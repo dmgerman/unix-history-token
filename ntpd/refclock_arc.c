@@ -134,7 +134,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Code by Derek Mulcahy,<derek@toybox.demon.co.uk>, 1997. Modifications by Damon Hart-Davis,<d@hd.org>, 1997. Modifications by Paul Alfille,<palfille@partners.org>, 2003. Modifications by Christopher Price,<cprice@cs-home.com>, 2003. Modifications by Nigel Roles<nigel@9fs.org>, 2003.   THIS CODE IS SUPPLIED AS IS, WITH NO WARRANTY OF ANY KIND.  USE AT YOUR OWN RISK.  Orginally developed and used with ntp3-5.85 by Derek Mulcahy.  Built against ntp3-5.90 on Solaris 2.5 using gcc 2.7.2.  This code may be freely copied and used and incorporated in other systems providing the disclaimer and notice of authorship are reproduced.  -------------------------------------------------------------------------------  Nigel's notes:  1) Called tcgetattr() before modifying, so that fields correctly initialised    for all operating systems  2) Altered parsing of timestamp line so that it copes with fields which are    not always ASCII digits (e.g. status field when battery low)  -------------------------------------------------------------------------------  Christopher's notes:  MAJOR CHANGES SINCE V1.2  ========================  1) Applied patch by Andrey Bray<abuse@madhouse.demon.co.uk>     2001-02-17 comp.protocols.time.ntp   2) Added WWVB support via clock mode command, localtime/UTC time configured     via flag1=(0=UTC, 1=localtime)   3) Added ignore resync request via flag2=(0=resync, 1=ignore resync)   4) Added simplified conversion from localtime to UTC with dst/bst translation   5) Added average signal quality poll   6) Fixed a badformat error when no code is available due to stripping      \n& \r's    7) Fixed a badformat error when clearing lencode& memset a_lastcode in poll     routine   8) Lots of code cleanup, including standardized DEBUG macros and removal      of unused code   -------------------------------------------------------------------------------  Author's original note:  I enclose my ntp driver for the Galleon Systems Arc MSF receiver.  It works (after a fashion) on both Solaris-1 and Solaris-2.  I am currently using ntp3-5.85.  I have been running the code for about 7 months without any problems.  Even coped with the change to BST!  I had to do some funky things to read from the clock because it uses the power from the receive lines to drive the transmit lines.  This makes the code look a bit stupid but it works.  I also had to put in some delays to allow for the turnaround time from receive to transmit.  These delays are between characters when requesting a time stamp so that shouldn't affect the results too drastically.  ...  The bottom line is that it works but could easily be improved.  You are free to do what you will with the code.  I haven't been able to determine how good the clock is.  I think that this requires a known good clock to compare it against.  -------------------------------------------------------------------------------  Damon's notes for adjustments:  MAJOR CHANGES SINCE V1.0 ========================  1) Removal of pollcnt variable that made the clock go permanently     off-line once two time polls failed to gain responses.   2) Avoiding (at least on Solaris-2) terminal becoming the controlling     terminal of the process when we do a low-level open().   3) Additional logic (conditional on ARCRON_LEAPSECOND_KEEN being     defined) to try to resync quickly after a potential leap-second     insertion or deletion.   4) Code significantly slimmer at run-time than V1.0.   GENERAL =======   1) The C preprocessor symbol to have the clock built has been changed     from ARC to ARCRON_MSF to CLOCK_ARCRON_MSF to minimise the     possiblity of clashes with other symbols in the future.   2) PRECISION should be -4/-5 (63ms/31ms) for the following reasons:       a) The ARC documentation claims the internal clock is (only)         accurate to about 20ms relative to Rugby (plus there must be         noticable drift and delay in the ms range due to transmission         delays and changing atmospheric effects).  This clock is not         designed for ms accuracy as NTP has spoilt us all to expect.       b) The clock oscillator looks like a simple uncompensated quartz         crystal of the sort used in digital watches (ie 32768Hz) which         can have large temperature coefficients and drifts; it is not         clear if this oscillator is properly disciplined to the MSF         transmission, but as the default is to resync only once per         *day*, we can imagine that it is not, and is free-running.  We         can minimise drift by resyncing more often (at the cost of         reduced battery life), but drift/wander may still be         significant.       c) Note that the bit time of 3.3ms adds to the potential error in         the the clock timestamp, since the bit clock of the serial link         may effectively be free-running with respect to the host clock         and the MSF clock.  Actually, the error is probably 1/16th of         the above, since the input data is probably sampled at at least         16x the bit rate.      By keeping the clock marked as not very precise, it will have a     fairly large dispersion, and thus will tend to be used as a     `backup' time source and sanity checker, which this clock is     probably ideal for.  For an isolated network without other time     sources, this clock can probably be expected to provide *much*     better than 1s accuracy, which will be fine.      By default, PRECISION is set to -4, but experience, especially at a     particular geographic location with a particular clock, may allow     this to be altered to -5.  (Note that skews of +/- 10ms are to be     expected from the clock from time-to-time.)  This improvement of     reported precision can be instigated by setting flag3 to 1, though     the PRECISION will revert to the normal value while the clock     signal quality is unknown whatever the flag3 setting.      IN ANY CASE, BE SURE TO SET AN APPROPRIATE FUDGE FACTOR TO REMOVE     ANY RESIDUAL SKEW, eg:          server 127.127.27.0 # ARCRON MSF radio clock unit 0.         # Fudge timestamps by about 20ms.         fudge 127.127.27.0 time1 0.020      You will need to observe your system's behaviour, assuming you have     some other NTP source to compare it with, to work out what the     fudge factor should be.  For my Sun SS1 running SunOS 4.1.3_U1 with     my MSF clock with my distance from the MSF transmitter, +20ms     seemed about right, after some observation.   3) REFID has been made "MSFa" to reflect the MSF time source and the     ARCRON receiver.   4) DEFAULT_RESYNC_TIME is the time in seconds (by default) before     forcing a resync since the last attempt.  This is picked to give a     little less than an hour between resyncs and to try to avoid     clashing with any regular event at a regular time-past-the-hour     which might cause systematic errors.      The INITIAL_RESYNC_DELAY is to avoid bothering the clock and     running down its batteries unnecesarily if ntpd is going to crash     or be killed or reconfigured quickly.  If ARCRON_KEEN is defined     then this period is long enough for (with normal polling rates)     enough time samples to have been taken to allow ntpd to sync to     the clock before the interruption for the clock to resync to MSF.     This avoids ntpd syncing to another peer first and then     almost immediately hopping to the MSF clock.      The RETRY_RESYNC_TIME is used before rescheduling a resync after a     resync failed to reveal a statisfatory signal quality (too low or     unknown).   5) The clock seems quite jittery, so I have increased the     median-filter size from the typical (previous) value of 3.  I     discard up to half the results in the filter.  It looks like maybe     1 sample in 10 or so (maybe less) is a spike, so allow the median     filter to discard at least 10% of its entries or 1 entry, whichever     is greater.   6) Sleeping *before* each character sent to the unit to allow required     inter-character time but without introducting jitter and delay in     handling the response if possible.   7) If the flag ARCRON_KEEN is defined, take time samples whenever     possible, even while resyncing, etc.  We rely, in this case, on the     clock always giving us a reasonable time or else telling us in the     status byte at the end of the timestamp that it failed to sync to     MSF---thus we should never end up syncing to completely the wrong     time.   8) If the flag ARCRON_OWN_FILTER is defined, use own versions of     refclock median-filter routines to get round small bug in 3-5.90     code which does not return the median offset. XXX Removed this     bit due NTP Version 4 upgrade - dlm.   9) We would appear to have a year-2000 problem with this clock since     it returns only the two least-significant digits of the year.  But     ntpd ignores the year and uses the local-system year instead, so     this is in fact not a problem.  Nevertheless, we attempt to do a     sensible thing with the dates, wrapping them into a 100-year     window.   10)Logs stats information that can be used by Derek's Tcl/Tk utility     to show the status of the clock.   11)The clock documentation insists that the number of bits per     character to be sent to the clock, and sent by it, is 11, including     one start bit and two stop bits.  The data format is either 7+even     or 8+none.   TO-DO LIST ==========    * Eliminate use of scanf(), and maybe sprintf().    * Allow user setting of resync interval to trade battery life for     accuracy; maybe could be done via fudge factor or unit number.    * Possibly note the time since the last resync of the MSF clock to     MSF as the age of the last reference timestamp, ie trust the     clock's oscillator not very much...    * Add very slow auto-adjustment up to a value of +/- time2 to correct     for long-term errors in the clock value (time2 defaults to 0 so the     correction would be disabled by default).    * Consider trying to use the tty_clk/ppsclock support.    * Possibly use average or maximum signal quality reported during     resync, rather than just the last one, which may be atypical.  */
+comment|/* Code by Derek Mulcahy,<derek@toybox.demon.co.uk>, 1997. Modifications by Damon Hart-Davis,<d@hd.org>, 1997. Modifications by Paul Alfille,<palfille@partners.org>, 2003. Modifications by Christopher Price,<cprice@cs-home.com>, 2003. Modifications by Nigel Roles<nigel@9fs.org>, 2003.   THIS CODE IS SUPPLIED AS IS, WITH NO WARRANTY OF ANY KIND.  USE AT YOUR OWN RISK.  Orginally developed and used with ntp3-5.85 by Derek Mulcahy.  Built against ntp3-5.90 on Solaris 2.5 using gcc 2.7.2.  This code may be freely copied and used and incorporated in other systems providing the disclaimer and notice of authorship are reproduced.  -------------------------------------------------------------------------------  Nigel's notes:  1) Called tcgetattr() before modifying, so that fields correctly initialised    for all operating systems  2) Altered parsing of timestamp line so that it copes with fields which are    not always ASCII digits (e.g. status field when battery low)  -------------------------------------------------------------------------------  Christopher's notes:  MAJOR CHANGES SINCE V1.2  ========================  1) Applied patch by Andrey Bray<abuse@madhouse.demon.co.uk>     2001-02-17 comp.protocols.time.ntp   2) Added WWVB support via clock mode command, localtime/UTC time configured     via flag1=(0=UTC, 1=localtime)   3) Added ignore resync request via flag2=(0=resync, 1=ignore resync)   4) Added simplified conversion from localtime to UTC with dst/bst translation   5) Added average signal quality poll   6) Fixed a badformat error when no code is available due to stripping      \n& \r's    7) Fixed a badformat error when clearing lencode& memset a_lastcode in poll     routine   8) Lots of code cleanup, including standardized DEBUG macros and removal      of unused code   -------------------------------------------------------------------------------  Author's original note:  I enclose my ntp driver for the Galleon Systems Arc MSF receiver.  It works (after a fashion) on both Solaris-1 and Solaris-2.  I am currently using ntp3-5.85.  I have been running the code for about 7 months without any problems.  Even coped with the change to BST!  I had to do some funky things to read from the clock because it uses the power from the receive lines to drive the transmit lines.  This makes the code look a bit stupid but it works.  I also had to put in some delays to allow for the turnaround time from receive to transmit.  These delays are between characters when requesting a time stamp so that shouldn't affect the results too drastically.  ...  The bottom line is that it works but could easily be improved.  You are free to do what you will with the code.  I haven't been able to determine how good the clock is.  I think that this requires a known good clock to compare it against.  -------------------------------------------------------------------------------  Damon's notes for adjustments:  MAJOR CHANGES SINCE V1.0 ========================  1) Removal of pollcnt variable that made the clock go permanently     off-line once two time polls failed to gain responses.   2) Avoiding (at least on Solaris-2) terminal becoming the controlling     terminal of the process when we do a low-level open().   3) Additional logic (conditional on ARCRON_LEAPSECOND_KEEN being     defined) to try to resync quickly after a potential leap-second     insertion or deletion.   4) Code significantly slimmer at run-time than V1.0.   GENERAL =======   1) The C preprocessor symbol to have the clock built has been changed     from ARC to ARCRON_MSF to CLOCK_ARCRON_MSF to minimise the     possiblity of clashes with other symbols in the future.   2) PRECISION should be -4/-5 (63ms/31ms) for the following reasons:       a) The ARC documentation claims the internal clock is (only) 	accurate to about 20ms relative to Rugby (plus there must be 	noticable drift and delay in the ms range due to transmission 	delays and changing atmospheric effects).  This clock is not 	designed for ms accuracy as NTP has spoilt us all to expect.       b) The clock oscillator looks like a simple uncompensated quartz 	crystal of the sort used in digital watches (ie 32768Hz) which 	can have large temperature coefficients and drifts; it is not 	clear if this oscillator is properly disciplined to the MSF 	transmission, but as the default is to resync only once per 	*day*, we can imagine that it is not, and is free-running.  We 	can minimise drift by resyncing more often (at the cost of 	reduced battery life), but drift/wander may still be 	significant.       c) Note that the bit time of 3.3ms adds to the potential error in 	the the clock timestamp, since the bit clock of the serial link 	may effectively be free-running with respect to the host clock 	and the MSF clock.  Actually, the error is probably 1/16th of 	the above, since the input data is probably sampled at at least 	16x the bit rate.      By keeping the clock marked as not very precise, it will have a     fairly large dispersion, and thus will tend to be used as a     `backup' time source and sanity checker, which this clock is     probably ideal for.  For an isolated network without other time     sources, this clock can probably be expected to provide *much*     better than 1s accuracy, which will be fine.      By default, PRECISION is set to -4, but experience, especially at a     particular geographic location with a particular clock, may allow     this to be altered to -5.  (Note that skews of +/- 10ms are to be     expected from the clock from time-to-time.)  This improvement of     reported precision can be instigated by setting flag3 to 1, though     the PRECISION will revert to the normal value while the clock     signal quality is unknown whatever the flag3 setting.      IN ANY CASE, BE SURE TO SET AN APPROPRIATE FUDGE FACTOR TO REMOVE     ANY RESIDUAL SKEW, eg:  	server 127.127.27.0 # ARCRON MSF radio clock unit 0. 	# Fudge timestamps by about 20ms. 	fudge 127.127.27.0 time1 0.020      You will need to observe your system's behaviour, assuming you have     some other NTP source to compare it with, to work out what the     fudge factor should be.  For my Sun SS1 running SunOS 4.1.3_U1 with     my MSF clock with my distance from the MSF transmitter, +20ms     seemed about right, after some observation.   3) REFID has been made "MSFa" to reflect the MSF time source and the     ARCRON receiver.   4) DEFAULT_RESYNC_TIME is the time in seconds (by default) before     forcing a resync since the last attempt.  This is picked to give a     little less than an hour between resyncs and to try to avoid     clashing with any regular event at a regular time-past-the-hour     which might cause systematic errors.      The INITIAL_RESYNC_DELAY is to avoid bothering the clock and     running down its batteries unnecesarily if ntpd is going to crash     or be killed or reconfigured quickly.  If ARCRON_KEEN is defined     then this period is long enough for (with normal polling rates)     enough time samples to have been taken to allow ntpd to sync to     the clock before the interruption for the clock to resync to MSF.     This avoids ntpd syncing to another peer first and then     almost immediately hopping to the MSF clock.      The RETRY_RESYNC_TIME is used before rescheduling a resync after a     resync failed to reveal a statisfatory signal quality (too low or     unknown).   5) The clock seems quite jittery, so I have increased the     median-filter size from the typical (previous) value of 3.  I     discard up to half the results in the filter.  It looks like maybe     1 sample in 10 or so (maybe less) is a spike, so allow the median     filter to discard at least 10% of its entries or 1 entry, whichever     is greater.   6) Sleeping *before* each character sent to the unit to allow required     inter-character time but without introducting jitter and delay in     handling the response if possible.   7) If the flag ARCRON_KEEN is defined, take time samples whenever     possible, even while resyncing, etc.  We rely, in this case, on the     clock always giving us a reasonable time or else telling us in the     status byte at the end of the timestamp that it failed to sync to     MSF---thus we should never end up syncing to completely the wrong     time.   8) If the flag ARCRON_OWN_FILTER is defined, use own versions of     refclock median-filter routines to get round small bug in 3-5.90     code which does not return the median offset. XXX Removed this     bit due NTP Version 4 upgrade - dlm.   9) We would appear to have a year-2000 problem with this clock since     it returns only the two least-significant digits of the year.  But     ntpd ignores the year and uses the local-system year instead, so     this is in fact not a problem.  Nevertheless, we attempt to do a     sensible thing with the dates, wrapping them into a 100-year     window.   10)Logs stats information that can be used by Derek's Tcl/Tk utility     to show the status of the clock.   11)The clock documentation insists that the number of bits per     character to be sent to the clock, and sent by it, is 11, including     one start bit and two stop bits.  The data format is either 7+even     or 8+none.   TO-DO LIST ==========    * Eliminate use of scanf(), and maybe sprintf().    * Allow user setting of resync interval to trade battery life for     accuracy; maybe could be done via fudge factor or unit number.    * Possibly note the time since the last resync of the MSF clock to     MSF as the age of the last reference timestamp, ie trust the     clock's oscillator not very much...    * Add very slow auto-adjustment up to a value of +/- time2 to correct     for long-term errors in the clock value (time2 defaults to 0 so the     correction would be disabled by default).    * Consider trying to use the tty_clk/ppsclock support.    * Possibly use average or maximum signal quality reported during     resync, rather than just the last one, which may be atypical.  */
 end_comment
 
 begin_comment
@@ -290,35 +290,35 @@ comment|/* 14. BST/UTC status */
 end_comment
 
 begin_comment
-comment|/*      bit 7   parity */
+comment|/*	bit 7	parity */
 end_comment
 
 begin_comment
-comment|/*      bit 6   always 0 */
+comment|/*	bit 6	always 0 */
 end_comment
 
 begin_comment
-comment|/*      bit 5   always 1 */
+comment|/*	bit 5	always 1 */
 end_comment
 
 begin_comment
-comment|/*      bit 4   always 1 */
+comment|/*	bit 4	always 1 */
 end_comment
 
 begin_comment
-comment|/*      bit 3   always 0 */
+comment|/*	bit 3	always 0 */
 end_comment
 
 begin_comment
-comment|/*      bit 2   =1 if UTC is in effect, complementary to the BST bit */
+comment|/*	bit 2	=1 if UTC is in effect, complementary to the BST bit */
 end_comment
 
 begin_comment
-comment|/*      bit 1   =1 if BST is in effect, according to the BST bit     */
+comment|/*	bit 1	=1 if BST is in effect, according to the BST bit     */
 end_comment
 
 begin_comment
-comment|/*      bit 0   BST/UTC change impending bit=1 in case of change impending */
+comment|/*	bit 0	BST/UTC change impending bit=1 in case of change impending */
 end_comment
 
 begin_comment
@@ -326,55 +326,55 @@ comment|/* 15. status */
 end_comment
 
 begin_comment
-comment|/*      bit 7   parity */
+comment|/*	bit 7	parity */
 end_comment
 
 begin_comment
-comment|/*      bit 6   always 0 */
+comment|/*	bit 6	always 0 */
 end_comment
 
 begin_comment
-comment|/*      bit 5   always 1 */
+comment|/*	bit 5	always 1 */
 end_comment
 
 begin_comment
-comment|/*      bit 4   always 1 */
+comment|/*	bit 4	always 1 */
 end_comment
 
 begin_comment
-comment|/*      bit 3   =1 if low battery is detected */
+comment|/*	bit 3	=1 if low battery is detected */
 end_comment
 
 begin_comment
-comment|/*      bit 2   =1 if the very last reception attempt failed and a valid */
+comment|/*	bit 2	=1 if the very last reception attempt failed and a valid */
 end_comment
 
 begin_comment
-comment|/*              time information already exists (bit0=1) */
+comment|/*		time information already exists (bit0=1) */
 end_comment
 
 begin_comment
-comment|/*              =0 if the last reception attempt was successful */
+comment|/*		=0 if the last reception attempt was successful */
 end_comment
 
 begin_comment
-comment|/*      bit 1   =1 if at least one reception since 2:30 am was successful */
+comment|/*	bit 1	=1 if at least one reception since 2:30 am was successful */
 end_comment
 
 begin_comment
-comment|/*              =0 if no reception attempt since 2:30 am was successful */
+comment|/*		=0 if no reception attempt since 2:30 am was successful */
 end_comment
 
 begin_comment
-comment|/*      bit 0   =1 if the RC Computer Clock contains valid time information */
+comment|/*	bit 0	=1 if the RC Computer Clock contains valid time information */
 end_comment
 
 begin_comment
-comment|/*              This bit is zero after reset and one after the first */
+comment|/*		This bit is zero after reset and one after the first */
 end_comment
 
 begin_comment
-comment|/*              successful reception attempt */
+comment|/*		successful reception attempt */
 end_comment
 
 begin_comment
@@ -1168,7 +1168,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void dummy_event_handler P((struct peer *)); static void   arc_event_handler P((struct peer *));
+unit|static void dummy_event_handler (struct peer *); static void   arc_event_handler (struct peer *);
 endif|#
 directive|endif
 end_endif
@@ -1225,71 +1225,59 @@ begin_comment
 comment|/*  * Function prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|arc_start
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|arc_shutdown
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|arc_receive
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|arc_poll
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Transfer vector  */
@@ -1404,11 +1392,6 @@ name|arcunit
 modifier|*
 name|up
 init|=
-operator|(
-expr|struct
-name|arcunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -1584,6 +1567,9 @@ modifier|*
 name|pp
 decl_stmt|;
 name|int
+name|temp_fd
+decl_stmt|;
+name|int
 name|fd
 decl_stmt|;
 name|char
@@ -1605,73 +1591,42 @@ name|msyslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"ARCRON: %s: opening unit %d"
+literal|"MSF_ARCRON %s: opening unit %d"
 argument_list|,
 name|arc_version
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-block|{
-name|printf
+name|DPRINTF
 argument_list|(
+literal|1
+argument_list|,
+operator|(
 literal|"arc: %s: attempt to open unit %d.\n"
-argument_list|,
+operator|,
 name|arc_version
-argument_list|,
+operator|,
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* Prevent a ridiculous device number causing overflow of device[]. */
-if|if
-condition|(
-operator|(
-name|unit
-operator|<
-literal|0
-operator|)
-operator|||
-operator|(
-name|unit
-operator|>
-literal|255
-operator|)
-condition|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/* 	 * Open serial port. Use CLK line discipline, if available. 	 */
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|device
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|device
+argument_list|)
 argument_list|,
 name|DEVICE
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|fd
+name|temp_fd
 operator|=
 name|refclock_open
 argument_list|(
@@ -1681,38 +1636,36 @@ name|SPEED
 argument_list|,
 name|LDISC_CLK
 argument_list|)
-operator|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+expr_stmt|;
 if|if
 condition|(
-name|debug
+name|temp_fd
+operator|<=
+literal|0
 condition|)
-block|{
-name|printf
+return|return
+literal|0
+return|;
+name|DPRINTF
 argument_list|(
-literal|"arc: unit %d using open().\n"
+literal|1
 argument_list|,
+operator|(
+literal|"arc: unit %d using tty_open().\n"
+operator|,
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|fd
 operator|=
-name|open
+name|tty_open
 argument_list|(
 name|device
 argument_list|,
 name|OPEN_FLAGS
+argument_list|,
+literal|0777
 argument_list|)
 expr_stmt|;
 if|if
@@ -1722,30 +1675,39 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-block|{
-name|printf
+name|msyslog
 argument_list|(
-literal|"arc: failed [open()] to open %s.\n"
+name|LOG_ERR
+argument_list|,
+literal|"MSF_ARCRON(%d): failed second open(%s, 0777): %m.\n"
+argument_list|,
+name|unit
 argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
+name|close
+argument_list|(
+name|temp_fd
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
+name|close
+argument_list|(
+name|temp_fd
+argument_list|)
+expr_stmt|;
+name|temp_fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SYS_WINNT
 name|fcntl
 argument_list|(
 name|fd
@@ -1756,27 +1718,24 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* clear the descriptor flags */
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"arc: opened RS232 port with file descriptor %d.\n"
-argument_list|,
-name|fd
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
+name|DPRINTF
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"arc: opened RS232 port with file descriptor %d.\n"
+operator|,
+name|fd
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_TERMIOS
+if|if
+condition|(
 name|tcgetattr
 argument_list|(
 name|fd
@@ -1784,7 +1743,30 @@ argument_list|,
 operator|&
 name|arg
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"MSF_ARCRON(%d): tcgetattr(%s): %m.\n"
+argument_list|,
+name|unit
+argument_list|,
+name|device
+argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|arg
 operator|.
 name|c_iflag
@@ -1837,6 +1819,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|tcsetattr
 argument_list|(
 name|fd
@@ -1846,14 +1830,37 @@ argument_list|,
 operator|&
 name|arg
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"MSF_ARCRON(%d): tcsetattr(%s): %m.\n"
+argument_list|,
+name|unit
+argument_list|,
+name|device
+argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 else|#
 directive|else
 name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ARCRON: termios not supported in this driver"
+literal|"ARCRON: termios required by this driver"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1869,57 +1876,15 @@ literal|0
 return|;
 endif|#
 directive|endif
+comment|/* Set structure to all zeros... */
 name|up
 operator|=
-operator|(
-expr|struct
-name|arcunit
-operator|*
-operator|)
-name|emalloc
+name|emalloc_zero
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|arcunit
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|up
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* Set structure to all zeros... */
-name|memset
-argument_list|(
-operator|(
-name|char
 operator|*
-operator|)
 name|up
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|arcunit
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1976,13 +1941,19 @@ name|io
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|free
 argument_list|(
@@ -1999,9 +1970,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 comment|/* 	 * Initialize miscellaneous variables 	 */
@@ -2266,15 +2234,21 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|arcunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
 expr_stmt|;
+if|if
+condition|(
+operator|-
+literal|1
+operator|!=
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+condition|)
 name|io_closeclock
 argument_list|(
 operator|&
@@ -2283,6 +2257,12 @@ operator|->
 name|io
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NULL
+operator|!=
+name|up
+condition|)
 name|free
 argument_list|(
 name|up
@@ -2697,11 +2677,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|arcunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -3109,7 +3084,7 @@ block|}
 comment|/* Just in case we still have lots of rubbish in the buffer... */
 comment|/* ...and to avoid the same timestamp being reused by mistake, */
 comment|/* eg on receipt of the \r coming in on its own after the      */
-comment|/* timecode.                                                   */
+comment|/* timecode.						       */
 if|if
 condition|(
 name|pp
@@ -4491,7 +4466,20 @@ decl_stmt|;
 name|time_t
 name|unixtime
 decl_stmt|;
-comment|/* 		         * Convert to GMT for sites that distribute localtime. 			 * This means we have to do Y2K conversion on the 			 * 2-digit year; otherwise, we get the time wrong. 	        	 */
+comment|/* 			 * Convert to GMT for sites that distribute localtime. 			 * This means we have to do Y2K conversion on the 			 * 2-digit year; otherwise, we get the time wrong. 			 */
+name|memset
+argument_list|(
+operator|&
+name|local
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|local
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|local
 operator|.
 name|tm_year
@@ -4590,7 +4578,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* It is unclear exactly when the  				    	       Arcron changes from DST->ST and  					       ST->DST. Testing has shown this 					       to be irregular. For the time  					       being, let the OS decide. */
+comment|/* It is unclear exactly when the  					       Arcron changes from DST->ST and  					       ST->DST. Testing has shown this 					       to be irregular. For the time  					       being, let the OS decide. */
 name|local
 operator|.
 name|tm_isdst
@@ -4845,7 +4833,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 		     	* For more rational sites distributing UTC 		     	*/
+comment|/* 			* For more rational sites distributing UTC 			*/
 name|pp
 operator|->
 name|day
@@ -5223,22 +5211,19 @@ begin_comment
 comment|/* No data should be sent after this until arc_poll() returns. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|request_time
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -5269,11 +5254,6 @@ name|arcunit
 modifier|*
 name|up
 init|=
-operator|(
-expr|struct
-name|arcunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -5395,11 +5375,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|arcunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr

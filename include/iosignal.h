@@ -28,91 +28,73 @@ name|HAVE_SIGNALED_IO
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|block_sigio
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|unblock_sigio
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|init_clock_sig
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|refclockio
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|init_socket_sig
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|set_signal
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|RETSIGTYPE
 name|sigio_handler
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
 directive|define
 name|BLOCKIO
 parameter_list|()
-value|((void) block_sigio())
+value|block_sigio()
 end_define
 
 begin_define
@@ -120,7 +102,7 @@ define|#
 directive|define
 name|UNBLOCKIO
 parameter_list|()
-value|((void) unblock_sigio())
+value|unblock_sigio()
 end_define
 
 begin_else

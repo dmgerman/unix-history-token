@@ -501,39 +501,5 @@ define|\
 value|(tsf) = msutotsfhi[((msu)>> 5)& 0x1f] + msutotsflo[(msu)& 0x1f]
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|tvtoa
-name|P
-argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|timeval
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|utvtoa
-name|P
-argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|timeval
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 

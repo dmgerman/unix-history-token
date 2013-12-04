@@ -1,16 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpd-opts.c)  *    *  It has been AutoGen-ed  Tuesday December  8, 2009 at 08:13:10 AM EST  *  From the definitions    ntpd-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
-end_comment
-
-begin_comment
-comment|/*  *  This file was produced by an AutoOpts template.  AutoOpts is a  *  copyrighted work.  This source file is not encumbered by AutoOpts  *  licensing, but is provided under the licensing terms chosen by the  *  ntpd author or copyright holder.  AutoOpts is licensed under  *  the terms of the LGPL.  The redistributable library (``libopts'') is  *  licensed under the terms of either the LGPL or, at the users discretion,  *  the BSD license.  See the AutoOpts and/or libopts sources for details.  *  * This source file is copyrighted and licensed under the following terms:  *  * ntpd copyright 1970-2009 David L. Mills and/or others - all rights reserved  *  * see html/copyright.html  */
+comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpd-opts.c)  *    *  It has been AutoGen-ed  December 24, 2011 at 06:34:01 PM by AutoGen 5.12  *  From the definitions    ntpd-opts.def  *  and the template file   options  *  * Generated from AutoOpts 35:0:10 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpd author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * This source file is copyrighted and licensed under the following terms:  *  *  see html/copyright.html  *    */
 end_comment
 
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_define
@@ -38,18 +52,31 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-name|tSCC
-name|zCopyright
-index|[]
-init|=
-literal|"ntpd copyright (c) 1970-2009 David L. Mills and/or others, all rights reserved"
+specifier|extern
+name|FILE
+modifier|*
+name|option_usage_fp
 decl_stmt|;
-name|tSCC
-name|zCopyrightNotice
-index|[]
+comment|/* TRANSLATORS: choose the translation for option names wisely because you                 cannot ever change your mind. */
+specifier|static
+name|char
+specifier|const
+name|zCopyright
+index|[
+literal|38
+index|]
 init|=
-comment|/* extracted from ../include/copyright.def near line 8 */
-literal|"see html/copyright.html"
+literal|"ntpd 4.2.6p5\n\ see html/copyright.html\n"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zLicenseDescrip
+index|[
+literal|25
+index|]
+init|=
+literal|"see html/copyright.html\n"
 decl_stmt|;
 specifier|extern
 name|tUsageProc
@@ -84,84 +111,108 @@ name|NULL
 value|0
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|EXIT_SUCCESS
-define|#
-directive|define
-name|EXIT_SUCCESS
-value|0
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|EXIT_FAILURE
-define|#
-directive|define
-name|EXIT_FAILURE
-value|1
-endif|#
-directive|endif
-comment|/*  *  Ipv4 option description:  */
-name|tSCC
+comment|/*  *  Ipv4 option description with  *  "Must also have options" and "Incompatible options":  */
+specifier|static
+name|char
+specifier|const
 name|zIpv4Text
 index|[]
 init|=
 literal|"Force IPv4 DNS name resolution"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIpv4_NAME
 index|[]
 init|=
 literal|"IPV4"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIpv4_Name
 index|[]
 init|=
 literal|"ipv4"
 decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|aIpv4CantList
+index|[]
+init|=
+block|{
+name|INDEX_OPT_IPV6
+block|,
+name|NO_EQUIVALENT
+block|}
+decl_stmt|;
 define|#
 directive|define
 name|IPV4_FLAGS
 value|(OPTST_DISABLED)
-comment|/*  *  Ipv6 option description:  */
-name|tSCC
+comment|/*  *  Ipv6 option description with  *  "Must also have options" and "Incompatible options":  */
+specifier|static
+name|char
+specifier|const
 name|zIpv6Text
 index|[]
 init|=
 literal|"Force IPv6 DNS name resolution"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIpv6_NAME
 index|[]
 init|=
 literal|"IPV6"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIpv6_Name
 index|[]
 init|=
 literal|"ipv6"
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|aIpv6CantList
+index|[]
+init|=
+block|{
+name|INDEX_OPT_IPV4
+block|,
+name|NO_EQUIVALENT
+block|}
 decl_stmt|;
 define|#
 directive|define
 name|IPV6_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Authreq option description with  *  "Must also have options" and "Incompatible options":  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zAuthreqText
 index|[]
 init|=
 literal|"Require crypto authentication"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zAuthreq_NAME
 index|[]
 init|=
 literal|"AUTHREQ"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zAuthreq_Name
 index|[]
 init|=
@@ -184,19 +235,25 @@ directive|define
 name|AUTHREQ_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Authnoreq option description with  *  "Must also have options" and "Incompatible options":  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zAuthnoreqText
 index|[]
 init|=
 literal|"Do not require crypto authentication"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zAuthnoreq_NAME
 index|[]
 init|=
 literal|"AUTHNOREQ"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zAuthnoreq_Name
 index|[]
 init|=
@@ -219,19 +276,25 @@ directive|define
 name|AUTHNOREQ_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Bcastsync option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zBcastsyncText
 index|[]
 init|=
 literal|"Allow us to sync to broadcast servers"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zBcastsync_NAME
 index|[]
 init|=
 literal|"BCASTSYNC"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zBcastsync_Name
 index|[]
 init|=
@@ -242,19 +305,25 @@ directive|define
 name|BCASTSYNC_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Configfile option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zConfigfileText
 index|[]
 init|=
 literal|"configuration file name"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zConfigfile_NAME
 index|[]
 init|=
 literal|"CONFIGFILE"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zConfigfile_Name
 index|[]
 init|=
@@ -268,19 +337,25 @@ comment|/*  *  Debug_Level option description:  */
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDebug_LevelText
 index|[]
 init|=
 literal|"Increase output debug message level"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDebug_Level_NAME
 index|[]
 init|=
 literal|"DEBUG_LEVEL"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDebug_Level_Name
 index|[]
 init|=
@@ -295,24 +370,28 @@ directive|else
 comment|/* disable Debug_Level */
 define|#
 directive|define
-name|VALUE_OPT_DEBUG_LEVEL
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|DEBUG_LEVEL_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zDebug_LevelText
-value|NULL
-define|#
-directive|define
 name|zDebug_Level_NAME
 value|NULL
-define|#
-directive|define
+specifier|static
+name|char
+specifier|const
 name|zDebug_Level_Name
-value|NULL
+index|[]
+init|=
+literal|"debug-level"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zDebug_LevelText
+index|[]
+init|=
+literal|"this package was built using 'configure --disable--debug'"
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
@@ -320,19 +399,25 @@ comment|/*  *  Set_Debug_Level option description:  */
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSet_Debug_LevelText
 index|[]
 init|=
 literal|"Set the output debug message level"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSet_Debug_Level_NAME
 index|[]
 init|=
 literal|"SET_DEBUG_LEVEL"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSet_Debug_Level_Name
 index|[]
 init|=
@@ -347,41 +432,51 @@ directive|else
 comment|/* disable Set_Debug_Level */
 define|#
 directive|define
-name|VALUE_OPT_SET_DEBUG_LEVEL
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|SET_DEBUG_LEVEL_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zSet_Debug_LevelText
-value|NULL
-define|#
-directive|define
 name|zSet_Debug_Level_NAME
 value|NULL
-define|#
-directive|define
+specifier|static
+name|char
+specifier|const
 name|zSet_Debug_Level_Name
-value|NULL
+index|[]
+init|=
+literal|"set-debug-level"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zSet_Debug_LevelText
+index|[]
+init|=
+literal|"this package was built using 'configure --disable--debug'"
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
 comment|/*  *  Driftfile option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDriftfileText
 index|[]
 init|=
 literal|"frequency drift file name"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDriftfile_NAME
 index|[]
 init|=
 literal|"DRIFTFILE"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDriftfile_Name
 index|[]
 init|=
@@ -392,19 +487,25 @@ directive|define
 name|DRIFTFILE_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 comment|/*  *  Panicgate option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPanicgateText
 index|[]
 init|=
 literal|"Allow the first adjustment to be Big"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPanicgate_NAME
 index|[]
 init|=
 literal|"PANICGATE"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPanicgate_Name
 index|[]
 init|=
@@ -415,19 +516,28 @@ directive|define
 name|PANICGATE_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Jaildir option description:  */
-name|tSCC
+ifdef|#
+directive|ifdef
+name|HAVE_DROPROOT
+specifier|static
+name|char
+specifier|const
 name|zJaildirText
 index|[]
 init|=
 literal|"Jail directory"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zJaildir_NAME
 index|[]
 init|=
 literal|"JAILDIR"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zJaildir_Name
 index|[]
 init|=
@@ -437,20 +547,56 @@ define|#
 directive|define
 name|JAILDIR_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
+else|#
+directive|else
+comment|/* disable Jaildir */
+define|#
+directive|define
+name|JAILDIR_FLAGS
+value|(OPTST_OMITTED | OPTST_NO_INIT)
+define|#
+directive|define
+name|zJaildir_NAME
+value|NULL
+specifier|static
+name|char
+specifier|const
+name|zJaildir_Name
+index|[]
+init|=
+literal|"jaildir"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zJaildirText
+index|[]
+init|=
+literal|"built without --enable-clockctl or --enable-linuxcaps"
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_DROPROOT */
 comment|/*  *  Interface option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zInterfaceText
 index|[]
 init|=
-literal|"Listen on interface"
+literal|"Listen on an interface name or address"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zInterface_NAME
 index|[]
 init|=
 literal|"INTERFACE"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zInterface_Name
 index|[]
 init|=
@@ -461,19 +607,25 @@ directive|define
 name|INTERFACE_FLAGS
 value|(OPTST_DISABLED | OPTST_STACKED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 comment|/*  *  Keyfile option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zKeyfileText
 index|[]
 init|=
 literal|"path to symmetric keys"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zKeyfile_NAME
 index|[]
 init|=
 literal|"KEYFILE"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zKeyfile_Name
 index|[]
 init|=
@@ -484,19 +636,25 @@ directive|define
 name|KEYFILE_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 comment|/*  *  Logfile option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zLogfileText
 index|[]
 init|=
 literal|"path to the log file"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zLogfile_NAME
 index|[]
 init|=
 literal|"LOGFILE"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zLogfile_Name
 index|[]
 init|=
@@ -507,19 +665,25 @@ directive|define
 name|LOGFILE_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 comment|/*  *  Novirtualips option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNovirtualipsText
 index|[]
 init|=
-literal|"Do not listen to virtual IPs"
+literal|"Do not listen to virtual interfaces"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNovirtualips_NAME
 index|[]
 init|=
 literal|"NOVIRTUALIPS"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNovirtualips_Name
 index|[]
 init|=
@@ -533,19 +697,25 @@ comment|/*  *  Modifymmtimer option description:  */
 ifdef|#
 directive|ifdef
 name|SYS_WINNT
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zModifymmtimerText
 index|[]
 init|=
 literal|"Modify Multimedia Timer (Windows only)"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zModifymmtimer_NAME
 index|[]
 init|=
 literal|"MODIFYMMTIMER"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zModifymmtimer_Name
 index|[]
 init|=
@@ -560,19 +730,15 @@ directive|else
 comment|/* disable Modifymmtimer */
 define|#
 directive|define
-name|VALUE_OPT_MODIFYMMTIMER
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|MODIFYMMTIMER_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zModifymmtimerText
+name|zModifymmtimer_NAME
 value|NULL
 define|#
 directive|define
-name|zModifymmtimer_NAME
+name|zModifymmtimerText
 value|NULL
 define|#
 directive|define
@@ -582,19 +748,25 @@ endif|#
 directive|endif
 comment|/* SYS_WINNT */
 comment|/*  *  Nofork option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNoforkText
 index|[]
 init|=
 literal|"Do not fork"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNofork_NAME
 index|[]
 init|=
 literal|"NOFORK"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNofork_Name
 index|[]
 init|=
@@ -605,19 +777,25 @@ directive|define
 name|NOFORK_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Nice option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNiceText
 index|[]
 init|=
 literal|"Run at high priority"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNice_NAME
 index|[]
 init|=
 literal|"NICE"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNice_Name
 index|[]
 init|=
@@ -628,19 +806,25 @@ directive|define
 name|NICE_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Pidfile option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPidfileText
 index|[]
 init|=
 literal|"path to the PID file"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPidfile_NAME
 index|[]
 init|=
 literal|"PIDFILE"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPidfile_Name
 index|[]
 init|=
@@ -651,19 +835,25 @@ directive|define
 name|PIDFILE_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 comment|/*  *  Priority option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPriorityText
 index|[]
 init|=
 literal|"Process priority"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPriority_NAME
 index|[]
 init|=
 literal|"PRIORITY"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPriority_Name
 index|[]
 init|=
@@ -674,19 +864,25 @@ directive|define
 name|PRIORITY_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_NUMERIC))
 comment|/*  *  Quit option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zQuitText
 index|[]
 init|=
 literal|"Set the time and quit"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zQuit_NAME
 index|[]
 init|=
 literal|"QUIT"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zQuit_Name
 index|[]
 init|=
@@ -697,19 +893,25 @@ directive|define
 name|QUIT_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Propagationdelay option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPropagationdelayText
 index|[]
 init|=
 literal|"Broadcast/propagation delay"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPropagationdelay_NAME
 index|[]
 init|=
 literal|"PROPAGATIONDELAY"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPropagationdelay_Name
 index|[]
 init|=
@@ -719,43 +921,80 @@ define|#
 directive|define
 name|PROPAGATIONDELAY_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
-comment|/*  *  Updateinterval option description:  */
-name|tSCC
-name|zUpdateintervalText
+comment|/*  *  Saveconfigquit option description:  */
+ifdef|#
+directive|ifdef
+name|SAVECONFIG
+specifier|static
+name|char
+specifier|const
+name|zSaveconfigquitText
 index|[]
 init|=
-literal|"interval in seconds between scans for new or dropped interfaces"
+literal|"Save parsed configuration and quit"
 decl_stmt|;
-name|tSCC
-name|zUpdateinterval_NAME
+specifier|static
+name|char
+specifier|const
+name|zSaveconfigquit_NAME
 index|[]
 init|=
-literal|"UPDATEINTERVAL"
+literal|"SAVECONFIGQUIT"
 decl_stmt|;
-name|tSCC
-name|zUpdateinterval_Name
+specifier|static
+name|char
+specifier|const
+name|zSaveconfigquit_Name
 index|[]
 init|=
-literal|"updateinterval"
+literal|"saveconfigquit"
 decl_stmt|;
 define|#
 directive|define
-name|UPDATEINTERVAL_FLAGS
-value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_NUMERIC))
+name|SAVECONFIGQUIT_FLAGS
+value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
+else|#
+directive|else
+comment|/* disable Saveconfigquit */
+define|#
+directive|define
+name|SAVECONFIGQUIT_FLAGS
+value|(OPTST_OMITTED | OPTST_NO_INIT)
+define|#
+directive|define
+name|zSaveconfigquit_NAME
+value|NULL
+define|#
+directive|define
+name|zSaveconfigquitText
+value|NULL
+define|#
+directive|define
+name|zSaveconfigquit_Name
+value|NULL
+endif|#
+directive|endif
+comment|/* SAVECONFIG */
 comment|/*  *  Statsdir option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zStatsdirText
 index|[]
 init|=
 literal|"Statistics file location"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zStatsdir_NAME
 index|[]
 init|=
 literal|"STATSDIR"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zStatsdir_Name
 index|[]
 init|=
@@ -766,19 +1005,25 @@ directive|define
 name|STATSDIR_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 comment|/*  *  Trustedkey option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zTrustedkeyText
 index|[]
 init|=
 literal|"Trusted key number"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zTrustedkey_NAME
 index|[]
 init|=
 literal|"TRUSTEDKEY"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zTrustedkey_Name
 index|[]
 init|=
@@ -789,19 +1034,28 @@ directive|define
 name|TRUSTEDKEY_FLAGS
 value|(OPTST_DISABLED | OPTST_STACKED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 comment|/*  *  User option description:  */
-name|tSCC
+ifdef|#
+directive|ifdef
+name|HAVE_DROPROOT
+specifier|static
+name|char
+specifier|const
 name|zUserText
 index|[]
 init|=
 literal|"Run as userid (or userid:groupid)"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zUser_NAME
 index|[]
 init|=
 literal|"USER"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zUser_Name
 index|[]
 init|=
@@ -811,20 +1065,85 @@ define|#
 directive|define
 name|USER_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
+else|#
+directive|else
+comment|/* disable User */
+define|#
+directive|define
+name|USER_FLAGS
+value|(OPTST_OMITTED | OPTST_NO_INIT)
+define|#
+directive|define
+name|zUser_NAME
+value|NULL
+specifier|static
+name|char
+specifier|const
+name|zUser_Name
+index|[]
+init|=
+literal|"user"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zUserText
+index|[]
+init|=
+literal|"built without --enable-clockctl or --enable-linuxcaps"
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_DROPROOT */
+comment|/*  *  Updateinterval option description:  */
+specifier|static
+name|char
+specifier|const
+name|zUpdateintervalText
+index|[]
+init|=
+literal|"interval in seconds between scans for new or dropped interfaces"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zUpdateinterval_NAME
+index|[]
+init|=
+literal|"UPDATEINTERVAL"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zUpdateinterval_Name
+index|[]
+init|=
+literal|"updateinterval"
+decl_stmt|;
+define|#
+directive|define
+name|UPDATEINTERVAL_FLAGS
+value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_NUMERIC))
 comment|/*  *  Var option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zVarText
 index|[]
 init|=
 literal|"make ARG an ntp variable (RW)"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zVar_NAME
 index|[]
 init|=
 literal|"VAR"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zVar_Name
 index|[]
 init|=
@@ -835,19 +1154,25 @@ directive|define
 name|VAR_FLAGS
 value|(OPTST_DISABLED | OPTST_STACKED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 comment|/*  *  Dvar option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDvarText
 index|[]
 init|=
 literal|"make ARG an ntp variable (RW|DEF)"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDvar_NAME
 index|[]
 init|=
 literal|"DVAR"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDvar_Name
 index|[]
 init|=
@@ -858,19 +1183,25 @@ directive|define
 name|DVAR_FLAGS
 value|(OPTST_DISABLED | OPTST_STACKED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 comment|/*  *  Slew option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSlewText
 index|[]
 init|=
 literal|"Slew up to 600 seconds"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSlew_NAME
 index|[]
 init|=
 literal|"SLEW"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSlew_Name
 index|[]
 init|=
@@ -880,38 +1211,196 @@ define|#
 directive|define
 name|SLEW_FLAGS
 value|(OPTST_DISABLED)
+comment|/*  *  Usepcc option description:  */
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+specifier|static
+name|char
+specifier|const
+name|zUsepccText
+index|[]
+init|=
+literal|"Use CPU cycle counter (Windows only)"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zUsepcc_NAME
+index|[]
+init|=
+literal|"USEPCC"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zUsepcc_Name
+index|[]
+init|=
+literal|"usepcc"
+decl_stmt|;
+define|#
+directive|define
+name|USEPCC_FLAGS
+value|(OPTST_DISABLED)
+else|#
+directive|else
+comment|/* disable Usepcc */
+define|#
+directive|define
+name|USEPCC_FLAGS
+value|(OPTST_OMITTED | OPTST_NO_INIT)
+define|#
+directive|define
+name|zUsepcc_NAME
+value|NULL
+define|#
+directive|define
+name|zUsepccText
+value|NULL
+define|#
+directive|define
+name|zUsepcc_Name
+value|NULL
+endif|#
+directive|endif
+comment|/* SYS_WINNT */
+comment|/*  *  Pccfreq option description:  */
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+specifier|static
+name|char
+specifier|const
+name|zPccfreqText
+index|[]
+init|=
+literal|"Force CPU cycle counter use (Windows only)"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zPccfreq_NAME
+index|[]
+init|=
+literal|"PCCFREQ"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zPccfreq_Name
+index|[]
+init|=
+literal|"pccfreq"
+decl_stmt|;
+define|#
+directive|define
+name|PCCFREQ_FLAGS
+value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
+else|#
+directive|else
+comment|/* disable Pccfreq */
+define|#
+directive|define
+name|PCCFREQ_FLAGS
+value|(OPTST_OMITTED | OPTST_NO_INIT)
+define|#
+directive|define
+name|zPccfreq_NAME
+value|NULL
+define|#
+directive|define
+name|zPccfreqText
+value|NULL
+define|#
+directive|define
+name|zPccfreq_Name
+value|NULL
+endif|#
+directive|endif
+comment|/* SYS_WINNT */
 comment|/*  *  Help/More_Help/Version option descriptions:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zHelpText
 index|[]
 init|=
-literal|"Display usage information and exit"
+literal|"Display extended usage information and exit"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zHelp_Name
 index|[]
 init|=
 literal|"help"
 decl_stmt|;
-name|tSCC
-name|zMore_HelpText
-index|[]
-init|=
-literal|"Extended usage information passed thru pager"
-decl_stmt|;
-name|tSCC
+ifdef|#
+directive|ifdef
+name|HAVE_WORKING_FORK
+define|#
+directive|define
+name|OPTST_MORE_HELP_FLAGS
+value|(OPTST_IMM | OPTST_NO_INIT)
+specifier|static
+name|char
+specifier|const
 name|zMore_Help_Name
 index|[]
 init|=
 literal|"more-help"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
+name|zMore_HelpText
+index|[]
+init|=
+literal|"Extended usage information passed thru pager"
+decl_stmt|;
+else|#
+directive|else
+define|#
+directive|define
+name|OPTST_MORE_HELP_FLAGS
+value|(OPTST_OMITTED | OPTST_NO_INIT)
+define|#
+directive|define
+name|zMore_Help_Name
+value|NULL
+define|#
+directive|define
+name|zMore_HelpText
+value|NULL
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NO_OPTIONAL_OPT_ARGS
+define|#
+directive|define
+name|OPTST_VERSION_FLAGS
+value|OPTST_IMM | OPTST_NO_INIT
+else|#
+directive|else
+define|#
+directive|define
+name|OPTST_VERSION_FLAGS
+value|OPTST_SET_ARGTYPE(OPARG_TYPE_STRING) | \                                 OPTST_ARG_OPTIONAL | OPTST_IMM | OPTST_NO_INIT
+endif|#
+directive|endif
+specifier|static
+name|char
+specifier|const
 name|zVersionText
 index|[]
 init|=
 literal|"Output version information and exit"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zVersion_Name
 index|[]
 init|=
@@ -942,16 +1431,6 @@ argument_list|(
 name|TEST_NTPD_OPTS
 argument_list|)
 comment|/*  *  Under test, omit argument processing, or call optionStackArg,  *  if multiple copies are allowed.  */
-specifier|extern
-name|tOptProc
-name|optionNumericVal
-decl_stmt|,
-name|optionPagedUsage
-decl_stmt|,
-name|optionStackArg
-decl_stmt|,
-name|optionVersionStderr
-decl_stmt|;
 specifier|static
 name|tOptProc
 name|doUsageOpt
@@ -967,13 +1446,27 @@ comment|/* NOT defined TEST_NTPD_OPTS */
 comment|/*  *  When not under test, there are different procs to use  */
 specifier|extern
 name|tOptProc
+name|optionBooleanVal
+decl_stmt|,
+name|optionNestedVal
+decl_stmt|,
 name|optionNumericVal
 decl_stmt|,
 name|optionPagedUsage
 decl_stmt|,
 name|optionPrintVersion
 decl_stmt|,
+name|optionResetOpt
+decl_stmt|,
 name|optionStackArg
+decl_stmt|,
+name|optionTimeDate
+decl_stmt|,
+name|optionTimeVal
+decl_stmt|,
+name|optionUnstackArg
+decl_stmt|,
+name|optionVersionStderr
 decl_stmt|;
 specifier|static
 name|tOptProc
@@ -1023,9 +1516,9 @@ block|,
 name|VALUE_OPT_IPV4
 block|,
 comment|/* equiv idx, value */
-name|NO_EQUIVALENT
-block|,
 literal|0
+block|,
+name|VALUE_OPT_IPV4
 block|,
 comment|/* equivalenced to  */
 name|NO_EQUIVALENT
@@ -1053,7 +1546,7 @@ block|,
 comment|/* must/cannot opts */
 name|NULL
 block|,
-name|NULL
+name|aIpv4CantList
 block|,
 comment|/* option proc      */
 name|NULL
@@ -1078,12 +1571,12 @@ block|,
 name|VALUE_OPT_IPV6
 block|,
 comment|/* equiv idx, value */
-name|NOLIMIT
+literal|1
 block|,
-name|NOLIMIT
+name|VALUE_OPT_IPV6
 block|,
 comment|/* equivalenced to  */
-name|INDEX_OPT_IPV4
+name|NO_EQUIVALENT
 block|,
 comment|/* min, max, act ct */
 literal|0
@@ -1108,7 +1601,7 @@ block|,
 comment|/* must/cannot opts */
 name|NULL
 block|,
-name|NULL
+name|aIpv6CantList
 block|,
 comment|/* option proc      */
 name|NULL
@@ -1528,7 +2021,7 @@ block|,
 comment|/* min, max, act ct */
 literal|0
 block|,
-literal|1
+name|NOLIMIT
 block|,
 literal|0
 block|,
@@ -2230,12 +2723,12 @@ block|{
 comment|/* entry idx, value */
 literal|22
 block|,
-name|VALUE_OPT_UPDATEINTERVAL
+name|VALUE_OPT_SAVECONFIGQUIT
 block|,
 comment|/* equiv idx, value */
 literal|22
 block|,
-name|VALUE_OPT_UPDATEINTERVAL
+name|VALUE_OPT_SAVECONFIGQUIT
 block|,
 comment|/* equivalenced to  */
 name|NO_EQUIVALENT
@@ -2248,7 +2741,7 @@ block|,
 literal|0
 block|,
 comment|/* opt state flags  */
-name|UPDATEINTERVAL_FLAGS
+name|SAVECONFIGQUIT_FLAGS
 block|,
 literal|0
 block|,
@@ -2266,14 +2759,14 @@ block|,
 name|NULL
 block|,
 comment|/* option proc      */
-name|optionNumericVal
+name|NULL
 block|,
 comment|/* desc, NAME, name */
-name|zUpdateintervalText
+name|zSaveconfigquitText
 block|,
-name|zUpdateinterval_NAME
+name|zSaveconfigquit_NAME
 block|,
-name|zUpdateinterval_Name
+name|zSaveconfigquit_Name
 block|,
 comment|/* disablement strs */
 name|NULL
@@ -2450,10 +2943,65 @@ block|{
 comment|/* entry idx, value */
 literal|26
 block|,
-name|VALUE_OPT_VAR
+name|VALUE_OPT_UPDATEINTERVAL
 block|,
 comment|/* equiv idx, value */
 literal|26
+block|,
+name|VALUE_OPT_UPDATEINTERVAL
+block|,
+comment|/* equivalenced to  */
+name|NO_EQUIVALENT
+block|,
+comment|/* min, max, act ct */
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+comment|/* opt state flags  */
+name|UPDATEINTERVAL_FLAGS
+block|,
+literal|0
+block|,
+comment|/* last opt argumnt */
+block|{
+name|NULL
+block|}
+block|,
+comment|/* arg list/cookie  */
+name|NULL
+block|,
+comment|/* must/cannot opts */
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* option proc      */
+name|optionNumericVal
+block|,
+comment|/* desc, NAME, name */
+name|zUpdateintervalText
+block|,
+name|zUpdateinterval_NAME
+block|,
+name|zUpdateinterval_Name
+block|,
+comment|/* disablement strs */
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+block|{
+comment|/* entry idx, value */
+literal|27
+block|,
+name|VALUE_OPT_VAR
+block|,
+comment|/* equiv idx, value */
+literal|27
 block|,
 name|VALUE_OPT_VAR
 block|,
@@ -2503,12 +3051,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|27
+literal|28
 block|,
 name|VALUE_OPT_DVAR
 block|,
 comment|/* equiv idx, value */
-literal|27
+literal|28
 block|,
 name|VALUE_OPT_DVAR
 block|,
@@ -2558,12 +3106,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|28
+literal|29
 block|,
 name|VALUE_OPT_SLEW
 block|,
 comment|/* equiv idx, value */
-literal|28
+literal|29
 block|,
 name|VALUE_OPT_SLEW
 block|,
@@ -2611,21 +3159,116 @@ block|,
 name|NULL
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|NO_OPTIONAL_OPT_ARGS
-define|#
-directive|define
-name|VERSION_OPT_FLAGS
-value|OPTST_IMM | OPTST_NO_INIT
-else|#
-directive|else
-define|#
-directive|define
-name|VERSION_OPT_FLAGS
-value|OPTST_SET_ARGTYPE(OPARG_TYPE_STRING) | \                                 OPTST_ARG_OPTIONAL | OPTST_IMM | OPTST_NO_INIT
-endif|#
-directive|endif
+block|{
+comment|/* entry idx, value */
+literal|30
+block|,
+name|VALUE_OPT_USEPCC
+block|,
+comment|/* equiv idx, value */
+literal|30
+block|,
+name|VALUE_OPT_USEPCC
+block|,
+comment|/* equivalenced to  */
+name|NO_EQUIVALENT
+block|,
+comment|/* min, max, act ct */
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+comment|/* opt state flags  */
+name|USEPCC_FLAGS
+block|,
+literal|0
+block|,
+comment|/* last opt argumnt */
+block|{
+name|NULL
+block|}
+block|,
+comment|/* arg list/cookie  */
+name|NULL
+block|,
+comment|/* must/cannot opts */
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* option proc      */
+name|NULL
+block|,
+comment|/* desc, NAME, name */
+name|zUsepccText
+block|,
+name|zUsepcc_NAME
+block|,
+name|zUsepcc_Name
+block|,
+comment|/* disablement strs */
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+block|{
+comment|/* entry idx, value */
+literal|31
+block|,
+name|VALUE_OPT_PCCFREQ
+block|,
+comment|/* equiv idx, value */
+literal|31
+block|,
+name|VALUE_OPT_PCCFREQ
+block|,
+comment|/* equivalenced to  */
+name|NO_EQUIVALENT
+block|,
+comment|/* min, max, act ct */
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+comment|/* opt state flags  */
+name|PCCFREQ_FLAGS
+block|,
+literal|0
+block|,
+comment|/* last opt argumnt */
+block|{
+name|NULL
+block|}
+block|,
+comment|/* arg list/cookie  */
+name|NULL
+block|,
+comment|/* must/cannot opts */
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* option proc      */
+name|NULL
+block|,
+comment|/* desc, NAME, name */
+name|zPccfreqText
+block|,
+name|zPccfreq_NAME
+block|,
+name|zPccfreq_Name
+block|,
+comment|/* disablement strs */
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 block|{
 comment|/* entry idx, value */
 name|INDEX_OPT_VERSION
@@ -2648,7 +3291,7 @@ block|,
 literal|0
 block|,
 comment|/* opt state flags  */
-name|VERSION_OPT_FLAGS
+name|OPTST_VERSION_FLAGS
 block|,
 literal|0
 block|,
@@ -2681,9 +3324,6 @@ block|,
 name|NULL
 block|}
 block|,
-undef|#
-directive|undef
-name|VERSION_OPT_FLAGS
 block|{
 comment|/* entry idx, value */
 name|INDEX_OPT_HELP
@@ -2763,9 +3403,7 @@ block|,
 literal|0
 block|,
 comment|/* opt state flags  */
-name|OPTST_IMM
-operator||
-name|OPTST_NO_INIT
+name|OPTST_MORE_HELP_FLAGS
 block|,
 literal|0
 block|,
@@ -2800,17 +3438,25 @@ block|}
 block|}
 decl_stmt|;
 comment|/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *  *  Define the Ntpd Option Environment  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPROGNAME
-index|[]
+index|[
+literal|5
+index|]
 init|=
 literal|"NTPD"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zUsageTitle
-index|[]
+index|[
+literal|99
+index|]
 init|=
-literal|"ntpd - NTP daemon program - Ver. 4.2.4p8\n\ USAGE:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n"
+literal|"ntpd - NTP daemon program - Ver. 4.2.6p5\n\ USAGE:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n"
 decl_stmt|;
 define|#
 directive|define
@@ -2820,9 +3466,13 @@ define|#
 directive|define
 name|apzHomeList
 value|NULL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zBugsAddr
-index|[]
+index|[
+literal|34
+index|]
 init|=
 literal|"http://bugs.ntp.org, bugs@ntp.org"
 decl_stmt|;
@@ -2830,19 +3480,25 @@ define|#
 directive|define
 name|zExplain
 value|NULL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDetail
-index|[]
+index|[
+literal|7
+index|]
 init|=
 literal|"\n\n"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zFullVersion
 index|[]
 init|=
 name|NTPD_FULL_VERSION
 decl_stmt|;
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optcode.tpl near line 408 */
+comment|/* extracted from optcode.tlib near line 515 */
 if|#
 directive|if
 name|defined
@@ -2870,6 +3526,59 @@ value|NULL
 endif|#
 directive|endif
 comment|/* ENABLE_NLS */
+define|#
+directive|define
+name|ntpd_full_usage
+value|NULL
+define|#
+directive|define
+name|ntpd_short_usage
+value|NULL
+ifndef|#
+directive|ifndef
+name|PKGDATADIR
+define|#
+directive|define
+name|PKGDATADIR
+value|""
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|WITH_PACKAGER
+define|#
+directive|define
+name|ntpd_packager_info
+value|NULL
+else|#
+directive|else
+specifier|static
+name|char
+specifier|const
+name|ntpd_packager_info
+index|[]
+init|=
+literal|"Packaged by "
+name|WITH_PACKAGER
+ifdef|#
+directive|ifdef
+name|WITH_PACKAGER_VERSION
+literal|" ("
+name|WITH_PACKAGER_VERSION
+literal|")"
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WITH_PACKAGER_BUG_REPORTS
+literal|"\nReport ntpd bugs to "
+name|WITH_PACKAGER_BUG_REPORTS
+endif|#
+directive|endif
+literal|"\n"
+decl_stmt|;
+endif|#
+directive|endif
 name|tOptions
 name|ntpdOptions
 init|=
@@ -2895,6 +3604,8 @@ operator|+
 name|OPTPROC_ENVIRON
 operator|+
 name|OPTPROC_NO_ARGS
+operator|+
+name|OPTPROC_MISUSE
 operator|)
 block|,
 literal|0
@@ -2912,7 +3623,7 @@ name|zRcName
 block|,
 name|zCopyright
 block|,
-name|zCopyrightNotice
+name|zLicenseDescrip
 block|,
 name|zFullVersion
 block|,
@@ -2944,21 +3655,34 @@ comment|/*      *  Indexes to special options      */
 block|{
 name|INDEX_OPT_MORE_HELP
 block|,
-literal|0
-comment|/* no option state saving */
-block|,
+comment|/* more-help option index */
 name|NO_EQUIVALENT
-comment|/* index of '-#' option */
 block|,
+comment|/* save option index */
+name|NO_EQUIVALENT
+block|,
+comment|/* '-#' option index */
 name|NO_EQUIVALENT
 comment|/* index of default opt */
 block|}
 block|,
-literal|32
+literal|35
 comment|/* full option count */
 block|,
-literal|29
+literal|32
 comment|/* user option count */
+block|,
+name|ntpd_full_usage
+block|,
+name|ntpd_short_usage
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|PKGDATADIR
+block|,
+name|ntpd_packager_info
 block|}
 decl_stmt|;
 comment|/*  *  Create the static procedure(s) declared above.  */
@@ -2975,9 +3699,14 @@ modifier|*
 name|pOptDesc
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|pOptions
+expr_stmt|;
 name|USAGE
 argument_list|(
-name|EXIT_SUCCESS
+name|NTPD_EXIT_SUCCESS
 argument_list|)
 expr_stmt|;
 block|}
@@ -2988,7 +3717,7 @@ name|defined
 argument_list|(
 name|TEST_NTPD_OPTS
 argument_list|)
-comment|/* * * * * * *  *  *   For the set-debug-level option, when DEBUG is #define-d.  */
+comment|/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *  *   For the set-debug-level option, when DEBUG is #define-d.  */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -3005,7 +3734,7 @@ modifier|*
 name|pOptDesc
 parameter_list|)
 block|{
-comment|/* extracted from ../include/debug-opt.def, line 29 */
+comment|/* extracted from ntpdbase-opts.def, line 100 */
 name|DESC
 argument_list|(
 name|DEBUG_LEVEL
@@ -3027,7 +3756,7 @@ comment|/* defined DEBUG */
 endif|#
 directive|endif
 comment|/* defined(TEST_NTPD_OPTS) */
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optmain.tpl near line 92 */
+comment|/* extracted from optmain.tlib near line 128 */
 if|#
 directive|if
 name|defined
@@ -3035,6 +3764,14 @@ argument_list|(
 name|TEST_NTPD_OPTS
 argument_list|)
 comment|/* TEST MAIN PROCEDURE: */
+specifier|extern
+name|void
+name|optionPutShell
+parameter_list|(
+name|tOptions
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|main
 parameter_list|(
@@ -3050,7 +3787,7 @@ block|{
 name|int
 name|res
 init|=
-name|EXIT_SUCCESS
+name|NTPD_EXIT_SUCCESS
 decl_stmt|;
 operator|(
 name|void
@@ -3065,21 +3802,32 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-block|{
-name|void
-name|optionPutShell
-argument_list|(
-name|tOptions
-operator|*
-argument_list|)
-decl_stmt|;
 name|optionPutShell
 argument_list|(
 operator|&
 name|ntpdOptions
 argument_list|)
 expr_stmt|;
-block|}
+name|res
+operator|=
+name|ferror
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|!=
+literal|0
+condition|)
+name|fputs
+argument_list|(
+literal|"output error writing to stdout\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 return|return
 name|res
 return|;
@@ -3087,7 +3835,7 @@ block|}
 endif|#
 directive|endif
 comment|/* defined TEST_NTPD_OPTS */
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optcode.tpl near line 514 */
+comment|/* extracted from optcode.tlib near line 666 */
 if|#
 directive|if
 name|ENABLE_NLS
@@ -3193,7 +3941,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EXIT_FAILURE
+name|NTPD_EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3221,14 +3969,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|COERSION
-parameter_list|(
-name|_f
-parameter_list|)
-define|\
-value|coerce_it((void*)&(ntpdOptions._f))
 comment|/*  *  This invokes the translation code (e.g. gettext(3)).  */
 specifier|static
 name|void
@@ -3237,18 +3977,33 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|tOptions
+modifier|*
+specifier|const
+name|pOpt
+init|=
+operator|&
+name|ntpdOptions
+decl_stmt|;
 comment|/*      *  Guard against re-translation.  It won't work.  The strings will have      *  been changed by the first pass through this code.  One shot only.      */
 if|if
 condition|(
 name|option_usage_text
 operator|.
 name|field_ct
-operator|==
+operator|!=
 literal|0
 condition|)
-return|return;
-comment|/*      *  Do the translations.  The first pointer follows the field count field.      *  The field count field is the size of a pointer.      */
 block|{
+comment|/*          *  Do the translations.  The first pointer follows the field count          *  field.  The field count field is the size of a pointer.          */
+name|tOptDesc
+modifier|*
+name|pOD
+init|=
+name|pOpt
+operator|->
+name|pOptDesc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -3298,133 +4053,239 @@ operator|>
 literal|0
 condition|)
 do|;
-block|}
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzCopyright
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzCopyNotice
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzFullVersion
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzUsageTitle
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzExplain
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzDetail
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzPackager
+operator|)
+argument_list|)
+expr_stmt|;
 name|option_usage_text
 operator|.
 name|field_ct
 operator|=
 literal|0
 expr_stmt|;
+for|for
+control|(
+name|ix
+operator|=
+name|pOpt
+operator|->
+name|optCt
+init|;
+name|ix
+operator|>
+literal|0
+condition|;
+name|ix
+operator|--
+operator|,
+name|pOD
+operator|++
+control|)
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pzText
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|pOpt
+operator|->
+name|fOptSet
+operator|&
+name|OPTPROC_NXLAT_OPT_CFG
+operator|)
+operator|==
+literal|0
+condition|)
 block|{
 name|tOptDesc
 modifier|*
 name|pOD
 init|=
-name|ntpdOptions
-operator|.
+name|pOpt
+operator|->
 name|pOptDesc
 decl_stmt|;
 name|int
 name|ix
-init|=
-name|ntpdOptions
-operator|.
-name|optCt
 decl_stmt|;
 for|for
 control|(
-init|;
-condition|;
-control|)
-block|{
-name|pOD
-operator|->
-name|pzText
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pzText
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_NAME
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_NAME
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_Name
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_Name
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_DisableName
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_DisableName
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_DisablePfx
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_DisablePfx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|--
 name|ix
-operator|<=
+operator|=
+name|pOpt
+operator|->
+name|optCt
+init|;
+name|ix
+operator|>
 literal|0
-condition|)
-break|break;
+condition|;
+name|ix
+operator|--
+operator|,
 name|pOD
 operator|++
+control|)
+block|{
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pz_Name
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pz_DisableName
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pz_DisablePfx
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
+comment|/* prevent re-translation */
+name|ntpdOptions
+operator|.
+name|fOptSet
+operator||=
+name|OPTPROC_NXLAT_OPT_CFG
+operator||
+name|OPTPROC_NXLAT_OPT
+expr_stmt|;
 block|}
-name|COERSION
-argument_list|(
-name|pzCopyright
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzCopyNotice
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzFullVersion
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzUsageTitle
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzExplain
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzDetail
-argument_list|)
-expr_stmt|;
 block|}
 endif|#
 directive|endif

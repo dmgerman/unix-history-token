@@ -110,7 +110,7 @@ file|"audio.h"
 end_include
 
 begin_comment
-comment|/*  * Audio IRIG-B/E demodulator/decoder  *  * This driver receives, demodulates and decodes IRIG-B/E signals when  * connected to the audio codec /dev/audio. The IRIG signal format is an  * amplitude-modulated carrier with pulse-width modulated data bits. For  * IRIG-B, the carrier frequency is 1000 Hz and bit rate 100 b/s; for  * IRIG-E, the carrier frequenchy is 100 Hz and bit rate 10 b/s. The  * driver automatically recognizes which format is in use.  *  * The program processes 8000-Hz mu-law companded samples using separate  * signal filters for IRIG-B and IRIG-E, a comb filter, envelope  * detector and automatic threshold corrector. Cycle crossings relative  * to the corrected slice level determine the width of each pulse and  * its value - zero, one or position identifier. The data encode 20 BCD  * digits which determine the second, minute, hour and day of the year  * and sometimes the year and synchronization condition. The comb filter  * exponentially averages the corresponding samples of successive baud  * intervals in order to reliably identify the reference carrier cycle.  * A type-II phase-lock loop (PLL) performs additional integration and  * interpolation to accurately determine the zero crossing of that  * cycle, which determines the reference timestamp. A pulse-width  * discriminator demodulates the data pulses, which are then encoded as  * the BCD digits of the timecode.  *  * The timecode and reference timestamp are updated once each second  * with IRIG-B (ten seconds with IRIG-E) and local clock offset samples  * saved for later processing. At poll intervals of 64 s, the saved  * samples are processed by a trimmed-mean filter and used to update the  * system clock.  *  * An automatic gain control feature provides protection against  * overdriven or underdriven input signal amplitudes. It is designed to  * maintain adequate demodulator signal amplitude while avoiding  * occasional noise spikes. In order to assure reliable capture, the  * decompanded input signal amplitude must be greater than 100 units and  * the codec sample frequency error less than 250 PPM (.025 percent).  *  * The program performs a number of error checks to protect against  * overdriven or underdriven input signal levels, incorrect signal  * format or improper hardware configuration. Specifically, if any of  * the following errors occur for a time measurement, the data are  * rejected.  *  * o The peak carrier amplitude is less than DRPOUT (100). This usually  *   means dead IRIG signal source, broken cable or wrong input port.  *  * o The frequency error is greater than MAXFREQ +-250 PPM (.025%). This  *   usually means broken codec hardware or wrong codec configuration.  *  * o The modulation index is less than MODMIN (0.5). This usually means  *   overdriven IRIG signal or wrong IRIG format.  *  * o A frame synchronization error has occurred. This usually means  *   wrong IRIG signal format or the IRIG signal source has lost  *   synchronization (signature control).  *  * o A data decoding error has occurred. This usually means wrong IRIG  *   signal format.  *  * o The current second of the day is not exactly one greater than the  *   previous one. This usually means a very noisy IRIG signal or  *   insufficient CPU resources.  *  * o An audio codec error (overrun) occurred. This usually means  *   insufficient CPU resources, as sometimes happens with Sun SPARC  *   IPCs when doing something useful.  *  * Note that additional checks are done elsewhere in the reference clock  * interface routines.  *  * Debugging aids  *  * The timecode format used for debugging and data recording includes  * data helpful in diagnosing problems with the IRIG signal and codec  * connections. With debugging enabled (-d on the ntpd command line),  * the driver produces one line for each timecode in the following  * format:  *  * 00 1 98 23 19:26:52 721 143 0.694 20 0.1 66.5 3094572411.00027  *  * The most recent line is also written to the clockstats file at 64-s  * intervals.  *  * The first field contains the error flags in hex, where the hex bits  * are interpreted as below. This is followed by the IRIG status  * indicator, year of century, day of year and time of day. The status  * indicator and year are not produced by some IRIG devices. Following  * these fields are the signal amplitude (0-8100), codec gain (0-255),  * modulation index (0-1), time constant (2-20), carrier phase error  * (us) and carrier frequency error (PPM). The last field is the on-time  * timestamp in NTP format.  *  * The fraction part of the on-time timestamp is a good indicator of how  * well the driver is doing. Once upon a time, an UltrSPARC 30 and  * Solaris 2.7 kept the clock within a few tens of microseconds relative  * to the IRIG-B signal. Accuracy with IRIG-E was about ten times worse.  * Unfortunately, Sun broke the 2.7 audio driver in 2.8, which has a 10-  * ms sawtooth modulation. The driver attempts to remove the modulation  * by some clever estimation techniques which mostly work. With the  * "mixerctl -o" command before starting the daemon, the jitter is down  * to about 100 microseconds. Your experience may vary.  *  * Unlike other drivers, which can have multiple instantiations, this  * one supports only one. It does not seem likely that more than one  * audio codec would be useful in a single machine. More than one would  * probably chew up too much CPU time anyway.  *  * Fudge factors  *  * Fudge flag4 causes the dubugging output described above to be  * recorded in the clockstats file. Fudge flag2 selects the audio input  * port, where 0 is the mike port (default) and 1 is the line-in port.  * It does not seem useful to select the compact disc player port. Fudge  * flag3 enables audio monitoring of the input signal. For this purpose,  * the monitor gain is set to a default value. Fudgetime2 is used as a  * frequency vernier for broken codec sample frequency.  */
+comment|/*  * Audio IRIG-B/E demodulator/decoder  *  * This driver synchronizes the computer time using data encoded in  * IRIG-B/E signals commonly produced by GPS receivers and other timing  * devices. The IRIG signal is an amplitude-modulated carrier with  * pulse-width modulated data bits. For IRIG-B, the carrier frequency is  * 1000 Hz and bit rate 100 b/s; for IRIG-E, the carrier frequenchy is  * 100 Hz and bit rate 10 b/s. The driver automatically recognizes which& format is in use.  *  * The driver requires an audio codec or sound card with sampling rate 8  * kHz and mu-law companding. This is the same standard as used by the  * telephone industry and is supported by most hardware and operating  * systems, including Solaris, SunOS, FreeBSD, NetBSD and Linux. In this  * implementation, only one audio driver and codec can be supported on a  * single machine.  *  * The program processes 8000-Hz mu-law companded samples using separate  * signal filters for IRIG-B and IRIG-E, a comb filter, envelope  * detector and automatic threshold corrector. Cycle crossings relative  * to the corrected slice level determine the width of each pulse and  * its value - zero, one or position identifier.  *  * The data encode 20 BCD digits which determine the second, minute,  * hour and day of the year and sometimes the year and synchronization  * condition. The comb filter exponentially averages the corresponding  * samples of successive baud intervals in order to reliably identify  * the reference carrier cycle. A type-II phase-lock loop (PLL) performs  * additional integration and interpolation to accurately determine the  * zero crossing of that cycle, which determines the reference  * timestamp. A pulse-width discriminator demodulates the data pulses,  * which are then encoded as the BCD digits of the timecode.  *  * The timecode and reference timestamp are updated once each second  * with IRIG-B (ten seconds with IRIG-E) and local clock offset samples  * saved for later processing. At poll intervals of 64 s, the saved  * samples are processed by a trimmed-mean filter and used to update the  * system clock.  *  * An automatic gain control feature provides protection against  * overdriven or underdriven input signal amplitudes. It is designed to  * maintain adequate demodulator signal amplitude while avoiding  * occasional noise spikes. In order to assure reliable capture, the  * decompanded input signal amplitude must be greater than 100 units and  * the codec sample frequency error less than 250 PPM (.025 percent).  *  * Monitor Data  *  * The timecode format used for debugging and data recording includes  * data helpful in diagnosing problems with the IRIG signal and codec  * connections. The driver produces one line for each timecode in the  * following format:  *  * 00 00 98 23 19:26:52 2782 143 0.694 10 0.3 66.5 3094572411.00027  *  * If clockstats is enabled, the most recent line is written to the  * clockstats file every 64 s. If verbose recording is enabled (fudge  * flag 4) each line is written as generated.  *  * The first field containes the error flags in hex, where the hex bits  * are interpreted as below. This is followed by the year of century,  * day of year and time of day. Note that the time of day is for the  * previous minute, not the current time. The status indicator and year  * are not produced by some IRIG devices and appear as zeros. Following  * these fields are the carrier amplitude (0-3000), codec gain (0-255),  * modulation index (0-1), time constant (4-10), carrier phase error  * +-.5) and carrier frequency error (PPM). The last field is the on-  * time timestamp in NTP format.  *  * The error flags are defined as follows in hex:  *  * x01	Low signal. The carrier amplitude is less than 100 units. This  *	is usually the result of no signal or wrong input port.  * x02	Frequency error. The codec frequency error is greater than 250  *	PPM. This may be due to wrong signal format or (rarely)  *	defective codec.  * x04	Modulation error. The IRIG modulation index is less than 0.5.  *	This is usually the result of an overdriven codec, wrong signal  *	format or wrong input port.  * x08	Frame synch error. The decoder frame does not match the IRIG  *	frame. This is usually the result of an overdriven codec, wrong  *	signal format or noisy IRIG signal. It may also be the result of  *	an IRIG signature check which indicates a failure of the IRIG  *	signal synchronization source.  * x10	Data bit error. The data bit length is out of tolerance. This is  *	usually the result of an overdriven codec, wrong signal format  *	or noisy IRIG signal.  * x20	Seconds numbering discrepancy. The decoder second does not match  *	the IRIG second. This is usually the result of an overdriven  *	codec, wrong signal format or noisy IRIG signal.  * x40	Codec error (overrun). The machine is not fast enough to keep up  *	with the codec.  * x80	Device status error (Spectracom).  *  *  * Once upon a time, an UltrSPARC 30 and Solaris 2.7 kept the clock  * within a few tens of microseconds relative to the IRIG-B signal.  * Accuracy with IRIG-E was about ten times worse. Unfortunately, Sun  * broke the 2.7 audio driver in 2.8, which has a 10-ms sawtooth  * modulation.  *  * Unlike other drivers, which can have multiple instantiations, this  * one supports only one. It does not seem likely that more than one  * audio codec would be useful in a single machine. More than one would  * probably chew up too much CPU time anyway.  *  * Fudge factors  *  * Fudge flag4 causes the dubugging output described above to be  * recorded in the clockstats file. Fudge flag2 selects the audio input  * port, where 0 is the mike port (default) and 1 is the line-in port.  * It does not seem useful to select the compact disc player port. Fudge  * flag3 enables audio monitoring of the input signal. For this purpose,  * the monitor gain is set t a default value. Fudgetime2 is used as a  * frequency vernier for broken codec sample frequency.  *  * Alarm codes  *  * CEVNT_BADTIME	invalid date or time  * CEVNT_TIMEOUT	no IRIG data since last poll  */
 end_comment
 
 begin_comment
@@ -224,7 +224,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* samples per carrier cycle */
+comment|/* samples per bit */
 end_comment
 
 begin_define
@@ -235,18 +235,18 @@ value|10
 end_define
 
 begin_comment
-comment|/* bits per subfield */
+comment|/* bits per frame */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FIELD
-value|10
+value|100
 end_define
 
 begin_comment
-comment|/* subfields per field */
+comment|/* bits per second */
 end_comment
 
 begin_define
@@ -264,7 +264,7 @@ begin_define
 define|#
 directive|define
 name|MAXTC
-value|20
+value|10
 end_define
 
 begin_comment
@@ -275,22 +275,22 @@ begin_define
 define|#
 directive|define
 name|MAXAMP
-value|6000.
+value|3000.
 end_define
 
 begin_comment
-comment|/* maximum signal level */
+comment|/* maximum signal amplitude */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAXCLP
-value|100
+name|MINAMP
+value|2000.
 end_define
 
 begin_comment
-comment|/* max clips above reference per s */
+comment|/* minimum signal amplitude */
 end_comment
 
 begin_define
@@ -301,7 +301,7 @@ value|100.
 end_define
 
 begin_comment
-comment|/* dropout signal level */
+comment|/* dropout signal amplitude */
 end_comment
 
 begin_define
@@ -326,67 +326,30 @@ begin_comment
 comment|/* freq tolerance (.025%) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PI
-value|3.1415926535
-end_define
-
 begin_comment
-comment|/* the real thing */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IRIG_SUCKS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|WIGGLE
-value|11
-end_define
-
-begin_comment
-comment|/* wiggle filter length */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IRIG_SUCKS */
-end_comment
-
-begin_comment
-comment|/*  * Experimentally determined filter delays  */
+comment|/*  * The on-time synchronization point is the positive-going zero crossing  * of the first cycle of the second. The IIR baseband filter phase delay  * is 1.03 ms for IRIG-B and 3.47 ms for IRIG-E. The fudge value 2.68 ms  * due to the codec and other causes was determined by calibrating to a  * PPS signal from a GPS receiver.  *  * The results with a 2.4-GHz P4 running FreeBSD 6.1 are generally  * within .02 ms short-term with .02 ms jitter. The processor load due  * to the driver is 0.51 percent.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IRIG_B
-value|.0019
+value|((1.03 + 2.68) / 1000)
 end_define
 
 begin_comment
-comment|/* IRIG-B filter delay */
+comment|/* IRIG-B system delay (s) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IRIG_E
-value|.0019
+value|((3.47 + 2.68) / 1000)
 end_define
 
 begin_comment
-comment|/* IRIG-E filter delay */
+comment|/* IRIG-E system delay (s) */
 end_comment
 
 begin_comment
@@ -427,7 +390,7 @@ comment|/* position identifier */
 end_comment
 
 begin_comment
-comment|/*  * Error flags (up->errflg)  */
+comment|/*  * Error flags  */
 end_comment
 
 begin_define
@@ -518,6 +481,16 @@ begin_comment
 comment|/* IRIG status error (Spectracom) */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|char
+name|hexchar
+index|[]
+init|=
+literal|"0123456789abcdef"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * IRIG unit control structure  */
 end_comment
@@ -529,7 +502,11 @@ block|{
 name|u_char
 name|timecode
 index|[
-literal|21
+literal|2
+operator|*
+name|SUBFLD
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* timecode string */
@@ -541,6 +518,18 @@ name|l_fp
 name|tick
 decl_stmt|;
 comment|/* audio sample increment */
+name|l_fp
+name|refstamp
+decl_stmt|;
+comment|/* reference timestamp */
+name|l_fp
+name|chrstamp
+decl_stmt|;
+comment|/* baud timestamp */
+name|l_fp
+name|prvstamp
+decl_stmt|;
+comment|/* previous baud timestamp */
 name|double
 name|integ
 index|[
@@ -590,6 +579,10 @@ name|SIZE
 index|]
 decl_stmt|;
 comment|/* decompanding table */
+name|double
+name|signal
+decl_stmt|;
+comment|/* peak signal for AGC */
 name|int
 name|port
 decl_stmt|;
@@ -603,18 +596,14 @@ name|mongain
 decl_stmt|;
 comment|/* codec monitor gain */
 name|int
-name|clipcnt
-decl_stmt|;
-comment|/* sample clipped count */
-name|int
 name|seccnt
 decl_stmt|;
 comment|/* second interval counter */
 comment|/* 	 * RF variables 	 */
 name|double
-name|hpf
+name|bpf
 index|[
-literal|5
+literal|9
 index|]
 decl_stmt|;
 comment|/* IRIG-B filter shift register */
@@ -626,19 +615,21 @@ index|]
 decl_stmt|;
 comment|/* IRIG-E filter shift register */
 name|double
+name|envmin
+decl_stmt|,
+name|envmax
+decl_stmt|;
+comment|/* envelope min and max */
+name|double
+name|slice
+decl_stmt|;
+comment|/* envelope slice level */
+name|double
 name|intmin
 decl_stmt|,
 name|intmax
 decl_stmt|;
 comment|/* integrated envelope min and max */
-name|double
-name|envmax
-decl_stmt|;
-comment|/* peak amplitude */
-name|double
-name|envmin
-decl_stmt|;
-comment|/* noise amplitude */
 name|double
 name|maxsignal
 decl_stmt|;
@@ -682,10 +673,6 @@ name|envptr
 decl_stmt|;
 comment|/* envelope phase pointer */
 name|int
-name|carphase
-decl_stmt|;
-comment|/* carrier phase */
-name|int
 name|envsw
 decl_stmt|;
 comment|/* envelope state */
@@ -719,60 +706,29 @@ name|dcycles
 decl_stmt|;
 comment|/* data cycles */
 name|int
-name|xptr
-decl_stmt|;
-comment|/* translate table pointer */
-name|int
 name|lastbit
 decl_stmt|;
-comment|/* last code element length */
+comment|/* last code element */
 name|int
 name|second
 decl_stmt|;
 comment|/* previous second */
 name|int
-name|fieldcnt
+name|bitcnt
 decl_stmt|;
-comment|/* subfield count in field */
+comment|/* bit count in frame */
+name|int
+name|frmcnt
+decl_stmt|;
+comment|/* bit count in second */
+name|int
+name|xptr
+decl_stmt|;
+comment|/* timecode pointer */
 name|int
 name|bits
 decl_stmt|;
 comment|/* demodulated bits */
-name|int
-name|bitcnt
-decl_stmt|;
-comment|/* bit count in subfield */
-ifdef|#
-directive|ifdef
-name|IRIG_SUCKS
-name|l_fp
-name|wigwag
-decl_stmt|;
-comment|/* wiggle accumulator */
-name|int
-name|wp
-decl_stmt|;
-comment|/* wiggle filter pointer */
-name|l_fp
-name|wiggle
-index|[
-name|WIGGLE
-index|]
-decl_stmt|;
-comment|/* wiggle filter */
-name|l_fp
-name|wigbot
-index|[
-name|WIGGLE
-index|]
-decl_stmt|;
-comment|/* wiggle bottom fisher*/
-endif|#
-directive|endif
-comment|/* IRIG_SUCKS */
-name|l_fp
-name|wuggle
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -781,141 +737,131 @@ begin_comment
 comment|/*  * Function prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|irig_start
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|irig_shutdown
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|irig_receive
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|irig_poll
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * More function prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|irig_base
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|irig_rf
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
+name|void
+name|irig_baud
+parameter_list|(
+name|struct
+name|peer
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|irig_decode
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|irig_gain
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Transfer vector  */
@@ -947,57 +893,6 @@ block|,
 comment|/* not used (old irig_buginfo) */
 name|NOFLAGS
 comment|/* not used */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Global variables  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|hexchar
-index|[]
-init|=
-block|{
-comment|/* really quick decoding table */
-literal|'0'
-block|,
-literal|'8'
-block|,
-literal|'4'
-block|,
-literal|'c'
-block|,
-comment|/* 0000 0001 0010 0011 */
-literal|'2'
-block|,
-literal|'a'
-block|,
-literal|'6'
-block|,
-literal|'e'
-block|,
-comment|/* 0100 0101 0110 0111 */
-literal|'1'
-block|,
-literal|'9'
-block|,
-literal|'5'
-block|,
-literal|'d'
-block|,
-comment|/* 1000 1001 1010 1011 */
-literal|'3'
-block|,
-literal|'b'
-block|,
-literal|'7'
-block|,
-literal|'f'
-comment|/* 1100 1101 1110 1111 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1081,56 +976,27 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Allocate and initialize unit structure 	 */
-if|if
-condition|(
-operator|!
-operator|(
 name|up
 operator|=
-operator|(
-expr|struct
-name|irigunit
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|irigunit
+operator|*
+name|up
 argument_list|)
-argument_list|)
-operator|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|up
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|irigunit
+operator|*
+name|up
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1196,18 +1062,30 @@ name|io
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|free
 argument_list|(
 name|up
 argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|unitptr
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -1255,12 +1133,6 @@ operator|->
 name|decim
 operator|=
 literal|1
-expr_stmt|;
-name|up
-operator|->
-name|fdelay
-operator|=
-name|IRIG_B
 expr_stmt|;
 name|up
 operator|->
@@ -1460,6 +1332,17 @@ name|pp
 operator|->
 name|unitptr
 expr_stmt|;
+if|if
+condition|(
+operator|-
+literal|1
+operator|!=
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+condition|)
 name|io_closeclock
 argument_list|(
 operator|&
@@ -1468,6 +1351,12 @@ operator|->
 name|io
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NULL
+operator|!=
+name|up
+condition|)
 name|free
 argument_list|(
 name|up
@@ -1624,52 +1513,18 @@ operator|&
 literal|0xff
 index|]
 expr_stmt|;
-comment|/* 		 * Clip noise spikes greater than MAXAMP. If no clips, 		 * increase the gain a tad; if the clips are too high,  		 * decrease a tad. 		 */
-if|if
-condition|(
-name|sample
-operator|>
-name|MAXAMP
-condition|)
-block|{
-name|sample
-operator|=
-name|MAXAMP
-expr_stmt|;
-name|up
-operator|->
-name|clipcnt
-operator|++
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|sample
-operator|<
-operator|-
-name|MAXAMP
-condition|)
-block|{
-name|sample
-operator|=
-operator|-
-name|MAXAMP
-expr_stmt|;
-name|up
-operator|->
-name|clipcnt
-operator|++
-expr_stmt|;
-block|}
 comment|/* 		 * Variable frequency oscillator. The codec oscillator 		 * runs at the nominal rate of 8000 samples per second, 		 * or 125 us per sample. A frequency change of one unit 		 * results in either duplicating or deleting one sample 		 * per second, which results in a frequency change of 		 * 125 PPM. 		 */
 name|up
 operator|->
 name|phase
 operator|+=
+operator|(
 name|up
 operator|->
 name|freq
+operator|+
+name|clock_codec
+operator|)
 operator|/
 name|SECOND
 expr_stmt|;
@@ -1754,6 +1609,41 @@ operator|->
 name|tick
 argument_list|)
 expr_stmt|;
+name|sample
+operator|=
+name|fabs
+argument_list|(
+name|sample
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sample
+operator|>
+name|up
+operator|->
+name|signal
+condition|)
+name|up
+operator|->
+name|signal
+operator|=
+name|sample
+expr_stmt|;
+name|up
+operator|->
+name|signal
+operator|+=
+operator|(
+name|sample
+operator|-
+name|up
+operator|->
+name|signal
+operator|)
+operator|/
+literal|1000
+expr_stmt|;
 comment|/* 		 * Once each second, determine the IRIG format and gain. 		 */
 name|up
 operator|->
@@ -1817,11 +1707,6 @@ operator|=
 name|IRIG_E
 expr_stmt|;
 block|}
-name|irig_gain
-argument_list|(
-name|peer
-argument_list|)
-expr_stmt|;
 name|up
 operator|->
 name|irig_b
@@ -1831,6 +1716,11 @@ operator|->
 name|irig_e
 operator|=
 literal|0
+expr_stmt|;
+name|irig_gain
+argument_list|(
+name|peer
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1881,7 +1771,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * irig_rf - RF processing  *  * This routine filters the RF signal using a highpass filter for IRIG-B  * and a lowpass filter for IRIG-E. In case of IRIG-E, the samples are  * decimated by a factor of ten. The lowpass filter functions also as a  * decimation filter in this case. Note that the codec filters function  * as roofing filters to attenuate both the high and low ends of the  * passband. IIR filter coefficients were determined using Matlab Signal  * Processing Toolkit.  */
+comment|/*  * irig_rf - RF processing  *  * This routine filters the RF signal using a bandass filter for IRIG-B  * and a lowpass filter for IRIG-E. In case of IRIG-E, the samples are  * decimated by a factor of ten. Note that the codec filters function as  * roofing filters to attenuate both the high and low ends of the  * passband. IIR filter coefficients were determined using Matlab Signal  * Processing Toolkit.  */
 end_comment
 
 begin_function
@@ -1934,92 +1824,174 @@ name|pp
 operator|->
 name|unitptr
 expr_stmt|;
-comment|/* 	 * IRIG-B filter. 4th-order elliptic, 800-Hz highpass, 0.3 dB 	 * passband ripple, -50 dB stopband ripple, phase delay .0022 	 * s) 	 */
+comment|/* 	 * IRIG-B filter. Matlab 4th-order IIR elliptic, 800-1200 Hz 	 * bandpass, 0.3 dB passband ripple, -50 dB stopband ripple, 	 * phase delay 1.03 ms. 	 */
 name|irig_b
 operator|=
 operator|(
 name|up
 operator|->
-name|hpf
+name|bpf
+index|[
+literal|8
+index|]
+operator|=
+name|up
+operator|->
+name|bpf
+index|[
+literal|7
+index|]
+operator|)
+operator|*
+literal|6.505491e-001
+expr_stmt|;
+name|irig_b
+operator|+=
+operator|(
+name|up
+operator|->
+name|bpf
+index|[
+literal|7
+index|]
+operator|=
+name|up
+operator|->
+name|bpf
+index|[
+literal|6
+index|]
+operator|)
+operator|*
+operator|-
+literal|3.875180e+000
+expr_stmt|;
+name|irig_b
+operator|+=
+operator|(
+name|up
+operator|->
+name|bpf
+index|[
+literal|6
+index|]
+operator|=
+name|up
+operator|->
+name|bpf
+index|[
+literal|5
+index|]
+operator|)
+operator|*
+literal|1.151180e+001
+expr_stmt|;
+name|irig_b
+operator|+=
+operator|(
+name|up
+operator|->
+name|bpf
+index|[
+literal|5
+index|]
+operator|=
+name|up
+operator|->
+name|bpf
+index|[
+literal|4
+index|]
+operator|)
+operator|*
+operator|-
+literal|2.141264e+001
+expr_stmt|;
+name|irig_b
+operator|+=
+operator|(
+name|up
+operator|->
+name|bpf
 index|[
 literal|4
 index|]
 operator|=
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|3
 index|]
 operator|)
 operator|*
-literal|2.322484e-01
+literal|2.712837e+001
 expr_stmt|;
 name|irig_b
 operator|+=
 operator|(
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|3
 index|]
 operator|=
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|2
 index|]
 operator|)
 operator|*
 operator|-
-literal|1.103929e+00
+literal|2.384486e+001
 expr_stmt|;
 name|irig_b
 operator|+=
 operator|(
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|2
 index|]
 operator|=
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|1
 index|]
 operator|)
 operator|*
-literal|2.351081e+00
+literal|1.427663e+001
 expr_stmt|;
 name|irig_b
 operator|+=
 operator|(
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|1
 index|]
 operator|=
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|0
 index|]
 operator|)
 operator|*
 operator|-
-literal|2.335036e+00
+literal|5.352734e+000
 expr_stmt|;
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|0
 index|]
@@ -2032,50 +2004,88 @@ name|irig_b
 operator|=
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|0
 index|]
 operator|*
-literal|4.335855e-01
+literal|4.952157e-003
 operator|+
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|1
 index|]
 operator|*
 operator|-
-literal|1.695859e+00
+literal|2.055878e-002
 operator|+
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|2
 index|]
 operator|*
-literal|2.525004e+00
+literal|4.401413e-002
 operator|+
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|3
 index|]
 operator|*
 operator|-
-literal|1.695859e+00
+literal|6.558851e-002
 operator|+
 name|up
 operator|->
-name|hpf
+name|bpf
 index|[
 literal|4
 index|]
 operator|*
-literal|4.335855e-01
+literal|7.462108e-002
+operator|+
+name|up
+operator|->
+name|bpf
+index|[
+literal|5
+index|]
+operator|*
+operator|-
+literal|6.558851e-002
+operator|+
+name|up
+operator|->
+name|bpf
+index|[
+literal|6
+index|]
+operator|*
+literal|4.401413e-002
+operator|+
+name|up
+operator|->
+name|bpf
+index|[
+literal|7
+index|]
+operator|*
+operator|-
+literal|2.055878e-002
+operator|+
+name|up
+operator|->
+name|bpf
+index|[
+literal|8
+index|]
+operator|*
+literal|4.952157e-003
 expr_stmt|;
 name|up
 operator|->
@@ -2085,7 +2095,7 @@ name|irig_b
 operator|*
 name|irig_b
 expr_stmt|;
-comment|/* 	 * IRIG-E filter. 4th-order elliptic, 130-Hz lowpass, 0.3 dB 	 * passband ripple, -50 dB stopband ripple, phase delay .0219 s. 	 */
+comment|/* 	 * IRIG-E filter. Matlab 4th-order IIR elliptic, 130-Hz lowpass, 	 * 0.3 dB passband ripple, -50 dB stopband ripple, phase delay 	 * 3.47 ms. 	 */
 name|irig_e
 operator|=
 operator|(
@@ -2104,7 +2114,7 @@ literal|3
 index|]
 operator|)
 operator|*
-literal|8.694604e-01
+literal|8.694604e-001
 expr_stmt|;
 name|irig_e
 operator|+=
@@ -2125,7 +2135,7 @@ index|]
 operator|)
 operator|*
 operator|-
-literal|3.589893e+00
+literal|3.589893e+000
 expr_stmt|;
 name|irig_e
 operator|+=
@@ -2145,7 +2155,7 @@ literal|1
 index|]
 operator|)
 operator|*
-literal|5.570154e+00
+literal|5.570154e+000
 expr_stmt|;
 name|irig_e
 operator|+=
@@ -2166,7 +2176,7 @@ index|]
 operator|)
 operator|*
 operator|-
-literal|3.849667e+00
+literal|3.849667e+000
 expr_stmt|;
 name|up
 operator|->
@@ -2188,7 +2198,7 @@ index|[
 literal|0
 index|]
 operator|*
-literal|3.215696e-03
+literal|3.215696e-003
 operator|+
 name|up
 operator|->
@@ -2198,7 +2208,7 @@ literal|1
 index|]
 operator|*
 operator|-
-literal|1.174951e-02
+literal|1.174951e-002
 operator|+
 name|up
 operator|->
@@ -2207,7 +2217,7 @@ index|[
 literal|2
 index|]
 operator|*
-literal|1.712074e-02
+literal|1.712074e-002
 operator|+
 name|up
 operator|->
@@ -2217,7 +2227,7 @@ literal|3
 index|]
 operator|*
 operator|-
-literal|1.174951e-02
+literal|1.174951e-002
 operator|+
 name|up
 operator|->
@@ -2226,7 +2236,7 @@ index|[
 literal|4
 index|]
 operator|*
-literal|3.215696e-03
+literal|3.215696e-003
 expr_stmt|;
 name|up
 operator|->
@@ -2290,7 +2300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * irig_base - baseband processing  *  * This routine processes the baseband signal and demodulates the AM  * carrier using a synchronous detector. It then synchronizes to the  * data frame at the baud rate and decodes the data pulses.  */
+comment|/*  * irig_base - baseband processing  *  * This routine processes the baseband signal and demodulates the AM  * carrier using a synchronous detector. It then synchronizes to the  * data frame at the baud rate and decodes the width-modulated data  * pulses.  */
 end_comment
 
 begin_function
@@ -2321,10 +2331,6 @@ name|up
 decl_stmt|;
 comment|/* 	 * Local variables 	 */
 name|double
-name|xxing
-decl_stmt|;
-comment|/* phase detector interpolated output */
-name|double
 name|lope
 decl_stmt|;
 comment|/* integrator output */
@@ -2335,7 +2341,10 @@ comment|/* envelope detector output */
 name|double
 name|dtemp
 decl_stmt|;
-comment|/* double temp */
+name|int
+name|carphase
+decl_stmt|;
+comment|/* carrier phase */
 name|pp
 operator|=
 name|peer
@@ -2353,7 +2362,7 @@ name|pp
 operator|->
 name|unitptr
 expr_stmt|;
-comment|/* 	 * Synchronous baud integrator. Corresponding samples of current 	 * and past baud intervals are integrated to refine the envelope 	 * amplitude and phase estimate. We keep one cycle of both the 	 * raw and integrated data for later use. 	 */
+comment|/* 	 * Synchronous baud integrator. Corresponding samples of current 	 * and past baud intervals are integrated to refine the envelope 	 * amplitude and phase estimate. We keep one cycle (1 ms) of the 	 * raw data and one baud (10 ms) of the integrated data. 	 */
 name|up
 operator|->
 name|envphase
@@ -2367,20 +2376,6 @@ literal|1
 operator|)
 operator|%
 name|BAUD
-expr_stmt|;
-name|up
-operator|->
-name|carphase
-operator|=
-operator|(
-name|up
-operator|->
-name|carphase
-operator|+
-literal|1
-operator|)
-operator|%
-name|CYCLE
 expr_stmt|;
 name|up
 operator|->
@@ -2423,12 +2418,18 @@ operator|->
 name|envphase
 index|]
 expr_stmt|;
+name|carphase
+operator|=
+name|up
+operator|->
+name|envphase
+operator|%
+name|CYCLE
+expr_stmt|;
 name|up
 operator|->
 name|lastenv
 index|[
-name|up
-operator|->
 name|carphase
 index|]
 operator|=
@@ -2438,14 +2439,12 @@ name|up
 operator|->
 name|lastint
 index|[
-name|up
-operator|->
 name|carphase
 index|]
 operator|=
 name|lope
 expr_stmt|;
-comment|/* 	 * Phase detector. Sample amplitudes are integrated over the 	 * baud interval. Cycle phase is determined from these 	 * amplitudes using an eight-sample cyclic buffer. A phase 	 * change of 360 degrees produces an output change of one unit. 	 */
+comment|/* 	 * Phase detector. Find the negative-going zero crossing 	 * relative to sample 4 in the 8-sample sycle. A phase change of 	 * 360 degrees produces an output change of one unit. 	 */
 if|if
 condition|(
 name|up
@@ -2458,43 +2457,28 @@ name|lope
 operator|<=
 literal|0
 condition|)
-block|{
-name|xxing
-operator|=
-name|lope
-operator|/
-operator|(
-name|up
-operator|->
-name|lastsig
-operator|-
-name|lope
-operator|)
-expr_stmt|;
 name|up
 operator|->
 name|zxing
 operator|+=
-operator|(
-name|up
-operator|->
+call|(
+name|double
+call|)
+argument_list|(
 name|carphase
 operator|-
 literal|4
-operator|+
-name|xxing
-operator|)
+argument_list|)
 operator|/
 name|CYCLE
 expr_stmt|;
-block|}
 name|up
 operator|->
 name|lastsig
 operator|=
 name|lope
 expr_stmt|;
-comment|/* 	 * Update signal/noise estimates and PLL phase/frequency. 	 */
+comment|/* 	 * End of the baud. Update signal/noise estimates and PLL 	 * phase, frequency and time constant. 	 */
 if|if
 condition|(
 name|up
@@ -2504,7 +2488,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Update envelope signal and noise estimates and mess 		 * with error bits. 		 */
 name|up
 operator|->
 name|maxsignal
@@ -2520,6 +2503,19 @@ operator|=
 name|up
 operator|->
 name|intmin
+expr_stmt|;
+name|up
+operator|->
+name|intmin
+operator|=
+literal|1e6
+expr_stmt|;
+name|up
+operator|->
+name|intmax
+operator|=
+operator|-
+literal|1e6
 expr_stmt|;
 if|if
 condition|(
@@ -2550,16 +2546,16 @@ operator|=
 operator|(
 name|up
 operator|->
-name|intmax
+name|maxsignal
 operator|-
 name|up
 operator|->
-name|intmin
+name|noise
 operator|)
 operator|/
 name|up
 operator|->
-name|intmax
+name|maxsignal
 expr_stmt|;
 else|else
 name|up
@@ -2581,18 +2577,6 @@ operator|->
 name|errflg
 operator||=
 name|IRIG_ERR_MOD
-expr_stmt|;
-name|up
-operator|->
-name|intmin
-operator|=
-literal|1e6
-expr_stmt|;
-name|up
-operator|->
-name|intmax
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2725,36 +2709,14 @@ name|IRIG_ERR_FREQ
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Synchronous demodulator. There are eight samples in the cycle 	 * and ten cycles in the baud interval. The amplitude of each 	 * cycle is determined at the last sample in the cycle. The 	 * beginning of the data pulse is determined from the integrated 	 * samples, while the end of the pulse is determined from the 	 * raw samples. The raw data bits are demodulated relative to 	 * the slice level and left-shifted in the decoding register. 	 */
+comment|/* 	 * Synchronous demodulator. There are eight samples in the cycle 	 * and ten cycles in the baud. Since the PLL has aligned the 	 * negative-going zero crossing at sample 4, the maximum 	 * amplitude is at sample 2 and minimum at sample 6. The 	 * beginning of the data pulse is determined from the integrated 	 * samples, while the end of the pulse is determined from the 	 * raw samples. The raw data bits are demodulated relative to 	 * the slice level and left-shifted in the decoding register. 	 */
 if|if
 condition|(
-name|up
-operator|->
 name|carphase
 operator|!=
 literal|7
 condition|)
 return|return;
-name|env
-operator|=
-operator|(
-name|up
-operator|->
-name|lastenv
-index|[
-literal|2
-index|]
-operator|-
-name|up
-operator|->
-name|lastenv
-index|[
-literal|6
-index|]
-operator|)
-operator|/
-literal|2.
-expr_stmt|;
 name|lope
 operator|=
 operator|(
@@ -2818,63 +2780,6 @@ operator|)
 operator|%
 literal|10
 expr_stmt|;
-if|if
-condition|(
-name|up
-operator|->
-name|pulse
-operator|==
-literal|1
-condition|)
-name|up
-operator|->
-name|envmax
-operator|=
-name|env
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|up
-operator|->
-name|pulse
-operator|==
-literal|9
-condition|)
-name|up
-operator|->
-name|envmin
-operator|=
-name|env
-expr_stmt|;
-name|up
-operator|->
-name|dcycles
-operator|<<=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|env
-operator|>=
-operator|(
-name|up
-operator|->
-name|envmax
-operator|+
-name|up
-operator|->
-name|envmin
-operator|)
-operator|/
-literal|2.
-condition|)
-name|up
-operator|->
-name|dcycles
-operator||=
-literal|1
-expr_stmt|;
 name|up
 operator|->
 name|cycles
@@ -2916,20 +2821,13 @@ operator|==
 literal|0x300c0300
 condition|)
 block|{
-name|l_fp
-name|ltemp
-decl_stmt|;
-name|int
-name|bitz
-decl_stmt|;
-comment|/* 		 * The PLL time constant starts out small, in order to 		 * sustain a frequency tolerance of 250 PPM. It 		 * gradually increases as the loop settles down. Note 		 * that small wiggles are not believed, unless they 		 * persist for lots of samples. 		 */
 if|if
 condition|(
 name|up
 operator|->
 name|pulse
 operator|!=
-literal|9
+literal|0
 condition|)
 name|up
 operator|->
@@ -2941,8 +2839,209 @@ name|up
 operator|->
 name|pulse
 operator|=
-literal|9
+literal|0
 expr_stmt|;
+block|}
+comment|/* 	 * Assemble the baud and max/min to get the slice level for the 	 * next baud. The slice level is based on the maximum over the 	 * first two bits and the minimum over the last two bits, with 	 * the slice level halfway between the maximum and minimum. 	 */
+name|env
+operator|=
+operator|(
+name|up
+operator|->
+name|lastenv
+index|[
+literal|2
+index|]
+operator|-
+name|up
+operator|->
+name|lastenv
+index|[
+literal|6
+index|]
+operator|)
+operator|/
+literal|2.
+expr_stmt|;
+name|up
+operator|->
+name|dcycles
+operator|<<=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|env
+operator|>=
+name|up
+operator|->
+name|slice
+condition|)
+name|up
+operator|->
+name|dcycles
+operator||=
+literal|1
+expr_stmt|;
+switch|switch
+condition|(
+name|up
+operator|->
+name|pulse
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|irig_baud
+argument_list|(
+name|peer
+argument_list|,
+name|up
+operator|->
+name|dcycles
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|env
+operator|<
+name|up
+operator|->
+name|envmin
+condition|)
+name|up
+operator|->
+name|envmin
+operator|=
+name|env
+expr_stmt|;
+name|up
+operator|->
+name|slice
+operator|=
+operator|(
+name|up
+operator|->
+name|envmax
+operator|+
+name|up
+operator|->
+name|envmin
+operator|)
+operator|/
+literal|2
+expr_stmt|;
+name|up
+operator|->
+name|envmin
+operator|=
+literal|1e6
+expr_stmt|;
+name|up
+operator|->
+name|envmax
+operator|=
+operator|-
+literal|1e6
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|up
+operator|->
+name|envmax
+operator|=
+name|env
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+if|if
+condition|(
+name|env
+operator|>
+name|up
+operator|->
+name|envmax
+condition|)
+name|up
+operator|->
+name|envmax
+operator|=
+name|env
+expr_stmt|;
+break|break;
+case|case
+literal|9
+case|:
+name|up
+operator|->
+name|envmin
+operator|=
+name|env
+expr_stmt|;
+break|break;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * irig_baud - update the PLL and decode the pulse-width signal  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|irig_baud
+parameter_list|(
+name|struct
+name|peer
+modifier|*
+name|peer
+parameter_list|,
+comment|/* peer structure pointer */
+name|int
+name|bits
+comment|/* decoded bits */
+parameter_list|)
+block|{
+name|struct
+name|refclockproc
+modifier|*
+name|pp
+decl_stmt|;
+name|struct
+name|irigunit
+modifier|*
+name|up
+decl_stmt|;
+name|double
+name|dtemp
+decl_stmt|;
+name|l_fp
+name|ltemp
+decl_stmt|;
+name|pp
+operator|=
+name|peer
+operator|->
+name|procptr
+expr_stmt|;
+name|up
+operator|=
+operator|(
+expr|struct
+name|irigunit
+operator|*
+operator|)
+name|pp
+operator|->
+name|unitptr
+expr_stmt|;
+comment|/* 	 * The PLL time constant starts out small, in order to 	 * sustain a frequency tolerance of 250 PPM. It 	 * gradually increases as the loop settles down. Note 	 * that small wiggles are not believed, unless they 	 * persist for lots of samples. 	 */
 name|up
 operator|->
 name|exing
@@ -2979,7 +3078,7 @@ name|up
 operator|->
 name|tcount
 operator|>
-literal|50
+literal|20
 operator|*
 name|up
 operator|->
@@ -3053,7 +3152,15 @@ operator|->
 name|envphase
 expr_stmt|;
 block|}
-comment|/* 		 * Determine a reference timestamp, accounting for the 		 * codec delay and filter delay. Note the timestamp is 		 * for the previous frame, so we have to backtrack for 		 * this plus the delay since the last carrier positive 		 * zero crossing. 		 */
+comment|/* 	 * Strike the baud timestamp as the positive zero crossing of 	 * the first bit, accounting for the codec delay and filter 	 * delay. 	 */
+name|up
+operator|->
+name|prvstamp
+operator|=
+name|up
+operator|->
+name|chrstamp
+expr_stmt|;
 name|dtemp
 operator|=
 name|up
@@ -3061,17 +3168,11 @@ operator|->
 name|decim
 operator|*
 operator|(
-operator|(
 name|up
 operator|->
 name|exing
-operator|+
-name|BAUD
-operator|)
 operator|/
 name|SECOND
-operator|+
-literal|1.
 operator|)
 operator|+
 name|up
@@ -3086,9 +3187,9 @@ operator|&
 name|ltemp
 argument_list|)
 expr_stmt|;
-name|pp
+name|up
 operator|->
-name|lastrec
+name|chrstamp
 operator|=
 name|up
 operator|->
@@ -3097,31 +3198,28 @@ expr_stmt|;
 name|L_SUB
 argument_list|(
 operator|&
-name|pp
+name|up
 operator|->
-name|lastrec
+name|chrstamp
 argument_list|,
 operator|&
 name|ltemp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The data bits are collected in ten-bit frames. The 		 * first two and last two bits are determined by frame 		 * sync and ignored here; the resulting patterns 		 * represent zero (0-1 bits), one (2-4 bits) and 		 * position identifier (5-6 bits). The remaining 		 * patterns represent errors and are treated as zeros. 		 */
-name|bitz
-operator|=
+comment|/* 	 * The data bits are collected in ten-bit bauds. The first two 	 * bits are not used. The resulting patterns represent runs of 	 * 0-1 bits (0), 2-4 bits (1) and 5-7 bits (PI). The remaining 	 * 8-bit run represents a soft error and is treated as 0. 	 */
+switch|switch
+condition|(
 name|up
 operator|->
 name|dcycles
 operator|&
-literal|0xfc
-expr_stmt|;
-switch|switch
-condition|(
-name|bitz
+literal|0xff
 condition|)
 block|{
 case|case
 literal|0x00
 case|:
+comment|/* 0-1 bits (0) */
 case|case
 literal|0x80
 case|:
@@ -3136,6 +3234,7 @@ break|break;
 case|case
 literal|0xc0
 case|:
+comment|/* 2-4 bits (1) */
 case|case
 literal|0xe0
 case|:
@@ -3153,8 +3252,12 @@ break|break;
 case|case
 literal|0xf8
 case|:
+comment|/* (5-7 bits (PI) */
 case|case
 literal|0xfc
+case|:
+case|case
+literal|0xfe
 case|:
 name|irig_decode
 argument_list|(
@@ -3165,11 +3268,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+comment|/* 8 bits (error) */
 name|irig_decode
 argument_list|(
 name|peer
 argument_list|,
-literal|0
+name|BIT0
 argument_list|)
 expr_stmt|;
 name|up
@@ -3180,11 +3284,10 @@ name|IRIG_ERR_DECODE
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/*  * irig_decode - decode the data  *  * This routine assembles bits into digits, digits into subfields and  * subfields into the timecode field. Bits can have values of zero, one  * or position identifier. There are four bits per digit, two digits per  * subfield and ten subfields per field. The last bit in every subfield  * and the first bit in the first subfield are position identifiers.  */
+comment|/*  * irig_decode - decode the data  *  * This routine assembles bauds into digits, digits into frames and  * frames into the timecode fields. Bits can have values of zero, one  * or position identifier. There are four bits per digit, ten digits per  * frame and ten frames per second.  */
 end_comment
 
 begin_function
@@ -3213,24 +3316,17 @@ name|irigunit
 modifier|*
 name|up
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IRIG_SUCKS
-name|int
-name|i
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* IRIG_SUCKS */
 comment|/* 	 * Local variables 	 */
-name|char
-name|syncchar
+name|int
+name|syncdig
 decl_stmt|;
-comment|/* sync character (Spectracom) */
+comment|/* sync digit (Spectracom) */
 name|char
 name|sbs
 index|[
 literal|6
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* binary seconds since 0h */
@@ -3238,9 +3334,14 @@ name|char
 name|spare
 index|[
 literal|2
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* mulligan digits */
+name|int
+name|temp
+decl_stmt|;
 name|pp
 operator|=
 name|peer
@@ -3258,11 +3359,11 @@ name|pp
 operator|->
 name|unitptr
 expr_stmt|;
-comment|/* 	 * Assemble subfield bits. 	 */
+comment|/* 	 * Assemble frame bits. 	 */
 name|up
 operator|->
 name|bits
-operator|<<=
+operator|>>=
 literal|1
 expr_stmt|;
 if|if
@@ -3276,7 +3377,7 @@ name|up
 operator|->
 name|bits
 operator||=
-literal|1
+literal|0x200
 expr_stmt|;
 block|}
 elseif|else
@@ -3293,337 +3394,70 @@ operator|==
 name|BITP
 condition|)
 block|{
-comment|/* 		 * Frame sync - two adjacent position identifiers. 		 * Monitor the reference timestamp and wiggle the 		 * clock, but only if no errors have occurred. 		 */
+comment|/* 		 * Frame sync - two adjacent position identifiers, which 		 * mark the beginning of the second. The reference time 		 * is the beginning of the second position identifier, 		 * so copy the character timestamp to the reference 		 * timestamp. 		 */
+if|if
+condition|(
 name|up
 operator|->
-name|bitcnt
+name|frmcnt
+operator|!=
+literal|1
+condition|)
+name|up
+operator|->
+name|errflg
+operator||=
+name|IRIG_ERR_SYNCH
+expr_stmt|;
+name|up
+operator|->
+name|frmcnt
 operator|=
 literal|1
 expr_stmt|;
 name|up
 operator|->
-name|fieldcnt
+name|refstamp
 operator|=
-literal|0
+name|up
+operator|->
+name|prvstamp
 expr_stmt|;
+block|}
 name|up
 operator|->
 name|lastbit
 operator|=
-literal|0
+name|bit
 expr_stmt|;
 if|if
 condition|(
 name|up
 operator|->
-name|errflg
-operator|==
-literal|0
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|IRIG_SUCKS
-name|l_fp
-name|ltemp
-decl_stmt|;
-comment|/* 			 * You really don't wanna know what comes down 			 * here. Leave it to say Solaris 2.8 broke the 			 * nice clean audio stream, apparently affected 			 * by a 5-ms sawtooth jitter. Sundown on 			 * Solaris. This leaves a little twilight. 			 * 			 * The scheme involves differentiation, forward 			 * learning and integration. The sawtooth has a 			 * period of 11 seconds. The timestamp 			 * differences are integrated and subtracted 			 * from the signal. 			 */
-name|ltemp
-operator|=
-name|pp
-operator|->
-name|lastrec
-expr_stmt|;
-name|L_SUB
-argument_list|(
-operator|&
-name|ltemp
-argument_list|,
-operator|&
-name|pp
-operator|->
-name|lastref
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ltemp
-operator|.
-name|l_f
-operator|<
-literal|0
-condition|)
-name|ltemp
-operator|.
-name|l_i
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-else|else
-name|ltemp
-operator|.
-name|l_i
-operator|=
-literal|0
-expr_stmt|;
-name|pp
-operator|->
-name|lastref
-operator|=
-name|pp
-operator|->
-name|lastrec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|L_ISNEG
-argument_list|(
-operator|&
-name|ltemp
-argument_list|)
-condition|)
-name|L_CLR
-argument_list|(
-operator|&
-name|up
-operator|->
-name|wigwag
-argument_list|)
-expr_stmt|;
-else|else
-name|L_ADD
-argument_list|(
-operator|&
-name|up
-operator|->
-name|wigwag
-argument_list|,
-operator|&
-name|ltemp
-argument_list|)
-expr_stmt|;
-name|L_SUB
-argument_list|(
-operator|&
-name|pp
-operator|->
-name|lastrec
-argument_list|,
-operator|&
-name|up
-operator|->
-name|wigwag
-argument_list|)
-expr_stmt|;
-name|up
-operator|->
-name|wiggle
-index|[
-name|up
-operator|->
-name|wp
-index|]
-operator|=
-name|ltemp
-expr_stmt|;
-comment|/* 			 * Bottom fisher. To understand this, you have 			 * to know about velocity microphones and AM 			 * transmitters. No further explanation is 			 * offered, as this is truly a black art. 			 */
-name|up
-operator|->
-name|wigbot
-index|[
-name|up
-operator|->
-name|wp
-index|]
-operator|=
-name|pp
-operator|->
-name|lastrec
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|WIGGLE
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|i
-operator|!=
-name|up
-operator|->
-name|wp
-condition|)
-name|up
-operator|->
-name|wigbot
-index|[
-name|i
-index|]
-operator|.
-name|l_ui
-operator|++
-expr_stmt|;
-name|L_SUB
-argument_list|(
-operator|&
-name|pp
-operator|->
-name|lastrec
-argument_list|,
-operator|&
-name|up
-operator|->
-name|wigbot
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|L_ISNEG
-argument_list|(
-operator|&
-name|pp
-operator|->
-name|lastrec
-argument_list|)
-condition|)
-name|L_ADD
-argument_list|(
-operator|&
-name|pp
-operator|->
-name|lastrec
-argument_list|,
-operator|&
-name|up
-operator|->
-name|wigbot
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-else|else
-name|pp
-operator|->
-name|lastrec
-operator|=
-name|up
-operator|->
-name|wigbot
-index|[
-name|i
-index|]
-expr_stmt|;
-block|}
-name|up
-operator|->
-name|wp
-operator|++
-expr_stmt|;
-name|up
-operator|->
-name|wp
-operator|%=
-name|WIGGLE
-expr_stmt|;
-name|up
-operator|->
-name|wuggle
-operator|=
-name|pp
-operator|->
-name|lastrec
-expr_stmt|;
-name|refclock_process
-argument_list|(
-name|pp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* IRIG_SUCKS */
-name|pp
-operator|->
-name|lastref
-operator|=
-name|pp
-operator|->
-name|lastrec
-expr_stmt|;
-name|up
-operator|->
-name|wuggle
-operator|=
-name|pp
-operator|->
-name|lastrec
-expr_stmt|;
-name|refclock_process
-argument_list|(
-name|pp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* IRIG_SUCKS */
-block|}
-name|up
-operator|->
-name|errflg
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|up
-operator|->
-name|bitcnt
-operator|=
-operator|(
-name|up
-operator|->
-name|bitcnt
-operator|+
-literal|1
-operator|)
+name|frmcnt
 operator|%
 name|SUBFLD
-expr_stmt|;
-if|if
-condition|(
-name|up
-operator|->
-name|bitcnt
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * End of subfield. Encode two hexadecimal digits in 		 * little-endian timecode field. 		 */
-if|if
-condition|(
-name|up
-operator|->
-name|fieldcnt
-operator|==
-literal|0
-condition|)
+comment|/* 		 * End of frame. Encode two hexadecimal digits in 		 * little-endian timecode field. Note frame 1 is shifted 		 * right one bit to account for the marker PI. 		 */
+name|temp
+operator|=
 name|up
 operator|->
 name|bits
-operator|<<=
+expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|frmcnt
+operator|==
+literal|10
+condition|)
+name|temp
+operator|>>=
 literal|1
 expr_stmt|;
 if|if
@@ -3631,16 +3465,26 @@ condition|(
 name|up
 operator|->
 name|xptr
-operator|<
+operator|>=
 literal|2
 condition|)
+block|{
+name|up
+operator|->
+name|timecode
+index|[
+operator|--
 name|up
 operator|->
 name|xptr
+index|]
 operator|=
-literal|2
-operator|*
-name|FIELD
+name|hexchar
+index|[
+name|temp
+operator|&
+literal|0xf
+index|]
 expr_stmt|;
 name|up
 operator|->
@@ -3655,9 +3499,7 @@ operator|=
 name|hexchar
 index|[
 operator|(
-name|up
-operator|->
-name|bits
+name|temp
 operator|>>
 literal|5
 operator|)
@@ -3665,56 +3507,24 @@ operator|&
 literal|0xf
 index|]
 expr_stmt|;
-name|up
-operator|->
-name|timecode
-index|[
-operator|--
-name|up
-operator|->
-name|xptr
-index|]
-operator|=
-name|hexchar
-index|[
-name|up
-operator|->
-name|bits
-operator|&
-literal|0xf
-index|]
-expr_stmt|;
-name|up
-operator|->
-name|fieldcnt
-operator|=
-operator|(
-name|up
-operator|->
-name|fieldcnt
-operator|+
-literal|1
-operator|)
-operator|%
-name|FIELD
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|up
 operator|->
-name|fieldcnt
+name|frmcnt
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * End of field. Decode the timecode and wind 			 * the clock. Not all IRIG generators have the 			 * year; if so, it is nonzero after year 2000. 			 * Not all have the hardware status bit; if so, 			 * it is lit when the source is okay and dim 			 * when bad. We watch this only if the year is 			 * nonzero. Not all are configured for signature 			 * control. If so, all BCD digits are set to 			 * zero if the source is bad. In this case the 			 * refclock_process() will reject the timecode 			 * as invalid. 			 */
+comment|/* 			 * End of second. Decode the timecode and wind 			 * the clock. Not all IRIG generators have the 			 * year; if so, it is nonzero after year 2000. 			 * Not all have the hardware status bit; if so, 			 * it is lit when the source is okay and dim 			 * when bad. We watch this only if the year is 			 * nonzero. Not all are configured for signature 			 * control. If so, all BCD digits are set to 			 * zero if the source is bad. In this case the 			 * refclock_process() will reject the timecode 			 * as invalid. 			 */
 name|up
 operator|->
 name|xptr
 operator|=
 literal|2
 operator|*
-name|FIELD
+name|SUBFLD
 expr_stmt|;
 if|if
 condition|(
@@ -3728,7 +3538,7 @@ name|up
 operator|->
 name|timecode
 argument_list|,
-literal|"%6s%2d%c%2s%3d%2d%2d%2d"
+literal|"%6s%2d%1d%2s%3d%2d%2d%2d"
 argument_list|,
 name|sbs
 argument_list|,
@@ -3738,7 +3548,7 @@ operator|->
 name|year
 argument_list|,
 operator|&
-name|syncchar
+name|syncdig
 argument_list|,
 name|spare
 argument_list|,
@@ -3794,19 +3604,32 @@ operator|)
 operator|%
 literal|60
 expr_stmt|;
+comment|/* 			 * Raise an alarm if the day field is zero, 			 * which happens when signature control is 			 * enabled and the device has lost 			 * synchronization. Raise an alarm if the year 			 * field is nonzero and the sync indicator is 			 * zero, which happens when a Spectracom radio 			 * has lost synchronization. Raise an alarm if 			 * the expected second does not agree with the 			 * decoded second, which happens with a garbled 			 * IRIG signal. We are very particular. 			 */
 if|if
 condition|(
 name|pp
 operator|->
-name|year
-operator|>
+name|day
+operator|==
 literal|0
-condition|)
+operator|||
+operator|(
 name|pp
 operator|->
 name|year
-operator|+=
-literal|2000
+operator|!=
+literal|0
+operator|&&
+name|syncdig
+operator|==
+literal|0
+operator|)
+condition|)
+name|up
+operator|->
+name|errflg
+operator||=
+name|IRIG_ERR_SIGERR
 expr_stmt|;
 if|if
 condition|(
@@ -3832,19 +3655,72 @@ name|pp
 operator|->
 name|second
 expr_stmt|;
-name|sprintf
+comment|/* 			 * Wind the clock only if there are no errors 			 * and the time constant has reached the 			 * maximum. 			 */
+if|if
+condition|(
+name|up
+operator|->
+name|errflg
+operator|==
+literal|0
+operator|&&
+name|up
+operator|->
+name|tc
+operator|==
+name|MAXTC
+condition|)
+block|{
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
+name|pp
+operator|->
+name|lastrec
+operator|=
+name|up
+operator|->
+name|refstamp
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|refclock_process
+argument_list|(
+name|pp
+argument_list|)
+condition|)
+name|refclock_report
+argument_list|(
+name|peer
+argument_list|,
+name|CEVNT_BADTIME
+argument_list|)
+expr_stmt|;
+block|}
+name|snprintf
 argument_list|(
 name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-literal|"%02x %c %2d %3d %02d:%02d:%02d %4.0f %3d %6.3f %2d %6.1f %6.1f %s"
+sizeof|sizeof
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
+argument_list|,
+literal|"%02x %02d %03d %02d:%02d:%02d %4.0f %3d %6.3f %2d %6.2f %6.1f %s"
 argument_list|,
 name|up
 operator|->
 name|errflg
-argument_list|,
-name|syncchar
 argument_list|,
 name|pp
 operator|->
@@ -3901,9 +3777,9 @@ argument_list|,
 name|ulfptoa
 argument_list|(
 operator|&
-name|up
+name|pp
 operator|->
-name|wuggle
+name|lastrec
 argument_list|,
 literal|6
 argument_list|)
@@ -3919,6 +3795,12 @@ name|pp
 operator|->
 name|a_lastcode
 argument_list|)
+expr_stmt|;
+name|up
+operator|->
+name|errflg
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3950,7 +3832,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"irig: %s\n"
+literal|"irig %s\n"
 argument_list|,
 name|pp
 operator|->
@@ -3965,15 +3847,23 @@ block|}
 block|}
 name|up
 operator|->
-name|lastbit
+name|frmcnt
 operator|=
-name|bit
+operator|(
+name|up
+operator|->
+name|frmcnt
+operator|+
+literal|1
+operator|)
+operator|%
+name|FIELD
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * irig_poll - called by the transmit procedure  *  * This routine sweeps up the timecode updates since the last poll. For  * IRIG-B there should be at least 60 updates; for IRIG-E there should  * be at least 6. If nothing is heard, a timeout event is declared and  * any orphaned timecode updates are sent to foster care.   */
+comment|/*  * irig_poll - called by the transmit procedure  *  * This routine sweeps up the timecode updates since the last poll. For  * IRIG-B there should be at least 60 updates; for IRIG-E there should  * be at least 6. If nothing is heard, a timeout event is declared.   */
 end_comment
 
 begin_function
@@ -4039,13 +3929,23 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|else
-block|{
 name|refclock_receive
 argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|pp
+operator|->
+name|sloppyclockflag
+operator|&
+name|CLK_FLAG4
+operator|)
+condition|)
+block|{
 name|record_clock_stats
 argument_list|(
 operator|&
@@ -4067,7 +3967,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"irig: %s\n"
+literal|"irig %s\n"
 argument_list|,
 name|pp
 operator|->
@@ -4087,7 +3987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * irig_gain - adjust codec gain  *  * This routine is called once each second. If the signal envelope  * amplitude is too low, the codec gain is bumped up by four units; if  * too high, it is bumped down. The decoder is relatively insensitive to  * amplitude, so this crudity works just fine. The input port is set and  * the error flag is cleared, mostly to be ornery.  */
+comment|/*  * irig_gain - adjust codec gain  *  * This routine is called at the end of each second. It uses the AGC to  * bradket the maximum signal level between MINAMP and MAXAMP to avoid  * hunting. The routine also jiggles the input port and selectively  * mutes the monitor.  */
 end_comment
 
 begin_function
@@ -4134,9 +4034,9 @@ if|if
 condition|(
 name|up
 operator|->
-name|clipcnt
-operator|==
-literal|0
+name|maxsignal
+operator|<
+name|MINAMP
 condition|)
 block|{
 name|up
@@ -4165,9 +4065,9 @@ if|if
 condition|(
 name|up
 operator|->
-name|clipcnt
+name|maxsignal
 operator|>
-name|MAXCLP
+name|MAXAMP
 condition|)
 block|{
 name|up
@@ -4205,12 +4105,6 @@ name|up
 operator|->
 name|port
 argument_list|)
-expr_stmt|;
-name|up
-operator|->
-name|clipcnt
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function

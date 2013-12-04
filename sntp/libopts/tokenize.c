@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  This file defines the string_tokenize interface  * Time-stamp:      "2006-06-24 15:27:49 bkorb"  *  *  string_tokenize copyright 2005 Bruce Korb  *  *  string_tokenize is free software; you can redistribute it and/or  *  modify it under the terms of the GNU Lesser General Public  *  License as published by the Free Software Foundation; either  *  version 2.1 of the License, or (at your option) any later version.  *  *  string_tokenize is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with string_tokenize; if not, write to:  *             The Free Software Foundation, Inc.,  *             51 Franklin Street, Fifth Floor,  *             Boston, MA  02110-1301, USA.  */
+comment|/*  *  This file defines the string_tokenize interface  * Time-stamp:      "2010-07-17 10:40:26 bkorb"  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -37,10 +31,6 @@ end_define
 
 begin_comment
 comment|/* = = = START-STATIC-FORWARD = = = */
-end_comment
-
-begin_comment
-comment|/* static forward declarations maintained by :mkfwd */
 end_comment
 
 begin_function_decl
@@ -77,6 +67,20 @@ specifier|const
 modifier|*
 modifier|*
 name|ppSrc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|token_list_t
+modifier|*
+name|alloc_token_list
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -400,14 +404,11 @@ comment|/* char following closing quote    */
 block|}
 end_function
 
-begin_comment
-comment|/*=export_func ao_string_tokenize  *  * what: tokenize an input string  *  * arg:  + char const* + string + string to be tokenized +  *  * ret_type:  token_list_t*  * ret_desc:  pointer to a structure that lists each token  *  * doc:  *  * This function will convert one input string into a list of strings.  * The list of strings is derived by separating the input based on  * white space separation.  However, if the input contains either single  * or double quote characters, then the text after that character up to  * a matching quote will become the string in the list.  *  *  The returned pointer should be deallocated with @code{free(3C)} when  *  are done using the data.  The data are placed in a single block of  *  allocated memory.  Do not deallocate individual token/strings.  *  *  The structure pointed to will contain at least these two fields:  *  @table @samp  *  @item tkn_ct  *  The number of tokens found in the input string.  *  @item tok_list  *  An array of @code{tkn_ct + 1} pointers to substring tokens, with  *  the last pointer set to NULL.  *  @end table  *  * There are two types of quoted strings: single quoted (@code{'}) and  * double quoted (@code{"}).  Singly quoted strings are fairly raw in that  * escape characters (@code{\\}) are simply another character, except when  * preceding the following characters:  * @example  * @code{\\}  double backslashes reduce to one  * @code{'}   incorporates the single quote into the string  * @code{\n}  suppresses both the backslash and newline character  * @end example  *  * Double quote strings are formed according to the rules of string  * constants in ANSI-C programs.  *  * example:  * @example  *    #include<stdlib.h>  *    int ix;  *    token_list_t* ptl = ao_string_tokenize( some_string )  *    for (ix = 0; ix< ptl->tkn_ct; ix++)  *       do_something_with_tkn( ptl->tkn_list[ix] );  *    free( ptl );  * @end example  * Note that everything is freed with the one call to @code{free(3C)}.  *  * err:  *  NULL is returned and @code{errno} will be set to indicate the problem:  *  @itemize @bullet  *  @item  *  @code{EINVAL} - There was an unterminated quoted string.  *  @item  *  @code{ENOENT} - The input string was empty.  *  @item  *  @code{ENOMEM} - There is not enough memory.  *  @end itemize =*/
-end_comment
-
 begin_function
+specifier|static
 name|token_list_t
 modifier|*
-name|ao_string_tokenize
+name|alloc_token_list
 parameter_list|(
 name|char
 specifier|const
@@ -415,16 +416,16 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|int
-name|max_token_ct
-init|=
-literal|1
-decl_stmt|;
-comment|/* allow for trailing NUL on string */
 name|token_list_t
 modifier|*
 name|res
 decl_stmt|;
+name|int
+name|max_token_ct
+init|=
+literal|2
+decl_stmt|;
+comment|/* allow for trailing NULL pointer& NUL on string */
 if|if
 condition|(
 name|str
@@ -432,16 +433,13 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|bogus_str
+name|enoent_res
 goto|;
 comment|/*      *  Trim leading white space.  Use "ENOENT" and a NULL return to indicate      *  an empty string was passed.      */
 while|while
 condition|(
-name|isspace
+name|IS_WHITESPACE_CHAR
 argument_list|(
-operator|(
-name|ch_t
-operator|)
 operator|*
 name|str
 argument_list|)
@@ -456,17 +454,9 @@ name|str
 operator|==
 name|NUL
 condition|)
-block|{
-name|bogus_str
-label|:
-name|errno
-operator|=
-name|ENOENT
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
+goto|goto
+name|enoent_res
+goto|;
 comment|/*      *  Take an approximate count of tokens.  If no quoted strings are used,      *  it will be accurate.  If quoted strings are used, it will be a little      *  high and we'll squander the space for a few extra pointers.      */
 block|{
 name|cc_t
@@ -487,7 +477,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|isspace
+name|IS_WHITESPACE_CHAR
 argument_list|(
 operator|*
 operator|++
@@ -506,7 +496,7 @@ name|found_nul
 goto|;
 while|while
 condition|(
-name|isspace
+name|IS_WHITESPACE_CHAR
 argument_list|(
 operator|*
 name|pz
@@ -526,8 +516,6 @@ condition|)
 do|;
 name|found_nul
 label|:
-empty_stmt|;
-block|}
 name|res
 operator|=
 name|malloc
@@ -538,10 +526,15 @@ operator|*
 name|res
 argument_list|)
 operator|+
-name|strlen
-argument_list|(
+operator|(
+name|pz
+operator|-
+operator|(
+name|cc_t
+operator|*
+operator|)
 name|str
-argument_list|)
+operator|)
 operator|+
 operator|(
 name|max_token_ct
@@ -554,27 +547,25 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|res
 operator|==
 name|NULL
 condition|)
-block|{
 name|errno
 operator|=
 name|ENOMEM
 expr_stmt|;
-return|return
+else|else
 name|res
-return|;
-block|}
-comment|/*      *  Now copy each token into the output buffer.      */
-block|{
-name|ch_t
-modifier|*
-name|pzDest
-init|=
+operator|->
+name|tkn_list
+index|[
+literal|0
+index|]
+operator|=
 operator|(
 name|ch_t
 operator|*
@@ -586,11 +577,79 @@ name|tkn_list
 operator|+
 operator|(
 name|max_token_ct
-operator|+
+operator|-
 literal|1
 operator|)
 operator|)
+expr_stmt|;
+return|return
+name|res
+return|;
+name|enoent_res
+label|:
+name|errno
+operator|=
+name|ENOENT
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*=export_func ao_string_tokenize  *  * what: tokenize an input string  *  * arg:  + char const* + string + string to be tokenized +  *  * ret_type:  token_list_t*  * ret_desc:  pointer to a structure that lists each token  *  * doc:  *  * This function will convert one input string into a list of strings.  * The list of strings is derived by separating the input based on  * white space separation.  However, if the input contains either single  * or double quote characters, then the text after that character up to  * a matching quote will become the string in the list.  *  *  The returned pointer should be deallocated with @code{free(3C)} when  *  are done using the data.  The data are placed in a single block of  *  allocated memory.  Do not deallocate individual token/strings.  *  *  The structure pointed to will contain at least these two fields:  *  @table @samp  *  @item tkn_ct  *  The number of tokens found in the input string.  *  @item tok_list  *  An array of @code{tkn_ct + 1} pointers to substring tokens, with  *  the last pointer set to NULL.  *  @end table  *  * There are two types of quoted strings: single quoted (@code{'}) and  * double quoted (@code{"}).  Singly quoted strings are fairly raw in that  * escape characters (@code{\\}) are simply another character, except when  * preceding the following characters:  * @example  * @code{\\}  double backslashes reduce to one  * @code{'}   incorporates the single quote into the string  * @code{\n}  suppresses both the backslash and newline character  * @end example  *  * Double quote strings are formed according to the rules of string  * constants in ANSI-C programs.  *  * example:  * @example  *    #include<stdlib.h>  *    int ix;  *    token_list_t* ptl = ao_string_tokenize(some_string)  *    for (ix = 0; ix< ptl->tkn_ct; ix++)  *       do_something_with_tkn(ptl->tkn_list[ix]);  *    free(ptl);  * @end example  * Note that everything is freed with the one call to @code{free(3C)}.  *  * err:  *  NULL is returned and @code{errno} will be set to indicate the problem:  *  @itemize @bullet  *  @item  *  @code{EINVAL} - There was an unterminated quoted string.  *  @item  *  @code{ENOENT} - The input string was empty.  *  @item  *  @code{ENOMEM} - There is not enough memory.  *  @end itemize =*/
+end_comment
+
+begin_function
+name|token_list_t
+modifier|*
+name|ao_string_tokenize
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|token_list_t
+modifier|*
+name|res
+init|=
+name|alloc_token_list
+argument_list|(
+name|str
+argument_list|)
 decl_stmt|;
+name|ch_t
+modifier|*
+name|pzDest
+decl_stmt|;
+comment|/*      *  Now copy each token into the output buffer.      */
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+return|return
+name|res
+return|;
+name|pzDest
+operator|=
+operator|(
+name|ch_t
+operator|*
+operator|)
+operator|(
+name|res
+operator|->
+name|tkn_list
+index|[
+literal|0
+index|]
+operator|)
+expr_stmt|;
 name|res
 operator|->
 name|tkn_ct
@@ -628,7 +687,7 @@ name|str
 decl_stmt|;
 if|if
 condition|(
-name|isspace
+name|IS_WHITESPACE_CHAR
 argument_list|(
 name|ch
 argument_list|)
@@ -638,11 +697,8 @@ name|found_white_space
 label|:
 while|while
 condition|(
-name|isspace
+name|IS_WHITESPACE_CHAR
 argument_list|(
-operator|(
-name|ch_t
-operator|)
 operator|*
 operator|++
 name|str
@@ -690,11 +746,8 @@ return|;
 block|}
 if|if
 condition|(
-name|isspace
+name|IS_WHITESPACE_CHAR
 argument_list|(
-operator|(
-name|ch_t
-operator|)
 operator|*
 name|str
 argument_list|)
@@ -737,11 +790,8 @@ return|;
 block|}
 if|if
 condition|(
-name|isspace
+name|IS_WHITESPACE_CHAR
 argument_list|(
-operator|(
-name|ch_t
-operator|)
 operator|*
 name|str
 argument_list|)
@@ -773,7 +823,7 @@ block|}
 name|copy_done
 label|:
 empty_stmt|;
-comment|/*              * NUL terminate the last token and see if we have any more tokens.              */
+comment|/*          * NUL terminate the last token and see if we have any more tokens.          */
 operator|*
 operator|(
 name|pzDest
@@ -802,7 +852,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 return|return
 name|res
 return|;

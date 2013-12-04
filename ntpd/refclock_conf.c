@@ -714,11 +714,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CLOCK_ATOM
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_PPSAPI
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -1359,6 +1367,7 @@ begin_decl_stmt
 name|struct
 name|refclock
 modifier|*
+specifier|const
 name|refclock_conf
 index|[]
 init|=

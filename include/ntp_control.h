@@ -64,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|CTL_HEADER_LEN
-value|12
+value|(offsetof(struct ntp_control, data))
 end_define
 
 begin_define
@@ -194,12 +194,20 @@ name|CTL_OP_UNSPEC
 value|0
 end_define
 
+begin_comment
+comment|/* unspeciffied */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CTL_OP_READSTAT
 value|1
 end_define
+
+begin_comment
+comment|/* read status */
+end_comment
 
 begin_define
 define|#
@@ -208,12 +216,20 @@ name|CTL_OP_READVAR
 value|2
 end_define
 
+begin_comment
+comment|/* read variables */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CTL_OP_WRITEVAR
 value|3
 end_define
+
+begin_comment
+comment|/* write variables */
+end_comment
 
 begin_define
 define|#
@@ -222,12 +238,20 @@ name|CTL_OP_READCLOCK
 value|4
 end_define
 
+begin_comment
+comment|/* read clock variables */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CTL_OP_WRITECLOCK
 value|5
 end_define
+
+begin_comment
+comment|/* write clock variables */
+end_comment
 
 begin_define
 define|#
@@ -236,6 +260,10 @@ name|CTL_OP_SETTRAP
 value|6
 end_define
 
+begin_comment
+comment|/* set trap address */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -243,12 +271,42 @@ name|CTL_OP_ASYNCMSG
 value|7
 end_define
 
+begin_comment
+comment|/* asynchronous message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_OP_CONFIGURE
+value|8
+end_define
+
+begin_comment
+comment|/* runtime configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_OP_SAVECONFIG
+value|9
+end_define
+
+begin_comment
+comment|/* save config to file */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CTL_OP_UNSETTRAP
 value|31
 end_define
+
+begin_comment
+comment|/* unset trap */
+end_comment
 
 begin_comment
 comment|/*  * {En,De}coding of the system status word  */
@@ -262,7 +320,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* time source unspecified */
+comment|/* unspec */
 end_comment
 
 begin_define
@@ -273,7 +331,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* time source calibrated atomic */
+comment|/* pps */
 end_comment
 
 begin_define
@@ -284,7 +342,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* time source VLF or LF radio */
+comment|/* lf radio */
 end_comment
 
 begin_define
@@ -295,7 +353,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* time source HF radio */
+comment|/* hf radio */
 end_comment
 
 begin_define
@@ -306,7 +364,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* time source UHF radio */
+comment|/* uhf radio */
 end_comment
 
 begin_define
@@ -317,7 +375,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* time source LOCAL */
+comment|/* local */
 end_comment
 
 begin_define
@@ -328,7 +386,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* time source NTP */
+comment|/* ntp */
 end_comment
 
 begin_define
@@ -339,7 +397,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* time source UDP/TIME */
+comment|/* other */
 end_comment
 
 begin_define
@@ -350,7 +408,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* time source is wristwatch */
+comment|/* wristwatch */
 end_comment
 
 begin_define
@@ -361,18 +419,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* time source is telephone modem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_SST_TS_PPS
-value|0x20
-end_define
-
-begin_comment
-comment|/* time source is PPS signal */
+comment|/* telephone */
 end_comment
 
 begin_define
@@ -474,7 +521,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CTL_PST_UNSPEC
+name|CTL_PST_BCAST
 value|0x08
 end_define
 
@@ -530,18 +577,18 @@ value|4
 end_define
 
 begin_comment
-comment|/* + candidat */
+comment|/* + candidate */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CTL_PST_SEL_DISTSYSPEER
+name|CTL_PST_SEL_EXCESS
 value|5
 end_define
 
 begin_comment
-comment|/* # selected */
+comment|/* # backup */
 end_comment
 
 begin_define
@@ -825,78 +872,99 @@ end_define
 begin_define
 define|#
 directive|define
-name|CS_STATE
+name|CS_OFFSET
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_OFFSET
+name|CS_DRIFT
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_DRIFT
+name|CS_JITTER
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_JITTER
+name|CS_ERROR
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_ERROR
+name|CS_CLOCK
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_CLOCK
+name|CS_PROCESSOR
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_PROCESSOR
+name|CS_SYSTEM
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_SYSTEM
+name|CS_VERSION
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_VERSION
+name|CS_STABIL
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_STABIL
+name|CS_VARLIST
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_VARLIST
+name|CS_TAI
 value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CS_LEAPTAB
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|CS_LEAPEND
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|CS_RATE
+value|23
 end_define
 
 begin_ifdef
@@ -909,77 +977,63 @@ begin_define
 define|#
 directive|define
 name|CS_FLAGS
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|CS_HOST
-value|22
-end_define
-
-begin_define
-define|#
-directive|define
-name|CS_PUBLIC
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|CS_CERTIF
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_REVTIME
+name|CS_HOST
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_LEAPTAB
+name|CS_PUBLIC
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_TAI
+name|CS_CERTIF
 value|27
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_DIGEST
+name|CS_SIGNATURE
 value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_IDENT
+name|CS_REVTIME
 value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_REVOKE
+name|CS_GROUP
 value|30
 end_define
 
 begin_define
 define|#
 directive|define
+name|CS_DIGEST
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
 name|CS_MAXCODE
-value|CS_REVOKE
+value|CS_DIGEST
 end_define
 
 begin_else
@@ -991,7 +1045,7 @@ begin_define
 define|#
 directive|define
 name|CS_MAXCODE
-value|CS_VARLIST
+value|CS_RATE
 end_define
 
 begin_endif
@@ -1266,6 +1320,34 @@ name|CP_VARLIST
 value|37
 end_define
 
+begin_define
+define|#
+directive|define
+name|CP_IN
+value|38
+end_define
+
+begin_define
+define|#
+directive|define
+name|CP_OUT
+value|39
+end_define
+
+begin_define
+define|#
+directive|define
+name|CP_RATE
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|CP_BIAS
+value|41
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1276,63 +1358,56 @@ begin_define
 define|#
 directive|define
 name|CP_FLAGS
-value|38
-end_define
-
-begin_define
-define|#
-directive|define
-name|CP_HOST
-value|39
-end_define
-
-begin_define
-define|#
-directive|define
-name|CP_VALID
-value|40
-end_define
-
-begin_define
-define|#
-directive|define
-name|CP_INITSEQ
-value|41
-end_define
-
-begin_define
-define|#
-directive|define
-name|CP_INITKEY
 value|42
 end_define
 
 begin_define
 define|#
 directive|define
-name|CP_INITTSP
+name|CP_HOST
 value|43
 end_define
 
 begin_define
 define|#
 directive|define
-name|CP_DIGEST
+name|CP_VALID
 value|44
 end_define
 
 begin_define
 define|#
 directive|define
-name|CP_IDENT
+name|CP_INITSEQ
 value|45
 end_define
 
 begin_define
 define|#
 directive|define
+name|CP_INITKEY
+value|46
+end_define
+
+begin_define
+define|#
+directive|define
+name|CP_INITTSP
+value|47
+end_define
+
+begin_define
+define|#
+directive|define
+name|CP_SIGNATURE
+value|48
+end_define
+
+begin_define
+define|#
+directive|define
 name|CP_MAXCODE
-value|CP_IDENT
+value|CP_SIGNATURE
 end_define
 
 begin_else
@@ -1344,7 +1419,7 @@ begin_define
 define|#
 directive|define
 name|CP_MAXCODE
-value|CP_VARLIST
+value|CP_BIAS
 end_define
 
 begin_endif
@@ -1466,8 +1541,7 @@ begin_struct
 struct|struct
 name|ctl_trap
 block|{
-name|struct
-name|sockaddr_storage
+name|sockaddr_u
 name|tr_addr
 decl_stmt|;
 comment|/* address of trap recipient */

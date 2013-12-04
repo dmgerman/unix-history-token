@@ -1,11 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntp-keygen-opts.c)  *    *  It has been AutoGen-ed  Tuesday December  8, 2009 at 08:14:56 AM EST  *  From the definitions    ntp-keygen-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
+comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntp-keygen-opts.c)  *    *  It has been AutoGen-ed  December 24, 2011 at 06:34:40 PM by AutoGen 5.12  *  From the definitions    ntp-keygen-opts.def  *  and the template file   options  *  * Generated from AutoOpts 35:0:10 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntp-keygen author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * This source file is copyrighted and licensed under the following terms:  *  *  see html/copyright.html  *    */
 end_comment
 
-begin_comment
-comment|/*  *  This file was produced by an AutoOpts template.  AutoOpts is a  *  copyrighted work.  This source file is not encumbered by AutoOpts  *  licensing, but is provided under the licensing terms chosen by the  *  ntp-keygen author or copyright holder.  AutoOpts is licensed under  *  the terms of the LGPL.  The redistributable library (``libopts'') is  *  licensed under the terms of either the LGPL or, at the users discretion,  *  the BSD license.  See the AutoOpts and/or libopts sources for details.  *  * This source file is copyrighted and licensed under the following terms:  *  * ntp-keygen copyright 1970-2009 David L. Mills and/or others - all rights reserved  *  * see html/copyright.html  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -17,6 +19,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_define
@@ -44,18 +58,31 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-name|tSCC
-name|zCopyright
-index|[]
-init|=
-literal|"ntp-keygen copyright (c) 1970-2009 David L. Mills and/or others, all rights reserved"
+specifier|extern
+name|FILE
+modifier|*
+name|option_usage_fp
 decl_stmt|;
-name|tSCC
-name|zCopyrightNotice
-index|[]
+comment|/* TRANSLATORS: choose the translation for option names wisely because you                 cannot ever change your mind. */
+specifier|static
+name|char
+specifier|const
+name|zCopyright
+index|[
+literal|50
+index|]
 init|=
-comment|/* extracted from ../include/copyright.def near line 8 */
-literal|"see html/copyright.html"
+literal|"ntp-keygen (ntp) 4.2.6p5\n\ see html/copyright.html\n"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zLicenseDescrip
+index|[
+literal|25
+index|]
+init|=
+literal|"see html/copyright.html\n"
 decl_stmt|;
 specifier|extern
 name|tUsageProc
@@ -93,41 +120,29 @@ name|NULL
 value|0
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|EXIT_SUCCESS
-define|#
-directive|define
-name|EXIT_SUCCESS
-value|0
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|EXIT_FAILURE
-define|#
-directive|define
-name|EXIT_FAILURE
-value|1
-endif|#
-directive|endif
 comment|/*  *  Certificate option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zCertificateText
 index|[]
 init|=
 literal|"certificate scheme"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zCertificate_NAME
 index|[]
 init|=
 literal|"CERTIFICATE"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zCertificate_Name
 index|[]
 init|=
@@ -142,19 +157,15 @@ directive|else
 comment|/* disable Certificate */
 define|#
 directive|define
-name|VALUE_OPT_CERTIFICATE
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|CERTIFICATE_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zCertificateText
+name|zCertificate_NAME
 value|NULL
 define|#
 directive|define
-name|zCertificate_NAME
+name|zCertificateText
 value|NULL
 define|#
 directive|define
@@ -164,22 +175,25 @@ endif|#
 directive|endif
 comment|/* OPENSSL */
 comment|/*  *  Debug_Level option description:  */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDebug_LevelText
 index|[]
 init|=
 literal|"Increase output debug message level"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDebug_Level_NAME
 index|[]
 init|=
 literal|"DEBUG_LEVEL"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDebug_Level_Name
 index|[]
 init|=
@@ -189,49 +203,26 @@ define|#
 directive|define
 name|DEBUG_LEVEL_FLAGS
 value|(OPTST_DISABLED)
-else|#
-directive|else
-comment|/* disable Debug_Level */
-define|#
-directive|define
-name|VALUE_OPT_DEBUG_LEVEL
-value|NO_EQUIVALENT
-define|#
-directive|define
-name|DEBUG_LEVEL_FLAGS
-value|(OPTST_OMITTED | OPTST_NO_INIT)
-define|#
-directive|define
-name|zDebug_LevelText
-value|NULL
-define|#
-directive|define
-name|zDebug_Level_NAME
-value|NULL
-define|#
-directive|define
-name|zDebug_Level_Name
-value|NULL
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*  *  Set_Debug_Level option description:  */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSet_Debug_LevelText
 index|[]
 init|=
 literal|"Set the output debug message level"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSet_Debug_Level_NAME
 index|[]
 init|=
 literal|"SET_DEBUG_LEVEL"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSet_Debug_Level_Name
 index|[]
 init|=
@@ -241,49 +232,29 @@ define|#
 directive|define
 name|SET_DEBUG_LEVEL_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
-else|#
-directive|else
-comment|/* disable Set_Debug_Level */
-define|#
-directive|define
-name|VALUE_OPT_SET_DEBUG_LEVEL
-value|NO_EQUIVALENT
-define|#
-directive|define
-name|SET_DEBUG_LEVEL_FLAGS
-value|(OPTST_OMITTED | OPTST_NO_INIT)
-define|#
-directive|define
-name|zSet_Debug_LevelText
-value|NULL
-define|#
-directive|define
-name|zSet_Debug_Level_NAME
-value|NULL
-define|#
-directive|define
-name|zSet_Debug_Level_Name
-value|NULL
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*  *  Id_Key option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zId_KeyText
 index|[]
 init|=
-literal|"Write identity keys"
+literal|"Write IFF or GQ identity keys"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zId_Key_NAME
 index|[]
 init|=
 literal|"ID_KEY"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zId_Key_Name
 index|[]
 init|=
@@ -298,19 +269,15 @@ directive|else
 comment|/* disable Id_Key */
 define|#
 directive|define
-name|VALUE_OPT_ID_KEY
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|ID_KEY_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zId_KeyText
+name|zId_Key_NAME
 value|NULL
 define|#
 directive|define
-name|zId_Key_NAME
+name|zId_KeyText
 value|NULL
 define|#
 directive|define
@@ -323,19 +290,25 @@ comment|/*  *  Gq_Params option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zGq_ParamsText
 index|[]
 init|=
 literal|"Generate GQ parameters and keys"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zGq_Params_NAME
 index|[]
 init|=
 literal|"GQ_PARAMS"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zGq_Params_Name
 index|[]
 init|=
@@ -350,19 +323,15 @@ directive|else
 comment|/* disable Gq_Params */
 define|#
 directive|define
-name|VALUE_OPT_GQ_PARAMS
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|GQ_PARAMS_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zGq_ParamsText
+name|zGq_Params_NAME
 value|NULL
 define|#
 directive|define
-name|zGq_Params_NAME
+name|zGq_ParamsText
 value|NULL
 define|#
 directive|define
@@ -371,75 +340,29 @@ value|NULL
 endif|#
 directive|endif
 comment|/* OPENSSL */
-comment|/*  *  Gq_Keys option description:  */
-ifdef|#
-directive|ifdef
-name|OPENSSL
-name|tSCC
-name|zGq_KeysText
-index|[]
-init|=
-literal|"update GQ keys"
-decl_stmt|;
-name|tSCC
-name|zGq_Keys_NAME
-index|[]
-init|=
-literal|"GQ_KEYS"
-decl_stmt|;
-name|tSCC
-name|zGq_Keys_Name
-index|[]
-init|=
-literal|"gq-keys"
-decl_stmt|;
-define|#
-directive|define
-name|GQ_KEYS_FLAGS
-value|(OPTST_DISABLED)
-else|#
-directive|else
-comment|/* disable Gq_Keys */
-define|#
-directive|define
-name|VALUE_OPT_GQ_KEYS
-value|NO_EQUIVALENT
-define|#
-directive|define
-name|GQ_KEYS_FLAGS
-value|(OPTST_OMITTED | OPTST_NO_INIT)
-define|#
-directive|define
-name|zGq_KeysText
-value|NULL
-define|#
-directive|define
-name|zGq_Keys_NAME
-value|NULL
-define|#
-directive|define
-name|zGq_Keys_Name
-value|NULL
-endif|#
-directive|endif
-comment|/* OPENSSL */
 comment|/*  *  Host_Key option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zHost_KeyText
 index|[]
 init|=
 literal|"generate RSA host key"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zHost_Key_NAME
 index|[]
 init|=
 literal|"HOST_KEY"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zHost_Key_Name
 index|[]
 init|=
@@ -454,19 +377,15 @@ directive|else
 comment|/* disable Host_Key */
 define|#
 directive|define
-name|VALUE_OPT_HOST_KEY
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|HOST_KEY_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zHost_KeyText
+name|zHost_Key_NAME
 value|NULL
 define|#
 directive|define
-name|zHost_Key_NAME
+name|zHost_KeyText
 value|NULL
 define|#
 directive|define
@@ -479,19 +398,25 @@ comment|/*  *  Iffkey option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIffkeyText
 index|[]
 init|=
 literal|"generate IFF parameters"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIffkey_NAME
 index|[]
 init|=
 literal|"IFFKEY"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIffkey_Name
 index|[]
 init|=
@@ -506,19 +431,15 @@ directive|else
 comment|/* disable Iffkey */
 define|#
 directive|define
-name|VALUE_OPT_IFFKEY
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|IFFKEY_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zIffkeyText
+name|zIffkey_NAME
 value|NULL
 define|#
 directive|define
-name|zIffkey_NAME
+name|zIffkeyText
 value|NULL
 define|#
 directive|define
@@ -531,19 +452,25 @@ comment|/*  *  Issuer_Name option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIssuer_NameText
 index|[]
 init|=
 literal|"set issuer name"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIssuer_Name_NAME
 index|[]
 init|=
 literal|"ISSUER_NAME"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIssuer_Name_Name
 index|[]
 init|=
@@ -552,25 +479,21 @@ decl_stmt|;
 define|#
 directive|define
 name|ISSUER_NAME_FLAGS
-value|(OPTST_DISABLED)
+value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 else|#
 directive|else
 comment|/* disable Issuer_Name */
-define|#
-directive|define
-name|VALUE_OPT_ISSUER_NAME
-value|NO_EQUIVALENT
 define|#
 directive|define
 name|ISSUER_NAME_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zIssuer_NameText
+name|zIssuer_Name_NAME
 value|NULL
 define|#
 directive|define
-name|zIssuer_Name_NAME
+name|zIssuer_NameText
 value|NULL
 define|#
 directive|define
@@ -580,19 +503,25 @@ endif|#
 directive|endif
 comment|/* OPENSSL */
 comment|/*  *  Md5key option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zMd5keyText
 index|[]
 init|=
 literal|"generate MD5 keys"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zMd5key_NAME
 index|[]
 init|=
 literal|"MD5KEY"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zMd5key_Name
 index|[]
 init|=
@@ -606,19 +535,25 @@ comment|/*  *  Modulus option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zModulusText
 index|[]
 init|=
 literal|"modulus"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zModulus_NAME
 index|[]
 init|=
 literal|"MODULUS"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zModulus_Name
 index|[]
 init|=
@@ -633,19 +568,15 @@ directive|else
 comment|/* disable Modulus */
 define|#
 directive|define
-name|VALUE_OPT_MODULUS
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|MODULUS_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zModulusText
+name|zModulus_NAME
 value|NULL
 define|#
 directive|define
-name|zModulus_NAME
+name|zModulusText
 value|NULL
 define|#
 directive|define
@@ -658,19 +589,25 @@ comment|/*  *  Pvt_Cert option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPvt_CertText
 index|[]
 init|=
 literal|"generate PC private certificate"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPvt_Cert_NAME
 index|[]
 init|=
 literal|"PVT_CERT"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPvt_Cert_Name
 index|[]
 init|=
@@ -685,19 +622,15 @@ directive|else
 comment|/* disable Pvt_Cert */
 define|#
 directive|define
-name|VALUE_OPT_PVT_CERT
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|PVT_CERT_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zPvt_CertText
+name|zPvt_Cert_NAME
 value|NULL
 define|#
 directive|define
-name|zPvt_Cert_NAME
+name|zPvt_CertText
 value|NULL
 define|#
 directive|define
@@ -710,19 +643,25 @@ comment|/*  *  Pvt_Passwd option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPvt_PasswdText
 index|[]
 init|=
 literal|"output private password"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPvt_Passwd_NAME
 index|[]
 init|=
 literal|"PVT_PASSWD"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPvt_Passwd_Name
 index|[]
 init|=
@@ -737,19 +676,15 @@ directive|else
 comment|/* disable Pvt_Passwd */
 define|#
 directive|define
-name|VALUE_OPT_PVT_PASSWD
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|PVT_PASSWD_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zPvt_PasswdText
+name|zPvt_Passwd_NAME
 value|NULL
 define|#
 directive|define
-name|zPvt_Passwd_NAME
+name|zPvt_PasswdText
 value|NULL
 define|#
 directive|define
@@ -762,19 +697,25 @@ comment|/*  *  Get_Pvt_Passwd option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zGet_Pvt_PasswdText
 index|[]
 init|=
 literal|"input private password"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zGet_Pvt_Passwd_NAME
 index|[]
 init|=
 literal|"GET_PVT_PASSWD"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zGet_Pvt_Passwd_Name
 index|[]
 init|=
@@ -789,19 +730,15 @@ directive|else
 comment|/* disable Get_Pvt_Passwd */
 define|#
 directive|define
-name|VALUE_OPT_GET_PVT_PASSWD
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|GET_PVT_PASSWD_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zGet_Pvt_PasswdText
+name|zGet_Pvt_Passwd_NAME
 value|NULL
 define|#
 directive|define
-name|zGet_Pvt_Passwd_NAME
+name|zGet_Pvt_PasswdText
 value|NULL
 define|#
 directive|define
@@ -814,19 +751,25 @@ comment|/*  *  Sign_Key option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSign_KeyText
 index|[]
 init|=
 literal|"generate sign key (RSA or DSA)"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSign_Key_NAME
 index|[]
 init|=
 literal|"SIGN_KEY"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSign_Key_Name
 index|[]
 init|=
@@ -841,19 +784,15 @@ directive|else
 comment|/* disable Sign_Key */
 define|#
 directive|define
-name|VALUE_OPT_SIGN_KEY
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|SIGN_KEY_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zSign_KeyText
+name|zSign_Key_NAME
 value|NULL
 define|#
 directive|define
-name|zSign_Key_NAME
+name|zSign_KeyText
 value|NULL
 define|#
 directive|define
@@ -866,19 +805,25 @@ comment|/*  *  Subject_Name option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSubject_NameText
 index|[]
 init|=
 literal|"set subject name"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSubject_Name_NAME
 index|[]
 init|=
 literal|"SUBJECT_NAME"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSubject_Name_Name
 index|[]
 init|=
@@ -893,19 +838,15 @@ directive|else
 comment|/* disable Subject_Name */
 define|#
 directive|define
-name|VALUE_OPT_SUBJECT_NAME
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|SUBJECT_NAME_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zSubject_NameText
+name|zSubject_Name_NAME
 value|NULL
 define|#
 directive|define
-name|zSubject_Name_NAME
+name|zSubject_NameText
 value|NULL
 define|#
 directive|define
@@ -918,19 +859,25 @@ comment|/*  *  Trusted_Cert option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zTrusted_CertText
 index|[]
 init|=
 literal|"trusted certificate (TC scheme)"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zTrusted_Cert_NAME
 index|[]
 init|=
 literal|"TRUSTED_CERT"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zTrusted_Cert_Name
 index|[]
 init|=
@@ -945,19 +892,15 @@ directive|else
 comment|/* disable Trusted_Cert */
 define|#
 directive|define
-name|VALUE_OPT_TRUSTED_CERT
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|TRUSTED_CERT_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zTrusted_CertText
+name|zTrusted_Cert_NAME
 value|NULL
 define|#
 directive|define
-name|zTrusted_Cert_NAME
+name|zTrusted_CertText
 value|NULL
 define|#
 directive|define
@@ -970,19 +913,25 @@ comment|/*  *  Mv_Params option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zMv_ParamsText
 index|[]
 init|=
 literal|"generate<num> MV parameters"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zMv_Params_NAME
 index|[]
 init|=
 literal|"MV_PARAMS"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zMv_Params_Name
 index|[]
 init|=
@@ -997,19 +946,15 @@ directive|else
 comment|/* disable Mv_Params */
 define|#
 directive|define
-name|VALUE_OPT_MV_PARAMS
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|MV_PARAMS_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zMv_ParamsText
+name|zMv_Params_NAME
 value|NULL
 define|#
 directive|define
-name|zMv_Params_NAME
+name|zMv_ParamsText
 value|NULL
 define|#
 directive|define
@@ -1022,19 +967,25 @@ comment|/*  *  Mv_Keys option description:  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zMv_KeysText
 index|[]
 init|=
 literal|"update<num> MV keys"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zMv_Keys_NAME
 index|[]
 init|=
 literal|"MV_KEYS"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zMv_Keys_Name
 index|[]
 init|=
@@ -1049,19 +1000,15 @@ directive|else
 comment|/* disable Mv_Keys */
 define|#
 directive|define
-name|VALUE_OPT_MV_KEYS
-value|NO_EQUIVALENT
-define|#
-directive|define
 name|MV_KEYS_FLAGS
 value|(OPTST_OMITTED | OPTST_NO_INIT)
 define|#
 directive|define
-name|zMv_KeysText
+name|zMv_Keys_NAME
 value|NULL
 define|#
 directive|define
-name|zMv_Keys_NAME
+name|zMv_KeysText
 value|NULL
 define|#
 directive|define
@@ -1071,74 +1018,135 @@ endif|#
 directive|endif
 comment|/* OPENSSL */
 comment|/*  *  Help/More_Help/Version option descriptions:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zHelpText
 index|[]
 init|=
-literal|"Display usage information and exit"
+literal|"Display extended usage information and exit"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zHelp_Name
 index|[]
 init|=
 literal|"help"
 decl_stmt|;
-name|tSCC
-name|zMore_HelpText
-index|[]
-init|=
-literal|"Extended usage information passed thru pager"
-decl_stmt|;
-name|tSCC
+ifdef|#
+directive|ifdef
+name|HAVE_WORKING_FORK
+define|#
+directive|define
+name|OPTST_MORE_HELP_FLAGS
+value|(OPTST_IMM | OPTST_NO_INIT)
+specifier|static
+name|char
+specifier|const
 name|zMore_Help_Name
 index|[]
 init|=
 literal|"more-help"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
+name|zMore_HelpText
+index|[]
+init|=
+literal|"Extended usage information passed thru pager"
+decl_stmt|;
+else|#
+directive|else
+define|#
+directive|define
+name|OPTST_MORE_HELP_FLAGS
+value|(OPTST_OMITTED | OPTST_NO_INIT)
+define|#
+directive|define
+name|zMore_Help_Name
+value|NULL
+define|#
+directive|define
+name|zMore_HelpText
+value|NULL
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NO_OPTIONAL_OPT_ARGS
+define|#
+directive|define
+name|OPTST_VERSION_FLAGS
+value|OPTST_IMM | OPTST_NO_INIT
+else|#
+directive|else
+define|#
+directive|define
+name|OPTST_VERSION_FLAGS
+value|OPTST_SET_ARGTYPE(OPARG_TYPE_STRING) | \                                 OPTST_ARG_OPTIONAL | OPTST_IMM | OPTST_NO_INIT
+endif|#
+directive|endif
+specifier|static
+name|char
+specifier|const
 name|zVersionText
 index|[]
 init|=
 literal|"Output version information and exit"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zVersion_Name
 index|[]
 init|=
 literal|"version"
 decl_stmt|;
-comment|/*  *  Save/Load_Opts option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSave_OptsText
 index|[]
 init|=
 literal|"Save the option state to a config file"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSave_Opts_Name
 index|[]
 init|=
 literal|"save-opts"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zLoad_OptsText
 index|[]
 init|=
 literal|"Load options from a config file"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zLoad_Opts_NAME
 index|[]
 init|=
 literal|"LOAD_OPTS"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNotLoad_Opts_Name
 index|[]
 init|=
 literal|"no-load-opts"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNotLoad_Opts_Pfx
 index|[]
 init|=
@@ -1151,23 +1159,6 @@ value|(zNotLoad_Opts_Name + 3)
 comment|/*  *  Declare option callback procedures  */
 ifdef|#
 directive|ifdef
-name|DEBUG
-specifier|static
-name|tOptProc
-name|doOptSet_Debug_Level
-decl_stmt|;
-else|#
-directive|else
-comment|/* not DEBUG */
-define|#
-directive|define
-name|doOptSet_Debug_Level
-value|NULL
-endif|#
-directive|endif
-comment|/* def/not DEBUG */
-ifdef|#
-directive|ifdef
 name|OPENSSL
 specifier|static
 name|tOptProc
@@ -1179,40 +1170,6 @@ comment|/* not OPENSSL */
 define|#
 directive|define
 name|doOptModulus
-value|NULL
-endif|#
-directive|endif
-comment|/* def/not OPENSSL */
-ifdef|#
-directive|ifdef
-name|OPENSSL
-specifier|extern
-name|tOptProc
-name|optionNumericVal
-decl_stmt|;
-else|#
-directive|else
-comment|/* not OPENSSL */
-define|#
-directive|define
-name|optionNumericVal
-value|NULL
-endif|#
-directive|endif
-comment|/* def/not OPENSSL */
-ifdef|#
-directive|ifdef
-name|OPENSSL
-specifier|extern
-name|tOptProc
-name|optionNumericVal
-decl_stmt|;
-else|#
-directive|else
-comment|/* not OPENSSL */
-define|#
-directive|define
-name|optionNumericVal
 value|NULL
 endif|#
 directive|endif
@@ -1224,18 +1181,8 @@ argument_list|(
 name|TEST_NTP_KEYGEN_OPTS
 argument_list|)
 comment|/*  *  Under test, omit argument processing, or call optionStackArg,  *  if multiple copies are allowed.  */
-specifier|extern
-name|tOptProc
-name|optionNumericVal
-decl_stmt|,
-name|optionPagedUsage
-decl_stmt|,
-name|optionVersionStderr
-decl_stmt|;
 specifier|static
 name|tOptProc
-name|doOptModulus
-decl_stmt|,
 name|doUsageOpt
 decl_stmt|;
 comment|/*  *  #define map the "normal" callout procs to the test ones...  */
@@ -1249,12 +1196,32 @@ comment|/* NOT defined TEST_NTP_KEYGEN_OPTS */
 comment|/*  *  When not under test, there are different procs to use  */
 specifier|extern
 name|tOptProc
+name|optionBooleanVal
+decl_stmt|,
+name|optionNestedVal
+decl_stmt|,
+name|optionNumericVal
+decl_stmt|,
 name|optionPagedUsage
 decl_stmt|,
 name|optionPrintVersion
+decl_stmt|,
+name|optionResetOpt
+decl_stmt|,
+name|optionStackArg
+decl_stmt|,
+name|optionTimeDate
+decl_stmt|,
+name|optionTimeVal
+decl_stmt|,
+name|optionUnstackArg
+decl_stmt|,
+name|optionVersionStderr
 decl_stmt|;
 specifier|static
 name|tOptProc
+name|doOptSet_Debug_Level
+decl_stmt|,
 name|doUsageOpt
 decl_stmt|;
 comment|/*  *  #define map the "normal" callout procs  */
@@ -1573,65 +1540,10 @@ block|{
 comment|/* entry idx, value */
 literal|5
 block|,
-name|VALUE_OPT_GQ_KEYS
-block|,
-comment|/* equiv idx, value */
-literal|5
-block|,
-name|VALUE_OPT_GQ_KEYS
-block|,
-comment|/* equivalenced to  */
-name|NO_EQUIVALENT
-block|,
-comment|/* min, max, act ct */
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
-comment|/* opt state flags  */
-name|GQ_KEYS_FLAGS
-block|,
-literal|0
-block|,
-comment|/* last opt argumnt */
-block|{
-name|NULL
-block|}
-block|,
-comment|/* arg list/cookie  */
-name|NULL
-block|,
-comment|/* must/cannot opts */
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* option proc      */
-name|NULL
-block|,
-comment|/* desc, NAME, name */
-name|zGq_KeysText
-block|,
-name|zGq_Keys_NAME
-block|,
-name|zGq_Keys_Name
-block|,
-comment|/* disablement strs */
-name|NULL
-block|,
-name|NULL
-block|}
-block|,
-block|{
-comment|/* entry idx, value */
-literal|6
-block|,
 name|VALUE_OPT_HOST_KEY
 block|,
 comment|/* equiv idx, value */
-literal|6
+literal|5
 block|,
 name|VALUE_OPT_HOST_KEY
 block|,
@@ -1681,12 +1593,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|7
+literal|6
 block|,
 name|VALUE_OPT_IFFKEY
 block|,
 comment|/* equiv idx, value */
-literal|7
+literal|6
 block|,
 name|VALUE_OPT_IFFKEY
 block|,
@@ -1736,12 +1648,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|8
+literal|7
 block|,
 name|VALUE_OPT_ISSUER_NAME
 block|,
 comment|/* equiv idx, value */
-literal|8
+literal|7
 block|,
 name|VALUE_OPT_ISSUER_NAME
 block|,
@@ -1791,12 +1703,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|9
+literal|8
 block|,
 name|VALUE_OPT_MD5KEY
 block|,
 comment|/* equiv idx, value */
-literal|9
+literal|8
 block|,
 name|VALUE_OPT_MD5KEY
 block|,
@@ -1846,12 +1758,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|10
+literal|9
 block|,
 name|VALUE_OPT_MODULUS
 block|,
 comment|/* equiv idx, value */
-literal|10
+literal|9
 block|,
 name|VALUE_OPT_MODULUS
 block|,
@@ -1901,12 +1813,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|11
+literal|10
 block|,
 name|VALUE_OPT_PVT_CERT
 block|,
 comment|/* equiv idx, value */
-literal|11
+literal|10
 block|,
 name|VALUE_OPT_PVT_CERT
 block|,
@@ -1956,12 +1868,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|12
+literal|11
 block|,
 name|VALUE_OPT_PVT_PASSWD
 block|,
 comment|/* equiv idx, value */
-literal|12
+literal|11
 block|,
 name|VALUE_OPT_PVT_PASSWD
 block|,
@@ -2011,12 +1923,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|13
+literal|12
 block|,
 name|VALUE_OPT_GET_PVT_PASSWD
 block|,
 comment|/* equiv idx, value */
-literal|13
+literal|12
 block|,
 name|VALUE_OPT_GET_PVT_PASSWD
 block|,
@@ -2066,12 +1978,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|14
+literal|13
 block|,
 name|VALUE_OPT_SIGN_KEY
 block|,
 comment|/* equiv idx, value */
-literal|14
+literal|13
 block|,
 name|VALUE_OPT_SIGN_KEY
 block|,
@@ -2121,12 +2033,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|15
+literal|14
 block|,
 name|VALUE_OPT_SUBJECT_NAME
 block|,
 comment|/* equiv idx, value */
-literal|15
+literal|14
 block|,
 name|VALUE_OPT_SUBJECT_NAME
 block|,
@@ -2176,12 +2088,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|16
+literal|15
 block|,
 name|VALUE_OPT_TRUSTED_CERT
 block|,
 comment|/* equiv idx, value */
-literal|16
+literal|15
 block|,
 name|VALUE_OPT_TRUSTED_CERT
 block|,
@@ -2231,12 +2143,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|17
+literal|16
 block|,
 name|VALUE_OPT_MV_PARAMS
 block|,
 comment|/* equiv idx, value */
-literal|17
+literal|16
 block|,
 name|VALUE_OPT_MV_PARAMS
 block|,
@@ -2286,12 +2198,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|18
+literal|17
 block|,
 name|VALUE_OPT_MV_KEYS
 block|,
 comment|/* equiv idx, value */
-literal|18
+literal|17
 block|,
 name|VALUE_OPT_MV_KEYS
 block|,
@@ -2339,21 +2251,6 @@ block|,
 name|NULL
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|NO_OPTIONAL_OPT_ARGS
-define|#
-directive|define
-name|VERSION_OPT_FLAGS
-value|OPTST_IMM | OPTST_NO_INIT
-else|#
-directive|else
-define|#
-directive|define
-name|VERSION_OPT_FLAGS
-value|OPTST_SET_ARGTYPE(OPARG_TYPE_STRING) | \                                 OPTST_ARG_OPTIONAL | OPTST_IMM | OPTST_NO_INIT
-endif|#
-directive|endif
 block|{
 comment|/* entry idx, value */
 name|INDEX_OPT_VERSION
@@ -2376,7 +2273,7 @@ block|,
 literal|0
 block|,
 comment|/* opt state flags  */
-name|VERSION_OPT_FLAGS
+name|OPTST_VERSION_FLAGS
 block|,
 literal|0
 block|,
@@ -2409,9 +2306,6 @@ block|,
 name|NULL
 block|}
 block|,
-undef|#
-directive|undef
-name|VERSION_OPT_FLAGS
 block|{
 comment|/* entry idx, value */
 name|INDEX_OPT_HELP
@@ -2491,9 +2385,7 @@ block|,
 literal|0
 block|,
 comment|/* opt state flags  */
-name|OPTST_IMM
-operator||
-name|OPTST_NO_INIT
+name|OPTST_MORE_HELP_FLAGS
 block|,
 literal|0
 block|,
@@ -2614,7 +2506,6 @@ name|OPTST_SET_ARGTYPE
 argument_list|(
 name|OPARG_TYPE_STRING
 argument_list|)
-expr|\
 operator||
 name|OPTST_DISABLE_IMM
 block|,
@@ -2651,28 +2542,45 @@ block|}
 block|}
 decl_stmt|;
 comment|/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *  *  Define the Ntp_Keygen Option Environment  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPROGNAME
-index|[]
+index|[
+literal|11
+index|]
 init|=
 literal|"NTP_KEYGEN"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zUsageTitle
-index|[]
+index|[
+literal|114
+index|]
 init|=
-literal|"ntp-keygen (ntp) - Create a NTP host key - Ver. 4.2.4p8\n\ USAGE:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n"
+literal|"ntp-keygen (ntp) - Create a NTP host key - Ver. 4.2.6p5\n\ USAGE:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zRcName
-index|[]
+index|[
+literal|7
+index|]
 init|=
 literal|".ntprc"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 modifier|*
+specifier|const
 name|apzHomeList
-index|[]
+index|[
+literal|3
+index|]
 init|=
 block|{
 literal|"$HOME"
@@ -2682,9 +2590,13 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zBugsAddr
-index|[]
+index|[
+literal|34
+index|]
 init|=
 literal|"http://bugs.ntp.org, bugs@ntp.org"
 decl_stmt|;
@@ -2692,19 +2604,25 @@ define|#
 directive|define
 name|zExplain
 value|NULL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDetail
-index|[]
+index|[
+literal|99
+index|]
 init|=
-literal|"\n\ If there is no new host key, look for an existing one.\n\ If one is not found, create it.\n"
+literal|"\n\ If there is no new host key, look for an existing one.  If one is not\n\ found, create it.\n"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zFullVersion
 index|[]
 init|=
 name|NTP_KEYGEN_FULL_VERSION
 decl_stmt|;
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optcode.tpl near line 408 */
+comment|/* extracted from optcode.tlib near line 515 */
 if|#
 directive|if
 name|defined
@@ -2732,6 +2650,59 @@ value|NULL
 endif|#
 directive|endif
 comment|/* ENABLE_NLS */
+define|#
+directive|define
+name|ntp_keygen_full_usage
+value|NULL
+define|#
+directive|define
+name|ntp_keygen_short_usage
+value|NULL
+ifndef|#
+directive|ifndef
+name|PKGDATADIR
+define|#
+directive|define
+name|PKGDATADIR
+value|""
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|WITH_PACKAGER
+define|#
+directive|define
+name|ntp_keygen_packager_info
+value|NULL
+else|#
+directive|else
+specifier|static
+name|char
+specifier|const
+name|ntp_keygen_packager_info
+index|[]
+init|=
+literal|"Packaged by "
+name|WITH_PACKAGER
+ifdef|#
+directive|ifdef
+name|WITH_PACKAGER_VERSION
+literal|" ("
+name|WITH_PACKAGER_VERSION
+literal|")"
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WITH_PACKAGER_BUG_REPORTS
+literal|"\nReport ntp_keygen bugs to "
+name|WITH_PACKAGER_BUG_REPORTS
+endif|#
+directive|endif
+literal|"\n"
+decl_stmt|;
+endif|#
+directive|endif
 name|tOptions
 name|ntp_keygenOptions
 init|=
@@ -2758,7 +2729,7 @@ name|OPTPROC_ENVIRON
 operator|+
 name|OPTPROC_NO_ARGS
 operator|+
-name|OPTPROC_HAS_IMMED
+name|OPTPROC_MISUSE
 operator|)
 block|,
 literal|0
@@ -2776,7 +2747,7 @@ name|zRcName
 block|,
 name|zCopyright
 block|,
-name|zCopyrightNotice
+name|zLicenseDescrip
 block|,
 name|zFullVersion
 block|,
@@ -2808,20 +2779,34 @@ comment|/*      *  Indexes to special options      */
 block|{
 name|INDEX_OPT_MORE_HELP
 block|,
+comment|/* more-help option index */
 name|INDEX_OPT_SAVE_OPTS
 block|,
+comment|/* save option index */
 name|NO_EQUIVALENT
-comment|/* index of '-#' option */
 block|,
+comment|/* '-#' option index */
 name|NO_EQUIVALENT
 comment|/* index of default opt */
 block|}
 block|,
-literal|24
+literal|23
 comment|/* full option count */
 block|,
-literal|19
+literal|18
 comment|/* user option count */
+block|,
+name|ntp_keygen_full_usage
+block|,
+name|ntp_keygen_short_usage
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|PKGDATADIR
+block|,
+name|ntp_keygen_packager_info
 block|}
 decl_stmt|;
 comment|/*  *  Create the static procedure(s) declared above.  */
@@ -2838,9 +2823,14 @@ modifier|*
 name|pOptDesc
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|pOptions
+expr_stmt|;
 name|USAGE
 argument_list|(
-name|EXIT_SUCCESS
+name|NTP_KEYGEN_EXIT_SUCCESS
 argument_list|)
 expr_stmt|;
 block|}
@@ -2851,10 +2841,7 @@ name|defined
 argument_list|(
 name|TEST_NTP_KEYGEN_OPTS
 argument_list|)
-comment|/* * * * * * *  *  *   For the set-debug-level option, when DEBUG is #define-d.  */
-ifdef|#
-directive|ifdef
-name|DEBUG
+comment|/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *  *   For the set-debug-level option.  */
 specifier|static
 name|void
 name|doOptSet_Debug_Level
@@ -2868,7 +2855,7 @@ modifier|*
 name|pOptDesc
 parameter_list|)
 block|{
-comment|/* extracted from ../include/debug-opt.def, line 29 */
+comment|/* extracted from debug-opt.def, line 27 */
 name|DESC
 argument_list|(
 name|DEBUG_LEVEL
@@ -2886,11 +2873,8 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* defined DEBUG */
-endif|#
-directive|endif
 comment|/* defined(TEST_NTP_KEYGEN_OPTS) */
-comment|/* * * * * * *  *  *   For the modulus option, when OPENSSL is #define-d.  */
+comment|/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *  *   For the modulus option, when OPENSSL is #define-d.  */
 ifdef|#
 directive|ifdef
 name|OPENSSL
@@ -2911,8 +2895,8 @@ specifier|static
 specifier|const
 struct|struct
 block|{
+name|long
 specifier|const
-name|int
 name|rmin
 decl_stmt|,
 name|rmax
@@ -2932,42 +2916,22 @@ block|}
 block|}
 struct|;
 name|int
-name|val
-decl_stmt|;
-name|int
 name|ix
-decl_stmt|;
-name|char
-specifier|const
-modifier|*
-name|pzIndent
-init|=
-literal|"\t\t\t\t  "
-decl_stmt|;
-specifier|extern
-name|FILE
-modifier|*
-name|option_usage_fp
 decl_stmt|;
 if|if
 condition|(
-name|pOptDesc
-operator|==
-name|NULL
+name|pOptions
+operator|<=
+name|OPTPROC_EMIT_LIMIT
 condition|)
-comment|/* usage is requesting range list                              option_usage_fp has already been set */
 goto|goto
 name|emit_ranges
 goto|;
-name|val
-operator|=
-name|atoi
+name|optionNumericVal
 argument_list|(
+name|pOptions
+argument_list|,
 name|pOptDesc
-operator|->
-name|optArg
-operator|.
-name|argString
 argument_list|)
 expr_stmt|;
 for|for
@@ -2986,7 +2950,11 @@ control|)
 block|{
 if|if
 condition|(
-name|val
+name|pOptDesc
+operator|->
+name|optArg
+operator|.
+name|argInt
 operator|<
 name|rng
 index|[
@@ -2999,7 +2967,11 @@ continue|continue;
 comment|/* ranges need not be ordered. */
 if|if
 condition|(
-name|val
+name|pOptDesc
+operator|->
+name|optArg
+operator|.
+name|argInt
 operator|==
 name|rng
 index|[
@@ -3008,9 +2980,7 @@ index|]
 operator|.
 name|rmin
 condition|)
-goto|goto
-name|valid_return
-goto|;
+return|return;
 if|if
 condition|(
 name|rng
@@ -3020,12 +2990,16 @@ index|]
 operator|.
 name|rmax
 operator|==
-name|INT_MIN
+name|LONG_MIN
 condition|)
 continue|continue;
 if|if
 condition|(
-name|val
+name|pOptDesc
+operator|->
+name|optArg
+operator|.
+name|argInt
 operator|<=
 name|rng
 index|[
@@ -3034,99 +3008,34 @@ index|]
 operator|.
 name|rmax
 condition|)
-goto|goto
-name|valid_return
-goto|;
+return|return;
 block|}
 name|option_usage_fp
 operator|=
 name|stderr
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"%s error:  %s option value ``%s''is out of range.\n"
-argument_list|)
-argument_list|,
-name|pOptions
-operator|->
-name|pzProgName
-argument_list|,
-name|pOptDesc
-operator|->
-name|pz_Name
-argument_list|,
-name|pOptDesc
-operator|->
-name|optArg
-operator|.
-name|argString
-argument_list|)
-expr_stmt|;
-name|pzIndent
-operator|=
-literal|"\t"
-expr_stmt|;
 name|emit_ranges
 label|:
-name|fprintf
+name|optionShowRange
 argument_list|(
-name|option_usage_fp
+name|pOptions
 argument_list|,
-name|_
-argument_list|(
-literal|"%sit must lie in the range: %d to %d\n"
-argument_list|)
-argument_list|,
-name|pzIndent
-argument_list|,
-name|rng
-index|[
-literal|0
-index|]
-operator|.
-name|rmin
-argument_list|,
-name|rng
-index|[
-literal|0
-index|]
-operator|.
-name|rmax
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|pOptDesc
-operator|==
-name|NULL
-condition|)
-return|return;
-name|USAGE
-argument_list|(
-name|EXIT_FAILURE
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|rng
+argument_list|,
+literal|1
 argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-return|return;
-name|valid_return
-label|:
-name|pOptDesc
-operator|->
-name|optArg
-operator|.
-name|argInt
-operator|=
-name|val
 expr_stmt|;
 block|}
 endif|#
 directive|endif
 comment|/* defined OPENSSL */
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optmain.tpl near line 92 */
+comment|/* extracted from optmain.tlib near line 128 */
 if|#
 directive|if
 name|defined
@@ -3134,6 +3043,14 @@ argument_list|(
 name|TEST_NTP_KEYGEN_OPTS
 argument_list|)
 comment|/* TEST MAIN PROCEDURE: */
+specifier|extern
+name|void
+name|optionPutShell
+parameter_list|(
+name|tOptions
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|main
 parameter_list|(
@@ -3149,7 +3066,7 @@ block|{
 name|int
 name|res
 init|=
-name|EXIT_SUCCESS
+name|NTP_KEYGEN_EXIT_SUCCESS
 decl_stmt|;
 operator|(
 name|void
@@ -3164,21 +3081,32 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-block|{
-name|void
-name|optionPutShell
-argument_list|(
-name|tOptions
-operator|*
-argument_list|)
-decl_stmt|;
 name|optionPutShell
 argument_list|(
 operator|&
 name|ntp_keygenOptions
 argument_list|)
 expr_stmt|;
-block|}
+name|res
+operator|=
+name|ferror
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|!=
+literal|0
+condition|)
+name|fputs
+argument_list|(
+literal|"output error writing to stdout\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 return|return
 name|res
 return|;
@@ -3186,7 +3114,7 @@ block|}
 endif|#
 directive|endif
 comment|/* defined TEST_NTP_KEYGEN_OPTS */
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optcode.tpl near line 514 */
+comment|/* extracted from optcode.tlib near line 666 */
 if|#
 directive|if
 name|ENABLE_NLS
@@ -3292,7 +3220,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EXIT_FAILURE
+name|NTP_KEYGEN_EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3320,14 +3248,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|COERSION
-parameter_list|(
-name|_f
-parameter_list|)
-define|\
-value|coerce_it((void*)&(ntp_keygenOptions._f))
 comment|/*  *  This invokes the translation code (e.g. gettext(3)).  */
 specifier|static
 name|void
@@ -3336,18 +3256,33 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|tOptions
+modifier|*
+specifier|const
+name|pOpt
+init|=
+operator|&
+name|ntp_keygenOptions
+decl_stmt|;
 comment|/*      *  Guard against re-translation.  It won't work.  The strings will have      *  been changed by the first pass through this code.  One shot only.      */
 if|if
 condition|(
 name|option_usage_text
 operator|.
 name|field_ct
-operator|==
+operator|!=
 literal|0
 condition|)
-return|return;
-comment|/*      *  Do the translations.  The first pointer follows the field count field.      *  The field count field is the size of a pointer.      */
 block|{
+comment|/*          *  Do the translations.  The first pointer follows the field count          *  field.  The field count field is the size of a pointer.          */
+name|tOptDesc
+modifier|*
+name|pOD
+init|=
+name|pOpt
+operator|->
+name|pOptDesc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -3397,133 +3332,239 @@ operator|>
 literal|0
 condition|)
 do|;
-block|}
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzCopyright
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzCopyNotice
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzFullVersion
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzUsageTitle
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzExplain
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzDetail
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzPackager
+operator|)
+argument_list|)
+expr_stmt|;
 name|option_usage_text
 operator|.
 name|field_ct
 operator|=
 literal|0
 expr_stmt|;
+for|for
+control|(
+name|ix
+operator|=
+name|pOpt
+operator|->
+name|optCt
+init|;
+name|ix
+operator|>
+literal|0
+condition|;
+name|ix
+operator|--
+operator|,
+name|pOD
+operator|++
+control|)
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pzText
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|pOpt
+operator|->
+name|fOptSet
+operator|&
+name|OPTPROC_NXLAT_OPT_CFG
+operator|)
+operator|==
+literal|0
+condition|)
 block|{
 name|tOptDesc
 modifier|*
 name|pOD
 init|=
-name|ntp_keygenOptions
-operator|.
+name|pOpt
+operator|->
 name|pOptDesc
 decl_stmt|;
 name|int
 name|ix
-init|=
-name|ntp_keygenOptions
-operator|.
-name|optCt
 decl_stmt|;
 for|for
 control|(
-init|;
-condition|;
-control|)
-block|{
-name|pOD
-operator|->
-name|pzText
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pzText
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_NAME
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_NAME
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_Name
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_Name
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_DisableName
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_DisableName
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_DisablePfx
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_DisablePfx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|--
 name|ix
-operator|<=
+operator|=
+name|pOpt
+operator|->
+name|optCt
+init|;
+name|ix
+operator|>
 literal|0
-condition|)
-break|break;
+condition|;
+name|ix
+operator|--
+operator|,
 name|pOD
 operator|++
+control|)
+block|{
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pz_Name
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pz_DisableName
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pz_DisablePfx
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
+comment|/* prevent re-translation */
+name|ntp_keygenOptions
+operator|.
+name|fOptSet
+operator||=
+name|OPTPROC_NXLAT_OPT_CFG
+operator||
+name|OPTPROC_NXLAT_OPT
+expr_stmt|;
 block|}
-name|COERSION
-argument_list|(
-name|pzCopyright
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzCopyNotice
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzFullVersion
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzUsageTitle
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzExplain
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzDetail
-argument_list|)
-expr_stmt|;
 block|}
 endif|#
 directive|endif

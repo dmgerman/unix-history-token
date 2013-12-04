@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: boolean.c,v 4.10 2007/02/04 17:44:12 bkorb Exp $  * Time-stamp:      "2007-01-13 10:10:39 bkorb"  *  *   Automated Options Paged Usage module.  *  *  This routine will run run-on options through a pager so the  *  user may examine, print or edit them at their leisure.  */
-end_comment
-
-begin_comment
-comment|/*  *  Automated Options copyright 1992-2007 Bruce Korb  *  *  Automated Options is free software.  *  You may redistribute it and/or modify it under the terms of the  *  GNU General Public License, as published by the Free Software  *  Foundation; either version 2, or (at your option) any later version.  *  *  Automated Options is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *  GNU General Public License for more details.  *  *  You should have received a copy of the GNU General Public License  *  along with Automated Options.  See the file "COPYING".  If not,  *  write to:  The Free Software Foundation, Inc.,  *             51 Franklin Street, Fifth Floor,  *             Boston, MA  02110-1301, USA.  *  * As a special exception, Bruce Korb gives permission for additional  * uses of the text contained in his release of AutoOpts.  *  * The exception is that, if you link the AutoOpts library with other  * files to produce an executable, this does not by itself cause the  * resulting executable to be covered by the GNU General Public License.  * Your use of that executable is in no way restricted on account of  * linking the AutoOpts library code into it.  *  * This exception does not however invalidate any other reasons why  * the executable file might be covered by the GNU General Public License.  *  * This exception applies only to the code released by Bruce Korb under  * the name AutoOpts.  If you copy code from other sources under the  * General Public License into a copy of AutoOpts, as the General Public  * License permits, the exception does not apply to the code that you add  * in this way.  To avoid misleading anyone as to the status of such  * modified files, you must delete this exception notice from them.  *  * If you write modifications of your own for AutoOpts, it is your choice  * whether to permit this exception to apply to your modifications.  * If you do not wish that, delete this exception notice.  */
+comment|/**  * \file boolean.c  *  * Time-stamp:      "2010-07-10 11:02:10 bkorb"  *  *   Automated Options Paged Usage module.  *  *  This routine will run run-on options through a pager so the  *  user may examine, print or edit them at their leisure.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
 end_comment
 
 begin_comment
@@ -33,6 +29,40 @@ name|res
 init|=
 name|AG_TRUE
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|pOD
+operator|->
+name|fOptState
+operator|&
+name|OPTST_RESET
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|pOD
+operator|->
+name|optArg
+operator|.
+name|argString
+operator|==
+name|NULL
+condition|)
+block|{
+name|pOD
+operator|->
+name|optArg
+operator|.
+name|argBool
+operator|=
+name|AG_FALSE
+expr_stmt|;
+return|return;
+block|}
 switch|switch
 condition|(
 operator|*

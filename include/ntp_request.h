@@ -6,19 +6,31 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NTP_REQUEST_H
+name|NTP_REQUEST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NTP_REQUEST_H
+name|NTP_REQUEST_H
 end_define
 
 begin_include
 include|#
 directive|include
+file|"stddef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"recvbuff.h"
 end_include
 
 begin_comment
@@ -94,7 +106,7 @@ comment|/* time stamp, for authentication */
 name|keyid_t
 name|keyid
 decl_stmt|;
-comment|/* encryption key */
+comment|/* (optional) encryption key */
 name|char
 name|mac
 index|[
@@ -102,11 +114,11 @@ name|MAX_MAC_LEN
 operator|-
 sizeof|sizeof
 argument_list|(
-name|u_int32
+name|keyid_t
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* (optional) 8 byte auth code */
+comment|/* (optional) auth code */
 block|}
 struct|;
 end_struct
@@ -126,7 +138,7 @@ comment|/* time stamp, for authentication */
 name|keyid_t
 name|keyid
 decl_stmt|;
-comment|/* encryption key */
+comment|/* (optional) encryption key */
 name|char
 name|mac
 index|[
@@ -134,53 +146,58 @@ name|MAX_MAC_LEN
 operator|-
 sizeof|sizeof
 argument_list|(
-name|u_int32
+name|keyid_t
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* (optional) 8 byte auth code */
+comment|/* (optional) auth code */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Input packet lengths.  One with the mac, one without.  */
+comment|/* MODE_PRIVATE request packet header length before optional items. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|REQ_LEN_HDR
-value|8
+value|(offsetof(struct req_pkt, data))
 end_define
 
 begin_comment
-comment|/* 4 * u_char + 2 * u_short */
+comment|/* MODE_PRIVATE request packet fixed length without MAC. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|REQ_LEN_MAC
-value|(sizeof(struct req_pkt))
+name|REQ_LEN_NOMAC
+value|(offsetof(struct req_pkt, keyid))
 end_define
+
+begin_comment
+comment|/* MODE_PRIVATE req_pkt_tail minimum size (16 octet digest) */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|REQ_LEN_NOMAC
-value|(sizeof(struct req_pkt) - MAX_MAC_LEN)
+name|REQ_TAIL_MIN
+define|\
+value|(sizeof(struct req_pkt_tail) - (MAX_MAC_LEN - MAX_MD5_LEN))
 end_define
 
 begin_comment
-comment|/*  * A response packet.  The length here is variable, this is a  * maximally sized one.  Note that this implementation doesn't  * authenticate responses.  */
+comment|/*  * A MODE_PRIVATE response packet.  The length here is variable, this  * is a maximally sized one.  Note that this implementation doesn't  * authenticate responses.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RESP_HEADER_SIZE
-value|(8)
+value|(offsetof(struct resp_pkt, data))
 end_define
 
 begin_define
@@ -1382,7 +1399,7 @@ comment|/* peer.timer */
 name|s_fp
 name|rootdelay
 decl_stmt|;
-comment|/* peer.distance */
+comment|/* peer.delay */
 name|u_fp
 name|rootdispersion
 decl_stmt|;
@@ -1669,7 +1686,7 @@ comment|/* local clock precision */
 name|s_fp
 name|rootdelay
 decl_stmt|;
-comment|/* distance from sync source */
+comment|/* delay from sync source */
 name|u_fp
 name|rootdispersion
 decl_stmt|;
@@ -2331,9 +2348,9 @@ name|firsttime
 decl_stmt|;
 comment|/* first time we received a packet */
 name|u_int32
-name|lastdrop
+name|restr
 decl_stmt|;
-comment|/* last time we rejected a packet due to client limitation policy */
+comment|/* restrict bits (was named lastdrop) */
 name|u_int32
 name|count
 decl_stmt|;
@@ -2401,9 +2418,9 @@ name|firsttime
 decl_stmt|;
 comment|/* first time we received a packet */
 name|u_int32
-name|lastdrop
+name|restr
 decl_stmt|;
-comment|/* last time we rejected a packet due to client limitation policy */
+comment|/* restrict bits (was named lastdrop) */
 name|u_int32
 name|count
 decl_stmt|;
@@ -2442,7 +2459,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure used for returning monitor data (old format  */
+comment|/*  * Structure used for returning monitor data (old format)  */
 end_comment
 
 begin_struct
@@ -2828,7 +2845,7 @@ decl_stmt|;
 name|int32
 name|fudgeval1
 decl_stmt|;
-name|int32
+name|u_int32
 name|fudgeval2
 decl_stmt|;
 block|}
@@ -2852,7 +2869,7 @@ decl_stmt|;
 name|l_fp
 name|fudgetime
 decl_stmt|;
-name|int32
+name|u_int32
 name|fudgeval_flags
 decl_stmt|;
 block|}
@@ -3176,6 +3193,26 @@ comment|/* hostname */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * function declarations  */
+end_comment
+
+begin_function_decl
+name|int
+name|get_packet_mode
+parameter_list|(
+name|struct
+name|recvbuf
+modifier|*
+name|rbufp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return packet mode */
+end_comment
 
 begin_endif
 endif|#

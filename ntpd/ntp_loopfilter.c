@@ -196,7 +196,7 @@ begin_define
 define|#
 directive|define
 name|CLOCK_FLL
-value|(NTP_MAXPOLL + CLOCK_AVG)
+value|.25
 end_define
 
 begin_comment
@@ -207,11 +207,11 @@ begin_define
 define|#
 directive|define
 name|CLOCK_ALLAN
-value|1500.
+value|11
 end_define
 
 begin_comment
-comment|/* compromise Allan intercept (s) */
+comment|/* Allan intercept (log2 s) */
 end_comment
 
 begin_define
@@ -269,67 +269,40 @@ begin_comment
 comment|/* kernel pps signal timeout (s) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FREQTOD
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) / 65536e6)
+end_define
+
 begin_comment
-comment|/*  * Clock discipline state machine. This is used to control the  * synchronization behavior during initialization and following a  * timewarp.  *  *	State< step> step		Comments  *	====================================================  *	NSET	FREQ		step, FREQ	no ntp.drift  *  *	FSET	SYNC		step, SYNC	ntp.drift  *  *	FREQ	if (mu< 900)	if (mu< 900)	set freq  *		    ignore	    ignore  *		else		else  *		    freq, SYNC	    freq, step, SYNC  *  *	SYNC	SYNC		if (mu< 900)	adjust phase/freq  *				    ignore  *				else  *				    SPIK  *  *	SPIK	SYNC		step, SYNC	set phase  */
+comment|/* NTP to double */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|S_NSET
-value|0
+name|DTOFREQ
+parameter_list|(
+name|x
+parameter_list|)
+value|((int32)((x) * 65536e6))
 end_define
 
 begin_comment
-comment|/* clock never set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_FSET
-value|1
-end_define
-
-begin_comment
-comment|/* frequency set from the drift file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_SPIK
-value|2
-end_define
-
-begin_comment
-comment|/* spike detected */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_FREQ
-value|3
-end_define
-
-begin_comment
-comment|/* frequency mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_SYNC
-value|4
-end_define
-
-begin_comment
-comment|/* clock synchronized */
+comment|/* double to NTP */
 end_comment
 
 begin_comment
-comment|/*  * Kernel PLL/PPS state machine. This is used with the kernel PLL  * modifications described in the README.kernel file.  *  * If kernel support for the ntp_adjtime() system call is available, the  * ntp_control flag is set. The ntp_enable and kern_enable flags can be  * set at configuration time or run time using ntpdc. If ntp_enable is  * false, the discipline loop is unlocked and no corrections of any kind  * are made. If both ntp_control and kern_enable are set, the kernel  * support is used as described above; if false, the kernel is bypassed  * entirely and the daemon discipline used instead.  *  * There have been three versions of the kernel discipline code. The  * first (microkernel) now in Solaris discipilnes the microseconds. The  * second and third (nanokernel) disciplines the clock in nanoseconds.  * These versions are identifed if the symbol STA_PLL is present in the  * header file /usr/include/sys/timex.h. The third and current version  * includes TAI offset and is identified by the symbol NTP_API with  * value 4.  *  * Each update to a prefer peer sets pps_stratum if it survives the  * intersection algorithm and its time is within range. The PPS time  * discipline is enabled (STA_PPSTIME bit set in the status word) when  * pps_stratum is true and the PPS frequency discipline is enabled. If  * the PPS time discipline is enabled and the kernel reports a PPS  * signal is present, the pps_control variable is set to the current  * time. If the current time is later than pps_control by PPS_MAXAGE  * (120 s), this variable is set to zero.  *  * If an external clock is present, the clock driver sets STA_CLK in the  * status word. When the local clock driver sees this bit, it updates  * via this routine, which then calls ntp_adjtime() with the STA_PLL bit  * set to zero, in which case the system clock is not adjusted. This is  * also a signal for the external clock driver to discipline the system  * clock.  */
+comment|/*  * Clock discipline state machine. This is used to control the  * synchronization behavior during initialization and following a  * timewarp.  *  *	State< step> step		Comments  *	========================================================  *	NSET	FREQ		step, FREQ	freq not set  *  *	FSET	SYNC		step, SYNC	freq set  *  *	FREQ	if (mu< 900)	if (mu< 900)	set freq direct  *		    ignore	    ignore  *		else		else  *		    freq, SYNC	    freq, step, SYNC  *  *	SYNC	SYNC		SPIK, ignore	adjust phase/freq  *  *	SPIK	SYNC		if (mu< 900)	adjust phase/freq  *				    ignore  *				step, SYNC  */
+end_comment
+
+begin_comment
+comment|/*  * Kernel PLL/PPS state machine. This is used with the kernel PLL  * modifications described in the documentation.  *  * If kernel support for the ntp_adjtime() system call is available, the  * ntp_control flag is set. The ntp_enable and kern_enable flags can be  * set at configuration time or run time using ntpdc. If ntp_enable is  * false, the discipline loop is unlocked and no corrections of any kind  * are made. If both ntp_control and kern_enable are set, the kernel  * support is used as described above; if false, the kernel is bypassed  * entirely and the daemon discipline used instead.  *  * There have been three versions of the kernel discipline code. The  * first (microkernel) now in Solaris discipilnes the microseconds. The  * second and third (nanokernel) disciplines the clock in nanoseconds.  * These versions are identifed if the symbol STA_PLL is present in the  * header file /usr/include/sys/timex.h. The third and current version  * includes TAI offset and is identified by the symbol NTP_API with  * value 4.  *  * Each PPS time/frequency discipline can be enabled by the atom driver  * or another driver. If enabled, the STA_PPSTIME and STA_FREQ bits are  * set in the kernel status word; otherwise, these bits are cleared.  * These bits are also cleard if the kernel reports an error.  *  * If an external clock is present, the clock driver sets STA_CLK in the  * status word. When the local clock driver sees this bit, it updates  * via this routine, which then calls ntp_adjtime() with the STA_PLL bit  * set to zero, in which case the system clock is not adjusted. This is  * also a signal for the external clock driver to discipline the system  * clock. Unless specified otherwise, all times are in seconds.  */
 end_comment
 
 begin_comment
@@ -345,7 +318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* step threshold (s) */
+comment|/* step threshold */
 end_comment
 
 begin_decl_stmt
@@ -357,7 +330,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* stepout threshold (s) */
+comment|/* stepout threshold */
 end_comment
 
 begin_decl_stmt
@@ -369,7 +342,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* panic threshold (s) */
+comment|/* panic threshold */
 end_comment
 
 begin_decl_stmt
@@ -385,7 +358,7 @@ comment|/* dispersion rate (s/s) */
 end_comment
 
 begin_decl_stmt
-name|double
+name|u_char
 name|allan_xpt
 init|=
 name|CLOCK_ALLAN
@@ -393,7 +366,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Allan intercept (s) */
+comment|/* Allan intercept (log2 s) */
 end_comment
 
 begin_comment
@@ -408,7 +381,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* offset (s) */
+comment|/* offset */
 end_comment
 
 begin_decl_stmt
@@ -418,7 +391,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* offset jitter (s) */
+comment|/* offset jitter */
 end_comment
 
 begin_decl_stmt
@@ -442,54 +415,78 @@ comment|/* frequency stability (wander) (s/s) */
 end_comment
 
 begin_decl_stmt
-name|u_long
-name|sys_clocktime
+name|double
+name|clock_codec
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* last system clock update */
+comment|/* audio codec frequency (samples/s) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_long
-name|pps_control
+name|clock_epoch
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* last pps update */
+comment|/* last update */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|u_int
 name|sys_tai
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* UTC offset from TAI (s) */
+comment|/* TAI offset from UTC */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|rstclock
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-name|u_long
-operator|,
+parameter_list|,
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* transition function */
+end_comment
+
+begin_function_decl
+specifier|static
+name|double
+name|direct_freq
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* direct set frequency */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|set_freq
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* set frequency */
 end_comment
 
 begin_ifdef
@@ -499,6 +496,7 @@ name|KERNEL_PLL
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timex
 name|ntv
@@ -506,7 +504,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* kernel API parameters */
+comment|/* ntp_adjtime() parameters */
 end_comment
 
 begin_decl_stmt
@@ -516,7 +514,40 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* status bits for kernel pll */
+comment|/* last kernel status bits */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STA_NANO
+argument_list|)
+operator|&&
+name|NTP_API
+operator|==
+literal|4
+end_if
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|loop_tai
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last TAI offset */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* STA_NANO */
 end_comment
 
 begin_endif
@@ -535,6 +566,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|ntp_enable
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -555,6 +588,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|kern_enable
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -633,8 +668,6 @@ end_comment
 begin_decl_stmt
 name|u_char
 name|sys_poll
-init|=
-name|NTP_MINDPOLL
 decl_stmt|;
 end_decl_stmt
 
@@ -660,6 +693,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* last offset (s) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|last_step
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last clock step */
 end_comment
 
 begin_comment
@@ -737,18 +781,15 @@ directive|ifdef
 name|SIGSYS
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|pll_trap
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* configuration trap */
@@ -818,15 +859,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * Initialize state variables. Initially, we expect no drift 	 * file, so set the state to S_NSET. If a drift file is present, 	 * it will be detected later and the state set to S_FSET. 	 */
-name|rstclock
-argument_list|(
-name|S_NSET
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
+comment|/* 	 * Initialize state variables. 	 */
+name|sys_poll
+operator|=
+name|ntp_minpoll
 expr_stmt|;
 name|clock_jitter
 operator|=
@@ -839,7 +875,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * local_clock - the NTP logical clock loop filter.  *  * Return codes:  * -1	update ignored: exceeds panic threshold  * 0	update ignored: popcorn or exceeds step threshold  * 1	clock was slewed  * 2	clock was stepped  *  * LOCKCLOCK: The only thing this routine does is set the  * sys_rootdispersion variable equal to the peer dispersion.  */
+comment|/*  * local_clock - the NTP logical clock loop filter.  *  * Return codes:  * -1	update ignored: exceeds panic threshold  * 0	update ignored: popcorn or exceeds step threshold  * 1	clock was slewed  * 2	clock was stepped  *  * LOCKCLOCK: The only thing this routine does is set the  * sys_rootdisp variable equal to the peer dispersion.  */
 end_comment
 
 begin_function
@@ -861,74 +897,32 @@ name|int
 name|rval
 decl_stmt|;
 comment|/* return code */
-name|u_long
+name|int
+name|osys_poll
+decl_stmt|;
+comment|/* old system poll */
+name|double
 name|mu
 decl_stmt|;
-comment|/* interval since last update (s) */
-name|double
-name|flladj
-decl_stmt|;
-comment|/* FLL frequency adjustment (ppm) */
-name|double
-name|plladj
-decl_stmt|;
-comment|/* PLL frequency adjustment (ppm) */
+comment|/* interval since last update */
 name|double
 name|clock_frequency
 decl_stmt|;
-comment|/* clock frequency adjustment (ppm) */
+comment|/* clock frequency */
 name|double
 name|dtemp
 decl_stmt|,
 name|etemp
 decl_stmt|;
 comment|/* double temps */
-ifdef|#
-directive|ifdef
-name|OPENSSL
-name|u_int32
-modifier|*
-name|tpt
+name|char
+name|tbuf
+index|[
+literal|80
+index|]
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-name|long
-name|togo
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* OPENSSL */
+comment|/* report buffer */
 comment|/* 	 * If the loop is opened or the NIST LOCKCLOCK is in use, 	 * monitor and record the offsets anyway in order to determine 	 * the open-loop response and then go home. 	 */
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"local_clock: assocID %d offset %.9f freq %.3f state %d\n"
-argument_list|,
-name|peer
-operator|->
-name|associd
-argument_list|,
-name|fp_offset
-argument_list|,
-name|drift_comp
-operator|*
-literal|1e6
-argument_list|,
-name|state
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|LOCKCLOCK
@@ -983,15 +977,29 @@ operator|!
 name|allow_panic
 condition|)
 block|{
-name|msyslog
+name|snprintf
 argument_list|(
-name|LOG_ERR
+name|tbuf
 argument_list|,
-literal|"time correction of %.0f seconds exceeds sanity limit (%.0f); set clock manually to the correct UTC time."
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
+argument_list|,
+literal|"%+.0f s; set clock manually within %.0f s."
 argument_list|,
 name|fp_offset
 argument_list|,
 name|clock_panic
+argument_list|)
+expr_stmt|;
+name|report_event
+argument_list|(
+name|EVNT_SYSFAULT
+argument_list|,
+name|NULL
+argument_list|,
+name|tbuf
 argument_list|)
 expr_stmt|;
 return|return
@@ -1001,7 +1009,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * If simulating ntpdate, set the clock directly, rather than 	 * using the discipline. The clock_max defines the step 	 * threshold, above which the clock will be stepped instead of 	 * slewed. The value defaults to 128 ms, but can be set to even 	 * unreasonable values. If set to zero, the clock will never be 	 * stepped. Note that a slew will persist beyond the life of 	 * this program. 	 * 	 * Note that if ntpdate is active, the terminal does not detach, 	 * so the termination comments print directly to the console. 	 */
+comment|/* 	 * This section simulates ntpdate. If the offset exceeds the 	 * step threshold (128 ms), step the clock to that time and 	 * exit. Othewise, slew the clock to that time and exit. Note 	 * that the slew will persist and eventually complete beyond the 	 * life of this program. Note that while ntpdate is active, the 	 * terminal does not detach, so the termination message prints 	 * directly to the terminal. 	 */
 if|if
 condition|(
 name|mode_ntpdate
@@ -1030,7 +1038,7 @@ name|msyslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"time reset %+.6f s"
+literal|"ntpd: time set %+.6f s"
 argument_list|,
 name|fp_offset
 argument_list|)
@@ -1054,7 +1062,7 @@ name|msyslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"time slew %+.6f s"
+literal|"ntpd: time slew %+.6f s"
 argument_list|,
 name|fp_offset
 argument_list|)
@@ -1086,22 +1094,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The huff-n'-puff filter finds the lowest delay in the recent 	 * interval. This is used to correct the offset by one-half the 	 * difference between the sample delay and minimum delay. This 	 * is most effective if the delays are highly assymetric and 	 * clockhopping is avoided and the clock frequency wander is 	 * relatively small. 	 * 	 * Note either there is no prefer peer or this update is from 	 * the prefer peer. 	 */
+comment|/* 	 * The huff-n'-puff filter finds the lowest delay in the recent 	 * interval. This is used to correct the offset by one-half the 	 * difference between the sample delay and minimum delay. This 	 * is most effective if the delays are highly assymetric and 	 * clockhopping is avoided and the clock frequency wander is 	 * relatively small. 	 */
 if|if
 condition|(
 name|sys_huffpuff
 operator|!=
 name|NULL
-operator|&&
-operator|(
-name|sys_prefer
-operator|==
-name|NULL
-operator|||
-name|sys_prefer
-operator|==
-name|peer
-operator|)
 condition|)
 block|{
 if|if
@@ -1195,36 +1193,48 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * Clock state machine transition function. This is where the 	 * action is and defines how the system reacts to large phase 	 * and frequency errors. There are two main regimes: when the 	 * offset exceeds the step threshold and when it does not. 	 * However, if the step threshold is set to zero, a step will 	 * never occur. See the instruction manual for the details how 	 * these actions interact with the command line options. 	 * 	 * Note the system poll is set to minpoll only if the clock is 	 * stepped. Note also the kernel is disabled if step is 	 * disabled or greater than 0.5 s.  	 */
-name|clock_frequency
+comment|/* 	 * Clock state machine transition function which defines how the 	 * system reacts to large phase and frequency excursion. There 	 * are two main regimes: when the offset exceeds the step 	 * threshold (128 ms) and when it does not. Under certain 	 * conditions updates are suspended until the stepout theshold 	 * (900 s) is exceeded. See the documentation on how these 	 * thresholds interact with commands and command line options.  	 * 	 * Note the kernel is disabled if step is disabled or greater 	 * than 0.5 s or in ntpdate mode.  	 */
+name|osys_poll
 operator|=
-name|flladj
-operator|=
-name|plladj
-operator|=
-literal|0
-expr_stmt|;
-name|mu
-operator|=
-name|peer
-operator|->
-name|epoch
-operator|-
-name|sys_clocktime
+name|sys_poll
 expr_stmt|;
 if|if
 condition|(
-name|clock_max
-operator|==
-literal|0
-operator|||
-name|clock_max
-operator|>
-literal|0.5
+name|sys_poll
+operator|<
+name|peer
+operator|->
+name|minpoll
 condition|)
-name|kern_enable
+name|sys_poll
 operator|=
-literal|0
+name|peer
+operator|->
+name|minpoll
+expr_stmt|;
+if|if
+condition|(
+name|sys_poll
+operator|>
+name|peer
+operator|->
+name|maxpoll
+condition|)
+name|sys_poll
+operator|=
+name|peer
+operator|->
+name|maxpoll
+expr_stmt|;
+name|mu
+operator|=
+name|current_time
+operator|-
+name|clock_epoch
+expr_stmt|;
+name|clock_frequency
+operator|=
+name|drift_comp
 expr_stmt|;
 name|rval
 operator|=
@@ -1249,22 +1259,45 @@ condition|(
 name|state
 condition|)
 block|{
-comment|/* 		 * In S_SYNC state we ignore the first outlyer amd 		 * switch to S_SPIK state. 		 */
+comment|/* 		 * In SYNC state we ignore the first outlyer and switch 		 * to SPIK state. 		 */
 case|case
-name|S_SYNC
+name|EVNT_SYNC
 case|:
+name|snprintf
+argument_list|(
+name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
+argument_list|,
+literal|"%+.6f s"
+argument_list|,
+name|fp_offset
+argument_list|)
+expr_stmt|;
+name|report_event
+argument_list|(
+name|EVNT_SPIK
+argument_list|,
+name|NULL
+argument_list|,
+name|tbuf
+argument_list|)
+expr_stmt|;
 name|state
 operator|=
-name|S_SPIK
+name|EVNT_SPIK
 expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * In S_FREQ state we ignore outlyers and inlyers. At 		 * the first outlyer after the stepout threshold, 		 * compute the apparent frequency correction and step 		 * the phase. 		 */
+comment|/* 		 * In FREQ state we ignore outlyers and inlyers. At the 		 * first outlyer after the stepout threshold, compute 		 * the apparent frequency correction and step the phase. 		 */
 case|case
-name|S_FREQ
+name|EVNT_FREQ
 case|:
 if|if
 condition|(
@@ -1279,18 +1312,15 @@ operator|)
 return|;
 name|clock_frequency
 operator|=
-operator|(
+name|direct_freq
+argument_list|(
 name|fp_offset
-operator|-
-name|clock_offset
-operator|)
-operator|/
-name|mu
+argument_list|)
 expr_stmt|;
 comment|/* fall through to S_SPIK */
-comment|/* 		 * In S_SPIK state we ignore succeeding outlyers until 		 * either an inlyer is found or the stepout threshold is 		 * exceeded. 		 */
+comment|/* 		 * In SPIK state we ignore succeeding outlyers until 		 * either an inlyer is found or the stepout threshold is 		 * exceeded. 		 */
 case|case
-name|S_SPIK
+name|EVNT_SPIK
 case|:
 if|if
 condition|(
@@ -1304,19 +1334,33 @@ literal|0
 operator|)
 return|;
 comment|/* fall through to default */
-comment|/* 		 * We get here by default in S_NSET and S_FSET states 		 * and from above in S_FREQ or S_SPIK states. 		 * 		 * In S_NSET state an initial frequency correction is 		 * not available, usually because the frequency file has 		 * not yet been written. Since the time is outside the 		 * step threshold, the clock is stepped. The frequency 		 * will be set directly following the stepout interval. 		 * 		 * In S_FSET state the initial frequency has been set 		 * from the frequency file. Since the time is outside 		 * the step threshold, the clock is stepped immediately, 		 * rather than after the stepout interval. Guys get 		 * nervous if it takes 17 minutes to set the clock for 		 * the first time. 		 * 		 * In S_FREQ and S_SPIK states the stepout threshold has 		 * expired and the phase is still above the step 		 * threshold. Note that a single spike greater than the 		 * step threshold is always suppressed, even at the 		 * longer poll intervals. 		 */
+comment|/* 		 * We get here by default in NSET and FSET states and 		 * from above in FREQ or SPIK states. 		 * 		 * In NSET state an initial frequency correction is not 		 * available, usually because the frequency file has not 		 * yet been written. Since the time is outside the step 		 * threshold, the clock is stepped. The frequency will 		 * be set directly following the stepout interval. 		 * 		 * In FSET state the initial frequency has been set from 		 * the frequency file. Since the time is outside the 		 * step threshold, the clock is stepped immediately, 		 * rather than after the stepout interval. Guys get 		 * nervous if it takes 15 minutes to set the clock for 		 * the first time. 		 * 		 * In FREQ and SPIK states the stepout threshold has 		 * expired and the phase is still above the step 		 * threshold. Note that a single spike greater than the 		 * step threshold is always suppressed, even with a 		 * long time constant. 		 */
 default|default:
-name|step_systime
+name|snprintf
 argument_list|(
+name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
+argument_list|,
+literal|"%+.6f s"
+argument_list|,
 name|fp_offset
 argument_list|)
 expr_stmt|;
-name|msyslog
+name|report_event
 argument_list|(
-name|LOG_NOTICE
+name|EVNT_CLOCKRESET
 argument_list|,
-literal|"time reset %+.6f s"
+name|NULL
 argument_list|,
+name|tbuf
+argument_list|)
+expr_stmt|;
+name|step_systime
+argument_list|(
 name|fp_offset
 argument_list|)
 expr_stmt|;
@@ -1324,14 +1368,6 @@ name|reinit_timer
 argument_list|()
 expr_stmt|;
 name|tc_counter
-operator|=
-literal|0
-expr_stmt|;
-name|sys_poll
-operator|=
-name|NTP_MINPOLL
-expr_stmt|;
-name|sys_tai
 operator|=
 literal|0
 expr_stmt|;
@@ -1350,16 +1386,22 @@ if|if
 condition|(
 name|state
 operator|==
-name|S_NSET
+name|EVNT_NSET
+operator|||
+operator|(
+name|current_time
+operator|-
+name|last_step
+operator|)
+operator|<
+name|clock_minstep
+operator|*
+literal|2
 condition|)
 block|{
 name|rstclock
 argument_list|(
-name|S_FREQ
-argument_list|,
-name|peer
-operator|->
-name|epoch
+name|EVNT_FREQ
 argument_list|,
 literal|0
 argument_list|)
@@ -1370,15 +1412,15 @@ name|rval
 operator|)
 return|;
 block|}
+name|last_step
+operator|=
+name|current_time
+expr_stmt|;
 break|break;
 block|}
 name|rstclock
 argument_list|(
-name|S_SYNC
-argument_list|,
-name|peer
-operator|->
-name|epoch
+name|EVNT_SYNC
 argument_list|,
 literal|0
 argument_list|)
@@ -1434,41 +1476,33 @@ condition|(
 name|state
 condition|)
 block|{
-comment|/* 		 * In S_NSET state this is the first update received and 		 * the frequency has not been initialized. Adjust the 		 * phase, but do not adjust the frequency until after 		 * the stepout threshold. 		 */
+comment|/* 		 * In NSET state this is the first update received and 		 * the frequency has not been initialized. Adjust the 		 * phase, but do not adjust the frequency until after 		 * the stepout threshold. 		 */
 case|case
-name|S_NSET
+name|EVNT_NSET
 case|:
 name|rstclock
 argument_list|(
-name|S_FREQ
-argument_list|,
-name|peer
-operator|->
-name|epoch
+name|EVNT_FREQ
 argument_list|,
 name|fp_offset
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 		 * In S_FSET state this is the first update received and 		 * the frequency has been initialized. Adjust the phase, 		 * but do not adjust the frequency until the next 		 * update. 		 */
+comment|/* 		 * In FSET state this is the first update received and 		 * the frequency has been initialized. Adjust the phase, 		 * but do not adjust the frequency until the next 		 * update. 		 */
 case|case
-name|S_FSET
+name|EVNT_FSET
 case|:
 name|rstclock
 argument_list|(
-name|S_SYNC
-argument_list|,
-name|peer
-operator|->
-name|epoch
+name|EVNT_SYNC
 argument_list|,
 name|fp_offset
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 		 * In S_FREQ state ignore updates until the stepout 		 * threshold. After that, correct the phase and 		 * frequency and switch to S_SYNC state. 		 */
+comment|/* 		 * In FREQ state ignore updates until the stepout 		 * threshold. After that, compute the new frequency, but 		 * do not adjust the phase or frequency until the next 		 * update. 		 */
 case|case
-name|S_FREQ
+name|EVNT_FREQ
 case|:
 if|if
 condition|(
@@ -1483,85 +1517,63 @@ operator|)
 return|;
 name|clock_frequency
 operator|=
-operator|(
-name|fp_offset
-operator|-
-name|clock_offset
-operator|)
-operator|/
-name|mu
-expr_stmt|;
-name|rstclock
+name|direct_freq
 argument_list|(
-name|S_SYNC
-argument_list|,
-name|peer
-operator|->
-name|epoch
-argument_list|,
 name|fp_offset
 argument_list|)
 expr_stmt|;
+name|rstclock
+argument_list|(
+name|EVNT_SYNC
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 break|break;
-comment|/* 		 * We get here by default in S_SYNC and S_SPIK states. 		 * Here we compute the frequency update due to PLL and 		 * FLL contributions. 		 */
+comment|/* 		 * We get here by default in SYNC and SPIK states. Here 		 * we compute the frequency update due to PLL and FLL 		 * contributions. 		 */
 default|default:
 name|allow_panic
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 			 * The FLL and PLL frequency gain constants 			 * depend on the poll interval and Allan 			 * intercept. The PLL is always used, but 			 * becomes ineffective above the Allan 			 * intercept. The FLL is not used below one-half 			 * the Allan intercept. Above that the loop gain 			 * increases in steps to 1 / CLOCK_AVG.  			 */
+comment|/* 			 * The FLL and PLL frequency gain constants 			 * depend on the time constant and Allan 			 * intercept. The PLL is always used, but 			 * becomes ineffective above the Allan intercept 			 * where the FLL becomes effective. 			 */
 if|if
 condition|(
-name|ULOGTOD
-argument_list|(
 name|sys_poll
-argument_list|)
-operator|>
+operator|>=
 name|allan_xpt
-operator|/
-literal|2
 condition|)
-block|{
-name|dtemp
-operator|=
-name|CLOCK_FLL
-operator|-
-name|sys_poll
-expr_stmt|;
-name|flladj
-operator|=
+name|clock_frequency
+operator|+=
 operator|(
 name|fp_offset
 operator|-
 name|clock_offset
 operator|)
 operator|/
-operator|(
 name|max
 argument_list|(
-name|mu
-argument_list|,
-name|allan_xpt
-argument_list|)
-operator|*
-name|dtemp
-operator|)
-expr_stmt|;
-block|}
-comment|/* 			 * For the PLL the integration interval 			 * (numerator) is the minimum of the update 			 * interval and poll interval. This allows 			 * oversampling, but not undersampling. 			 */
-name|etemp
-operator|=
-name|min
-argument_list|(
-name|mu
-argument_list|,
-operator|(
-name|u_long
-operator|)
 name|ULOGTOD
 argument_list|(
 name|sys_poll
 argument_list|)
+argument_list|,
+name|mu
+argument_list|)
+operator|*
+name|CLOCK_FLL
+expr_stmt|;
+comment|/* 			 * The PLL frequency gain (numerator) depends on 			 * the minimum of the update interval and Allan 			 * intercept. This reduces the PLL gain when the  			 * FLL becomes effective. 			 */
+name|etemp
+operator|=
+name|min
+argument_list|(
+name|ULOGTOD
+argument_list|(
+name|allan_xpt
+argument_list|)
+argument_list|,
+name|mu
 argument_list|)
 expr_stmt|;
 name|dtemp
@@ -1575,8 +1587,8 @@ argument_list|(
 name|sys_poll
 argument_list|)
 expr_stmt|;
-name|plladj
-operator|=
+name|clock_frequency
+operator|+=
 name|fp_offset
 operator|*
 name|etemp
@@ -1589,11 +1601,7 @@ operator|)
 expr_stmt|;
 name|rstclock
 argument_list|(
-name|S_SYNC
-argument_list|,
-name|peer
-operator|->
-name|epoch
+name|EVNT_SYNC
 argument_list|,
 name|fp_offset
 argument_list|)
@@ -1601,169 +1609,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|OPENSSL
-comment|/* 	 * Scan the loopsecond table to determine the TAI offset. If 	 * there is a scheduled leap in future, set the leap warning, 	 * but only if less than 30 days before the leap. 	 */
-name|tpt
-operator|=
-operator|(
-name|u_int32
-operator|*
-operator|)
-name|tai_leap
-operator|.
-name|ptr
-expr_stmt|;
-name|len
-operator|=
-name|ntohl
-argument_list|(
-name|tai_leap
-operator|.
-name|vallen
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|u_int32
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tpt
-operator|!=
-name|NULL
-condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|togo
-operator|=
-operator|(
-name|long
-operator|)
-name|ntohl
-argument_list|(
-name|tpt
-index|[
-name|i
-index|]
-argument_list|)
-operator|-
-operator|(
-name|long
-operator|)
-name|peer
-operator|->
-name|rec
-operator|.
-name|l_ui
-expr_stmt|;
-if|if
-condition|(
-name|togo
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|togo
-operator|<
-name|CLOCK_JUNE
-condition|)
-name|leap_next
-operator||=
-name|LEAP_ADDSECOND
-expr_stmt|;
-break|break;
-block|}
-block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|STA_NANO
-argument_list|)
-operator|&&
-name|NTP_API
-operator|==
-literal|4
-if|if
-condition|(
-name|pll_control
-operator|&&
-name|kern_enable
-operator|&&
-name|sys_tai
-operator|==
-literal|0
-condition|)
-block|{
-name|memset
-argument_list|(
-operator|&
-name|ntv
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ntv
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ntv
-operator|.
-name|modes
-operator|=
-name|MOD_TAI
-expr_stmt|;
-name|ntv
-operator|.
-name|constant
-operator|=
-name|i
-operator|+
-name|TAI_1972
-operator|-
-literal|1
-expr_stmt|;
-name|ntp_adjtime
-argument_list|(
-operator|&
-name|ntv
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* STA_NANO */
-name|sys_tai
-operator|=
-name|i
-operator|+
-name|TAI_1972
-operator|-
-literal|1
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* OPENSSL */
 ifdef|#
 directive|ifdef
 name|KERNEL_PLL
@@ -1803,16 +1648,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|struct
-name|tm
-modifier|*
-name|tm
-init|=
-name|NULL
-decl_stmt|;
-name|time_t
-name|tstamp
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|STA_NANO
@@ -1905,38 +1740,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* STA_NANO */
-comment|/* 			 * The frequency is set directly only if 			 * clock_frequency is nonzero coming out of FREQ 			 * state. 			 */
-if|if
-condition|(
-name|clock_frequency
-operator|!=
-literal|0
-condition|)
-block|{
-name|ntv
-operator|.
-name|modes
-operator||=
-name|MOD_FREQUENCY
-expr_stmt|;
-name|ntv
-operator|.
-name|freq
-operator|=
-call|(
-name|int32
-call|)
-argument_list|(
-operator|(
-name|clock_frequency
-operator|+
-name|drift_comp
-operator|)
-operator|*
-literal|65536e6
-argument_list|)
-expr_stmt|;
-block|}
 name|ntv
 operator|.
 name|esterror
@@ -1963,7 +1766,7 @@ name|sys_rootdelay
 operator|/
 literal|2
 operator|+
-name|sys_rootdispersion
+name|sys_rootdisp
 operator|)
 operator|*
 literal|1e6
@@ -1975,71 +1778,72 @@ name|status
 operator|=
 name|STA_PLL
 expr_stmt|;
-comment|/* 			 * Set the leap bits in the status word, but 			 * only on the last day of June or December. 			 */
-name|tstamp
-operator|=
-name|peer
-operator|->
-name|rec
-operator|.
-name|l_ui
-operator|-
-name|JAN_1970
-expr_stmt|;
-name|tm
-operator|=
-name|gmtime
-argument_list|(
+comment|/* 			 * Enable/disable the PPS if requested. 			 */
+if|if
+condition|(
+name|pps_enable
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|pll_status
 operator|&
-name|tstamp
+name|STA_PPSTIME
+operator|)
+condition|)
+name|report_event
+argument_list|(
+name|EVNT_KERN
+argument_list|,
+name|NULL
+argument_list|,
+literal|"PPS enabled"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tm
-operator|!=
-name|NULL
-condition|)
+name|ntv
+operator|.
+name|status
+operator||=
+name|STA_PPSTIME
+operator||
+name|STA_PPSFREQ
+expr_stmt|;
+block|}
+else|else
 block|{
 if|if
 condition|(
-operator|(
-name|tm
-operator|->
-name|tm_mon
-operator|+
-literal|1
-operator|==
-literal|6
-operator|&&
-name|tm
-operator|->
-name|tm_mday
-operator|==
-literal|30
-operator|)
-operator|||
-operator|(
-name|tm
-operator|->
-name|tm_mon
-operator|+
-literal|1
-operator|==
-literal|12
-operator|&&
-name|tm
-operator|->
-name|tm_mday
-operator|==
-literal|31
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|leap_next
+name|pll_status
 operator|&
+name|STA_PPSTIME
+condition|)
+name|report_event
+argument_list|(
+name|EVNT_KERN
+argument_list|,
+name|NULL
+argument_list|,
+literal|"PPS disabled"
+argument_list|)
+expr_stmt|;
+name|ntv
+operator|.
+name|status
+operator|&=
+operator|~
+operator|(
+name|STA_PPSTIME
+operator||
+name|STA_PPSFREQ
+operator|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sys_leap
+operator|==
 name|LEAP_ADDSECOND
 condition|)
 name|ntv
@@ -2051,8 +1855,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|leap_next
-operator|&
+name|sys_leap
+operator|==
 name|LEAP_DELSECOND
 condition|)
 name|ntv
@@ -2062,52 +1866,7 @@ operator||=
 name|STA_DEL
 expr_stmt|;
 block|}
-block|}
-comment|/* 			 * If the PPS signal is up and enabled, light 			 * the frequency bit. If the PPS driver is 			 * working, light the phase bit as well. If not, 			 * douse the lights, since somebody else may 			 * have left the switch on. 			 */
-if|if
-condition|(
-name|pps_enable
-operator|&&
-name|pll_status
-operator|&
-name|STA_PPSSIGNAL
-condition|)
-block|{
-name|ntv
-operator|.
-name|status
-operator||=
-name|STA_PPSFREQ
-expr_stmt|;
-if|if
-condition|(
-name|pps_stratum
-operator|<
-name|STRATUM_UNSPEC
-condition|)
-name|ntv
-operator|.
-name|status
-operator||=
-name|STA_PPSTIME
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ntv
-operator|.
-name|status
-operator|&=
-operator|~
-operator|(
-name|STA_PPSFREQ
-operator||
-name|STA_PPSTIME
-operator|)
-expr_stmt|;
-block|}
-block|}
-comment|/* 		 * Pass the stuff to the kernel. If it squeals, turn off 		 * the pig. In any case, fetch the kernel offset and 		 * frequency and pretend we did it here. 		 */
+comment|/* 		 * Pass the stuff to the kernel. If it squeals, turn off 		 * the pps. In any case, fetch the kernel offset, 		 * frequency and jitter. 		 */
 if|if
 condition|(
 name|ntp_adjtime
@@ -2119,61 +1878,24 @@ operator|==
 name|TIME_ERROR
 condition|)
 block|{
-name|NLOG
-argument_list|(
-argument|NLOG_SYNCEVENT | NLOG_SYSEVENT
-argument_list|)
-name|msyslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"kernel time sync error %04x"
-argument_list|,
-name|ntv
-operator|.
-name|status
-argument_list|)
-expr_stmt|;
-name|ntv
-operator|.
-name|status
-operator|&=
-operator|~
-operator|(
-name|STA_PPSFREQ
-operator||
-name|STA_PPSTIME
-operator|)
-expr_stmt|;
-block|}
-else|else
-block|{
 if|if
 condition|(
+operator|!
 operator|(
 name|ntv
 operator|.
 name|status
-operator|^
-name|pll_status
-operator|)
 operator|&
-operator|~
-name|STA_FLL
+name|STA_PPSSIGNAL
+operator|)
 condition|)
-name|NLOG
+name|report_event
 argument_list|(
-argument|NLOG_SYNCEVENT | NLOG_SYSEVENT
-argument_list|)
-name|msyslog
-argument_list|(
-name|LOG_NOTICE
+name|EVNT_KERN
 argument_list|,
-literal|"kernel time sync status change %04x"
+name|NULL
 argument_list|,
-name|ntv
-operator|.
-name|status
+literal|"PPS no signal"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2210,17 +1932,12 @@ directive|endif
 comment|/* STA_NANO */
 name|clock_frequency
 operator|=
+name|FREQTOD
+argument_list|(
 name|ntv
 operator|.
 name|freq
-operator|/
-literal|65536e6
-expr_stmt|;
-name|flladj
-operator|=
-name|plladj
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 comment|/* 		 * If the kernel PPS is lit, monitor its performance. 		 */
 if|if
@@ -2232,10 +1949,6 @@ operator|&
 name|STA_PPSTIME
 condition|)
 block|{
-name|pps_control
-operator|=
-name|current_time
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|STA_NANO
@@ -2262,31 +1975,55 @@ endif|#
 directive|endif
 comment|/* STA_NANO */
 block|}
-block|}
-else|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STA_NANO
+argument_list|)
+operator|&&
+name|NTP_API
+operator|==
+literal|4
+comment|/* 		 * If the TAI changes, update the kernel TAI. 		 */
+if|if
+condition|(
+name|loop_tai
+operator|!=
+name|sys_tai
+condition|)
 block|{
+name|loop_tai
+operator|=
+name|sys_tai
+expr_stmt|;
+name|ntv
+operator|.
+name|modes
+operator|=
+name|MOD_TAI
+expr_stmt|;
+name|ntv
+operator|.
+name|constant
+operator|=
+name|sys_tai
+expr_stmt|;
+name|ntp_adjtime
+argument_list|(
+operator|&
+name|ntv
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
-comment|/* KERNEL_PLL */
-comment|/* 		 * We get here if the kernel discipline is not enabled. 		 * Adjust the clock frequency as the sum of the directly 		 * computed frequency (if measured) and the PLL and FLL 		 * increments. 		 */
-name|clock_frequency
-operator|=
-name|drift_comp
-operator|+
-name|clock_frequency
-operator|+
-name|flladj
-operator|+
-name|plladj
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KERNEL_PLL
+comment|/* STA_NANO */
 block|}
 endif|#
 directive|endif
 comment|/* KERNEL_PLL */
-comment|/* 	 * Clamp the frequency within the tolerance range and calculate 	 * the frequency change since the last update. 	 */
+comment|/* 	 * Clamp the frequency within the tolerance range and calculate 	 * the frequency difference since the last update. 	 */
 if|if
 condition|(
 name|fabs
@@ -2296,10 +2033,6 @@ argument_list|)
 operator|>
 name|NTP_MAXFREQ
 condition|)
-name|NLOG
-argument_list|(
-argument|NLOG_SYNCEVENT | NLOG_SYSEVENT
-argument_list|)
 name|msyslog
 argument_list|(
 name|LOG_NOTICE
@@ -2352,7 +2085,7 @@ name|drift_comp
 operator|=
 name|clock_frequency
 expr_stmt|;
-comment|/* 	 * Calculate the wander as the exponentially weighted frequency 	 * differences. 	 */
+comment|/* 	 * Calculate the wander as the exponentially weighted RMS 	 * frequency differences. Record the change for the frequency 	 * file update. 	 */
 name|etemp
 operator|=
 name|SQUARE
@@ -2375,7 +2108,11 @@ operator|/
 name|CLOCK_AVG
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Here we adjust the poll interval by comparing the current 	 * offset with the clock jitter. If the offset is less than the 	 * clock jitter times a constant, then the averaging interval is 	 * increased, otherwise it is decreased. A bit of hysteresis 	 * helps calm the dance. Works best using burst mode. 	 */
+name|drift_file_sw
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* 	 * Here we adjust the timeconstan by comparing the current 	 * offset with the clock jitter. If the offset is less than the 	 * clock jitter times a constant, then the averaging interval is 	 * increased, otherwise it is decreased. A bit of hysteresis 	 * helps calm the dance. Works best using burst mode. 	 */
 if|if
 condition|(
 name|fabs
@@ -2462,6 +2199,20 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* 	 * If the time constant has changed, update the poll variables. 	 */
+if|if
+condition|(
+name|osys_poll
+operator|!=
+name|sys_poll
+condition|)
+name|poll_update
+argument_list|(
+name|peer
+argument_list|,
+name|sys_poll
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Yibbidy, yibbbidy, yibbidy; that'h all folks. 	 */
 name|record_loop_stats
 argument_list|(
@@ -2485,9 +2236,9 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"local_clock: mu %lu jitr %.6f freq %.3f stab %.6f poll %d count %d\n"
+literal|"local_clock: offset %.9f jit %.9f freq %.3f stab %.3f poll %d\n"
 argument_list|,
-name|mu
+name|clock_offset
 argument_list|,
 name|clock_jitter
 argument_list|,
@@ -2500,8 +2251,6 @@ operator|*
 literal|1e6
 argument_list|,
 name|sys_poll
-argument_list|,
-name|tc_counter
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2519,7 +2268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * adj_host_clock - Called once every second to update the local clock.  *  * LOCKCLOCK: The only thing this routine does is increment the  * sys_rootdispersion variable.  */
+comment|/*  * adj_host_clock - Called once every second to update the local clock.  *  * LOCKCLOCK: The only thing this routine does is increment the  * sys_rootdisp variable.  */
 end_comment
 
 begin_function
@@ -2532,8 +2281,8 @@ block|{
 name|double
 name|adjustment
 decl_stmt|;
-comment|/* 	 * Update the dispersion since the last update. In contrast to 	 * NTPv3, NTPv4 does not declare unsynchronized after one day, 	 * since the dispersion check serves this function. Also, 	 * since the poll interval can exceed one day, the old test 	 * would be counterproductive. Note we do this even with 	 * external clocks, since the clock driver will recompute the 	 * maximum error and the local clock driver will pick it up and 	 * pass to the common refclock routines. Very elegant. 	 */
-name|sys_rootdispersion
+comment|/* 	 * Update the dispersion since the last update. In contrast to 	 * NTPv3, NTPv4 does not declare unsynchronized after one day, 	 * since the dispersion check serves this function. Also, 	 * since the poll interval can exceed one day, the old test 	 * would be counterproductive. 	 */
+name|sys_rootdisp
 operator|+=
 name|clock_phi
 expr_stmt|;
@@ -2555,39 +2304,7 @@ name|kern_enable
 operator|)
 condition|)
 return|return;
-comment|/* 	 * Declare PPS kernel unsync if the pps signal has not been 	 * heard for a few minutes. 	 */
-if|if
-condition|(
-name|pps_control
-operator|&&
-name|current_time
-operator|-
-name|pps_control
-operator|>
-name|PPS_MAXAGE
-condition|)
-block|{
-if|if
-condition|(
-name|pps_control
-condition|)
-name|NLOG
-argument_list|(
-argument|NLOG_SYNCEVENT | NLOG_SYSEVENT
-argument_list|)
-name|msyslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"pps sync disabled"
-argument_list|)
-expr_stmt|;
-name|pps_control
-operator|=
-literal|0
-expr_stmt|;
-block|}
-comment|/* 	 * Implement the phase and frequency adjustments. The gain 	 * factor (denominator) is not allowed to increase beyond the 	 * Allan intercept. It doesn't make sense to average phase noise 	 * beyond this point and it helps to damp residual offset at the 	 * longer poll intervals. 	 */
+comment|/* 	 * Implement the phase and frequency adjustments. The gain 	 * factor (denominator) increases with poll interval, so is 	 * dominated by the FLL above the Allan intercept.  	 */
 name|adjustment
 operator|=
 name|clock_offset
@@ -2595,14 +2312,9 @@ operator|/
 operator|(
 name|CLOCK_PLL
 operator|*
-name|min
-argument_list|(
 name|ULOGTOD
 argument_list|(
 name|sys_poll
-argument_list|)
-argument_list|,
-name|allan_xpt
 argument_list|)
 operator|)
 expr_stmt|;
@@ -2624,7 +2336,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Clock state machine. Enter new state and set state variables. Note we  * use the time of the last clock filter sample, which may be earlier  * than the current time.  */
+comment|/*  * Clock state machine. Enter new state and set state variables.  */
 end_comment
 
 begin_function
@@ -2636,10 +2348,6 @@ name|int
 name|trans
 parameter_list|,
 comment|/* new state */
-name|u_long
-name|update
-parameter_list|,
-comment|/* new update time */
 name|double
 name|offset
 comment|/* new offset */
@@ -2651,31 +2359,48 @@ name|DEBUG
 if|if
 condition|(
 name|debug
+operator|>
+literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"local_clock: time %lu offset %.6f freq %.3f state %d\n"
+literal|"local_clock: mu %lu state %d poll %d count %d\n"
 argument_list|,
-name|update
-argument_list|,
-name|offset
-argument_list|,
-name|drift_comp
-operator|*
-literal|1e6
+name|current_time
+operator|-
+name|clock_epoch
 argument_list|,
 name|trans
+argument_list|,
+name|sys_poll
+argument_list|,
+name|tc_counter
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|trans
+operator|!=
+name|state
+operator|&&
+name|trans
+operator|!=
+name|EVNT_FSET
+condition|)
+name|report_event
+argument_list|(
+name|trans
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|state
 operator|=
 name|trans
-expr_stmt|;
-name|sys_clocktime
-operator|=
-name|update
 expr_stmt|;
 name|last_offset
 operator|=
@@ -2683,6 +2408,277 @@ name|clock_offset
 operator|=
 name|offset
 expr_stmt|;
+name|clock_epoch
+operator|=
+name|current_time
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * calc_freq - calculate frequency directly  *  * This is very carefully done. When the offset is first computed at the  * first update, a residual frequency component results. Subsequently,  * updates are suppresed until the end of the measurement interval while  * the offset is amortized. At the end of the interval the frequency is  * calculated from the current offset, residual offset, length of the  * interval and residual frequency component. At the same time the  * frequenchy file is armed for update at the next hourly stats.  */
+end_comment
+
+begin_function
+specifier|static
+name|double
+name|direct_freq
+parameter_list|(
+name|double
+name|fp_offset
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|KERNEL_PLL
+comment|/* 	 * If the kernel is enabled, we need the residual offset to 	 * calculate the frequency correction. 	 */
+if|if
+condition|(
+name|pll_control
+operator|&&
+name|kern_enable
+condition|)
+block|{
+name|memset
+argument_list|(
+operator|&
+name|ntv
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ntv
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ntp_adjtime
+argument_list|(
+operator|&
+name|ntv
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|STA_NANO
+name|clock_offset
+operator|=
+name|ntv
+operator|.
+name|offset
+operator|/
+literal|1e9
+expr_stmt|;
+else|#
+directive|else
+comment|/* STA_NANO */
+name|clock_offset
+operator|=
+name|ntv
+operator|.
+name|offset
+operator|/
+literal|1e6
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* STA_NANO */
+name|drift_comp
+operator|=
+name|FREQTOD
+argument_list|(
+name|ntv
+operator|.
+name|freq
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* KERNEL_PLL */
+name|set_freq
+argument_list|(
+operator|(
+name|fp_offset
+operator|-
+name|clock_offset
+operator|)
+operator|/
+operator|(
+name|current_time
+operator|-
+name|clock_epoch
+operator|)
+operator|+
+name|drift_comp
+argument_list|)
+expr_stmt|;
+name|wander_resid
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|drift_comp
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * set_freq - set clock frequency  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|set_freq
+parameter_list|(
+name|double
+name|freq
+comment|/* frequency update */
+parameter_list|)
+block|{
+name|char
+name|tbuf
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|drift_comp
+operator|=
+name|freq
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERNEL_PLL
+comment|/* 	 * If the kernel is enabled, update the kernel frequency. 	 */
+if|if
+condition|(
+name|pll_control
+operator|&&
+name|kern_enable
+condition|)
+block|{
+name|memset
+argument_list|(
+operator|&
+name|ntv
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ntv
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ntv
+operator|.
+name|modes
+operator|=
+name|MOD_FREQUENCY
+expr_stmt|;
+name|ntv
+operator|.
+name|freq
+operator|=
+name|DTOFREQ
+argument_list|(
+name|drift_comp
+argument_list|)
+expr_stmt|;
+name|ntp_adjtime
+argument_list|(
+operator|&
+name|ntv
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
+argument_list|,
+literal|"kernel %.3f PPM"
+argument_list|,
+name|drift_comp
+operator|*
+literal|1e6
+argument_list|)
+expr_stmt|;
+name|report_event
+argument_list|(
+name|EVNT_FSET
+argument_list|,
+name|NULL
+argument_list|,
+name|tbuf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|snprintf
+argument_list|(
+name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
+argument_list|,
+literal|"ntpd %.3f PPM"
+argument_list|,
+name|drift_comp
+operator|*
+literal|1e6
+argument_list|)
+expr_stmt|;
+name|report_event
+argument_list|(
+name|EVNT_FSET
+argument_list|,
+name|NULL
+argument_list|,
+name|tbuf
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* KERNEL_PLL */
+name|snprintf
+argument_list|(
+name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
+argument_list|,
+literal|"ntpd %.3f PPM"
+argument_list|,
+name|drift_comp
+operator|*
+literal|1e6
+argument_list|)
+expr_stmt|;
+name|report_event
+argument_list|(
+name|EVNT_FSET
+argument_list|,
+name|NULL
+argument_list|,
+name|tbuf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* KERNEL_PLL */
 block|}
 end_function
 
@@ -2778,11 +2774,32 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|>
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"loop_config: item %d freq %f\n"
+argument_list|,
+name|item
+argument_list|,
+name|freq
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|item
 condition|)
 block|{
+comment|/* 	 * We first assume the kernel supports the ntp_adjtime() 	 * syscall. If that syscall works, initialize the kernel time 	 * variables. Otherwise, continue leaving no harm behind. 	 */
 case|case
 name|LOOP_DRIFTINIT
 case|:
@@ -2792,7 +2809,6 @@ name|LOCKCLOCK
 ifdef|#
 directive|ifdef
 name|KERNEL_PLL
-comment|/* 		 * Assume the kernel supports the ntp_adjtime() syscall. 		 * If that syscall works, initialize the kernel time  		 * variables. Otherwise, continue leaving no harm 		 * behind. While at it, ask to set nanosecond mode. If 		 * the kernel agrees, rejoice; othewise, it does only 		 * microseconds. 		 */
 if|if
 condition|(
 name|mode_ntpdate
@@ -2815,29 +2831,18 @@ name|ntv
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|STA_NANO
-name|ntv
-operator|.
-name|modes
-operator|=
-name|MOD_BITS
-operator||
-name|MOD_NANO
-expr_stmt|;
-else|#
-directive|else
-comment|/* STA_NANO */
 name|ntv
 operator|.
 name|modes
 operator|=
 name|MOD_BITS
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* STA_NANO */
+name|ntv
+operator|.
+name|status
+operator|=
+name|STA_PLL
+expr_stmt|;
 name|ntv
 operator|.
 name|maxerror
@@ -2852,9 +2857,9 @@ name|MAXDISPERSE
 expr_stmt|;
 name|ntv
 operator|.
-name|status
+name|constant
 operator|=
-name|STA_UNSYNC
+name|sys_poll
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2987,17 +2992,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* STA_NANO */
-name|NLOG
+name|report_event
 argument_list|(
-argument|NLOG_SYNCEVENT | NLOG_SYSEVENT
-argument_list|)
-name|msyslog
-argument_list|(
-name|LOG_INFO
+name|EVNT_KERN
 argument_list|,
-literal|"kernel time sync status %04x"
+name|NULL
 argument_list|,
-name|pll_status
+literal|"kernel time sync enabled"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3008,34 +3009,33 @@ endif|#
 directive|endif
 comment|/* LOCKCLOCK */
 break|break;
+comment|/* 	 * Initialize the frequency. If the frequency file is missing or 	 * broken, set the initial frequency to zero and set the state 	 * to NSET. Otherwise, set the initial frequency to the given 	 * value and the state to FSET. 	 */
 case|case
 name|LOOP_DRIFTCOMP
 case|:
 ifndef|#
 directive|ifndef
 name|LOCKCLOCK
-comment|/* 		 * If the frequency value is reasonable, set the initial 		 * frequency to the given value and the state to S_FSET. 		 * Otherwise, the drift file may be missing or broken, 		 * so set the frequency to zero. This erases past 		 * history should somebody break something. 		 */
 if|if
 condition|(
 name|freq
-operator|<=
+operator|>
 name|NTP_MAXFREQ
-operator|&&
+operator|||
 name|freq
-operator|>=
+operator|<
 operator|-
 name|NTP_MAXFREQ
 condition|)
 block|{
-name|drift_comp
-operator|=
-name|freq
+name|set_freq
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|rstclock
 argument_list|(
-name|S_FSET
-argument_list|,
-literal|0
+name|EVNT_NSET
 argument_list|,
 literal|0
 argument_list|)
@@ -3043,15 +3043,33 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|drift_comp
-operator|=
+name|set_freq
+argument_list|(
+name|freq
+argument_list|)
+expr_stmt|;
+name|rstclock
+argument_list|(
+name|EVNT_FSET
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* LOCKCLOCK */
+break|break;
+comment|/* 	 * Disable the kernel at shutdown. The microkernel just abandons 	 * ship. The nanokernel carefully cleans up so applications can 	 * see this. Note the last programmed offset and frequency are 	 * left in place. 	 */
+case|case
+name|LOOP_KERN_CLEAR
+case|:
+ifndef|#
+directive|ifndef
+name|LOCKCLOCK
 ifdef|#
 directive|ifdef
 name|KERNEL_PLL
-comment|/* 		 * Sanity check. If the kernel is available, load the 		 * frequency and light up the loop. Make sure the offset 		 * is zero to cancel any previous nonsense. If you don't 		 * want this initialization, remove the ntp.drift file. 		 */
 if|if
 condition|(
 name|pll_control
@@ -3080,78 +3098,7 @@ name|ntv
 operator|.
 name|modes
 operator|=
-name|MOD_OFFSET
-operator||
-name|MOD_FREQUENCY
-expr_stmt|;
-name|ntv
-operator|.
-name|freq
-operator|=
-call|(
-name|int32
-call|)
-argument_list|(
-name|drift_comp
-operator|*
-literal|65536e6
-argument_list|)
-expr_stmt|;
-name|ntp_adjtime
-argument_list|(
-operator|&
-name|ntv
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* KERNEL_PLL */
-endif|#
-directive|endif
-comment|/* LOCKCLOCK */
-break|break;
-case|case
-name|LOOP_KERN_CLEAR
-case|:
-ifndef|#
-directive|ifndef
-name|LOCKCLOCK
-ifdef|#
-directive|ifdef
-name|KERNEL_PLL
-comment|/* Completely turn off the kernel time adjustments. */
-if|if
-condition|(
-name|pll_control
-condition|)
-block|{
-name|memset
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|ntv
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ntv
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ntv
-operator|.
-name|modes
-operator|=
-name|MOD_BITS
-operator||
-name|MOD_OFFSET
-operator||
-name|MOD_FREQUENCY
+name|MOD_STATUS
 expr_stmt|;
 name|ntv
 operator|.
@@ -3165,19 +3112,13 @@ operator|&
 name|ntv
 argument_list|)
 expr_stmt|;
-name|NLOG
+name|report_event
 argument_list|(
-argument|NLOG_SYNCEVENT | NLOG_SYSEVENT
-argument_list|)
-name|msyslog
-argument_list|(
-name|LOG_INFO
+name|EVNT_KERN
 argument_list|,
-literal|"kernel time sync disabled %04x"
+name|NULL
 argument_list|,
-name|ntv
-operator|.
-name|status
+literal|"kernel time sync disabledx"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3188,56 +3129,64 @@ endif|#
 directive|endif
 comment|/* LOCKCLOCK */
 break|break;
-comment|/* 	 * Special tinker variables for Ulrich Windl. Very dangerous. 	 */
+comment|/* 	 * Tinker command variables for Ulrich Windl. Very dangerous. 	 */
 case|case
-name|LOOP_MAX
+name|LOOP_ALLAN
 case|:
-comment|/* step threshold */
-name|clock_max
+comment|/* Allan intercept (log2) (allan) */
+name|allan_xpt
 operator|=
+operator|(
+name|u_char
+operator|)
 name|freq
 expr_stmt|;
 break|break;
 case|case
-name|LOOP_PANIC
+name|LOOP_CODEC
 case|:
-comment|/* panic threshold */
-name|clock_panic
+comment|/* audio codec frequency (codec) */
+name|clock_codec
 operator|=
 name|freq
+operator|/
+literal|1e6
 expr_stmt|;
 break|break;
 case|case
 name|LOOP_PHI
 case|:
-comment|/* dispersion rate */
+comment|/* dispersion threshold (dispersion) */
 name|clock_phi
 operator|=
 name|freq
+operator|/
+literal|1e6
 expr_stmt|;
 break|break;
 case|case
-name|LOOP_MINSTEP
+name|LOOP_FREQ
 case|:
-comment|/* watchdog bark */
-name|clock_minstep
-operator|=
+comment|/* initial frequency (freq) */
+name|set_freq
+argument_list|(
 name|freq
+operator|/
+literal|1e6
+argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|LOOP_ALLAN
-case|:
-comment|/* Allan intercept */
-name|allan_xpt
-operator|=
-name|freq
+name|rstclock
+argument_list|(
+name|EVNT_FSET
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|LOOP_HUFFPUFF
 case|:
-comment|/* huff-n'-puff filter length */
+comment|/* huff-n'-puff length (huffpuff) */
 if|if
 condition|(
 name|freq
@@ -3301,25 +3250,60 @@ literal|1e9
 expr_stmt|;
 break|break;
 case|case
-name|LOOP_FREQ
+name|LOOP_PANIC
 case|:
-comment|/* initial frequency */
-name|drift_comp
+comment|/* panic threshold (panic) */
+name|clock_panic
 operator|=
 name|freq
-operator|/
-literal|1e6
-expr_stmt|;
-name|rstclock
-argument_list|(
-name|S_FSET
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|LOOP_MAX
+case|:
+comment|/* step threshold (step) */
+name|clock_max
+operator|=
+name|freq
+expr_stmt|;
+if|if
+condition|(
+name|clock_max
+operator|==
+literal|0
+operator|||
+name|clock_max
+operator|>
+literal|0.5
+condition|)
+name|kern_enable
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|LOOP_MINSTEP
+case|:
+comment|/* stepout threshold (stepout) */
+name|clock_minstep
+operator|=
+name|freq
+expr_stmt|;
+break|break;
+case|case
+name|LOOP_LEAP
+case|:
+comment|/* not used */
+default|default:
+name|msyslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"loop_config: unsupported option %d"
+argument_list|,
+name|item
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

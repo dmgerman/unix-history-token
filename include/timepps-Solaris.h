@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************************************************************  *								       *  * Copyright (c) David L. Mills 1999-2000			       *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name        *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,        *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied          *  * warranty.							       *  *								       *  ***********************************************************************  *								       *  * This header file complies with "Pulse-Per-Second API for UNIX-like  *  * Operating Systems, Version 1.0", rfc2783. Credit is due Jeff Mogul  *  * and Marc Brett, from whom much of this code was shamelessly stolen. *  *								       *  * this modified timepps.h can be used to provide a PPSAPI interface   *  * to a machine running Solaris (2.6 and above).		       *  *								       *  ***********************************************************************  *								       *  * A full PPSAPI interface to the Solaris kernel would be better, but  *  * this at least removes the necessity for special coding from the NTP *  * NTP drivers. 						       *  *								       *  ***********************************************************************  *								       *  * Some of this include file					       *  * Copyright (c) 1999 by Ulrich Windl,				       *  *	based on code by Reg Clemens<reg@dwf.com>		       *  *		based on code by Poul-Henning Kamp<phk@FreeBSD.org>   *  *								       *  ***********************************************************************  *								       *  * "THE BEER-WARE LICENSE" (Revision 42):                              *  *<phk@FreeBSD.org> wrote this file.  As long as you retain this      *  * notice you can do whatever you want with this stuff. If we meet some*  * day, and you think this stuff is worth it, you can buy me a beer    *  * in return.	Poul-Henning Kamp				       *  *								       *  **********************************************************************/
+comment|/***********************************************************************  *								       *  * Copyright (c) David L. Mills 1999-2009			       *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name        *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,        *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied          *  * warranty.							       *  *								       *  ***********************************************************************  *								       *  * This header file complies with "Pulse-Per-Second API for UNIX-like  *  * Operating Systems, Version 1.0", rfc2783. Credit is due Jeff Mogul  *  * and Marc Brett, from whom much of this code was shamelessly stolen. *  *								       *  * this modified timepps.h can be used to provide a PPSAPI interface   *  * to a machine running Solaris (2.6 and above).		       *  *								       *  ***********************************************************************  *								       *  * A full PPSAPI interface to the Solaris kernel would be better, but  *  * this at least removes the necessity for special coding from the NTP *  * NTP drivers. 						       *  *								       *  ***********************************************************************  *								       *  * Some of this include file					       *  * Copyright (c) 1999 by Ulrich Windl,				       *  *	based on code by Reg Clemens<reg@dwf.com>		       *  *		based on code by Poul-Henning Kamp<phk@FreeBSD.org>   *  *								       *  ***********************************************************************  *								       *  * "THE BEER-WARE LICENSE" (Revision 42):                              *  *<phk@FreeBSD.org> wrote this file.  As long as you retain this      *  * notice you can do whatever you want with this stuff. If we meet some*  * day, and you think this stuff is worth it, you can buy me a beer    *  * in return.	Poul-Henning Kamp				       *  *								       *  **********************************************************************/
 end_comment
 
 begin_comment
@@ -474,6 +474,40 @@ value|clear_off_tu.ntpfp
 end_define
 
 begin_comment
+comment|/* addition of NTP fixed-point format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTPFP_M_ADD
+parameter_list|(
+name|r_i
+parameter_list|,
+name|r_f
+parameter_list|,
+name|a_i
+parameter_list|,
+name|a_f
+parameter_list|)
+comment|/* r += a */
+define|\
+value|do { \ 		register u_int32 lo_tmp; \ 		register u_int32 hi_tmp; \ 		\ 		lo_tmp = ((r_f)& 0xffff) + ((a_f)& 0xffff); \ 		hi_tmp = (((r_f)>> 16)& 0xffff) + (((a_f)>> 16)& 0xffff); \ 		if (lo_tmp& 0x10000) \ 			hi_tmp++; \ 		(r_f) = ((hi_tmp& 0xffff)<< 16) | (lo_tmp& 0xffff); \ 		\ 		(r_i) += (a_i); \ 		if (hi_tmp& 0x10000) \ 			(r_i)++; \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTPFP_L_ADDS
+parameter_list|(
+name|r
+parameter_list|,
+name|a
+parameter_list|)
+value|NTPFP_M_ADD((r)->integral, (r)->fractional, \ 					    (int)(a)->integral, (a)->fractional)
+end_define
+
+begin_comment
 comment|/*  * The following definitions are architecture-dependent  */
 end_comment
 
@@ -488,7 +522,7 @@ begin_define
 define|#
 directive|define
 name|PPS_RO
-value|(PPS_CANWAIT | PPS_CANPOLL | PPS_TSFMT_TSPEC | PPS_TSFMT_NTPFP)
+value|(PPS_CANWAIT | PPS_CANPOLL)
 end_define
 
 begin_typedef
@@ -508,18 +542,6 @@ name|pps_unit_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|pps_unit_t
-modifier|*
-name|pps_handle_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* pps handlebars */
-end_comment
-
 begin_comment
 comment|/*  *------ Here begins the implementation-specific part! ------  */
 end_comment
@@ -529,6 +551,17 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_comment
+comment|/*  * pps handlebars, which are required to be an opaque scalar.  This  * implementation uses the handle as a pointer so it must be large  * enough.  uintptr_t is as large as a pointer.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uintptr_t
+name|pps_handle_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * create PPS handle from file descriptor  */
@@ -550,6 +583,10 @@ name|handle
 comment|/* returned handle */
 parameter_list|)
 block|{
+name|pps_unit_t
+modifier|*
+name|punit
+decl_stmt|;
 name|int
 name|one
 init|=
@@ -602,29 +639,27 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Allocate and initialize default unit structure. 	 */
-operator|*
-name|handle
+name|punit
 operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|pps_unit_t
+operator|*
+name|punit
 argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
-operator|*
-name|handle
-operator|)
+name|NULL
+operator|==
+name|punit
 condition|)
 block|{
 name|errno
 operator|=
-name|EBADF
+name|ENOMEM
 expr_stmt|;
 return|return
 operator|(
@@ -636,30 +671,24 @@ comment|/* what, no memory? */
 block|}
 name|memset
 argument_list|(
-operator|*
-name|handle
+name|punit
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pps_unit_t
+operator|*
+name|punit
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|handle
-operator|)
+name|punit
 operator|->
 name|filedes
 operator|=
 name|filedes
 expr_stmt|;
-operator|(
-operator|*
-name|handle
-operator|)
+name|punit
 operator|->
 name|params
 operator|.
@@ -667,10 +696,7 @@ name|api_version
 operator|=
 name|PPS_API_VERS_1
 expr_stmt|;
-operator|(
-operator|*
-name|handle
-operator|)
+name|punit
 operator|->
 name|params
 operator|.
@@ -679,6 +705,14 @@ operator|=
 name|PPS_CAPTUREASSERT
 operator||
 name|PPS_TSFMT_TSPEC
+expr_stmt|;
+operator|*
+name|handle
+operator|=
+operator|(
+name|pps_handle_t
+operator|)
+name|punit
 expr_stmt|;
 return|return
 operator|(
@@ -702,6 +736,10 @@ name|pps_handle_t
 name|handle
 parameter_list|)
 block|{
+name|pps_unit_t
+modifier|*
+name|punit
+decl_stmt|;
 comment|/* 	 * Check for valid arguments and detach PPS signal. 	 */
 if|if
 condition|(
@@ -721,9 +759,17 @@ operator|)
 return|;
 comment|/* bad handle */
 block|}
+name|punit
+operator|=
+operator|(
+name|pps_unit_t
+operator|*
+operator|)
+name|handle
+expr_stmt|;
 name|free
 argument_list|(
-name|handle
+name|punit
 argument_list|)
 expr_stmt|;
 return|return
@@ -753,6 +799,10 @@ modifier|*
 name|params
 parameter_list|)
 block|{
+name|pps_unit_t
+modifier|*
+name|punit
+decl_stmt|;
 name|int
 name|mode
 decl_stmt|,
@@ -823,13 +873,78 @@ name|params
 operator|->
 name|mode
 expr_stmt|;
+name|punit
+operator|=
+operator|(
+name|pps_unit_t
+operator|*
+operator|)
+name|handle
+expr_stmt|;
+comment|/* 	 * Only one of the time formats may be selected 	 * if a nonzero assert offset is supplied. 	 */
+if|if
+condition|(
+operator|(
+name|mode_in
+operator|&
+operator|(
+name|PPS_TSFMT_TSPEC
+operator||
+name|PPS_TSFMT_NTPFP
+operator|)
+operator|)
+operator|==
+operator|(
+name|PPS_TSFMT_TSPEC
+operator||
+name|PPS_TSFMT_NTPFP
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|punit
+operator|->
+name|params
+operator|.
+name|assert_offset
+operator|.
+name|tv_sec
+operator|||
+name|punit
+operator|->
+name|params
+operator|.
+name|assert_offset
+operator|.
+name|tv_nsec
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+comment|/* 		 * If no offset was specified but both time 		 * format flags are used consider it harmless 		 * but turn off PPS_TSFMT_NTPFP so getparams 		 * will not show both formats lit. 		 */
+name|mode_in
+operator|&=
+operator|~
+name|PPS_TSFMT_NTPFP
+expr_stmt|;
+block|}
 comment|/* turn off read-only bits */
 name|mode_in
 operator|&=
 operator|~
 name|PPS_RO
 expr_stmt|;
-comment|/* test remaining bits, should only have captureassert and/or offsetassert */
+comment|/* 	 * test remaining bits, should only have captureassert,  	 * offsetassert, and/or timestamp format bits. 	 */
 if|if
 condition|(
 name|mode_in
@@ -839,6 +954,10 @@ operator|(
 name|PPS_CAPTUREASSERT
 operator||
 name|PPS_OFFSETASSERT
+operator||
+name|PPS_TSFMT_TSPEC
+operator||
+name|PPS_TSFMT_NTPFP
 operator|)
 condition|)
 block|{
@@ -856,7 +975,7 @@ block|}
 comment|/* 	 * ok, ready to go. 	 */
 name|mode
 operator|=
-name|handle
+name|punit
 operator|->
 name|params
 operator|.
@@ -865,7 +984,7 @@ expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
-name|handle
+name|punit
 operator|->
 name|params
 argument_list|,
@@ -873,11 +992,13 @@ name|params
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pps_params_t
+name|punit
+operator|->
+name|params
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|handle
+name|punit
 operator|->
 name|params
 operator|.
@@ -885,7 +1006,7 @@ name|api_version
 operator|=
 name|PPS_API_VERS_1
 expr_stmt|;
-name|handle
+name|punit
 operator|->
 name|params
 operator|.
@@ -921,6 +1042,10 @@ modifier|*
 name|params
 parameter_list|)
 block|{
+name|pps_unit_t
+modifier|*
+name|punit
+decl_stmt|;
 comment|/* 	 * Check for valid arguments and get parameters. 	 */
 if|if
 condition|(
@@ -958,18 +1083,26 @@ operator|)
 return|;
 comment|/* bad argument */
 block|}
+name|punit
+operator|=
+operator|(
+name|pps_unit_t
+operator|*
+operator|)
+name|handle
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|params
 argument_list|,
 operator|&
-name|handle
+name|punit
 operator|->
 name|params
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pps_params_t
+name|params
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -982,7 +1115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* (  * get capabilities for handle  */
+comment|/*  * get capabilities for handle  */
 end_comment
 
 begin_function
@@ -1093,6 +1226,10 @@ struct|;
 name|pps_info_t
 name|infobuf
 decl_stmt|;
+name|pps_unit_t
+modifier|*
+name|punit
+decl_stmt|;
 comment|/* 	 * Check for valid arguments and fetch timestamps 	 */
 if|if
 condition|(
@@ -1144,11 +1281,19 @@ name|infobuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|punit
+operator|=
+operator|(
+name|pps_unit_t
+operator|*
+operator|)
+name|handle
+expr_stmt|;
 comment|/* 	 * if not captureassert, nothing to return. 	 */
 if|if
 condition|(
 operator|!
-name|handle
+name|punit
 operator|->
 name|params
 operator|.
@@ -1166,7 +1311,8 @@ name|infobuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pps_info_t
+operator|*
+name|ppsinfo
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1180,7 +1326,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|handle
+name|punit
 operator|->
 name|filedes
 argument_list|,
@@ -1212,7 +1358,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Apply offsets as specified. Note that only assert timestamps 	 * are captured by this interface. 	 */
 name|infobuf
 operator|.
 name|assert_sequence
@@ -1247,9 +1392,19 @@ name|tv_usec
 operator|*
 literal|1000
 expr_stmt|;
+comment|/* 	 * Translate to specified format then apply offset 	 */
+switch|switch
+condition|(
+name|tsformat
+condition|)
+block|{
+case|case
+name|PPS_TSFMT_TSPEC
+case|:
+comment|/* timespec format requires no conversion */
 if|if
 condition|(
-name|handle
+name|punit
 operator|->
 name|params
 operator|.
@@ -1264,7 +1419,7 @@ name|assert_timestamp
 operator|.
 name|tv_sec
 operator|+=
-name|handle
+name|punit
 operator|->
 name|params
 operator|.
@@ -1278,7 +1433,7 @@ name|assert_timestamp
 operator|.
 name|tv_nsec
 operator|+=
-name|handle
+name|punit
 operator|->
 name|params
 operator|.
@@ -1294,17 +1449,7 @@ name|assert_timestamp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Translate to specified format 	 */
-switch|switch
-condition|(
-name|tsformat
-condition|)
-block|{
-case|case
-name|PPS_TSFMT_TSPEC
-case|:
 break|break;
-comment|/* timespec format requires no translation */
 case|case
 name|PPS_TSFMT_NTPFP
 case|:
@@ -1314,6 +1459,31 @@ argument_list|(
 name|infobuf
 operator|.
 name|assert_timestamp_ntpfp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|punit
+operator|->
+name|params
+operator|.
+name|mode
+operator|&
+name|PPS_OFFSETASSERT
+condition|)
+name|NTPFP_L_ADDS
+argument_list|(
+operator|&
+name|infobuf
+operator|.
+name|assert_timestamp_ntpfp
+argument_list|,
+operator|&
+name|punit
+operator|->
+name|params
+operator|.
+name|assert_offset_ntpfp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1333,7 +1503,7 @@ name|infobuf
 operator|.
 name|current_mode
 operator|=
-name|handle
+name|punit
 operator|->
 name|params
 operator|.
@@ -1348,7 +1518,8 @@ name|infobuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pps_info_t
+operator|*
+name|ppsinfo
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -1,8 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_include
+include|#
+directive|include
+file|"autoopts/project.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|AUTOOPTS_INTERNAL
+value|1
 end_define
 
 begin_include
@@ -39,6 +46,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"xat-attribute.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"value-type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ag-char-map.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"autoopts.h"
 end_include
 
@@ -46,6 +71,30 @@ begin_include
 include|#
 directive|include
 file|"proto.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"parse-duration.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"parse-duration.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"value-type.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xat-attribute.c"
 end_include
 
 begin_include
@@ -82,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|"environment.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"file.c"
 end_include
 
 begin_include
@@ -129,6 +184,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"reset.c"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"restore.c"
 end_include
 
@@ -166,6 +227,12 @@ begin_include
 include|#
 directive|include
 file|"tokenize.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"time.c"
 end_include
 
 begin_include

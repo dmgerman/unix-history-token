@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* -*- buffer-read-only: t -*- vi: set ro:  *  * Prototypes for autoopts  * Generated Sat May  5 12:02:36 PDT 2007  */
+comment|/* -*- buffer-read-only: t -*- vi: set ro:  *  * Prototypes for autoopts  * Generated Fri Apr 29 15:44:06 PDT 2011  */
 end_comment
 
 begin_ifndef
@@ -53,7 +53,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*\n *  Extracted from autoopts.c\n */
+comment|/*  *  Extracted from autoopts.c  */
 end_comment
 
 begin_function_decl
@@ -86,18 +86,6 @@ end_function_decl
 
 begin_function_decl
 name|LOCAL
-name|void
-name|ao_free
-parameter_list|(
-name|void
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|LOCAL
 name|char
 modifier|*
 name|ao_strdup
@@ -113,7 +101,7 @@ end_function_decl
 begin_function_decl
 name|LOCAL
 name|tSuccess
-name|handleOption
+name|handle_opt
 parameter_list|(
 name|tOptions
 modifier|*
@@ -190,7 +178,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*\n *  Extracted from configfile.c\n */
+comment|/*  *  Extracted from configfile.c  */
 end_comment
 
 begin_function_decl
@@ -248,7 +236,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*\n *  Extracted from environment.c\n */
+comment|/*  *  Extracted from environment.c  */
 end_comment
 
 begin_function_decl
@@ -282,7 +270,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*\n *  Extracted from load.c\n */
+comment|/*  *  Extracted from load.c  */
 end_comment
 
 begin_function_decl
@@ -327,8 +315,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*\n *  Extracted from nested.c\n */
+comment|/*  *  Extracted from nested.c  */
 end_comment
+
+begin_function_decl
+name|LOCAL
+name|void
+name|unload_arg_list
+parameter_list|(
+name|tArgList
+modifier|*
+name|pAL
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|LOCAL
@@ -352,8 +352,41 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|LOCAL
+name|int
+name|get_special_char
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+modifier|*
+name|ppz
+parameter_list|,
+name|int
+modifier|*
+name|ct
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LOCAL
+name|void
+name|emit_special_char
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|,
+name|int
+name|ch
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*\n *  Extracted from sort.c\n */
+comment|/*  *  Extracted from sort.c  */
 end_comment
 
 begin_function_decl
@@ -369,7 +402,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*\n *  Extracted from stack.c\n */
+comment|/*  *  Extracted from stack.c  */
 end_comment
 
 begin_function_decl

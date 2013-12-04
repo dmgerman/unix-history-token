@@ -48,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|NBUF
-value|80002
+value|800002
 end_define
 
 begin_define

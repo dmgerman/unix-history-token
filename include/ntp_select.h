@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ntp_select_h
+name|NTP_SELECT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ntp_select_h
+name|NTP_SELECT_H
 end_define
 
 begin_comment
@@ -61,36 +61,33 @@ directive|include
 file|<sockLib.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|select
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|width
-operator|,
+parameter_list|,
 name|fd_set
-operator|*
+modifier|*
 name|pReadFds
-operator|,
+parameter_list|,
 name|fd_set
-operator|*
+modifier|*
 name|pWriteFds
-operator|,
+parameter_list|,
 name|fd_set
-operator|*
+modifier|*
 name|pExceptFds
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|timeval
-operator|*
+modifier|*
 name|pTimeOut
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -109,12 +106,6 @@ operator|!
 name|defined
 argument_list|(
 name|FD_SET
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SYS_WINNT
 argument_list|)
 end_if
 
@@ -213,13 +204,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_comment
+comment|/* ports/winnt/libntp/setpriority.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|InitSockets
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _ntp_select_h */
+comment|/* NTP_SELECT_H */
 end_comment
 
 end_unit

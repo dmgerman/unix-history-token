@@ -80,11 +80,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * I'm still not sure I like what I've done here. It certainly consumes  * memory like it is going out of style, and also may not be as low  * overhead as I'd imagined.  *  * Anyway, we record statistics based on source address, mode and  * version (for now, anyway. Check the code).  The receive procedure  * calls us with the incoming rbufp before it does anything else.  *  * Each entry is doubly linked into two lists, a hash table and a  * most-recently-used list. When a packet arrives it is looked up in  * the hash table.  If found, the statistics are updated and the entry  * relinked at the head of the MRU list. If not found, a new entry is  * allocated, initialized and linked into both the hash table and at the  * head of the MRU list.  *  * Memory is usually allocated by grabbing a big chunk of new memory and  * cutting it up into littler pieces. The exception to this when we hit  * the memory limit. Then we free memory by grabbing entries off the  * tail for the MRU list, unlinking from the hash table, and  * reinitializing.  *  * trimmed back memory consumption ... jdg 8/94  */
+comment|/*  * Record statistics based on source address, mode and version. The  * receive procedure calls us with the incoming rbufp before it does  * anything else. While at it, implement rate controls for inbound  * traffic.  *  * Each entry is doubly linked into two lists, a hash table and a most-  * recently-used (MRU) list. When a packet arrives it is looked up in  * the hash table. If found, the statistics are updated and the entry  * relinked at the head of the MRU list. If not found, a new entry is  * allocated, initialized and linked into both the hash table and at the  * head of the MRU list.  *  * Memory is usually allocated by grabbing a big chunk of new memory and  * cutting it up into littler pieces. The exception to this when we hit  * the memory limit. Then we free memory by grabbing entries off the  * tail for the MRU list, unlinking from the hash table, and  * reinitializing.  */
 end_comment
 
 begin_comment
-comment|/*  * Limits on the number of structures allocated.  This limit is picked  * with the illicit knowlege that we can only return somewhat less  * than 8K bytes in a mode 7 response packet, and that each structure  * will require about 20 bytes of space in the response.  *  * ... I don't believe the above is true anymore ... jdg  */
+comment|/*  * Limits on the number of structures allocated.  This limit is picked  * with the illicit knowlege that we can only return somewhat less than  * 8K bytes in a mode 7 response packet, and that each structure will  * require about 20 bytes of space in the response.  *  * ... I don't believe the above is true anymore ... jdg  */
 end_comment
 
 begin_ifndef
@@ -139,14 +139,14 @@ begin_define
 define|#
 directive|define
 name|MON_HASH_SIZE
-value|128
+value|NTP_HASH_SIZE
 end_define
 
 begin_define
 define|#
 directive|define
 name|MON_HASH_MASK
-value|(MON_HASH_SIZE-1)
+value|NTP_HASH_MASK
 end_define
 
 begin_define
@@ -156,7 +156,7 @@ name|MON_HASH
 parameter_list|(
 name|addr
 parameter_list|)
-value|sock_hash(addr)
+value|NTP_HASH_ADDR(addr)
 end_define
 
 begin_comment
@@ -187,7 +187,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * List of free structures structures, and counters of free and total  * structures.  The free structures are linked with the hash_next field.  */
+comment|/*  * List of free structures structures, and counters of free and total  * structures. The free structures are linked with the hash_next field.  */
 end_comment
 
 begin_decl_stmt
@@ -226,6 +226,34 @@ comment|/* times called malloc() */
 end_comment
 
 begin_comment
+comment|/*  * Parameters of the RES_LIMITED restriction option. We define headway  * as the idle time between packets. A packet is discarded if the  * headway is less than the minimum, as well as if the average headway  * is less than eight times the increment.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ntp_minpkt
+init|=
+name|NTP_MINPKT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* minimum (log 2 s) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ntp_minpoll
+init|=
+name|NTP_MINPOLL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* increment (log 2 s) */
+end_comment
+
+begin_comment
 comment|/*  * Initialization state.  We may be monitoring, we may not.  If  * we aren't, we may not even have allocated any memory yet.  */
 end_comment
 
@@ -240,7 +268,7 @@ comment|/* enable switch */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|int
 name|mon_age
 init|=
 literal|3000
@@ -258,33 +286,27 @@ name|mon_have_memory
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|mon_getmoremem
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|remove_from_hash
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|mon_data
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * init_mon - initialize monitoring global data  */
@@ -647,7 +669,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ntp_monitor - record stats about this packet  *  * Returns 1 if the packet is at the head of the list, 0 otherwise.  */
+comment|/*  * ntp_monitor - record stats about this packet  *  * Returns flags  */
 end_comment
 
 begin_function
@@ -658,6 +680,9 @@ name|struct
 name|recvbuf
 modifier|*
 name|rbufp
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 specifier|register
@@ -672,17 +697,19 @@ name|mon_data
 modifier|*
 name|md
 decl_stmt|;
-name|struct
-name|sockaddr_storage
+name|sockaddr_u
 name|addr
 decl_stmt|;
 specifier|register
-name|int
+name|u_int
 name|hash
 decl_stmt|;
 specifier|register
 name|int
 name|mode
+decl_stmt|;
+name|int
+name|interval
 decl_stmt|;
 if|if
 condition|(
@@ -691,7 +718,9 @@ operator|==
 name|MON_OFF
 condition|)
 return|return
-literal|0
+operator|(
+name|flags
+operator|)
 return|;
 name|pkt
 operator|=
@@ -762,10 +791,22 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|int
+name|head
+decl_stmt|;
+comment|/* headway increment */
+name|int
+name|leak
+decl_stmt|;
+comment|/* new headway */
+name|int
+name|limit
+decl_stmt|;
+comment|/* average threshold */
 comment|/* 		 * Match address only to conserve MRU size. 		 */
 if|if
 condition|(
-name|SOCKCMP
+name|SOCK_EQ
 argument_list|(
 operator|&
 name|md
@@ -777,9 +818,7 @@ name|addr
 argument_list|)
 condition|)
 block|{
-name|md
-operator|->
-name|drop_count
+name|interval
 operator|=
 name|current_time
 operator|-
@@ -797,6 +836,12 @@ name|md
 operator|->
 name|count
 operator|++
+expr_stmt|;
+name|md
+operator|->
+name|flags
+operator|=
+name|flags
 expr_stmt|;
 name|md
 operator|->
@@ -880,8 +925,142 @@ name|mru_next
 operator|=
 name|md
 expr_stmt|;
-return|return
+comment|/* 			 * At this point the most recent arrival is 			 * first in the MRU list. Decrease the counter 			 * by the headway, but not less than zero. 			 */
+name|md
+operator|->
+name|leak
+operator|-=
+name|interval
+expr_stmt|;
+if|if
+condition|(
+name|md
+operator|->
+name|leak
+operator|<
+literal|0
+condition|)
+name|md
+operator|->
+name|leak
+operator|=
+literal|0
+expr_stmt|;
+name|head
+operator|=
 literal|1
+operator|<<
+name|ntp_minpoll
+expr_stmt|;
+name|leak
+operator|=
+name|md
+operator|->
+name|leak
+operator|+
+name|head
+expr_stmt|;
+name|limit
+operator|=
+name|NTP_SHIFT
+operator|*
+name|head
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|>
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"restrict: interval %d headway %d limit %d\n"
+argument_list|,
+name|interval
+argument_list|,
+name|leak
+argument_list|,
+name|limit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 			 * If the minimum and average thresholds are not 			 * exceeded, douse the RES_LIMITED and RES_KOD 			 * bits and increase the counter by the headway 			 * increment. Note that we give a 1-s grace for 			 * the minimum threshold and a 2-s grace for the 			 * headway increment. If one or both thresholds 			 * are exceeded and the old counter is less than 			 * the average threshold, set the counter to the 			 * average threshold plus the inrcrment and 			 * leave the RES_KOD bit lit. Othewise, leave 			 * the counter alone and douse the RES_KOD bit. 			 * This rate-limits the KoDs to no less than the 			 * average headway. 			 */
+if|if
+condition|(
+name|interval
+operator|+
+literal|1
+operator|>=
+operator|(
+literal|1
+operator|<<
+name|ntp_minpkt
+operator|)
+operator|&&
+name|leak
+operator|<
+name|limit
+condition|)
+block|{
+name|md
+operator|->
+name|leak
+operator|=
+name|leak
+operator|-
+literal|2
+expr_stmt|;
+name|md
+operator|->
+name|flags
+operator|&=
+operator|~
+operator|(
+name|RES_LIMITED
+operator||
+name|RES_KOD
+operator|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|md
+operator|->
+name|leak
+operator|<
+name|limit
+condition|)
+block|{
+name|md
+operator|->
+name|leak
+operator|=
+name|limit
+operator|+
+name|head
+expr_stmt|;
+block|}
+else|else
+block|{
+name|md
+operator|->
+name|flags
+operator|&=
+operator|~
+name|RES_KOD
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|md
+operator|->
+name|flags
+operator|)
 return|;
 block|}
 name|md
@@ -910,18 +1089,16 @@ name|mon_mru_list
 operator|.
 name|mru_prev
 expr_stmt|;
-comment|/* We get 31 bits from ntp_random() */
 if|if
 condition|(
-operator|(
-operator|(
-name|u_long
-operator|)
 name|ntp_random
 argument_list|()
-operator|)
 operator|/
+operator|(
+literal|2.
+operator|*
 name|FRAC
+operator|)
 operator|>
 call|(
 name|double
@@ -937,7 +1114,16 @@ operator|/
 name|mon_age
 condition|)
 return|return
-literal|0
+operator|(
+name|flags
+operator|&
+operator|~
+operator|(
+name|RES_LIMITED
+operator||
+name|RES_KOD
+operator|)
+operator|)
 return|;
 name|md
 operator|->
@@ -987,13 +1173,11 @@ block|}
 comment|/* 	 * Got one, initialize it 	 */
 name|md
 operator|->
-name|avg_interval
+name|lasttime
 operator|=
-literal|0
-expr_stmt|;
 name|md
 operator|->
-name|lasttime
+name|firsttime
 operator|=
 name|current_time
 expr_stmt|;
@@ -1005,7 +1189,20 @@ literal|1
 expr_stmt|;
 name|md
 operator|->
-name|drop_count
+name|flags
+operator|=
+name|flags
+operator|&
+operator|~
+operator|(
+name|RES_LIMITED
+operator||
+name|RES_KOD
+operator|)
+expr_stmt|;
+name|md
+operator|->
+name|leak
 operator|=
 literal|0
 expr_stmt|;
@@ -1176,7 +1373,11 @@ operator|=
 name|md
 expr_stmt|;
 return|return
-literal|1
+operator|(
+name|md
+operator|->
+name|flags
+operator|)
 return|;
 block|}
 end_function
@@ -1296,7 +1497,7 @@ name|md
 parameter_list|)
 block|{
 specifier|register
-name|int
+name|u_int
 name|hash
 decl_stmt|;
 specifier|register

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp4-dev/libparse/clk_trimtsip.c,v 4.17 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * clk_trimtsip.c,v 4.17 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * Trimble TSIP support  * Thanks to Sven Dietrich for providing test hardware  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/libparse/clk_trimtsip.c,v 4.19 2009/11/01 10:47:49 kardel RELEASE_20091101_A  *  * clk_trimtsip.c,v 4.19 2009/11/01 10:47:49 kardel RELEASE_20091101_A  *  * Trimble TSIP support  * Thanks to Sven Dietrich for providing test hardware  *  * Copyright (c) 1995-2009 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -253,54 +253,48 @@ begin_comment
 comment|/* enough information for good operation */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|unsigned
 name|long
 name|inp_tsip
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|parse_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|timestamp_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|unsigned
 name|long
 name|cvt_trimtsip
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|format
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|clocktime_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -715,6 +709,7 @@ operator||
 name|PARSE_INP_DATA
 return|;
 block|}
+comment|/*FALLTHROUGH*/
 default|default:
 comment|/* collect data */
 name|t
@@ -1572,7 +1567,7 @@ comment|/* not (REFCLOCK&& CLOCK_PARSE&& CLOCK_TRIMTSIP&& !PARSESTREAM) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_trimtsip.c,v  * Revision 4.17  2005/04/16 17:32:10  kardel  * update copyright  *  * Revision 4.16  2004/11/14 15:29:41  kardel  * support PPSAPI, upgrade Copyright to Berkeley style  *  * Revision 4.13  1999/11/28 09:13:51  kardel  * RECON_4_0_98F  *  * Revision 4.12  1999/02/28 13:00:08  kardel  * *** empty log message ***  *  * Revision 4.11  1999/02/28 11:47:54  kardel  * (struct trimble): new member t_utcknown  * (cvt_trimtsip): fixed status monitoring, bad receiver states are  * now recognized  *  * Revision 4.10  1999/02/27 15:57:15  kardel  * use mmemcpy instead of bcopy  *  * Revision 4.9  1999/02/21 12:17:42  kardel  * 4.91f reconcilation  *  * Revision 4.8  1998/11/15 20:27:58  kardel  * Release 4.0.73e13 reconcilation  *  * Revision 4.7  1998/08/16 18:49:20  kardel  * (cvt_trimtsip): initial kernel capable version (no more floats)  * (clock_trimtsip =): new format name  *  * Revision 4.6  1998/08/09 22:26:05  kardel  * Trimble TSIP support  *  * Revision 4.5  1998/08/02 10:37:05  kardel  * working TSIP parser  *  * Revision 4.4  1998/06/28 16:50:40  kardel  * (getflt): fixed ENDIAN issue  * (getdbl): fixed ENDIAN issue  * (getint): use get_msb_short()  * (cvt_trimtsip): use gpstolfp() for conversion  *  * Revision 4.3  1998/06/13 12:07:31  kardel  * fix SYSV clock name clash  *  * Revision 4.2  1998/06/12 15:22:30  kardel  * fix prototypes  *  * Revision 4.1  1998/05/24 09:39:54  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:32  kardel  * Start 4.0 release version numbering  *  * from V3 1.8 loginfo deleted 1998/04/11 kardel  */
+comment|/*  * History:  *  * clk_trimtsip.c,v  * Revision 4.19  2009/11/01 10:47:49  kardel  * de-P()  *  * Revision 4.18  2009/11/01 08:46:46  kardel  * clarify case FALLTHROUGH  *  * Revision 4.17  2005/04/16 17:32:10  kardel  * update copyright  *  * Revision 4.16  2004/11/14 15:29:41  kardel  * support PPSAPI, upgrade Copyright to Berkeley style  *  * Revision 4.13  1999/11/28 09:13:51  kardel  * RECON_4_0_98F  *  * Revision 4.12  1999/02/28 13:00:08  kardel  * *** empty log message ***  *  * Revision 4.11  1999/02/28 11:47:54  kardel  * (struct trimble): new member t_utcknown  * (cvt_trimtsip): fixed status monitoring, bad receiver states are  * now recognized  *  * Revision 4.10  1999/02/27 15:57:15  kardel  * use mmemcpy instead of bcopy  *  * Revision 4.9  1999/02/21 12:17:42  kardel  * 4.91f reconcilation  *  * Revision 4.8  1998/11/15 20:27:58  kardel  * Release 4.0.73e13 reconcilation  *  * Revision 4.7  1998/08/16 18:49:20  kardel  * (cvt_trimtsip): initial kernel capable version (no more floats)  * (clock_trimtsip =): new format name  *  * Revision 4.6  1998/08/09 22:26:05  kardel  * Trimble TSIP support  *  * Revision 4.5  1998/08/02 10:37:05  kardel  * working TSIP parser  *  * Revision 4.4  1998/06/28 16:50:40  kardel  * (getflt): fixed ENDIAN issue  * (getdbl): fixed ENDIAN issue  * (getint): use get_msb_short()  * (cvt_trimtsip): use gpstolfp() for conversion  *  * Revision 4.3  1998/06/13 12:07:31  kardel  * fix SYSV clock name clash  *  * Revision 4.2  1998/06/12 15:22:30  kardel  * fix prototypes  *  * Revision 4.1  1998/05/24 09:39:54  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:32  kardel  * Start 4.0 release version numbering  *  * from V3 1.8 loginfo deleted 1998/04/11 kardel  */
 end_comment
 
 end_unit

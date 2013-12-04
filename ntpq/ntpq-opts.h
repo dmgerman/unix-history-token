@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpq-opts.h)  *    *  It has been AutoGen-ed  Tuesday December  8, 2009 at 08:14:26 AM EST  *  From the definitions    ntpq-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
-end_comment
-
-begin_comment
-comment|/*  *  This file was produced by an AutoOpts template.  AutoOpts is a  *  copyrighted work.  This header file is not encumbered by AutoOpts  *  licensing, but is provided under the licensing terms chosen by the  *  ntpq author or copyright holder.  AutoOpts is licensed under  *  the terms of the LGPL.  The redistributable library (``libopts'') is  *  licensed under the terms of either the LGPL or, at the users discretion,  *  the BSD license.  See the AutoOpts and/or libopts sources for details.  *  * This source file is copyrighted and licensed under the following terms:  *  * ntpq copyright 1970-2009 David L. Mills and/or others - all rights reserved  *  * see html/copyright.html  */
+comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpq-opts.h)  *    *  It has been AutoGen-ed  December 24, 2011 at 06:34:27 PM by AutoGen 5.12  *  From the definitions    ntpq-opts.def  *  and the template file   options  *  * Generated from AutoOpts 35:0:10 templates.  *  *  AutoOpts is a copyrighted work.  This header file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpq author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * This source file is copyrighted and licensed under the following terms:  *  *  see html/copyright.html  *    */
 end_comment
 
 begin_comment
@@ -21,6 +17,7 @@ begin_define
 define|#
 directive|define
 name|AUTOOPTS_NTPQ_OPTS_H_GUARD
+value|1
 end_define
 
 begin_include
@@ -43,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|AO_TEMPLATE_VERSION
-value|118784
+value|143360
 end_define
 
 begin_if
@@ -110,25 +107,29 @@ name|INDEX_OPT_NUMERIC
 operator|=
 literal|7
 block|,
-name|INDEX_OPT_VERSION
+name|INDEX_OPT_OLD_RV
 operator|=
 literal|8
 block|,
-name|INDEX_OPT_HELP
+name|INDEX_OPT_VERSION
 operator|=
 literal|9
 block|,
-name|INDEX_OPT_MORE_HELP
+name|INDEX_OPT_HELP
 operator|=
 literal|10
 block|,
-name|INDEX_OPT_SAVE_OPTS
+name|INDEX_OPT_MORE_HELP
 operator|=
 literal|11
 block|,
-name|INDEX_OPT_LOAD_OPTS
+name|INDEX_OPT_SAVE_OPTS
 operator|=
 literal|12
+block|,
+name|INDEX_OPT_LOAD_OPTS
+operator|=
+literal|13
 block|}
 name|teOptIndex
 expr_stmt|;
@@ -138,25 +139,25 @@ begin_define
 define|#
 directive|define
 name|OPTION_CT
-value|13
+value|14
 end_define
 
 begin_define
 define|#
 directive|define
 name|NTPQ_VERSION
-value|"4.2.4p8"
+value|"4.2.6p5"
 end_define
 
 begin_define
 define|#
 directive|define
 name|NTPQ_FULL_VERSION
-value|"ntpq - standard NTP query program - Ver. 4.2.4p8"
+value|"ntpq 4.2.6p5"
 end_define
 
 begin_comment
-comment|/*  *  Interface defines for all options.  Replace "n" with the UPPER_CASED  *  option name (as in the teOptIndex enumeration above).  *  e.g. HAVE_OPT( IPV4 )  */
+comment|/*  *  Interface defines for all options.  Replace "n" with the UPPER_CASED  *  option name (as in the teOptIndex enumeration above).  *  e.g. HAVE_OPT(IPV4)  */
 end_comment
 
 begin_define
@@ -266,8 +267,28 @@ name|CLEAR_OPT
 parameter_list|(
 name|n
 parameter_list|)
-value|STMTS( \                 DESC(n).fOptState&= OPTST_PERSISTENT_MASK;   \                 if ( (DESC(n).fOptState& OPTST_INITENABLED) == 0) \                     DESC(n).fOptState |= OPTST_DISABLED; \                 DESC(n).optCookie = NULL )
+value|STMTS( \                 DESC(n).fOptState&= OPTST_PERSISTENT_MASK;   \                 if ((DESC(n).fOptState& OPTST_INITENABLED) == 0) \                     DESC(n).fOptState |= OPTST_DISABLED; \                 DESC(n).optCookie = NULL )
 end_define
+
+begin_comment
+comment|/* * * * * *  *  *  Enumeration of ntpq exit codes  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|NTPQ_EXIT_SUCCESS
+init|=
+literal|0
+block|,
+name|NTPQ_EXIT_FAILURE
+init|=
+literal|1
+block|}
+name|ntpq_exit_code_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  *  Make sure there are no #define name conflicts with the option names  */
@@ -463,6 +484,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_RV
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+warning|undefining OLD_RV due to option name conflict
+end_warning
+
+begin_undef
+undef|#
+directive|undef
+name|OLD_RV
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -520,6 +564,12 @@ directive|undef
 name|NUMERIC
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|OLD_RV
+end_undef
+
 begin_endif
 endif|#
 directive|endif
@@ -530,7 +580,7 @@ comment|/*  NO_OPTION_NAME_WARNINGS */
 end_comment
 
 begin_comment
-comment|/*  *  Interface defines for specific options.  */
+comment|/* * * * * *  *  *  Interface defines for specific options.  */
 end_comment
 
 begin_define
@@ -538,20 +588,6 @@ define|#
 directive|define
 name|VALUE_OPT_IPV4
 value|'4'
-end_define
-
-begin_define
-define|#
-directive|define
-name|WHICH_OPT_IPV4
-value|(DESC(IPV4).optActualValue)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WHICH_IDX_IPV4
-value|(DESC(IPV4).optActualIndex)
 end_define
 
 begin_define
@@ -568,12 +604,6 @@ name|VALUE_OPT_COMMAND
 value|'c'
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -581,36 +611,12 @@ name|VALUE_OPT_DEBUG_LEVEL
 value|'d'
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_SET_DEBUG_LEVEL
 value|'D'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
 
 begin_define
 define|#
@@ -636,8 +642,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VALUE_OPT_VERSION
-value|'v'
+name|VALUE_OPT_OLD_RV
+value|8
 end_define
 
 begin_define
@@ -652,6 +658,13 @@ define|#
 directive|define
 name|VALUE_OPT_MORE_HELP
 value|'!'
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALUE_OPT_VERSION
+value|INDEX_OPT_VERSION
 end_define
 
 begin_define
@@ -686,14 +699,14 @@ begin_define
 define|#
 directive|define
 name|ERRSKIP_OPTERR
-value|STMTS( ntpqOptions.fOptSet&= ~OPTPROC_ERRSTOP )
+value|STMTS(ntpqOptions.fOptSet&= ~OPTPROC_ERRSTOP)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ERRSTOP_OPTERR
-value|STMTS( ntpqOptions.fOptSet |= OPTPROC_ERRSTOP )
+value|STMTS(ntpqOptions.fOptSet |= OPTPROC_ERRSTOP)
 end_define
 
 begin_define
@@ -703,7 +716,7 @@ name|RESTART_OPT
 parameter_list|(
 name|n
 parameter_list|)
-value|STMTS( \                 ntpqOptions.curOptIdx = (n); \                 ntpqOptions.pzCurOpt  = NULL )
+value|STMTS( \                 ntpqOptions.curOptIdx = (n); \                 ntpqOptions.pzCurOpt  = NULL)
 end_define
 
 begin_define
@@ -720,15 +733,11 @@ name|USAGE
 parameter_list|(
 name|c
 parameter_list|)
-value|(*ntpqOptions.pUsageProc)(&ntpqOptions, c )
+value|(*ntpqOptions.pUsageProc)(&ntpqOptions, c)
 end_define
 
 begin_comment
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/opthead.tpl near line 360 */
-end_comment
-
-begin_comment
-comment|/* * * * * *  *  *  Declare the ntpq option descriptor.  */
+comment|/* extracted from opthead.tlib near line 451 */
 end_comment
 
 begin_ifdef
@@ -743,16 +752,20 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/* * * * * *  *  *  Declare the ntpq option descriptor.  */
 specifier|extern
 name|tOptions
 name|ntpqOptions
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENABLE_NLS
+argument_list|)
 ifndef|#
 directive|ifndef
 name|_
-if|#
-directive|if
-name|ENABLE_NLS
 include|#
 directive|include
 file|<stdio.h>
@@ -795,21 +808,55 @@ parameter_list|(
 name|s
 parameter_list|)
 value|aoGetsText(s)
+endif|#
+directive|endif
+comment|/* _() */
+define|#
+directive|define
+name|OPT_NO_XLAT_CFG_NAMES
+value|STMTS(ntpqOptions.fOptSet |= \                                     OPTPROC_NXLAT_OPT_CFG;)
+define|#
+directive|define
+name|OPT_NO_XLAT_OPT_NAMES
+value|STMTS(ntpqOptions.fOptSet |= \                                     OPTPROC_NXLAT_OPT|OPTPROC_NXLAT_OPT_CFG;)
+define|#
+directive|define
+name|OPT_XLAT_CFG_NAMES
+value|STMTS(ntpqOptions.fOptSet&= \                                   ~(OPTPROC_NXLAT_OPT|OPTPROC_NXLAT_OPT_CFG);)
+define|#
+directive|define
+name|OPT_XLAT_OPT_NAMES
+value|STMTS(ntpqOptions.fOptSet&= \                                   ~OPTPROC_NXLAT_OPT;)
 else|#
 directive|else
 comment|/* ENABLE_NLS */
 define|#
 directive|define
+name|OPT_NO_XLAT_CFG_NAMES
+define|#
+directive|define
+name|OPT_NO_XLAT_OPT_NAMES
+define|#
+directive|define
+name|OPT_XLAT_CFG_NAMES
+define|#
+directive|define
+name|OPT_XLAT_OPT_NAMES
+ifndef|#
+directive|ifndef
+name|_
+define|#
+directive|define
 name|_
 parameter_list|(
-name|s
+name|_s
 parameter_list|)
-value|s
+value|_s
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* ENABLE_NLS */
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -27,7 +33,7 @@ modifier|*
 name|inttoa
 parameter_list|(
 name|long
-name|ival
+name|val
 parameter_list|)
 block|{
 specifier|register
@@ -40,19 +46,15 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
 argument_list|,
+name|LIB_BUFLENGTH
+argument_list|,
 literal|"%ld"
 argument_list|,
-operator|(
-name|long
-operator|)
-name|ival
+name|val
 argument_list|)
 expr_stmt|;
 return|return

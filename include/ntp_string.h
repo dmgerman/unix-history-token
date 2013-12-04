@@ -175,6 +175,41 @@ directive|ifdef
 name|NTP_NEED_BOPS
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRINGS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_comment
+comment|/* bcmp, bcopy, bzero */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|void
+name|ntp_memset
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -186,7 +221,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|bcmp(a,b,(int)c)
+value|bcmp(a, b, (int)(c))
 end_define
 
 begin_define
@@ -200,7 +235,7 @@ name|f
 parameter_list|,
 name|c
 parameter_list|)
-value|bcopy(f,t,(int)c)
+value|bcopy(f, t, (int)(c))
 end_define
 
 begin_define
@@ -214,7 +249,7 @@ name|f
 parameter_list|,
 name|c
 parameter_list|)
-value|bcopy(f,t,(int)c)
+value|bcopy(f, t, (int)(c))
 end_define
 
 begin_define
@@ -228,25 +263,8 @@ name|x
 parameter_list|,
 name|c
 parameter_list|)
-value|if (x == 0x00) bzero(a,(int)c); else ntp_memset((char*)a,x,c)
+value|if (0 == (x)) \ 					bzero(a, (int)(c)); \ 				else \ 					ntp_memset((char *)(a), x, c)
 end_define
-
-begin_decl_stmt
-name|void
-name|ntp_memset
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#

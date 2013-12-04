@@ -1,24 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: environment.c,v 4.13 2007/04/15 19:01:18 bkorb Exp $  * Time-stamp:      "2007-04-15 11:50:35 bkorb"  *  *  This file contains all of the routines that must be linked into  *  an executable to use the generated option processing.  The optional  *  routines are in separately compiled modules so that they will not  *  necessarily be linked in.  */
-end_comment
-
-begin_comment
-comment|/*  *  Automated Options copyright 1992-2007 Bruce Korb  *  *  Automated Options is free software.  *  You may redistribute it and/or modify it under the terms of the  *  GNU General Public License, as published by the Free Software  *  Foundation; either version 2, or (at your option) any later version.  *  *  Automated Options is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *  GNU General Public License for more details.  *  *  You should have received a copy of the GNU General Public License  *  along with Automated Options.  See the file "COPYING".  If not,  *  write to:  The Free Software Foundation, Inc.,  *             51 Franklin Street, Fifth Floor,  *             Boston, MA  02110-1301, USA.  *  * As a special exception, Bruce Korb gives permission for additional  * uses of the text contained in his release of AutoOpts.  *  * The exception is that, if you link the AutoOpts library with other  * files to produce an executable, this does not by itself cause the  * resulting executable to be covered by the GNU General Public License.  * Your use of that executable is in no way restricted on account of  * linking the AutoOpts library code into it.  *  * This exception does not however invalidate any other reasons why  * the executable file might be covered by the GNU General Public License.  *  * This exception applies only to the code released by Bruce Korb under  * the name AutoOpts.  If you copy code from other sources under the  * General Public License into a copy of AutoOpts, as the General Public  * License permits, the exception does not apply to the code that you add  * in this way.  To avoid misleading anyone as to the status of such  * modified files, you must delete this exception notice from them.  *  * If you write modifications of your own for AutoOpts, it is your choice  * whether to permit this exception to apply to your modifications.  * If you do not wish that, delete this exception notice.  */
+comment|/**  * \file environment.c  *  * Time-stamp:      "2011-04-06 09:35:55 bkorb"  *  *  This file contains all of the routines that must be linked into  *  an executable to use the generated option processing.  The optional  *  routines are in separately compiled modules so that they will not  *  necessarily be linked in.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
 end_comment
 
 begin_comment
 comment|/* = = = START-STATIC-FORWARD = = = */
 end_comment
 
-begin_comment
-comment|/* static forward declarations maintained by :mkfwd */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
-name|checkEnvOpt
+name|do_env_opt
 parameter_list|(
 name|tOptState
 modifier|*
@@ -86,34 +78,12 @@ modifier|*
 modifier|*
 name|sv_argv
 decl_stmt|;
-comment|/*      *  IF there is no such environment variable      *   *or* there is, but we are doing immediate opts and there are      *        no immediate opts to do (--help inside $PROGNAME is silly,      *        but --no-load-defs is not, so that is marked)      *  THEN bail out now.  (      */
+comment|/*      *  No such beast?  Then bail now.      */
 if|if
 condition|(
-operator|(
 name|pczOptStr
 operator|==
 name|NULL
-operator|)
-operator|||
-operator|(
-operator|(
-name|type
-operator|==
-name|ENV_IMM
-operator|)
-operator|&&
-operator|(
-operator|(
-name|pOpts
-operator|->
-name|fOptSet
-operator|&
-name|OPTPROC_HAS_IMMED
-operator|)
-operator|==
-literal|0
-operator|)
-operator|)
 condition|)
 return|return;
 comment|/*      *  Tokenize the string.  If there's nothing of interest, we'll bail      *  here immediately.      */
@@ -205,7 +175,6 @@ block|{
 case|case
 name|ENV_IMM
 case|:
-comment|/*          *  We know the OPTPROC_HAS_IMMED bit is set.          */
 operator|(
 name|void
 operator|)
@@ -216,28 +185,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ENV_NON_IMM
+name|ENV_ALL
 case|:
-operator|(
-name|void
-operator|)
-name|doRegularOpts
-argument_list|(
-name|pOpts
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-comment|/*          *  Only to immediate opts if the OPTPROC_HAS_IMMED bit is set.          */
-if|if
-condition|(
-name|pOpts
-operator|->
-name|fOptSet
-operator|&
-name|OPTPROC_HAS_IMMED
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -258,7 +207,10 @@ name|pzCurOpt
 operator|=
 name|NULL
 expr_stmt|;
-block|}
+comment|/* FALLTHROUGH */
+case|case
+name|ENV_NON_IMM
+case|:
 operator|(
 name|void
 operator|)
@@ -267,7 +219,6 @@ argument_list|(
 name|pOpts
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 comment|/*      *  Free up the temporary arg vector and restore the original program args.      */
 name|free
@@ -299,7 +250,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|checkEnvOpt
+name|do_env_opt
 parameter_list|(
 name|tOptState
 modifier|*
@@ -447,15 +398,6 @@ block|}
 comment|/*      *  Make sure the option value string is persistent and consistent.      *      *  The interpretation of the option value depends      *  on the type of value argument the option takes      */
 if|if
 condition|(
-name|os
-operator|->
-name|pzOptArg
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
 name|OPTST_GET_ARGTYPE
 argument_list|(
 name|os
@@ -468,6 +410,7 @@ operator|==
 name|OPARG_TYPE_NONE
 condition|)
 block|{
+comment|/*          *  Ignore any value.          */
 name|os
 operator|->
 name|pzOptArg
@@ -476,6 +419,19 @@ name|NULL
 expr_stmt|;
 block|}
 elseif|else
+if|if
+condition|(
+name|os
+operator|->
+name|pzOptArg
+index|[
+literal|0
+index|]
+operator|==
+name|NUL
+condition|)
+block|{
+comment|/*          * If the argument is the empty string and the argument is          * optional, then treat it as if the option was not specified.          */
 if|if
 condition|(
 operator|(
@@ -487,40 +443,15 @@ name|fOptState
 operator|&
 name|OPTST_ARG_OPTIONAL
 operator|)
-operator|&&
-operator|(
-operator|*
-name|os
-operator|->
-name|pzOptArg
 operator|==
-name|NUL
-operator|)
+literal|0
 condition|)
-block|{
+return|return;
 name|os
 operator|->
 name|pzOptArg
 operator|=
 name|NULL
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|*
-name|os
-operator|->
-name|pzOptArg
-operator|==
-name|NUL
-condition|)
-block|{
-name|os
-operator|->
-name|pzOptArg
-operator|=
-name|zNil
 expr_stmt|;
 block|}
 else|else
@@ -545,8 +476,7 @@ operator||=
 name|OPTST_ALLOC_ARG
 expr_stmt|;
 block|}
-block|}
-name|handleOption
+name|handle_opt
 argument_list|(
 name|pOpts
 argument_list|,
@@ -673,6 +603,9 @@ name|pOD
 operator|++
 control|)
 block|{
+name|size_t
+name|nln
+decl_stmt|;
 comment|/*          *  If presetting is disallowed, then skip this entry          */
 if|if
 condition|(
@@ -702,8 +635,8 @@ operator|)
 condition|)
 continue|continue;
 comment|/*          *  IF there is no such environment variable,          *  THEN skip this entry, too.          */
-if|if
-condition|(
+name|nln
+operator|=
 name|strlen
 argument_list|(
 name|st
@@ -712,12 +645,18 @@ name|pOD
 operator|->
 name|pz_NAME
 argument_list|)
-operator|>=
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|nln
+operator|<=
 name|spaceLeft
 condition|)
-continue|continue;
-comment|/*          *  Set up the option state          */
-name|strcpy
+block|{
+comment|/*              *  Set up the option state              */
+name|memcpy
 argument_list|(
 name|pzFlagName
 argument_list|,
@@ -726,9 +665,11 @@ operator|.
 name|pOD
 operator|->
 name|pz_NAME
+argument_list|,
+name|nln
 argument_list|)
 expr_stmt|;
-name|checkEnvOpt
+name|do_env_opt
 argument_list|(
 operator|&
 name|st
@@ -741,9 +682,21 @@ name|type
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/*      *  Special handling for ${PROGNAME_LOAD_OPTS}      */
 if|if
 condition|(
+operator|(
+name|pOpts
+operator|->
+name|specOptIdx
+operator|.
+name|save_opts
+operator|!=
+name|NO_EQUIVALENT
+operator|)
+operator|&&
+operator|(
 name|pOpts
 operator|->
 name|specOptIdx
@@ -751,8 +704,12 @@ operator|.
 name|save_opts
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
+name|size_t
+name|nln
+decl_stmt|;
 name|st
 operator|.
 name|pOD
@@ -769,7 +726,38 @@ name|save_opts
 operator|+
 literal|1
 expr_stmt|;
-name|strcpy
+if|if
+condition|(
+name|st
+operator|.
+name|pOD
+operator|->
+name|pz_NAME
+operator|==
+name|NULL
+condition|)
+return|return;
+name|nln
+operator|=
+name|strlen
+argument_list|(
+name|st
+operator|.
+name|pOD
+operator|->
+name|pz_NAME
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|nln
+operator|>
+name|spaceLeft
+condition|)
+return|return;
+name|memcpy
 argument_list|(
 name|pzFlagName
 argument_list|,
@@ -778,9 +766,11 @@ operator|.
 name|pOD
 operator|->
 name|pz_NAME
+argument_list|,
+name|nln
 argument_list|)
 expr_stmt|;
-name|checkEnvOpt
+name|do_env_opt
 argument_list|(
 operator|&
 name|st

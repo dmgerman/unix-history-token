@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	MD5 interface for rsaref2.0  *  * These routines implement an interface for the RSA Laboratories  * implementation of the Message Digest 5 (MD5) algorithm. This  * algorithm is included in the rsaref2.0 package available from RSA in  * the US and foreign countries. Further information is available at  * www.rsa.com.  */
+comment|/*  *	digest support for NTP, MD5 and with OpenSSL more  */
 end_comment
 
 begin_ifdef
@@ -38,35 +38,28 @@ directive|include
 file|"ntp_stdlib.h"
 end_include
 
-begin_comment
-comment|/* Disable the openssl md5 includes, because they'd clash with ours. */
-end_comment
-
-begin_comment
-comment|/* #define NO_MD5 */
-end_comment
-
-begin_comment
-comment|/* #define OPENSSL_NO_MD5 */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|OPENSSL
-end_undef
-
 begin_include
 include|#
 directive|include
 file|"ntp.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"global.h"
+file|"openssl/evp.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -75,13 +68,26 @@ file|"ntp_md5.h"
 end_include
 
 begin_comment
-comment|/*  * MD5authencrypt - generate MD5 message authenticator  *  * Returns length of authenticator field.  */
+comment|/* provides clone of OpenSSL MD5 API */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * MD5authencrypt - generate message digest  *  * Returns length of MAC including key ID and digest.  */
 end_comment
 
 begin_function
 name|int
 name|MD5authencrypt
 parameter_list|(
+name|int
+name|type
+parameter_list|,
+comment|/* hash algorithm */
 name|u_char
 modifier|*
 name|key
@@ -97,26 +103,37 @@ name|length
 comment|/* packet length */
 parameter_list|)
 block|{
-name|MD5_CTX
-name|md5
-decl_stmt|;
 name|u_char
 name|digest
 index|[
-literal|16
+name|EVP_MAX_MD_SIZE
 index|]
 decl_stmt|;
-comment|/* 	 * MD5 with key identifier concatenated with packet. 	 */
-name|MD5Init
+name|u_int
+name|len
+decl_stmt|;
+name|EVP_MD_CTX
+name|ctx
+decl_stmt|;
+comment|/* 	 * Compute digest of key concatenated with packet. Note: the 	 * key type and digest type have been verified when the key 	 * was creaded. 	 */
+name|INIT_SSL
+argument_list|()
+expr_stmt|;
+name|EVP_DigestInit
 argument_list|(
 operator|&
-name|md5
+name|ctx
+argument_list|,
+name|EVP_get_digestbynid
+argument_list|(
+name|type
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|MD5Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
-name|md5
+name|ctx
 argument_list|,
 name|key
 argument_list|,
@@ -126,10 +143,10 @@ operator|)
 name|cache_keylen
 argument_list|)
 expr_stmt|;
-name|MD5Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
-name|md5
+name|ctx
 argument_list|,
 operator|(
 name|u_char
@@ -143,12 +160,15 @@ operator|)
 name|length
 argument_list|)
 expr_stmt|;
-name|MD5Final
+name|EVP_DigestFinal
 argument_list|(
+operator|&
+name|ctx
+argument_list|,
 name|digest
 argument_list|,
 operator|&
-name|md5
+name|len
 argument_list|)
 expr_stmt|;
 name|memmove
@@ -165,12 +185,12 @@ literal|4
 argument_list|,
 name|digest
 argument_list|,
-literal|16
+name|len
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|16
+name|len
 operator|+
 literal|4
 operator|)
@@ -179,13 +199,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MD5authdecrypt - verify MD5 message authenticator  *  * Returns one if authenticator valid, zero if invalid.  */
+comment|/*  * MD5authdecrypt - verify MD5 message authenticator  *  * Returns one if digest valid, zero if invalid.  */
 end_comment
 
 begin_function
 name|int
 name|MD5authdecrypt
 parameter_list|(
+name|int
+name|type
+parameter_list|,
+comment|/* hash algorithm */
 name|u_char
 modifier|*
 name|key
@@ -205,26 +229,37 @@ name|size
 comment|/* MAC size */
 parameter_list|)
 block|{
-name|MD5_CTX
-name|md5
-decl_stmt|;
 name|u_char
 name|digest
 index|[
-literal|16
+name|EVP_MAX_MD_SIZE
 index|]
 decl_stmt|;
-comment|/* 	 * MD5 with key identifier concatenated with packet. 	 */
-name|MD5Init
+name|u_int
+name|len
+decl_stmt|;
+name|EVP_MD_CTX
+name|ctx
+decl_stmt|;
+comment|/* 	 * Compute digest of key concatenated with packet. Note: the 	 * key type and digest type have been verified when the key 	 * was created. 	 */
+name|INIT_SSL
+argument_list|()
+expr_stmt|;
+name|EVP_DigestInit
 argument_list|(
 operator|&
-name|md5
+name|ctx
+argument_list|,
+name|EVP_get_digestbynid
+argument_list|(
+name|type
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|MD5Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
-name|md5
+name|ctx
 argument_list|,
 name|key
 argument_list|,
@@ -234,10 +269,10 @@ operator|)
 name|cache_keylen
 argument_list|)
 expr_stmt|;
-name|MD5Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
-name|md5
+name|ctx
 argument_list|,
 operator|(
 name|u_char
@@ -251,27 +286,42 @@ operator|)
 name|length
 argument_list|)
 expr_stmt|;
-name|MD5Final
+name|EVP_DigestFinal
 argument_list|(
+operator|&
+name|ctx
+argument_list|,
 name|digest
 argument_list|,
 operator|&
-name|md5
+name|len
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|size
 operator|!=
-literal|16
+name|len
 operator|+
 literal|4
 condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"MAC decrypt: MAC length error"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 return|return
 operator|(
 operator|!
@@ -289,7 +339,7 @@ name|length
 operator|+
 literal|4
 argument_list|,
-literal|16
+name|len
 argument_list|)
 operator|)
 return|;
@@ -297,67 +347,73 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Calculate the reference id from the address. If it is an IPv4  * address, use it as is. If it is an IPv6 address, do a md5 on  * it and use the bottom 4 bytes.  */
+comment|/*  * Calculate the reference id from the address. If it is an IPv4  * address, use it as is. If it is an IPv6 address, do a md5 on  * it and use the bottom 4 bytes.  * The result is in network byte order.  */
 end_comment
 
 begin_function
 name|u_int32
 name|addr2refid
 parameter_list|(
-name|struct
-name|sockaddr_storage
+name|sockaddr_u
 modifier|*
 name|addr
 parameter_list|)
 block|{
-name|MD5_CTX
-name|md5
-decl_stmt|;
 name|u_char
 name|digest
 index|[
-literal|16
+literal|20
 index|]
 decl_stmt|;
 name|u_int32
 name|addr_refid
 decl_stmt|;
+name|EVP_MD_CTX
+name|ctx
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
 if|if
 condition|(
+name|IS_IPV4
+argument_list|(
 name|addr
-operator|->
-name|ss_family
-operator|==
-name|AF_INET
+argument_list|)
 condition|)
 return|return
 operator|(
-name|GET_INADDR
+name|NSRCADR
 argument_list|(
-operator|*
 name|addr
 argument_list|)
 operator|)
 return|;
-name|MD5Init
+name|INIT_SSL
+argument_list|()
+expr_stmt|;
+name|EVP_DigestInit
 argument_list|(
 operator|&
-name|md5
+name|ctx
+argument_list|,
+name|EVP_get_digestbynid
+argument_list|(
+name|NID_md5
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|MD5Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
-name|md5
+name|ctx
 argument_list|,
 operator|(
 name|u_char
 operator|*
 operator|)
-operator|&
-name|GET_INADDR6
+name|PSOCK_ADDR6
 argument_list|(
-operator|*
 name|addr
 argument_list|)
 argument_list|,
@@ -368,12 +424,15 @@ name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MD5Final
+name|EVP_DigestFinal
 argument_list|(
+operator|&
+name|ctx
+argument_list|,
 name|digest
 argument_list|,
 operator|&
-name|md5
+name|len
 argument_list|)
 expr_stmt|;
 name|memcpy

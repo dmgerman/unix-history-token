@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpd-opts.h)  *    *  It has been AutoGen-ed  Tuesday December  8, 2009 at 08:13:09 AM EST  *  From the definitions    ntpd-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
-end_comment
-
-begin_comment
-comment|/*  *  This file was produced by an AutoOpts template.  AutoOpts is a  *  copyrighted work.  This header file is not encumbered by AutoOpts  *  licensing, but is provided under the licensing terms chosen by the  *  ntpd author or copyright holder.  AutoOpts is licensed under  *  the terms of the LGPL.  The redistributable library (``libopts'') is  *  licensed under the terms of either the LGPL or, at the users discretion,  *  the BSD license.  See the AutoOpts and/or libopts sources for details.  *  * This source file is copyrighted and licensed under the following terms:  *  * ntpd copyright 1970-2009 David L. Mills and/or others - all rights reserved  *  * see html/copyright.html  */
+comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpd-opts.h)  *    *  It has been AutoGen-ed  December 24, 2011 at 06:34:00 PM by AutoGen 5.12  *  From the definitions    ntpd-opts.def  *  and the template file   options  *  * Generated from AutoOpts 35:0:10 templates.  *  *  AutoOpts is a copyrighted work.  This header file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpd author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * This source file is copyrighted and licensed under the following terms:  *  *  see html/copyright.html  *    */
 end_comment
 
 begin_comment
@@ -21,6 +17,7 @@ begin_define
 define|#
 directive|define
 name|AUTOOPTS_NTPD_OPTS_H_GUARD
+value|1
 end_define
 
 begin_include
@@ -43,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|AO_TEMPLATE_VERSION
-value|118784
+value|143360
 end_define
 
 begin_if
@@ -166,7 +163,7 @@ name|INDEX_OPT_PROPAGATIONDELAY
 operator|=
 literal|21
 block|,
-name|INDEX_OPT_UPDATEINTERVAL
+name|INDEX_OPT_SAVECONFIGQUIT
 operator|=
 literal|22
 block|,
@@ -182,29 +179,41 @@ name|INDEX_OPT_USER
 operator|=
 literal|25
 block|,
-name|INDEX_OPT_VAR
+name|INDEX_OPT_UPDATEINTERVAL
 operator|=
 literal|26
 block|,
-name|INDEX_OPT_DVAR
+name|INDEX_OPT_VAR
 operator|=
 literal|27
 block|,
-name|INDEX_OPT_SLEW
+name|INDEX_OPT_DVAR
 operator|=
 literal|28
 block|,
-name|INDEX_OPT_VERSION
+name|INDEX_OPT_SLEW
 operator|=
 literal|29
 block|,
-name|INDEX_OPT_HELP
+name|INDEX_OPT_USEPCC
 operator|=
 literal|30
 block|,
-name|INDEX_OPT_MORE_HELP
+name|INDEX_OPT_PCCFREQ
 operator|=
 literal|31
+block|,
+name|INDEX_OPT_VERSION
+operator|=
+literal|32
+block|,
+name|INDEX_OPT_HELP
+operator|=
+literal|33
+block|,
+name|INDEX_OPT_MORE_HELP
+operator|=
+literal|34
 block|}
 name|teOptIndex
 expr_stmt|;
@@ -214,25 +223,25 @@ begin_define
 define|#
 directive|define
 name|OPTION_CT
-value|32
+value|35
 end_define
 
 begin_define
 define|#
 directive|define
 name|NTPD_VERSION
-value|"4.2.4p8"
+value|"4.2.6p5"
 end_define
 
 begin_define
 define|#
 directive|define
 name|NTPD_FULL_VERSION
-value|"ntpd - NTP daemon program - Ver. 4.2.4p8"
+value|"ntpd 4.2.6p5"
 end_define
 
 begin_comment
-comment|/*  *  Interface defines for all options.  Replace "n" with the UPPER_CASED  *  option name (as in the teOptIndex enumeration above).  *  e.g. HAVE_OPT( IPV4 )  */
+comment|/*  *  Interface defines for all options.  Replace "n" with the UPPER_CASED  *  option name (as in the teOptIndex enumeration above).  *  e.g. HAVE_OPT(IPV4)  */
 end_comment
 
 begin_define
@@ -342,8 +351,28 @@ name|CLEAR_OPT
 parameter_list|(
 name|n
 parameter_list|)
-value|STMTS( \                 DESC(n).fOptState&= OPTST_PERSISTENT_MASK;   \                 if ( (DESC(n).fOptState& OPTST_INITENABLED) == 0) \                     DESC(n).fOptState |= OPTST_DISABLED; \                 DESC(n).optCookie = NULL )
+value|STMTS( \                 DESC(n).fOptState&= OPTST_PERSISTENT_MASK;   \                 if ((DESC(n).fOptState& OPTST_INITENABLED) == 0) \                     DESC(n).fOptState |= OPTST_DISABLED; \                 DESC(n).optCookie = NULL )
 end_define
+
+begin_comment
+comment|/* * * * * *  *  *  Enumeration of ntpd exit codes  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|NTPD_EXIT_SUCCESS
+init|=
+literal|0
+block|,
+name|NTPD_EXIT_FAILURE
+init|=
+literal|1
+block|}
+name|ntpd_exit_code_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  *  Make sure there are no #define name conflicts with the option names  */
@@ -864,19 +893,19 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UPDATEINTERVAL
+name|SAVECONFIGQUIT
 end_ifdef
 
 begin_warning
 warning|#
 directive|warning
-warning|undefining UPDATEINTERVAL due to option name conflict
+warning|undefining SAVECONFIGQUIT due to option name conflict
 end_warning
 
 begin_undef
 undef|#
 directive|undef
-name|UPDATEINTERVAL
+name|SAVECONFIGQUIT
 end_undef
 
 begin_endif
@@ -956,6 +985,29 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|UPDATEINTERVAL
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+warning|undefining UPDATEINTERVAL due to option name conflict
+end_warning
+
+begin_undef
+undef|#
+directive|undef
+name|UPDATEINTERVAL
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|VAR
 end_ifdef
 
@@ -1015,6 +1067,52 @@ begin_undef
 undef|#
 directive|undef
 name|SLEW
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USEPCC
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+warning|undefining USEPCC due to option name conflict
+end_warning
+
+begin_undef
+undef|#
+directive|undef
+name|USEPCC
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PCCFREQ
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+warning|undefining PCCFREQ due to option name conflict
+end_warning
+
+begin_undef
+undef|#
+directive|undef
+name|PCCFREQ
 end_undef
 
 begin_endif
@@ -1166,7 +1264,7 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|UPDATEINTERVAL
+name|SAVECONFIGQUIT
 end_undef
 
 begin_undef
@@ -1190,6 +1288,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|UPDATEINTERVAL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|VAR
 end_undef
 
@@ -1205,6 +1309,18 @@ directive|undef
 name|SLEW
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|USEPCC
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PCCFREQ
+end_undef
+
 begin_endif
 endif|#
 directive|endif
@@ -1215,7 +1331,7 @@ comment|/*  NO_OPTION_NAME_WARNINGS */
 end_comment
 
 begin_comment
-comment|/*  *  Interface defines for specific options.  */
+comment|/* * * * * *  *  *  Interface defines for specific options.  */
 end_comment
 
 begin_define
@@ -1223,20 +1339,6 @@ define|#
 directive|define
 name|VALUE_OPT_IPV4
 value|'4'
-end_define
-
-begin_define
-define|#
-directive|define
-name|WHICH_OPT_IPV4
-value|(DESC(IPV4).optActualValue)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WHICH_IDX_IPV4
-value|(DESC(IPV4).optActualIndex)
 end_define
 
 begin_define
@@ -1274,12 +1376,6 @@ name|VALUE_OPT_CONFIGFILE
 value|'c'
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1287,36 +1383,12 @@ name|VALUE_OPT_DEBUG_LEVEL
 value|'d'
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_SET_DEBUG_LEVEL
 value|'D'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
 
 begin_define
 define|#
@@ -1367,27 +1439,12 @@ name|VALUE_OPT_NOVIRTUALIPS
 value|'L'
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYS_WINNT
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_MODIFYMMTIMER
 value|'M'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYS_WINNT */
-end_comment
 
 begin_define
 define|#
@@ -1441,15 +1498,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VALUE_OPT_UPDATEINTERVAL
-value|'U'
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPT_VALUE_UPDATEINTERVAL
-value|(DESC(UPDATEINTERVAL).optArg.argInt)
+name|VALUE_OPT_SAVECONFIGQUIT
+value|22
 end_define
 
 begin_define
@@ -1476,15 +1526,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|VALUE_OPT_UPDATEINTERVAL
+value|'U'
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_VALUE_UPDATEINTERVAL
+value|(DESC(UPDATEINTERVAL).optArg.argInt)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VALUE_OPT_VAR
-value|'v'
+value|27
 end_define
 
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_DVAR
-value|'V'
+value|28
 end_define
 
 begin_define
@@ -1497,8 +1561,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|VALUE_OPT_VERSION
-value|'v'
+name|VALUE_OPT_USEPCC
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALUE_OPT_PCCFREQ
+value|31
 end_define
 
 begin_define
@@ -1515,6 +1586,13 @@ name|VALUE_OPT_MORE_HELP
 value|'!'
 end_define
 
+begin_define
+define|#
+directive|define
+name|VALUE_OPT_VERSION
+value|INDEX_OPT_VERSION
+end_define
+
 begin_comment
 comment|/*  *  Interface defines not associated with particular options  */
 end_comment
@@ -1523,14 +1601,14 @@ begin_define
 define|#
 directive|define
 name|ERRSKIP_OPTERR
-value|STMTS( ntpdOptions.fOptSet&= ~OPTPROC_ERRSTOP )
+value|STMTS(ntpdOptions.fOptSet&= ~OPTPROC_ERRSTOP)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ERRSTOP_OPTERR
-value|STMTS( ntpdOptions.fOptSet |= OPTPROC_ERRSTOP )
+value|STMTS(ntpdOptions.fOptSet |= OPTPROC_ERRSTOP)
 end_define
 
 begin_define
@@ -1540,7 +1618,7 @@ name|RESTART_OPT
 parameter_list|(
 name|n
 parameter_list|)
-value|STMTS( \                 ntpdOptions.curOptIdx = (n); \                 ntpdOptions.pzCurOpt  = NULL )
+value|STMTS( \                 ntpdOptions.curOptIdx = (n); \                 ntpdOptions.pzCurOpt  = NULL)
 end_define
 
 begin_define
@@ -1557,15 +1635,11 @@ name|USAGE
 parameter_list|(
 name|c
 parameter_list|)
-value|(*ntpdOptions.pUsageProc)(&ntpdOptions, c )
+value|(*ntpdOptions.pUsageProc)(&ntpdOptions, c)
 end_define
 
 begin_comment
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/opthead.tpl near line 360 */
-end_comment
-
-begin_comment
-comment|/* * * * * *  *  *  Declare the ntpd option descriptor.  */
+comment|/* extracted from opthead.tlib near line 451 */
 end_comment
 
 begin_ifdef
@@ -1580,16 +1654,20 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/* * * * * *  *  *  Declare the ntpd option descriptor.  */
 specifier|extern
 name|tOptions
 name|ntpdOptions
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENABLE_NLS
+argument_list|)
 ifndef|#
 directive|ifndef
 name|_
-if|#
-directive|if
-name|ENABLE_NLS
 include|#
 directive|include
 file|<stdio.h>
@@ -1632,21 +1710,55 @@ parameter_list|(
 name|s
 parameter_list|)
 value|aoGetsText(s)
+endif|#
+directive|endif
+comment|/* _() */
+define|#
+directive|define
+name|OPT_NO_XLAT_CFG_NAMES
+value|STMTS(ntpdOptions.fOptSet |= \                                     OPTPROC_NXLAT_OPT_CFG;)
+define|#
+directive|define
+name|OPT_NO_XLAT_OPT_NAMES
+value|STMTS(ntpdOptions.fOptSet |= \                                     OPTPROC_NXLAT_OPT|OPTPROC_NXLAT_OPT_CFG;)
+define|#
+directive|define
+name|OPT_XLAT_CFG_NAMES
+value|STMTS(ntpdOptions.fOptSet&= \                                   ~(OPTPROC_NXLAT_OPT|OPTPROC_NXLAT_OPT_CFG);)
+define|#
+directive|define
+name|OPT_XLAT_OPT_NAMES
+value|STMTS(ntpdOptions.fOptSet&= \                                   ~OPTPROC_NXLAT_OPT;)
 else|#
 directive|else
 comment|/* ENABLE_NLS */
 define|#
 directive|define
+name|OPT_NO_XLAT_CFG_NAMES
+define|#
+directive|define
+name|OPT_NO_XLAT_OPT_NAMES
+define|#
+directive|define
+name|OPT_XLAT_CFG_NAMES
+define|#
+directive|define
+name|OPT_XLAT_OPT_NAMES
+ifndef|#
+directive|ifndef
+name|_
+define|#
+directive|define
 name|_
 parameter_list|(
-name|s
+name|_s
 parameter_list|)
-value|s
+value|_s
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* ENABLE_NLS */
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus

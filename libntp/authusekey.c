@@ -37,13 +37,6 @@ begin_comment
 comment|/*  * Types of ascii representations for keys.  "Standard" means a 64 bit  * hex number in NBS format, i.e. with the low order bit of each byte  * a parity bit.  "NTP" means a 64 bit key in NTP format, with the  * high order bit of each byte a parity bit.  "Ascii" means a 1-to-8  * character string whose ascii representation is used as the key.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|KEY_TYPE_MD5
-value|4
-end_define
-
 begin_function
 name|int
 name|authusekey
@@ -93,17 +86,11 @@ condition|)
 return|return
 literal|0
 return|;
-switch|switch
-condition|(
-name|keytype
-condition|)
-block|{
-case|case
-name|KEY_TYPE_MD5
-case|:
 name|MD5auth_setkey
 argument_list|(
 name|keyno
+argument_list|,
+name|keytype
 argument_list|,
 name|str
 argument_list|,
@@ -121,13 +108,6 @@ name|str
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
-default|default:
-comment|/* Oh, well */
-return|return
-literal|0
-return|;
-block|}
 return|return
 literal|1
 return|;

@@ -1,16 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-name|__recvbuff_h
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RECVBUFF_H
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__recvbuff_h
+name|RECVBUFF_H
 end_define
 
 begin_ifdef
@@ -45,13 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isc/list.h>
+file|"ntp_lists.h"
 end_include
 
 begin_include
@@ -147,18 +139,15 @@ begin_comment
 comment|/*  Return the event which is set when items are added to the full list  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|HANDLE
 name|get_recv_buff_event
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -221,10 +210,10 @@ argument|recvbuf_t
 argument_list|)
 name|link
 expr_stmt|;
+comment|/* next in list */
 union|union
 block|{
-name|struct
-name|sockaddr_storage
+name|sockaddr_u
 name|X_recv_srcadr
 decl_stmt|;
 name|caddr_t
@@ -250,32 +239,26 @@ define|#
 directive|define
 name|recv_peer
 value|X_from_where.X_recv_peer
-if|#
-directive|if
-name|defined
+ifndef|#
+directive|ifndef
 name|HAVE_IO_COMPLETION_PORT
-name|WSABUF
-name|wsabuff
-decl_stmt|;
-else|#
-directive|else
-name|struct
-name|sockaddr_storage
+name|sockaddr_u
 name|srcadr
 decl_stmt|;
 comment|/* where packet came from */
+else|#
+directive|else
+name|int
+name|recv_srcadr_len
+decl_stmt|;
+comment|/* filled in on completion */
 endif|#
 directive|endif
-name|int
-name|src_addr_len
-decl_stmt|;
-comment|/* source address length */
-name|struct
-name|interface
+name|endpt
 modifier|*
 name|dstadr
 decl_stmt|;
-comment|/* interface datagram arrived thru */
+comment|/* address pkt arrived on */
 name|SOCKET
 name|fd
 decl_stmt|;
@@ -289,18 +272,16 @@ name|recv_time
 decl_stmt|;
 comment|/* time of arrival */
 name|void
-argument_list|(
-argument|*receiver
-argument_list|)
-name|P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|receiver
+function_decl|)
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* routine to receive buffer */
 name|int
 name|recv_length
@@ -321,9 +302,6 @@ decl_stmt|;
 block|}
 name|recv_space
 union|;
-name|int
-name|used
-decl_stmt|;
 define|#
 directive|define
 name|recv_pkt
@@ -332,79 +310,71 @@ define|#
 directive|define
 name|recv_buffer
 value|recv_space.X_recv_buffer
+name|int
+name|used
+decl_stmt|;
+comment|/* reference count */
 block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|init_recvbuff
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* freerecvbuf - make a single recvbuf available for reuse  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|freerecvbuf
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  Get a free buffer (typically used so an async  *  read can directly place data into the buffer  *  *  The buffer is removed from the free list. Make sure  *  you put it back with freerecvbuf() or   */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|recvbuf
 modifier|*
 name|get_free_recv_buffer
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* signal safe - no malloc */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|recvbuf
 modifier|*
 name|get_free_recv_buffer_alloc
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* signal unsafe - may malloc */
@@ -414,116 +384,95 @@ begin_comment
 comment|/*   Add a buffer to the full list  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|add_full_recv_buffer
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*extern	void	process_recv_buffers	 P((void)); */
+comment|/*extern	void	process_recv_buffers	 (void); */
 end_comment
 
 begin_comment
 comment|/* number of recvbufs on freelist */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|u_long
 name|free_recvbuffs
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|u_long
 name|full_recvbuffs
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|u_long
 name|total_recvbuffs
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|u_long
 name|lowater_additions
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  Returns the next buffer in the full list.  *  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|recvbuf
 modifier|*
 name|get_full_recv_buffer
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Checks to see if there are buffers to process  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|isc_boolean_t
 name|has_full_recv_buffer
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -531,7 +480,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined __recvbuff_h */
+comment|/* RECVBUFF_H */
 end_comment
 
 end_unit

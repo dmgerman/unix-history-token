@@ -110,6 +110,48 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL_PLL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ntp_syscall.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL_PLL */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/rand.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL */
+end_comment
+
 begin_comment
 comment|/*  * These routines provide support for the event timer.	The timer is  * implemented by an interrupt routine which sets a flag once every  * 2**EVENT_TIMEOUT seconds (currently 4), and a timer routine which  * is called when the mainline code gets around to seeing the flag.  * The timer routine dispatches the clock adjustment code if its time  * has come, then searches the timer queue for expiries which are  * dispatched to the transmit procedure.  Finally, we call the hourly  * procedure to do cleanup and print a message.  */
 end_comment
@@ -128,7 +170,7 @@ comment|/* update interface every 5 minutes as default */
 end_comment
 
 begin_comment
-comment|/*  * Alarm flag.	The mainline code imports this.  */
+comment|/*  * Alarm flag. The mainline code imports this.  */
 end_comment
 
 begin_decl_stmt
@@ -139,7 +181,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The counters  */
+comment|/*  * The counters and timeouts  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|interface_timer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* interface update timer */
 end_comment
 
 begin_decl_stmt
@@ -151,17 +204,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* second timer */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_long
-name|keys_timer
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* minute timer */
 end_comment
 
 begin_decl_stmt
@@ -187,14 +229,23 @@ comment|/* huff-n'-puff timer */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|u_long
-name|interface_timer
+name|leapsec
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* interface update timer */
+comment|/* leapseconds countdown */
+end_comment
+
+begin_decl_stmt
+name|l_fp
+name|sys_time
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current system time */
 end_comment
 
 begin_ifdef
@@ -215,7 +266,18 @@ comment|/* keys revoke timer */
 end_comment
 
 begin_decl_stmt
-name|u_char
+specifier|static
+name|u_long
+name|keys_timer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* session key timer */
+end_comment
+
+begin_decl_stmt
+name|u_long
 name|sys_revoke
 init|=
 name|KEY_REVOKE
@@ -224,6 +286,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* keys revoke timeout (log2 s) */
+end_comment
+
+begin_decl_stmt
+name|u_long
+name|sys_automax
+init|=
+name|NTP_AUTOMAX
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* key list timeout (log2 s) */
 end_comment
 
 begin_endif
@@ -257,7 +331,14 @@ begin_define
 define|#
 directive|define
 name|HOUR
-value|(60*60)
+value|(60 * MINUTE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DAY
+value|(24 * HOUR)
 end_define
 
 begin_decl_stmt
@@ -265,6 +346,10 @@ name|u_long
 name|current_time
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* seconds since startup */
+end_comment
 
 begin_comment
 comment|/*  * Stats.  Number of overflows and number of calls to transmit().  */
@@ -355,18 +440,15 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|RETSIGTYPE
 name|alarming
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -791,27 +873,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-name|SYS_WINNT
-operator|&
-operator|!
-name|defined
-argument_list|(
-name|SYS_CYGWIN32
-argument_list|)
-name|HANDLE
-name|hToken
-init|=
-name|INVALID_HANDLE_VALUE
-decl_stmt|;
-name|TOKEN_PRIVILEGES
-name|tkp
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* SYS_WINNT */
 comment|/* 	 * Initialize... 	 */
 name|alarm_flag
 operator|=
@@ -1108,114 +1169,6 @@ comment|/* VMS */
 else|#
 directive|else
 comment|/* SYS_WINNT */
-name|_tzset
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Get privileges needed for fiddling with the clock 	 */
-comment|/* get the current process token handle */
-if|if
-condition|(
-operator|!
-name|OpenProcessToken
-argument_list|(
-name|GetCurrentProcess
-argument_list|()
-argument_list|,
-name|TOKEN_ADJUST_PRIVILEGES
-operator||
-name|TOKEN_QUERY
-argument_list|,
-operator|&
-name|hToken
-argument_list|)
-condition|)
-block|{
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"OpenProcessToken failed: %m"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* get the LUID for system-time privilege. */
-name|LookupPrivilegeValue
-argument_list|(
-name|NULL
-argument_list|,
-name|SE_SYSTEMTIME_NAME
-argument_list|,
-operator|&
-name|tkp
-operator|.
-name|Privileges
-index|[
-literal|0
-index|]
-operator|.
-name|Luid
-argument_list|)
-expr_stmt|;
-name|tkp
-operator|.
-name|PrivilegeCount
-operator|=
-literal|1
-expr_stmt|;
-comment|/* one privilege to set */
-name|tkp
-operator|.
-name|Privileges
-index|[
-literal|0
-index|]
-operator|.
-name|Attributes
-operator|=
-name|SE_PRIVILEGE_ENABLED
-expr_stmt|;
-comment|/* get set-time privilege for this process. */
-name|AdjustTokenPrivileges
-argument_list|(
-name|hToken
-argument_list|,
-name|FALSE
-argument_list|,
-operator|&
-name|tkp
-argument_list|,
-literal|0
-argument_list|,
-operator|(
-name|PTOKEN_PRIVILEGES
-operator|)
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* cannot test return value of AdjustTokenPrivileges. */
-if|if
-condition|(
-name|GetLastError
-argument_list|()
-operator|!=
-name|ERROR_SUCCESS
-condition|)
-block|{
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"AdjustTokenPrivileges failed: %m"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Set up timer interrupts for every 2**EVENT_TIMEOUT seconds 	 * Under Windows/NT,  	 */
 name|WaitableTimerHandle
 operator|=
@@ -1344,7 +1297,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * timer - dispatch anyone who needs to be  */
+comment|/*  * timer - event timer  */
 end_comment
 
 begin_function
@@ -1363,31 +1316,19 @@ decl_stmt|,
 modifier|*
 name|next_peer
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|OPENSSL
-name|char
-name|statstr
-index|[
-name|NTP_MAXSTRLEN
-index|]
-decl_stmt|;
-comment|/* statistics for filegen */
-endif|#
-directive|endif
-comment|/* OPENSSL */
 name|u_int
 name|n
 decl_stmt|;
+comment|/* 	 * The basic timerevent is one second. This is used to adjust 	 * the system clock in time and frequency, implement the 	 * kiss-o'-deatch function and implement the association 	 * polling function.. 	 */
 name|current_time
-operator|+=
-operator|(
-literal|1
-operator|<<
-name|EVENT_TIMEOUT
-operator|)
+operator|++
 expr_stmt|;
-comment|/* 	 * Adjustment timeout first. 	 */
+name|get_systime
+argument_list|(
+operator|&
+name|sys_time
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|adjust_timer
@@ -1400,9 +1341,6 @@ operator|+=
 literal|1
 expr_stmt|;
 name|adj_host_clock
-argument_list|()
-expr_stmt|;
-name|kod_proto
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -1465,7 +1403,7 @@ endif|#
 directive|endif
 comment|/* REFCLOCK */
 block|}
-comment|/* 	 * Now dispatch any peers whose event timer has expired. Be careful 	 * here, since the peer structure might go away as the result of 	 * the call. 	 */
+comment|/* 	 * Now dispatch any peers whose event timer has expired. Be 	 * careful here, since the peer structure might go away as the 	 * result of the call. 	 */
 for|for
 control|(
 name|n
@@ -1523,6 +1461,20 @@ argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Restrain the non-burst packet rate not more 			 * than one packet every 16 seconds. This is 			 * usually tripped using iburst and minpoll of 			 * 128 s or less. 			 */
+if|if
+condition|(
+name|peer
+operator|->
+name|throttle
+operator|>
+literal|0
+condition|)
+name|peer
+operator|->
+name|throttle
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|peer
@@ -1568,23 +1520,187 @@ comment|/* REFCLOCK */
 block|}
 block|}
 block|}
-comment|/* 	 * Garbage collect expired keys. 	 */
+comment|/* 	 * Orphan mode is active when enabled and when no servers less 	 * than the orphan stratum are available. A server with no other 	 * synchronization source is an orphan. It shows offset zero and 	 * reference ID the loopback address. 	 */
 if|if
 condition|(
-name|keys_timer
-operator|<=
-name|current_time
+name|sys_orphan
+operator|<
+name|STRATUM_UNSPEC
+operator|&&
+name|sys_peer
+operator|==
+name|NULL
 condition|)
 block|{
-name|keys_timer
-operator|+=
-name|MINUTE
+if|if
+condition|(
+name|sys_leap
+operator|==
+name|LEAP_NOTINSYNC
+condition|)
+block|{
+name|sys_leap
+operator|=
+name|LEAP_NOWARNING
 expr_stmt|;
-name|auth_agekeys
+ifdef|#
+directive|ifdef
+name|OPENSSL
+if|if
+condition|(
+name|crypto_flags
+condition|)
+name|crypto_update
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* OPENSSL */
 block|}
-comment|/* 	 * Huff-n'-puff filter 	 */
+name|sys_stratum
+operator|=
+operator|(
+name|u_char
+operator|)
+name|sys_orphan
+expr_stmt|;
+if|if
+condition|(
+name|sys_stratum
+operator|>
+literal|1
+condition|)
+name|sys_refid
+operator|=
+name|htonl
+argument_list|(
+name|LOOPBACKADR
+argument_list|)
+expr_stmt|;
+else|else
+name|memcpy
+argument_list|(
+operator|&
+name|sys_refid
+argument_list|,
+literal|"LOOP"
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|sys_offset
+operator|=
+literal|0
+expr_stmt|;
+name|sys_rootdelay
+operator|=
+literal|0
+expr_stmt|;
+name|sys_rootdisp
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* 	 * Leapseconds. If a leap is pending, decrement the time 	 * remaining. If less than one day remains, set the leap bits. 	 * When no time remains, clear the leap bits and increment the 	 * TAI. If kernel suppport is not available, do the leap 	 * crudely. Note a leap cannot be pending unless the clock is 	 * set. 	 */
+if|if
+condition|(
+name|leapsec
+operator|>
+literal|0
+condition|)
+block|{
+name|leapsec
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|leapsec
+operator|==
+literal|0
+condition|)
+block|{
+name|sys_leap
+operator|=
+name|LEAP_NOWARNING
+expr_stmt|;
+name|sys_tai
+operator|=
+name|leap_tai
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERNEL_PLL
+if|if
+condition|(
+operator|!
+operator|(
+name|pll_control
+operator|&&
+name|kern_enable
+operator|)
+condition|)
+name|step_systime
+argument_list|(
+operator|-
+literal|1.0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* KERNEL_PLL */
+ifndef|#
+directive|ifndef
+name|SYS_WINNT
+comment|/* WinNT port has its own leap second handling */
+name|step_systime
+argument_list|(
+operator|-
+literal|1.0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SYS_WINNT */
+endif|#
+directive|endif
+comment|/* KERNEL_PLL */
+name|report_event
+argument_list|(
+name|EVNT_LEAP
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|leapsec
+operator|<
+name|DAY
+condition|)
+name|sys_leap
+operator|=
+name|LEAP_ADDSECOND
+expr_stmt|;
+if|if
+condition|(
+name|leap_tai
+operator|>
+literal|0
+condition|)
+name|sys_tai
+operator|=
+name|leap_tai
+operator|-
+literal|1
+expr_stmt|;
+block|}
+block|}
+comment|/* 	 * Update huff-n'-puff filter. 	 */
 if|if
 condition|(
 name|huffpuff_timer
@@ -1603,66 +1719,59 @@ block|}
 ifdef|#
 directive|ifdef
 name|OPENSSL
-comment|/* 	 * Garbage collect old keys and generate new private value 	 */
+comment|/* 	 * Garbage collect expired keys. 	 */
+if|if
+condition|(
+name|keys_timer
+operator|<=
+name|current_time
+condition|)
+block|{
+name|keys_timer
+operator|+=
+literal|1
+operator|<<
+name|sys_automax
+expr_stmt|;
+name|auth_agekeys
+argument_list|()
+expr_stmt|;
+block|}
+comment|/* 	 * Garbage collect key list and generate new private value. The 	 * timer runs only after initial synchronization and fires about 	 * once per day. 	 */
 if|if
 condition|(
 name|revoke_timer
 operator|<=
 name|current_time
+operator|&&
+name|sys_leap
+operator|!=
+name|LEAP_NOTINSYNC
 condition|)
 block|{
 name|revoke_timer
 operator|+=
-name|RANDPOLL
-argument_list|(
+literal|1
+operator|<<
 name|sys_revoke
-argument_list|)
 expr_stmt|;
-name|expire_all
-argument_list|()
-expr_stmt|;
-name|sprintf
+name|RAND_bytes
 argument_list|(
-name|statstr
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|&
+name|sys_private
 argument_list|,
-literal|"refresh ts %u"
-argument_list|,
-name|ntohl
-argument_list|(
-name|hostval
-operator|.
-name|tstamp
-argument_list|)
+literal|4
 argument_list|)
 expr_stmt|;
-name|record_crypto_stats
-argument_list|(
-name|NULL
-argument_list|,
-name|statstr
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"timer: %s\n"
-argument_list|,
-name|statstr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 endif|#
 directive|endif
 comment|/* OPENSSL */
-comment|/* 	 * interface update timer 	 */
+comment|/* 	 * Interface update timer 	 */
 if|if
 condition|(
 name|interface_interval
@@ -1681,7 +1790,7 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 operator|(
 literal|"timer: interface update\n"
@@ -1696,7 +1805,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Finally, periodically write stats. 	 */
+comment|/* 	 * Finally, write hourly stats. 	 */
 if|if
 condition|(
 name|stats_timer
@@ -1704,18 +1813,33 @@ operator|<=
 name|current_time
 condition|)
 block|{
-if|if
-condition|(
 name|stats_timer
-operator|!=
-literal|0
-condition|)
+operator|+=
+name|HOUR
+expr_stmt|;
 name|write_stats
 argument_list|()
 expr_stmt|;
-name|stats_timer
-operator|+=
-name|stats_write_period
+if|if
+condition|(
+name|sys_tai
+operator|!=
+literal|0
+operator|&&
+name|sys_time
+operator|.
+name|l_ui
+operator|>
+name|leap_expire
+condition|)
+name|report_event
+argument_list|(
+name|EVNT_LEAPVAL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 block|}

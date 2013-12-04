@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Time-stamp:      "2007-04-15 09:59:39 bkorb"  *  *  autoopts.h  $Id: autoopts.h,v 4.23 2007/04/15 19:01:18 bkorb Exp $  *  Time-stamp:      "2005-02-14 05:59:50 bkorb"  *  *  This file defines all the global structures and special values  *  used in the automated option processing library.  */
-end_comment
-
-begin_comment
-comment|/*  *  Automated Options copyright 1992-2007 Bruce Korb  *  *  Automated Options is free software.  *  You may redistribute it and/or modify it under the terms of the  *  GNU General Public License, as published by the Free Software  *  Foundation; either version 2, or (at your option) any later version.  *  *  Automated Options is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *  GNU General Public License for more details.  *  *  You should have received a copy of the GNU General Public License  *  along with Automated Options.  See the file "COPYING".  If not,  *  write to:  The Free Software Foundation, Inc.,  *             51 Franklin Street, Fifth Floor,  *             Boston, MA  02110-1301, USA.  *  * As a special exception, Bruce Korb gives permission for additional  * uses of the text contained in his release of AutoOpts.  *  * The exception is that, if you link the AutoOpts library with other  * files to produce an executable, this does not by itself cause the  * resulting executable to be covered by the GNU General Public License.  * Your use of that executable is in no way restricted on account of  * linking the AutoOpts library code into it.  *  * This exception does not however invalidate any other reasons why  * the executable file might be covered by the GNU General Public License.  *  * This exception applies only to the code released by Bruce Korb under  * the name AutoOpts.  If you copy code from other sources under the  * General Public License into a copy of AutoOpts, as the General Public  * License permits, the exception does not apply to the code that you add  * in this way.  To avoid misleading anyone as to the status of such  * modified files, you must delete this exception notice from them.  *  * If you write modifications of your own for AutoOpts, it is your choice  * whether to permit this exception to apply to your modifications.  * If you do not wish that, delete this exception notice.  */
+comment|/*  *  \file autoopts.h  *  *  Time-stamp:      "2011-03-25 17:51:34 bkorb"  *  *  This file defines all the global structures and special values  *  used in the automated option processing library.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
 end_comment
 
 begin_ifndef
@@ -23,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"compat/compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ag-char-map.h"
 end_include
 
 begin_define
@@ -306,130 +308,6 @@ parameter_list|)
 value|((d)<0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ISNAMECHAR
-parameter_list|(
-name|c
-parameter_list|)
-value|(isalnum(c) || ((c) == '_') || ((c) == '-'))
-end_define
-
-begin_comment
-comment|/*  *  Procedure success codes  *  *  USAGE:  define procedures to return "tSuccess".  Test their results  *          with the SUCCEEDED, FAILED and HADGLITCH macros.  *  *  Microsoft sticks its nose into user space here, so for Windows' sake,  *  make sure all of these are undefined.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SUCCESS
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|FAILURE
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|PROBLEM
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|SUCCEEDED
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|SUCCESSFUL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|FAILED
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|HADGLITCH
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUCCESS
-value|((tSuccess) 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FAILURE
-value|((tSuccess)-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PROBLEM
-value|((tSuccess) 1)
-end_define
-
-begin_typedef
-typedef|typedef
-name|int
-name|tSuccess
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|SUCCEEDED
-parameter_list|(
-name|p
-parameter_list|)
-value|((p) == SUCCESS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SUCCESSFUL
-parameter_list|(
-name|p
-parameter_list|)
-value|SUCCEEDED( p )
-end_define
-
-begin_define
-define|#
-directive|define
-name|FAILED
-parameter_list|(
-name|p
-parameter_list|)
-value|((p)<  SUCCESS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HADGLITCH
-parameter_list|(
-name|p
-parameter_list|)
-value|((p)>  SUCCESS)
-end_define
-
 begin_comment
 comment|/*  *  When loading a line (or block) of text as an option, the value can  *  be processed in any of several modes:  *  *  @table @samp  *  @item keep  *  Every part of the value between the delimiters is saved.  *  *  @item uncooked  *  Even if the value begins with quote characters, do not do quote processing.  *  *  @item cooked  *  If the value looks like a quoted string, then process it.  *  Double quoted strings are processed the way strings are in "C" programs,  *  except they are treated as regular characters if the following character  *  is not a well-established escape sequence.  *  Single quoted strings (quoted with apostrophies) are handled the way  *  strings are handled in shell scripts, *except* that backslash escapes  *  are honored before backslash escapes and apostrophies.  *  @end table  */
 end_comment
@@ -449,7 +327,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|tOptionLoadMode
 name|option_load_mode
 decl_stmt|;
@@ -472,13 +350,6 @@ block|}
 name|tePagerState
 typedef|;
 end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|tePagerState
-name|pagerState
-decl_stmt|;
-end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -551,7 +422,7 @@ define|#
 directive|define
 name|TEXTTO_TABLE
 define|\
-value|_TT_( LONGUSAGE ) \         _TT_( USAGE ) \         _TT_( VERSION )
+value|_TT_(LONGUSAGE) \         _TT_(USAGE) \         _TT_(VERSION)
 end_define
 
 begin_define
@@ -586,57 +457,80 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzStr
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzReq
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzNum
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
+modifier|*
+name|pzFile
+decl_stmt|;
+name|char
+specifier|const
 modifier|*
 name|pzKey
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzKeyL
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzBool
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzNest
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzOpt
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzNo
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzBrk
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzNoF
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzSpc
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzOptFmt
+decl_stmt|;
+name|char
+specifier|const
+modifier|*
+name|pzTime
 decl_stmt|;
 block|}
 name|arg_types_t
@@ -674,9 +568,9 @@ define|#
 directive|define
 name|AGFREE
 parameter_list|(
-name|p
+name|_p
 parameter_list|)
-value|ao_free((void*)p)
+value|free((void *)_p)
 end_define
 
 begin_define
@@ -721,17 +615,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
+begin_define
+define|#
+directive|define
 name|ao_free
 parameter_list|(
-name|void
-modifier|*
-name|p
+name|_p
 parameter_list|)
-function_decl|;
-end_function_decl
+value|free((void *)_p)
+end_define
 
 begin_function_decl
 specifier|static
@@ -1012,10 +904,18 @@ comment|/*  *  File pointer for usage output  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|FILE
 modifier|*
 name|option_usage_fp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+modifier|*
+name|program_pkgdatadir
 decl_stmt|;
 end_decl_stmt
 

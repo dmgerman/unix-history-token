@@ -9,17 +9,39 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SOCKET_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_IN_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -62,8 +84,8 @@ name|char
 modifier|*
 name|socktohost
 parameter_list|(
-name|struct
-name|sockaddr_storage
+specifier|const
+name|sockaddr_u
 modifier|*
 name|sock
 parameter_list|)
@@ -82,12 +104,10 @@ if|if
 condition|(
 name|getnameinfo
 argument_list|(
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
+operator|&
 name|sock
+operator|->
+name|sa
 argument_list|,
 name|SOCKLEN
 argument_list|(
@@ -97,7 +117,6 @@ argument_list|,
 name|buffer
 argument_list|,
 name|LIB_BUFLENGTH
-comment|/* NI_MAXHOST*/
 argument_list|,
 name|NULL
 argument_list|,

@@ -42,17 +42,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|VERSION
-value|"1.6"
-end_define
-
-begin_comment
-comment|/* Just the version string */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MAX_SOCKETS
 value|10
 end_define
@@ -106,6 +95,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|//#define DEBUG
+end_comment
+
+begin_comment
 comment|/* Defined in main.c */
 end_comment
 
@@ -131,56 +124,8 @@ begin_comment
 comment|/* Behave as a listening client */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|argv0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|verbose
-decl_stmt|,
-name|operation
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|lockname
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|void
-name|fatal
-parameter_list|(
-name|int
-name|syserr
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|message
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|insert
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/* Defined in unix.c */
+comment|/* extern const char *argv0;  extern int verbose, operation;  extern const char *lockname;  extern void fatal (int syserr, const char *message, const char *insert);     Defined in unix.c */
 end_comment
 
 begin_function_decl
@@ -334,16 +279,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|close_socket
-parameter_list|(
-name|int
-name|which
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* extern void close_socket (int which); */
+end_comment
 
 begin_comment
 comment|/* Defined in timing.c */

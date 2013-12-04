@@ -9,20 +9,17 @@ directive|include
 file|"ntp_malloc.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|loadservers
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|cfgpath
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * The server structure is a much simplified version of the  * peer structure, for ntpdate's use.  Since we always send  * in client mode and expect to receive in server mode, this  * leaves only a very limited number of things we need to  * remember about the server.  */
@@ -38,8 +35,7 @@ modifier|*
 name|next_server
 decl_stmt|;
 comment|/* next server in build list */
-name|struct
-name|sockaddr_storage
+name|sockaddr_u
 name|srcadr
 decl_stmt|;
 comment|/* address of remote host */
@@ -68,7 +64,7 @@ name|rootdelay
 decl_stmt|;
 comment|/* distance from primary clock */
 name|u_fp
-name|rootdispersion
+name|rootdisp
 decl_stmt|;
 comment|/* peer clock dispersion */
 name|u_int32
@@ -307,12 +303,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFTIMEOUT
-value|5
+name|MINTIMEOUT
+value|(2 * TIMER_HZ)
 end_define
 
 begin_comment
-comment|/* 5 timer increments */
+comment|/* 2s min. between packets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFTIMEOUT
+value|MINTIMEOUT
+end_define
+
+begin_comment
+comment|/*   (to the same server) */
 end_comment
 
 begin_define

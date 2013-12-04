@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|GPSORIGIN
-value|ULONG_CONST(2524953600)
+value|2524953600UL
 end_define
 
 begin_comment

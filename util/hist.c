@@ -71,21 +71,18 @@ begin_comment
 comment|/* sample interval (us) */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|col
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|long
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|long
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int

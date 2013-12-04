@@ -1,16 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpdc-opts.c)  *    *  It has been AutoGen-ed  Tuesday December  8, 2009 at 08:14:00 AM EST  *  From the definitions    ntpdc-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
-end_comment
-
-begin_comment
-comment|/*  *  This file was produced by an AutoOpts template.  AutoOpts is a  *  copyrighted work.  This source file is not encumbered by AutoOpts  *  licensing, but is provided under the licensing terms chosen by the  *  ntpdc author or copyright holder.  AutoOpts is licensed under  *  the terms of the LGPL.  The redistributable library (``libopts'') is  *  licensed under the terms of either the LGPL or, at the users discretion,  *  the BSD license.  See the AutoOpts and/or libopts sources for details.  *  * This source file is copyrighted and licensed under the following terms:  *  * ntpdc copyright 1970-2009 David L. Mills and/or others - all rights reserved  *  * see html/copyright.html  */
+comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpdc-opts.c)  *    *  It has been AutoGen-ed  December 24, 2011 at 06:34:16 PM by AutoGen 5.12  *  From the definitions    ntpdc-opts.def  *  and the template file   options  *  * Generated from AutoOpts 35:0:10 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpdc author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * This source file is copyrighted and licensed under the following terms:  *  *  see html/copyright.html  *    */
 end_comment
 
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_define
@@ -38,18 +52,31 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-name|tSCC
-name|zCopyright
-index|[]
-init|=
-literal|"ntpdc copyright (c) 1970-2009 David L. Mills and/or others, all rights reserved"
+specifier|extern
+name|FILE
+modifier|*
+name|option_usage_fp
 decl_stmt|;
-name|tSCC
-name|zCopyrightNotice
-index|[]
+comment|/* TRANSLATORS: choose the translation for option names wisely because you                 cannot ever change your mind. */
+specifier|static
+name|char
+specifier|const
+name|zCopyright
+index|[
+literal|39
+index|]
 init|=
-comment|/* extracted from ../include/copyright.def near line 8 */
-literal|"see html/copyright.html"
+literal|"ntpdc 4.2.6p5\n\ see html/copyright.html\n"
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|zLicenseDescrip
+index|[
+literal|25
+index|]
+init|=
+literal|"see html/copyright.html\n"
 decl_stmt|;
 specifier|extern
 name|tUsageProc
@@ -84,84 +111,108 @@ name|NULL
 value|0
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|EXIT_SUCCESS
-define|#
-directive|define
-name|EXIT_SUCCESS
-value|0
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|EXIT_FAILURE
-define|#
-directive|define
-name|EXIT_FAILURE
-value|1
-endif|#
-directive|endif
-comment|/*  *  Ipv4 option description:  */
-name|tSCC
+comment|/*  *  Ipv4 option description with  *  "Must also have options" and "Incompatible options":  */
+specifier|static
+name|char
+specifier|const
 name|zIpv4Text
 index|[]
 init|=
 literal|"Force IPv4 DNS name resolution"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIpv4_NAME
 index|[]
 init|=
 literal|"IPV4"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIpv4_Name
 index|[]
 init|=
 literal|"ipv4"
 decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|aIpv4CantList
+index|[]
+init|=
+block|{
+name|INDEX_OPT_IPV6
+block|,
+name|NO_EQUIVALENT
+block|}
+decl_stmt|;
 define|#
 directive|define
 name|IPV4_FLAGS
 value|(OPTST_DISABLED)
-comment|/*  *  Ipv6 option description:  */
-name|tSCC
+comment|/*  *  Ipv6 option description with  *  "Must also have options" and "Incompatible options":  */
+specifier|static
+name|char
+specifier|const
 name|zIpv6Text
 index|[]
 init|=
 literal|"Force IPv6 DNS name resolution"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIpv6_NAME
 index|[]
 init|=
 literal|"IPV6"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zIpv6_Name
 index|[]
 init|=
 literal|"ipv6"
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|aIpv6CantList
+index|[]
+init|=
+block|{
+name|INDEX_OPT_IPV4
+block|,
+name|NO_EQUIVALENT
+block|}
 decl_stmt|;
 define|#
 directive|define
 name|IPV6_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Command option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zCommandText
 index|[]
 init|=
 literal|"run a command and exit"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zCommand_NAME
 index|[]
 init|=
 literal|"COMMAND"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zCommand_Name
 index|[]
 init|=
@@ -172,19 +223,25 @@ directive|define
 name|COMMAND_FLAGS
 value|(OPTST_DISABLED | OPTST_STACKED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
 comment|/*  *  Listpeers option description with  *  "Must also have options" and "Incompatible options":  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zListpeersText
 index|[]
 init|=
 literal|"Print a list of the peers"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zListpeers_NAME
 index|[]
 init|=
 literal|"LISTPEERS"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zListpeers_Name
 index|[]
 init|=
@@ -207,19 +264,25 @@ directive|define
 name|LISTPEERS_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Peers option description with  *  "Must also have options" and "Incompatible options":  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPeersText
 index|[]
 init|=
 literal|"Print a list of the peers"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPeers_NAME
 index|[]
 init|=
 literal|"PEERS"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPeers_Name
 index|[]
 init|=
@@ -242,19 +305,25 @@ directive|define
 name|PEERS_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Showpeers option description with  *  "Must also have options" and "Incompatible options":  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zShowpeersText
 index|[]
 init|=
 literal|"Show a list of the peers"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zShowpeers_NAME
 index|[]
 init|=
 literal|"SHOWPEERS"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zShowpeers_Name
 index|[]
 init|=
@@ -277,19 +346,25 @@ directive|define
 name|SHOWPEERS_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Interactive option description with  *  "Must also have options" and "Incompatible options":  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zInteractiveText
 index|[]
 init|=
 literal|"Force ntpq to operate in interactive mode"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zInteractive_NAME
 index|[]
 init|=
 literal|"INTERACTIVE"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zInteractive_Name
 index|[]
 init|=
@@ -318,22 +393,25 @@ directive|define
 name|INTERACTIVE_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Debug_Level option description:  */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDebug_LevelText
 index|[]
 init|=
 literal|"Increase output debug message level"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDebug_Level_NAME
 index|[]
 init|=
 literal|"DEBUG_LEVEL"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDebug_Level_Name
 index|[]
 init|=
@@ -343,49 +421,26 @@ define|#
 directive|define
 name|DEBUG_LEVEL_FLAGS
 value|(OPTST_DISABLED)
-else|#
-directive|else
-comment|/* disable Debug_Level */
-define|#
-directive|define
-name|VALUE_OPT_DEBUG_LEVEL
-value|NO_EQUIVALENT
-define|#
-directive|define
-name|DEBUG_LEVEL_FLAGS
-value|(OPTST_OMITTED | OPTST_NO_INIT)
-define|#
-directive|define
-name|zDebug_LevelText
-value|NULL
-define|#
-directive|define
-name|zDebug_Level_NAME
-value|NULL
-define|#
-directive|define
-name|zDebug_Level_Name
-value|NULL
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*  *  Set_Debug_Level option description:  */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSet_Debug_LevelText
 index|[]
 init|=
 literal|"Set the output debug message level"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSet_Debug_Level_NAME
 index|[]
 init|=
 literal|"SET_DEBUG_LEVEL"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSet_Debug_Level_Name
 index|[]
 init|=
@@ -395,46 +450,26 @@ define|#
 directive|define
 name|SET_DEBUG_LEVEL_FLAGS
 value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_STRING))
-else|#
-directive|else
-comment|/* disable Set_Debug_Level */
-define|#
-directive|define
-name|VALUE_OPT_SET_DEBUG_LEVEL
-value|NO_EQUIVALENT
-define|#
-directive|define
-name|SET_DEBUG_LEVEL_FLAGS
-value|(OPTST_OMITTED | OPTST_NO_INIT)
-define|#
-directive|define
-name|zSet_Debug_LevelText
-value|NULL
-define|#
-directive|define
-name|zSet_Debug_Level_NAME
-value|NULL
-define|#
-directive|define
-name|zSet_Debug_Level_Name
-value|NULL
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*  *  Numeric option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNumericText
 index|[]
 init|=
 literal|"numeric host addresses"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNumeric_NAME
 index|[]
 init|=
 literal|"NUMERIC"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNumeric_Name
 index|[]
 init|=
@@ -445,74 +480,135 @@ directive|define
 name|NUMERIC_FLAGS
 value|(OPTST_DISABLED)
 comment|/*  *  Help/More_Help/Version option descriptions:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zHelpText
 index|[]
 init|=
-literal|"Display usage information and exit"
+literal|"Display extended usage information and exit"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zHelp_Name
 index|[]
 init|=
 literal|"help"
 decl_stmt|;
-name|tSCC
-name|zMore_HelpText
-index|[]
-init|=
-literal|"Extended usage information passed thru pager"
-decl_stmt|;
-name|tSCC
+ifdef|#
+directive|ifdef
+name|HAVE_WORKING_FORK
+define|#
+directive|define
+name|OPTST_MORE_HELP_FLAGS
+value|(OPTST_IMM | OPTST_NO_INIT)
+specifier|static
+name|char
+specifier|const
 name|zMore_Help_Name
 index|[]
 init|=
 literal|"more-help"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
+name|zMore_HelpText
+index|[]
+init|=
+literal|"Extended usage information passed thru pager"
+decl_stmt|;
+else|#
+directive|else
+define|#
+directive|define
+name|OPTST_MORE_HELP_FLAGS
+value|(OPTST_OMITTED | OPTST_NO_INIT)
+define|#
+directive|define
+name|zMore_Help_Name
+value|NULL
+define|#
+directive|define
+name|zMore_HelpText
+value|NULL
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NO_OPTIONAL_OPT_ARGS
+define|#
+directive|define
+name|OPTST_VERSION_FLAGS
+value|OPTST_IMM | OPTST_NO_INIT
+else|#
+directive|else
+define|#
+directive|define
+name|OPTST_VERSION_FLAGS
+value|OPTST_SET_ARGTYPE(OPARG_TYPE_STRING) | \                                 OPTST_ARG_OPTIONAL | OPTST_IMM | OPTST_NO_INIT
+endif|#
+directive|endif
+specifier|static
+name|char
+specifier|const
 name|zVersionText
 index|[]
 init|=
 literal|"Output version information and exit"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zVersion_Name
 index|[]
 init|=
 literal|"version"
 decl_stmt|;
-comment|/*  *  Save/Load_Opts option description:  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSave_OptsText
 index|[]
 init|=
 literal|"Save the option state to a config file"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zSave_Opts_Name
 index|[]
 init|=
 literal|"save-opts"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zLoad_OptsText
 index|[]
 init|=
 literal|"Load options from a config file"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zLoad_Opts_NAME
 index|[]
 init|=
 literal|"LOAD_OPTS"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNotLoad_Opts_Name
 index|[]
 init|=
 literal|"no-load-opts"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zNotLoad_Opts_Pfx
 index|[]
 init|=
@@ -523,23 +619,6 @@ directive|define
 name|zLoad_Opts_Name
 value|(zNotLoad_Opts_Name + 3)
 comment|/*  *  Declare option callback procedures  */
-ifdef|#
-directive|ifdef
-name|DEBUG
-specifier|static
-name|tOptProc
-name|doOptSet_Debug_Level
-decl_stmt|;
-else|#
-directive|else
-comment|/* not DEBUG */
-define|#
-directive|define
-name|doOptSet_Debug_Level
-value|NULL
-endif|#
-directive|endif
-comment|/* def/not DEBUG */
 if|#
 directive|if
 name|defined
@@ -547,14 +626,6 @@ argument_list|(
 name|TEST_NTPDC_OPTS
 argument_list|)
 comment|/*  *  Under test, omit argument processing, or call optionStackArg,  *  if multiple copies are allowed.  */
-specifier|extern
-name|tOptProc
-name|optionPagedUsage
-decl_stmt|,
-name|optionStackArg
-decl_stmt|,
-name|optionVersionStderr
-decl_stmt|;
 specifier|static
 name|tOptProc
 name|doUsageOpt
@@ -570,14 +641,32 @@ comment|/* NOT defined TEST_NTPDC_OPTS */
 comment|/*  *  When not under test, there are different procs to use  */
 specifier|extern
 name|tOptProc
+name|optionBooleanVal
+decl_stmt|,
+name|optionNestedVal
+decl_stmt|,
+name|optionNumericVal
+decl_stmt|,
 name|optionPagedUsage
 decl_stmt|,
 name|optionPrintVersion
 decl_stmt|,
+name|optionResetOpt
+decl_stmt|,
 name|optionStackArg
+decl_stmt|,
+name|optionTimeDate
+decl_stmt|,
+name|optionTimeVal
+decl_stmt|,
+name|optionUnstackArg
+decl_stmt|,
+name|optionVersionStderr
 decl_stmt|;
 specifier|static
 name|tOptProc
+name|doOptSet_Debug_Level
+decl_stmt|,
 name|doUsageOpt
 decl_stmt|;
 comment|/*  *  #define map the "normal" callout procs  */
@@ -624,9 +713,9 @@ block|,
 name|VALUE_OPT_IPV4
 block|,
 comment|/* equiv idx, value */
-name|NO_EQUIVALENT
-block|,
 literal|0
+block|,
+name|VALUE_OPT_IPV4
 block|,
 comment|/* equivalenced to  */
 name|NO_EQUIVALENT
@@ -654,7 +743,7 @@ block|,
 comment|/* must/cannot opts */
 name|NULL
 block|,
-name|NULL
+name|aIpv4CantList
 block|,
 comment|/* option proc      */
 name|NULL
@@ -679,12 +768,12 @@ block|,
 name|VALUE_OPT_IPV6
 block|,
 comment|/* equiv idx, value */
-name|NOLIMIT
+literal|1
 block|,
-name|NOLIMIT
+name|VALUE_OPT_IPV6
 block|,
 comment|/* equivalenced to  */
-name|INDEX_OPT_IPV4
+name|NO_EQUIVALENT
 block|,
 comment|/* min, max, act ct */
 literal|0
@@ -709,7 +798,7 @@ block|,
 comment|/* must/cannot opts */
 name|NULL
 block|,
-name|NULL
+name|aIpv6CantList
 block|,
 comment|/* option proc      */
 name|NULL
@@ -1167,21 +1256,6 @@ block|,
 name|NULL
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|NO_OPTIONAL_OPT_ARGS
-define|#
-directive|define
-name|VERSION_OPT_FLAGS
-value|OPTST_IMM | OPTST_NO_INIT
-else|#
-directive|else
-define|#
-directive|define
-name|VERSION_OPT_FLAGS
-value|OPTST_SET_ARGTYPE(OPARG_TYPE_STRING) | \                                 OPTST_ARG_OPTIONAL | OPTST_IMM | OPTST_NO_INIT
-endif|#
-directive|endif
 block|{
 comment|/* entry idx, value */
 name|INDEX_OPT_VERSION
@@ -1204,7 +1278,7 @@ block|,
 literal|0
 block|,
 comment|/* opt state flags  */
-name|VERSION_OPT_FLAGS
+name|OPTST_VERSION_FLAGS
 block|,
 literal|0
 block|,
@@ -1237,9 +1311,6 @@ block|,
 name|NULL
 block|}
 block|,
-undef|#
-directive|undef
-name|VERSION_OPT_FLAGS
 block|{
 comment|/* entry idx, value */
 name|INDEX_OPT_HELP
@@ -1319,9 +1390,7 @@ block|,
 literal|0
 block|,
 comment|/* opt state flags  */
-name|OPTST_IMM
-operator||
-name|OPTST_NO_INIT
+name|OPTST_MORE_HELP_FLAGS
 block|,
 literal|0
 block|,
@@ -1442,7 +1511,6 @@ name|OPTST_SET_ARGTYPE
 argument_list|(
 name|OPARG_TYPE_STRING
 argument_list|)
-expr|\
 operator||
 name|OPTST_DISABLE_IMM
 block|,
@@ -1479,28 +1547,45 @@ block|}
 block|}
 decl_stmt|;
 comment|/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *  *  Define the Ntpdc Option Environment  */
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zPROGNAME
-index|[]
+index|[
+literal|6
+index|]
 init|=
 literal|"NTPDC"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zUsageTitle
-index|[]
+index|[
+literal|127
+index|]
 init|=
-literal|"ntpdc - vendor-specific NTP query program - Ver. 4.2.4p8\n\ USAGE:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n"
+literal|"ntpdc - vendor-specific NTP query program - Ver. 4.2.6p5\n\ USAGE:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zRcName
-index|[]
+index|[
+literal|7
+index|]
 init|=
 literal|".ntprc"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 modifier|*
+specifier|const
 name|apzHomeList
-index|[]
+index|[
+literal|3
+index|]
 init|=
 block|{
 literal|"$HOME"
@@ -1510,9 +1595,13 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zBugsAddr
-index|[]
+index|[
+literal|34
+index|]
 init|=
 literal|"http://bugs.ntp.org, bugs@ntp.org"
 decl_stmt|;
@@ -1520,19 +1609,25 @@ define|#
 directive|define
 name|zExplain
 value|NULL
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zDetail
-index|[]
+index|[
+literal|601
+index|]
 init|=
-literal|"\n\ The\n\ [= prog-name =]\n\ utility program is used to query an NTP daemon about its\n\ current state and to request changes in that state.\n\ It uses NTP mode 7 control message formats described in the source code.\n\ The program may\n\ be run either in interactive mode or controlled using command line\n\ arguments.\n\ Extensive state and statistics information is available\n\ through the\n\ [= prog-name =]\n\ interface.\n\ In addition, nearly all the\n\ configuration options which can be specified at startup using\n\ ntpd's configuration file may also be specified at run time using\n\ [= prog-name =] .\n"
+literal|"\n\ The [= prog-name =] utility program is used to query an NTP daemon about\n\ its current state and to request changes in that state.  It uses NTP mode\n\ 7 control message formats described in the source code.  The program may\n\ be run either in interactive mode or controlled using command line\n\ arguments.  Extensive state and statistics information is available\n\ through the [= prog-name =] interface.  In addition, nearly all the\n\ configuration options which can be specified at startup using ntpd's\n\ configuration file may also be specified at run time using [= prog-name =]\n\ .\n"
 decl_stmt|;
-name|tSCC
+specifier|static
+name|char
+specifier|const
 name|zFullVersion
 index|[]
 init|=
 name|NTPDC_FULL_VERSION
 decl_stmt|;
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optcode.tpl near line 408 */
+comment|/* extracted from optcode.tlib near line 515 */
 if|#
 directive|if
 name|defined
@@ -1560,6 +1655,59 @@ value|NULL
 endif|#
 directive|endif
 comment|/* ENABLE_NLS */
+define|#
+directive|define
+name|ntpdc_full_usage
+value|NULL
+define|#
+directive|define
+name|ntpdc_short_usage
+value|NULL
+ifndef|#
+directive|ifndef
+name|PKGDATADIR
+define|#
+directive|define
+name|PKGDATADIR
+value|""
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|WITH_PACKAGER
+define|#
+directive|define
+name|ntpdc_packager_info
+value|NULL
+else|#
+directive|else
+specifier|static
+name|char
+specifier|const
+name|ntpdc_packager_info
+index|[]
+init|=
+literal|"Packaged by "
+name|WITH_PACKAGER
+ifdef|#
+directive|ifdef
+name|WITH_PACKAGER_VERSION
+literal|" ("
+name|WITH_PACKAGER_VERSION
+literal|")"
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WITH_PACKAGER_BUG_REPORTS
+literal|"\nReport ntpdc bugs to "
+name|WITH_PACKAGER_BUG_REPORTS
+endif|#
+directive|endif
+literal|"\n"
+decl_stmt|;
+endif|#
+directive|endif
 name|tOptions
 name|ntpdcOptions
 init|=
@@ -1584,7 +1732,7 @@ name|OPTPROC_NO_REQ_OPT
 operator|+
 name|OPTPROC_ENVIRON
 operator|+
-name|OPTPROC_HAS_IMMED
+name|OPTPROC_MISUSE
 operator|)
 block|,
 literal|0
@@ -1602,7 +1750,7 @@ name|zRcName
 block|,
 name|zCopyright
 block|,
-name|zCopyrightNotice
+name|zLicenseDescrip
 block|,
 name|zFullVersion
 block|,
@@ -1634,11 +1782,13 @@ comment|/*      *  Indexes to special options      */
 block|{
 name|INDEX_OPT_MORE_HELP
 block|,
+comment|/* more-help option index */
 name|INDEX_OPT_SAVE_OPTS
 block|,
+comment|/* save option index */
 name|NO_EQUIVALENT
-comment|/* index of '-#' option */
 block|,
+comment|/* '-#' option index */
 name|NO_EQUIVALENT
 comment|/* index of default opt */
 block|}
@@ -1648,6 +1798,18 @@ comment|/* full option count */
 block|,
 literal|10
 comment|/* user option count */
+block|,
+name|ntpdc_full_usage
+block|,
+name|ntpdc_short_usage
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|PKGDATADIR
+block|,
+name|ntpdc_packager_info
 block|}
 decl_stmt|;
 comment|/*  *  Create the static procedure(s) declared above.  */
@@ -1664,9 +1826,14 @@ modifier|*
 name|pOptDesc
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|pOptions
+expr_stmt|;
 name|USAGE
 argument_list|(
-name|EXIT_SUCCESS
+name|NTPDC_EXIT_SUCCESS
 argument_list|)
 expr_stmt|;
 block|}
@@ -1677,10 +1844,7 @@ name|defined
 argument_list|(
 name|TEST_NTPDC_OPTS
 argument_list|)
-comment|/* * * * * * *  *  *   For the set-debug-level option, when DEBUG is #define-d.  */
-ifdef|#
-directive|ifdef
-name|DEBUG
+comment|/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *  *   For the set-debug-level option.  */
 specifier|static
 name|void
 name|doOptSet_Debug_Level
@@ -1694,7 +1858,7 @@ modifier|*
 name|pOptDesc
 parameter_list|)
 block|{
-comment|/* extracted from ../include/debug-opt.def, line 29 */
+comment|/* extracted from debug-opt.def, line 27 */
 name|DESC
 argument_list|(
 name|DEBUG_LEVEL
@@ -1712,11 +1876,8 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* defined DEBUG */
-endif|#
-directive|endif
 comment|/* defined(TEST_NTPDC_OPTS) */
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optmain.tpl near line 92 */
+comment|/* extracted from optmain.tlib near line 128 */
 if|#
 directive|if
 name|defined
@@ -1724,6 +1885,14 @@ argument_list|(
 name|TEST_NTPDC_OPTS
 argument_list|)
 comment|/* TEST MAIN PROCEDURE: */
+specifier|extern
+name|void
+name|optionPutShell
+parameter_list|(
+name|tOptions
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|main
 parameter_list|(
@@ -1739,7 +1908,7 @@ block|{
 name|int
 name|res
 init|=
-name|EXIT_SUCCESS
+name|NTPDC_EXIT_SUCCESS
 decl_stmt|;
 operator|(
 name|void
@@ -1754,21 +1923,32 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-block|{
-name|void
-name|optionPutShell
-argument_list|(
-name|tOptions
-operator|*
-argument_list|)
-decl_stmt|;
 name|optionPutShell
 argument_list|(
 operator|&
 name|ntpdcOptions
 argument_list|)
 expr_stmt|;
-block|}
+name|res
+operator|=
+name|ferror
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|!=
+literal|0
+condition|)
+name|fputs
+argument_list|(
+literal|"output error writing to stdout\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 return|return
 name|res
 return|;
@@ -1776,7 +1956,7 @@ block|}
 endif|#
 directive|endif
 comment|/* defined TEST_NTPDC_OPTS */
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optcode.tpl near line 514 */
+comment|/* extracted from optcode.tlib near line 666 */
 if|#
 directive|if
 name|ENABLE_NLS
@@ -1882,7 +2062,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EXIT_FAILURE
+name|NTPDC_EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1910,14 +2090,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|COERSION
-parameter_list|(
-name|_f
-parameter_list|)
-define|\
-value|coerce_it((void*)&(ntpdcOptions._f))
 comment|/*  *  This invokes the translation code (e.g. gettext(3)).  */
 specifier|static
 name|void
@@ -1926,18 +2098,33 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|tOptions
+modifier|*
+specifier|const
+name|pOpt
+init|=
+operator|&
+name|ntpdcOptions
+decl_stmt|;
 comment|/*      *  Guard against re-translation.  It won't work.  The strings will have      *  been changed by the first pass through this code.  One shot only.      */
 if|if
 condition|(
 name|option_usage_text
 operator|.
 name|field_ct
-operator|==
+operator|!=
 literal|0
 condition|)
-return|return;
-comment|/*      *  Do the translations.  The first pointer follows the field count field.      *  The field count field is the size of a pointer.      */
 block|{
+comment|/*          *  Do the translations.  The first pointer follows the field count          *  field.  The field count field is the size of a pointer.          */
+name|tOptDesc
+modifier|*
+name|pOD
+init|=
+name|pOpt
+operator|->
+name|pOptDesc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -1987,133 +2174,239 @@ operator|>
 literal|0
 condition|)
 do|;
-block|}
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzCopyright
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzCopyNotice
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzFullVersion
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzUsageTitle
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzExplain
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzDetail
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOpt
+operator|->
+name|pzPackager
+operator|)
+argument_list|)
+expr_stmt|;
 name|option_usage_text
 operator|.
 name|field_ct
 operator|=
 literal|0
 expr_stmt|;
+for|for
+control|(
+name|ix
+operator|=
+name|pOpt
+operator|->
+name|optCt
+init|;
+name|ix
+operator|>
+literal|0
+condition|;
+name|ix
+operator|--
+operator|,
+name|pOD
+operator|++
+control|)
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pzText
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|pOpt
+operator|->
+name|fOptSet
+operator|&
+name|OPTPROC_NXLAT_OPT_CFG
+operator|)
+operator|==
+literal|0
+condition|)
 block|{
 name|tOptDesc
 modifier|*
 name|pOD
 init|=
-name|ntpdcOptions
-operator|.
+name|pOpt
+operator|->
 name|pOptDesc
 decl_stmt|;
 name|int
 name|ix
-init|=
-name|ntpdcOptions
-operator|.
-name|optCt
 decl_stmt|;
 for|for
 control|(
-init|;
-condition|;
-control|)
-block|{
-name|pOD
-operator|->
-name|pzText
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pzText
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_NAME
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_NAME
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_Name
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_Name
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_DisableName
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_DisableName
-argument_list|)
-expr_stmt|;
-name|pOD
-operator|->
-name|pz_DisablePfx
-operator|=
-name|AO_gettext
-argument_list|(
-name|pOD
-operator|->
-name|pz_DisablePfx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|--
 name|ix
-operator|<=
+operator|=
+name|pOpt
+operator|->
+name|optCt
+init|;
+name|ix
+operator|>
 literal|0
-condition|)
-break|break;
+condition|;
+name|ix
+operator|--
+operator|,
 name|pOD
 operator|++
+control|)
+block|{
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pz_Name
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pz_DisableName
+operator|)
+argument_list|)
+expr_stmt|;
+name|coerce_it
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+operator|(
+name|pOD
+operator|->
+name|pz_DisablePfx
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
+comment|/* prevent re-translation */
+name|ntpdcOptions
+operator|.
+name|fOptSet
+operator||=
+name|OPTPROC_NXLAT_OPT_CFG
+operator||
+name|OPTPROC_NXLAT_OPT
+expr_stmt|;
 block|}
-name|COERSION
-argument_list|(
-name|pzCopyright
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzCopyNotice
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzFullVersion
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzUsageTitle
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzExplain
-argument_list|)
-expr_stmt|;
-name|COERSION
-argument_list|(
-name|pzDetail
-argument_list|)
-expr_stmt|;
 block|}
 endif|#
 directive|endif

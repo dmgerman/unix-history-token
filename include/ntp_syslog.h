@@ -15,6 +15,16 @@ directive|define
 name|NTP_SYSLOG_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<ntp_types.h>
+end_include
+
+begin_comment
+comment|/* u_int32 type */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -75,11 +85,26 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|msyslog_term
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* duplicate to stdout/err */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|FILE
 modifier|*
 name|syslog_file
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* if syslogit is FALSE, log to  				   this file and not syslog */
+end_comment
 
 begin_if
 if|#
@@ -490,8 +515,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|long
+name|u_int32
 name|ntp_syslogmask
 decl_stmt|;
 end_decl_stmt

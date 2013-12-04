@@ -210,19 +210,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|input_handler
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * SIGPOLL and SIGIO ROUTINES.  */

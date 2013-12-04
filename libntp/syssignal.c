@@ -103,22 +103,17 @@ name|sig
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function_decl
 name|void
-argument_list|(
-argument|*func
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

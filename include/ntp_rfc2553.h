@@ -14,13 +14,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NTP_RFC2553_H_
+name|NTP_RFC2553_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NTP_RFC2553_H_
+name|NTP_RFC2553_H
 end_define
 
 begin_comment
@@ -42,19 +42,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_types.h"
+file|<isc/net.h>
 end_include
 
-begin_comment
-comment|/*  * Don't include any additional IPv6 definitions  * We are defining our own here.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISC_IPV6_H
-value|1
-end_define
+begin_include
+include|#
+directive|include
+file|"ntp_types.h"
+end_include
 
 begin_comment
 comment|/*  * If various macros are not defined we need to define them  */
@@ -118,7 +113,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_SA_LEN_IN_STRUCT_SOCKADDR
+name|ISC_PLATFORM_HAVESALEN
 end_ifdef
 
 begin_define
@@ -160,7 +155,29 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_SA_LEN_IN_STRUCT_SOCKADDR */
+comment|/* ISC_PLATFORM_HAVESALEN */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INET6_ADDRSTRLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INET6_ADDRSTRLEN
+value|46
+end_define
+
+begin_comment
+comment|/* max len of IPv6 addr in ascii */
 end_comment
 
 begin_endif
@@ -184,7 +201,7 @@ name|sockaddr_storage
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_SA_LEN_IN_STRUCT_SOCKADDR
+name|ISC_PLATFORM_HAVESALEN
 name|ntp_u_int8_t
 name|ss_len
 decl_stmt|;
@@ -237,7 +254,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AI_NUMERICHOST
+name|AI_PASSIVE
 end_ifndef
 
 begin_define
@@ -301,33 +318,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* !AI_PASSIVE */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ISC_PLATFORM_HAVEIPV6
+name|AI_NUMERICHOST
 end_ifndef
 
 begin_comment
-comment|/*  * Definition of some useful macros to handle IP6 addresses  */
+comment|/* such as AIX 4.3 */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISC_PLATFORM_NEEDIN6ADDRANY
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYS_WINNT
-end_ifdef
 
 begin_define
 define|#
 directive|define
-name|IN6ADDR_ANY_INIT
-value|{{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }}
+name|Z_AI_NUMERICHOST
+value|0
 end_define
 
 begin_else
@@ -338,9 +347,8 @@ end_else
 begin_define
 define|#
 directive|define
-name|IN6ADDR_ANY_INIT
-define|\
-value|{{{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }}}
+name|Z_AI_NUMERICHOST
+value|AI_NUMERICHOST
 end_define
 
 begin_endif
@@ -348,14 +356,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AI_NUMERICSERV
+end_ifndef
+
+begin_comment
+comment|/* not in RFC 2553 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Z_AI_NUMERICSERV
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|Z_AI_NUMERICSERV
+value|AI_NUMERICSERV
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * IPv6 address  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISC_PLATFORM_HAVEIPV6
+end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -368,236 +407,6 @@ define|#
 directive|define
 name|in6_addr
 value|in_addr6
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_struct
-struct|struct
-name|in6_addr
-block|{
-union|union
-block|{
-name|ntp_u_int8_t
-name|__u6_addr8
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|ntp_u_int16_t
-name|__u6_addr16
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|ntp_u_int32_t
-name|__u6_addr32
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|__u6_addr
-union|;
-comment|/* 128-bit IP6 address */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|s6_addr
-value|__u6_addr.__u6_addr8
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ISC_PLATFORM_HAVEIPV6
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|ISC_PLATFORM_NEEDIN6ADDRANY
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|in6_addr
-name|in6addr_any
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|SIN6_LEN
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_SOCKADDR_IN6
-end_ifndef
-
-begin_struct
-struct|struct
-name|sockaddr_in6
-block|{
-ifdef|#
-directive|ifdef
-name|HAVE_SA_LEN_IN_STRUCT_SOCKADDR
-name|ntp_u_int8_t
-name|sin6_len
-decl_stmt|;
-comment|/* length of this struct(sa_family_t)*/
-name|ntp_u_int8_t
-name|sin6_family
-decl_stmt|;
-comment|/* AF_INET6 (sa_family_t) */
-else|#
-directive|else
-name|short
-name|sin6_family
-decl_stmt|;
-comment|/* AF_INET6 (sa_family_t) */
-endif|#
-directive|endif
-name|ntp_u_int16_t
-name|sin6_port
-decl_stmt|;
-comment|/* Transport layer port # (in_port_t)*/
-name|ntp_u_int32_t
-name|sin6_flowinfo
-decl_stmt|;
-comment|/* IP6 flow information */
-name|struct
-name|in6_addr
-name|sin6_addr
-decl_stmt|;
-comment|/* IP6 address */
-name|ntp_u_int32_t
-name|sin6_scope_id
-decl_stmt|;
-comment|/* scope zone index */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Unspecified  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IN6_IS_ADDR_UNSPECIFIED
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IN6_IS_ADDR_UNSPECIFIED
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|((*(const ntp_u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const ntp_u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const ntp_u_int32_t *)(const void *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(const ntp_u_int32_t *)(const void *)(&(a)->s6_addr[12]) == 0))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Multicast  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IN6_IS_ADDR_MULTICAST
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IN6_IS_ADDR_MULTICAST
-parameter_list|(
-name|a
-parameter_list|)
-value|((a)->s6_addr[0] == 0xff)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Unicast link / site local.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IN6_IS_ADDR_LINKLOCAL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IN6_IS_ADDR_LINKLOCAL
-parameter_list|(
-name|a
-parameter_list|)
-value|(\ (*((u_long *)((a)->s6_addr)    ) == 0xfe)&& \ ((*((u_long *)((a)->s6_addr) + 1)& 0xc0) == 0x80))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IN6_IS_ADDR_SITELOCAL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IN6_IS_ADDR_SITELOCAL
-parameter_list|(
-name|a
-parameter_list|)
-value|(\ (*((u_long *)((a)->s6_addr)    ) == 0xfe)&& \ ((*((u_long *)((a)->s6_addr) + 1)& 0xc0) == 0xc0))
 end_define
 
 begin_endif
@@ -796,89 +605,77 @@ name|EAI_MAX
 value|14
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|getaddrinfo
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
-expr|struct
+name|struct
 name|addrinfo
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|addrinfo
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|getnameinfo
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
-expr|struct
+name|struct
 name|sockaddr
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|freeaddrinfo
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|addrinfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|gai_strerror
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Constants for getnameinfo()  */
@@ -972,7 +769,60 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ISC_PLATFORM_HAVEIPV6 */
+comment|/* !ISC_PLATFORM_HAVEIPV6 */
+end_comment
+
+begin_comment
+comment|/*   * Set up some macros to look for IPv6 and IPv6 multicast  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ISC_PLATFORM_HAVEIPV6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|WANT_IPV6
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|INCLUDE_IPV6_SUPPORT
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPV6_JOIN_GROUP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|IPV6_LEAVE_GROUP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|INCLUDE_IPV6_MULTICAST_SUPPORT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IPV6 Multicast Support */
 end_comment
 
 begin_endif
@@ -981,7 +831,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_NTP_RFC2553_H_ */
+comment|/* IPv6 Support */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !NTP_RFC2553_H */
 end_comment
 
 end_unit

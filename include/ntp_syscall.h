@@ -96,20 +96,17 @@ directive|ifdef
 name|HAVE___ADJTIMEX
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|__adjtimex
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|timex
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -120,6 +117,40 @@ name|t
 parameter_list|)
 value|__adjtimex((t))
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRUCT_NTPTIMEVAL
+end_ifndef
+
+begin_struct
+struct|struct
+name|ntptimeval
+block|{
+name|struct
+name|timeval
+name|time
+decl_stmt|;
+comment|/* current time (ro) */
+name|long
+name|int
+name|maxerror
+decl_stmt|;
+comment|/* maximum error (us) (ro) */
+name|long
+name|int
+name|esterror
+decl_stmt|;
+comment|/* estimated error (us) (ro) */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

@@ -27,6 +27,12 @@ directive|include
 file|"ntp_string.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ntp_assert.h"
+end_include
+
 begin_comment
 comment|/*  * Powers of 10  */
 end_comment
@@ -109,6 +115,13 @@ name|digits
 init|=
 literal|"0123456789"
 decl_stmt|;
+name|NTP_REQUIRE
+argument_list|(
+name|str
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|isneg
 operator|=
 literal|0

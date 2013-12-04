@@ -43,22 +43,11 @@ directive|include
 file|"config.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TYPES_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -578,19 +567,16 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|inline
 name|long
 name|good_rand
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static

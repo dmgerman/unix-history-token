@@ -5,78 +5,63 @@ directive|include
 file|<ntp_types.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|long
 name|ntp_random
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ntp_srandom
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ntp_srandomdev
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|ntp_initstate
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|long
-operator|,
+parameter_list|,
 comment|/* seed for R.N.G. */
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 comment|/* pointer to state array */
 name|long
 comment|/* # bytes of state info */
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|ntp_setstate
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* pointer to state array */

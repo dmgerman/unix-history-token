@@ -372,45 +372,39 @@ name|JANFEBLEAP
 value|((JAN+FEBLEAP) * SECSPERDAY)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|caljulian
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_long
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|calendar
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|u_long
 name|caltontp
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
-expr|struct
+name|struct
 name|calendar
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Additional support stuff for Ed Rheingold's calendrical calculations  */
 end_comment
 
 begin_comment
-comment|/*  * Start day of NTP time as days past the imaginary date 12/1/1 BC.  * P((This is the beginning of the Christian Era, or BCE.))  */
+comment|/*  * Start day of NTP time as days past the imaginary date 12/1/1 BC.  * (This is the beginning of the Christian Era, or BCE.)  */
 end_comment
 
 begin_define
@@ -460,7 +454,7 @@ name|is_leapyear
 parameter_list|(
 name|y
 parameter_list|)
-value|(y%4 == 0&& !(y%100 == 0&& !(y%400 == 0)))
+value|(!((y) % 4)&& !(!((y) % 100)&& (y) % 400))
 end_define
 
 begin_endif

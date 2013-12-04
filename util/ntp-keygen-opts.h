@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntp-keygen-opts.h)  *    *  It has been AutoGen-ed  Tuesday December  8, 2009 at 08:14:55 AM EST  *  From the definitions    ntp-keygen-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
-end_comment
-
-begin_comment
-comment|/*  *  This file was produced by an AutoOpts template.  AutoOpts is a  *  copyrighted work.  This header file is not encumbered by AutoOpts  *  licensing, but is provided under the licensing terms chosen by the  *  ntp-keygen author or copyright holder.  AutoOpts is licensed under  *  the terms of the LGPL.  The redistributable library (``libopts'') is  *  licensed under the terms of either the LGPL or, at the users discretion,  *  the BSD license.  See the AutoOpts and/or libopts sources for details.  *  * This source file is copyrighted and licensed under the following terms:  *  * ntp-keygen copyright 1970-2009 David L. Mills and/or others - all rights reserved  *  * see html/copyright.html  */
+comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntp-keygen-opts.h)  *    *  It has been AutoGen-ed  December 24, 2011 at 06:34:40 PM by AutoGen 5.12  *  From the definitions    ntp-keygen-opts.def  *  and the template file   options  *  * Generated from AutoOpts 35:0:10 templates.  *  *  AutoOpts is a copyrighted work.  This header file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntp-keygen author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * This source file is copyrighted and licensed under the following terms:  *  *  see html/copyright.html  *    */
 end_comment
 
 begin_comment
@@ -21,6 +17,7 @@ begin_define
 define|#
 directive|define
 name|AUTOOPTS_NTP_KEYGEN_OPTS_H_GUARD
+value|1
 end_define
 
 begin_include
@@ -43,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|AO_TEMPLATE_VERSION
-value|118784
+value|143360
 end_define
 
 begin_if
@@ -98,81 +95,77 @@ name|INDEX_OPT_GQ_PARAMS
 operator|=
 literal|4
 block|,
-name|INDEX_OPT_GQ_KEYS
+name|INDEX_OPT_HOST_KEY
 operator|=
 literal|5
 block|,
-name|INDEX_OPT_HOST_KEY
+name|INDEX_OPT_IFFKEY
 operator|=
 literal|6
 block|,
-name|INDEX_OPT_IFFKEY
+name|INDEX_OPT_ISSUER_NAME
 operator|=
 literal|7
 block|,
-name|INDEX_OPT_ISSUER_NAME
+name|INDEX_OPT_MD5KEY
 operator|=
 literal|8
 block|,
-name|INDEX_OPT_MD5KEY
+name|INDEX_OPT_MODULUS
 operator|=
 literal|9
 block|,
-name|INDEX_OPT_MODULUS
+name|INDEX_OPT_PVT_CERT
 operator|=
 literal|10
 block|,
-name|INDEX_OPT_PVT_CERT
+name|INDEX_OPT_PVT_PASSWD
 operator|=
 literal|11
 block|,
-name|INDEX_OPT_PVT_PASSWD
+name|INDEX_OPT_GET_PVT_PASSWD
 operator|=
 literal|12
 block|,
-name|INDEX_OPT_GET_PVT_PASSWD
+name|INDEX_OPT_SIGN_KEY
 operator|=
 literal|13
 block|,
-name|INDEX_OPT_SIGN_KEY
+name|INDEX_OPT_SUBJECT_NAME
 operator|=
 literal|14
 block|,
-name|INDEX_OPT_SUBJECT_NAME
+name|INDEX_OPT_TRUSTED_CERT
 operator|=
 literal|15
 block|,
-name|INDEX_OPT_TRUSTED_CERT
+name|INDEX_OPT_MV_PARAMS
 operator|=
 literal|16
 block|,
-name|INDEX_OPT_MV_PARAMS
+name|INDEX_OPT_MV_KEYS
 operator|=
 literal|17
 block|,
-name|INDEX_OPT_MV_KEYS
+name|INDEX_OPT_VERSION
 operator|=
 literal|18
 block|,
-name|INDEX_OPT_VERSION
+name|INDEX_OPT_HELP
 operator|=
 literal|19
 block|,
-name|INDEX_OPT_HELP
+name|INDEX_OPT_MORE_HELP
 operator|=
 literal|20
 block|,
-name|INDEX_OPT_MORE_HELP
+name|INDEX_OPT_SAVE_OPTS
 operator|=
 literal|21
 block|,
-name|INDEX_OPT_SAVE_OPTS
-operator|=
-literal|22
-block|,
 name|INDEX_OPT_LOAD_OPTS
 operator|=
-literal|23
+literal|22
 block|}
 name|teOptIndex
 expr_stmt|;
@@ -182,25 +175,25 @@ begin_define
 define|#
 directive|define
 name|OPTION_CT
-value|24
+value|23
 end_define
 
 begin_define
 define|#
 directive|define
 name|NTP_KEYGEN_VERSION
-value|"4.2.4p8"
+value|"4.2.6p5"
 end_define
 
 begin_define
 define|#
 directive|define
 name|NTP_KEYGEN_FULL_VERSION
-value|"ntp-keygen (ntp) - Create a NTP host key - Ver. 4.2.4p8"
+value|"ntp-keygen (ntp) 4.2.6p5"
 end_define
 
 begin_comment
-comment|/*  *  Interface defines for all options.  Replace "n" with the UPPER_CASED  *  option name (as in the teOptIndex enumeration above).  *  e.g. HAVE_OPT( CERTIFICATE )  */
+comment|/*  *  Interface defines for all options.  Replace "n" with the UPPER_CASED  *  option name (as in the teOptIndex enumeration above).  *  e.g. HAVE_OPT(CERTIFICATE)  */
 end_comment
 
 begin_define
@@ -310,8 +303,28 @@ name|CLEAR_OPT
 parameter_list|(
 name|n
 parameter_list|)
-value|STMTS( \                 DESC(n).fOptState&= OPTST_PERSISTENT_MASK;   \                 if ( (DESC(n).fOptState& OPTST_INITENABLED) == 0) \                     DESC(n).fOptState |= OPTST_DISABLED; \                 DESC(n).optCookie = NULL )
+value|STMTS( \                 DESC(n).fOptState&= OPTST_PERSISTENT_MASK;   \                 if ((DESC(n).fOptState& OPTST_INITENABLED) == 0) \                     DESC(n).fOptState |= OPTST_DISABLED; \                 DESC(n).optCookie = NULL )
 end_define
+
+begin_comment
+comment|/* * * * * *  *  *  Enumeration of ntp-keygen exit codes  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|NTP_KEYGEN_EXIT_SUCCESS
+init|=
+literal|0
+block|,
+name|NTP_KEYGEN_EXIT_FAILURE
+init|=
+literal|1
+block|}
+name|ntp_keygen_exit_code_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  *  Make sure there are no #define name conflicts with the option names  */
@@ -431,29 +444,6 @@ begin_undef
 undef|#
 directive|undef
 name|GQ_PARAMS
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GQ_KEYS
-end_ifdef
-
-begin_warning
-warning|#
-directive|warning
-warning|undefining GQ_KEYS due to option name conflict
-end_warning
-
-begin_undef
-undef|#
-directive|undef
-name|GQ_KEYS
 end_undef
 
 begin_endif
@@ -802,12 +792,6 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|GQ_KEYS
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|HOST_KEY
 end_undef
 
@@ -893,14 +877,8 @@ comment|/*  NO_OPTION_NAME_WARNINGS */
 end_comment
 
 begin_comment
-comment|/*  *  Interface defines for specific options.  */
+comment|/* * * * * *  *  *  Interface defines for specific options.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
 
 begin_define
 define|#
@@ -909,42 +887,12 @@ name|VALUE_OPT_CERTIFICATE
 value|'c'
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_DEBUG_LEVEL
 value|'d'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
 
 begin_define
 define|#
@@ -953,42 +901,12 @@ name|VALUE_OPT_SET_DEBUG_LEVEL
 value|'D'
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_ID_KEY
 value|'e'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
 
 begin_define
 define|#
@@ -997,64 +915,12 @@ name|VALUE_OPT_GQ_PARAMS
 value|'G'
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|VALUE_OPT_GQ_KEYS
-value|'g'
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_HOST_KEY
 value|'H'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
 
 begin_define
 define|#
@@ -1063,36 +929,12 @@ name|VALUE_OPT_IFFKEY
 value|'I'
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_ISSUER_NAME
 value|'i'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
 
 begin_define
 define|#
@@ -1101,18 +943,18 @@ name|VALUE_OPT_MD5KEY
 value|'M'
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_MODULUS
 value|'m'
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
 
 begin_define
 define|#
@@ -1130,33 +972,12 @@ begin_comment
 comment|/* OPENSSL */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_PVT_CERT
 value|'P'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
 
 begin_define
 define|#
@@ -1165,42 +986,12 @@ name|VALUE_OPT_PVT_PASSWD
 value|'p'
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_GET_PVT_PASSWD
 value|'q'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
 
 begin_define
 define|#
@@ -1209,42 +1000,12 @@ name|VALUE_OPT_SIGN_KEY
 value|'S'
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_SUBJECT_NAME
 value|'s'
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
 
 begin_define
 define|#
@@ -1253,27 +1014,18 @@ name|VALUE_OPT_TRUSTED_CERT
 value|'T'
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_MV_PARAMS
 value|'V'
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
 
 begin_define
 define|#
@@ -1291,18 +1043,18 @@ begin_comment
 comment|/* OPENSSL */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|VALUE_OPT_MV_KEYS
 value|'v'
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
 
 begin_define
 define|#
@@ -1323,13 +1075,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VALUE_OPT_VERSION
-value|'v'
-end_define
-
-begin_define
-define|#
-directive|define
 name|VALUE_OPT_HELP
 value|'?'
 end_define
@@ -1339,6 +1084,13 @@ define|#
 directive|define
 name|VALUE_OPT_MORE_HELP
 value|'!'
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALUE_OPT_VERSION
+value|INDEX_OPT_VERSION
 end_define
 
 begin_define
@@ -1373,14 +1125,14 @@ begin_define
 define|#
 directive|define
 name|ERRSKIP_OPTERR
-value|STMTS( ntp_keygenOptions.fOptSet&= ~OPTPROC_ERRSTOP )
+value|STMTS(ntp_keygenOptions.fOptSet&= ~OPTPROC_ERRSTOP)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ERRSTOP_OPTERR
-value|STMTS( ntp_keygenOptions.fOptSet |= OPTPROC_ERRSTOP )
+value|STMTS(ntp_keygenOptions.fOptSet |= OPTPROC_ERRSTOP)
 end_define
 
 begin_define
@@ -1390,7 +1142,7 @@ name|RESTART_OPT
 parameter_list|(
 name|n
 parameter_list|)
-value|STMTS( \                 ntp_keygenOptions.curOptIdx = (n); \                 ntp_keygenOptions.pzCurOpt  = NULL )
+value|STMTS( \                 ntp_keygenOptions.curOptIdx = (n); \                 ntp_keygenOptions.pzCurOpt  = NULL)
 end_define
 
 begin_define
@@ -1407,15 +1159,11 @@ name|USAGE
 parameter_list|(
 name|c
 parameter_list|)
-value|(*ntp_keygenOptions.pUsageProc)(&ntp_keygenOptions, c )
+value|(*ntp_keygenOptions.pUsageProc)(&ntp_keygenOptions, c)
 end_define
 
 begin_comment
-comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/opthead.tpl near line 360 */
-end_comment
-
-begin_comment
-comment|/* * * * * *  *  *  Declare the ntp-keygen option descriptor.  */
+comment|/* extracted from opthead.tlib near line 451 */
 end_comment
 
 begin_ifdef
@@ -1430,16 +1178,20 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/* * * * * *  *  *  Declare the ntp-keygen option descriptor.  */
 specifier|extern
 name|tOptions
 name|ntp_keygenOptions
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENABLE_NLS
+argument_list|)
 ifndef|#
 directive|ifndef
 name|_
-if|#
-directive|if
-name|ENABLE_NLS
 include|#
 directive|include
 file|<stdio.h>
@@ -1482,21 +1234,55 @@ parameter_list|(
 name|s
 parameter_list|)
 value|aoGetsText(s)
+endif|#
+directive|endif
+comment|/* _() */
+define|#
+directive|define
+name|OPT_NO_XLAT_CFG_NAMES
+value|STMTS(ntp_keygenOptions.fOptSet |= \                                     OPTPROC_NXLAT_OPT_CFG;)
+define|#
+directive|define
+name|OPT_NO_XLAT_OPT_NAMES
+value|STMTS(ntp_keygenOptions.fOptSet |= \                                     OPTPROC_NXLAT_OPT|OPTPROC_NXLAT_OPT_CFG;)
+define|#
+directive|define
+name|OPT_XLAT_CFG_NAMES
+value|STMTS(ntp_keygenOptions.fOptSet&= \                                   ~(OPTPROC_NXLAT_OPT|OPTPROC_NXLAT_OPT_CFG);)
+define|#
+directive|define
+name|OPT_XLAT_OPT_NAMES
+value|STMTS(ntp_keygenOptions.fOptSet&= \                                   ~OPTPROC_NXLAT_OPT;)
 else|#
 directive|else
 comment|/* ENABLE_NLS */
 define|#
 directive|define
+name|OPT_NO_XLAT_CFG_NAMES
+define|#
+directive|define
+name|OPT_NO_XLAT_OPT_NAMES
+define|#
+directive|define
+name|OPT_XLAT_CFG_NAMES
+define|#
+directive|define
+name|OPT_XLAT_OPT_NAMES
+ifndef|#
+directive|ifndef
+name|_
+define|#
+directive|define
 name|_
 parameter_list|(
-name|s
+name|_s
 parameter_list|)
-value|s
+value|_s
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* ENABLE_NLS */
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus

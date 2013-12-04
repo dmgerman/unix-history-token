@@ -3,6 +3,143 @@ begin_comment
 comment|/*  * ntp_crypto.h - definitions for cryptographic operations  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NTP_CRYPTO_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NTP_CRYPTO_H
+end_define
+
+begin_comment
+comment|/*  * Configuration codes (also needed for parser without OPENSSL)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* nothing doing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_PRIV
+value|1
+end_define
+
+begin_comment
+comment|/* host keys file name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_SIGN
+value|2
+end_define
+
+begin_comment
+comment|/* signature keys file name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_CERT
+value|3
+end_define
+
+begin_comment
+comment|/* certificate file name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_RAND
+value|4
+end_define
+
+begin_comment
+comment|/* random seed file name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_IFFPAR
+value|5
+end_define
+
+begin_comment
+comment|/* IFF parameters file name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_GQPAR
+value|6
+end_define
+
+begin_comment
+comment|/* GQ parameters file name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_MVPAR
+value|7
+end_define
+
+begin_comment
+comment|/* MV parameters file name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_PW
+value|8
+end_define
+
+begin_comment
+comment|/* private key password */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_IDENT
+value|9
+end_define
+
+begin_comment
+comment|/* specify identity scheme */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_NID
+value|10
+end_define
+
+begin_comment
+comment|/* specify digest name */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -103,7 +240,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CRYPTO_FLAG_VALID
+name|CRYPTO_FLAG_CERT
 value|0x0100
 end_define
 
@@ -136,7 +273,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CRYPTO_FLAG_AGREE
+name|CRYPTO_FLAG_COOK
 value|0x0800
 end_define
 
@@ -174,7 +311,18 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* leapseconds table verified */
+comment|/* leapsecond values verified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_FLAG_ALL
+value|0x7f00
+end_define
+
+begin_comment
+comment|/* all mask */
 end_comment
 
 begin_comment
@@ -330,12 +478,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CRYPTO_TAI
+name|CRYPTO_LEAP
 value|CRYPTO_CMD(5)
 end_define
 
 begin_comment
-comment|/* leapseconds table */
+comment|/* leapsecond values */
 end_comment
 
 begin_define
@@ -558,7 +706,7 @@ value|XEVNT_CMD(12)
 end_define
 
 begin_comment
-comment|/* bad or missing leapseconds table */
+comment|/* bad or missing leapseconds */
 end_comment
 
 begin_define
@@ -594,164 +742,6 @@ begin_comment
 comment|/* protocol error */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XEVNT_SRV
-value|XEVNT_CMD(16)
-end_define
-
-begin_comment
-comment|/* server certificate expired */
-end_comment
-
-begin_comment
-comment|/*  * Configuration codes  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_NONE
-value|0
-end_define
-
-begin_comment
-comment|/* nothing doing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_PRIV
-value|1
-end_define
-
-begin_comment
-comment|/* host keys file name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_SIGN
-value|2
-end_define
-
-begin_comment
-comment|/* signature keys file name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_LEAP
-value|3
-end_define
-
-begin_comment
-comment|/* leapseconds table file name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_KEYS
-value|4
-end_define
-
-begin_comment
-comment|/* keys directory path */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_CERT
-value|5
-end_define
-
-begin_comment
-comment|/* certificate file name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_RAND
-value|6
-end_define
-
-begin_comment
-comment|/* random seed file name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_TRST
-value|7
-end_define
-
-begin_comment
-comment|/* specify trust */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_IFFPAR
-value|8
-end_define
-
-begin_comment
-comment|/* IFF parameters file name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_GQPAR
-value|9
-end_define
-
-begin_comment
-comment|/* GQ parameters file name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_MVPAR
-value|10
-end_define
-
-begin_comment
-comment|/* GQ parameters file name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_PW
-value|11
-end_define
-
-begin_comment
-comment|/* private key password */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRYPTO_CONF_IDENT
-value|12
-end_define
-
-begin_comment
-comment|/* specify identity scheme */
-end_comment
-
 begin_comment
 comment|/*  * Miscellaneous crypto stuff  */
 end_comment
@@ -770,30 +760,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NTP_AUTOMAX
-value|13
-end_define
-
-begin_comment
-comment|/* log2 default max session key life */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEY_REVOKE
-value|16
-end_define
-
-begin_comment
-comment|/* log2 default key revoke timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NTP_MAXEXTEN
-value|1024
+value|2048
 end_define
 
 begin_comment
@@ -803,12 +771,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TAI_1972
-value|10
+name|NTP_AUTOMAX
+value|12
 end_define
 
 begin_comment
-comment|/* initial TAI offset (s) */
+comment|/* default key list timeout (log2 s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEY_REVOKE
+value|17
+end_define
+
+begin_comment
+comment|/* default key revoke timeout (log2 s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_REFRESH
+value|19
+end_define
+
+begin_comment
+comment|/* default restart timeout (log2 s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_MAXKEY
+value|65535
+end_define
+
+begin_comment
+comment|/* maximum symmetric key ID */
 end_comment
 
 begin_comment
@@ -969,15 +970,11 @@ modifier|*
 name|issuer
 decl_stmt|;
 comment|/* issuer common name */
-name|u_char
+name|BIGNUM
 modifier|*
 name|grpkey
 decl_stmt|;
 comment|/* GQ group key */
-name|u_int
-name|grplen
-decl_stmt|;
-comment|/* GQ group key length */
 name|struct
 name|value
 name|cert
@@ -988,19 +985,39 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Cryptographic values  */
+comment|/*  * The keys info/value structure  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_struct
+struct|struct
+name|pkey_info
+block|{
+name|struct
+name|pkey_info
+modifier|*
+name|link
+decl_stmt|;
+comment|/* forward link */
+name|EVP_PKEY
+modifier|*
+name|pkey
+decl_stmt|;
+comment|/* generic key */
 name|char
 modifier|*
-name|keysdir
+name|name
 decl_stmt|;
-end_decl_stmt
+comment|/* file name */
+name|tstamp_t
+name|fstamp
+decl_stmt|;
+comment|/* filestamp */
+block|}
+struct|;
+end_struct
 
 begin_comment
-comment|/* crypto keys directory */
+comment|/*  * Cryptographic values  */
 end_comment
 
 begin_decl_stmt
@@ -1012,6 +1029,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* status word */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|crypto_nid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* digest nid */
 end_comment
 
 begin_decl_stmt
@@ -1058,6 +1086,15 @@ end_endif
 
 begin_comment
 comment|/* OPENSSL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NTP_CRYPTO_H */
 end_comment
 
 end_unit

@@ -18,30 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_rfc2553.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_types.h"
 end_include
 
@@ -154,7 +130,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A unit second in fp format.  Actually 2**(half_the_bits_in_a_long)  */
+comment|/*  * A unit second in fp format.	Actually 2**(half_the_bits_in_a_long)  */
 end_comment
 
 begin_define
@@ -243,11 +219,11 @@ parameter_list|,
 name|nf
 parameter_list|)
 define|\
-value|do { (ni) = ntohl(hi); (nf) = ntohl(hf); } while (0)
+value|do { (ni) = htonl(hi); (nf) = htonl(hf); } while (0)
 end_define
 
 begin_comment
-comment|/* funny ones.  Converts ts fractions to net order ts */
+comment|/* funny ones.	Converts ts fractions to net order ts */
 end_comment
 
 begin_define
@@ -911,312 +887,261 @@ begin_comment
 comment|/*  * Prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|dofptoa
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_fp
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|short
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|dolfptoa
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_long
-operator|,
+parameter_list|,
 name|u_long
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|short
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|atolfp
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|buftvtots
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|fptoa
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|s_fp
-operator|,
+parameter_list|,
 name|short
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|fptoms
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|s_fp
-operator|,
+parameter_list|,
 name|short
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|hextolfp
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|gpstolfp
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|unsigned
 name|long
-operator|,
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|mstolfp
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|prettydate
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|gmprettydate
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|uglydate
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|mfp_mul
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int32
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int32
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int32
-operator|,
+parameter_list|,
 name|u_int32
-operator|,
+parameter_list|,
 name|int32
-operator|,
+parameter_list|,
 name|u_int32
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|get_systime
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|step_systime
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|adj_systime
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|tm
 modifier|*
 name|ntp2unix_tm
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_long
 name|ntp
-operator|,
+parameter_list|,
 name|int
 name|local
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
 directive|define
 name|lfptoa
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|mfptoa((_fpv)->l_ui, (_fpv)->l_uf, (_ndec))
+value|mfptoa((fpv)->l_ui, (fpv)->l_uf, (ndec))
 end_define
 
 begin_define
@@ -1224,11 +1149,11 @@ define|#
 directive|define
 name|lfptoms
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|mfptoms((_fpv)->l_ui, (_fpv)->l_uf, (_ndec))
+value|mfptoms((fpv)->l_ui, (fpv)->l_uf, (ndec))
 end_define
 
 begin_define
@@ -1236,19 +1161,9 @@ define|#
 directive|define
 name|stoa
 parameter_list|(
-name|_sin
+name|addr
 parameter_list|)
-value|socktoa((_sin))
-end_define
-
-begin_define
-define|#
-directive|define
-name|stohost
-parameter_list|(
-name|_sin
-parameter_list|)
-value|socktohost((_sin))
+value|socktoa(addr)
 end_define
 
 begin_define
@@ -1256,19 +1171,19 @@ define|#
 directive|define
 name|ntoa
 parameter_list|(
-name|_sin
+name|addr
 parameter_list|)
-value|stoa(_sin)
+value|stoa(addr)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ntohost
+name|stohost
 parameter_list|(
-name|_sin
+name|addr
 parameter_list|)
-value|stohost(_sin)
+value|socktohost(addr)
 end_define
 
 begin_define
@@ -1276,11 +1191,11 @@ define|#
 directive|define
 name|ufptoa
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|dofptoa((_fpv), 0, (_ndec), 0)
+value|dofptoa((fpv), 0, (ndec), 0)
 end_define
 
 begin_define
@@ -1288,11 +1203,11 @@ define|#
 directive|define
 name|ufptoms
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|dofptoa((_fpv), 0, (_ndec), 1)
+value|dofptoa((fpv), 0, (ndec), 1)
 end_define
 
 begin_define
@@ -1300,11 +1215,11 @@ define|#
 directive|define
 name|ulfptoa
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|dolfptoa((_fpv)->l_ui, (_fpv)->l_uf, 0, (_ndec), 0)
+value|dolfptoa((fpv)->l_ui, (fpv)->l_uf, 0, (ndec), 0)
 end_define
 
 begin_define
@@ -1312,11 +1227,11 @@ define|#
 directive|define
 name|ulfptoms
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|dolfptoa((_fpv)->l_ui, (_fpv)->l_uf, 0, (_ndec), 1)
+value|dolfptoa((fpv)->l_ui, (fpv)->l_uf, 0, (ndec), 1)
 end_define
 
 begin_define
@@ -1324,13 +1239,13 @@ define|#
 directive|define
 name|umfptoa
 parameter_list|(
-name|_fpi
+name|fpi
 parameter_list|,
-name|_fpf
+name|fpf
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|dolfptoa((_fpi), (_fpf), 0, (_ndec), 0)
+value|dolfptoa((fpi), (fpf), 0, (ndec), 0)
 end_define
 
 begin_endif

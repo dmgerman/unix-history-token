@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntpsim.h - Prototypes for ntpsim  */
+comment|/* ntpsim.h  *  * The header file for the ntp discrete event simulator.   *  * Written By:	Sachin Kamboj  *		University of Delaware  *		Newark, DE 19711  * Copyright (c) 2006  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__ntpsim_h
+name|NTPSIM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__ntpsim_h
+name|NTPSIM_H
 end_define
 
 begin_include
@@ -27,11 +27,22 @@ directive|include
 file|<math.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SOCKET_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -93,6 +104,33 @@ directive|include
 file|"ntp_stdlib.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ntp_data_structures.h"
+end_include
+
+begin_comment
+comment|/* CONSTANTS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PI
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|PI
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -101,7 +139,59 @@ value|3.1415926535
 end_define
 
 begin_comment
-comment|/*  * ntpsim declarations  */
+comment|/* The world's most famous constant */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIM_TIME
+value|86400
+end_define
+
+begin_comment
+comment|/* end simulation time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NET_DLY
+value|.001
+end_define
+
+begin_comment
+comment|/* network delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROC_DLY
+value|.001
+end_define
+
+begin_comment
+comment|/* processing delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BEEP_DLY
+value|3600
+end_define
+
+begin_comment
+comment|/* beep interval (s) */
+end_comment
+
+begin_comment
+comment|/* Discrete Event Queue  * --------------------  * The NTP simulator is a discrete event simulator.  *  * Central to this simulator is an event queue which is a priority queue  * in which the "priority" is given by the time of arrival of the event.  *  * A discrete set of events can happen and are stored in the queue to arrive  * at a particular time.  */
+end_comment
+
+begin_comment
+comment|/* Possible Discrete Events */
 end_comment
 
 begin_typedef
@@ -110,15 +200,23 @@ enum|enum
 block|{
 name|BEEP
 block|,
+comment|/* Event to record simulator stats */
 name|CLOCK
 block|,
+comment|/* Event to advance the clock to the specified time */
 name|TIMER
 block|,
+comment|/* Event that designates a timer interrupt. */
 name|PACKET
+comment|/* Event that designates arrival of a packet */
 block|}
 name|funcTkn
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Event information */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -127,6 +225,11 @@ block|{
 name|double
 name|time
 decl_stmt|;
+comment|/* Time at which event occurred */
+name|funcTkn
+name|function
+decl_stmt|;
+comment|/* Type of event that occured */
 union|union
 block|{
 name|struct
@@ -140,6 +243,7 @@ decl_stmt|;
 block|}
 name|buffer
 union|;
+comment|/* Other data associated with the event */
 define|#
 directive|define
 name|ntp_pkt
@@ -148,350 +252,318 @@ define|#
 directive|define
 name|rcv_buf
 value|buffer.evnt_buf
-name|funcTkn
-name|function
-decl_stmt|;
 block|}
 name|Event
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|List
-block|{
-name|Event
-name|event
-decl_stmt|;
-name|struct
-name|List
-modifier|*
-name|next
-decl_stmt|;
-block|}
-typedef|*
-name|Queue
-typedef|;
-end_typedef
+begin_comment
+comment|/* Server Script Information */
+end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|nde
 block|{
 name|double
-name|time
+name|duration
 decl_stmt|;
-comment|/* simulation time */
+name|double
+name|freq_offset
+decl_stmt|;
+name|double
+name|wander
+decl_stmt|;
+name|double
+name|jitter
+decl_stmt|;
+name|double
+name|prop_delay
+decl_stmt|;
+name|double
+name|proc_delay
+decl_stmt|;
+block|}
+name|script_info
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Server Structures */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|double
+name|server_time
+decl_stmt|;
+comment|/* Server time */
+name|sockaddr_u
+modifier|*
+name|addr
+decl_stmt|;
+comment|/* Server Address */
+name|queue
+modifier|*
+name|script
+decl_stmt|;
+comment|/* Server Script */
+name|script_info
+modifier|*
+name|curr_script
+decl_stmt|;
+comment|/* Current Script */
+block|}
+name|server_info
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Simulation control information */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|Sim_Info
+block|{
 name|double
 name|sim_time
 decl_stmt|;
-comment|/* end simulation time */
+comment|/* Time in the simulation */
 name|double
-name|ntp_time
+name|end_time
 decl_stmt|;
-comment|/* client disciplined time */
+comment|/* Time at which simulation needs to be ended */
 name|double
-name|adj
+name|beep_delay
 decl_stmt|;
-comment|/* remaining time correction */
-name|double
-name|slew
+comment|/* Delay between simulation "beeps" at which                              simulation  stats are recorded. */
+name|int
+name|num_of_servers
 decl_stmt|;
-comment|/* correction slew rate */
-name|double
-name|clk_time
-decl_stmt|;
-comment|/* server time */
-name|double
-name|ferr
-decl_stmt|;
-comment|/* frequency errort */
-name|double
-name|fnse
-decl_stmt|;
-comment|/* random walk noise */
-name|double
-name|ndly
-decl_stmt|;
-comment|/* network delay */
-name|double
-name|snse
-decl_stmt|;
-comment|/* phase noise */
-name|double
-name|pdly
-decl_stmt|;
-comment|/* processing delay */
-name|double
-name|bdly
-decl_stmt|;
-comment|/* beep interval */
-name|double
-name|last_time
-decl_stmt|;
-comment|/* last clock read time */
-name|Queue
-name|events
-decl_stmt|;
-comment|/* Node Event Queue */
-name|struct
-name|recvbuf
+comment|/* Number of servers in the simulation */
+name|server_info
 modifier|*
-name|rbuflist
+name|servers
 decl_stmt|;
-comment|/* Node Receive Buffer */
+comment|/* Pointer to array of servers */
 block|}
-name|Node
+name|sim_info
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Function prototypes  */
+comment|/* Local Clock (Client) Variables */
 end_comment
 
-begin_decl_stmt
-name|int
-name|ntpsim
-name|P
-argument_list|(
-operator|(
-name|int
-name|argc
-operator|,
-name|char
-operator|*
-name|argv
-index|[]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Event
-name|event
-name|P
-argument_list|(
-operator|(
+begin_typedef
+typedef|typedef
+struct|struct
+name|Local_Clock_Info
+block|{
 name|double
-operator|,
-name|funcTkn
-operator|)
-argument_list|)
+name|local_time
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Queue
-name|queue
-name|P
-argument_list|(
-operator|(
-name|Event
-operator|,
-name|Queue
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Node
-name|node
-name|P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|push
-name|P
-argument_list|(
-operator|(
-name|Event
-operator|,
-name|Queue
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Event
-name|pop
-name|P
-argument_list|(
-operator|(
-name|Queue
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ndbeep
-name|P
-argument_list|(
-operator|(
-name|Node
-operator|*
-operator|,
-name|Event
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ndeclk
-name|P
-argument_list|(
-operator|(
-name|Node
-operator|*
-operator|,
-name|Event
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ntptmr
-name|P
-argument_list|(
-operator|(
-name|Node
-operator|*
-operator|,
-name|Event
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|netpkt
-name|P
-argument_list|(
-operator|(
-name|Node
-operator|*
-operator|,
-name|Event
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|srvr_rply
-name|P
-argument_list|(
-operator|(
-name|Node
-operator|*
-operator|,
-expr|struct
-name|sockaddr_storage
-operator|*
-operator|,
-expr|struct
-name|interface
-operator|*
-operator|,
-expr|struct
-name|pkt
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+comment|/* Client disciplined time */
 name|double
-name|gauss
-name|P
-argument_list|(
-operator|(
-name|double
-operator|,
-name|double
-operator|)
-argument_list|)
+name|adj
 decl_stmt|;
-end_decl_stmt
+comment|/* Remaining time correction */
+name|double
+name|slew
+decl_stmt|;
+comment|/* Correction Slew Rate */
+name|double
+name|last_read_time
+decl_stmt|;
+comment|/* Last time the clock was read */
+block|}
+name|local_clock_info
+typedef|;
+end_typedef
 
 begin_decl_stmt
-name|double
-name|poisson
-name|P
-argument_list|(
-operator|(
-name|double
-operator|,
-name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|node_clock
-name|P
-argument_list|(
-operator|(
-name|Node
-operator|*
-operator|,
-name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|abortsim
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
+specifier|extern
+name|local_clock_info
+name|simclock
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The global Node  */
+comment|/* Local Clock Variables */
 end_comment
 
 begin_decl_stmt
-name|Node
-name|ntp_node
+specifier|extern
+name|sim_info
+name|simulation
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Simulation Control Variables */
+end_comment
+
+begin_comment
+comment|/* Function Prototypes */
+end_comment
+
+begin_function_decl
+name|int
+name|ntpsim
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Event
+modifier|*
+name|event
+parameter_list|(
+name|double
+name|t
+parameter_list|,
+name|funcTkn
+name|f
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sim_event_timer
+parameter_list|(
+name|Event
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|simulate_server
+parameter_list|(
+name|sockaddr_u
+modifier|*
+name|serv_addr
+parameter_list|,
+name|struct
+name|interface
+modifier|*
+name|inter
+parameter_list|,
+name|struct
+name|pkt
+modifier|*
+name|rpkt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sim_update_clocks
+parameter_list|(
+name|Event
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sim_event_recv_packet
+parameter_list|(
+name|Event
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sim_event_beep
+parameter_list|(
+name|Event
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|abortsim
+parameter_list|(
+name|char
+modifier|*
+name|errmsg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
+name|gauss
+parameter_list|(
+name|double
+parameter_list|,
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
+name|poisson
+parameter_list|(
+name|double
+parameter_list|,
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|yyparse
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|create_server_associations
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* NTPSIM_H */
+end_comment
 
 end_unit
 

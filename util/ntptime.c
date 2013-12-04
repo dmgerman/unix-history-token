@@ -170,36 +170,30 @@ begin_comment
 comment|/*  * Function prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|sprintb
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
 name|timex_state
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -207,17 +201,14 @@ directive|ifdef
 name|SIGSYS
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|pll_trap
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -301,6 +292,17 @@ modifier|*
 name|progname
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|volatile
+name|int
+name|debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for libntp */
+end_comment
 
 begin_decl_stmt
 specifier|static

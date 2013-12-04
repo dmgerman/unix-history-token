@@ -3,6 +3,18 @@ begin_comment
 comment|/*  *  ntp_types.h - defines how int32 and u_int32 are treated.  *  For 64 bit systems like the DEC Alpha, they have to be defined  *  as int and u_int.  *  For 32 bit systems, define them as long and u_long  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NTP_TYPES_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NTP_TYPES_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -18,14 +30,38 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NTP_TYPES_
+name|TRUE
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NTP_TYPES_
+name|TRUE
+value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FALSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This is another naming conflict.  * On NetBSD for MAC the macro "mac" is defined as 1  * this is fun for us as a packet structure contains an  * optional "mac" member - severe confusion results 8-)  * As we hopefully do not have to rely on that macro we  * just undefine that.  */
@@ -49,56 +85,23 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Set up for prototyping  */
+comment|/*  * used to quiet compiler warnings  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|P
+name|UNUSED_ARG
 end_ifndef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|HAVE_PROTOTYPES
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
-name|P
+name|UNUSED_ARG
 parameter_list|(
-name|x
+name|arg
 parameter_list|)
-value|x
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not __STDC__ and not HAVE_PROTOTYPES */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|x
-parameter_list|)
-value|()
+value|((void)(arg))
 end_define
 
 begin_endif
@@ -107,17 +110,18 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not __STDC__ and HAVE_PROTOTYPES */
+comment|/*  * COUNTOF(array) - size of array in elements  */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* P */
-end_comment
+begin_define
+define|#
+directive|define
+name|COUNTOF
+parameter_list|(
+name|arr
+parameter_list|)
+value|(sizeof(arr) / sizeof((arr)[0]))
+end_define
 
 begin_comment
 comment|/*  * VMS DECC (v4.1), {u_char,u_short,u_long} are only in SOCKET.H,  *			and u_int isn't defined anywhere  */
@@ -182,6 +186,42 @@ name|int32
 value|int
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT32_MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT32_MIN
+value|INT_MIN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT32_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT32_MAX
+value|INT_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -199,6 +239,24 @@ directive|define
 name|u_int32
 value|unsigned int
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|U_INT32_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|U_INT32_MAX
+value|UINT_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -224,15 +282,6 @@ literal|4
 operator|)
 end_if
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not sizeof(long) == 4 */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -245,6 +294,42 @@ directive|define
 name|int32
 value|long
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT32_MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT32_MIN
+value|LONG_MIN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT32_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT32_MAX
+value|LONG_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -264,6 +349,19 @@ name|u_int32
 value|unsigned long
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|U_INT32_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|U_INT32_MAX
+value|ULONG_MAX
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -273,6 +371,11 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/* not sizeof(long) == 4 */
@@ -283,6 +386,15 @@ include|#
 directive|include
 file|"Bletch: what's 32 bits on this machine?"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not sizeof(long) == 4 */
+end_comment
 
 begin_endif
 endif|#
@@ -364,13 +476,64 @@ begin_comment
 comment|/* NTP seconds timestamp */
 end_comment
 
+begin_comment
+comment|/*  * On Unix struct sock_timeval is equivalent to struct timeval.  * On Windows built with 64-bit time_t, sock_timeval.tv_sec is a long  * as required by Windows' socket() interface timeout argument, while  * timeval.tv_sec is time_t for the more common use as a UTC time   * within NTP.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYS_WINNT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|sock_timeval
+value|timeval
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _NTP_TYPES_ */
+comment|/*  * On Unix open() works for tty (serial) devices just fine, while on  * Windows refclock serial devices are opened using CreateFile, a lower  * level than the CRT-provided descriptors, because the C runtime lacks  * tty APIs.  For refclocks which wish to use open() as well as or   * instead of refclock_open(), tty_open() is equivalent to open() on  * Unix and  implemented in the Windows port similarly to  * refclock_open().  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYS_WINNT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|tty_open
+parameter_list|(
+name|f
+parameter_list|,
+name|a
+parameter_list|,
+name|m
+parameter_list|)
+value|open(f, a, m)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NTP_TYPES_H */
 end_comment
 
 end_unit

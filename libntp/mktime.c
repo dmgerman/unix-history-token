@@ -33,6 +33,25 @@ name|HAVE_TIMEGM
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|SIZEOF_TIME_T
+operator|>=
+literal|8
+end_if
+
+begin_error
+error|#
+directive|error
+error|libntp supplied mktime()/timegm() do not support 64-bit time_t
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
