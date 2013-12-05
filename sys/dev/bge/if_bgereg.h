@@ -9209,6 +9209,20 @@ name|BGE_RDMA_LSO_CRPTEN_CTRL_BLEN_LSO_4K
 value|0x000C0000
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_TX_LENGTH_WA_5719
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_TX_LENGTH_WA_5720
+value|0x00200000
+end_define
+
 begin_comment
 comment|/* BD Read DMA Mode register */
 end_comment
@@ -9279,6 +9293,20 @@ define|#
 directive|define
 name|BGE_RDMA_NON_LSO_MODE_ENABLE
 value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_LENGTH
+value|0x4BE0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_NUM_RDMA_CHANNELS
+value|4
 end_define
 
 begin_comment
@@ -15855,6 +15883,10 @@ define|#
 directive|define
 name|BGE_FLAG_MBOX_REORDER
 value|0x20000000
+define|#
+directive|define
+name|BGE_FLAG_RDMA_BUG
+value|0x40000000
 name|uint32_t
 name|bge_mfw_flags
 decl_stmt|;
