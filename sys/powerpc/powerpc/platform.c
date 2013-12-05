@@ -696,6 +696,9 @@ expr_stmt|;
 name|naregions
 operator|--
 expr_stmt|;
+name|i
+operator|--
+expr_stmt|;
 block|}
 block|}
 block|}
