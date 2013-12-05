@@ -3696,7 +3696,7 @@ argument_list|(
 name|sbt
 argument_list|)
 expr_stmt|;
-comment|/* Switch timers mack into active mode. */
+comment|/* Switch timers back into active mode. */
 if|if
 condition|(
 operator|!
