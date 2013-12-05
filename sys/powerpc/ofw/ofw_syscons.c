@@ -170,6 +170,15 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ofwfb_reset_on_switch
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -206,6 +215,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"relaxed mmap bounds checking"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ofwfb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|reset_on_mode_switch
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ofwfb_reset_on_switch
+argument_list|,
+literal|0
+argument_list|,
+literal|"reset the framebuffer driver on mode switch"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2164,7 +2194,12 @@ operator|*
 operator|)
 name|adp
 expr_stmt|;
-comment|/* 	 * Open the display device, which will initialize it. 	 */
+if|if
+condition|(
+name|ofwfb_reset_on_switch
+condition|)
+block|{
+comment|/* 		 * Open the display device, which will initialize it. 		 */
 name|memset
 argument_list|(
 name|name
@@ -2207,7 +2242,7 @@ operator|==
 literal|8
 condition|)
 block|{
-comment|/* 		 * Install the ISO6429 colormap - older OFW systems 		 * don't do this by default 		 */
+comment|/* 			 * Install the ISO6429 colormap - older OFW systems 			 * don't do this by default 			 */
 for|for
 control|(
 name|i
@@ -2259,6 +2294,7 @@ operator|&
 name|retval
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|ofwfb_blank_display

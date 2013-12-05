@@ -45,22 +45,11 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/endian.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1451,51 +1440,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-AdeghmNnOPqRrvz] "
+literal|"usage: %s [-AdeghmNnOPqRrvz] [-a anchor] [-D macro=value] [-F modifier]\n"
+literal|"\t[-f file] [-i interface] [-K host | network]\n"
+literal|"\t[-k host | network | label | id] [-o level] [-p device]\n"
+literal|"\t[-s modifier] [-t table -T command [address ...]] [-x level]\n"
 argument_list|,
 name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"[-a anchor] [-D macro=value] [-F modifier]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t[-f file] [-i interface] [-K host | network]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t[-k host | network | label | id] "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"[-o level] [-p device]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t[-s modifier] "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"[-t table -T command [address ...]] [-x level]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1540,9 +1490,6 @@ argument_list|,
 literal|"pf already enabled"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 elseif|else
 if|if
 condition|(
@@ -1557,8 +1504,6 @@ argument_list|,
 literal|"pfil registeration failed"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 else|else
 name|err
 argument_list|(
@@ -13424,11 +13369,6 @@ name|NULL
 expr_stmt|;
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(

@@ -82,6 +82,9 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+name|off_t
+name|sc_size
+decl_stmt|;
 name|int
 name|sc_opened
 decl_stmt|;

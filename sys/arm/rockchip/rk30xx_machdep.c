@@ -95,6 +95,12 @@ directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arm/rockchip/rk30xx_wdog.h>
+end_include
+
 begin_comment
 comment|/* Start of address space used for bootstrap map */
 end_comment
@@ -313,9 +319,12 @@ name|void
 name|cpu_reset
 parameter_list|()
 block|{
+name|rk30_wd_watchdog_reset
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"No cpu_reset implementation!\n"
+literal|"Reset failed!\n"
 argument_list|)
 expr_stmt|;
 while|while

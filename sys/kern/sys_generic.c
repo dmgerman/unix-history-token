@@ -5757,6 +5757,14 @@ block|{
 name|cap_rights_t
 name|rights
 decl_stmt|;
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_EVENT
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|fget_unlocked
@@ -5765,13 +5773,8 @@ name|fdp
 argument_list|,
 name|fd
 argument_list|,
-name|cap_rights_init
-argument_list|(
 operator|&
 name|rights
-argument_list|,
-name|CAP_POLL_EVENT
-argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -6835,7 +6838,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 argument_list|)
 argument_list|)
 operator|!=
@@ -7206,7 +7209,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 argument_list|)
 argument_list|)
 operator|!=

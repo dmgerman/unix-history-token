@@ -8138,7 +8138,7 @@ operator|,
 name|__nodebug__
 operator|)
 argument_list|)
-name|_mm_movpi64_pi64
+name|_mm_movpi64_epi64
 argument_list|(
 name|__m64
 name|__a

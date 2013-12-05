@@ -799,6 +799,11 @@ name|tmpva
 decl_stmt|,
 name|offset
 decl_stmt|;
+name|vm_size_t
+name|origsize
+init|=
+name|size
+decl_stmt|;
 name|offset
 operator|=
 name|va
@@ -851,7 +856,7 @@ name|kva_free
 argument_list|(
 name|va
 argument_list|,
-name|size
+name|origsize
 argument_list|)
 expr_stmt|;
 block|}

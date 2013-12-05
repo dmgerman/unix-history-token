@@ -3780,6 +3780,23 @@ block|{
 comment|/* 					 * We allow pending addresses, where 					 * we have sent an asconf-add to be 					 * considered valid. 					 */
 continue|continue;
 block|}
+if|if
+condition|(
+name|sctp_ifa
+operator|->
+name|address
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|!=
+name|to
+operator|->
+name|sa_family
+condition|)
+block|{
+continue|continue;
+block|}
 switch|switch
 condition|(
 name|sctp_ifa
@@ -26615,8 +26632,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Free BSD the it thread never exits but we do clean up. The only 	 * way freebsd reaches here if we have VRF's but we still add the 	 * ifdef to make it compile on old versions. 	 */
-block|{
 name|struct
 name|sctp_iterator
 modifier|*
@@ -26625,6 +26640,7 @@ decl_stmt|,
 modifier|*
 name|nit
 decl_stmt|;
+comment|/* 	 * In FreeBSD the iterator thread never exits but we do clean up. 	 * The only way FreeBSD reaches here is if we have VRF's but we 	 * still add the ifdef to make it compile on old versions. 	 */
 name|SCTP_IPI_ITERATOR_WQ_LOCK
 argument_list|()
 expr_stmt|;
@@ -26731,7 +26747,6 @@ block|}
 name|SCTP_ITERATOR_UNLOCK
 argument_list|()
 expr_stmt|;
-block|}
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&

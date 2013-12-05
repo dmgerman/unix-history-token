@@ -356,6 +356,11 @@ argument_list|(
 argument|__a
 argument_list|)
 block|{
+if|if
+condition|(
+name|__n
+condition|)
+block|{
 name|this
 operator|->
 name|_M_impl
@@ -368,7 +373,7 @@ name|_M_allocate
 argument_list|(
 name|__n
 argument_list|)
-block|;
+expr_stmt|;
 name|this
 operator|->
 name|_M_impl
@@ -380,7 +385,7 @@ operator|->
 name|_M_impl
 operator|.
 name|_M_start
-block|;
+expr_stmt|;
 name|this
 operator|->
 name|_M_impl
@@ -394,10 +399,17 @@ operator|.
 name|_M_start
 operator|+
 name|__n
-block|;       }
-operator|~
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_macro
+unit|}        ~
 name|_Vector_base
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|_M_deallocate
 argument_list|(
@@ -419,13 +431,20 @@ name|_M_impl
 operator|.
 name|_M_start
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_decl_stmt
 name|_Vector_impl
 name|_M_impl
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|_Tp

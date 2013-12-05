@@ -692,7 +692,7 @@ comment|/* in bytes */
 define|#
 directive|define
 name|MXGEFW_CMD_SET_INTRQ_SIZE_FLAG_NO_STRICT_SIZE_CHECK
-value|(1<< 31)
+value|(1U<< 31)
 comment|/* command to bring ethernet interface up.  Above parameters      (plus mtu& mac address) must have been exchanged prior      to issuing this command  */
 name|MXGEFW_CMD_ETHERNET_UP
 init|=

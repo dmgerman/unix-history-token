@@ -109,6 +109,17 @@ decl_stmt|;
 name|ListNode
 name|lNode
 decl_stmt|;
+if|if
+condition|(
+name|list
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
 name|lNode
 operator|=
 name|list

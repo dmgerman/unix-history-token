@@ -395,6 +395,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/ofw_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ddb/ddb.h>
 end_include
 
@@ -589,19 +595,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|int
-name|setfault
-parameter_list|(
-name|faultbuf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* defined in locore.S */
-end_comment
 
 begin_decl_stmt
 name|long
@@ -839,7 +832,11 @@ argument|*imisssize; extern void	*dlmisstrap
 argument_list|,
 argument|*dlmisssize; extern void	*dsmisstrap
 argument_list|,
-argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
+argument|*dsmisssize; char 		save_trap_init[
+literal|0x2f00
+argument|];
+comment|/* EXC_LAST */
+argument|uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
 argument|scratch;
 ifdef|#
@@ -860,6 +857,8 @@ literal|0
 argument|; 	cacheline_warn =
 literal|0
 argument|;
+comment|/* Save trap vectors. */
+argument|ofw_save_trap_vec(save_trap_init);
 ifdef|#
 directive|ifdef
 name|WII

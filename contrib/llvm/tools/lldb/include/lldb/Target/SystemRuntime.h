@@ -232,12 +232,14 @@ comment|///   An empty vector may be returned if no thread origin extended
 comment|///   backtrace capabilities are available.
 comment|//------------------------------------------------------------------
 name|virtual
+specifier|const
 name|std
 operator|::
 name|vector
 operator|<
 name|ConstString
 operator|>
+operator|&
 name|GetExtendedBacktraceTypes
 argument_list|()
 block|;
@@ -272,7 +274,7 @@ name|virtual
 name|lldb
 operator|::
 name|ThreadSP
-name|GetExtendedBacktrace
+name|GetExtendedBacktraceThread
 argument_list|(
 argument|lldb::ThreadSP thread
 argument_list|,
@@ -287,6 +289,14 @@ comment|//------------------------------------------------------------------
 name|Process
 operator|*
 name|m_process
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+name|m_types
 block|;
 name|private
 operator|:

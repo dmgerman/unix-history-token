@@ -3804,7 +3804,7 @@ begin_define
 define|#
 directive|define
 name|LPC_DMAC_CH_CONTROL_I
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

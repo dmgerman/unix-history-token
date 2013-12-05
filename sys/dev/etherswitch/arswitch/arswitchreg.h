@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|AR8X16_MASK_CTRL_SOFT_RESET
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -498,7 +498,7 @@ begin_define
 define|#
 directive|define
 name|AR8X16_VLAN_PRIO_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -785,7 +785,7 @@ begin_define
 define|#
 directive|define
 name|AR8X16_MDIO_CTRL_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2100,7 +2100,7 @@ begin_define
 define|#
 directive|define
 name|AR8327_POWER_ON_STRIP_POWER_ON_SEL
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2497,7 +2497,7 @@ begin_define
 define|#
 directive|define
 name|AR8327_ATU_FUNC_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2668,7 +2668,7 @@ begin_define
 define|#
 directive|define
 name|AR8327_VTU_FUNC1_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

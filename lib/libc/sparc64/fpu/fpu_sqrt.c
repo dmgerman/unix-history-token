@@ -272,7 +272,7 @@ operator|>>
 literal|1
 expr_stmt|;
 comment|/* calculates (e&1 ? (e-1)/2 : e/2 */
-comment|/* 	 * Now calculate the mantissa root.  Since x is now in [1..4), 	 * we know that the first trip around the loop will definitely 	 * set the top bit in q, so we can do that manually and start 	 * the loop at the next bit down instead.  We must be sure to 	 * double x correctly while doing the `known q=1.0'. 	 * 	 * We do this one mantissa-word at a time, as noted above, to 	 * save work.  To avoid `(1<< 31)<< 1', we also do the top bit 	 * outside of each per-word loop. 	 * 	 * The calculation `t = y + bit' breaks down into `t0 = y0, ..., 	 * t3 = y3, t? |= bit' for the appropriate word.  Since the bit 	 * is always a `new' one, this means that three of the `t?'s are 	 * just the corresponding `y?'; we use `#define's here for this. 	 * The variable `tt' holds the actual `t?' variable. 	 */
+comment|/* 	 * Now calculate the mantissa root.  Since x is now in [1..4), 	 * we know that the first trip around the loop will definitely 	 * set the top bit in q, so we can do that manually and start 	 * the loop at the next bit down instead.  We must be sure to 	 * double x correctly while doing the `known q=1.0'. 	 * 	 * We do this one mantissa-word at a time, as noted above, to 	 * save work.  To avoid `(1U<< 31)<< 1', we also do the top bit 	 * outside of each per-word loop. 	 * 	 * The calculation `t = y + bit' breaks down into `t0 = y0, ..., 	 * t3 = y3, t? |= bit' for the appropriate word.  Since the bit 	 * is always a `new' one, this means that three of the `t?'s are 	 * just the corresponding `y?'; we use `#define's here for this. 	 * The variable `tt' holds the actual `t?' variable. 	 */
 comment|/* calculate q0 */
 define|#
 directive|define

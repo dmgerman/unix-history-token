@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: netcat.c,v 1.111 2013/03/20 09:27:56 sthen Exp $ */
+comment|/* $OpenBSD: netcat.c,v 1.112 2013/04/29 00:28:23 okan Exp $ */
 end_comment
 
 begin_comment
@@ -2789,7 +2789,7 @@ name|s
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 name|memset

@@ -1543,6 +1543,12 @@ block|}
 if|if
 condition|(
 name|local_only
+operator|&&
+operator|(
+name|db_status
+operator|!=
+name|svn_wc__db_status_deleted
+operator|)
 condition|)
 block|{
 if|if

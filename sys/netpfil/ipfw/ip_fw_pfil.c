@@ -323,7 +323,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|int
 name|ipfw_check_packet
 parameter_list|(
@@ -349,7 +348,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|int
 name|ipfw_check_frame
 parameter_list|(
@@ -528,7 +526,6 @@ endif|#
 directive|endif
 comment|/* SYSCTL_NODE */
 comment|/*  * The pfilter hook to pass packets to ipfw_chk and then to  * dummynet, divert, netgraph or other modules.  * The packet may be consumed.  */
-specifier|static
 name|int
 name|ipfw_check_packet
 parameter_list|(
@@ -1322,7 +1319,6 @@ comment|/*  * ipfw processing for ethernet packets (in and out).  * Inteface is 
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ipfw_check_frame
 parameter_list|(

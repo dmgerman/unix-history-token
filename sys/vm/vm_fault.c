@@ -3949,7 +3949,7 @@ name|vm_page_t
 modifier|*
 name|mp
 decl_stmt|;
-name|vm_size_t
+name|int
 name|count
 decl_stmt|;
 name|boolean_t
@@ -4009,26 +4009,29 @@ operator|-
 literal|1
 operator|)
 return|;
-name|count
-operator|=
-name|howmany
+if|if
+condition|(
+name|atop
 argument_list|(
 name|end
 operator|-
 name|addr
-argument_list|,
-name|PAGE_SIZE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|count
 operator|>
 name|max_count
 condition|)
 name|panic
 argument_list|(
 literal|"vm_fault_quick_hold_pages: count> max_count"
+argument_list|)
+expr_stmt|;
+name|count
+operator|=
+name|atop
+argument_list|(
+name|end
+operator|-
+name|addr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Most likely, the physical pages are resident in the pmap, so it is 	 * faster to try pmap_extract_and_hold() first. 	 */

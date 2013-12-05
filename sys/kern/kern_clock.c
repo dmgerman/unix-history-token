@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ntp.h"
 end_include
 
@@ -349,8 +343,6 @@ name|SDT_PROBE_DEFINE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|tick
-argument_list|,
 name|tick
 argument_list|,
 literal|"struct thread *"

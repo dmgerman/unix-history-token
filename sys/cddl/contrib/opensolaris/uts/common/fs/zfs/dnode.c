@@ -7466,8 +7466,6 @@ if|if
 condition|(
 name|dn
 operator|->
-name|dn_phys
-operator|->
 name|dn_maxblkid
 operator|!=
 literal|0
@@ -9963,7 +9961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Call when we think we're going to write/free space in open context.  * Be conservative (ie. OK to write less than this or free more than  * this, but don't write more or free less).  */
+comment|/*  * Call when we think we're going to write/free space in open context to track  * the amount of memory in use by the currently open txg.  */
 end_comment
 
 begin_function
@@ -9998,14 +9996,9 @@ name|os
 operator|->
 name|os_dsl_dataset
 decl_stmt|;
-if|if
-condition|(
-name|space
-operator|>
-literal|0
-condition|)
-name|space
-operator|=
+name|int64_t
+name|aspace
+init|=
 name|spa_get_asize
 argument_list|(
 name|os
@@ -10014,27 +10007,43 @@ name|os_spa
 argument_list|,
 name|space
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ds
+operator|!=
+name|NULL
 condition|)
+block|{
 name|dsl_dir_willuse_space
 argument_list|(
 name|ds
 operator|->
 name|ds_dir
 argument_list|,
+name|aspace
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+name|dsl_pool_dirty_space
+argument_list|(
+name|dmu_tx_pool
+argument_list|(
+name|tx
+argument_list|)
+argument_list|,
 name|space
 argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
+block|}
 name|dmu_tx_willuse_space
 argument_list|(
 name|tx
 argument_list|,
-name|space
+name|aspace
 argument_list|)
 expr_stmt|;
 block|}

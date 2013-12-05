@@ -284,6 +284,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.zfs_flags"
+argument_list|,
+operator|&
+name|zfs_flags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|zfs_flags
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zfs_flags
+argument_list|,
+literal|0
+argument_list|,
+literal|"ZFS debug flags."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * zfs_recover can be set to nonzero to attempt to recover from  * otherwise-fatal errors, typically caused by on-disk corruption.  When  * set, calls to zfs_panic_recover() will turn into warning messages.  */
 end_comment
@@ -336,32 +376,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|zfs_txg_synctime_ms
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * Expiration time in units of zfs_txg_synctime_ms. This value has two  * meanings. First it is used to determine when the spa_deadman logic  * should fire. By default the spa_deadman will fire if spa_sync has  * not completed in 1000 * zfs_txg_synctime_ms (i.e. 1000 seconds).  * Secondly, the value determines if an I/O is considered "hung".  * Any I/O that has not completed in zfs_deadman_synctime is considered  * "hung" resulting in a system panic.  * 1000 zfs_txg_synctime_ms (i.e. 1000 seconds).  */
+comment|/*  * Expiration time in milliseconds. This value has two meanings. First it is  * used to determine when the spa_deadman() logic should fire. By default the  * spa_deadman() will fire if spa_sync() has not completed in 1000 seconds.  * Secondly, the value determines if an I/O is considered "hung". Any I/O that  * has not completed in zfs_deadman_synctime_ms is considered "hung" resulting  * in a system panic.  */
 end_comment
 
 begin_decl_stmt
 name|uint64_t
-name|zfs_deadman_synctime
+name|zfs_deadman_synctime_ms
 init|=
-literal|1000ULL
+literal|1000000ULL
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|TUNABLE_QUAD
 argument_list|(
-literal|"vfs.zfs.deadman_synctime"
+literal|"vfs.zfs.deadman_synctime_ms"
 argument_list|,
 operator|&
-name|zfs_deadman_synctime
+name|zfs_deadman_synctime_ms
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -373,16 +406,60 @@ name|_vfs_zfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|deadman_synctime
+name|deadman_synctime_ms
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
-name|zfs_deadman_synctime
+name|zfs_deadman_synctime_ms
 argument_list|,
 literal|0
 argument_list|,
-literal|"Stalled ZFS I/O expiration time in units of vfs.zfs.txg.synctime_ms"
+literal|"Stalled ZFS I/O expiration time in milliseconds"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Check time in milliseconds. This defines the frequency at which we check  * for hung I/O.  */
+end_comment
+
+begin_decl_stmt
+name|uint64_t
+name|zfs_deadman_checktime_ms
+init|=
+literal|5000ULL
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.deadman_checktime_ms"
+argument_list|,
+operator|&
+name|zfs_deadman_checktime_ms
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|deadman_checktime_ms
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|zfs_deadman_checktime_ms
+argument_list|,
+literal|0
+argument_list|,
+literal|"Period of checks for stalled ZFS I/O in milliseconds"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -431,6 +508,18 @@ literal|"Kernel panic on stalled ZFS I/O"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * The worst case is single-sector max-parity RAID-Z blocks, in which  * case the space requirement is exactly (VDEV_RAIDZ_MAXPARITY + 1)  * times the size; so just assume that.  Add to this the fact that  * we can have up to 3 DVAs per bp, and one more factor of 2 because  * the block may be dittoed with up to 3 DVAs by ddt_sync().  All together,  * the worst case is:  *     (VDEV_RAIDZ_MAXPARITY + 1) * SPA_DVAS_PER_BP * 2 == 24  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|spa_asize_inflation
+init|=
+literal|24
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -1484,6 +1573,37 @@ name|spa
 init|=
 name|arg
 decl_stmt|;
+comment|/* 	 * Disable the deadman timer if the pool is suspended. 	 */
+if|if
+condition|(
+name|spa_suspended
+argument_list|(
+name|spa
+argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|illumos
+name|VERIFY
+argument_list|(
+name|cyclic_reprogram
+argument_list|(
+name|spa
+operator|->
+name|spa_deadman_cycid
+argument_list|,
+name|CY_INFINITY
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* Nothing.  just don't schedule any future callouts. */
+endif|#
+directive|endif
+return|return;
+block|}
 name|zfs_dbgmsg
 argument_list|(
 literal|"slow spa_sync: started %llu seconds ago, calls %llu"
@@ -1875,24 +1995,20 @@ name|spa_deadman_synctime
 operator|=
 name|MSEC2NSEC
 argument_list|(
-name|zfs_deadman_synctime
-operator|*
-name|zfs_txg_synctime_ms
+name|zfs_deadman_synctime_ms
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|illumos
-comment|/* 	 * This determines how often we need to check for hung I/Os after 	 * the cyclic has already fired. Since checking for hung I/Os is 	 * an expensive operation we don't want to check too frequently. 	 * Instead wait for 5 synctimes before checking again. 	 */
+comment|/* 	 * This determines how often we need to check for hung I/Os after 	 * the cyclic has already fired. Since checking for hung I/Os is 	 * an expensive operation we don't want to check too frequently. 	 * Instead wait for 5 seconds before checking again. 	 */
 name|when
 operator|.
 name|cyt_interval
 operator|=
 name|MSEC2NSEC
 argument_list|(
-literal|5
-operator|*
-name|zfs_txg_synctime_ms
+name|zfs_deadman_checktime_ms
 argument_list|)
 expr_stmt|;
 name|when
@@ -3909,11 +4025,9 @@ name|vdev_detached
 operator|||
 name|vd
 operator|->
-name|vdev_dtl_smo
-operator|.
-name|smo_object
+name|vdev_dtl_sm
 operator|==
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|spa_config_enter
@@ -5743,20 +5857,11 @@ name|uint64_t
 name|lsize
 parameter_list|)
 block|{
-comment|/* 	 * The worst case is single-sector max-parity RAID-Z blocks, in which 	 * case the space requirement is exactly (VDEV_RAIDZ_MAXPARITY + 1) 	 * times the size; so just assume that.  Add to this the fact that 	 * we can have up to 3 DVAs per bp, and one more factor of 2 because 	 * the block may be dittoed with up to 3 DVAs by ddt_sync(). 	 */
 return|return
 operator|(
 name|lsize
 operator|*
-operator|(
-name|VDEV_RAIDZ_MAXPARITY
-operator|+
-literal|1
-operator|)
-operator|*
-name|SPA_DVAS_PER_BP
-operator|*
-literal|2
+name|spa_asize_inflation
 operator|)
 return|;
 block|}
@@ -6544,10 +6649,13 @@ expr_stmt|;
 name|unique_init
 argument_list|()
 expr_stmt|;
-name|space_map_init
+name|range_tree_init
 argument_list|()
 expr_stmt|;
 name|zio_init
+argument_list|()
+expr_stmt|;
+name|lz4_init
 argument_list|()
 expr_stmt|;
 name|dmu_init
@@ -6613,10 +6721,13 @@ expr_stmt|;
 name|dmu_fini
 argument_list|()
 expr_stmt|;
+name|lz4_fini
+argument_list|()
+expr_stmt|;
 name|zio_fini
 argument_list|()
 expr_stmt|;
-name|space_map_fini
+name|range_tree_fini
 argument_list|()
 expr_stmt|;
 name|unique_fini

@@ -1373,7 +1373,7 @@ literal|0x1e048086
 block|,
 literal|0x00
 block|,
-literal|"Intel Panther Point"
+literal|"Intel Panther Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1383,7 +1383,7 @@ literal|0x1e058086
 block|,
 literal|0x00
 block|,
-literal|"Intel Panther Point"
+literal|"Intel Panther Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1393,7 +1393,7 @@ literal|0x1e068086
 block|,
 literal|0x00
 block|,
-literal|"Intel Panther Point"
+literal|"Intel Panther Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1403,7 +1403,7 @@ literal|0x1e078086
 block|,
 literal|0x00
 block|,
-literal|"Intel Panther Point"
+literal|"Intel Panther Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1413,7 +1413,7 @@ literal|0x1e0e8086
 block|,
 literal|0x00
 block|,
-literal|"Intel Panther Point"
+literal|"Intel Panther Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1423,7 +1423,167 @@ literal|0x1e0f8086
 block|,
 literal|0x00
 block|,
-literal|"Intel Panther Point"
+literal|"Intel Panther Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f228086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f238086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f248086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f258086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f268086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f278086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f2e8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f2f8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f328086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f338086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f348086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f358086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f368086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f378086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f3e8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1f3f8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Avoton (RAID)"
 block|,
 literal|0
 block|}
@@ -1434,6 +1594,26 @@ block|,
 literal|0x00
 block|,
 literal|"Intel Coleto Creek"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x28238086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x28278086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg (RAID)"
 block|,
 literal|0
 block|}
@@ -1463,7 +1643,7 @@ literal|0x8c048086
 block|,
 literal|0x00
 block|,
-literal|"Intel Lynx Point"
+literal|"Intel Lynx Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1473,7 +1653,7 @@ literal|0x8c058086
 block|,
 literal|0x00
 block|,
-literal|"Intel Lynx Point"
+literal|"Intel Lynx Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1483,7 +1663,7 @@ literal|0x8c068086
 block|,
 literal|0x00
 block|,
-literal|"Intel Lynx Point"
+literal|"Intel Lynx Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1493,7 +1673,7 @@ literal|0x8c078086
 block|,
 literal|0x00
 block|,
-literal|"Intel Lynx Point"
+literal|"Intel Lynx Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1503,7 +1683,7 @@ literal|0x8c0e8086
 block|,
 literal|0x00
 block|,
-literal|"Intel Lynx Point"
+literal|"Intel Lynx Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1513,7 +1693,157 @@ literal|0x8c0f8086
 block|,
 literal|0x00
 block|,
-literal|"Intel Lynx Point"
+literal|"Intel Lynx Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8d028086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8d048086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8d068086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8d628086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8d648086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8d668086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8d6e8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x9c028086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point-LP"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x9c038086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point-LP"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x9c048086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point-LP (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x9c058086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point-LP (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x9c068086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point-LP (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x9c078086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point-LP (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x9c0e8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point-LP (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x9c0f8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lynx Point-LP (RAID)"
 block|,
 literal|0
 block|}
@@ -7701,6 +8031,27 @@ name|AHCI_P_CMD_FBSCP
 expr_stmt|;
 if|if
 condition|(
+name|ch
+operator|->
+name|caps2
+operator|&
+name|AHCI_CAP2_SDS
+condition|)
+name|ch
+operator|->
+name|chscaps
+operator|=
+name|ATA_INL
+argument_list|(
+name|ch
+operator|->
+name|r_mem
+argument_list|,
+name|AHCI_P_DEVSLP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|bootverbose
 condition|)
 block|{
@@ -7708,7 +8059,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Caps:%s%s%s%s%s\n"
+literal|"Caps:%s%s%s%s%s%s\n"
 argument_list|,
 operator|(
 name|ch
@@ -7767,6 +8118,18 @@ name|AHCI_P_CMD_FBSCP
 operator|)
 condition|?
 literal|" FBSCP"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|ch
+operator|->
+name|chscaps
+operator|&
+name|AHCI_P_DEVSLP_DSP
+operator|)
+condition|?
+literal|" DSP"
 else|:
 literal|""
 argument_list|)

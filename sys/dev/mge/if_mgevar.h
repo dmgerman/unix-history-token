@@ -1213,7 +1213,7 @@ begin_define
 define|#
 directive|define
 name|MGE_PORT_INT_SUM
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1283,7 +1283,7 @@ begin_define
 define|#
 directive|define
 name|MGE_PORT_INT_EXT_SUM
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1625,7 +1625,7 @@ begin_define
 define|#
 directive|define
 name|MGE_DMA_OWNED
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

@@ -634,7 +634,7 @@ begin_define
 define|#
 directive|define
 name|CONS_LOCAL_CURSOR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

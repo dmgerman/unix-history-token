@@ -8374,7 +8374,7 @@ operator|(
 name|orb0
 operator|&
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

@@ -2160,7 +2160,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|bool
 name|strict_aliasing_warning
 parameter_list|(
 name|tree

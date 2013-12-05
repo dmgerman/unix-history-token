@@ -48,7 +48,7 @@ define|#
 directive|define
 name|RUN_MAX_TXSZ
 define|\
-value|(sizeof (struct rt2870_txd) +	\ 	 sizeof (struct rt2860_rxwi) +	\ 	 MCLBYTES + 11)
+value|(sizeof (struct rt2870_txd) +	\ 	 sizeof (struct rt2860_txwi) +	\ 	 MCLBYTES + 11)
 end_define
 
 begin_define

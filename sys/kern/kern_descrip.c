@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_procdesc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -14591,9 +14585,6 @@ operator|->
 name|f_data
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|PROCDESC
 case|case
 name|DTYPE_PROCDESC
 case|:
@@ -14604,8 +14595,6 @@ operator|=
 name|KF_TYPE_PROCDESC
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|kif
 operator|->
@@ -16532,9 +16521,6 @@ operator|->
 name|f_data
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|PROCDESC
 case|case
 name|DTYPE_PROCDESC
 case|:
@@ -16549,8 +16535,6 @@ operator|->
 name|f_data
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|type
 operator|=
@@ -18989,6 +18973,11 @@ name|int
 name|kflags
 parameter_list|,
 name|struct
+name|sendfile_sync
+modifier|*
+name|sfs
+parameter_list|,
+name|struct
 name|thread
 modifier|*
 name|td
@@ -19168,6 +19157,11 @@ name|flags
 parameter_list|,
 name|int
 name|kflags
+parameter_list|,
+name|struct
+name|sendfile_sync
+modifier|*
+name|sfs
 parameter_list|,
 name|struct
 name|thread

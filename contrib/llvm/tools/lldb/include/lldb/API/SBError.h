@@ -247,6 +247,13 @@ end_decl_stmt
 begin_decl_stmt
 name|friend
 name|class
+name|SBPlatform
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
 name|SBProcess
 decl_stmt|;
 end_decl_stmt

@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|MPEII_MAX_IRQ
-value|16
+value|24
 end_define
 
 begin_comment
@@ -1120,9 +1120,7 @@ name|mpt_build_ioapic_entries
 argument_list|(
 name|mpei
 argument_list|,
-name|ncpu
-operator|+
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|curraddr
@@ -1151,9 +1149,7 @@ name|mpie
 argument_list|,
 name|MPEII_MAX_IRQ
 argument_list|,
-name|ncpu
-operator|+
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|curraddr

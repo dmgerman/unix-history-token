@@ -779,7 +779,7 @@ operator|>=
 name|BUFSIZ
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"oid too long: '%s'%s"
 argument_list|,
@@ -1082,7 +1082,7 @@ operator|==
 name|CTLTYPE_NODE
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"oid '%s' isn't a leaf node%s"
 argument_list|,

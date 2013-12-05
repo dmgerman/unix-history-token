@@ -120,7 +120,7 @@ parameter_list|,
 name|tcptr
 parameter_list|)
 define|\
-value|static \     void \     atfu_ ## tc ## _head(atf_tc_t *tcptr)
+value|static \     void \     atfu_ ## tc ## _head(atf_tc_t *tcptr ATF_DEFS_ATTRIBUTE_UNUSED)
 end_define
 
 begin_define
@@ -376,6 +376,66 @@ modifier|...
 parameter_list|)
 define|\
 value|ATF_CHECK_MSG(strcmp(x, y) == 0, "%s != %s (%s != %s): " fmt, \                     #x, #y, x, y, ##__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATF_REQUIRE_MATCH
+parameter_list|(
+name|regexp
+parameter_list|,
+name|string
+parameter_list|)
+define|\
+value|ATF_REQUIRE_MSG(atf_utils_grep_string("%s", string, regexp), \                     "'%s' not matched in '%s'", regexp, string);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATF_CHECK_MATCH
+parameter_list|(
+name|regexp
+parameter_list|,
+name|string
+parameter_list|)
+define|\
+value|ATF_CHECK_MSG(atf_utils_grep_string("%s", string, regexp), \                   "'%s' not matched in '%s'", regexp, string);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATF_REQUIRE_MATCH_MSG
+parameter_list|(
+name|regexp
+parameter_list|,
+name|string
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|ATF_REQUIRE_MSG(atf_utils_grep_string("%s", string, regexp), \                     "'%s' not matched in '%s': " fmt, regexp, string, \                     ##__VA_ARGS__);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATF_CHECK_MATCH_MSG
+parameter_list|(
+name|regexp
+parameter_list|,
+name|string
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|ATF_CHECK_MSG(atf_utils_grep_string("%s", string, regexp), \                   "'%s' not matched in '%s': " fmt, regexp, string, \                   ##__VA_ARGS__);
 end_define
 
 begin_define

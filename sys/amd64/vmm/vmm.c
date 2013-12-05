@@ -212,6 +212,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vhpet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vioapic.h"
 end_include
 
@@ -402,6 +408,12 @@ modifier|*
 name|iommu
 decl_stmt|;
 comment|/* iommu-specific data */
+name|struct
+name|vhpet
+modifier|*
+name|vhpet
+decl_stmt|;
+comment|/* virtual HPET */
 name|struct
 name|vioapic
 modifier|*
@@ -1271,6 +1283,15 @@ argument_list|(
 name|vm
 argument_list|)
 expr_stmt|;
+name|vm
+operator|->
+name|vhpet
+operator|=
+name|vhpet_init
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1412,6 +1433,20 @@ operator|->
 name|iommu
 argument_list|)
 expr_stmt|;
+name|vhpet_cleanup
+argument_list|(
+name|vm
+operator|->
+name|vhpet
+argument_list|)
+expr_stmt|;
+name|vioapic_cleanup
+argument_list|(
+name|vm
+operator|->
+name|vioapic
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1468,13 +1503,6 @@ name|vcpu
 index|[
 name|i
 index|]
-argument_list|)
-expr_stmt|;
-name|vioapic_cleanup
-argument_list|(
-name|vm
-operator|->
-name|vioapic
 argument_list|)
 expr_stmt|;
 name|VMSPACE_FREE
@@ -4205,7 +4233,7 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-comment|/* return to userland unless this is a local apic access */
+comment|/* return to userland unless this is an in-kernel emulated device */
 if|if
 condition|(
 name|gpa
@@ -4249,6 +4277,29 @@ expr_stmt|;
 name|mwrite
 operator|=
 name|vioapic_mmio_write
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|gpa
+operator|>=
+name|VHPET_BASE
+operator|&&
+name|gpa
+operator|<
+name|VHPET_BASE
+operator|+
+name|VHPET_SIZE
+condition|)
+block|{
+name|mread
+operator|=
+name|vhpet_mmio_read
+expr_stmt|;
+name|mwrite
+operator|=
+name|vhpet_mmio_write
 expr_stmt|;
 block|}
 else|else
@@ -4818,7 +4869,7 @@ name|nmi_pending
 operator|=
 literal|1
 expr_stmt|;
-name|vm_interrupt_hostcpu
+name|vcpu_notify_event
 argument_list|(
 name|vm
 argument_list|,
@@ -5179,6 +5230,28 @@ operator|(
 name|vm
 operator|->
 name|vioapic
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|struct
+name|vhpet
+modifier|*
+name|vm_hpet
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vm
+operator|->
+name|vhpet
 operator|)
 return|;
 block|}
@@ -5782,9 +5855,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This function is called to ensure that a vcpu "sees" a pending event  * as soon as possible:  * - If the vcpu thread is sleeping then it is woken up.  * - If the vcpu is running on a different host_cpu then an IPI will be directed  *   to the host_cpu to cause the vcpu to trap into the hypervisor.  */
+end_comment
+
 begin_function
 name|void
-name|vm_interrupt_hostcpu
+name|vcpu_notify_event
 parameter_list|(
 name|struct
 name|vm

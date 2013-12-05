@@ -31,6 +31,12 @@ directive|include
 file|<machine/segments.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
 begin_struct
 struct|struct
 name|pcb
@@ -202,6 +208,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

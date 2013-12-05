@@ -43,6 +43,18 @@ directive|define
 name|liblldb_OptionParser_h_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_struct_decl
+struct_decl|struct
+name|option
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -148,6 +160,18 @@ name|int
 name|GetOptionErrorCause
 parameter_list|()
 function_decl|;
+specifier|static
+name|std
+operator|::
+name|string
+name|GetShortOptionString
+argument_list|(
+expr|struct
+name|option
+operator|*
+name|long_options
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

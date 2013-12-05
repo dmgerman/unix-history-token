@@ -530,6 +530,22 @@ operator|&
 name|value
 argument_list|)
 decl_stmt|;
+comment|/// Returns current thread IDs in process
+name|size_t
+name|GetCurrentThreadIDs
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|tid_t
+operator|>
+operator|&
+name|thread_ids
+argument_list|)
+decl_stmt|;
 comment|/// Writes a ptrace_lwpinfo structure corresponding to the given thread ID
 comment|/// to the memory region pointed to by @p lwpinfo.
 name|bool
@@ -549,6 +565,19 @@ operator|&
 name|error_no
 argument_list|)
 decl_stmt|;
+comment|/// Suspends or unsuspends a thread prior to process resume or step.
+name|bool
+name|ThreadSuspend
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|,
+name|bool
+name|suspend
+argument_list|)
+decl_stmt|;
 comment|/// Writes the raw event message code (vis-a-vis PTRACE_GETEVENTMSG)
 comment|/// corresponding to the given thread IDto the memory pointed to by @p
 comment|/// message.
@@ -566,29 +595,29 @@ operator|*
 name|message
 argument_list|)
 decl_stmt|;
-comment|/// Resumes the given thread.  If @p signo is anything but
-comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
+comment|/// Resumes the process.  If @p signo is anything but
+comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the process.
 name|bool
 name|Resume
 argument_list|(
 name|lldb
 operator|::
 name|tid_t
-name|tid
+name|unused
 argument_list|,
 name|uint32_t
 name|signo
 argument_list|)
 decl_stmt|;
-comment|/// Single steps the given thread.  If @p signo is anything but
-comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
+comment|/// Single steps the process.  If @p signo is anything but
+comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the process.
 name|bool
 name|SingleStep
 argument_list|(
 name|lldb
 operator|::
 name|tid_t
-name|tid
+name|unused
 argument_list|,
 name|uint32_t
 name|signo

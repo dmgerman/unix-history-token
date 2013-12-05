@@ -1730,9 +1730,18 @@ block|}
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|USERSPACE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 comment|/* and OSX too ? */
 name|struct
 name|ifaddr
@@ -1845,9 +1854,18 @@ name|u_int
 name|fib
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USERSPACE
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 return|return
 literal|0
 return|;
@@ -2962,6 +2980,18 @@ modifier|*
 name|uc
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USERSPACE
+argument_list|)
+return|return
+literal|0
+return|;
+comment|// not supported in userspace
+else|#
+directive|else
 ifndef|#
 directive|ifndef
 name|__FreeBSD__
@@ -3551,6 +3581,9 @@ return|;
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
+endif|#
+directive|endif
+comment|/* not supported in userspace */
 block|}
 end_function
 
@@ -6132,6 +6165,9 @@ argument_list|(
 name|src_port
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|USERSPACE
 elseif|else
 if|if
 condition|(
@@ -6243,6 +6279,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
+comment|/* !USERSPACE */
 break|break;
 block|}
 name|match
@@ -8434,6 +8473,10 @@ case|case
 name|O_SOCKARG
 case|:
 block|{
+ifndef|#
+directive|ifndef
+name|USERSPACE
+comment|/* not supported in userspace */
 name|struct
 name|inpcb
 modifier|*
@@ -8570,6 +8613,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* !USERSPACE */
 break|break;
 block|}
 case|case
@@ -10127,6 +10173,16 @@ block|}
 case|case
 name|O_NAT
 case|:
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
+name|done
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
 if|if
 condition|(
 operator|!
@@ -10137,9 +10193,8 @@ name|retval
 operator|=
 name|IP_FW_DENY
 expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
 name|struct
 name|cfg_nat
 modifier|*
@@ -10177,14 +10232,6 @@ name|NULL
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-name|l
-operator|=
-literal|0
-expr_stmt|;
-name|done
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -10242,16 +10289,6 @@ name|retval
 operator|=
 name|IP_FW_DENY
 expr_stmt|;
-name|l
-operator|=
-literal|0
-expr_stmt|;
-comment|/* exit inner loop */
-name|done
-operator|=
-literal|1
-expr_stmt|;
-comment|/* exit outer loop */
 break|break;
 block|}
 if|if
@@ -10286,17 +10323,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-block|}
-name|l
-operator|=
-literal|0
-expr_stmt|;
-comment|/* exit inner loop */
-name|done
-operator|=
-literal|1
-expr_stmt|;
-comment|/* exit outer loop */
 break|break;
 case|case
 name|O_REASS

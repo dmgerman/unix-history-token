@@ -1647,7 +1647,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*          * This needs to happen before login_getpwclass to support          * home directories on GSS-API authenticated NFS where the          * kerberos credentials need to be saved so that the kernel          * can authenticate to the NFS server.          */
+comment|/* 	 * This needs to happen before login_getpwclass to support 	 * home directories on GSS-API authenticated NFS where the 	 * kerberos credentials need to be saved so that the kernel 	 * can authenticate to the NFS server. 	 */
 name|pam_err
 operator|=
 name|pam_setcred

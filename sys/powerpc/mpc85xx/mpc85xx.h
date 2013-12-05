@@ -19,11 +19,18 @@ begin_comment
 comment|/*  * Configuration control and status registers  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|ccsrbar_va
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|CCSRBAR_VA
-value|fdt_immr_va
+value|ccsrbar_va
 end_define
 
 begin_define

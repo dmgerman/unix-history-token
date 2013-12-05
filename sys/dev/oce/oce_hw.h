@@ -5846,10 +5846,16 @@ decl_stmt|;
 name|uint8_t
 name|data_buffer
 index|[
-literal|4
+literal|32768
 index|]
 decl_stmt|;
 comment|/* + IMAGE_TRANSFER_SIZE */
+name|uint8_t
+name|rsvd
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -45697,6 +45697,14 @@ name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dst_ffd
+operator|->
+name|format
+operator|>=
+name|SVN_FS_FS__MIN_PACKED_REVPROP_FORMAT
+condition|)
 name|SVN_ERR
 argument_list|(
 name|hotcopy_remove_revprop_files
@@ -45743,6 +45751,12 @@ condition|(
 name|rev
 operator|>
 literal|0
+operator|&&
+name|dst_ffd
+operator|->
+name|format
+operator|>=
+name|SVN_FS_FS__MIN_PACKED_REVPROP_FORMAT
 condition|)
 name|SVN_ERR
 argument_list|(

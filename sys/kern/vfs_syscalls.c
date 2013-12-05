@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -321,8 +315,6 @@ name|stat
 argument_list|,
 name|mode
 argument_list|,
-name|mode
-argument_list|,
 literal|"char *"
 argument_list|,
 literal|"int"
@@ -336,8 +328,6 @@ argument_list|(
 name|vfs
 argument_list|, ,
 name|stat
-argument_list|,
-name|reg
 argument_list|,
 name|reg
 argument_list|,

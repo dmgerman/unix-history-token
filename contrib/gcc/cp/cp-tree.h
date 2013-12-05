@@ -17324,6 +17324,16 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|bool
+name|class_tmpl_impl_spec_p
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|zero_init_p
 parameter_list|(

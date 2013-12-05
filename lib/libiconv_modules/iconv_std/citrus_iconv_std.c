@@ -2557,6 +2557,26 @@ operator|==
 name|E_NO_CORRESPONDING_CHAR
 condition|)
 block|{
+comment|/* 				 * GNU iconv returns EILSEQ when no 				 * corresponding character in the output. 				 * Some software depends on this behavior 				 * though this is against POSIX specification. 				 */
+if|if
+condition|(
+name|cv
+operator|->
+name|cv_shared
+operator|->
+name|ci_ilseq_invalid
+operator|!=
+literal|0
+condition|)
+block|{
+name|ret
+operator|=
+name|EILSEQ
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|inval
 operator|++
 expr_stmt|;

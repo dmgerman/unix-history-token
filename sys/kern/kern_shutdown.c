@@ -291,6 +291,48 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|panic_reboot_wait_time
+init|=
+name|PANIC_REBOOT_WAIT_TIME
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|panic_reboot_wait_time
+argument_list|,
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
+argument_list|,
+operator|&
+name|panic_reboot_wait_time
+argument_list|,
+literal|0
+argument_list|,
+literal|"Seconds to wait before rebooting after a panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.panic_reboot_wait_time"
+argument_list|,
+operator|&
+name|panic_reboot_wait_time
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Note that stdarg.h and the ANSI style va_start macro is used for both  * ANSI and traditional C compilers.  */
 end_comment
@@ -1917,14 +1959,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|PANIC_REBOOT_WAIT_TIME
+name|panic_reboot_wait_time
 operator|!=
 literal|0
 condition|)
 block|{
 if|if
 condition|(
-name|PANIC_REBOOT_WAIT_TIME
+name|panic_reboot_wait_time
 operator|!=
 operator|-
 literal|1
@@ -1935,14 +1977,14 @@ argument_list|(
 literal|"Automatic reboot in %d seconds - "
 literal|"press a key on the console to abort\n"
 argument_list|,
-name|PANIC_REBOOT_WAIT_TIME
+name|panic_reboot_wait_time
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|loop
 operator|=
-name|PANIC_REBOOT_WAIT_TIME
+name|panic_reboot_wait_time
 operator|*
 literal|10
 init|;

@@ -3661,7 +3661,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* unalligned little endian access */
+comment|/* unaligned little endian access */
 end_comment
 
 begin_define

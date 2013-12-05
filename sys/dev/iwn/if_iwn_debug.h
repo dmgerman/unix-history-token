@@ -99,6 +99,11 @@ init|=
 literal|0x00004000
 block|,
 comment|/* Power save operations */
+name|IWN_DEBUG_SCAN
+init|=
+literal|0x00008000
+block|,
+comment|/* Scan related operations */
 name|IWN_DEBUG_REGISTER
 init|=
 literal|0x20000000

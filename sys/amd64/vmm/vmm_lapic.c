@@ -163,6 +163,9 @@ name|cpu
 parameter_list|,
 name|int
 name|vector
+parameter_list|,
+name|bool
+name|level
 parameter_list|)
 block|{
 name|struct
@@ -214,9 +217,11 @@ argument_list|(
 name|vlapic
 argument_list|,
 name|vector
+argument_list|,
+name|level
 argument_list|)
 expr_stmt|;
-name|vm_interrupt_hostcpu
+name|vcpu_notify_event
 argument_list|(
 name|vm
 argument_list|,

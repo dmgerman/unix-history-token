@@ -72,7 +72,7 @@ name|struct
 name|apr_reslist_t
 name|apr_reslist_t
 typedef|;
-comment|/* Generic constructor called by resource list when it needs to create a  * resource.  * @param resource opaque resource  * @param param flags  * @param pool  Pool  */
+comment|/* Generic constructor called by resource list when it needs to create a  * resource.  * @param resource opaque resource  * @param params flags  * @param pool  Pool  */
 typedef|typedef
 name|apr_status_t
 function_decl|(
@@ -94,7 +94,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Generic destructor called by resource list when it needs to destroy a  * resource.  * @param resource opaque resource  * @param param flags  * @param pool  Pool  */
+comment|/* Generic destructor called by resource list when it needs to destroy a  * resource.  * @param resource opaque resource  * @param params flags  * @param pool  Pool  */
 typedef|typedef
 name|apr_status_t
 function_decl|(
@@ -164,7 +164,7 @@ operator|*
 name|reslist
 argument_list|)
 expr_stmt|;
-comment|/**  * Retrieve a resource from the list, creating a new one if necessary.  * If we have met our maximum number of resources, we will block  * until one becomes available.  */
+comment|/**  * Retrieve a resource from the list, creating a new one if necessary.  * If we have met our maximum number of resources, we will block  * until one becomes available.  * @param reslist The resource list.  * @param resource An address where the pointer to the resource  *                will be stored.  */
 name|APU_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -181,7 +181,7 @@ operator|*
 name|resource
 argument_list|)
 expr_stmt|;
-comment|/**  * Return a resource back to the list of available resources.  */
+comment|/**  * Return a resource back to the list of available resources.  * @param reslist The resource list.  * @param resource The resource to return to the list.  */
 name|APU_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -221,7 +221,7 @@ operator|*
 name|reslist
 argument_list|)
 expr_stmt|;
-comment|/**  * Invalidate a resource in the pool - e.g. a database connection  * that returns a "lost connection" error and can't be restored.  * Use this instead of apr_reslist_release if the resource is bad.  */
+comment|/**  * Invalidate a resource in the pool - e.g. a database connection  * that returns a "lost connection" error and can't be restored.  * Use this instead of apr_reslist_release if the resource is bad.  * @param reslist The resource list.  * @param resource The resource to invalidate.  */
 name|APU_DECLARE
 argument_list|(
 argument|apr_status_t

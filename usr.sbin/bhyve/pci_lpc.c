@@ -293,7 +293,7 @@ operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
-name|vm_ioapic_assert_irq
+name|vm_ioapic_pulse_irq
 argument_list|(
 name|lpc_bridge
 operator|->
@@ -317,33 +317,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|struct
-name|lpc_uart_softc
-modifier|*
-name|sc
-init|=
-name|arg
-decl_stmt|;
-name|assert
-argument_list|(
-name|sc
-operator|->
-name|irq
-operator|>=
-literal|0
-argument_list|)
-expr_stmt|;
-name|vm_ioapic_deassert_irq
-argument_list|(
-name|lpc_bridge
-operator|->
-name|pi_vmctx
-argument_list|,
-name|sc
-operator|->
-name|irq
-argument_list|)
-expr_stmt|;
+comment|/*  	 * The COM devices on the LPC bus generate edge triggered interrupts, 	 * so nothing more to do here. 	 */
 block|}
 end_function
 

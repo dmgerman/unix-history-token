@@ -7535,7 +7535,7 @@ name|arg2
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|notyet
 name|u_int
 name|refcount
 decl_stmt|;

@@ -60,6 +60,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|vhpet
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|vioapic
 struct_decl|;
 end_struct_decl
@@ -893,6 +899,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|vhpet
+modifier|*
+name|vm_hpet
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vm_get_capability
 parameter_list|(
@@ -1174,7 +1194,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_interrupt_hostcpu
+name|vcpu_notify_event
 parameter_list|(
 name|struct
 name|vm
@@ -1182,7 +1202,7 @@ modifier|*
 name|vm
 parameter_list|,
 name|int
-name|vcpu
+name|vcpuid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1523,9 +1543,6 @@ name|gpa
 decl_stmt|;
 name|int
 name|fault_type
-decl_stmt|;
-name|int
-name|protection
 decl_stmt|;
 block|}
 name|paging

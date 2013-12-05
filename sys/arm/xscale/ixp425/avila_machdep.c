@@ -1621,6 +1621,11 @@ comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
+name|cpu_setup
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* ready to setup the console (XXX move earlier if possible) */
 name|cninit
 argument_list|()

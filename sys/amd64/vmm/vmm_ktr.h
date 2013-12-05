@@ -27,12 +27,23 @@ directive|include
 file|<sys/pcpu.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KTR_VMM
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|KTR_VMM
 value|KTR_GEN
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -46,7 +57,7 @@ parameter_list|,
 name|format
 parameter_list|)
 define|\
-value|CTR3(KTR_VMM, "vm %s-%d(%d): " format, vm_name((vm)), (vcpuid), curcpu)
+value|CTR2(KTR_VMM, "vm %s[%d]: " format, vm_name((vm)), (vcpuid))
 end_define
 
 begin_define
@@ -63,7 +74,7 @@ parameter_list|,
 name|p1
 parameter_list|)
 define|\
-value|CTR4(KTR_VMM, "vm %s-%d(%d): " format, vm_name((vm)), (vcpuid), curcpu, \ 			(p1))
+value|CTR3(KTR_VMM, "vm %s[%d]: " format, vm_name((vm)), (vcpuid), (p1))
 end_define
 
 begin_define
@@ -82,7 +93,7 @@ parameter_list|,
 name|p2
 parameter_list|)
 define|\
-value|CTR5(KTR_VMM, "vm %s-%d(%d): " format, vm_name((vm)), (vcpuid), curcpu, \ 			(p1), (p2))
+value|CTR4(KTR_VMM, "vm %s[%d]: " format, vm_name((vm)), (vcpuid), (p1), (p2))
 end_define
 
 begin_define
@@ -103,7 +114,7 @@ parameter_list|,
 name|p3
 parameter_list|)
 define|\
-value|CTR6(KTR_VMM, "vm %s-%d(%d): " format, vm_name((vm)), (vcpuid), curcpu, \ 			(p1), (p2), (p3))
+value|CTR5(KTR_VMM, "vm %s[%d]: " format, vm_name((vm)), (vcpuid), (p1), (p2), (p3))
 end_define
 
 begin_define
@@ -116,7 +127,7 @@ parameter_list|,
 name|format
 parameter_list|)
 define|\
-value|CTR2(KTR_VMM, "vm %s(%d): " format, vm_name((vm)), curcpu)
+value|CTR1(KTR_VMM, "vm %s: " format, vm_name((vm)))
 end_define
 
 begin_define
@@ -131,7 +142,7 @@ parameter_list|,
 name|p1
 parameter_list|)
 define|\
-value|CTR3(KTR_VMM, "vm %s(%d): " format, vm_name((vm)), curcpu, (p1))
+value|CTR2(KTR_VMM, "vm %s: " format, vm_name((vm)), (p1))
 end_define
 
 begin_define
@@ -148,7 +159,7 @@ parameter_list|,
 name|p2
 parameter_list|)
 define|\
-value|CTR4(KTR_VMM, "vm %s(%d): " format, vm_name((vm)), curcpu, (p1), (p2))
+value|CTR3(KTR_VMM, "vm %s: " format, vm_name((vm)), (p1), (p2))
 end_define
 
 begin_define
@@ -167,7 +178,28 @@ parameter_list|,
 name|p3
 parameter_list|)
 define|\
-value|CTR5(KTR_VMM, "vm %s(%d): " format, vm_name((vm)), curcpu, (p1), (p2), (p3))
+value|CTR4(KTR_VMM, "vm %s: " format, vm_name((vm)), (p1), (p2), (p3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_CTR4
+parameter_list|(
+name|vm
+parameter_list|,
+name|format
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|)
+define|\
+value|CTR5(KTR_VMM, "vm %s: " format, vm_name((vm)), (p1), (p2), (p3), (p4))
 end_define
 
 begin_endif

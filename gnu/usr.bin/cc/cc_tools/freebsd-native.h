@@ -94,7 +94,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 end_ifdef
 
 begin_define

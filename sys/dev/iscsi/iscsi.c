@@ -9997,7 +9997,7 @@ name|si_drv1
 operator|=
 name|sc
 expr_stmt|;
-comment|/* 	 * XXX: For some reason this doesn't do its job; active sessions still hang out there 	 * 	after final sync, making the reboot effectively hang. 	 */
+comment|/* 	 * Note that this needs to get run before dashutdown().  Otherwise, 	 * when rebooting with iSCSI session with outstanding requests, 	 * but disconnected, dashutdown() will hang on cam_periph_runccb(). 	 */
 name|sc
 operator|->
 name|sc_shutdown_eh
@@ -10010,7 +10010,7 @@ name|iscsi_shutdown
 argument_list|,
 name|sc
 argument_list|,
-name|SHUTDOWN_PRI_DEFAULT
+name|SHUTDOWN_PRI_FIRST
 argument_list|)
 expr_stmt|;
 return|return

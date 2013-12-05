@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -72,8 +66,6 @@ name|ip
 argument_list|, , ,
 name|receive
 argument_list|,
-name|receive
-argument_list|,
 literal|"void *"
 argument_list|,
 literal|"pktinfo_t *"
@@ -108,8 +100,6 @@ name|ip
 argument_list|, , ,
 name|send
 argument_list|,
-name|send
-argument_list|,
 literal|"void *"
 argument_list|,
 literal|"pktinfo_t *"
@@ -142,11 +132,7 @@ name|SDT_PROBE_DEFINE5_XLATE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|accept_established
-argument_list|,
-name|accept
-operator|-
-name|established
+name|accept__established
 argument_list|,
 literal|"void *"
 argument_list|,
@@ -176,11 +162,7 @@ name|SDT_PROBE_DEFINE5_XLATE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|accept_refused
-argument_list|,
-name|accept
-operator|-
-name|refused
+name|accept__refused
 argument_list|,
 literal|"void *"
 argument_list|,
@@ -210,11 +192,7 @@ name|SDT_PROBE_DEFINE5_XLATE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|connect_established
-argument_list|,
-name|connect
-operator|-
-name|established
+name|connect__established
 argument_list|,
 literal|"void *"
 argument_list|,
@@ -244,11 +222,7 @@ name|SDT_PROBE_DEFINE5_XLATE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|connect_refused
-argument_list|,
-name|connect
-operator|-
-name|refused
+name|connect__refused
 argument_list|,
 literal|"void *"
 argument_list|,
@@ -278,11 +252,7 @@ name|SDT_PROBE_DEFINE5_XLATE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|connect_request
-argument_list|,
-name|connect
-operator|-
-name|request
+name|connect__request
 argument_list|,
 literal|"void *"
 argument_list|,
@@ -314,8 +284,6 @@ name|tcp
 argument_list|, , ,
 name|receive
 argument_list|,
-name|receive
-argument_list|,
 literal|"void *"
 argument_list|,
 literal|"pktinfo_t *"
@@ -344,8 +312,6 @@ name|SDT_PROBE_DEFINE5_XLATE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|send
-argument_list|,
 name|send
 argument_list|,
 literal|"void *"
@@ -376,11 +342,7 @@ name|SDT_PROBE_DEFINE6_XLATE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|state_change
-argument_list|,
-name|state
-operator|-
-name|change
+name|state__change
 argument_list|,
 literal|"void *"
 argument_list|,
@@ -416,8 +378,6 @@ name|udp
 argument_list|, , ,
 name|receive
 argument_list|,
-name|receive
-argument_list|,
 literal|"void *"
 argument_list|,
 literal|"pktinfo_t *"
@@ -446,8 +406,6 @@ name|SDT_PROBE_DEFINE5_XLATE
 argument_list|(
 name|udp
 argument_list|, , ,
-name|send
-argument_list|,
 name|send
 argument_list|,
 literal|"void *"
