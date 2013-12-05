@@ -1196,10 +1196,13 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"reg %d has %x reg %d has %x\n"
+literal|"reg %d has %jx reg %d has %jx\n"
 operator|,
 name|ra
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|fixreg
@@ -1209,6 +1212,9 @@ index|]
 operator|,
 name|rb
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|fixreg
@@ -1405,10 +1411,13 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"reg %d has %x reg %d has %x\n"
+literal|"reg %d has %jx reg %d has %jx\n"
 operator|,
 name|ra
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|fixreg
@@ -1418,6 +1427,9 @@ index|]
 operator|,
 name|rb
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|fixreg
@@ -1526,10 +1538,13 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"reg %d has %x displ %x\n"
+literal|"reg %d has %jx displ %jx\n"
 operator|,
 name|ra
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|fixreg
@@ -1537,6 +1552,9 @@ index|[
 name|ra
 index|]
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|addr
 operator|)
 argument_list|)
@@ -1841,7 +1859,7 @@ operator|==
 name|OPC_load_st_62
 condition|)
 block|{
-comment|/* These are 64-bit extenstions */
+comment|/* These are 64-bit extensions */
 return|return
 operator|(
 name|NOTFPU
@@ -4139,12 +4157,15 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"fpu_execute: cr[%d] (cr=%x)<= %x\n"
+literal|"fpu_execute: cr[%d] (cr=%jx)<= %x\n"
 operator|,
 name|bf
 operator|/
 literal|4
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|cr
