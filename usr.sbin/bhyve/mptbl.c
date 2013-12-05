@@ -218,59 +218,6 @@ value|24
 end_define
 
 begin_comment
-comment|/* Define processor entry struct since<x86/mptable.h> gets it wrong */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|BPROCENTRY
-block|{
-name|u_char
-name|type
-decl_stmt|;
-name|u_char
-name|apic_id
-decl_stmt|;
-name|u_char
-name|apic_version
-decl_stmt|;
-name|u_char
-name|cpu_flags
-decl_stmt|;
-name|uint32_t
-name|cpu_signature
-decl_stmt|;
-name|uint32_t
-name|feature_flags
-decl_stmt|;
-name|uint32_t
-name|reserved1
-decl_stmt|;
-name|uint32_t
-name|reserved2
-decl_stmt|;
-block|}
-typedef|*
-name|bproc_entry_ptr
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|BPROCENTRY
-argument_list|)
-operator|==
-literal|20
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Bus entry defines */
 end_comment
 
@@ -525,7 +472,7 @@ specifier|static
 name|void
 name|mpt_build_proc_entries
 parameter_list|(
-name|bproc_entry_ptr
+name|proc_entry_ptr
 name|mpep
 parameter_list|,
 name|int
@@ -959,7 +906,7 @@ decl_stmt|;
 name|io_apic_entry_ptr
 name|mpei
 decl_stmt|;
-name|bproc_entry_ptr
+name|proc_entry_ptr
 name|mpep
 decl_stmt|;
 name|mpfps_t
@@ -1054,7 +1001,7 @@ expr_stmt|;
 name|mpep
 operator|=
 operator|(
-name|bproc_entry_ptr
+name|proc_entry_ptr
 operator|)
 name|curraddr
 expr_stmt|;
