@@ -2320,6 +2320,14 @@ name|value
 expr_stmt|;
 break|break;
 case|case
+name|OPT_flax_vector_conversions
+case|:
+name|flag_lax_vector_conversions
+operator|=
+name|value
+expr_stmt|;
+break|break;
+case|case
 name|OPT_fms_extensions
 case|:
 name|flag_ms_extensions

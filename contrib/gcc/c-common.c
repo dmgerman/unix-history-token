@@ -483,6 +483,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means allow implicit conversions between vectors with    differing numbers of subparts and/or differing element types.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|flag_lax_vector_conversions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means allow Microsoft extensions without warnings or errors.  */
 end_comment
 
@@ -4217,11 +4227,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Nonzero if vector types T1 and T2 can be converted to each other    without an explicit cast.  */
+comment|/* True if vector types T1 and T2 can be converted to each other    without an explicit cast.  If EMIT_LAX_NOTE is true, and T1 and T2    can only be converted with -flax-vector-conversions yet that is not    in effect, emit a note telling the user about that option if such    a note has not previously been emitted.  */
 end_comment
 
 begin_function
-name|int
+name|bool
 name|vector_types_convertible_p
 parameter_list|(
 name|tree
@@ -4229,9 +4239,23 @@ name|t1
 parameter_list|,
 name|tree
 name|t2
+parameter_list|,
+name|bool
+name|emit_lax_note
 parameter_list|)
 block|{
-return|return
+specifier|static
+name|bool
+name|emitted_lax_note
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|convertible_lax
+decl_stmt|;
+if|if
+condition|(
+operator|(
 name|targetm
 operator|.
 name|vector_opaque_p
@@ -4245,7 +4269,26 @@ name|vector_opaque_p
 argument_list|(
 name|t2
 argument_list|)
-operator|||
+operator|)
+operator|&&
+name|tree_int_cst_equal
+argument_list|(
+name|TYPE_SIZE
+argument_list|(
+name|t1
+argument_list|)
+argument_list|,
+name|TYPE_SIZE
+argument_list|(
+name|t2
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+name|convertible_lax
+operator|=
 operator|(
 name|tree_int_cst_equal
 argument_list|(
@@ -4282,6 +4325,7 @@ name|t2
 argument_list|)
 operator|)
 operator|&&
+operator|(
 name|INTEGRAL_TYPE_P
 argument_list|(
 name|TREE_TYPE
@@ -4298,6 +4342,68 @@ name|t2
 argument_list|)
 argument_list|)
 operator|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|convertible_lax
+operator|||
+name|flag_lax_vector_conversions
+condition|)
+return|return
+name|convertible_lax
+return|;
+if|if
+condition|(
+name|TYPE_VECTOR_SUBPARTS
+argument_list|(
+name|t1
+argument_list|)
+operator|==
+name|TYPE_VECTOR_SUBPARTS
+argument_list|(
+name|t2
+argument_list|)
+operator|&&
+name|comptypes
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|t1
+argument_list|)
+argument_list|,
+name|TREE_TYPE
+argument_list|(
+name|t2
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|emit_lax_note
+operator|&&
+operator|!
+name|emitted_lax_note
+condition|)
+block|{
+name|emitted_lax_note
+operator|=
+name|true
+expr_stmt|;
+name|inform
+argument_list|(
+literal|"use -flax-vector-conversions to permit "
+literal|"conversions between vectors with differing "
+literal|"element types or numbers of subparts"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|false
 return|;
 block|}
 end_function
