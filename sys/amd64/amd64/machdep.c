@@ -1118,10 +1118,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|realmem
-operator|=
-name|Maxmem
-expr_stmt|;
 comment|/* 	 * Display physical memory if SMBIOS reports reasonable amount. 	 */
 name|memsize
 operator|=
@@ -1201,6 +1197,13 @@ argument_list|,
 name|memsize
 operator|>>
 literal|20
+argument_list|)
+expr_stmt|;
+name|realmem
+operator|=
+name|atop
+argument_list|(
+name|memsize
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
