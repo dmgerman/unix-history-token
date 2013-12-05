@@ -993,17 +993,11 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"CRF7 0x%02x "
+literal|"CRF7 0x%02x"
 argument_list|,
 name|sc
 operator|->
 name|reg_2
-argument_list|)
-expr_stmt|;
-name|sbuf_trim
-argument_list|(
-operator|&
-name|sb
 argument_list|)
 expr_stmt|;
 name|error
