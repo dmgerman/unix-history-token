@@ -89,9 +89,14 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|struct drm_i915_private *dev_priv = dev->dev_private; 	struct fb_info *info;
+block|struct drm_i915_private *dev_priv = dev->dev_private;
 endif|#
 directive|endif
+name|struct
+name|fb_info
+modifier|*
+name|info
+decl_stmt|;
 name|struct
 name|drm_framebuffer
 modifier|*
@@ -273,6 +278,87 @@ if|#
 directive|if
 literal|0
 block|info = framebuffer_alloc(0, device); 	if (!info) { 		ret = -ENOMEM; 		goto out_unpin; 	}  	info->par = ifbdev;
+else|#
+directive|else
+name|info
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|fb_info
+argument_list|)
+argument_list|,
+name|DRM_MEM_KMS
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+name|info
+operator|->
+name|fb_size
+operator|=
+name|size
+expr_stmt|;
+name|info
+operator|->
+name|fb_bpp
+operator|=
+name|sizes
+operator|->
+name|surface_bpp
+expr_stmt|;
+name|info
+operator|->
+name|fb_width
+operator|=
+name|sizes
+operator|->
+name|fb_width
+expr_stmt|;
+name|info
+operator|->
+name|fb_height
+operator|=
+name|sizes
+operator|->
+name|fb_height
+expr_stmt|;
+name|info
+operator|->
+name|fb_pbase
+operator|=
+name|dev
+operator|->
+name|agp
+operator|->
+name|base
+operator|+
+name|obj
+operator|->
+name|gtt_offset
+expr_stmt|;
+name|info
+operator|->
+name|fb_vbase
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|pmap_mapdev_attr
+argument_list|(
+name|info
+operator|->
+name|fb_pbase
+argument_list|,
+name|size
+argument_list|,
+name|PAT_WRITE_COMBINING
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|ret
@@ -316,10 +402,18 @@ name|fb
 operator|=
 name|fb
 expr_stmt|;
+name|ifbdev
+operator|->
+name|helper
+operator|.
+name|fbdev
+operator|=
+name|info
+expr_stmt|;
 if|#
 directive|if
 literal|0
-block|ifbdev->helper.fbdev = info;  	strcpy(info->fix.id, "inteldrmfb");  	info->flags = FBINFO_DEFAULT | FBINFO_CAN_FORCE_OUTPUT; 	info->fbops =&intelfb_ops;  	ret = fb_alloc_cmap(&info->cmap, 256, 0); 	if (ret) { 		ret = -ENOMEM; 		goto out_unpin; 	}
+block|strcpy(info->fix.id, "inteldrmfb");  	info->flags = FBINFO_DEFAULT | FBINFO_CAN_FORCE_OUTPUT; 	info->fbops =&intelfb_ops;  	ret = fb_alloc_cmap(&info->cmap, 256, 0); 	if (ret) { 		ret = -ENOMEM; 		goto out_unpin; 	}
 comment|/* setup aperture base/size for vesafb takeover */
 block|info->apertures = alloc_apertures(1); 	if (!info->apertures) { 		ret = -ENOMEM; 		goto out_unpin; 	} 	info->apertures->ranges[0].base = dev->mode_config.fb_base; 	info->apertures->ranges[0].size = 		dev_priv->mm.gtt->gtt_mappable_entries<< PAGE_SHIFT;  	info->fix.smem_start = dev->mode_config.fb_base + obj->gtt_offset; 	info->fix.smem_len = size;  	info->screen_base = ioremap_wc(dev->agp->base + obj->gtt_offset, size); 	if (!info->screen_base) { 		ret = -ENOSPC; 		goto out_unpin; 	} 	info->screen_size = size;
 comment|//	memset(info->screen_base, 0, size);
@@ -329,7 +423,7 @@ endif|#
 directive|endif
 name|DRM_DEBUG_KMS
 argument_list|(
-literal|"allocated %dx%d fb: 0x%08x, bo %p\n"
+literal|"allocated %dx%d (s %dbits) fb: 0x%08x, bo %p\n"
 argument_list|,
 name|fb
 operator|->
@@ -338,6 +432,10 @@ argument_list|,
 name|fb
 operator|->
 name|height
+argument_list|,
+name|fb
+operator|->
+name|depth
 argument_list|,
 name|obj
 operator|->

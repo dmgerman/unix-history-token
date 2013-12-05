@@ -617,6 +617,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|tty_lock_owned
+parameter_list|(
+name|tp
+parameter_list|)
+value|mtx_owned((tp)->t_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|tty_lock_assert
 parameter_list|(
 name|tp

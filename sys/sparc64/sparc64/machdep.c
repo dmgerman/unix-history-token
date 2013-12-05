@@ -2378,10 +2378,6 @@ argument_list|(
 name|tl0_base
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the console. 	 * NB: the low-level console drivers require a working DELAY() and 	 * some compiler optimizations may cause the curthread accesses of 	 * mutex(9) to be factored out even if the latter aren't actually 	 * called, both requiring PCPU_REG to be set. 	 */
-name|cninit
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Initialize the dynamic per-CPU area for the BSP and the message 	 * buffer (after setting the trap table). 	 */
 name|dpcpu_init
 argument_list|(
@@ -2399,6 +2395,10 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize mutexes. 	 */
 name|mutex_init
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Initialize console now that we have a reasonable set of system 	 * services. 	 */
+name|cninit
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Finish the interrupt initialization now that mutexes work and 	 * enable them. 	 */
