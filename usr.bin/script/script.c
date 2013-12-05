@@ -426,6 +426,8 @@ decl_stmt|;
 name|int
 name|aflg
 decl_stmt|,
+name|Fflg
+decl_stmt|,
 name|kflg
 decl_stmt|,
 name|pflg
@@ -447,6 +449,8 @@ decl_stmt|,
 name|fm_log
 decl_stmt|;
 name|aflg
+operator|=
+name|Fflg
 operator|=
 name|kflg
 operator|=
@@ -483,7 +487,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adfkpqrt:"
+literal|"adFfkpqrt:"
 argument_list|)
 operator|)
 operator|!=
@@ -509,6 +513,14 @@ case|:
 name|usesleep
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+name|Fflg
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1548,6 +1560,15 @@ operator|=
 name|tvec
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Fflg
+condition|)
+name|fflush
+argument_list|(
+name|fscript
+argument_list|)
+expr_stmt|;
 block|}
 name|finish
 argument_list|()
