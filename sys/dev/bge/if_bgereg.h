@@ -1956,6 +1956,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CHIPREV_57765_AX
+value|0x577850
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CHIPREV_5784_AX
 value|0x57841
 end_define
@@ -7461,6 +7468,13 @@ name|BGE_CPMU_PHY_STRAP
 value|0x3664
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_CPMU_PADRNG_CTL
+value|0x3668
+end_define
+
 begin_comment
 comment|/* Central Power Management Unit (CPMU) register */
 end_comment
@@ -7638,6 +7652,17 @@ define|#
 directive|define
 name|BGE_CPMU_PHY_STRAP_IS_SERDES
 value|0x00000020
+end_define
+
+begin_comment
+comment|/* CPMU Padring Control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_CPMU_PADRNG_CTL_RDIV2
+value|0x00040000
 end_define
 
 begin_comment
