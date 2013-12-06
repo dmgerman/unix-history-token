@@ -25564,9 +25564,9 @@ name|sc
 argument_list|,
 literal|4
 argument_list|,
-name|bbp4
+name|bbp
 operator||
-literal|0x40
+name|RT5390_MAC_IF_CTRL
 argument_list|)
 expr_stmt|;
 for|for
@@ -26930,7 +26930,7 @@ literal|2
 argument_list|,
 name|rf
 operator||
-literal|0x80
+name|RT5390_RESCAL
 argument_list|)
 expr_stmt|;
 name|run_delay
@@ -26949,7 +26949,7 @@ argument_list|,
 name|rf
 operator|&
 operator|~
-literal|0x80
+name|RT5390_RESCAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -26961,7 +26961,7 @@ name|sc
 argument_list|,
 literal|2
 argument_list|,
-literal|0x80
+name|RT5390_RESCAL
 argument_list|)
 expr_stmt|;
 name|run_delay
@@ -27735,7 +27735,7 @@ literal|4
 argument_list|,
 name|bbp
 operator||
-literal|0x40
+name|RT5390_MAC_IF_CTRL
 argument_list|)
 expr_stmt|;
 name|run_rt3070_rf_read

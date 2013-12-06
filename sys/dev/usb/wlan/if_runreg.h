@@ -4038,6 +4038,17 @@ value|(1<< 3)
 end_define
 
 begin_comment
+comment|/* Possible flags for RT5390 RF register 2. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RESCAL
+value|(1<< 7)
+end_define
+
+begin_comment
 comment|/* Possible flags for RT5390 RF register 3. */
 end_comment
 
@@ -4068,6 +4079,35 @@ define|#
 directive|define
 name|RT5390_RX_LO2
 value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* Possible flags for RT5390 BBP register 4. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_MAC_IF_CTRL
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Possible flags for RT5390 BBP register 105. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_MLD
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5390_EN_SIG_MODULATION
+value|(1<< 3)
 end_define
 
 begin_comment
