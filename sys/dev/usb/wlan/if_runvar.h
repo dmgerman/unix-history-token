@@ -27,18 +27,6 @@ define|\
 value|MIN(4096, MJUMPAGESIZE)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|(sizeof (uint32_t) +		\ 	 sizeof (struct rt2860_rxwi) +	\ 	 sizeof (uint16_t) +		\ 	 MCLBYTES +			\ 	 sizeof (struct rt2870_rxd))
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* NB: "11" is the maximum number of padding bytes needed for Tx */
 end_comment
