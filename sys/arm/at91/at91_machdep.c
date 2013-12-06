@@ -1762,15 +1762,18 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Use the full 256MB of KVA we have available, regardless of memory size */
 name|pmap_bootstrap
 argument_list|(
 name|freemempos
 argument_list|,
 name|KERNVIRTADDR
 operator|+
-literal|3
-operator|*
-name|memsize
+operator|(
+literal|256
+operator|<<
+literal|20
+operator|)
 argument_list|,
 operator|&
 name|kernel_l1pt
