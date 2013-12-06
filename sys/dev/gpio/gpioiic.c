@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -56,31 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -140,11 +110,6 @@ name|sc_dev
 decl_stmt|;
 name|device_t
 name|sc_busdev
-decl_stmt|;
-name|struct
-name|cdev
-modifier|*
-name|sc_leddev
 decl_stmt|;
 name|int
 name|scl_pin
