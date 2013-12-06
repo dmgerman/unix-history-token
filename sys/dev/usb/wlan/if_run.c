@@ -18566,7 +18566,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|rt2870_txwi
+name|rt2860_txwi
 argument_list|)
 argument_list|)
 argument_list|,
