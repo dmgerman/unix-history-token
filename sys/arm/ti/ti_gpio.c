@@ -1987,7 +1987,7 @@ name|sc
 argument_list|,
 name|bank
 argument_list|,
-name|TI_GPIO_DATAOUT
+name|TI_GPIO_DATAIN
 argument_list|)
 operator|&
 name|mask
@@ -2008,7 +2008,7 @@ name|sc
 argument_list|,
 name|bank
 argument_list|,
-name|TI_GPIO_DATAIN
+name|TI_GPIO_DATAOUT
 argument_list|)
 operator|&
 name|mask
