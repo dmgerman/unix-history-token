@@ -21160,22 +21160,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* RT3070 is 2GHz only */
-name|KASSERT
-argument_list|(
-name|chan
-operator|>=
-literal|1
-operator|&&
-name|chan
-operator|<=
-literal|14
-argument_list|,
-operator|(
-literal|"wrong channel selected\n"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* find the settings for this channel (we know it exists) */
 for|for
 control|(
