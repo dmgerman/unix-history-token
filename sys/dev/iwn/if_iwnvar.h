@@ -442,6 +442,9 @@ decl_stmt|;
 name|uint32_t
 name|low_fa
 decl_stmt|;
+name|uint32_t
+name|bad_plcp_ht
+decl_stmt|;
 name|uint8_t
 name|cck_state
 decl_stmt|;
@@ -1030,6 +1033,7 @@ name|struct
 name|task
 name|sc_radiooff_task
 decl_stmt|;
+comment|/* Calibration information */
 name|struct
 name|callout
 name|calib_to
@@ -1040,6 +1044,9 @@ decl_stmt|;
 name|struct
 name|iwn_calib_state
 name|calib
+decl_stmt|;
+name|int
+name|last_calib_ticks
 decl_stmt|;
 name|struct
 name|callout
