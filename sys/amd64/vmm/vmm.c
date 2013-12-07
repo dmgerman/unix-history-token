@@ -3734,9 +3734,9 @@ modifier|*
 name|vcpu
 decl_stmt|;
 name|int
-name|sleepticks
-decl_stmt|,
 name|t
+decl_stmt|,
+name|timo
 decl_stmt|;
 name|vcpu
 operator|=
@@ -3752,27 +3752,6 @@ name|vcpu_lock
 argument_list|(
 name|vcpu
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Figure out the number of host ticks until the next apic 	 * timer interrupt in the guest. 	 */
-name|sleepticks
-operator|=
-name|lapic_timer_tick
-argument_list|(
-name|vm
-argument_list|,
-name|vcpuid
-argument_list|)
-expr_stmt|;
-comment|/* 	 * If the guest local apic timer is disabled then sleep for 	 * a long time but not forever. 	 */
-if|if
-condition|(
-name|sleepticks
-operator|<
-literal|0
-condition|)
-name|sleepticks
-operator|=
-name|hz
 expr_stmt|;
 comment|/* 	 * Do a final check for pending NMI or interrupts before 	 * really putting this thread to sleep. 	 * 	 * These interrupts could have happened any time after we 	 * returned from VMRUN() and before we grabbed the vcpu lock. 	 */
 if|if
@@ -3799,19 +3778,6 @@ literal|0
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|sleepticks
-operator|<=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"invalid sleepticks %d"
-argument_list|,
-name|sleepticks
-argument_list|)
-expr_stmt|;
 name|t
 operator|=
 name|ticks
@@ -3833,6 +3799,11 @@ name|vlapic
 argument_list|)
 condition|)
 block|{
+comment|/* 			 * XXX msleep_spin() is not interruptible so use the 			 * 'timo' to put an upper bound on the sleep time. 			 */
+name|timo
+operator|=
+name|hz
+expr_stmt|;
 name|msleep_spin
 argument_list|(
 name|vcpu
@@ -3844,7 +3815,7 @@ name|mtx
 argument_list|,
 literal|"vmidle"
 argument_list|,
-name|sleepticks
+name|timo
 argument_list|)
 expr_stmt|;
 block|}

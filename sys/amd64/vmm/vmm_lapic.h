@@ -129,21 +129,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|lapic_timer_tick
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|,
-name|int
-name|cpu
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Returns a vector between 32 and 255 if an interrupt is pending in the  * IRR that can be delivered based on the current state of ISR and TPR.  *  * Note that the vector does not automatically transition to the ISR as a  * result of calling this function.  *  * Returns -1 if there is no eligible vector that can be delivered to the  * guest at this time.  */
 end_comment

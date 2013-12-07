@@ -6248,15 +6248,6 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-name|lapic_timer_tick
-argument_list|(
-name|vmx
-operator|->
-name|vm
-argument_list|,
-name|vcpu
-argument_list|)
-expr_stmt|;
 name|vmx_inject_interrupts
 argument_list|(
 name|vmx

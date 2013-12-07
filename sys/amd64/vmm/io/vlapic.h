@@ -660,18 +660,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|vlapic_timer_tick
-parameter_list|(
-name|struct
-name|vlapic
-modifier|*
-name|vlapic
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|uint64_t
 name|vlapic_get_apicbase
 parameter_list|(
