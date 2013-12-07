@@ -717,6 +717,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|bool
+name|vlapic_enabled
+parameter_list|(
+name|struct
+name|vlapic
+modifier|*
+name|vlapic
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
