@@ -22189,6 +22189,10 @@ condition|)
 block|{
 name|free_aligned
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|dtv
 index|[
 name|i
@@ -22201,6 +22205,10 @@ block|}
 block|}
 name|free_aligned
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|tlsstart
 argument_list|)
 expr_stmt|;
