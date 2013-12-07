@@ -34105,6 +34105,13 @@ name|EAGAIN
 operator|)
 return|;
 block|}
+comment|/* Assign the scan channel */
+name|c
+operator|=
+name|ic
+operator|->
+name|ic_curchan
+expr_stmt|;
 name|sc
 operator|->
 name|rxon
@@ -34255,9 +34262,7 @@ if|if
 condition|(
 name|IEEE80211_IS_CHAN_A
 argument_list|(
-name|ic
-operator|->
-name|ic_curchan
+name|c
 argument_list|)
 operator|&&
 name|sc
@@ -34350,9 +34355,7 @@ if|if
 condition|(
 name|IEEE80211_IS_CHAN_5GHZ
 argument_list|(
-name|ic
-operator|->
-name|ic_curchan
+name|c
 argument_list|)
 condition|)
 block|{
@@ -34820,12 +34823,6 @@ condition|?
 name|IWN_GOOD_CRC_TH_DEFAULT
 else|:
 name|IWN_GOOD_CRC_TH_NEVER
-expr_stmt|;
-name|c
-operator|=
-name|ic
-operator|->
-name|ic_curchan
 expr_stmt|;
 name|chan
 operator|=
