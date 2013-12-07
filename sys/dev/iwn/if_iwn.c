@@ -2321,6 +2321,14 @@ name|iwn_softc
 modifier|*
 parameter_list|,
 name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_scan_state
+modifier|*
+parameter_list|,
+name|struct
 name|ieee80211_channel
 modifier|*
 parameter_list|)
@@ -33968,6 +33976,16 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|,
+name|struct
+name|ieee80211_scan_state
+modifier|*
+name|ss
+parameter_list|,
+name|struct
 name|ieee80211_channel
 modifier|*
 name|c
@@ -33992,23 +34010,11 @@ operator|->
 name|if_l2com
 decl_stmt|;
 name|struct
-name|ieee80211_scan_state
-modifier|*
-name|ss
-init|=
-name|ic
-operator|->
-name|ic_scan
-decl_stmt|;
-comment|/*XXX*/
-name|struct
 name|ieee80211_node
 modifier|*
 name|ni
 init|=
-name|ss
-operator|->
-name|ss_vap
+name|vap
 operator|->
 name|iv_bss
 decl_stmt|;
@@ -34481,7 +34487,7 @@ name|is_active
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If we're scanning for a specific SSID, add it to the command. 	 */
+comment|/* 	 * If we're scanning for a specific SSID, add it to the command. 	 * 	 * XXX maybe look at adding support for scanning multiple SSIDs? 	 */
 name|essid
 operator|=
 operator|(
@@ -34495,6 +34501,13 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|ss
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|ss
@@ -34613,6 +34626,7 @@ name|is_active
 operator|=
 literal|1
 expr_stmt|;
+block|}
 comment|/* 	 * Build a probe request frame.  Most of the following code is a 	 * copy& paste of what is done in net80211. 	 */
 name|wh
 operator|=
@@ -45043,6 +45057,10 @@ operator|=
 name|iwn_scan
 argument_list|(
 name|sc
+argument_list|,
+name|vap
+argument_list|,
+name|ss
 argument_list|,
 name|ic
 operator|->
