@@ -84,6 +84,31 @@ value|(1<<7)
 end_define
 
 begin_comment
+comment|/*  * Each chip has a different threshold for PLCP errors that should trigger a  * retune.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_PLCP_ERR_DEFAULT_THRESHOLD
+value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_PLCP_ERR_LONG_THRESHOLD
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_PLCP_ERR_EXT_LONG_THRESHOLD
+value|200
+end_define
+
+begin_comment
 comment|/*  * Define some parameters for managing different NIC.  * Refer to linux specific file like iwl-xxxx.c to determine correct value  * for NIC.  *  * @max_ll_items: max number of OTP blocks  * @shadow_ram_support: shadow support for OTP memory  * @shadow_reg_enable: HW shadhow register bit  * @no_idle_support: do not support idle mode  * @advanced_bt_coexist : Advanced BT management  * @bt_session_2 : NIC need a new struct for configure BT coexistence. Needed  *   only if advanced_bt_coexist is true  * @bt_sco_disable :  * @additional_nic_config: For 6005 series  * @iq_invert : ? But need it for N 2000 series  * @regulatory_bands : XXX  * @enhanced_TX_power : EEPROM Has advanced TX power options. Set 'True'  *    if update_enhanced_txpower = iwl_eeprom_enhanced_txpower.  *    See iwl-agn-devices.c file to determine that(enhanced_txpower)  * @need_temp_offset_calib : Need to compute some temp offset for calibration.  * @calib_need : Use IWN_FLG_NEED_PHY_CALIB_* flags to specify which  *    calibration data ucode need. See calib_init_cfg in iwl-xxxx.c  *    linux kernel file  * @support_hostap: Define IEEE80211_C_HOSTAP for ic_caps  * @no_multi_vaps: See iwn_vap_create  * @additional_gp_drv_bit : Specific bit to defined during nic_config  * @bt_mode: BT configuration mode  */
 end_comment
 
@@ -178,6 +203,9 @@ decl_stmt|;
 name|enum
 name|bt_mode_enum
 name|bt_mode
+decl_stmt|;
+name|uint32_t
+name|plcp_err_threshold
 decl_stmt|;
 block|}
 struct|;
@@ -282,7 +310,11 @@ operator|=
 name|IWN_BT_NONE
 block|,
 comment|/* bt_mode */
-block|}
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_LONG_THRESHOLD
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -391,7 +423,11 @@ operator|=
 name|IWN_BT_SIMPLE
 block|,
 comment|/* bt_mode */
-block|}
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_DEFAULT_THRESHOLD
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -482,6 +518,11 @@ operator|.
 name|bt_mode
 operator|=
 name|IWN_BT_NONE
+block|,
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_DEFAULT_THRESHOLD
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -574,6 +615,11 @@ operator|.
 name|bt_mode
 operator|=
 name|IWN_BT_ADVANCED
+block|,
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_DEFAULT_THRESHOLD
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -664,6 +710,11 @@ operator|.
 name|bt_mode
 operator|=
 name|IWN_BT_NONE
+block|,
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_EXT_LONG_THRESHOLD
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -753,6 +804,11 @@ operator|.
 name|bt_mode
 operator|=
 name|IWN_BT_SIMPLE
+block|,
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_DEFAULT_THRESHOLD
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -842,6 +898,11 @@ operator|.
 name|bt_mode
 operator|=
 name|IWN_BT_SIMPLE
+block|,
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_DEFAULT_THRESHOLD
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -933,6 +994,11 @@ operator|.
 name|bt_mode
 operator|=
 name|IWN_BT_SIMPLE
+block|,
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_DEFAULT_THRESHOLD
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1022,6 +1088,11 @@ operator|.
 name|bt_mode
 operator|=
 name|IWN_BT_SIMPLE
+block|,
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_DEFAULT_THRESHOLD
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1109,6 +1180,11 @@ operator|.
 name|bt_mode
 operator|=
 name|IWN_BT_SIMPLE
+block|,
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_DEFAULT_THRESHOLD
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1204,6 +1280,11 @@ operator|.
 name|bt_mode
 operator|=
 name|IWN_BT_ADVANCED
+block|,
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_DEFAULT_THRESHOLD
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1293,6 +1374,11 @@ operator|.
 name|bt_mode
 operator|=
 name|IWN_BT_SIMPLE
+block|,
+operator|.
+name|plcp_err_threshold
+operator|=
+name|IWN_PLCP_ERR_LONG_THRESHOLD
 block|, }
 decl_stmt|;
 end_decl_stmt
