@@ -303,15 +303,8 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|u_int
+name|int
 name|val
-init|=
-operator|*
-operator|(
-name|u_int
-operator|*
-operator|)
-name|arg1
 decl_stmt|;
 name|int
 name|error
