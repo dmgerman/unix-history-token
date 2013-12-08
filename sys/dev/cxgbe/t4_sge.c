@@ -9250,9 +9250,12 @@ name|m_pkthdr
 operator|.
 name|flowid
 operator|=
+name|be32toh
+argument_list|(
 name|rss
 operator|->
 name|hash_val
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
