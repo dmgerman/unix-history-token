@@ -3995,6 +3995,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -4100,6 +4106,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -4269,11 +4280,16 @@ operator|&
 name|wsz
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 name|vtterm_splash
 argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vd
 operator|->
 name|vd_flags
@@ -8868,6 +8884,9 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 if|if
 condition|(
 name|vd
@@ -8881,6 +8900,8 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vd
