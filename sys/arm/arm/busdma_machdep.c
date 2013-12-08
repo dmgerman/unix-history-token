@@ -3776,7 +3776,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|EINVAL
+literal|0
 operator|)
 return|;
 comment|/* 		 * In a valid DMA range.  Translate the physical 		 * memory address to an address in the DMA window. 		 */
@@ -3887,7 +3887,7 @@ name|nsegments
 condition|)
 return|return
 operator|(
-name|EFBIG
+literal|0
 operator|)
 return|;
 name|segs
@@ -3916,7 +3916,7 @@ name|seg
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|sgsize
 operator|)
 return|;
 block|}
