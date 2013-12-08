@@ -880,7 +880,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|cswitch
 decl_stmt|;
 name|int
