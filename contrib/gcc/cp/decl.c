@@ -12354,6 +12354,14 @@ name|flag_inline_trees
 operator|=
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|flag_visibility_ms_compat
+condition|)
+name|default_visibility
+operator|=
+name|VISIBILITY_HIDDEN
+expr_stmt|;
 comment|/* Initially, C.  */
 name|current_lang_name
 operator|=
