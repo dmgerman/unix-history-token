@@ -146,9 +146,6 @@ name|rtree
 parameter_list|,
 name|vm_page_t
 name|newpage
-parameter_list|,
-name|vm_pindex_t
-name|index
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -4193,8 +4193,6 @@ operator|->
 name|rtree
 argument_list|,
 name|mnew
-argument_list|,
-name|pindex
 argument_list|)
 expr_stmt|;
 name|KASSERT
