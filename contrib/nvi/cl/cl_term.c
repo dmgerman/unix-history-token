@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: cl_term.c,v 10.33 2012/04/21 23:51:46 zy Exp $"
+literal|"$Id: cl_term.c,v 10.34 2013/12/07 16:21:14 wjenkner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1183,6 +1183,11 @@ name|qp
 decl_stmt|,
 modifier|*
 name|nqp
+decl_stmt|,
+modifier|*
+name|pre_qp
+init|=
+name|NULL
 decl_stmt|;
 comment|/* Delete screen specific mappings. */
 name|SLIST_FOREACH_SAFE
@@ -1205,11 +1210,30 @@ name|SEQ_SCREEN
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|qp
+operator|==
+name|SLIST_FIRST
+argument_list|(
+name|gp
+operator|->
+name|seqq
+argument_list|)
+condition|)
 name|SLIST_REMOVE_HEAD
 argument_list|(
 name|gp
 operator|->
 name|seqq
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
+else|else
+name|SLIST_REMOVE_AFTER
+argument_list|(
+name|pre_qp
 argument_list|,
 name|q
 argument_list|)
@@ -1223,6 +1247,11 @@ name|qp
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|pre_qp
+operator|=
+name|qp
+expr_stmt|;
 return|return
 operator|(
 literal|0
