@@ -1835,7 +1835,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_bus_suspend  *  * This function is used to suspend the USB contoller.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_suspend  *  * This function is used to suspend the USB controller.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -2031,7 +2031,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_bus_resume  *  * This function is used to resume the USB contoller.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_resume  *  * This function is used to resume the USB controller.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -2271,7 +2271,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_bus_reset  *  * This function is used to reset the USB contoller.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_reset  *  * This function is used to reset the USB controller.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -2338,7 +2338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_bus_shutdown  *  * This function is used to shutdown the USB contoller.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_bus_shutdown  *  * This function is used to shutdown the USB controller.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
