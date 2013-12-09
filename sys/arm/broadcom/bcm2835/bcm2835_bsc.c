@@ -1885,18 +1885,12 @@ name|sc
 argument_list|,
 name|BCM_BSC_SLAVE
 argument_list|,
-operator|(
 name|msgs
 index|[
 name|i
 index|]
 operator|.
 name|slave
-operator|>>
-literal|1
-operator|)
-operator|&
-literal|0x7f
 argument_list|)
 expr_stmt|;
 comment|/* Write the data length. */
