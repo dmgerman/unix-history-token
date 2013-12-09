@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_syscons.h"
 end_include
 
