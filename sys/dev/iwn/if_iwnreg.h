@@ -8735,6 +8735,9 @@ decl_stmt|;
 name|uint32_t
 name|energy_ofdm
 decl_stmt|;
+name|uint32_t
+name|barker_mrc
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -8780,6 +8783,8 @@ block|,
 literal|100
 block|,
 literal|100
+block|,
+literal|390
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8823,6 +8828,8 @@ block|,
 literal|95
 block|,
 literal|95
+block|,
+literal|390
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8866,7 +8873,9 @@ block|,
 literal|95
 block|,
 literal|95
-block|}
+block|,
+literal|390
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -8907,7 +8916,9 @@ block|,
 literal|95
 block|,
 literal|95
-block|}
+block|,
+literal|390
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -8948,6 +8959,51 @@ block|,
 literal|97
 block|,
 literal|100
+block|,
+literal|390
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|iwn_sensitivity_limits
+name|iwn6235_sensitivity_limits
+init|=
+block|{
+literal|105
+block|,
+literal|110
+block|,
+literal|192
+block|,
+literal|232
+block|,
+literal|80
+block|,
+literal|145
+block|,
+literal|128
+block|,
+literal|232
+block|,
+literal|125
+block|,
+literal|175
+block|,
+literal|160
+block|,
+literal|310
+block|,
+literal|100
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|336
 block|}
 decl_stmt|;
 end_decl_stmt

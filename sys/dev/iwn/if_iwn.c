@@ -608,15 +608,22 @@ block|,
 literal|"Intel WiMAX/WiFi Link 5150"
 block|}
 block|,
-comment|/* 	 * These currently don't function; the firmware crashes during 	 * the startup calibration request. 	 */
-if|#
-directive|if
-literal|0
-block|{ 0x8086, IWN_DID_6035_1, "Intel Centrino Advanced 6235"		},
-comment|/* XXX TODO: figure out which ID this one is? */
-block|{ 0x8086, IWN_DID_6035_2, "Intel Centrino Advanced 6235"		},
-endif|#
-directive|endif
+block|{
+literal|0x8086
+block|,
+name|IWN_DID_6035_1
+block|,
+literal|"Intel Centrino Advanced 6235"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|IWN_DID_6035_2
+block|,
+literal|"Intel Centrino Advanced 6235"
+block|}
+block|,
 block|{
 literal|0
 block|,
@@ -5219,14 +5226,14 @@ operator|->
 name|limits
 operator|=
 operator|&
-name|iwn6000_sensitivity_limits
+name|iwn6235_sensitivity_limits
 expr_stmt|;
 name|sc
 operator|->
 name|base_params
 operator|=
 operator|&
-name|iwn_6000g2b_base_params
+name|iwn_6235_base_params
 expr_stmt|;
 break|break;
 default|default:
@@ -31338,7 +31345,11 @@ name|corr_barker_mrc
 operator|=
 name|htole16
 argument_list|(
-literal|390
+name|sc
+operator|->
+name|limits
+operator|->
+name|barker_mrc
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -35442,7 +35453,7 @@ name|rxon
 operator|->
 name|cck_mask
 operator|=
-literal|0x0f
+literal|0x03
 expr_stmt|;
 name|sc
 operator|->
