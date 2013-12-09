@@ -440,6 +440,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+end_ifndef
+
+begin_comment
+comment|/* Only mouse support use it now. */
+end_comment
+
 begin_comment
 comment|/* Translate current view row number to history row. */
 end_comment
@@ -475,6 +485,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Translate history row to current view row number. */
@@ -2891,6 +2906,12 @@ block|}
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+end_ifndef
+
 begin_function
 name|void
 name|vtbuf_mouse_cursor_position
@@ -3905,6 +3926,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void

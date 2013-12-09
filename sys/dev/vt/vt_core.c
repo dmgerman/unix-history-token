@@ -498,6 +498,12 @@ name|vt_font_default
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -505,6 +511,11 @@ name|mouse_cursor
 name|vt_default_mouse_pointer
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3362,11 +3373,6 @@ name|struct
 name|vt_bufmask
 name|tmask
 decl_stmt|;
-name|struct
-name|mouse_cursor
-modifier|*
-name|m
-decl_stmt|;
 name|unsigned
 name|int
 name|row
@@ -3383,6 +3389,14 @@ name|term_char_t
 modifier|*
 name|r
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+name|struct
+name|mouse_cursor
+modifier|*
+name|m
+decl_stmt|;
 name|int
 name|bpl
 decl_stmt|,
@@ -3390,6 +3404,8 @@ name|h
 decl_stmt|,
 name|w
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vd
@@ -3477,6 +3493,9 @@ operator|~
 name|VDF_INVALID
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
 if|if
 condition|(
 operator|(
@@ -3508,6 +3527,8 @@ name|vd_mdirtyy
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 for|for
 control|(
 name|row
@@ -3618,6 +3639,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
 comment|/* Mouse disabled. */
 if|if
 condition|(
@@ -3838,6 +3862,8 @@ operator|->
 name|vf_height
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5516,6 +5542,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+end_ifndef
+
 begin_function
 name|void
 name|vt_mouse_event
@@ -6112,6 +6144,11 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

@@ -900,6 +900,9 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -934,6 +937,8 @@ name|value
 argument_list|)
 expr_stmt|;
 return|return;
+endif|#
+directive|endif
 name|done
 label|:
 name|mtx_unlock
@@ -1637,6 +1642,9 @@ name|sysmouse_level
 operator|=
 name|level
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
 name|vt_mouse_state
 argument_list|(
 operator|(
@@ -1650,6 +1658,8 @@ else|:
 name|VT_MOUSE_HIDE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1695,6 +1705,9 @@ name|mode
 operator|->
 name|level
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
 name|vt_mouse_state
 argument_list|(
 operator|(
@@ -1710,6 +1723,8 @@ else|:
 name|VT_MOUSE_HIDE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 return|return

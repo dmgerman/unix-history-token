@@ -23,6 +23,12 @@ directive|include
 file|<dev/vt/vt.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+end_ifndef
+
 begin_decl_stmt
 name|struct
 name|mouse_cursor
@@ -131,6 +137,11 @@ literal|13
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
