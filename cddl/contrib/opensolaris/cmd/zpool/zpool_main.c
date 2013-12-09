@@ -7630,6 +7630,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ZPOOL_STATUS_NON_NATIVE_ASHIFT
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"status: One or more devices were "
+literal|"configured to use a non-native block size.\n"
+literal|"\tExpect reduced performance.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 comment|/* 		 * No other status can be seen when importing pools. 		 */
 name|assert
