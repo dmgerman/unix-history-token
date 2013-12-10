@@ -345,6 +345,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|rval
+parameter_list|,
+name|bool
+modifier|*
+name|retu
 parameter_list|)
 block|{
 name|int
@@ -405,6 +409,8 @@ argument_list|,
 name|offset
 argument_list|,
 name|rval
+argument_list|,
+name|retu
 argument_list|)
 expr_stmt|;
 block|}
@@ -433,6 +439,10 @@ name|msr
 parameter_list|,
 name|uint64_t
 name|val
+parameter_list|,
+name|bool
+modifier|*
+name|retu
 parameter_list|)
 block|{
 name|int
@@ -492,6 +502,8 @@ argument_list|,
 name|offset
 argument_list|,
 name|val
+argument_list|,
+name|retu
 argument_list|)
 expr_stmt|;
 block|}
@@ -579,6 +591,8 @@ argument_list|,
 name|off
 argument_list|,
 name|wval
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 return|return
@@ -666,6 +680,8 @@ argument_list|,
 name|off
 argument_list|,
 name|rval
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 return|return

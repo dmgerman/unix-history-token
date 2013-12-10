@@ -323,7 +323,7 @@ name|VLAPIC_TIMER_LOCK
 parameter_list|(
 name|vlapic
 parameter_list|)
-value|mtx_lock(&((vlapic)->timer_mtx))
+value|mtx_lock_spin(&((vlapic)->timer_mtx))
 end_define
 
 begin_define
@@ -333,7 +333,7 @@ name|VLAPIC_TIMER_UNLOCK
 parameter_list|(
 name|vlapic
 parameter_list|)
-value|mtx_unlock(&((vlapic)->timer_mtx))
+value|mtx_unlock_spin(&((vlapic)->timer_mtx))
 end_define
 
 begin_define
@@ -2439,6 +2439,10 @@ name|vlapic
 parameter_list|,
 name|uint64_t
 name|icrval
+parameter_list|,
+name|bool
+modifier|*
+name|retu
 parameter_list|)
 block|{
 name|int
@@ -2793,6 +2797,27 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 			 * XXX this assumes that the startup IPI always succeeds 			 */
+name|vlapic2
+operator|->
+name|boot_state
+operator|=
+name|BS_RUNNING
+expr_stmt|;
+name|vm_activate_cpu
+argument_list|(
+name|vlapic2
+operator|->
+name|vm
+argument_list|,
+name|dest
+argument_list|)
+expr_stmt|;
+operator|*
+name|retu
+operator|=
+name|true
+expr_stmt|;
 name|vmexit
 operator|=
 name|vm_exitinfo
@@ -2833,22 +2858,6 @@ operator|=
 name|vec
 operator|<<
 name|PAGE_SHIFT
-expr_stmt|;
-comment|/* 			 * XXX this assumes that the startup IPI always succeeds 			 */
-name|vlapic2
-operator|->
-name|boot_state
-operator|=
-name|BS_RUNNING
-expr_stmt|;
-name|vm_activate_cpu
-argument_list|(
-name|vlapic2
-operator|->
-name|vm
-argument_list|,
-name|dest
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3299,6 +3308,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|data
+parameter_list|,
+name|bool
+modifier|*
+name|retu
 parameter_list|)
 block|{
 name|struct
@@ -3691,6 +3704,10 @@ name|offset
 parameter_list|,
 name|uint64_t
 name|data
+parameter_list|,
+name|bool
+modifier|*
+name|retu
 parameter_list|)
 block|{
 name|struct
@@ -3830,6 +3847,8 @@ argument_list|(
 name|vlapic
 argument_list|,
 name|data
+argument_list|,
+name|retu
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3994,6 +4013,7 @@ name|vcpuid
 operator|=
 name|vcpuid
 expr_stmt|;
+comment|/* 	 * If the vlapic is configured in x2apic mode then it will be 	 * accessed in the critical section via the MSR emulation code. 	 * 	 * Therefore the timer mutex must be a spinlock because blockable 	 * mutexes cannot be acquired in a critical section. 	 */
 name|mtx_init
 argument_list|(
 operator|&
@@ -4005,7 +4025,7 @@ literal|"vlapic timer mtx"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_DEF
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|callout_init

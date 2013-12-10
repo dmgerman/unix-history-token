@@ -49,6 +49,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|rval
+parameter_list|,
+name|bool
+modifier|*
+name|retu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -70,6 +74,10 @@ name|msr
 parameter_list|,
 name|uint64_t
 name|wval
+parameter_list|,
+name|bool
+modifier|*
+name|retu
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -3715,10 +3715,10 @@ parameter_list|,
 name|int
 name|vcpuid
 parameter_list|,
-name|boolean_t
+name|bool
 name|intr_disabled
 parameter_list|,
-name|boolean_t
+name|bool
 modifier|*
 name|retu
 parameter_list|)
@@ -3825,7 +3825,7 @@ comment|/* 			 * Spindown the vcpu if the apic is disabled and it 			 * had ente
 operator|*
 name|retu
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|vmexit
 operator|=
@@ -3899,7 +3899,7 @@ parameter_list|,
 name|int
 name|vcpuid
 parameter_list|,
-name|boolean_t
+name|bool
 modifier|*
 name|retu
 parameter_list|)
@@ -4106,7 +4106,7 @@ parameter_list|,
 name|int
 name|vcpuid
 parameter_list|,
-name|boolean_t
+name|bool
 modifier|*
 name|retu
 parameter_list|)
@@ -4340,7 +4340,7 @@ block|{
 operator|*
 name|retu
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 return|return
 operator|(
@@ -4364,26 +4364,8 @@ name|mread
 argument_list|,
 name|mwrite
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* return to userland to spin up the AP */
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-operator|&&
-name|vme
-operator|->
-name|exitcode
-operator|==
-name|VM_EXITCODE_SPINUP_AP
-condition|)
-operator|*
 name|retu
-operator|=
-name|TRUE
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4433,7 +4415,7 @@ name|vm_exit
 modifier|*
 name|vme
 decl_stmt|;
-name|boolean_t
+name|bool
 name|retu
 decl_stmt|,
 name|intr_disabled
@@ -4631,7 +4613,7 @@ condition|)
 block|{
 name|retu
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 switch|switch
 condition|(
@@ -4643,8 +4625,9 @@ block|{
 case|case
 name|VM_EXITCODE_HLT
 case|:
-if|if
-condition|(
+name|intr_disabled
+operator|=
+operator|(
 operator|(
 name|vme
 operator|->
@@ -4658,15 +4641,7 @@ name|PSL_I
 operator|)
 operator|==
 literal|0
-condition|)
-name|intr_disabled
-operator|=
-name|TRUE
-expr_stmt|;
-else|else
-name|intr_disabled
-operator|=
-name|FALSE
+operator|)
 expr_stmt|;
 name|error
 operator|=
@@ -4718,7 +4693,7 @@ break|break;
 default|default:
 name|retu
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 comment|/* handled in userland */
 break|break;
@@ -4732,7 +4707,7 @@ literal|0
 operator|&&
 name|retu
 operator|==
-name|FALSE
+name|false
 condition|)
 block|{
 name|rip

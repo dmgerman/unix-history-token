@@ -591,6 +591,10 @@ name|offset
 parameter_list|,
 name|uint64_t
 name|data
+parameter_list|,
+name|bool
+modifier|*
+name|retu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -610,6 +614,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|data
+parameter_list|,
+name|bool
+modifier|*
+name|retu
 parameter_list|)
 function_decl|;
 end_function_decl
