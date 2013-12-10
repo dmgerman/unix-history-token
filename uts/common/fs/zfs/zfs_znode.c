@@ -3458,9 +3458,6 @@ decl_stmt|,
 name|obj
 decl_stmt|;
 name|int
-name|err
-decl_stmt|;
-name|int
 name|bonuslen
 decl_stmt|;
 name|sa_handle_t
@@ -3599,8 +3596,8 @@ operator|->
 name|z_replay
 condition|)
 block|{
-name|err
-operator|=
+name|VERIFY0
+argument_list|(
 name|zap_create_claim_norm
 argument_list|(
 name|zfsvfs
@@ -3621,10 +3618,6 @@ name|bonuslen
 argument_list|,
 name|tx
 argument_list|)
-expr_stmt|;
-name|ASSERT0
-argument_list|(
-name|err
 argument_list|)
 expr_stmt|;
 block|}
@@ -3662,8 +3655,8 @@ operator|->
 name|z_replay
 condition|)
 block|{
-name|err
-operator|=
+name|VERIFY0
+argument_list|(
 name|dmu_object_claim
 argument_list|(
 name|zfsvfs
@@ -3682,10 +3675,6 @@ name|bonuslen
 argument_list|,
 name|tx
 argument_list|)
-expr_stmt|;
-name|ASSERT0
-argument_list|(
-name|err
 argument_list|)
 expr_stmt|;
 block|}
@@ -4791,8 +4780,8 @@ operator|<
 name|ZFS_ACL_VERSION_FUID
 condition|)
 block|{
-name|err
-operator|=
+name|VERIFY0
+argument_list|(
 name|zfs_aclset_common
 argument_list|(
 operator|*
@@ -4806,10 +4795,6 @@ name|cr
 argument_list|,
 name|tx
 argument_list|)
-expr_stmt|;
-name|ASSERT0
-argument_list|(
-name|err
 argument_list|)
 expr_stmt|;
 block|}
