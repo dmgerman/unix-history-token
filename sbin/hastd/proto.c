@@ -1365,6 +1365,12 @@ name|conn
 operator|->
 name|pc_ctx
 argument_list|,
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
 name|protoname
 argument_list|,
 name|strlen
@@ -1514,6 +1520,11 @@ name|conn
 operator|->
 name|pc_ctx
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|protoname
 argument_list|,
 sizeof|sizeof
