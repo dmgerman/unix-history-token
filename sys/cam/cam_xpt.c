@@ -4562,7 +4562,7 @@ name|CAM_PERIPH_ANNOUNCED
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d at %s%d bus %d scbus%d target %d lun %d\n"
+literal|"%s%d at %s%d bus %d scbus%d target %d lun %jx\n"
 argument_list|,
 name|periph
 operator|->
@@ -4608,6 +4608,9 @@ name|target
 operator|->
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|path
 operator|->
 name|device
@@ -4894,7 +4897,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d at %s%d bus %d scbus%d target %d lun %d\n"
+literal|"%s%d at %s%d bus %d scbus%d target %d lun %jx\n"
 argument_list|,
 name|periph
 operator|->
@@ -4940,6 +4943,9 @@ name|target
 operator|->
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|path
 operator|->
 name|device
@@ -16261,8 +16267,11 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"%d): "
+literal|"%jx): "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|path
 operator|->
 name|device
@@ -16305,7 +16314,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"(noperiph:%s%d:%d:%d:%d): "
+literal|"(noperiph:%s%d:%d:%d:%jx): "
 argument_list|,
 name|device
 operator|->
@@ -16331,6 +16340,9 @@ name|target
 operator|->
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|device
 operator|->
 name|lun_id
@@ -16596,8 +16608,11 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"%d): "
+literal|"%jx): "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|path
 operator|->
 name|device
