@@ -26,7 +26,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ifq.h>
 end_include
 
 begin_comment
