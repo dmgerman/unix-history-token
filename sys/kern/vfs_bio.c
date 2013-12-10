@@ -14640,15 +14640,6 @@ name|bio_completed
 expr_stmt|;
 name|bp
 operator|->
-name|b_resid
-operator|=
-name|bip
-operator|->
-name|bio_resid
-expr_stmt|;
-comment|/* XXX: remove */
-name|bp
-operator|->
 name|b_ioflags
 operator|=
 name|bip
