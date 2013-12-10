@@ -462,6 +462,12 @@ directive|include
 file|"opt_drm.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_syscons.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

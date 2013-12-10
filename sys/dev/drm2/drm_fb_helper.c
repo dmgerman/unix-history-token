@@ -2482,6 +2482,9 @@ argument_list|(
 name|fbd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_VT
 if|if
 condition|(
 name|ret
@@ -2495,6 +2498,8 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|#
 directive|else
