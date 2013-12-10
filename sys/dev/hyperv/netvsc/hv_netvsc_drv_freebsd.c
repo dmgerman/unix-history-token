@@ -551,6 +551,11 @@ expr_stmt|;
 name|netvsc_drv_init
 argument_list|()
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"done!\n"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
