@@ -4105,6 +4105,12 @@ comment|/* sun */
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -4123,9 +4129,6 @@ modifier|*
 name|sname
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|sun
 name|struct
 name|extvtoc
 name|vtoc
@@ -4331,11 +4334,17 @@ name|gpt
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* sun */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* sun */
+end_comment
 
 begin_function
 specifier|static
@@ -4464,6 +4473,9 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* this file is too small to hold a zpool */
+ifdef|#
+directive|ifdef
+name|sun
 if|if
 condition|(
 name|S_ISREG
@@ -4517,6 +4529,31 @@ name|rn_name
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* !sun */
+if|if
+condition|(
+name|statbuf
+operator|.
+name|st_size
+operator|<
+name|SPA_MINDEVSIZE
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
+comment|/* sun */
 if|if
 condition|(
 operator|(
