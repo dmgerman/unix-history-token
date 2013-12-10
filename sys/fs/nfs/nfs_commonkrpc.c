@@ -1257,6 +1257,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|nrp
+operator|->
+name|nr_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Someone else already connected. 		 */
 name|CLNT_RELEASE
 argument_list|(
@@ -1272,8 +1280,7 @@ name|nr_client
 operator|=
 name|client
 expr_stmt|;
-block|}
-comment|/* 	 * Protocols that do not require connections may be optionally left 	 * unconnected for servers that reply from a port other than NFS_PORT. 	 */
+comment|/* 		 * Protocols that do not require connections may be optionally 		 * left unconnected for servers that reply from a port other 		 * than NFS_PORT. 		 */
 if|if
 condition|(
 name|nmp
@@ -1311,7 +1318,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|mtx_unlock
 argument_list|(
 operator|&
