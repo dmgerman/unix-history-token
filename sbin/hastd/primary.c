@@ -593,6 +593,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISFULLSYNC
+parameter_list|(
+name|hio
+parameter_list|)
+value|((hio)->hio_replication == HAST_REPLICATION_FULLSYNC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISMEMSYNC
+parameter_list|(
+name|hio
+parameter_list|)
+value|((hio)->hio_replication == HAST_REPLICATION_MEMSYNC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISASYNC
+parameter_list|(
+name|hio
+parameter_list|)
+value|((hio)->hio_replication == HAST_REPLICATION_ASYNC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYNCREQ
 parameter_list|(
 name|hio
@@ -637,8 +667,7 @@ name|ISMEMSYNCWRITE
 parameter_list|(
 name|hio
 parameter_list|)
-define|\
-value|(((hio)->hio_replication == HAST_REPLICATION_MEMSYNC&&		\ 	(hio)->hio_ggio.gctl_cmd == BIO_WRITE&& !ISSYNCREQ(hio)))
+value|(ISMEMSYNC(hio)&&			\ 	    (hio)->hio_ggio.gctl_cmd == BIO_WRITE&& !ISSYNCREQ(hio))
 end_define
 
 begin_decl_stmt
@@ -6176,11 +6205,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ISMEMSYNC
+argument_list|(
 name|hio
-operator|->
-name|hio_replication
-operator|==
-name|HAST_REPLICATION_MEMSYNC
+argument_list|)
 condition|)
 block|{
 name|hio
@@ -6608,11 +6636,10 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|ISASYNC
+argument_list|(
 name|hio
-operator|->
-name|hio_replication
-operator|==
-name|HAST_REPLICATION_ASYNC
+argument_list|)
 condition|)
 block|{
 name|ggio
