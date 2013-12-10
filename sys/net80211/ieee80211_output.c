@@ -12478,21 +12478,19 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-init|=
-name|arg
-decl_stmt|;
-name|struct
 name|ieee80211vap
 modifier|*
 name|vap
 init|=
-name|ni
-operator|->
-name|ni_vap
+name|arg
 decl_stmt|;
+name|IEEE80211_LOCK
+argument_list|(
+name|vap
+operator|->
+name|iv_ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -12515,7 +12513,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * NB: it's safe to specify a timeout as the reason here; 		 *     it'll only be used in the right state. 		 */
-name|ieee80211_new_state
+name|ieee80211_new_state_locked
 argument_list|(
 name|vap
 argument_list|,
@@ -12525,8 +12523,19 @@ name|IEEE80211_SCAN_FAIL_TIMEOUT
 argument_list|)
 expr_stmt|;
 block|}
+name|IEEE80211_UNLOCK
+argument_list|(
+name|vap
+operator|->
+name|iv_ic
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This is the callback set on net80211-sourced transmitted  * authentication request frames.  *  * This does a couple of things:  *  * + If the frame transmitted was a success, it schedules a future  *   event which will transition the interface to scan.  *   If a state transition _then_ occurs before that event occurs,  *   said state transition will cancel this callout.  *  * + If the frame transmit was a failure, it immediately schedules  *   the transition back to scan.  */
+end_comment
 
 begin_function
 specifier|static
@@ -12574,6 +12583,7 @@ name|iv_state
 operator|==
 name|ostate
 condition|)
+block|{
 name|callout_reset
 argument_list|(
 operator|&
@@ -12593,9 +12603,10 @@ literal|0
 argument_list|,
 name|ieee80211_tx_mgt_timeout
 argument_list|,
-name|ni
+name|vap
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
