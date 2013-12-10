@@ -197,33 +197,6 @@ directive|include
 file|"gmt2local.h"
 end_include
 
-begin_comment
-comment|/* packing rule for routing socket */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|((a)> 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADVANCE
-parameter_list|(
-name|x
-parameter_list|,
-name|n
-parameter_list|)
-value|(x += ROUNDUP((n)->sa_len))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1843,7 +1816,7 @@ name|sockaddr_dl
 operator|*
 operator|)
 operator|(
-name|ROUNDUP
+name|ALIGN
 argument_list|(
 name|sin
 operator|->
@@ -2353,7 +2326,7 @@ name|sockaddr_dl
 operator|*
 operator|)
 operator|(
-name|ROUNDUP
+name|ALIGN
 argument_list|(
 name|sin
 operator|->
@@ -2873,7 +2846,7 @@ operator|*
 operator|)
 name|sin
 operator|+
-name|ROUNDUP
+name|ALIGN
 argument_list|(
 name|sin
 operator|->
