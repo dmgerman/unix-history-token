@@ -258,6 +258,15 @@ block|;
 name|public
 operator|:
 name|GCCInstallationDetector
+argument_list|()
+operator|:
+name|IsValid
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|void
+name|init
 argument_list|(
 specifier|const
 name|Driver
