@@ -1242,7 +1242,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the next property of a package. Return the actual len of retrieved  * prop name.  */
+comment|/*  * Get the next property of a package. Return values:  *  -1: package or previous property does not exist  *   0: no more properties  *   1: success  */
 end_comment
 
 begin_function
@@ -1458,10 +1458,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
+literal|1
 operator|)
 return|;
 block|}
