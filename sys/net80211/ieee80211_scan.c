@@ -3791,6 +3791,10 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|scandone
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|done
 goto|;
