@@ -547,7 +547,7 @@ name|name
 parameter_list|,
 name|ncomp
 parameter_list|)
-value|do {				\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock[(ncomp)]);			\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list[(ncomp)]);		\ 	TAILQ_INSERT_TAIL(&hio_##name##_list[(ncomp)], (hio),		\ 	    hio_next[(ncomp)]);						\ 	hio_##name##_list_size[(ncomp)]++;				\ 	mtx_unlock(&hio_##name##_list_lock[ncomp]);			\ 	if (_wakeup)							\ 		cv_broadcast(&hio_##name##_list_cond[(ncomp)]);		\ } while (0)
+value|do {				\ 	mtx_lock(&hio_##name##_list_lock[(ncomp)]);			\ 	if (TAILQ_EMPTY(&hio_##name##_list[(ncomp)]))			\ 		cv_broadcast(&hio_##name##_list_cond[(ncomp)]);		\ 	TAILQ_INSERT_TAIL(&hio_##name##_list[(ncomp)], (hio),		\ 	    hio_next[(ncomp)]);						\ 	hio_##name##_list_size[(ncomp)]++;				\ 	mtx_unlock(&hio_##name##_list_lock[(ncomp)]);			\ } while (0)
 end_define
 
 begin_define
@@ -559,7 +559,7 @@ name|hio
 parameter_list|,
 name|name
 parameter_list|)
-value|do {				\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock);				\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list);			\ 	TAILQ_INSERT_TAIL(&hio_##name##_list, (hio), hio_##name##_next);\ 	hio_##name##_list_size++;					\ 	mtx_unlock(&hio_##name##_list_lock);				\ 	if (_wakeup)							\ 		cv_broadcast(&hio_##name##_list_cond);			\ } while (0)
+value|do {				\ 	mtx_lock(&hio_##name##_list_lock);				\ 	if (TAILQ_EMPTY(&hio_##name##_list))				\ 		cv_broadcast(&hio_##name##_list_cond);			\ 	TAILQ_INSERT_TAIL(&hio_##name##_list, (hio), hio_##name##_next);\ 	hio_##name##_list_size++;					\ 	mtx_unlock(&hio_##name##_list_lock);				\ } while (0)
 end_define
 
 begin_define
