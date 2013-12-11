@@ -792,7 +792,8 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|extern
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|xhci_bus_methods
@@ -13835,6 +13836,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|xhci_device_generic_methods
@@ -18758,6 +18761,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|xhci_bus_methods

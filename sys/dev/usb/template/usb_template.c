@@ -3538,6 +3538,7 @@ name|usb_hw_ep_profile
 modifier|*
 name|pf
 decl_stmt|;
+specifier|const
 name|struct
 name|usb_bus_methods
 modifier|*

@@ -9442,6 +9442,7 @@ name|uint8_t
 name|power_mode
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|usb_bus_methods
 modifier|*

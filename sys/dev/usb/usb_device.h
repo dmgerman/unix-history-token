@@ -406,6 +406,7 @@ name|usb_device
 modifier|*
 name|udev
 decl_stmt|;
+specifier|const
 name|struct
 name|usb_bus_methods
 modifier|*

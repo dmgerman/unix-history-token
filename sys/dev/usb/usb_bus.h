@@ -225,6 +225,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+specifier|const
 name|struct
 name|usb_bus_methods
 modifier|*

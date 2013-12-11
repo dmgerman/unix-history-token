@@ -593,6 +593,7 @@ name|usb_endpoint_ss_comp_descriptor
 modifier|*
 name|ecomp
 decl_stmt|;
+specifier|const
 name|struct
 name|usb_pipe_methods
 modifier|*
