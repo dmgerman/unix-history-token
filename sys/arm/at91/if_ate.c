@@ -5772,7 +5772,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * There's a small race between the loop in ate_intr finishing 		 * and the check above to see if the packet was finished, as well 		 * as when atestart gets called via other paths. Loose the race 		 * gracefully and free the mbuf... 		 */
+comment|/* 		 * There's a small race between the loop in ate_intr finishing 		 * and the check above to see if the packet was finished, as well 		 * as when atestart gets called via other paths. Lose the race 		 * gracefully and free the mbuf... 		 */
 if|if
 condition|(
 name|sc
