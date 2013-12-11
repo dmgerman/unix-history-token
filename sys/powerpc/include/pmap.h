@@ -1040,8 +1040,12 @@ begin_define
 define|#
 directive|define
 name|PHYS_AVAIL_SZ
-value|128
+value|256
 end_define
+
+begin_comment
+comment|/* Allows up to 16GB Ram on pSeries with 				 * logical memory block size of 64MB. 				 * For more Ram increase the lmb or this value. 				 */
+end_comment
 
 begin_decl_stmt
 specifier|extern
