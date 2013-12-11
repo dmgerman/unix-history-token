@@ -143,6 +143,12 @@ directive|include
 file|<machine/ofw_machdep.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/trap.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -169,6 +175,19 @@ name|PHYS_AVAIL_SZ
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|apple_hacks
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIM
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -202,6 +221,33 @@ name|ofw_real_mode
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|save_trap_init
+index|[
+literal|0x2f00
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* EXC_LAST */
+end_comment
+
+begin_decl_stmt
+name|char
+name|save_trap_of
+index|[
+literal|0x2f00
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* EXC_LAST */
+end_comment
+
 begin_function_decl
 name|int
 name|ofwcall
@@ -224,6 +270,82 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+name|__inline
+name|void
+name|ofw_save_trap_vec
+parameter_list|(
+name|char
+modifier|*
+name|save_trap_vec
+parameter_list|)
+block|{
+if|if
+condition|(
+name|apple_hacks
+condition|)
+return|return;
+name|bcopy
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|EXC_RST
+argument_list|,
+name|save_trap_vec
+argument_list|,
+name|EXC_LAST
+operator|-
+name|EXC_RST
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ofw_restore_trap_vec
+parameter_list|(
+name|char
+modifier|*
+name|restore_trap_vec
+parameter_list|)
+block|{
+if|if
+condition|(
+name|apple_hacks
+condition|)
+return|return;
+name|bcopy
+argument_list|(
+name|restore_trap_vec
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|EXC_RST
+argument_list|,
+name|EXC_LAST
+operator|-
+name|EXC_RST
+argument_list|)
+expr_stmt|;
+name|__syncicache
+argument_list|(
+name|EXC_RSVD
+argument_list|,
+name|EXC_LAST
+operator|-
+name|EXC_RSVD
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Saved SPRG0-3 from OpenFirmware. Will be restored prior to the callback.  */
 end_comment
@@ -243,6 +365,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|apple_hacks
+condition|)
+return|return;
 comment|/* 	 * Assume that interrupt are disabled at this point, or 	 * SPRG1-3 could be trashed 	 */
 asm|__asm __volatile("mfsprg0 %0\n\t"
 literal|"mtsprg0 %1\n\t"
@@ -299,10 +427,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|apple_hacks
+condition|)
+return|return;
 comment|/* 	 * Note that SPRG1-3 contents are irrelevant. They are scratch 	 * registers used in the early portion of trap handling when 	 * interrupts are disabled. 	 * 	 * PCPU data cannot be used until this routine is called ! 	 */
 asm|__asm __volatile("mtsprg0 %0" :: "r"(ofw_sprg0_save));
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Memory region utilities: determine if two regions overlap,  * and merge two overlapping regions into one  */
@@ -653,7 +792,7 @@ name|size_cells
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * On Apple hardware, address_cells is always 1 for "available", 	 * even when it is explicitly set to 2. Then all memory above 4 GB 	 * should be added by hand to the available list. Detect Apple hardware 	 * by seeing if ofw_real_mode is set -- only Apple seems to use 	 * virtual-mode OF. 	 */
+comment|/* 	 * On Apple hardware, address_cells is always 1 for "available", 	 * even when it is explicitly set to 2. All memory above 4 GB 	 * also needs to be added by hand to the available list. 	 */
 if|if
 condition|(
 name|strcmp
@@ -665,16 +804,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-operator|!
-name|ofw_real_mode
-condition|)
-name|apple_hack_mode
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|apple_hack_mode
+name|apple_hacks
 condition|)
 name|address_cells
 operator|=
@@ -928,7 +1058,16 @@ directive|ifdef
 name|__powerpc64__
 if|if
 condition|(
-name|apple_hack_mode
+name|strcmp
+argument_list|(
+name|prop
+argument_list|,
+literal|"available"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|apple_hacks
 condition|)
 block|{
 comment|/* Add in regions above 4 GB to the available list */
@@ -1900,6 +2039,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIM
+end_ifdef
+
 begin_function
 name|void
 name|OF_initial_setup
@@ -2072,6 +2217,23 @@ name|fdt
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Apple firmware has some bugs. Check for a "mac-io" alias. */
+name|apple_hacks
+operator|=
+operator|(
+name|OF_finddevice
+argument_list|(
+literal|"mac-io"
+argument_list|)
+operator|!=
+operator|-
+literal|1
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|status
@@ -2169,6 +2331,18 @@ expr_stmt|;
 name|ofw_sprg_prepare
 argument_list|()
 expr_stmt|;
+comment|/* Save trap vectors */
+name|ofw_save_trap_vec
+argument_list|(
+name|save_trap_of
+argument_list|)
+expr_stmt|;
+comment|/* Restore initially saved trap vectors */
+name|ofw_restore_trap_vec
+argument_list|(
+name|save_trap_init
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2220,6 +2394,18 @@ operator|=
 name|ofwcall
 argument_list|(
 name|args
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Restore trap vecotrs */
+end_comment
+
+begin_expr_stmt
+name|ofw_restore_trap_vec
+argument_list|(
+name|save_trap_of
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2490,6 +2676,15 @@ comment|/* just in case */
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AIM */
+end_comment
+
 begin_function
 name|void
 name|OF_getetheraddr
@@ -2552,9 +2747,9 @@ name|pcip
 parameter_list|)
 block|{
 name|char
-name|name
+name|type
 index|[
-literal|16
+literal|64
 index|]
 decl_stmt|;
 name|uint32_t
@@ -2644,13 +2839,13 @@ name|OF_getprop
 argument_list|(
 name|node
 argument_list|,
-literal|"name"
+literal|"device_type"
 argument_list|,
-name|name
+name|type
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|name
+name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2662,11 +2857,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|name
+name|type
 index|[
 sizeof|sizeof
 argument_list|(
-name|name
+name|type
 argument_list|)
 operator|-
 literal|1
@@ -2679,7 +2874,7 @@ operator|=
 operator|(
 name|strcmp
 argument_list|(
-name|name
+name|type
 argument_list|,
 literal|"pci"
 argument_list|)
@@ -2850,6 +3045,13 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* Assume big-endian unless we find a PCI device */
+operator|*
+name|tag
+operator|=
+operator|&
+name|bs_be_tag
+expr_stmt|;
 comment|/* Get the requested register. */
 name|OF_get_addr_props
 argument_list|(
@@ -2864,6 +3066,16 @@ argument_list|,
 operator|&
 name|pci
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pci
+condition|)
+operator|*
+name|tag
+operator|=
+operator|&
+name|bs_le_tag
 expr_stmt|;
 name|res
 operator|=
@@ -3073,6 +3285,16 @@ argument_list|,
 operator|&
 name|pcib
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pcib
+condition|)
+operator|*
+name|tag
+operator|=
+operator|&
+name|bs_le_tag
 expr_stmt|;
 name|res
 operator|=
@@ -3350,12 +3572,6 @@ name|pci
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|tag
-operator|=
-operator|&
-name|bs_le_tag
-expr_stmt|;
 return|return
 operator|(
 name|bus_space_map
