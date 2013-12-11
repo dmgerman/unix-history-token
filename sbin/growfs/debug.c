@@ -4349,7 +4349,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"extsize    int32_t        0x%08x\n"
+literal|"extsize    u_int32_t      0x%08x\n"
 argument_list|,
 name|ino
 operator|->
