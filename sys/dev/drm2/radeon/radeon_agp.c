@@ -664,6 +664,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|rdev
 operator|->
 name|ddev
@@ -673,6 +674,9 @@ operator|->
 name|info
 operator|.
 name|ai_aperture_size
+operator|>>
+literal|20
+operator|)
 operator|<
 literal|32
 condition|)
@@ -702,6 +706,8 @@ operator|->
 name|info
 operator|.
 name|ai_aperture_size
+operator|>>
+literal|20
 argument_list|)
 expr_stmt|;
 return|return
@@ -1130,8 +1136,6 @@ operator|->
 name|info
 operator|.
 name|ai_aperture_size
-operator|<<
-literal|20
 expr_stmt|;
 name|rdev
 operator|->
