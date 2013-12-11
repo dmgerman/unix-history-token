@@ -2277,6 +2277,10 @@ name|void
 name|nfsv4_setsequence
 parameter_list|(
 name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
+name|struct
 name|nfsrv_descript
 modifier|*
 parameter_list|,
