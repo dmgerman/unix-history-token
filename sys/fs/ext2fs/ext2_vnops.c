@@ -7839,7 +7839,7 @@ operator|>
 literal|1
 condition|)
 block|{
-name|int
+name|u_int
 name|nextsize
 init|=
 name|blksize
