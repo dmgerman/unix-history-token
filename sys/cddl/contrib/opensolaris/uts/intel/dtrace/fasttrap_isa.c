@@ -287,7 +287,7 @@ argument_list|,
 operator|&
 name|uio
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 block|{
