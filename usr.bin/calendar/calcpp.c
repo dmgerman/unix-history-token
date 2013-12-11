@@ -577,7 +577,7 @@ condition|)
 name|p
 operator|++
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|string
 argument_list|,
