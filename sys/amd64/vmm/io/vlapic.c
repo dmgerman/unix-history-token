@@ -827,7 +827,7 @@ name|version
 operator||=
 operator|(
 name|VLAPIC_MAXLVT_ENTRIES
-operator|<
+operator|<<
 name|MAXLVTSHIFT
 operator|)
 expr_stmt|;
