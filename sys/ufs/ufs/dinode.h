@@ -355,10 +355,10 @@ name|u_int32_t
 name|di_flags
 decl_stmt|;
 comment|/*  88: Status flags (chflags). */
-name|int32_t
+name|u_int32_t
 name|di_extsize
 decl_stmt|;
-comment|/*  92: External attributes block. */
+comment|/*  92: External attributes size. */
 name|ufs2_daddr_t
 name|di_extb
 index|[
@@ -476,7 +476,7 @@ name|u_int32_t
 name|di_flags
 decl_stmt|;
 comment|/* 100: Status flags (chflags). */
-name|int32_t
+name|u_int32_t
 name|di_blocks
 decl_stmt|;
 comment|/* 104: Blocks actually held. */
