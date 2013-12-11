@@ -6367,6 +6367,10 @@ operator|=
 name|CONS_SETKBD
 expr_stmt|;
 break|break;
+default|default:
+goto|goto
+name|skip_thunk
+goto|;
 block|}
 name|ival
 operator|=
@@ -6383,6 +6387,8 @@ operator|)
 operator|&
 name|ival
 expr_stmt|;
+name|skip_thunk
+label|:
 endif|#
 directive|endif
 switch|switch
