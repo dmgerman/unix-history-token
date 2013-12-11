@@ -500,11 +500,21 @@ name|root
 operator|=
 name|device_get_parent
 argument_list|(
+comment|/* pcib             */
+name|device_get_parent
+argument_list|(
+comment|/* `-- pci          */
+name|device_get_parent
+argument_list|(
+comment|/*     `-- vgapci   */
 name|dev
 operator|->
 name|device
 argument_list|)
+argument_list|)
+argument_list|)
 expr_stmt|;
+comment|/*         `-- drmn */
 name|pos
 operator|=
 literal|0
