@@ -613,8 +613,11 @@ if|if
 condition|(
 name|OF_init
 argument_list|(
-operator|&
-name|fdt_static_dtb
+operator|(
+name|void
+operator|*
+operator|)
+name|dtbp
 argument_list|)
 operator|!=
 literal|0
