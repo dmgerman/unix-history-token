@@ -5734,6 +5734,7 @@ return|return;
 block|}
 else|else
 block|{
+specifier|const
 name|char
 modifier|*
 name|__kind
