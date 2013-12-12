@@ -8645,6 +8645,9 @@ operator||
 name|XHCI_TRB_3_CYCLE_BIT
 operator||
 name|XHCI_TRB_3_IOC_BIT
+operator||
+comment|/* 		     * CHAIN-BIT: Ensure that a multi-TRB IN-endpoint 		     * frame only receives a single short packet event 		     * by setting the CHAIN bit in the LINK field. In 		     * addition some XHCI controllers have problems 		     * sending a ZLP unless the CHAIN-BIT is set in 		     * the LINK TRB. 		     */
+name|XHCI_TRB_3_CHAIN_BIT
 expr_stmt|;
 name|td
 operator|->
@@ -8771,7 +8774,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* clear TD SIZE to zero, hence this is the last TRB */
-comment|/* remove chain bit because this is the last TRB in the chain */
+comment|/* remove chain bit because this is the last data TRB in the chain */
 name|td
 operator|->
 name|td_trb
