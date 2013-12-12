@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: extern.h,v 1.29 2002/02/16 21:27:48 millert Exp $	*/
+comment|/*	$OpenBSD: extern.h,v 1.52 2012/04/12 17:00:11 espie Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*	$NetBSD: extern.h,v 1.3 1996/01/13 23:25:24 pk Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ozan Yigit at York University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)extern.h	8.1 (Berkeley) 6/6/93  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ozan Yigit at York University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)extern.h	8.1 (Berkeley) 6/6/93  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -24,6 +24,8 @@ specifier|const
 name|char
 modifier|*
 index|[]
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -202,14 +204,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* look.c */
-end_comment
-
 begin_function_decl
 specifier|extern
-name|ndptr
-name|addent
+name|void
+name|getdivfile
 parameter_list|(
 specifier|const
 name|char
@@ -220,12 +218,50 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|unsigned
-name|hash
+name|void
+name|doformat
 parameter_list|(
 specifier|const
 name|char
 modifier|*
+index|[]
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* look.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLAG_UNTRACED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAG_TRACED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAG_NO_TRACE
+value|2
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_macros
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -245,13 +281,180 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|remhash
+name|mark_traced
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ohash
+name|macros
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|struct
+name|macro_definition
+modifier|*
+name|lookup_macro_definition
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|macro_define
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|macro_pushdef
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|macro_popdef
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|macro_undefine
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|setup_builtin
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|macro_for_all
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|macro_definition
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|macro_getdef
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|macro_name
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|macro_builtin_type
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->builtin_type)
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_traced
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->trace_flags == FLAG_NO_TRACE ? (trace_flags& TRACE_ALL) : (p)->trace_flags)
+end_define
+
+begin_function_decl
+specifier|extern
+name|ndptr
+name|macro_getbuiltin
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -274,37 +477,28 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|builtin_type
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|builtin_realname
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
-name|emitline
+name|do_emit_synchline
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|exit_code
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|emit_synchline
+parameter_list|()
+value|do { if (synch_lines) do_emit_synchline(); } while(0)
+end_define
 
 begin_comment
 comment|/* misc.c */
@@ -400,6 +594,20 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|pbnumbase
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|pbunsigned
 parameter_list|(
 name|unsigned
@@ -423,7 +631,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|putback
+name|pushback
 parameter_list|(
 name|int
 parameter_list|)
@@ -437,6 +645,34 @@ modifier|*
 name|xalloc
 parameter_list|(
 name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|xrealloc
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -499,6 +735,22 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|m4errx
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|obtain_char
 parameter_list|(
@@ -541,13 +793,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* speeded-up versions of chrsave/putback */
+comment|/* speeded-up versions of chrsave/pushback */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PUTBACK
+name|PUSHBACK
 parameter_list|(
 name|c
 parameter_list|)
@@ -592,6 +844,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 modifier|*
 name|endpbb
@@ -610,31 +863,20 @@ begin_comment
 comment|/* trace.c */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|void
-name|mark_traced
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
+name|unsigned
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+name|trace_flags
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|int
-name|is_traced
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|TRACE_ALL
+value|512
+end_define
 
 begin_function_decl
 specifier|extern
@@ -650,7 +892,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|ssize_t
+name|size_t
 name|trace
 parameter_list|(
 specifier|const
@@ -677,13 +919,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|traced_macros
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|void
@@ -703,18 +938,6 @@ modifier|*
 name|traceout
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ndptr
-name|hashtab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* hash table for macros etc. */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -763,31 +986,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* input file stack (0=stdin) */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|inname
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* names of these input files */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|inlineno
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current number in each input file */
 end_comment
 
 begin_decl_stmt
@@ -860,6 +1058,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 modifier|*
 name|bp
@@ -872,6 +1071,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 modifier|*
 name|buf
@@ -884,6 +1084,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 modifier|*
 name|bufbase
@@ -896,6 +1097,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 modifier|*
 name|bbase
@@ -953,8 +1155,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|char
+modifier|*
 modifier|*
 name|m4wraps
 decl_stmt|;
@@ -966,9 +1168,32 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|maxwraps
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of m4wraps array */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|wrapindex
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current index in m4wraps */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
 name|char
+modifier|*
 name|null
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1011,12 +1236,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|synccpp
+name|synch_lines
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Line synchronisation for C preprocessor */
+comment|/* line synchronisation directives */
 end_comment
 
 begin_decl_stmt
@@ -1030,81 +1255,16 @@ begin_comment
 comment|/* behaves like gnu-m4 */
 end_comment
 
-begin_comment
-comment|/* get a possibly pushed-back-character, increment lineno if need be */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
+begin_decl_stmt
+specifier|extern
 name|int
-name|gpbc
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|int
-name|chscratch
+name|prefix_builtins
 decl_stmt|;
-comment|/* Scratch space. */
-if|if
-condition|(
-name|bp
-operator|>
-name|bufbase
-condition|)
-block|{
-if|if
-condition|(
-operator|*
-operator|--
-name|bp
-condition|)
-return|return
-operator|(
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|bp
-operator|)
-return|;
-else|else
-return|return
-operator|(
-name|EOF
-operator|)
-return|;
-block|}
-name|chscratch
-operator|=
-name|obtain_char
-argument_list|(
-name|infile
-operator|+
-name|ilevel
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|chscratch
-operator|==
-literal|'\n'
-condition|)
-operator|++
-name|inlineno
-index|[
-name|ilevel
-index|]
-expr_stmt|;
-return|return
-operator|(
-name|chscratch
-operator|)
-return|;
-block|}
-end_function
+end_decl_stmt
+
+begin_comment
+comment|/* prefix builtin macros with m4_ */
+end_comment
 
 end_unit
 
