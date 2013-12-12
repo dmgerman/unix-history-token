@@ -47,6 +47,8 @@ name|SIGNATURE_TYPE
 block|,
 name|FINGERPRINTS
 block|,
+name|REPOS_DIR
+block|,
 name|CONFIG_SIZE
 block|}
 name|pkg_config_key
@@ -62,6 +64,8 @@ init|=
 literal|0
 block|,
 name|PKG_CONFIG_BOOL
+block|,
+name|PKG_CONFIG_LIST
 block|, }
 name|pkg_config_t
 typedef|;
