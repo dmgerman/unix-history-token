@@ -18139,7 +18139,7 @@ name|val
 operator|=
 name|compare_range_with_value
 argument_list|(
-name|GT_EXPR
+name|GE_EXPR
 argument_list|,
 name|vr
 argument_list|,

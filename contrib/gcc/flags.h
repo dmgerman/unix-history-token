@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"options.h"
 end_include
 
@@ -106,6 +112,56 @@ name|debug_info_level
 name|debug_info_level
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* A major contribution to object and executable size is debug    information size.  A major contribution to debug information    size is struct descriptions replicated in several object files.    The following function determines whether or not debug information    should be generated for a given struct.  The indirect parameter    indicates that the struct is being handled indirectly, via    a pointer.  See opts.c for the implementation. */
+end_comment
+
+begin_enum
+enum|enum
+name|debug_info_usage
+block|{
+name|DINFO_USAGE_DFN
+block|,
+comment|/* A struct definition. */
+name|DINFO_USAGE_DIR_USE
+block|,
+comment|/* A direct use, such as the type of a variable. */
+name|DINFO_USAGE_IND_USE
+block|,
+comment|/* An indirect use, such as through a pointer. */
+name|DINFO_USAGE_NUM_ENUMS
+comment|/* The number of enumerators. */
+block|}
+enum|;
+end_enum
+
+begin_function_decl
+specifier|extern
+name|bool
+name|should_emit_struct_debug
+parameter_list|(
+name|tree
+name|type_decl
+parameter_list|,
+name|enum
+name|debug_info_usage
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|set_struct_debug_option
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Nonzero means use GNU-only extensions in the generated symbolic    debugging information.  */

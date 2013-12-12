@@ -3200,6 +3200,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|warn_about_parentheses
+parameter_list|(
+name|enum
+name|tree_code
+parameter_list|,
+name|enum
+name|tree_code
+parameter_list|,
+name|enum
+name|tree_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* In c-gimplify.c  */
 end_comment

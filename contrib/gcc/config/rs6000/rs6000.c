@@ -6896,8 +6896,6 @@ name|PROCESSOR_PPC8540
 block|,
 name|POWERPC_BASE_MASK
 operator||
-name|MASK_PPC_GFXOPT
-operator||
 name|MASK_STRICT_ALIGN
 block|}
 block|,
@@ -6908,8 +6906,6 @@ block|,
 name|PROCESSOR_PPC8540
 block|,
 name|POWERPC_BASE_MASK
-operator||
-name|MASK_PPC_GFXOPT
 operator||
 name|MASK_STRICT_ALIGN
 block|}

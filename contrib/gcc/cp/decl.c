@@ -24648,6 +24648,10 @@ elseif|else
 if|if
 condition|(
 name|pedantic
+operator|&&
+name|warn_vla
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -24656,7 +24660,7 @@ name|name
 condition|)
 name|pedwarn
 argument_list|(
-literal|"ISO C++ forbids variable-size array %qD"
+literal|"ISO C++ forbids variable length array %qD"
 argument_list|,
 name|name
 argument_list|)
@@ -24664,7 +24668,37 @@ expr_stmt|;
 else|else
 name|pedwarn
 argument_list|(
-literal|"ISO C++ forbids variable-size array"
+literal|"ISO C++ forbids variable length array"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|warn_vla
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|name
+condition|)
+name|warning
+argument_list|(
+name|OPT_Wvla
+argument_list|,
+literal|"variable length array %qD is used"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|warning
+argument_list|(
+name|OPT_Wvla
+argument_list|,
+literal|"variable length array is used"
 argument_list|)
 expr_stmt|;
 block|}
