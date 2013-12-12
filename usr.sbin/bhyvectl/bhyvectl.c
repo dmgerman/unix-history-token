@@ -304,6 +304,7 @@ literal|"       [--set-mem=<memory in units of MB>]\n"
 literal|"       [--get-lowmem]\n"
 literal|"       [--get-highmem]\n"
 literal|"       [--get-gpa-pmap]\n"
+literal|"       [--inject-nmi]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -328,6 +329,13 @@ decl_stmt|,
 name|capval
 decl_stmt|,
 name|get_gpa_pmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|inject_nmi
 decl_stmt|;
 end_decl_stmt
 
@@ -3045,6 +3053,17 @@ literal|1
 block|}
 block|,
 block|{
+literal|"inject-nmi"
+block|,
+name|NO_ARG
+block|,
+operator|&
+name|inject_nmi
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
@@ -4411,6 +4430,24 @@ argument_list|,
 name|VMCS_ENTRY_INTR_INFO
 argument_list|,
 name|vmcs_entry_interruption_info
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|inject_nmi
+condition|)
+block|{
+name|error
+operator|=
+name|vm_inject_nmi
+argument_list|(
+name|ctx
+argument_list|,
+name|vcpu
 argument_list|)
 expr_stmt|;
 block|}
