@@ -718,13 +718,15 @@ name|t4_list_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
 argument|adapter
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|t4_list
 expr_stmt|;
 end_expr_stmt
@@ -743,13 +745,15 @@ name|t4_uld_list_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
 argument|uld_info
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|t4_uld_list
 expr_stmt|;
 end_expr_stmt
