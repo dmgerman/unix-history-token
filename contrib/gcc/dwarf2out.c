@@ -17648,6 +17648,9 @@ parameter_list|(
 name|tree
 parameter_list|,
 name|dw_die_ref
+parameter_list|,
+name|enum
+name|debug_info_usage
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -48868,6 +48871,10 @@ name|type
 parameter_list|,
 name|dw_die_ref
 name|context_die
+parameter_list|,
+name|enum
+name|debug_info_usage
+name|usage
 parameter_list|)
 block|{
 name|dw_die_ref
@@ -48928,6 +48935,17 @@ operator|==
 name|DW_TAG_namespace
 operator|)
 decl_stmt|;
+name|complete
+operator|=
+name|complete
+operator|&&
+name|should_emit_struct_debug
+argument_list|(
+name|type
+argument_list|,
+name|usage
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|type_die
@@ -49460,13 +49478,17 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|gen_type_die
+name|gen_type_die_with_usage
 parameter_list|(
 name|tree
 name|type
 parameter_list|,
 name|dw_die_ref
 name|context_die
+parameter_list|,
+name|enum
+name|debug_info_usage
+name|usage
 parameter_list|)
 block|{
 name|int
@@ -49603,7 +49625,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* For these types, all that is required is that we output a DIE (or a 	 set of DIEs) to represent the "basis" type.  */
-name|gen_type_die
+name|gen_type_die_with_usage
 argument_list|(
 name|TREE_TYPE
 argument_list|(
@@ -49611,6 +49633,8 @@ name|type
 argument_list|)
 argument_list|,
 name|context_die
+argument_list|,
+name|DINFO_USAGE_IND_USE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -49618,7 +49642,7 @@ case|case
 name|OFFSET_TYPE
 case|:
 comment|/* This code is used for C++ pointer-to-data-member types. 	 Output a description of the relevant class type.  */
-name|gen_type_die
+name|gen_type_die_with_usage
 argument_list|(
 name|TYPE_OFFSET_BASETYPE
 argument_list|(
@@ -49626,10 +49650,12 @@ name|type
 argument_list|)
 argument_list|,
 name|context_die
+argument_list|,
+name|DINFO_USAGE_IND_USE
 argument_list|)
 expr_stmt|;
 comment|/* Output a description of the type of the object pointed to.  */
-name|gen_type_die
+name|gen_type_die_with_usage
 argument_list|(
 name|TREE_TYPE
 argument_list|(
@@ -49637,6 +49663,8 @@ name|type
 argument_list|)
 argument_list|,
 name|context_die
+argument_list|,
+name|DINFO_USAGE_IND_USE
 argument_list|)
 expr_stmt|;
 comment|/* Now output a DIE to represent this pointer-to-data-member type 	 itself.  */
@@ -49652,7 +49680,7 @@ case|case
 name|FUNCTION_TYPE
 case|:
 comment|/* Force out return type (in case it wasn't forced out already).  */
-name|gen_type_die
+name|gen_type_die_with_usage
 argument_list|(
 name|TREE_TYPE
 argument_list|(
@@ -49660,6 +49688,8 @@ name|type
 argument_list|)
 argument_list|,
 name|context_die
+argument_list|,
+name|DINFO_USAGE_DIR_USE
 argument_list|)
 expr_stmt|;
 name|gen_subroutine_type_die
@@ -49674,7 +49704,7 @@ case|case
 name|METHOD_TYPE
 case|:
 comment|/* Force out return type (in case it wasn't forced out already).  */
-name|gen_type_die
+name|gen_type_die_with_usage
 argument_list|(
 name|TREE_TYPE
 argument_list|(
@@ -49682,6 +49712,8 @@ name|type
 argument_list|)
 argument_list|,
 name|context_die
+argument_list|,
+name|DINFO_USAGE_DIR_USE
 argument_list|)
 expr_stmt|;
 name|gen_subroutine_type_die
@@ -49752,7 +49784,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|gen_type_die
+name|gen_type_die_with_usage
 argument_list|(
 name|TYPE_CONTEXT
 argument_list|(
@@ -49760,6 +49792,8 @@ name|type
 argument_list|)
 argument_list|,
 name|context_die
+argument_list|,
+name|usage
 argument_list|)
 expr_stmt|;
 if|if
@@ -49841,6 +49875,8 @@ argument_list|(
 name|type
 argument_list|,
 name|context_die
+argument_list|,
+name|usage
 argument_list|)
 expr_stmt|;
 if|if
@@ -49885,6 +49921,30 @@ name|type
 argument_list|)
 operator|=
 literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|gen_type_die
+parameter_list|(
+name|tree
+name|type
+parameter_list|,
+name|dw_die_ref
+name|context_die
+parameter_list|)
+block|{
+name|gen_type_die_with_usage
+argument_list|(
+name|type
+argument_list|,
+name|context_die
+argument_list|,
+name|DINFO_USAGE_DIR_USE
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -51754,6 +51814,18 @@ argument_list|(
 name|context
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|should_emit_struct_debug
+argument_list|(
+name|context
+argument_list|,
+name|DINFO_USAGE_DIR_USE
+argument_list|)
+condition|)
+return|return;
 name|scope_die
 operator|=
 name|force_type_die
@@ -51761,6 +51833,7 @@ argument_list|(
 name|context
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|scope_die
 operator|=
@@ -51873,6 +51946,21 @@ name|type
 argument_list|)
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|should_emit_struct_debug
+argument_list|(
+name|TYPE_CONTEXT
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+name|DINFO_USAGE_DIR_USE
+argument_list|)
+condition|)
+return|return;
 name|type_context_die
 operator|=
 name|force_type_die
@@ -51883,6 +51971,7 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|type_context_die
 operator|=

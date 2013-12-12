@@ -1061,6 +1061,16 @@ name|file_hash_entries_allocated
 decl_stmt|,
 name|file_hash_entries_used
 decl_stmt|;
+comment|/* Negative path lookup hash table.  */
+name|struct
+name|htab
+modifier|*
+name|nonexistent_file_hash
+decl_stmt|;
+name|struct
+name|obstack
+name|nonexistent_file_ob
+decl_stmt|;
 comment|/* Nonzero means don't look for #include "foo" the source-file      directory.  */
 name|bool
 name|quote_ignores_source_dir
