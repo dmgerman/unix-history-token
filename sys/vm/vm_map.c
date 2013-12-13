@@ -9104,6 +9104,31 @@ name|end
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Mark the entry in case the map lock is released.  (See 		 * above.) 		 */
+name|KASSERT
+argument_list|(
+operator|(
+name|entry
+operator|->
+name|eflags
+operator|&
+name|MAP_ENTRY_IN_TRANSITION
+operator|)
+operator|==
+literal|0
+operator|&&
+name|entry
+operator|->
+name|wiring_thread
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"owned map entry %p"
+operator|,
+name|entry
+operator|)
+argument_list|)
+expr_stmt|;
 name|entry
 operator|->
 name|eflags
@@ -9432,7 +9457,24 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"vm_map_unwire: in-transition flag missing"
+literal|"vm_map_unwire: in-transition flag missing %p"
+operator|,
+name|entry
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|entry
+operator|->
+name|wiring_thread
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"vm_map_unwire: alien wire %p"
+operator|,
+name|entry
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9826,6 +9868,31 @@ name|end
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Mark the entry in case the map lock is released.  (See 		 * above.) 		 */
+name|KASSERT
+argument_list|(
+operator|(
+name|entry
+operator|->
+name|eflags
+operator|&
+name|MAP_ENTRY_IN_TRANSITION
+operator|)
+operator|==
+literal|0
+operator|&&
+name|entry
+operator|->
+name|wiring_thread
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"owned map entry %p"
+operator|,
+name|entry
+operator|)
+argument_list|)
+expr_stmt|;
 name|entry
 operator|->
 name|eflags
