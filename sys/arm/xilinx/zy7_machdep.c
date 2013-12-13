@@ -109,8 +109,6 @@ block|{
 return|return
 operator|(
 name|ZYNQ7_PSIO_VBASE
-operator|-
-name|ARM_NOCACHE_KVA_SIZE
 operator|)
 return|;
 block|}

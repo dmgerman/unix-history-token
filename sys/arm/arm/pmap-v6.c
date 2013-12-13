@@ -7409,10 +7409,6 @@ name|kernel_vm_end
 operator|=
 name|pmap_curmaxkvaddr
 expr_stmt|;
-name|arm_nocache_startaddr
-operator|=
-name|vm_max_kernel_address
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&

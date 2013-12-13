@@ -126,8 +126,6 @@ comment|/* Platform-specific initialisation */
 return|return
 operator|(
 name|fdt_immr_va
-operator|-
-name|ARM_NOCACHE_KVA_SIZE
 operator|)
 return|;
 block|}
