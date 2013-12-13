@@ -2624,13 +2624,15 @@ argument_list|(
 name|tname
 argument_list|)
 argument_list|,
-literal|"%s vtnet%d tx"
-argument_list|,
-name|vmname
+literal|"vtnet-%d:%d tx"
 argument_list|,
 name|pi
 operator|->
 name|pi_slot
+argument_list|,
+name|pi
+operator|->
+name|pi_func
 argument_list|)
 expr_stmt|;
 name|pthread_set_name_np

@@ -26,9 +26,6 @@ name|ctx
 parameter_list|,
 name|int
 name|ncpu
-parameter_list|,
-name|int
-name|ioapic
 parameter_list|)
 function_decl|;
 end_function_decl

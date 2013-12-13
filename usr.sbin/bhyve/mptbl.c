@@ -948,9 +948,6 @@ name|ctx
 parameter_list|,
 name|int
 name|ncpu
-parameter_list|,
-name|int
-name|ioapic
 parameter_list|)
 block|{
 name|mpcth_t
@@ -1112,11 +1109,6 @@ name|entry_count
 operator|+=
 name|MPE_NUM_BUSES
 expr_stmt|;
-if|if
-condition|(
-name|ioapic
-condition|)
-block|{
 name|mpei
 operator|=
 operator|(
@@ -1128,9 +1120,7 @@ name|mpt_build_ioapic_entries
 argument_list|(
 name|mpei
 argument_list|,
-name|ncpu
-operator|+
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|curraddr
@@ -1146,7 +1136,6 @@ operator|->
 name|entry_count
 operator|++
 expr_stmt|;
-block|}
 name|mpie
 operator|=
 operator|(
@@ -1160,9 +1149,7 @@ name|mpie
 argument_list|,
 name|MPEII_MAX_IRQ
 argument_list|,
-name|ncpu
-operator|+
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|curraddr

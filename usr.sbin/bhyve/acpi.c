@@ -924,7 +924,7 @@ name|fp
 argument_list|,
 literal|"[0001]\t\tI/O Apic ID : %02x\n"
 argument_list|,
-name|basl_ncpu
+literal|0
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -955,7 +955,70 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* Override the 8259 chained vector. XXX maybe not needed */
+comment|/* Legacy IRQ0 is connected to pin 2 of the IOAPIC */
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tSubtable Type : 02\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tLength : 0A\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tBus : 00\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tSource : 00\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tInterrupt : 00000002\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0002]\t\tFlags (decoded below) : 0005\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t\t\tPolarity : 1\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t\t\tTrigger Mode : 1\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|EFPRINTF
 argument_list|(
 name|fp
@@ -3818,9 +3881,6 @@ name|ctx
 parameter_list|,
 name|int
 name|ncpu
-parameter_list|,
-name|int
-name|ioapic
 parameter_list|)
 block|{
 name|int
@@ -3837,25 +3897,6 @@ name|basl_ncpu
 operator|=
 name|ncpu
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ioapic
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ACPI tables require an ioapic\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
 comment|/* 	 * For debug, allow the user to have iasl compiler output sent 	 * to stdout rather than /dev/null 	 */
 if|if
 condition|(
