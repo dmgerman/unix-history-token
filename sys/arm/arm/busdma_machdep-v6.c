@@ -1774,12 +1774,7 @@ name|flags
 operator||=
 name|BUS_DMA_COULD_BOUNCE
 expr_stmt|;
-else|else
-name|maxsize
-operator|=
-literal|2
-expr_stmt|;
-comment|/* Need at most 2 bounce pages for unaligned access on cache line boundaries */
+comment|/* 	 * Any request can auto-bounce due to cacheline alignment, in addition 	 * to any alignment or boundary specifications in the tag, so if the 	 * ALLOCNOW flag is set, there's always work to do. 	 */
 if|if
 condition|(
 operator|(
@@ -1796,7 +1791,18 @@ name|bounce_zone
 modifier|*
 name|bz
 decl_stmt|;
-comment|/* Must bounce */
+comment|/* 		 * Round size up to a full page, and add one more page because 		 * there can always be one more boundary crossing than the 		 * number of pages in a transfer. 		 */
+name|maxsize
+operator|=
+name|roundup2
+argument_list|(
+name|maxsize
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+operator|+
+name|PAGE_SIZE
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2159,7 +2165,7 @@ name|bpages
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attempt to add pages to our pool on a per-instance 	 * basis up to a sane limit. 	 */
+comment|/* 	 * Attempt to add pages to our pool on a per-instance basis up to a sane 	 * limit.  Even if the tag isn't flagged as COULD_BOUNCE due to 	 * alignment and boundary constraints, it could still auto-bounce due to 	 * cacheline alignment, which requires at most two bounce pages. 	 */
 if|if
 condition|(
 name|dmat
@@ -2181,7 +2187,6 @@ name|bz
 operator|->
 name|map_count
 expr_stmt|;
-comment|/* Only need at most 2 pages for buffers unaligned on cache line boundaries */
 if|if
 condition|(
 operator|(
@@ -2214,17 +2219,19 @@ name|pages
 decl_stmt|;
 name|pages
 operator|=
-name|MAX
-argument_list|(
 name|atop
+argument_list|(
+name|roundup2
 argument_list|(
 name|dmat
 operator|->
 name|maxsize
-argument_list|)
 argument_list|,
-literal|1
+name|PAGE_SIZE
 argument_list|)
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 name|pages
 operator|=
@@ -2245,7 +2252,7 @@ name|MAX
 argument_list|(
 name|pages
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
