@@ -5326,7 +5326,8 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|frame
 init|=
@@ -5816,7 +5817,8 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|frame
 init|=

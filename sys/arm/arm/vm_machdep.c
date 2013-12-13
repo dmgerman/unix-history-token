@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -1361,7 +1367,8 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|frame
 decl_stmt|;

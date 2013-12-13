@@ -22,12 +22,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/fp.h>
 end_include
 

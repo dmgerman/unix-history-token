@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"bcm2835_dma.h"
 end_include
 
