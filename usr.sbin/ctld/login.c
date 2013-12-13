@@ -4984,6 +4984,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|ag
+operator|->
+name|ag_type
+operator|==
+name|AG_TYPE_UNKNOWN
+condition|)
+block|{
+comment|/* 		 * This can happen with empty auth-group. 		 */
+name|login_send_error
+argument_list|(
+name|request
+argument_list|,
+literal|0x02
+argument_list|,
+literal|0x01
+argument_list|)
+expr_stmt|;
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"auth-group type not set, denying access"
+argument_list|)
+expr_stmt|;
+block|}
 name|log_debugx
 argument_list|(
 literal|"CHAP authentication required"
