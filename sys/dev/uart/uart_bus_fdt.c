@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -307,6 +313,21 @@ operator|)
 name|NULL
 block|}
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Export the compat_data table for use by the uart_cpu_fdt.c probe routine. */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|ofw_compat_data
+modifier|*
+name|uart_fdt_compat_data
+init|=
+name|compat_data
 decl_stmt|;
 end_decl_stmt
 
