@@ -10919,11 +10919,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: sc_inreset_cnt> 0; bailing\n"
 argument_list|,
@@ -26105,11 +26105,11 @@ operator|->
 name|an_is_powersave
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
 literal|"%s: %6D: not in powersave?\n"
 argument_list|,
@@ -26280,11 +26280,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX nothing in the TIDs at this point? Eek. 	 */
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
 literal|"%s: %6D: TIDs empty, but ath_node showed traffic?!\n"
 argument_list|,
