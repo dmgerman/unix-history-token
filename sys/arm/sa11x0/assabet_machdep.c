@@ -198,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -511,7 +517,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|assabet_devmap
 index|[]
 init|=
@@ -1369,7 +1375,7 @@ name|PTE_CACHE
 argument_list|)
 expr_stmt|;
 comment|/* Map the statically mapped devices. */
-name|pmap_devmap_bootstrap
+name|arm_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,

@@ -200,6 +200,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -447,7 +453,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|s3c24x0_devmap
 index|[]
 init|=
@@ -1349,7 +1355,7 @@ name|PTE_PAGETABLE
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_devmap_bootstrap
+name|arm_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,

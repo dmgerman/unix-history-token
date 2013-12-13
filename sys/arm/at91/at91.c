@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/intr.h>
 end_include
 
@@ -143,7 +149,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|at91_devmap
 index|[]
 decl_stmt|;
@@ -738,7 +744,7 @@ argument_list|)
 decl_stmt|;
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|pdevmap
 decl_stmt|;
