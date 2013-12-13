@@ -321,6 +321,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|__inline
+name|int
+name|lim_shared
+parameter_list|(
+name|struct
+name|plimit
+modifier|*
+name|limp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Resource controls and accounting.  */
 end_comment
@@ -5167,6 +5181,32 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|__inline
+name|int
+name|lim_shared
+parameter_list|(
+name|limp
+parameter_list|)
+name|struct
+name|plimit
+modifier|*
+name|limp
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|limp
+operator|->
+name|pl_refcnt
+operator|>
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|lim_fork
 parameter_list|(
@@ -5328,11 +5368,11 @@ begin_block
 block|{
 name|KASSERT
 argument_list|(
+operator|!
+name|lim_shared
+argument_list|(
 name|dst
-operator|->
-name|pl_refcnt
-operator|==
-literal|1
+argument_list|)
 argument_list|,
 operator|(
 literal|"lim_copy to shared limit"
