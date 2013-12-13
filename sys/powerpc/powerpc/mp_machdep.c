@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -242,6 +248,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|longfault
+parameter_list|(
+name|faultbuf
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|machdep_ap_bootstrap
@@ -249,6 +266,36 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|jmp_buf
+modifier|*
+name|restore
+decl_stmt|;
+comment|/* The following is needed for restoring from sleep. */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+comment|/* Writing to the time base register is hypervisor-privileged */
+if|if
+condition|(
+name|mfmsr
+argument_list|()
+operator|&
+name|PSL_HV
+condition|)
+name|mttb
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|mttb
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Set up important bits on the CPU (HID registers, etc.) */
 name|cpudep_ap_setup
 argument_list|()
@@ -272,6 +319,29 @@ literal|1
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("msync; isync");
+name|restore
+operator|=
+name|PCPU_GET
+argument_list|(
+name|restore
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|restore
+operator|!=
+name|NULL
+condition|)
+block|{
+name|longjmp
+argument_list|(
+operator|*
+name|restore
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|ap_letgo
