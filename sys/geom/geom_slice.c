@@ -2021,13 +2021,14 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|g_resize_provider
+argument_list|(
 name|pp
-operator|->
-name|mediasize
-operator|=
+argument_list|,
 name|gsl
 operator|->
 name|length
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
