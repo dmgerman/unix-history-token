@@ -588,6 +588,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|int
+name|global_exit
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Call all handlers registered with __cxa_atexit for the shared  * object owning 'dso'.  Note: if 'dso' is NULL, then all remaining  * handlers are called.  */
 end_comment
@@ -625,6 +632,7 @@ name|dso
 operator|!=
 name|NULL
 condition|)
+block|{
 name|has_phdr
 operator|=
 name|_rtld_addr_phdr
@@ -635,11 +643,18 @@ operator|&
 name|phdr_info
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|has_phdr
 operator|=
 literal|0
 expr_stmt|;
+name|global_exit
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|_MUTEX_LOCK
 argument_list|(
 operator|&
@@ -718,6 +733,8 @@ if|if
 condition|(
 operator|!
 name|has_phdr
+operator|||
+name|global_exit
 operator|||
 operator|!
 name|__elf_phdr_match_addr
@@ -817,6 +834,9 @@ expr_stmt|;
 if|if
 condition|(
 name|has_phdr
+operator|&&
+operator|!
+name|global_exit
 operator|&&
 operator|&
 name|__pthread_cxa_finalize
