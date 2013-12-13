@@ -6516,6 +6516,7 @@ break|break;
 case|case
 name|CTL_BE_BLOCK_NONE
 case|:
+break|break;
 default|default:
 name|panic
 argument_list|(
@@ -6599,6 +6600,7 @@ break|break;
 case|case
 name|CTL_BE_BLOCK_NONE
 case|:
+break|break;
 default|default:
 name|panic
 argument_list|(
@@ -7010,7 +7012,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s is not a disk or file"
+literal|"%s is not a disk or plain file"
 argument_list|,
 name|be_lun
 operator|->
