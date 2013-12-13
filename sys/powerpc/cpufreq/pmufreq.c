@@ -418,9 +418,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|uint32_t
-name|min_freq
-decl_stmt|;
 name|struct
 name|pmufreq_softc
 modifier|*
@@ -428,6 +425,9 @@ name|sc
 decl_stmt|;
 name|phandle_t
 name|node
+decl_stmt|;
+name|uint32_t
+name|min_freq
 decl_stmt|;
 if|if
 condition|(
@@ -795,10 +795,9 @@ modifier|*
 name|sc
 decl_stmt|;
 name|int
-name|speed_sel
-decl_stmt|;
-name|int
 name|error
+decl_stmt|,
+name|speed_sel
 decl_stmt|;
 if|if
 condition|(
@@ -859,7 +858,9 @@ operator|->
 name|freq
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
