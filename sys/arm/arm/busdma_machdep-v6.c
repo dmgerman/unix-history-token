@@ -5810,7 +5810,26 @@ operator|++
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|BUS_DMASYNC_POSTREAD
+case|:
+case|case
+name|BUS_DMASYNC_POSTWRITE
+case|:
+case|case
+name|BUS_DMASYNC_POSTREAD
+operator||
+name|BUS_DMASYNC_POSTWRITE
+case|:
+break|break;
 default|default:
+name|panic
+argument_list|(
+literal|"unsupported combination of sync operations: 0x%08x\n"
+argument_list|,
+name|op
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
