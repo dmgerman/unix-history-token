@@ -113,15 +113,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ti_cpu_reset
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 name|DEVMAP_BOOTSTRAP_MAP_START
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|initarm_early_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ti_cpu_reset
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -185,7 +195,7 @@ end_comment
 
 begin_function
 name|int
-name|platform_devmap_init
+name|initarm_devmap_init
 parameter_list|(
 name|void
 parameter_list|)

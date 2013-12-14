@@ -112,6 +112,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PTE_DEVICE
+value|PTE_NOCACHE
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTE_PAGETABLE
 value|3
 end_define

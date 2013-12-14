@@ -122,6 +122,15 @@ end_function
 
 begin_function
 name|void
+name|initarm_early_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+name|void
 name|initarm_gpio_init
 parameter_list|(
 name|void
@@ -162,7 +171,7 @@ end_comment
 
 begin_function
 name|int
-name|platform_devmap_init
+name|initarm_devmap_init
 parameter_list|(
 name|void
 parameter_list|)

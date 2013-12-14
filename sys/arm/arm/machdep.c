@@ -6118,9 +6118,7 @@ operator|=
 name|curr
 expr_stmt|;
 comment|/* Platform-specific initialisation */
-name|vm_max_kernel_address
-operator|=
-name|initarm_lastaddr
+name|initarm_early_init
 argument_list|()
 expr_stmt|;
 name|pcpu0_init
@@ -6611,10 +6609,10 @@ argument_list|,
 name|PTE_CACHE
 argument_list|)
 expr_stmt|;
-comment|/* Map pmap_devmap[] entries */
+comment|/* Establish static device mappings. */
 name|err_devmap
 operator|=
-name|platform_devmap_init
+name|initarm_devmap_init
 argument_list|()
 expr_stmt|;
 name|arm_devmap_bootstrap
@@ -6623,6 +6621,11 @@ name|l1pagetable
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|vm_max_kernel_address
+operator|=
+name|initarm_lastaddr
+argument_list|()
 expr_stmt|;
 name|cpu_domains
 argument_list|(
