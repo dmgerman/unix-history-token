@@ -331,7 +331,7 @@ begin_define
 define|#
 directive|define
 name|MMCHS_SD_CAPA
-value|0x240
+value|0x140
 end_define
 
 begin_define
@@ -1806,7 +1806,7 @@ name|slot
 operator|.
 name|host
 operator|.
-name|host_ocr
+name|caps
 operator||=
 name|MMC_OCR_LOW_VOLTAGE
 expr_stmt|;
@@ -1832,7 +1832,7 @@ name|slot
 operator|.
 name|host
 operator|.
-name|host_ocr
+name|caps
 operator||=
 name|MMC_OCR_290_300
 operator||
