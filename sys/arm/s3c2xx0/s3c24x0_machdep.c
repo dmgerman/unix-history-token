@@ -1415,6 +1415,11 @@ comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
+name|cpu_setup
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* Disable all peripheral interrupts */
 name|ioreg_write32
 argument_list|(
