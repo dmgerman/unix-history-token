@@ -5812,7 +5812,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<KeysTotal>%ju</KeysTotal>"
+literal|"%s<KeysTotal>%ju</KeysTotal>\n"
 argument_list|,
 name|indent
 argument_list|,
@@ -5828,7 +5828,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<KeysAllocated>%ju</KeysAllocated>"
+literal|"%s<KeysAllocated>%ju</KeysAllocated>\n"
 argument_list|,
 name|indent
 argument_list|,
