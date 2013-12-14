@@ -19,14 +19,14 @@ begin_define
 define|#
 directive|define
 name|PMC_MDEP_CLASS_INDEX_PPC7450
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMC_MDEP_CLASS_INDEX_PPC970
-value|0
+value|1
 end_define
 
 begin_union
