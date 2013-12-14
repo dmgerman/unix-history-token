@@ -1933,6 +1933,8 @@ name|debugger_on_panic
 operator|||
 name|kdb_active
 condition|)
+if|if
+condition|(
 name|kdb_trap
 argument_list|(
 name|fsr
@@ -1941,7 +1943,12 @@ literal|0
 argument_list|,
 name|tf
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 endif|#
 directive|endif
 name|panic
