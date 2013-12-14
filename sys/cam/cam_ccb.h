@@ -393,20 +393,6 @@ name|ccb_flags
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CAM_EXTLUN_VALID
-init|=
-literal|0x00000001
-block|,
-comment|/* 64bit lun field is valid      */
-block|}
-name|ccb_xflags
-typedef|;
-end_typedef
-
 begin_comment
 comment|/* XPT Opcodes for xpt_action */
 end_comment
@@ -1098,10 +1084,6 @@ name|lun_id_t
 name|target_lun
 decl_stmt|;
 comment|/* Target LUN number */
-name|lun64_id_t
-name|ext_lun
-decl_stmt|;
-comment|/* 64bit extended/multi-level LUNs */
 name|u_int32_t
 name|flags
 decl_stmt|;
@@ -1831,7 +1813,7 @@ begin_define
 define|#
 directive|define
 name|CAM_VERSION
-value|0x18
+value|0x19
 end_define
 
 begin_comment
