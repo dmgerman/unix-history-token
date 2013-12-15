@@ -35,23 +35,6 @@ end_struct_decl
 
 begin_function_decl
 name|int
-name|msg_peek
-parameter_list|(
-name|int
-name|sock
-parameter_list|,
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|cred_send
 parameter_list|(
 name|int
