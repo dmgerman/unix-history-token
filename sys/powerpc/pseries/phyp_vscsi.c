@@ -2070,13 +2070,7 @@ name|cpi
 operator|->
 name|max_lun
 operator|=
-operator|~
-call|(
-name|lun_id_t
-call|)
-argument_list|(
 literal|0
-argument_list|)
 expr_stmt|;
 name|cpi
 operator|->
