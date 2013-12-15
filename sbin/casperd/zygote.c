@@ -456,6 +456,11 @@ operator|>
 name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"zygote"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pjdlog_mode_get
