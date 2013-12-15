@@ -3057,6 +3057,14 @@ name|pfile
 argument_list|,
 name|preprocessed
 argument_list|)
+operator|&&
+operator|!
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|directives_only
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|buffer
