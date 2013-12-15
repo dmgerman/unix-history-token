@@ -1241,11 +1241,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Release our limits structure. 	 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|plim
 operator|=
 name|p
@@ -1257,11 +1252,6 @@ operator|->
 name|p_limit
 operator|=
 name|NULL
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 name|lim_free
 argument_list|(
