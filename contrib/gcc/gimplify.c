@@ -24760,6 +24760,12 @@ name|DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT
 argument_list|(
 name|fndecl
 argument_list|)
+operator|&&
+operator|!
+name|flag_instrument_functions_exclude_p
+argument_list|(
+name|fndecl
+argument_list|)
 condition|)
 block|{
 name|tree

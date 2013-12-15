@@ -9511,7 +9511,6 @@ name|true
 argument_list|)
 condition|)
 return|return;
-comment|/* We use TYPE_MIN_VALUE and TYPE_MAX_VALUE here instead of      negative_overflow_infinity and positive_overflow_infinity,      because we have concluded that the loop probably does not      wrap.  */
 name|type
 operator|=
 name|TREE_TYPE
@@ -9519,6 +9518,21 @@ argument_list|(
 name|var
 argument_list|)
 expr_stmt|;
+comment|/* If we see a pointer type starting at a constant, then we have an      unusual ivopt.  It may legitimately wrap.  */
+if|if
+condition|(
+name|POINTER_TYPE_P
+argument_list|(
+name|type
+argument_list|)
+operator|&&
+name|is_gimple_min_invariant
+argument_list|(
+name|init
+argument_list|)
+condition|)
+return|return;
+comment|/* We use TYPE_MIN_VALUE and TYPE_MAX_VALUE here instead of      negative_overflow_infinity and positive_overflow_infinity,      because we have concluded that the loop probably does not      wrap.  */
 if|if
 condition|(
 name|POINTER_TYPE_P

@@ -2198,6 +2198,59 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* In directives.c */
+end_comment
+
+begin_struct
+struct|struct
+name|_cpp_dir_only_callbacks
+block|{
+comment|/* Called to print a block of lines. */
+name|void
+function_decl|(
+modifier|*
+name|print_lines
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|maybe_print_line
+function_decl|)
+parameter_list|(
+name|source_location
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|extern
+name|void
+name|_cpp_preprocess_dir_only
+parameter_list|(
+name|cpp_reader
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|_cpp_dir_only_callbacks
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* In traditional.c.  */
 end_comment
 

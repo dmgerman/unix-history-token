@@ -942,7 +942,7 @@ enum|enum
 block|{
 name|_S_num_primes
 init|=
-literal|28
+literal|29
 block|}
 enum|;
 end_enum
@@ -958,6 +958,9 @@ name|_S_num_primes
 index|]
 init|=
 block|{
+literal|5ul
+block|,
+comment|// 5ul mini size is a Google addition
 literal|53ul
 block|,
 literal|97ul
@@ -6235,6 +6238,17 @@ operator|::
 name|clear
 argument_list|()
 block|{
+comment|// Google addition: do not iterate over buckets when empty
+if|if
+condition|(
+name|_M_num_elements
+operator|==
+literal|0
+condition|)
+return|return;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|size_type
@@ -6294,10 +6308,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
+block|}
+end_for
 
 begin_expr_stmt
-unit|}       _M_num_elements
+name|_M_num_elements
 operator|=
 literal|0
 expr_stmt|;

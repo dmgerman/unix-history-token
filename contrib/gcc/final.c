@@ -5308,6 +5308,30 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|warn_frame_larger_than
+operator|&&
+name|get_frame_size
+argument_list|()
+operator|>
+name|frame_larger_than_size
+condition|)
+block|{
+comment|/* Issue a warning */
+name|warning
+argument_list|(
+name|OPT_Wframe_larger_than_
+argument_list|,
+literal|"the frame size of %wd bytes is larger than %wd bytes"
+argument_list|,
+name|get_frame_size
+argument_list|()
+argument_list|,
+name|frame_larger_than_size
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* First output the function prologue: code to set up the stack frame.  */
 name|targetm
 operator|.
