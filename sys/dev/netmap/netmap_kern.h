@@ -192,16 +192,6 @@ parameter_list|)
 value|atomic_store_rel_int((p), 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|prefetch
-parameter_list|(
-name|x
-parameter_list|)
-value|__builtin_prefetch(x)
-end_define
-
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(

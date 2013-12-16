@@ -559,7 +559,7 @@ argument_list|,
 name|nm_i
 argument_list|)
 expr_stmt|;
-name|prefetch
+name|__builtin_prefetch
 argument_list|(
 operator|&
 name|ring
@@ -570,7 +570,7 @@ name|nm_i
 index|]
 argument_list|)
 expr_stmt|;
-name|prefetch
+name|__builtin_prefetch
 argument_list|(
 operator|&
 name|txr
@@ -681,7 +681,7 @@ else|:
 literal|0
 decl_stmt|;
 comment|/* prefetch for next round */
-name|prefetch
+name|__builtin_prefetch
 argument_list|(
 operator|&
 name|ring
@@ -694,7 +694,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|prefetch
+name|__builtin_prefetch
 argument_list|(
 operator|&
 name|txr

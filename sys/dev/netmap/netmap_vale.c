@@ -180,10 +180,6 @@ directive|include
 file|<sys/refcount.h>
 end_include
 
-begin_comment
-comment|// #define prefetch(x)	__builtin_prefetch(x)
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -4124,7 +4120,7 @@ argument_list|,
 name|slot
 argument_list|)
 expr_stmt|;
-name|prefetch
+name|__builtin_prefetch
 argument_list|(
 name|buf
 argument_list|)
