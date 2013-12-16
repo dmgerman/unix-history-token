@@ -5278,21 +5278,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RT2860_DEF_MAC
-define|\
-value|{ RT2860_BCN_OFFSET0,		0xf8f0e8e0 },	\ 	{ RT2860_LEGACY_BASIC_RATE,	0x0000013f },	\ 	{ RT2860_HT_BASIC_RATE,		0x00008003 },	\ 	{ RT2860_MAC_SYS_CTRL,		0x00000000 },	\ 	{ RT2860_BKOFF_SLOT_CFG,	0x00000209 },	\ 	{ RT2860_TX_SW_CFG0,		0x00000000 },	\ 	{ RT2860_TX_SW_CFG1,		0x00080606 },	\ 	{ RT2860_TX_LINK_CFG,		0x00001020 },	\ 	{ RT2860_TX_TIMEOUT_CFG,	0x000a2090 },	\ 	{ RT2860_LED_CFG,		0x7f031e46 },	\ 	{ RT2860_WMM_AIFSN_CFG,		0x00002273 },	\ 	{ RT2860_WMM_CWMIN_CFG,		0x00002344 },	\ 	{ RT2860_WMM_CWMAX_CFG,		0x000034aa },	\ 	{ RT2860_MAX_PCNT,		0x1f3fbf9f },	\ 	{ RT2860_TX_RTY_CFG,		0x47d01f0f },	\ 	{ RT2860_AUTO_RSP_CFG,		0x00000013 },	\ 	{ RT2860_CCK_PROT_CFG,		0x05740003 },	\ 	{ RT2860_OFDM_PROT_CFG,		0x05740003 },	\ 	{ RT2860_GF20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_GF40_PROT_CFG,		0x03f44084 },	\ 	{ RT2860_MM20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_MM40_PROT_CFG,		0x03f54084 },	\ 	{ RT2860_TXOP_CTRL_CFG,		0x0000583f },	\ 	{ RT2860_TXOP_HLDR_ET,		0x00000002 },	\ 	{ RT2860_TX_RTS_CFG,		0x00092b20 },	\ 	{ RT2860_EXP_ACK_TIME,		0x002400ca },	\ 	{ RT2860_XIFS_TIME_CFG,		0x33a41010 },	\ 	{ RT2860_PWR_PIN_CFG,		0x00000003 }
-end_define
-
-begin_comment
-comment|/* XXX only a few registers differ from above, try to merge? */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|RT2870_DEF_MAC
 define|\
-value|{ RT2860_BCN_OFFSET0,		0xf8f0e8e0 },	\ 	{ RT2860_LEGACY_BASIC_RATE,	0x0000013f },	\ 	{ RT2860_HT_BASIC_RATE,		0x00008003 },	\ 	{ RT2860_MAC_SYS_CTRL,		0x00000000 },	\ 	{ RT2860_BKOFF_SLOT_CFG,	0x00000209 },	\ 	{ RT2860_TX_SW_CFG0,		0x00000000 },	\ 	{ RT2860_TX_SW_CFG1,		0x00080606 },	\ 	{ RT2860_TX_LINK_CFG,		0x00001020 },	\ 	{ RT2860_TX_TIMEOUT_CFG,	0x000a2090 },	\ 	{ RT2860_LED_CFG,		0x7f031e46 },	\ 	{ RT2860_WMM_AIFSN_CFG,		0x00002273 },	\ 	{ RT2860_WMM_CWMIN_CFG,		0x00002344 },	\ 	{ RT2860_WMM_CWMAX_CFG,		0x000034aa },	\ 	{ RT2860_MAX_PCNT,		0x1f3fbf9f },	\ 	{ RT2860_TX_RTY_CFG,		0x47d01f0f },	\ 	{ RT2860_AUTO_RSP_CFG,		0x00000013 },	\ 	{ RT2860_CCK_PROT_CFG,		0x05740003 },	\ 	{ RT2860_OFDM_PROT_CFG,		0x05740003 },	\ 	{ RT2860_PBF_CFG,		0x00f40006 },	\ 	{ RT2860_WPDMA_GLO_CFG,		0x00000030 },	\ 	{ RT2860_GF20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_GF40_PROT_CFG,		0x03f44084 },	\ 	{ RT2860_MM20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_MM40_PROT_CFG,		0x03f44084 },	\ 	{ RT2860_TXOP_CTRL_CFG,		0x0000583f },	\ 	{ RT2860_TXOP_HLDR_ET,		0x00000002 },	\ 	{ RT2860_TX_RTS_CFG,		0x00092b20 },	\ 	{ RT2860_EXP_ACK_TIME,		0x002400ca },	\ 	{ RT2860_XIFS_TIME_CFG,		0x33a41010 },	\ 	{ RT2860_PWR_PIN_CFG,		0x00000003 }
+value|{ RT2860_BCN_OFFSET0,		0xf8f0e8e0 },	\ 	{ RT2860_BCN_OFFSET1,		0x6f77d0c8 },	\ 	{ RT2860_LEGACY_BASIC_RATE,	0x0000013f },	\ 	{ RT2860_HT_BASIC_RATE,		0x00008003 },	\ 	{ RT2860_MAC_SYS_CTRL,		0x00000000 },	\ 	{ RT2860_BKOFF_SLOT_CFG,	0x00000209 },	\ 	{ RT2860_TX_SW_CFG0,		0x00000000 },	\ 	{ RT2860_TX_SW_CFG1,		0x00080606 },	\ 	{ RT2860_TX_LINK_CFG,		0x00001020 },	\ 	{ RT2860_TX_TIMEOUT_CFG,	0x000a2090 },	\ 	{ RT2860_MAX_LEN_CFG,		0x00001f00 },	\ 	{ RT2860_LED_CFG,		0x7f031e46 },	\ 	{ RT2860_WMM_AIFSN_CFG,		0x00002273 },	\ 	{ RT2860_WMM_CWMIN_CFG,		0x00002344 },	\ 	{ RT2860_WMM_CWMAX_CFG,		0x000034aa },	\ 	{ RT2860_MAX_PCNT,		0x1f3fbf9f },	\ 	{ RT2860_TX_RTY_CFG,		0x47d01f0f },	\ 	{ RT2860_AUTO_RSP_CFG,		0x00000013 },	\ 	{ RT2860_CCK_PROT_CFG,		0x05740003 },	\ 	{ RT2860_OFDM_PROT_CFG,		0x05740003 },	\ 	{ RT2860_PBF_CFG,		0x00f40006 },	\ 	{ RT2860_WPDMA_GLO_CFG,		0x00000030 },	\ 	{ RT2860_GF20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_GF40_PROT_CFG,		0x03f44084 },	\ 	{ RT2860_MM20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_MM40_PROT_CFG,		0x03f44084 },	\ 	{ RT2860_TXOP_CTRL_CFG,		0x0000583f },	\ 	{ RT2860_TXOP_HLDR_ET,		0x00000002 },	\ 	{ RT2860_TX_RTS_CFG,		0x00092b20 },	\ 	{ RT2860_EXP_ACK_TIME,		0x002400ca },	\ 	{ RT2860_XIFS_TIME_CFG,		0x33a41010 },	\ 	{ RT2860_PWR_PIN_CFG,		0x00000003 }
 end_define
 
 begin_comment
@@ -5304,7 +5292,7 @@ define|#
 directive|define
 name|RT2860_DEF_BBP
 define|\
-value|{  65, 0x2c },	\ 	{  66, 0x38 },	\ 	{  69, 0x12 },	\ 	{  70, 0x0a },	\ 	{  73, 0x10 },	\ 	{  81, 0x37 },	\ 	{  82, 0x62 },	\ 	{  83, 0x6a },	\ 	{  84, 0x99 },	\ 	{  86, 0x00 },	\ 	{  91, 0x04 },	\ 	{  92, 0x00 },	\ 	{ 103, 0x00 },	\ 	{ 105, 0x05 },	\ 	{ 106, 0x35 }
+value|{  65, 0x2c },	\ 	{  66, 0x38 },	\ 	{  68, 0x0b },	\ 	{  69, 0x12 },	\ 	{  70, 0x0a },	\ 	{  73, 0x10 },	\ 	{  81, 0x37 },	\ 	{  82, 0x62 },	\ 	{  83, 0x6a },	\ 	{  84, 0x99 },	\ 	{  86, 0x00 },	\ 	{  91, 0x04 },	\ 	{  92, 0x00 },	\ 	{ 103, 0x00 },	\ 	{ 105, 0x05 },	\ 	{ 106, 0x35 }
 end_define
 
 begin_define
@@ -5364,7 +5352,7 @@ define|#
 directive|define
 name|RT3070_DEF_RF
 define|\
-value|{  4, 0x40 },	\ 	{  5, 0x03 },	\ 	{  6, 0x02 },	\ 	{  7, 0x70 },	\ 	{  9, 0x0f },	\ 	{ 10, 0x41 },	\ 	{ 11, 0x21 },	\ 	{ 12, 0x7b },	\ 	{ 14, 0x90 },	\ 	{ 15, 0x58 },	\ 	{ 16, 0xb3 },	\ 	{ 17, 0x92 },	\ 	{ 18, 0x2c },	\ 	{ 19, 0x02 },	\ 	{ 20, 0xba },	\ 	{ 21, 0xdb },	\ 	{ 24, 0x16 },	\ 	{ 25, 0x01 },	\ 	{ 29, 0x1f }
+value|{  4, 0x40 },	\ 	{  5, 0x03 },	\ 	{  6, 0x02 },	\ 	{  7, 0x60 },	\ 	{  9, 0x0f },	\ 	{ 10, 0x41 },	\ 	{ 11, 0x21 },	\ 	{ 12, 0x7b },	\ 	{ 14, 0x90 },	\ 	{ 15, 0x58 },	\ 	{ 16, 0xb3 },	\ 	{ 17, 0x92 },	\ 	{ 18, 0x2c },	\ 	{ 19, 0x02 },	\ 	{ 20, 0xba },	\ 	{ 21, 0xdb },	\ 	{ 24, 0x16 },	\ 	{ 25, 0x03 },	\ 	{ 29, 0x1f }
 end_define
 
 begin_define
