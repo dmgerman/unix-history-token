@@ -386,7 +386,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|_gsskrb5_encode_om_uint32
+name|_gsskrb5_encode_be_om_uint32
 argument_list|(
 name|num
 argument_list|,
@@ -477,9 +477,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|+=
-name|output
-operator|.
-name|length
+name|tsize
 expr_stmt|;
 name|desired_output_len
 operator|-=
