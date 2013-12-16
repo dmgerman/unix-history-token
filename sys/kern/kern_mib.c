@@ -1415,6 +1415,56 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|supported_archs
+argument_list|,
+name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+name|MACHINE_ARCH
+literal|" "
+name|MACHINE_ARCH32
+argument_list|,
+literal|0
+argument_list|,
+literal|"Supported architectures for binaries"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|MACHINE_ARCH
+operator|,
+literal|0
+operator|,
+literal|"Supported architectures for binaries"
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
