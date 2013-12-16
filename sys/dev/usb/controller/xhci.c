@@ -8816,6 +8816,24 @@ argument_list|(
 name|XHCI_TRB_3_CHAIN_BIT
 argument_list|)
 expr_stmt|;
+comment|/* remove CHAIN-BIT from last LINK TRB */
+name|td
+operator|->
+name|td_trb
+index|[
+name|td
+operator|->
+name|ntrb
+index|]
+operator|.
+name|dwTrb3
+operator|&=
+operator|~
+name|htole32
+argument_list|(
+name|XHCI_TRB_3_CHAIN_BIT
+argument_list|)
+expr_stmt|;
 name|usb_pc_cpu_flush
 argument_list|(
 name|td
