@@ -2905,6 +2905,8 @@ name|uvp
 operator|->
 name|vap
 expr_stmt|;
+if|if
+condition|(
 name|ieee80211_vap_setup
 argument_list|(
 name|ic
@@ -2923,7 +2925,24 @@ name|bssid
 argument_list|,
 name|mac
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* out of memory */
+name|free
+argument_list|(
+name|uvp
+argument_list|,
+name|M_80211_VAP
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* override state transition machine */
 name|uvp
 operator|->
@@ -6720,16 +6739,14 @@ index|]
 operator|=
 name|IEEE80211_FC1_DIR_NODS
 expr_stmt|;
-operator|*
-operator|(
-name|uint16_t
-operator|*
-operator|)
+name|USETW
+argument_list|(
 name|wh
 operator|->
 name|i_dur
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(

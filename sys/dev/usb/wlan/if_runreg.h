@@ -19,45 +19,6 @@ directive|define
 name|_IF_RUNREG_H_
 end_define
 
-begin_comment
-comment|/* PCI registers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RT2860_PCI_CFG
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT2860_PCI_EECTRL
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT2860_PCI_MCUCTRL
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT2860_PCI_SYSCTRL
-value|0x000c
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT2860_PCIE_JTAG
-value|0x0010
-end_define
-
 begin_define
 define|#
 directive|define
@@ -423,6 +384,17 @@ define|#
 directive|define
 name|RT3070_GPIO_SWITCH
 value|0x05dc
+end_define
+
+begin_comment
+comment|/* RT5592 registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5592_DEBUG_INDEX
+value|0x05e8
 end_define
 
 begin_comment
@@ -1154,6 +1126,13 @@ define|#
 directive|define
 name|RT2860_H2M_MAILBOX_STATUS
 value|0x701c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2860_H2M_INTSRC
+value|0x7024
 end_define
 
 begin_define
@@ -2242,6 +2221,17 @@ define|#
 directive|define
 name|RT3070_EFUSE_AOUT_MASK
 value|0x0000003f
+end_define
+
+begin_comment
+comment|/* possible flag for register DEBUG_INDEX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5592_SEL_XTAL
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -3954,6 +3944,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RT3070_PLL_PD
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT3070_RX0_PD
 value|(1<< 2)
 end_define
@@ -4020,6 +4017,79 @@ begin_define
 define|#
 directive|define
 name|RT3070_RX_LO2
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Possible flags for RT5390 RF register 2. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RESCAL
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* Possible flags for RT5390 RF register 3. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_VCOCAL
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* Possible flags for RT5390 RF register 38. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RX_LO1
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* Possible flags for RT5390 RF register 39. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RX_LO2
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* Possible flags for RT5390 BBP register 4. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_MAC_IF_CTRL
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Possible flags for RT5390 BBP register 105. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_MLD
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5390_EN_SIG_MODULATION
 value|(1<< 3)
 end_define
 
@@ -4432,51 +4502,11 @@ name|__packed
 struct|;
 end_struct
 
-begin_comment
-comment|/* first DMA segment contains TXWI + 802.11 header + 32-bit padding */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RT2860_TXWI_DMASZ
-define|\
-value|(sizeof (struct rt2860_txwi) +		\ 	 sizeof (struct ieee80211_htframe) +	\ 	 sizeof (uint16_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT2860_RF1
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT2860_RF2
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT2860_RF3
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT2860_RF4
-value|3
-end_define
-
 begin_define
 define|#
 directive|define
 name|RT2860_RF_2820
-value|1
+value|0x0001
 end_define
 
 begin_comment
@@ -4487,7 +4517,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_RF_2850
-value|2
+value|0x0002
 end_define
 
 begin_comment
@@ -4498,7 +4528,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_RF_2720
-value|3
+value|0x0003
 end_define
 
 begin_comment
@@ -4509,7 +4539,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_RF_2750
-value|4
+value|0x0004
 end_define
 
 begin_comment
@@ -4520,7 +4550,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_3020
-value|5
+value|0x0005
 end_define
 
 begin_comment
@@ -4531,7 +4561,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_2020
-value|6
+value|0x0006
 end_define
 
 begin_comment
@@ -4542,7 +4572,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_3021
-value|7
+value|0x0007
 end_define
 
 begin_comment
@@ -4553,7 +4583,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_3022
-value|8
+value|0x0008
 end_define
 
 begin_comment
@@ -4564,11 +4594,44 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_3052
-value|9
+value|0x0009
 end_define
 
 begin_comment
 comment|/* dual-band 2T2R */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5592_RF_5592
+value|0x000f
+end_define
+
+begin_comment
+comment|/* dual-band 2T2R */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RF_5370
+value|0x5370
+end_define
+
+begin_comment
+comment|/* 1T1R */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RF_5372
+value|0x5372
+end_define
+
+begin_comment
+comment|/* 2T2R */
 end_comment
 
 begin_comment
@@ -5244,6 +5307,22 @@ define|\
 value|{  65, 0x2c },	\ 	{  66, 0x38 },	\ 	{  69, 0x12 },	\ 	{  70, 0x0a },	\ 	{  73, 0x10 },	\ 	{  81, 0x37 },	\ 	{  82, 0x62 },	\ 	{  83, 0x6a },	\ 	{  84, 0x99 },	\ 	{  86, 0x00 },	\ 	{  91, 0x04 },	\ 	{  92, 0x00 },	\ 	{ 103, 0x00 },	\ 	{ 105, 0x05 },	\ 	{ 106, 0x35 }
 end_define
 
+begin_define
+define|#
+directive|define
+name|RT5390_DEF_BBP
+define|\
+value|{  31, 0x08 },	\ 	{  65, 0x2c },	\ 	{  66, 0x38 },	\ 	{  68, 0x0b },	\ 	{  69, 0x0d },	\ 	{  70, 0x06 },	\ 	{  73, 0x13 },	\ 	{  75, 0x46 },	\ 	{  76, 0x28 },	\ 	{  77, 0x59 },	\ 	{  81, 0x37 },	\ 	{  82, 0x62 },	\ 	{  83, 0x7a },	\ 	{  84, 0x9a },	\ 	{  86, 0x38 },	\ 	{  91, 0x04 },	\ 	{  92, 0x02 },	\ 	{ 103, 0xc0 },	\ 	{ 104, 0x92 },	\ 	{ 105, 0x3c },	\ 	{ 106, 0x03 },	\ 	{ 128, 0x12 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5592_DEF_BBP
+define|\
+value|{  20, 0x06 },	\ 	{  31, 0x08 },	\ 	{  65, 0x2c },	\ 	{  66, 0x38 },	\ 	{  68, 0xdd },	\ 	{  69, 0x1a },	\ 	{  70, 0x05 },	\ 	{  73, 0x13 },	\ 	{  74, 0x0f },	\ 	{  75, 0x4f },	\ 	{  76, 0x28 },	\ 	{  77, 0x59 },	\ 	{  81, 0x37 },	\ 	{  82, 0x62 },	\ 	{  83, 0x6a },	\ 	{  84, 0x9a },	\ 	{  86, 0x38 },	\ 	{  88, 0x90 },	\ 	{  91, 0x04 },	\ 	{  92, 0x02 },	\ 	{  95, 0x9a },	\ 	{  98, 0x12 },	\ 	{ 103, 0xc0 },	\ 	{ 104, 0x92 },	\ 	{ 105, 0x3c },	\ 	{ 106, 0x35 },	\ 	{ 128, 0x12 },	\ 	{ 134, 0xd0 },	\ 	{ 135, 0xf6 },	\ 	{ 137, 0x0f }
+end_define
+
 begin_comment
 comment|/*  * Default settings for RF registers; values derived from the reference driver.  */
 end_comment
@@ -5253,7 +5332,7 @@ define|#
 directive|define
 name|RT2860_RF2850
 define|\
-value|{   1, 0x100bb3, 0x1301e1, 0x05a014, 0x001402 },	\ 	{   2, 0x100bb3, 0x1301e1, 0x05a014, 0x001407 },	\ 	{   3, 0x100bb3, 0x1301e2, 0x05a014, 0x001402 },	\ 	{   4, 0x100bb3, 0x1301e2, 0x05a014, 0x001407 },	\ 	{   5, 0x100bb3, 0x1301e3, 0x05a014, 0x001402 },	\ 	{   6, 0x100bb3, 0x1301e3, 0x05a014, 0x001407 },	\ 	{   7, 0x100bb3, 0x1301e4, 0x05a014, 0x001402 },	\ 	{   8, 0x100bb3, 0x1301e4, 0x05a014, 0x001407 },	\ 	{   9, 0x100bb3, 0x1301e5, 0x05a014, 0x001402 },	\ 	{  10, 0x100bb3, 0x1301e5, 0x05a014, 0x001407 },	\ 	{  11, 0x100bb3, 0x1301e6, 0x05a014, 0x001402 },	\ 	{  12, 0x100bb3, 0x1301e6, 0x05a014, 0x001407 },	\ 	{  13, 0x100bb3, 0x1301e7, 0x05a014, 0x001402 },	\ 	{  14, 0x100bb3, 0x1301e8, 0x05a014, 0x001404 },	\ 	{  36, 0x100bb3, 0x130266, 0x056014, 0x001408 },	\ 	{  38, 0x100bb3, 0x130267, 0x056014, 0x001404 },	\ 	{  40, 0x100bb2, 0x1301a0, 0x056014, 0x001400 },	\ 	{  44, 0x100bb2, 0x1301a0, 0x056014, 0x001408 },	\ 	{  46, 0x100bb2, 0x1301a1, 0x056014, 0x001402 },	\ 	{  48, 0x100bb2, 0x1301a1, 0x056014, 0x001406 },	\ 	{  52, 0x100bb2, 0x1301a2, 0x056014, 0x001404 },	\ 	{  54, 0x100bb2, 0x1301a2, 0x056014, 0x001408 },	\ 	{  56, 0x100bb2, 0x1301a3, 0x056014, 0x001402 },	\ 	{  60, 0x100bb2, 0x1301a4, 0x056014, 0x001400 },	\ 	{  62, 0x100bb2, 0x1301a4, 0x056014, 0x001404 },	\ 	{  64, 0x100bb2, 0x1301a4, 0x056014, 0x001408 },	\ 	{ 100, 0x100bb2, 0x1301ac, 0x05e014, 0x001400 },	\ 	{ 102, 0x100bb2, 0x1701ac, 0x15e014, 0x001404 },	\ 	{ 104, 0x100bb2, 0x1701ac, 0x15e014, 0x001408 },	\ 	{ 108, 0x100bb3, 0x17028c, 0x15e014, 0x001404 },	\ 	{ 110, 0x100bb3, 0x13028d, 0x05e014, 0x001400 },	\ 	{ 112, 0x100bb3, 0x13028d, 0x05e014, 0x001406 },	\ 	{ 116, 0x100bb3, 0x13028e, 0x05e014, 0x001408 },	\ 	{ 118, 0x100bb3, 0x13028f, 0x05e014, 0x001404 },	\ 	{ 120, 0x100bb1, 0x1300e0, 0x05e014, 0x001400 },	\ 	{ 124, 0x100bb1, 0x1300e0, 0x05e014, 0x001404 },	\ 	{ 126, 0x100bb1, 0x1300e0, 0x05e014, 0x001406 },	\ 	{ 128, 0x100bb1, 0x1300e0, 0x05e014, 0x001408 },	\ 	{ 132, 0x100bb1, 0x1300e1, 0x05e014, 0x001402 },	\ 	{ 134, 0x100bb1, 0x1300e1, 0x05e014, 0x001404 },	\ 	{ 136, 0x100bb1, 0x1300e1, 0x05e014, 0x001406 },	\ 	{ 140, 0x100bb1, 0x1300e2, 0x05e014, 0x001400 },	\ 	{ 149, 0x100bb1, 0x1300e2, 0x05e014, 0x001409 },	\ 	{ 151, 0x100bb1, 0x1300e3, 0x05e014, 0x001401 },	\ 	{ 153, 0x100bb1, 0x1300e3, 0x05e014, 0x001403 },	\ 	{ 157, 0x100bb1, 0x1300e3, 0x05e014, 0x001407 },	\ 	{ 159, 0x100bb1, 0x1300e3, 0x05e014, 0x001409 },	\ 	{ 161, 0x100bb1, 0x1300e4, 0x05e014, 0x001401 },	\ 	{ 165, 0x100bb1, 0x1300e4, 0x05e014, 0x001405 },	\ 	{ 167, 0x100bb1, 0x1300f4, 0x05e014, 0x001407 },	\ 	{ 169, 0x100bb1, 0x1300f4, 0x05e014, 0x001409 },	\ 	{ 171, 0x100bb1, 0x1300f5, 0x05e014, 0x001401 },	\ 	{ 173, 0x100bb1, 0x1300f5, 0x05e014, 0x001403 }
+value|{   1, 0x98402ecc, 0x984c0786, 0x9816b455, 0x9800510b },	\ 	{   2, 0x98402ecc, 0x984c0786, 0x98168a55, 0x9800519f },	\ 	{   3, 0x98402ecc, 0x984c078a, 0x98168a55, 0x9800518b },	\ 	{   4, 0x98402ecc, 0x984c078a, 0x98168a55, 0x9800519f },	\ 	{   5, 0x98402ecc, 0x984c078e, 0x98168a55, 0x9800518b },	\ 	{   6, 0x98402ecc, 0x984c078e, 0x98168a55, 0x9800519f },	\ 	{   7, 0x98402ecc, 0x984c0792, 0x98168a55, 0x9800518b },	\ 	{   8, 0x98402ecc, 0x984c0792, 0x98168a55, 0x9800519f },	\ 	{   9, 0x98402ecc, 0x984c0796, 0x98168a55, 0x9800518b },	\ 	{  10, 0x98402ecc, 0x984c0796, 0x98168a55, 0x9800519f },	\ 	{  11, 0x98402ecc, 0x984c079a, 0x98168a55, 0x9800518b },	\ 	{  12, 0x98402ecc, 0x984c079a, 0x98168a55, 0x9800519f },	\ 	{  13, 0x98402ecc, 0x984c079e, 0x98168a55, 0x9800518b },	\ 	{  14, 0x98402ecc, 0x984c07a2, 0x98168a55, 0x98005193 },	\ 	{  36, 0x98402ecc, 0x984c099a, 0x98158a55, 0x980ed1a3 },	\ 	{  38, 0x98402ecc, 0x984c099e, 0x98158a55, 0x980ed193 },	\ 	{  40, 0x98402ec8, 0x984c0682, 0x98158a55, 0x980ed183 },	\ 	{  44, 0x98402ec8, 0x984c0682, 0x98158a55, 0x980ed1a3 },	\ 	{  46, 0x98402ec8, 0x984c0686, 0x98158a55, 0x980ed18b },	\ 	{  48, 0x98402ec8, 0x984c0686, 0x98158a55, 0x980ed19b },	\ 	{  52, 0x98402ec8, 0x984c068a, 0x98158a55, 0x980ed193 },	\ 	{  54, 0x98402ec8, 0x984c068a, 0x98158a55, 0x980ed1a3 },	\ 	{  56, 0x98402ec8, 0x984c068e, 0x98158a55, 0x980ed18b },	\ 	{  60, 0x98402ec8, 0x984c0692, 0x98158a55, 0x980ed183 },	\ 	{  62, 0x98402ec8, 0x984c0692, 0x98158a55, 0x980ed193 },	\ 	{  64, 0x98402ec8, 0x984c0692, 0x98158a55, 0x980ed1a3 },	\ 	{ 100, 0x98402ec8, 0x984c06b2, 0x98178a55, 0x980ed783 },	\ 	{ 102, 0x98402ec8, 0x985c06b2, 0x98578a55, 0x980ed793 },	\ 	{ 104, 0x98402ec8, 0x985c06b2, 0x98578a55, 0x980ed1a3 },	\ 	{ 108, 0x98402ecc, 0x985c0a32, 0x98578a55, 0x980ed193 },	\ 	{ 110, 0x98402ecc, 0x984c0a36, 0x98178a55, 0x980ed183 },	\ 	{ 112, 0x98402ecc, 0x984c0a36, 0x98178a55, 0x980ed19b },	\ 	{ 116, 0x98402ecc, 0x984c0a3a, 0x98178a55, 0x980ed1a3 },	\ 	{ 118, 0x98402ecc, 0x984c0a3e, 0x98178a55, 0x980ed193 },	\ 	{ 120, 0x98402ec4, 0x984c0382, 0x98178a55, 0x980ed183 },	\ 	{ 124, 0x98402ec4, 0x984c0382, 0x98178a55, 0x980ed193 },	\ 	{ 126, 0x98402ec4, 0x984c0382, 0x98178a55, 0x980ed15b },	\ 	{ 128, 0x98402ec4, 0x984c0382, 0x98178a55, 0x980ed1a3 },	\ 	{ 132, 0x98402ec4, 0x984c0386, 0x98178a55, 0x980ed18b },	\ 	{ 134, 0x98402ec4, 0x984c0386, 0x98178a55, 0x980ed193 },	\ 	{ 136, 0x98402ec4, 0x984c0386, 0x98178a55, 0x980ed19b },	\ 	{ 140, 0x98402ec4, 0x984c038a, 0x98178a55, 0x980ed183 },	\ 	{ 149, 0x98402ec4, 0x984c038a, 0x98178a55, 0x980ed1a7 },	\ 	{ 151, 0x98402ec4, 0x984c038e, 0x98178a55, 0x980ed187 },	\ 	{ 153, 0x98402ec4, 0x984c038e, 0x98178a55, 0x980ed18f },	\ 	{ 157, 0x98402ec4, 0x984c038e, 0x98178a55, 0x980ed19f },	\ 	{ 159, 0x98402ec4, 0x984c038e, 0x98178a55, 0x980ed1a7 },	\ 	{ 161, 0x98402ec4, 0x984c0392, 0x98178a55, 0x980ed187 },	\ 	{ 165, 0x98402ec4, 0x984c0392, 0x98178a55, 0x980ed197 },	\ 	{ 167, 0x98402ec4, 0x984c03d2, 0x98179855, 0x9815531f },	\ 	{ 169, 0x98402ec4, 0x984c03d2, 0x98179855, 0x98155327 },	\ 	{ 171, 0x98402ec4, 0x984c03d6, 0x98179855, 0x98155307 },	\ 	{ 173, 0x98402ec4, 0x984c03d6, 0x98179855, 0x9815530f },	\ 	{ 184, 0x95002ccc, 0x9500491e, 0x9509be55, 0x950c0a0b },	\ 	{ 188, 0x95002ccc, 0x95004922, 0x9509be55, 0x950c0a13 },	\ 	{ 192, 0x95002ccc, 0x95004926, 0x9509be55, 0x950c0a1b },	\ 	{ 196, 0x95002ccc, 0x9500492a, 0x9509be55, 0x950c0a23 },	\ 	{ 208, 0x95002ccc, 0x9500493a, 0x9509be55, 0x950c0a13 },	\ 	{ 212, 0x95002ccc, 0x9500493e, 0x9509be55, 0x950c0a1b },	\ 	{ 216, 0x95002ccc, 0x95004982, 0x9509be55, 0x950c0a23 }
 end_define
 
 begin_define
@@ -5262,6 +5341,22 @@ directive|define
 name|RT3070_RF3052
 define|\
 value|{ 0xf1, 2,  2 },	\ 	{ 0xf1, 2,  7 },	\ 	{ 0xf2, 2,  2 },	\ 	{ 0xf2, 2,  7 },	\ 	{ 0xf3, 2,  2 },	\ 	{ 0xf3, 2,  7 },	\ 	{ 0xf4, 2,  2 },	\ 	{ 0xf4, 2,  7 },	\ 	{ 0xf5, 2,  2 },	\ 	{ 0xf5, 2,  7 },	\ 	{ 0xf6, 2,  2 },	\ 	{ 0xf6, 2,  7 },	\ 	{ 0xf7, 2,  2 },	\ 	{ 0xf8, 2,  4 },	\ 	{ 0x56, 0,  4 },	\ 	{ 0x56, 0,  6 },	\ 	{ 0x56, 0,  8 },	\ 	{ 0x57, 0,  0 },	\ 	{ 0x57, 0,  2 },	\ 	{ 0x57, 0,  4 },	\ 	{ 0x57, 0,  8 },	\ 	{ 0x57, 0, 10 },	\ 	{ 0x58, 0,  0 },	\ 	{ 0x58, 0,  4 },	\ 	{ 0x58, 0,  6 },	\ 	{ 0x58, 0,  8 },	\ 	{ 0x5b, 0,  8 },	\ 	{ 0x5b, 0, 10 },	\ 	{ 0x5c, 0,  0 },	\ 	{ 0x5c, 0,  4 },	\ 	{ 0x5c, 0,  6 },	\ 	{ 0x5c, 0,  8 },	\ 	{ 0x5d, 0,  0 },	\ 	{ 0x5d, 0,  2 },	\ 	{ 0x5d, 0,  4 },	\ 	{ 0x5d, 0,  8 },	\ 	{ 0x5d, 0, 10 },	\ 	{ 0x5e, 0,  0 },	\ 	{ 0x5e, 0,  4 },	\ 	{ 0x5e, 0,  6 },	\ 	{ 0x5e, 0,  8 },	\ 	{ 0x5f, 0,  0 },	\ 	{ 0x5f, 0,  9 },	\ 	{ 0x5f, 0, 11 },	\ 	{ 0x60, 0,  1 },	\ 	{ 0x60, 0,  5 },	\ 	{ 0x60, 0,  7 },	\ 	{ 0x60, 0,  9 },	\ 	{ 0x61, 0,  1 },	\ 	{ 0x61, 0,  3 },	\ 	{ 0x61, 0,  5 },	\ 	{ 0x61, 0,  7 },	\ 	{ 0x61, 0,  9 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5592_RF5592_20MHZ
+define|\
+value|{ 0x1e2,  4, 10, 3 },	\ 	{ 0x1e3,  4, 10, 3 },	\ 	{ 0x1e4,  4, 10, 3 },	\ 	{ 0x1e5,  4, 10, 3 },	\ 	{ 0x1e6,  4, 10, 3 },	\ 	{ 0x1e7,  4, 10, 3 },	\ 	{ 0x1e8,  4, 10, 3 },	\ 	{ 0x1e9,  4, 10, 3 },	\ 	{ 0x1ea,  4, 10, 3 },	\ 	{ 0x1eb,  4, 10, 3 },	\ 	{ 0x1ec,  4, 10, 3 },	\ 	{ 0x1ed,  4, 10, 3 },	\ 	{ 0x1ee,  4, 10, 3 },	\ 	{ 0x1f0,  8, 10, 3 },	\ 	{  0xac,  8, 12, 1 },	\ 	{  0xad,  0, 12, 1 },	\ 	{  0xad,  4, 12, 1 },	\ 	{  0xae,  0, 12, 1 },	\ 	{  0xae,  4, 12, 1 },	\ 	{  0xae,  8, 12, 1 },	\ 	{  0xaf,  4, 12, 1 },	\ 	{  0xaf,  8, 12, 1 },	\ 	{  0xb0,  0, 12, 1 },	\ 	{  0xb0,  8, 12, 1 },	\ 	{  0xb1,  0, 12, 1 },	\ 	{  0xb1,  4, 12, 1 },	\ 	{  0xb7,  4, 12, 1 },	\ 	{  0xb7,  8, 12, 1 },	\ 	{  0xb8,  0, 12, 1 },	\ 	{  0xb8,  8, 12, 1 },	\ 	{  0xb9,  0, 12, 1 },	\ 	{  0xb9,  4, 12, 1 },	\ 	{  0xba,  0, 12, 1 },	\ 	{  0xba,  4, 12, 1 },	\ 	{  0xba,  8, 12, 1 },	\ 	{  0xbb,  4, 12, 1 },	\ 	{  0xbb,  8, 12, 1 },	\ 	{  0xbc,  0, 12, 1 },	\ 	{  0xbc,  8, 12, 1 },	\ 	{  0xbd,  0, 12, 1 },	\ 	{  0xbd,  4, 12, 1 },	\ 	{  0xbe,  0, 12, 1 },	\ 	{  0xbf,  6, 12, 1 },	\ 	{  0xbf, 10, 12, 1 },	\ 	{  0xc0,  2, 12, 1 },	\ 	{  0xc0, 10, 12, 1 },	\ 	{  0xc1,  2, 12, 1 },	\ 	{  0xc1,  6, 12, 1 },	\ 	{  0xc2,  2, 12, 1 },	\ 	{  0xa4,  0, 12, 1 },	\ 	{  0xa4,  4, 12, 1 },	\ 	{  0xa5,  8, 12, 1 },	\ 	{  0xa6,  0, 12, 1 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5592_RF5592_40MHZ
+define|\
+value|{ 0xf1,  2, 10, 3 },	\ 	{ 0xf1,  7, 10, 3 },	\ 	{ 0xf2,  2, 10, 3 },	\ 	{ 0xf2,  7, 10, 3 },	\ 	{ 0xf3,  2, 10, 3 },	\ 	{ 0xf3,  7, 10, 3 },	\ 	{ 0xf4,  2, 10, 3 },	\ 	{ 0xf4,  7, 10, 3 },	\ 	{ 0xf5,  2, 10, 3 },	\ 	{ 0xf5,  7, 10, 3 },	\ 	{ 0xf6,  2, 10, 3 },	\ 	{ 0xf6,  7, 10, 3 },	\ 	{ 0xf7,  2, 10, 3 },	\ 	{ 0xf8,  4, 10, 3 },	\ 	{ 0x56,  4, 12, 1 },	\ 	{ 0x56,  6, 12, 1 },	\ 	{ 0x56,  8, 12, 1 },	\ 	{ 0x57,  0, 12, 1 },	\ 	{ 0x57,  2, 12, 1 },	\ 	{ 0x57,  4, 12, 1 },	\ 	{ 0x57,  8, 12, 1 },	\ 	{ 0x57, 10, 12, 1 },	\ 	{ 0x58,  0, 12, 1 },	\ 	{ 0x58,  4, 12, 1 },	\ 	{ 0x58,  6, 12, 1 },	\ 	{ 0x58,  8, 12, 1 },	\ 	{ 0x5b,  8, 12, 1 },	\ 	{ 0x5b, 10, 12, 1 },	\ 	{ 0x5c,  0, 12, 1 },	\ 	{ 0x5c,  4, 12, 1 },	\ 	{ 0x5c,  6, 12, 1 },	\ 	{ 0x5c,  8, 12, 1 },	\ 	{ 0x5d,  0, 12, 1 },	\ 	{ 0x5d,  2, 12, 1 },	\ 	{ 0x5d,  4, 12, 1 },	\ 	{ 0x5d,  8, 12, 1 },	\ 	{ 0x5d, 10, 12, 1 },	\ 	{ 0x5e,  0, 12, 1 },	\ 	{ 0x5e,  4, 12, 1 },	\ 	{ 0x5e,  6, 12, 1 },	\ 	{ 0x5e,  8, 12, 1 },	\ 	{ 0x5f,  0, 12, 1 },	\ 	{ 0x5f,  9, 12, 1 },	\ 	{ 0x5f, 11, 12, 1 },	\ 	{ 0x60,  1, 12, 1 },	\ 	{ 0x60,  5, 12, 1 },	\ 	{ 0x60,  7, 12, 1 },	\ 	{ 0x60,  9, 12, 1 },	\ 	{ 0x61,  1, 12, 1 },	\ 	{ 0x52,  0, 12, 1 },	\ 	{ 0x52,  4, 12, 1 },	\ 	{ 0x52,  8, 12, 1 },	\ 	{ 0x53,  0, 12, 1 }
 end_define
 
 begin_define
@@ -5278,6 +5373,54 @@ directive|define
 name|RT3572_DEF_RF
 define|\
 value|{  0, 0x70 },	\ 	{  1, 0x81 },	\ 	{  2, 0xf1 },	\ 	{  3, 0x02 },	\ 	{  4, 0x4c },	\ 	{  5, 0x05 },	\ 	{  6, 0x4a },	\ 	{  7, 0xd8 },	\ 	{  9, 0xc3 },	\ 	{ 10, 0xf1 },	\ 	{ 11, 0xb9 },	\ 	{ 12, 0x70 },	\ 	{ 13, 0x65 },	\ 	{ 14, 0xa0 },	\ 	{ 15, 0x53 },	\ 	{ 16, 0x4c },	\ 	{ 17, 0x23 },	\ 	{ 18, 0xac },	\ 	{ 19, 0x93 },	\ 	{ 20, 0xb3 },	\ 	{ 21, 0xd0 },	\ 	{ 22, 0x00 },  	\ 	{ 23, 0x3c },	\ 	{ 24, 0x16 },	\ 	{ 25, 0x15 },	\ 	{ 26, 0x85 },	\ 	{ 27, 0x00 },	\ 	{ 28, 0x00 },	\ 	{ 29, 0x9b },	\ 	{ 30, 0x09 },	\ 	{ 31, 0x10 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5390_DEF_RF
+define|\
+value|{  1, 0x0f },	\ 	{  2, 0x80 },	\ 	{  3, 0x88 },	\ 	{  5, 0x10 },	\ 	{  6, 0xa0 },	\ 	{  7, 0x00 },	\ 	{ 10, 0x53 },	\ 	{ 11, 0x4a },	\ 	{ 12, 0x46 },	\ 	{ 13, 0x9f },	\ 	{ 14, 0x00 },	\ 	{ 15, 0x00 },	\ 	{ 16, 0x00 },	\ 	{ 18, 0x03 },	\ 	{ 19, 0x00 },	\ 	{ 20, 0x00 },	\ 	{ 21, 0x00 },	\ 	{ 22, 0x20 },  	\ 	{ 23, 0x00 },	\ 	{ 24, 0x00 },	\ 	{ 25, 0xc0 },	\ 	{ 26, 0x00 },	\ 	{ 27, 0x09 },	\ 	{ 28, 0x00 },	\ 	{ 29, 0x10 },	\ 	{ 30, 0x10 },	\ 	{ 31, 0x80 },	\ 	{ 32, 0x80 },	\ 	{ 33, 0x00 },	\ 	{ 34, 0x07 },	\ 	{ 35, 0x12 },	\ 	{ 36, 0x00 },	\ 	{ 37, 0x08 },	\ 	{ 38, 0x85 },	\ 	{ 39, 0x1b },	\ 	{ 40, 0x0b },	\ 	{ 41, 0xbb },	\ 	{ 42, 0xd2 },	\ 	{ 43, 0x9a },	\ 	{ 44, 0x0e },	\ 	{ 45, 0xa2 },	\ 	{ 46, 0x7b },	\ 	{ 47, 0x00 },	\ 	{ 48, 0x10 },	\ 	{ 49, 0x94 },	\ 	{ 52, 0x38 },	\ 	{ 53, 0x84 },	\ 	{ 54, 0x78 },	\ 	{ 55, 0x44 },	\ 	{ 56, 0x22 },	\ 	{ 57, 0x80 },	\ 	{ 58, 0x7f },	\ 	{ 59, 0x8f },	\ 	{ 60, 0x45 },	\ 	{ 61, 0xdd },	\ 	{ 62, 0x00 },	\ 	{ 63, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5392_DEF_RF
+define|\
+value|{  1, 0x17 },	\ 	{  3, 0x88 },	\ 	{  5, 0x10 },	\ 	{  6, 0xe0 },	\ 	{  7, 0x00 },	\ 	{ 10, 0x53 },	\ 	{ 11, 0x4a },	\ 	{ 12, 0x46 },	\ 	{ 13, 0x9f },	\ 	{ 14, 0x00 },	\ 	{ 15, 0x00 },	\ 	{ 16, 0x00 },	\ 	{ 18, 0x03 },	\ 	{ 19, 0x4d },	\ 	{ 20, 0x00 },	\ 	{ 21, 0x8d },	\ 	{ 22, 0x20 },  	\ 	{ 23, 0x0b },	\ 	{ 24, 0x44 },	\ 	{ 25, 0x80 },	\ 	{ 26, 0x82 },	\ 	{ 27, 0x09 },	\ 	{ 28, 0x00 },	\ 	{ 29, 0x10 },	\ 	{ 30, 0x10 },	\ 	{ 31, 0x80 },	\ 	{ 32, 0x20 },	\ 	{ 33, 0xc0 },	\ 	{ 34, 0x07 },	\ 	{ 35, 0x12 },	\ 	{ 36, 0x00 },	\ 	{ 37, 0x08 },	\ 	{ 38, 0x89 },	\ 	{ 39, 0x1b },	\ 	{ 40, 0x0f },	\ 	{ 41, 0xbb },	\ 	{ 42, 0xd5 },	\ 	{ 43, 0x9b },	\ 	{ 44, 0x0e },	\ 	{ 45, 0xa2 },	\ 	{ 46, 0x73 },	\ 	{ 47, 0x0c },	\ 	{ 48, 0x10 },	\ 	{ 49, 0x94 },	\ 	{ 50, 0x94 },	\ 	{ 51, 0x3a },	\ 	{ 52, 0x48 },	\ 	{ 53, 0x44 },	\ 	{ 54, 0x38 },	\ 	{ 55, 0x43 },	\ 	{ 56, 0xa1 },	\ 	{ 57, 0x00 },	\ 	{ 58, 0x39 },	\ 	{ 59, 0x07 },	\ 	{ 60, 0x45 },	\ 	{ 61, 0x91 },	\ 	{ 62, 0x39 },	\ 	{ 63, 0x07 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5592_DEF_RF
+define|\
+value|{  1, 0x3f },	\ 	{  3, 0x08 },	\ 	{  5, 0x10 },	\ 	{  6, 0xe4 },	\ 	{  7, 0x00 },	\ 	{ 14, 0x00 },	\ 	{ 15, 0x00 },	\ 	{ 16, 0x00 },	\ 	{ 18, 0x03 },	\ 	{ 19, 0x4d },	\ 	{ 20, 0x10 },	\ 	{ 21, 0x8d },	\ 	{ 26, 0x82 },	\ 	{ 28, 0x00 },	\ 	{ 29, 0x10 },	\ 	{ 33, 0xc0 },	\ 	{ 34, 0x07 },	\ 	{ 35, 0x12 },	\ 	{ 47, 0x0c },	\ 	{ 53, 0x22 },	\ 	{ 63, 0x07 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5592_2GHZ_DEF_RF
+define|\
+value|{ 10, 0x90 },		\ 	{ 11, 0x4a },		\ 	{ 12, 0x52 },		\ 	{ 13, 0x42 },		\ 	{ 22, 0x40 },		\ 	{ 24, 0x4a },		\ 	{ 25, 0x80 },		\ 	{ 27, 0x42 },		\ 	{ 36, 0x80 },		\ 	{ 37, 0x08 },		\ 	{ 38, 0x89 },		\ 	{ 39, 0x1b },		\ 	{ 40, 0x0d },		\ 	{ 41, 0x9b },		\ 	{ 42, 0xd5 },		\ 	{ 43, 0x72 },		\ 	{ 44, 0x0e },		\ 	{ 45, 0xa2 },		\ 	{ 46, 0x6b },		\ 	{ 48, 0x10 },		\ 	{ 51, 0x3e },		\ 	{ 52, 0x48 },		\ 	{ 54, 0x38 },		\ 	{ 56, 0xa1 },		\ 	{ 57, 0x00 },		\ 	{ 58, 0x39 },		\ 	{ 60, 0x45 },		\ 	{ 61, 0x91 },		\ 	{ 62, 0x39 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5592_5GHZ_DEF_RF
+define|\
+value|{ 10, 0x97 },		\ 	{ 11, 0x40 },		\ 	{ 25, 0xbf },		\ 	{ 27, 0x42 },		\ 	{ 36, 0x00 },		\ 	{ 37, 0x04 },		\ 	{ 38, 0x85 },		\ 	{ 40, 0x42 },		\ 	{ 41, 0xbb },		\ 	{ 42, 0xd7 },		\ 	{ 45, 0x41 },		\ 	{ 48, 0x00 },		\ 	{ 57, 0x77 },		\ 	{ 60, 0x05 },		\ 	{ 61, 0x01 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5592_CHAN_5GHZ
+define|\
+value|{  36,  64, 12, 0x2e },	\ 	{ 100, 165, 12, 0x0e },	\ 	{  36,  64, 13, 0x22 },	\ 	{ 100, 165, 13, 0x42 },	\ 	{  36,  64, 22, 0x60 },	\ 	{ 100, 165, 22, 0x40 },	\ 	{  36,  64, 23, 0x7f },	\ 	{ 100, 153, 23, 0x3c },	\ 	{ 155, 165, 23, 0x38 },	\ 	{  36,  50, 24, 0x09 },	\ 	{  52,  64, 24, 0x07 },	\ 	{ 100, 153, 24, 0x06 },	\ 	{ 155, 165, 24, 0x05 },	\ 	{  36,  64, 39, 0x1c },	\ 	{ 100, 138, 39, 0x1a },	\ 	{ 140, 165, 39, 0x18 },	\ 	{  36,  64, 43, 0x5b },	\ 	{ 100, 138, 43, 0x3b },	\ 	{ 140, 165, 43, 0x1b },	\ 	{  36,  64, 44, 0x40 },	\ 	{ 100, 138, 44, 0x20 },	\ 	{ 140, 165, 44, 0x10 },	\ 	{  36,  64, 46, 0x00 },	\ 	{ 100, 138, 46, 0x18 },	\ 	{ 140, 165, 46, 0x08 },	\ 	{  36,  64, 51, 0xfe },	\ 	{ 100, 124, 51, 0xfc },	\ 	{ 126, 165, 51, 0xec },	\ 	{  36,  64, 52, 0x0c },	\ 	{ 100, 138, 52, 0x06 },	\ 	{ 140, 165, 52, 0x06 },	\ 	{  36,  64, 54, 0xf8 },	\ 	{ 100, 165, 54, 0xeb },	\ 	{ 36,   50, 55, 0x06 },	\ 	{ 52,   64, 55, 0x04 },	\ 	{ 100, 138, 55, 0x01 },	\ 	{ 140, 165, 55, 0x00 },	\ 	{  36,  50, 56, 0xd3 },	\ 	{  52, 128, 56, 0xbb },	\ 	{ 130, 165, 56, 0xab },	\ 	{  36,  64, 58, 0x15 },	\ 	{ 100, 116, 58, 0x1d },	\ 	{ 118, 165, 58, 0x15 },	\ 	{  36,  64, 59, 0x7f },	\ 	{ 100, 138, 59, 0x3f },	\ 	{ 140, 165, 59, 0x7c },	\ 	{  36,  64, 62, 0x15 },	\ 	{ 100, 116, 62, 0x1d },	\ 	{ 118, 165, 62, 0x15 }
 end_define
 
 begin_union
