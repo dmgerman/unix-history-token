@@ -1633,6 +1633,14 @@ name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
+name|void
+modifier|*
+name|sc_rx_dma_buf
+decl_stmt|;
+name|void
+modifier|*
+name|sc_tx_dma_buf
+decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
