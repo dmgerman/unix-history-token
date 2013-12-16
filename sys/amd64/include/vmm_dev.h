@@ -145,6 +145,20 @@ end_struct
 
 begin_struct
 struct|struct
+name|vm_lapic_msi
+block|{
+name|uint64_t
+name|msg
+decl_stmt|;
+name|uint64_t
+name|addr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vm_lapic_irq
 block|{
 name|int
@@ -252,11 +266,11 @@ name|int
 name|numvec
 decl_stmt|;
 comment|/* 0 means disabled */
-name|int
-name|vector
+name|uint64_t
+name|msg
 decl_stmt|;
-name|int
-name|destcpu
+name|uint64_t
+name|addr
 decl_stmt|;
 block|}
 struct|;
@@ -281,7 +295,7 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|msg
 decl_stmt|;
 name|uint32_t
@@ -481,6 +495,10 @@ name|IOCNUM_IOAPIC_PULSE_IRQ
 init|=
 literal|35
 block|,
+name|IOCNUM_LAPIC_MSI
+init|=
+literal|36
+block|,
 comment|/* PCI pass-thru */
 name|IOCNUM_BIND_PPTDEV
 init|=
@@ -597,6 +615,14 @@ directive|define
 name|VM_LAPIC_IRQ
 define|\
 value|_IOW('v', IOCNUM_LAPIC_IRQ, struct vm_lapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_LAPIC_MSI
+define|\
+value|_IOW('v', IOCNUM_LAPIC_MSI, struct vm_lapic_msi)
 end_define
 
 begin_define

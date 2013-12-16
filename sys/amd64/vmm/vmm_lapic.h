@@ -287,6 +287,24 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+name|int
+name|lapic_intr_msi
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|uint64_t
+name|addr
+parameter_list|,
+name|uint64_t
+name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
