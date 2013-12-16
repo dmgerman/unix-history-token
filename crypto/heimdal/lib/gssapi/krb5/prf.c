@@ -477,7 +477,9 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|+=
-name|tsize
+name|output
+operator|.
+name|length
 expr_stmt|;
 name|desired_output_len
 operator|-=
