@@ -1657,6 +1657,10 @@ define|#
 directive|define
 name|UPGT_FLAG_INITDONE
 value|(1<< 1)
+define|#
+directive|define
+name|UPGT_FLAG_DETACHED
+value|(1<< 2)
 name|int
 name|sc_if_flags
 decl_stmt|;

@@ -745,6 +745,9 @@ decl_stmt|;
 name|uint8_t
 name|rvp_bmap
 decl_stmt|;
+name|uint8_t
+name|sc_detached
+decl_stmt|;
 union|union
 block|{
 name|struct

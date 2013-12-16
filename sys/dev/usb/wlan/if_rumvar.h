@@ -293,6 +293,9 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+name|uint8_t
+name|sc_detached
+decl_stmt|;
 struct|struct
 block|{
 name|uint8_t
