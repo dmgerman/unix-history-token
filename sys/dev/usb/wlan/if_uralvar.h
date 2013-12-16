@@ -72,6 +72,11 @@ name|uint8_t
 name|wr_antenna
 decl_stmt|;
 block|}
+name|__packed
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -107,6 +112,11 @@ name|uint8_t
 name|wt_antenna
 decl_stmt|;
 block|}
+name|__packed
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 

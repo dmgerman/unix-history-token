@@ -123,6 +123,10 @@ name|wr_antsignal
 decl_stmt|;
 block|}
 name|__packed
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -159,6 +163,10 @@ name|wt_hwqueue
 decl_stmt|;
 block|}
 name|__packed
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
