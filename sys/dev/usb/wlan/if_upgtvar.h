@@ -1395,9 +1395,6 @@ decl_stmt|;
 name|uint32_t
 name|addr
 decl_stmt|;
-name|uint8_t
-name|use
-decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
 argument|upgt_data
