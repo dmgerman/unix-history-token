@@ -19500,7 +19500,7 @@ name|rxr
 operator|->
 name|rxtag
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 operator|&
 name|rxbuf
@@ -21393,6 +21393,22 @@ goto|goto
 name|next_desc
 goto|;
 block|}
+name|bus_dmamap_unload
+argument_list|(
+name|rxr
+operator|->
+name|rxtag
+argument_list|,
+name|rxr
+operator|->
+name|rx_buffers
+index|[
+name|i
+index|]
+operator|.
+name|map
+argument_list|)
+expr_stmt|;
 comment|/* Assign correct length to the current fragment */
 name|mp
 operator|=
@@ -21773,6 +21789,17 @@ name|rx_buffers
 index|[
 name|i
 index|]
+expr_stmt|;
+name|bus_dmamap_unload
+argument_list|(
+name|rxr
+operator|->
+name|rxtag
+argument_list|,
+name|rbuf
+operator|->
+name|map
+argument_list|)
 expr_stmt|;
 comment|/* Free any previous pieces */
 if|if
