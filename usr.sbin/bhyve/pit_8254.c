@@ -350,7 +350,7 @@ name|c
 operator|->
 name|ctx
 argument_list|,
-literal|0
+literal|2
 argument_list|)
 expr_stmt|;
 name|ioapic_deassert_pin
@@ -359,7 +359,7 @@ name|c
 operator|->
 name|ctx
 argument_list|,
-literal|0
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Delete the timer for one-shots 	 */

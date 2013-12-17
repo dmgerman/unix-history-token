@@ -1249,9 +1249,7 @@ argument_list|(
 name|tname
 argument_list|)
 argument_list|,
-literal|"%s blk-%s"
-argument_list|,
-name|vmname
+literal|"blk-%s"
 argument_list|,
 name|ident
 argument_list|)
