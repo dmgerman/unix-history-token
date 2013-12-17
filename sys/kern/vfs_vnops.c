@@ -1592,6 +1592,20 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+comment|/* Prevent second close from fdrop()->vn_close(). */
+if|if
+condition|(
+name|fp
+operator|!=
+name|NULL
+condition|)
+name|fp
+operator|->
+name|f_ops
+operator|=
+operator|&
+name|badfileops
+expr_stmt|;
 return|return
 operator|(
 name|error
