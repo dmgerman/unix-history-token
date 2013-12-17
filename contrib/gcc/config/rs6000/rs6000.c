@@ -58771,6 +58771,9 @@ name|enum
 name|insn_code
 name|nor_code
 decl_stmt|;
+name|rtx
+name|eq_rtx
+decl_stmt|;
 name|rev_code
 operator|=
 name|reverse_condition_maybe_unordered
@@ -58778,9 +58781,8 @@ argument_list|(
 name|rcode
 argument_list|)
 expr_stmt|;
-name|rtx
 name|eq_rtx
-init|=
+operator|=
 name|rs6000_emit_vector_compare
 argument_list|(
 name|rev_code
@@ -58791,7 +58793,7 @@ name|op1
 argument_list|,
 name|dest_mode
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|nor_code
 operator|=
 name|one_cmpl_optab
