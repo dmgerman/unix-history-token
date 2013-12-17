@@ -488,6 +488,31 @@ define|\
 value|((t)->dt_mt->dm_dmamem_free((t), (v), (m)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|_bus_dmamap_load_ma
+parameter_list|(
+name|t
+parameter_list|,
+name|m
+parameter_list|,
+name|a
+parameter_list|,
+name|tt
+parameter_list|,
+name|o
+parameter_list|,
+name|f
+parameter_list|,
+name|s
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|bus_dmamap_load_ma_triv((t), (m), (a), (tt), (o), (f), (s), (p))
+end_define
+
 begin_endif
 endif|#
 directive|endif
