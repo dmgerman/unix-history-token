@@ -430,6 +430,23 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|td
+operator|->
+name|td_rw_rlocks
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning with %d rwlocks held in read mode"
+operator|,
+name|td
+operator|->
+name|td_rw_rlocks
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 operator|(
 name|td
 operator|->

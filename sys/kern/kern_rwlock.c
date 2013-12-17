@@ -2006,6 +2006,17 @@ name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+name|spin_cnt
+operator|+=
+name|rowner_loops
+operator|-
+name|i
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|i
