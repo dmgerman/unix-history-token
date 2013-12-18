@@ -20972,8 +20972,6 @@ argument_list|,
 literal|159
 argument_list|,
 name|val
-operator|&
-literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* Tx0 IQ phase. */
@@ -21081,8 +21079,6 @@ argument_list|,
 literal|159
 argument_list|,
 name|val
-operator|&
-literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* Tx1 IQ gain. */
@@ -21190,8 +21186,6 @@ argument_list|,
 literal|159
 argument_list|,
 name|val
-operator|&
-literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* Tx1 IQ phase. */
@@ -21299,8 +21293,6 @@ argument_list|,
 literal|159
 argument_list|,
 name|val
-operator|&
-literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* RF IQ compensation control. */
@@ -21332,8 +21324,6 @@ argument_list|,
 literal|159
 argument_list|,
 name|val
-operator|&
-literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* RF IQ imbalance compensation control. */
@@ -21365,8 +21355,6 @@ argument_list|,
 literal|159
 argument_list|,
 name|val
-operator|&
-literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
