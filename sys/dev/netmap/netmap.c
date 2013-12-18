@@ -172,6 +172,12 @@ directive|include
 file|<sys/refcount.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
+end_include
+
 begin_comment
 comment|/* reduce conditional code */
 end_comment
