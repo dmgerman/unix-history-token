@@ -25874,7 +25874,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Perform IQ calibrations. */
+comment|/* Perform IQ calibration. */
 if|if
 condition|(
 name|sc
