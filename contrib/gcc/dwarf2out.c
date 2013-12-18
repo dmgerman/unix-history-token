@@ -7589,7 +7589,7 @@ name|label
 operator|=
 name|get_file_function_name
 argument_list|(
-literal|'F'
+literal|"F"
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_ALIGN

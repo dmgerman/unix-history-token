@@ -227,6 +227,8 @@ literal|"strlen_optab->handlers[$A].insn_code = CODE_FOR_$(strlen$a$)"
 block|,
 literal|"one_cmpl_optab->handlers[$A].insn_code = CODE_FOR_$(one_cmpl$a2$)"
 block|,
+literal|"bswap_optab->handlers[$A].insn_code = CODE_FOR_$(bswap$a2$)"
+block|,
 literal|"ffs_optab->handlers[$A].insn_code = CODE_FOR_$(ffs$a2$)"
 block|,
 literal|"clz_optab->handlers[$A].insn_code = CODE_FOR_$(clz$a2$)"

@@ -254,6 +254,56 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Initialise anonymous_namespace_name if necessary, and return it.  */
+end_comment
+
+begin_function
+specifier|static
+name|tree
+name|get_anonymous_namespace_name
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|anonymous_namespace_name
+condition|)
+block|{
+comment|/* The anonymous namespace has to have a unique name 	 if typeinfo objects are being compared by name.  */
+if|if
+condition|(
+operator|!
+name|flag_weak
+operator|||
+operator|!
+name|SUPPORTS_ONE_ONLY
+condition|)
+name|anonymous_namespace_name
+operator|=
+name|get_file_function_name
+argument_list|(
+literal|"N"
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* The demangler expects anonymous namespaces to be called 	   something starting with '_GLOBAL__N_'.  */
+name|anonymous_namespace_name
+operator|=
+name|get_identifier
+argument_list|(
+literal|"_GLOBAL__N_1"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|anonymous_namespace_name
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Compute the chain index of a binding_entry given the HASH value of its    name and the total COUNT of chains.  COUNT is assumed to be a power    of 2.  */
 end_comment
 
@@ -10995,22 +11045,10 @@ condition|(
 name|anon
 condition|)
 block|{
-comment|/* The name of anonymous namespace is unique for the translation 	 unit.  */
-if|if
-condition|(
-operator|!
-name|anonymous_namespace_name
-condition|)
-name|anonymous_namespace_name
-operator|=
-name|get_file_function_name
-argument_list|(
-literal|'N'
-argument_list|)
-expr_stmt|;
 name|name
 operator|=
-name|anonymous_namespace_name
+name|get_anonymous_namespace_name
+argument_list|()
 expr_stmt|;
 name|d
 operator|=

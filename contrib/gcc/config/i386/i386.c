@@ -5051,6 +5051,20 @@ name|m_386
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Byteswap was added for 80486.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|int
+name|x86_bswap
+init|=
+operator|~
+name|m_386
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|const
 name|int

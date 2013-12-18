@@ -10368,6 +10368,9 @@ case|:
 case|case
 name|PARITY
 case|:
+case|case
+name|BSWAP
+case|:
 name|new
 operator|=
 name|eliminate_regs_1
@@ -11404,6 +11407,9 @@ name|POPCOUNT
 case|:
 case|case
 name|PARITY
+case|:
+case|case
+name|BSWAP
 case|:
 name|elimination_effects
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic SSA value propagation engine.    Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.    Contributed by Diego Novillo<dnovillo@redhat.com>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License    for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* Generic SSA value propagation engine.    Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.    Contributed by Diego Novillo<dnovillo@redhat.com>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License    for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -308,6 +308,11 @@ name|basic_block
 name|bb
 parameter_list|)
 block|{
+name|bool
+name|head
+init|=
+name|false
+decl_stmt|;
 name|gcc_assert
 argument_list|(
 name|bb
@@ -394,7 +399,31 @@ name|cfg_blocks_tail
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+comment|/* Minor optimization: we prefer to see blocks with more 	 predecessors later, because there is more of a chance that 	 the incoming edges will be executable.  */
+elseif|else
+if|if
+condition|(
+name|EDGE_COUNT
+argument_list|(
+name|bb
+operator|->
+name|preds
+argument_list|)
+operator|>=
+name|EDGE_COUNT
+argument_list|(
+name|VEC_index
+argument_list|(
+name|basic_block
+argument_list|,
+name|cfg_blocks
+argument_list|,
+name|cfg_blocks_head
+argument_list|)
+operator|->
+name|preds
+argument_list|)
+condition|)
 name|cfg_blocks_tail
 operator|=
 operator|(
@@ -412,6 +441,31 @@ name|cfg_blocks
 argument_list|)
 operator|)
 expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|cfg_blocks_head
+operator|==
+literal|0
+condition|)
+name|cfg_blocks_head
+operator|=
+name|VEC_length
+argument_list|(
+name|basic_block
+argument_list|,
+name|cfg_blocks
+argument_list|)
+expr_stmt|;
+operator|--
+name|cfg_blocks_head
+expr_stmt|;
+name|head
+operator|=
+name|true
+expr_stmt|;
+block|}
 block|}
 name|VEC_replace
 argument_list|(
@@ -419,6 +473,10 @@ name|basic_block
 argument_list|,
 name|cfg_blocks
 argument_list|,
+name|head
+condition|?
+name|cfg_blocks_head
+else|:
 name|cfg_blocks_tail
 argument_list|,
 name|bb
