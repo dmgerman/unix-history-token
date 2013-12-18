@@ -389,6 +389,18 @@ end_expr_stmt
 begin_expr_stmt
 name|VT_SYSCTL_INT
 argument_list|(
+name|enable_altgr
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable AltGr key (Do not assume R.Alt as Alt)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VT_SYSCTL_INT
+argument_list|(
 name|debug
 argument_list|,
 literal|0
@@ -1843,6 +1855,13 @@ operator||
 name|RALT
 operator|)
 case|:
+if|if
+condition|(
+name|vt_enable_altgr
+operator|!=
+literal|0
+condition|)
+break|break;
 case|case
 operator|(
 name|SPCLKEY
