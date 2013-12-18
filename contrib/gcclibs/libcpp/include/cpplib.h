@@ -620,6 +620,13 @@ name|unsigned
 name|char
 name|warn_trigraphs
 decl_stmt|;
+comment|/* APPLE LOCAL begin -Wnewline-eof 2001-08-23 --sts */
+comment|/* Nonzero means warn if no newline at end of file.  */
+name|unsigned
+name|char
+name|warn_newline_at_eof
+decl_stmt|;
+comment|/* APPLE LOCAL end -Wnewline-eof 2001-08-23 --sts */
 comment|/* Nonzero means warn about multicharacter charconsts.  */
 name|unsigned
 name|char

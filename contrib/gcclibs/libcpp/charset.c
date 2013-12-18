@@ -7043,6 +7043,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* If the file is using old-school Mac line endings (\r only),      terminate with another \r, not an \n, so that we do not mistake      the \r\n sequence for a single DOS line ending and erroneously      issue the "No newline at end of file" diagnostic.  */
+comment|/* APPLE LOCAL don't access to.text[-1] radar 6121572 */
 if|if
 condition|(
 name|to
