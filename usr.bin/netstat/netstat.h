@@ -100,6 +100,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|Mflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* read statistics from core */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|mflag
 decl_stmt|;
 end_decl_stmt
