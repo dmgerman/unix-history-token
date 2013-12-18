@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vmx.h"
+file|"vmx_cpufunc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmx_cpufunc.h"
+file|"vmx.h"
 end_include
 
 begin_expr_stmt
