@@ -2656,7 +2656,7 @@ end_function
 
 begin_function
 name|int
-name|vm_setup_msi
+name|vm_setup_pptdev_msi
 parameter_list|(
 name|struct
 name|vmctx
@@ -2762,7 +2762,7 @@ end_function
 
 begin_function
 name|int
-name|vm_setup_msix
+name|vm_setup_pptdev_msix
 parameter_list|(
 name|struct
 name|vmctx

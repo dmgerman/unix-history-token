@@ -1549,7 +1549,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|vm_setup_msix
+name|vm_setup_pptdev_msix
 argument_list|(
 name|ctx
 argument_list|,
@@ -3013,7 +3013,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|vm_setup_msi
+name|vm_setup_pptdev_msi
 argument_list|(
 name|ctx
 argument_list|,
@@ -3065,7 +3065,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vm_setup_msi returned error %d\r\n"
+literal|"vm_setup_pptdev_msi error %d\r\n"
 argument_list|,
 name|errno
 argument_list|)
@@ -3142,7 +3142,7 @@ control|)
 block|{
 name|error
 operator|=
-name|vm_setup_msix
+name|vm_setup_pptdev_msix
 argument_list|(
 name|ctx
 argument_list|,
@@ -3209,7 +3209,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vm_setup_msix error %d\r\n"
+literal|"vm_setup_pptdev_msix error "
+literal|"%d\r\n"
 argument_list|,
 name|errno
 argument_list|)
