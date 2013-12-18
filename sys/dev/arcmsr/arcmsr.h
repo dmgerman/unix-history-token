@@ -677,6 +677,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ARECA_SUB_DEV_ID_1883
+value|0x1883
+end_define
+
+begin_comment
+comment|/* Subsystem Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ARECA_SUB_DEV_ID_1212
 value|0x1212
 end_define
@@ -4381,14 +4392,12 @@ comment|/* message unit ATU inbound base address0 */
 name|u_int8_t
 name|adapter_index
 decl_stmt|;
-comment|/*  */
 name|u_int8_t
 name|irq
 decl_stmt|;
 name|u_int16_t
 name|acb_flags
 decl_stmt|;
-comment|/*  */
 name|struct
 name|CommandControlBlock
 modifier|*
@@ -4534,6 +4543,9 @@ name|adapter_bus_speed
 decl_stmt|;
 name|u_int32_t
 name|maxOutstanding
+decl_stmt|;
+name|u_int16_t
+name|sub_device_id
 decl_stmt|;
 block|}
 struct|;
