@@ -2161,7 +2161,7 @@ operator|==
 literal|0xe5
 condition|)
 continue|continue;
-comment|/* Skip volume labels */
+comment|/* Check if directory entry is volume label */
 if|if
 condition|(
 name|dd
@@ -2172,7 +2172,8 @@ name|attr
 operator|&
 name|FA_LABEL
 condition|)
-continue|continue;
+block|{
+comment|/*  	     * If volume label set, check if the current entry is 	     * extended entry (FA_XDE) for long file names. 	     */
 if|if
 condition|(
 operator|(
@@ -2188,6 +2189,7 @@ operator|==
 name|FA_XDE
 condition|)
 block|{
+comment|/* 		 * Read through all following extended entries 		 * to get the long file name. 0x40 marks the 		 * last entry containing part of long file name. 		 */
 if|if
 condition|(
 name|dd
@@ -2266,6 +2268,12 @@ operator|.
 name|xde
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* skip only volume label entries */
+continue|continue;
+block|}
 block|}
 else|else
 block|{
