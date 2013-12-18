@@ -90,11 +90,8 @@ name|SVM_MSR_BITMAP_SIZE
 index|]
 decl_stmt|;
 comment|/* Nested Paging */
-name|pml4_entry_t
-name|np_pml4
-index|[
-name|NPML4EPG
-index|]
+name|vm_offset_t
+name|nptp
 decl_stmt|;
 comment|/* Virtual machine pointer. */
 name|struct
@@ -139,7 +136,7 @@ argument_list|(
 expr|struct
 name|svm_softc
 argument_list|,
-name|np_pml4
+name|nptp
 argument_list|)
 operator|&
 name|PAGE_MASK

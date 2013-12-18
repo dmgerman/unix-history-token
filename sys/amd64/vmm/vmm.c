@@ -4176,6 +4176,23 @@ operator|(
 name|EFAULT
 operator|)
 return|;
+comment|/*  	 * AMD-V doesn't provide instruction length which is nRIP - RIP 	 * for some of the exit including Nested Page Fault. Use instruction 	 * length calculated by software instruction emulation to update 	 * RIP of vcpu. 	 */
+if|if
+condition|(
+name|vme
+operator|->
+name|inst_length
+operator|==
+name|VIE_INST_SIZE
+condition|)
+name|vme
+operator|->
+name|inst_length
+operator|=
+name|vie
+operator|->
+name|num_processed
+expr_stmt|;
 comment|/* return to userland unless this is a local apic access */
 if|if
 condition|(

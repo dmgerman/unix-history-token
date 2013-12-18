@@ -962,7 +962,7 @@ parameter_list|,
 name|uint32_t
 name|error
 parameter_list|,
-name|boolean_t
+name|bool
 name|ec_valid
 parameter_list|)
 block|{

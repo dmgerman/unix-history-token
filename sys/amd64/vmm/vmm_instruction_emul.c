@@ -2044,8 +2044,6 @@ condition|(
 name|vie
 operator|->
 name|num_valid
-operator|==
-name|inst_length
 condition|)
 return|return
 operator|(

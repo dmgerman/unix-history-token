@@ -367,7 +367,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMCB_TLB_FLUSH_EVERYTHING
+name|VMCB_TLB_FLUSH_ALL
 value|1
 end_define
 
@@ -794,6 +794,54 @@ end_define
 begin_comment
 comment|/* Guest page table. */
 end_comment
+
+begin_comment
+comment|/*  * EXITINTINFO, Interrupt exit info for all intrecepts.  * Section 15.7.2, Intercepts during IDT Interrupt Delivery.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMCB_EXITINTINFO_VECTOR
+parameter_list|(
+name|x
+parameter_list|)
+value|(x& 0xFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCB_EXITINTINFO_TYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x& 0x7)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCB_EXITINTINFO_EC_VALID
+value|BIT(11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCB_EXITINTINFO_VALID
+value|BIT(31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCB_EXITINTINFO_EC
+parameter_list|(
+name|x
+parameter_list|)
+value|((x& 0xFFFFFFFF)>> 32)
+end_define
 
 begin_comment
 comment|/* VMCB save state area segment format */
@@ -1242,10 +1290,10 @@ name|uint64_t
 name|br_to
 decl_stmt|;
 name|uint64_t
-name|lastexcpfrom
+name|int_from
 decl_stmt|;
 name|uint64_t
-name|lastexcpto
+name|int_to
 decl_stmt|;
 name|uint8_t
 name|pad7
@@ -1438,7 +1486,7 @@ parameter_list|,
 name|uint32_t
 name|error
 parameter_list|,
-name|boolean_t
+name|bool
 name|ec_valid
 parameter_list|)
 function_decl|;
