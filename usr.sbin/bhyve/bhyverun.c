@@ -405,7 +405,7 @@ name|uint64_t
 name|vmexit_mtrap
 decl_stmt|;
 name|uint64_t
-name|vmexit_paging
+name|vmexit_inst_emul
 decl_stmt|;
 name|uint64_t
 name|cpu_switch_rotate
@@ -729,13 +729,6 @@ name|inst_length
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|vcpu
-operator|==
-name|BSP
-condition|)
-block|{
 name|mt_vmm_info
 index|[
 name|vcpu
@@ -784,7 +777,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1556,7 +1548,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|vmexit_paging
+name|vmexit_inst_emul
 parameter_list|(
 name|struct
 name|vmctx
@@ -1578,7 +1570,7 @@ name|err
 decl_stmt|;
 name|stats
 operator|.
-name|vmexit_paging
+name|vmexit_inst_emul
 operator|++
 expr_stmt|;
 name|err
@@ -1594,7 +1586,7 @@ name|vmexit
 operator|->
 name|u
 operator|.
-name|paging
+name|inst_emul
 operator|.
 name|gpa
 argument_list|,
@@ -1603,7 +1595,7 @@ name|vmexit
 operator|->
 name|u
 operator|.
-name|paging
+name|inst_emul
 operator|.
 name|vie
 argument_list|)
@@ -1650,7 +1642,7 @@ name|vmexit
 operator|->
 name|u
 operator|.
-name|paging
+name|inst_emul
 operator|.
 name|gpa
 argument_list|)
@@ -1716,10 +1708,10 @@ operator|=
 name|vmexit_mtrap
 block|,
 index|[
-name|VM_EXITCODE_PAGING
+name|VM_EXITCODE_INST_EMUL
 index|]
 operator|=
-name|vmexit_paging
+name|vmexit_inst_emul
 block|,
 index|[
 name|VM_EXITCODE_SPINUP_AP

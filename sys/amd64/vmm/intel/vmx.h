@@ -21,6 +21,12 @@ directive|include
 file|"vmcs.h"
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|pmap
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
@@ -128,6 +134,22 @@ comment|/* vmcs launch state */
 name|int
 name|launch_error
 decl_stmt|;
+name|long
+name|eptgen
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+comment|/* cached pmap->pm_eptgen */
+comment|/* 	 * The 'eptp' and the 'pmap' do not change during the lifetime of 	 * the VM so it is safe to keep a copy in each vcpu's vmxctx. 	 */
+name|vm_paddr_t
+name|eptp
+decl_stmt|;
+name|struct
+name|pmap
+modifier|*
+name|pmap
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -169,12 +191,6 @@ begin_struct
 struct|struct
 name|vmx
 block|{
-name|pml4_entry_t
-name|pml4ept
-index|[
-name|NPML4EPG
-index|]
-decl_stmt|;
 name|struct
 name|vmcs
 name|vmcs
@@ -220,6 +236,9 @@ index|[
 name|VM_MAXCPU
 index|]
 decl_stmt|;
+name|uint64_t
+name|eptp
+decl_stmt|;
 name|struct
 name|vm
 modifier|*
@@ -228,26 +247,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-operator|(
-name|offsetof
-argument_list|(
-expr|struct
-name|vmx
-argument_list|,
-name|pml4ept
-argument_list|)
-operator|&
-name|PAGE_MASK
-operator|)
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|CTASSERT
@@ -344,8 +343,15 @@ name|VMX_RETURN_AST
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMX_RETURN_INVEPT
+value|5
+end_define
+
 begin_comment
-comment|/*  * vmx_setjmp() returns:  * - 0 when it returns directly  * - 1 when it returns from vmx_longjmp  * - 2 when it returns from vmx_resume (which would only be in the error case)  * - 3 when it returns from vmx_launch (which would only be in the error case)  * - 4 when it returns from vmx_resume or vmx_launch because of AST pending  */
+comment|/*  * vmx_setjmp() returns:  * - 0 when it returns directly  * - 1 when it returns from vmx_longjmp  * - 2 when it returns from vmx_resume (which would only be in the error case)  * - 3 when it returns from vmx_launch (which would only be in the error case)  * - 4 when it returns from vmx_resume or vmx_launch because of AST pending  * - 5 when it returns from vmx_launch/vmx_resume because of invept error  */
 end_comment
 
 begin_function_decl

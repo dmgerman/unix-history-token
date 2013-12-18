@@ -1554,6 +1554,8 @@ literal|0
 argument_list|,
 operator|&
 name|lomem
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1605,6 +1607,8 @@ name|m_4GB
 argument_list|,
 operator|&
 name|himem
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 literal|0

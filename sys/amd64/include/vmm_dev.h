@@ -55,7 +55,9 @@ comment|/* in */
 name|size_t
 name|len
 decl_stmt|;
-comment|/* in */
+name|int
+name|wired
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -359,6 +361,28 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_gpa_pte
+block|{
+name|uint64_t
+name|gpa
+decl_stmt|;
+comment|/* in */
+name|uint64_t
+name|pte
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* out */
+name|int
+name|ptenum
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -387,6 +411,10 @@ block|,
 name|IOCNUM_GET_MEMORY_SEG
 init|=
 literal|11
+block|,
+name|IOCNUM_GET_GPA_PMAP
+init|=
+literal|12
 block|,
 comment|/* register/state accessors */
 name|IOCNUM_SET_REGISTER
@@ -626,6 +654,14 @@ directive|define
 name|VM_GET_X2APIC_STATE
 define|\
 value|_IOWR('v', IOCNUM_GET_X2APIC_STATE, struct vm_x2apic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GET_GPA_PMAP
+define|\
+value|_IOWR('v', IOCNUM_GET_GPA_PMAP, struct vm_gpa_pte)
 end_define
 
 begin_endif

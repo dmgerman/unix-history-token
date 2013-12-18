@@ -116,8 +116,8 @@ parameter_list|,
 name|u_long
 name|host_rsp
 parameter_list|,
-name|u_long
-name|ept_pml4
+name|uint64_t
+name|eptp
 parameter_list|,
 name|uint32_t
 name|pinbased_ctls
@@ -298,6 +298,22 @@ directive|define
 name|vmcs_gla
 parameter_list|()
 value|vmcs_read(VMCS_GUEST_LINEAR_ADDRESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vmcs_idt_vectoring_info
+parameter_list|()
+value|vmcs_read(VMCS_IDT_VECTORING_INFO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vmcs_idt_vectoring_err
+parameter_list|()
+value|vmcs_read(VMCS_IDT_VECTORING_ERROR)
 end_define
 
 begin_endif
@@ -1754,6 +1770,24 @@ value|(2<< 8)
 end_define
 
 begin_comment
+comment|/*  * VMCS IDT-Vectoring information fields  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMCS_IDT_VEC_VALID
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_IDT_VEC_ERRCODE_VALID
+value|(1<< 11)
+end_define
+
+begin_comment
 comment|/*  * VMCS Guest interruptibility field  */
 end_comment
 
@@ -1819,6 +1853,27 @@ define|#
 directive|define
 name|EPT_VIOLATION_INST_FETCH
 value|(1UL<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPT_VIOLATION_GPA_READABLE
+value|(1UL<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPT_VIOLATION_GPA_WRITEABLE
+value|(1UL<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPT_VIOLATION_GPA_EXECUTABLE
+value|(1UL<< 5)
 end_define
 
 begin_define

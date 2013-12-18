@@ -7233,7 +7233,9 @@ name|PG_V
 operator||
 name|PG_RW
 operator||
-name|PG_N
+name|PG_NC_PWT
+operator||
+name|PG_NC_PCD
 expr_stmt|;
 name|invltlb
 argument_list|()

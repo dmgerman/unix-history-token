@@ -1949,6 +1949,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ret_lowmem
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|vm_get_memory_seg
@@ -1960,6 +1962,8 @@ operator|*
 name|GB
 argument_list|,
 name|ret_highmem
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
