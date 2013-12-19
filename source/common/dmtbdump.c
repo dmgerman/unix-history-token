@@ -2207,6 +2207,13 @@ block|{
 return|return;
 block|}
 comment|/* Dump the OemData (optional) */
+if|if
+condition|(
+name|SubTable
+operator|->
+name|OemDataOffset
+condition|)
+block|{
 name|AcpiDmDumpBuffer
 argument_list|(
 name|SubTable
@@ -2228,6 +2235,7 @@ argument_list|,
 literal|"OEM Data"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Point to next sub-table */
 name|Offset
 operator|+=
@@ -5307,7 +5315,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -5328,6 +5336,66 @@ operator|->
 name|Length
 condition|)
 block|{
+comment|/* Common subtable header */
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiDmDumpTable
+argument_list|(
+name|Length
+argument_list|,
+name|Offset
+argument_list|,
+name|SubTable
+argument_list|,
+name|SubTable
+operator|->
+name|Header
+operator|.
+name|Length
+argument_list|,
+name|AcpiDmTableInfoPcctHdr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+comment|/* ACPI 5.0: Only one type of PCCT subtable is supported */
+if|if
+condition|(
+name|SubTable
+operator|->
+name|Header
+operator|.
+name|Type
+operator|!=
+name|ACPI_PCCT_TYPE_GENERIC_SUBSPACE
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n**** Unexpected or unknown PCCT subtable type 0x%X\n\n"
+argument_list|,
+name|SubTable
+operator|->
+name|Header
+operator|.
+name|Type
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -5362,7 +5430,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable

@@ -646,7 +646,7 @@ return|;
 case|case
 name|ACPI_ALLOCATE_BUFFER
 case|:
-comment|/* Allocate a new buffer */
+comment|/*          * Allocate a new buffer. We directectly call AcpiOsAllocate here to          * purposefully bypass the (optionally enabled) internal allocation          * tracking mechanism since we only want to track internal          * allocations. Note: The caller should use AcpiOsFree to free this          * buffer created via ACPI_ALLOCATE_BUFFER.          */
 name|Buffer
 operator|->
 name|Pointer

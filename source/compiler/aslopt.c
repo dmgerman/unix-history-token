@@ -1399,7 +1399,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPTIMIZATIONS
 operator|,
-literal|"%5d [%12.12s] [%12.12s] "
+literal|"PATH OPTIMIZE: Line %5d ParentOp [%12.12s] ThisOp [%12.12s] "
 operator|,
 name|Op
 operator|->
@@ -1539,7 +1539,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPTIMIZATIONS
 operator|,
-literal|"NAME"
+literal|"NAME\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1611,7 +1611,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPTIMIZATIONS
 operator|,
-literal|"REF "
+literal|"REFERENCE\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1748,15 +1748,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPTIMIZATIONS
 operator|,
-literal|"%37s (%2u) ==> %-32s(%2u) %-32s"
-operator|,
-operator|(
-name|char
-operator|*
-operator|)
-name|CurrentPath
-operator|.
-name|Pointer
+literal|"CURRENT SCOPE: (%2u) %-37s FULL PATH TO NAME: (%2u) %-32s ACTUAL AML:%-32s\n"
 operator|,
 operator|(
 name|UINT32
@@ -1769,7 +1761,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|TargetPath
+name|CurrentPath
 operator|.
 name|Pointer
 operator|,
@@ -1779,6 +1771,14 @@ operator|)
 name|TargetPath
 operator|.
 name|Length
+operator|,
+operator|(
+name|char
+operator|*
+operator|)
+name|TargetPath
+operator|.
+name|Pointer
 operator|,
 name|ExternalNameString
 operator|)
@@ -1945,7 +1945,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPTIMIZATIONS
 operator|,
-literal|" REDUCED %2u (%u)"
+literal|" REDUCED BY %2u (TOTAL SAVED %2u)"
 operator|,
 operator|(
 name|UINT32

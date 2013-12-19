@@ -217,7 +217,7 @@ name|CMD_NAMESPACE
 block|,
 name|CMD_NOTIFY
 block|,
-name|CMD_OBJECT
+name|CMD_OBJECTS
 block|,
 name|CMD_OPEN
 block|,
@@ -528,7 +528,7 @@ literal|2
 block|}
 block|,
 block|{
-literal|"OBJECT"
+literal|"OBJECTS"
 block|,
 literal|1
 block|}
@@ -2952,7 +2952,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CMD_OBJECT
+name|CMD_OBJECTS
 case|:
 name|AcpiUtStrupr
 argument_list|(

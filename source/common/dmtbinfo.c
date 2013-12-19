@@ -4789,7 +4789,7 @@ argument_list|)
 block|,
 literal|"Length"
 block|,
-literal|0
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -4841,7 +4841,7 @@ argument_list|)
 block|,
 literal|"OEM Data Length"
 block|,
-literal|0
+name|DT_DESCRIBES_OPTIONAL
 block|}
 block|,
 block|{
@@ -4854,7 +4854,7 @@ argument_list|)
 block|,
 literal|"OEM Data Offset"
 block|,
-literal|0
+name|DT_DESCRIBES_OPTIONAL
 block|}
 block|,
 block|{
@@ -4987,6 +4987,27 @@ block|,
 literal|"Namepath"
 block|,
 literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoDbg2OemData
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_BUFFER
+block|,
+literal|0
+block|,
+literal|"OEM Data"
+block|,
+name|DT_OPTIONAL
 block|}
 block|,
 name|ACPI_DMT_TERMINATOR
@@ -10196,20 +10217,7 @@ literal|0
 block|}
 block|,
 block|{
-name|ACPI_DMT_UINT32
-block|,
-name|ACPI_PCCT_OFFSET
-argument_list|(
-name|Latency
-argument_list|)
-block|,
-literal|"Command Latency"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT32
+name|ACPI_DMT_UINT64
 block|,
 name|ACPI_PCCT_OFFSET
 argument_list|(
@@ -10230,18 +10238,14 @@ begin_comment
 comment|/* PCCT subtables */
 end_comment
 
-begin_comment
-comment|/* 0: Generic Communications Subspace */
-end_comment
-
 begin_decl_stmt
 name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoPcct0
+name|AcpiDmTableInfoPcctHdr
 index|[]
 init|=
 block|{
 block|{
-name|ACPI_DMT_UINT8
+name|ACPI_DMT_PCCT
 block|,
 name|ACPI_PCCT0_OFFSET
 argument_list|(
@@ -10270,6 +10274,21 @@ block|,
 name|DT_LENGTH
 block|}
 block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0: Generic Communications Subspace */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPcct0
+index|[]
+init|=
+block|{
 block|{
 name|ACPI_DMT_UINT48
 block|,
@@ -10347,6 +10366,45 @@ name|WriteMask
 argument_list|)
 block|,
 literal|"Write Mask"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|Latency
+argument_list|)
+block|,
+literal|"Command Latency"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|MaxAccessRate
+argument_list|)
+block|,
+literal|"Maximum Access Rate"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|MinTurnaroundTime
+argument_list|)
+block|,
+literal|"Minimum Turnaround Time"
 block|,
 literal|0
 block|}

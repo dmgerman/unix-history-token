@@ -738,26 +738,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|AcpiOsGpeCount
-parameter_list|(
-name|UINT32
-name|GpeNumber
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AcpiOsFixedEventCount
-parameter_list|(
-name|UINT32
-name|FixedEventNumber
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsHotplugExecute
 parameter_list|(

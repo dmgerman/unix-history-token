@@ -1,47 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: examples - Example ACPICA code  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: examples - Example ACPICA initialization and execution code  *  *****************************************************************************/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
-begin_comment
-comment|/* Set the ACPICA application type for use in include/platform/acenv.h */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WIN32
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|WIN32
+name|__EXAMPLES_C__
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUG_OUTPUT
-end_define
-
-begin_comment
-comment|/* ACPICA public headers */
-end_comment
 
 begin_include
 include|#
 directive|include
-file|"acpi.h"
+file|"examples.h"
 end_include
 
 begin_define
@@ -63,28 +38,13 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Standard Clib headers */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_comment
 comment|/* Local Prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|ACPI_STATUS
-name|InitializeFullAcpi
+name|InitializeFullAcpica
 parameter_list|(
 name|void
 parameter_list|)
@@ -92,6 +52,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ACPI_STATUS
 name|InstallHandlers
 parameter_list|(
@@ -101,8 +62,55 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|void
+name|NotifyHandler
+parameter_list|(
+name|ACPI_HANDLE
+name|Device
+parameter_list|,
+name|UINT32
+name|Value
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ExecuteMAIN
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|ExecuteOSI
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|InitializeAcpiTables
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|InitializeAcpi
 parameter_list|(
 name|void
 parameter_list|)
@@ -127,37 +135,25 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|ACPI_FUNCTION_NAME
-argument_list|(
-name|Examples
-operator|-
-expr|main
-argument_list|)
-expr_stmt|;
 name|ACPI_DEBUG_INITIALIZE
 argument_list|()
 expr_stmt|;
 comment|/* For debug version only */
-name|InitializeFullAcpi
+name|printf
+argument_list|(
+name|ACPI_COMMON_SIGNON
+argument_list|(
+literal|"ACPI Example Code"
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Initialize the local ACPI tables (RSDP/RSDT/XSDT/FADT/DSDT/FACS) */
+name|ExInitializeAcpiTables
 argument_list|()
 expr_stmt|;
-comment|/* Enable debug output, example debug print */
-name|AcpiDbgLayer
-operator|=
-name|ACPI_EXAMPLE
-expr_stmt|;
-name|AcpiDbgLevel
-operator|=
-name|ACPI_LV_INIT
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INIT
-operator|,
-literal|"Example Debug output\n"
-operator|)
-argument_list|)
+comment|/* Initialize the ACPICA subsystem */
+name|InitializeFullAcpica
+argument_list|()
 expr_stmt|;
 comment|/* Example warning and error output */
 name|ACPI_INFO
@@ -165,7 +161,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"ACPICA example info message"
+literal|"Example ACPICA info message"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -174,7 +170,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"ACPICA example warning message"
+literal|"Example ACPICA warning message"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -183,7 +179,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"ACPICA example error message"
+literal|"Example ACPICA error message"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -194,11 +190,14 @@ name|AE_INFO
 operator|,
 name|AE_AML_OPERAND_TYPE
 operator|,
-literal|"Example exception message"
+literal|"Example ACPICA exception message"
 operator|)
 argument_list|)
 expr_stmt|;
 name|ExecuteOSI
+argument_list|()
+expr_stmt|;
+name|ExecuteMAIN
 argument_list|()
 expr_stmt|;
 return|return
@@ -214,8 +213,9 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
-name|InitializeFullAcpi
+name|InitializeFullAcpica
 parameter_list|(
 name|void
 parameter_list|)
@@ -255,6 +255,15 @@ operator|)
 return|;
 block|}
 comment|/* Initialize the ACPICA Table Manager and get all ACPI tables */
+name|ACPI_INFO
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Loading ACPI tables"
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiInitializeTables
@@ -648,6 +657,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|NotifyHandler
 parameter_list|(
@@ -677,6 +687,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|InstallHandlers
 parameter_list|(
@@ -734,10 +745,11 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * Example control method execution.  *  * _OSI is a predefined method that is implemented internally within ACPICA.  *  * Shows the following elements:  *  * 1) How to setup a control method argument and argument list  * 2) How to setup the return value object  * 3) How to invoke AcpiEvaluateObject  * 4) How to check the returned ACPI_STATUS  * 5) How to analyze the return value  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Examples of control method execution.  *  * _OSI is a predefined method that is implemented internally within ACPICA.  *  * Shows the following elements:  *  * 1) How to setup a control method argument and argument list  * 2) How to setup the return value object  * 3) How to invoke AcpiEvaluateObject  * 4) How to check the returned ACPI_STATUS  * 5) How to analyze the return value  *  *****************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ExecuteOSI
 parameter_list|(
@@ -768,7 +780,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Executing OSI method"
+literal|"Executing _OSI reserved method"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -891,7 +903,9 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 comment|/* Expect an integer return value from execution of _OSI */
 name|Object
@@ -937,76 +951,199 @@ name|Value
 operator|)
 argument_list|)
 expr_stmt|;
+name|ErrorExit
+label|:
+comment|/* Free a buffer created via ACPI_ALLOCATE_BUFFER */
 name|AcpiOsFree
 argument_list|(
-name|Object
+name|ReturnValue
+operator|.
+name|Pointer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * OSL support (only needed to link to the windows OSL)  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Execute an actual control method in the DSDT (MAIN)  *  *****************************************************************************/
 end_comment
 
-begin_decl_stmt
-name|FILE
-modifier|*
-name|AcpiGbl_DebugFile
-decl_stmt|;
-end_decl_stmt
-
 begin_function
-name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
+specifier|static
+name|void
+name|ExecuteMAIN
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|ACPI_THREAD_ID
-name|AcpiOsGetThreadId
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0xFFFF
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|ACPI_STATUS
-name|AcpiOsExecute
-parameter_list|(
-name|ACPI_EXECUTE_TYPE
-name|Type
-parameter_list|,
-name|ACPI_OSD_EXEC_CALLBACK
-name|Function
-parameter_list|,
-name|void
+name|Status
+decl_stmt|;
+name|ACPI_OBJECT_LIST
+name|ArgList
+decl_stmt|;
+name|ACPI_OBJECT
+name|Arg
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|ACPI_BUFFER
+name|ReturnValue
+decl_stmt|;
+name|ACPI_OBJECT
 modifier|*
-name|Context
-parameter_list|)
-block|{
-return|return
+name|Object
+decl_stmt|;
+name|ACPI_INFO
+argument_list|(
 operator|(
-name|AE_SUPPORT
+name|AE_INFO
+operator|,
+literal|"Executing MAIN method"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
+comment|/* Setup input argument */
+name|ArgList
+operator|.
+name|Count
+operator|=
+literal|1
+expr_stmt|;
+name|ArgList
+operator|.
+name|Pointer
+operator|=
+name|Arg
+expr_stmt|;
+name|Arg
+index|[
+literal|0
+index|]
+operator|.
+name|Type
+operator|=
+name|ACPI_TYPE_STRING
+expr_stmt|;
+name|Arg
+index|[
+literal|0
+index|]
+operator|.
+name|String
+operator|.
+name|Pointer
+operator|=
+literal|"Method [MAIN] is executing"
+expr_stmt|;
+name|Arg
+index|[
+literal|0
+index|]
+operator|.
+name|String
+operator|.
+name|Length
+operator|=
+name|strlen
+argument_list|(
+name|Arg
+index|[
+literal|0
+index|]
+operator|.
+name|String
+operator|.
+name|Pointer
+argument_list|)
+expr_stmt|;
+comment|/* Ask ACPICA to allocate space for the return object */
+name|ReturnValue
+operator|.
+name|Length
+operator|=
+name|ACPI_ALLOCATE_BUFFER
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiEvaluateObject
+argument_list|(
+name|NULL
+argument_list|,
+literal|"\\MAIN"
+argument_list|,
+operator|&
+name|ArgList
+argument_list|,
+operator|&
+name|ReturnValue
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"While executing MAIN"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|ReturnValue
+operator|.
+name|Pointer
+condition|)
+block|{
+comment|/* Obtain and validate the returned ACPI_OBJECT */
+name|Object
+operator|=
+name|ReturnValue
+operator|.
+name|Pointer
+expr_stmt|;
+if|if
+condition|(
+name|Object
+operator|->
+name|Type
+operator|==
+name|ACPI_TYPE_STRING
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Method [MAIN] returned: \"%s\"\n"
+argument_list|,
+name|Object
+operator|->
+name|String
+operator|.
+name|Pointer
+argument_list|)
+expr_stmt|;
+block|}
+name|ACPI_FREE
+argument_list|(
+name|ReturnValue
+operator|.
+name|Pointer
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

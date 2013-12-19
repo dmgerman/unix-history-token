@@ -106,7 +106,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nGlobal:\n"
+literal|"\nGeneral:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -132,9 +132,70 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-p<prefix>"
+argument_list|,
+literal|"Specify path/filename prefix for all output files"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-v"
 argument_list|,
 literal|"Display compiler version"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vo"
+argument_list|,
+literal|"Enable optimization comments"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vs"
+argument_list|,
+literal|"Disable signon"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nHelp:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-h"
+argument_list|,
+literal|"This message"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-hc"
+argument_list|,
+literal|"Display operators allowed in constant expressions"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-hf"
+argument_list|,
+literal|"Display help for output filename generation"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-hr"
+argument_list|,
+literal|"Display ACPI reserved method names"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ht"
+argument_list|,
+literal|"Display currently supported ACPI table names"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -172,21 +233,21 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nGeneral Processing:\n"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-p<prefix>"
-argument_list|,
-literal|"Specify path/filename prefix for all output files"
+literal|"\nErrors, Warnings, and Remarks:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
 literal|"-va"
 argument_list|,
-literal|"Disable all errors and warnings (summary only)"
+literal|"Disable all errors/warnings/remarks"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ve"
+argument_list|,
+literal|"Report only errors (ignore warnings and remarks)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -198,23 +259,9 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-vo"
-argument_list|,
-literal|"Enable optimization comments"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-vr"
 argument_list|,
 literal|"Disable remarks"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-vs"
-argument_list|,
-literal|"Disable signon"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -450,46 +497,6 @@ argument_list|(
 literal|"-vt"
 argument_list|,
 literal|"Dump binary table data in hex format within output file"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nHelp:\n"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-h"
-argument_list|,
-literal|"This message"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-hc"
-argument_list|,
-literal|"Display operators allowed in constant expressions"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-hf"
-argument_list|,
-literal|"Display help for output filename generation"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-hr"
-argument_list|,
-literal|"Display ACPI reserved method names"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-ht"
-argument_list|,
-literal|"Display currently supported ACPI table names"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -949,6 +956,11 @@ name|argv
 index|[
 name|Index2
 index|]
+expr_stmt|;
+name|UtConvertBackslashes
+argument_list|(
+name|Gbl_OutputFilenamePrefix
+argument_list|)
 expr_stmt|;
 block|}
 name|Status

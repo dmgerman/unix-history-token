@@ -398,13 +398,15 @@ name|AE_NOT_FOUND
 condition|)
 block|{
 comment|/*              * Table disassembly:              * Target of Scope() not found. Generate an External for it, and              * insert the name into the namespace.              */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|Op
 argument_list|,
 name|Path
 argument_list|,
 name|ACPI_TYPE_DEVICE
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)

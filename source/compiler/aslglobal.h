@@ -940,6 +940,18 @@ name|ASL_EXTERN
 name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
+name|Gbl_DisplayWarnings
+parameter_list|,
+name|TRUE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
 name|Gbl_DisplayOptimizations
 parameter_list|,
 name|FALSE
@@ -1547,18 +1559,6 @@ literal|"NO_ID"
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|ASL_EXTERN
-name|FILE
-modifier|*
-name|AcpiGbl_DebugFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Placeholder for oswinxf only */
-end_comment
 
 begin_comment
 comment|/* Static structures */

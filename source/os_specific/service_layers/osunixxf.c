@@ -104,14 +104,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|AcpiGbl_DebugFile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|AcpiGbl_OutputFile

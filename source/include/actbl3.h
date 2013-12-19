@@ -927,10 +927,7 @@ comment|/* Common ACPI table header */
 name|UINT32
 name|Flags
 decl_stmt|;
-name|UINT32
-name|Latency
-decl_stmt|;
-name|UINT32
+name|UINT64
 name|Reserved
 decl_stmt|;
 block|}
@@ -950,7 +947,27 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * PCCT subtables  */
+comment|/* Values for subtable type in ACPI_SUBTABLE_HEADER */
+end_comment
+
+begin_enum
+enum|enum
+name|AcpiPcctType
+block|{
+name|ACPI_PCCT_TYPE_GENERIC_SUBSPACE
+init|=
+literal|0
+block|,
+name|ACPI_PCCT_TYPE_RESERVED
+init|=
+literal|1
+comment|/* 1 and greater are reserved */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * PCCT Subtables, correspond to Type in ACPI_SUBTABLE_HEADER  */
 end_comment
 
 begin_comment
@@ -985,6 +1002,15 @@ name|PreserveMask
 decl_stmt|;
 name|UINT64
 name|WriteMask
+decl_stmt|;
+name|UINT32
+name|Latency
+decl_stmt|;
+name|UINT32
+name|MaxAccessRate
+decl_stmt|;
+name|UINT16
+name|MinTurnaroundTime
 decl_stmt|;
 block|}
 name|ACPI_PCCT_SUBSPACE

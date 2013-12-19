@@ -118,6 +118,18 @@ name|UINT16
 name|Opcode
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG_OUTPUT
+specifier|const
+name|char
+modifier|*
+name|OpcodeName
+init|=
+literal|"Unknown AML opcode"
+decl_stmt|;
+endif|#
+directive|endif
 name|ACPI_FUNCTION_NAME
 argument_list|(
 name|PsGetOpcodeInfo
@@ -192,13 +204,107 @@ index|]
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|defined
+name|ACPI_ASL_COMPILER
+operator|&&
+name|defined
+name|ACPI_DEBUG_OUTPUT
+include|#
+directive|include
+file|"asldefine.h"
+switch|switch
+condition|(
+name|Opcode
+condition|)
+block|{
+case|case
+name|AML_RAW_DATA_BYTE
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Byte-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_RAW_DATA_WORD
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Word-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_RAW_DATA_DWORD
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Dword-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_RAW_DATA_QWORD
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Qword-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_RAW_DATA_BUFFER
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Buffer-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_RAW_DATA_CHAIN
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Buffer Chain-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_PACKAGE_LENGTH
+case|:
+name|OpcodeName
+operator|=
+literal|"-Package Length-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_UNASSIGNED_OPCODE
+case|:
+name|OpcodeName
+operator|=
+literal|"-Unassigned Opcode-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_DEFAULT_ARG_OP
+case|:
+name|OpcodeName
+operator|=
+literal|"-Default Arg-"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+endif|#
+directive|endif
 comment|/* Unknown AML opcode */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Unknown AML opcode [%4.4X]\n"
+literal|"%s [%4.4X]\n"
+operator|,
+name|OpcodeName
 operator|,
 name|Opcode
 operator|)

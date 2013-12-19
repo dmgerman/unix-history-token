@@ -1079,6 +1079,11 @@ name|Gbl_OutputFilenamePrefix
 operator|=
 name|AcpiGbl_Optarg
 expr_stmt|;
+name|UtConvertBackslashes
+argument_list|(
+name|Gbl_OutputFilenamePrefix
+argument_list|)
+expr_stmt|;
 name|Gbl_UseDefaultAmlFilename
 operator|=
 name|FALSE
@@ -1254,10 +1259,23 @@ expr_stmt|;
 case|case
 literal|'a'
 case|:
-comment|/* Disable All error/warning messages */
+comment|/* Disable all error/warning/remark messages */
 name|Gbl_NoErrors
 operator|=
 name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+comment|/* Disable all warning/remark messages (errors only) */
+name|Gbl_DisplayRemarks
+operator|=
+name|FALSE
+expr_stmt|;
+name|Gbl_DisplayWarnings
+operator|=
+name|FALSE
 expr_stmt|;
 break|break;
 case|case

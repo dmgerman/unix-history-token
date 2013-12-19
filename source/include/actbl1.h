@@ -1287,6 +1287,7 @@ decl_stmt|;
 name|UINT32
 name|Bus
 decl_stmt|;
+comment|/* Bus and Segment numbers */
 name|UINT16
 name|Device
 decl_stmt|;
@@ -1332,6 +1333,30 @@ define|#
 directive|define
 name|ACPI_HEST_GLOBAL
 value|(1<<1)
+end_define
+
+begin_comment
+comment|/*  * Macros to access the bus/segment numbers in Bus field above:  *  Bus number is encoded in bits 7:0  *  Segment number is encoded in bits 23:8  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_BUS
+parameter_list|(
+name|Bus
+parameter_list|)
+value|((Bus)& 0xFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_SEGMENT
+parameter_list|(
+name|Bus
+parameter_list|)
+value|(((Bus)>> 8)& 0xFFFF)
 end_define
 
 begin_comment

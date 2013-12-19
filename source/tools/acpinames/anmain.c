@@ -36,13 +36,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|FILE
-modifier|*
-name|AcpiGbl_DebugFile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|AE_TABLE_DESC
 modifier|*

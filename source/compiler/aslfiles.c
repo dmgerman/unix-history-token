@@ -2051,6 +2051,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|UtConvertBackslashes
+argument_list|(
+name|Gbl_OutputFilenamePrefix
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK

@@ -365,7 +365,7 @@ name|ACPI_BTYPE_DDB_HANDLE
 operator|)
 return|;
 case|case
-name|ACPI_BTYPE_DEBUG_OBJECT
+name|ACPI_TYPE_DEBUG_OBJECT
 case|:
 comment|/* Cannot be used as a source operand */
 return|return

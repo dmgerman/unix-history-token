@@ -129,14 +129,6 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|FILE
-modifier|*
-name|AcpiGbl_DebugFile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|BOOLEAN
 name|AcpiGbl_IgnoreErrors
 decl_stmt|;

@@ -2278,6 +2278,11 @@ name|Gbl_OutputFilenamePrefix
 operator|=
 name|Filename
 expr_stmt|;
+name|UtConvertBackslashes
+argument_list|(
+name|Gbl_OutputFilenamePrefix
+argument_list|)
+expr_stmt|;
 block|}
 name|Child
 operator|->

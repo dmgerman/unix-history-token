@@ -452,6 +452,24 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+name|AcpiDmPcctSubnames
+index|[]
+init|=
+block|{
+literal|"Generic Communications Subspace"
+block|,
+comment|/* ACPI_PCCT_TYPE_GENERIC_SUBSPACE */
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
 name|AcpiDmPmttSubnames
 index|[]
 init|=
@@ -697,13 +715,13 @@ block|,
 block|{
 name|ACPI_SIG_DBG2
 block|,
-name|NULL
+name|AcpiDmTableInfoDbg2
 block|,
 name|AcpiDmDumpDbg2
 block|,
-name|NULL
+name|DtCompileDbg2
 block|,
-name|NULL
+name|TemplateDbg2
 block|,
 literal|"Debug Port table type 2"
 block|}
@@ -949,13 +967,13 @@ block|,
 block|{
 name|ACPI_SIG_PCCT
 block|,
-name|NULL
+name|AcpiDmTableInfoPcct
 block|,
 name|AcpiDmDumpPcct
 block|,
-name|NULL
+name|DtCompilePcct
 block|,
-name|NULL
+name|TemplatePcct
 block|,
 literal|"Platform Communications Channel Table"
 block|}
@@ -1974,6 +1992,9 @@ decl_stmt|;
 name|UINT16
 name|Temp16
 decl_stmt|;
+name|UINT64
+name|Value
+decl_stmt|;
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData
@@ -2103,6 +2124,9 @@ name|ACPI_DMT_IVRS
 case|:
 case|case
 name|ACPI_DMT_MADT
+case|:
+case|case
+name|ACPI_DMT_PCCT
 case|:
 case|case
 name|ACPI_DMT_PMTT
@@ -2518,6 +2542,10 @@ case|case
 name|ACPI_DMT_UINT64
 case|:
 comment|/*              * Dump bytes - high byte first, low byte last.              * Note: All ACPI tables are little-endian.              */
+name|Value
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|Temp8
@@ -2545,6 +2573,39 @@ name|Temp8
 operator|-
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+name|Value
+operator||=
+name|Target
+index|[
+name|Temp8
+operator|-
+literal|1
+index|]
+expr_stmt|;
+name|Value
+operator|<<=
+literal|8
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|Value
+operator|&&
+operator|(
+name|Info
+operator|->
+name|Flags
+operator|&
+name|DT_DESCRIBES_OPTIONAL
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" [Optional field not present]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3336,6 +3397,41 @@ operator|*
 name|Target
 argument_list|,
 name|AcpiDmMadtSubnames
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_PCCT
+case|:
+comment|/* PCCT subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_PCCT_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_PCCT_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmPcctSubnames
 index|[
 name|Temp8
 index|]

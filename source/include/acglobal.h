@@ -181,6 +181,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Optionally ignore an XSDT if present and use the RSDT instead.  * Although the ACPI specification requires that an XSDT be used instead  * of the RSDT, the XSDT has been found to be corrupt or ill-formed on  * some machines. Default behavior is to use the XSDT if present.  */
+end_comment
+
+begin_function_decl
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_DoNotUseXsdt
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Optionally use 32-bit FADT addresses if and when there is a conflict  * (address mismatch) between the 32-bit and 64-bit versions of the  * address. Although ACPICA adheres to the ACPI specification which  * requires the use of the corresponding 64-bit address if it is non-zero,  * some machines have been found to have a corrupted non-zero 64-bit  * address. Default is FALSE, do not favor the 32-bit addresses.  */
+end_comment
+
+begin_function_decl
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_Use32BitFadtAddresses
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Optionally truncate I/O addresses to 16 bits. Provides compatibility  * with other ACPI implementations. NOTE: During ACPICA initialization,  * this value is set to TRUE if any Windows OSI strings have been  * requested by the BIOS.  */
 end_comment
 
@@ -1626,6 +1656,36 @@ end_endif
 
 begin_comment
 comment|/* ACPI_DEBUGGER */
+end_comment
+
+begin_comment
+comment|/*****************************************************************************  *  * Application globals  *  ****************************************************************************/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
+
+begin_function_decl
+name|ACPI_FILE
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_DebugFile
+parameter_list|,
+name|NULL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_APPLICATION */
 end_comment
 
 begin_comment

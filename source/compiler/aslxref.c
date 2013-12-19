@@ -554,11 +554,11 @@ operator|&
 name|NODE_IS_NAME_DECLARATION
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* We are only interested in opcodes that have an associated name */
 name|OpInfo
@@ -627,11 +627,11 @@ name|PARSEOP_METHODCALL
 operator|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * One special case: CondRefOf operator - we don't care if the name exists      * or not at this point, just ignore it, the point of the operator is to      * determine if the name exists at runtime.      */
 if|if
@@ -659,11 +659,11 @@ name|PARSEOP_CONDREFOF
 operator|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * We must enable the "search-to-root" for single NameSegs, but      * we have to be very careful about opening up scopes      */
 name|Flags
@@ -1012,11 +1012,11 @@ operator|=
 name|AE_OK
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Check for a reference vs. name declaration */
 if|if
@@ -1532,11 +1532,11 @@ operator|)
 operator|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*          * There are two types of method invocation:          * 1) Invocation with arguments -- the parser recognizes this          *    as a METHODCALL.          * 2) Invocation with no arguments --the parser cannot determine that          *    this is a method invocation, therefore we have to figure it out          *    here.          */
 if|if
@@ -1579,11 +1579,11 @@ argument_list|,
 name|MsgBuffer
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Save the method node in the caller's op */
 name|Op
@@ -1609,11 +1609,11 @@ operator|==
 name|PARSEOP_CONDREFOF
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*          * This is a method invocation, with or without arguments.          * Count the number of arguments, each appears as a child          * under the parent node          */
 name|Op
@@ -2120,11 +2120,11 @@ name|Node
 operator|=
 name|Node
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2193,11 +2193,11 @@ name|AML_NAMED
 operator|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Not interested in name references, we did not open a scope for them */
 if|if
@@ -2233,11 +2233,11 @@ name|PARSEOP_METHODCALL
 operator|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Pop the scope stack if necessary */
 if|if
@@ -2282,11 +2282,11 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

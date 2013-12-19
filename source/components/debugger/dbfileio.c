@@ -85,36 +85,6 @@ literal|"dbfileio"
 argument_list|)
 end_macro
 
-begin_comment
-comment|/*  * NOTE: this is here for lack of a better place. It is used in all  * flavors of the debugger, need LCD file  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_APPLICATION
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|AcpiGbl_DebugFile
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef

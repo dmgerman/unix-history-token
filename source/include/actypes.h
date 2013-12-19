@@ -3129,12 +3129,20 @@ name|ACPI_ALLOCATE_BUFFER
 value|(ACPI_SIZE) (-1)
 end_define
 
+begin_comment
+comment|/* Let ACPICA allocate buffer */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_ALLOCATE_LOCAL_BUFFER
 value|(ACPI_SIZE) (-2)
 end_define
+
+begin_comment
+comment|/* For internal use only (enables tracking) */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -3154,20 +3162,6 @@ block|}
 name|ACPI_BUFFER
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* Free a buffer created in an ACPI_BUFFER via ACPI_ALLOCATE_LOCAL_BUFFER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_FREE_BUFFER
-parameter_list|(
-name|b
-parameter_list|)
-value|ACPI_FREE(b.Pointer)
-end_define
 
 begin_comment
 comment|/*  * NameType for AcpiGetName  */

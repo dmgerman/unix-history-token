@@ -51,6 +51,17 @@ end_comment
 
 begin_function_decl
 specifier|static
+name|ACPI_STATUS
+name|AcpiTbValidateXsdt
+parameter_list|(
+name|ACPI_PHYSICAL_ADDRESS
+name|Address
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|ACPI_PHYSICAL_ADDRESS
 name|AcpiTbGetRootTableEntry
 parameter_list|(
@@ -644,10 +655,7 @@ if|if
 condition|(
 name|TableEntrySize
 operator|==
-sizeof|sizeof
-argument_list|(
-name|UINT32
-argument_list|)
+name|ACPI_RSDT_ENTRY_SIZE
 condition|)
 block|{
 comment|/*          * 32-bit platform, RSDT: Return 32-bit table entry          * 64-bit platform, RSDT: Expand 32-bit to 64-bit and return          */
@@ -725,6 +733,223 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbValidateXsdt  *  * PARAMETERS:  Address             - Physical address of the XSDT (from RSDP)  *  * RETURN:      Status. AE_OK if the table appears to be valid.  *  * DESCRIPTION: Validate an XSDT to ensure that it is of minimum size and does  *              not contain any NULL entries. A problem that is seen in the  *              field is that the XSDT exists, but is actually useless because  *              of one or more (or all) NULL entries.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|AcpiTbValidateXsdt
+parameter_list|(
+name|ACPI_PHYSICAL_ADDRESS
+name|XsdtAddress
+parameter_list|)
+block|{
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+decl_stmt|;
+name|UINT8
+modifier|*
+name|NextEntry
+decl_stmt|;
+name|ACPI_PHYSICAL_ADDRESS
+name|Address
+decl_stmt|;
+name|UINT32
+name|Length
+decl_stmt|;
+name|UINT32
+name|EntryCount
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
+comment|/* Get the XSDT length */
+name|Table
+operator|=
+name|AcpiOsMapMemory
+argument_list|(
+name|XsdtAddress
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Table
+condition|)
+block|{
+return|return
+operator|(
+name|AE_NO_MEMORY
+operator|)
+return|;
+block|}
+name|Length
+operator|=
+name|Table
+operator|->
+name|Length
+expr_stmt|;
+name|AcpiOsUnmapMemory
+argument_list|(
+name|Table
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*      * Minimum XSDT length is the size of the standard ACPI header      * plus one physical address entry      */
+if|if
+condition|(
+name|Length
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+operator|+
+name|ACPI_XSDT_ENTRY_SIZE
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_INVALID_TABLE_LENGTH
+operator|)
+return|;
+block|}
+comment|/* Map the entire XSDT */
+name|Table
+operator|=
+name|AcpiOsMapMemory
+argument_list|(
+name|XsdtAddress
+argument_list|,
+name|Length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Table
+condition|)
+block|{
+return|return
+operator|(
+name|AE_NO_MEMORY
+operator|)
+return|;
+block|}
+comment|/* Get the number of entries and pointer to first entry */
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+name|NextEntry
+operator|=
+name|ACPI_ADD_PTR
+argument_list|(
+name|UINT8
+argument_list|,
+name|Table
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|EntryCount
+operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
+operator|(
+name|Table
+operator|->
+name|Length
+operator|-
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+operator|)
+operator|/
+name|ACPI_XSDT_ENTRY_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* Validate each entry (physical address) within the XSDT */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|EntryCount
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|Address
+operator|=
+name|AcpiTbGetRootTableEntry
+argument_list|(
+name|NextEntry
+argument_list|,
+name|ACPI_XSDT_ENTRY_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Address
+condition|)
+block|{
+comment|/* Detected a NULL entry, XSDT is invalid */
+name|Status
+operator|=
+name|AE_NULL_ENTRY
+expr_stmt|;
+break|break;
+block|}
+name|NextEntry
+operator|+=
+name|ACPI_XSDT_ENTRY_SIZE
+expr_stmt|;
+block|}
+comment|/* Unmap table */
+name|AcpiOsUnmapMemory
+argument_list|(
+name|Table
+argument_list|,
+name|Length
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseRootTable  *  * PARAMETERS:  Rsdp                    - Pointer to the RSDP  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to parse the Root System Description  *              Table (RSDT or XSDT)  *  * NOTE:        Tables are mapped (not copied) for efficiency. The FACS must  *              be mapped and cannot be copied because it contains the actual  *              memory location of the ACPI Global Lock.  *  ******************************************************************************/
 end_comment
 
@@ -771,7 +996,7 @@ argument_list|(
 name|TbParseRootTable
 argument_list|)
 expr_stmt|;
-comment|/*      * Map the entire RSDP and extract the address of the RSDT or XSDT      */
+comment|/* Map the entire RSDP and extract the address of the RSDT or XSDT */
 name|Rsdp
 operator|=
 name|AcpiOsMapMemory
@@ -808,21 +1033,26 @@ name|Rsdp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Differentiate between RSDT and XSDT root tables */
+comment|/* Use XSDT if present and not overridden. Otherwise, use RSDT */
 if|if
 condition|(
+operator|(
 name|Rsdp
 operator|->
 name|Revision
 operator|>
 literal|1
+operator|)
 operator|&&
 name|Rsdp
 operator|->
 name|XsdtPhysicalAddress
+operator|&&
+operator|!
+name|AcpiGbl_DoNotUseXsdt
 condition|)
 block|{
-comment|/*          * Root table is an XSDT (64-bit physical addresses). We must use the          * XSDT if the revision is> 1 and the XSDT pointer is present, as per          * the ACPI specification.          */
+comment|/*          * RSDP contains an XSDT (64-bit physical addresses). We must use          * the XSDT if the revision is> 1 and the XSDT pointer is present,          * as per the ACPI specification.          */
 name|Address
 operator|=
 operator|(
@@ -834,10 +1064,7 @@ name|XsdtPhysicalAddress
 expr_stmt|;
 name|TableEntrySize
 operator|=
-sizeof|sizeof
-argument_list|(
-name|UINT64
-argument_list|)
+name|ACPI_XSDT_ENTRY_SIZE
 expr_stmt|;
 block|}
 else|else
@@ -854,10 +1081,7 @@ name|RsdtPhysicalAddress
 expr_stmt|;
 name|TableEntrySize
 operator|=
-sizeof|sizeof
-argument_list|(
-name|UINT32
-argument_list|)
+name|ACPI_RSDT_ENTRY_SIZE
 expr_stmt|;
 block|}
 comment|/*      * It is not possible to map more than one entry in some environments,      * so unmap the RSDP here before mapping other tables      */
@@ -871,6 +1095,59 @@ name|ACPI_TABLE_RSDP
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/*      * If it is present and used, validate the XSDT for access/size      * and ensure that all table entries are at least non-NULL      */
+if|if
+condition|(
+name|TableEntrySize
+operator|==
+name|ACPI_XSDT_ENTRY_SIZE
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiTbValidateXsdt
+argument_list|(
+name|Address
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_BIOS_WARNING
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"XSDT is invalid (%s), using RSDT"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Fall back to the RSDT */
+name|Address
+operator|=
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
+name|Rsdp
+operator|->
+name|RsdtPhysicalAddress
+expr_stmt|;
+name|TableEntrySize
+operator|=
+name|ACPI_RSDT_ENTRY_SIZE
+expr_stmt|;
+block|}
+block|}
 comment|/* Map the RSDT/XSDT table header to get the full table length */
 name|Table
 operator|=
@@ -903,7 +1180,7 @@ argument_list|,
 name|Table
 argument_list|)
 expr_stmt|;
-comment|/* Get the length of the full table, verify length and map entire table */
+comment|/*      * Validate length of the table, and map entire table.      * Minimum length table must contain at least one entry.      */
 name|Length
 operator|=
 name|Table
@@ -924,10 +1201,14 @@ if|if
 condition|(
 name|Length
 operator|<
+operator|(
 sizeof|sizeof
 argument_list|(
 name|ACPI_TABLE_HEADER
 argument_list|)
+operator|+
+name|TableEntrySize
+operator|)
 condition|)
 block|{
 name|ACPI_BIOS_ERROR
@@ -999,7 +1280,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Calculate the number of tables described in the root table */
+comment|/* Get the number of entries and pointer to first entry */
 name|TableCount
 operator|=
 call|(
@@ -1020,28 +1301,28 @@ operator|/
 name|TableEntrySize
 argument_list|)
 expr_stmt|;
-comment|/*      * First two entries in the table array are reserved for the DSDT      * and FACS, which are not actually present in the RSDT/XSDT - they      * come from the FADT      */
 name|TableEntry
 operator|=
-name|ACPI_CAST_PTR
+name|ACPI_ADD_PTR
 argument_list|(
 name|UINT8
 argument_list|,
 name|Table
-argument_list|)
-operator|+
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ACPI_TABLE_HEADER
 argument_list|)
+argument_list|)
 expr_stmt|;
+comment|/*      * First two entries in the table array are reserved for the DSDT      * and FACS, which are not actually present in the RSDT/XSDT - they      * come from the FADT      */
 name|AcpiGbl_RootTableList
 operator|.
 name|CurrentTableCount
 operator|=
 literal|2
 expr_stmt|;
-comment|/*      * Initialize the root table array from the RSDT/XSDT      */
+comment|/* Initialize the root table array from the RSDT/XSDT */
 for|for
 control|(
 name|i
@@ -1178,7 +1459,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* Special case for FADT - get the DSDT and FACS */
+comment|/* Special case for FADT - validate it then get the DSDT and FACS */
 if|if
 condition|(
 name|ACPI_COMPARE_NAME

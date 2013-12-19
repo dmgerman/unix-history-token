@@ -195,13 +195,15 @@ operator|)
 return|;
 block|}
 comment|/*      * Table disassembly:      * OperationRegion not found. Generate an External for it, and      * insert the name into the namespace.      */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|Op
 argument_list|,
 name|Path
 argument_list|,
 name|ACPI_TYPE_REGION
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)

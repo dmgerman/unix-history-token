@@ -3672,17 +3672,11 @@ decl_stmt|;
 name|UINT16
 name|Length
 decl_stmt|;
-name|UINT8
-name|Type
-decl_stmt|;
-name|UINT8
+name|UINT16
 name|Flags
 decl_stmt|;
-name|BOOLEAN
-name|Resolved
-decl_stmt|;
-name|BOOLEAN
-name|Emitted
+name|UINT8
+name|Type
 decl_stmt|;
 block|}
 name|ACPI_EXTERNAL_LIST
@@ -3696,16 +3690,46 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_IPATH_ALLOCATED
+name|ACPI_EXT_RESOLVED_REFERENCE
 value|0x01
 end_define
+
+begin_comment
+comment|/* Object was resolved during cross ref */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_FROM_REFERENCE_FILE
+name|ACPI_EXT_ORIGIN_FROM_FILE
 value|0x02
 end_define
+
+begin_comment
+comment|/* External came from a file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXT_INTERNAL_PATH_ALLOCATED
+value|0x04
+end_define
+
+begin_comment
+comment|/* Deallocate internal path on completion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXT_EXTERNAL_EMITTED
+value|0x08
+end_define
+
+begin_comment
+comment|/* External() statement has been emitted */
+end_comment
 
 begin_typedef
 typedef|typedef

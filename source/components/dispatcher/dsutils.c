@@ -1766,10 +1766,27 @@ name|Index
 operator|++
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_DISPATCH
+operator|,
+literal|"NumOperands %d, ArgCount %d, Index %d\n"
+operator|,
+name|WalkState
+operator|->
+name|NumOperands
+operator|,
+name|ArgCount
+operator|,
+name|Index
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Create the interpreter arguments, in reverse order */
 name|Index
 operator|--
 expr_stmt|;
-comment|/* It is the appropriate order to get objects from the Result stack */
 for|for
 control|(
 name|i
@@ -1791,7 +1808,6 @@ index|[
 name|Index
 index|]
 expr_stmt|;
-comment|/* Force the filling of the operand stack in inverse order */
 name|WalkState
 operator|->
 name|OperandIndex
@@ -1824,23 +1840,23 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|Index
-operator|--
-expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Arg #%u (%p) done, Arg1=%p\n"
+literal|"Created Arg #%u (%p) %u args total\n"
 operator|,
 name|Index
 operator|,
 name|Arg
 operator|,
-name|FirstArg
+name|ArgCount
 operator|)
 argument_list|)
+expr_stmt|;
+name|Index
+operator|--
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS

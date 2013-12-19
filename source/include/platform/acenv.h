@@ -193,7 +193,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * AcpiBin/AcpiDump/AcpiSrc/AcpiXtract configuration. All single  * threaded, with no debug output.  */
+comment|/*  * AcpiBin/AcpiDump/AcpiSrc/AcpiXtract/Example configuration. All single  * threaded, with no debug output.  */
 end_comment
 
 begin_if
@@ -220,6 +220,12 @@ expr|\
 operator|(
 name|defined
 name|ACPI_XTRACT_APP
+operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+name|ACPI_EXAMPLE_APP
 operator|)
 end_if
 
@@ -1524,6 +1530,61 @@ end_endif
 
 begin_comment
 comment|/* ACPI_USE_SYSTEM_CLIBRARY */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_FILE
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ACPI_FILE
+value|FILE *
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_FILE
+value|void *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_APPLICATION */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_FILE */
 end_comment
 
 begin_endif

@@ -103,7 +103,7 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|BOOLEAN
-name|MustFree
+name|FreeBufferOnError
 init|=
 name|FALSE
 decl_stmt|;
@@ -134,7 +134,7 @@ operator|==
 name|ACPI_ALLOCATE_BUFFER
 condition|)
 block|{
-name|MustFree
+name|FreeBufferOnError
 operator|=
 name|TRUE
 expr_stmt|;
@@ -262,10 +262,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|MustFree
+name|FreeBufferOnError
 condition|)
 block|{
-comment|/*          * Caller used ACPI_ALLOCATE_BUFFER, free the return buffer.          * Note: We use AcpiOsFree here because AcpiOsAllocate was used          * to allocate the buffer. This purposefully bypasses the internal          * allocation tracking mechanism (if it is enabled).          */
+comment|/*          * Free a buffer created via ACPI_ALLOCATE_BUFFER.          * Note: We use AcpiOsFree here because AcpiOsAllocate was used          * to allocate the buffer. This purposefully bypasses the          * (optionally enabled) allocation tracking mechanism since we          * only want to track internal allocations.          */
 name|AcpiOsFree
 argument_list|(
 name|ReturnBuffer

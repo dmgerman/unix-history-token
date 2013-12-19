@@ -292,6 +292,24 @@ name|Level
 condition|)
 block|{
 case|case
+name|ASL_WARNING
+case|:
+case|case
+name|ASL_WARNING2
+case|:
+case|case
+name|ASL_WARNING3
+case|:
+if|if
+condition|(
+operator|!
+name|Gbl_DisplayWarnings
+condition|)
+block|{
+return|return;
+block|}
+break|break;
+case|case
 name|ASL_REMARK
 case|:
 if|if
@@ -319,7 +337,7 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/* Get the file handles */
+comment|/* Get the various required file handles */
 name|OutputFile
 operator|=
 name|Gbl_Files

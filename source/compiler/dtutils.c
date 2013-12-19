@@ -959,6 +959,9 @@ case|case
 name|ACPI_DMT_MADT
 case|:
 case|case
+name|ACPI_DMT_PCCT
+case|:
+case|case
 name|ACPI_DMT_PMTT
 case|:
 case|case

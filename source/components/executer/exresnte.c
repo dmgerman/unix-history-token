@@ -244,7 +244,13 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No object attached to node %p"
+literal|"No object attached to node [%4.4s] %p"
+operator|,
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
 operator|,
 name|Node
 operator|)

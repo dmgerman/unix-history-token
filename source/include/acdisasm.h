@@ -95,6 +95,10 @@ name|ACPI_DMTABLE_INFO
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Values for Flags field above */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -128,10 +132,6 @@ begin_comment
 comment|/* Field must be non-zero */
 end_comment
 
-begin_comment
-comment|/* TBD: Not used at this time */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -139,12 +139,31 @@ name|DT_OPTIONAL
 value|0x08
 end_define
 
+begin_comment
+comment|/* Field is optional */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_DESCRIBES_OPTIONAL
+value|0x10
+end_define
+
+begin_comment
+comment|/* Field describes an optional field (length, etc.) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DT_COUNT
-value|0x10
+value|0x20
 end_define
+
+begin_comment
+comment|/* Currently not used */
+end_comment
 
 begin_comment
 comment|/*  * Values for Opcode above.  * Note: 0-7 must not change, they are used as a flag shift value. Other  * than those, new values can be added wherever appropriate.  */
@@ -275,6 +294,8 @@ block|,
 name|ACPI_DMT_IVRS
 block|,
 name|ACPI_DMT_MADT
+block|,
+name|ACPI_DMT_PCCT
 block|,
 name|ACPI_DMT_PMTT
 block|,
@@ -694,6 +715,14 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoDbg2Name
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoDbg2OemData
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1334,6 +1363,14 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoPcct
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPcctHdr
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -2389,7 +2426,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -2404,6 +2441,29 @@ name|Type
 parameter_list|,
 name|UINT32
 name|Value
+parameter_list|,
+name|UINT16
+name|Flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDmAddNodeToExternalList
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|,
+name|UINT8
+name|Type
+parameter_list|,
+name|UINT32
+name|Value
+parameter_list|,
+name|UINT16
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl

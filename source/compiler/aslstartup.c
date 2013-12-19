@@ -676,6 +676,11 @@ name|Filename
 operator|=
 name|Filename
 expr_stmt|;
+name|UtConvertBackslashes
+argument_list|(
+name|Filename
+argument_list|)
+expr_stmt|;
 comment|/*      * AML Disassembly (Optional)      */
 if|if
 condition|(

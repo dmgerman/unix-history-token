@@ -354,8 +354,8 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ACPI_EXEC_APP
-comment|/*      * For AcpiExec only, emit the thread ID and nesting level.      * Note: nesting level is really only useful during a single-thread      * execution. Otherwise, multiple threads will keep resetting the      * level.      */
+name|ACPI_APPLICATION
+comment|/*      * For AcpiExec/iASL only, emit the thread ID and nesting level.      * Note: nesting level is really only useful during a single-thread      * execution. Otherwise, multiple threads will keep resetting the      * level.      */
 if|if
 condition|(
 name|ACPI_LV_THREADS

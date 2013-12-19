@@ -893,6 +893,22 @@ name|ACPI_TABLE_DBG2
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_dbg2_header
+block|{
+name|UINT32
+name|InfoOffset
+decl_stmt|;
+name|UINT32
+name|InfoCount
+decl_stmt|;
+block|}
+name|ACPI_DBG2_HEADER
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Debug Device Information Subtable */
 end_comment

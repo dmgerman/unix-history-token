@@ -398,6 +398,10 @@ name|char
 modifier|*
 name|NewFilename
 decl_stmt|;
+name|char
+modifier|*
+name|DirectoryPosition
+decl_stmt|;
 comment|/*      * Copy the original filename to a new buffer. Leave room for the worst case      * where we append the suffix, an added dot and the null terminator.      */
 name|NewFilename
 operator|=
@@ -427,6 +431,15 @@ name|InputFilename
 argument_list|)
 expr_stmt|;
 comment|/* Try to find the last dot in the filename */
+name|DirectoryPosition
+operator|=
+name|strrchr
+argument_list|(
+name|NewFilename
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
 name|Position
 operator|=
 name|strrchr
@@ -439,6 +452,12 @@ expr_stmt|;
 if|if
 condition|(
 name|Position
+operator|&&
+operator|(
+name|Position
+operator|>
+name|DirectoryPosition
+operator|)
 condition|)
 block|{
 comment|/* Tack on the new suffix */

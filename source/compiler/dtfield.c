@@ -700,12 +700,14 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"%8.8X%8.8X"
+literal|"%8.8X%8.8X - max %u bytes"
 argument_list|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Value
 argument_list|)
+argument_list|,
+name|ByteLength
 argument_list|)
 expr_stmt|;
 name|DtError

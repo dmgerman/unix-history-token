@@ -1145,7 +1145,7 @@ name|NextOp
 condition|)
 block|{
 comment|/* This NamePath has no args, assume it is an integer */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1158,6 +1158,8 @@ operator|.
 name|String
 argument_list|,
 name|ACPI_TYPE_INTEGER
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1199,7 +1201,7 @@ literal|1
 condition|)
 block|{
 comment|/* One Arg means this is just a Store(Name,Target) */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1214,6 +1216,8 @@ argument_list|,
 name|ACPI_TYPE_INTEGER
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1222,7 +1226,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1237,6 +1241,8 @@ argument_list|,
 name|ACPI_TYPE_METHOD
 argument_list|,
 name|ArgCount
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1291,7 +1297,7 @@ name|NextOp
 condition|)
 block|{
 comment|/* This NamePath has no args, assume it is an integer */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1304,6 +1310,8 @@ operator|.
 name|String
 argument_list|,
 name|ACPI_TYPE_INTEGER
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1333,7 +1341,7 @@ literal|1
 condition|)
 block|{
 comment|/* One Arg means this is just a Store(Name,Target) */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1348,6 +1356,8 @@ argument_list|,
 name|ACPI_TYPE_INTEGER
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1356,7 +1366,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1371,6 +1381,8 @@ argument_list|,
 name|ACPI_TYPE_METHOD
 argument_list|,
 name|ArgCount
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1513,7 +1525,7 @@ name|Op
 operator|)
 condition|)
 block|{
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|Op
 argument_list|,
@@ -1528,13 +1540,15 @@ argument_list|,
 name|ACPI_TYPE_INTEGER
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 block|}
 comment|/*              * This is a standalone namestring (not a parameter to another              * operator) - it *must* be a method invocation, nothing else is              * grammatically possible.              */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|Op
 argument_list|,
@@ -1549,6 +1563,8 @@ argument_list|,
 name|ACPI_TYPE_METHOD
 argument_list|,
 name|ArgCount
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2058,6 +2074,10 @@ name|ParamCount
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|Pathname
+decl_stmt|;
 name|WalkState
 operator|=
 name|Info
@@ -2299,6 +2319,10 @@ name|Exit
 goto|;
 block|}
 comment|/*      * Lookup the name in the namespace. Name must exist at this point, or it      * is an invalid reference.      *      * The namespace is also used as a lookup table for references to resource      * descriptors and the fields within them.      */
+name|Node
+operator|=
+name|NULL
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -2339,6 +2363,7 @@ name|ANOBJ_IS_EXTERNAL
 operator|)
 condition|)
 block|{
+comment|/* Node was created by an External() statement */
 name|Status
 operator|=
 name|AE_NOT_FOUND
@@ -2386,7 +2411,29 @@ operator|)
 operator|)
 condition|)
 block|{
-name|AcpiDmAddToExternalList
+if|if
+condition|(
+name|Node
+condition|)
+block|{
+name|AcpiDmAddNodeToExternalList
+argument_list|(
+name|Node
+argument_list|,
+operator|(
+name|UINT8
+operator|)
+name|ObjectType
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|Op
 argument_list|,
@@ -2398,12 +2445,15 @@ operator|)
 name|ObjectType
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*      * Found the node in external table, add it to external list      * Node->OwnerId == 0 indicates built-in ACPI Names, _OS_ etc      */
+block|}
+comment|/*      * Found the node, but check if it came from an external table.      * Add it to external list. Note: Node->OwnerId == 0 indicates      * one of the built-in ACPI Names (_OS_ etc.) which can safely      * be ignored.      */
 elseif|else
 if|if
 condition|(
@@ -2411,6 +2461,7 @@ name|Node
 operator|->
 name|OwnerId
 operator|&&
+operator|(
 name|WalkState
 operator|->
 name|OwnerId
@@ -2418,6 +2469,7 @@ operator|!=
 name|Node
 operator|->
 name|OwnerId
+operator|)
 condition|)
 block|{
 name|ObjectType2
@@ -2461,11 +2513,28 @@ name|ParamCount
 expr_stmt|;
 block|}
 block|}
-name|AcpiDmAddToExternalList
+name|Pathname
+operator|=
+name|AcpiNsGetExternalPathname
 argument_list|(
-name|Op
-argument_list|,
-name|Path
+name|Node
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Pathname
+condition|)
+block|{
+return|return
+operator|(
+name|AE_NO_MEMORY
+operator|)
+return|;
+block|}
+name|AcpiDmAddNodeToExternalList
+argument_list|(
+name|Node
 argument_list|,
 operator|(
 name|UINT8
@@ -2473,8 +2542,13 @@ operator|)
 name|ObjectType2
 argument_list|,
 name|ParamCount
-operator||
-literal|0x80
+argument_list|,
+name|ACPI_EXT_RESOLVED_REFERENCE
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|Pathname
 argument_list|)
 expr_stmt|;
 name|Op

@@ -381,16 +381,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeXruptBlock  *  * PARAMETERS:  InterruptNumber             - Interrupt for a GPE block  *  * RETURN:      A GPE interrupt block  *  * DESCRIPTION: Get or Create a GPE interrupt block. There is one interrupt  *              block per unique interrupt level used for GPEs. Should be  *              called only when the GPE lists are semaphore locked and not  *              subject to change.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeXruptBlock  *  * PARAMETERS:  InterruptNumber             - Interrupt for a GPE block  *              GpeXruptBlock               - Where the block is returned  *  * RETURN:      Status  *  * DESCRIPTION: Get or Create a GPE interrupt block. There is one interrupt  *              block per unique interrupt level used for GPEs. Should be  *              called only when the GPE lists are semaphore locked and not  *              subject to change.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_GPE_XRUPT_INFO
-modifier|*
+name|ACPI_STATUS
 name|AcpiEvGetGpeXruptBlock
 parameter_list|(
 name|UINT32
 name|InterruptNumber
+parameter_list|,
+name|ACPI_GPE_XRUPT_INFO
+modifier|*
+modifier|*
+name|GpeXruptBlock
 parameter_list|)
 block|{
 name|ACPI_GPE_XRUPT_INFO
@@ -431,9 +435,14 @@ operator|==
 name|InterruptNumber
 condition|)
 block|{
-name|return_PTR
-argument_list|(
+operator|*
+name|GpeXruptBlock
+operator|=
 name|NextGpeXrupt
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
@@ -461,9 +470,9 @@ operator|!
 name|GpeXrupt
 condition|)
 block|{
-name|return_PTR
+name|return_ACPI_STATUS
 argument_list|(
-name|NULL
+name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
@@ -560,10 +569,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
 name|AE_INFO
+operator|,
+name|Status
 operator|,
 literal|"Could not install GPE interrupt handler at level 0x%X"
 operator|,
@@ -571,16 +582,21 @@ name|InterruptNumber
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_PTR
+name|return_ACPI_STATUS
 argument_list|(
-name|NULL
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|return_PTR
-argument_list|(
+operator|*
+name|GpeXruptBlock
+operator|=
 name|GpeXrupt
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}

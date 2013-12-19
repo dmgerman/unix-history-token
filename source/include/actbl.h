@@ -408,6 +408,20 @@ name|ACPI_TABLE_XSDT
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|ACPI_RSDT_ENTRY_SIZE
+value|(sizeof (UINT32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_XSDT_ENTRY_SIZE
+value|(sizeof (UINT64))
+end_define
+
 begin_comment
 comment|/*******************************************************************************  *  * FACS - Firmware ACPI Control Structure (FACS)  *  ******************************************************************************/
 end_comment

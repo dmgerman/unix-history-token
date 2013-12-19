@@ -752,7 +752,7 @@ comment|/*    ASL_MSG_NOT_REACHABLE */
 literal|"Object is not accessible from this scope"
 block|,
 comment|/*    ASL_MSG_NOT_REFERENCED */
-literal|"Namespace object is not referenced"
+literal|"Object is not referenced"
 block|,
 comment|/*    ASL_MSG_NULL_DESCRIPTOR */
 literal|"Min/Max/Length/Gran are all zero, but no resource tag"
