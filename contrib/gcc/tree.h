@@ -4543,6 +4543,32 @@ value|TREE_STATIC (EH_FILTER_EXPR_CHECK (NODE))
 end_define
 
 begin_comment
+comment|/* CHANGE_DYNAMIC_TYPE_EXPR accessors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANGE_DYNAMIC_TYPE_NEW_TYPE
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_OPERAND (CHANGE_DYNAMIC_TYPE_EXPR_CHECK (NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANGE_DYNAMIC_TYPE_LOCATION
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_OPERAND (CHANGE_DYNAMIC_TYPE_EXPR_CHECK (NODE), 1)
+end_define
+
+begin_comment
 comment|/* OBJ_TYPE_REF accessors.  */
 end_comment
 
@@ -8114,6 +8140,21 @@ define|\
 value|DECL_COMMON_CHECK (DECL)->decl_common.call_clobbered_flag
 end_define
 
+begin_comment
+comment|/* For a DECL with pointer type, this is set if Type Based Alias    Analysis should not be applied to this DECL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_NO_TBAA_P
+parameter_list|(
+name|DECL
+parameter_list|)
+define|\
+value|DECL_COMMON_CHECK (DECL)->decl_common.no_tbaa_flag
+end_define
+
 begin_decl_stmt
 name|struct
 name|tree_decl_common
@@ -8250,6 +8291,12 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|call_clobbered_flag
+range|:
+literal|1
+decl_stmt|;
+comment|/* In a DECL with pointer type, set if no TBAA should be done.  */
+name|unsigned
+name|no_tbaa_flag
 range|:
 literal|1
 decl_stmt|;

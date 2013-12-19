@@ -2144,6 +2144,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DECL_NO_TBAA_P
+argument_list|(
+name|node
+argument_list|)
+condition|)
+name|fputs
+argument_list|(
+literal|" no-tbaa"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|DECL_LANG_FLAG_0
 argument_list|(
 name|node
