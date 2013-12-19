@@ -9,11 +9,22 @@ directive|undef
 name|JEMALLOC_OVERRIDE_VALLOC
 end_undef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MALLOC_PRODUCTION
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MALLOC_PRODUCTION
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
