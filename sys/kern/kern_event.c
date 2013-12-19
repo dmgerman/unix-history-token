@@ -2473,6 +2473,17 @@ name|intptr_t
 name|data
 parameter_list|)
 block|{
+if|if
+condition|(
+name|data
+operator|>
+name|LLONG_MAX
+operator|/
+name|SBT_1MS
+condition|)
+return|return
+name|LLONG_MAX
+return|;
 return|return
 operator|(
 name|SBT_1MS
