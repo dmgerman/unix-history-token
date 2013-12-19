@@ -3267,18 +3267,11 @@ name|capdnsloc
 operator|==
 name|NULL
 condition|)
-block|{
-name|warning
+name|error
 argument_list|(
 literal|"unable to open system.dns service"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 comment|/* Limit system.dns to reverse DNS lookups. */
 name|types
 index|[
@@ -3300,23 +3293,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|warning
+name|error
 argument_list|(
 literal|"unable to limit access to system.dns service"
 argument_list|)
 expr_stmt|;
-name|cap_close
-argument_list|(
-name|capdnsloc
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|families
 index|[
 literal|0
@@ -3344,23 +3325,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|warning
+name|error
 argument_list|(
 literal|"unable to limit access to system.dns service"
 argument_list|)
 expr_stmt|;
-name|cap_close
-argument_list|(
-name|capdnsloc
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 return|return
 operator|(
 name|capdnsloc

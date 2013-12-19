@@ -1312,7 +1312,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1373,9 +1374,11 @@ argument_list|(
 literal|"unable to open system.grp service"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Limit system.pwd to only getpwuid() function and pw_name field. */
 name|cmds
@@ -1398,16 +1401,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
-literal|"unable to limit access to system.pwd service"
+literal|1
+argument_list|,
+literal|"unable to limit system.pwd service"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 name|fields
 index|[
 literal|0
@@ -1428,16 +1428,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
-literal|"unable to limit access to system.pwd service"
+literal|1
+argument_list|,
+literal|"unable to limit system.pwd service"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 comment|/* Limit system.grp to only getgrgid() function and gr_name field. */
 name|cmds
 index|[
@@ -1459,16 +1456,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
-literal|"unable to limit access to system.grp service"
+literal|1
+argument_list|,
+literal|"unable to limit system.grp service"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 name|fields
 index|[
 literal|0
@@ -1489,16 +1483,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
-literal|"unable to limit access to system.grp service"
+literal|1
+argument_list|,
+literal|"unable to limit system.grp service"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 operator|*
 name|cappwdp
 operator|=
@@ -1512,36 +1503,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-name|fail
-label|:
-if|if
-condition|(
-name|capgrploc
-operator|==
-name|NULL
-condition|)
-name|cap_close
-argument_list|(
-name|cappwdloc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|capgrploc
-operator|==
-name|NULL
-condition|)
-name|cap_close
-argument_list|(
-name|capgrploc
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
 operator|)
 return|;
 block|}
