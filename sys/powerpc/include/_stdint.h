@@ -190,6 +190,73 @@ name|__STDC_LIMIT_MACROS
 argument_list|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__INT64_C
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__INT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UINT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## UL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__INT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## LL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UINT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## ULL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.2.1 Limits of exact-width integer types  */
 end_comment
@@ -223,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|INT64_MIN
-value|(-INT64_C(0x7fffffffffffffff)-1)
+value|(-__INT64_C(0x7fffffffffffffff)-1)
 end_define
 
 begin_comment
@@ -255,7 +322,7 @@ begin_define
 define|#
 directive|define
 name|INT64_MAX
-value|INT64_C(0x7fffffffffffffff)
+value|__INT64_C(0x7fffffffffffffff)
 end_define
 
 begin_comment
@@ -287,7 +354,7 @@ begin_define
 define|#
 directive|define
 name|UINT64_MAX
-value|UINT64_C(0xffffffffffffffff)
+value|__UINT64_C(0xffffffffffffffff)
 end_define
 
 begin_comment
