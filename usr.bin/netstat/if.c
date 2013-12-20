@@ -1011,6 +1011,9 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|)
+parameter_list|,
+name|int
+name|af
 parameter_list|)
 block|{
 name|struct

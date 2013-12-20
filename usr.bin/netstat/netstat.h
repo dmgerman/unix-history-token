@@ -100,17 +100,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|Mflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* read statistics from core */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|mflag
 decl_stmt|;
 end_decl_stmt
@@ -255,17 +244,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|af
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* address family */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|live
 decl_stmt|;
 end_decl_stmt
@@ -273,6 +251,12 @@ end_decl_stmt
 begin_comment
 comment|/* true if we are examining a live system */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|nlist
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|int
@@ -304,6 +288,17 @@ name|buf
 parameter_list|,
 name|size_t
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kresolve_list
+parameter_list|(
+name|struct
+name|nlist
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -766,9 +761,7 @@ begin_function_decl
 name|void
 name|mroute6pr
 parameter_list|(
-name|u_long
-parameter_list|,
-name|u_long
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -777,7 +770,7 @@ begin_function_decl
 name|void
 name|mrt6_stats
 parameter_list|(
-name|u_long
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -948,6 +941,8 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|)
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -974,9 +969,7 @@ begin_function_decl
 name|void
 name|rt_stats
 parameter_list|(
-name|u_long
-parameter_list|,
-name|u_long
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1109,7 +1102,7 @@ begin_function_decl
 name|void
 name|routepr
 parameter_list|(
-name|u_long
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1451,11 +1444,7 @@ begin_function_decl
 name|void
 name|mroutepr
 parameter_list|(
-name|u_long
-parameter_list|,
-name|u_long
-parameter_list|,
-name|u_long
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1464,7 +1453,7 @@ begin_function_decl
 name|void
 name|mrt_stats
 parameter_list|(
-name|u_long
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
