@@ -1165,6 +1165,10 @@ name|int
 name|vw_flags
 decl_stmt|;
 comment|/* (d) Per-window flags. */
+name|int
+name|vw_mouse_level
+decl_stmt|;
+comment|/* Mouse op mode. */
 define|#
 directive|define
 name|VWF_BUSY

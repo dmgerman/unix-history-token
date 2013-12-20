@@ -3093,6 +3093,16 @@ name|arg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|TP_MOUSE
+case|:
+name|vw
+operator|->
+name|vw_mouse_level
+operator|=
+name|arg
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -5971,7 +5981,9 @@ return|return;
 comment|/* 	 * TODO: add flag about pointer position changed, to not redraw chars 	 * under mouse pointer when nothing changed. 	 */
 if|if
 condition|(
-name|mlevel
+name|vw
+operator|->
+name|vw_mouse_level
 operator|>
 literal|0
 condition|)
