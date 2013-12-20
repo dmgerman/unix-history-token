@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vmm_ipi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmx_msr.h"
 end_include
 
@@ -366,6 +372,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|ept_pmap_flags
+operator|=
+name|vmm_ipinum
+operator|&
+name|PMAP_NESTED_IPIMASK
+expr_stmt|;
 name|use_superpages
 operator|=
 literal|1

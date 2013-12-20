@@ -1197,8 +1197,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PMAP_NESTED_IPIMASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
 name|PMAP_PDE_SUPERPAGE
-value|(1<< 0)
+value|(1<< 8)
 end_define
 
 begin_comment
@@ -1209,7 +1216,7 @@ begin_define
 define|#
 directive|define
 name|PMAP_EMULATE_AD_BITS
-value|(1<< 1)
+value|(1<< 9)
 end_define
 
 begin_comment
@@ -1220,7 +1227,7 @@ begin_define
 define|#
 directive|define
 name|PMAP_SUPPORTS_EXEC_ONLY
-value|(1<< 2)
+value|(1<< 10)
 end_define
 
 begin_comment
