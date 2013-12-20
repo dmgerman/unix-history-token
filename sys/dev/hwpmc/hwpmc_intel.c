@@ -577,6 +577,9 @@ case|case
 literal|0x3C
 case|:
 comment|/* Per Intel document 325462-045US 01/2013. */
+case|case
+literal|0x45
+case|:
 name|cputype
 operator|=
 name|PMC_CPU_INTEL_HASWELL
