@@ -377,7 +377,7 @@ name|c
 parameter_list|,
 name|a
 parameter_list|)
-value|((c) | \ 	(a)->ta_format<< 22 | \ 	teken_256to8((a)->ta_fgcolor)<< 26 | \ 	teken_256to8((a)->ta_bgcolor)<< 29)
+value|((c) | \ 	(a)->ta_format<< 21 | \ 	teken_256to8((a)->ta_fgcolor)<< 26 | \ 	teken_256to8((a)->ta_bgcolor)<< 29)
 end_define
 
 begin_function

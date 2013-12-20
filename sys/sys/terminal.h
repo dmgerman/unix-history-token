@@ -76,7 +76,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * The terminal layer is an abstraction on top of the TTY layer and the  * console interface.  It can be used by system console drivers to  * easily interact with the kernel console and TTYs.  *  * Terminals contain terminal emulators, which means console drivers  * don't need to implement their own terminal emulator. The terminal  * emulator deals with UTF-8 exclusively. This means that term_char_t,  * the data type used to store input/output characters will always  * contain Unicode codepoints.  *  * To save memory usage, the top bits of term_char_t will contain other  * attributes, like colors. Right now term_char_t is composed as  * follows:  *  *  Bits  Meaning  *  0-20: Character value  *    21: Unused  * 22-25: Bold, underline, blink, reverse  * 26-28: Foreground color  * 29-31: Background color  */
+comment|/*  * The terminal layer is an abstraction on top of the TTY layer and the  * console interface.  It can be used by system console drivers to  * easily interact with the kernel console and TTYs.  *  * Terminals contain terminal emulators, which means console drivers  * don't need to implement their own terminal emulator. The terminal  * emulator deals with UTF-8 exclusively. This means that term_char_t,  * the data type used to store input/output characters will always  * contain Unicode codepoints.  *  * To save memory usage, the top bits of term_char_t will contain other  * attributes, like colors. Right now term_char_t is composed as  * follows:  *  *  Bits  Meaning  *  0-20: Character value  * 21-25: Bold, underline, blink, reverse, right part of CJK fullwidth character  * 26-28: Foreground color  * 29-31: Background color  */
 end_comment
 
 begin_typedef
@@ -103,7 +103,7 @@ name|TCHAR_FORMAT
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c)>> 22)& 0xf)
+value|(((c)>> 21)& 0x1f)
 end_define
 
 begin_define

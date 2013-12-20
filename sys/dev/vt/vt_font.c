@@ -332,12 +332,26 @@ decl_stmt|;
 name|size_t
 name|stride
 decl_stmt|;
+comment|/* 	 * No support for printing right hand sides for CJK fullwidth 	 * characters. Simply print a space and assume that the left 	 * hand side describes the entire character. 	 */
 name|src
 operator|=
 name|TCHAR_CHARACTER
 argument_list|(
 name|c
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TCHAR_FORMAT
+argument_list|(
+name|c
+argument_list|)
+operator|&
+name|TF_CJK_RIGHT
+condition|)
+name|src
+operator|=
+literal|' '
 expr_stmt|;
 if|if
 condition|(

@@ -3635,6 +3635,7 @@ name|cursor
 decl_stmt|,
 name|attr
 decl_stmt|;
+comment|/* 	 * No support for printing right hand sides for CJK fullwidth 	 * characters. Simply print a space and assume that the left 	 * hand side describes the entire character. 	 */
 name|attr
 operator|=
 name|scteken_attr
@@ -3643,6 +3644,18 @@ name|a
 argument_list|)
 operator|<<
 literal|8
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|ta_format
+operator|&
+name|TF_CJK_RIGHT
+condition|)
+name|c
+operator|=
+literal|' '
 expr_stmt|;
 ifdef|#
 directive|ifdef
