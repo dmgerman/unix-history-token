@@ -16200,6 +16200,9 @@ modifier|*
 name|txr
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
 name|struct
 name|adapter
 modifier|*
@@ -16218,6 +16221,8 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
+endif|#
+directive|endif
 name|u32
 name|work
 decl_stmt|,
