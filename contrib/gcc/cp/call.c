@@ -223,12 +223,6 @@ name|base_p
 range|:
 literal|1
 decl_stmt|;
-comment|/* If KIND is ck_ref_bind, true when either an lvalue reference is      being bound to an lvalue expression or an rvalue reference is      being bound to an rvalue expression. */
-name|BOOL_BITFIELD
-name|rvaluedness_matches_p
-range|:
-literal|1
-decl_stmt|;
 comment|/* The type of the expression resulting from the conversion.  */
 name|tree
 name|type
@@ -891,8 +885,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|conversion
-modifier|*
+name|tree
 name|maybe_handle_ref_bind
 parameter_list|(
 name|conversion
@@ -3889,7 +3882,7 @@ modifier|*
 name|convert_class_to_reference
 parameter_list|(
 name|tree
-name|reference_type
+name|t
 parameter_list|,
 name|tree
 name|s
@@ -3909,7 +3902,7 @@ modifier|*
 name|conv
 decl_stmt|;
 name|tree
-name|t
+name|reference_type
 decl_stmt|;
 name|struct
 name|z_candidate
@@ -3966,11 +3959,11 @@ argument_list|,
 name|arglist
 argument_list|)
 expr_stmt|;
-name|t
-operator|=
-name|TREE_TYPE
-argument_list|(
 name|reference_type
+operator|=
+name|build_reference_type
+argument_list|(
+name|t
 argument_list|)
 expr_stmt|;
 while|while
@@ -4209,30 +4202,6 @@ argument_list|,
 name|identity_conv
 argument_list|)
 operator|)
-expr_stmt|;
-name|cand
-operator|->
-name|second_conv
-operator|->
-name|rvaluedness_matches_p
-operator|=
-name|TYPE_REF_IS_RVALUE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|cand
-operator|->
-name|fn
-argument_list|)
-argument_list|)
-argument_list|)
-operator|==
-name|TYPE_REF_IS_RVALUE
-argument_list|(
-name|reference_type
-argument_list|)
 expr_stmt|;
 name|cand
 operator|->
@@ -4667,35 +4636,11 @@ argument_list|,
 name|from
 argument_list|)
 expr_stmt|;
-comment|/* Directly bind reference when target expression's type is compatible with      the reference and expression is an lvalue. In C++0x, the wording in      [8.5.3/5 dcl.init.ref] is changed to also allow direct bindings for const      and rvalue references to rvalues of compatible class type, as part of      DR391. */
 if|if
 condition|(
-name|compatible_p
-operator|&&
-operator|(
 name|lvalue_p
-operator|||
-operator|(
-name|flag_cpp0x
 operator|&&
-operator|(
-name|CP_TYPE_CONST_NON_VOLATILE_P
-argument_list|(
-name|to
-argument_list|)
-operator|||
-name|TYPE_REF_IS_RVALUE
-argument_list|(
-name|rto
-argument_list|)
-operator|)
-operator|&&
-name|CLASS_TYPE_P
-argument_list|(
-name|from
-argument_list|)
-operator|)
-operator|)
+name|compatible_p
 condition|)
 block|{
 comment|/* [dcl.init.ref]  	 If the initializer expression  	 -- is an lvalue (but not an lvalue for a bit-field), and "cv1 T1" 	    is reference-compatible with "cv2 T2,"  	 the reference is bound directly to the initializer expression 	 lvalue.  */
@@ -4716,37 +4661,6 @@ name|rto
 argument_list|,
 name|conv
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|LOOKUP_PREFER_RVALUE
-condition|)
-comment|/* The top-level caller requested that we pretend that the lvalue 	   be treated as an rvalue.  */
-name|conv
-operator|->
-name|rvaluedness_matches_p
-operator|=
-name|TYPE_REF_IS_RVALUE
-argument_list|(
-name|rto
-argument_list|)
-expr_stmt|;
-else|else
-name|conv
-operator|->
-name|rvaluedness_matches_p
-operator|=
-operator|(
-name|TYPE_REF_IS_RVALUE
-argument_list|(
-name|rto
-argument_list|)
-operator|==
-operator|!
-name|lvalue_p
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -4806,7 +4720,7 @@ name|conv
 operator|=
 name|convert_class_to_reference
 argument_list|(
-name|rto
+name|to
 argument_list|,
 name|from
 argument_list|,
@@ -4832,19 +4746,13 @@ return|return
 name|NULL
 return|;
 comment|/* [over.ics.rank]       When a parameter of reference type is not bound directly to an      argument expression, the conversion sequence is the one required      to convert the argument expression to the underlying type of the      reference according to _over.best.ics_.  Conceptually, this      conversion sequence corresponds to copy-initializing a temporary      of the underlying type with the argument expression.  Any      difference in top-level cv-qualification is subsumed by the      initialization itself and does not constitute a conversion.  */
-comment|/* [dcl.init.ref]       Otherwise, the reference shall be to a non-volatile const type.       Under C++0x, [8.5.3/5 dcl.init.ref] it may also be an rvalue reference */
+comment|/* [dcl.init.ref]       Otherwise, the reference shall be to a non-volatile const type.  */
 if|if
 condition|(
 operator|!
 name|CP_TYPE_CONST_NON_VOLATILE_P
 argument_list|(
 name|to
-argument_list|)
-operator|&&
-operator|!
-name|TYPE_REF_IS_RVALUE
-argument_list|(
-name|rto
 argument_list|)
 condition|)
 return|return
@@ -4877,15 +4785,6 @@ argument_list|(
 name|rto
 argument_list|,
 name|conv
-argument_list|)
-expr_stmt|;
-name|conv
-operator|->
-name|rvaluedness_matches_p
-operator|=
-name|TYPE_REF_IS_RVALUE
-argument_list|(
-name|rto
 argument_list|)
 expr_stmt|;
 if|if
@@ -4967,15 +4866,6 @@ operator|->
 name|need_temporary_p
 operator|=
 name|true
-expr_stmt|;
-name|conv
-operator|->
-name|rvaluedness_matches_p
-operator|=
-name|TYPE_REF_IS_RVALUE
-argument_list|(
-name|rto
-argument_list|)
 expr_stmt|;
 return|return
 name|conv
@@ -5130,7 +5020,7 @@ name|cand
 operator|->
 name|second_conv
 expr_stmt|;
-comment|/* We used to try to bind a reference to a temporary here, but that 	 is now handled after the recursive call to this function at the end 	 of reference_binding.  */
+comment|/* We used to try to bind a reference to a temporary here, but that 	 is now handled by the recursive call to this function at the end 	 of reference_binding.  */
 return|return
 name|conv
 return|;
@@ -16344,26 +16234,18 @@ name|ref_type
 init|=
 name|totype
 decl_stmt|;
-comment|/* If necessary, create a temporary.              VA_ARG_EXPR and CONSTRUCTOR expressions are special cases            that need temporaries, even when their types are reference            compatible with the type of reference being bound, so the            upcoming call to build_unary_op (ADDR_EXPR, expr, ...)            doesn't fail.  */
+comment|/* If necessary, create a temporary.  */
 if|if
 condition|(
 name|convs
 operator|->
 name|need_temporary_p
 operator|||
-name|TREE_CODE
+operator|!
+name|lvalue_p
 argument_list|(
 name|expr
 argument_list|)
-operator|==
-name|CONSTRUCTOR
-operator|||
-name|TREE_CODE
-argument_list|(
-name|expr
-argument_list|)
-operator|==
-name|VA_ARG_EXPR
 condition|)
 block|{
 name|tree
@@ -16394,12 +16276,6 @@ name|TREE_TYPE
 argument_list|(
 name|ref_type
 argument_list|)
-argument_list|)
-operator|&&
-operator|!
-name|TYPE_REF_IS_RVALUE
-argument_list|(
-name|ref_type
 argument_list|)
 condition|)
 block|{
@@ -18312,17 +18188,10 @@ name|num_convs
 operator|==
 literal|1
 operator|&&
-operator|(
 name|DECL_COPY_CONSTRUCTOR_P
 argument_list|(
 name|fn
 argument_list|)
-operator|||
-name|DECL_MOVE_CONSTRUCTOR_P
-argument_list|(
-name|fn
-argument_list|)
-operator|)
 condition|)
 block|{
 name|tree
@@ -21284,12 +21153,6 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-name|t
-operator|->
-name|rvaluedness_matches_p
-operator|=
-literal|1
-expr_stmt|;
 operator|*
 name|ics
 operator|=
@@ -21300,13 +21163,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* If *ICS is a REF_BIND set *ICS to the remainder of the conversion,    and return the initial reference binding conversion. Otherwise,    leave *ICS unchanged and return NULL.  */
+comment|/* If *ICS is a REF_BIND set *ICS to the remainder of the conversion,    and return the type to which the reference refers.  Otherwise,    leave *ICS unchanged and return NULL_TREE.  */
 end_comment
 
 begin_function
 specifier|static
-name|conversion
-modifier|*
+name|tree
 name|maybe_handle_ref_bind
 parameter_list|(
 name|conversion
@@ -21333,6 +21195,16 @@ name|old_ics
 init|=
 operator|*
 name|ics
+decl_stmt|;
+name|tree
+name|type
+init|=
+name|TREE_TYPE
+argument_list|(
+name|old_ics
+operator|->
+name|type
+argument_list|)
 decl_stmt|;
 operator|*
 name|ics
@@ -21366,11 +21238,11 @@ operator|->
 name|bad_p
 expr_stmt|;
 return|return
-name|old_ics
+name|type
 return|;
 block|}
 return|return
-name|NULL
+name|NULL_TREE
 return|;
 block|}
 end_function
@@ -21430,14 +21302,12 @@ name|rank1
 decl_stmt|,
 name|rank2
 decl_stmt|;
-comment|/* REF_BINDING is nonzero if the result of the conversion sequence      is a reference type.   In that case REF_CONV is the reference      binding conversion. */
-name|conversion
-modifier|*
-name|ref_conv1
+comment|/* REF_BINDING is nonzero if the result of the conversion sequence      is a reference type.   In that case TARGET_TYPE is the      type referred to by the reference.  */
+name|tree
+name|target_type1
 decl_stmt|;
-name|conversion
-modifier|*
-name|ref_conv2
+name|tree
+name|target_type2
 decl_stmt|;
 comment|/* Handle implicit object parameters.  */
 name|maybe_handle_implicit_object
@@ -21453,7 +21323,7 @@ name|ics2
 argument_list|)
 expr_stmt|;
 comment|/* Handle reference parameters.  */
-name|ref_conv1
+name|target_type1
 operator|=
 name|maybe_handle_ref_bind
 argument_list|(
@@ -21461,7 +21331,7 @@ operator|&
 name|ics1
 argument_list|)
 expr_stmt|;
-name|ref_conv2
+name|target_type2
 operator|=
 name|maybe_handle_ref_bind
 argument_list|(
@@ -22360,12 +22230,12 @@ argument_list|,
 name|to_type2
 argument_list|)
 return|;
-comment|/* [over.ics.rank]       --S1 and S2 are reference bindings (_dcl.init.ref_) and neither refers      to an implicit object parameter, and either S1 binds an lvalue reference      to an lvalue and S2 binds an rvalue reference or S1 binds an rvalue      reference to an rvalue and S2 binds an lvalue reference      (C++0x draft standard, 13.3.3.2)       --S1 and S2 are reference bindings (_dcl.init.ref_), and the      types to which the references refer are the same type except for      top-level cv-qualifiers, and the type to which the reference      initialized by S2 refers is more cv-qualified than the type to      which the reference initialized by S1 refers */
+comment|/* [over.ics.rank]       --S1 and S2 are reference bindings (_dcl.init.ref_), and the      types to which the references refer are the same type except for      top-level cv-qualifiers, and the type to which the reference      initialized by S2 refers is more cv-qualified than the type to      which the reference initialized by S1 refers */
 if|if
 condition|(
-name|ref_conv1
+name|target_type1
 operator|&&
-name|ref_conv2
+name|target_type2
 operator|&&
 name|same_type_ignoring_top_level_qualifiers_p
 argument_list|(
@@ -22374,56 +22244,14 @@ argument_list|,
 name|to_type2
 argument_list|)
 condition|)
-block|{
-if|if
-condition|(
-name|ref_conv1
-operator|->
-name|rvaluedness_matches_p
-operator|&&
-operator|!
-name|ref_conv2
-operator|->
-name|rvaluedness_matches_p
-condition|)
-return|return
-literal|1
-return|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|ref_conv1
-operator|->
-name|rvaluedness_matches_p
-operator|&&
-name|ref_conv2
-operator|->
-name|rvaluedness_matches_p
-condition|)
-return|return
-operator|-
-literal|1
-return|;
 return|return
 name|comp_cv_qualification
 argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|ref_conv2
-operator|->
-name|type
-argument_list|)
+name|target_type2
 argument_list|,
-name|TREE_TYPE
-argument_list|(
-name|ref_conv1
-operator|->
-name|type
-argument_list|)
+name|target_type1
 argument_list|)
 return|;
-block|}
 comment|/* Neither conversion sequence is better than the other.  */
 return|return
 literal|0
