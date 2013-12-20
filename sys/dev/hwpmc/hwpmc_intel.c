@@ -241,6 +241,10 @@ decl_stmt|,
 name|nclasses
 decl_stmt|,
 name|ncpus
+decl_stmt|,
+name|stepping
+decl_stmt|,
+name|verov
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -281,6 +285,10 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|verov
+operator|=
+literal|0
+expr_stmt|;
 name|model
 operator|=
 operator|(
@@ -302,6 +310,12 @@ operator|)
 operator|>>
 literal|4
 operator|)
+expr_stmt|;
+name|stepping
+operator|=
+name|cpu_id
+operator|&
+literal|0xF
 expr_stmt|;
 switch|switch
 condition|(
@@ -413,6 +427,25 @@ break|break;
 case|case
 literal|0xF
 case|:
+comment|/* Per Intel document 315338-020. */
+if|if
+condition|(
+name|stepping
+operator|==
+literal|0x7
+condition|)
+block|{
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_CORE
+expr_stmt|;
+name|verov
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|cputype
 operator|=
 name|PMC_CPU_INTEL_CORE2
@@ -421,6 +454,7 @@ name|nclasses
 operator|=
 literal|3
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|0x17
@@ -714,6 +748,8 @@ argument_list|(
 name|pmc_mdep
 argument_list|,
 name|ncpus
+argument_list|,
+name|verov
 argument_list|)
 expr_stmt|;
 break|break;
