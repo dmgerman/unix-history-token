@@ -5229,7 +5229,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Non-terminals<type> and<CV-qualifier>.<type> ::=<builtin-type> 	    ::=<function-type> 	    ::=<class-enum-type> 	    ::=<array-type> 	    ::=<pointer-to-member-type> 	    ::=<template-param> 	    ::=<substitution> 	    ::=<CV-qualifier> 	    ::= P<type>    # pointer-to 	    ::= R<type>    # reference-to 	    ::= C<type>    # complex pair (C 2000) 	    ::= G<type>    # imaginary (C 2000)     [not supported] 	    ::= U<source-name><type>   # vendor extended type qualifier     TYPE is a type node.  */
+comment|/* Non-terminals<type> and<CV-qualifier>.<type> ::=<builtin-type> 	    ::=<function-type> 	    ::=<class-enum-type> 	    ::=<array-type> 	    ::=<pointer-to-member-type> 	    ::=<template-param> 	    ::=<substitution> 	    ::=<CV-qualifier> 	    ::= P<type>    # pointer-to 	    ::= R<type>    # reference-to 	    ::= C<type>    # complex pair (C 2000) 	    ::= G<type>    # imaginary (C 2000)     [not supported] 	    ::= U<source-name><type>   # vendor extended type qualifier     C++0x extensions<type> ::= RR<type>   # rvalue reference-to     TYPE is a type node.  */
 end_comment
 
 begin_function
@@ -5481,6 +5481,18 @@ break|break;
 case|case
 name|REFERENCE_TYPE
 case|:
+if|if
+condition|(
+name|TYPE_REF_IS_RVALUE
+argument_list|(
+name|type
+argument_list|)
+condition|)
+name|write_char
+argument_list|(
+literal|'R'
+argument_list|)
+expr_stmt|;
 name|write_char
 argument_list|(
 literal|'R'
