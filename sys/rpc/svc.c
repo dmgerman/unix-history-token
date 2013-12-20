@@ -1299,9 +1299,9 @@ decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
-name|xprt
+name|pool
 operator|->
-name|xp_mlock
+name|sp_lock
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1440,9 +1440,9 @@ decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
-name|xprt
+name|pool
 operator|->
-name|xp_mlock
+name|sp_lock
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1668,9 +1668,9 @@ decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
-name|xprt
+name|pool
 operator|->
-name|xp_mlock
+name|sp_lock
 argument_list|,
 name|MA_OWNED
 argument_list|)
