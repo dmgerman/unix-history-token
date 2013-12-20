@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Alias analysis for trees.    Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.    Contributed by Diego Novillo<dnovillo@redhat.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Alias analysis for trees.    Copyright (C) 2004, 2005 Free Software Foundation, Inc.    Contributed by Diego Novillo<dnovillo@redhat.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -6161,15 +6161,6 @@ operator|==
 name|SYMBOL_MEMORY_TAG
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|DECL_NO_TBAA_P
-argument_list|(
-name|ptr
-argument_list|)
-condition|)
-block|{
 name|alias_stats
 operator|.
 name|tbaa_queries
@@ -6201,16 +6192,20 @@ return|return
 name|false
 return|;
 block|}
-comment|/* If VAR is a record or union type, PTR cannot point into VAR 	 unless there is some explicit address operation in the 	 program that can reference a field of the type pointed-to by 	 PTR.  This also assumes that the types of both VAR and PTR 	 are contained within the compilation unit, and that there is 	 no fancy addressing arithmetic associated with any of the 	 types involved.  */
+comment|/* If var is a record or union type, ptr cannot point into var      unless there is some operation explicit address operation in the      program that can reference a field of the ptr's dereferenced      type.  This also assumes that the types of both var and ptr are      contained within the compilation unit, and that there is no fancy      addressing arithmetic associated with any of the types      involved.  */
 if|if
 condition|(
+operator|(
 name|mem_alias_set
 operator|!=
 literal|0
+operator|)
 operator|&&
+operator|(
 name|var_alias_set
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 name|tree
@@ -6250,7 +6245,7 @@ name|ptr_star_count
 init|=
 literal|0
 decl_stmt|;
-comment|/* ipa_type_escape_star_count_of_interesting_type is a 		 little too restrictive for the pointer type, need to 		 allow pointers to primitive types as long as those 		 types cannot be pointers to everything.  */
+comment|/* Ipa_type_escape_star_count_of_interesting_type is a little to 	     restrictive for the pointer type, need to allow pointers to 	     primitive types as long as those types cannot be pointers 	     to everything.  */
 while|while
 condition|(
 name|POINTER_TYPE_P
@@ -6258,8 +6253,8 @@ argument_list|(
 name|ptr_type
 argument_list|)
 condition|)
+comment|/* Strip the *'s off.  */
 block|{
-comment|/* Strip the *s off.  */
 name|ptr_type
 operator|=
 name|TREE_TYPE
@@ -6271,7 +6266,7 @@ name|ptr_star_count
 operator|++
 expr_stmt|;
 block|}
-comment|/* There does not appear to be a better test to see if 		 the pointer type was one of the pointer to everything 		 types.  */
+comment|/* There does not appear to be a better test to see if the  	     pointer type was one of the pointer to everything  	     types.  */
 if|if
 condition|(
 name|ptr_star_count
@@ -6320,7 +6315,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* If PTR_TYPE was not really a pointer to type, it cannot  		     alias.  */
+comment|/* If ptr_type was not really a pointer to type, it cannot  		 alias.  */
 name|alias_stats
 operator|.
 name|structnoaddress_queries
@@ -6339,7 +6334,6 @@ expr_stmt|;
 return|return
 name|false
 return|;
-block|}
 block|}
 block|}
 block|}

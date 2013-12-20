@@ -6105,18 +6105,6 @@ expr_stmt|;
 return|return
 name|NULL
 return|;
-comment|/* CHANGE_DYNAMIC_TYPE_EXPR explicitly expands to nothing.  */
-case|case
-name|CHANGE_DYNAMIC_TYPE_EXPR
-case|:
-operator|*
-name|walk_subtrees
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|NULL
-return|;
 comment|/* Try to estimate the cost of assignments.  We have three cases to        deal with: 	1) Simple assignments to registers; 	2) Stores to things that must live in memory.  This includes 	   "normal" stores to scalars, but also assignments of large 	   structures, or constructors of big arrays; 	3) TARGET_EXPRs.         Let us look at the first two cases, assuming we have "a = b + C":<modify_expr<var_decl "a"><plus_expr<var_decl "b"><constant C>>        If "a" is a GIMPLE register, the assignment to it is free on almost        any target, because "a" usually ends up in a real register.  Hence        the only cost of this expression comes from the PLUS_EXPR, and we        can ignore the MODIFY_EXPR.        If "a" is not a GIMPLE register, the assignment to "a" will most        likely be a real store, so the cost of the MODIFY_EXPR is the cost        of moving something into "a", which we compute using the function        estimate_move_cost.         The third case deals with TARGET_EXPRs, for which the semantics are        that a temporary is assigned, unless the TARGET_EXPR itself is being        assigned to something else.  In the latter case we do not need the        temporary.  E.g. in<modify_expr<var_decl "a"><target_expr>>, the        MODIFY_EXPR is free.  */
 case|case
 name|INIT_EXPR
@@ -9579,16 +9567,6 @@ argument_list|(
 name|decl
 argument_list|)
 expr_stmt|;
-name|DECL_NO_TBAA_P
-argument_list|(
-name|copy
-argument_list|)
-operator|=
-name|DECL_NO_TBAA_P
-argument_list|(
-name|decl
-argument_list|)
-expr_stmt|;
 return|return
 name|copy_decl_for_dup_finish
 argument_list|(
@@ -9721,16 +9699,6 @@ name|copy
 argument_list|)
 operator|=
 name|DECL_COMPLEX_GIMPLE_REG_P
-argument_list|(
-name|decl
-argument_list|)
-expr_stmt|;
-name|DECL_NO_TBAA_P
-argument_list|(
-name|copy
-argument_list|)
-operator|=
-name|DECL_NO_TBAA_P
 argument_list|(
 name|decl
 argument_list|)
