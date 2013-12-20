@@ -31186,6 +31186,8 @@ name|error_msg
 condition|)
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|error_msg
 argument_list|)
 expr_stmt|;

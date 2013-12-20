@@ -24296,6 +24296,8 @@ else|else
 name|error
 argument_list|(
 name|gmsgid
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -24306,6 +24308,8 @@ block|{
 name|error
 argument_list|(
 name|message
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 name|free
