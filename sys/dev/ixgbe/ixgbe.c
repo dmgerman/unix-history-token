@@ -16665,11 +16665,6 @@ expr_stmt|;
 operator|++
 name|processed
 expr_stmt|;
-operator|++
-name|ifp
-operator|->
-name|if_opackets
-expr_stmt|;
 name|txr
 operator|->
 name|watchdog_time
@@ -20286,11 +20281,6 @@ operator|.
 name|rcvif
 operator|=
 name|ifp
-expr_stmt|;
-name|ifp
-operator|->
-name|if_ipackets
-operator|++
 expr_stmt|;
 name|rxr
 operator|->
