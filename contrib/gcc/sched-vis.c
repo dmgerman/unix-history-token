@@ -2564,10 +2564,15 @@ name|sprintf
 argument_list|(
 name|t
 argument_list|,
-literal|"<0x%lx,0x%lx>"
+literal|"<"
+name|HOST_WIDE_INT_PRINT_HEX
+literal|","
+name|HOST_WIDE_INT_PRINT_HEX
+literal|">"
 argument_list|,
 operator|(
-name|long
+name|unsigned
+name|HOST_WIDE_INT
 operator|)
 name|CONST_DOUBLE_LOW
 argument_list|(
@@ -2575,7 +2580,8 @@ name|x
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|unsigned
+name|HOST_WIDE_INT
 operator|)
 name|CONST_DOUBLE_HIGH
 argument_list|(

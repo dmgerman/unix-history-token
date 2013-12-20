@@ -4725,6 +4725,10 @@ name|buffer
 argument_list|,
 literal|"%08lx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|target_real
 index|[
 name|i
