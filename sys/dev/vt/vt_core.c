@@ -391,7 +391,7 @@ name|VT_SYSCTL_INT
 argument_list|(
 name|enable_altgr
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|"Enable AltGr key (Do not assume R.Alt as Alt)"
 argument_list|)
