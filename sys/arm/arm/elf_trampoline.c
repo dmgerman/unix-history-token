@@ -608,6 +608,11 @@ name|defined
 argument_list|(
 name|CPU_CORTEXA
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
+argument_list|)
 end_elif
 
 begin_define

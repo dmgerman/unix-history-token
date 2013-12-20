@@ -578,6 +578,11 @@ name|defined
 argument_list|(
 name|CPU_MV_PJ4B
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
+argument_list|)
 end_if
 
 begin_define
@@ -2457,6 +2462,11 @@ operator|||
 name|defined
 argument_list|(
 name|CPU_CORTEXA
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
 argument_list|)
 end_if
 

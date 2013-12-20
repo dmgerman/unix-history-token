@@ -151,6 +151,8 @@ name|CPU_CLASS_ARM10EJ
 block|,
 name|CPU_CLASS_CORTEXA
 block|,
+name|CPU_CLASS_KRAIT
+block|,
 name|CPU_CLASS_SA1
 block|,
 name|CPU_CLASS_XSCALE

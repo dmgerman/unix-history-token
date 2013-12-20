@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|CPU_NTYPES
-value|(defined(CPU_ARM7TDMI) +			\ 			 defined(CPU_ARM8) + defined(CPU_ARM9) +	\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM10) +				\ 			 defined(CPU_ARM1136) +				\ 			 defined(CPU_ARM1176) +				\ 			 defined(CPU_SA110) + defined(CPU_SA1100) +	\ 			 defined(CPU_SA1110) +				\ 			 defined(CPU_IXP12X0) +				\ 			 defined(CPU_XSCALE_80200) +			\ 			 defined(CPU_XSCALE_80321) +			\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_FA526) +				\ 			 defined(CPU_FA626TE) +				\ 			 defined(CPU_XSCALE_IXP425)) +			\ 			 defined(CPU_CORTEXA) +				\ 			 defined(CPU_MV_PJ4B)
+value|(defined(CPU_ARM7TDMI) +			\ 			 defined(CPU_ARM8) + defined(CPU_ARM9) +	\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM10) +				\ 			 defined(CPU_ARM1136) +				\ 			 defined(CPU_ARM1176) +				\ 			 defined(CPU_SA110) + defined(CPU_SA1100) +	\ 			 defined(CPU_SA1110) +				\ 			 defined(CPU_IXP12X0) +				\ 			 defined(CPU_XSCALE_80200) +			\ 			 defined(CPU_XSCALE_80321) +			\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_FA526) +				\ 			 defined(CPU_FA626TE) +				\ 			 defined(CPU_XSCALE_IXP425)) +			\ 			 defined(CPU_CORTEXA) +				\ 			 defined(CPU_KRAIT) +				\ 			 defined(CPU_MV_PJ4B)
 end_define
 
 begin_comment
@@ -253,6 +253,11 @@ directive|if
 name|defined
 argument_list|(
 name|CPU_CORTEXA
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
 argument_list|)
 end_if
 
@@ -518,6 +523,11 @@ directive|if
 name|defined
 argument_list|(
 name|CPU_CORTEXA
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
 argument_list|)
 end_if
 
