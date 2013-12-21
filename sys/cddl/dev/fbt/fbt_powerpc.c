@@ -1045,11 +1045,6 @@ operator|+
 name|symval
 operator|->
 name|size
-operator|/
-sizeof|sizeof
-argument_list|(
-name|u_int32_t
-argument_list|)
 operator|)
 expr_stmt|;
 for|for
