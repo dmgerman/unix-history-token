@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/openpicreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/openpicvar.h>
 end_include
 
