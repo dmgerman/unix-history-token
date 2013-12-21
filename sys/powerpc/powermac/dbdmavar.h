@@ -110,6 +110,12 @@ decl_stmt|;
 name|bus_dmamap_t
 name|sc_dmamap
 decl_stmt|;
+name|uint32_t
+name|sc_saved_regs
+index|[
+literal|5
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
