@@ -242,6 +242,8 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|mangled_name
 argument_list|)
 expr_stmt|;
@@ -263,6 +265,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|result
 argument_list|)
 expr_stmt|;

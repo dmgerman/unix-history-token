@@ -11925,7 +11925,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Implement the __alignof keyword: Return the minimum required    alignment of EXPR, measured in bytes.  For VAR_DECL's and    FIELD_DECL's return DECL_ALIGN (which can be set from an    "aligned" __attribute__ specification).  */
+comment|/* Implement the __alignof keyword: Return the minimum required    alignment of EXPR, measured in bytes.  For VAR_DECLs,    FUNCTION_DECLs and FIELD_DECLs return DECL_ALIGN (which can be set    from an "aligned" __attribute__ specification).  */
 end_comment
 
 begin_function
@@ -11941,12 +11941,10 @@ name|t
 decl_stmt|;
 if|if
 condition|(
-name|TREE_CODE
+name|VAR_OR_FUNCTION_DECL_P
 argument_list|(
 name|expr
 argument_list|)
-operator|==
-name|VAR_DECL
 condition|)
 name|t
 operator|=
@@ -19400,12 +19398,11 @@ block|}
 elseif|else
 if|if
 condition|(
-name|TREE_CODE
+operator|!
+name|VAR_OR_FUNCTION_DECL_P
 argument_list|(
 name|decl
 argument_list|)
-operator|!=
-name|VAR_DECL
 operator|&&
 name|TREE_CODE
 argument_list|(
@@ -19420,6 +19417,73 @@ argument_list|(
 literal|"alignment may not be specified for %q+D"
 argument_list|,
 name|decl
+argument_list|)
+expr_stmt|;
+operator|*
+name|no_add_attrs
+operator|=
+name|true
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|FUNCTION_DECL
+operator|&&
+name|DECL_ALIGN
+argument_list|(
+name|decl
+argument_list|)
+operator|>
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+operator|*
+name|BITS_PER_UNIT
+condition|)
+block|{
+if|if
+condition|(
+name|DECL_USER_ALIGN
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"alignment for %q+D was previously specified as %d "
+literal|"and may not be decreased"
+argument_list|,
+name|decl
+argument_list|,
+name|DECL_ALIGN
+argument_list|(
+name|decl
+argument_list|)
+operator|/
+name|BITS_PER_UNIT
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+argument_list|(
+literal|"alignment for %q+D must be at least %d"
+argument_list|,
+name|decl
+argument_list|,
+name|DECL_ALIGN
+argument_list|(
+name|decl
+argument_list|)
+operator|/
+name|BITS_PER_UNIT
 argument_list|)
 expr_stmt|;
 operator|*

@@ -7746,7 +7746,7 @@ name|DECL_ALIGN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_COMMON_CHECK (NODE)->decl_common.u1.a.align)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.align)
 end_define
 
 begin_comment
@@ -7764,7 +7764,7 @@ value|(DECL_ALIGN (NODE) / BITS_PER_UNIT)
 end_define
 
 begin_comment
-comment|/* For FIELD_DECLs, off_align holds the number of low-order bits of    DECL_FIELD_OFFSET which are known to be always zero.    DECL_OFFSET_ALIGN thus returns the alignment that DECL_FIELD_OFFSET    has.  */
+comment|/* Set if the alignment of this DECL has been set by the user, for    example with an 'aligned' attribute.  */
 end_comment
 
 begin_define
@@ -7802,7 +7802,8 @@ name|DECL_FUNCTION_CODE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl_common.u1.f)
+define|\
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.function_code)
 end_define
 
 begin_define
@@ -8252,46 +8253,19 @@ name|call_clobbered_flag
 range|:
 literal|1
 decl_stmt|;
-union|union
-name|tree_decl_u1
-block|{
-comment|/* In a FUNCTION_DECL for which DECL_BUILT_IN holds, this is        DECL_FUNCTION_CODE.  */
-name|enum
-name|built_in_function
-name|f
-decl_stmt|;
-comment|/* In a FUNCTION_DECL for which DECL_BUILT_IN does not hold, this        is used by language-dependent code.  */
-name|HOST_WIDE_INT
-name|i
-decl_stmt|;
-comment|/* DECL_ALIGN and DECL_OFFSET_ALIGN.  (These are not used for        FUNCTION_DECLs).  */
-struct|struct
-name|tree_decl_u1_a
-block|{
 name|unsigned
 name|int
 name|align
 range|:
 literal|24
 decl_stmt|;
+comment|/* DECL_OFFSET_ALIGN, used only for FIELD_DECLs.  */
 name|unsigned
 name|int
 name|off_align
 range|:
 literal|8
 decl_stmt|;
-block|}
-name|a
-struct|;
-block|}
-name|GTY
-argument_list|(
-operator|(
-name|skip
-operator|)
-argument_list|)
-name|u1
-union|;
 name|tree
 name|size_unit
 decl_stmt|;
@@ -8576,7 +8550,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(((unsigned HOST_WIDE_INT)1)<< FIELD_DECL_CHECK (NODE)->decl_common.u1.a.off_align)
+value|(((unsigned HOST_WIDE_INT)1)<< FIELD_DECL_CHECK (NODE)->decl_common.off_align)
 end_define
 
 begin_comment
@@ -8593,7 +8567,7 @@ parameter_list|,
 name|X
 parameter_list|)
 define|\
-value|(FIELD_DECL_CHECK (NODE)->decl_common.u1.a.off_align = exact_log2 ((X)& -(X)))
+value|(FIELD_DECL_CHECK (NODE)->decl_common.off_align = exact_log2 ((X)& -(X)))
 end_define
 
 begin_comment
@@ -9850,6 +9824,11 @@ block|{
 name|struct
 name|tree_decl_non_common
 name|common
+decl_stmt|;
+comment|/* In a FUNCTION_DECL for which DECL_BUILT_IN holds, this is      DECL_FUNCTION_CODE.  Otherwise unused.  */
+name|enum
+name|built_in_function
+name|function_code
 decl_stmt|;
 name|unsigned
 name|static_ctor_flag
