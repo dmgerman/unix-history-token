@@ -378,7 +378,15 @@ name|consdev
 modifier|*
 name|cp
 parameter_list|)
-block|{ }
+block|{
+name|uart_grab
+argument_list|(
+name|cp
+operator|->
+name|cn_arg
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -391,7 +399,15 @@ name|consdev
 modifier|*
 name|cp
 parameter_list|)
-block|{ }
+block|{
+name|uart_ungrab
+argument_list|(
+name|cp
+operator|->
+name|cn_arg
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
