@@ -1284,8 +1284,6 @@ name|fnotice
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s"
-argument_list|,
 literal|"gcov (GCC) %s\n"
 argument_list|,
 name|version_string
@@ -1306,6 +1304,8 @@ expr_stmt|;
 name|fnotice
 argument_list|(
 name|stdout
+argument_list|,
+literal|"%s"
 argument_list|,
 name|_
 argument_list|(
