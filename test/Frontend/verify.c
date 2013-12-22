@@ -4,19 +4,19 @@ comment|// RUN: %clang_cc1 -DTEST1 -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -DTEST2 -verify %s 2>&1 | FileCheck -check-prefix=CHECK2 %s
+comment|// RUN: not %clang_cc1 -DTEST2 -verify %s 2>&1 | FileCheck -check-prefix=CHECK2 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -DTEST3 -verify %s 2>&1 | FileCheck -check-prefix=CHECK3 %s
+comment|// RUN: not %clang_cc1 -DTEST3 -verify %s 2>&1 | FileCheck -check-prefix=CHECK3 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -DTEST4 -verify %s 2>&1 | FileCheck -check-prefix=CHECK4 %s
+comment|// RUN: not %clang_cc1 -DTEST4 -verify %s 2>&1 | FileCheck -check-prefix=CHECK4 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -DTEST5 -verify %s 2>&1 | FileCheck -check-prefix=CHECK5 %s
+comment|// RUN: not %clang_cc1 -DTEST5 -verify %s 2>&1 | FileCheck -check-prefix=CHECK5 %s
 end_comment
 
 begin_comment
@@ -501,7 +501,7 @@ literal|0
 end_if
 
 begin_comment
-comment|// RUN: %clang_cc1 -verify %t.invalid 2>&1 | FileCheck -check-prefix=CHECK6 %s
+comment|// RUN: not %clang_cc1 -verify %t.invalid 2>&1 | FileCheck -check-prefix=CHECK6 %s
 end_comment
 
 begin_comment
@@ -521,7 +521,7 @@ comment|// CHECK6-NEXT: 2 errors generated.
 end_comment
 
 begin_comment
-comment|// RUN: echo -e '//expected-error@2{{1}}\n#error 2' | %clang_cc1 -verify 2>&1 | FileCheck -check-prefix=CHECK7 %s
+comment|// RUN: printf '//expected-error@2{{1}}\n#error 2\n' | not %clang_cc1 -verify 2>&1 | FileCheck -check-prefix=CHECK7 %s
 end_comment
 
 begin_comment
@@ -556,15 +556,15 @@ name|TEST8
 end_ifdef
 
 begin_comment
-comment|// RUN: %clang_cc1 -DTEST8 -verify %s 2>&1 | FileCheck -check-prefix=CHECK8 %s
+comment|// RUN: not %clang_cc1 -DTEST8 -verify %s 2>&1 | FileCheck -check-prefix=CHECK8 %s
 end_comment
 
 begin_comment
-comment|// expected-warning@nonexistant-file:1 {{ }}
+comment|// expected-warning@nonexistent-file:1 {{ }}
 end_comment
 
 begin_comment
-comment|// expected-error@-1 {{file 'nonexistant-file' could not be located}}
+comment|// expected-error@-1 {{file 'nonexistent-file' could not be located}}
 end_comment
 
 begin_comment

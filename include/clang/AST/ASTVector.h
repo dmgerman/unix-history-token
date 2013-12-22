@@ -208,14 +208,26 @@ operator|>
 name|class
 name|ASTVector
 block|{
+name|private
+operator|:
 name|T
 operator|*
 name|Begin
 block|,
 operator|*
 name|End
-block|,
+block|;
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|T
 operator|*
+block|,
+literal|1
+block|,
+name|bool
+operator|>
 name|Capacity
 block|;
 name|void
@@ -230,6 +242,35 @@ name|End
 operator|=
 name|P
 block|; }
+name|protected
+operator|:
+comment|// Make a tag bit available to users of this class.
+comment|// FIXME: This is a horrible hack.
+name|bool
+name|getTag
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Capacity
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+name|void
+name|setTag
+argument_list|(
+argument|bool B
+argument_list|)
+block|{
+name|Capacity
+operator|.
+name|setInt
+argument_list|(
+name|B
+argument_list|)
+block|; }
 name|public
 operator|:
 comment|// Default ctor - Initialize to empty.
@@ -238,39 +279,43 @@ argument_list|()
 operator|:
 name|Begin
 argument_list|(
-name|NULL
+literal|0
 argument_list|)
 block|,
 name|End
 argument_list|(
-name|NULL
+literal|0
 argument_list|)
 block|,
 name|Capacity
 argument_list|(
-argument|NULL
+literal|0
+argument_list|,
+argument|false
 argument_list|)
-block|{ }
+block|{}
 name|ASTVector
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|unsigned N
 argument_list|)
 operator|:
 name|Begin
 argument_list|(
-name|NULL
+literal|0
 argument_list|)
 block|,
 name|End
 argument_list|(
-name|NULL
+literal|0
 argument_list|)
 block|,
 name|Capacity
 argument_list|(
-argument|NULL
+literal|0
+argument_list|,
+argument|false
 argument_list|)
 block|{
 name|reserve
@@ -669,6 +714,7 @@ parameter_list|(
 name|const_reference
 name|Elt
 parameter_list|,
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -678,7 +724,10 @@ if|if
 condition|(
 name|End
 operator|<
-name|Capacity
+name|this
+operator|->
+name|capacity_ptr
+argument_list|()
 condition|)
 block|{
 name|Retry
@@ -709,6 +758,7 @@ block|}
 name|void
 name|reserve
 parameter_list|(
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -721,7 +771,10 @@ if|if
 condition|(
 name|unsigned
 argument_list|(
-name|Capacity
+name|this
+operator|->
+name|capacity_ptr
+argument_list|()
 operator|-
 name|Begin
 argument_list|)
@@ -744,7 +797,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Capacity
+name|this
+operator|->
+name|capacity_ptr
+argument_list|()
 operator|-
 name|Begin
 return|;
@@ -759,7 +815,7 @@ operator|>
 name|void
 name|append
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|in_iter in_start
 argument_list|,
@@ -861,6 +917,7 @@ begin_function
 name|void
 name|append
 parameter_list|(
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -978,7 +1035,7 @@ block|;   }
 name|iterator
 name|insert
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|iterator I
 argument_list|,
@@ -999,6 +1056,8 @@ comment|// Important special case for empty vector.
 name|push_back
 argument_list|(
 name|Elt
+argument_list|,
+name|C
 argument_list|)
 expr_stmt|;
 return|return
@@ -1017,11 +1076,12 @@ if|if
 condition|(
 name|this
 operator|->
-name|EndX
+name|End
 operator|<
 name|this
 operator|->
-name|CapacityX
+name|capacity_ptr
+argument_list|()
 condition|)
 block|{
 name|Retry
@@ -1126,7 +1186,7 @@ begin_macro
 unit|}    iterator
 name|insert
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|iterator I
 argument_list|,
@@ -1369,7 +1429,7 @@ operator|>
 name|iterator
 name|insert
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|iterator I
 argument_list|,
@@ -1695,7 +1755,7 @@ begin_macro
 unit|}    void
 name|resize
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|unsigned N
 argument_list|,
@@ -1824,6 +1884,7 @@ begin_function_decl
 name|void
 name|grow
 parameter_list|(
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -1914,6 +1975,24 @@ name|protected
 label|:
 end_label
 
+begin_expr_stmt
+name|const_iterator
+name|capacity_ptr
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|iterator
+operator|)
+name|Capacity
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 name|iterator
 name|capacity_ptr
@@ -1923,9 +2002,10 @@ return|return
 operator|(
 name|iterator
 operator|)
-name|this
-operator|->
 name|Capacity
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 end_function
@@ -1949,7 +2029,7 @@ operator|>
 operator|::
 name|grow
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|size_t MinSize
 argument_list|)
@@ -1957,9 +2037,10 @@ block|{
 name|size_t
 name|CurCapacity
 operator|=
-name|Capacity
-operator|-
-name|Begin
+name|this
+operator|->
+name|capacity
+argument_list|()
 block|;
 name|size_t
 name|CurSize
@@ -2081,10 +2162,13 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Capacity
-operator|=
+operator|.
+name|setPointer
+argument_list|(
 name|Begin
 operator|+
 name|NewCapacity
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 

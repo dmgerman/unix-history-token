@@ -8,31 +8,44 @@ comment|// RUN: %clang_cc1 -E %s | FileCheck --strict-whitespace %s
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: 1{{.*}}#
-end_comment
-
-begin_comment
 comment|// CHECK: {{^1$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: 1{{.*}}#
+comment|// CHECK-NEXT: {{^      #$}}
 end_comment
 
 begin_comment
-comment|// CHECK: {{^      #$}}
+comment|// CHECK-NEXT: {{^2$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: 1{{.*}}#
+comment|// CHECK-NEXT: {{^           #$}}
 end_comment
 
-begin_expr_stmt
-literal|1
+begin_define
 define|#
 directive|define
 name|EMPTY
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDENTITY
+parameter_list|(
+name|X
+parameter_list|)
+value|X
+end_define
+
+begin_expr_stmt
+literal|1
 name|EMPTY
+operator|#
+literal|2
+name|IDENTITY
+argument_list|()
 operator|#
 end_expr_stmt
 

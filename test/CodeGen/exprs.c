@@ -695,7 +695,7 @@ comment|// rdar://7530813
 end_comment
 
 begin_comment
-comment|// CHECK: define i32 @f11
+comment|// CHECK-LABEL: define i32 @f11
 end_comment
 
 begin_function
@@ -731,7 +731,7 @@ name|f12
 parameter_list|()
 block|{
 comment|// PR3150
-comment|// CHECK: define i32 @f12
+comment|// CHECK-LABEL: define i32 @f12
 comment|// CHECK: ret i32 1
 return|return
 literal|1
@@ -753,7 +753,7 @@ name|double
 name|X
 parameter_list|)
 block|{
-comment|// CHECK: define double @f13
+comment|// CHECK-LABEL: define double @f13
 comment|// CHECK: fsub double -0.0
 return|return
 operator|-
@@ -787,7 +787,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f15
+comment|// CHECK-LABEL: define void @f15
 end_comment
 
 begin_function
@@ -911,7 +911,7 @@ comment|// PR8967: this was crashing
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f16()
+comment|// CHECK-LABEL: define void @f16()
 end_comment
 
 begin_function
@@ -935,7 +935,7 @@ comment|// PR13704: negative increment in i128 is not preserved.
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f17()
+comment|// CHECK-LABEL: define void @f17()
 end_comment
 
 begin_function

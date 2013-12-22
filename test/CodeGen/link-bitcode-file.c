@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -mlink-bitcode-file %t.bc -
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -DBITCODE -mlink-bitcode-file %t.bc -O3 -emit-llvm -o - %s 2>&1 | FileCheck -check-prefix=CHECK-BC %s
+comment|// RUN: not %clang_cc1 -triple i386-pc-linux-gnu -DBITCODE -mlink-bitcode-file %t.bc -O3 -emit-llvm -o - %s 2>&1 | FileCheck -check-prefix=CHECK-BC %s
 end_comment
 
 begin_function_decl
@@ -49,7 +49,7 @@ directive|else
 end_else
 
 begin_comment
-comment|// CHECK-NO-BC: define i32 @g
+comment|// CHECK-NO-BC-LABEL: define i32 @g
 end_comment
 
 begin_comment
@@ -71,7 +71,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-NO-BC: define i32 @f
+comment|// CHECK-NO-BC-LABEL: define i32 @f
 end_comment
 
 begin_endif

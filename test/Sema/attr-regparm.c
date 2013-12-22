@@ -40,7 +40,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-error{{'regparm' attribute requires integer constant}}
+comment|// expected-error{{'regparm' attribute requires an integer constant}}
 end_comment
 
 begin_macro
@@ -108,7 +108,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-error{{attribute takes one argument}}
+comment|// expected-error{{'regparm' attribute takes one argument}}
 end_comment
 
 begin_decl_stmt

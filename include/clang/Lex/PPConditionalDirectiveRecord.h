@@ -362,6 +362,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|SourceRange ConditionRange
+argument_list|,
+argument|bool ConditionValue
 argument_list|)
 block|;
 name|virtual
@@ -371,6 +373,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|SourceRange ConditionRange
+argument_list|,
+argument|bool ConditionValue
 argument_list|,
 argument|SourceLocation IfLoc
 argument_list|)

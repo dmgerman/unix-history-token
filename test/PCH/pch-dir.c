@@ -20,7 +20,7 @@ comment|// RUN: %clang -include %t.h -DFOO=foo -fsyntax-only %s -Xclang -print-s
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -check-prefix=C %s< %t.clog
+comment|// RUN: FileCheck -check-prefix=CHECK-C %s< %t.clog
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// RUN: %clang -include %t.h -DFOO=bar -DBAR=bar -fsyntax-only %s -Xclan
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -check-prefix=CBAR %s< %t.cbarlog
+comment|// RUN: FileCheck -check-prefix=CHECK-CBAR %s< %t.cbarlog
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// RUN: %clang -x c++ -include %t.h -std=c++98 -fsyntax-only %s -Xclang 
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -check-prefix=CPP %s< %t.cpplog
+comment|// RUN: FileCheck -check-prefix=CHECK-CPP %s< %t.cpplog
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|// RUN: not %clang -x c++ -std=c++11 -include %t.h -fsyntax-only %s 2> %
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -check-prefix=CPP11 %s< %t.cpp11log
+comment|// RUN: FileCheck -check-prefix=CHECK-CPP11 %s< %t.cpp11log
 end_comment
 
 begin_comment

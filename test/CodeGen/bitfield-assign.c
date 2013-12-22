@@ -8,7 +8,7 @@ comment|/* Check that we get one load for each simple assign and two for the    
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -O0 -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -o %t %s
 end_comment
 
 begin_comment
@@ -28,11 +28,11 @@ comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -O3 -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'load ' %t | count 0
+comment|// RUN: not grep 'load ' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "@g0" %t | count 0
+comment|// RUN: not grep "@g0" %t
 end_comment
 
 begin_struct

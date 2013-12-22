@@ -110,7 +110,7 @@ comment|// RUN: %clang_cc1 -fblocks -fsyntax-only -Weverything %s 2>&1 | FileChe
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fblocks -fsyntax-only -Weverything -Werror %s 2>&1 | FileCheck -check-prefix=CHECK-everything-error %s
+comment|// RUN: not %clang_cc1 -fblocks -fsyntax-only -Weverything -Werror %s 2>&1 | FileCheck -check-prefix=CHECK-everything-error %s
 end_comment
 
 begin_comment

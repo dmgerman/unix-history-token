@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -fsyntax-only -triple i386-unknown-unknown -verify
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -fsyntax-only -triple i386-unknown-unknown -fms-compatibility -DWIN -verify
+end_comment
+
 begin_decl_stmt
 name|void
 name|__attribute__
@@ -17,7 +21,7 @@ name|float
 operator|*
 name|a
 argument_list|)
-block|{  }
+block|{ }
 end_decl_stmt
 
 begin_decl_stmt
@@ -34,7 +38,7 @@ name|float
 operator|*
 name|a
 argument_list|)
-block|{  }
+block|{ }
 end_decl_stmt
 
 begin_decl_stmt
@@ -55,7 +59,7 @@ operator|*
 name|a
 argument_list|)
 block|{
-comment|// expected-error {{attribute takes no arguments}}
+comment|// expected-error {{'fastcall' attribute takes no arguments}}
 block|}
 end_decl_stmt
 
@@ -105,7 +109,47 @@ argument_list|,
 operator|...
 argument_list|)
 block|{
-comment|// expected-error {{variadic function cannot use fastcall calling convention}}
+comment|// expected-warning {{fastcall calling convention ignored on variadic function}}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|stdcall
+operator|)
+argument_list|)
+name|test3
+argument_list|(
+name|int
+name|a
+argument_list|,
+operator|...
+argument_list|)
+block|{
+comment|// expected-warning {{stdcall calling convention ignored on variadic function}}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|thiscall
+operator|)
+argument_list|)
+name|test4
+argument_list|(
+name|int
+name|a
+argument_list|,
+operator|...
+argument_list|)
+block|{
+comment|// expected-error {{variadic function cannot use thiscall calling convention}}
 block|}
 end_decl_stmt
 
@@ -142,7 +186,7 @@ block|{}
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no arguments}}
+comment|// expected-error {{'cdecl' attribute takes no arguments}}
 end_comment
 
 begin_expr_stmt
@@ -297,7 +341,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes one argument}}
+comment|// expected-error {{'pcs' attribute takes one argument}}
 end_comment
 
 begin_decl_stmt
@@ -317,7 +361,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes one argument}}
+comment|// expected-error {{'pcs' attribute takes one argument}}
 end_comment
 
 begin_decl_stmt
@@ -339,7 +383,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes one argument}}
+comment|// expected-error {{'pcs' attribute requires a string}} \
+end_comment
+
+begin_comment
+comment|// expected-error {{invalid PCS type}}
 end_comment
 
 begin_decl_stmt
@@ -361,7 +409,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{'pcs' attribute requires parameter 1 to be a string}}
+comment|// expected-error {{'pcs' attribute requires a string}}
 end_comment
 
 begin_comment
@@ -532,6 +580,46 @@ name|a
 argument_list|)
 block|{}
 end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|void
+name|typedef_fun_t
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+name|typedef_fun_t
+name|typedef_fun
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-note {{previous declaration is here}}
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|stdcall
+operator|)
+argument_list|)
+name|typedef_fun
+argument_list|(
+name|int
+name|x
+argument_list|)
+block|{ }
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{function declared 'stdcall' here was previously declared without calling convention}}
+end_comment
 
 end_unit
 

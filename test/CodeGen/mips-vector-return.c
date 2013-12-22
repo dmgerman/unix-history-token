@@ -50,7 +50,7 @@ typedef|(16)));
 end_typedef
 
 begin_comment
-comment|// O32: define void @test_v4sf(<4 x float>* noalias nocapture sret
+comment|// O32-LABEL: define void @test_v4sf(<4 x float>* noalias nocapture sret
 end_comment
 
 begin_comment
@@ -83,11 +83,11 @@ block|}
 end_function
 
 begin_comment
-comment|// O32: define void @test_v4df(<4 x double>* noalias nocapture sret
+comment|// O32-LABEL: define void @test_v4df(<4 x double>* noalias nocapture sret
 end_comment
 
 begin_comment
-comment|// N64: define void @test_v4df(<4 x double>* noalias nocapture sret
+comment|// N64-LABEL: define void @test_v4df(<4 x double>* noalias nocapture sret
 end_comment
 
 begin_function

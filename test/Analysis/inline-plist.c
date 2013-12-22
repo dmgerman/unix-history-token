@@ -4,7 +4,7 @@ comment|// RUN: %clang --analyze %s -fblocks -Xanalyzer -analyzer-output=text -X
 end_comment
 
 begin_comment
-comment|// RUN: %clang --analyze %s -fblocks -Xanalyzer -analyzer-config -Xanalyzer suppress-null-return-paths=false -o %t
+comment|// RUN: %clang --analyze %s -fblocks -Xanalyzer -analyzer-config -Xanalyzer suppress-null-return-paths=false -Xanalyzer -analyzer-config -Xanalyzer path-diagnostics-alternate=false -o %t
 end_comment
 
 begin_comment

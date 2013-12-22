@@ -99,6 +99,40 @@ comment|// expected-warning {{integer constant not in range of enumerated type '
 block|}
 end_function
 
+begin_comment
+comment|// PR15069
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|a
+init|=
+literal|0
+block|}
+name|T
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|f
+parameter_list|()
+block|{
+name|T
+name|x
+init|=
+name|a
+decl_stmt|;
+name|x
+operator|+=
+literal|1
+expr_stmt|;
+comment|// expected-warning {{integer constant not in range of enumerated type}}
+block|}
+end_function
+
 begin_function
 name|int
 name|main

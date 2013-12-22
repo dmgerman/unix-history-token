@@ -3,6 +3,36 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple aarch64-none-linux-gnu -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple aarch64-none-linux-gnu -DTEST1 -fsyntax-only -verify %s
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEST1
+end_ifdef
+
+begin_function_decl
+name|void
+name|__clear_cache
+parameter_list|(
+name|void
+modifier|*
+name|start
+parameter_list|,
+name|void
+modifier|*
+name|end
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|test_clear_cache_chars

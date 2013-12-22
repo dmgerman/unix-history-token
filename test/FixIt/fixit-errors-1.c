@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -pedantic -fixit %t
 end_comment
 
 begin_comment
-comment|// RUN: echo %clang_cc1 -pedantic -Werror -x c %t
+comment|// RUN: %clang_cc1 -pedantic -Werror -x c %t
 end_comment
 
 begin_comment

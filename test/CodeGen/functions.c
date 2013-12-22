@@ -100,7 +100,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f0()
+comment|// CHECK-LABEL: define void @f0()
 end_comment
 
 begin_function_decl
@@ -131,7 +131,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f1()
+comment|// CHECK-LABEL: define void @f1()
 end_comment
 
 begin_function
@@ -260,7 +260,7 @@ operator|&
 name|f8_callback
 argument_list|)
 expr_stmt|;
-comment|// CHECK: define void @f8_test()
+comment|// CHECK-LABEL: define void @f8_test()
 comment|// CHECK: call void @f8_user({{.*}}* bitcast (void ()* @f8_callback to {{.*}}*))
 comment|// CHECK: declare void @f8_user({{.*}}*)
 comment|// CHECK: declare void @f8_callback()

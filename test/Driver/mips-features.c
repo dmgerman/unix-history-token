@@ -200,6 +200,102 @@ comment|//
 end_comment
 
 begin_comment
+comment|// -mmsa
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mno-msa -mmsa 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MMSA %s
+end_comment
+
+begin_comment
+comment|// CHECK-MMSA: "-target-feature" "+msa"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mno-msa
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mmsa -mno-msa 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOMMSA %s
+end_comment
+
+begin_comment
+comment|// CHECK-NOMMSA: "-target-feature" "-msa"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mfp64
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mfp32 -mfp64 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MFP64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-MFP64: "-target-feature" "+fp64"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mfp32
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mfp64 -mfp32 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOMFP64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-NOMFP64: "-target-feature" "-fp64"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// -mxgot
 end_comment
 
@@ -241,6 +337,102 @@ end_comment
 
 begin_comment
 comment|// CHECK-NOXGOT-NOT: "-mllvm" "-mxgot"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mldc1-sdc1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mno-ldc1-sdc1 -mldc1-sdc1 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LDC1SDC1 %s
+end_comment
+
+begin_comment
+comment|// CHECK-LDC1SDC1-NOT: "-mllvm" "-mno-ldc1-sdc1"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mno-ldc1-sdc1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mldc1-sdc1 -mno-ldc1-sdc1 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOLDC1SDC1 %s
+end_comment
+
+begin_comment
+comment|// CHECK-NOLDC1SDC1: "-mllvm" "-mno-ldc1-sdc1"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mcheck-zero-division
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mno-check-zero-division -mcheck-zero-division 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ZERODIV %s
+end_comment
+
+begin_comment
+comment|// CHECK-ZERODIV-NOT: "-mllvm" "-mno-check-zero-division"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mno-check-zero-division
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mcheck-zero-division -mno-check-zero-division 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOZERODIV %s
+end_comment
+
+begin_comment
+comment|// CHECK-NOZERODIV: "-mllvm" "-mno-check-zero-division"
 end_comment
 
 begin_comment

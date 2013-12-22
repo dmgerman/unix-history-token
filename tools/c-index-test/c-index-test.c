@@ -3522,6 +3522,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|clang_CXXMethod_isPureVirtual
+argument_list|(
+name|Cursor
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" (pure)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|clang_Cursor_isVariadic
 argument_list|(
 name|Cursor
@@ -3530,6 +3542,18 @@ condition|)
 name|printf
 argument_list|(
 literal|" (variadic)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|clang_Cursor_isObjCOptional
+argument_list|(
+name|Cursor
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" (@optional)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5979,6 +6003,15 @@ argument_list|(
 name|cursor
 argument_list|)
 decl_stmt|;
+name|enum
+name|CXRefQualifierKind
+name|RQ
+init|=
+name|clang_Type_getCXXRefQualifier
+argument_list|(
+name|T
+argument_list|)
+decl_stmt|;
 name|PrintCursor
 argument_list|(
 name|cursor
@@ -6027,6 +6060,28 @@ condition|)
 name|printf
 argument_list|(
 literal|" restrict"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|RQ
+operator|==
+name|CXRefQualifier_LValue
+condition|)
+name|printf
+argument_list|(
+literal|" lvalue-ref-qualifier"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|RQ
+operator|==
+name|CXRefQualifier_RValue
+condition|)
+name|printf
+argument_list|(
+literal|" rvalue-ref-qualifier"
 argument_list|)
 expr_stmt|;
 comment|/* Print the canonical type if it is different. */

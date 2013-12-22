@@ -156,7 +156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{integer constant is too large for its type}}
+comment|// expected-error {{constant is larger than the largest unsigned integer type}}
 end_comment
 
 begin_decl_stmt
@@ -193,7 +193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{integer constant is too large for its type}}
+comment|// expected-error {{constant is larger than the largest unsigned integer type}}
 end_comment
 
 begin_decl_stmt

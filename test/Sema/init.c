@@ -935,5 +935,37 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uintptr_t
+name|x
+range|:
+literal|2
+decl_stmt|;
+block|}
+name|StructWithBitfield
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|StructWithBitfield
+name|bitfieldvar
+init|=
+block|{
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|bitfieldvar
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{initializer element is not a compile-time constant}}
+end_comment
+
 end_unit
 

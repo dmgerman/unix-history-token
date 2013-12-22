@@ -4,19 +4,19 @@ comment|// REQUIRES: arm-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple armv7-apple-darwin9 -target-abi apcs-gnu -emit-llvm -w -o - %s | FileCheck -check-prefix=APCS-GNU %s
+comment|// RUN: %clang_cc1 -triple armv7-apple-darwin9 -target-feature +neon -target-abi apcs-gnu -emit-llvm -w -o - %s | FileCheck -check-prefix=APCS-GNU %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple armv7-apple-darwin9 -target-abi aapcs -emit-llvm -w -o - %s | FileCheck -check-prefix=AAPCS %s
+comment|// RUN: %clang_cc1 -triple armv7-apple-darwin9 -target-feature +neon -target-abi aapcs -emit-llvm -w -o - %s | FileCheck -check-prefix=AAPCS %s
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define signext i8 @f0()
+comment|// APCS-GNU-LABEL: define signext i8 @f0()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc signext i8 @f0()
+comment|// AAPCS-LABEL: define arm_aapcscc signext i8 @f0()
 end_comment
 
 begin_function
@@ -33,11 +33,11 @@ block|}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i8 @f1()
+comment|// APCS-GNU-LABEL: define i8 @f1()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i8 @f1()
+comment|// AAPCS-LABEL: define arm_aapcscc i8 @f1()
 end_comment
 
 begin_struct
@@ -62,11 +62,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i16 @f2()
+comment|// APCS-GNU-LABEL: define i16 @f2()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i16 @f2()
+comment|// AAPCS-LABEL: define arm_aapcscc i16 @f2()
 end_comment
 
 begin_struct
@@ -91,11 +91,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i32 @f3()
+comment|// APCS-GNU-LABEL: define i32 @f3()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f3()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f3()
 end_comment
 
 begin_struct
@@ -120,11 +120,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i32 @f4()
+comment|// APCS-GNU-LABEL: define i32 @f4()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f4()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f4()
 end_comment
 
 begin_struct
@@ -155,7 +155,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f5(
+comment|// APCS-GNU-LABEL: define void @f5(
 end_comment
 
 begin_comment
@@ -163,7 +163,7 @@ comment|// APCS-GNU: struct.s5* noalias sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f5()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f5()
 end_comment
 
 begin_struct
@@ -192,7 +192,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f6(
+comment|// APCS-GNU-LABEL: define void @f6(
 end_comment
 
 begin_comment
@@ -200,7 +200,7 @@ comment|// APCS-GNU: struct.s6* noalias sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f6()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f6()
 end_comment
 
 begin_struct
@@ -228,11 +228,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f7()
+comment|// APCS-GNU-LABEL: define void @f7()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc void @f7()
+comment|// AAPCS-LABEL: define arm_aapcscc void @f7()
 end_comment
 
 begin_struct
@@ -263,7 +263,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f8(
+comment|// APCS-GNU-LABEL: define void @f8(
 end_comment
 
 begin_comment
@@ -271,7 +271,7 @@ comment|// APCS-GNU: struct.s8* noalias sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc void @f8()
+comment|// AAPCS-LABEL: define arm_aapcscc void @f8()
 end_comment
 
 begin_struct
@@ -305,11 +305,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i32 @f9()
+comment|// APCS-GNU-LABEL: define i32 @f9()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f9()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f9()
 end_comment
 
 begin_struct
@@ -338,11 +338,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i32 @f10()
+comment|// APCS-GNU-LABEL: define i32 @f10()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f10()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f10()
 end_comment
 
 begin_struct
@@ -375,7 +375,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f11(
+comment|// APCS-GNU-LABEL: define void @f11(
 end_comment
 
 begin_comment
@@ -383,7 +383,7 @@ comment|// APCS-GNU: struct.s11* noalias sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f11()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f11()
 end_comment
 
 begin_struct
@@ -412,11 +412,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i32 @f12()
+comment|// APCS-GNU-LABEL: define i32 @f12()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f12()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f12()
 end_comment
 
 begin_union
@@ -447,7 +447,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f13(
+comment|// APCS-GNU-LABEL: define void @f13(
 end_comment
 
 begin_comment
@@ -484,7 +484,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f14(
+comment|// APCS-GNU-LABEL: define void @f14(
 end_comment
 
 begin_comment
@@ -492,7 +492,7 @@ comment|// APCS-GNU: union.u14* noalias sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f14()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f14()
 end_comment
 
 begin_union
@@ -517,11 +517,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f15()
+comment|// APCS-GNU-LABEL: define void @f15()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc void @f15()
+comment|// AAPCS-LABEL: define arm_aapcscc void @f15()
 end_comment
 
 begin_function
@@ -536,11 +536,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f16()
+comment|// APCS-GNU-LABEL: define void @f16()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc void @f16()
+comment|// AAPCS-LABEL: define arm_aapcscc void @f16()
 end_comment
 
 begin_function
@@ -555,11 +555,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i32 @f17()
+comment|// APCS-GNU-LABEL: define i32 @f17()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f17()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f17()
 end_comment
 
 begin_struct
@@ -591,11 +591,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i32 @f18()
+comment|// APCS-GNU-LABEL: define i32 @f18()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f18()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f18()
 end_comment
 
 begin_struct
@@ -625,7 +625,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f19(
+comment|// APCS-GNU-LABEL: define void @f19(
 end_comment
 
 begin_comment
@@ -633,7 +633,7 @@ comment|// APCS-GNU: struct.s19* noalias sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f19()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f19()
 end_comment
 
 begin_struct
@@ -662,7 +662,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f20(
+comment|// APCS-GNU-LABEL: define void @f20(
 end_comment
 
 begin_comment
@@ -670,7 +670,7 @@ comment|// APCS-GNU: struct.s20* noalias sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f20()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f20()
 end_comment
 
 begin_struct
@@ -699,11 +699,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i8 @f21()
+comment|// APCS-GNU-LABEL: define i8 @f21()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f21()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f21()
 end_comment
 
 begin_struct
@@ -734,35 +734,35 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i16 @f22()
+comment|// APCS-GNU-LABEL: define i16 @f22()
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define i32 @f23()
+comment|// APCS-GNU-LABEL: define i32 @f23()
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define i64 @f24()
+comment|// APCS-GNU-LABEL: define i64 @f24()
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define i128 @f25()
+comment|// APCS-GNU-LABEL: define i128 @f25()
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define i64 @f26()
+comment|// APCS-GNU-LABEL: define i64 @f26()
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define i128 @f27()
+comment|// APCS-GNU-LABEL: define i128 @f27()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i16 @f22()
+comment|// AAPCS-LABEL: define arm_aapcscc i16 @f22()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f23()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f23()
 end_comment
 
 begin_comment
@@ -843,11 +843,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i16 @f28()
+comment|// APCS-GNU-LABEL: define i16 @f28()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i16 @f28()
+comment|// AAPCS-LABEL: define arm_aapcscc i16 @f28()
 end_comment
 
 begin_struct
@@ -871,11 +871,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define i32 @f29()
+comment|// APCS-GNU-LABEL: define i32 @f29()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc i32 @f29()
+comment|// AAPCS-LABEL: define arm_aapcscc i32 @f29()
 end_comment
 
 begin_struct
@@ -1050,11 +1050,11 @@ block|{ }
 end_function
 
 begin_comment
-comment|// APCS-GNU: define void @f33(%struct.s33* byval %s)
+comment|// APCS-GNU-LABEL: define void @f33(%struct.s33* byval %s)
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc void @f33(%struct.s33* byval %s)
+comment|// AAPCS-LABEL: define arm_aapcscc void @f33(%struct.s33* byval %s)
 end_comment
 
 begin_comment
@@ -1248,7 +1248,7 @@ block|}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define<4 x float> @f35(i32 %i, %struct.s35* byval, %struct.s35* byval)
+comment|// APCS-GNU-LABEL: define<4 x float> @f35(i32 %i, %struct.s35* byval, %struct.s35* byval)
 end_comment
 
 begin_comment
@@ -1276,7 +1276,7 @@ comment|// APCS-GNU: load<4 x float>* %[[d]], align 16
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc<4 x float> @f35(i32 %i, %struct.s35* byval, %struct.s35* byval)
+comment|// AAPCS-LABEL: define arm_aapcscc<4 x float> @f35(i32 %i, %struct.s35* byval, %struct.s35* byval)
 end_comment
 
 begin_comment

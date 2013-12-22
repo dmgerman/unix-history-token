@@ -65,7 +65,7 @@ name|aapcs_vfp_fn
 name|baz
 parameter_list|)
 block|{
-comment|// CHECK: define i32 @foo
+comment|// CHECK-LABEL: define i32 @foo
 comment|// CHECK: call arm_aapcscc
 comment|// CHECK: call arm_aapcs_vfpcc
 return|return

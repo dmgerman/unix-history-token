@@ -79,6 +79,9 @@ decl_stmt|;
 name|class
 name|MemberPointerType
 decl_stmt|;
+name|class
+name|MangleNumberingContext
+decl_stmt|;
 comment|/// Implements C++ ABI-specific semantic analysis functions.
 name|class
 name|CXXABI
@@ -120,8 +123,8 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|// Returns whether the given class is nearly empty, with just virtual pointers
-comment|// and no data except possibly virtual bases.
+comment|/// Returns whether the given class is nearly empty, with just virtual
+comment|/// pointers and no data except possibly virtual bases.
 name|virtual
 name|bool
 name|isNearlyEmpty
@@ -135,6 +138,16 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// Returns a new mangling number context for this C++ ABI.
+name|virtual
+name|MangleNumberingContext
+operator|*
+name|createMangleNumberingContext
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// Creates an instance of a C++ ABI class.

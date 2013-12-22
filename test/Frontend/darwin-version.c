@@ -4,7 +4,7 @@ comment|// RUN: %clang -target armv6-apple-darwin9 -dM -E -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t | count 0
+comment|// RUN: not grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// RUN: grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t | grep 
 end_comment
 
 begin_comment
-comment|// RUN: grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t | count 0
+comment|// RUN: not grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|// RUN: grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t | grep 
 end_comment
 
 begin_comment
-comment|// RUN: grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t | count 0
+comment|// RUN: not grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// RUN: %clang -target i686-apple-darwin8 -dM -E -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t | count 0
+comment|// RUN: not grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ comment|// RUN: %clang -target i686-apple-darwin9 -mmacosx-version-min=10.4 -dM 
 end_comment
 
 begin_comment
-comment|// RUN: grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t | count 0
+comment|// RUN: not grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t
 end_comment
 
 begin_comment

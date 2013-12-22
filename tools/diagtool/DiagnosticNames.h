@@ -131,25 +131,13 @@ function_decl|;
 struct|struct
 name|GroupRecord
 block|{
-comment|// Be safe with the size of 'NameLen' because we don't statically check if
-comment|// the size will fit in the field; the struct size won't decrease with a
-comment|// shorter type anyway.
-name|size_t
-name|NameLen
+name|uint16_t
+name|NameOffset
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|NameStr
-decl_stmt|;
-specifier|const
-name|short
-modifier|*
+name|uint16_t
 name|Members
 decl_stmt|;
-specifier|const
-name|short
-modifier|*
+name|uint16_t
 name|SubGroups
 decl_stmt|;
 name|llvm
@@ -158,18 +146,7 @@ name|StringRef
 name|getName
 argument_list|()
 specifier|const
-block|{
-return|return
-name|llvm
-operator|::
-name|StringRef
-argument_list|(
-name|NameStr
-argument_list|,
-name|NameLen
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 name|template
 operator|<
 name|typename
@@ -365,11 +342,7 @@ name|subgroup_iterator
 name|subgroup_begin
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SubGroups
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
@@ -377,11 +350,7 @@ name|subgroup_iterator
 name|subgroup_end
 argument_list|()
 specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_typedef
@@ -399,11 +368,7 @@ name|diagnostics_iterator
 name|diagnostics_begin
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Members
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
@@ -411,11 +376,7 @@ name|diagnostics_iterator
 name|diagnostics_end
 argument_list|()
 specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
@@ -423,9 +384,9 @@ name|bool
 name|operator
 operator|<
 operator|(
-specifier|const
-name|GroupRecord
-operator|&
+name|llvm
+operator|::
+name|StringRef
 name|Other
 operator|)
 specifier|const
@@ -435,9 +396,6 @@ name|getName
 argument_list|()
 operator|<
 name|Other
-operator|.
-name|getName
-argument_list|()
 return|;
 block|}
 end_expr_stmt

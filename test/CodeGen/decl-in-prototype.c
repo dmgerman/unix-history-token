@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define i32 @f1
+comment|// CHECK-LABEL: define i32 @f1
 end_comment
 
 begin_decl_stmt
@@ -37,7 +37,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define i32 @f2
+comment|// CHECK-LABEL: define i32 @f2
 end_comment
 
 begin_decl_stmt

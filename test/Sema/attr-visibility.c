@@ -278,5 +278,24 @@ begin_comment
 comment|// expected-error {{'type_visibility' attribute only applies to types and namespaces}}
 end_comment
 
+begin_decl_stmt
+name|int
+name|PR17105
+name|__attribute__
+argument_list|(
+operator|(
+name|visibility
+argument_list|(
+name|hidden
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{'visibility' attribute requires a string}}
+end_comment
+
 end_unit
 

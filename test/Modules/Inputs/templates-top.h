@@ -26,6 +26,16 @@ name|push_back
 argument_list|(
 name|T
 argument_list|)
+block|;    struct
+name|node
+block|{}
+block|;
+name|node
+operator|*
+name|head
+block|;
+name|unsigned
+name|size
 block|; }
 expr_stmt|;
 end_expr_stmt
@@ -70,6 +80,21 @@ name|func
 argument_list|()
 block|{}
 block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|Outer
+block|{   struct
+name|Inner
+block|{}
+block|; }
 expr_stmt|;
 end_expr_stmt
 

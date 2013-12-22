@@ -29,8 +29,8 @@ name|int
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|// CHECK:     define void @test1()
-comment|// CHECK-ARM: define arm_aapcscc void @test1()
+comment|// CHECK-LABEL:     define void @test1()
+comment|// CHECK-ARM-LABEL: define arm_aapcscc void @test1()
 specifier|__block
 name|int
 name|x

@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -fdiagnostics-parseable-fixits %s 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 -fsyntax-only -fdiagnostics-parseable-fixits %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

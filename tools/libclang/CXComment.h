@@ -103,6 +103,7 @@ block|}
 name|namespace
 name|cxcomment
 block|{
+specifier|static
 specifier|inline
 name|CXComment
 name|createCXComment
@@ -137,6 +138,7 @@ return|return
 name|Result
 return|;
 block|}
+specifier|static
 specifier|inline
 specifier|const
 name|comments
@@ -169,6 +171,7 @@ operator|<
 name|typename
 name|T
 operator|>
+specifier|static
 specifier|inline
 specifier|const
 name|T
@@ -208,6 +211,7 @@ name|C
 operator|)
 return|;
 block|}
+specifier|static
 specifier|inline
 name|ASTContext
 modifier|&
@@ -231,6 +235,7 @@ name|getASTContext
 argument_list|()
 return|;
 block|}
+specifier|static
 specifier|inline
 name|comments
 operator|::

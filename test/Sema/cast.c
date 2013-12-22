@@ -388,6 +388,42 @@ operator|)
 name|v
 expr_stmt|;
 comment|// expected-warning{{cast to 'CharPtr' (aka 'char *') from smaller integer type 'Int' (aka 'int')}}
+comment|// Test that casts to void* can be controlled separately
+comment|// from other -Wint-to-pointer-cast warnings.
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|push
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|ignored
+literal|"-Wint-to-void-pointer-cast"
+operator|(
+name|void
+operator|)
+operator|(
+name|VoidPtr
+operator|)
+name|v
+expr_stmt|;
+comment|// no-warning
+operator|(
+name|void
+operator|)
+operator|(
+name|CharPtr
+operator|)
+name|v
+expr_stmt|;
+comment|// expected-warning{{cast to 'CharPtr' (aka 'char *') from smaller integer type 'Int' (aka 'int')}}
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|pop
 block|}
 end_function
 

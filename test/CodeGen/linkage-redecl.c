@@ -79,7 +79,7 @@ comment|// still has internal linkage
 end_comment
 
 begin_comment
-comment|// CHECK: define internal void @f
+comment|// CHECK-LABEL: define internal void @f
 end_comment
 
 end_unit

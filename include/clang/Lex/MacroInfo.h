@@ -780,11 +780,9 @@ index|]
 return|;
 block|}
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|Token
-operator|,
-literal|8
 operator|>
 operator|::
 name|const_iterator
@@ -1418,6 +1416,7 @@ name|isValid
 argument_list|()
 return|;
 block|}
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()

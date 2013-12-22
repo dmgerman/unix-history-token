@@ -107,7 +107,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define void @f1(i32 inreg %i, i32 inreg %j, i32 %k)
+comment|// CHECK-LABEL: define void @f1(i32 inreg %i, i32 inreg %j, i32 %k)
 end_comment
 
 begin_function

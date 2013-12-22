@@ -96,7 +96,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK-FUNCTIONS: define i32 @s0_load_x
+comment|// CHECK-FUNCTIONS-LABEL: define i32 @s0_load_x
 end_comment
 
 begin_comment
@@ -142,7 +142,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-FUNCTIONS: define i32 @s0_load_y
+comment|// CHECK-FUNCTIONS-LABEL: define i32 @s0_load_y
 end_comment
 
 begin_comment
@@ -172,7 +172,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-FUNCTIONS: define void @s0_copy
+comment|// CHECK-FUNCTIONS-LABEL: define void @s0_copy
 end_comment
 
 begin_comment
@@ -292,7 +292,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK-FUNCTIONS: define i32 @s1_load_x
+comment|// CHECK-FUNCTIONS-LABEL: define i32 @s1_load_x
 end_comment
 
 begin_comment
@@ -322,7 +322,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-FUNCTIONS: define i32 @s1_load_y
+comment|// CHECK-FUNCTIONS-LABEL: define i32 @s1_load_y
 end_comment
 
 begin_comment
@@ -352,7 +352,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-FUNCTIONS: define void @s1_copy
+comment|// CHECK-FUNCTIONS-LABEL: define void @s1_copy
 end_comment
 
 begin_comment
@@ -486,7 +486,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK-FUNCTIONS: define i32 @s2_load_x
+comment|// CHECK-FUNCTIONS-LABEL: define i32 @s2_load_x
 end_comment
 
 begin_comment
@@ -516,7 +516,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-FUNCTIONS: define i32 @s2_load_y
+comment|// CHECK-FUNCTIONS-LABEL: define i32 @s2_load_y
 end_comment
 
 begin_comment
@@ -546,7 +546,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-FUNCTIONS: define void @s2_copy
+comment|// CHECK-FUNCTIONS-LABEL: define void @s2_copy
 end_comment
 
 begin_comment
@@ -620,7 +620,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK-FUNCTIONS: define i32 @test3(
+comment|// CHECK-FUNCTIONS-LABEL: define i32 @test3(
 end_comment
 
 begin_function

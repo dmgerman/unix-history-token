@@ -15,7 +15,7 @@ name|x
 init|=
 literal|0
 decl_stmt|;
-comment|/* expected-error@+1 {{'#pragma fp_contract' should only appear at file scope or at the start of a compound expression}} */
+comment|/* expected-error@+1 {{'#pragma fp_contract' can only appear at file scope or at the start of a compound statement}} */
 pragma|#
 directive|pragma
 name|STDC

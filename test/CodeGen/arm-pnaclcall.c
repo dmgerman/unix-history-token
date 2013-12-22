@@ -35,7 +35,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: define i32 @f48(%struct.s1* byval %s)
+comment|// CHECK-LABEL: define i32 @f48(%struct.s1* byval %s)
 end_comment
 
 begin_decl_stmt
@@ -61,7 +61,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define void @f49(%struct.s1* noalias sret %agg.result)
+comment|// CHECK-LABEL: define void @f49(%struct.s1* noalias sret %agg.result)
 end_comment
 
 begin_decl_stmt
@@ -113,7 +113,7 @@ comment|// Unions should be passed as byval structs
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f50(%union.simple_union* byval %s)
+comment|// CHECK-LABEL: define void @f50(%union.simple_union* byval %s)
 end_comment
 
 begin_decl_stmt
@@ -162,7 +162,7 @@ comment|// Bitfields should be passed as byval structs
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f51(%struct.bitfield1* byval %bf1)
+comment|// CHECK-LABEL: define void @f51(%struct.bitfield1* byval %bf1)
 end_comment
 
 begin_decl_stmt

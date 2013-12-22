@@ -30,7 +30,7 @@ block|{}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define dllexport void @foo1
+comment|// CHECK-LABEL: define dllexport void @foo1
 end_comment
 
 begin_decl_stmt
@@ -79,7 +79,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define dllexport void @foo3
+comment|// CHECK-LABEL: define dllexport void @foo3
 end_comment
 
 begin_macro

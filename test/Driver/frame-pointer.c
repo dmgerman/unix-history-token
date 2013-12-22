@@ -40,6 +40,54 @@ comment|// RUN: %clang -target x86_64-pc-linux -### -S -Os %s -o %t.s 2>&1 | Fil
 end_comment
 
 begin_comment
+comment|// Trust the above to get the optimizations right, and just test other targets
+end_comment
+
+begin_comment
+comment|// that want this by default.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target s390x-pc-linux -### -S -O0 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK0-64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target s390x-pc-linux -### -S -O1 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK1-64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -S -O0 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK0-32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -S -O1 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK1-32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mipsel-linux-gnu -### -S -O0 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK0-32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mipsel-linux-gnu -### -S -O1 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK1-32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64-linux-gnu -### -S -O0 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK0-32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64-linux-gnu -### -S -O1 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK1-32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64el-linux-gnu -### -S -O0 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK0-32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64el-linux-gnu -### -S -O1 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK1-32 %s
+end_comment
+
+begin_comment
 comment|// CHECK0-32: -mdisable-fp-elim
 end_comment
 

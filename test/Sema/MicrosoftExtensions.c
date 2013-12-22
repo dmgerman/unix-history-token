@@ -250,6 +250,15 @@ name|short
 operator|)
 name|ptr
 expr_stmt|;
+comment|// This is valid ISO C.
+name|_Bool
+name|b
+init|=
+operator|(
+name|_Bool
+operator|)
+name|ptr
+decl_stmt|;
 block|}
 end_function
 
@@ -364,7 +373,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-error {{argument to deprecated attribute was not a string literal}}
+comment|// expected-error {{'deprecated' attribute requires a string}}
 end_comment
 
 begin_function
@@ -399,6 +408,234 @@ decl_stmt|;
 comment|// no warning because E1 is not deprecated
 block|}
 end_function
+
+begin_decl_stmt
+name|int
+name|__sptr
+name|wrong1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{'__sptr' attribute only applies to pointer arguments}}
+end_comment
+
+begin_comment
+comment|// The modifier must follow the asterisk
+end_comment
+
+begin_decl_stmt
+name|int
+name|__sptr
+modifier|*
+name|wrong_psp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{'__sptr' attribute only applies to pointer arguments}}
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__sptr
+name|__uptr
+name|wrong2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{'__sptr' and '__uptr' attributes are not compatible}}
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__sptr
+name|__sptr
+name|wrong3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{attribute '__sptr' is already applied}}
+end_comment
+
+begin_comment
+comment|// It is illegal to overload based on the type attribute.
+end_comment
+
+begin_function
+name|void
+name|ptr_func
+parameter_list|(
+name|int
+modifier|*
+name|__ptr32
+name|i
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
+comment|// expected-note {{previous definition is here}}
+end_comment
+
+begin_function
+name|void
+name|ptr_func
+parameter_list|(
+name|int
+modifier|*
+name|__ptr64
+name|i
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
+comment|// expected-error {{redefinition of 'ptr_func'}}
+end_comment
+
+begin_comment
+comment|// It is also illegal to overload based on the pointer type attribute.
+end_comment
+
+begin_function
+name|void
+name|ptr_func2
+parameter_list|(
+name|int
+modifier|*
+name|__sptr
+name|__ptr32
+name|i
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
+comment|// expected-note {{previous definition is here}}
+end_comment
+
+begin_function
+name|void
+name|ptr_func2
+parameter_list|(
+name|int
+modifier|*
+name|__uptr
+name|__ptr32
+name|i
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
+comment|// expected-error {{redefinition of 'ptr_func2'}}
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__sptr
+name|__ptr32
+name|__sptr
+name|wrong4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{attribute '__sptr' is already applied}}
+end_comment
+
+begin_decl_stmt
+name|__ptr32
+name|int
+modifier|*
+name|wrong5
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{'__ptr32' attribute only applies to pointer arguments}}
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|wrong6
+name|__ptr32
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{expected ';' after top level declarator}} expected-warning {{declaration does not declare anything}}
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__ptr32
+name|__ptr64
+name|wrong7
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{'__ptr32' and '__ptr64' attributes are not compatible}}
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__ptr32
+name|__ptr32
+name|wrong8
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{attribute '__ptr32' is already applied}}
+end_comment
+
+begin_macro
+name|int
+end_macro
+
+begin_expr_stmt
+operator|*
+operator|(
+name|__ptr32
+name|__sptr
+name|wrong9
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// expected-error {{'__sptr' attribute only applies to pointer arguments}} // expected-error {{'__ptr32' attribute only applies to pointer arguments}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+modifier|*
+name|T
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|T
+name|__ptr32
+name|wrong10
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{'__ptr32' attribute only applies to pointer arguments}}
+end_comment
 
 end_unit
 

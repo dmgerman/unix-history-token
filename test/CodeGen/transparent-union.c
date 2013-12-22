@@ -46,7 +46,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define void @f1_0(i32* %a0)
+comment|// CHECK-LABEL: define void @f1_0(i32* %a0)
 end_comment
 
 begin_comment

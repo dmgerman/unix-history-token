@@ -16,63 +16,55 @@ comment|// CHECK: @correct_linkage = weak global
 end_comment
 
 begin_comment
-comment|// CHECK: @both = alias void ()* @__both
+comment|// CHECK-DAG: @both = alias void ()* @__both
 end_comment
 
 begin_comment
-comment|// CHECK: @both2 = alias void ()* @__both2
+comment|// CHECK-DAG: @both2 = alias void ()* @__both2
 end_comment
 
 begin_comment
-comment|// CHECK: @both3 = alias weak void ()* @__both3
+comment|// CHECK-DAG: @weakvar_alias = alias weak i32* @__weakvar_alias
 end_comment
 
 begin_comment
-comment|// CHECK: @a3 = alias weak void ()* @__a3
+comment|// CHECK-DAG: @foo = alias weak void ()* @__foo
 end_comment
 
 begin_comment
-comment|// CHECK: @weakvar_alias = alias weak i32* @__weakvar_alias
+comment|// CHECK-DAG: @foo2 = alias weak void ()* @__foo2
 end_comment
 
 begin_comment
-comment|// CHECK: @foo = alias weak void ()* @__foo
+comment|// CHECK-DAG: @stutter = alias weak void ()* @__stutter
 end_comment
 
 begin_comment
-comment|// CHECK: @foo2 = alias weak void ()* @__foo2
+comment|// CHECK-DAG: @stutter2 = alias weak void ()* @__stutter2
 end_comment
 
 begin_comment
-comment|// CHECK: @stutter = alias weak void ()* @__stutter
+comment|// CHECK-DAG: @declfirst = alias weak void ()* @__declfirst
 end_comment
 
 begin_comment
-comment|// CHECK: @stutter2 = alias weak void ()* @__stutter2
+comment|// CHECK-DAG: @declfirstattr = alias weak void ()* @__declfirstattr
 end_comment
 
 begin_comment
-comment|// CHECK: @declfirst = alias weak void ()* @__declfirst
+comment|// CHECK-DAG: @mix2 = alias weak void ()* @__mix2
 end_comment
 
 begin_comment
-comment|// CHECK: @declfirstattr = alias weak void ()* @__declfirstattr
+comment|// CHECK-DAG: @a1 = alias weak void ()* @__a1
 end_comment
 
 begin_comment
-comment|// CHECK: @mix2 = alias weak void ()* @__mix2
+comment|// CHECK-DAG: @xxx = alias weak void ()* @__xxx
 end_comment
 
 begin_comment
-comment|// CHECK: @a1 = alias weak void ()* @__a1
-end_comment
-
-begin_comment
-comment|// CHECK: @xxx = alias weak void ()* @__xxx
-end_comment
-
-begin_comment
-comment|// CHECK: define weak void @weakdef()
+comment|// CHECK-LABEL: define weak void @weakdef()
 end_comment
 
 begin_pragma
@@ -170,7 +162,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__foo()
+comment|// CHECK-LABEL: define void @__foo()
 end_comment
 
 begin_function
@@ -192,7 +184,7 @@ name|__foo2
 end_pragma
 
 begin_comment
-comment|// CHECK: define void @__foo2()
+comment|// CHECK-LABEL: define void @__foo2()
 end_comment
 
 begin_comment
@@ -297,7 +289,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__stutter()
+comment|// CHECK-LABEL: define void @__stutter()
 end_comment
 
 begin_function
@@ -328,7 +320,7 @@ name|__stutter2
 end_pragma
 
 begin_comment
-comment|// CHECK: define void @__stutter2()
+comment|// CHECK-LABEL: define void @__stutter2()
 end_comment
 
 begin_comment
@@ -363,7 +355,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__declfirst()
+comment|// CHECK-LABEL: define void @__declfirst()
 end_comment
 
 begin_function_decl
@@ -401,7 +393,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__declfirstattr()
+comment|// CHECK-LABEL: define void @__declfirstattr()
 end_comment
 
 begin_comment
@@ -445,7 +437,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define weak void @mix()
+comment|// CHECK-LABEL: define weak void @mix()
 end_comment
 
 begin_comment
@@ -507,7 +499,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__mix2()
+comment|// CHECK-LABEL: define void @__mix2()
 end_comment
 
 begin_comment
@@ -559,7 +551,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__both()
+comment|// CHECK-LABEL: define void @__both()
 end_comment
 
 begin_comment
@@ -624,60 +616,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__both2()
-end_comment
-
-begin_function_decl
-name|void
-name|__both3
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|both3
-name|=
-name|__both3
-end_pragma
-
-begin_comment
-comment|// first, wins
-end_comment
-
-begin_function_decl
-name|void
-name|both3
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|__attribute
-parameter_list|(
-function_decl|(alias
-parameter_list|(
-function_decl|"__both3"
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
-begin_function
-name|void
-name|__both3
-parameter_list|(
-name|void
-parameter_list|)
-block|{}
-end_function
-
-begin_comment
-comment|// CHECK: define void @__both3()
+comment|// CHECK-LABEL: define void @__both2()
 end_comment
 
 begin_comment
@@ -722,70 +661,6 @@ begin_comment
 comment|// CHECK: define void @__a1() [[NI:#[0-9]+]]
 end_comment
 
-begin_comment
-comment|// attributes introduced BEFORE a combination of #pragma weak and alias()
-end_comment
-
-begin_comment
-comment|// hold...
-end_comment
-
-begin_function_decl
-name|void
-name|__a3
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|__attribute
-parameter_list|(
-function_decl|(noinline
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|a3
-name|=
-name|__a3
-end_pragma
-
-begin_function_decl
-name|void
-name|a3
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|__attribute
-parameter_list|(
-function_decl|(alias
-parameter_list|(
-function_decl|"__a3"
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
-begin_function
-name|void
-name|__a3
-parameter_list|(
-name|void
-parameter_list|)
-block|{}
-end_function
-
-begin_comment
-comment|// CHECK: define void @__a3() [[NI]]
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -798,7 +673,7 @@ end_pragma
 begin_macro
 name|__attribute
 argument_list|(
-argument|(pure,noinline,const,fastcall)
+argument|(pure,noinline,const)
 argument_list|)
 end_macro
 
@@ -890,6 +765,96 @@ comment|// CHECK: declare extern_weak i32 @PR14046e()
 end_comment
 
 begin_comment
+comment|// Parse #pragma weak after a label or case statement
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|PR16705a
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|PR16705b
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|PR16705c
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|PR16705f
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|a
+condition|)
+block|{
+case|case
+literal|1
+case|:
+pragma|#
+directive|pragma
+name|weak
+name|PR16705a
+name|PR16705a
+argument_list|()
+expr_stmt|;
+default|default:
+pragma|#
+directive|pragma
+name|weak
+name|PR16705b
+name|PR16705b
+argument_list|()
+expr_stmt|;
+block|}
+name|label
+label|:
+pragma|#
+directive|pragma
+name|weak
+name|PR16705c
+name|PR16705c
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: declare extern_weak i32 @PR16705a()
+end_comment
+
+begin_comment
+comment|// CHECK: declare extern_weak i32 @PR16705b()
+end_comment
+
+begin_comment
+comment|// CHECK: declare extern_weak i32 @PR16705c()
+end_comment
+
+begin_comment
 comment|///////////// TODO: stuff that still doesn't work
 end_comment
 
@@ -939,7 +904,7 @@ comment|// NOTE: weak doesn't apply, not before or in same TopLevelDec(!)
 end_comment
 
 begin_comment
-comment|// CHECK: define void @yyy()
+comment|// CHECK-LABEL: define void @yyy()
 end_comment
 
 begin_decl_stmt

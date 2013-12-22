@@ -63,14 +63,25 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
+name|opt
+block|{
+name|class
+name|Arg
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|namespace
 name|driver
 block|{
-name|class
-name|Arg
-decl_stmt|;
 comment|/// Action - Represent an abstract compilation step to perform.
 comment|///
 comment|/// An action represents an edge in the compilation graph; typically
@@ -414,6 +425,10 @@ name|anchor
 argument_list|()
 block|;
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|Arg
 operator|&
 name|Input
@@ -422,12 +437,16 @@ name|public
 operator|:
 name|InputAction
 argument_list|(
-argument|const Arg&_Input
+argument|const llvm::opt::Arg&_Input
 argument_list|,
 argument|types::ID _Type
 argument_list|)
 block|;
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|Arg
 operator|&
 name|getInputArg

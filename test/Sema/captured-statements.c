@@ -143,6 +143,7 @@ specifier|__block
 name|int
 name|x
 decl_stmt|;
+comment|// expected-note {{'x' declared here}}
 name|int
 name|y
 decl_stmt|;
@@ -161,7 +162,7 @@ name|x
 operator|=
 name|y
 expr_stmt|;
-comment|// OK
+comment|// expected-error{{__block variable 'x' cannot be captured in a captured statement}}
 name|y
 operator|=
 name|z
@@ -180,6 +181,7 @@ specifier|__block
 name|int
 name|a
 decl_stmt|;
+comment|// expected-note 2 {{'a' declared here}}
 name|int
 name|b
 decl_stmt|;
@@ -202,12 +204,7 @@ name|a
 operator|=
 name|b
 expr_stmt|;
-comment|// OK
-name|a
-operator|=
-name|c
-expr_stmt|;
-comment|// OK
+comment|// expected-error{{__block variable 'a' cannot be captured in a captured statement}}
 name|b
 operator|=
 name|d
@@ -216,6 +213,11 @@ comment|// OK - Consistent with block inside a lambda
 name|c
 operator|=
 name|a
+expr_stmt|;
+comment|// expected-error{{__block variable 'a' cannot be captured in a captured statement}}
+name|c
+operator|=
+name|d
 expr_stmt|;
 comment|// OK
 name|d

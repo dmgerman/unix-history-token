@@ -29,6 +29,28 @@ begin_comment
 comment|// expected-warning {{unknown pragma ignored}}
 end_comment
 
+begin_macro
+name|_Pragma
+argument_list|(
+literal|""
+argument_list|)
+end_macro
+
+begin_comment
+comment|// expected-warning {{unknown pragma ignored}}
+end_comment
+
+begin_macro
+name|_Pragma
+argument_list|(
+literal|"message(\"foo \\\\\\\\ bar\")"
+argument_list|)
+end_macro
+
+begin_comment
+comment|// expected-warning {{foo \\ bar}}
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

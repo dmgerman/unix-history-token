@@ -8,7 +8,7 @@ comment|// RUN: FileCheck< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f0(%struct.s0* byval align 4)
+comment|// CHECK-LABEL: define void @f0(%struct.s0* byval align 4)
 end_comment
 
 begin_comment

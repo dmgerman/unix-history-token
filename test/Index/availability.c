@@ -47,6 +47,43 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_enum
+enum|enum
+block|{
+name|old_enum
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|deprecated
+operator|)
+argument_list|)
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|old_enum_plat
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|availability
+argument_list|(
+argument|macosx
+argument_list|,
+argument|introduced=
+literal|10.4
+argument_list|,
+argument|deprecated=
+literal|10.5
+argument_list|,
+argument|obsoleted=
+literal|10.7
+argument_list|)
+end_enum
+
 begin_comment
 comment|// RUN: c-index-test -test-load-source all %s> %t
 end_comment
@@ -65,6 +102,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-2: (macosx, introduced=10.4, deprecated=10.5, obsoleted=10.7)
+end_comment
+
+begin_comment
+comment|// CHECK-2: EnumConstantDecl=old_enum:6:3 (Definition) (deprecated)
+end_comment
+
+begin_comment
+comment|// CHECK-2: EnumConstantDecl=old_enum_plat:10:3 {{.*}} (macosx, introduced=10.4, deprecated=10.5, obsoleted=10.7)
 end_comment
 
 end_unit

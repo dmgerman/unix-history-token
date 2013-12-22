@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang -target mips64el-unknown-linux -O3 -S -mabi=n64 -o - -emit-llvm %s | FileCheck %s -check-prefix=N64
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target mipsel-unknown-linux -mfp64 -O3 -S -o - -emit-llvm %s | FileCheck %s -check-prefix=O32
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -28,7 +32,7 @@ comment|// Insert padding to ensure arguments of type S0 are aligned to 16-byte 
 end_comment
 
 begin_comment
-comment|// N64: define void @foo1(i32 %a0, i64, double %a1.coerce0, i64 %a1.coerce1, i64 %a1.coerce2, i64 %a1.coerce3, double %a2.coerce0, i64 %a2.coerce1, i64 %a2.coerce2, i64 %a2.coerce3, i32 %b, i64, double %a3.coerce0, i64 %a3.coerce1, i64 %a3.coerce2, i64 %a3.coerce3)
+comment|// N64-LABEL: define void @foo1(i32 %a0, i64, double %a1.coerce0, i64 %a1.coerce1, i64 %a1.coerce2, i64 %a1.coerce3, double %a2.coerce0, i64 %a2.coerce1, i64 %a2.coerce2, i64 %a2.coerce3, i32 %b, i64, double %a3.coerce0, i64 %a3.coerce1, i64 %a3.coerce2, i64 %a3.coerce3)
 end_comment
 
 begin_comment
@@ -110,7 +114,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// N64: define void @foo3(i32 %a0, i64, fp128 %a1)
+comment|// N64-LABEL: define void @foo3(i32 %a0, i64, fp128 %a1)
 end_comment
 
 begin_comment
@@ -173,7 +177,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// N64: define void @foo5(%struct.S0* noalias sret %agg.result, i64, fp128 %a0)
+comment|// N64-LABEL: define void @foo5(%struct.S0* noalias sret %agg.result, i64, fp128 %a0)
 end_comment
 
 begin_comment
@@ -230,7 +234,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32: define void @foo7(float %a0, double %a1)
+comment|// O32-LABEL: define void @foo7(float %a0, double %a1)
 end_comment
 
 begin_comment
@@ -269,6 +273,71 @@ argument_list|,
 name|a1
 operator|+
 literal|2.0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// O32-LABEL: define void @foo9()
+end_comment
+
+begin_comment
+comment|// O32: declare void @foo10(i32, i32
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|__attribute__
+argument_list|(
+operator|(
+name|aligned
+argument_list|(
+literal|16
+argument_list|)
+operator|)
+argument_list|)
+block|{
+name|int
+name|a
+block|; }
+end_typedef
+
+begin_expr_stmt
+name|S16
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|S16
+name|s16
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|foo10
+parameter_list|(
+name|int
+parameter_list|,
+name|S16
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|foo9
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|foo10
+argument_list|(
+literal|1
+argument_list|,
+name|s16
 argument_list|)
 expr_stmt|;
 block|}

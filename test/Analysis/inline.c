@@ -506,5 +506,29 @@ comment|// no-warning
 block|}
 end_function
 
+begin_function
+name|void
+name|knr_one_argument
+parameter_list|(
+name|a
+parameter_list|)
+name|int
+name|a
+decl_stmt|;
+block|{ }
+end_function
+
+begin_function
+name|void
+name|call_with_less_arguments
+parameter_list|()
+block|{
+name|knr_one_argument
+argument_list|()
+expr_stmt|;
+comment|// expected-warning{{too few arguments}} expected-warning{{Function taking 1 argument}}
+block|}
+end_function
+
 end_unit
 

@@ -189,6 +189,9 @@ decl_stmt|;
 name|class
 name|VersionTuple
 decl_stmt|;
+name|class
+name|OMPClause
+decl_stmt|;
 comment|/// Parser - This implements a parser for the C family of languages.  After
 comment|/// parsing units of the grammar, productions are invoked to handle whatever has
 comment|/// been read.
@@ -319,15 +322,20 @@ name|IdentifierInfo
 operator|*
 name|Ident__except
 block|;
+name|mutable
+name|IdentifierInfo
+operator|*
+name|Ident_sealed
+block|;
 comment|/// Ident_super - IdentifierInfo for "super", to support fast
 comment|/// comparison.
 name|IdentifierInfo
 operator|*
 name|Ident_super
 block|;
-comment|/// Ident_vector and Ident_pixel - cached IdentifierInfo's for
-comment|/// "vector" and "pixel" fast comparison.  Only present if
-comment|/// AltiVec enabled.
+comment|/// Ident_vector, Ident_pixel, Ident_bool - cached IdentifierInfo's
+comment|/// for "vector", "pixel", and "bool" fast comparison.  Only present
+comment|/// if AltiVec enabled.
 name|IdentifierInfo
 operator|*
 name|Ident_vector
@@ -335,6 +343,10 @@ block|;
 name|IdentifierInfo
 operator|*
 name|Ident_pixel
+block|;
+name|IdentifierInfo
+operator|*
+name|Ident_bool
 block|;
 comment|/// Objective-C contextual keywords.
 name|mutable
@@ -470,6 +482,12 @@ operator|<
 name|PragmaHandler
 operator|>
 name|MSCommentHandler
+block|;
+name|OwningPtr
+operator|<
+name|PragmaHandler
+operator|>
+name|MSDetectMismatchHandler
 block|;
 comment|/// Whether the '>' token acts as an operator or not. This will be
 comment|/// true except when we are parsing an expression within a C++
@@ -1351,6 +1369,13 @@ name|void
 name|cutOffParsing
 parameter_list|()
 block|{
+if|if
+condition|(
+name|PP
+operator|.
+name|isCodeCompletionEnabled
+argument_list|()
+condition|)
 name|PP
 operator|.
 name|setCodeCompletionReached
@@ -1388,6 +1413,12 @@ comment|/// \brief Handle the annotation token produced for
 comment|/// #pragma ms_struct...
 name|void
 name|HandlePragmaMSStruct
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma comment...
+name|void
+name|HandlePragmaMSComment
 parameter_list|()
 function_decl|;
 comment|/// \brief Handle the annotation token produced for
@@ -1731,6 +1762,13 @@ name|getIdentifierInfo
 argument_list|()
 operator|!=
 name|Ident_pixel
+operator|&&
+name|Tok
+operator|.
+name|getIdentifierInfo
+argument_list|()
+operator|!=
+name|Ident_bool
 operator|)
 condition|)
 return|return
@@ -1808,6 +1846,18 @@ parameter_list|,
 name|bool
 modifier|&
 name|isInvalid
+parameter_list|)
+function_decl|;
+comment|/// TryKeywordIdentFallback - For compatibility with system headers using
+comment|/// keywords as identifiers, attempt to convert the current token to an
+comment|/// identifier and optionally disable the keyword for the remainder of the
+comment|/// translation unit. This returns false if the token was not replaced,
+comment|/// otherwise emits a diagnostic and returns true.
+name|bool
+name|TryKeywordIdentFallback
+parameter_list|(
+name|bool
+name|DisableKeyword
 parameter_list|)
 function_decl|;
 comment|/// \brief Get the TemplateIdAnnotation from the token.
@@ -2015,6 +2065,9 @@ argument_list|)
 block|;     }
 block|}
 empty_stmt|;
+name|class
+name|UnannotatedTentativeParsingAction
+decl_stmt|;
 comment|/// ObjCDeclContextSwitch - An object used to switch context from
 comment|/// an objective-c decl context to its enclosing decl context and
 comment|/// back.
@@ -2420,11 +2473,74 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+comment|/// \brief Control flags for SkipUntil functions.
+enum|enum
+name|SkipUntilFlags
+block|{
+name|StopAtSemi
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+comment|///< Stop skipping at semicolon
+comment|/// \brief Stop skipping at specified token, but don't skip the token itself
+name|StopBeforeMatch
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+name|StopAtCodeCompletion
+init|=
+literal|1
+operator|<<
+literal|2
+comment|///< Stop at code completion
+block|}
+enum|;
+name|friend
+name|LLVM_CONSTEXPR
+name|SkipUntilFlags
+name|operator
+operator||
+operator|(
+name|SkipUntilFlags
+name|L
+operator|,
+name|SkipUntilFlags
+name|R
+operator|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|SkipUntilFlags
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|L
+operator|)
+operator||
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|R
+operator|)
+operator|)
+return|;
+block|}
 comment|/// SkipUntil - Read tokens until we get to the specified token, then consume
-comment|/// it (unless DontConsume is true).  Because we cannot guarantee that the
-comment|/// token will ever occur, this skips to the next token, or to some likely
-comment|/// good stopping point.  If StopAtSemi is true, skipping will stop at a ';'
-comment|/// character.
+comment|/// it (unless StopBeforeMatch is specified).  Because we cannot guarantee
+comment|/// that the token will ever occur, this skips to the next token, or to some
+comment|/// likely good stopping point.  If Flags has StopAtSemi flag, skipping will
+comment|/// stop at a ';' character.
 comment|///
 comment|/// If SkipUntil finds the specified token, it returns true, otherwise it
 comment|/// returns false.
@@ -2436,20 +2552,16 @@ operator|::
 name|TokenKind
 name|T
 argument_list|,
-name|bool
-name|StopAtSemi
+name|SkipUntilFlags
+name|Flags
 operator|=
-name|true
-argument_list|,
-name|bool
-name|DontConsume
-operator|=
-name|false
-argument_list|,
-name|bool
-name|StopAtCodeCompletion
-operator|=
-name|false
+name|static_cast
+operator|<
+name|SkipUntilFlags
+operator|>
+operator|(
+literal|0
+operator|)
 argument_list|)
 block|{
 return|return
@@ -2462,11 +2574,7 @@ argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|StopAtSemi
-argument_list|,
-name|DontConsume
-argument_list|,
-name|StopAtCodeCompletion
+name|Flags
 argument_list|)
 return|;
 block|}
@@ -2483,20 +2591,16 @@ operator|::
 name|TokenKind
 name|T2
 argument_list|,
-name|bool
-name|StopAtSemi
+name|SkipUntilFlags
+name|Flags
 operator|=
-name|true
-argument_list|,
-name|bool
-name|DontConsume
-operator|=
-name|false
-argument_list|,
-name|bool
-name|StopAtCodeCompletion
-operator|=
-name|false
+name|static_cast
+operator|<
+name|SkipUntilFlags
+operator|>
+operator|(
+literal|0
+operator|)
 argument_list|)
 block|{
 name|tok
@@ -2516,11 +2620,7 @@ name|SkipUntil
 argument_list|(
 name|TokArray
 argument_list|,
-name|StopAtSemi
-argument_list|,
-name|DontConsume
-argument_list|,
-name|StopAtCodeCompletion
+name|Flags
 argument_list|)
 return|;
 block|}
@@ -2542,20 +2642,16 @@ operator|::
 name|TokenKind
 name|T3
 argument_list|,
-name|bool
-name|StopAtSemi
+name|SkipUntilFlags
+name|Flags
 operator|=
-name|true
-argument_list|,
-name|bool
-name|DontConsume
-operator|=
-name|false
-argument_list|,
-name|bool
-name|StopAtCodeCompletion
-operator|=
-name|false
+name|static_cast
+operator|<
+name|SkipUntilFlags
+operator|>
+operator|(
+literal|0
+operator|)
 argument_list|)
 block|{
 name|tok
@@ -2577,11 +2673,7 @@ name|SkipUntil
 argument_list|(
 name|TokArray
 argument_list|,
-name|StopAtSemi
-argument_list|,
-name|DontConsume
-argument_list|,
-name|StopAtCodeCompletion
+name|Flags
 argument_list|)
 return|;
 block|}
@@ -2596,20 +2688,16 @@ name|TokenKind
 operator|>
 name|Toks
 argument_list|,
-name|bool
-name|StopAtSemi
+name|SkipUntilFlags
+name|Flags
 operator|=
-name|true
-argument_list|,
-name|bool
-name|DontConsume
-operator|=
-name|false
-argument_list|,
-name|bool
-name|StopAtCodeCompletion
-operator|=
-name|false
+name|static_cast
+operator|<
+name|SkipUntilFlags
+operator|>
+operator|(
+literal|0
+operator|)
 argument_list|)
 decl_stmt|;
 comment|/// SkipMalformedDecl - Read tokens until we get to some likely good stopping
@@ -3416,34 +3504,6 @@ name|LLVM_READONLY
 expr_stmt|;
 block|}
 struct|;
-comment|/// \brief Contains a late templated function.
-comment|/// Will be parsed at the end of the translation unit.
-struct|struct
-name|LateParsedTemplatedFunction
-block|{
-name|explicit
-name|LateParsedTemplatedFunction
-argument_list|(
-name|Decl
-operator|*
-name|MD
-argument_list|)
-operator|:
-name|D
-argument_list|(
-argument|MD
-argument_list|)
-block|{}
-name|CachedTokens
-name|Toks
-expr_stmt|;
-comment|/// \brief The template function declaration to be late parsed.
-name|Decl
-modifier|*
-name|D
-decl_stmt|;
-block|}
-struct|;
 name|void
 name|LexTemplateFunctionForLateParsing
 parameter_list|(
@@ -3455,28 +3515,11 @@ function_decl|;
 name|void
 name|ParseLateTemplatedFuncDef
 parameter_list|(
-name|LateParsedTemplatedFunction
+name|LateParsedTemplate
 modifier|&
-name|LMT
+name|LPT
 parameter_list|)
 function_decl|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|FunctionDecl
-operator|*
-operator|,
-name|LateParsedTemplatedFunction
-operator|*
-operator|>
-name|LateParsedTemplateMapT
-expr_stmt|;
-name|LateParsedTemplateMapT
-name|LateParsedTemplateMap
-decl_stmt|;
 specifier|static
 name|void
 name|LateTemplateParserCallback
@@ -3485,19 +3528,9 @@ name|void
 modifier|*
 name|P
 parameter_list|,
-specifier|const
-name|FunctionDecl
-modifier|*
-name|FD
-parameter_list|)
-function_decl|;
-name|void
-name|LateTemplateParser
-parameter_list|(
-specifier|const
-name|FunctionDecl
-modifier|*
-name|FD
+name|LateParsedTemplate
+modifier|&
+name|LPT
 parameter_list|)
 function_decl|;
 name|Sema
@@ -3528,6 +3561,14 @@ operator|::
 name|ParsingClassState
 argument_list|)
 decl_stmt|;
+enum|enum
+name|CachedInitKind
+block|{
+name|CIK_DefaultArgument
+block|,
+name|CIK_DefaultInitializer
+block|}
+enum|;
 name|NamedDecl
 modifier|*
 name|ParseCXXInlineMethodDef
@@ -3670,6 +3711,25 @@ parameter_list|)
 function_decl|;
 name|bool
 name|ConsumeAndStoreFunctionPrologue
+parameter_list|(
+name|CachedTokens
+modifier|&
+name|Toks
+parameter_list|)
+function_decl|;
+name|bool
+name|ConsumeAndStoreInitializer
+parameter_list|(
+name|CachedTokens
+modifier|&
+name|Toks
+parameter_list|,
+name|CachedInitKind
+name|CIK
+parameter_list|)
+function_decl|;
+name|bool
+name|ConsumeAndStoreConditional
 parameter_list|(
 name|CachedTokens
 modifier|&
@@ -4571,6 +4631,27 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// ParseSimpleExpressionList - A simple comma-separated list of expressions,
+comment|/// used for misc language extensions.
+name|bool
+name|ParseSimpleExpressionList
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|&
+name|Exprs
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|SourceLocation
+operator|>
+operator|&
+name|CommaLocs
+argument_list|)
+decl_stmt|;
 comment|/// ParenParseOption - Control what ParseParenExpression will parse.
 enum|enum
 name|ParenParseOption
@@ -4759,6 +4840,12 @@ argument_list|(
 name|LambdaIntroducer
 operator|&
 name|Intro
+argument_list|,
+name|bool
+operator|*
+name|SkippedInits
+operator|=
+literal|0
 argument_list|)
 expr_stmt|;
 name|bool
@@ -5223,21 +5310,7 @@ name|TrailingElseLoc
 init|=
 literal|0
 parameter_list|)
-block|{
-name|StmtVector
-name|Stmts
-decl_stmt|;
-return|return
-name|ParseStatementOrDeclaration
-argument_list|(
-name|Stmts
-argument_list|,
-name|true
-argument_list|,
-name|TrailingElseLoc
-argument_list|)
-return|;
-block|}
+function_decl|;
 name|StmtResult
 name|ParseStatementOrDeclaration
 parameter_list|(
@@ -5903,6 +5976,26 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+name|bool
+name|DiagnoseMissingSemiAfterTagDefinition
+parameter_list|(
+name|DeclSpec
+modifier|&
+name|DS
+parameter_list|,
+name|AccessSpecifier
+name|AS
+parameter_list|,
+name|DeclSpecContext
+name|DSContext
+parameter_list|,
+name|LateParsedAttrList
+modifier|*
+name|LateAttrs
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 name|void
 name|ParseSpecifierQualifierList
 parameter_list|(
@@ -6439,6 +6532,13 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// Given that isCXXDeclarationSpecifier returns \c TPResult::True or
+comment|/// \c TPResult::Ambiguous, determine whether the decl-specifier would be
+comment|/// a type-specifier other than a cv-qualifier.
+name|bool
+name|isCXXDeclarationSpecifierAType
+parameter_list|()
+function_decl|;
 comment|/// \brief Determine whether an identifier has been tentatively declared as a
 comment|/// non-type. Such tentative declarations should not be found to name a type
 comment|/// during a tentative parse, but also should not be annotated as a non-type.
@@ -6457,16 +6557,6 @@ comment|// resolved and tentative parsing may stop. TPResult::Ambiguous() indica
 comment|// that more tentative parsing is necessary for disambiguation.
 comment|// They all consume tokens, so backtracking should be used after calling them.
 name|TPResult
-name|TryParseDeclarationSpecifier
-parameter_list|(
-name|bool
-modifier|*
-name|HasMissingTypename
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-name|TPResult
 name|TryParseSimpleDeclaration
 parameter_list|(
 name|bool
@@ -6479,6 +6569,14 @@ parameter_list|()
 function_decl|;
 name|TPResult
 name|TryParseProtocolQualifiers
+parameter_list|()
+function_decl|;
+name|TPResult
+name|TryParsePtrOperatorSeq
+parameter_list|()
+function_decl|;
+name|TPResult
+name|TryParseOperatorId
 parameter_list|()
 function_decl|;
 name|TPResult
@@ -6505,6 +6603,11 @@ modifier|*
 name|InvalidAsDeclaration
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|VersusTemplateArg
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|TPResult
@@ -6513,6 +6616,10 @@ parameter_list|()
 function_decl|;
 name|TPResult
 name|TryParseBracketDeclarator
+parameter_list|()
+function_decl|;
+name|TPResult
+name|TryConsumeDeclarationSpecifier
 parameter_list|()
 function_decl|;
 name|public
@@ -6732,6 +6839,12 @@ modifier|&
 name|attrs
 parameter_list|)
 function_decl|;
+comment|/// \brief Diagnose and skip C++11 attributes that appear in syntactic
+comment|/// locations where attributes are not allowed.
+name|void
+name|DiagnoseAndSkipCXX11Attributes
+parameter_list|()
+function_decl|;
 name|void
 name|MaybeParseGNUAttributes
 parameter_list|(
@@ -6880,6 +6993,11 @@ name|Syntax
 name|Syntax
 argument_list|)
 decl_stmt|;
+name|IdentifierLoc
+modifier|*
+name|ParseIdentifierLoc
+parameter_list|()
+function_decl|;
 name|void
 name|MaybeParseCXX11Attributes
 parameter_list|(
@@ -7263,6 +7381,25 @@ name|EndLoc
 parameter_list|)
 function_decl|;
 name|void
+name|ParseAttributeWithTypeArg
+parameter_list|(
+name|IdentifierInfo
+modifier|&
+name|AttrName
+parameter_list|,
+name|SourceLocation
+name|AttrNameLoc
+parameter_list|,
+name|ParsedAttributes
+modifier|&
+name|Attrs
+parameter_list|,
+name|SourceLocation
+modifier|*
+name|EndLoc
+parameter_list|)
+function_decl|;
+name|void
 name|ParseTypeofSpecifier
 parameter_list|(
 name|DeclSpec
@@ -7582,6 +7719,11 @@ name|bool
 name|AtomicAllowed
 init|=
 name|true
+parameter_list|,
+name|bool
+name|IdentifierRequired
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|void
@@ -7635,13 +7777,11 @@ name|Declarator
 operator|&
 name|D
 argument_list|,
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|DeclaratorChunk
 operator|::
 name|ParamInfo
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|ParamInfo
@@ -7658,13 +7798,11 @@ name|ParsedAttributes
 operator|&
 name|attrs
 argument_list|,
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|DeclaratorChunk
 operator|::
 name|ParamInfo
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|ParamInfo
@@ -7711,6 +7849,14 @@ name|bool
 name|OuterMightBeMessageSend
 init|=
 name|false
+parameter_list|)
+function_decl|;
+name|void
+name|DiagnoseUnexpectedNamespace
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|Context
 parameter_list|)
 function_decl|;
 name|Decl
@@ -8116,10 +8262,18 @@ parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// OpenMP: Directives and clauses.
+comment|/// \brief Parses declarative OpenMP directives.
 name|DeclGroupPtrTy
 name|ParseOpenMPDeclarativeDirective
 parameter_list|()
 function_decl|;
+comment|/// \brief Parses simple list of variables.
+comment|///
+comment|/// \param Kind Kind of the directive.
+comment|/// \param [out] VarList List of referenced variables.
+comment|/// \param AllowScopeSpecifier true, if the variables can have fully
+comment|/// qualified names.
+comment|///
 name|bool
 name|ParseOpenMPSimpleVarList
 argument_list|(
@@ -8128,12 +8282,78 @@ name|Kind
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|DeclarationNameInfo
+name|Expr
+operator|*
 operator|>
 operator|&
-name|IdList
+name|VarList
+argument_list|,
+name|bool
+name|AllowScopeSpecifier
 argument_list|)
 decl_stmt|;
+comment|/// \brief Parses declarative or executable directive.
+name|StmtResult
+name|ParseOpenMPDeclarativeOrExecutableDirective
+parameter_list|()
+function_decl|;
+comment|/// \brief Parses clause of kind \a CKind for directive of a kind \a Kind.
+comment|///
+comment|/// \param DKind Kind of current directive.
+comment|/// \param CKind Kind of current clause.
+comment|/// \param FirstClause true, if this is the first clause of a kind \a CKind
+comment|/// in current directive.
+comment|///
+name|OMPClause
+modifier|*
+name|ParseOpenMPClause
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|,
+name|OpenMPClauseKind
+name|CKind
+parameter_list|,
+name|bool
+name|FirstClause
+parameter_list|)
+function_decl|;
+comment|/// \brief Parses clause with a single expression of a kind \a Kind.
+comment|///
+comment|/// \param Kind Kind of current clause.
+comment|///
+name|OMPClause
+modifier|*
+name|ParseOpenMPSingleExprClause
+parameter_list|(
+name|OpenMPClauseKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// \brief Parses simple clause of a kind \a Kind.
+comment|///
+comment|/// \param Kind Kind of current clause.
+comment|///
+name|OMPClause
+modifier|*
+name|ParseOpenMPSimpleClause
+parameter_list|(
+name|OpenMPClauseKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// \brief Parses clause with the list of variables of a kind \a Kind.
+comment|///
+comment|/// \param Kind Kind of current clause.
+comment|///
+name|OMPClause
+modifier|*
+name|ParseOpenMPVarListClause
+parameter_list|(
+name|OpenMPClauseKind
+name|Kind
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|bool

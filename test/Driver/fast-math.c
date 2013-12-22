@@ -176,51 +176,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -fno-fast-math -fmath-errno -c %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH-MATH-ERRNO %s
-end_comment
-
-begin_comment
-comment|// CHECK-NO-FAST-MATH-MATH-ERRNO: "-cc1"
-end_comment
-
-begin_comment
-comment|// CHECK-NO-FAST-MATH-MATH-ERRNO: "-fmath-errno"
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -fmath-errno -fno-fast-math -c %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck --check-prefix=CHECK-MATH-ERRNO-NO-FAST-MATH %s
-end_comment
-
-begin_comment
-comment|// CHECK-MATH-ERRNO-NO-FAST-MATH: "-cc1"
-end_comment
-
-begin_comment
-comment|// CHECK-MATH-ERRNO-NO-FAST-MATH-NOT: "-fmath-errno"
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// RUN: %clang -### -fmath-errno -fno-math-errno -c %s 2>&1 \
 end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-MATH-ERRNO: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-MATH-ERRNO-NOT: "-fmath-errno"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Target defaults for -fmath-errno (reusing the above checks).
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target i686-unknown-linux -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MATH-ERRNO %s
 end_comment
 
 begin_comment
@@ -264,11 +248,83 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
 end_comment
 
 begin_comment
-comment|// CHECK-NO-MATH-ERRNO: "-cc1"
+comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-NO-MATH-ERRNO-NOT: "-fmath-errno"
+comment|// Check that -ffast-math disables -fmath-errno, and -fno-fast-math merely
+end_comment
+
+begin_comment
+comment|// preserves the target default. Also check various flag set operations between
+end_comment
+
+begin_comment
+comment|// the two flags. (Resuses above checks.)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -ffast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fmath-errno -ffast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -ffast-math -fmath-errno -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target i686-unknown-linux -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target i686-unknown-linux -fno-math-errno -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target i686-apple-darwin -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target i686-apple-darwin -fno-math-errno -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-fast-math -fno-math-errno -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-MATH-ERRNO %s
 end_comment
 
 begin_comment

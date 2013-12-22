@@ -30,11 +30,7 @@ comment|// CHECK: @[[LINE_200:.*]] = private unnamed_addr global {{.*}}, i32 200
 end_comment
 
 begin_comment
-comment|// CHECK: @[[DIVINT:.*]] = private unnamed_addr constant { i16, i16, [6 x i8] } { i16 0, i16 11, [6 x i8] c"'int'\00" }
-end_comment
-
-begin_comment
-comment|// CHECK: @[[LINE_300:.*]] = private unnamed_addr global {{.*}}, i32 300, i32 5 {{.*}} @[[DIVINT]]
+comment|// CHECK: @[[LINE_300:.*]] = private unnamed_addr global {{.*}}, i32 300, i32 5 {{.*}} @[[INT]]
 end_comment
 
 begin_decl_stmt

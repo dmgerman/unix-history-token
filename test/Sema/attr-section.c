@@ -19,7 +19,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{argument to section attribute was not a string literal}}
+comment|// expected-error {{'section' attribute requires a string}}
 end_comment
 
 begin_comment

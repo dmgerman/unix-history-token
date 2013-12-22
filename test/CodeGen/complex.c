@@ -160,8 +160,10 @@ name|cf
 operator|+=
 name|D
 expr_stmt|;
-comment|// FIXME: Currently unsupported!
-comment|//D += cf;
+name|D
+operator|+=
+name|cf
+expr_stmt|;
 name|cf
 operator|/=
 name|g1
@@ -242,8 +244,10 @@ name|cs
 operator|+=
 name|i
 expr_stmt|;
-comment|// FIXME: Currently unsupported!
-comment|//D += cf;
+name|D
+operator|+=
+name|cf
+expr_stmt|;
 name|cs
 operator|/=
 name|ci1
@@ -415,6 +419,28 @@ block|{
 literal|1
 block|}
 decl_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|const
+specifier|_Complex
+name|double
+name|test9const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|_Complex
+name|double
+name|test9func
+parameter_list|()
+block|{
+return|return
+name|test9const
+return|;
 block|}
 end_function
 

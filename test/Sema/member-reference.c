@@ -3,10 +3,6 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -verify -fsyntax-only
 end_comment
 
-begin_comment
-comment|// expected-no-diagnostics
-end_comment
-
 begin_struct
 struct|struct
 name|simple
@@ -88,6 +84,24 @@ name|z
 operator|=
 literal|2
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|PR17762
+parameter_list|(
+name|struct
+name|simple
+name|c
+parameter_list|)
+block|{
+return|return
+name|c
+operator|->
+name|i
+return|;
+comment|// expected-error {{member reference type 'struct simple' is not a pointer; maybe you meant to use '.'?}}
 block|}
 end_function
 

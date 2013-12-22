@@ -99,11 +99,11 @@ union|;
 comment|// CHECK:      %[[CHECK0:.*]] = icmp ne {{.*}}* %[[PTR:.*]], null
 comment|// CHECK-TRAP: %[[CHECK0:.*]] = icmp ne {{.*}}* %[[PTR:.*]], null
 comment|// CHECK:      %[[I8PTR:.*]] = bitcast i32* %[[PTR]] to i8*
-comment|// CHECK-NEXT: %[[SIZE:.*]] = call i64 @llvm.objectsize.i64(i8* %[[I8PTR]], i1 false)
+comment|// CHECK-NEXT: %[[SIZE:.*]] = call i64 @llvm.objectsize.i64.p0i8(i8* %[[I8PTR]], i1 false)
 comment|// CHECK-NEXT: %[[CHECK1:.*]] = icmp uge i64 %[[SIZE]], 4
 comment|// CHECK-NEXT: %[[CHECK01:.*]] = and i1 %[[CHECK0]], %[[CHECK1]]
 comment|// CHECK-TRAP:      %[[I8PTR:.*]] = bitcast i32* %[[PTR]] to i8*
-comment|// CHECK-TRAP-NEXT: %[[SIZE:.*]] = call i64 @llvm.objectsize.i64(i8* %[[I8PTR]], i1 false)
+comment|// CHECK-TRAP-NEXT: %[[SIZE:.*]] = call i64 @llvm.objectsize.i64.p0i8(i8* %[[I8PTR]], i1 false)
 comment|// CHECK-TRAP-NEXT: %[[CHECK1:.*]] = icmp uge i64 %[[SIZE]], 4
 comment|// CHECK-TRAP-NEXT: %[[CHECK01:.*]] = and i1 %[[CHECK0]], %[[CHECK1]]
 comment|// CHECK:      %[[PTRTOINT:.*]] = ptrtoint {{.*}}* %[[PTR]] to i64

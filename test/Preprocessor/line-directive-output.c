@@ -187,5 +187,13 @@ begin_empty
 empty|# 49 "A.c"
 end_empty
 
+begin_comment
+comment|// CHECK: # 50 "a\n.c"
+end_comment
+
+begin_empty
+empty|# 50 "a\012.c"
+end_empty
+
 end_unit
 

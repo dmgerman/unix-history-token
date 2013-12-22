@@ -12,7 +12,7 @@ comment|// CHECK-NOT: opaque
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f0
+comment|// CHECK-LABEL: define void @f0
 end_comment
 
 begin_decl_stmt

@@ -76,5 +76,13 @@ begin_comment
 comment|// TOP: inclusion directive=targeted-fields.h ({{.*[/\\]}}test{{[/\\]}}Index{{[/\\]}}targeted-fields.h) =[16:1 - 16:2]
 end_comment
 
+begin_comment
+comment|// rdar://13803893
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -file-includes-in=%S/Inputs/empty.h %S/Inputs/empty.h
+end_comment
+
 end_unit
 

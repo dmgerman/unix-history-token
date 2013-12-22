@@ -12,7 +12,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-undefined-trap-on-err
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-TRAP: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|bounds|enum|bool),?){14}"}}
+comment|// CHECK-UNDEFINED-TRAP: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool),?){14}"}}
 end_comment
 
 begin_comment
@@ -24,7 +24,15 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=undefined %s -### 2>&
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift|unreachable|return|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|bounds|enum|bool),?){15}"}}
+comment|// CHECK-UNDEFINED: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|function|shift|unreachable|return|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool),?){16}"}}
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=undefined %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-UNDEFINED-DARWIN: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift|unreachable|return|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool),?){15}"}}
 end_comment
 
 begin_comment
@@ -40,7 +48,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=thread,undefined -fno
 end_comment
 
 begin_comment
-comment|// CHECK-PARTIAL-UNDEFINED: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift|unreachable|return|vla-bound|alignment|null|object-size|bounds),?){11}"}}
+comment|// CHECK-PARTIAL-UNDEFINED: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|function|shift|unreachable|return|vla-bound|alignment|null|object-size|array-bounds),?){12}"}}
 end_comment
 
 begin_comment
@@ -52,11 +60,11 @@ comment|// CHECK-ASAN-FULL: "-fsanitize={{((address|init-order|use-after-return|
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fno-sanitize=init-order -fsanitize=address %s -### 2>&1 |  FileCheck %s --check-prefix=CHECK-ASAN-IMPLIED-INIT-ORDER
+comment|// RUN: %clang -target x86_64-linux-gnu -fno-sanitize=init-order,use-after-return -fsanitize=address %s -### 2>&1 |  FileCheck %s --check-prefix=CHECK-ASAN-IMPLIED-INIT-ORDER-UAR
 end_comment
 
 begin_comment
-comment|// CHECK-ASAN-IMPLIED-INIT-ORDER: "-fsanitize={{((address|init-order),?){2}"}}
+comment|// CHECK-ASAN-IMPLIED-INIT-ORDER-UAR: "-fsanitize={{((address|init-order|use-after-return),?){3}"}}
 end_comment
 
 begin_comment
@@ -65,6 +73,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-ASAN-NO-IMPLIED-INIT-ORDER-NOT: init-order
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fno-sanitize=use-after-return %s -### 2>&1 |  FileCheck %s --check-prefix=CHECK-ASAN-NO-IMPLIED-UAR
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-NO-IMPLIED-UAR-NOT: use-after-return
 end_comment
 
 begin_comment
@@ -141,6 +157,22 @@ end_comment
 
 begin_comment
 comment|// CHECK-SANM-SANT: '-fsanitize=thread' not allowed with '-fsanitize=memory'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=leak,thread -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANL-SANT
+end_comment
+
+begin_comment
+comment|// CHECK-SANL-SANT: '-fsanitize=leak' not allowed with '-fsanitize=thread'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=leak,memory -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANL-SANM
+end_comment
+
+begin_comment
+comment|// CHECK-SANL-SANM: '-fsanitize=leak' not allowed with '-fsanitize=memory'
 end_comment
 
 begin_comment
@@ -244,19 +276,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fcatch-undefined-behavior -fthr
 end_comment
 
 begin_comment
-comment|// CHECK-DEPRECATED: argument '-fcatch-undefined-behavior' is deprecated, use '-fsanitize=undefined-trap -fsanitize-undefined-trap-on-error' instead
-end_comment
-
-begin_comment
-comment|// CHECK-DEPRECATED: argument '-fthread-sanitizer' is deprecated, use '-fsanitize=thread' instead
-end_comment
-
-begin_comment
-comment|// CHECK-DEPRECATED: argument '-fno-thread-sanitizer' is deprecated, use '-fno-sanitize=thread' instead
-end_comment
-
-begin_comment
-comment|// CHECK-DEPRECATED: argument '-faddress-sanitizer' is deprecated, use '-fsanitize=address' instead
+comment|// CHECK-DEPRECATED: argument '-fbounds-checking' is deprecated, use '-fsanitize=local-bounds' instead
 end_comment
 
 begin_comment
@@ -264,7 +284,19 @@ comment|// CHECK-DEPRECATED: argument '-fno-address-sanitizer' is deprecated, us
 end_comment
 
 begin_comment
-comment|// CHECK-DEPRECATED: argument '-fbounds-checking' is deprecated, use '-fsanitize=bounds' instead
+comment|// CHECK-DEPRECATED: argument '-faddress-sanitizer' is deprecated, use '-fsanitize=address' instead
+end_comment
+
+begin_comment
+comment|// CHECK-DEPRECATED: argument '-fno-thread-sanitizer' is deprecated, use '-fno-sanitize=thread' instead
+end_comment
+
+begin_comment
+comment|// CHECK-DEPRECATED: argument '-fthread-sanitizer' is deprecated, use '-fsanitize=thread' instead
+end_comment
+
+begin_comment
+comment|// CHECK-DEPRECATED: argument '-fcatch-undefined-behavior' is deprecated, use '-fsanitize=undefined-trap -fsanitize-undefined-trap-on-error' instead
 end_comment
 
 begin_comment
@@ -328,6 +360,14 @@ comment|// CHECK-ANDROID-ASAN-NO-PIE: "-pie"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm-linux-androideabi %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ANDROID-NO-ASAN
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-NO-ASAN: "-mrelocation-model" "static"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm-linux-androideabi -fsanitize=address -fsanitize-address-zero-base-shadow %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ANDROID-ASAN-ZERO-BASE
 end_comment
 
@@ -369,6 +409,110 @@ end_comment
 
 begin_comment
 comment|// CHECK-NO-RECOVER: "-fno-sanitize-recover"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANL
+end_comment
+
+begin_comment
+comment|// CHECK-SANL: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address,leak -fno-sanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANA-SANL-NO-SANA
+end_comment
+
+begin_comment
+comment|// CHECK-SANA-SANL-NO-SANA: "-fsanitize=leak"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MSAN
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN: "-fno-assume-sane-operator-new"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=zzz %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-DIAG1
+end_comment
+
+begin_comment
+comment|// CHECK-DIAG1: unsupported argument 'zzz' to option 'fsanitize='
+end_comment
+
+begin_comment
+comment|// CHECK-DIAG1-NOT: unsupported argument 'zzz' to option 'fsanitize='
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i686-linux-gnu -fsanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MSAN-X86
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-X86: error: unsupported option '-fsanitize=memory' for target 'i686--linux-gnu'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MSAN-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-DARWIN: unsupported option '-fsanitize=memory' for target 'x86_64-apple-darwin10'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=memory -fno-sanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MSAN-NOMSAN-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-NOMSAN-DARWIN-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=memory -fsanitize=thread,memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MSAN-TSAN-MSAN-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-TSAN-MSAN-DARWIN: unsupported option '-fsanitize=thread,memory' for target 'x86_64-apple-darwin10'
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-TSAN-MSAN-DARWIN-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=thread,memory -fsanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TSAN-MSAN-MSAN-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-MSAN-MSAN-DARWIN: unsupported option '-fsanitize=memory' for target 'x86_64-apple-darwin10'
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-MSAN-MSAN-DARWIN: unsupported option '-fsanitize=thread' for target 'x86_64-apple-darwin10'
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-MSAN-MSAN-DARWIN-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=function %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-FSAN-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-FSAN-DARWIN: unsupported option '-fsanitize=function' for target 'x86_64-apple-darwin10'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=function -fsanitize=undefined %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-FSAN-UBSAN-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-FSAN-UBSAN-DARWIN: unsupported option '-fsanitize=function' for target 'x86_64-apple-darwin10'
 end_comment
 
 end_unit

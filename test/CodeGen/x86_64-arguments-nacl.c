@@ -82,7 +82,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f1(i64 %p1.coerce0, i64 %p1.coerce1)
+comment|// CHECK-LABEL: define void @f1(i64 %p1.coerce0, i64 %p1.coerce1)
 end_comment
 
 begin_function
@@ -107,7 +107,7 @@ comment|// long doubles are 64 bits on NaCl
 end_comment
 
 begin_comment
-comment|// CHECK: define double @f5()
+comment|// CHECK-LABEL: define double @f5()
 end_comment
 
 begin_function
@@ -125,7 +125,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f6(i8 signext %a0, i16 signext %a1, i32 %a2, i64 %a3, i8* %a4)
+comment|// CHECK-LABEL: define void @f6(i8 signext %a0, i16 signext %a1, i32 %a2, i64 %a3, i8* %a4)
 end_comment
 
 begin_function
@@ -153,11 +153,11 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define i64 @f8_1()
+comment|// CHECK-LABEL: define i64 @f8_1()
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f8_2(i64 %a0.coerce)
+comment|// CHECK-LABEL: define void @f8_2(i64 %a0.coerce)
 end_comment
 
 begin_union
@@ -201,7 +201,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define i64 @f9()
+comment|// CHECK-LABEL: define i64 @f9()
 end_comment
 
 begin_struct
@@ -230,7 +230,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define void @f10(i64 %a0.coerce)
+comment|// CHECK-LABEL: define void @f10(i64 %a0.coerce)
 decl|struct
 name|s10
 block|{
@@ -260,7 +260,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define double @f11()
+comment|// CHECK-LABEL: define double @f11()
 end_comment
 
 begin_union
@@ -283,8 +283,8 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define i32 @f12_0()
-comment|// CHECK: define void @f12_1(i32 %a0.coerce)
+comment|// CHECK-LABEL: define i32 @f12_0()
+comment|// CHECK-LABEL: define void @f12_1(i32 %a0.coerce)
 decl|struct
 name|s12
 block|{
@@ -407,7 +407,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f20(%struct.s20* byval align 32 %x)
+comment|// CHECK-LABEL: define void @f20(%struct.s20* byval align 32 %x)
 end_comment
 
 begin_struct
@@ -511,7 +511,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: define i32 @f48(%struct.s1* byval %s)
+comment|// CHECK-LABEL: define i32 @f48(%struct.s1* byval %s)
 end_comment
 
 begin_decl_stmt
@@ -537,7 +537,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define void @f49(%struct.s1* noalias sret %agg.result)
+comment|// CHECK-LABEL: define void @f49(%struct.s1* noalias sret %agg.result)
 end_comment
 
 begin_decl_stmt
@@ -589,7 +589,7 @@ comment|// Unions should be passed as byval structs
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f50(%union.simple_union* byval %s)
+comment|// CHECK-LABEL: define void @f50(%union.simple_union* byval %s)
 end_comment
 
 begin_decl_stmt
@@ -638,7 +638,7 @@ comment|// Bitfields should be passed as byval structs
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f51(%struct.bitfield1* byval %bf1)
+comment|// CHECK-LABEL: define void @f51(%struct.bitfield1* byval %bf1)
 end_comment
 
 begin_decl_stmt

@@ -355,5 +355,41 @@ expr_stmt|;
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+name|int
+name|PR4997
+name|__attribute__
+typedef|((
+name|address_space
+typedef|(
+name|Foobar
+typedef|)));
+end_typedef
+
+begin_comment
+comment|// expected-error {{use of undeclared identifier 'Foobar'}}
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(address_space(
+literal|"12"
+argument|))
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+modifier|*
+name|i
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{'address_space' attribute requires an integer constant}}
+end_comment
+
 end_unit
 

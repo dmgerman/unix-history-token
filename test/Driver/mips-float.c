@@ -76,15 +76,15 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFT %s
 end_comment
 
 begin_comment
+comment|// CHECK-SOFT: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
 comment|// CHECK-SOFT: "-msoft-float"
 end_comment
 
 begin_comment
 comment|// CHECK-SOFT: "-mfloat-abi" "soft"
-end_comment
-
-begin_comment
-comment|// CHECK-SOFT: "-target-feature" "+soft-float"
 end_comment
 
 begin_comment
@@ -132,15 +132,15 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-SOFT %s
 end_comment
 
 begin_comment
+comment|// CHECK-ABI-SOFT: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
 comment|// CHECK-ABI-SOFT: "-msoft-float"
 end_comment
 
 begin_comment
 comment|// CHECK-ABI-SOFT: "-mfloat-abi" "soft"
-end_comment
-
-begin_comment
-comment|// CHECK-ABI-SOFT: "-target-feature" "+soft-float"
 end_comment
 
 begin_comment
@@ -192,11 +192,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-SINGLE %s
 end_comment
 
 begin_comment
-comment|// CHECK-ABI-SINGLE: "-mfloat-abi" "hard"
+comment|// CHECK-ABI-SINGLE: "-target-feature" "+single-float"
 end_comment
 
 begin_comment
-comment|// CHECK-ABI-SINGLE: "-target-feature" "+single-float"
+comment|// CHECK-ABI-SINGLE: "-mfloat-abi" "hard"
 end_comment
 
 begin_comment
@@ -220,11 +220,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-SOFT-SINGLE %s
 end_comment
 
 begin_comment
-comment|// CHECK-ABI-SOFT-SINGLE: "-mfloat-abi" "soft"
+comment|// CHECK-ABI-SOFT-SINGLE: "-target-feature" "+single-float"
 end_comment
 
 begin_comment
-comment|// CHECK-ABI-SOFT-SINGLE: "-target-feature" "+single-float"
+comment|// CHECK-ABI-SOFT-SINGLE: "-mfloat-abi" "soft"
 end_comment
 
 begin_comment
@@ -276,15 +276,15 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-HARD-MIPS16 %s
 end_comment
 
 begin_comment
+comment|// CHECK-HARD-MIPS16: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
 comment|// CHECK-HARD-MIPS16: "-msoft-float"
 end_comment
 
 begin_comment
 comment|// CHECK-HARD-MIPS16: "-mfloat-abi" "soft"
-end_comment
-
-begin_comment
-comment|// CHECK-HARD-MIPS16: "-target-feature" "+soft-float"
 end_comment
 
 begin_comment
@@ -312,15 +312,15 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFT-MIPS16 %s
 end_comment
 
 begin_comment
+comment|// CHECK-SOFT-MIPS16: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
 comment|// CHECK-SOFT-MIPS16: "-msoft-float"
 end_comment
 
 begin_comment
 comment|// CHECK-SOFT-MIPS16: "-mfloat-abi" "soft"
-end_comment
-
-begin_comment
-comment|// CHECK-SOFT-MIPS16: "-target-feature" "+soft-float"
 end_comment
 
 begin_comment
@@ -344,15 +344,15 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-HARD-MIPS16 %s
 end_comment
 
 begin_comment
+comment|// CHECK-ABI-HARD-MIPS16: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
 comment|// CHECK-ABI-HARD-MIPS16: "-msoft-float"
 end_comment
 
 begin_comment
 comment|// CHECK-ABI-HARD-MIPS16: "-mfloat-abi" "soft"
-end_comment
-
-begin_comment
-comment|// CHECK-ABI-HARD-MIPS16: "-target-feature" "+soft-float"
 end_comment
 
 begin_comment
@@ -380,15 +380,15 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-SOFT-MIPS16 %s
 end_comment
 
 begin_comment
+comment|// CHECK-ABI-SOFT-MIPS16: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
 comment|// CHECK-ABI-SOFT-MIPS16: "-msoft-float"
 end_comment
 
 begin_comment
 comment|// CHECK-ABI-SOFT-MIPS16: "-mfloat-abi" "soft"
-end_comment
-
-begin_comment
-comment|// CHECK-ABI-SOFT-MIPS16: "-target-feature" "+soft-float"
 end_comment
 
 end_unit

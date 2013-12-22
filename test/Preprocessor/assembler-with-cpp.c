@@ -165,28 +165,40 @@ literal|11
 operator|:
 name|T11
 argument_list|(
-argument|b
+name|b
+argument_list|)
+comment|// CHECK-Identifiers-True: 11: #0
+comment|// Universal character names can specify basic ascii and control characters
+literal|12
+operator|:
+operator|\
+name|u0020
+operator|\
+name|u0030
+operator|\
+name|u0080
+operator|\
+name|u0000
+comment|// CHECK-Identifiers-False: 12: \u0020\u0030\u0080\u0000
+comment|// This should not crash
+comment|// rdar://8823139
+empty|# ##
+comment|// CHECK-Identifiers-False: # ##
+define|#
+directive|define
+name|X
+parameter_list|(
+name|a
+parameter_list|)
+value|# # # 1
+name|X
+argument_list|(
+literal|1
 argument_list|)
 end_expr_stmt
 
 begin_comment
-comment|// CHECK-Identifiers-True: 11: #0
-end_comment
-
-begin_comment
-comment|// This should not crash
-end_comment
-
-begin_comment
-comment|// rdar://8823139
-end_comment
-
-begin_empty
-empty|# ##
-end_empty
-
-begin_comment
-comment|// CHECK-Identifiers-False: # ##
+comment|// CHECK-Identifiers-False: # # # 1
 end_comment
 
 end_unit

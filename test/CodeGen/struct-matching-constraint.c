@@ -4,7 +4,7 @@ comment|// REQUIRES: arm-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -S -emit-llvm -triple armv7a-apple-darwin %s -o /dev/null
+comment|// RUN: %clang_cc1 -S -emit-llvm -triple armv7a-apple-darwin -target-feature +neon %s -o /dev/null
 end_comment
 
 begin_typedef

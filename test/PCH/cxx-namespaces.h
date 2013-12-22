@@ -13,6 +13,16 @@ name|int
 name|x
 decl_stmt|;
 block|}
+name|void
+name|f
+parameter_list|()
+function_decl|;
+name|void
+name|f
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -165,7 +165,7 @@ comment|// rdar://8403108
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f_8403108
+comment|// CHECK-LABEL: define void @f_8403108
 end_comment
 
 begin_function
@@ -386,7 +386,7 @@ comment|// http://llvm.org/PR8567
 end_comment
 
 begin_comment
-comment|// CHECK: define double @test_PR8567
+comment|// CHECK-LABEL: define double @test_PR8567
 end_comment
 
 begin_decl_stmt
@@ -461,7 +461,7 @@ literal|6
 index|]
 argument_list|)
 block|{
-comment|// CHECK:    define i32 @test4(
+comment|// CHECK-LABEL:    define i32 @test4(
 comment|// CHECK:      [[N:%.*]] = alloca i32, align 4
 comment|// CHECK-NEXT: [[P:%.*]] = alloca [6 x i8]*, align 4
 comment|// CHECK-NEXT: [[P2:%.*]] = alloca [6 x i8]*, align 4
@@ -530,7 +530,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define void @test5(
+comment|// CHECK-LABEL: define void @test5(
 name|int
 name|a
 index|[
@@ -591,7 +591,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define void @test6(
+comment|// CHECK-LABEL: define void @test6(
 name|int
 name|n
 init|=
@@ -668,7 +668,7 @@ argument_list|)
 index|]
 parameter_list|)
 block|{
-comment|// CHECK: define void @test7(
+comment|// CHECK-LABEL: define void @test7(
 comment|// CHECK: call i32 @b(i8* null)
 block|}
 end_function

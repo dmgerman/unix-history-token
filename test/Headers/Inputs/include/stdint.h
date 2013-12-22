@@ -57,6 +57,13 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
+name|__INTPTR_TYPE__
+name|intptr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|unsigned
 name|__INTPTR_TYPE__
 name|uintptr_t

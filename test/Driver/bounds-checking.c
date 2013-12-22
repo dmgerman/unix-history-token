@@ -8,7 +8,7 @@ comment|// RUN: FileCheck -check-prefix=CHECK< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK: "-fsanitize=bounds"
+comment|// CHECK: "-fsanitize=array-bounds,local-bounds"
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// RUN: FileCheck -check-prefix=CHECK-OLD< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK-OLD: "-fsanitize=bounds"
+comment|// CHECK-OLD: "-fsanitize=local-bounds"
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|// RUN: FileCheck -check-prefix=CHECK-OLD2< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK-OLD2: "-fsanitize=bounds"
+comment|// CHECK-OLD2: "-fsanitize=local-bounds"
 end_comment
 
 end_unit

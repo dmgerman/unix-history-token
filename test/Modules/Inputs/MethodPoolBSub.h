@@ -25,6 +25,15 @@ name|method4
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+operator|-
+operator|(
+name|id
+operator|)
+name|method6
+expr_stmt|;
+end_expr_stmt
+
 begin_macro
 unit|@
 name|end

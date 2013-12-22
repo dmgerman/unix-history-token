@@ -1028,7 +1028,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{first argument to atomic builtin must be a pointer}}
+comment|// expected-error {{address argument to atomic builtin must be a pointer}}
 name|__c11_atomic_store
 argument_list|(
 operator|(
@@ -1042,7 +1042,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{first argument to atomic operation must be a pointer to _Atomic}}
+comment|// expected-error {{address argument to atomic operation must be a pointer to _Atomic}}
 name|__c11_atomic_load
 argument_list|(
 name|i
@@ -1776,7 +1776,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{first argument to atomic operation must be a pointer to non-const _Atomic type ('const _Atomic(int) *' invalid)}}
+comment|// expected-error {{address argument to atomic operation must be a pointer to non-const _Atomic type ('const _Atomic(int) *' invalid)}}
 name|__c11_atomic_store
 argument_list|(
 operator|&
@@ -1787,7 +1787,7 @@ argument_list|,
 name|memory_order_release
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{first argument to atomic operation must be a pointer to non-const _Atomic type ('const _Atomic(int) *' invalid)}}
+comment|// expected-error {{address argument to atomic operation must be a pointer to non-const _Atomic type ('const _Atomic(int) *' invalid)}}
 name|__c11_atomic_load
 argument_list|(
 operator|&
@@ -1796,7 +1796,7 @@ argument_list|,
 name|memory_order_acquire
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{first argument to atomic operation must be a pointer to non-const _Atomic type ('const _Atomic(int) *' invalid)}}
+comment|// expected-error {{address argument to atomic operation must be a pointer to non-const _Atomic type ('const _Atomic(int) *' invalid)}}
 block|}
 end_function
 
@@ -1821,6 +1821,45 @@ name|b
 init|=
 name|PR12527_a
 decl_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|PR16931
+parameter_list|(
+name|int
+modifier|*
+name|x
+parameter_list|)
+block|{
+comment|// expected-note {{passing argument to parameter 'x' here}}
+typedef|typedef
+struct|struct
+block|{
+atomic|_Atomic
+argument_list|(
+name|_Bool
+argument_list|)
+name|flag
+decl_stmt|;
+block|}
+name|flag
+typedef|;
+name|flag
+name|flagvar
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
+name|PR16931
+argument_list|(
+operator|&
+name|flagvar
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{incompatible pointer types}}
 block|}
 end_function
 

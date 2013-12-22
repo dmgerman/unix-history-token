@@ -12,6 +12,30 @@ comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-checker=core
 end_comment
 
 begin_comment
+comment|// RUN: ls %T/dir | grep report
+end_comment
+
+begin_comment
+comment|// PR16547: Test relative paths
+end_comment
+
+begin_comment
+comment|// RUN: cd %T/dir
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-checker=core -o testrelative %s
+end_comment
+
+begin_comment
+comment|// RUN: ls %T/dir/testrelative | grep report
+end_comment
+
+begin_comment
+comment|// REQUIRES: shell
+end_comment
+
+begin_comment
 comment|// Currently this test mainly checks that the HTML diagnostics doesn't crash
 end_comment
 

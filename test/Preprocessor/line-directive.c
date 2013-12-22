@@ -4,11 +4,11 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify -pedantic %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E %s 2>&1 | grep 'blonk.c:92:2: error: ABC'
+comment|// RUN: not %clang_cc1 -E %s 2>&1 | grep 'blonk.c:92:2: error: ABC'
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E %s 2>&1 | grep 'blonk.c:93:2: error: DEF'
+comment|// RUN: not %clang_cc1 -E %s 2>&1 | grep 'blonk.c:93:2: error: DEF'
 end_comment
 
 begin_line

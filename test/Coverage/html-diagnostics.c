@@ -12,6 +12,14 @@ comment|// RUN: cat %t/*.html | FileCheck %s
 end_comment
 
 begin_comment
+comment|// Because of the glob (*.html)
+end_comment
+
+begin_comment
+comment|// REQUIRES: shell
+end_comment
+
+begin_comment
 comment|// CHECK:<h3>Annotated Source Code</h3>
 end_comment
 

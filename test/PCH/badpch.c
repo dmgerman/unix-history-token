@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -include-pch %S/Inputs/badpch-empty.h.gch %s 2>&1 | FileCheck -check-prefix=CHECK-EMPTY %s
+comment|// RUN: not %clang_cc1 -fsyntax-only -include-pch %S/Inputs/badpch-empty.h.gch %s 2>&1 | FileCheck -check-prefix=CHECK-EMPTY %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -include-pch %S/Inputs/badpch-dir.h.gch %s 2>&1 | FileCheck -check-prefix=CHECK-DIR %s
+comment|// RUN: not %clang_cc1 -fsyntax-only -include-pch %S/Inputs/badpch-dir.h.gch %s 2>&1 | FileCheck -check-prefix=CHECK-DIR %s
 end_comment
 
 begin_comment

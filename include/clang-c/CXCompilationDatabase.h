@@ -62,7 +62,7 @@ comment|/**  * \brief Error codes for Compilation Database  */
 typedef|typedef
 enum|enum
 block|{
-comment|/*    * \brief No error occured    */
+comment|/*    * \brief No error occurred    */
 name|CXCompilationDatabase_NoError
 init|=
 literal|0
@@ -165,6 +165,36 @@ comment|/**  * \brief Get the I'th argument value in the compiler invocations  *
 name|CINDEX_LINKAGE
 name|CXString
 name|clang_CompileCommand_getArg
+parameter_list|(
+name|CXCompileCommand
+parameter_list|,
+name|unsigned
+name|I
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Get the number of source mappings for the compiler invocation.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CompileCommand_getNumMappedSources
+parameter_list|(
+name|CXCompileCommand
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Get the I'th mapped source path for the compiler invocation.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_CompileCommand_getMappedSourcePath
+parameter_list|(
+name|CXCompileCommand
+parameter_list|,
+name|unsigned
+name|I
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Get the I'th mapped source content for the compiler invocation.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_CompileCommand_getMappedSourceContent
 parameter_list|(
 name|CXCompileCommand
 parameter_list|,

@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -E %s | grep 'a:Y'
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -E %s | grep 'b:Y'
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -E %s | grep 'c:YY'
+comment|// RUN: %clang_cc1 -E %s | FileCheck --strict-whitespace %s
 end_comment
 
 begin_define
@@ -31,6 +23,10 @@ name|FOO
 argument_list|()
 end_macro
 
+begin_comment
+comment|// CHECK: a:Y
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -51,6 +47,10 @@ name|FOO2
 argument_list|()
 end_macro
 
+begin_comment
+comment|// CHECK: b:Y
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -70,6 +70,39 @@ begin_macro
 name|FOO3
 argument_list|()
 end_macro
+
+begin_comment
+comment|// CHECK: c:YY
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOO4
+parameter_list|(
+name|X
+parameter_list|,
+name|Y
+parameter_list|)
+value|X ## Y
+end_define
+
+begin_label
+name|d
+label|:
+end_label
+
+begin_macro
+name|FOO4
+argument_list|(
+argument_list|,
+argument|FOO4(,)
+argument_list|)
+end_macro
+
+begin_comment
+comment|// CHECK: d:FOO4
+end_comment
 
 end_unit
 

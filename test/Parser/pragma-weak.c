@@ -112,5 +112,71 @@ name|x
 name|c
 end_pragma
 
+begin_function
+name|void
+name|pragma_is_not_a_statement
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|int
+name|t
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|x
+condition|)
+pragma|#
+directive|pragma
+name|weak
+name|t
+else|else
+comment|// expected-error {{expected expression}}
+pragma|#
+directive|pragma
+name|weak
+name|t
+block|}
+switch|switch
+condition|(
+name|x
+condition|)
+block|{
+case|case
+literal|1
+case|:
+pragma|#
+directive|pragma
+name|weak
+name|t
+block|}
+comment|// expected-error {{expected statement}}
+switch|switch
+condition|(
+name|x
+condition|)
+block|{
+default|default:
+pragma|#
+directive|pragma
+name|weak
+name|t
+block|}
+comment|// expected-error {{expected statement}}
+name|label
+label|:
+pragma|#
+directive|pragma
+name|weak
+name|t
+block|}
+end_function
+
+begin_comment
+comment|// expected-error {{expected statement}}
+end_comment
+
 end_unit
 

@@ -25,7 +25,7 @@ block|}
 end_block
 
 begin_comment
-comment|// CHECK: attributes [[ATTR]] = { {{.*}}optsize{{.*}} }
+comment|// CHECK: attributes [[ATTR]] = { {{.*}}cold{{.*}}optsize{{.*}} }
 end_comment
 
 end_unit

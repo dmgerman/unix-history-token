@@ -64,7 +64,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no arguments}}
+comment|// expected-error {{'nodebug' attribute takes no arguments}}
 end_comment
 
 end_unit

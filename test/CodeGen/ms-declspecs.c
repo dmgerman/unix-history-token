@@ -3,6 +3,42 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple i386-pc-win32 %s -emit-llvm -fms-compatibility -o - | FileCheck %s
 end_comment
 
+begin_macro
+name|__declspec
+argument_list|(
+argument|selectany
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|x1
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+specifier|const
+name|__declspec
+argument_list|(
+argument|selectany
+argument_list|)
+name|int
+name|x2
+operator|=
+literal|2
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// CHECK: @x1 = weak_odr global i32 1, align 4
+end_comment
+
+begin_comment
+comment|// CHECK: @x2 = weak_odr constant i32 2, align 4
+end_comment
+
 begin_struct
 struct|struct
 name|__declspec

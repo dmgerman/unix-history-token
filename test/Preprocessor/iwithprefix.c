@@ -24,15 +24,11 @@ comment|// RUN:   -iprefix %t.tmps/ -iwithprefix second \
 end_comment
 
 begin_comment
-comment|// RUN:    -isystem %t.tmps/first -v 2> %t.out
+comment|// RUN:    -isystem %t.tmps/first -v %s 2> %t.out
 end_comment
 
 begin_comment
-comment|// RUN: cat %t.out
-end_comment
-
-begin_comment
-comment|// RUN: FileCheck< %t.out %s
+comment|// RUN: FileCheck %s< %t.out
 end_comment
 
 begin_comment
@@ -44,7 +40,7 @@ comment|// CHECK: {{.*}}.tmps/first
 end_comment
 
 begin_comment
-comment|// CHECK: /lib/clang/{{[.0-9]+}}/include
+comment|// CHECK: {{/|\\}}lib{{/|\\}}clang{{/|\\}}{{[.0-9]+}}{{/|\\}}include
 end_comment
 
 begin_comment

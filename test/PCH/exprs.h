@@ -551,6 +551,33 @@ expr_stmt|;
 end_typedef
 
 begin_comment
+comment|// ConvertVectorExpr
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|( ext_vector_type(
+literal|2
+argument|) )
+argument_list|)
+name|float
+name|float2
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typeof
+argument_list|(
+argument|__builtin_convertvector(vec2, float2)
+argument_list|)
+name|convert_expr
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// GenericSelectionExpr
 end_comment
 

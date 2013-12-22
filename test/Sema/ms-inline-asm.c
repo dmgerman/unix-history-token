@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: disabled
+comment|// REQUIRES: x86-64-registered-target
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ expr_stmt|;
 asm|__asm {
 asm|mov eax, 1+=2
 comment|//
-asm|expected-error 2 {{unknown token in expression}}
+asm|expected-error {{unknown token in expression}}
 asm|}
 name|f
 argument_list|()
@@ -49,7 +49,7 @@ expr_stmt|;
 asm|__asm {
 asm|mov eax, 1+++
 comment|//
-asm|expected-error 2 {{unknown token in expression}}
+asm|expected-error {{unknown token in expression}}
 asm|}
 name|f
 argument_list|()
@@ -57,7 +57,7 @@ expr_stmt|;
 asm|__asm {
 asm|mov eax, LENGTH bar
 comment|//
-asm|expected-error {{Unable to lookup expr!}}
+asm|expected-error {{unable to lookup expression}}
 asm|}
 name|f
 argument_list|()
@@ -65,7 +65,7 @@ expr_stmt|;
 asm|__asm {
 asm|mov eax, SIZE bar
 comment|//
-asm|expected-error {{Unable to lookup expr!}}
+asm|expected-error {{unable to lookup expression}}
 asm|}
 name|f
 argument_list|()
@@ -73,7 +73,7 @@ expr_stmt|;
 asm|__asm {
 asm|mov eax, TYPE bar
 comment|//
-asm|expected-error {{Unable to lookup expr!}}
+asm|expected-error {{unable to lookup expression}}
 asm|}
 block|}
 end_function

@@ -335,12 +335,7 @@ name|CI
 operator|=
 name|ConditionalStack
 operator|.
-name|back
-argument_list|()
-expr_stmt|;
-name|ConditionalStack
-operator|.
-name|pop_back
+name|pop_back_val
 argument_list|()
 expr_stmt|;
 return|return

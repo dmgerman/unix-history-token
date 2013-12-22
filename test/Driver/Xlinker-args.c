@@ -59,5 +59,33 @@ begin_comment
 comment|// LINUX: "--no-demangle" "one" "two" "three" "four"
 end_comment
 
+begin_comment
+comment|// Check that we forward '-Xlinker' and '-Wl,' on Windows.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i686-pc-win32 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -Xlinker one -Wl,two %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck -check-prefix=WIN %s
+end_comment
+
+begin_comment
+comment|// WIN: link.exe
+end_comment
+
+begin_comment
+comment|// WIN: "one"
+end_comment
+
+begin_comment
+comment|// WIN: "two"
+end_comment
+
 end_unit
 

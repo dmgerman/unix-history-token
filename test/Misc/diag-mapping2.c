@@ -24,7 +24,7 @@ comment|// -Werror can map all warnings to error.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -Werror 2>&1 | grep "error:"
+comment|// RUN: not %clang_cc1 %s -Werror 2>&1 | grep "error:"
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|// -Werror can map this one warning to error.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -Werror=#warnings 2>&1 | grep "error:"
+comment|// RUN: not %clang_cc1 %s -Werror=#warnings 2>&1 | grep "error:"
 end_comment
 
 begin_comment

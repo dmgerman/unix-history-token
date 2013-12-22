@@ -40,7 +40,7 @@ comment|/// \file
 end_comment
 
 begin_comment
-comment|/// \brief  Defines several types used to describe C++ lambda expressions
+comment|/// \brief Defines several types used to describe C++ lambda expressions
 end_comment
 
 begin_comment
@@ -82,16 +82,22 @@ block|,
 name|LCD_ByRef
 block|}
 enum|;
-comment|/// \brief The different capture forms in a lambda introducer: 'this' or a
-comment|/// copied or referenced variable.
+comment|/// \brief The different capture forms in a lambda introducer
+comment|///
+comment|/// C++11 allows capture of \c this, or of local variables by copy or
+comment|/// by reference.  C++1y also allows "init-capture", where the initializer
+comment|/// is an expression.
 enum|enum
 name|LambdaCaptureKind
 block|{
 name|LCK_This
 block|,
+comment|///< Capturing the \c this pointer
 name|LCK_ByCopy
 block|,
+comment|///< Capturing by copy (a.k.a., by value)
 name|LCK_ByRef
+comment|///< Capturing by reference
 block|}
 enum|;
 block|}

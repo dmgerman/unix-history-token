@@ -231,6 +231,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+modifier|*
+name|memcpy
+parameter_list|(
+name|void
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -584,7 +604,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|//The following is a fake system header function
+comment|//The following are fake system header functions for generic testing.
 end_comment
 
 begin_function_decl
@@ -592,6 +612,17 @@ name|void
 name|fakeSystemHeaderCallInt
 parameter_list|(
 name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fakeSystemHeaderCallIntPtr
+parameter_list|(
+name|int
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;

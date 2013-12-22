@@ -20,7 +20,7 @@ comment|// RUN: %clang_cc1 -triple arm-none-linux-gnueabi -target-abi aapcs  -em
 end_comment
 
 begin_comment
-comment|// DARWIN-APCS: define void @f()
+comment|// DARWIN-APCS-LABEL: define void @f()
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// DARWIN-APCS: call void @g
 end_comment
 
 begin_comment
-comment|// DARWIN-AAPCS: define arm_aapcscc void @f()
+comment|// DARWIN-AAPCS-LABEL: define arm_aapcscc void @f()
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// DARWIN-AAPCS: call arm_aapcscc void @g
 end_comment
 
 begin_comment
-comment|// LINUX-APCS: define arm_apcscc void @f()
+comment|// LINUX-APCS-LABEL: define arm_apcscc void @f()
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|// LINUX-APCS: call arm_apcscc void @g
 end_comment
 
 begin_comment
-comment|// LINUX-AAPCS: define void @f()
+comment|// LINUX-AAPCS-LABEL: define void @f()
 end_comment
 
 begin_comment

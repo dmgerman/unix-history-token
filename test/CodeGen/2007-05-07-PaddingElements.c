@@ -4,11 +4,11 @@ comment|// PR 1278
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -O0 -o - | grep {struct.s} | not grep "4 x i8] zeroinitializer"
+comment|// RUN: %clang_cc1 %s -emit-llvm -o - | grep struct.s | not grep "4 x i8] zeroinitializer"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -O0 -o - | not grep "i32 0, i32 2"
+comment|// RUN: %clang_cc1 %s -emit-llvm -o - | not grep "i32 0, i32 2"
 end_comment
 
 begin_struct

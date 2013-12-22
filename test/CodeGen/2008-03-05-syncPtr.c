@@ -36,7 +36,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32* @foo
+comment|// CHECK-LABEL: define i32* @foo
 end_comment
 
 begin_comment
@@ -75,7 +75,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @foo2
+comment|// CHECK-LABEL: define i32 @foo2
 end_comment
 
 begin_comment
@@ -108,7 +108,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32* @foo3
+comment|// CHECK-LABEL: define i32* @foo3
 end_comment
 
 begin_comment
@@ -141,7 +141,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32* @foo4
+comment|// CHECK-LABEL: define i32* @foo4
 end_comment
 
 begin_comment
@@ -175,7 +175,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32* @foo5
+comment|// CHECK-LABEL: define i32* @foo5
 end_comment
 
 begin_comment
@@ -211,7 +211,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32* @foo6
+comment|// CHECK-LABEL: define i32* @foo6
 end_comment
 
 begin_comment

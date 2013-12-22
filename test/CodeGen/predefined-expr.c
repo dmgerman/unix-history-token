@@ -28,6 +28,14 @@ comment|// CHECK: @__PRETTY_FUNCTION__.privateExternFunction = private unnamed_a
 end_comment
 
 begin_comment
+comment|// CHECK: @__func__.__captured_stmt = private unnamed_addr constant [25 x i8] c"functionWithCapturedStmt\00"
+end_comment
+
+begin_comment
+comment|// CHECK: @__PRETTY_FUNCTION__.__captured_stmt = private unnamed_addr constant [32 x i8] c"void functionWithCapturedStmt()\00"
+end_comment
+
+begin_comment
 comment|// CHECK: @__func__.staticFunction = private unnamed_addr constant [15 x i8] c"staticFunction\00"
 end_comment
 
@@ -138,6 +146,42 @@ block|}
 end_function
 
 begin_function
+name|void
+name|functionWithCapturedStmt
+parameter_list|()
+block|{
+pragma|#
+directive|pragma
+name|clang
+name|__debug
+name|captured
+block|{
+name|printf
+argument_list|(
+literal|"__func__ %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"__FUNCTION__ %s\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"__PRETTY_FUNCTION__ %s\n\n"
+argument_list|,
+name|__PRETTY_FUNCTION__
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|staticFunction
@@ -179,6 +223,9 @@ name|externFunction
 argument_list|()
 expr_stmt|;
 name|privateExternFunction
+argument_list|()
+expr_stmt|;
+name|functionWithCapturedStmt
 argument_list|()
 expr_stmt|;
 name|staticFunction

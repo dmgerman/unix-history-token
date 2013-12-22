@@ -53,7 +53,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// RUN: %clang_cc1 -Eonly %s -DOPT_O0 -O0 -verify
+comment|// RUN: %clang_cc1 -Eonly %s -DOPT_O0 -verify
 end_comment
 
 begin_ifdef

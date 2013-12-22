@@ -34,7 +34,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @g1
+comment|// CHECK-LABEL: define i32 @g1
 end_comment
 
 begin_comment

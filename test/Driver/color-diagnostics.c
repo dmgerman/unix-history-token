@@ -4,7 +4,7 @@ comment|// RUN: %clang -fcolor-diagnostics -### -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=CD %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-CD %s
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: %clang -fno-color-diagnostics -### -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=NCD %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-NCD %s
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// RUN: %clang -fdiagnostics-color -### -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=DC %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-DC %s
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|// RUN: %clang -fno-diagnostics-color -### -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=NDC %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-NDC %s
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|// RUN: %clang -fdiagnostics-color=always -### -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=DCE_A %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-DCE_A %s
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|// RUN: %clang -fdiagnostics-color=never -### -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=DCE_N %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-DCE_N %s
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ comment|// RUN: %clang -fdiagnostics-color=auto -### -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=DCE_AUTO %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-DCE_AUTO %s
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ comment|// RUN: %clang -fdiagnostics-color=foo -### -c %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=DCE_FOO %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-DCE_FOO %s
 end_comment
 
 begin_comment
@@ -108,7 +108,7 @@ comment|// RUN: %clang -fno-color-diagnostics -fdiagnostics-color -### -c %s 2>&
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=NCD_DC_S %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-NCD_DC_S %s
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ comment|// RUN: %clang -fcolor-diagnostics -fno-diagnostics-color -### -c %s 2>&
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=CD_NDC_S %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-CD_NDC_S %s
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ comment|// RUN: %clang -fdiagnostics-color -fno-color-diagnostics -### -c %s 2>&
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=DC_NCD_S %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-DC_NCD_S %s
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ comment|// RUN: %clang -fno-diagnostics-color -fcolor-diagnostics -### -c %s 2>&
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=NDC_CD_S %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-NDC_CD_S %s
 end_comment
 
 begin_comment
@@ -156,11 +156,23 @@ comment|// RUN: %clang -fcolor-diagnostics -fdiagnostics-color=auto -### -c %s 2
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck --check-prefix=CD_DCE_AUTO_S %s
+comment|// RUN:     | FileCheck --check-prefix=CHECK-CD_DCE_AUTO_S %s
 end_comment
 
 begin_comment
 comment|// CHECK-CD_DCE_AUTO_S-NOT: clang{{.*}}" "-fcolor-diagnostics"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fansi-escape-codes -### -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     | FileCheck --check-prefix=CHECK-AEC %s
+end_comment
+
+begin_comment
+comment|// CHECK-AEC: clang{{.*}}" "-fansi-escape-codes"
 end_comment
 
 end_unit

@@ -12,7 +12,7 @@ comment|// that we *shouldn't* tag arguments and returns with their extension.
 end_comment
 
 begin_comment
-comment|// PCS: define i8 @f0(i16 %a)
+comment|// PCS-LABEL: define i8 @f0(i16 %a)
 end_comment
 
 begin_function
@@ -193,7 +193,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define void @f7()
+comment|// PCS-LABEL: define void @f7()
 end_comment
 
 begin_struct
@@ -224,7 +224,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define  void @f8()
+comment|// PCS-LABEL: define  void @f8()
 end_comment
 
 begin_struct
@@ -383,7 +383,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define %struct.s13 @f13()
+comment|// PCS-LABEL: define %struct.s13 @f13()
 end_comment
 
 begin_struct
@@ -408,7 +408,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define %union.u14 @f14()
+comment|// PCS-LABEL: define %union.u14 @f14()
 end_comment
 
 begin_union
@@ -433,7 +433,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define void @f15()
+comment|// PCS-LABEL: define void @f15()
 end_comment
 
 begin_function
@@ -448,7 +448,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define void @f16()
+comment|// PCS-LABEL: define void @f16()
 end_comment
 
 begin_function
@@ -738,7 +738,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define void @f28(i8 %a, i16 %b, i32 %c, i64 %d, float %e, double %f)
+comment|// PCS-LABEL: define void @f28(i8 %a, i16 %b, i32 %c, i64 %d, float %e, double %f)
 end_comment
 
 begin_function
@@ -796,7 +796,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define void @f30(%struct.s30* %a)
+comment|// PCS-LABEL: define void @f30(%struct.s30* %a)
 end_comment
 
 begin_struct
@@ -857,7 +857,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define void @f32(%struct.s32* %a)
+comment|// PCS-LABEL: define void @f32(%struct.s32* %a)
 end_comment
 
 begin_struct
@@ -922,7 +922,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define void @f34(%struct.s34* noalias sret
+comment|// PCS-LABEL: define void @f34(%struct.s34* noalias sret
 end_comment
 
 begin_struct
@@ -952,7 +952,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// PCS: define void @f35()
+comment|// PCS-LABEL: define void @f35()
 end_comment
 
 begin_struct

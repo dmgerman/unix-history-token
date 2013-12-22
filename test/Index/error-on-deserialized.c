@@ -22,7 +22,7 @@ comment|// RUN:    -Xclang -error-on-deserialized-decl=NestedVar1
 end_comment
 
 begin_comment
-comment|// RUN: env CINDEXTEST_FAILONERROR=1 c-index-test -cursor-at=%S/targeted-nested1.h:2:16 %s -include %t.h \
+comment|// RUN: env CINDEXTEST_FAILONERROR=1 not c-index-test -cursor-at=%S/targeted-nested1.h:2:16 %s -include %t.h \
 end_comment
 
 begin_comment

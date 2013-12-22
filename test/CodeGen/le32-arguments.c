@@ -8,7 +8,7 @@ comment|// Basic argument/attribute tests for le32/PNaCl
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f0(i32 %i, i32 %j, double %k)
+comment|// CHECK-LABEL: define void @f0(i32 %i, i32 %j, double %k)
 end_comment
 
 begin_function
@@ -47,7 +47,7 @@ comment|// Structs should be passed byval and not split up
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f1(%struct.s1* byval %i)
+comment|// CHECK-LABEL: define void @f1(%struct.s1* byval %i)
 end_comment
 
 begin_function
@@ -77,7 +77,7 @@ comment|// Structs should be returned sret and not simplified by the frontend
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f2(%struct.s2* noalias sret %agg.result)
+comment|// CHECK-LABEL: define void @f2(%struct.s2* noalias sret %agg.result)
 end_comment
 
 begin_function
@@ -95,7 +95,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f3(i64 %i)
+comment|// CHECK-LABEL: define void @f3(i64 %i)
 end_comment
 
 begin_function
@@ -114,7 +114,7 @@ comment|// i8/i16 should be signext, i32 and higher should not
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f4(i8 signext %a, i16 signext %b)
+comment|// CHECK-LABEL: define void @f4(i8 signext %a, i16 signext %b)
 end_comment
 
 begin_function
@@ -131,7 +131,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f5(i8 zeroext %a, i16 zeroext %b)
+comment|// CHECK-LABEL: define void @f5(i8 zeroext %a, i16 zeroext %b)
 end_comment
 
 begin_function
@@ -167,7 +167,7 @@ comment|// Enums should be treated as the underlying i32
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f6(i32 %a)
+comment|// CHECK-LABEL: define void @f6(i32 %a)
 end_comment
 
 begin_function
@@ -200,7 +200,7 @@ comment|// Unions should be passed as byval structs
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f7(%union.simple_union* byval %s)
+comment|// CHECK-LABEL: define void @f7(%union.simple_union* byval %s)
 end_comment
 
 begin_function
@@ -243,7 +243,7 @@ comment|// Bitfields should be passed as byval structs
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f8(%struct.bitfield1* byval %bf1)
+comment|// CHECK-LABEL: define void @f8(%struct.bitfield1* byval %bf1)
 end_comment
 
 begin_function

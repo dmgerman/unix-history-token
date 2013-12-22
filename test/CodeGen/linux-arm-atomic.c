@@ -11,6 +11,14 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -emit-llvm -o - -triple=thumbv7-unknown-linux | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -emit-llvm -o - -triple=armv6-unknown-freebsd | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -emit-llvm -o - -triple=armv6-unknown-bitrig | FileCheck %s
+end_comment
+
 begin_typedef
 typedef|typedef
 name|int

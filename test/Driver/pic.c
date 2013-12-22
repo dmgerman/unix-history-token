@@ -104,6 +104,14 @@ comment|//
 end_comment
 
 begin_comment
+comment|// CHECK-NOPIE-LD: "-nopie"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// CHECK-DYNAMIC-NO-PIC-32: "-mrelocation-model" "dynamic-no-pic"
 end_comment
 
@@ -793,6 +801,46 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-PIC
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// On OpenBSD, PIE is enabled by default, but can be disabled.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target i386-pc-openbsd -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target i386-pc-openbsd -fno-pie -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-PIC
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// On OpenBSD, -nopie needs to be passed through to the linker.
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -target i386-pc-openbsd -nopie -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NOPIE-LD
 end_comment
 
 end_unit

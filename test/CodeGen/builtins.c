@@ -1018,7 +1018,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @bar(
+comment|// CHECK-LABEL: define void @bar(
 end_comment
 
 begin_function
@@ -1167,7 +1167,7 @@ comment|// CHECK: }
 end_comment
 
 begin_comment
-comment|// CHECK: define void @test_float_builtins
+comment|// CHECK-LABEL: define void @test_float_builtins
 end_comment
 
 begin_function
@@ -1244,7 +1244,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test_builtin_longjmp
+comment|// CHECK-LABEL: define void @test_builtin_longjmp
 end_comment
 
 begin_function
@@ -1271,7 +1271,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i64 @test_builtin_readcyclecounter
+comment|// CHECK-LABEL: define i64 @test_builtin_readcyclecounter
 end_comment
 
 begin_function

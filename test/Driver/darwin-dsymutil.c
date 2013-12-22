@@ -140,7 +140,7 @@ comment|// RUN:   -o foo %t.o -g 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "Dsymutil" %t | count 0
+comment|// RUN: not grep "Dsymutil" %t
 end_comment
 
 begin_comment

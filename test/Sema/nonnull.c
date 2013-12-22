@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
@@ -96,6 +96,31 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|foo
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(nonnull
+parameter_list|(
+function_decl|"foo"
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error{{'nonnull' attribute requires parameter 1 to be an integer constant}}
+end_comment
 
 end_unit
 

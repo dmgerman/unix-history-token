@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -triple i386 -emit-llvm -O2 -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: define i32 @f0()
+comment|// CHECK-LABEL: define i32 @f0()
 end_comment
 
 begin_comment

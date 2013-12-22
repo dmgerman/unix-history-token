@@ -14,7 +14,7 @@ end_expr_stmt
 begin_expr_stmt
 operator|-
 operator|(
-name|double
+name|void
 operator|)
 name|f2
 expr_stmt|;

@@ -1043,17 +1043,6 @@ block|{
 literal|0
 block|}
 decl_stmt|;
-name|__c11_atomic_store
-argument_list|(
-operator|&
-name|bigAtomic
-argument_list|,
-name|f
-argument_list|,
-literal|5
-argument_list|)
-expr_stmt|;
-comment|// CHECK: call void @__atomic_store(i32 512, i8* bitcast ({{.*}} @bigAtomic to i8*),
 name|struct
 name|bar
 name|b
@@ -1096,19 +1085,6 @@ parameter_list|()
 block|{
 comment|// CHECK: @structAtomicLoad
 name|struct
-name|foo
-name|f
-init|=
-name|__c11_atomic_load
-argument_list|(
-operator|&
-name|bigAtomic
-argument_list|,
-literal|5
-argument_list|)
-decl_stmt|;
-comment|// CHECK: call void @__atomic_load(i32 512, i8* bitcast ({{.*}} @bigAtomic to i8*),
-name|struct
 name|bar
 name|b
 decl_stmt|;
@@ -1124,6 +1100,14 @@ literal|5
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call void @__atomic_load(i32 3, i8* {{.*}} @smallThing
+name|struct
+name|foo
+name|f
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
 name|__atomic_load
 argument_list|(
 operator|&

@@ -26,6 +26,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
+comment|// expected-note {{declared here}}
 block|}
 end_function
 
@@ -1131,6 +1132,30 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{incompatible integer to pointer conversion}}
+block|}
+end_function
+
+begin_function
+name|void
+name|no_ms_builtins
+parameter_list|()
+block|{
+name|__assume
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{implicit declaration}}
+name|__noop
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{implicit declaration}}
+name|__debugbreak
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{implicit declaration}}
 block|}
 end_function
 

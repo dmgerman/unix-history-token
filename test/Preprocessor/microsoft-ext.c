@@ -146,5 +146,77 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// This tests compatibility with behaviour needed for type_traits in VS2012
+end_comment
+
+begin_comment
+comment|// Test based on _VARIADIC_EXPAND_0X macros in xstddef of VS2012
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_COMMA
+value|,
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKER
+parameter_list|(
+name|_arg1
+parameter_list|,
+name|_comma
+parameter_list|,
+name|_arg2
+parameter_list|)
+define|\
+value|void func(_arg1 _comma _arg2) {}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKE_FUNC
+parameter_list|(
+name|_makerP1
+parameter_list|,
+name|_makerP2
+parameter_list|,
+name|_arg1
+parameter_list|,
+name|_comma
+parameter_list|,
+name|_arg2
+parameter_list|)
+define|\
+value|_makerP1##_makerP2(_arg1, _comma, _arg2)
+end_define
+
+begin_macro
+name|MAKE_FUNC
+argument_list|(
+argument|MAK
+argument_list|,
+argument|ER
+argument_list|,
+argument|int a
+argument_list|,
+argument|_COMMA
+argument_list|,
+argument|int b
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// CHECK: void func(int a , int b) {}
+end_comment
+
 end_unit
 

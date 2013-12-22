@@ -30,5 +30,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|__stderrp
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

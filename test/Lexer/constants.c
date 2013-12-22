@@ -65,6 +65,52 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|-
+literal|01000000000000000000000
+end_if
+
+begin_comment
+comment|// should not warn.
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+literal|9223372036854775808
+end_if
+
+begin_comment
+comment|// expected-warning {{integer constant is larger than the largest signed integer type}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+literal|0x10000000000000000
+end_if
+
+begin_comment
+comment|// expected-error {{integer constant is larger than the largest unsigned integer type}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|c

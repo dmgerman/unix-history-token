@@ -107,7 +107,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no arguments}}
+comment|// expected-error {{'noreturn' attribute takes no arguments}}
 end_comment
 
 begin_function_decl
@@ -197,7 +197,7 @@ name|unsigned
 name|long
 name|size
 parameter_list|)
-block|{    }
+block|{  }
 end_function
 
 begin_comment
@@ -254,7 +254,7 @@ typedef|)));
 end_typedef
 
 begin_comment
-comment|// expected-error {{attribute takes no arguments}}
+comment|// expected-error {{'noreturn' attribute takes no arguments}}
 end_comment
 
 end_unit

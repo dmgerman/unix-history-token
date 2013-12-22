@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -pedantic-errors %s 2>&1 | FileCheck %s --check-prefix=PRESUMED
+comment|// RUN: not %clang_cc1 -fsyntax-only -pedantic-errors %s 2>&1 | FileCheck %s --check-prefix=PRESUMED
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -pedantic-errors -fno-diagnostics-use-presumed-location %s 2>&1 | FileCheck %s --check-prefix=SPELLING
+comment|// RUN: not %clang_cc1 -fsyntax-only -pedantic-errors -fno-diagnostics-use-presumed-location %s 2>&1 | FileCheck %s --check-prefix=SPELLING
 end_comment
 
 begin_line

@@ -49,7 +49,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute requires parameter 1 to be an identifier}}
+comment|// expected-error {{'pointer_with_type_tag' attribute requires parameter 1 to be an identifier}}
 end_comment
 
 begin_function_decl
@@ -344,7 +344,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{attribute requires parameter 1 to be an identifier}}
+comment|// expected-error {{'type_tag_for_datatype' attribute requires parameter 1 to be an identifier}}
 end_comment
 
 begin_decl_stmt

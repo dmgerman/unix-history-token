@@ -31,7 +31,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define void @f4()
+comment|// CHECK-LABEL: define void @f4()
 name|f1
 argument_list|()
 expr_stmt|;
@@ -47,7 +47,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define void @f5()
+comment|// CHECK-LABEL: define void @f5()
 name|f2
 argument_list|()
 expr_stmt|;

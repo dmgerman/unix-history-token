@@ -16,7 +16,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux \
+comment|// RUN:     --target=i386-unknown-linux \
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// CHECK-LD-32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-32: "{{.*}}/usr/lib/gcc/i386-unknown-linux/4.6.0/crtbegin.o"
+comment|// CHECK-LD-32: "{{.*}}/usr/lib/gcc/i386-unknown-linux/4.6.0{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     --target=x86_64-unknown-linux \
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|// CHECK-LD-64: "-dynamic-linker"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-64: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/crtbegin.o"
+comment|// CHECK-LD-64: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     --target=x86_64-unknown-linux \
 end_comment
 
 begin_comment
@@ -180,7 +180,7 @@ comment|// CHECK-LD-64-STATIC-LIBGCC: "-dynamic-linker"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-64-STATIC-LIBGCC: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/crtbegin.o"
+comment|// CHECK-LD-64-STATIC-LIBGCC: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -224,7 +224,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     --target=x86_64-unknown-linux \
 end_comment
 
 begin_comment
@@ -264,7 +264,7 @@ comment|// CHECK-LD-64-STATIC: "-static"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-64-STATIC: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/crtbeginT.o"
+comment|// CHECK-LD-64-STATIC: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0{{/|\\\\}}crtbeginT.o"
 end_comment
 
 begin_comment
@@ -304,7 +304,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     --target=x86_64-unknown-linux \
 end_comment
 
 begin_comment
@@ -328,7 +328,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -m32 \
+comment|// RUN:     --target=i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -344,7 +344,7 @@ comment|// CHECK-32-TO-32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
 end_comment
 
 begin_comment
-comment|// CHECK-32-TO-32: "{{.*}}/usr/lib/gcc/i386-unknown-linux/4.6.0/crtbegin.o"
+comment|// CHECK-32-TO-32: "{{.*}}/usr/lib/gcc/i386-unknown-linux/4.6.0{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -392,7 +392,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -m64 \
+comment|// RUN:     --target=i386-unknown-linux -m64 \
 end_comment
 
 begin_comment
@@ -408,7 +408,7 @@ comment|// CHECK-32-TO-64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
 end_comment
 
 begin_comment
-comment|// CHECK-32-TO-64: "{{.*}}/usr/lib/gcc/i386-unknown-linux/4.6.0/64/crtbegin.o"
+comment|// CHECK-32-TO-64: "{{.*}}/usr/lib/gcc/i386-unknown-linux/4.6.0/64{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -460,7 +460,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -m64 \
+comment|// RUN:     --target=x86_64-unknown-linux -m64 \
 end_comment
 
 begin_comment
@@ -476,7 +476,7 @@ comment|// CHECK-64-TO-64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
 end_comment
 
 begin_comment
-comment|// CHECK-64-TO-64: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/crtbegin.o"
+comment|// CHECK-64-TO-64: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -524,7 +524,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -m32 \
+comment|// RUN:     --target=x86_64-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -540,7 +540,7 @@ comment|// CHECK-64-TO-32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
 end_comment
 
 begin_comment
-comment|// CHECK-64-TO-32: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/32/crtbegin.o"
+comment|// CHECK-64-TO-32: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/32{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -592,11 +592,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -m32 \
+comment|// RUN:     --target=x86_64-unknown-linux -m32 \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/multilib_64bit_linux_tree/usr \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/multilib_64bit_linux_tree/usr \
 end_comment
 
 begin_comment
@@ -612,7 +612,7 @@ comment|// CHECK-64-TO-32-SYSROOT: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^
 end_comment
 
 begin_comment
-comment|// CHECK-64-TO-32-SYSROOT: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/32/crtbegin.o"
+comment|// CHECK-64-TO-32-SYSROOT: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/32{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -648,7 +648,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -m32 \
+comment|// RUN:     --target=i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -668,7 +668,7 @@ comment|// CHECK-INSTALL-DIR-32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]
 end_comment
 
 begin_comment
-comment|// CHECK-INSTALL-DIR-32: "{{.*}}/Inputs/fake_install_tree/bin/../lib/gcc/i386-unknown-linux/4.7.0/crtbegin.o"
+comment|// CHECK-INSTALL-DIR-32: "{{.*}}/Inputs/fake_install_tree/bin/../lib/gcc/i386-unknown-linux/4.7.0{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -692,7 +692,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -m64 \
+comment|// RUN:     --target=x86_64-unknown-linux -m64 \
 end_comment
 
 begin_comment
@@ -712,7 +712,7 @@ comment|// CHECK-INSTALL-DIR-64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]
 end_comment
 
 begin_comment
-comment|// CHECK-INSTALL-DIR-64: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/crtbegin.o"
+comment|// CHECK-INSTALL-DIR-64: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -736,7 +736,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -m32 \
+comment|// RUN:     --target=i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -756,7 +756,7 @@ comment|// CHECK-GCC-VERSION1: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]
 end_comment
 
 begin_comment
-comment|// CHECK-GCC-VERSION1: "{{.*}}/Inputs/gcc_version_parsing1/bin/../lib/gcc/i386-unknown-linux/4.7/crtbegin.o"
+comment|// CHECK-GCC-VERSION1: "{{.*}}/Inputs/gcc_version_parsing1/bin/../lib/gcc/i386-unknown-linux/4.7{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -768,7 +768,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -m32 \
+comment|// RUN:     --target=i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -788,7 +788,7 @@ comment|// CHECK-GCC-VERSION2: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]
 end_comment
 
 begin_comment
-comment|// CHECK-GCC-VERSION2: "{{.*}}/Inputs/gcc_version_parsing2/bin/../lib/gcc/i386-unknown-linux/4.7.x/crtbegin.o"
+comment|// CHECK-GCC-VERSION2: "{{.*}}/Inputs/gcc_version_parsing2/bin/../lib/gcc/i386-unknown-linux/4.7.x{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -800,7 +800,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -m32 \
+comment|// RUN:     --target=i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -820,7 +820,7 @@ comment|// CHECK-GCC-VERSION3: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]
 end_comment
 
 begin_comment
-comment|// CHECK-GCC-VERSION3: "{{.*}}/Inputs/gcc_version_parsing3/bin/../lib/gcc/i386-unknown-linux/4.7.99-rc5/crtbegin.o"
+comment|// CHECK-GCC-VERSION3: "{{.*}}/Inputs/gcc_version_parsing3/bin/../lib/gcc/i386-unknown-linux/4.7.99-rc5{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -832,7 +832,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -m32 \
+comment|// RUN:     --target=i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -852,7 +852,7 @@ comment|// CHECK-GCC-VERSION4: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]
 end_comment
 
 begin_comment
-comment|// CHECK-GCC-VERSION4: "{{.*}}/Inputs/gcc_version_parsing4/bin/../lib/gcc/i386-unknown-linux/4.7.99/crtbegin.o"
+comment|// CHECK-GCC-VERSION4: "{{.*}}/Inputs/gcc_version_parsing4/bin/../lib/gcc/i386-unknown-linux/4.7.99{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -872,7 +872,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux \
+comment|// RUN:     --target=i386-unknown-linux \
 end_comment
 
 begin_comment
@@ -888,7 +888,7 @@ comment|// CHECK-UBUNTU-11-04: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-11-04: "{{.*}}/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5/crtbegin.o"
+comment|// CHECK-UBUNTU-11-04: "{{.*}}/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -928,7 +928,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-unknown-linux-gnueabihf \
+comment|// RUN:     --target=arm-unknown-linux-gnueabihf \
 end_comment
 
 begin_comment
@@ -944,15 +944,15 @@ comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}/usr/lib/gcc/arm-linux-gnueabihf/4.6.3/../../../arm-linux-gnueabihf/crt1.o"
+comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}/usr/lib/gcc/arm-linux-gnueabihf/4.6.3/../../../arm-linux-gnueabihf{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}/usr/lib/gcc/arm-linux-gnueabihf/4.6.3/../../../arm-linux-gnueabihf/crti.o"
+comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}/usr/lib/gcc/arm-linux-gnueabihf/4.6.3/../../../arm-linux-gnueabihf{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}/usr/lib/gcc/arm-linux-gnueabihf/4.6.3/crtbegin.o"
+comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}/usr/lib/gcc/arm-linux-gnueabihf/4.6.3{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -976,11 +976,155 @@ comment|// CHECK-UBUNTU-12-04-ARM-HF: "-L[[SYSROOT]]/usr/lib/gcc/arm-linux-gnuea
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}/usr/lib/gcc/arm-linux-gnueabihf/4.6.3/crtend.o"
+comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}/usr/lib/gcc/arm-linux-gnueabihf/4.6.3{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}/usr/lib/gcc/arm-linux-gnueabihf/4.6.3/../../../arm-linux-gnueabihf/crtn.o"
+comment|// CHECK-UBUNTU-12-04-ARM-HF: "{{.*}}/usr/lib/gcc/arm-linux-gnueabihf/4.6.3/../../../arm-linux-gnueabihf{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Check Ubuntu 13.10 on x86-64 targeting arm-linux-gnueabihf.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=arm-linux-gnueabihf \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/x86-64_ubuntu_13.10 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-X86-64-UBUNTU-13-10-ARM-HF %s
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "-dynamic-linker" "/lib/ld-linux-armhf.so.3"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "{{.*}}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8/../../../../arm-linux-gnueabihf/lib/../lib{{/|\\\\}}crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "{{.*}}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8/../../../../arm-linux-gnueabihf/lib/../lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "{{.*}}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "-L[[SYSROOT]]/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "-L[[SYSROOT]]/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8/../../../../arm-linux-gnueabihf/lib/../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "-L[[SYSROOT]]/lib/../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "-L[[SYSROOT]]/usr/lib/../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "-L[[SYSROOT]]/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8/../../../../arm-linux-gnueabihf/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "{{.*}}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8{{/|\\\\}}crtend.o"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "{{.*}}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8/../../../../arm-linux-gnueabihf/lib/../lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Check Ubuntu 13.10 on x86-64 targeting arm-linux-gnueabi.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=arm-linux-gnueabi \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/x86-64_ubuntu_13.10 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-X86-64-UBUNTU-13-10-ARM %s
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "-dynamic-linker" "/lib/ld-linux.so.3"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "{{.*}}/usr/lib/gcc-cross/arm-linux-gnueabi/4.7/../../../../arm-linux-gnueabi/lib/../lib{{/|\\\\}}crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "{{.*}}/usr/lib/gcc-cross/arm-linux-gnueabi/4.7/../../../../arm-linux-gnueabi/lib/../lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "{{.*}}/usr/lib/gcc-cross/arm-linux-gnueabi/4.7{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "-L[[SYSROOT]]/usr/lib/gcc-cross/arm-linux-gnueabi/4.7"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "-L[[SYSROOT]]/usr/lib/gcc-cross/arm-linux-gnueabi/4.7/../../../../arm-linux-gnueabi/lib/../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "-L[[SYSROOT]]/lib/../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "-L[[SYSROOT]]/usr/lib/../lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "-L[[SYSROOT]]/usr/lib/gcc-cross/arm-linux-gnueabi/4.7/../../../../arm-linux-gnueabi/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "{{.*}}/usr/lib/gcc-cross/arm-linux-gnueabi/4.7{{/|\\\\}}crtend.o"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "{{.*}}/usr/lib/gcc-cross/arm-linux-gnueabi/4.7/../../../../arm-linux-gnueabi/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -996,7 +1140,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target armv7-unknown-linux-gnueabihf \
+comment|// RUN:     --target=armv7-unknown-linux-gnueabihf \
 end_comment
 
 begin_comment
@@ -1012,15 +1156,15 @@ comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^
 end_comment
 
 begin_comment
-comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../../crt1.o"
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../../../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../../crti.o"
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../../../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/crtbegin.o"
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1028,23 +1172,15 @@ comment|// CHECK-FEDORA-18-ARM-HF: "-L[[SYSROOT]]/usr/lib/gcc/armv7hl-redhat-lin
 end_comment
 
 begin_comment
-comment|// CHECK-FEDORA-18-ARM-HF: "-L[[SYSROOT]]/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../.."
+comment|// CHECK-FEDORA-18-ARM-HF: "-L[[SYSROOT]]/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../../../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-FEDORA-18-ARM-HF: "-L[[SYSROOT]]/lib"
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-FEDORA-18-ARM-HF: "-L[[SYSROOT]]/usr/lib"
-end_comment
-
-begin_comment
-comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/crtend.o"
-end_comment
-
-begin_comment
-comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../../crtn.o"
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../../../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -1056,7 +1192,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-unknown-linux-gnueabi \
+comment|// RUN:     --target=arm-unknown-linux-gnueabi \
 end_comment
 
 begin_comment
@@ -1072,15 +1208,15 @@ comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}/usr/lib/gcc/arm-linux-gnueabi/4.6.1/../../../arm-linux-gnueabi/crt1.o"
+comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}/usr/lib/gcc/arm-linux-gnueabi/4.6.1/../../../arm-linux-gnueabi{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}/usr/lib/gcc/arm-linux-gnueabi/4.6.1/../../../arm-linux-gnueabi/crti.o"
+comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}/usr/lib/gcc/arm-linux-gnueabi/4.6.1/../../../arm-linux-gnueabi{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}/usr/lib/gcc/arm-linux-gnueabi/4.6.1/crtbegin.o"
+comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}/usr/lib/gcc/arm-linux-gnueabi/4.6.1{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1104,11 +1240,11 @@ comment|// CHECK-UBUNTU-12-04-ARM: "-L[[SYSROOT]]/usr/lib/gcc/arm-linux-gnueabi/
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}/usr/lib/gcc/arm-linux-gnueabi/4.6.1/crtend.o"
+comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}/usr/lib/gcc/arm-linux-gnueabi/4.6.1{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}/usr/lib/gcc/arm-linux-gnueabi/4.6.1/../../../arm-linux-gnueabi/crtn.o"
+comment|// CHECK-UBUNTU-12-04-ARM: "{{.*}}/usr/lib/gcc/arm-linux-gnueabi/4.6.1/../../../arm-linux-gnueabi{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -1124,7 +1260,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target powerpc64-suse-linux \
+comment|// RUN:     --target=powerpc64-suse-linux \
 end_comment
 
 begin_comment
@@ -1140,7 +1276,7 @@ comment|// CHECK-SUSE-10-3-PPC64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"
 end_comment
 
 begin_comment
-comment|// CHECK-SUSE-10-3-PPC64: "{{.*}}/usr/lib/gcc/powerpc64-suse-linux/4.1.2/64/crtbegin.o"
+comment|// CHECK-SUSE-10-3-PPC64: "{{.*}}/usr/lib/gcc/powerpc64-suse-linux/4.1.2/64{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1172,7 +1308,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-gnueabi \
+comment|// RUN:     --target=arm-linux-gnueabi \
 end_comment
 
 begin_comment
@@ -1200,7 +1336,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-gnueabihf \
+comment|// RUN:     --target=arm-linux-gnueabihf \
 end_comment
 
 begin_comment
@@ -1240,7 +1376,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips-linux-gnu \
+comment|// RUN:     --target=mips-linux-gnu \
 end_comment
 
 begin_comment
@@ -1268,7 +1404,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-gnu \
+comment|// RUN:     --target=mipsel-linux-gnu \
 end_comment
 
 begin_comment
@@ -1296,7 +1432,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64-linux-gnu \
+comment|// RUN:     --target=mips64-linux-gnu \
 end_comment
 
 begin_comment
@@ -1324,7 +1460,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64el-linux-gnu \
+comment|// RUN:     --target=mips64el-linux-gnu \
 end_comment
 
 begin_comment
@@ -1352,7 +1488,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64-linux-gnu -mabi=n32 \
+comment|// RUN:     --target=mips64-linux-gnu -mabi=n32 \
 end_comment
 
 begin_comment
@@ -1380,7 +1516,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64el-linux-gnu -mabi=n32 \
+comment|// RUN:     --target=mips64el-linux-gnu -mabi=n32 \
 end_comment
 
 begin_comment
@@ -1416,7 +1552,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i686-linux-gnu \
+comment|// RUN:     --target=i686-linux-gnu \
 end_comment
 
 begin_comment
@@ -1432,7 +1568,7 @@ comment|// CHECK-DEBIAN-X86: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-X86: "{{.*}}/usr/lib/gcc/i686-linux-gnu/4.5/crtbegin.o"
+comment|// CHECK-DEBIAN-X86: "{{.*}}/usr/lib/gcc/i686-linux-gnu/4.5{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1464,7 +1600,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-linux-gnu \
+comment|// RUN:     --target=x86_64-linux-gnu \
 end_comment
 
 begin_comment
@@ -1480,7 +1616,7 @@ comment|// CHECK-DEBIAN-X86-64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-X86-64: "{{.*}}/usr/lib/gcc/x86_64-linux-gnu/4.5/crtbegin.o"
+comment|// CHECK-DEBIAN-X86-64: "{{.*}}/usr/lib/gcc/x86_64-linux-gnu/4.5{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1512,7 +1648,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target powerpc-linux-gnu \
+comment|// RUN:     --target=powerpc-linux-gnu \
 end_comment
 
 begin_comment
@@ -1528,7 +1664,7 @@ comment|// CHECK-DEBIAN-PPC: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-PPC: "{{.*}}/usr/lib/gcc/powerpc-linux-gnu/4.5/crtbegin.o"
+comment|// CHECK-DEBIAN-PPC: "{{.*}}/usr/lib/gcc/powerpc-linux-gnu/4.5{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1560,7 +1696,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target powerpc64-linux-gnu \
+comment|// RUN:     --target=powerpc64-linux-gnu \
 end_comment
 
 begin_comment
@@ -1576,7 +1712,7 @@ comment|// CHECK-DEBIAN-PPC64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-PPC64: "{{.*}}/usr/lib/gcc/powerpc64-linux-gnu/4.5/crtbegin.o"
+comment|// CHECK-DEBIAN-PPC64: "{{.*}}/usr/lib/gcc/powerpc64-linux-gnu/4.5{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1608,7 +1744,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips-linux-gnu \
+comment|// RUN:     --target=mips-linux-gnu \
 end_comment
 
 begin_comment
@@ -1624,7 +1760,7 @@ comment|// CHECK-DEBIAN-MIPS: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-MIPS: "{{.*}}/usr/lib/gcc/mips-linux-gnu/4.5/crtbegin.o"
+comment|// CHECK-DEBIAN-MIPS: "{{.*}}/usr/lib/gcc/mips-linux-gnu/4.5{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1656,7 +1792,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-gnu \
+comment|// RUN:     --target=mipsel-linux-gnu \
 end_comment
 
 begin_comment
@@ -1672,7 +1808,7 @@ comment|// CHECK-DEBIAN-MIPSEL: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.5/crtbegin.o"
+comment|// CHECK-DEBIAN-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.5{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1704,7 +1840,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64-linux-gnu \
+comment|// RUN:     --target=mips64-linux-gnu \
 end_comment
 
 begin_comment
@@ -1720,7 +1856,7 @@ comment|// CHECK-DEBIAN-MIPS64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-MIPS64: "{{.*}}/usr/lib/gcc/mips-linux-gnu/4.5/64/crtbegin.o"
+comment|// CHECK-DEBIAN-MIPS64: "{{.*}}/usr/lib/gcc/mips-linux-gnu/4.5/64{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1748,7 +1884,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64el-linux-gnu \
+comment|// RUN:     --target=mips64el-linux-gnu \
 end_comment
 
 begin_comment
@@ -1764,7 +1900,7 @@ comment|// CHECK-DEBIAN-MIPS64EL: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.5/64/crtbegin.o"
+comment|// CHECK-DEBIAN-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.5/64{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1792,7 +1928,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64-linux-gnu -mabi=n32 \
+comment|// RUN:     --target=mips64-linux-gnu -mabi=n32 \
 end_comment
 
 begin_comment
@@ -1808,7 +1944,7 @@ comment|// CHECK-DEBIAN-MIPS64-N32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-MIPS64-N32: "{{.*}}/usr/lib/gcc/mips-linux-gnu/4.5/n32/crtbegin.o"
+comment|// CHECK-DEBIAN-MIPS64-N32: "{{.*}}/usr/lib/gcc/mips-linux-gnu/4.5/n32{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1836,7 +1972,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64el-linux-gnu -mabi=n32 \
+comment|// RUN:     --target=mips64el-linux-gnu -mabi=n32 \
 end_comment
 
 begin_comment
@@ -1852,7 +1988,7 @@ comment|// CHECK-DEBIAN-MIPS64EL-N32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.5/n32/crtbegin.o"
+comment|// CHECK-DEBIAN-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.5/n32{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1888,7 +2024,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi \
+comment|// RUN:     --target=arm-linux-androideabi \
 end_comment
 
 begin_comment
@@ -1904,7 +2040,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-android \
+comment|// RUN:     --target=arm-linux-android \
 end_comment
 
 begin_comment
@@ -1920,7 +2056,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-android \
+comment|// RUN:     --target=mipsel-linux-android \
 end_comment
 
 begin_comment
@@ -1936,7 +2072,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-linux-android \
+comment|// RUN:     --target=i386-linux-android \
 end_comment
 
 begin_comment
@@ -1952,7 +2088,7 @@ comment|// CHECK-ANDROID: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID: "{{.*}}/crtbegin_dynamic.o"
+comment|// CHECK-ANDROID: "{{.*}}{{/|\\\\}}crtbegin_dynamic.o"
 end_comment
 
 begin_comment
@@ -1976,7 +2112,7 @@ comment|// CHECK-ANDROID-NOT: "gcc_s"
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID: "{{.*}}/crtend_android.o"
+comment|// CHECK-ANDROID: "{{.*}}{{/|\\\\}}crtend_android.o"
 end_comment
 
 begin_comment
@@ -1984,7 +2120,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi \
+comment|// RUN:     --target=arm-linux-androideabi \
 end_comment
 
 begin_comment
@@ -2004,7 +2140,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-android \
+comment|// RUN:     --target=arm-linux-android \
 end_comment
 
 begin_comment
@@ -2024,7 +2160,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-android \
+comment|// RUN:     --target=mipsel-linux-android \
 end_comment
 
 begin_comment
@@ -2044,7 +2180,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-linux-android \
+comment|// RUN:     --target=i386-linux-android \
 end_comment
 
 begin_comment
@@ -2068,7 +2204,7 @@ comment|// CHECK-ANDROID-SO: "-Bsymbolic"
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-SO: "{{.*}}/crtbegin_so.o"
+comment|// CHECK-ANDROID-SO: "{{.*}}{{/|\\\\}}crtbegin_so.o"
 end_comment
 
 begin_comment
@@ -2092,7 +2228,7 @@ comment|// CHECK-ANDROID-SO-NOT: "gcc_s"
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-SO: "{{.*}}/crtend_so.o"
+comment|// CHECK-ANDROID-SO: "{{.*}}{{/|\\\\}}crtend_so.o"
 end_comment
 
 begin_comment
@@ -2100,7 +2236,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi \
+comment|// RUN:     --target=arm-linux-androideabi \
 end_comment
 
 begin_comment
@@ -2120,7 +2256,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-android \
+comment|// RUN:     --target=arm-linux-android \
 end_comment
 
 begin_comment
@@ -2140,7 +2276,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-android \
+comment|// RUN:     --target=mipsel-linux-android \
 end_comment
 
 begin_comment
@@ -2160,7 +2296,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-linux-android \
+comment|// RUN:     --target=i386-linux-android \
 end_comment
 
 begin_comment
@@ -2180,7 +2316,7 @@ comment|// CHECK-ANDROID-STATIC: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-STATIC: "{{.*}}/crtbegin_static.o"
+comment|// CHECK-ANDROID-STATIC: "{{.*}}{{/|\\\\}}crtbegin_static.o"
 end_comment
 
 begin_comment
@@ -2204,7 +2340,7 @@ comment|// CHECK-ANDROID-STATIC-NOT: "gcc_s"
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-STATIC: "{{.*}}/crtend_android.o"
+comment|// CHECK-ANDROID-STATIC: "{{.*}}{{/|\\\\}}crtend_android.o"
 end_comment
 
 begin_comment
@@ -2212,7 +2348,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi \
+comment|// RUN:     --target=arm-linux-androideabi \
 end_comment
 
 begin_comment
@@ -2232,7 +2368,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-android \
+comment|// RUN:     --target=arm-linux-android \
 end_comment
 
 begin_comment
@@ -2252,7 +2388,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-android \
+comment|// RUN:     --target=mipsel-linux-android \
 end_comment
 
 begin_comment
@@ -2272,7 +2408,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-linux-android \
+comment|// RUN:     --target=i386-linux-android \
 end_comment
 
 begin_comment
@@ -2292,7 +2428,7 @@ comment|// CHECK-ANDROID-PIE: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-PIE: "{{.*}}/crtbegin_dynamic.o"
+comment|// CHECK-ANDROID-PIE: "{{.*}}{{/|\\\\}}crtbegin_dynamic.o"
 end_comment
 
 begin_comment
@@ -2312,7 +2448,7 @@ comment|// CHECK-ANDROID-PIE-NOT: "gcc_s"
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-PIE: "{{.*}}/crtend_android.o"
+comment|// CHECK-ANDROID-PIE: "{{.*}}{{/|\\\\}}crtend_android.o"
 end_comment
 
 begin_comment
@@ -2328,7 +2464,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-gnu \
+comment|// RUN:     --target=mipsel-linux-gnu \
 end_comment
 
 begin_comment
@@ -2344,15 +2480,15 @@ comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib/crt1.o"
+comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib/crti.o"
+comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/crtbegin.o"
+comment|// CHECK-DEBIAN-ML-MIPSEL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -2392,7 +2528,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64el-linux-gnu \
+comment|// RUN:     --target=mips64el-linux-gnu \
 end_comment
 
 begin_comment
@@ -2408,15 +2544,15 @@ comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib64/crt1.o"
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib64{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib64/crti.o"
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib64{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/64/crtbegin.o"
+comment|// CHECK-DEBIAN-ML-MIPS64EL: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/64{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -2456,7 +2592,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64el-linux-gnu -mabi=n32 \
+comment|// RUN:     --target=mips64el-linux-gnu -mabi=n32 \
 end_comment
 
 begin_comment
@@ -2472,15 +2608,15 @@ comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSR
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib32/crt1.o"
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib32{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib32/crti.o"
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/../../../../lib32{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/n32/crtbegin.o"
+comment|// CHECK-DEBIAN-ML-MIPS64EL-N32: "{{.*}}/usr/lib/gcc/mipsel-linux-gnu/4.4/n32{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -2524,7 +2660,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target powerpc-fsl-linux \
+comment|// RUN:     --target=powerpc-fsl-linux \
 end_comment
 
 begin_comment
@@ -2544,11 +2680,11 @@ comment|// CHECK-FSL-PPC: "-m" "elf32ppclinux"
 end_comment
 
 begin_comment
-comment|// CHECK-FSL-PPC: "{{.*}}/crt1.o"
+comment|// CHECK-FSL-PPC: "{{.*}}{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-FSL-PPC: "{{.*}}/crtbegin.o"
+comment|// CHECK-FSL-PPC: "{{.*}}{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -2560,7 +2696,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target powerpc64-fsl-linux \
+comment|// RUN:     --target=powerpc64-fsl-linux \
 end_comment
 
 begin_comment
@@ -2580,11 +2716,11 @@ comment|// CHECK-FSL-PPC64: "-m" "elf64ppc"
 end_comment
 
 begin_comment
-comment|// CHECK-FSL-PPC64: "{{.*}}/crt1.o"
+comment|// CHECK-FSL-PPC64: "{{.*}}{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-FSL-PPC64: "{{.*}}/crtbegin.o"
+comment|// CHECK-FSL-PPC64: "{{.*}}{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -2600,7 +2736,7 @@ comment|// Check that crtfastmath.o is linked with -ffast-math.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-unknown-linux -### %s \
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s \
 end_comment
 
 begin_comment
@@ -2612,7 +2748,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-NOCRTFASTMATH %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-unknown-linux -### %s -ffast-math \
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -ffast-math \
 end_comment
 
 begin_comment
@@ -2624,7 +2760,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-unknown-linux -### %s -funsafe-math-optimizations\
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -funsafe-math-optimizations\
 end_comment
 
 begin_comment
@@ -2636,7 +2772,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-unknown-linux -### %s -ffast-math -fno-fast-math \
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -ffast-math -fno-fast-math \
 end_comment
 
 begin_comment
@@ -2656,7 +2792,7 @@ comment|// detection works.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target i386-unknown-linux -### %s -ffast-math \
+comment|// RUN: %clang --target=i386-unknown-linux -### %s -ffast-math \
 end_comment
 
 begin_comment
@@ -2668,11 +2804,31 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-NOCRTFASTMATH %s
 end_comment
 
 begin_comment
-comment|// CHECK-CRTFASTMATH: usr/lib/gcc/x86_64-unknown-linux/4.6.0/crtfastmath.o
+comment|// CHECK-CRTFASTMATH: usr/lib/gcc/x86_64-unknown-linux/4.6.0{{/|\\\\}}crtfastmath.o
 end_comment
 
 begin_comment
 comment|// CHECK-NOCRTFASTMATH-NOT: crtfastmath.o
+end_comment
+
+begin_comment
+comment|// Check that we link in gcrt1.o when compiling with -pg
+end_comment
+
+begin_comment
+comment|// RUN: %clang -pg --target=x86_64-unknown-linux -### %s \
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>& 1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-PG %s
+end_comment
+
+begin_comment
+comment|// CHECK-PG: gcrt1.o
 end_comment
 
 end_unit

@@ -4,7 +4,7 @@ comment|// RUN: %clang -target mipsel-unknown-linux -S -o - -emit-llvm %s
 end_comment
 
 begin_comment
-comment|/*     This checks that the frontend will accept both     enumerated and symbolic Mips GPR register names.          Any bad names will make the frontend choke.  */
+comment|/*     This checks that the frontend will accept both     enumerated and symbolic Mips register names.      Includes:     - GPR     - FPU     - MSA      Any bad names will make the frontend choke.  */
 end_comment
 
 begin_function
@@ -145,7 +145,7 @@ specifier|__volatile__
 asm|("addi $7,$10,77":::"$10");
 asm|__asm__
 specifier|__volatile__
-asm|("addi $7,$11,77":::"$10");
+asm|("addi $7,$11,77":::"$11");
 asm|__asm__
 specifier|__volatile__
 asm|("addi $7,$12,77":::"$12");
@@ -206,6 +206,198 @@ asm|("addi $7,$30,77":::"$30");
 asm|__asm__
 specifier|__volatile__
 asm|("addi $7,$31,77":::"$31");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f0,77":::"$f0");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f1,77":::"$f1");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f2,77":::"$f2");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f3,77":::"$f3");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f4,77":::"$f4");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f5,77":::"$f5");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f6,77":::"$f6");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f7,77":::"$f7");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f8,77":::"$f8");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f9,77":::"$f9");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f10,77":::"$f10");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f11,77":::"$f11");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f12,77":::"$f12");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f13,77":::"$f13");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f14,77":::"$f14");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f15,77":::"$f15");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f16,77":::"$f16");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f17,77":::"$f17");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f18,77":::"$f18");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f19,77":::"$f19");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f20,77":::"$f20");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f21,77":::"$f21");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f22,77":::"$f22");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f23,77":::"$f23");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f24,77":::"$f24");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f25,77":::"$f25");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f26,77":::"$f26");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f27,77":::"$f27");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f28,77":::"$f28");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f29,77":::"$f29");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f30,77":::"$f30");
+asm|__asm__
+specifier|__volatile__
+asm|("fadd.s $f31,77":::"$f31");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w0,77":::"$w0");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w1,77":::"$w1");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w2,77":::"$w2");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w3,77":::"$w3");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w4,77":::"$w4");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w5,77":::"$w5");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w6,77":::"$w6");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w7,77":::"$w7");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w8,77":::"$w8");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w9,77":::"$w9");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w10,77":::"$w10");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w11,77":::"$w10");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w12,77":::"$w12");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w13,77":::"$w13");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w14,77":::"$w14");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w15,77":::"$w15");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w16,77":::"$w16");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w17,77":::"$w17");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w18,77":::"$w18");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w19,77":::"$w19");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w20,77":::"$w20");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w21,77":::"$w21");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w22,77":::"$w22");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w23,77":::"$w23");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w24,77":::"$w24");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w25,77":::"$w25");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w26,77":::"$w26");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w27,77":::"$w27");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w28,77":::"$w28");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w29,77":::"$w29");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w30,77":::"$w30");
+asm|__asm__
+specifier|__volatile__
+asm|("ldi.w $w31,77":::"$w31");
 block|}
 end_function
 

@@ -324,6 +324,16 @@ comment|// expected-note {{to match}}
 argument|;
 comment|// expected-error {{expected ')'}}
 argument|}
+comment|// PR16992
+argument|struct pr16992 { int x; };  void func_16992 () {   int x1 = sizeof int;
+comment|// expected-error {{expected parentheses around type name in sizeof expression}}
+argument|int x2 = sizeof struct pr16992;
+comment|// expected-error {{expected parentheses around type name in sizeof expression}}
+argument|int x3 = __alignof int;
+comment|// expected-error {{expected parentheses around type name in __alignof expression}}
+argument|int x4 = _Alignof int;
+comment|// expected-error {{expected parentheses around type name in _Alignof expression}}
+argument|}
 end_function
 
 end_unit

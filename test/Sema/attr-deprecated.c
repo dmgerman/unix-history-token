@@ -748,5 +748,40 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|int
+name|test23_ty
+name|__attribute
+typedef|((
+name|deprecated
+typedef|));
+end_typedef
+
+begin_comment
+comment|// expected-note {{previous definition is here}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|test23_ty
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-note {{'test23_ty' declared here}} expected-warning {{redefinition of typedef 'test23_ty' is a C11 feature}}
+end_comment
+
+begin_decl_stmt
+name|test23_ty
+name|test23_v
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{'test23_ty' is deprecated}}
+end_comment
+
 end_unit
 

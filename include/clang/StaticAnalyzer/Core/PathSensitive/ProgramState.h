@@ -732,8 +732,8 @@ comment|///        call.
 comment|/// \param IS the set of invalidated symbols.
 comment|/// \param Call if non-null, the invalidated regions represent parameters to
 comment|///        the call and should be considered directly invalidated.
-comment|/// \param ConstRegions the set of regions whose contents are accessible,
-comment|///        even though the regions themselves should not be invalidated.
+comment|/// \param ITraits information about special handling for a particular
+comment|///        region/symbol.
 name|ProgramStateRef
 name|invalidateRegions
 argument_list|(
@@ -774,22 +774,11 @@ name|Call
 operator|=
 literal|0
 argument_list|,
-name|ArrayRef
-operator|<
-specifier|const
-name|MemRegion
+name|RegionAndSymbolInvalidationTraits
 operator|*
-operator|>
-name|ConstRegions
+name|ITraits
 operator|=
-name|ArrayRef
-operator|<
-specifier|const
-name|MemRegion
-operator|*
-operator|>
-operator|(
-operator|)
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -831,18 +820,11 @@ name|Call
 operator|=
 literal|0
 argument_list|,
-name|ArrayRef
-operator|<
-name|SVal
-operator|>
-name|ConstRegions
+name|RegionAndSymbolInvalidationTraits
+operator|*
+name|ITraits
 operator|=
-name|ArrayRef
-operator|<
-name|SVal
-operator|>
-operator|(
-operator|)
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1693,19 +1675,17 @@ name|bool
 name|ResultsInSymbolEscape
 argument_list|,
 name|InvalidatedSymbols
-operator|&
+operator|*
 name|IS
+argument_list|,
+name|RegionAndSymbolInvalidationTraits
+operator|*
+name|HTraits
 argument_list|,
 specifier|const
 name|CallEvent
 operator|*
 name|Call
-argument_list|,
-name|ArrayRef
-operator|<
-name|SVal
-operator|>
-name|ConstValues
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2033,6 +2013,9 @@ name|ArrayToPointer
 parameter_list|(
 name|Loc
 name|Array
+parameter_list|,
+name|QualType
+name|ElementTy
 parameter_list|)
 block|{
 return|return
@@ -2041,6 +2024,8 @@ operator|->
 name|ArrayToPointer
 argument_list|(
 name|Array
+argument_list|,
+name|ElementTy
 argument_list|)
 return|;
 block|}
@@ -3609,13 +3594,11 @@ block|{
 typedef|typedef
 name|llvm
 operator|::
-name|DenseMap
+name|DenseSet
 operator|<
 specifier|const
 name|void
 operator|*
-operator|,
-name|unsigned
 operator|>
 name|VisitedItems
 expr_stmt|;
@@ -3651,9 +3634,18 @@ block|{}
 name|bool
 name|scan
 argument_list|(
-argument|nonloc::CompoundVal val
+argument|nonloc::LazyCompoundVal val
 argument_list|)
 expr_stmt|;
+name|bool
+name|scan
+argument_list|(
+name|nonloc
+operator|::
+name|CompoundVal
+name|val
+argument_list|)
+decl_stmt|;
 name|bool
 name|scan
 parameter_list|(

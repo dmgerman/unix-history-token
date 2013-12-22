@@ -21,5 +21,28 @@ return|return;
 block|}
 end_function
 
+begin_function
+name|void
+name|test_64bit_r
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|long
+name|long
+name|foo
+init|=
+literal|0
+decl_stmt|,
+name|bar
+init|=
+literal|0
+decl_stmt|;
+asm|asm
+specifier|volatile
+asm|("INST %0, %1" : "=r"(foo) : "r"(bar));
+block|}
+end_function
+
 end_unit
 

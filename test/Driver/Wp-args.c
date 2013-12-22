@@ -8,7 +8,7 @@ comment|// major projects (e.g., FireFox and the Linux Kernel).
 end_comment
 
 begin_comment
-comment|// RUN: %clang --target i386-pc-linux-gnu -### \
+comment|// RUN: %clang -target i386-pc-linux-gnu -### \
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// PR4062
 end_comment
 
 begin_comment
-comment|// RUN: %clang --target i386-pc-linux-gnu -### \
+comment|// RUN: %clang -target i386-pc-linux-gnu -### \
 end_comment
 
 begin_comment

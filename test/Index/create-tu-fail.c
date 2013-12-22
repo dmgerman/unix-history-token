@@ -16,7 +16,7 @@ comment|// RUN: cp %s %t.c
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -test-load-tu %t.pch local 2>&1 | FileCheck %s
+comment|// RUN: not c-index-test -test-load-tu %t.pch local 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

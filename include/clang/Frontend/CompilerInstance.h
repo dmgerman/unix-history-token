@@ -1113,8 +1113,9 @@ specifier|const
 block|{
 return|return
 name|Consumer
-operator|!=
-literal|0
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 name|ASTConsumer
@@ -1169,8 +1170,9 @@ specifier|const
 block|{
 return|return
 name|TheSema
-operator|!=
-literal|0
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 name|Sema
@@ -1236,8 +1238,9 @@ specifier|const
 block|{
 return|return
 name|CompletionConsumer
-operator|!=
-literal|0
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 name|CodeCompleteConsumer
@@ -1292,8 +1295,9 @@ specifier|const
 block|{
 return|return
 name|FrontendTimer
-operator|!=
-literal|0
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 name|llvm
@@ -1543,17 +1547,15 @@ name|createOutputFile
 argument_list|(
 argument|StringRef OutputPath
 argument_list|,
-argument|bool Binary = true
+argument|bool Binary
 argument_list|,
-argument|bool RemoveFileOnSignal = true
+argument|bool RemoveFileOnSignal
 argument_list|,
-argument|StringRef BaseInput =
-literal|""
+argument|StringRef BaseInput
 argument_list|,
-argument|StringRef Extension =
-literal|""
+argument|StringRef Extension
 argument_list|,
-argument|bool UseTemporary = false
+argument|bool UseTemporary
 argument_list|,
 argument|bool CreateMissingDirectories = false
 argument_list|)
@@ -1594,25 +1596,21 @@ argument|StringRef OutputPath
 argument_list|,
 argument|std::string&Error
 argument_list|,
-argument|bool Binary = true
+argument|bool Binary
 argument_list|,
-argument|bool RemoveFileOnSignal = true
+argument|bool RemoveFileOnSignal
 argument_list|,
-argument|StringRef BaseInput =
-literal|""
+argument|StringRef BaseInput
 argument_list|,
-argument|StringRef Extension =
-literal|""
+argument|StringRef Extension
 argument_list|,
-argument|bool UseTemporary = false
+argument|bool UseTemporary
 argument_list|,
-argument|bool CreateMissingDirectories = false
+argument|bool CreateMissingDirectories
 argument_list|,
-argument|std::string *ResultPathName =
-literal|0
+argument|std::string *ResultPathName
 argument_list|,
-argument|std::string *TempPathName =
-literal|0
+argument|std::string *TempPathName
 argument_list|)
 block|;
 comment|/// }
@@ -1688,9 +1686,20 @@ argument|SourceLocation ImportLoc
 argument_list|,
 argument|bool Complain
 argument_list|)
-block|;  }
-decl_stmt|;
+block|;
+name|bool
+name|hadModuleLoaderFatalFailure
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModuleLoader
+operator|::
+name|HadFatalFailure
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

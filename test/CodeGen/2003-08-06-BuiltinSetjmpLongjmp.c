@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: %clang_cc1  %s -emit-llvm -o - | not grep __builtin_  *  * __builtin_longjmp/setjmp should get transformed into llvm.setjmp/longjmp   * just like explicit setjmp/longjmp calls are.  */
+comment|/* RUN: %clang_cc1  %s -emit-llvm -o - | FileCheck %s  *  * __builtin_longjmp/setjmp should get transformed into intrinsics.  */
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: builtin_longjmp
 end_comment
 
 begin_function

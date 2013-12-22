@@ -1,18 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fmath-errno -emit-llvm -o - %s -triple i386-unknown-unknown | FileCheck -check-prefix YES %s
+comment|// RUN: %clang_cc1 -fmath-errno -emit-llvm -o - %s -triple i386-unknown-unknown | FileCheck -check-prefix CHECK-YES %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s -triple i386-unknown-unknown | FileCheck -check-prefix NO %s
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -triple i386-unknown-unknown | FileCheck -check-prefix CHECK-NO %s
 end_comment
 
 begin_comment
-comment|// CHECK-YES: define void @test_sqrt
+comment|// RUN: %clang_cc1 -menable-unsafe-fp-math -emit-llvm -o - %s -triple i386-unknown-unknown | FileCheck -check-prefix CHECK-FAST %s
 end_comment
 
 begin_comment
-comment|// CHECK-NO: define void @test_sqrt
+comment|// CHECK-YES-LABEL: define void @test_sqrt
+end_comment
+
+begin_comment
+comment|// CHECK-NO-LABEL: define void @test_sqrt
+end_comment
+
+begin_comment
+comment|// CHECK-FAST-LABEL: define void @test_sqrt
 end_comment
 
 begin_function
@@ -92,11 +100,23 @@ comment|// CHECK-NO: declare x86_fp80 @sqrtl(x86_fp80) [[NUW_RN]]
 end_comment
 
 begin_comment
-comment|// CHECK-YES: define void @test_pow
+comment|// CHECK-FAST: declare float @llvm.sqrt.f32(float)
 end_comment
 
 begin_comment
-comment|// CHECK-NO: define void @test_pow
+comment|// CHECK-FAST: declare double @llvm.sqrt.f64(double)
+end_comment
+
+begin_comment
+comment|// CHECK-FAST: declare x86_fp80 @llvm.sqrt.f80(x86_fp80)
+end_comment
+
+begin_comment
+comment|// CHECK-YES-LABEL: define void @test_pow
+end_comment
+
+begin_comment
+comment|// CHECK-NO-LABEL: define void @test_pow
 end_comment
 
 begin_function
@@ -179,11 +199,11 @@ comment|// CHECK-NO: declare x86_fp80 @llvm.pow.f80(x86_fp80, x86_fp80) [[NUW_RO
 end_comment
 
 begin_comment
-comment|// CHECK-YES: define void @test_fma
+comment|// CHECK-YES-LABEL: define void @test_fma
 end_comment
 
 begin_comment
-comment|// CHECK-NO: define void @test_fma
+comment|// CHECK-NO-LABEL: define void @test_fma
 end_comment
 
 begin_function

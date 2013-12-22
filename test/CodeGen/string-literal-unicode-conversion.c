@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm %s -o - | FileCheck -check-prefix=C %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm %s -o - | FileCheck -check-prefix=CHECK-C %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x c++ -std=c++0x -triple i386-unknown-unknown -emit-llvm %s -o - | FileCheck -check-prefix=CPP0X %s
+comment|// RUN: %clang_cc1 -x c++ -std=c++0x -triple i386-unknown-unknown -emit-llvm %s -o - | FileCheck -check-prefix=CHECK-CPP0X %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x c++ -std=c++0x -fshort-wchar -triple i386-unknown-unknown -emit-llvm %s -o - | FileCheck -check-prefix=SHORTWCHAR %s
+comment|// RUN: %clang_cc1 -x c++ -std=c++0x -fshort-wchar -triple i386-unknown-unknown -emit-llvm %s -o - | FileCheck -check-prefix=CHECK-SHORTWCHAR %s
 end_comment
 
 begin_comment
@@ -92,8 +92,12 @@ init|=
 literal|L"ÐÐ¾ÑÐºÐ°"
 decl_stmt|;
 comment|// CHECK-C: private unnamed_addr constant [4 x i32] [i32 20320, i32 22909, i32 66304, i32 0], align 4
-comment|// CHECK-SHORTWCHAR: private unnamed_addr constant [4 x i16] [i16 20320, i16 22909, i16 768, i16 0], align 2
 comment|// CHECK-CPP0X: private unnamed_addr constant [4 x i32] [i32 20320, i32 22909, i32 66304, i32 0], align 4
+if|#
+directive|if
+name|__WCHAR_MAX__
+operator|==
+literal|2147483647
 name|wchar_t
 specifier|const
 modifier|*
@@ -101,6 +105,8 @@ name|b2
 init|=
 literal|L"\x4f60\x597d\x10300"
 decl_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|__cplusplus

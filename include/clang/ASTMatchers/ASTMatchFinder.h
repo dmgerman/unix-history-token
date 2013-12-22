@@ -281,6 +281,14 @@ name|void
 name|onStartOfTranslationUnit
 parameter_list|()
 block|{}
+comment|/// \brief Called at the end of each translation unit.
+comment|///
+comment|/// Optionally override to do per translation unit tasks.
+name|virtual
+name|void
+name|onEndOfTranslationUnit
+parameter_list|()
+block|{}
 block|}
 empty_stmt|;
 comment|/// \brief Called when parsing is finished. Intended for testing only.
@@ -397,6 +405,29 @@ name|Action
 parameter_list|)
 function_decl|;
 comment|/// @}
+comment|/// \brief Adds a matcher to execute when running over the AST.
+comment|///
+comment|/// This is similar to \c addMatcher(), but it uses the dynamic interface. It
+comment|/// is more flexible, but the lost type information enables a caller to pass
+comment|/// a matcher that cannot match anything.
+comment|///
+comment|/// \returns \c true if the matcher is a valid top-level matcher, \c false
+comment|///   otherwise.
+name|bool
+name|addDynamicMatcher
+argument_list|(
+specifier|const
+name|internal
+operator|::
+name|DynTypedMatcher
+operator|&
+name|NodeMatch
+argument_list|,
+name|MatchCallback
+operator|*
+name|Action
+argument_list|)
+decl_stmt|;
 comment|/// \brief Creates a clang ASTConsumer that finds all matches.
 name|clang
 operator|::
@@ -458,6 +489,15 @@ name|Context
 argument_list|)
 expr_stmt|;
 comment|/// @}
+comment|/// \brief Finds all matches in the given AST.
+name|void
+name|matchAST
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
 comment|/// \brief Registers a callback to notify the end of parsing.
 comment|///
 comment|/// The provided closure is called after parsing is done, before the AST is
@@ -483,11 +523,9 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
 name|internal
 operator|::
 name|DynTypedMatcher
-operator|*
 operator|,
 name|MatchCallback
 operator|*

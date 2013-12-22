@@ -160,14 +160,14 @@ index|[]
 init|=
 literal|"x"
 decl_stmt|;
-comment|// expected-error {{initializer}}
+comment|// expected-error {{initializing wide char array with non-wide string literal}}
 name|char
 name|t3
 index|[]
 init|=
 literal|L"x"
 decl_stmt|;
-comment|// expected-error {{initializer}}
+comment|// expected-error {{initializing char array with wide string literal}}
 block|}
 end_function
 

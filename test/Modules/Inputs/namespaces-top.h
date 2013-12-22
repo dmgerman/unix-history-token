@@ -47,5 +47,32 @@ name|N12
 block|{ }
 end_decl_stmt
 
+begin_decl_stmt
+name|namespace
+name|N13
+block|{
+name|void
+name|f
+parameter_list|()
+function_decl|;
+name|int
+name|f
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|p
+function_decl|)
+parameter_list|()
+init|=
+operator|&
+name|f
+function_decl|;
+block|}
+end_decl_stmt
+
 end_unit
 

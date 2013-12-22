@@ -12,11 +12,11 @@ comment|// -fno-math-errno should emit an llvm intrinsic, -fmath-errno should no
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -fno-math-errno -O0 -o - | grep {call.*exp2\\.f64}
+comment|// RUN: %clang_cc1 %s -emit-llvm -fno-math-errno -o - | grep {call.*exp2\\.f64}
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -fmath-errno -O0 -o - | grep {call.*exp2}
+comment|// RUN: %clang_cc1 %s -emit-llvm -fmath-errno -o - | grep {call.*exp2}
 end_comment
 
 begin_comment

@@ -75,5 +75,40 @@ comment|// CHECK: store volatile i32 1
 block|}
 end_function
 
+begin_function
+name|void
+name|sevl
+parameter_list|()
+block|{
+name|__builtin_arm_sevl
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call {{.*}} @llvm.arm.sevl
+end_comment
+
+begin_function
+name|void
+name|test_barrier
+parameter_list|()
+block|{
+name|__builtin_arm_dmb
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|//CHECK: call {{.*}} @llvm.arm.dmb(i32 1)
+name|__builtin_arm_dsb
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+comment|//CHECK: call {{.*}} @llvm.arm.dsb(i32 2)
+block|}
+end_function
+
 end_unit
 

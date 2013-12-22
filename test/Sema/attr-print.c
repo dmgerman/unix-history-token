@@ -82,11 +82,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// FIXME: Print these at a valid location for these attributes.
-end_comment
-
-begin_comment
-comment|// CHECK: int *p32 __ptr32;
+comment|// CHECK: int * __ptr32 p32;
 end_comment
 
 begin_decl_stmt
@@ -98,7 +94,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: int *p64 __ptr64;
+comment|// CHECK: int * __ptr64 p64;
 end_comment
 
 begin_decl_stmt
@@ -106,6 +102,67 @@ name|int
 modifier|*
 name|__ptr64
 name|p64
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// TODO: the Type Printer has no way to specify the order to print attributes
+end_comment
+
+begin_comment
+comment|// in, and so it currently always prints them in reverse order. Fix this.
+end_comment
+
+begin_comment
+comment|// CHECK: int * __ptr32 __uptr p32_2;
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__uptr
+name|__ptr32
+name|p32_2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: int * __ptr64 __sptr p64_2;
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__sptr
+name|__ptr64
+name|p64_2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: int * __ptr32 __uptr p32_3;
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__uptr
+name|__ptr32
+name|p32_3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: int * __sptr * __ptr32 ppsp32;
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__sptr
+modifier|*
+name|__ptr32
+name|ppsp32
 decl_stmt|;
 end_decl_stmt
 

@@ -163,5 +163,133 @@ begin_comment
 comment|// CHECK-SOFT-FLOAT: "-target-feature" "-neon"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target armv8 -mfpu=fp-armv8 %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ARMV8-SOFT-FLOAT %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARMV8-SOFT-FLOAT: "-target-feature" "+fp-armv8"
+end_comment
+
+begin_comment
+comment|// CHECK-ARMV8-SOFT-FLOAT: "-target-feature" "-crypto"
+end_comment
+
+begin_comment
+comment|// CHECK-ARMV8-SOFT-FLOAT: "-target-feature" "-neon"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv8-linux-gnueabihf -mfpu=fp-armv8 %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-FP-ARMV8 %s
+end_comment
+
+begin_comment
+comment|// CHECK-FP-ARMV8-NOT: "-target-feature" "+neon"
+end_comment
+
+begin_comment
+comment|// CHECK-FP-ARMV8: "-target-feature" "+fp-armv8"
+end_comment
+
+begin_comment
+comment|// CHECK-FP-ARMV8: "-target-feature" "-neon"
+end_comment
+
+begin_comment
+comment|// CHECK-FP-ARMV8: "-target-feature" "-crypto"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv8-linux-gnueabihf -mfpu=neon-fp-armv8 %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NEON-FP-ARMV8 %s
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP-ARMV8: "-target-feature" "+fp-armv8"
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP-ARMV8: "-target-feature" "+neon"
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP-ARMV8: "-target-feature" "-crypto"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv8-linux-gnueabihf -mfpu=crypto-neon-fp-armv8 %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CRYPTO-NEON-FP-ARMV8 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CRYPTO-NEON-FP-ARMV8: "-target-feature" "+fp-armv8"
+end_comment
+
+begin_comment
+comment|// CHECK-CRYPTO-NEON-FP-ARMV8: "-target-feature" "+neon"
+end_comment
+
+begin_comment
+comment|// CHECK-CRYPTO-NEON-FP-ARMV8: "-target-feature" "+crypto"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv8-linux-gnueabi -mfpu=none %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FP %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FP: "-target-feature" "-vfp2"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FP: "-target-feature" "-vfp3"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FP: "-target-feature" "-vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FP: "-target-feature" "-fp-armv8"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FP: "-target-feature" "-crypto"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FP: "-target-feature" "-neon"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabihf %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-HF %s
+end_comment
+
+begin_comment
+comment|// CHECK-HF: "-target-cpu" "arm1136jf-s"
+end_comment
+
 end_unit
 

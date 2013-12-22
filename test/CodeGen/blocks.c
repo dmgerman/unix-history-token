@@ -267,7 +267,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define void @f4()
+comment|// CHECK-LABEL: define void @f4()
 end_comment
 
 begin_function
@@ -359,7 +359,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define void @f5()
+comment|// CHECK-LABEL: define void @f5()
 end_comment
 
 begin_function
@@ -394,6 +394,61 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// rdar://14085217
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|^
+name|b
+function_decl|)
+parameter_list|()
+init|=
+lambda|^
+block|{}
+function_decl|;
+end_function_decl
+
+begin_function
+name|int
+name|main
+parameter_list|()
+block|{
+operator|(
+name|b
+condition|?
+else|:
+lambda|^
+block|{}
+operator|)
+operator|(
+operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: [[ZERO:%.*]] = load void (...)** @b
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [[TB:%.*]] = icmp ne void (...)* [[ZERO]], null
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: br i1 [[TB]], label [[CT:%.*]], label [[CF:%.*]]
+end_comment
+
+begin_comment
+comment|// CHECK: [[ONE:%.*]] = bitcast void (...)* [[ZERO]] to void ()*
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   br label [[CE:%.*]]
+end_comment
 
 end_unit
 

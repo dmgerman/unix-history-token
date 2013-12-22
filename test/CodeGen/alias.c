@@ -54,7 +54,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECKBASIC: @g1 = alias i32* @g0
+comment|// CHECKBASIC-DAG: @g1 = alias i32* @g0
 end_comment
 
 begin_function
@@ -96,7 +96,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// CHECKBASIC: @f1 = alias void ()* @f0
+comment|// CHECKBASIC-DAG: @f1 = alias void ()* @f0
 end_comment
 
 begin_comment
@@ -125,7 +125,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECKBASIC: define internal i32 @foo1()
+comment|// CHECKBASIC-LABEL: define internal i32 @foo1()
 end_comment
 
 begin_function_decl

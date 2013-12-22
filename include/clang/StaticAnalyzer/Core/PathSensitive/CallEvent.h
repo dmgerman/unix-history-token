@@ -871,17 +871,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// \brief Returns true if this is a call to a variadic function or method.
-name|virtual
-name|bool
-name|isVariadic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// \brief Returns a source range for the entire call, suitable for
 comment|/// outputting in diagnostics.
 name|virtual
@@ -1249,6 +1238,31 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Returns true if the given decl is known to be variadic.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \p D must not be null.
+end_comment
+
+begin_function_decl
+specifier|static
+name|bool
+name|isVariadic
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Iterator access to formal parameters and their types.
 end_comment
 
@@ -1296,26 +1310,6 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If UseDefinitionParams is set, this will return the parameter decls
-end_comment
-
-begin_comment
-comment|/// used in the callee's definition (suitable for inlining). Most of the
-end_comment
-
-begin_comment
-comment|/// time it is better to use the decl found by name lookup, which likely
-end_comment
-
-begin_comment
-comment|/// carries more annotations.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
 comment|/// Remember that the number of formal parameters may not match the number
 end_comment
 
@@ -1332,15 +1326,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If the call has no accessible declaration (or definition, if
+comment|/// If the call has no accessible declaration, \c param_begin() will be equal
 end_comment
 
 begin_comment
-comment|/// \p UseDefinitionParams is set), \c param_begin() will be equal to
-end_comment
-
-begin_comment
-comment|/// \c param_end().
+comment|/// to \c param_end().
 end_comment
 
 begin_expr_stmt
@@ -1634,20 +1624,6 @@ return|;
 block|}
 return|return
 name|RuntimeDefinition
-argument_list|()
-return|;
-block|}
-name|virtual
-name|bool
-name|isVariadic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getDecl
-argument_list|()
-operator|->
-name|isVariadic
 argument_list|()
 return|;
 block|}
@@ -2058,20 +2034,6 @@ argument_list|(
 name|getBlockDecl
 argument_list|()
 argument_list|)
-return|;
-block|}
-name|virtual
-name|bool
-name|isVariadic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getBlockDecl
-argument_list|()
-operator|->
-name|isVariadic
-argument_list|()
 return|;
 block|}
 name|virtual
@@ -3352,20 +3314,6 @@ name|getArg
 argument_list|(
 name|Index
 argument_list|)
-return|;
-block|}
-name|virtual
-name|bool
-name|isVariadic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getDecl
-argument_list|()
-operator|->
-name|isVariadic
-argument_list|()
 return|;
 block|}
 name|bool

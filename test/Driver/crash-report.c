@@ -8,7 +8,7 @@ comment|// RUN: mkdir %t
 end_comment
 
 begin_comment
-comment|// RUN: env TMPDIR=%t TEMP=%t TMP=%t RC_DEBUG_OPTIONS=1 %clang -fsyntax-only %s \
+comment|// RUN: not env TMPDIR=%t TEMP=%t TMP=%t RC_DEBUG_OPTIONS=1 %clang -fsyntax-only %s \
 end_comment
 
 begin_comment
@@ -20,7 +20,11 @@ comment|// RUN:  -iprefix /the/prefix -iwithprefix /tmp -iwithprefixbefore /tmp/
 end_comment
 
 begin_comment
-comment|// RUN:  -internal-isystem /tmp/ -internal-externc-isystem /tmp/ \
+comment|// RUN:  -Xclang -internal-isystem -Xclang /tmp/                         \
+end_comment
+
+begin_comment
+comment|// RUN:  -Xclang -internal-externc-isystem -Xclang /tmp/                 \
 end_comment
 
 begin_comment
@@ -40,7 +44,23 @@ comment|// REQUIRES: crash-recovery
 end_comment
 
 begin_comment
-comment|// RUN: env FORCE_CLANG_DIAGNOSTICS_CRASH=1 %clang -fsyntax-only -x c /dev/null 2>&1 | FileCheck %s
+comment|// because of the glob (*.c, *.sh)
+end_comment
+
+begin_comment
+comment|// REQUIRES: shell
+end_comment
+
+begin_comment
+comment|// RUN: not env FORCE_CLANG_DIAGNOSTICS_CRASH=1 %clang -fsyntax-only -x c /dev/null 2>&1 | FileCheck %s
+end_comment
+
+begin_comment
+comment|// FIXME: Investigating. "fatal error: file 'nul' modified since it was first processed"
+end_comment
+
+begin_comment
+comment|// XFAIL: mingw32
 end_comment
 
 begin_pragma
@@ -65,6 +85,10 @@ end_macro
 
 begin_comment
 comment|// CHECKSRC: FOO
+end_comment
+
+begin_comment
+comment|// CHECKSH: -cc1
 end_comment
 
 begin_comment

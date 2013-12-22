@@ -2436,6 +2436,7 @@ modifier|*
 name|src
 parameter_list|)
 block|{
+comment|// We assume this can never actually happen, so we don't get a warning.
 if|if
 condition|(
 name|strlen
@@ -2472,7 +2473,6 @@ argument_list|,
 name|src
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{This expression will create a string whose length is too big to be represented as a size_t}}
 block|}
 end_function
 
@@ -3823,6 +3823,7 @@ modifier|*
 name|src
 parameter_list|)
 block|{
+comment|// We assume this will never actually happen, so we don't get a warning.
 if|if
 condition|(
 name|strlen
@@ -3861,7 +3862,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{This expression will create a string whose length is too big to be represented as a size_t}}
 block|}
 end_function
 

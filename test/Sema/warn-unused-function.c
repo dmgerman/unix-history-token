@@ -90,20 +90,24 @@ begin_comment
 comment|// expected-warning{{unused}}
 end_comment
 
-begin_comment
-comment|// FIXME: This will trigger a warning when it should not.
-end_comment
+begin_function_decl
+specifier|inline
+specifier|static
+name|void
+name|f4
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f4
+parameter_list|()
+block|{ }
+end_function
 
 begin_comment
-comment|// Update once PR6281 is fixed.
-end_comment
-
-begin_comment
-comment|//inline static void f4();
-end_comment
-
-begin_comment
-comment|//void f4() { }
+comment|// expected-warning{{unused}}
 end_comment
 
 begin_decl_stmt

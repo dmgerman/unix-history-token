@@ -200,8 +200,6 @@ parameter_list|,
 name|DESC
 parameter_list|,
 name|CREATFN
-parameter_list|,
-name|AUTOCREAT
 parameter_list|)
 value|PD_##NAME,
 include|#
@@ -516,6 +514,13 @@ name|bool
 operator|>
 name|InlineCXXContainerCtorsAndDtors
 expr_stmt|;
+comment|/// \sa mayInlineCXXSharedPtrDtor
+name|Optional
+operator|<
+name|bool
+operator|>
+name|InlineCXXSharedPtrDtor
+expr_stmt|;
 comment|/// \sa mayInlineObjCMethod
 name|Optional
 operator|<
@@ -565,6 +570,13 @@ operator|<
 name|bool
 operator|>
 name|SuppressFromCXXStandardLibrary
+expr_stmt|;
+comment|/// \sa reportIssuesInMainSourceFile
+name|Optional
+operator|<
+name|bool
+operator|>
+name|ReportIssuesInMainSourceFile
 expr_stmt|;
 comment|/// \sa getGraphTrimInterval
 name|Optional
@@ -697,6 +709,18 @@ name|bool
 name|mayInlineCXXContainerCtorsAndDtors
 parameter_list|()
 function_decl|;
+comment|/// Returns whether or not the destructor of C++ 'shared_ptr' may be
+comment|/// considered for inlining.
+comment|///
+comment|/// This covers std::shared_ptr, std::tr1::shared_ptr, and boost::shared_ptr,
+comment|/// and indeed any destructor named "~shared_ptr".
+comment|///
+comment|/// This is controlled by the 'c++-shared_ptr-inlining' config option, which
+comment|/// accepts the values "true" and "false".
+name|bool
+name|mayInlineCXXSharedPtrDtor
+parameter_list|()
+function_decl|;
 comment|/// Returns whether or not paths that go through null returns should be
 comment|/// suppressed.
 comment|///
@@ -738,6 +762,15 @@ comment|/// This is controlled by the 'suppress-c++-stdlib' config option,
 comment|/// which accepts the values "true" and "false".
 name|bool
 name|shouldSuppressFromCXXStandardLibrary
+parameter_list|()
+function_decl|;
+comment|/// Returns whether or not the diagnostic report should be always reported
+comment|/// in the main source file and not the headers.
+comment|///
+comment|/// This is controlled by the 'report-in-main-source-file' config option,
+comment|/// which accepts the values "true" and "false".
+name|bool
+name|shouldReportIssuesInMainSourceFile
 parameter_list|()
 function_decl|;
 comment|/// Returns whether irrelevant parts of a bug report path should be pruned

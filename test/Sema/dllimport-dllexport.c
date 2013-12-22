@@ -375,5 +375,47 @@ begin_comment
 comment|// expected-warning{{dllimport attribute ignored}}
 end_comment
 
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|foo15
+init|=
+literal|54
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{'dllimport' attribute cannot be specified on a definition}}
+end_comment
+
+begin_extern
+extern|extern __declspec(dllimport
+end_extern
+
+begin_decl_stmt
+unit|)
+name|int
+name|foo17
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|foo17
+init|=
+literal|54
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{'dllimport' attribute cannot be specified on a definition}}
+end_comment
+
 end_unit
 

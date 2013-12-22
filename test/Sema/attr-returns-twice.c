@@ -66,7 +66,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no arguments}}
+comment|// expected-error {{'returns_twice' attribute takes no arguments}}
 end_comment
 
 begin_typedef

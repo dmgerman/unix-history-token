@@ -84,6 +84,22 @@ comment|// CORE2: "core2"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64h-apple-darwin -### -S %s -o %t.s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=AVX2 %s
+end_comment
+
+begin_comment
+comment|// AVX2: "-target-cpu"
+end_comment
+
+begin_comment
+comment|// AVX2: "core-avx2"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-apple-darwin10 -### -S %s -arch armv7 2>&1 | \
 end_comment
 
@@ -132,19 +148,19 @@ comment|// ARMV7_SOFTFLOAT: "-cc1"
 end_comment
 
 begin_comment
-comment|// ARMV7_SOFTFLOAT: "-msoft-float"
-end_comment
-
-begin_comment
-comment|// ARMV7_SOFTFLOAT: "-mfloat-abi" "soft"
-end_comment
-
-begin_comment
 comment|// ARMV7_SOFTFLOAT: "-target-feature"
 end_comment
 
 begin_comment
 comment|// ARMV7_SOFTFLOAT: "-neon"
+end_comment
+
+begin_comment
+comment|// ARMV7_SOFTFLOAT: "-msoft-float"
+end_comment
+
+begin_comment
+comment|// ARMV7_SOFTFLOAT: "-mfloat-abi" "soft"
 end_comment
 
 begin_comment

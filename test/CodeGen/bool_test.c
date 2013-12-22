@@ -45,7 +45,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f(
+comment|// CHECK-LABEL: define void @f(
 end_comment
 
 begin_comment

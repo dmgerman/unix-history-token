@@ -8,14 +8,6 @@ comment|// REQUIRES: dev-fd-fs
 end_comment
 
 begin_comment
-comment|// It has not been working since r169831 on freebsd.
-end_comment
-
-begin_comment
-comment|// XFAIL: freebsd
-end_comment
-
-begin_comment
 comment|// Check reading from named pipes. We cat the input here instead of redirecting
 end_comment
 

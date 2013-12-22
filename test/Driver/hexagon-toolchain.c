@@ -44,11 +44,11 @@ comment|// CHECK001:   "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/q
 end_comment
 
 begin_comment
-comment|// CHECK001-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-as"
+comment|// CHECK001-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-cxx -x c++ -### -target hexagon-unknown-linux     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-linux     \
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK002 %s
 end_comment
 
 begin_comment
-comment|// CHECK002: "-cc1" {{.*}} "-internal-isystem" "[[INSTALL_DIR:.*]]/Inputs/hexagon_tree/qc/bin/../../gnu/hexagon/include/c++/4.4.0"
+comment|// CHECK002: "-cc1" {{.*}} "-internal-isystem" "[[INSTALL_DIR:.*]]/Inputs/hexagon_tree/qc/bin/../../gnu{{/|\\\\}}hexagon/include/c++/4.4.0"
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ comment|// CHECK002:   "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/q
 end_comment
 
 begin_comment
-comment|// CHECK002-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-as"
+comment|// CHECK002-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ comment|// CHECK003-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree
 end_comment
 
 begin_comment
-comment|// CHECK003-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-as"
+comment|// CHECK003-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -172,11 +172,11 @@ comment|// CHECK004-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree
 end_comment
 
 begin_comment
-comment|// CHECK004-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-as"
+comment|// CHECK004-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-cxx -x c++ -### -target hexagon-unknown-linux     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-linux     \
 end_comment
 
 begin_comment
@@ -216,11 +216,11 @@ comment|// CHECK005-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree
 end_comment
 
 begin_comment
-comment|// CHECK005-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-as"
+comment|// CHECK005-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-cxx -x c++ -### -target hexagon-unknown-linux     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-linux     \
 end_comment
 
 begin_comment
@@ -248,7 +248,7 @@ comment|// CHECK006-NOT: "-internal-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/
 end_comment
 
 begin_comment
-comment|// CHECK006-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-as"
+comment|// CHECK006-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -288,11 +288,11 @@ comment|// CHECK007: "-cc1" {{.*}} "-target-cpu" "hexagonv3"
 end_comment
 
 begin_comment
-comment|// CHECK007-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-as"{{.*}} "-march=v3"
+comment|// CHECK007-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"{{.*}} "-march=v3"
 end_comment
 
 begin_comment
-comment|// CHECK007-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-ld"{{.*}} "-mv3"
+comment|// CHECK007-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-ld"{{.*}} "-mv3"
 end_comment
 
 begin_comment
@@ -320,11 +320,11 @@ comment|// CHECK008: "-cc1" {{.*}} "-target-cpu" "hexagonv5"
 end_comment
 
 begin_comment
-comment|// CHECK008-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-as"{{.*}} "-march=v5"
+comment|// CHECK008-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"{{.*}} "-march=v5"
 end_comment
 
 begin_comment
-comment|// CHECK008-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-ld"{{.*}} "-mv5"
+comment|// CHECK008-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-ld"{{.*}} "-mv5"
 end_comment
 
 begin_comment
@@ -352,11 +352,11 @@ comment|// CHECK009: "-cc1" {{.*}} "-target-cpu" "hexagonv2"
 end_comment
 
 begin_comment
-comment|// CHECK009-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-as"{{.*}} "-march=v2"
+comment|// CHECK009-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"{{.*}} "-march=v2"
 end_comment
 
 begin_comment
-comment|// CHECK009-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-ld"{{.*}} "-mv2"
+comment|// CHECK009-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-ld"{{.*}} "-mv2"
 end_comment
 
 begin_comment
@@ -380,23 +380,15 @@ comment|// CHECK010: "-cc1" {{.*}} "-target-cpu" "hexagonv4"
 end_comment
 
 begin_comment
-comment|// CHECK010-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-as"{{.*}} "-march=v4"
+comment|// CHECK010-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"{{.*}} "-march=v4"
 end_comment
 
 begin_comment
-comment|// CHECK010-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin/hexagon-ld"{{.*}} "-mv4"
+comment|// CHECK010-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-ld"{{.*}} "-mv4"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -march=hexagonv2 -target hexagon-unknown-linux \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V2 %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -mcpu=hexagonv2  -target hexagon-unknown-linux \
+comment|// RUN: not %clang -march=hexagonv2 -target hexagon-unknown-linux \
 end_comment
 
 begin_comment
@@ -404,7 +396,15 @@ comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V2 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -mv2             -target hexagon-unknown-linux \
+comment|// RUN: not %clang -mcpu=hexagonv2  -target hexagon-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V2 %s
+end_comment
+
+begin_comment
+comment|// RUN: not %clang -mv2             -target hexagon-unknown-linux \
 end_comment
 
 begin_comment
@@ -416,7 +416,7 @@ comment|// CHECK-UNKNOWN-V2: error: unknown target CPU 'hexagonv2'
 end_comment
 
 begin_comment
-comment|// RUN: %clang -march=hexagonv3 -target hexagon-unknown-linux \
+comment|// RUN: not %clang -march=hexagonv3 -target hexagon-unknown-linux \
 end_comment
 
 begin_comment
@@ -424,7 +424,7 @@ comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V3 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -mcpu=hexagonv3  -target hexagon-unknown-linux \
+comment|// RUN: not %clang -mcpu=hexagonv3  -target hexagon-unknown-linux \
 end_comment
 
 begin_comment
@@ -432,7 +432,7 @@ comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V3 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -mv3             -target hexagon-unknown-linux \
+comment|// RUN: not %clang -mv3             -target hexagon-unknown-linux \
 end_comment
 
 begin_comment
@@ -488,11 +488,11 @@ comment|// CHECK011: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK011-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK011-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK011-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK011-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -560,7 +560,7 @@ comment|// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-cxx -x c++ -### -target hexagon-unknown-linux     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-linux     \
 end_comment
 
 begin_comment
@@ -580,11 +580,11 @@ comment|// CHECK012: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK012-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK012-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK012-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK012-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -680,11 +680,11 @@ comment|// CHECK013: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK013-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK013-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK013-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK013-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -772,11 +772,11 @@ comment|// CHECK014: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK014-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK014-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK014-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK014-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -852,11 +852,11 @@ comment|// CHECK015: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK015-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK015-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK015-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK015-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -968,11 +968,11 @@ comment|// CHECK016: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK016-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK016-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK016-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK016-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1068,7 +1068,7 @@ comment|// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-cxx -x c++ -### -target hexagon-unknown-linux     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-linux     \
 end_comment
 
 begin_comment
@@ -1092,11 +1092,11 @@ comment|// CHECK017: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK017-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK017-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK017-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK017-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1168,7 +1168,7 @@ comment|// CHECK017-NOT: fini.o
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-cxx -x c++ -### -target hexagon-unknown-linux     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-linux     \
 end_comment
 
 begin_comment
@@ -1192,11 +1192,11 @@ comment|// CHECK018: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK018-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK018-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK018-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK018-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1268,7 +1268,7 @@ comment|// CHECK018-NOT: fini.o
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-cxx -x c++ -### -target hexagon-unknown-linux     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-linux     \
 end_comment
 
 begin_comment
@@ -1292,11 +1292,11 @@ comment|// CHECK019: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK019-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK019-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK019-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK019-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1404,11 +1404,11 @@ comment|// CHECK020: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK020-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK020-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK020-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK020-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1500,11 +1500,11 @@ comment|// CHECK021: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK021-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK021-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK021-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK021-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1584,7 +1584,7 @@ comment|// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-cxx -x c++ -### -target hexagon-unknown-linux     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-linux     \
 end_comment
 
 begin_comment
@@ -1624,11 +1624,11 @@ comment|// CHECK022: "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK022-NEXT: "{{.*}}/bin/hexagon-as"{{.*}}
+comment|// CHECK022-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK022-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK022-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1732,7 +1732,7 @@ comment|// CHECK023:        "-mrelocation-model" "static"
 end_comment
 
 begin_comment
-comment|// CHECK023-NEXT: "{{.*}}/bin/hexagon-as"
+comment|// CHECK023-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -1740,7 +1740,7 @@ comment|// CHECK023-NOT:    "-G{{[0-9]+}}"
 end_comment
 
 begin_comment
-comment|// CHECK023-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK023-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1800,7 +1800,7 @@ comment|// RUN:   -fPIC \
 end_comment
 
 begin_comment
-comment|// RUN:   -msmall_data_threshold=8 \
+comment|// RUN:   -msmall-data-threshold=8 \
 end_comment
 
 begin_comment
@@ -1828,7 +1828,7 @@ comment|// CHECK024:        "-mllvm" "-hexagon-small-data-threshold=0"
 end_comment
 
 begin_comment
-comment|// CHECK024-NEXT: "{{.*}}/bin/hexagon-as"
+comment|// CHECK024-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -1836,7 +1836,7 @@ comment|// CHECK024:        "-G0"
 end_comment
 
 begin_comment
-comment|// CHECK024-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK024-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1916,7 +1916,7 @@ comment|// CHECK025:        "-mllvm" "-hexagon-small-data-threshold=8"
 end_comment
 
 begin_comment
-comment|// CHECK025-NEXT: "{{.*}}/bin/hexagon-as"
+comment|// CHECK025-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -1924,7 +1924,7 @@ comment|// CHECK025:        "-G8"
 end_comment
 
 begin_comment
-comment|// CHECK025-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK025-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1968,11 +1968,11 @@ comment|// CHECK026:      "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK026-NEXT: "{{.*}}/bin/hexagon-as"
+comment|// CHECK026-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
-comment|// CHECK026-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK026-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -2004,11 +2004,11 @@ comment|// CHECK027:      "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK027-NEXT: "{{.*}}/bin/hexagon-as"
+comment|// CHECK027-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
-comment|// CHECK027-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK027-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -2056,11 +2056,11 @@ comment|// CHECK028:        "-Wreturn-type"
 end_comment
 
 begin_comment
-comment|// CHECK028-NEXT: "{{.*}}/bin/hexagon-as"
+comment|// CHECK028-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
-comment|// CHECK028-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK028-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -2108,7 +2108,7 @@ comment|// CHECK029:      "{{.*}}clang{{.*}}" "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK029-NEXT: "{{.*}}/bin/hexagon-as"
+comment|// CHECK029-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -2116,7 +2116,7 @@ comment|// CHECK029:      "--noexecstack" "--trap" "--keep-locals"
 end_comment
 
 begin_comment
-comment|// CHECK029-NEXT: "{{.*}}/bin/hexagon-ld"
+comment|// CHECK029-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
 end_comment
 
 end_unit

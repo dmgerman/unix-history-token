@@ -375,5 +375,74 @@ decl_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// vector size too large
+end_comment
+
+begin_decl_stmt
+name|int
+name|__attribute__
+argument_list|(
+operator|(
+name|vector_size
+argument_list|(
+literal|8192
+argument_list|)
+operator|)
+argument_list|)
+name|x1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{vector size too large}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|__attribute__
+argument_list|(
+operator|(
+name|ext_vector_type
+argument_list|(
+literal|8192
+argument_list|)
+operator|)
+argument_list|)
+name|x2
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-error {{vector size too large}}
+end_comment
+
+begin_comment
+comment|// no support for vector enum type
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|e_2
+block|}
+name|x3
+name|__attribute__
+argument_list|(
+operator|(
+name|vector_size
+argument_list|(
+literal|64
+argument_list|)
+operator|)
+argument_list|)
+enum|;
+end_enum
+
+begin_comment
+comment|// expected-error {{invalid vector element type}}
+end_comment
+
 end_unit
 

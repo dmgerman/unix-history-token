@@ -136,7 +136,7 @@ argument_list|,)
 end_macro
 
 begin_comment
-comment|/* expected-error {{too many arguments provided to function-like macro invocation}} */
+comment|/* expected-error {{too many arguments provided to function-like macro invocation}} \                      expected-warning {{empty macro arguments are a C99 feature}}*/
 end_comment
 
 begin_macro
@@ -216,6 +216,10 @@ argument_list|,
 comment|/* expected-warning {{empty macro arguments are a C99 feature}}  \              expected-error {{too many arguments provided to function-like macro invocation}} */
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* expected-warning {{empty macro arguments are a C99 feature}} */
+end_comment
 
 begin_macro
 name|two

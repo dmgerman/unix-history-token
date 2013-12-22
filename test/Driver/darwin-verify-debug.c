@@ -124,7 +124,7 @@ comment|// RUN:   -verify -o foo %t.o -g 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "Verify" %t | count 0
+comment|// RUN: not grep "Verify" %t
 end_comment
 
 end_unit

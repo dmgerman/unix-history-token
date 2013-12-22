@@ -502,7 +502,23 @@ block|{
 name|e1
 block|}
 comment|// expected-error {{expected ';' after enum}}
+name|int
+name|PR17175
+name|__attribute__
+argument_list|(
+operator|(
+name|visibility
+argument_list|(
+name|hidden
+argument_list|)
+operator|)
+argument_list|)
+struct|;
 end_struct
+
+begin_comment
+comment|// expected-error {{'visibility' attribute requires a string}}
+end_comment
 
 end_unit
 

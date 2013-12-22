@@ -55,6 +55,10 @@ begin_comment
 comment|//
 end_comment
 
+begin_comment
+comment|// RUN: not %clang -fsyntax-only -Werror -fdiagnostics-format=msvc-fallback %s 2>&1 | FileCheck %s -check-prefix=MSVC-FALLBACK
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -89,6 +93,10 @@ end_comment
 
 begin_comment
 comment|// NO_COLUMN: {{.*}}:28: warning: extra tokens at end of #endif directive [-Wextra-tokens]
+end_comment
+
+begin_comment
+comment|// MSVC-FALLBACK: {{.*}}(28,7) : error(clang): extra tokens at end of #endif directive
 end_comment
 
 begin_decl_stmt

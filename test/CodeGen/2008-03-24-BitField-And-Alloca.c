@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -O2 -emit-llvm %s -o - | not grep alloca
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -m32 -O2 -emit-llvm %s -o - | not grep {store }
+comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -O2 -emit-llvm %s -o - | not grep store
 end_comment
 
 begin_enum

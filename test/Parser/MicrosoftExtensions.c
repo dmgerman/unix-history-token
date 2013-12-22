@@ -250,6 +250,61 @@ directive|endif
 block|}
 end_function
 
+begin_comment
+comment|// Both inline and __forceinline is OK.
+end_comment
+
+begin_function
+specifier|inline
+name|void
+name|__forceinline
+name|pr8264
+parameter_list|()
+block|{ }
+end_function
+
+begin_function
+name|__forceinline
+name|void
+specifier|inline
+name|pr8264_1
+parameter_list|()
+block|{ }
+end_function
+
+begin_function
+name|void
+specifier|inline
+name|__forceinline
+name|pr8264_2
+parameter_list|()
+block|{ }
+end_function
+
+begin_function
+name|void
+name|__forceinline
+specifier|inline
+name|pr8264_3
+parameter_list|()
+block|{ }
+end_function
+
+begin_comment
+comment|// But duplicate __forceinline causes warning.
+end_comment
+
+begin_function
+name|void
+name|__forceinline
+name|__forceinline
+name|pr8264_4
+parameter_list|()
+block|{
+comment|// expected-warning{{duplicate '__forceinline' declaration specifier}}
+block|}
+end_function
+
 begin_function
 name|_inline
 name|int
@@ -696,6 +751,76 @@ decl_stmt|;
 comment|/* expected-warning {{'t' is deprecated}} */
 block|}
 end_function
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__sptr
+name|psp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__uptr
+name|pup
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Either ordering is acceptable */
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__ptr32
+name|__sptr
+name|psp32
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__ptr32
+name|__uptr
+name|pup32
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__sptr
+name|__ptr64
+name|psp64
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__uptr
+name|__ptr64
+name|pup64
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Legal to have nested pointer attributes */
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|__sptr
+modifier|*
+name|__ptr32
+name|ppsp32
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

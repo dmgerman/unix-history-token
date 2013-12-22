@@ -14,7 +14,7 @@ file|<stdarg.h>
 end_include
 
 begin_comment
-comment|// CHECK: define signext i8 @f0()
+comment|// CHECK-LABEL: define signext i8 @f0()
 end_comment
 
 begin_function
@@ -31,7 +31,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define signext i16 @f1()
+comment|// CHECK-LABEL: define signext i16 @f1()
 end_comment
 
 begin_function
@@ -48,7 +48,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @f2()
+comment|// CHECK-LABEL: define i32 @f2()
 end_comment
 
 begin_function
@@ -65,7 +65,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define float @f3()
+comment|// CHECK-LABEL: define float @f3()
 end_comment
 
 begin_function
@@ -82,7 +82,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define double @f4()
+comment|// CHECK-LABEL: define double @f4()
 end_comment
 
 begin_function
@@ -99,7 +99,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_fp80 @f5()
+comment|// CHECK-LABEL: define x86_fp80 @f5()
 end_comment
 
 begin_function
@@ -117,7 +117,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f6(i8 signext %a0, i16 signext %a1, i32 %a2, i64 %a3, i8* %a4)
+comment|// CHECK-LABEL: define void @f6(i8 signext %a0, i16 signext %a1, i32 %a2, i64 %a3, i8* %a4)
 end_comment
 
 begin_function
@@ -145,7 +145,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define void @f7(i32 %a0)
+comment|// CHECK-LABEL: define void @f7(i32 %a0)
 end_comment
 
 begin_typedef
@@ -181,11 +181,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f8_1(%union.u8* noalias sret %agg.result)
+comment|// CHECK-LABEL: define void @f8_1(%union.u8* noalias sret %agg.result)
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f8_2(%union.u8* byval align 16 %a0)
+comment|// CHECK-LABEL: define void @f8_2(%union.u8* byval align 16 %a0)
 end_comment
 
 begin_union
@@ -229,7 +229,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define i64 @f9()
+comment|// CHECK-LABEL: define i64 @f9()
 end_comment
 
 begin_struct
@@ -258,7 +258,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define void @f10(i64 %a0.coerce)
+comment|// CHECK-LABEL: define void @f10(i64 %a0.coerce)
 decl|struct
 name|s10
 block|{
@@ -288,7 +288,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f11(%union.anon* noalias sret %agg.result)
+comment|// CHECK-LABEL: define void @f11(%union.anon* noalias sret %agg.result)
 end_comment
 
 begin_union
@@ -311,8 +311,8 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define i32 @f12_0()
-comment|// CHECK: define void @f12_1(i32 %a0.coerce)
+comment|// CHECK-LABEL: define i32 @f12_0()
+comment|// CHECK-LABEL: define void @f12_1(i32 %a0.coerce)
 decl|struct
 name|s12
 block|{
@@ -589,7 +589,7 @@ comment|// rdar://8135035
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f18(i32 %a, i32 %f18_arg1.coerce)
+comment|// CHECK-LABEL: define void @f18(i32 %a, i32 %f18_arg1.coerce)
 end_comment
 
 begin_struct
@@ -628,7 +628,7 @@ comment|// Check byval alignment.
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f19(%struct.s19* byval align 16 %x)
+comment|// CHECK-LABEL: define void @f19(%struct.s19* byval align 16 %x)
 end_comment
 
 begin_struct
@@ -655,7 +655,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f20(%struct.s20* byval align 32 %x)
+comment|// CHECK-LABEL: define void @f20(%struct.s20* byval align 32 %x)
 end_comment
 
 begin_struct
@@ -710,7 +710,7 @@ comment|// rdar://7375902
 end_comment
 
 begin_comment
-comment|// CHECK: define i8* @f21(i64 %S.coerce0, i8* %S.coerce1)
+comment|// CHECK-LABEL: define i8* @f21(i64 %S.coerce0, i8* %S.coerce1)
 end_comment
 
 begin_function
@@ -822,7 +822,7 @@ name|f23S
 name|B
 parameter_list|)
 block|{
-comment|// CHECK: define void @f23(i32 %A, i64 %B.coerce0, i32 %B.coerce1)
+comment|// CHECK-LABEL: define void @f23(i32 %A, i64 %B.coerce0, i32 %B.coerce1)
 block|}
 end_function
 
@@ -886,7 +886,7 @@ name|v4f32
 name|X
 parameter_list|)
 block|{
-comment|// CHECK: define<4 x float> @f25(<4 x float> %X)
+comment|// CHECK-LABEL: define<4 x float> @f25(<4 x float> %X)
 comment|// CHECK-NOT: alloca
 comment|// CHECK: alloca<4 x float>
 comment|// CHECK-NOT: alloca
@@ -957,7 +957,7 @@ name|v4f32wrapper
 name|X
 parameter_list|)
 block|{
-comment|// CHECK: define<4 x float> @f27(<4 x float> %X.coerce)
+comment|// CHECK-LABEL: define<4 x float> @f27(<4 x float> %X.coerce)
 return|return
 name|X
 return|;
@@ -991,7 +991,7 @@ name|f28c
 name|C
 parameter_list|)
 block|{
-comment|// CHECK: define void @f28(double %C.coerce0, i32 %C.coerce1)
+comment|// CHECK-LABEL: define void @f28(double %C.coerce0, i32 %C.coerce1)
 block|}
 end_function
 
@@ -1027,7 +1027,7 @@ name|f29a
 name|A
 parameter_list|)
 block|{
-comment|// CHECK: define void @f29a(double %A.coerce0, i32 %A.coerce1)
+comment|// CHECK-LABEL: define void @f29a(double %A.coerce0, i32 %A.coerce1)
 block|}
 end_function
 
@@ -1067,7 +1067,7 @@ name|S0
 name|p_4
 parameter_list|)
 block|{
-comment|// CHECK: define void @f30(i64 %p_4.coerce0, i24 %p_4.coerce1)
+comment|// CHECK-LABEL: define void @f30(i64 %p_4.coerce0, i24 %p_4.coerce1)
 block|}
 end_function
 
@@ -1103,7 +1103,7 @@ name|f31foo
 name|X
 parameter_list|)
 block|{
-comment|// CHECK: define float @f31(<2 x float> %X.coerce0, float %X.coerce1)
+comment|// CHECK-LABEL: define float @f31(<2 x float> %X.coerce0, float %X.coerce1)
 return|return
 name|X
 operator|.
@@ -1127,7 +1127,7 @@ name|B
 parameter_list|)
 block|{
 comment|// rdar://6379669
-comment|// CHECK: define<2 x float> @f32(<2 x float> %A.coerce,<2 x float> %B.coerce)
+comment|// CHECK-LABEL: define<2 x float> @f32(<2 x float> %A.coerce,<2 x float> %B.coerce)
 return|return
 name|A
 operator|+
@@ -1192,7 +1192,7 @@ comment|// rdar://8359248
 end_comment
 
 begin_comment
-comment|// CHECK: define i64 @f34(i64 %arg.coerce)
+comment|// CHECK-LABEL: define i64 @f34(i64 %arg.coerce)
 end_comment
 
 begin_function
@@ -1214,7 +1214,7 @@ comment|// rdar://8358475
 end_comment
 
 begin_comment
-comment|// CHECK: define i64 @f35(i64 %arg.coerce)
+comment|// CHECK-LABEL: define i64 @f35(i64 %arg.coerce)
 end_comment
 
 begin_typedef
@@ -1303,7 +1303,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define double @f36(double %arg.coerce)
+comment|// CHECK-LABEL: define double @f36(double %arg.coerce)
 end_comment
 
 begin_typedef
@@ -1544,7 +1544,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @f44
+comment|// CHECK-LABEL: define i32 @f44
 end_comment
 
 begin_comment
@@ -1633,7 +1633,7 @@ comment|// Text that vec3 returns the correct LLVM IR type.
 end_comment
 
 begin_comment
-comment|// AVX: define i32 @foo(<3 x i64> %X)
+comment|// AVX-LABEL: define i32 @foo(<3 x i64> %X)
 end_comment
 
 begin_typedef
@@ -2020,7 +2020,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:    define void @test49(
+comment|// CHECK-LABEL:    define void @test49(
 end_comment
 
 begin_comment
@@ -2064,7 +2064,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:    define void @test50(
+comment|// CHECK-LABEL:    define void @test50(
 end_comment
 
 begin_comment
@@ -2077,6 +2077,256 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: call void (double, double, ...)* bitcast (void (...)* @test50_helper to void (double, double, ...)*)(double [[T0]], double [[T1]])
+end_comment
+
+begin_struct
+struct|struct
+name|test51_s
+block|{
+name|__uint128_t
+name|intval
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|test51
+parameter_list|(
+name|struct
+name|test51_s
+modifier|*
+name|s
+parameter_list|,
+name|__builtin_va_list
+name|argList
+parameter_list|)
+block|{
+operator|*
+name|s
+operator|=
+name|__builtin_va_arg
+argument_list|(
+name|argList
+argument_list|,
+expr|struct
+name|test51_s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @test51
+end_comment
+
+begin_comment
+comment|// CHECK: [[TMP_ADDR:%.*]] = alloca [[STRUCT_TEST51:%.*]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK: br i1
+end_comment
+
+begin_comment
+comment|// CHECK: [[REG_SAVE_AREA_PTR:%.*]] = getelementptr inbounds {{.*}}, i32 0, i32 3
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [[REG_SAVE_AREA:%.*]] = load i8** [[REG_SAVE_AREA_PTR]]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [[VALUE_ADDR:%.*]] = getelementptr i8* [[REG_SAVE_AREA]], i32 {{.*}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [[CASTED_VALUE_ADDR:%.*]] = bitcast i8* [[VALUE_ADDR]] to [[STRUCT_TEST51]]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [[CASTED_TMP_ADDR:%.*]] = bitcast [[STRUCT_TEST51]]* [[TMP_ADDR]] to i8*
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [[RECASTED_VALUE_ADDR:%.*]] = bitcast [[STRUCT_TEST51]]* [[CASTED_VALUE_ADDR]] to i8*
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: call void @llvm.memcpy.p0i8.p0i8.i64(i8* [[CASTED_TMP_ADDR]], i8* [[RECASTED_VALUE_ADDR]], i64 16, i32 8, i1 false)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: add i32 {{.*}}, 16
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: store i32 {{.*}}, i32* {{.*}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: br label
+end_comment
+
+begin_function_decl
+name|void
+name|test52_helper
+parameter_list|(
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|__m256
+name|x52
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|test52
+parameter_list|()
+block|{
+name|test52_helper
+argument_list|(
+literal|0
+argument_list|,
+name|x52
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// AVX: @test52_helper(i32 0,<8 x float> {{%[a-zA-Z0-9]+}}, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double {{%[a-zA-Z0-9]+}}, double {{%[a-zA-Z0-9]+}})
+end_comment
+
+begin_function
+name|void
+name|test53
+parameter_list|(
+name|__m256
+modifier|*
+name|m
+parameter_list|,
+name|__builtin_va_list
+name|argList
+parameter_list|)
+block|{
+operator|*
+name|m
+operator|=
+name|__builtin_va_arg
+argument_list|(
+name|argList
+argument_list|,
+name|__m256
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// AVX-LABEL: define void @test53
+end_comment
+
+begin_comment
+comment|// AVX-NOT: br i1
+end_comment
+
+begin_comment
+comment|// AVX: ret void
+end_comment
+
+begin_function_decl
+name|void
+name|test54_helper
+parameter_list|(
+name|__m256
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|__m256
+name|x54
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|test54
+parameter_list|()
+block|{
+name|test54_helper
+argument_list|(
+name|x54
+argument_list|,
+name|x54
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0i
+argument_list|)
+expr_stmt|;
+name|test54_helper
+argument_list|(
+name|x54
+argument_list|,
+name|x54
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0
+argument_list|,
+literal|1.0i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// AVX: @test54_helper(<8 x float> {{%[a-zA-Z0-9]+}},<8 x float> {{%[a-zA-Z0-9]+}}, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double {{%[a-zA-Z0-9]+}}, double {{%[a-zA-Z0-9]+}})
+end_comment
+
+begin_comment
+comment|// AVX: @test54_helper(<8 x float> {{%[a-zA-Z0-9]+}},<8 x float> {{%[a-zA-Z0-9]+}}, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, double 1.000000e+00, { double, double }* byval align 8 {{%[a-zA-Z0-9]+}})
 end_comment
 
 end_unit

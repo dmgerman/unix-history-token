@@ -188,5 +188,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// CHECK: has_no_volatile_attribute
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_attribute
+argument_list|(
+specifier|volatile
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|has_no_volatile_attribute
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

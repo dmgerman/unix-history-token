@@ -72,11 +72,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECKS:   define void @testshortadd()
+comment|// CHECKS-LABEL:   define void @testshortadd()
 end_comment
 
 begin_comment
-comment|// CHECKU: define void @testshortadd()
+comment|// CHECKU-LABEL: define void @testshortadd()
 end_comment
 
 begin_function
@@ -108,11 +108,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECKS:   define void @testshortsub()
+comment|// CHECKS-LABEL:   define void @testshortsub()
 end_comment
 
 begin_comment
-comment|// CHECKU: define void @testshortsub()
+comment|// CHECKU-LABEL: define void @testshortsub()
 end_comment
 
 begin_function
@@ -144,11 +144,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECKS:   define void @testshortmul()
+comment|// CHECKS-LABEL:   define void @testshortmul()
 end_comment
 
 begin_comment
-comment|// CHECKU: define void @testshortmul()
+comment|// CHECKU-LABEL: define void @testshortmul()
 end_comment
 
 begin_function
@@ -180,11 +180,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECKS:   define void @testcharadd()
+comment|// CHECKS-LABEL:   define void @testcharadd()
 end_comment
 
 begin_comment
-comment|// CHECKU: define void @testcharadd()
+comment|// CHECKU-LABEL: define void @testcharadd()
 end_comment
 
 begin_function
@@ -216,11 +216,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECKS:   define void @testcharsub()
+comment|// CHECKS-LABEL:   define void @testcharsub()
 end_comment
 
 begin_comment
-comment|// CHECKU: define void @testcharsub()
+comment|// CHECKU-LABEL: define void @testcharsub()
 end_comment
 
 begin_function
@@ -252,11 +252,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECKS:   define void @testcharmul()
+comment|// CHECKS-LABEL:   define void @testcharmul()
 end_comment
 
 begin_comment
-comment|// CHECKU: define void @testcharmul()
+comment|// CHECKU-LABEL: define void @testcharmul()
 end_comment
 
 begin_function

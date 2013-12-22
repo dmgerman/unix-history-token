@@ -89,7 +89,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error{{attribute requires integer constant}}
+comment|// expected-error{{'alloc_size' attribute requires parameter 1 to be an integer constant}}
 end_comment
 
 begin_function_decl
@@ -113,7 +113,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error{{attribute requires integer constant}}
+comment|// expected-error{{'alloc_size' attribute requires an integer constant}}
 end_comment
 
 begin_function_decl
@@ -274,7 +274,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning {{integer constant is too large for its type}} // expected-error {{attribute parameter 1 is out of bounds}}
+comment|// expected-error {{integer constant is larger than the largest unsigned integer type}} // expected-error {{attribute parameter 1 is out of bounds}}
 end_comment
 
 begin_function_decl

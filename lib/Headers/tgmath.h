@@ -6653,7 +6653,6 @@ end_comment
 begin_function
 specifier|static
 name|float
-specifier|_Complex
 name|_TG_ATTRS
 name|__tg_creal
 parameter_list|(
@@ -6670,7 +6669,6 @@ end_function
 begin_function
 specifier|static
 name|double
-specifier|_Complex
 name|_TG_ATTRS
 name|__tg_creal
 parameter_list|(
@@ -6688,7 +6686,6 @@ begin_function
 specifier|static
 name|long
 name|double
-specifier|_Complex
 name|_TG_ATTRS
 name|__tg_creal
 parameter_list|(

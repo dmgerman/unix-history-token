@@ -120,8 +120,12 @@ decl_stmt|;
 name|class
 name|TemplateParameterList
 decl_stmt|;
-comment|/// OpaquePtr - This is a very simple POD type that wraps a pointer that the
-comment|/// Parser doesn't know about but that Sema or another client does.  The UID
+comment|/// \brief Wrapper for void* pointer.
+comment|/// \tparam PtrTy Either a pointer type like 'T*' or a type that behaves like
+comment|///               a pointer.
+comment|///
+comment|/// This is a very simple POD type that wraps a pointer that the Parser
+comment|/// doesn't know about but that Sema or another client does.  The PtrTy
 comment|/// template argument is used to make sure that "Decl" pointers are not
 comment|/// compatible with "Type" pointers for example.
 name|template
@@ -189,14 +193,18 @@ return|return
 name|OP
 return|;
 block|}
+comment|/// \brief Returns plain pointer to the entity pointed by this wrapper.
+comment|/// \tparam PointeeT Type of pointed entity.
+comment|///
+comment|/// It is identical to getPtrAs<PointeeT*>.
 name|template
 operator|<
 name|typename
-name|T
+name|PointeeT
 operator|>
-name|T
+name|PointeeT
 operator|*
-name|getAs
+name|getPtrTo
 argument_list|()
 specifier|const
 block|{
@@ -205,13 +213,19 @@ name|get
 argument_list|()
 return|;
 block|}
+comment|/// \brief Returns pointer converted to the specified type.
+comment|/// \tparam PtrT Result pointer type.  There must be implicit conversion
+comment|///              from PtrTy to PtrT.
+comment|///
+comment|/// In contrast to getPtrTo, this method allows the return type to be
+comment|/// a smart pointer.
 name|template
 operator|<
 name|typename
-name|T
+name|PtrT
 operator|>
-name|T
-name|getAsVal
+name|PtrT
+name|getPtrAs
 argument_list|()
 specifier|const
 block|{
@@ -251,6 +265,7 @@ name|P
 argument_list|)
 expr_stmt|;
 block|}
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()

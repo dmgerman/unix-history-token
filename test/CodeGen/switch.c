@@ -246,7 +246,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @foo4t()
+comment|// CHECK-LABEL: define i32 @foo4t()
 end_comment
 
 begin_comment
@@ -288,7 +288,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @foo5()
+comment|// CHECK-LABEL: define void @foo5()
 end_comment
 
 begin_comment
@@ -320,7 +320,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @foo6()
+comment|// CHECK-LABEL: define void @foo6()
 end_comment
 
 begin_comment
@@ -345,7 +345,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @foo7()
+comment|// CHECK-LABEL: define void @foo7()
 end_comment
 
 begin_comment
@@ -374,7 +374,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @f8(
+comment|// CHECK-LABEL: define i32 @f8(
 end_comment
 
 begin_comment
@@ -424,7 +424,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define i32 @f9()
+comment|// CHECK-LABEL: define i32 @f9()
 end_comment
 
 begin_comment
@@ -496,7 +496,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define i32 @f10()
+comment|// CHECK-LABEL: define i32 @f10()
 end_comment
 
 begin_comment
@@ -563,7 +563,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define i32 @f11(
+comment|// CHECK-LABEL: define i32 @f11(
 end_comment
 
 begin_comment
@@ -612,7 +612,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define i32 @f12(
+comment|// CHECK-LABEL: define i32 @f12(
 end_comment
 
 begin_comment
@@ -662,7 +662,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define i32 @f13(
+comment|// CHECK-LABEL: define i32 @f13(
 end_comment
 
 begin_comment

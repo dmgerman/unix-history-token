@@ -140,7 +140,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define void @f8()
+comment|// CHECK-LABEL: define void @f8()
 end_comment
 
 begin_comment
@@ -361,7 +361,7 @@ comment|// Ensure that these get inlined: rdar://6853279
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f14
+comment|// CHECK-LABEL: define void @f14
 end_comment
 
 begin_comment
@@ -467,7 +467,7 @@ comment|//<rdar://problem/7102668> [irgen] clang isn't setting the optsize bit o
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f15
+comment|// CHECK-LABEL: define void @f15
 end_comment
 
 begin_comment
@@ -492,7 +492,7 @@ comment|// PR5254
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f16
+comment|// CHECK-LABEL: define void @f16
 end_comment
 
 begin_comment
@@ -523,7 +523,7 @@ comment|// PR11038
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f18()
+comment|// CHECK-LABEL: define void @f18()
 end_comment
 
 begin_comment
@@ -583,7 +583,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f19()
+comment|// CHECK-LABEL: define void @f19()
 end_comment
 
 begin_comment

@@ -11,7 +11,9 @@ name|_Tp
 operator|>
 expr|struct
 name|__is_pod
-block|{   enum
+block|{
+comment|// expected-warning {{keyword '__is_pod' will be treated as an identifier for the remainder of the translation unit}}
+block|enum
 block|{
 name|__value
 block|}
@@ -27,7 +29,9 @@ name|_Tp
 operator|>
 expr|struct
 name|__is_empty
-block|{   enum
+block|{
+comment|// expected-warning {{keyword '__is_empty' will be treated as an identifier for the remainder of the translation unit}}
+block|enum
 block|{
 name|__value
 block|}

@@ -586,6 +586,16 @@ argument|ExplodedNodeSet&Dst
 argument_list|)
 block|;
 name|void
+name|ProcessDeleteDtor
+argument_list|(
+argument|const CFGDeleteDtor D
+argument_list|,
+argument|ExplodedNode *Pred
+argument_list|,
+argument|ExplodedNodeSet&Dst
+argument_list|)
+block|;
+name|void
 name|ProcessBaseDtor
 argument_list|(
 argument|const CFGBaseDtor D
@@ -1762,7 +1772,7 @@ argument_list|)
 block|;
 comment|/// Call PointerEscape callback when a value escapes as a result of
 comment|/// region invalidation.
-comment|/// \param[in] IsConst Specifies that the pointer is const.
+comment|/// \param[in] ITraits Specifies invalidation traits for regions/symbols.
 name|ProgramStateRef
 name|notifyCheckersOfPointerEscape
 argument_list|(
@@ -1776,7 +1786,7 @@ argument|ArrayRef<const MemRegion *> Regions
 argument_list|,
 argument|const CallEvent *Call
 argument_list|,
-argument|bool IsConst
+argument|RegionAndSymbolInvalidationTraits&ITraits
 argument_list|)
 block|;
 name|public

@@ -75,7 +75,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define void @test1
+comment|// CHECK-LABEL: define void @test1
 end_comment
 
 begin_function
@@ -99,7 +99,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test2
+comment|// CHECK-LABEL: define void @test2
 end_comment
 
 begin_function
@@ -119,7 +119,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test3
+comment|// CHECK-LABEL: define void @test3
 end_comment
 
 begin_function
@@ -143,7 +143,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test4
+comment|// CHECK-LABEL: define void @test4
 end_comment
 
 begin_function
@@ -176,7 +176,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test5
+comment|// CHECK-LABEL: define void @test5
 end_comment
 
 begin_function
@@ -185,7 +185,7 @@ name|test5
 parameter_list|()
 block|{
 comment|// CHECK:     = load i8** @gp
-comment|// CHECK-NEXT:= call i64 @llvm.objectsize.i64(i8* %{{.*}}, i1 false)
+comment|// CHECK-NEXT:= call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
 name|strcpy
 argument_list|(
 name|gp
@@ -197,7 +197,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test6
+comment|// CHECK-LABEL: define void @test6
 end_comment
 
 begin_function
@@ -227,7 +227,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test7
+comment|// CHECK-LABEL: define void @test7
 end_comment
 
 begin_function
@@ -258,7 +258,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test8
+comment|// CHECK-LABEL: define void @test8
 end_comment
 
 begin_function
@@ -290,7 +290,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test9
+comment|// CHECK-LABEL: define void @test9
 end_comment
 
 begin_function
@@ -322,7 +322,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test10
+comment|// CHECK-LABEL: define void @test10
 end_comment
 
 begin_decl_stmt
@@ -355,7 +355,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test11
+comment|// CHECK-LABEL: define void @test11
 end_comment
 
 begin_function
@@ -378,7 +378,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test12
+comment|// CHECK-LABEL: define void @test12
 end_comment
 
 begin_function
@@ -400,7 +400,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test13
+comment|// CHECK-LABEL: define void @test13
 end_comment
 
 begin_function
@@ -422,7 +422,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test14
+comment|// CHECK-LABEL: define void @test14
 end_comment
 
 begin_function
@@ -444,7 +444,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test15
+comment|// CHECK-LABEL: define void @test15
 end_comment
 
 begin_function
@@ -466,7 +466,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test16
+comment|// CHECK-LABEL: define void @test16
 end_comment
 
 begin_function

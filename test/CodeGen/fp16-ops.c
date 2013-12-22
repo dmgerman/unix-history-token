@@ -54,7 +54,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define void @foo()
+comment|// CHECK-LABEL: define void @foo()
 comment|// Check unary ops
 comment|// CHECK: call float @llvm.convert.from.fp16
 comment|// CHECK fptoi float

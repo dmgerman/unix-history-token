@@ -61,7 +61,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{
-comment|// CHECK: define x86_fastcallcc void @f4()
+comment|// CHECK-LABEL: define x86_fastcallcc void @f4()
 name|f1
 argument_list|()
 expr_stmt|;
@@ -82,7 +82,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{
-comment|// CHECK: define x86_stdcallcc void @f5()
+comment|// CHECK-LABEL: define x86_stdcallcc void @f5()
 name|f2
 argument_list|()
 expr_stmt|;
@@ -103,7 +103,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{
-comment|// CHECK: define x86_thiscallcc void @f6()
+comment|// CHECK-LABEL: define x86_thiscallcc void @f6()
 name|f3
 argument_list|()
 expr_stmt|;
@@ -349,7 +349,7 @@ name|int
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar1
+comment|// CHECK-LABEL: define void @bar1
 comment|// CHECK: call x86_fastcallcc void @foo1(i32 inreg %
 name|foo1
 argument_list|(
@@ -396,7 +396,7 @@ name|S1
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar2
+comment|// CHECK-LABEL: define void @bar2
 comment|// CHECK: call x86_fastcallcc void @foo2(i32 inreg undef, i32 %
 name|foo2
 argument_list|(
@@ -432,7 +432,7 @@ modifier|*
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar3
+comment|// CHECK-LABEL: define void @bar3
 comment|// CHECK: call x86_fastcallcc void @foo3(i32* inreg %
 name|foo3
 argument_list|(
@@ -477,7 +477,7 @@ name|Enum
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar4
+comment|// CHECK-LABEL: define void @bar4
 comment|// CHECK: call x86_fastcallcc void @foo4(i32 inreg %
 name|foo4
 argument_list|(
@@ -530,7 +530,7 @@ name|S2
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar5
+comment|// CHECK-LABEL: define void @bar5
 comment|// CHECK: call x86_fastcallcc void @foo5(%struct.S2* byval align 4 %
 name|foo5
 argument_list|(
@@ -566,7 +566,7 @@ name|long
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar6
+comment|// CHECK-LABEL: define void @bar6
 comment|// CHECK: call x86_fastcallcc void @foo6(i64 %
 name|foo6
 argument_list|(
@@ -614,7 +614,7 @@ name|int
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar7
+comment|// CHECK-LABEL: define void @bar7
 comment|// CHECK: call x86_fastcallcc void @foo7(i32 inreg %{{.*}}, i32 %{{.*}}, i32 %{{.*}}
 name|foo7
 argument_list|(
@@ -660,7 +660,7 @@ name|int
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar8
+comment|// CHECK-LABEL: define void @bar8
 comment|// CHECK: call x86_fastcallcc void @foo8(i32 inreg undef, i32 %{{.*}}, i32 inreg %
 name|foo8
 argument_list|(
@@ -704,7 +704,7 @@ name|int
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar9
+comment|// CHECK-LABEL: define void @bar9
 comment|// CHECK: call x86_fastcallcc void @foo9(%struct.S2* byval align 4 %{{.*}}, i32 %
 name|foo9
 argument_list|(
@@ -746,7 +746,7 @@ name|int
 name|x
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar10
+comment|// CHECK-LABEL: define void @bar10
 comment|// CHECK: call x86_fastcallcc void @foo10(float %{{.*}}, i32 inreg %
 name|foo10
 argument_list|(
@@ -788,7 +788,7 @@ name|int
 name|x
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar11
+comment|// CHECK-LABEL: define void @bar11
 comment|// CHECK: call x86_fastcallcc void @foo11(double %{{.*}}, i32 inreg %
 name|foo11
 argument_list|(
@@ -843,7 +843,7 @@ name|int
 name|x
 parameter_list|)
 block|{
-comment|// CHECK: define void @bar12
+comment|// CHECK-LABEL: define void @bar12
 comment|// CHECK: call x86_fastcallcc void @foo12(float %{{.*}}, i32 inreg %
 name|foo12
 argument_list|(

@@ -31,7 +31,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{cleanup attribute ignored}}
+comment|// expected-warning {{'cleanup' attribute ignored}}
 end_comment
 
 begin_decl_stmt
@@ -50,7 +50,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{cleanup attribute ignored}}
+comment|// expected-warning {{'cleanup' attribute ignored}}
 end_comment
 
 begin_decl_stmt
@@ -70,7 +70,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{cleanup attribute ignored}}
+comment|// expected-warning {{'cleanup' attribute ignored}}
 end_comment
 
 begin_function
@@ -87,7 +87,7 @@ name|cleanup
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// expected-error {{attribute takes one argument}}
+comment|// expected-error {{'cleanup' attribute takes one argument}}
 name|int
 name|v2
 name|__attribute
@@ -102,7 +102,7 @@ argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// expected-error {{attribute takes one argument}}
+comment|// expected-error {{'cleanup' attribute takes one argument}}
 specifier|static
 name|int
 name|v3
@@ -116,7 +116,7 @@ argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{cleanup attribute ignored}}
+comment|// expected-warning {{'cleanup' attribute ignored}}
 name|int
 name|v4
 name|__attribute
@@ -129,7 +129,7 @@ argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// expected-error {{'cleanup' argument 'h' not found}}
+comment|// expected-error {{use of undeclared identifier 'h'}}
 name|int
 name|v5
 name|__attribute
@@ -292,6 +292,33 @@ operator|)
 argument_list|)
 decl_stmt|;
 comment|// expected-warning {{'c5' is deprecated}}
+block|}
+end_function
+
+begin_function
+name|void
+name|t6
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|i
+name|__attribute__
+argument_list|(
+operator|(
+name|cleanup
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+comment|// expected-error {{'cleanup' argument is not a function}}
 block|}
 end_function
 

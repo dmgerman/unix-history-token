@@ -140,13 +140,13 @@ argument|const DeclarationName&Name
 argument_list|,
 argument|NamedDecl *NameDecl
 argument_list|,
-argument|NestedNameSpecifier *NNS=
+argument|NestedNameSpecifier *NNS =
 literal|0
 argument_list|,
-argument|unsigned CharDistance=
+argument|unsigned CharDistance =
 literal|0
 argument_list|,
-argument|unsigned QualifierDistance=
+argument|unsigned QualifierDistance =
 literal|0
 argument_list|)
 block|:
@@ -174,6 +174,16 @@ name|CallbackDistance
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|ForceSpecifierReplacement
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|RequiresImport
+argument_list|(
+argument|false
+argument_list|)
 block|{
 if|if
 condition|(
@@ -191,10 +201,10 @@ name|TypoCorrection
 argument_list|(
 argument|NamedDecl *Name
 argument_list|,
-argument|NestedNameSpecifier *NNS=
+argument|NestedNameSpecifier *NNS =
 literal|0
 argument_list|,
-argument|unsigned CharDistance=
+argument|unsigned CharDistance =
 literal|0
 argument_list|)
 block|:
@@ -225,6 +235,16 @@ name|CallbackDistance
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|ForceSpecifierReplacement
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|RequiresImport
+argument_list|(
+argument|false
+argument_list|)
 block|{
 if|if
 condition|(
@@ -242,10 +262,10 @@ name|TypoCorrection
 argument_list|(
 argument|DeclarationName Name
 argument_list|,
-argument|NestedNameSpecifier *NNS=
+argument|NestedNameSpecifier *NNS =
 literal|0
 argument_list|,
-argument|unsigned CharDistance=
+argument|unsigned CharDistance =
 literal|0
 argument_list|)
 block|:
@@ -273,6 +293,16 @@ name|CallbackDistance
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|ForceSpecifierReplacement
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|RequiresImport
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|TypoCorrection
 argument_list|()
@@ -295,6 +325,16 @@ operator|,
 name|CallbackDistance
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|ForceSpecifierReplacement
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|RequiresImport
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Gets the DeclarationName of the typo correction
@@ -343,6 +383,35 @@ name|CorrectionNameSpec
 operator|=
 name|NNS
 expr_stmt|;
+name|ForceSpecifierReplacement
+operator|=
+operator|(
+name|NNS
+operator|!=
+literal|0
+operator|)
+expr_stmt|;
+block|}
+name|void
+name|WillReplaceSpecifier
+parameter_list|(
+name|bool
+name|ForceReplacement
+parameter_list|)
+block|{
+name|ForceSpecifierReplacement
+operator|=
+name|ForceReplacement
+expr_stmt|;
+block|}
+name|bool
+name|WillReplaceSpecifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ForceSpecifierReplacement
+return|;
 block|}
 name|void
 name|setQualifierDistance
@@ -512,6 +581,17 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// \brief Clears the list of NamedDecls.
+name|void
+name|ClearCorrectionDecls
+parameter_list|()
+block|{
+name|CorrectionDecls
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
 comment|/// \brief Clears the list of NamedDecls before adding the new one.
 name|void
 name|setCorrectionDecl
@@ -529,6 +609,44 @@ expr_stmt|;
 name|addCorrectionDecl
 argument_list|(
 name|CDecl
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Clears the list of NamedDecls and adds the given set.
+name|void
+name|setCorrectionDecls
+argument_list|(
+name|ArrayRef
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+name|Decls
+argument_list|)
+block|{
+name|CorrectionDecls
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|CorrectionDecls
+operator|.
+name|insert
+argument_list|(
+name|CorrectionDecls
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Decls
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Decls
+operator|.
+name|end
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -572,6 +690,7 @@ literal|"'"
 return|;
 block|}
 comment|/// \brief Returns whether this TypoCorrection has a non-empty DeclarationName
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -603,6 +722,10 @@ name|push_back
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|ForceSpecifierReplacement
+operator|=
+name|true
 expr_stmt|;
 block|}
 comment|// Check if this TypoCorrection is a keyword by checking if the first
@@ -700,9 +823,15 @@ name|CorrectionRange
 operator|.
 name|setBegin
 argument_list|(
-name|CorrectionNameSpec
+name|ForceSpecifierReplacement
 operator|&&
 name|SS
+operator|&&
+operator|!
+name|SS
+operator|->
+name|isEmpty
+argument_list|()
 condition|?
 name|SS
 operator|->
@@ -736,12 +865,10 @@ name|CorrectionRange
 return|;
 block|}
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|NamedDecl
 operator|*
-operator|,
-literal|1
 operator|>
 operator|::
 name|iterator
@@ -778,12 +905,10 @@ argument_list|()
 return|;
 block|}
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|NamedDecl
 operator|*
-operator|,
-literal|1
 operator|>
 operator|::
 name|const_iterator
@@ -820,6 +945,29 @@ operator|.
 name|end
 argument_list|()
 return|;
+block|}
+comment|/// \brief Returns whether this typo correction is correcting to a
+comment|/// declaration that was declared in a module that has not been imported.
+name|bool
+name|requiresImport
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RequiresImport
+return|;
+block|}
+name|void
+name|setRequiresImport
+parameter_list|(
+name|bool
+name|Req
+parameter_list|)
+block|{
+name|RequiresImport
+operator|=
+name|Req
+expr_stmt|;
 block|}
 name|private
 label|:
@@ -870,6 +1018,12 @@ name|CallbackDistance
 decl_stmt|;
 name|SourceRange
 name|CorrectionRange
+decl_stmt|;
+name|bool
+name|ForceSpecifierReplacement
+decl_stmt|;
+name|bool
+name|RequiresImport
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1029,6 +1183,86 @@ name|C
 operator|>
 operator|(
 operator|)
+return|;
+block|}
+expr|}
+block|;
+comment|// @brief Callback class to limit the allowed keywords and to only accept typo
+comment|// corrections that are keywords or whose decls refer to functions (or template
+comment|// functions) that accept the given number of arguments.
+name|class
+name|FunctionCallFilterCCC
+operator|:
+name|public
+name|CorrectionCandidateCallback
+block|{
+name|public
+operator|:
+name|FunctionCallFilterCCC
+argument_list|(
+argument|Sema&SemaRef
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|bool HasExplicitTemplateArgs
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|ValidateCandidate
+argument_list|(
+specifier|const
+name|TypoCorrection
+operator|&
+name|candidate
+argument_list|)
+block|;
+name|private
+operator|:
+name|unsigned
+name|NumArgs
+block|;
+name|bool
+name|HasExplicitTemplateArgs
+block|; }
+block|;
+comment|// @brief Callback class that effectively disabled typo correction
+name|class
+name|NoTypoCorrectionCCC
+operator|:
+name|public
+name|CorrectionCandidateCallback
+block|{
+name|public
+operator|:
+name|NoTypoCorrectionCCC
+argument_list|()
+block|{
+name|WantTypeSpecifiers
+operator|=
+name|false
+block|;
+name|WantExpressionKeywords
+operator|=
+name|false
+block|;
+name|WantCXXNamedCasts
+operator|=
+name|false
+block|;
+name|WantRemainingKeywords
+operator|=
+name|false
+block|;   }
+name|virtual
+name|bool
+name|ValidateCandidate
+argument_list|(
+argument|const TypoCorrection&candidate
+argument_list|)
+block|{
+return|return
+name|false
 return|;
 block|}
 expr|}

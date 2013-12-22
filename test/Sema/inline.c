@@ -371,6 +371,53 @@ comment|// ok
 block|}
 end_function
 
+begin_comment
+comment|// Check behavior of line markers.
+end_comment
+
+begin_empty
+empty|# 1 "XXX.h" 1
+end_empty
+
+begin_function
+specifier|inline
+name|int
+name|useStaticMainFileInLineMarker
+parameter_list|()
+block|{
+comment|// expected-note 2 {{use 'static' to give inline function 'useStaticMainFileInLineMarker' internal linkage}}
+name|staticFunction
+argument_list|()
+expr_stmt|;
+comment|// expected-warning{{static function 'staticFunction' is used in an inline function with external linkage}}
+return|return
+name|staticVar
+return|;
+comment|// expected-warning{{static variable 'staticVar' is used in an inline function with external linkage}}
+block|}
+end_function
+
+begin_empty
+empty|# 100 "inline.c" 2
+end_empty
+
+begin_function
+specifier|inline
+name|int
+name|useStaticMainFileAfterLineMarker
+parameter_list|()
+block|{
+name|staticFunction
+argument_list|()
+expr_stmt|;
+comment|// no-warning
+return|return
+name|staticVar
+return|;
+comment|// no-warning
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

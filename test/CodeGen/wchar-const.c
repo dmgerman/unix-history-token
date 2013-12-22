@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple i386-pc-win32 | FileCheck %s --check-prefix=WIN
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple i386-pc-win32 | FileCheck %s --check-prefix=CHECK-WIN
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple x86_64-apple-darwin | FileCheck %s --check-prefix=DAR
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple x86_64-apple-darwin | FileCheck %s --check-prefix=CHECK-DAR
 end_comment
 
 begin_comment

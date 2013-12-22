@@ -16,7 +16,7 @@ comment|// RUN:   | FileCheck %s -check-prefix=OPTION
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -fdiagnostics-show-option -Werror %s 2>&1 \
+comment|// RUN: not %clang_cc1 -fsyntax-only -fdiagnostics-show-option -Werror %s 2>&1 \
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// RUN:   | FileCheck %s -check-prefix=CATEGORY_NAME
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -fdiagnostics-show-option -fdiagnostics-show-category name -Werror %s 2>&1 \
+comment|// RUN: not %clang_cc1 -fsyntax-only -fdiagnostics-show-option -fdiagnostics-show-category name -Werror %s 2>&1 \
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -ffreestanding -triple i386-apple-darwin9 -target-cpu pentium4 -target-feature +sse4.1 -g -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding -triple x86_64-apple-macosx10.8.0 -target-feature +sse4.1 -g -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_include
@@ -196,7 +196,7 @@ modifier|*
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @test_store_ss
+comment|// CHECK-LABEL: define void @test_store_ss
 comment|// CHECK: store {{.*}} float* {{.*}}, align 1,
 name|_mm_store_ss
 argument_list|(
@@ -336,7 +336,7 @@ modifier|*
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @test_store_sd
+comment|// CHECK-LABEL: define void @test_store_sd
 comment|// CHECK: store {{.*}} double* {{.*}}, align 1{{$}}
 name|_mm_store_sd
 argument_list|(
@@ -360,7 +360,7 @@ modifier|*
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @test_store1_pd
+comment|// CHECK-LABEL: define void @test_store1_pd
 comment|// CHECK: store {{.*}} double* {{.*}}, align 1{{$}}
 comment|// CHECK: store {{.*}} double* {{.*}}, align 1{{$}}
 name|_mm_store1_pd
@@ -385,7 +385,7 @@ modifier|*
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @test_storer_pd
+comment|// CHECK-LABEL: define void @test_storer_pd
 comment|// CHECK: store {{.*}}<2 x double>* {{.*}}, align 16{{$}}
 name|_mm_storer_pd
 argument_list|(
@@ -409,7 +409,7 @@ modifier|*
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @test_storeh_pd
+comment|// CHECK-LABEL: define void @test_storeh_pd
 comment|// CHECK: store {{.*}} double* {{.*}}, align 1{{$}}
 name|_mm_storeh_pd
 argument_list|(
@@ -433,7 +433,7 @@ modifier|*
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @test_storel_pd
+comment|// CHECK-LABEL: define void @test_storel_pd
 comment|// CHECK: store {{.*}} double* {{.*}}, align 1{{$}}
 name|_mm_storel_pd
 argument_list|(
@@ -668,13 +668,195 @@ modifier|*
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: define void @test_storel_epi64
+comment|// CHECK-LABEL: define void @test_storel_epi64
 comment|// CHECK: store {{.*}} i64* {{.*}}, align 1{{$}}
 name|_mm_storel_epi64
 argument_list|(
 name|y
 argument_list|,
 name|x
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_stream_si32
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|void
+modifier|*
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define void @test_stream_si32
+comment|// CHECK: store {{.*}} i32* {{.*}}, align 1, !nontemporal
+name|_mm_stream_si32
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_stream_si64
+parameter_list|(
+name|long
+name|long
+name|x
+parameter_list|,
+name|void
+modifier|*
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define void @test_stream_si64
+comment|// CHECK: store {{.*}} i64* {{.*}}, align 1, !nontemporal
+name|_mm_stream_si64
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_stream_si128
+parameter_list|(
+name|__m128i
+name|x
+parameter_list|,
+name|void
+modifier|*
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define void @test_stream_si128
+comment|// CHECK: store {{.*}}<2 x i64>* {{.*}}, align 16, !nontemporal
+name|_mm_stream_si128
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_extract_epi16
+parameter_list|(
+name|__m128i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define void @test_extract_epi16
+comment|// CHECK: [[x:%.*]] = and i32 %{{.*}}, 7
+comment|// CHECK: extractelement<8 x i16> %{{.*}}, i32 [[x]]
+name|_mm_extract_epi16
+argument_list|(
+name|__a
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_extract_ps
+parameter_list|(
+name|__m128i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_extract_ps
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+return|return
+name|_mm_extract_ps
+argument_list|(
+name|__a
+argument_list|,
+literal|4
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_extract_epi8
+parameter_list|(
+name|__m128i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_extract_epi8
+comment|// CHECK: extractelement<16 x i8> %{{.*}}, i32 0
+return|return
+name|_mm_extract_epi8
+argument_list|(
+name|__a
+argument_list|,
+literal|16
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_extract_epi32
+parameter_list|(
+name|__m128i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_extract_epi32
+comment|// CHECK: extractelement<4 x i32> %{{.*}}, i32 0
+return|return
+name|_mm_extract_epi32
+argument_list|(
+name|__a
+argument_list|,
+literal|4
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_insert_epi32
+parameter_list|(
+name|__m128i
+name|__a
+parameter_list|,
+name|int
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_insert_epi32
+comment|// CHECK: insertelement<4 x i32> %{{.*}}, i32 %{{.*}}, i32 0
+name|_mm_insert_epi32
+argument_list|(
+name|__a
+argument_list|,
+name|b
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 block|}

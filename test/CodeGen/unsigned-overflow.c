@@ -56,7 +56,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define void @testlongadd()
+comment|// CHECK-LABEL: define void @testlongadd()
 end_comment
 
 begin_function
@@ -80,7 +80,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @testlongsub()
+comment|// CHECK-LABEL: define void @testlongsub()
 end_comment
 
 begin_function
@@ -104,7 +104,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @testlongmul()
+comment|// CHECK-LABEL: define void @testlongmul()
 end_comment
 
 begin_function
@@ -128,7 +128,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @testlongpostinc()
+comment|// CHECK-LABEL: define void @testlongpostinc()
 end_comment
 
 begin_function
@@ -151,7 +151,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @testlongpreinc()
+comment|// CHECK-LABEL: define void @testlongpreinc()
 end_comment
 
 begin_function
@@ -174,7 +174,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @testintadd()
+comment|// CHECK-LABEL: define void @testintadd()
 end_comment
 
 begin_function
@@ -198,7 +198,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @testintsub()
+comment|// CHECK-LABEL: define void @testintsub()
 end_comment
 
 begin_function
@@ -222,7 +222,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @testintmul()
+comment|// CHECK-LABEL: define void @testintmul()
 end_comment
 
 begin_function
@@ -246,7 +246,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @testintpostinc()
+comment|// CHECK-LABEL: define void @testintpostinc()
 end_comment
 
 begin_function
@@ -269,7 +269,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @testintpreinc()
+comment|// CHECK-LABEL: define void @testintpreinc()
 end_comment
 
 begin_function

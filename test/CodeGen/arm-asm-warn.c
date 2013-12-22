@@ -4,7 +4,7 @@ comment|// REQUIRES: arm-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple armv7 %s -emit-llvm -o /dev/null
+comment|// RUN: %clang_cc1 -triple armv7 -target-feature +neon %s -emit-llvm -o /dev/null
 end_comment
 
 begin_function_decl
@@ -32,6 +32,10 @@ comment|// no warning
 asm|__asm__
 specifier|volatile
 asm|("foo %0, %1"                    : "+r" (x),                      "+r" (y)                    :);
+asm|__asm__
+specifier|volatile
+asm|("ldrb %0, [%1]" : "=r" (y) : "r" (x));
+comment|// no warning
 block|}
 end_function
 
@@ -84,13 +88,13 @@ name|int64x2x4_t
 name|r
 decl_stmt|;
 asm|__asm__("vldm %[a], { %q[r0], %q[r1], %q[r2], %q[r3] }"           : [r0] "=r"(r.val[0]),
-comment|// expected-warning {{the value is truncated when put into register, use a modifier to specify the size}}
+comment|// expected-warning {{value size does not match register size specified by the constraint and modifier}}
 asm|[r1] "=r"(r.val[1]),
-comment|// expected-warning {{the value is truncated when put into register, use a modifier to specify the size}}
+comment|// expected-warning {{value size does not match register size specified by the constraint and modifier}}
 asm|[r2] "=r"(r.val[2]),
-comment|// expected-warning {{the value is truncated when put into register, use a modifier to specify the size}}
+comment|// expected-warning {{value size does not match register size specified by the constraint and modifier}}
 asm|[r3] "=r"(r.val[3])
-comment|// expected-warning {{the value is truncated when put into register, use a modifier to specify the size}}
+comment|// expected-warning {{value size does not match register size specified by the constraint and modifier}}
 asm|: [a] "r"(a));
 return|return
 name|r

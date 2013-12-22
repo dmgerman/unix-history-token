@@ -4,7 +4,7 @@ comment|// REQUIRES: x86-64-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple x86_64-apple-darwin10 -O0 -fasm-blocks -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple x86_64-apple-darwin10 -fasm-blocks -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_function

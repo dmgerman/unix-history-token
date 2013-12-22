@@ -326,6 +326,41 @@ block|}
 end_function
 
 begin_comment
+comment|// Test that div by zero does not get suppressed. This is a policy choice.
+end_comment
+
+begin_function
+name|int
+name|retZero
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|triggerDivZero
+parameter_list|()
+block|{
+name|int
+name|y
+init|=
+name|retZero
+argument_list|()
+decl_stmt|;
+return|return
+literal|5
+operator|/
+name|y
+return|;
+comment|// expected-warning {{Division by zero}}
+block|}
+end_function
+
+begin_comment
 comment|// --------------------------
 end_comment
 

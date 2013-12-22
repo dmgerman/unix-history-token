@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-output=text
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-output=plist-multi-file -analyzer-config suppress-null-return-paths=false %s -o %t.plist
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-output=plist-multi-file -analyzer-config suppress-null-return-paths=false -analyzer-config path-diagnostics-alternate=false %s -o %t.plist
 end_comment
 
 begin_comment

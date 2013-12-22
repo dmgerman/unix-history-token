@@ -143,7 +143,7 @@ argument_list|)
 init|=
 literal|3
 decl_stmt|;
-comment|// LOCAL: define void @local()
+comment|// LOCAL-LABEL: define void @local()
 comment|// LOCAL:      [[LOCALVAR:%.*]] = alloca i32,
 comment|// LOCAL-NEXT: [[T0:%.*]] = bitcast i32* [[LOCALVAR]] to i8*
 comment|// LOCAL-NEXT: call void @llvm.var.annotation(i8* [[T0]], i8* getelementptr inbounds ([15 x i8]* @{{.*}}), i8* getelementptr inbounds ({{.*}}), i32 33)
@@ -171,7 +171,7 @@ argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// UNDEF: define void @undef()
+comment|// UNDEF-LABEL: define void @undef()
 comment|// UNDEF:      [[UNDEFVAR:%.*]] = alloca i32,
 comment|// UNDEF-NEXT: [[T0:%.*]] = bitcast i32* [[UNDEFVAR]] to i8*
 comment|// UNDEF-NEXT: call void @llvm.var.annotation(i8* [[T0]], i8* getelementptr inbounds ([15 x i8]* @{{.*}}), i8* getelementptr inbounds ({{.*}}), i32 43)

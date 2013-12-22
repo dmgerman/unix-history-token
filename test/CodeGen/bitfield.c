@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown %s -emit-llvm -o %t -O3
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown %s -emit-llvm -o - -O3 -no-struct-path-tbaa | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: grep "ret i32" %t | count 4
-end_comment
-
-begin_comment
-comment|// RUN: grep "ret i32 1" %t | count 4
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown %s -emit-llvm -o - -O3 | FileCheck %s --check-prefix=PATH
 end_comment
 
 begin_function
@@ -91,6 +87,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: @g0()
+comment|// CHECK: ret i32 1
+comment|// PATH-LABEL: @g0()
+comment|// PATH: ret i32 1
 return|return
 name|f0
 argument_list|(
@@ -173,6 +173,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: @g1()
+comment|// CHECK: ret i32 1
+comment|// PATH-LABEL: @g1()
+comment|// PATH: ret i32 1
 return|return
 name|f1
 argument_list|()
@@ -252,6 +256,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: @g2()
+comment|// CHECK: ret i32 1
+comment|// PATH-LABEL: @g2()
+comment|// PATH: ret i32 1
 return|return
 name|f2
 argument_list|()
@@ -371,6 +379,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: @g3()
+comment|// CHECK: ret i32 1
+comment|// PATH-LABEL: @g3()
+comment|// PATH: ret i32 1
 return|return
 name|f3
 argument_list|(

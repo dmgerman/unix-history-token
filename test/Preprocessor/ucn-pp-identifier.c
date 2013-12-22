@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 %s -fsyntax-only -x c++ -pedantic -verify -Wundef
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -std=c99 -pedantic -Wundef 2>&1 | FileCheck -strict-whitespace %s
+comment|// RUN: not %clang_cc1 %s -fsyntax-only -std=c99 -pedantic -Wundef 2>&1 | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define

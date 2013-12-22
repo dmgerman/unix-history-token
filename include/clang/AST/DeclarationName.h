@@ -607,6 +607,7 @@ comment|// non-empty.
 end_comment
 
 begin_expr_stmt
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -636,6 +637,24 @@ operator|~
 name|PtrMask
 operator|)
 operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Evaluates true when this declaration name is empty.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isEmpty
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+operator|*
+name|this
 return|;
 block|}
 end_expr_stmt
@@ -746,22 +765,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/// printName - Print the human-readable name to a stream.
-end_comment
-
-begin_decl_stmt
-name|void
-name|printName
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/// getAsIdentifierInfo - Retrieve the IdentifierInfo * stored in
@@ -1211,8 +1214,24 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
+begin_expr_stmt
 unit|};
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+name|DeclarationName
+name|N
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Ordering on two declaration names. If both names are identifiers,
 end_comment
 

@@ -53,7 +53,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define i32 @test1()
+comment|// CHECK-LABEL: define i32 @test1()
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @test2(i32 %i)
+comment|// CHECK-LABEL: define i32 @test2(i32 %i)
 end_comment
 
 begin_comment
@@ -124,7 +124,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define void @test3()
+comment|// CHECK-LABEL: define void @test3()
 end_comment
 
 begin_comment
@@ -177,7 +177,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: define void @test4(
+comment|// CHECK-LABEL: define void @test4(
 end_comment
 
 begin_comment

@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -emit-pch -o %t.2.ast %S/Inputs/enum2.c
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -ast-merge %t.1.ast -ast-merge %t.2.ast -fsyntax-only %s 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 -ast-merge %t.1.ast -ast-merge %t.2.ast -fsyntax-only %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

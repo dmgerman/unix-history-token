@@ -496,7 +496,7 @@ argument_list|)
 operator|)
 name|missing_rparen_1
 argument_list|;
-comment|// expected-error {{expected ')'}}
+comment|// expected-error 2{{expected ')'}} expected-note {{to match}} expected-warning {{does not declare anything}}
 name|int
 name|__attribute__
 argument_list|(

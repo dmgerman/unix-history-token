@@ -24,7 +24,7 @@ comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodules-cache-path
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E -fmodules -x objective-c -fmodules-cache-path=%t %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
+comment|// RUN: not %clang_cc1 -E -fmodules -x objective-c -fmodules-cache-path=%t %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
 end_comment
 
 begin_comment

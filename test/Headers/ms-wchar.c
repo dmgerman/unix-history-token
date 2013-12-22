@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -fsyntax-only -target i386-pc-win32 %s
+comment|// RUN: %clang_cc1 -fsyntax-only -triple i386-pc-win32 -fms-compatibility %s
 end_comment
 
 begin_if

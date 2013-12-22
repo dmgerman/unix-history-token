@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -emit-llvm -triple x86_64 -O3 -o %t.opt.ll %s \
 end_comment
 
 begin_comment
-comment|// RUN:   -fdump-record-layouts 2> %t.dump.txt
+comment|// RUN:   -fdump-record-layouts> %t.dump.txt
 end_comment
 
 begin_comment
@@ -163,7 +163,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-OPT: define i64 @test_0()
+comment|// CHECK-OPT-LABEL: define i64 @test_0()
 end_comment
 
 begin_comment
@@ -416,7 +416,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-OPT: define i64 @test_1()
+comment|// CHECK-OPT-LABEL: define i64 @test_1()
 end_comment
 
 begin_comment
@@ -634,7 +634,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-OPT: define i64 @test_2()
+comment|// CHECK-OPT-LABEL: define i64 @test_2()
 end_comment
 
 begin_comment
@@ -827,7 +827,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-OPT: define i64 @test_3()
+comment|// CHECK-OPT-LABEL: define i64 @test_3()
 end_comment
 
 begin_comment
@@ -1040,7 +1040,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-OPT: define i64 @test_4()
+comment|// CHECK-OPT-LABEL: define i64 @test_4()
 end_comment
 
 begin_comment
@@ -1260,7 +1260,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-OPT: define i64 @test_5()
+comment|// CHECK-OPT-LABEL: define i64 @test_5()
 end_comment
 
 begin_comment
@@ -1440,7 +1440,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-OPT: define zeroext i1 @test_6()
+comment|// CHECK-OPT-LABEL: define zeroext i1 @test_6()
 end_comment
 
 begin_comment
@@ -1742,7 +1742,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-OPT: define i32 @test_8()
+comment|// CHECK-OPT-LABEL: define i32 @test_8()
 end_comment
 
 begin_comment

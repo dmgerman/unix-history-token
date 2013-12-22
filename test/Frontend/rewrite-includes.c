@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -verify -E -frewrite-includes -DFIRST -I %S/Inputs %s -o - | FileCheck -strict-whitespace %s
+comment|// RUN: not %clang_cc1 -verify -E -frewrite-includes -DFIRST -I %S/Inputs %s -o - | FileCheck -strict-whitespace %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -verify -E -frewrite-includes -P -DFIRST -I %S/Inputs %s -o - | FileCheck -check-prefix=CHECKNL -strict-whitespace %s
+comment|// RUN: not %clang_cc1 -verify -E -frewrite-includes -P -DFIRST -I %S/Inputs %s -o - | FileCheck -check-prefix=CHECKNL -strict-whitespace %s
 end_comment
 
 begin_comment
@@ -72,6 +72,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// indented
+end_comment
 
 begin_include
 include|#
@@ -153,7 +157,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs[/\\]}}rewrite-includes1.h" 1{{$}}
+comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes1.h" 1{{$}}
 end_comment
 
 begin_comment
@@ -169,7 +173,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 2 "{{.*[/\\]Inputs[/\\]}}rewrite-includes1.h" 3{{$}}
+comment|// CHECK-NEXT: {{^}}# 2 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes1.h" 3{{$}}
 end_comment
 
 begin_comment
@@ -189,7 +193,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs[/\\]}}rewrite-includes2.h" 1 3{{$}}
+comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes2.h" 1 3{{$}}
 end_comment
 
 begin_comment
@@ -197,7 +201,7 @@ comment|// CHECK-NEXT: {{^}}included_line2{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 4 "{{.*[/\\]Inputs[/\\]}}rewrite-includes1.h" 2 3{{$}}
+comment|// CHECK-NEXT: {{^}}# 4 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes1.h" 2 3{{$}}
 end_comment
 
 begin_comment
@@ -225,7 +229,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs[/\\]}}rewrite-includes3.h" 1{{$}}
+comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes3.h" 1{{$}}
 end_comment
 
 begin_comment
@@ -238,6 +242,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: {{^}}#else{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 11 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
 begin_comment
@@ -261,6 +269,14 @@ comment|// CHECK-NEXT: {{^}}#endif{{$}}
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: {{^}}# 13 "{{.*}}rewrite-includes.c"{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}  // indented{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: {{^}}#if 0 /* expanded by -frewrite-includes */{{$}}
 end_comment
 
@@ -277,7 +293,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs[/\\]}}rewrite-includes5.h" 1{{$}}
+comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes5.h" 1{{$}}
 end_comment
 
 begin_comment
@@ -285,7 +301,7 @@ comment|// CHECK-NEXT: {{^}}included_line5{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 15 "{{.*}}rewrite-includes.c" 2{{$}}
+comment|// CHECK-NEXT: {{^}}# 16 "{{.*}}rewrite-includes.c" 2{{$}}
 end_comment
 
 begin_comment
@@ -301,7 +317,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs[/\\]}}rewrite-includes6.h" 1{{$}}
+comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes6.h" 1{{$}}
 end_comment
 
 begin_comment
@@ -317,7 +333,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 2 "{{.*[/\\]Inputs[/\\]}}rewrite-includes6.h"{{$}}
+comment|// CHECK-NEXT: {{^}}# 2 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes6.h"{{$}}
 end_comment
 
 begin_comment
@@ -325,7 +341,7 @@ comment|// CHECK-NEXT: {{^}}included_line6{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 16 "{{.*}}rewrite-includes.c" 2{{$}}
+comment|// CHECK-NEXT: {{^}}# 17 "{{.*}}rewrite-includes.c" 2{{$}}
 end_comment
 
 begin_comment
@@ -349,7 +365,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 19 "{{.*}}rewrite-includes.c"{{$}}
+comment|// CHECK-NEXT: {{^}}# 20 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
 begin_comment
@@ -365,7 +381,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs[/\\]}}rewrite-includes7.h" 1{{$}}
+comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes7.h" 1{{$}}
 end_comment
 
 begin_comment
@@ -385,7 +401,11 @@ comment|// CHECK-NEXT: {{^}}#endif{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 20 "{{.*}}rewrite-includes.c" 2{{$}}
+comment|// CHECK-NEXT: {{^}}# 5 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes7.h"{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 21 "{{.*}}rewrite-includes.c" 2{{$}}
 end_comment
 
 begin_comment
@@ -401,7 +421,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 21 "{{.*}}rewrite-includes.c"{{$}}
+comment|// CHECK-NEXT: {{^}}# 22 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
 begin_comment
@@ -417,7 +437,7 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs[/\\]}}rewrite-includes8.h" 1{{$}}
+comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes8.h" 1{{$}}
 end_comment
 
 begin_comment
@@ -429,7 +449,15 @@ comment|// CHECK-NEXT: {{^}}#elif (0)/*__has_include(<rewrite-includes8.hfail>)*
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: {{^}}# 3 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes8.h"{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: {{^}}#endif{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 4 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes8.h"{{$}}
 end_comment
 
 begin_comment
@@ -441,7 +469,11 @@ comment|// CHECK-NEXT: {{^}}#endif{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^}}# 22 "{{.*}}rewrite-includes.c" 2{{$}}
+comment|// CHECK-NEXT: {{^}}# 6 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes8.h"{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 23 "{{.*}}rewrite-includes.c" 2{{$}}
 end_comment
 
 begin_comment
@@ -546,6 +578,10 @@ end_comment
 
 begin_comment
 comment|// CHECKNL-NEXT: {{^}}#endif{{$}}
+end_comment
+
+begin_comment
+comment|// CHECKNL-NEXT: {{^}}  // indented{{$}}
 end_comment
 
 begin_comment

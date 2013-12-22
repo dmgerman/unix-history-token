@@ -116,6 +116,12 @@ operator|::
 name|string
 name|CPU
 block|;
+comment|/// If given, the unit to use for floating point math.
+name|std
+operator|::
+name|string
+name|FPMath
+block|;
 comment|/// If given, the name of the target ABI to use.
 name|std
 operator|::

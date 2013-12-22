@@ -81,10 +81,19 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Constant
+decl_stmt|;
 name|class
 name|GlobalValue
 decl_stmt|;
@@ -315,6 +324,11 @@ return|return
 name|Address
 return|;
 block|}
+comment|/// Corrects the low-level LLVM type for a given constraint and "usual"
+comment|/// type.
+comment|///
+comment|/// \returns A pointer to a new LLVM type, possibly the same as the original
+comment|/// on success; 0 on failure.
 name|virtual
 name|llvm
 operator|::
@@ -354,6 +368,23 @@ return|return
 literal|""
 return|;
 block|}
+comment|/// Return a constant used by UBSan as a signature to identify functions
+comment|/// possessing type information, or 0 if the platform is unsupported.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getUBSanFunctionSignature
+argument_list|(
+argument|CodeGen::CodeGenModule&CGM
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// Determine whether a call to an unprototyped functions under
 comment|/// the given calling convention should use the variadic
 comment|/// convention or the non-variadic convention.
@@ -389,6 +420,13 @@ comment|/// function: for example, x86-64 passes the number of SSE
 comment|/// arguments in %al.  On these platforms, it is desireable to
 comment|/// call unprototyped functions using the variadic convention so
 comment|/// that unprototyped calls to varargs functions still succeed.
+comment|///
+comment|/// Relatedly, platforms which pass the fixed arguments to this:
+comment|///   A foo(B, C, D);
+comment|/// differently than they would pass them to this:
+comment|///   A foo(B, C, D, ...);
+comment|/// may need to adjust the debugger-support code in Sema to do the
+comment|/// right thing when calling a function with no know signature.
 name|virtual
 name|bool
 name|isNoProtoCallVariadic
@@ -407,6 +445,55 @@ name|fnType
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Gets the linker options necessary to link a dependent library on this
+comment|/// platform.
+name|virtual
+name|void
+name|getDependentLibraryOption
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Lib
+argument_list|,
+name|llvm
+operator|::
+name|SmallString
+operator|<
+literal|24
+operator|>
+operator|&
+name|Opt
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Gets the linker options necessary to detect object file mismatches on
+comment|/// this platform.
+name|virtual
+name|void
+name|getDetectMismatchOption
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Name
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Value
+argument_list|,
+name|llvm
+operator|::
+name|SmallString
+operator|<
+literal|32
+operator|>
+operator|&
+name|Opt
+argument_list|)
+decl|const
+block|{}
 block|}
 empty_stmt|;
 block|}

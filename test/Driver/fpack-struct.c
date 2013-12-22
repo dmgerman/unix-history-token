@@ -12,7 +12,7 @@ comment|// RUN: %clang -fpack-struct=8 -### %s 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck< %t %s --check-prefix=EQ
+comment|// RUN: FileCheck< %t %s --check-prefix=CHECK-EQ
 end_comment
 
 begin_comment

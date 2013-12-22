@@ -164,7 +164,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Transforms/Utils/BlackList.h"
+file|"llvm/Transforms/Utils/SpecialCaseList.h"
 end_include
 
 begin_decl_stmt
@@ -847,10 +847,6 @@ comment|/// VTables - Holds information about C++ vtables.
 name|CodeGenVTables
 name|VTables
 decl_stmt|;
-name|friend
-name|class
-name|CodeGenVTables
-decl_stmt|;
 name|CGObjCRuntime
 modifier|*
 name|ObjCRuntime
@@ -920,6 +916,35 @@ name|GlobalDecl
 operator|>
 name|DeferredDeclsToEmit
 expr_stmt|;
+comment|/// List of alias we have emitted. Used to make sure that what they point to
+comment|/// is defined once we get to the end of the of the translation unit.
+name|std
+operator|::
+name|vector
+operator|<
+name|GlobalDecl
+operator|>
+name|Aliases
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|llvm
+operator|::
+name|TrackingVH
+operator|<
+name|llvm
+operator|::
+name|Constant
+operator|>
+expr|>
+name|ReplacementsTy
+expr_stmt|;
+name|ReplacementsTy
+name|Replacements
+decl_stmt|;
 comment|/// DeferredVTables - A queue of (optional) vtables to consider emitting.
 name|std
 operator|::
@@ -1051,6 +1076,21 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|MaterializedGlobalTemporaryMap
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
 name|QualType
 operator|,
 name|llvm
@@ -1072,6 +1112,20 @@ name|Constant
 operator|*
 operator|>
 name|AtomicGetterHelperFnMap
+expr_stmt|;
+comment|/// Map used to get unique type descriptor constants for sanitizers.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|QualType
+operator|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|TypeDescriptorMap
 expr_stmt|;
 comment|/// Map used to track internal linkage functions declared within
 comment|/// extern "C" regions.
@@ -1249,6 +1303,18 @@ operator|*
 operator|>
 name|ImportedModules
 expr_stmt|;
+comment|/// \brief A vector of metadata strings.
+name|SmallVector
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|,
+literal|16
+operator|>
+name|LinkerOptionsMetadata
+expr_stmt|;
 comment|/// @name Cache for Objective-C runtime types
 comment|/// @{
 comment|/// CFConstantStringClassRef - Cached reference to the class for constant
@@ -1303,10 +1369,8 @@ function_decl|;
 name|bool
 name|shouldEmitFunction
 parameter_list|(
-specifier|const
-name|FunctionDecl
-modifier|*
-name|F
+name|GlobalDecl
+name|GD
 parameter_list|)
 function_decl|;
 comment|/// @name Cache for Blocks Runtime Globals
@@ -1374,7 +1438,12 @@ name|initializedGlobalDecl
 decl_stmt|;
 name|llvm
 operator|::
-name|BlackList
+name|OwningPtr
+operator|<
+name|llvm
+operator|::
+name|SpecialCaseList
+operator|>
 name|SanitizerBlacklist
 expr_stmt|;
 specifier|const
@@ -1684,6 +1753,43 @@ operator|=
 name|Fn
 expr_stmt|;
 block|}
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getTypeDescriptor
+argument_list|(
+argument|QualType Ty
+argument_list|)
+block|{
+return|return
+name|TypeDescriptorMap
+index|[
+name|Ty
+index|]
+return|;
+block|}
+name|void
+name|setTypeDescriptor
+argument_list|(
+name|QualType
+name|Ty
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|C
+argument_list|)
+block|{
+name|TypeDescriptorMap
+index|[
+name|Ty
+index|]
+operator|=
+name|C
+expr_stmt|;
+block|}
 name|CGDebugInfo
 modifier|*
 name|getModuleDebugInfo
@@ -1908,15 +2014,30 @@ block|}
 end_function
 
 begin_function
-name|VTableContext
+name|ItaniumVTableContext
 modifier|&
-name|getVTableContext
+name|getItaniumVTableContext
 parameter_list|()
 block|{
 return|return
 name|VTables
 operator|.
-name|getVTableContext
+name|getItaniumVTableContext
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|MicrosoftVTableContext
+modifier|&
+name|getMicrosoftVTableContext
+parameter_list|()
+block|{
+return|return
+name|VTables
+operator|.
+name|getMicrosoftVTableContext
 argument_list|()
 return|;
 block|}
@@ -3069,6 +3190,34 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Returns a pointer to a global variable representing a temporary
+end_comment
+
+begin_comment
+comment|/// with static or thread storage duration.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetAddrOfGlobalTemporary
+argument_list|(
+specifier|const
+name|MaterializeTemporaryExpr
+operator|*
+name|E
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|Inner
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the record type that describes the state of an
 end_comment
 
@@ -3128,6 +3277,9 @@ argument_list|,
 argument|CXXDtorType dtorType
 argument_list|,
 argument|const CGFunctionInfo *fnInfo =
+literal|0
+argument_list|,
+argument|llvm::FunctionType *fnType =
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3642,14 +3794,6 @@ begin_comment
 comment|/// specified stmt yet.
 end_comment
 
-begin_comment
-comment|/// \param OmitOnError - If true, then this error should only be emitted if no
-end_comment
-
-begin_comment
-comment|/// other errors have been reported.
-end_comment
-
 begin_function_decl
 name|void
 name|ErrorUnsupported
@@ -3663,11 +3807,6 @@ specifier|const
 name|char
 modifier|*
 name|Type
-parameter_list|,
-name|bool
-name|OmitOnError
-init|=
-name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3678,14 +3817,6 @@ end_comment
 
 begin_comment
 comment|/// specified decl yet.
-end_comment
-
-begin_comment
-comment|/// \param OmitOnError - If true, then this error should only be emitted if no
-end_comment
-
-begin_comment
-comment|/// other errors have been reported.
 end_comment
 
 begin_function_decl
@@ -3701,11 +3832,6 @@ specifier|const
 name|char
 modifier|*
 name|Type
-parameter_list|,
-name|bool
-name|OmitOnError
-init|=
-name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3981,6 +4107,66 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// EmitFundamentalRTTIDescriptors - Emit the RTTI descriptors for the
+end_comment
+
+begin_comment
+comment|/// builtin types.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitFundamentalRTTIDescriptors
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Appends Opts to the "Linker Options" metadata value.
+end_comment
+
+begin_function_decl
+name|void
+name|AppendLinkerOptions
+parameter_list|(
+name|StringRef
+name|Opts
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Appends a detect mismatch command to the linker options.
+end_comment
+
+begin_function_decl
+name|void
+name|AddDetectMismatch
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|StringRef
+name|Value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Appends a dependent lib to the "Linker Options" metadata value.
+end_comment
+
+begin_function_decl
+name|void
+name|AddDependentLib
+parameter_list|(
+name|StringRef
+name|Lib
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|llvm
 operator|::
@@ -3989,10 +4175,7 @@ operator|::
 name|LinkageTypes
 name|getFunctionLinkage
 argument_list|(
-specifier|const
-name|FunctionDecl
-operator|*
-name|FD
+argument|GlobalDecl GD
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4001,10 +4184,8 @@ begin_decl_stmt
 name|void
 name|setFunctionLinkage
 argument_list|(
-specifier|const
-name|FunctionDecl
-operator|*
-name|FD
+name|GlobalDecl
+name|GD
 argument_list|,
 name|llvm
 operator|::
@@ -4019,7 +4200,7 @@ name|setLinkage
 argument_list|(
 name|getFunctionLinkage
 argument_list|(
-name|FD
+name|GD
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4088,16 +4269,9 @@ operator|::
 name|LinkageTypes
 name|GetLLVMLinkageVarDefinition
 argument_list|(
-specifier|const
-name|VarDecl
-operator|*
-name|D
+argument|const VarDecl *D
 argument_list|,
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|GV
+argument|bool isConstant
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4235,13 +4409,14 @@ begin_expr_stmt
 specifier|const
 name|llvm
 operator|::
-name|BlackList
+name|SpecialCaseList
 operator|&
 name|getSanitizerBlacklist
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|SanitizerBlacklist
 return|;
 block|}
@@ -4280,6 +4455,24 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// EmitGlobal - Emit code for a singal global function or var decl. Forward
+end_comment
+
+begin_comment
+comment|/// declarations are emitted lazily.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitGlobal
+parameter_list|(
+name|GlobalDecl
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_label
 name|private
@@ -4423,24 +4616,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/// EmitGlobal - Emit code for a singal global function or var decl. Forward
-end_comment
-
-begin_comment
-comment|/// declarations are emitted lazily.
-end_comment
-
-begin_function_decl
-name|void
-name|EmitGlobal
-parameter_list|(
-name|GlobalDecl
-name|D
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|void
 name|EmitGlobalDefinition
@@ -4472,26 +4647,6 @@ name|D
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|MaybeEmitGlobalStdInitializerListInitializer
-argument_list|(
-specifier|const
-name|VarDecl
-operator|*
-name|D
-argument_list|,
-specifier|const
-name|Expr
-operator|*
-name|init
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function_decl
 name|void
@@ -4539,6 +4694,9 @@ name|Alias
 parameter_list|,
 name|GlobalDecl
 name|Target
+parameter_list|,
+name|bool
+name|InEveryTU
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4579,20 +4737,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/// EmitCXXConstructors - Emit constructors (base, complete) from a
-end_comment
-
-begin_comment
-comment|/// C++ constructor Decl.
-end_comment
-
 begin_function_decl
 name|void
-name|EmitCXXConstructors
+name|CompleteDIClassType
 parameter_list|(
 specifier|const
-name|CXXConstructorDecl
+name|CXXMethodDecl
 modifier|*
 name|D
 parameter_list|)
@@ -4618,26 +4768,6 @@ name|D
 parameter_list|,
 name|CXXCtorType
 name|Type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// EmitCXXDestructors - Emit destructors (base, complete) from a
-end_comment
-
-begin_comment
-comment|/// C++ destructor Decl.
-end_comment
-
-begin_function_decl
-name|void
-name|EmitCXXDestructors
-parameter_list|(
-specifier|const
-name|CXXDestructorDecl
-modifier|*
-name|D
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4815,21 +4945,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitFundamentalRTTIDescriptors - Emit the RTTI descriptors for the
-end_comment
-
-begin_comment
-comment|/// builtin types.
-end_comment
-
-begin_function_decl
-name|void
-name|EmitFundamentalRTTIDescriptors
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// EmitDeferred - Emit any needed decls for which code generation
 end_comment
 
@@ -4840,6 +4955,24 @@ end_comment
 begin_function_decl
 name|void
 name|EmitDeferred
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Call replaceAllUsesWith on all pairs in Replacements.
+end_comment
+
+begin_function_decl
+name|void
+name|applyReplacements
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|checkAliases
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -4903,6 +5036,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|EmitDeclMetadata
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit the Clang version as llvm.ident metadata.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitVersionIdentMetadata
 parameter_list|()
 function_decl|;
 end_function_decl

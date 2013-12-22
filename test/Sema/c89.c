@@ -471,7 +471,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* expected-warning {{Flexible array members are a C99-specific feature}} */
+comment|/* expected-warning {{flexible array members are a C99 feature}} */
 end_comment
 
 begin_comment
@@ -634,6 +634,71 @@ end_decl_stmt
 begin_comment
 comment|/* expected-warning {{'long long' is an extension when C99 mode is not enabled}} */
 end_comment
+
+begin_struct
+struct|struct
+name|Test17
+block|{
+name|int
+name|a
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|struct
+name|Test17
+name|test17_aux
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test17
+parameter_list|(
+name|int
+name|v
+parameter_list|,
+name|int
+name|w
+parameter_list|)
+block|{
+name|int
+name|a
+index|[
+literal|2
+index|]
+init|=
+block|{
+name|v
+block|,
+name|w
+block|}
+decl_stmt|;
+comment|/* expected-warning {{initializer for aggregate is not a compile-time constant}} */
+name|struct
+name|Test17
+name|t0
+init|=
+block|{
+name|v
+block|}
+decl_stmt|;
+comment|/* expected-warning {{initializer for aggregate is not a compile-time constant}} */
+name|struct
+name|Test17
+name|t1
+init|=
+name|test17_aux
+argument_list|()
+decl_stmt|;
+comment|/* this is allowed */
+block|}
+end_function
 
 end_unit
 

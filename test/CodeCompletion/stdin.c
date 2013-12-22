@@ -22,7 +22,7 @@ enum_decl|enum
 end_enum_decl
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=-:4:6< %s -o - | FileCheck -check-prefix=CC1 %s
+comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=-:4:6< %s -o - | FileCheck -check-prefix=CHECK-CC1 %s
 end_comment
 
 begin_comment

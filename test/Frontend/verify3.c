@@ -12,7 +12,7 @@ comment|// 'expected-no-diagnostics' directive.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -DTEST1 -verify %s 2>&1 | FileCheck -check-prefix=CHECK1 %s
+comment|// RUN: not %clang_cc1 -DTEST1 -verify %s 2>&1 | FileCheck -check-prefix=CHECK1 %s
 end_comment
 
 begin_ifdef
@@ -47,7 +47,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// RUN: %clang_cc1 -DTEST2 -verify %s 2>&1 | FileCheck -check-prefix=CHECK2 %s
+comment|// RUN: not %clang_cc1 -DTEST2 -verify %s 2>&1 | FileCheck -check-prefix=CHECK2 %s
 end_comment
 
 begin_ifdef
@@ -88,11 +88,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// RUN: %clang_cc1 -DTEST3 -verify %s 2>&1 | FileCheck -check-prefix=CHECK3 %s
+comment|// RUN: not %clang_cc1 -DTEST3 -verify %s 2>&1 | FileCheck -check-prefix=CHECK3 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -verify 2>&1 | FileCheck -check-prefix=CHECK3 %s
+comment|// RUN: not %clang_cc1 -verify %s 2>&1 | FileCheck -check-prefix=CHECK3 %s
 end_comment
 
 begin_ifdef

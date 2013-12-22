@@ -467,5 +467,133 @@ begin_comment
 comment|// MIPS-NDSPR2-NOT: "-mdspr2"
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mnan=legacy -mnan=2008 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-NAN2008 %s
+end_comment
+
+begin_comment
+comment|// MIPS-NAN2008: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB" "-mnan=2008"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mnan=2008 -mnan=legacy -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-NAN-LEGACY %s
+end_comment
+
+begin_comment
+comment|// MIPS-NAN-LEGACY: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// MIPS-NAN_LEGACY-NOT: "-mnan={{.*}}"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mfp64 -mfp32 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-MFP32 %s
+end_comment
+
+begin_comment
+comment|// MIPS-MFP32: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB" "-mfp32"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mfp32 -mfp64 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-MFP64 %s
+end_comment
+
+begin_comment
+comment|// MIPS-MFP64: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB" "-mfp64"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mno-msa -mmsa -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-MSA %s
+end_comment
+
+begin_comment
+comment|// MIPS-MSA: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB" "-mmsa"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mmsa -mno-msa -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-NMSA %s
+end_comment
+
+begin_comment
+comment|// MIPS-NMSA: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// MIPS-NMSA-NOT: "-mmsa"
+end_comment
+
 end_unit
 

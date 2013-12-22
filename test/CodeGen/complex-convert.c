@@ -116,7 +116,7 @@ name|long
 name|long
 name|cull1
 decl_stmt|;
-comment|// CHECK: define void @foo(
+comment|// CHECK-LABEL: define void @foo(
 comment|// CHECK: alloca i[[CHSIZE:[0-9]+]], align [[CHALIGN:[0-9]+]]
 comment|// CHECK-NEXT: alloca i[[CHSIZE]], align [[CHALIGN]]
 comment|// CHECK-NEXT: alloca i[[LLSIZE:[0-9]+]], align [[LLALIGN:[0-9]+]]

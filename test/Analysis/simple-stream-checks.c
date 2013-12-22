@@ -454,11 +454,12 @@ operator|&
 name|fs
 argument_list|)
 expr_stmt|;
+comment|// invalidates fs, making fs.p unreachable
 block|}
 end_function
 
 begin_comment
-comment|// expected-warning {{Opened file is never closed; potential resource leak}}
+comment|// no-warning
 end_comment
 
 end_unit

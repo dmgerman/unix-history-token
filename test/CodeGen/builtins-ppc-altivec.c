@@ -494,7 +494,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define void @test1
+comment|// CHECK-LABEL: define void @test1
 end_comment
 
 begin_function
@@ -2261,7 +2261,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test2
+comment|// CHECK-LABEL: define void @test2
 end_comment
 
 begin_function
@@ -2524,7 +2524,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test5
+comment|// CHECK-LABEL: define void @test5
 end_comment
 
 begin_function
@@ -2688,7 +2688,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test6
+comment|// CHECK-LABEL: define void @test6
 end_comment
 
 begin_function
@@ -18668,7 +18668,7 @@ comment|/* ------------------------------ Relational Operators -----------------
 end_comment
 
 begin_comment
-comment|// CHECK: define void @test7
+comment|// CHECK-LABEL: define void @test7
 end_comment
 
 begin_function

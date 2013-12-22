@@ -451,5 +451,45 @@ begin_comment
 comment|// LINK_PG: -no_new_main
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 -rdynamic -### %t.o \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=100 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_NO_EXPORT_DYNAMIC %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_NO_EXPORT_DYNAMIC: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_NO_EXPORT_DYNAMIC-NOT: "-export_dynamic"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 -rdynamic -### %t.o \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=137 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_EXPORT_DYNAMIC %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_EXPORT_DYNAMIC: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_EXPORT_DYNAMIC: "-export_dynamic"
+end_comment
+
 end_unit
 

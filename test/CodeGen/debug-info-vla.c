@@ -3,10 +3,6 @@ begin_comment
 comment|// RUN: %clang_cc1 -emit-llvm -g -triple x86_64-apple-darwin %s -o - | FileCheck %s
 end_comment
 
-begin_comment
-comment|// CHECK: metadata !{i32 {{.*}}, metadata {{.*}}, metadata !"vla", metadata {{.*}}, i32 7, metadata {{.*}}, i32 0, i32 0, i64 2} ; [ DW_TAG_auto_variable ]
-end_comment
-
 begin_function
 name|void
 name|testVLAwithSize
@@ -15,6 +11,7 @@ name|int
 name|s
 parameter_list|)
 block|{
+comment|// CHECK: metadata !{i32 {{.*}}, metadata {{.*}}, metadata !"vla", metadata {{.*}}, i32 [[@LINE+1]], metadata {{.*}}, i32 8192, i32 0} ; [ DW_TAG_auto_variable ] [vla] [line [[@LINE+1]]]
 name|int
 name|vla
 index|[

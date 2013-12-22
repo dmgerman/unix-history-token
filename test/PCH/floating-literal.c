@@ -33,7 +33,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: long double foo = 1.0E+4000L;
+comment|// CHECK: long double foo = 1.00000000000000000000000000000000004E+4000L;
 end_comment
 
 begin_comment
@@ -49,7 +49,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: double bar = 1.0E+300;
+comment|// CHECK: double bar = 1.0000000000000001E+300;
 end_comment
 
 begin_decl_stmt

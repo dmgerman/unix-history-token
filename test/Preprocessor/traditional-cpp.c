@@ -4,7 +4,7 @@ comment|/* Clang supports a very limited subset of -traditional-cpp, basically w
 end_comment
 
 begin_comment
-comment|/*  RUN: %clang_cc1 -traditional-cpp %s -E -o %t  RUN: FileCheck -strict-whitespace< %t %s  RUN: %clang_cc1 -traditional-cpp %s -E -C | FileCheck -check-prefix=CHECK-COMMENTS %s */
+comment|/*  RUN: %clang_cc1 -traditional-cpp %s -E | FileCheck -strict-whitespace %s  RUN: %clang_cc1 -traditional-cpp %s -E -C | FileCheck -check-prefix=CHECK-COMMENTS %s  RUN: %clang_cc1 -traditional-cpp -x c++ %s -E | FileCheck -check-prefix=CHECK-CXX %s */
 end_comment
 
 begin_comment
@@ -16,7 +16,11 @@ comment|/* CHECK-NOT: /*  * CHECK-COMMENTS: {{^}}/* -traditional-cpp should elim
 end_comment
 
 begin_comment
-comment|/* CHECK: {{^}}foo // bar{{$}}  */
+comment|/* -traditional-cpp should only eliminate "//" comments in C++ mode. */
+end_comment
+
+begin_comment
+comment|/* CHECK: {{^}}foo // bar{{$}}  * CHECK-CXX: {{^}}foo {{$}}  */
 end_comment
 
 begin_expr_stmt
@@ -110,14 +114,52 @@ name|URLs
 operator|:
 name|http
 operator|:
+comment|//clang.llvm.org
+comment|/* CHECK: {{^}}Preserve URLs: http://clang.llvm.org{{$}}  */
+comment|/* The following tests ensure we ignore # and ## in macro bodies */
+define|#
+directive|define
+name|FOO_NO_STRINGIFY
+parameter_list|(
+name|a
+parameter_list|)
+value|test(# a)
+name|FOO_NO_STRINGIFY
+argument_list|(
+argument|foobar
+argument_list|)
+comment|/* CHECK: {{^}}test(# foobar){{$}}  */
+define|#
+directive|define
+name|FOO_NO_PASTE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|test(b##a)
+name|FOO_NO_PASTE
+argument_list|(
+argument|foo
+argument_list|,
+argument|bar
+argument_list|)
+comment|/* CHECK {{^}}test(bar##foo){{$}}  */
+define|#
+directive|define
+name|BAR_NO_STRINGIFY
+parameter_list|(
+name|a
+parameter_list|)
+value|test(#a)
+name|BAR_NO_STRINGIFY
+argument_list|(
+argument|foobar
+argument_list|)
 end_expr_stmt
 
 begin_comment
-comment|//clang.llvm.org
-end_comment
-
-begin_comment
-comment|/* CHECK: {{^}}Preserve URLs: http://clang.llvm.org{{$}}  */
+comment|/* CHECK: {{^}}test(#foobar){{$}}  */
 end_comment
 
 end_unit

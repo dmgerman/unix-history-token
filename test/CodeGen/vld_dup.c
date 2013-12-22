@@ -12,7 +12,7 @@ comment|// RUN:   -target-cpu cortex-a8 \
 end_comment
 
 begin_comment
-comment|// RUN:   -emit-llvm -O0 -o - %s | FileCheck %s
+comment|// RUN:   -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_include

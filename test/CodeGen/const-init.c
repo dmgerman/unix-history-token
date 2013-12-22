@@ -1017,6 +1017,7 @@ block|{
 literal|"asdf"
 block|}
 decl_stmt|;
+comment|// expected-warning {{incompatible pointer to integer conversion initializing 'int' with an expression of type 'char [5]'}}
 specifier|static
 name|int
 name|c

@@ -1,0 +1,155 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|// Don't attempt slash switches on msys bash.
+end_comment
+
+begin_comment
+comment|// REQUIRES: shell-preserves-root
+end_comment
+
+begin_comment
+comment|// Note: %s must be preceded by --, otherwise it may be interpreted as a
+end_comment
+
+begin_comment
+comment|// command-line option, e.g. on Mac where %s is commonly under /Users.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fallback /Dfoo=bar /Ubaz /Ifoo /O0 /Ox /GR /GR- /LD /LDd \
+end_comment
+
+begin_comment
+comment|// RUN:     /MD /MDd /MTd /MT /FImyheader.h -### -- %s 2>&1 | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK: "-fdiagnostics-format" "msvc-fallback"
+end_comment
+
+begin_comment
+comment|// CHECK: ||
+end_comment
+
+begin_comment
+comment|// CHECK: cl.exe
+end_comment
+
+begin_comment
+comment|// CHECK: "/nologo"
+end_comment
+
+begin_comment
+comment|// CHECK: "/c"
+end_comment
+
+begin_comment
+comment|// CHECK: "/W0"
+end_comment
+
+begin_comment
+comment|// CHECK: "-D" "foo=bar"
+end_comment
+
+begin_comment
+comment|// CHECK: "-U" "baz"
+end_comment
+
+begin_comment
+comment|// CHECK: "-I" "foo"
+end_comment
+
+begin_comment
+comment|// CHECK: "/Ox"
+end_comment
+
+begin_comment
+comment|// CHECK: "/GR-"
+end_comment
+
+begin_comment
+comment|// CHECK: "/FImyheader.h"
+end_comment
+
+begin_comment
+comment|// CHECK: "/LD"
+end_comment
+
+begin_comment
+comment|// CHECK: "/LDd"
+end_comment
+
+begin_comment
+comment|// CHECK: "/MT"
+end_comment
+
+begin_comment
+comment|// CHECK: "/Tc" "{{.*cl-fallback.c}}"
+end_comment
+
+begin_comment
+comment|// CHECK: "/Fo{{.*cl-fallback.*.obj}}"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fallback /Od -### -- %s 2>&1 | FileCheck -check-prefix=O0 %s
+end_comment
+
+begin_comment
+comment|// O0: cl.exe
+end_comment
+
+begin_comment
+comment|// O0: "/Od"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fallback /O1 -### -- %s 2>&1 | FileCheck -check-prefix=O1 %s
+end_comment
+
+begin_comment
+comment|// O1: cl.exe
+end_comment
+
+begin_comment
+comment|// O1: "-O1"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fallback /O2 -### -- %s 2>&1 | FileCheck -check-prefix=O2 %s
+end_comment
+
+begin_comment
+comment|// O2: cl.exe
+end_comment
+
+begin_comment
+comment|// O2: "-O2"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fallback /Os -### -- %s 2>&1 | FileCheck -check-prefix=Os %s
+end_comment
+
+begin_comment
+comment|// Os: cl.exe
+end_comment
+
+begin_comment
+comment|// Os: "-Os"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fallback /Ox -### -- %s 2>&1 | FileCheck -check-prefix=Ox %s
+end_comment
+
+begin_comment
+comment|// Ox: cl.exe
+end_comment
+
+begin_comment
+comment|// Ox: "/Ox"
+end_comment
+
+end_unit
+

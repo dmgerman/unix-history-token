@@ -64,6 +64,13 @@ expr|\
 operator|!
 name|__has_builtin
 argument_list|(
+name|__builtin_convertvector
+argument_list|)
+operator|||
+expr|\
+operator|!
+name|__has_builtin
+argument_list|(
 name|__builtin_trap
 argument_list|)
 operator|||

@@ -1,18 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: shell
-end_comment
-
-begin_comment
-comment|// RUN: ln -sf %clang %T/clang-cpp
-end_comment
-
-begin_comment
 comment|// PR13529: Don't crash.
 end_comment
 
 begin_comment
-comment|// RUN: %T/clang-cpp -lfoo -M %s 2>&1 | FileCheck --check-prefix=CHECK-PR13529 %s
+comment|// RUN: %clang_cpp -lfoo -M %s 2>&1 | FileCheck --check-prefix=CHECK-PR13529 %s
 end_comment
 
 begin_comment

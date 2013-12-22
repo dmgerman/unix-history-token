@@ -331,7 +331,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* C99 5.2.4.2.1: Added long long. */
+comment|/* C99 5.2.4.2.1: Added long long.    C++11 18.3.3.2: same contents as the Standard C Library header<limits.h>.  */
 end_comment
 
 begin_if
@@ -340,6 +340,10 @@ directive|if
 name|__STDC_VERSION__
 operator|>=
 literal|199901
+operator|||
+name|__cplusplus
+operator|>=
+literal|201103L
 end_if
 
 begin_undef

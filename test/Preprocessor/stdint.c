@@ -860,6 +860,862 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=mips-none-none %s | FileCheck -check-prefix MIPS %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:typedef signed long long int int64_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef unsigned long long int uint64_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef int64_t int_least64_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef uint64_t uint_least64_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef int64_t int_fast64_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef uint64_t uint_fast64_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:typedef signed int int32_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef unsigned int uint32_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef int32_t int_least32_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef uint32_t uint_least32_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef int32_t int_fast32_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef uint32_t uint_fast32_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:typedef signed short int16_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef unsigned short uint16_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef int16_t int_least16_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef uint16_t uint_least16_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef uint8_t uint_fast8_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:typedef int32_t intptr_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef uint32_t uintptr_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:typedef long long int intmax_t;
+end_comment
+
+begin_comment
+comment|// MIPS:typedef long long unsigned int uintmax_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:INT8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// MIPS:INT8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:UINT8_MAX_ 255
+end_comment
+
+begin_comment
+comment|// MIPS:INT_LEAST8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:INT_LEAST8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// MIPS:UINT_LEAST8_MAX_ 255
+end_comment
+
+begin_comment
+comment|// MIPS:INT_FAST8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:INT_FAST8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// MIPS:UINT_FAST8_MAX_ 255
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:INT16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// MIPS:INT16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:UINT16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|// MIPS:INT_LEAST16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:INT_LEAST16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// MIPS:UINT_LEAST16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|// MIPS:INT_FAST16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:INT_FAST16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// MIPS:UINT_FAST16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:INT32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS:INT32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:UINT32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS:INT_LEAST32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:INT_LEAST32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS:UINT_LEAST32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS:INT_FAST32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:INT_FAST32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS:UINT_FAST32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:INT64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS:INT64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// MIPS:UINT64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// MIPS:INT_LEAST64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS:UINT_LEAST64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS:INT_FAST64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// MIPS:INT_FAST64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS:UINT_FAST64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:INTPTR_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:INTPTR_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS:UINTPTR_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS:PTRDIFF_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:PTRDIFF_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS:SIZE_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:INTMAX_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// MIPS:INTMAX_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS:UINTMAX_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:SIG_ATOMIC_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:SIG_ATOMIC_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS:WINT_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS:WINT_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:WCHAR_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS:WCHAR_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:INT8_C_(0) 0
+end_comment
+
+begin_comment
+comment|// MIPS:UINT8_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// MIPS:INT16_C_(0) 0
+end_comment
+
+begin_comment
+comment|// MIPS:UINT16_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// MIPS:INT32_C_(0) 0
+end_comment
+
+begin_comment
+comment|// MIPS:UINT32_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// MIPS:INT64_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// MIPS:UINT64_C_(0) 0ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// MIPS:UINTMAX_C_(0) 0ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=mips64-none-none %s | FileCheck -check-prefix MIPS64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef signed long long int int64_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef unsigned long long int uint64_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef int64_t int_least64_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef uint64_t uint_least64_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef int64_t int_fast64_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef uint64_t uint_fast64_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef signed int int32_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef unsigned int uint32_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef int32_t int_least32_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef uint32_t uint_least32_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef int32_t int_fast32_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef uint32_t uint_fast32_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef signed short int16_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef unsigned short uint16_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef int16_t int_least16_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef uint16_t uint_least16_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef uint8_t uint_fast8_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef int64_t intptr_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef uint64_t uintptr_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef long long int intmax_t;
+end_comment
+
+begin_comment
+comment|// MIPS64:typedef long long unsigned int uintmax_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:INT8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// MIPS64:INT8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT8_MAX_ 255
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_LEAST8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_LEAST8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT_LEAST8_MAX_ 255
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_FAST8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_FAST8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT_FAST8_MAX_ 255
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:INT16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// MIPS64:INT16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_LEAST16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_LEAST16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT_LEAST16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_FAST16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_FAST16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT_FAST16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:INT32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS64:INT32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_LEAST32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_LEAST32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT_LEAST32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_FAST32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_FAST32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT_FAST32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:INT64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS64:INT64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_LEAST64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT_LEAST64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_FAST64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INT_FAST64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT_FAST64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:INTPTR_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INTPTR_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS64:UINTPTR_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS64:PTRDIFF_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:PTRDIFF_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS64:SIZE_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:INTMAX_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INTMAX_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS64:UINTMAX_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:SIG_ATOMIC_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:SIG_ATOMIC_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS64:WINT_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:WINT_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:WCHAR_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS64:WCHAR_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:INT8_C_(0) 0
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT8_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// MIPS64:INT16_C_(0) 0
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT16_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// MIPS64:INT32_C_(0) 0
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT32_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// MIPS64:INT64_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// MIPS64:UINT64_C_(0) 0ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// MIPS64:UINTMAX_C_(0) 0ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -ffreestanding -triple=msp430-none-none %s | FileCheck -check-prefix MSP430 %s
 end_comment
 
@@ -964,11 +1820,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:typedef long int intmax_t;
+comment|// MSP430:typedef long long int intmax_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef long unsigned int uintmax_t;
+comment|// MSP430:typedef long long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -1164,15 +2020,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:INTMAX_MIN_ (-2147483647L -1)
+comment|// MSP430:INTMAX_MIN_ (-9223372036854775807LL -1)
 end_comment
 
 begin_comment
-comment|// MSP430:INTMAX_MAX_ 2147483647L
+comment|// MSP430:INTMAX_MAX_ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// MSP430:UINTMAX_MAX_ 4294967295UL
+comment|// MSP430:UINTMAX_MAX_ 18446744073709551615ULL
 end_comment
 
 begin_comment
@@ -3849,6 +4705,438 @@ end_comment
 
 begin_comment
 comment|// I386_MINGW32:WCHAR_MIN_ 0U
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=xcore-none-none %s | FileCheck -check-prefix XCORE %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:typedef signed long long int int64_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef unsigned long long int uint64_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef int64_t int_least64_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef uint64_t uint_least64_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef int64_t int_fast64_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef uint64_t uint_fast64_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:typedef signed int int32_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef unsigned int uint32_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef int32_t int_least32_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef uint32_t uint_least32_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef int32_t int_fast32_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef uint32_t uint_fast32_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:typedef signed short int16_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef unsigned short uint16_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef int16_t int_least16_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef uint16_t uint_least16_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef uint8_t uint_fast8_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:typedef int32_t intptr_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef uint32_t uintptr_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:typedef long long int intmax_t;
+end_comment
+
+begin_comment
+comment|// XCORE:typedef long long unsigned int uintmax_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:INT8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// XCORE:INT8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:UINT8_MAX_ 255
+end_comment
+
+begin_comment
+comment|// XCORE:INT_LEAST8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:INT_LEAST8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// XCORE:UINT_LEAST8_MAX_ 255
+end_comment
+
+begin_comment
+comment|// XCORE:INT_FAST8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:INT_FAST8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// XCORE:UINT_FAST8_MAX_ 255
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:INT16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// XCORE:INT16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:UINT16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|// XCORE:INT_LEAST16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:INT_LEAST16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// XCORE:UINT_LEAST16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|// XCORE:INT_FAST16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:INT_FAST16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// XCORE:UINT_FAST16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:INT32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// XCORE:INT32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:UINT32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// XCORE:INT_LEAST32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:INT_LEAST32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// XCORE:UINT_LEAST32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// XCORE:INT_FAST32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:INT_FAST32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// XCORE:UINT_FAST32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:INT64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// XCORE:INT64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// XCORE:UINT64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// XCORE:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// XCORE:INT_LEAST64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// XCORE:UINT_LEAST64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// XCORE:INT_FAST64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// XCORE:INT_FAST64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// XCORE:UINT_FAST64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:INTPTR_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:INTPTR_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// XCORE:UINTPTR_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// XCORE:PTRDIFF_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:PTRDIFF_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// XCORE:SIZE_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:INTMAX_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// XCORE:INTMAX_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// XCORE:UINTMAX_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:SIG_ATOMIC_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// XCORE:SIG_ATOMIC_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// XCORE:WINT_MIN_ 0U
+end_comment
+
+begin_comment
+comment|// XCORE:WINT_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:WCHAR_MAX_ 255U
+end_comment
+
+begin_comment
+comment|// XCORE:WCHAR_MIN_ 0
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:INT8_C_(0) 0
+end_comment
+
+begin_comment
+comment|// XCORE:UINT8_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// XCORE:INT16_C_(0) 0
+end_comment
+
+begin_comment
+comment|// XCORE:UINT16_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// XCORE:INT32_C_(0) 0
+end_comment
+
+begin_comment
+comment|// XCORE:UINT32_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// XCORE:INT64_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// XCORE:UINT64_C_(0) 0ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// XCORE:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// XCORE:UINTMAX_C_(0) 0ULL
 end_comment
 
 begin_comment

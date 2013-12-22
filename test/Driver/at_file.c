@@ -8,6 +8,14 @@ comment|// RUN: FileCheck --input-file=%t.log %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -E %s @%s.args.utf16le -o %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --input-file=%t.log %s
+end_comment
+
+begin_comment
 comment|// CHECK: bar1
 end_comment
 
@@ -55,6 +63,14 @@ begin_comment
 comment|// CHECK: zed12
 end_comment
 
+begin_comment
+comment|// CHECK: one\two
+end_comment
+
+begin_comment
+comment|// CHECK: c:\foo\bar.c
+end_comment
+
 begin_expr_stmt
 name|foo1
 name|foo2
@@ -73,6 +89,8 @@ name|bar
 endif|#
 directive|endif
 name|foo12
+name|foo13
+name|foo14
 end_expr_stmt
 
 end_unit

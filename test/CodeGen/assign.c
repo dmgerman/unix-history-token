@@ -12,7 +12,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f0()
+comment|// CHECK-LABEL: define void @f0()
 end_comment
 
 begin_comment
@@ -77,7 +77,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f1()
+comment|// CHECK-LABEL: define void @f1()
 end_comment
 
 begin_comment

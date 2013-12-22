@@ -4,7 +4,7 @@ comment|// PR: 6058
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -g -emit-llvm %s  -O0 -o /dev/null
+comment|// RUN: %clang_cc1 -g -emit-llvm %s -o /dev/null
 end_comment
 
 begin_function_decl

@@ -68,6 +68,22 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-Z %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target mips64-unknown-openbsd %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS64-LD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target mips64el-unknown-openbsd %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS64EL-LD %s
+end_comment
+
+begin_comment
 comment|// CHECK-LD-R: clang{{.*}}" "-cc1" "-triple" "i686-pc-openbsd"
 end_comment
 
@@ -97,6 +113,98 @@ end_comment
 
 begin_comment
 comment|// CHECK-LD-Z: ld{{.*}}" "-e" "__start" "--eh-frame-hdr" "-Bdynamic" "-dynamic-linker" "{{.*}}ld.so" "-o" "a.out" "{{.*}}crt0.o" "{{.*}}crtbegin.o" "-L{{.*}}" "-Z" "{{.*}}.o" "-lgcc" "-lc" "-lgcc" "{{.*}}crtend.o"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64-LD: clang{{.*}}" "-cc1" "-triple" "mips64-unknown-openbsd"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64-LD: ld{{.*}}" "-EB" "-e" "__start" "--eh-frame-hdr" "-Bdynamic" "-dynamic-linker" "{{.*}}ld.so" "-o" "a.out" "{{.*}}crt0.o" "{{.*}}crtbegin.o" "-L{{.*}}" "{{.*}}.o" "-lgcc" "-lc" "-lgcc" "{{.*}}crtend.o"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-LD: clang{{.*}}" "-cc1" "-triple" "mips64el-unknown-openbsd"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-LD: ld{{.*}}" "-EL" "-e" "__start" "--eh-frame-hdr" "-Bdynamic" "-dynamic-linker" "{{.*}}ld.so" "-o" "a.out" "{{.*}}crt0.o" "{{.*}}crtbegin.o" "-L{{.*}}" "{{.*}}.o" "-lgcc" "-lc" "-lgcc" "{{.*}}crtend.o"
+end_comment
+
+begin_comment
+comment|// Check passing options to the assembler for various OpenBSD targets
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target amd64-pc-openbsd -m32 -### -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-AMD64-M32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc-unknown-openbsd -### -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-POWERPC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64-unknown-openbsd -### -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-MIPS64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64-unknown-openbsd -fPIC -### -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-MIPS64-PIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64el-unknown-openbsd -### -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-MIPS64EL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64el-unknown-openbsd -fPIC -### -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-MIPS64EL-PIC %s
+end_comment
+
+begin_comment
+comment|// CHECK-AMD64-M32: as{{.*}}" "--32"
+end_comment
+
+begin_comment
+comment|// CHECK-POWERPC: as{{.*}}" "-mppc" "-many"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64: as{{.*}}" "-mabi" "64" "-EB"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64-PIC: as{{.*}}" "-mabi" "64" "-EB" "-KPIC"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL: as{{.*}}" "-mabi" "64" "-EL"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-PIC: as{{.*}}" "-mabi" "64" "-EL" "-KPIC"
 end_comment
 
 end_unit

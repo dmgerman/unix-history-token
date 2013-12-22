@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -F %S/Inputs %s 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -F %S/Inputs %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

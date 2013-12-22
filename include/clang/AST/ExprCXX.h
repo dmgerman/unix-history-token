@@ -32,15 +32,19 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the Expr interface and subclasses for C++ expressions.
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//
+comment|/// \brief Defines the clang::Expr interface and subclasses for C++ expressions.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -247,7 +251,7 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
-comment|/// getOperator - Returns the kind of overloaded operator that this
+comment|/// \brief Returns the kind of overloaded operator that this
 comment|/// expression refers to.
 name|OverloadedOperatorKind
 name|getOperator
@@ -258,11 +262,11 @@ return|return
 name|Operator
 return|;
 block|}
-comment|/// getOperatorLoc - Returns the location of the operator symbol in
-comment|/// the expression. When @c getOperator()==OO_Call, this is the
-comment|/// location of the right parentheses; when @c
-comment|/// getOperator()==OO_Subscript, this is the location of the right
-comment|/// bracket.
+comment|/// \brief Returns the location of the operator symbol in the expression.
+comment|///
+comment|/// When \c getOperator()==OO_Call, this is the location of the right
+comment|/// parentheses; when \c getOperator()==OO_Subscript, this is the location
+comment|/// of the right bracket.
 name|SourceLocation
 name|getOperatorLoc
 argument_list|()
@@ -356,7 +360,7 @@ name|class
 name|ASTStmtWriter
 block|; }
 decl_stmt|;
-comment|/// CXXMemberCallExpr - Represents a call to a member function that
+comment|/// Represents a call to a member function that
 comment|/// may be written either with member call syntax (e.g., "obj.func()"
 comment|/// or "objptr->func()") or with normal function-call syntax
 comment|/// ("func()") within a member function that ends up calling a member
@@ -422,26 +426,27 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
-comment|/// getImplicitObjectArgument - Retrieves the implicit object
-comment|/// argument for the member call. For example, in "x.f(5)", this
-comment|/// operation would return "x".
+comment|/// \brief Retrieves the implicit object argument for the member call.
+comment|///
+comment|/// For example, in "x.f(5)", this returns the sub-expression "x".
 name|Expr
 operator|*
 name|getImplicitObjectArgument
 argument_list|()
 specifier|const
 block|;
-comment|/// Retrieves the declaration of the called method.
+comment|/// \brief Retrieves the declaration of the called method.
 name|CXXMethodDecl
 operator|*
 name|getMethodDecl
 argument_list|()
 specifier|const
 block|;
-comment|/// getRecordDecl - Retrieves the CXXRecordDecl for the underlying type of
-comment|/// the implicit object argument. Note that this is may not be the same
-comment|/// declaration as that of the class context of the CXXMethodDecl which this
-comment|/// function is calling.
+comment|/// \brief Retrieves the CXXRecordDecl for the underlying type of
+comment|/// the implicit object argument.
+comment|///
+comment|/// Note that this is may not be the same declaration as that of the class
+comment|/// context of the CXXMethodDecl which this function is calling.
 comment|/// FIXME: Returns 0 for member pointer call exprs.
 name|CXXRecordDecl
 operator|*
@@ -467,7 +472,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CUDAKernelCallExpr - Represents a call to a CUDA kernel function.
+comment|/// \brief Represents a call to a CUDA kernel function.
 name|class
 name|CUDAKernelCallExpr
 operator|:
@@ -613,13 +618,12 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXNamedCastExpr - Abstract class common to all of the C++ "named"
-comment|/// casts, @c static_cast, @c dynamic_cast, @c reinterpret_cast, or @c
-comment|/// const_cast.
+comment|/// \brief Abstract class common to all of the C++ "named"/"keyword" casts.
 comment|///
 comment|/// This abstract class is inherited by all of the classes
-comment|/// representing "named" casts, e.g., CXXStaticCastExpr,
-comment|/// CXXDynamicCastExpr, CXXReinterpretCastExpr, and CXXConstCastExpr.
+comment|/// representing "named" casts: CXXStaticCastExpr for \c static_cast,
+comment|/// CXXDynamicCastExpr for \c dynamic_cast, CXXReinterpretCastExpr for
+comment|/// reinterpret_cast, and CXXConstCastExpr for \c const_cast.
 name|class
 name|CXXNamedCastExpr
 operator|:
@@ -730,7 +734,7 @@ argument_list|()
 specifier|const
 block|;
 comment|/// \brief Retrieve the location of the cast operator keyword, e.g.,
-comment|/// "static_cast".
+comment|/// \c static_cast.
 name|SourceLocation
 name|getOperatorLoc
 argument_list|()
@@ -818,11 +822,10 @@ block|}
 block|}
 expr|}
 block|;
-comment|/// CXXStaticCastExpr - A C++ @c static_cast expression
-comment|/// (C++ [expr.static.cast]).
+comment|/// \brief A C++ \c static_cast expression (C++ [expr.static.cast]).
 comment|///
 comment|/// This expression node represents a C++ static cast, e.g.,
-comment|/// @c static_cast<int>(1.0).
+comment|/// \c static_cast<int>(1.0).
 name|class
 name|CXXStaticCastExpr
 operator|:
@@ -897,7 +900,7 @@ name|CXXStaticCastExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -923,7 +926,7 @@ name|CXXStaticCastExpr
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|unsigned PathSize
 argument_list|)
@@ -946,12 +949,11 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXDynamicCastExpr - A C++ @c dynamic_cast expression
-comment|/// (C++ [expr.dynamic.cast]), which may perform a run-time check to
-comment|/// determine how to perform the type cast.
+comment|/// \brief A C++ @c dynamic_cast expression (C++ [expr.dynamic.cast]).
 comment|///
 comment|/// This expression node represents a dynamic cast, e.g.,
-comment|/// @c dynamic_cast<Derived*>(BasePtr).
+comment|/// \c dynamic_cast<Derived*>(BasePtr). Such a cast may perform a run-time
+comment|/// check to determine how to perform the type conversion.
 name|class
 name|CXXDynamicCastExpr
 operator|:
@@ -1026,7 +1028,7 @@ name|CXXDynamicCastExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -1052,7 +1054,7 @@ name|CXXDynamicCastExpr
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|unsigned pathSize
 argument_list|)
@@ -1080,12 +1082,14 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXReinterpretCastExpr - A C++ @c reinterpret_cast expression (C++
-comment|/// [expr.reinterpret.cast]), which provides a differently-typed view
-comment|/// of a value but performs no actual work at run time.
+comment|/// \brief A C++ @c reinterpret_cast expression (C++ [expr.reinterpret.cast]).
 comment|///
 comment|/// This expression node represents a reinterpret cast, e.g.,
 comment|/// @c reinterpret_cast<int>(VoidPtr).
+comment|///
+comment|/// A reinterpret_cast provides a differently-typed view of a value but
+comment|/// (in Clang, as in most C++ implementations) performs no actual work at
+comment|/// run time.
 name|class
 name|CXXReinterpretCastExpr
 operator|:
@@ -1159,7 +1163,7 @@ name|CXXReinterpretCastExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -1185,7 +1189,7 @@ name|CXXReinterpretCastExpr
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|unsigned pathSize
 argument_list|)
@@ -1208,11 +1212,13 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXConstCastExpr - A C++ @c const_cast expression (C++ [expr.const.cast]),
-comment|/// which can remove type qualifiers but does not change the underlying value.
+comment|/// \brief A C++ \c const_cast expression (C++ [expr.const.cast]).
 comment|///
 comment|/// This expression node represents a const cast, e.g.,
-comment|/// @c const_cast<char*>(PtrToConstChar).
+comment|/// \c const_cast<char*>(PtrToConstChar).
+comment|///
+comment|/// A const_cast can remove type qualifiers but does not change the underlying
+comment|/// value.
 name|class
 name|CXXConstCastExpr
 operator|:
@@ -1281,7 +1287,7 @@ name|CXXConstCastExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -1303,6 +1309,7 @@ name|CXXConstCastExpr
 operator|*
 name|CreateEmpty
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -1326,7 +1333,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// UserDefinedLiteral - A call to a literal operator (C++11 [over.literal])
+comment|/// \brief A call to a literal operator (C++11 [over.literal])
 comment|/// written as a user-defined literal (C++11 [lit.ext]).
 comment|///
 comment|/// Represents a user-defined literal, e.g. "foo"_bar or 1.23_xyz. While this
@@ -1349,7 +1356,7 @@ name|public
 operator|:
 name|UserDefinedLiteral
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|Expr *Fn
 argument_list|,
@@ -1391,7 +1398,7 @@ block|{}
 name|explicit
 name|UserDefinedLiteral
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|EmptyShell Empty
 argument_list|)
@@ -1428,14 +1435,14 @@ name|LOK_Character
 comment|///< operator "" X (CharT)
 block|}
 block|;
-comment|/// getLiteralOperatorKind - Returns the kind of literal operator invocation
+comment|/// \brief Returns the kind of literal operator invocation
 comment|/// which this expression represents.
 name|LiteralOperatorKind
 name|getLiteralOperatorKind
 argument_list|()
 specifier|const
 block|;
-comment|/// getCookedLiteral - If this is not a raw user-defined literal, get the
+comment|/// \brief If this is not a raw user-defined literal, get the
 comment|/// underlying cooked literal (representing the literal with the suffix
 comment|/// removed).
 name|Expr
@@ -1500,7 +1507,8 @@ name|getRParenLoc
 argument_list|()
 return|;
 block|}
-comment|/// getUDSuffixLoc - Returns the location of a ud-suffix in the expression.
+comment|/// \brief Returns the location of a ud-suffix in the expression.
+comment|///
 comment|/// For a string literal, there may be multiple identical suffixes. This
 comment|/// returns the first.
 name|SourceLocation
@@ -1512,7 +1520,7 @@ return|return
 name|UDSuffixLoc
 return|;
 block|}
-comment|/// getUDSuffix - Returns the ud-suffix specified for this literal.
+comment|/// \brief Returns the ud-suffix specified for this literal.
 specifier|const
 name|IdentifierInfo
 operator|*
@@ -1545,7 +1553,7 @@ name|class
 name|ASTStmtWriter
 block|; }
 block|;
-comment|/// CXXBoolLiteralExpr - [C++ 2.13.5] C++ Boolean Literal.
+comment|/// \brief A boolean literal, per ([C++ lex.bool] Boolean literals).
 comment|///
 name|class
 name|CXXBoolLiteralExpr
@@ -1698,7 +1706,9 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXNullPtrLiteralExpr - [C++0x 2.14.7] C++ Pointer Literal
+comment|/// \brief The null pointer literal (C++11 [lex.nullptr])
+comment|///
+comment|/// Introduced in C++11, the only literal of type \c nullptr_t is \c nullptr.
 name|class
 name|CXXNullPtrLiteralExpr
 operator|:
@@ -1820,11 +1830,201 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXTypeidExpr - A C++ @c typeid expression (C++ [expr.typeid]), which gets
-comment|/// the type_info that corresponds to the supplied type, or the (possibly
+comment|/// \brief Implicit construction of a std::initializer_list<T> object from an
+comment|/// array temporary within list-initialization (C++11 [dcl.init.list]p5).
+name|class
+name|CXXStdInitializerListExpr
+operator|:
+name|public
+name|Expr
+block|{
+name|Stmt
+operator|*
+name|SubExpr
+block|;
+name|CXXStdInitializerListExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|CXXStdInitializerListExprClass
+argument_list|,
+name|Empty
+argument_list|)
+block|,
+name|SubExpr
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|public
+operator|:
+name|CXXStdInitializerListExpr
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|Expr *SubExpr
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|CXXStdInitializerListExprClass
+argument_list|,
+name|Ty
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|Ty
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|SubExpr
+operator|->
+name|isValueDependent
+argument_list|()
+argument_list|,
+name|SubExpr
+operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+name|SubExpr
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|SubExpr
+argument_list|(
+argument|SubExpr
+argument_list|)
+block|{}
+name|Expr
+operator|*
+name|getSubExpr
+argument_list|()
+block|{
+return|return
+name|static_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|SubExpr
+operator|)
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|getSubExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+name|SubExpr
+operator|)
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SubExpr
+operator|->
+name|getLocStart
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SubExpr
+operator|->
+name|getLocEnd
+argument_list|()
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SubExpr
+operator|->
+name|getSourceRange
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *S
+argument_list|)
+block|{
+return|return
+name|S
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|CXXStdInitializerListExprClass
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExpr
+argument_list|,
+operator|&
+name|SubExpr
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+name|friend
+name|class
+name|ASTReader
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|; }
+block|;
+comment|/// A C++ \c typeid expression (C++ [expr.typeid]), which gets
+comment|/// the \c type_info that corresponds to the supplied type, or the (possibly
 comment|/// dynamic) type of the supplied expression.
 comment|///
-comment|/// This represents code like @c typeid(int) or @c typeid(*objPtr)
+comment|/// This represents code like \c typeid(int) or \c typeid(*objPtr)
 name|class
 name|CXXTypeidExpr
 operator|:
@@ -2026,7 +2226,9 @@ comment|/// \brief Retrieves the type operand of this typeid() expression after
 comment|/// various required adjustments (removing reference types, cv-qualifiers).
 name|QualType
 name|getTypeOperand
-argument_list|()
+argument_list|(
+argument|ASTContext&Context
+argument_list|)
 specifier|const
 block|;
 comment|/// \brief Retrieve source information for the type operand.
@@ -2232,10 +2434,11 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// A member reference to an MSPropertyDecl.  This expression always
-comment|/// has pseudo-object type, and therefore it is typically not
-comment|/// encountered in a fully-typechecked expression except within the
-comment|/// syntactic form of a PseudoObjectExpr.
+comment|/// \brief A member reference to an MSPropertyDecl.
+comment|///
+comment|/// This expression always has pseudo-object type, and therefore it is
+comment|/// typically not encountered in a fully-typechecked expression except
+comment|/// within the syntactic form of a PseudoObjectExpr.
 name|class
 name|MSPropertyRefExpr
 operator|:
@@ -2515,7 +2718,7 @@ name|class
 name|ASTStmtReader
 block|; }
 block|;
-comment|/// CXXUuidofExpr - A microsoft C++ @c __uuidof expression, which gets
+comment|/// A Microsoft C++ @c __uuidof expression, which gets
 comment|/// the _GUID that corresponds to the supplied type or expression.
 comment|///
 comment|/// This represents code like @c __uuidof(COMTYPE) or @c __uuidof(*comPtr)
@@ -2704,7 +2907,9 @@ comment|/// \brief Retrieves the type operand of this __uuidof() expression afte
 comment|/// various required adjustments (removing reference types, cv-qualifiers).
 name|QualType
 name|getTypeOperand
-argument_list|()
+argument_list|(
+argument|ASTContext&Context
+argument_list|)
 specifier|const
 block|;
 comment|/// \brief Retrieve source information for the type operand.
@@ -2805,6 +3010,13 @@ name|Operand
 operator|=
 name|E
 block|;   }
+name|StringRef
+name|getUuidAsStringRef
+argument_list|(
+argument|ASTContext&Context
+argument_list|)
+specifier|const
+block|;
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -2867,13 +3079,17 @@ operator|==
 name|CXXUuidofExprClass
 return|;
 block|}
-comment|/// Grabs __declspec(uuid()) off a type, or returns 0 if there is none.
+comment|/// Grabs __declspec(uuid()) off a type, or returns 0 if we cannot resolve to
+comment|/// a single GUID.
 specifier|static
 name|UuidAttr
 operator|*
 name|GetUuidAttrOfType
 argument_list|(
 argument|QualType QT
+argument_list|,
+argument|bool *HasMultipleGUIDsPtr =
+literal|0
 argument_list|)
 block|;
 comment|// Iterators
@@ -2919,17 +3135,18 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXThisExpr - Represents the "this" expression in C++, which is a
-comment|/// pointer to the object on which the current member function is
+comment|/// \brief Represents the \c this expression in C++.
+comment|///
+comment|/// This is a pointer to the object on which the current member function is
 comment|/// executing (C++ [expr.prim]p3). Example:
 comment|///
-comment|/// @code
+comment|/// \code
 comment|/// class Foo {
 comment|/// public:
 comment|///   void bar();
 comment|///   void test() { this->bar(); }
 comment|/// };
-comment|/// @endcode
+comment|/// \endcode
 name|class
 name|CXXThisExpr
 operator|:
@@ -3094,10 +3311,11 @@ return|;
 block|}
 expr|}
 block|;
-comment|///  CXXThrowExpr - [C++ 15] C++ Throw Expression.  This handles
-comment|///  'throw' and 'throw' assignment-expression.  When
-comment|///  assignment-expression isn't present, Op will be null.
+comment|/// \brief A C++ throw-expression (C++ [except.throw]).
 comment|///
+comment|/// This handles 'throw' (for re-throwing the current exception) and
+comment|/// 'throw' assignment-expression.  When assignment-expression isn't
+comment|/// present, Op will be null.
 name|class
 name|CXXThrowExpr
 operator|:
@@ -3123,8 +3341,8 @@ name|ASTStmtReader
 block|;
 name|public
 operator|:
-comment|// Ty is the void type which is used as the result type of the
-comment|// exepression.  The l is the location of the throw keyword.  expr
+comment|// \p Ty is the void type which is used as the result type of the
+comment|// expression.  The \p l is the location of the throw keyword.  \p expr
 comment|// can by null, if the optional expression to throw isn't present.
 name|CXXThrowExpr
 argument_list|(
@@ -3323,10 +3541,11 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CXXDefaultArgExpr - C++ [dcl.fct.default]. This wraps up a
-comment|/// function call argument that was created from the corresponding
-comment|/// parameter's default argument, when the call did not explicitly
-comment|/// supply arguments for all of the parameters.
+comment|/// \brief A default argument (C++ [dcl.fct.default]).
+comment|///
+comment|/// This wraps up a function call argument that was created from the
+comment|/// corresponding parameter's default argument, when the call did not
+comment|/// explicitly supply arguments for all of the parameters.
 name|class
 name|CXXDefaultArgExpr
 operator|:
@@ -3506,14 +3725,14 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{}
-comment|// Param is the parameter whose default argument is used by this
+comment|// \p Param is the parameter whose default argument is used by this
 comment|// expression.
 specifier|static
 name|CXXDefaultArgExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
@@ -3535,14 +3754,14 @@ name|Param
 argument_list|)
 return|;
 block|}
-comment|// Param is the parameter whose default argument is used by this
-comment|// expression, and SubExpr is the expression that will actually be used.
+comment|// \p Param is the parameter whose default argument is used by this
+comment|// expression, and \p SubExpr is the expression that will actually be used.
 specifier|static
 name|CXXDefaultArgExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
@@ -3662,8 +3881,8 @@ return|return
 name|Loc
 return|;
 block|}
-comment|// Default argument expressions have no representation in the
-comment|// source, so they have an empty source range.
+comment|/// Default argument expressions have no representation in the
+comment|/// source, so they have an empty source range.
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -3731,7 +3950,10 @@ name|class
 name|ASTStmtWriter
 block|; }
 block|;
-comment|/// \brief This wraps a use of a C++ default initializer (technically,
+comment|/// \brief A use of a default initializer in a constructor or in aggregate
+comment|/// initialization.
+comment|///
+comment|/// This wraps a use of a C++ default initializer (technically,
 comment|/// a brace-or-equal-initializer for a non-static data member) when it
 comment|/// is implicitly used in a mem-initializer-list in a constructor
 comment|/// (C++11 [class.base.init]p8) or in aggregate initialization
@@ -3753,7 +3975,7 @@ name|Loc
 block|;
 name|CXXDefaultInitExpr
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
@@ -3776,14 +3998,14 @@ argument_list|)
 block|{}
 name|public
 operator|:
-comment|// Field is the non-static data member whose default initializer is used
-comment|// by this expression.
+comment|/// \p Field is the non-static data member whose default initializer is used
+comment|/// by this expression.
 specifier|static
 name|CXXDefaultInitExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
@@ -3810,7 +4032,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|// Get the field whose initializer will be used.
+comment|/// \brief Get the field whose initializer will be used.
 name|FieldDecl
 operator|*
 name|getField
@@ -3831,7 +4053,7 @@ return|return
 name|Field
 return|;
 block|}
-comment|// Get the initialization expression that will be used.
+comment|/// \brief Get the initialization expression that will be used.
 specifier|const
 name|Expr
 operator|*
@@ -3913,16 +4135,17 @@ name|class
 name|ASTStmtReader
 block|; }
 block|;
-comment|/// CXXTemporary - Represents a C++ temporary.
+comment|/// \brief Represents a C++ temporary.
 name|class
 name|CXXTemporary
 block|{
-comment|/// Destructor - The destructor that needs to be called.
+comment|/// \brief The destructor that needs to be called.
 specifier|const
 name|CXXDestructorDecl
 operator|*
 name|Destructor
 block|;
+name|explicit
 name|CXXTemporary
 argument_list|(
 specifier|const
@@ -3943,6 +4166,7 @@ name|CXXTemporary
 operator|*
 name|Create
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|C
@@ -4088,6 +4312,7 @@ name|CXXBindTemporaryExpr
 operator|*
 name|Create
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|C
@@ -4267,7 +4492,7 @@ name|SourceLocation
 name|Loc
 block|;
 name|SourceRange
-name|ParenRange
+name|ParenOrBraceRange
 block|;
 name|unsigned
 name|NumArgs
@@ -4308,7 +4533,7 @@ name|protected
 operator|:
 name|CXXConstructExpr
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|StmtClass SC
 argument_list|,
@@ -4330,7 +4555,7 @@ argument|bool ZeroInitialization
 argument_list|,
 argument|ConstructionKind ConstructKind
 argument_list|,
-argument|SourceRange ParenRange
+argument|SourceRange ParenOrBraceRange
 argument_list|)
 block|;
 comment|/// \brief Construct an empty C++ construction expression.
@@ -4449,7 +4674,7 @@ name|CXXConstructExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -4469,7 +4694,7 @@ argument|bool ZeroInitialization
 argument_list|,
 argument|ConstructionKind ConstructKind
 argument_list|,
-argument|SourceRange ParenRange
+argument|SourceRange ParenOrBraceRange
 argument_list|)
 block|;
 name|CXXConstructorDecl
@@ -4595,7 +4820,7 @@ name|ZeroInitialization
 operator|=
 name|ZeroInit
 block|;   }
-comment|/// \brief Determines whether this constructor is actually constructing
+comment|/// \brief Determine whether this constructor is actually constructing
 comment|/// a base class (rather than a complete object).
 name|ConstructionKind
 name|getConstructionKind
@@ -4693,7 +4918,7 @@ return|return
 name|NumArgs
 return|;
 block|}
-comment|/// getArg - Return the specified argument.
+comment|/// \brief Return the specified argument.
 name|Expr
 operator|*
 name|getArg
@@ -4754,7 +4979,7 @@ index|]
 operator|)
 return|;
 block|}
-comment|/// setArg - Set the specified argument.
+comment|/// \brief Set the specified argument.
 name|void
 name|setArg
 argument_list|(
@@ -4792,21 +5017,21 @@ specifier|const
 name|LLVM_READONLY
 block|;
 name|SourceRange
-name|getParenRange
+name|getParenOrBraceRange
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ParenRange
+name|ParenOrBraceRange
 return|;
 block|}
 name|void
-name|setParenRange
+name|setParenOrBraceRange
 argument_list|(
 argument|SourceRange Range
 argument_list|)
 block|{
-name|ParenRange
+name|ParenOrBraceRange
 operator|=
 name|Range
 block|; }
@@ -4866,9 +5091,9 @@ comment|/// \brief Represents an explicit C++ type conversion that uses "functio
 comment|/// notation (C++ [expr.type.conv]).
 comment|///
 comment|/// Example:
-comment|/// @code
+comment|/// \code
 comment|///   x = int(0.5);
-comment|/// @endcode
+comment|/// \endcode
 name|class
 name|CXXFunctionalCastExpr
 operator|:
@@ -4876,7 +5101,7 @@ name|public
 name|ExplicitCastExpr
 block|{
 name|SourceLocation
-name|TyBeginLoc
+name|LParenLoc
 block|;
 name|SourceLocation
 name|RParenLoc
@@ -4889,13 +5114,13 @@ argument|ExprValueKind VK
 argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|,
-argument|SourceLocation tyBeginLoc
-argument_list|,
 argument|CastKind kind
 argument_list|,
 argument|Expr *castExpr
 argument_list|,
 argument|unsigned pathSize
+argument_list|,
+argument|SourceLocation lParenLoc
 argument_list|,
 argument|SourceLocation rParenLoc
 argument_list|)
@@ -4917,9 +5142,9 @@ argument_list|,
 name|writtenTy
 argument_list|)
 block|,
-name|TyBeginLoc
+name|LParenLoc
 argument_list|(
-name|tyBeginLoc
+name|lParenLoc
 argument_list|)
 block|,
 name|RParenLoc
@@ -4951,7 +5176,7 @@ name|CXXFunctionalCastExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -4959,13 +5184,13 @@ argument|ExprValueKind VK
 argument_list|,
 argument|TypeSourceInfo *Written
 argument_list|,
-argument|SourceLocation TyBeginLoc
-argument_list|,
 argument|CastKind Kind
 argument_list|,
 argument|Expr *Op
 argument_list|,
 argument|const CXXCastPath *Path
+argument_list|,
+argument|SourceLocation LPLoc
 argument_list|,
 argument|SourceLocation RPLoc
 argument_list|)
@@ -4975,27 +5200,27 @@ name|CXXFunctionalCastExpr
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|unsigned PathSize
 argument_list|)
 block|;
 name|SourceLocation
-name|getTypeBeginLoc
+name|getLParenLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TyBeginLoc
+name|LParenLoc
 return|;
 block|}
 name|void
-name|setTypeBeginLoc
+name|setLParenLoc
 argument_list|(
 argument|SourceLocation L
 argument_list|)
 block|{
-name|TyBeginLoc
+name|LParenLoc
 operator|=
 name|L
 block|; }
@@ -5023,21 +5248,13 @@ name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
-block|{
-return|return
-name|TyBeginLoc
-return|;
-block|}
+block|;
 name|SourceLocation
 name|getLocEnd
 argument_list|()
 specifier|const
 name|LLVM_READONLY
-block|{
-return|return
-name|RParenLoc
-return|;
-block|}
+block|;
 specifier|static
 name|bool
 name|classof
@@ -5064,13 +5281,13 @@ comment|/// (C++[expr.type.conv]) with N != 1 arguments that invokes a
 comment|/// constructor to build a temporary object. With N == 1 arguments the
 comment|/// functional cast expression will be represented by CXXFunctionalCastExpr.
 comment|/// Example:
-comment|/// @code
+comment|/// \code
 comment|/// struct X { X(int, float); }
 comment|///
 comment|/// X create_X() {
 comment|///   return X(1, 3.14f); // creates a CXXTemporaryObjectExpr
 comment|/// };
-comment|/// @endcode
+comment|/// \endcode
 name|class
 name|CXXTemporaryObjectExpr
 operator|:
@@ -5085,7 +5302,7 @@ name|public
 operator|:
 name|CXXTemporaryObjectExpr
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|CXXConstructorDecl *Cons
 argument_list|,
@@ -5093,7 +5310,7 @@ argument|TypeSourceInfo *Type
 argument_list|,
 argument|ArrayRef<Expr *> Args
 argument_list|,
-argument|SourceRange parenRange
+argument|SourceRange ParenOrBraceRange
 argument_list|,
 argument|bool HadMultipleCandidates
 argument_list|,
@@ -5172,12 +5389,16 @@ comment|///                               [=](double value) { return value> cuto
 comment|/// }
 comment|/// \endcode
 comment|///
-comment|/// Lambda expressions can capture local variables, either by copying
+comment|/// C++11 lambda expressions can capture local variables, either by copying
 comment|/// the values of those local variables at the time the function
 comment|/// object is constructed (not when it is called!) or by holding a
 comment|/// reference to the local variable. These captures can occur either
 comment|/// implicitly or can be written explicitly between the square
 comment|/// brackets ([...]) that start the lambda expression.
+comment|///
+comment|/// C++1y introduces a new form of "capture" called an init-capture that
+comment|/// includes an initializing expression (rather than capturing a variable),
+comment|/// and which can never occur implicitly.
 name|class
 name|LambdaExpr
 operator|:
@@ -5191,8 +5412,10 @@ name|Capture_Implicit
 operator|=
 literal|0x01
 block|,
-comment|/// \brief Flag used by the Capture class to indciate that the
+comment|/// \brief Flag used by the Capture class to indicate that the
 comment|/// given capture was by-copy.
+comment|///
+comment|/// This includes the case of a non-reference init-capture.
 name|Capture_ByCopy
 operator|=
 literal|0x02
@@ -5201,6 +5424,10 @@ block|;
 comment|/// \brief The source range that covers the lambda introducer ([...]).
 name|SourceRange
 name|IntroducerRange
+block|;
+comment|/// \brief The source location of this lambda's capture-default ('=' or '&').
+name|SourceLocation
+name|CaptureDefaultLoc
 block|;
 comment|/// \brief The number of captures.
 name|unsigned
@@ -5251,7 +5478,8 @@ comment|// expression, along with the index variables used to initialize by-copy
 comment|// array captures.
 name|public
 operator|:
-comment|/// \brief Describes the capture of either a variable or 'this'.
+comment|/// \brief Describes the capture of a variable or of \c this, or of a
+comment|/// C++1y init-capture.
 name|class
 name|Capture
 block|{
@@ -5259,12 +5487,12 @@ name|llvm
 operator|::
 name|PointerIntPair
 operator|<
-name|VarDecl
+name|Decl
 operator|*
 block|,
 literal|2
 operator|>
-name|VarAndBits
+name|DeclAndBits
 block|;
 name|SourceLocation
 name|Loc
@@ -5282,15 +5510,17 @@ name|ASTStmtWriter
 block|;
 name|public
 operator|:
-comment|/// \brief Create a new capture.
+comment|/// \brief Create a new capture of a variable or of \c this.
 comment|///
 comment|/// \param Loc The source location associated with this capture.
 comment|///
-comment|/// \param Kind The kind of capture (this, byref, bycopy).
+comment|/// \param Kind The kind of capture (this, byref, bycopy), which must
+comment|/// not be init-capture.
 comment|///
 comment|/// \param Implicit Whether the capture was implicit or explicit.
 comment|///
-comment|/// \param Var The local variable being captured, or null if capturing this.
+comment|/// \param Var The local variable being captured, or null if capturing
+comment|/// \c this.
 comment|///
 comment|/// \param EllipsisLoc The location of the ellipsis (...) for a
 comment|/// capture that is a pack expansion, or an invalid source
@@ -5315,7 +5545,7 @@ name|getCaptureKind
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Determine whether this capture handles the C++ 'this'
+comment|/// \brief Determine whether this capture handles the C++ \c this
 comment|/// pointer.
 name|bool
 name|capturesThis
@@ -5323,7 +5553,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarAndBits
+name|DeclAndBits
 operator|.
 name|getPointer
 argument_list|()
@@ -5338,19 +5568,40 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarAndBits
+name|dyn_cast_or_null
+operator|<
+name|VarDecl
+operator|>
+operator|(
+name|DeclAndBits
 operator|.
 name|getPointer
 argument_list|()
-operator|!=
-literal|0
+operator|)
+return|;
+block|}
+comment|/// \brief Determine whether this is an init-capture.
+name|bool
+name|isInitCapture
+argument_list|()
+specifier|const
+block|{
+return|return
+name|capturesVariable
+argument_list|()
+operator|&&
+name|getCapturedVar
+argument_list|()
+operator|->
+name|isInitCapture
+argument_list|()
 return|;
 block|}
 comment|/// \brief Retrieve the declaration of the local variable being
 comment|/// captured.
 comment|///
-comment|/// This operation is only valid if this capture does not capture
-comment|/// 'this'.
+comment|/// This operation is only valid if this capture is a variable capture
+comment|/// (other than a capture of \c this).
 name|VarDecl
 operator|*
 name|getCapturedVar
@@ -5359,18 +5610,23 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-operator|!
-name|capturesThis
+name|capturesVariable
 argument_list|()
 operator|&&
 literal|"No variable available for 'this' capture"
 argument_list|)
 block|;
 return|return
-name|VarAndBits
+name|cast
+operator|<
+name|VarDecl
+operator|>
+operator|(
+name|DeclAndBits
 operator|.
 name|getPointer
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Determine whether this was an implicit capture (not
@@ -5381,7 +5637,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarAndBits
+name|DeclAndBits
 operator|.
 name|getInt
 argument_list|()
@@ -5389,8 +5645,8 @@ operator|&
 name|Capture_Implicit
 return|;
 block|}
-comment|/// \brief Determine whether this was an explicit capture, written
-comment|/// between the square brackets introducing the lambda.
+comment|/// \brief Determine whether this was an explicit capture (written
+comment|/// between the square brackets introducing the lambda).
 name|bool
 name|isExplicit
 argument_list|()
@@ -5406,7 +5662,7 @@ comment|/// \brief Retrieve the source location of the capture.
 comment|///
 comment|/// For an explicit capture, this returns the location of the
 comment|/// explicit capture in the source. For an implicit capture, this
-comment|/// returns the location at which the variable or 'this' was first
+comment|/// returns the location at which the variable or \c this was first
 comment|/// used.
 name|SourceLocation
 name|getLocation
@@ -5462,6 +5718,8 @@ argument_list|,
 argument|SourceRange IntroducerRange
 argument_list|,
 argument|LambdaCaptureDefault CaptureDefault
+argument_list|,
+argument|SourceLocation CaptureDefaultLoc
 argument_list|,
 argument|ArrayRef<Capture> Captures
 argument_list|,
@@ -5649,13 +5907,15 @@ name|LambdaExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *Class
 argument_list|,
 argument|SourceRange IntroducerRange
 argument_list|,
 argument|LambdaCaptureDefault CaptureDefault
+argument_list|,
+argument|SourceLocation CaptureDefaultLoc
 argument_list|,
 argument|ArrayRef<Capture> Captures
 argument_list|,
@@ -5681,7 +5941,7 @@ name|LambdaExpr
 operator|*
 name|CreateDeserialized
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|unsigned NumCaptures
 argument_list|,
@@ -5702,6 +5962,16 @@ operator|>
 operator|(
 name|CaptureDefault
 operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the location of this lambda's capture-default, if any.
+name|SourceLocation
+name|getCaptureDefaultLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CaptureDefaultLoc
 return|;
 block|}
 comment|/// \brief An iterator that walks over the captures of the lambda,
@@ -5833,9 +6103,11 @@ return|return
 name|IntroducerRange
 return|;
 block|}
-comment|/// \brief Retrieve the class that corresponds to the lambda, which
-comment|/// stores the captures in its fields and provides the various
-comment|/// operations permitted on a lambda (copying, calling).
+comment|/// \brief Retrieve the class that corresponds to the lambda.
+comment|///
+comment|/// This is the "closure type" (C++1y [expr.prim.lambda]), and stores the
+comment|/// captures in its fields and provides the various operations permitted
+comment|/// on a lambda (copying, calling).
 name|CXXRecordDecl
 operator|*
 name|getLambdaClass
@@ -5850,6 +6122,25 @@ name|getCallOperator
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief If this is a generic lambda expression, retrieve the template
+comment|/// parameter list associated with it, or else return null.
+name|TemplateParameterList
+operator|*
+name|getTemplateParameterList
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Whether this is a generic lambda.
+name|bool
+name|isGenericLambda
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTemplateParameterList
+argument_list|()
+return|;
+block|}
 comment|/// \brief Retrieve the body of the lambda.
 name|CompoundStmt
 operator|*
@@ -5952,10 +6243,8 @@ name|class
 name|ASTStmtWriter
 block|; }
 block|;
-comment|/// CXXScalarValueInitExpr - [C++ 5.2.3p2]
-comment|/// Expression "T()" which creates a value-initialized rvalue of type
-comment|/// T, which is a non-class type.
-comment|///
+comment|/// An expression "T()" which creates a value-initialized rvalue of type
+comment|/// T, which is a non-class type.  See (C++98 [5.2.3p2]).
 name|class
 name|CXXScalarValueInitExpr
 operator|:
@@ -6094,16 +6383,16 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// @brief Represents a new-expression for memory allocation and constructor
-comment|// calls, e.g: "new CXXNewExpr(foo)".
+comment|/// \brief Represents a new-expression for memory allocation and constructor
+comment|/// calls, e.g: "new CXXNewExpr(foo)".
 name|class
 name|CXXNewExpr
 operator|:
 name|public
 name|Expr
 block|{
-comment|// Contains an optional array size expression, an optional initialization
-comment|// expression, and any number of optional placement arguments, in that order.
+comment|/// Contains an optional array size expression, an optional initialization
+comment|/// expression, and any number of optional placement arguments, in that order.
 name|Stmt
 operator|*
 operator|*
@@ -6138,34 +6427,34 @@ comment|/// \brief Source-range of a paren-delimited initializer.
 name|SourceRange
 name|DirectInitRange
 block|;
-comment|// Was the usage ::new, i.e. is the global new to be used?
+comment|/// Was the usage ::new, i.e. is the global new to be used?
 name|bool
 name|GlobalNew
 operator|:
 literal|1
 block|;
-comment|// Do we allocate an array? If so, the first SubExpr is the size expression.
+comment|/// Do we allocate an array? If so, the first SubExpr is the size expression.
 name|bool
 name|Array
 operator|:
 literal|1
 block|;
-comment|// If this is an array allocation, does the usual deallocation
-comment|// function for the allocated type want to know the allocated size?
+comment|/// If this is an array allocation, does the usual deallocation
+comment|/// function for the allocated type want to know the allocated size?
 name|bool
 name|UsualArrayDeleteWantsSize
 operator|:
 literal|1
 block|;
-comment|// The number of placement new arguments.
+comment|/// The number of placement new arguments.
 name|unsigned
 name|NumPlacementArgs
 operator|:
 literal|13
 block|;
-comment|// What kind of initializer do we have? Could be none, parens, or braces.
-comment|// In storage, we distinguish between "none, and no initializer expr", and
-comment|// "none, but an implicit initializer expr".
+comment|/// What kind of initializer do we have? Could be none, parens, or braces.
+comment|/// In storage, we distinguish between "none, and no initializer expr", and
+comment|/// "none, but an implicit initializer expr".
 name|unsigned
 name|StoredInitializationStyle
 operator|:
@@ -6196,7 +6485,7 @@ block|}
 block|;
 name|CXXNewExpr
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|bool globalNew
 argument_list|,
@@ -6246,7 +6535,7 @@ block|{ }
 name|void
 name|AllocateArgsArray
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|bool isArray
 argument_list|,
@@ -6295,10 +6584,12 @@ name|AllocatedTypeInfo
 return|;
 block|}
 comment|/// \brief True if the allocation result needs to be null-checked.
-comment|/// C++0x [expr.new]p13:
+comment|///
+comment|/// C++11 [expr.new]p13:
 comment|///   If the allocation function returns null, initialization shall
 comment|///   not be done, the deallocation function shall not be called,
 comment|///   and the value of the new-expression shall be null.
+comment|///
 comment|/// An allocation function is not allowed to return null unless it
 comment|/// has a non-throwing exception-specification.  The '03 rule is
 comment|/// identical except that the definition of a non-throwing
@@ -6306,7 +6597,7 @@ comment|/// exception specification is just "is it throw()?".
 name|bool
 name|shouldNullCheckAllocation
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -6613,7 +6904,7 @@ else|:
 literal|0
 return|;
 block|}
-comment|/// \brief Returns the CXXConstructExpr from this new-expression, or NULL.
+comment|/// \brief Returns the CXXConstructExpr from this new-expression, or null.
 specifier|const
 name|CXXConstructExpr
 operator|*
@@ -6875,42 +7166,42 @@ operator|:
 name|public
 name|Expr
 block|{
-comment|// Points to the operator delete overload that is used. Could be a member.
+comment|/// Points to the operator delete overload that is used. Could be a member.
 name|FunctionDecl
 operator|*
 name|OperatorDelete
 block|;
-comment|// The pointer expression to be deleted.
+comment|/// The pointer expression to be deleted.
 name|Stmt
 operator|*
 name|Argument
 block|;
-comment|// Location of the expression.
+comment|/// Location of the expression.
 name|SourceLocation
 name|Loc
 block|;
-comment|// Is this a forced global delete, i.e. "::delete"?
+comment|/// Is this a forced global delete, i.e. "::delete"?
 name|bool
 name|GlobalDelete
 operator|:
 literal|1
 block|;
-comment|// Is this the array form of delete, i.e. "delete[]"?
+comment|/// Is this the array form of delete, i.e. "delete[]"?
 name|bool
 name|ArrayForm
 operator|:
 literal|1
 block|;
-comment|// ArrayFormAsWritten can be different from ArrayForm if 'delete' is applied
-comment|// to pointer-to-array type (ArrayFormAsWritten will be false while ArrayForm
-comment|// will be true).
+comment|/// ArrayFormAsWritten can be different from ArrayForm if 'delete' is applied
+comment|/// to pointer-to-array type (ArrayFormAsWritten will be false while ArrayForm
+comment|/// will be true).
 name|bool
 name|ArrayFormAsWritten
 operator|:
 literal|1
 block|;
-comment|// Does the usual deallocation function for the element type require
-comment|// a size_t argument?
+comment|/// Does the usual deallocation function for the element type require
+comment|/// a size_t argument?
 name|bool
 name|UsualArrayDeleteWantsSize
 operator|:
@@ -7102,9 +7393,10 @@ name|Argument
 operator|)
 return|;
 block|}
-comment|/// \brief Retrieve the type being destroyed.  If the type being
-comment|/// destroyed is a dependent type which may or may not be a pointer,
-comment|/// return an invalid type.
+comment|/// \brief Retrieve the type being destroyed.
+comment|///
+comment|/// If the type being destroyed is a dependent type which may or may not
+comment|/// be a pointer, return an invalid type.
 name|QualType
 name|getDestroyedType
 argument_list|()
@@ -7348,7 +7640,7 @@ name|public
 operator|:
 name|CXXPseudoDestructorExpr
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|Expr *Base
 argument_list|,
@@ -7424,6 +7716,9 @@ specifier|const
 block|{
 return|return
 name|QualifierLoc
+operator|.
+name|hasQualifier
+argument_list|()
 return|;
 block|}
 comment|/// \brief Retrieves the nested-name-specifier that qualifies the type name,
@@ -7439,7 +7734,7 @@ return|;
 block|}
 comment|/// \brief If the member name was qualified, retrieves the
 comment|/// nested-name-specifier that precedes the member name. Otherwise, returns
-comment|/// NULL.
+comment|/// null.
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -7519,7 +7814,7 @@ comment|/// being destroyed.
 comment|///
 comment|/// This type-source information is available for non-dependent
 comment|/// pseudo-destructor expressions and some dependent pseudo-destructor
-comment|/// expressions. Returns NULL if we only have the identifier for a
+comment|/// expressions. Returns null if we only have the identifier for a
 comment|/// dependent pseudo-destructor expression.
 name|TypeSourceInfo
 operator|*
@@ -7661,17 +7956,17 @@ comment|/// \brief Represents a GCC or MS unary type trait, as used in the
 comment|/// implementation of TR1/C++11 type trait templates.
 comment|///
 comment|/// Example:
-comment|/// @code
+comment|/// \code
 comment|///   __is_pod(int) == true
 comment|///   __is_enum(std::string) == false
-comment|/// @endcode
+comment|/// \endcode
 name|class
 name|UnaryTypeTraitExpr
 operator|:
 name|public
 name|Expr
 block|{
-comment|/// UTT - The trait. A UnaryTypeTrait enum in MSVC compat unsigned.
+comment|/// \brief The trait. A UnaryTypeTrait enum in MSVC compatible unsigned.
 name|unsigned
 name|UTT
 operator|:
@@ -7683,15 +7978,15 @@ name|Value
 operator|:
 literal|1
 block|;
-comment|/// Loc - The location of the type trait keyword.
+comment|/// \brief The location of the type trait keyword.
 name|SourceLocation
 name|Loc
 block|;
-comment|/// RParen - The location of the closing paren.
+comment|/// \brief The location of the closing paren.
 name|SourceLocation
 name|RParen
 block|;
-comment|/// The type being queried.
+comment|/// \brief The type being queried.
 name|TypeSourceInfo
 operator|*
 name|QueriedType
@@ -7902,16 +8197,16 @@ comment|/// \brief Represents a GCC or MS binary type trait, as used in the
 comment|/// implementation of TR1/C++11 type trait templates.
 comment|///
 comment|/// Example:
-comment|/// @code
+comment|/// \code
 comment|///   __is_base_of(Base, Derived) == true
-comment|/// @endcode
+comment|/// \endcode
 name|class
 name|BinaryTypeTraitExpr
 operator|:
 name|public
 name|Expr
 block|{
-comment|/// BTT - The trait. A BinaryTypeTrait enum in MSVC compat unsigned.
+comment|/// \brief The trait. A BinaryTypeTrait enum in MSVC compatible unsigned.
 name|unsigned
 name|BTT
 operator|:
@@ -7923,20 +8218,20 @@ name|Value
 operator|:
 literal|1
 block|;
-comment|/// Loc - The location of the type trait keyword.
+comment|/// \brief The location of the type trait keyword.
 name|SourceLocation
 name|Loc
 block|;
-comment|/// RParen - The location of the closing paren.
+comment|/// \brief The location of the closing paren.
 name|SourceLocation
 name|RParen
 block|;
-comment|/// The lhs type being queried.
+comment|/// \brief The lhs type being queried.
 name|TypeSourceInfo
 operator|*
 name|LhsType
 block|;
-comment|/// The rhs type being queried.
+comment|/// \brief The rhs type being queried.
 name|TypeSourceInfo
 operator|*
 name|RhsType
@@ -8312,7 +8607,7 @@ name|TypeTraitExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -8332,7 +8627,7 @@ name|TypeTraitExpr
 operator|*
 name|CreateDeserialized
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|unsigned NumArgs
 argument_list|)
@@ -8554,10 +8849,10 @@ comment|/// \brief An Embarcadero array type trait, as used in the implementatio
 comment|/// __array_rank and __array_extent.
 comment|///
 comment|/// Example:
-comment|/// @code
+comment|/// \code
 comment|///   __array_rank(int[10][20]) == 2
 comment|///   __array_extent(int, 1)    == 20
-comment|/// @endcode
+comment|/// \endcode
 name|class
 name|ArrayTypeTraitExpr
 operator|:
@@ -8842,17 +9137,17 @@ block|;
 comment|/// \brief An expression trait intrinsic.
 comment|///
 comment|/// Example:
-comment|/// @code
+comment|/// \code
 comment|///   __is_lvalue_expr(std::cout) == true
 comment|///   __is_lvalue_expr(1) == false
-comment|/// @endcode
+comment|/// \endcode
 name|class
 name|ExpressionTraitExpr
 operator|:
 name|public
 name|Expr
 block|{
-comment|/// \brief The trait. A ExpressionTrait enum in MSVC compat unsigned.
+comment|/// \brief The trait. A ExpressionTrait enum in MSVC compatible unsigned.
 name|unsigned
 name|ET
 operator|:
@@ -9127,7 +9422,7 @@ name|OverloadExpr
 argument_list|(
 argument|StmtClass K
 argument_list|,
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
@@ -9183,7 +9478,7 @@ block|{ }
 name|void
 name|initializeResults
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|UnresolvedSetIterator Begin
 argument_list|,
@@ -9206,7 +9501,7 @@ name|bool
 name|HasFormOfMemberPointer
 block|;   }
 block|;
-comment|/// Finds the overloaded expression in the given expression of
+comment|/// \brief Finds the overloaded expression in the given expression \p E of
 comment|/// OverloadTy.
 comment|///
 comment|/// \return the expression (which must be there) and true if it has
@@ -9713,10 +10008,11 @@ comment|/// \brief A reference to a name which we were able to look up during
 comment|/// parsing but could not resolve to a specific declaration.
 comment|///
 comment|/// This arises in several ways:
-comment|///   * we might be waiting for argument-dependent lookup
-comment|///   * the name might resolve to an overloaded function
+comment|///   * we might be waiting for argument-dependent lookup;
+comment|///   * the name might resolve to an overloaded function;
 comment|/// and eventually:
-comment|///   * the lookup might have included a function template
+comment|///   * the lookup might have included a function template.
+comment|///
 comment|/// These never include UnresolvedUsingValueDecls, which are always class
 comment|/// members and therefore appear only in UnresolvedMemberLookupExprs.
 name|class
@@ -9747,7 +10043,7 @@ name|NamingClass
 block|;
 name|UnresolvedLookupExpr
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *NamingClass
 argument_list|,
@@ -9846,7 +10142,7 @@ name|UnresolvedLookupExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *NamingClass
 argument_list|,
@@ -9898,7 +10194,7 @@ name|UnresolvedLookupExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *NamingClass
 argument_list|,
@@ -9922,7 +10218,7 @@ name|UnresolvedLookupExpr
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|bool HasTemplateKWAndArgsInfo
 argument_list|,
@@ -10088,7 +10384,7 @@ comment|/// this case, X<T>::value cannot resolve to a declaration because the
 end_comment
 
 begin_comment
-comment|/// declaration will differ from on instantiation of X<T> to the
+comment|/// declaration will differ from one instantiation of X<T> to the
 end_comment
 
 begin_comment
@@ -10119,7 +10415,7 @@ comment|/// declaration name.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
 block|;
-comment|/// The name of the entity we will be referencing.
+comment|/// \brief The name of the entity we will be referencing.
 name|DeclarationNameInfo
 name|NameInfo
 block|;
@@ -10215,6 +10511,7 @@ name|DependentScopeDeclRefExpr
 modifier|*
 name|Create
 parameter_list|(
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -10244,6 +10541,7 @@ name|DependentScopeDeclRefExpr
 modifier|*
 name|CreateEmpty
 parameter_list|(
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -10296,6 +10594,14 @@ end_expr_stmt
 
 begin_comment
 comment|/// \brief Retrieve the location of the name within the expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// For example, in "X<T>::value" this is the location of "value".
 end_comment
 
 begin_expr_stmt
@@ -10592,6 +10898,10 @@ comment|/// \brief Retrieves the optional explicit template arguments.
 end_comment
 
 begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
 end_comment
 
@@ -10686,6 +10996,14 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Note: getLocStart() is the start of the whole DependentScopeDeclRefExpr,
+end_comment
+
+begin_comment
+comment|/// and differs from getLocation().getStart().
+end_comment
+
 begin_expr_stmt
 name|SourceLocation
 name|getLocStart
@@ -10777,7 +11095,7 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|/// Represents an expression --- generally a full-expression --- which
+comment|/// Represents an expression -- generally a full-expression -- that
 end_comment
 
 begin_comment
@@ -10934,6 +11252,7 @@ name|ExprWithCleanups
 modifier|*
 name|Create
 parameter_list|(
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -10953,6 +11272,7 @@ name|ExprWithCleanups
 modifier|*
 name|Create
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|C
@@ -11077,7 +11397,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// setSubExpr - As with any mutator of the AST, be very careful
+comment|/// As with any mutator of the AST, be very careful
 end_comment
 
 begin_comment
@@ -11335,7 +11655,7 @@ name|CXXUnresolvedConstructExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|TypeSourceInfo *Type
 argument_list|,
@@ -11351,7 +11671,7 @@ name|CXXUnresolvedConstructExpr
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|unsigned NumArgs
 argument_list|)
@@ -11633,8 +11953,33 @@ argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
+name|assert
+argument_list|(
+name|RParenLoc
+operator|.
+name|isValid
+argument_list|()
+operator|||
+name|NumArgs
+operator|==
+literal|1
+argument_list|)
+block|;
 return|return
 name|RParenLoc
+operator|.
+name|isValid
+argument_list|()
+condition|?
+name|RParenLoc
+else|:
+name|getArg
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getLocEnd
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -11782,6 +12127,7 @@ name|FirstQualifierFoundInScope
 block|;
 comment|/// \brief The member to which this member expression refers, which
 comment|/// can be name, overloaded operator, or destructor.
+comment|///
 comment|/// FIXME: could also be a template-id
 name|DeclarationNameInfo
 name|MemberNameInfo
@@ -11846,7 +12192,7 @@ end_expr_stmt
 begin_macro
 name|CXXDependentScopeMemberExpr
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|Expr *Base
 argument_list|,
@@ -11880,7 +12226,7 @@ end_label
 begin_macro
 name|CXXDependentScopeMemberExpr
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|Expr *Base
 argument_list|,
@@ -11908,6 +12254,7 @@ name|CXXDependentScopeMemberExpr
 modifier|*
 name|Create
 parameter_list|(
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -11952,6 +12299,7 @@ name|CXXDependentScopeMemberExpr
 modifier|*
 name|CreateEmpty
 parameter_list|(
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -12468,6 +12816,10 @@ comment|/// \brief Retrieves the optional explicit template arguments.
 end_comment
 
 begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
 end_comment
 
@@ -12749,6 +13101,10 @@ comment|/// The member access may be explicit or implicit:
 end_comment
 
 begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
 comment|///    struct A {
 end_comment
 
@@ -12766,6 +13122,10 @@ end_comment
 
 begin_comment
 comment|///    };
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_comment
@@ -12806,13 +13166,14 @@ operator|:
 literal|1
 block|;
 comment|/// \brief The expression for the base pointer or class reference,
-comment|/// e.g., the \c x in x.f.  This can be null if this is an 'unbased'
-comment|/// member expression
+comment|/// e.g., the \c x in x.f.
+comment|///
+comment|/// This can be null if this is an 'unbased' member expression.
 name|Stmt
 operator|*
 name|Base
 block|;
-comment|/// \brief The type of the base expression;  never null.
+comment|/// \brief The type of the base expression; never null.
 name|QualType
 name|BaseType
 block|;
@@ -12822,7 +13183,7 @@ name|OperatorLoc
 block|;
 name|UnresolvedMemberExpr
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|bool HasUnresolvedUsing
 argument_list|,
@@ -12885,7 +13246,7 @@ name|UnresolvedMemberExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|bool HasUnresolvedUsing
 argument_list|,
@@ -12915,16 +13276,17 @@ name|UnresolvedMemberExpr
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|bool HasTemplateKWAndArgsInfo
 argument_list|,
 argument|unsigned NumTemplateArgs
 argument_list|)
 block|;
-comment|/// \brief True if this is an implicit access, i.e. one in which the
-comment|/// member being accessed was not written in the source.  The source
-comment|/// location of the operator is invalid in this case.
+comment|/// \brief True if this is an implicit access, i.e., one in which the
+comment|/// member being accessed was not written in the source.
+comment|///
+comment|/// The source location of the operator is invalid in this case.
 name|bool
 name|isImplicitAccess
 argument_list|()
@@ -13019,7 +13381,7 @@ return|return
 name|OperatorLoc
 return|;
 block|}
-comment|/// \brief Retrieves the naming class of this lookup.
+comment|/// \brief Retrieve the naming class of this lookup.
 name|CXXRecordDecl
 operator|*
 name|getNamingClass
@@ -13061,6 +13423,19 @@ specifier|const
 block|{
 return|return
 name|getNameLoc
+argument_list|()
+return|;
+block|}
+comment|// \brief Return the preferred location (the member name) for the arrow when
+comment|// diagnosing a problem with this expression.
+name|SourceLocation
+name|getExprLoc
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|getMemberLoc
 argument_list|()
 return|;
 block|}
@@ -13196,7 +13571,7 @@ end_function
 
 begin_comment
 unit|};
-comment|/// \brief Represents a C++0x noexcept expression (C++ [expr.unary.noexcept]).
+comment|/// \brief Represents a C++11 noexcept expression (C++ [expr.unary.noexcept]).
 end_comment
 
 begin_comment
@@ -13411,7 +13786,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents a C++0x pack expansion that produces a sequence of
+comment|/// \brief Represents a C++11 pack expansion that produces a sequence of
 comment|/// expressions.
 comment|///
 comment|/// A pack expansion expression contains a pattern (which itself is an
@@ -13771,7 +14146,7 @@ range|:
 name|public
 name|Expr
 block|{
-comment|/// \brief The location of the 'sizeof' keyword.
+comment|/// \brief The location of the \c sizeof keyword.
 name|SourceLocation
 name|OperatorLoc
 block|;
@@ -13806,7 +14181,7 @@ name|ASTStmtWriter
 block|;
 name|public
 operator|:
-comment|/// \brief Creates a value-dependent expression that computes the length of
+comment|/// \brief Create a value-dependent expression that computes the length of
 comment|/// the given parameter pack.
 name|SizeOfPackExpr
 argument_list|(
@@ -13869,7 +14244,7 @@ argument_list|(
 argument|Pack
 argument_list|)
 block|{ }
-comment|/// \brief Creates an expression that computes the length of
+comment|/// \brief Create an expression that computes the length of
 comment|/// the given parameter pack, which is already known.
 name|SizeOfPackExpr
 argument_list|(
@@ -14462,7 +14837,7 @@ name|FunctionParmPackExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -14478,7 +14853,7 @@ name|FunctionParmPackExpr
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|unsigned NumParams
 argument_list|)
@@ -14616,7 +14991,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents a prvalue temporary that written into memory so that
+comment|/// \brief Represents a prvalue temporary that is written into memory so that
 comment|/// a reference can bind to it.
 comment|///
 comment|/// Prvalue expressions are materialized when they need to have an address
@@ -14632,17 +15007,30 @@ comment|/// then materialized via a \c MaterializeTemporaryExpr, and the referen
 comment|/// binds to the temporary. \c MaterializeTemporaryExprs are always glvalues
 comment|/// (either an lvalue or an xvalue, depending on the kind of reference binding
 comment|/// to it), maintaining the invariant that references always bind to glvalues.
+comment|///
+comment|/// Reference binding and copy-elision can both extend the lifetime of a
+comment|/// temporary. When either happens, the expression will also track the
+comment|/// declaration which is responsible for the lifetime extension.
 name|class
 name|MaterializeTemporaryExpr
 operator|:
 name|public
 name|Expr
 block|{
+name|public
+operator|:
 comment|/// \brief The temporary-generating expression whose value will be
 comment|/// materialized.
 name|Stmt
 operator|*
 name|Temporary
+block|;
+comment|/// \brief The declaration which lifetime-extended this reference, if any.
+comment|/// Either a VarDecl, or (for a ctor-initializer) a FieldDecl.
+specifier|const
+name|ValueDecl
+operator|*
+name|ExtendingDecl
 block|;
 name|friend
 name|class
@@ -14661,6 +15049,8 @@ argument_list|,
 argument|Expr *Temporary
 argument_list|,
 argument|bool BoundToLvalueReference
+argument_list|,
+argument|const ValueDecl *ExtendedBy
 argument_list|)
 operator|:
 name|Expr
@@ -14700,9 +15090,14 @@ argument_list|)
 block|,
 name|Temporary
 argument_list|(
-argument|Temporary
+name|Temporary
 argument_list|)
-block|{ }
+block|,
+name|ExtendingDecl
+argument_list|(
+argument|ExtendedBy
+argument_list|)
+block|{   }
 name|MaterializeTemporaryExpr
 argument_list|(
 argument|EmptyShell Empty
@@ -14724,7 +15119,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|static_cast
 operator|<
 name|Expr
 operator|*
@@ -14734,6 +15129,71 @@ name|Temporary
 operator|)
 return|;
 block|}
+comment|/// \brief Retrieve the storage duration for the materialized temporary.
+name|StorageDuration
+name|getStorageDuration
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|ExtendingDecl
+condition|)
+return|return
+name|SD_FullExpression
+return|;
+comment|// FIXME: This is not necessarily correct for a temporary materialized
+comment|// within a default initializer.
+if|if
+condition|(
+name|isa
+operator|<
+name|FieldDecl
+operator|>
+operator|(
+name|ExtendingDecl
+operator|)
+condition|)
+return|return
+name|SD_Automatic
+return|;
+return|return
+name|cast
+operator|<
+name|VarDecl
+operator|>
+operator|(
+name|ExtendingDecl
+operator|)
+operator|->
+name|getStorageDuration
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get the declaration which triggered the lifetime-extension of this
+comment|/// temporary, if any.
+specifier|const
+name|ValueDecl
+operator|*
+name|getExtendingDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExtendingDecl
+return|;
+block|}
+name|void
+name|setExtendingDecl
+argument_list|(
+argument|const ValueDecl *ExtendedBy
+argument_list|)
+block|{
+name|ExtendingDecl
+operator|=
+name|ExtendedBy
+block|;   }
 comment|/// \brief Determine whether this materialized temporary is bound to an
 comment|/// lvalue reference; otherwise, it's bound to an rvalue reference.
 name|bool

@@ -119,17 +119,16 @@ function_decl|__attribute__
 parameter_list|(
 function_decl|(nomips16
 parameter_list|(
-name|xyz
-parameter_list|)
+function_decl|0
 end_function_decl
 
 begin_empty_stmt
-unit|))
+unit|)))
 empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no arguments}}
+comment|// expected-error {{'nomips16' attribute takes no arguments}}
 end_comment
 
 begin_decl_stmt
@@ -139,7 +138,7 @@ argument_list|(
 operator|(
 name|mips16
 argument_list|(
-name|xyz
+literal|1
 argument_list|)
 operator|)
 argument_list|)
@@ -149,7 +148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no arguments}}
+comment|// expected-error {{'mips16' attribute takes no arguments}}
 end_comment
 
 begin_decl_stmt
@@ -171,7 +170,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no arguments}}
+comment|// expected-error {{'nomips16' attribute takes no arguments}}
 end_comment
 
 begin_decl_stmt
@@ -193,7 +192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no arguments}}
+comment|// expected-error {{'mips16' attribute takes no arguments}}
 end_comment
 
 begin_macro

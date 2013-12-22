@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -589,7 +595,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getTokenID - If this is a source-language token (e.g. 'for'), this API
+comment|/// If this is a source-language token (e.g. 'for'), this API
 end_comment
 
 begin_comment
@@ -773,11 +779,15 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getBuiltinID - Return a value indicating whether this is a builtin
+comment|/// \brief Return a value indicating whether this is a builtin function.
 end_comment
 
 begin_comment
-comment|/// function.  0 is not-built-in.  1 is builtin-for-some-nonprimary-target.
+comment|///
+end_comment
+
+begin_comment
+comment|/// 0 is not-built-in.  1 is builtin-for-some-nonprimary-target.
 end_comment
 
 begin_comment
@@ -1018,7 +1028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// isPoisoned - Return true if this token has been poisoned.
+comment|/// \brief Return true if this token has been poisoned.
 end_comment
 
 begin_expr_stmt
@@ -1132,15 +1142,23 @@ block|}
 end_function
 
 begin_comment
-comment|/// isHandleIdentifierCase - Return true if the Preprocessor::HandleIdentifier
+comment|/// \brief Return true if the Preprocessor::HandleIdentifier must be called
 end_comment
 
 begin_comment
-comment|/// must be called on a token of this identifier.  If this returns false, we
+comment|/// on a token of this identifier.
 end_comment
 
 begin_comment
-comment|/// know that HandleIdentifier will not affect the token.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If this returns false, we know that HandleIdentifier will not affect
+end_comment
+
+begin_comment
+comment|/// the token.
 end_comment
 
 begin_expr_stmt
@@ -1156,7 +1174,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isFromAST - Return true if the identifier in its current state was loaded
+comment|/// \brief Return true if the identifier in its current state was loaded
 end_comment
 
 begin_comment
@@ -1283,11 +1301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Determine whether this is the contextual keyword
-end_comment
-
-begin_comment
-comment|/// 'import'.
+comment|/// \brief Determine whether this is the contextual keyword \c import.
 end_comment
 
 begin_expr_stmt
@@ -1303,11 +1317,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Set whether this identifier is the contextual keyword
-end_comment
-
-begin_comment
-comment|/// 'import'.
+comment|/// \brief Set whether this identifier is the contextual keyword \c import.
 end_comment
 
 begin_function
@@ -1343,19 +1353,15 @@ label|:
 end_label
 
 begin_comment
-comment|/// RecomputeNeedsHandleIdentifier - The Preprocessor::HandleIdentifier does
+comment|/// The Preprocessor::HandleIdentifier does several special (but rare)
 end_comment
 
 begin_comment
-comment|/// several special (but rare) things to identifiers of various sorts.  For
+comment|/// things to identifiers of various sorts.  For example, it changes the
 end_comment
 
 begin_comment
-comment|/// example, it changes the "for" keyword token from tok::identifier to
-end_comment
-
-begin_comment
-comment|/// tok::for.
+comment|/// \c for keyword token from tok::identifier to tok::for.
 end_comment
 
 begin_comment
@@ -1405,15 +1411,19 @@ end_function
 
 begin_comment
 unit|};
-comment|/// \brief an RAII object for [un]poisoning an identifier
+comment|/// \brief An RAII object for [un]poisoning an identifier within a scope.
 end_comment
 
 begin_comment
-comment|/// within a certain scope. II is allowed to be null, in
+comment|///
 end_comment
 
 begin_comment
-comment|/// which case, objects of this type have no effect.
+comment|/// \p II is allowed to be null, in which case objects of this type have
+end_comment
+
+begin_comment
+comment|/// no effect.
 end_comment
 
 begin_decl_stmt
@@ -1577,15 +1587,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// IdentifierInfoLookup - An abstract class used by IdentifierTable that
-end_comment
-
-begin_comment
-comment|///  provides an interface for performing lookups from strings
-end_comment
-
-begin_comment
-comment|/// (const char *) to IdentiferInfo objects.
+comment|/// \brief Provides lookups to, and iteration over, IdentiferInfo objects.
 end_comment
 
 begin_decl_stmt
@@ -1599,10 +1601,11 @@ operator|~
 name|IdentifierInfoLookup
 argument_list|()
 expr_stmt|;
-comment|/// get - Return the identifier token info for the specified named identifier.
-comment|///  Unlike the version in IdentifierTable, this returns a pointer instead
-comment|///  of a reference.  If the pointer is NULL then the IdentifierInfo cannot
-comment|///  be found.
+comment|/// \brief Return the IdentifierInfo for the specified named identifier.
+comment|///
+comment|/// Unlike the version in IdentifierTable, this returns a pointer instead
+comment|/// of a reference.  If the pointer is null then the IdentifierInfo cannot
+comment|/// be found.
 name|virtual
 name|IdentifierInfo
 modifier|*
@@ -2284,6 +2287,41 @@ enum|;
 end_enum
 
 begin_comment
+comment|/// \brief A family of Objective-C methods.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// These are family of methods whose result type is initially 'id', but
+end_comment
+
+begin_comment
+comment|/// but are candidate for the result type to be changed to 'instancetype'.
+end_comment
+
+begin_enum
+enum|enum
+name|ObjCInstanceTypeFamily
+block|{
+name|OIT_None
+block|,
+name|OIT_Array
+block|,
+name|OIT_Dictionary
+block|,
+name|OIT_Singleton
+block|,
+name|OIT_Init
+block|,
+name|OIT_ReturnsSelf
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/// \brief Smart pointer class that efficiently represents Objective-C method
 end_comment
 
@@ -2866,6 +2904,17 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+specifier|static
+name|ObjCInstanceTypeFamily
+name|getInstTypeMethodFamily
+parameter_list|(
+name|Selector
+name|sel
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 unit|};
 comment|/// \brief This table allows us to fully hide how we implement
@@ -2965,13 +3014,27 @@ name|getTotalMemory
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Return the setter name for the given identifier.
+comment|/// \brief Return the default setter name for the given identifier.
+comment|///
+comment|/// This is "set" + \p Name where the initial character of \p Name
+comment|/// has been capitalized.
+specifier|static
+name|SmallString
+operator|<
+literal|64
+operator|>
+name|constructSetterName
+argument_list|(
+argument|StringRef Name
+argument_list|)
+expr_stmt|;
+comment|/// \brief Return the default setter selector for the given identifier.
 comment|///
 comment|/// This is "set" + \p Name where the initial character of \p Name
 comment|/// has been capitalized.
 specifier|static
 name|Selector
-name|constructSetterName
+name|constructSetterSelector
 parameter_list|(
 name|IdentifierTable
 modifier|&

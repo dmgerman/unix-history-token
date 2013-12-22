@@ -41,7 +41,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @a(i64 %x.coerce)
+comment|// CHECK-LABEL: define i32 @a(i64 %x.coerce)
 end_comment
 
 begin_comment
@@ -82,7 +82,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @b(<4 x i32> %x)
+comment|// CHECK-LABEL: define i32 @b(<4 x i32> %x)
 end_comment
 
 end_unit

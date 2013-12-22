@@ -4,7 +4,7 @@ comment|// RUN: rm -f %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=unix.Malloc -analyzer-output=plist -o %t %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=unix.Malloc -analyzer-output=plist -analyzer-config path-diagnostics-alternate=false -o %t %s
 end_comment
 
 begin_comment

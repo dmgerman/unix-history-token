@@ -73,7 +73,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @b
+comment|// CHECK-LABEL: define void @b
 end_comment
 
 begin_comment

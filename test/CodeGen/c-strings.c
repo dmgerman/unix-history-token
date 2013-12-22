@@ -88,7 +88,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define void @f0()
+comment|// CHECK-LABEL: define void @f0()
 end_comment
 
 begin_function
@@ -106,7 +106,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f1()
+comment|// CHECK-LABEL: define void @f1()
 end_comment
 
 begin_function
@@ -132,7 +132,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f2()
+comment|// CHECK-LABEL: define void @f2()
 end_comment
 
 begin_function
@@ -157,7 +157,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f3()
+comment|// CHECK-LABEL: define void @f3()
 end_comment
 
 begin_function
@@ -194,7 +194,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define void @f4()
+comment|// CHECK-LABEL: define void @f4()
 end_comment
 
 begin_function

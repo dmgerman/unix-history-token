@@ -39,7 +39,7 @@ argument_list|)
 name|int
 name|y
 decl_stmt|;
-comment|// expected-error {{argument to annotate attribute was not a string literal}}
+comment|// expected-error {{'annotate' attribute requires a string}}
 name|__attribute__
 argument_list|(
 argument|(annotate(
@@ -51,7 +51,7 @@ argument_list|)
 name|int
 name|z
 decl_stmt|;
-comment|// expected-error {{attribute takes one argument}}
+comment|// expected-error {{'annotate' attribute takes one argument}}
 name|int
 name|u
 init|=

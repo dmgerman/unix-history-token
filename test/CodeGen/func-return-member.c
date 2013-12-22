@@ -74,7 +74,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define void @bar
+comment|// CHECK-LABEL: define void @bar
 end_comment
 
 begin_function
@@ -99,7 +99,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @bun
+comment|// CHECK-LABEL: define void @bun
 end_comment
 
 begin_function
@@ -122,7 +122,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @ban
+comment|// CHECK-LABEL: define void @ban
 end_comment
 
 begin_function

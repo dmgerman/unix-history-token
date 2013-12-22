@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-apple-darwin -target-feature +avx2 -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-apple-darwin -target-feature +avx2 -emit-llvm -o - -Werror | FileCheck %s
 end_comment
 
 begin_comment
@@ -2657,16 +2657,15 @@ end_function
 
 begin_function
 name|__m256i
-name|test_mm_broadcastsi128_si256
+name|test_mm256_broadcastsi128_si256
 parameter_list|(
 name|__m128i
-modifier|*
 name|a
 parameter_list|)
 block|{
 comment|// CHECK: @llvm.x86.avx2.vbroadcasti128
 return|return
-name|_mm_broadcastsi128_si256
+name|_mm256_broadcastsi128_si256
 argument_list|(
 name|a
 argument_list|)
@@ -3921,7 +3920,8 @@ parameter_list|(
 name|__m128i
 name|a
 parameter_list|,
-name|int
+name|long
+name|long
 specifier|const
 modifier|*
 name|b
@@ -3958,7 +3958,8 @@ parameter_list|(
 name|__m256i
 name|a
 parameter_list|,
-name|int
+name|long
+name|long
 specifier|const
 modifier|*
 name|b
@@ -3995,7 +3996,8 @@ parameter_list|(
 name|__m128i
 name|a
 parameter_list|,
-name|int
+name|long
+name|long
 specifier|const
 modifier|*
 name|b
@@ -4032,7 +4034,8 @@ parameter_list|(
 name|__m256i
 name|a
 parameter_list|,
-name|int
+name|long
+name|long
 specifier|const
 modifier|*
 name|b
@@ -4390,7 +4393,8 @@ begin_function
 name|__m128i
 name|test_mm_i32gather_epi64
 parameter_list|(
-name|int
+name|long
+name|long
 specifier|const
 modifier|*
 name|b
@@ -4417,7 +4421,8 @@ begin_function
 name|__m256i
 name|test_mm256_i32gather_epi64
 parameter_list|(
-name|int
+name|long
+name|long
 specifier|const
 modifier|*
 name|b
@@ -4444,7 +4449,8 @@ begin_function
 name|__m128i
 name|test_mm_i64gather_epi64
 parameter_list|(
-name|int
+name|long
+name|long
 specifier|const
 modifier|*
 name|b
@@ -4471,7 +4477,8 @@ begin_function
 name|__m256i
 name|test_mm256_i64gather_epi64
 parameter_list|(
-name|int
+name|long
+name|long
 specifier|const
 modifier|*
 name|b

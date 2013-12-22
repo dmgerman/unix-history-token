@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -mrtd -triple i386-unknown-freebsd9.0 -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -mrtd -triple i386-unknown-unknown -std=c89 -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_function_decl
@@ -46,6 +46,56 @@ end_comment
 
 begin_comment
 comment|// CHECK: declare x86_stdcallcc void @baz(i32)
+end_comment
+
+begin_function
+name|void
+name|qux
+parameter_list|(
+name|int
+name|arg
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// CHECK: define void @qux(i32 %arg, ...)
+end_comment
+
+begin_function
+name|void
+name|quux
+parameter_list|(
+name|int
+name|a1
+parameter_list|,
+name|int
+name|a2
+parameter_list|,
+name|int
+name|a3
+parameter_list|)
+block|{
+name|qux
+argument_list|(
+name|a1
+argument_list|,
+name|a2
+argument_list|,
+name|a3
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define x86_stdcallcc void @quux
+end_comment
+
+begin_comment
+comment|// CHECK: call void (i32, ...)* @qux
 end_comment
 
 begin_comment

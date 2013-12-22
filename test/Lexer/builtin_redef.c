@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 %s -D__TIME__=1234 -U__DATE__ -E 2>&1 | FileCheck %s 
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -D__TIME__=1234 -U__DATE__ -E 2>&1 -pedantic-errors | FileCheck %s --check-prefix=CHECK-ERR
+comment|// RUN: not %clang_cc1 %s -D__TIME__=1234 -U__DATE__ -E 2>&1 -pedantic-errors | FileCheck %s --check-prefix=CHECK-ERR
 end_comment
 
 begin_comment

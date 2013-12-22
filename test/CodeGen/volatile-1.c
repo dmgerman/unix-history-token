@@ -113,7 +113,7 @@ comment|// reduced.
 end_comment
 
 begin_comment
-comment|// CHECK: define void @test()
+comment|// CHECK-LABEL: define void @test()
 end_comment
 
 begin_function
@@ -124,8 +124,8 @@ block|{
 comment|// CHECK: load volatile [[INT]]* @i
 name|i
 expr_stmt|;
-comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
 comment|// CHECK-NEXT: sitofp [[INT]]
 call|(
 name|float
@@ -134,8 +134,8 @@ argument_list|(
 name|ci
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
 operator|(
 name|void
 operator|)
@@ -148,10 +148,10 @@ name|void
 operator|)
 name|a
 expr_stmt|;
-comment|// CHECK-NEXT: [[R:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
-comment|// CHECK-NEXT: store volatile [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: store volatile [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: [[R:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: [[I:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
+comment|// CHECK-NEXT: store volatile [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: store volatile [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
 call|(
 name|void
 call|)
@@ -172,29 +172,29 @@ operator|=
 name|j
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: [[R1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
-comment|// CHECK-NEXT: [[R2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: [[R1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: [[I1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
+comment|// CHECK-NEXT: [[R2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: [[I2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
 comment|// Not sure why they're ordered this way.
 comment|// CHECK-NEXT: [[R:%.*]] = add [[INT]] [[R2]], [[R1]]
 comment|// CHECK-NEXT: [[I:%.*]] = add [[INT]] [[I2]], [[I1]]
-comment|// CHECK-NEXT: store volatile [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: store volatile [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: store volatile [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: store volatile [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
 name|ci
 operator|+=
 name|ci
 expr_stmt|;
-comment|// CHECK-NEXT: [[R1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
-comment|// CHECK-NEXT: [[R2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: [[R1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: [[I1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
+comment|// CHECK-NEXT: [[R2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: [[I2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
 comment|// CHECK-NEXT: [[R:%.*]] = add [[INT]] [[R2]], [[R1]]
 comment|// CHECK-NEXT: [[I:%.*]] = add [[INT]] [[I2]], [[I1]]
-comment|// CHECK-NEXT: store volatile [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: store volatile [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
-comment|// CHECK-NEXT: [[R2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: store volatile [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: store volatile [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
+comment|// CHECK-NEXT: [[R2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: [[I2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1), align 4
 comment|// These additions can be elided
 comment|// CHECK-NEXT: add [[INT]] [[R]], [[R2]]
 comment|// CHECK-NEXT: add [[INT]] [[I]], [[I2]]
@@ -745,7 +745,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define void @test1()
+comment|// CHECK-LABEL: define void @test1()
 end_comment
 
 begin_function
@@ -774,6 +774,30 @@ name|x
 expr_stmt|;
 return|return
 name|x
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define {{.*}} @test2()
+end_comment
+
+begin_function
+name|int
+name|test2
+parameter_list|()
+block|{
+comment|// CHECK: load volatile i32*
+comment|// CHECK-NEXT: load volatile i32*
+comment|// CHECK-NEXT: load volatile i32*
+comment|// CHECK-NEXT: add i32
+comment|// CHECK-NEXT: add i32
+comment|// CHECK-NEXT: store volatile i32
+comment|// CHECK-NEXT: ret i32
+return|return
+name|i
+operator|+=
+name|ci
 return|;
 block|}
 end_function

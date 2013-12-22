@@ -8,10 +8,10 @@ name|void
 name|test0
 parameter_list|()
 block|{
-comment|// CHECK: define void @test0()
+comment|// CHECK-LABEL: define void @test0()
 comment|// CHECK:      [[F:%.*]] = alloca float
-comment|// CHECK-NEXT: [[REAL:%.*]] = load volatile float* getelementptr inbounds ({ float, float }* @test0_v, i32 0, i32 0)
-comment|// CHECK-NEXT: load volatile float* getelementptr inbounds ({{.*}} @test0_v, i32 0, i32 1)
+comment|// CHECK-NEXT: [[REAL:%.*]] = load volatile float* getelementptr inbounds ({ float, float }* @test0_v, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: load volatile float* getelementptr inbounds ({{.*}} @test0_v, i32 0, i32 1), align 4
 comment|// CHECK-NEXT: store float [[REAL]], float* [[F]], align 4
 comment|// CHECK-NEXT: ret void
 specifier|extern
@@ -36,11 +36,11 @@ name|void
 name|test1
 parameter_list|()
 block|{
-comment|// CHECK: define void @test1()
-comment|// CHECK:      [[REAL:%.*]] = load volatile float* getelementptr inbounds ({{.*}} @test1_v, i32 0, i32 0)
-comment|// CHECK-NEXT: [[IMAG:%.*]] = load volatile float* getelementptr inbounds ({{.*}} @test1_v, i32 0, i32 1)
-comment|// CHECK-NEXT: store volatile float [[REAL]], float* getelementptr inbounds ({{.*}} @test1_v, i32 0, i32 0)
-comment|// CHECK-NEXT: store volatile float [[IMAG]], float* getelementptr inbounds ({{.*}} @test1_v, i32 0, i32 1)
+comment|// CHECK-LABEL: define void @test1()
+comment|// CHECK:      [[REAL:%.*]] = load volatile float* getelementptr inbounds ({{.*}} @test1_v, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: [[IMAG:%.*]] = load volatile float* getelementptr inbounds ({{.*}} @test1_v, i32 0, i32 1), align 4
+comment|// CHECK-NEXT: store volatile float [[REAL]], float* getelementptr inbounds ({{.*}} @test1_v, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: store volatile float [[IMAG]], float* getelementptr inbounds ({{.*}} @test1_v, i32 0, i32 1), align 4
 comment|// CHECK-NEXT: ret void
 specifier|extern
 specifier|volatile

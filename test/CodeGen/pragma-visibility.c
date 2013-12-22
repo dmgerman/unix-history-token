@@ -115,7 +115,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define hidden void @f
+comment|// CHECK-LABEL: define hidden void @f
 end_comment
 
 begin_macro
@@ -142,7 +142,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @g
+comment|// CHECK-LABEL: define void @g
 end_comment
 
 end_unit

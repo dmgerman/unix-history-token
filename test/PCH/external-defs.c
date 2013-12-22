@@ -16,7 +16,7 @@ comment|// RUN: grep "@x = common global i32 0" %t | count 1
 end_comment
 
 begin_comment
-comment|// RUN: grep "@z" %t | count 0
+comment|// RUN: not grep "@z" %t
 end_comment
 
 begin_comment

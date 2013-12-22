@@ -1733,7 +1733,8 @@ block|{
 literal|6
 block|}
 struct|;
-comment|//expected-error{{initializer for aggregate with no elements}}
+comment|//expected-error{{initializer for aggregate with no elements}} \
+comment|// expected-warning {{struct without named members is a GNU extension}}
 block|}
 end_function
 

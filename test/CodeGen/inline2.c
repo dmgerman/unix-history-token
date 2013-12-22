@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -O1 -std=gnu89 -triple i386-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix GNU89 %s
+comment|// RUN: %clang_cc1 -O1 -std=gnu89 -triple i386-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix CHECK-GNU89 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -O1 -std=c99 -triple i386-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix C99 %s
+comment|// RUN: %clang_cc1 -O1 -std=c99 -triple i386-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix CHECK-C99 %s
 end_comment
 
 begin_comment
-comment|// CHECK-GNU89: define i32 @f0()
+comment|// CHECK-GNU89-LABEL: define i32 @f0()
 end_comment
 
 begin_comment
-comment|// CHECK-C99: define i32 @f0()
+comment|// CHECK-C99-LABEL: define i32 @f0()
 end_comment
 
 begin_function_decl
@@ -38,11 +38,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GNU89: define i32 @f1()
+comment|// CHECK-GNU89-LABEL: define i32 @f1()
 end_comment
 
 begin_comment
-comment|// CHECK-C99: define i32 @f1()
+comment|// CHECK-C99-LABEL: define i32 @f1()
 end_comment
 
 begin_function_decl
@@ -69,11 +69,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GNU89: define i32 @f2()
+comment|// CHECK-GNU89-LABEL: define i32 @f2()
 end_comment
 
 begin_comment
-comment|// CHECK-C99: define i32 @f2()
+comment|// CHECK-C99-LABEL: define i32 @f2()
 end_comment
 
 begin_function_decl
@@ -100,11 +100,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GNU89: define i32 @f3()
+comment|// CHECK-GNU89-LABEL: define i32 @f3()
 end_comment
 
 begin_comment
-comment|// CHECK-C99: define i32 @f3()
+comment|// CHECK-C99-LABEL: define i32 @f3()
 end_comment
 
 begin_function_decl
@@ -132,11 +132,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GNU89: define i32 @f5()
+comment|// CHECK-GNU89-LABEL: define i32 @f5()
 end_comment
 
 begin_comment
-comment|// CHECK-C99: define i32 @f5()
+comment|// CHECK-C99-LABEL: define i32 @f5()
 end_comment
 
 begin_function_decl
@@ -165,11 +165,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GNU89: define i32 @f6()
+comment|// CHECK-GNU89-LABEL: define i32 @f6()
 end_comment
 
 begin_comment
-comment|// CHECK-C99: define i32 @f6()
+comment|// CHECK-C99-LABEL: define i32 @f6()
 end_comment
 
 begin_function_decl
@@ -198,11 +198,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GNU89: define i32 @f7()
+comment|// CHECK-GNU89-LABEL: define i32 @f7()
 end_comment
 
 begin_comment
-comment|// CHECK-C99: define i32 @f7()
+comment|// CHECK-C99-LABEL: define i32 @f7()
 end_comment
 
 begin_function_decl
@@ -231,7 +231,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GNU89: define i32 @fA()
+comment|// CHECK-GNU89-LABEL: define i32 @fA()
 end_comment
 
 begin_function
@@ -249,11 +249,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GNU89: define available_externally i32 @f4()
+comment|// CHECK-GNU89-LABEL: define available_externally i32 @f4()
 end_comment
 
 begin_comment
-comment|// CHECK-C99: define i32 @f4()
+comment|// CHECK-C99-LABEL: define i32 @f4()
 end_comment
 
 begin_function_decl
@@ -281,11 +281,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GNU89: define available_externally i32 @f8()
+comment|// CHECK-GNU89-LABEL: define available_externally i32 @f8()
 end_comment
 
 begin_comment
-comment|// CHECK-C99: define i32 @f8()
+comment|// CHECK-C99-LABEL: define i32 @f8()
 end_comment
 
 begin_function_decl
@@ -314,11 +314,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GNU89: define available_externally i32 @f9()
+comment|// CHECK-GNU89-LABEL: define available_externally i32 @f9()
 end_comment
 
 begin_comment
-comment|// CHECK-C99: define i32 @f9()
+comment|// CHECK-C99-LABEL: define i32 @f9()
 end_comment
 
 begin_function_decl
@@ -348,7 +348,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-C99: define available_externally i32 @fA()
+comment|// CHECK-C99-LABEL: define available_externally i32 @fA()
 end_comment
 
 begin_function

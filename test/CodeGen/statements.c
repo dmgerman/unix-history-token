@@ -7,29 +7,6 @@ begin_comment
 comment|// REQUIRES: LP64
 end_comment
 
-begin_function
-name|void
-name|test1
-parameter_list|(
-name|int
-name|x
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|x
-condition|)
-block|{
-case|case
-literal|111111111111111111111111111111111111111
-case|:
-name|bar
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_comment
 comment|// Mismatched type between return and function result.
 end_comment

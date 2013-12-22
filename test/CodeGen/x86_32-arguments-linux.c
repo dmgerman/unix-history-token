@@ -8,7 +8,7 @@ comment|// RUN: FileCheck< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f56(
+comment|// CHECK-LABEL: define void @f56(
 end_comment
 
 begin_comment

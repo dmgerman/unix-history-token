@@ -35,5 +35,21 @@ begin_comment
 comment|// SSP-BUF: "-stack-protector-buffer-size" "16"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target i386-pc-openbsd -### %s 2>&1 | FileCheck %s -check-prefix=OPENBSD
+end_comment
+
+begin_comment
+comment|// OPENBSD: "-stack-protector" "1"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-pc-openbsd -fno-stack-protector -### %s 2>&1 | FileCheck %s -check-prefix=OPENBSD_OFF
+end_comment
+
+begin_comment
+comment|// OPENBSD_OFF-NOT: "-stack-protector"
+end_comment
+
 end_unit
 

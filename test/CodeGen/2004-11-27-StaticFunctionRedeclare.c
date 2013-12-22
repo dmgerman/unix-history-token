@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o - | \
-end_comment
-
-begin_comment
-comment|// RUN:   opt -std-compile-opts -emit-llvm | not grep {declare i32.*func}
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -21,6 +17,18 @@ end_comment
 
 begin_comment
 comment|// This is PR244
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define void @bar(
+end_comment
+
+begin_comment
+comment|// CHECK: call {{.*}} @func
+end_comment
+
+begin_comment
+comment|// CHECK: define internal {{.*}}i32 @func(
 end_comment
 
 begin_function_decl

@@ -12,7 +12,7 @@ comment|// CHECK-NOT: zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK: define i8* @f
+comment|// CHECK-LABEL: define i8* @f
 end_comment
 
 begin_struct

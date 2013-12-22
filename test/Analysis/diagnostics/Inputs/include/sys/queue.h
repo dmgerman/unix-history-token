@@ -1,11 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_pragma
-pragma|#
-directive|pragma
-name|clang
-name|system_header
-end_pragma
-
 begin_function_decl
 name|void
 name|free

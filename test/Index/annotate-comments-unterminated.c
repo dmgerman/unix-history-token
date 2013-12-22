@@ -4,7 +4,7 @@ comment|// RUN: c-index-test -test-load-source all %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only %s 2>&1 | FileCheck -check-prefix=ERR %s
+comment|// RUN: not %clang_cc1 -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-ERR %s
 end_comment
 
 begin_comment

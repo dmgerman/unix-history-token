@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-pth -o %t %S/pth.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -include-pth %t -fsyntax-only %s 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 -triple i386-unknown-unknown -include-pth %t -fsyntax-only %s 2>&1 | FileCheck %s
 end_comment
 
 begin_error

@@ -4,7 +4,19 @@ comment|// RUN: %clang -### -S %s        2>&1 | FileCheck --check-prefix=CHECK-W
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -S %s -g     2>&1 | FileCheck --check-prefix=CHECK-WITH-G    %s
+comment|// RUN: %clang -### -S %s -g -target x86_64-linux-gnu 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S %s -g -target x86_64-apple-darwin 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G-DARWIN %s
 end_comment
 
 begin_comment
@@ -16,7 +28,19 @@ comment|// RUN: %clang -### -S %s -g -g0 2>&1 | FileCheck --check-prefix=CHECK-W
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -S %s -g0 -g 2>&1 | FileCheck --check-prefix=CHECK-WITH-G    %s
+comment|// RUN: %clang -### -S %s -g0 -g -target x86_64-linux-gnu 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S %s -g0 -g -target x86_64-apple-darwin 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G-DARWIN %s
 end_comment
 
 begin_comment
@@ -25,6 +49,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-WITH-G: "-g"
+end_comment
+
+begin_comment
+comment|// CHECK-WITH-G-DARWIN: "-gdwarf-2"
 end_comment
 
 end_unit

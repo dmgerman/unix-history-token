@@ -42,5 +42,21 @@ return|return;
 block|}
 end_function
 
+begin_function
+name|void
+name|PR8455
+parameter_list|()
+block|{
+name|L
+label|:
+name|__attribute__
+argument_list|(
+argument|(unused)
+argument_list|)
+return|return;
+comment|// ok, no semicolon required
+block|}
+end_function
+
 end_unit
 

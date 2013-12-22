@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep "@pipe()" %t | count 0
+comment|// RUN: not grep "@pipe()" %t
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: grep '_thisIsNotAPipe' %t | count 3
 end_comment
 
 begin_comment
-comment|// RUN: grep 'g0' %t | count 0
+comment|// RUN: not grep 'g0' %t
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// RUN: %clang_cc1 -DUSE_DEF -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep "@pipe()" %t | count 0
+comment|// RUN: not grep "@pipe()" %t
 end_comment
 
 begin_comment

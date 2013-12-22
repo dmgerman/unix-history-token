@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -DHUGE 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 %s -fsyntax-only -DHUGE 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 %s -fsyntax-only 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -fbracket-depth 299 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 %s -fsyntax-only -fbracket-depth 299 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: %clang_cc1 %s -fsyntax-only -fbracket-depth 300
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -fsyntax-only -fbracket-depth=299 2>&1 | FileCheck %s
+comment|// RUN: not %clang %s -fsyntax-only -fbracket-depth=299 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

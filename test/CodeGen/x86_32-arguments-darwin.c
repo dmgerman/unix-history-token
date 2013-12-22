@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -w -fblocks -triple i386-apple-darwin9 -target-cpu yo
 end_comment
 
 begin_comment
-comment|// CHECK: define signext i8 @f0()
+comment|// CHECK-LABEL: define signext i8 @f0()
 end_comment
 
 begin_function
@@ -21,7 +21,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define signext i16 @f1()
+comment|// CHECK-LABEL: define signext i16 @f1()
 end_comment
 
 begin_function
@@ -38,7 +38,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @f2()
+comment|// CHECK-LABEL: define i32 @f2()
 end_comment
 
 begin_function
@@ -55,7 +55,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define float @f3()
+comment|// CHECK-LABEL: define float @f3()
 end_comment
 
 begin_function
@@ -72,7 +72,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define double @f4()
+comment|// CHECK-LABEL: define double @f4()
 end_comment
 
 begin_function
@@ -89,7 +89,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_fp80 @f5()
+comment|// CHECK-LABEL: define x86_fp80 @f5()
 end_comment
 
 begin_function
@@ -107,7 +107,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f6(i8 signext %a0, i16 signext %a1, i32 %a2, i64 %a3, i8* %a4)
+comment|// CHECK-LABEL: define void @f6(i8 signext %a0, i16 signext %a1, i32 %a2, i64 %a3, i8* %a4)
 end_comment
 
 begin_function
@@ -135,7 +135,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f7(i32 %a0)
+comment|// CHECK-LABEL: define void @f7(i32 %a0)
 end_comment
 
 begin_typedef
@@ -163,11 +163,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define i64 @f8_1()
+comment|// CHECK-LABEL: define i64 @f8_1()
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f8_2(i32 %a0.0, i32 %a0.1)
+comment|// CHECK-LABEL: define void @f8_2(i32 %a0.0, i32 %a0.1)
 end_comment
 
 begin_struct
@@ -216,7 +216,7 @@ comment|// This should be passed just as s8.
 end_comment
 
 begin_comment
-comment|// CHECK: define i64 @f9_1()
+comment|// CHECK-LABEL: define i64 @f9_1()
 end_comment
 
 begin_comment
@@ -228,7 +228,7 @@ comment|// backend in terms of optimization but doesn't change the ABI.
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f9_2(%struct.s9* byval align 4 %a0)
+comment|// CHECK-LABEL: define void @f9_2(%struct.s9* byval align 4 %a0)
 end_comment
 
 begin_struct
@@ -769,7 +769,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define i16 @f29()
+comment|// CHECK-LABEL: define i16 @f29()
 decl|struct
 name|s29
 block|{
@@ -798,7 +798,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define i16 @f30()
+comment|// CHECK-LABEL: define i16 @f30()
 decl|struct
 name|s30
 block|{
@@ -822,7 +822,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define float @f31()
+comment|// CHECK-LABEL: define float @f31()
 decl|struct
 name|s31
 block|{
@@ -849,7 +849,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define i32 @f32()
+comment|// CHECK-LABEL: define i32 @f32()
 decl|struct
 name|s32
 block|{
@@ -872,7 +872,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define float @f33()
+comment|// CHECK-LABEL: define float @f33()
 decl|struct
 name|s33
 block|{
@@ -896,7 +896,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define float @f34()
+comment|// CHECK-LABEL: define float @f34()
 decl|struct
 name|s34
 block|{
@@ -924,7 +924,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define i16 @f35()
+comment|// CHECK-LABEL: define i16 @f35()
 decl|struct
 name|s35
 block|{
@@ -955,7 +955,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define i16 @f36()
+comment|// CHECK-LABEL: define i16 @f36()
 decl|struct
 name|s36
 block|{
@@ -992,7 +992,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define float @f37()
+comment|// CHECK-LABEL: define float @f37()
 decl|struct
 name|s37
 block|{
@@ -1017,7 +1017,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define void @f38(%struct.s38* noalias sret %agg.result)
+comment|// CHECK-LABEL: define void @f38(%struct.s38* noalias sret %agg.result)
 decl|struct
 name|s38
 block|{
@@ -1042,7 +1042,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define void @f39(%struct.s39* byval align 16 %x)
+comment|// CHECK-LABEL: define void @f39(%struct.s39* byval align 16 %x)
 decl|typedef
 name|int
 name|v39
@@ -1085,7 +1085,7 @@ comment|//<rdar://problem/7247671>
 end_comment
 
 begin_comment
-comment|// CHECK: define i32 @f40()
+comment|// CHECK-LABEL: define i32 @f40()
 end_comment
 
 begin_enum
@@ -1110,7 +1110,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define void ()* @f41()
+comment|// CHECK-LABEL: define void ()* @f41()
 end_comment
 
 begin_typedef
@@ -1136,7 +1136,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @f42()
+comment|// CHECK-LABEL: define i32 @f42()
 end_comment
 
 begin_struct
@@ -1153,7 +1153,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{  }
-comment|// CHECK: define i64 @f43()
+comment|// CHECK-LABEL: define i64 @f43()
 decl|struct
 name|s43
 block|{
@@ -1170,7 +1170,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{  }
-comment|// CHECK: define void ()* @f44()
+comment|// CHECK-LABEL: define void ()* @f44()
 decl|struct
 name|s44
 block|{
@@ -1183,7 +1183,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{  }
-comment|// CHECK: define i64 @f45()
+comment|// CHECK-LABEL: define i64 @f45()
 decl|struct
 name|s45
 block|{
@@ -1199,7 +1199,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{  }
-comment|// CHECK: define void @f46(i32 %a0)
+comment|// CHECK-LABEL: define void @f46(i32 %a0)
 name|void
 name|f46
 argument_list|(
@@ -1208,7 +1208,7 @@ name|e40
 name|a0
 argument_list|)
 block|{ }
-comment|// CHECK: define void @f47(void ()* %a1)
+comment|// CHECK-LABEL: define void @f47(void ()* %a1)
 name|void
 name|f47
 argument_list|(
@@ -1216,7 +1216,7 @@ name|vvbp
 name|a1
 argument_list|)
 block|{ }
-comment|// CHECK: define void @f48(i32 %a0.0)
+comment|// CHECK-LABEL: define void @f48(i32 %a0.0)
 decl|struct
 name|s48
 block|{
@@ -1240,7 +1240,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define void @f49(i32 %a0.0, i32 %a0.1)
+comment|// CHECK-LABEL: define void @f49(i32 %a0.0, i32 %a0.1)
 end_comment
 
 begin_struct
@@ -1270,7 +1270,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define void @f50(void ()* %a0.0)
+comment|// CHECK-LABEL: define void @f50(void ()* %a0.0)
 end_comment
 
 begin_struct
@@ -1296,7 +1296,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define void @f51(void ()* %a0.0, i32 %a0.1)
+comment|// CHECK-LABEL: define void @f51(void ()* %a0.0, i32 %a0.1)
 end_comment
 
 begin_struct
@@ -1325,7 +1325,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define void @f52(%struct.s52* byval align 4)
+comment|// CHECK-LABEL: define void @f52(%struct.s52* byval align 4)
 end_comment
 
 begin_struct
@@ -1352,7 +1352,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f53(%struct.s53* byval align 4)
+comment|// CHECK-LABEL: define void @f53(%struct.s53* byval align 4)
 end_comment
 
 begin_struct
@@ -1398,7 +1398,7 @@ typedef|(4)));
 end_typedef
 
 begin_comment
-comment|// CHECK: define i32 @f54(i32 %arg.coerce)
+comment|// CHECK-LABEL: define i32 @f54(i32 %arg.coerce)
 end_comment
 
 begin_comment
@@ -1432,7 +1432,7 @@ typedef|(16)));
 end_typedef
 
 begin_comment
-comment|// CHECK: define<2 x i64> @f55(<4 x i32> %arg)
+comment|// CHECK-LABEL: define<2 x i64> @f55(<4 x i32> %arg)
 end_comment
 
 begin_comment
@@ -1456,7 +1456,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f56(
+comment|// CHECK-LABEL: define void @f56(
 end_comment
 
 begin_comment
@@ -1813,7 +1813,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f57(i32 %x.0, i32 %x.1)
+comment|// CHECK-LABEL: define void @f57(i32 %x.0, i32 %x.1)
 end_comment
 
 begin_comment
@@ -1865,7 +1865,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f58()
+comment|// CHECK-LABEL: define void @f58()
 end_comment
 
 begin_union
@@ -1887,7 +1887,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define i64 @f59()
+comment|// CHECK-LABEL: define i64 @f59()
 end_comment
 
 begin_struct
@@ -1925,7 +1925,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f60(%struct.s60* byval align 4, i32 %y)
+comment|// CHECK-LABEL: define void @f60(%struct.s60* byval align 4, i32 %y)
 end_comment
 
 begin_struct
@@ -1963,7 +1963,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f61(i32 %x, %struct.s61* byval align 16 %y)
+comment|// CHECK-LABEL: define void @f61(i32 %x, %struct.s61* byval align 16 %y)
 end_comment
 
 begin_typedef
@@ -2005,7 +2005,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f62(i32 %x, %struct.s62* byval align 4)
+comment|// CHECK-LABEL: define void @f62(i32 %x, %struct.s62* byval align 4)
 end_comment
 
 begin_typedef
@@ -2058,7 +2058,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @f63
+comment|// CHECK-LABEL: define i32 @f63
 end_comment
 
 begin_comment
@@ -2143,7 +2143,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f64(%struct.s64* byval align 4 %x)
+comment|// CHECK-LABEL: define void @f64(%struct.s64* byval align 4 %x)
 end_comment
 
 begin_struct
@@ -2178,7 +2178,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define float @f65()
+comment|// CHECK-LABEL: define float @f65()
 end_comment
 
 begin_struct
@@ -2220,7 +2220,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define<2 x i64> @f66
+comment|// CHECK-LABEL: define<2 x i64> @f66
 end_comment
 
 begin_comment
@@ -2316,7 +2316,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f67(%struct.s67* byval align 4 %x)
+comment|// CHECK-LABEL: define void @f67(%struct.s67* byval align 4 %x)
 end_comment
 
 end_unit

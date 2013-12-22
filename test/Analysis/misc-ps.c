@@ -1,7 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -disable-free -analyzer-eagerly-assume -analyzer-checker=core -analyzer-checker=deadcode -verify %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -disable-free -analyzer-eagerly-assume -analyzer-checker=core,deadcode,debug.ExprInspection -verify %s
 end_comment
+
+begin_function_decl
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -1082,6 +1091,85 @@ name|uninitialized
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{uninitialized}}
+block|}
+end_function
+
+begin_comment
+comment|// PR16131: C permits variables to be declared extern void.
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|PR16131
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+specifier|extern
+name|void
+name|v
+decl_stmt|;
+name|int
+modifier|*
+name|ip
+init|=
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|v
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|v
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|ip
+operator|==
+name|cp
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+comment|// expected-warning@-1 {{comparison of distinct pointer types}}
+operator|*
+name|ip
+operator|=
+literal|42
+expr_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+operator|*
+name|ip
+operator|==
+literal|42
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|v
+operator|==
+literal|42
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 

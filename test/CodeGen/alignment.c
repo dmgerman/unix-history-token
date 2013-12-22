@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-linux-gnu -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_macro
@@ -53,6 +53,21 @@ end_comment
 
 begin_comment
 comment|// CHECK: @b = {{.*}}zeroinitializer, align 16
+end_comment
+
+begin_decl_stmt
+name|long
+name|long
+name|int
+name|test5
+index|[
+literal|1024
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK-DAG: @test5 = common global [1024 x i64] zeroinitializer, align 8
 end_comment
 
 begin_comment

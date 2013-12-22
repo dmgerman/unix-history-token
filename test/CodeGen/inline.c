@@ -4,19 +4,19 @@ comment|// RUN: echo "GNU89 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -target i386-unknown-unknown -O1 -emit-llvm -S -o - -std=gnu89 | FileCheck %s --check-prefix=CHECK1
+comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O1 -disable-llvm-optzns -emit-llvm -o - -std=gnu89 | FileCheck %s --check-prefix=CHECK1
 end_comment
 
 begin_comment
-comment|// CHECK1: define i32 @foo()
+comment|// CHECK1-LABEL: define i32 @foo()
 end_comment
 
 begin_comment
-comment|// CHECK1: define i32 @bar()
+comment|// CHECK1-LABEL: define i32 @bar()
 end_comment
 
 begin_comment
-comment|// CHECK1: define void @unreferenced1()
+comment|// CHECK1-LABEL: define void @unreferenced1()
 end_comment
 
 begin_comment
@@ -24,35 +24,35 @@ comment|// CHECK1-NOT: unreferenced2
 end_comment
 
 begin_comment
-comment|// CHECK1: define void @gnu_inline()
+comment|// CHECK1-LABEL: define void @gnu_inline()
 end_comment
 
 begin_comment
-comment|// CHECK1: define i32 @test1
+comment|// CHECK1-LABEL: define i32 @test1
 end_comment
 
 begin_comment
-comment|// CHECK1: define i32 @test2
+comment|// CHECK1-LABEL: define i32 @test2
 end_comment
 
 begin_comment
-comment|// CHECK1: define void @test3()
+comment|// CHECK1-LABEL: define void @test3()
 end_comment
 
 begin_comment
-comment|// CHECK1: define available_externally i32 @test4
+comment|// CHECK1-LABEL: define available_externally i32 @test4
 end_comment
 
 begin_comment
-comment|// CHECK1: define available_externally i32 @test5
+comment|// CHECK1-LABEL: define available_externally i32 @test5
 end_comment
 
 begin_comment
-comment|// CHECK1: define i32 @test6
+comment|// CHECK1-LABEL: define i32 @test6
 end_comment
 
 begin_comment
-comment|// CHECK1: define void @test7
+comment|// CHECK1-LABEL: define void @test7
 end_comment
 
 begin_comment
@@ -64,23 +64,23 @@ comment|// CHECK1-NOT: test9
 end_comment
 
 begin_comment
-comment|// CHECK1: define void @testA
+comment|// CHECK1-LABEL: define void @testA
 end_comment
 
 begin_comment
-comment|// CHECK1: define void @testB
+comment|// CHECK1-LABEL: define void @testB
 end_comment
 
 begin_comment
-comment|// CHECK1: define void @testC
+comment|// CHECK1-LABEL: define void @testC
 end_comment
 
 begin_comment
-comment|// CHECK1: define available_externally void @gnu_ei_inline()
+comment|// CHECK1-LABEL: define available_externally void @gnu_ei_inline()
 end_comment
 
 begin_comment
-comment|// CHECK1: define available_externally i32 @ei()
+comment|// CHECK1-LABEL: define available_externally i32 @ei()
 end_comment
 
 begin_comment
@@ -88,15 +88,15 @@ comment|// RUN: echo "C99 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -target i386-unknown-unknown -O1 -emit-llvm -S -o - -std=gnu99 | FileCheck %s --check-prefix=CHECK2
+comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O1 -disable-llvm-optzns -emit-llvm -o - -std=gnu99 | FileCheck %s --check-prefix=CHECK2
 end_comment
 
 begin_comment
-comment|// CHECK2: define i32 @ei()
+comment|// CHECK2-LABEL: define i32 @ei()
 end_comment
 
 begin_comment
-comment|// CHECK2: define i32 @bar()
+comment|// CHECK2-LABEL: define i32 @bar()
 end_comment
 
 begin_comment
@@ -104,39 +104,39 @@ comment|// CHECK2-NOT: unreferenced1
 end_comment
 
 begin_comment
-comment|// CHECK2: define void @unreferenced2()
+comment|// CHECK2-LABEL: define void @unreferenced2()
 end_comment
 
 begin_comment
-comment|// CHECK2: define void @gnu_inline()
+comment|// CHECK2-LABEL: define void @gnu_inline()
 end_comment
 
 begin_comment
-comment|// CHECK2: define i32 @test1
+comment|// CHECK2-LABEL: define i32 @test1
 end_comment
 
 begin_comment
-comment|// CHECK2: define i32 @test2
+comment|// CHECK2-LABEL: define i32 @test2
 end_comment
 
 begin_comment
-comment|// CHECK2: define void @test3
+comment|// CHECK2-LABEL: define void @test3
 end_comment
 
 begin_comment
-comment|// CHECK2: define available_externally i32 @test4
+comment|// CHECK2-LABEL: define available_externally i32 @test4
 end_comment
 
 begin_comment
-comment|// CHECK2: define available_externally i32 @test5
+comment|// CHECK2-LABEL: define available_externally i32 @test5
 end_comment
 
 begin_comment
-comment|// CHECK2: define i32 @test6
+comment|// CHECK2-LABEL: define i32 @test6
 end_comment
 
 begin_comment
-comment|// CHECK2: define void @test7
+comment|// CHECK2-LABEL: define void @test7
 end_comment
 
 begin_comment
@@ -144,27 +144,27 @@ comment|// CHECK2: define available_externally i{{..}} @strlcpy
 end_comment
 
 begin_comment
-comment|// CHECK2: define void @test9
+comment|// CHECK2-LABEL: define void @test9
 end_comment
 
 begin_comment
-comment|// CHECK2: define void @testA
+comment|// CHECK2-LABEL: define void @testA
 end_comment
 
 begin_comment
-comment|// CHECK2: define void @testB
+comment|// CHECK2-LABEL: define void @testB
 end_comment
 
 begin_comment
-comment|// CHECK2: define void @testC
+comment|// CHECK2-LABEL: define void @testC
 end_comment
 
 begin_comment
-comment|// CHECK2: define available_externally void @gnu_ei_inline()
+comment|// CHECK2-LABEL: define available_externally void @gnu_ei_inline()
 end_comment
 
 begin_comment
-comment|// CHECK2: define available_externally i32 @foo()
+comment|// CHECK2-LABEL: define available_externally i32 @foo()
 end_comment
 
 begin_comment
@@ -172,15 +172,15 @@ comment|// RUN: echo "C++ tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -x c++ %s -target i386-unknown-unknown -O1 -emit-llvm -S -o - -std=c++98 | FileCheck %s --check-prefix=CHECK3
+comment|// RUN: %clang_cc1 -x c++ %s -triple i386-unknown-unknown -O1 -disable-llvm-optzns -emit-llvm -o - -std=c++98 | FileCheck %s --check-prefix=CHECK3
 end_comment
 
 begin_comment
-comment|// CHECK3: define i32 @_Z3barv()
+comment|// CHECK3-LABEL: define i32 @_Z3barv()
 end_comment
 
 begin_comment
-comment|// CHECK3: define linkonce_odr i32 @_Z3foov()
+comment|// CHECK3-LABEL: define linkonce_odr i32 @_Z3foov()
 end_comment
 
 begin_comment
@@ -188,15 +188,47 @@ comment|// CHECK3-NOT: unreferenced
 end_comment
 
 begin_comment
-comment|// CHECK3: define void @_Z10gnu_inlinev()
+comment|// CHECK3-LABEL: define void @_Z10gnu_inlinev()
 end_comment
 
 begin_comment
-comment|// CHECK3: define available_externally void @_Z13gnu_ei_inlinev()
+comment|// CHECK3-LABEL: define available_externally void @_Z13gnu_ei_inlinev()
 end_comment
 
 begin_comment
-comment|// CHECK3: define linkonce_odr i32 @_Z2eiv()
+comment|// CHECK3-LABEL: define linkonce_odr i32 @_Z2eiv()
+end_comment
+
+begin_comment
+comment|// RUN: echo "MS C Mode tests:"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O1 -disable-llvm-optzns -emit-llvm -o - -std=c99 -fms-compatibility | FileCheck %s --check-prefix=CHECK4
+end_comment
+
+begin_comment
+comment|// CHECK4-LABEL: define i32 @bar()
+end_comment
+
+begin_comment
+comment|// CHECK4-LABEL: define void @gnu_inline()
+end_comment
+
+begin_comment
+comment|// CHECK4-LABEL: define available_externally void @gnu_ei_inline()
+end_comment
+
+begin_comment
+comment|// CHECK4-LABEL: define linkonce_odr i32 @foo()
+end_comment
+
+begin_comment
+comment|// CHECK4-NOT: unreferenced
+end_comment
+
+begin_comment
+comment|// CHECK4-LABEL: define linkonce_odr i32 @ei()
 end_comment
 
 begin_function

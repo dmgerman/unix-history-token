@@ -4,7 +4,7 @@ comment|// REQUIRES: ppc64-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -O0 -triple powerpc64-unknown-linux-gnu -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple powerpc64-unknown-linux-gnu -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_typedef
@@ -79,7 +79,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @bar
+comment|// CHECK-LABEL: define void @bar
 end_comment
 
 begin_comment
@@ -196,7 +196,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @foo
+comment|// CHECK-LABEL: define void @foo
 end_comment
 
 begin_comment

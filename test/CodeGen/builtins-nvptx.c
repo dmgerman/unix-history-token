@@ -510,6 +510,22 @@ argument_list|(
 name|d2
 argument_list|)
 decl_stmt|;
+comment|// CHECK: call void @llvm.nvvm.membar.cta()
+name|__nvvm_membar_cta
+argument_list|()
+expr_stmt|;
+comment|// CHECK: call void @llvm.nvvm.membar.gl()
+name|__nvvm_membar_gl
+argument_list|()
+expr_stmt|;
+comment|// CHECK: call void @llvm.nvvm.membar.sys()
+name|__nvvm_membar_sys
+argument_list|()
+expr_stmt|;
+comment|// CHECK: call void @llvm.nvvm.barrier0()
+name|__nvvm_bar0
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

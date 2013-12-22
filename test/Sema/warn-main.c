@@ -4,11 +4,11 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -fdiagnostics-parseable-fixits %s 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 -fsyntax-only -fdiagnostics-parseable-fixits %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -fdiagnostics-parseable-fixits -x c++ %s 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 -fsyntax-only -fdiagnostics-parseable-fixits -x c++ %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
@@ -48,15 +48,11 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-error@+3 {{redefinition of 'main'}}
+comment|// expected-error@+2 {{redefinition of 'main'}}
 end_comment
 
 begin_comment
-comment|// expected-error@+2 {{'main' is not allowed to be declared inline}}
-end_comment
-
-begin_comment
-comment|// expected-note@+1 {{previous definition is here}}
+comment|// expected-error@+1 {{'main' is not allowed to be declared inline}}
 end_comment
 
 begin_function
@@ -73,11 +69,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning@+6 {{function 'main' declared 'noreturn' should not return}}
-end_comment
-
-begin_comment
-comment|// expected-error@+3 {{redefinition of 'main'}}
+comment|// expected-warning@+5 {{function 'main' declared 'noreturn' should not return}}
 end_comment
 
 begin_comment

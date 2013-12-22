@@ -6,7 +6,7 @@ literal|0
 end_if
 
 begin_comment
-comment|// RUN: %clang_cc1 -verify %s 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 -verify %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

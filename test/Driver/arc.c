@@ -1,26 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -ObjC -target i386-apple-darwin10 -m32 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck %s
+comment|// RUN: not %clang -ObjC -target i386-apple-darwin10 -m32 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -x objective-c -target i386-apple-darwin10 -m32 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck %s
+comment|// RUN: not %clang -x objective-c -target i386-apple-darwin10 -m32 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -x objective-c++ -target i386-apple-darwin10 -m32 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck %s
+comment|// RUN: not %clang -x objective-c++ -target i386-apple-darwin10 -m32 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -x c -target i386-apple-darwin10 -m32 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck -check-prefix NOTOBJC %s
+comment|// RUN: not %clang -x c -target i386-apple-darwin10 -m32 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck -check-prefix NOTOBJC %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -x c++ -target i386-apple-darwin10 -m32 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck -check-prefix NOTOBJC %s
+comment|// RUN: not %clang -x c++ -target i386-apple-darwin10 -m32 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck -check-prefix NOTOBJC %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -x objective-c -target x86_64-apple-darwin11 -mmacosx-version-min=10.5 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck -check-prefix UNSUPPORTED %s
+comment|// RUN: not %clang -x objective-c -target x86_64-apple-darwin11 -mmacosx-version-min=10.5 -fobjc-arc %s -fsyntax-only 2>&1 | FileCheck -check-prefix UNSUPPORTED %s
 end_comment
 
 begin_comment

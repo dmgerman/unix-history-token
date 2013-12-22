@@ -12,7 +12,7 @@ comment|// RUN: %clang -target i386-apple-darwin9 -m64 -Xarch_i386 -O2 %s -S -##
 end_comment
 
 begin_comment
-comment|// RUN: grep ' "-O2" ' %t.log | count 0
+comment|// RUN: not grep ' "-O2" ' %t.log
 end_comment
 
 begin_comment

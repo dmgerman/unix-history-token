@@ -25,7 +25,7 @@ typedef|(4)));
 end_typedef
 
 begin_comment
-comment|// CHECK: define void @clang_shufflevector_v_v(
+comment|// CHECK-LABEL: define void @clang_shufflevector_v_v(
 end_comment
 
 begin_function
@@ -75,7 +75,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @clang_shufflevector_v_v_c(
+comment|// CHECK-LABEL: define void @clang_shufflevector_v_v_c(
 end_comment
 
 begin_function
@@ -91,9 +91,6 @@ name|x
 parameter_list|,
 name|float4
 name|y
-parameter_list|,
-name|uint4
-name|mask
 parameter_list|)
 block|{
 comment|// CHECK: [[V:%.*]] = shufflevector<4 x float> {{%.*}},<4 x float> {{%.*}},<4 x i32><i32 0, i32 4, i32 1, i32 5>
@@ -111,6 +108,49 @@ literal|0
 argument_list|,
 literal|4
 argument_list|,
+literal|1
+argument_list|,
+literal|5
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @clang_shufflevector_v_v_undef(
+end_comment
+
+begin_function
+name|void
+name|clang_shufflevector_v_v_undef
+parameter_list|(
+name|float4
+modifier|*
+name|A
+parameter_list|,
+name|float4
+name|x
+parameter_list|,
+name|float4
+name|y
+parameter_list|)
+block|{
+comment|// CHECK: [[V:%.*]] = shufflevector<4 x float> {{%.*}},<4 x float> {{%.*}},<4 x i32><i32 0, i32 4, i32 undef, i32 5>
+comment|// CHECK: store<4 x float> [[V]],<4 x float>* {{%.*}}
+operator|*
+name|A
+operator|=
+name|__builtin_shufflevector
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+operator|-
 literal|1
 argument_list|,
 literal|5

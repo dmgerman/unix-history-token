@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/ASTUnit.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Tooling/Tooling.h"
 end_include
 
@@ -68,6 +74,13 @@ block|{
 name|namespace
 name|ast_matchers
 block|{
+name|using
+name|clang
+operator|::
+name|tooling
+operator|::
+name|buildASTFromCodeWithArgs
+expr_stmt|;
 name|using
 name|clang
 operator|::
@@ -127,6 +140,11 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|void
+name|onEndOfTranslationUnit
+parameter_list|()
+block|{}
 block|}
 empty_stmt|;
 comment|// If 'FindResultVerifier' is not NULL, sets *Verified to the result of
@@ -204,6 +222,21 @@ name|true
 expr_stmt|;
 block|}
 block|}
+name|void
+name|onEndOfTranslationUnit
+argument_list|()
+name|LLVM_OVERRIDE
+block|{
+if|if
+condition|(
+name|FindResultReviewer
+condition|)
+name|FindResultReviewer
+operator|->
+name|onEndOfTranslationUnit
+argument_list|()
+expr_stmt|;
+block|}
 name|private
 operator|:
 name|bool
@@ -240,6 +273,10 @@ name|bool
 name|Found
 operator|=
 name|false
+block|,
+name|DynamicFound
+operator|=
+name|false
 block|;
 name|MatchFinder
 name|Finder
@@ -255,6 +292,28 @@ literal|0
 argument|,&Found)
 argument_list|)
 block|;
+if|if
+condition|(
+operator|!
+name|Finder
+operator|.
+name|addDynamicMatcher
+argument_list|(
+argument|AMatcher
+argument_list|,
+argument|new VerifyMatch(
+literal|0
+argument|,&DynamicFound)
+argument_list|)
+condition|)
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Could not add dynamic matcher"
+return|;
 name|OwningPtr
 operator|<
 name|FrontendActionFactory
@@ -267,7 +326,7 @@ operator|&
 name|Finder
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 comment|// Some tests use typeof, which is a gnu extension.
 name|std
 operator|::
@@ -283,7 +342,7 @@ literal|1
 argument_list|,
 name|CompileArg
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -311,6 +370,30 @@ operator|<<
 name|Code
 operator|<<
 literal|"\""
+return|;
+block|}
+if|if
+condition|(
+name|Found
+operator|!=
+name|DynamicFound
+condition|)
+block|{
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Dynamic match result ("
+operator|<<
+name|DynamicFound
+operator|<<
+literal|") does not match static result ("
+operator|<<
+name|Found
+operator|<<
+literal|")"
 return|;
 block|}
 if|if
@@ -565,6 +648,97 @@ operator|<<
 literal|"\""
 return|;
 block|}
+name|VerifiedResult
+operator|=
+name|false
+expr_stmt|;
+name|OwningPtr
+operator|<
+name|ASTUnit
+operator|>
+name|AST
+argument_list|(
+name|buildASTFromCodeWithArgs
+argument_list|(
+name|Code
+argument_list|,
+name|Args
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|AST
+operator|.
+name|get
+argument_list|()
+condition|)
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Parsing error in \""
+operator|<<
+name|Code
+operator|<<
+literal|"\" while building AST"
+return|;
+name|Finder
+operator|.
+name|matchAST
+argument_list|(
+name|AST
+operator|->
+name|getASTContext
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|VerifiedResult
+operator|&&
+name|ExpectResult
+condition|)
+block|{
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Could not verify result in \""
+operator|<<
+name|Code
+operator|<<
+literal|"\" with AST"
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|VerifiedResult
+operator|&&
+operator|!
+name|ExpectResult
+condition|)
+block|{
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Verified unexpected result in \""
+operator|<<
+name|Code
+operator|<<
+literal|"\" with AST"
+return|;
+block|}
 return|return
 name|testing
 operator|::
@@ -572,8 +746,17 @@ name|AssertionSuccess
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|// FIXME: Find better names for these functions (or document what they
+end_comment
+
+begin_comment
 comment|// do more precisely).
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -604,6 +787,9 @@ name|true
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -634,12 +820,15 @@ name|false
 argument_list|)
 return|;
 block|}
-block|}
-comment|// end namespace ast_matchers
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
+unit|}
+comment|// end namespace ast_matchers
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

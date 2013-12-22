@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -ftabstop 3 -fsyntax-only %s 2>&1 | FileCheck -check-prefix=3 -strict-whitespace %s
+comment|// RUN: %clang_cc1 -ftabstop 3 -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-3 -strict-whitespace %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -ftabstop 4 -fsyntax-only %s 2>&1 | FileCheck -check-prefix=4 -strict-whitespace %s
+comment|// RUN: %clang_cc1 -ftabstop 4 -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-4 -strict-whitespace %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -ftabstop 5 -fsyntax-only %s 2>&1 | FileCheck -check-prefix=5 -strict-whitespace %s
+comment|// RUN: %clang_cc1 -ftabstop 5 -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-5 -strict-whitespace %s
 end_comment
 
 begin_comment

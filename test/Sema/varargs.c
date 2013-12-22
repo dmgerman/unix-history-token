@@ -398,5 +398,39 @@ comment|// expected-warning {{second argument to 'va_arg' is of promotable type 
 block|}
 end_function
 
+begin_function
+name|void
+name|f10
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|__builtin_va_list
+name|ap
+decl_stmt|;
+name|i
+operator|=
+name|__builtin_va_start
+argument_list|(
+name|ap
+argument_list|,
+name|a
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{assigning to 'int' from incompatible type 'void'}}
+name|__builtin_va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

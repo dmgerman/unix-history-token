@@ -1005,5 +1005,32 @@ unit|)))
 empty_stmt|;
 end_empty_stmt
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|foo3
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format_arg
+parameter_list|(
+function_decl|"foo"
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error{{'format_arg' attribute requires parameter 1 to be an integer constant}}
+end_comment
+
 end_unit
 

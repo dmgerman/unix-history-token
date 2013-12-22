@@ -132,23 +132,11 @@ comment|// CHECK-GNU:     ext_gnu_old_style_field_designator
 end_comment
 
 begin_comment
-comment|// CHECK-GNU:   -Wvla
+comment|// CHECK-GNU:   -Wvla-extension
 end_comment
 
 begin_comment
 comment|// CHECK-GNU:     ext_vla
-end_comment
-
-begin_comment
-comment|// CHECK-GNU:   ext_array_init_copy
-end_comment
-
-begin_comment
-comment|// CHECK-GNU:   ext_empty_struct_union
-end_comment
-
-begin_comment
-comment|// CHECK-GNU:   ext_expr_not_ice
 end_comment
 
 begin_comment

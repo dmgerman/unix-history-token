@@ -79,5 +79,37 @@ begin_comment
 comment|// CHECK-OPTION: "-split-dwarf-file" "split-debug.dwo"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gsplit-dwarf -S -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-ASM< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-ASM-NOT: objcopy
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -no-integrated-as -gsplit-dwarf -c -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-IAS< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-IAS: objcopy
+end_comment
+
 end_unit
 

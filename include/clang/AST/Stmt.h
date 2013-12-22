@@ -1194,13 +1194,6 @@ name|HadArrayRangeDesignator
 range|:
 literal|1
 decl_stmt|;
-comment|/// Whether this initializer list initializes a std::initializer_list
-comment|/// object.
-name|unsigned
-name|InitializesStdInitializerList
-range|:
-literal|1
-decl_stmt|;
 block|}
 empty_stmt|;
 name|class
@@ -1320,6 +1313,7 @@ parameter_list|(
 name|size_t
 name|bytes
 parameter_list|,
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -1329,8 +1323,6 @@ name|alignment
 init|=
 literal|8
 parameter_list|)
-function_decl|throw
-parameter_list|()
 function_decl|;
 name|void
 modifier|*
@@ -1340,6 +1332,7 @@ parameter_list|(
 name|size_t
 name|bytes
 parameter_list|,
+specifier|const
 name|ASTContext
 modifier|*
 name|C
@@ -1349,9 +1342,20 @@ name|alignment
 init|=
 literal|8
 parameter_list|)
-function_decl|throw
-parameter_list|()
-function_decl|;
+block|{
+return|return
+name|operator
+name|new
+argument_list|(
+name|bytes
+argument_list|,
+operator|*
+name|C
+argument_list|,
+name|alignment
+argument_list|)
+return|;
+block|}
 name|void
 modifier|*
 name|operator
@@ -1378,6 +1382,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
+specifier|const
 name|ASTContext
 modifier|&
 parameter_list|,
@@ -1393,6 +1398,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
+specifier|const
 name|ASTContext
 modifier|*
 parameter_list|,
@@ -1404,16 +1410,14 @@ block|{ }
 name|void
 name|operator
 name|delete
-argument_list|(
+parameter_list|(
 name|void
-operator|*
-argument_list|,
-name|std
-operator|::
+modifier|*
+parameter_list|,
 name|size_t
-argument_list|)
-name|throw
-argument_list|()
+parameter_list|)
+function|throw
+parameter_list|()
 block|{ }
 name|void
 name|operator
@@ -1607,6 +1611,7 @@ comment|/// back to its original source language syntax.
 name|void
 name|dumpPretty
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -1684,16 +1689,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// hasImplicitControlFlow - Some statements (e.g. short circuited operations)
-comment|///  contain implicit control-flow in the order their subexpressions
-comment|///  are evaluated.  This predicate returns true if this statement has
-comment|///  such implicit control-flow.  Such statements are also specially handled
-comment|///  within CFGs.
-name|bool
-name|hasImplicitControlFlow
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// Child Iterators: All subclasses must implement 'children'
 comment|/// to permit easy iteration over the substatements/subexpessions of an
 comment|/// AST node.  This permits easy iteration over all nodes in the AST.
@@ -2378,7 +2373,7 @@ name|public
 operator|:
 name|CompoundStmt
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|ArrayRef<Stmt*> Stmts
 argument_list|,
@@ -2387,7 +2382,7 @@ argument_list|,
 argument|SourceLocation RB
 argument_list|)
 block|;
-comment|// \brief Build an empty compound statment with a location.
+comment|// \brief Build an empty compound statement with a location.
 name|explicit
 name|CompoundStmt
 argument_list|(
@@ -2448,7 +2443,7 @@ block|;   }
 name|void
 name|setStmts
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|Stmt **Stmts
 argument_list|,
@@ -4036,7 +4031,7 @@ name|AttributedStmt
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
@@ -4051,7 +4046,7 @@ name|AttributedStmt
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|unsigned NumAttrs
 argument_list|)
@@ -4204,7 +4199,7 @@ name|public
 operator|:
 name|IfStmt
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation IL
 argument_list|,
@@ -4251,6 +4246,7 @@ block|;
 name|void
 name|setConditionVariable
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|C
@@ -4590,6 +4586,7 @@ name|public
 operator|:
 name|SwitchStmt
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|C
@@ -4635,6 +4632,7 @@ block|;
 name|void
 name|setConditionVariable
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|C
@@ -4787,9 +4785,6 @@ name|FirstCase
 return|;
 block|}
 comment|/// \brief Set the case list for this switch statement.
-comment|///
-comment|/// The caller is responsible for incrementing the retain counts on
-comment|/// all of the SwitchCase statements in this list.
 name|void
 name|setSwitchCaseList
 argument_list|(
@@ -4990,7 +4985,7 @@ name|public
 operator|:
 name|WhileStmt
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|VarDecl *Var
 argument_list|,
@@ -5032,6 +5027,7 @@ block|;
 name|void
 name|setConditionVariable
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|C
@@ -5615,7 +5611,7 @@ name|public
 operator|:
 name|ForStmt
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|Stmt *Init
 argument_list|,
@@ -5677,6 +5673,7 @@ block|;
 name|void
 name|setConditionVariable
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|C
@@ -7095,7 +7092,7 @@ operator|::
 name|string
 name|generateAsmString
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|)
 specifier|const
 block|;
@@ -7425,7 +7422,7 @@ name|public
 operator|:
 name|GCCAsmStmt
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation asmloc
 argument_list|,
@@ -7696,7 +7693,7 @@ name|AnalyzeAsmString
 argument_list|(
 argument|SmallVectorImpl<AsmStringPiece>&Pieces
 argument_list|,
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|unsigned&DiagOffs
 argument_list|)
@@ -7708,7 +7705,7 @@ operator|::
 name|string
 name|generateAsmString
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|)
 specifier|const
 block|;
@@ -7959,7 +7956,7 @@ operator|:
 name|void
 name|setOutputsAndInputsAndClobbers
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|IdentifierInfo **Names
 argument_list|,
@@ -8103,7 +8100,7 @@ name|public
 operator|:
 name|MSAsmStmt
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation asmloc
 argument_list|,
@@ -8247,7 +8244,7 @@ operator|::
 name|string
 name|generateAsmString
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|)
 specifier|const
 block|;
@@ -8464,7 +8461,7 @@ operator|:
 name|void
 name|initialize
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|StringRef AsmString
 argument_list|,
@@ -8597,7 +8594,7 @@ name|SEHExceptStmt
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation ExceptLoc
 argument_list|,
@@ -8770,7 +8767,7 @@ name|SEHFinallyStmt
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation FinallyLoc
 argument_list|,
@@ -8940,7 +8937,7 @@ name|SEHTryStmt
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|bool isCXXTry
 argument_list|,
@@ -9378,7 +9375,7 @@ name|CapturedStmt
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|Stmt *S
 argument_list|,
@@ -9398,7 +9395,7 @@ name|CapturedStmt
 operator|*
 name|CreateDeserialized
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|unsigned NumCaptures
 argument_list|)

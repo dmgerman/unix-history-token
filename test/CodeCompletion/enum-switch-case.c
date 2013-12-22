@@ -60,7 +60,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:19:10 %s -o - | FileCheck -check-prefix=CC1 %s
+comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:19:10 %s -o - | FileCheck -check-prefix=CHECK-CC1 %s
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ comment|// CHECK-CC1-NEXT: Violet
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:25:10 %s -o - | FileCheck -check-prefix=CC2 %s
+comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:25:10 %s -o - | FileCheck -check-prefix=CHECK-CC2 %s
 end_comment
 
 begin_comment

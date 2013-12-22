@@ -12,6 +12,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|clang_analyzer_warnIfReached
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|f
@@ -138,6 +145,63 @@ name|g
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{FALSE}}
+block|}
+end_function
+
+begin_function
+name|void
+name|nullFunctionPointerConstant
+parameter_list|()
+block|{
+name|void
+function_decl|(
+modifier|*
+name|f
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|f
+argument_list|()
+expr_stmt|;
+comment|// expected-warning{{Called function pointer is null}}
+name|clang_analyzer_warnIfReached
+argument_list|()
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|nullFunctionPointerConstraint
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|f
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|)
+block|{
+if|if
+condition|(
+name|f
+condition|)
+return|return;
+name|f
+argument_list|()
+expr_stmt|;
+comment|// expected-warning{{Called function pointer is null}}
+name|clang_analyzer_warnIfReached
+argument_list|()
+expr_stmt|;
+comment|// no-warning
 block|}
 end_function
 

@@ -15,6 +15,14 @@ begin_comment
 comment|// RUN:   -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple powerpc64-pc-linux-gnu -DTEST_64BIT_PPC64 -fsyntax-only \
+end_comment
+
+begin_comment
+comment|// RUN:   -verify %s
+end_comment
+
 begin_typedef
 typedef|typedef
 name|int
@@ -119,7 +127,7 @@ typedef|));
 end_typedef
 
 begin_comment
-comment|// expected-error{{attribute requires unquoted parameter}}
+comment|// expected-error{{'mode' attribute takes one argument}}
 end_comment
 
 begin_typedef
@@ -133,7 +141,7 @@ typedef|()));
 end_typedef
 
 begin_comment
-comment|// expected-error{{attribute requires unquoted parameter}}
+comment|// expected-error{{'mode' attribute takes one argument}}
 end_comment
 
 begin_typedef
@@ -191,6 +199,20 @@ end_typedef
 
 begin_comment
 comment|// expected-error{{type of machine mode does not match type of base type}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|invalid_6
+name|__attribute__
+typedef|((
+name|mode
+typedef|(12)));
+end_typedef
+
+begin_comment
+comment|// expected-error{{'mode' attribute requires an identifier}}
 end_comment
 
 begin_typedef
@@ -272,6 +294,16 @@ name|DC
 typedef|)));
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TEST_64BIT_PPC64
+end_ifndef
+
+begin_comment
+comment|// Note, 'XC' mode is illegal for PPC64 machines.
+end_comment
+
 begin_typedef
 typedef|typedef
 specifier|_Complex
@@ -284,6 +316,11 @@ typedef|(
 name|XC
 typedef|)));
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// PR6108: Correctly select 'long' built in type on 64-bit platforms for 64 bit
@@ -714,6 +751,112 @@ block|{
 name|f_ui64_arg
 argument_list|(
 name|y
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+name|float
+name|f128ibm
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|TF
+typedef|)));
+end_typedef
+
+begin_comment
+comment|// expected-error{{unsupported machine mode 'TF'}}
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|TEST_64BIT_PPC64
+end_elif
+
+begin_typedef
+typedef|typedef
+name|float
+name|f128ibm
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|TF
+typedef|)));
+end_typedef
+
+begin_typedef
+typedef|typedef
+specifier|_Complex
+name|float
+name|c128ibm
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|TC
+typedef|)));
+end_typedef
+
+begin_function_decl
+name|void
+name|f_ft128_arg
+parameter_list|(
+name|long
+name|double
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|f_ft128_complex_arg
+parameter_list|(
+specifier|_Complex
+name|long
+name|double
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test_TFtype
+parameter_list|(
+name|f128ibm
+modifier|*
+name|a
+parameter_list|)
+block|{
+name|f_ft128_arg
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_TCtype
+parameter_list|(
+name|c128ibm
+modifier|*
+name|a
+parameter_list|)
+block|{
+name|f_ft128_complex_arg
+argument_list|(
+name|a
 argument_list|)
 expr_stmt|;
 block|}

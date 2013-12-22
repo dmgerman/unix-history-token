@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fmessage-length 40 2>&1 | FileCheck -strict-whitespace %s
+comment|// RUN: not %clang_cc1 %s -fmessage-length 40 2>&1 | FileCheck -strict-whitespace %s
 end_comment
 
 begin_function

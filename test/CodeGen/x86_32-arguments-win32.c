@@ -4,11 +4,11 @@ comment|// RUN: %clang_cc1 -w -triple i386-pc-win32 -emit-llvm -o - %s | FileChe
 end_comment
 
 begin_comment
-comment|// CHECK: define i64 @f1_1()
+comment|// CHECK-LABEL: define i64 @f1_1()
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f1_2(%struct.s1* byval align 4 %a0)
+comment|// CHECK-LABEL: define void @f1_2(%struct.s1* byval align 4 %a0)
 end_comment
 
 begin_struct
@@ -53,7 +53,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @f2_1()
+comment|// CHECK-LABEL: define i32 @f2_1()
 end_comment
 
 begin_struct
@@ -87,7 +87,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i16 @f3_1()
+comment|// CHECK-LABEL: define i16 @f3_1()
 end_comment
 
 begin_struct
@@ -121,7 +121,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i8 @f4_1()
+comment|// CHECK-LABEL: define i8 @f4_1()
 end_comment
 
 begin_struct
@@ -159,11 +159,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i64 @f5_1()
+comment|// CHECK-LABEL: define i64 @f5_1()
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f5_2(%struct.s5* byval align 4)
+comment|// CHECK-LABEL: define void @f5_2(%struct.s5* byval align 4)
 end_comment
 
 begin_struct
@@ -205,11 +205,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define i32 @f6_1()
+comment|// CHECK-LABEL: define i32 @f6_1()
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f6_2(%struct.s6* byval align 4 %a0)
+comment|// CHECK-LABEL: define void @f6_2(%struct.s6* byval align 4 %a0)
 end_comment
 
 begin_struct

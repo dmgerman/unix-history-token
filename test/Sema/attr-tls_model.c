@@ -104,7 +104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes one argument}}
+comment|// expected-error {{'tls_model' attribute takes one argument}}
 end_comment
 
 begin_decl_stmt
@@ -125,7 +125,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{argument to tls_model attribute was not a string literal}}
+comment|// expected-error {{'tls_model' attribute requires a string}}
 end_comment
 
 begin_decl_stmt

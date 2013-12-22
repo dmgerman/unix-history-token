@@ -53,7 +53,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test2_f()
+comment|// CHECK-LABEL: define void @test2_f()
 end_comment
 
 begin_function
@@ -156,7 +156,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test4_f()
+comment|// CHECK-LABEL: define void @test4_f()
 end_comment
 
 begin_function_decl

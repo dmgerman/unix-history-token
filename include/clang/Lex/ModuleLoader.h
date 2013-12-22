@@ -195,6 +195,14 @@ name|ModuleLoader
 block|{
 name|public
 label|:
+name|ModuleLoader
+argument_list|()
+operator|:
+name|HadFatalFailure
+argument_list|(
+argument|false
+argument_list|)
+block|{}
 name|virtual
 operator|~
 name|ModuleLoader
@@ -262,6 +270,9 @@ name|Complain
 argument_list|)
 init|=
 literal|0
+decl_stmt|;
+name|bool
+name|HadFatalFailure
 decl_stmt|;
 block|}
 empty_stmt|;

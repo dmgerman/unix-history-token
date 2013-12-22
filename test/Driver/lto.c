@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// -emit-llvm, -flto, and -O4 all cause a switch to llvm-bc object files.
+comment|// -flto causes a switch to llvm-bc object files.
 end_comment
 
 begin_comment
@@ -12,19 +12,7 @@ comment|// RUN: grep '2: compiler, {1}, lto-bc' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-print-phases -c %s -O4 2> %t.log
-end_comment
-
-begin_comment
-comment|// RUN: grep '2: compiler, {1}, lto-bc' %t.log
-end_comment
-
-begin_comment
-comment|// and -emit-llvm doesn't alter pipeline (unfortunately?).
-end_comment
-
-begin_comment
-comment|// RUN: %clang -ccc-print-phases %s -emit-llvm 2> %t.log
+comment|// RUN: %clang -ccc-print-phases %s -flto 2> %t.log
 end_comment
 
 begin_comment
@@ -52,7 +40,7 @@ comment|// (unfortunately).
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -emit-llvm -save-temps -### 2> %t.log
+comment|// RUN: %clang %s -flto -save-temps -### 2> %t.log
 end_comment
 
 begin_comment
@@ -68,11 +56,19 @@ comment|// RUN: grep '".*a.out" .*".*lto\.o"' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -emit-llvm -S -### 2> %t.log
+comment|// RUN: %clang %s -flto -S -### 2> %t.log
 end_comment
 
 begin_comment
 comment|// RUN: grep '"-o" ".*lto\.s" "-x" "c" ".*lto\.c"' %t.log
+end_comment
+
+begin_comment
+comment|// RUN: not %clang %s -emit-llvm 2>&1 | FileCheck --check-prefix=LLVM-LINK %s
+end_comment
+
+begin_comment
+comment|// LLVM-LINK: -emit-llvm cannot be used when linking
 end_comment
 
 end_unit

@@ -44,7 +44,7 @@ comment|// RUN: %clang_cc1 -fmodules -x objective-c++ -fmodules-cache-path=%t -f
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -fdisable-module-hash %s -DNONEXISTENT 2>&1 | FileCheck -check-prefix=CHECK-NONEXISTENT %s
+comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -fdisable-module-hash %s -DNONEXISTENT 2>&1 | FileCheck -check-prefix=CHECK-NONEXISTENT %s
 end_comment
 
 begin_comment

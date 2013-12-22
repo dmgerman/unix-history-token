@@ -62,7 +62,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:    define void @test0()
+comment|// CHECK-LABEL:    define void @test0()
 end_comment
 
 begin_comment
@@ -163,7 +163,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:    define void @test1()
+comment|// CHECK-LABEL:    define void @test1()
 end_comment
 
 begin_comment

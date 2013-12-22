@@ -103,7 +103,7 @@ comment|// CHECK-HIDDEN: @test4 = hidden global i32 10
 end_comment
 
 begin_comment
-comment|// CHECK-DEFAULT: define i32 @f_def()
+comment|// CHECK-DEFAULT-LABEL: define i32 @f_def()
 end_comment
 
 begin_comment
@@ -111,11 +111,11 @@ comment|// CHECK-DEFAULT: declare void @f_ext()
 end_comment
 
 begin_comment
-comment|// CHECK-DEFAULT: define internal void @f_deferred()
+comment|// CHECK-DEFAULT-LABEL: define internal void @f_deferred()
 end_comment
 
 begin_comment
-comment|// CHECK-PROTECTED: define protected i32 @f_def()
+comment|// CHECK-PROTECTED-LABEL: define protected i32 @f_def()
 end_comment
 
 begin_comment
@@ -123,11 +123,11 @@ comment|// CHECK-PROTECTED: declare void @f_ext()
 end_comment
 
 begin_comment
-comment|// CHECK-PROTECTED: define internal void @f_deferred()
+comment|// CHECK-PROTECTED-LABEL: define internal void @f_deferred()
 end_comment
 
 begin_comment
-comment|// CHECK-HIDDEN: define hidden i32 @f_def()
+comment|// CHECK-HIDDEN-LABEL: define hidden i32 @f_def()
 end_comment
 
 begin_comment
@@ -135,7 +135,7 @@ comment|// CHECK-HIDDEN: declare void @f_ext()
 end_comment
 
 begin_comment
-comment|// CHECK-HIDDEN: define internal void @f_deferred()
+comment|// CHECK-HIDDEN-LABEL: define internal void @f_deferred()
 end_comment
 
 begin_function_decl
@@ -191,15 +191,15 @@ comment|// PR8457
 end_comment
 
 begin_comment
-comment|// CHECK-DEFAULT: define void @test1(
+comment|// CHECK-DEFAULT-LABEL: define void @test1(
 end_comment
 
 begin_comment
-comment|// CHECK-PROTECTED: define void @test1(
+comment|// CHECK-PROTECTED-LABEL: define void @test1(
 end_comment
 
 begin_comment
-comment|// CHECK-HIDDEN: define void @test1(
+comment|// CHECK-HIDDEN-LABEL: define void @test1(
 end_comment
 
 begin_struct
@@ -239,15 +239,15 @@ comment|// rdar://problem/8595231
 end_comment
 
 begin_comment
-comment|// CHECK-DEFAULT: define void @test2()
+comment|// CHECK-DEFAULT-LABEL: define void @test2()
 end_comment
 
 begin_comment
-comment|// CHECK-PROTECTED: define void @test2()
+comment|// CHECK-PROTECTED-LABEL: define void @test2()
 end_comment
 
 begin_comment
-comment|// CHECK-HIDDEN: define void @test2()
+comment|// CHECK-HIDDEN-LABEL: define void @test2()
 end_comment
 
 begin_function_decl
@@ -278,15 +278,15 @@ block|{}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK-DEFAULT: define hidden void @test3()
+comment|// CHECK-DEFAULT-LABEL: define hidden void @test3()
 end_comment
 
 begin_comment
-comment|// CHECK-PROTECTED: define hidden void @test3()
+comment|// CHECK-PROTECTED-LABEL: define hidden void @test3()
 end_comment
 
 begin_comment
-comment|// CHECK-HIDDEN: define hidden void @test3()
+comment|// CHECK-HIDDEN-LABEL: define hidden void @test3()
 end_comment
 
 begin_function_decl
@@ -334,15 +334,15 @@ comment|// rdar://12399248
 end_comment
 
 begin_comment
-comment|// CHECK-DEFAULT: define hidden void @test5()
+comment|// CHECK-DEFAULT-LABEL: define hidden void @test5()
 end_comment
 
 begin_comment
-comment|// CHECK-PROTECTED: define hidden void @test5()
+comment|// CHECK-PROTECTED-LABEL: define hidden void @test5()
 end_comment
 
 begin_comment
-comment|// CHECK-HIDDEN: define hidden void @test5()
+comment|// CHECK-HIDDEN-LABEL: define hidden void @test5()
 end_comment
 
 begin_macro

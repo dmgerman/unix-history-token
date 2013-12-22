@@ -63,7 +63,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define<2 x float> @f
+comment|// CHECK-LABEL: define<2 x float> @f
 end_comment
 
 begin_comment
@@ -101,7 +101,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define<2 x float> @f2
+comment|// CHECK-LABEL: define<2 x float> @f2
 end_comment
 
 begin_comment

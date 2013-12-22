@@ -810,6 +810,73 @@ operator|&
 name|Pending
 argument_list|)
 block|;
+comment|/// \brief Read the set of late parsed template functions for this source.
+comment|///
+comment|/// The external source should insert its own late parsed template functions
+comment|/// into the map. Note that this routine may be invoked multiple times; the
+comment|/// external source should take care not to introduce the same map entries
+comment|/// repeatedly.
+name|virtual
+name|void
+name|ReadLateParsedTemplates
+argument_list|(
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|FunctionDecl
+operator|*
+argument_list|,
+name|LateParsedTemplate
+operator|*
+operator|>
+operator|&
+name|LPTMap
+argument_list|)
+block|;
+comment|/// \copydoc ExternalSemaSource::CorrectTypo
+comment|/// \note Returns the first nonempty correction.
+name|virtual
+name|TypoCorrection
+name|CorrectTypo
+argument_list|(
+argument|const DeclarationNameInfo&Typo
+argument_list|,
+argument|int LookupKind
+argument_list|,
+argument|Scope *S
+argument_list|,
+argument|CXXScopeSpec *SS
+argument_list|,
+argument|CorrectionCandidateCallback&CCC
+argument_list|,
+argument|DeclContext *MemberContext
+argument_list|,
+argument|bool EnteringContext
+argument_list|,
+argument|const ObjCObjectPointerType *OPT
+argument_list|)
+block|;
+comment|/// \brief Produces a diagnostic note if one of the attached sources
+comment|/// contains a complete definition for \p T. Queries the sources in list
+comment|/// order until the first one claims that a diagnostic was produced.
+comment|///
+comment|/// \param Loc the location at which a complete type was required but not
+comment|/// provided
+comment|///
+comment|/// \param T the \c QualType that should have been complete at \p Loc
+comment|///
+comment|/// \return true if a diagnostic was produced, false otherwise.
+name|virtual
+name|bool
+name|MaybeDiagnoseMissingCompleteType
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|QualType T
+argument_list|)
+block|;
 comment|// isa/cast/dyn_cast support
 specifier|static
 name|bool

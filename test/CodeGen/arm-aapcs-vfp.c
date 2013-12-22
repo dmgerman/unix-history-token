@@ -436,7 +436,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @f33(%struct.s33* byval %s)
+comment|// CHECK-LABEL: define arm_aapcs_vfpcc void @f33(%struct.s33* byval %s)
 end_comment
 
 begin_struct

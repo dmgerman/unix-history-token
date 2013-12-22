@@ -238,6 +238,31 @@ begin_comment
 comment|// expected-warning{{'unavailable' availability overrides all other availability information}}
 end_comment
 
+begin_function_decl
+name|void
+name|f7
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(availability
+parameter_list|(
+name|macosx
+parameter_list|,
+name|message
+init|=
+literal|L"wide"
+parameter_list|)
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error {{expected string literal for optional message in 'availability' attribute}}
+end_comment
+
 begin_comment
 comment|// rdar://10095131
 end_comment

@@ -168,7 +168,7 @@ name|Warnings
 name|without
 name|flags
 argument_list|(
-literal|143
+literal|134
 argument_list|)
 operator|:
 name|CHECK
@@ -176,11 +176,6 @@ operator|-
 name|NEXT
 operator|:
 name|ext_delete_void_ptr_operand
-name|CHECK
-operator|-
-name|NEXT
-operator|:
-name|ext_enum_friend
 name|CHECK
 operator|-
 name|NEXT
@@ -485,11 +480,6 @@ name|CHECK
 operator|-
 name|NEXT
 operator|:
-name|warn_hex_escape_too_large
-name|CHECK
-operator|-
-name|NEXT
-operator|:
 name|warn_ignoring_ftabstop_value
 name|CHECK
 operator|-
@@ -511,11 +501,6 @@ operator|-
 name|NEXT
 operator|:
 name|warn_inline_namespace_reopened_noninline
-name|CHECK
-operator|-
-name|NEXT
-operator|:
-name|warn_integer_too_large
 name|CHECK
 operator|-
 name|NEXT
@@ -596,11 +581,6 @@ operator|-
 name|NEXT
 operator|:
 name|warn_objc_protocol_qualifier_missing_id
-name|CHECK
-operator|-
-name|NEXT
-operator|:
-name|warn_octal_escape_too_large
 name|CHECK
 operator|-
 name|NEXT
@@ -760,11 +740,6 @@ name|CHECK
 operator|-
 name|NEXT
 operator|:
-name|warn_previous_alias_decl
-name|CHECK
-operator|-
-name|NEXT
-operator|:
 name|warn_property_attr_mismatch
 name|CHECK
 operator|-
@@ -806,21 +781,6 @@ operator|-
 name|NEXT
 operator|:
 name|warn_related_result_type_compatibility_protocol
-name|CHECK
-operator|-
-name|NEXT
-operator|:
-name|warn_second_parameter_of_va_start_not_last_named_argument
-name|CHECK
-operator|-
-name|NEXT
-operator|:
-name|warn_second_parameter_to_va_arg_never_compatible
-name|CHECK
-operator|-
-name|NEXT
-operator|:
-name|warn_static_inline_explicit_inst_ignored
 name|CHECK
 operator|-
 name|NEXT
@@ -870,11 +830,6 @@ name|CHECK
 operator|-
 name|NEXT
 operator|:
-name|warn_unknown_method_family
-name|CHECK
-operator|-
-name|NEXT
-operator|:
 name|warn_use_out_of_scope_declaration
 name|CHECK
 operator|-
@@ -907,7 +862,7 @@ argument_list|(
 argument|not covered by other -W flags
 argument_list|)
 operator|:
-literal|29
+literal|28
 end_expr_stmt
 
 end_unit

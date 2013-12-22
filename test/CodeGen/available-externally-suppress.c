@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - -O0 -triple x86_64-apple-darwin10 %s | FileCheck %s
+comment|// RUN: %clang_cc1 -emit-llvm -o - -triple x86_64-apple-darwin10 %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @test()
+comment|// CHECK-LABEL: define void @test()
 end_comment
 
 begin_comment

@@ -132,11 +132,9 @@ name|unsigned
 name|Options
 decl_stmt|;
 comment|// CXGlobalOptFlags.
-name|llvm
+name|std
 operator|::
-name|sys
-operator|::
-name|Path
+name|string
 name|ResourcesPath
 expr_stmt|;
 name|public
@@ -244,51 +242,16 @@ name|opt
 return|;
 block|}
 comment|/// \brief Get the path of the clang resource files.
+specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|getClangResourcesPath
 argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/**    * \brief Given a set of "unsaved" files, create temporary files and     * construct the clang -cc1 argument list needed to perform the remapping.    *    * \returns true if an error occurred.    */
-name|bool
-name|RemapFiles
-argument_list|(
-name|unsigned
-name|num_unsaved_files
-argument_list|,
-expr|struct
-name|CXUnsavedFile
-operator|*
-name|unsaved_files
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|RemapArgs
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|llvm
-operator|::
-name|sys
-operator|::
-name|Path
-operator|>
-operator|&
-name|TemporaryFiles
-argument_list|)
-decl_stmt|;
 comment|/// \brief Return the current size to request for "safety".
 name|unsigned
 name|GetSafetyThreadStackSize

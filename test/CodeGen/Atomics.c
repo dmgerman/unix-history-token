@@ -75,7 +75,7 @@ name|test_op_ignore
 parameter_list|(
 name|void
 parameter_list|)
-comment|// CHECK: define void @test_op_ignore
+comment|// CHECK-LABEL: define void @test_op_ignore
 block|{
 operator|(
 name|void
@@ -566,7 +566,7 @@ name|test_fetch_and_op
 parameter_list|(
 name|void
 parameter_list|)
-comment|// CHECK: define void @test_fetch_and_op
+comment|// CHECK-LABEL: define void @test_fetch_and_op
 block|{
 name|sc
 operator|=

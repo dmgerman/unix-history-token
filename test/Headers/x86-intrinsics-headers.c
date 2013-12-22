@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -fsyntax-only -ffreestanding %s
+comment|// RUN: %clang_cc1 -fsyntax-only -ffreestanding %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsyntax-only -ffreestanding -fno-lax-vector-conversions %s
+comment|// RUN: %clang_cc1 -fsyntax-only -ffreestanding -fno-lax-vector-conversions %s
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx -fsyntax-only -ffreestanding -x c++ %s
+comment|// RUN: %clang_cc1 -fsyntax-only -ffreestanding -x c++ %s
 end_comment
 
 begin_if

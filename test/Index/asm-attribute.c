@@ -22,11 +22,7 @@ comment|// CHECK: asm-attribute.c:1:5: FunctionDecl=foo:1:5 Extent=[1:1 - 1:32]
 end_comment
 
 begin_comment
-comment|// FIXME: Location below.
-end_comment
-
-begin_comment
-comment|// CHECK:<invalid loc>:0:0: asm label=_foo_ Extent=[1:24 - 1:31]
+comment|// CHECK: asm-attribute.c:1:24: asm label=_foo_ Extent=[1:24 - 1:31]
 end_comment
 
 end_unit

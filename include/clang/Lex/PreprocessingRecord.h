@@ -2110,6 +2110,9 @@ specifier|const
 name|MacroDirective
 modifier|*
 name|MD
+parameter_list|,
+name|SourceRange
+name|Range
 parameter_list|)
 function_decl|;
 name|void

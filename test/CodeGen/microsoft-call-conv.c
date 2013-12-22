@@ -3,6 +3,14 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple i386-pc-linux -emit-llvm< %s | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple i386-pc-linux -emit-llvm -mrtd< %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple i386-pc-linux -emit-llvm -fms-compatibility< %s
+end_comment
+
 begin_function_decl
 name|void
 name|__fastcall
@@ -41,7 +49,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define x86_fastcallcc void @f4()
+comment|// CHECK-LABEL: define x86_fastcallcc void @f4()
 name|f1
 argument_list|()
 expr_stmt|;
@@ -57,7 +65,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define x86_stdcallcc void @f5()
+comment|// CHECK-LABEL: define x86_stdcallcc void @f5()
 name|f2
 argument_list|()
 expr_stmt|;
@@ -73,7 +81,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define x86_thiscallcc void @f6()
+comment|// CHECK-LABEL: define x86_thiscallcc void @f6()
 name|f3
 argument_list|()
 expr_stmt|;
@@ -256,6 +264,74 @@ expr_stmt|;
 comment|// CHECK: call x86_stdcallcc void @f7(i32 0)
 block|}
 end_function
+
+begin_comment
+comment|// PR12535
+end_comment
+
+begin_function
+name|void
+name|__fastcall
+name|f9
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+block|{}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// WIN: define x86_fastcallcc void @f9({{.*}})
+end_comment
+
+begin_function
+name|void
+name|__fastcall
+name|f10
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// WIN: define void @f10({{.*}})
+end_comment
+
+begin_function
+name|void
+name|__stdcall
+name|f11
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// WIN: define void @f11({{.*}})
+end_comment
 
 end_unit
 

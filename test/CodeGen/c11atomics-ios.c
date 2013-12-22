@@ -20,7 +20,7 @@ comment|// This work was done in pursuit of<rdar://13338582>.
 end_comment
 
 begin_comment
-comment|// CHECK: define arm_aapcscc void @testFloat(float*
+comment|// CHECK-LABEL: define arm_aapcscc void @testFloat(float*
 end_comment
 
 begin_function
@@ -212,8 +212,6 @@ comment|// CHECK-NEXT: [[F:%.*]] = alloca [[S:%.*]], align 2
 comment|// CHECK-NEXT: [[TMP0:%.*]] = alloca [[S]], align 8
 comment|// CHECK-NEXT: store [[S]]*
 comment|// CHECK-NEXT: [[P:%.*]] = load [[S]]** [[FP]]
-comment|// CHECK-NEXT: [[T0:%.*]] = bitcast [[S]]* [[P]] to i8*
-comment|// CHECK-NEXT: call void @llvm.memset.p0i8.i64(i8* [[T0]], i8 0, i64 8, i32 8, i1 false)
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]]* [[P]], i32 0, i32 0
 comment|// CHECK-NEXT: store i16 1, i16* [[T0]], align 2
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]]* [[P]], i32 0, i32 1
@@ -240,8 +238,6 @@ literal|4
 block|}
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: [[T0:%.*]] = bitcast [[S]]* [[X]] to i8*
-comment|// CHECK-NEXT: call void @llvm.memset.p0i8.i64(i8* [[T0]], i8 0, i64 8, i32 8, i1 false)
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]]* [[X]], i32 0, i32 0
 comment|// CHECK-NEXT: store i16 1, i16* [[T0]], align 2
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]]* [[X]], i32 0, i32 1
@@ -362,7 +358,7 @@ block|}
 argument_list|)
 expr_stmt|;
 comment|// CHECK-NEXT: [[T0:%.*]] = bitcast [[APS]]* [[X]] to i8*
-comment|// CHECK-NEXT: call void @llvm.memset.p0i8.i64(i8* [[T0]], i8 0, i64 8, i32 8, i1 false)
+comment|// CHECK-NEXT: call void @llvm.memset.p0i8.i32(i8* [[T0]], i8 0, i32 8, i32 8, i1 false)
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[APS]]* [[X]], i32 0, i32 0
 comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[PS]]* [[T0]], i32 0, i32 0
 comment|// CHECK-NEXT: store i16 1, i16* [[T1]], align 2
@@ -391,7 +387,7 @@ comment|// CHECK-NEXT: [[T0:%.*]] = load [[APS]]** [[FP]]
 comment|// CHECK-NEXT: [[T1:%.*]] = bitcast [[APS]]* [[T0]] to i64*
 comment|// CHECK-NEXT: [[T2:%.*]] = load atomic i64* [[T1]] seq_cst, align 8
 comment|// CHECK-NEXT: [[T3:%.*]] = bitcast [[APS]]* [[TMP0]] to i64*
-comment|// CHECK-NEXT: store i64 [[T2]], i64* [[T3]], align 8
+comment|// CHECK-NEXT: store i64 [[T2]], i64* [[T3]], align 2
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[APS]]* [[TMP0]], i32 0, i32 0
 comment|// CHECK-NEXT: [[T1:%.*]] = bitcast [[PS]]* [[F]] to i8*
 comment|// CHECK-NEXT: [[T2:%.*]] = bitcast [[PS]]* [[T0]] to i8*
@@ -403,6 +399,8 @@ operator|*
 name|fp
 decl_stmt|;
 comment|// CHECK-NEXT: [[T0:%.*]] = load [[APS]]** [[FP]]
+comment|// CHECK-NEXT: [[T1:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[TMP1]] to i8*
+comment|// CHECK-NEXT: call void @llvm.memset.p0i8.i32(i8* [[T1]], i8 0, i32 8, i32 8, i1 false)
 comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[APS]]* [[TMP1]], i32 0, i32 0
 comment|// CHECK-NEXT: [[T2:%.*]] = bitcast [[PS]]* [[T1]] to i8*
 comment|// CHECK-NEXT: [[T3:%.*]] = bitcast [[PS]]* [[F]] to i8*

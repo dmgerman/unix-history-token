@@ -50,6 +50,24 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_decl_stmt
+name|namespace
+name|Def3NS
+block|{
+name|class
+name|Def3
+block|{
+name|public
+label|:
+name|void
+name|func
+parameter_list|()
+function_decl|;
+block|}
+empty_stmt|;
+block|}
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

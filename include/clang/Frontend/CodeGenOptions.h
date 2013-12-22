@@ -215,6 +215,18 @@ comment|// Form fused FP ops according to FP_CONTRACT rules.
 name|FPC_Fast
 comment|// Aggressively fuse FP ops (E.g. FMA).
 block|}
+block|;    enum
+name|StructReturnConventionKind
+block|{
+name|SRCK_Default
+block|,
+comment|// No special option was passed.
+name|SRCK_OnStack
+block|,
+comment|// Small structs on the stack (-fpcc-struct-return).
+name|SRCK_InRegs
+comment|// Small structs in registers (-freg-struct-return).
+block|}
 block|;
 comment|/// The code model to use (-mcmodel).
 name|std
@@ -317,6 +329,23 @@ operator|::
 name|string
 operator|>
 name|BackendOptions
+block|;
+comment|/// A list of dependent libraries.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|DependentLibraries
+block|;
+comment|/// Name of the profile file to use with -fprofile-sample-use.
+name|std
+operator|::
+name|string
+name|SampleProfileFile
 block|;
 name|public
 operator|:

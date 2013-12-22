@@ -52,7 +52,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define void @test1(
+comment|// CHECK-LABEL: define void @test1(
 end_comment
 
 begin_comment
@@ -151,7 +151,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define void @test2(
+comment|// CHECK-LABEL: define void @test2(
 end_comment
 
 begin_comment
@@ -199,7 +199,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define void @test3(
+comment|// CHECK-LABEL: define void @test3(
 end_comment
 
 begin_comment

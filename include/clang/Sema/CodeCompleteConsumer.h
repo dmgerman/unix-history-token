@@ -525,15 +525,13 @@ name|QualType
 name|BaseType
 decl_stmt|;
 comment|/// \brief The identifiers for Objective-C selector parts.
+name|ArrayRef
+operator|<
 name|IdentifierInfo
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|SelIdents
-decl_stmt|;
-comment|/// \brief The number of Objective-C selector parts.
-name|unsigned
-name|NumSelIdents
-decl_stmt|;
+expr_stmt|;
 name|public
 label|:
 comment|/// \brief Construct a new code-completion context of the given kind.
@@ -549,12 +547,7 @@ argument_list|)
 operator|,
 name|SelIdents
 argument_list|(
-name|NULL
-argument_list|)
-operator|,
-name|NumSelIdents
-argument_list|(
-literal|0
+argument|None
 argument_list|)
 block|{ }
 comment|/// \brief Construct a new code-completion context of the given kind.
@@ -564,10 +557,7 @@ argument|enum Kind Kind
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|IdentifierInfo **SelIdents = NULL
-argument_list|,
-argument|unsigned NumSelIdents =
-literal|0
+argument|ArrayRef<IdentifierInfo *> SelIdents = None
 argument_list|)
 operator|:
 name|Kind
@@ -577,12 +567,7 @@ argument_list|)
 operator|,
 name|SelIdents
 argument_list|(
-name|SelIdents
-argument_list|)
-operator|,
-name|NumSelIdents
-argument_list|(
-argument|NumSelIdents
+argument|SelIdents
 argument_list|)
 block|{
 if|if
@@ -652,25 +637,17 @@ name|BaseType
 return|;
 block|}
 comment|/// \brief Retrieve the Objective-C selector identifiers.
+name|ArrayRef
+operator|<
 name|IdentifierInfo
 operator|*
-operator|*
+operator|>
 name|getSelIdents
 argument_list|()
 specifier|const
 block|{
 return|return
 name|SelIdents
-return|;
-block|}
-comment|/// \brief Retrieve the number of Objective-C selector identifiers.
-name|unsigned
-name|getNumSelIdents
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumSelIdents
 return|;
 block|}
 comment|/// \brief Determines whether we want C++ constructors as results within this

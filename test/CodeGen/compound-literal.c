@@ -158,7 +158,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f()
+comment|// CHECK-LABEL: define void @f()
 end_comment
 
 begin_function
@@ -215,7 +215,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define i48 @g(
+comment|// CHECK-LABEL: define i48 @g(
 end_comment
 
 begin_struct

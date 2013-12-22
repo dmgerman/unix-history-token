@@ -411,5 +411,17 @@ begin_comment
 comment|// CHECK-ARM-EABI-NOT: as{{.*}}" "-matpcs"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target x86_64-pc-freebsd8 %s -### -flto -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LTO %s
+end_comment
+
+begin_comment
+comment|// CHECK-LTO: ld{{.*}}" "-plugin{{.*}}LLVMgold.so
+end_comment
+
 end_unit
 

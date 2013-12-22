@@ -171,6 +171,13 @@ name|char
 operator|*
 operator|*
 name|argv
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Overview
+operator|=
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/// Returns a reference to the loaded compilations database.

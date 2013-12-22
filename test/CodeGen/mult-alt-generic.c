@@ -12,10 +12,6 @@ comment|// RUN: %clang_cc1 -triple arm %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple mblaze %s -emit-llvm -o - | FileCheck %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -triple mips %s -emit-llvm -o - | FileCheck %s
 end_comment
 

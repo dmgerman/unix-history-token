@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix LSB %s
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix CHECK-LSB %s
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// CHECK-LSB: @.str4 = internal unnamed_addr constant [6 x i16] [i16 116
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix MSB %s
+comment|// RUN: %clang_cc1 -triple powerpc-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix CHECK-MSB %s
 end_comment
 
 begin_comment

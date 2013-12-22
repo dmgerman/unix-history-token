@@ -81,9 +81,14 @@ decl_stmt|;
 name|class
 name|CIndexer
 decl_stmt|;
+name|namespace
+name|index
+block|{
 name|class
-name|SimpleFormatContext
+name|CommentToXMLConverter
 decl_stmt|;
+block|}
+comment|// namespace index
 block|}
 end_decl_stmt
 
@@ -125,13 +130,12 @@ name|OverridenCursorsPool
 decl_stmt|;
 name|clang
 operator|::
-name|SimpleFormatContext
+name|index
+operator|::
+name|CommentToXMLConverter
 operator|*
-name|FormatContext
+name|CommentToXML
 expr_stmt|;
-name|unsigned
-name|FormatInMemoryUniqueId
-decl_stmt|;
 block|}
 struct|;
 end_struct

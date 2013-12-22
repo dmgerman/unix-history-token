@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -O2 -fno-builtin -o - | grep call.*printf
+comment|// RUN: %clang_cc1 -emit-llvm %s -O2 -fno-builtin -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -21,6 +21,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// CHECK: define void {{.*}}foo(
+end_comment
+
 begin_function
 name|void
 name|foo
@@ -31,6 +35,7 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
+comment|// CHECK: call {{.*}}printf
 name|printf
 argument_list|(
 literal|"%s\n"

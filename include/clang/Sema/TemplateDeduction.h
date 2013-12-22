@@ -84,6 +84,9 @@ block|{
 name|class
 name|TemplateArgumentList
 decl_stmt|;
+name|class
+name|Sema
+decl_stmt|;
 name|namespace
 name|sema
 block|{
@@ -459,8 +462,348 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace sema
+comment|/// A structure used to record information about a failed
+comment|/// template argument deduction, for diagnosis.
+struct|struct
+name|DeductionFailureInfo
+block|{
+comment|/// A Sema::TemplateDeductionResult.
+name|unsigned
+name|Result
+range|:
+literal|8
+decl_stmt|;
+comment|/// \brief Indicates whether a diagnostic is stored in Diagnostic.
+name|unsigned
+name|HasDiagnostic
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Opaque pointer containing additional data about
+comment|/// this deduction failure.
+name|void
+modifier|*
+name|Data
+decl_stmt|;
+comment|/// \brief A diagnostic indicating why deduction failed.
+union|union
+block|{
+name|void
+modifier|*
+name|Align
+decl_stmt|;
+name|char
+name|Diagnostic
+index|[
+sizeof|sizeof
+argument_list|(
+name|PartialDiagnosticAt
+argument_list|)
+index|]
+decl_stmt|;
+block|}
+union|;
+comment|/// \brief Retrieve the diagnostic which caused this deduction failure,
+comment|/// if any.
+name|PartialDiagnosticAt
+modifier|*
+name|getSFINAEDiagnostic
+parameter_list|()
+function_decl|;
+comment|/// \brief Retrieve the template parameter this deduction failure
+comment|/// refers to, if any.
+name|TemplateParameter
+name|getTemplateParameter
+parameter_list|()
+function_decl|;
+comment|/// \brief Retrieve the template argument list associated with this
+comment|/// deduction failure, if any.
+name|TemplateArgumentList
+modifier|*
+name|getTemplateArgumentList
+parameter_list|()
+function_decl|;
+comment|/// \brief Return the first template argument this deduction failure
+comment|/// refers to, if any.
+specifier|const
+name|TemplateArgument
+modifier|*
+name|getFirstArg
+parameter_list|()
+function_decl|;
+comment|/// \brief Return the second template argument this deduction failure
+comment|/// refers to, if any.
+specifier|const
+name|TemplateArgument
+modifier|*
+name|getSecondArg
+parameter_list|()
+function_decl|;
+comment|/// \brief Return the expression this deduction failure refers to,
+comment|/// if any.
+name|Expr
+modifier|*
+name|getExpr
+parameter_list|()
+function_decl|;
+comment|/// \brief Free any memory associated with this deduction failure.
+name|void
+name|Destroy
+parameter_list|()
+function_decl|;
+block|}
+struct|;
+comment|/// TemplateSpecCandidate - This is a generalization of OverloadCandidate
+comment|/// which keeps track of template argument deduction failure info, when
+comment|/// handling explicit specializations (and instantiations) of templates
+comment|/// beyond function overloading.
+comment|/// For now, assume that the candidates are non-matching specializations.
+comment|/// TODO: In the future, we may need to unify/generalize this with
+comment|/// OverloadCandidate.
+struct|struct
+name|TemplateSpecCandidate
+block|{
+comment|/// Specialization - The actual specialization that this candidate
+comment|/// represents. When NULL, this may be a built-in candidate.
+name|Decl
+modifier|*
+name|Specialization
+decl_stmt|;
+comment|/// Template argument deduction info
+name|DeductionFailureInfo
+name|DeductionFailure
+decl_stmt|;
+name|void
+name|set
+parameter_list|(
+name|Decl
+modifier|*
+name|Spec
+parameter_list|,
+name|DeductionFailureInfo
+name|Info
+parameter_list|)
+block|{
+name|Specialization
+operator|=
+name|Spec
+expr_stmt|;
+name|DeductionFailure
+operator|=
+name|Info
+expr_stmt|;
+block|}
+comment|/// Diagnose a template argument deduction failure.
+name|void
+name|NoteDeductionFailure
+parameter_list|(
+name|Sema
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+comment|/// TemplateSpecCandidateSet - A set of generalized overload candidates,
+comment|/// used in template specializations.
+comment|/// TODO: In the future, we may need to unify/generalize this with
+comment|/// OverloadCandidateSet.
+name|class
+name|TemplateSpecCandidateSet
+block|{
+name|SmallVector
+operator|<
+name|TemplateSpecCandidate
+operator|,
+literal|16
+operator|>
+name|Candidates
+expr_stmt|;
+name|SourceLocation
+name|Loc
+decl_stmt|;
+name|TemplateSpecCandidateSet
+argument_list|(
+argument|const TemplateSpecCandidateSet&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|TemplateSpecCandidateSet
+operator|&
+operator|)
+name|LLVM_DELETED_FUNCTION
+decl_stmt|;
+name|void
+name|destroyCandidates
+parameter_list|()
+function_decl|;
+name|public
+label|:
+name|TemplateSpecCandidateSet
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|:
+name|Loc
+argument_list|(
+argument|Loc
+argument_list|)
+block|{}
+operator|~
+name|TemplateSpecCandidateSet
+argument_list|()
+block|{
+name|destroyCandidates
+argument_list|()
+block|; }
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
+return|;
+block|}
+comment|/// \brief Clear out all of the candidates.
+comment|/// TODO: This may be unnecessary.
+name|void
+name|clear
+parameter_list|()
+function_decl|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|TemplateSpecCandidate
+operator|,
+literal|16
+operator|>
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+name|iterator
+name|begin
+parameter_list|()
+block|{
+return|return
+name|Candidates
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|end
+parameter_list|()
+block|{
+return|return
+name|Candidates
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|size_t
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Candidates
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Candidates
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// \brief Add a new candidate with NumConversions conversion sequence slots
+comment|/// to the overload set.
+name|TemplateSpecCandidate
+modifier|&
+name|addCandidate
+parameter_list|()
+block|{
+name|Candidates
+operator|.
+name|push_back
+argument_list|(
+name|TemplateSpecCandidate
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|Candidates
+operator|.
+name|back
+argument_list|()
+return|;
+block|}
+name|void
+name|NoteCandidates
+parameter_list|(
+name|Sema
+modifier|&
+name|S
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
+name|void
+name|NoteCandidates
+argument_list|(
+name|Sema
+operator|&
+name|S
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+block|{
+name|const_cast
+operator|<
+name|TemplateSpecCandidateSet
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|NoteCandidates
+argument_list|(
+name|S
+argument_list|,
+name|Loc
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace clang
+end_comment
 
 begin_endif
 endif|#

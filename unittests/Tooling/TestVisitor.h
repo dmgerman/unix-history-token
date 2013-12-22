@@ -120,7 +120,7 @@ comment|///
 comment|/// This is a drop-in replacement for RecursiveASTVisitor itself, with the
 comment|/// additional capability of running it over a snippet of code.
 comment|///
-comment|/// Visits template instantiations (but not implicit code) by default.
+comment|/// Visits template instantiations and implicit code by default.
 name|template
 operator|<
 name|typename
@@ -150,7 +150,13 @@ name|Language
 block|{
 name|Lang_C
 block|,
+name|Lang_CXX98
+block|,
+name|Lang_CXX11
+block|,
 name|Lang_CXX
+operator|=
+name|Lang_CXX98
 block|}
 block|;
 comment|/// \brief Runs the current AST visitor over the given code.
@@ -189,13 +195,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Lang_CXX
+name|Lang_CXX98
 case|:
 name|Args
 operator|.
 name|push_back
 argument_list|(
 literal|"-std=c++98"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Lang_CXX11
+case|:
+name|Args
+operator|.
+name|push_back
+argument_list|(
+literal|"-std=c++11"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -216,6 +233,15 @@ return|;
 block|}
 name|bool
 name|shouldVisitTemplateInstantiations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|shouldVisitImplicitCode
 argument_list|()
 specifier|const
 block|{

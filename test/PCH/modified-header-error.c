@@ -24,7 +24,7 @@ comment|// RUN: echo>> %t.dir/header2.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %t.dir/t.c -include-pch %t.pch -fsyntax-only 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 %t.dir/t.c -include-pch %t.pch -fsyntax-only 2>&1 | FileCheck %s
 end_comment
 
 begin_include

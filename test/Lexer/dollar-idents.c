@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -dump-tokens %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -dump-tokens -x assembler-with-cpp %s 2>&1 | FileCheck %s --check-prefix=ASM
+comment|// RUN: %clang_cc1 -dump-tokens -x assembler-with-cpp %s 2>&1 | FileCheck %s --check-prefix=CHECK-ASM
 end_comment
 
 begin_comment

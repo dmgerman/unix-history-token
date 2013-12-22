@@ -345,5 +345,65 @@ begin_comment
 comment|// CHECK: zext i16 {{.*}} to i32
 end_comment
 
+begin_function
+name|void
+name|extractinttypes
+parameter_list|()
+block|{
+specifier|extern
+name|int
+name|check_extract_result_int
+decl_stmt|;
+extern|extern __typeof(_mm_extract_epi8(_mm_setzero_si128(
+block|)
+operator|,
+function|3
+end_function
+
+begin_expr_stmt
+unit|))
+name|check_result_int
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern __typeof(_mm_extract_epi16(_mm_setzero_si128(
+end_extern
+
+begin_operator
+unit|)
+operator|,
+end_operator
+
+begin_expr_stmt
+literal|3
+end_expr_stmt
+
+begin_expr_stmt
+unit|))
+name|check_result_int
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern __typeof(_mm_extract_epi32(_mm_setzero_si128(
+end_extern
+
+begin_operator
+unit|)
+operator|,
+end_operator
+
+begin_expr_stmt
+literal|3
+end_expr_stmt
+
+begin_expr_stmt
+unit|))
+name|check_result_int
+expr_stmt|;
+end_expr_stmt
+
+unit|}
 end_unit
 

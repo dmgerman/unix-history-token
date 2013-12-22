@@ -1053,6 +1053,27 @@ name|b
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+operator|-
+operator|(
+name|id
+operator|)
+name|initWithBytes
+operator|:
+operator|(
+name|void
+operator|*
+operator|)
+name|bytes
+name|length
+operator|:
+operator|(
+name|NSUInteger
+operator|)
+name|length
+expr_stmt|;
+end_expr_stmt
+
 begin_macro
 unit|@
 name|end

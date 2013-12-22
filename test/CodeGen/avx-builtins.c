@@ -508,5 +508,68 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|test_extract_epi32
+parameter_list|(
+name|__m256i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_extract_epi32
+comment|// CHECK: extractelement<8 x i32> %{{.*}}, i32 0
+return|return
+name|_mm256_extract_epi32
+argument_list|(
+name|__a
+argument_list|,
+literal|8
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_extract_epi16
+parameter_list|(
+name|__m256i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_extract_epi16
+comment|// CHECK: extractelement<16 x i16> %{{.*}}, i32 0
+return|return
+name|_mm256_extract_epi16
+argument_list|(
+name|__a
+argument_list|,
+literal|16
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_extract_epi8
+parameter_list|(
+name|__m256i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_extract_epi8
+comment|// CHECK: extractelement<32 x i8> %{{.*}}, i32 0
+return|return
+name|_mm256_extract_epi8
+argument_list|(
+name|__a
+argument_list|,
+literal|32
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

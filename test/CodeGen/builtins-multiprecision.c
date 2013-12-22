@@ -13,6 +13,64 @@ end_comment
 
 begin_function
 name|unsigned
+name|char
+name|test_addcb
+parameter_list|(
+name|unsigned
+name|char
+name|x
+parameter_list|,
+name|unsigned
+name|char
+name|y
+parameter_list|,
+name|unsigned
+name|char
+name|carryin
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|z
+parameter_list|)
+block|{
+comment|// CHECK: @test_addcb
+comment|// CHECK: %{{.+}} = {{.*}} call { i8, i1 } @llvm.uadd.with.overflow.i8(i8 %x, i8 %y)
+comment|// CHECK: %{{.+}} = extractvalue { i8, i1 } %{{.+}}, 1
+comment|// CHECK: %{{.+}} = extractvalue { i8, i1 } %{{.+}}, 0
+comment|// CHECK: %{{.+}} = {{.*}} call { i8, i1 } @llvm.uadd.with.overflow.i8(i8 %{{.+}}, i8 %carryin)
+comment|// CHECK: %{{.+}} = extractvalue { i8, i1 } %{{.+}}, 1
+comment|// CHECK: %{{.+}} = extractvalue { i8, i1 } %{{.+}}, 0
+comment|// CHECK: %{{.+}} = or i1 %{{.+}}, %{{.+}}
+comment|// CHECK: %{{.+}} = zext i1 %{{.+}} to i8
+comment|// CHECK: store i8 %{{.+}}, i8* %z, align 1
+name|unsigned
+name|char
+name|carryout
+decl_stmt|;
+operator|*
+name|z
+operator|=
+name|__builtin_addcb
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+name|carryin
+argument_list|,
+operator|&
+name|carryout
+argument_list|)
+expr_stmt|;
+return|return
+name|carryout
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
 name|short
 name|test_addcs
 parameter_list|(
@@ -227,6 +285,64 @@ operator|*
 name|z
 operator|=
 name|__builtin_addcll
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+name|carryin
+argument_list|,
+operator|&
+name|carryout
+argument_list|)
+expr_stmt|;
+return|return
+name|carryout
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|char
+name|test_subcb
+parameter_list|(
+name|unsigned
+name|char
+name|x
+parameter_list|,
+name|unsigned
+name|char
+name|y
+parameter_list|,
+name|unsigned
+name|char
+name|carryin
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|z
+parameter_list|)
+block|{
+comment|// CHECK: @test_subcb
+comment|// CHECK: %{{.+}} = {{.*}} call { i8, i1 } @llvm.usub.with.overflow.i8(i8 %x, i8 %y)
+comment|// CHECK: %{{.+}} = extractvalue { i8, i1 } %{{.+}}, 1
+comment|// CHECK: %{{.+}} = extractvalue { i8, i1 } %{{.+}}, 0
+comment|// CHECK: %{{.+}} = {{.*}} call { i8, i1 } @llvm.usub.with.overflow.i8(i8 %{{.+}}, i8 %carryin)
+comment|// CHECK: %{{.+}} = extractvalue { i8, i1 } %{{.+}}, 1
+comment|// CHECK: %{{.+}} = extractvalue { i8, i1 } %{{.+}}, 0
+comment|// CHECK: %{{.+}} = or i1 %{{.+}}, %{{.+}}
+comment|// CHECK: %{{.+}} = zext i1 %{{.+}} to i8
+comment|// CHECK: store i8 %{{.+}}, i8* %z, align 1
+name|unsigned
+name|char
+name|carryout
+decl_stmt|;
+operator|*
+name|z
+operator|=
+name|__builtin_subcb
 argument_list|(
 name|x
 argument_list|,

@@ -108,5 +108,27 @@ begin_comment
 comment|// expected-warning {{__VA_ARGS__ can only appear in the expansion of a C99 variadic macro}}
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOG_ON_ERROR
+parameter_list|(
+name|x
+parameter_list|)
+value|x ## #y;
+end_define
+
+begin_comment
+comment|// expected-error {{'#' is not followed by a macro parameter}}
+end_comment
+
+begin_expr_stmt
+name|LOG_ON_ERROR
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

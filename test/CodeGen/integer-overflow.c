@@ -32,9 +32,9 @@ name|void
 name|test1
 parameter_list|()
 block|{
-comment|// DEFAULT: define void @test1
-comment|// WRAPV: define void @test1
-comment|// TRAPV: define void @test1
+comment|// DEFAULT-LABEL: define void @test1
+comment|// WRAPV-LABEL: define void @test1
+comment|// TRAPV-LABEL: define void @test1
 specifier|extern
 specifier|volatile
 name|int

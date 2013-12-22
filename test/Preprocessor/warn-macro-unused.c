@@ -9,6 +9,20 @@ directive|include
 file|"warn-macro-unused.h"
 end_include
 
+begin_empty
+empty|# 1 "warn-macro-unused-fake-header.h" 1
+end_empty
+
+begin_define
+define|#
+directive|define
+name|unused_from_fake_header
+end_define
+
+begin_empty
+empty|# 5 "warn-macro-unused.c" 2
+end_empty
+
 begin_define
 define|#
 directive|define

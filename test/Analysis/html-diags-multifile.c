@@ -4,11 +4,11 @@ comment|// RUN: mkdir -p %t.dir
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-checker=core -o %t.dir
+comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-checker=core -o %t.dir %s
 end_comment
 
 begin_comment
-comment|// RUN: ls %t.dir | grep report | count 0
+comment|// RUN: ls %t.dir | not grep report
 end_comment
 
 begin_comment

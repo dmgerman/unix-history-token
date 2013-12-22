@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -verify
+comment|// RUN: %clang_cc1 %s -triple armv7 -target-feature +neon -fsyntax-only -verify
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple armv8 -target-feature +neon -fsyntax-only -verify
 end_comment
 
 begin_typedef
@@ -162,7 +166,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{attribute takes one argument}}
+comment|// expected-error{{'neon_vector_type' attribute takes one argument}}
 end_comment
 
 begin_comment
@@ -183,7 +187,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{attribute requires integer constant}}
+comment|// expected-error{{'neon_vector_type' attribute requires an integer constant}}
 end_comment
 
 begin_comment

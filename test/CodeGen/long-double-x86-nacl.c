@@ -32,7 +32,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: define void @s1(double %a)
+comment|// CHECK-LABEL: define void @s1(double %a)
 end_comment
 
 begin_function

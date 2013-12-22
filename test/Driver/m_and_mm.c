@@ -8,7 +8,7 @@ comment|// RUN:   -M -MM %s 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-sys-header-deps"' %t | count 0
+comment|// RUN: not grep '"-sys-header-deps"' %t
 end_comment
 
 end_unit

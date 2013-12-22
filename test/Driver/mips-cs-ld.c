@@ -16,11 +16,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips-linux-gnu \
+comment|// RUN:     --target=mips-linux-gnu \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -36,15 +36,15 @@ comment|// CHECK-BE-HF-32: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib/crt1.o"
+comment|// CHECK-BE-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib/crti.o"
+comment|// CHECK-BE-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/crtbegin.o"
+comment|// CHECK-BE-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -64,11 +64,11 @@ comment|// CHECK-BE-HF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/usr/lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/crtend.o"
+comment|// CHECK-BE-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib/crtn.o"
+comment|// CHECK-BE-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -84,11 +84,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips-linux-gnu -mips16 \
+comment|// RUN:     --target=mips-linux-gnu -mips16 \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -104,15 +104,15 @@ comment|// CHECK-BE-HF-16: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/usr/lib/../lib/crt1.o"
+comment|// CHECK-BE-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/usr/lib/../lib/crti.o"
+comment|// CHECK-BE-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/crtbegin.o"
+comment|// CHECK-BE-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -124,23 +124,23 @@ comment|// CHECK-BE-HF-16: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/mips1
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-16: "-L[[TC]]"
+comment|// CHECK-BE-HF-16-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/lib"
+comment|// CHECK-BE-HF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/usr/lib"
+comment|// CHECK-BE-HF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/crtend.o"
+comment|// CHECK-BE-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/usr/lib/../lib/crtn.o"
+comment|// CHECK-BE-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -156,11 +156,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips-linux-gnu -mmicromips \
+comment|// RUN:     --target=mips-linux-gnu -mmicromips \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -176,15 +176,15 @@ comment|// CHECK-BE-HF-MICRO: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/usr/lib/../lib/crt1.o"
+comment|// CHECK-BE-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/usr/lib/../lib/crti.o"
+comment|// CHECK-BE-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/crtbegin.o"
+comment|// CHECK-BE-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -196,23 +196,23 @@ comment|// CHECK-BE-HF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/mi
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-MICRO: "-L[[TC]]"
+comment|// CHECK-BE-HF-MICRO-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/lib"
+comment|// CHECK-BE-HF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/usr/lib"
+comment|// CHECK-BE-HF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/crtend.o"
+comment|// CHECK-BE-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/usr/lib/../lib/crtn.o"
+comment|// CHECK-BE-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -228,11 +228,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips-linux-gnu -msoft-float \
+comment|// RUN:     --target=mips-linux-gnu -msoft-float \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -248,15 +248,15 @@ comment|// CHECK-BE-SF-32: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib/crt1.o"
+comment|// CHECK-BE-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib/crti.o"
+comment|// CHECK-BE-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/crtbegin.o"
+comment|// CHECK-BE-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -268,23 +268,23 @@ comment|// CHECK-BE-SF-32: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/soft-
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-32: "-L[[TC]]"
+comment|// CHECK-BE-SF-32-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/soft-float/lib"
+comment|// CHECK-BE-SF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/soft-float/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/soft-float/usr/lib"
+comment|// CHECK-BE-SF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/crtend.o"
+comment|// CHECK-BE-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib/crtn.o"
+comment|// CHECK-BE-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -300,11 +300,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips-linux-gnu -msoft-float -mips16 \
+comment|// RUN:     --target=mips-linux-gnu -msoft-float -mips16 \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -320,15 +320,15 @@ comment|// CHECK-BE-SF-16: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/usr/lib/../lib/crt1.o"
+comment|// CHECK-BE-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/usr/lib/../lib/crti.o"
+comment|// CHECK-BE-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/soft-float/crtbegin.o"
+comment|// CHECK-BE-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/soft-float{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -340,23 +340,23 @@ comment|// CHECK-BE-SF-16: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/mips1
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-16: "-L[[TC]]"
+comment|// CHECK-BE-SF-16-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/soft-float/lib"
+comment|// CHECK-BE-SF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/soft-float/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/soft-float/usr/lib"
+comment|// CHECK-BE-SF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/soft-float/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/soft-float/crtend.o"
+comment|// CHECK-BE-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/soft-float{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/usr/lib/../lib/crtn.o"
+comment|// CHECK-BE-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -372,11 +372,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips-linux-gnu -msoft-float -mmicromips \
+comment|// RUN:     --target=mips-linux-gnu -msoft-float -mmicromips \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -392,15 +392,15 @@ comment|// CHECK-BE-SF-MICRO: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/usr/lib/../lib/crt1.o"
+comment|// CHECK-BE-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/usr/lib/../lib/crti.o"
+comment|// CHECK-BE-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/soft-float/crtbegin.o"
+comment|// CHECK-BE-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/soft-float{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -412,23 +412,23 @@ comment|// CHECK-BE-SF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/mi
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-MICRO: "-L[[TC]]"
+comment|// CHECK-BE-SF-MICRO-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/soft-float/lib"
+comment|// CHECK-BE-SF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/soft-float/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/soft-float/usr/lib"
+comment|// CHECK-BE-SF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/soft-float/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/soft-float/crtend.o"
+comment|// CHECK-BE-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/soft-float{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/usr/lib/../lib/crtn.o"
+comment|// CHECK-BE-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -444,11 +444,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64-linux-gnu \
+comment|// RUN:     --target=mips64-linux-gnu \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -464,15 +464,15 @@ comment|// CHECK-BE-HF-64: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib64/crt1.o"
+comment|// CHECK-BE-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib64{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib64/crti.o"
+comment|// CHECK-BE-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib64{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/64/crtbegin.o"
+comment|// CHECK-BE-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/64{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -492,15 +492,15 @@ comment|// CHECK-BE-HF-64: "-L[[TC]]/../../../../mips-linux-gnu/libc/usr/lib/../
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-64: "-L[[TC]]"
+comment|// CHECK-BE-HF-64-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/64/crtend.o"
+comment|// CHECK-BE-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/64{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib64/crtn.o"
+comment|// CHECK-BE-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/usr/lib/../lib64{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -516,11 +516,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64-linux-gnu -msoft-float \
+comment|// RUN:     --target=mips64-linux-gnu -msoft-float \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -536,15 +536,15 @@ comment|// CHECK-BE-SF-64: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib64/crt1.o"
+comment|// CHECK-BE-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib64{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib64/crti.o"
+comment|// CHECK-BE-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib64{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/64/crtbegin.o"
+comment|// CHECK-BE-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/64{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -564,15 +564,15 @@ comment|// CHECK-BE-SF-64: "-L[[TC]]/../../../../mips-linux-gnu/libc/soft-float/
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-64: "-L[[TC]]"
+comment|// CHECK-BE-SF-64-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/64/crtend.o"
+comment|// CHECK-BE-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/64{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-BE-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib64/crtn.o"
+comment|// CHECK-BE-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/usr/lib/../lib64{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -588,11 +588,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-gnu -mhard-float \
+comment|// RUN:     --target=mipsel-linux-gnu -mhard-float \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -608,15 +608,15 @@ comment|// CHECK-EL-HF-32: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib/crt1.o"
+comment|// CHECK-EL-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib/crti.o"
+comment|// CHECK-EL-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/el/crtbegin.o"
+comment|// CHECK-EL-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/el{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -628,23 +628,23 @@ comment|// CHECK-EL-HF-32: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/el"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-32: "-L[[TC]]"
+comment|// CHECK-EL-HF-32-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/el/lib"
+comment|// CHECK-EL-HF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/el/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/el/usr/lib"
+comment|// CHECK-EL-HF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/el/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/el/crtend.o"
+comment|// CHECK-EL-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/el{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib/crtn.o"
+comment|// CHECK-EL-HF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -660,11 +660,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-gnu -mips16 \
+comment|// RUN:     --target=mipsel-linux-gnu -mips16 \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -680,15 +680,15 @@ comment|// CHECK-EL-HF-16: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/el/usr/lib/../lib/crt1.o"
+comment|// CHECK-EL-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/el/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/el/usr/lib/../lib/crti.o"
+comment|// CHECK-EL-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/el/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/el/crtbegin.o"
+comment|// CHECK-EL-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/el{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -700,23 +700,23 @@ comment|// CHECK-EL-HF-16: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/mips1
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-16: "-L[[TC]]"
+comment|// CHECK-EL-HF-16-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/el/lib"
+comment|// CHECK-EL-HF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/el/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/el/usr/lib"
+comment|// CHECK-EL-HF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/el/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/el/crtend.o"
+comment|// CHECK-EL-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/el{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/el/usr/lib/../lib/crtn.o"
+comment|// CHECK-EL-HF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/el/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -732,11 +732,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-gnu -mmicromips \
+comment|// RUN:     --target=mipsel-linux-gnu -mmicromips \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -752,15 +752,15 @@ comment|// CHECK-EL-HF-MICRO: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/el/usr/lib/../lib/crt1.o"
+comment|// CHECK-EL-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/el/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/el/usr/lib/../lib/crti.o"
+comment|// CHECK-EL-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/el/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/el/crtbegin.o"
+comment|// CHECK-EL-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/el{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -772,23 +772,23 @@ comment|// CHECK-EL-HF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/mi
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-MICRO: "-L[[TC]]"
+comment|// CHECK-EL-HF-MICRO-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/el/lib"
+comment|// CHECK-EL-HF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/el/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/el/usr/lib"
+comment|// CHECK-EL-HF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/el/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/el/crtend.o"
+comment|// CHECK-EL-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/el{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/el/usr/lib/../lib/crtn.o"
+comment|// CHECK-EL-HF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/el/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -804,11 +804,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-gnu -mfloat-abi=soft \
+comment|// RUN:     --target=mipsel-linux-gnu -mfloat-abi=soft \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -824,15 +824,15 @@ comment|// CHECK-EL-SF-32: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib/crt1.o"
+comment|// CHECK-EL-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib/crti.o"
+comment|// CHECK-EL-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/el/crtbegin.o"
+comment|// CHECK-EL-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/el{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -844,23 +844,23 @@ comment|// CHECK-EL-SF-32: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/soft-
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-32: "-L[[TC]]"
+comment|// CHECK-EL-SF-32-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/soft-float/el/lib"
+comment|// CHECK-EL-SF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/soft-float/el/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib"
+comment|// CHECK-EL-SF-32: "-L[[TC]]/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/el/crtend.o"
+comment|// CHECK-EL-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/el{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib/crtn.o"
+comment|// CHECK-EL-SF-32: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -876,11 +876,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-gnu -mips16 -msoft-float \
+comment|// RUN:     --target=mipsel-linux-gnu -mips16 -msoft-float \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -896,15 +896,15 @@ comment|// CHECK-EL-SF-16: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/el/usr/lib/../lib/crt1.o"
+comment|// CHECK-EL-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/el/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/el/usr/lib/../lib/crti.o"
+comment|// CHECK-EL-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/el/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/soft-float/el/crtbegin.o"
+comment|// CHECK-EL-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/soft-float/el{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -916,23 +916,23 @@ comment|// CHECK-EL-SF-16: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/mips1
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-16: "-L[[TC]]"
+comment|// CHECK-EL-SF-16-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/soft-float/el/lib"
+comment|// CHECK-EL-SF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/soft-float/el/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/soft-float/el/usr/lib"
+comment|// CHECK-EL-SF-16: "-L[[TC]]/../../../../mips-linux-gnu/libc/mips16/soft-float/el/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/soft-float/el/crtend.o"
+comment|// CHECK-EL-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/mips16/soft-float/el{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/el/usr/lib/../lib/crtn.o"
+comment|// CHECK-EL-SF-16: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/mips16/soft-float/el/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -948,11 +948,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mipsel-linux-gnu -mmicromips -msoft-float \
+comment|// RUN:     --target=mipsel-linux-gnu -mmicromips -msoft-float \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -968,15 +968,15 @@ comment|// CHECK-EL-SF-MICRO: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/el/usr/lib/../lib/crt1.o"
+comment|// CHECK-EL-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/el/usr/lib/../lib{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/el/usr/lib/../lib/crti.o"
+comment|// CHECK-EL-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/el/usr/lib/../lib{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/soft-float/el/crtbegin.o"
+comment|// CHECK-EL-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/soft-float/el{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -988,23 +988,23 @@ comment|// CHECK-EL-SF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/lib/../lib/mi
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-MICRO: "-L[[TC]]"
+comment|// CHECK-EL-SF-MICRO-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/soft-float/el/lib"
+comment|// CHECK-EL-SF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/soft-float/el/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/soft-float/el/usr/lib"
+comment|// CHECK-EL-SF-MICRO: "-L[[TC]]/../../../../mips-linux-gnu/libc/micromips/soft-float/el/usr/lib/../lib"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/soft-float/el/crtend.o"
+comment|// CHECK-EL-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/micromips/soft-float/el{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/el/usr/lib/../lib/crtn.o"
+comment|// CHECK-EL-SF-MICRO: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/micromips/soft-float/el/usr/lib/../lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -1020,11 +1020,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64el-linux-gnu \
+comment|// RUN:     --target=mips64el-linux-gnu \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -1040,15 +1040,15 @@ comment|// CHECK-EL-HF-64: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib64/crt1.o"
+comment|// CHECK-EL-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib64{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib64/crti.o"
+comment|// CHECK-EL-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib64{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/el/64/crtbegin.o"
+comment|// CHECK-EL-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/el/64{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1068,15 +1068,15 @@ comment|// CHECK-EL-HF-64: "-L[[TC]]/../../../../mips-linux-gnu/libc/el/usr/lib/
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-64: "-L[[TC]]"
+comment|// CHECK-EL-HF-64-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/el/64/crtend.o"
+comment|// CHECK-EL-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/el/64{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib64/crtn.o"
+comment|// CHECK-EL-HF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/el/usr/lib/../lib64{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -1092,11 +1092,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips64el-linux-gnu -msoft-float \
+comment|// RUN:     --target=mips64el-linux-gnu -msoft-float \
 end_comment
 
 begin_comment
-comment|// RUN:     -gcc-toolchain %S/Inputs/mips_cs_tree \
+comment|// RUN:     --gcc-toolchain=%S/Inputs/mips_cs_tree \
 end_comment
 
 begin_comment
@@ -1112,15 +1112,15 @@ comment|// CHECK-EL-SF-64: "--sysroot=[[TC:[^"]+]]/../../../../mips-linux-gnu/li
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib64/crt1.o"
+comment|// CHECK-EL-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib64{{/|\\\\}}crt1.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib64/crti.o"
+comment|// CHECK-EL-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib64{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/el/64/crtbegin.o"
+comment|// CHECK-EL-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/el/64{{/|\\\\}}crtbegin.o"
 end_comment
 
 begin_comment
@@ -1140,15 +1140,15 @@ comment|// CHECK-EL-SF-64: "-L[[TC]]/../../../../mips-linux-gnu/libc/soft-float/
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-64: "-L[[TC]]"
+comment|// CHECK-EL-SF-64-NOT: "-L[[TC]]"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/el/64/crtend.o"
+comment|// CHECK-EL-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/soft-float/el/64{{/|\\\\}}crtend.o"
 end_comment
 
 begin_comment
-comment|// CHECK-EL-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib64/crtn.o"
+comment|// CHECK-EL-SF-64: "{{.*}}/lib/gcc/mips-linux-gnu/4.6.3/../../../../mips-linux-gnu/libc/soft-float/el/usr/lib/../lib64{{/|\\\\}}crtn.o"
 end_comment
 
 end_unit

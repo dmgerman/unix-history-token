@@ -30,7 +30,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define i32 @simple_int
+comment|// CHECK-LABEL: define i32 @simple_int
 return|return
 name|va_arg
 argument_list|(
@@ -72,7 +72,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define i128 @aligned_int
+comment|// CHECK-LABEL: define i128 @aligned_int
 return|return
 name|va_arg
 argument_list|(
@@ -135,7 +135,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define void @simple_indirect
+comment|// CHECK-LABEL: define void @simple_indirect
 return|return
 name|va_arg
 argument_list|(
@@ -195,7 +195,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define void @simple_aligned_indirect
+comment|// CHECK-LABEL: define void @simple_aligned_indirect
 return|return
 name|va_arg
 argument_list|(
@@ -237,7 +237,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define double @simple_double
+comment|// CHECK-LABEL: define double @simple_double
 return|return
 name|va_arg
 argument_list|(
@@ -293,7 +293,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: define %struct.hfa @simple_hfa
+comment|// CHECK-LABEL: define %struct.hfa @simple_hfa
 return|return
 name|va_arg
 argument_list|(
@@ -347,7 +347,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-comment|// CHECK: define void @check_start(i32 %n, ...)
+comment|// CHECK-LABEL: define void @check_start(i32 %n, ...)
 name|va_list
 name|the_list
 decl_stmt|;

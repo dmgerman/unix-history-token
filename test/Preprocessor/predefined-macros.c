@@ -183,5 +183,77 @@ begin_comment
 comment|// CHECK-SYNC_CAS_I586: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - -triple armv6 -target-cpu arm1136j-s \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_ARM
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_ARM: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_ARM: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_ARM: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_ARM: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - -triple armv7 -target-cpu cortex-a8 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_ARMv7
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_ARMv7: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_ARMv7: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_ARMv7: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_ARMv7: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - -triple armv6 -target-cpu cortex-m0 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_ARMv6
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_ARMv6-NOT: __GCC_HAVE_SYNC_COMPARE_AND_SWAP
+end_comment
+
 end_unit
 

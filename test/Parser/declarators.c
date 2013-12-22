@@ -628,7 +628,9 @@ range|:
 comment|// expected-error {{expected ';'}}
 range|struct
 name|EnumBitfield
-block|{   enum
+block|{
+comment|// expected-warning {{struct without named members is a GNU extension}}
+block|enum
 name|E2
 block|{
 name|e2

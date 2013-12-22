@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Werror -triple i386-unknown-unknown -emit-llvm -O1 -disable-llvm-optzns -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -Werror -triple i386-unknown-unknown -emit-llvm -O1 -no-struct-path-tbaa -disable-llvm-optzns -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -Werror -triple i386-unknown-unknown -emit-llvm -O1 -struct-path-tbaa -disable-llvm-optzns -o - %s | FileCheck %s -check-prefix=PATH
+comment|// RUN: %clang_cc1 -Werror -triple i386-unknown-unknown -emit-llvm -O1 -disable-llvm-optzns -o - %s | FileCheck %s -check-prefix=PATH
 end_comment
 
 begin_comment
@@ -41,14 +41,14 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: store i32 0, i32* %{{.*}}, !tbaa !1
+comment|// CHECK: store i32 0, i32* %{{.*}}, !tbaa [[TAG_CHAR:!.*]]
 comment|// PATH: store i32 0, i32* %{{.*}}, !tbaa [[TAG_CHAR:!.*]]
 operator|*
 name|ai
 operator|=
 literal|0
 expr_stmt|;
-comment|// CHECK: store i32 1, i32* %{{.*}}, !tbaa !3
+comment|// CHECK: store i32 1, i32* %{{.*}}, !tbaa [[TAG_INT:!.*]]
 comment|// PATH: store i32 1, i32* %{{.*}}, !tbaa [[TAG_INT:!.*]]
 operator|*
 name|i
@@ -105,7 +105,7 @@ modifier|*
 name|p2
 parameter_list|)
 block|{
-comment|// CHECK: store i32 2, i32* {{%.*}}, !tbaa !1
+comment|// CHECK: store i32 2, i32* {{%.*}}, !tbaa [[TAG_CHAR]]
 comment|// PATH: store i32 2, i32* {{%.*}}, !tbaa [[TAG_CHAR]]
 name|p1
 operator|->
@@ -113,7 +113,7 @@ name|x
 operator|=
 literal|2
 expr_stmt|;
-comment|// CHECK: store i32 3, i32* {{%.*}}, !tbaa !3
+comment|// CHECK: store i32 3, i32* {{%.*}}, !tbaa [[TAG_INT]]
 comment|// PATH: store i32 3, i32* {{%.*}}, !tbaa [[TAG_test1_x:!.*]]
 name|p2
 operator|->
@@ -125,19 +125,27 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: !0 = metadata !{metadata !"any pointer", metadata !1}
+comment|// CHECK: metadata !{metadata !"any pointer", metadata [[TYPE_CHAR:!.*]],
 end_comment
 
 begin_comment
-comment|// CHECK: !1 = metadata !{metadata !"omnipotent char", metadata !2}
+comment|// CHECK: [[TYPE_CHAR]] = metadata !{metadata !"omnipotent char", metadata [[TAG_CXX_TBAA:!.*]],
 end_comment
 
 begin_comment
-comment|// CHECK: !2 = metadata !{metadata !"Simple C/C++ TBAA"}
+comment|// CHECK: [[TAG_CXX_TBAA]] = metadata !{metadata !"Simple C/C++ TBAA"}
 end_comment
 
 begin_comment
-comment|// CHECK: !3 = metadata !{metadata !"int", metadata !1}
+comment|// CHECK: [[TAG_CHAR]] = metadata !{metadata [[TYPE_CHAR]], metadata [[TYPE_CHAR]], i64 0}
+end_comment
+
+begin_comment
+comment|// CHECK: [[TAG_INT]] = metadata !{metadata [[TYPE_INT:!.*]], metadata [[TYPE_INT]], i64 0}
+end_comment
+
+begin_comment
+comment|// CHECK: [[TYPE_INT]] = metadata !{metadata !"int", metadata [[TYPE_CHAR]]
 end_comment
 
 begin_comment
@@ -161,7 +169,7 @@ comment|// PATH: [[TAG_test1_x]] = metadata !{metadata [[TYPE_test1:!.*]], metad
 end_comment
 
 begin_comment
-comment|// PATH: [[TYPE_test1]] = metadata !{metadata !"_ZTS5Test1", metadata [[TYPE_INT]], i64 0}
+comment|// PATH: [[TYPE_test1]] = metadata !{metadata !"Test1", metadata [[TYPE_INT]], i64 0}
 end_comment
 
 end_unit

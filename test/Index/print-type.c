@@ -118,6 +118,17 @@ name|int4_t
 typedef|;
 end_typedef
 
+begin_function_decl
+name|int
+name|f2
+parameter_list|(
+name|int
+name|incompletearray
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// RUN: c-index-test -test-print-type %s | FileCheck %s
 end_comment
@@ -219,7 +230,7 @@ comment|// CHECK: ArraySubscriptExpr= [type=int] [typekind=Int] [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: DeclRefExpr=arr:3:40 [type=int *] [typekind=Pointer] [isPOD=1]
+comment|// CHECK: UnexposedExpr=arr:3:40 [type=int [5]] [typekind=ConstantArray] [isPOD=1]
 end_comment
 
 begin_comment
@@ -244,6 +255,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: TypedefDecl=int4_t:11:46 (Definition) [type=int4_t] [typekind=Typedef] [canonicaltype=__attribute__((__vector_size__(4 * sizeof(int)))) int] [canonicaltypekind=Vector] [isPOD=1]
+end_comment
+
+begin_comment
+comment|// CHECK: ParmDecl=incompletearray:13:12 (Definition) [type=int []] [typekind=IncompleteArray] [isPOD=1]
 end_comment
 
 end_unit

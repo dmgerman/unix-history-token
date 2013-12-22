@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize=bounds -emit-llvm -triple x86_64-apple-darwin10< %s | FileCheck %s
+comment|// RUN: %clang_cc1 -fsanitize=local-bounds -emit-llvm -triple x86_64-apple-darwin10 %s -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: @f
+comment|// RUN: %clang_cc1 -fsanitize=array-bounds -O -fsanitize-undefined-trap-on-error -emit-llvm -triple x86_64-apple-darwin10 -DNO_DYNAMIC %s -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: @f
 end_comment
 
 begin_function
@@ -24,7 +28,7 @@ index|[
 name|b
 index|]
 decl_stmt|;
-comment|// CHECK: trap
+comment|// CHECK: call {{.*}} @llvm.trap
 return|return
 name|a
 index|[
@@ -35,7 +39,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @f2
+comment|// CHECK-LABEL: @f2
 end_comment
 
 begin_function
@@ -44,7 +48,7 @@ name|f2
 parameter_list|()
 block|{
 comment|// everything is constant; no trap possible
-comment|// CHECK-NOT: trap
+comment|// CHECK-NOT: call {{.*}} @llvm.trap
 name|int
 name|a
 index|[
@@ -58,6 +62,9 @@ index|]
 operator|=
 literal|42
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_DYNAMIC
 name|short
 modifier|*
 name|b
@@ -82,11 +89,13 @@ index|]
 operator|+
 literal|2
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: @f3
+comment|// CHECK-LABEL: @f3
 end_comment
 
 begin_function
@@ -100,7 +109,7 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-comment|// CHECK: trap
+comment|// CHECK: call {{.*}} @llvm.trap
 name|a
 index|[
 literal|2

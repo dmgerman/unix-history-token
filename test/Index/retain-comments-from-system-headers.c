@@ -28,7 +28,7 @@ comment|// RUN: c-index-test -test-load-source all %s -I %S/Inputs | FileCheck %
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -test-load-source all %s -fretain-comments-from-system-headers -I %S/Inputs | FileCheck %s -check-prefix=RETAIN
+comment|// RUN: c-index-test -test-load-source all %s -fretain-comments-from-system-headers -I %S/Inputs | FileCheck %s -check-prefix=CHECK-RETAIN
 end_comment
 
 begin_comment
