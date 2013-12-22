@@ -5692,6 +5692,26 @@ literal|"ISO C++ forbids applying %<__alignof%> to an expression of "
 literal|"function type"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|e
+argument_list|)
+operator|==
+name|FUNCTION_DECL
+condition|)
+name|t
+operator|=
+name|size_int
+argument_list|(
+name|DECL_ALIGN_UNIT
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|t
 operator|=
 name|size_one_node

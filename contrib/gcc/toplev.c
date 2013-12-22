@@ -1299,16 +1299,6 @@ name|align_functions_log
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Like align_functions_log above, but used by front-ends to force the    minimum function alignment.  Zero means no alignment is forced.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|force_align_functions_log
-decl_stmt|;
-end_decl_stmt
-
 begin_typedef
 typedef|typedef
 struct|struct

@@ -5847,15 +5847,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TREE_CODE
-argument_list|(
-name|olddecl
-argument_list|)
-operator|!=
-name|FUNCTION_DECL
-condition|)
-if|if
-condition|(
 name|DECL_ALIGN
 argument_list|(
 name|olddecl

@@ -1776,7 +1776,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%u"
+literal|"%lu"
 argument_list|,
 name|ref
 operator|.
@@ -1801,7 +1801,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%u"
+literal|"%lu"
 argument_list|,
 name|ref
 operator|.
