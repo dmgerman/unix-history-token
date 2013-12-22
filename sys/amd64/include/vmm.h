@@ -1116,6 +1116,9 @@ parameter_list|,
 name|enum
 name|vcpu_state
 name|state
+parameter_list|,
+name|bool
+name|from_idle
 parameter_list|)
 function_decl|;
 end_function_decl
