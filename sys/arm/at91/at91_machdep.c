@@ -2475,13 +2475,16 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Always use the 256MB of KVA we have available between the kernel and devices */
 name|vm_max_kernel_address
 operator|=
 name|KERNVIRTADDR
 operator|+
-literal|3
-operator|*
-name|memsize
+operator|(
+literal|256
+operator|<<
+literal|20
+operator|)
 expr_stmt|;
 name|pmap_bootstrap
 argument_list|(
