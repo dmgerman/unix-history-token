@@ -104,12 +104,36 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Config/config.h"
 end_include
 
 begin_comment
 comment|// Get build system configuration settings
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/system_error.h"
+end_include
 
 begin_include
 include|#
@@ -126,12 +150,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<shlobj.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -139,6 +157,12 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -174,6 +198,9 @@ name|buffer
 init|=
 name|NULL
 decl_stmt|;
+name|DWORD
+name|R
+init|=
 name|FormatMessage
 argument_list|(
 name|FORMAT_MESSAGE_ALLOCATE_BUFFER
@@ -197,7 +224,11 @@ literal|1
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+if|if
+condition|(
+name|R
+condition|)
 operator|*
 name|ErrMsg
 operator|=
@@ -205,13 +236,23 @@ name|prefix
 operator|+
 name|buffer
 expr_stmt|;
+else|else
+operator|*
+name|ErrMsg
+operator|=
+name|prefix
+operator|+
+literal|"Unknown error"
+expr_stmt|;
 name|LocalFree
 argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|R
+operator|!=
+literal|0
 return|;
 block|}
 end_decl_stmt
@@ -384,13 +425,11 @@ unit|}
 comment|// True if Handle is valid.
 end_comment
 
-begin_macro
-unit|operator
+begin_expr_stmt
+unit|LLVM_EXPLICIT
+name|operator
 name|bool
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -658,6 +697,49 @@ name|data
 argument_list|()
 return|;
 block|}
+name|namespace
+name|sys
+block|{
+name|namespace
+name|windows
+block|{
+name|error_code
+name|UTF8ToUTF16
+argument_list|(
+name|StringRef
+name|utf8
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|wchar_t
+operator|>
+operator|&
+name|utf16
+argument_list|)
+decl_stmt|;
+name|error_code
+name|UTF16ToUTF8
+argument_list|(
+specifier|const
+name|wchar_t
+operator|*
+name|utf16
+argument_list|,
+name|size_t
+name|utf16_len
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|utf8
+argument_list|)
+decl_stmt|;
+block|}
+comment|// end namespace windows
+block|}
+comment|// end namespace sys
 block|}
 end_decl_stmt
 

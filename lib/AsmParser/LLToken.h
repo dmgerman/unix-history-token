@@ -135,16 +135,11 @@ name|kw_linker_private
 block|,
 name|kw_linker_private_weak
 block|,
-name|kw_linker_private_weak_def_auto
-block|,
-comment|// FIXME: For backwards compatibility.
 name|kw_internal
 block|,
 name|kw_linkonce
 block|,
 name|kw_linkonce_odr
-block|,
-name|kw_linkonce_odr_auto_hide
 block|,
 name|kw_weak
 block|,
@@ -259,6 +254,8 @@ name|kw_inteldialect
 block|,
 name|kw_gc
 block|,
+name|kw_prefix
+block|,
 name|kw_c
 block|,
 name|kw_cc
@@ -293,6 +290,14 @@ name|kw_spir_kernel
 block|,
 name|kw_spir_func
 block|,
+name|kw_x86_64_sysvcc
+block|,
+name|kw_x86_64_win64cc
+block|,
+name|kw_webkit_jscc
+block|,
+name|kw_anyregcc
+block|,
 comment|// Attributes:
 name|kw_attributes
 block|,
@@ -300,7 +305,11 @@ name|kw_alwaysinline
 block|,
 name|kw_sanitize_address
 block|,
+name|kw_builtin
+block|,
 name|kw_byval
+block|,
+name|kw_cold
 block|,
 name|kw_inlinehint
 block|,
@@ -331,6 +340,8 @@ block|,
 name|kw_noreturn
 block|,
 name|kw_nounwind
+block|,
+name|kw_optnone
 block|,
 name|kw_optsize
 block|,
@@ -485,6 +496,8 @@ block|,
 name|kw_ptrtoint
 block|,
 name|kw_bitcast
+block|,
+name|kw_addrspacecast
 block|,
 name|kw_select
 block|,

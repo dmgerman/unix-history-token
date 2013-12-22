@@ -59,8 +59,10 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
-name|unsigned
-name|SavedGPRFrameSize
+name|virtual
+name|void
+name|anchor
+argument_list|()
 block|;
 name|unsigned
 name|LowSavedGPR
@@ -93,11 +95,6 @@ operator|&
 name|MF
 argument_list|)
 operator|:
-name|SavedGPRFrameSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|LowSavedGPR
 argument_list|(
 literal|0
@@ -133,27 +130,6 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-comment|// Get and set the number of bytes allocated by generic code to store
-comment|// call-saved GPRs.
-name|unsigned
-name|getSavedGPRFrameSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SavedGPRFrameSize
-return|;
-block|}
-name|void
-name|setSavedGPRFrameSize
-argument_list|(
-argument|unsigned bytes
-argument_list|)
-block|{
-name|SavedGPRFrameSize
-operator|=
-name|bytes
-block|; }
 comment|// Get and set the first call-saved GPR that should be saved and restored
 comment|// by this function.  This is 0 if no GPRs need to be saved or restored.
 name|unsigned

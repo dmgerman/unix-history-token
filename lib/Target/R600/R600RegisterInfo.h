@@ -82,9 +82,6 @@ block|{
 name|class
 name|R600TargetMachine
 decl_stmt|;
-name|class
-name|TargetInstrInfo
-decl_stmt|;
 name|struct
 name|R600RegisterInfo
 range|:
@@ -95,21 +92,14 @@ name|AMDGPUTargetMachine
 operator|&
 name|TM
 block|;
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
+name|RegClassWeight
+name|RCW
 block|;
 name|R600RegisterInfo
 argument_list|(
 name|AMDGPUTargetMachine
 operator|&
 name|tm
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 name|virtual
@@ -141,6 +131,14 @@ argument|unsigned reg
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|unsigned
+name|getHWRegIndex
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief get the register class of the specified type to use in the
 comment|/// CFGStructurizer
 name|virtual
@@ -153,15 +151,25 @@ argument|MVT VT
 argument_list|)
 specifier|const
 block|;
-comment|/// \returns the sub reg enum value for the given \p Channel
-comment|/// (e.g. getSubRegFromChannel(0) -> AMDGPU::sel_x)
-name|unsigned
-name|getSubRegFromChannel
+name|virtual
+specifier|const
+name|RegClassWeight
+operator|&
+name|getRegClassWeight
 argument_list|(
-argument|unsigned Channel
+argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
-block|;  }
+block|;
+comment|// \returns true if \p Reg can be defined in one ALU caluse and used in another.
+name|virtual
+name|bool
+name|isPhysRegLiveAcrossClauses
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

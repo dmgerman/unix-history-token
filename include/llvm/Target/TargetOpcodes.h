@@ -147,8 +147,9 @@ init|=
 literal|11
 block|,
 comment|/// REG_SEQUENCE - This variadic instruction is used to form a register that
-comment|/// represent a consecutive sequence of sub-registers. It's used as register
-comment|/// coalescing / allocation aid and must be eliminated before code emission.
+comment|/// represents a consecutive sequence of sub-registers. It's used as a
+comment|/// register coalescing / allocation aid and must be eliminated before code
+comment|/// emission.
 comment|// In SDNode form, the first operand encodes the register class created by
 comment|// the REG_SEQUENCE, while each subsequent pair names a vreg + subreg index
 comment|// pair.  Once it has been lowered to a MachineInstr, the regclass operand
@@ -181,6 +182,22 @@ block|,
 name|LIFETIME_END
 init|=
 literal|16
+block|,
+comment|/// A Stackmap instruction captures the location of live variables at its
+comment|/// position in the instruction stream. It is followed by a shadow of bytes
+comment|/// that must lie within the function and not contain another stackmap.
+name|STACKMAP
+init|=
+literal|17
+block|,
+comment|/// Patchable call instruction - this instruction represents a call to a
+comment|/// constant address, followed by a series of NOPs. It is intended to
+comment|/// support optimizations for dynamic languages (such as javascript) that
+comment|/// rewrite calls to runtimes with more efficient code sequences.
+comment|/// This also implies a stack map.
+name|PATCHPOINT
+init|=
+literal|18
 block|}
 enum|;
 block|}

@@ -80,14 +80,10 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// DisablePrettyStackTrace - Set this to true to disable this module. This
-comment|/// might be necessary if the host application installs its own signal
-comment|/// handlers which conflict with the ones installed by this module.
-comment|/// Defaults to false.
-specifier|extern
-name|bool
-name|DisablePrettyStackTrace
-decl_stmt|;
+name|void
+name|EnablePrettyStackTrace
+parameter_list|()
+function_decl|;
 comment|/// PrettyStackTraceEntry - This class is used to represent a frame of the
 comment|/// "pretty" stack trace that is dumped when a program crashes. You can define
 comment|/// subclasses of this and declare them on the program stack: when they are
@@ -229,7 +225,10 @@ name|ArgV
 argument_list|(
 argument|argv
 argument_list|)
-block|{}
+block|{
+name|EnablePrettyStackTrace
+argument_list|()
+block|;     }
 name|virtual
 name|void
 name|print

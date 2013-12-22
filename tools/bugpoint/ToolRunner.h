@@ -123,9 +123,6 @@ name|Triple
 name|TargetTriple
 decl_stmt|;
 name|class
-name|CBE
-decl_stmt|;
-name|class
 name|LLC
 decl_stmt|;
 comment|//===---------------------------------------------------------------------===//
@@ -134,15 +131,15 @@ comment|//
 name|class
 name|GCC
 block|{
-name|sys
+name|std
 operator|::
-name|Path
+name|string
 name|GCCPath
 expr_stmt|;
 comment|// The path to the gcc executable.
-name|sys
+name|std
 operator|::
-name|Path
+name|string
 name|RemoteClientPath
 expr_stmt|;
 comment|// The path to the rsh / ssh executable.
@@ -159,33 +156,13 @@ expr_stmt|;
 comment|// GCC-specific arguments.
 name|GCC
 argument_list|(
-specifier|const
-name|sys
-operator|::
-name|Path
-operator|&
-name|gccPath
+argument|StringRef gccPath
 argument_list|,
-specifier|const
-name|sys
-operator|::
-name|Path
-operator|&
-name|RemotePath
+argument|StringRef RemotePath
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|*
-name|GCCArgs
+argument|const std::vector<std::string> *GCCArgs
 argument_list|)
-operator|:
+block|:
 name|GCCPath
 argument_list|(
 name|gccPath
@@ -396,58 +373,6 @@ function_decl|;
 name|public
 label|:
 specifier|static
-name|CBE
-modifier|*
-name|createCBE
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|Argv0
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|Message
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|GCCBinary
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|*
-name|Args
-operator|=
-literal|0
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|*
-name|GCCArgs
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
-specifier|static
 name|LLC
 modifier|*
 name|createLLC
@@ -639,7 +564,7 @@ name|OutputCode
 argument_list|(
 argument|const std::string&Bitcode
 argument_list|,
-argument|sys::Path&OutFile
+argument|std::string&OutFile
 argument_list|,
 argument|std::string&Error
 argument_list|,
@@ -769,163 +694,6 @@ literal|0
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|//===---------------------------------------------------------------------===//
-comment|// CBE Implementation of AbstractIntepreter interface
-comment|//
-name|class
-name|CBE
-range|:
-name|public
-name|AbstractInterpreter
-block|{
-name|sys
-operator|::
-name|Path
-name|LLCPath
-block|;
-comment|// The path to the `llc' executable.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|ToolArgs
-block|;
-comment|// Extra args to pass to LLC.
-name|GCC
-operator|*
-name|gcc
-block|;
-name|public
-operator|:
-name|CBE
-argument_list|(
-specifier|const
-name|sys
-operator|::
-name|Path
-operator|&
-name|llcPath
-argument_list|,
-name|GCC
-operator|*
-name|Gcc
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|*
-name|Args
-argument_list|)
-operator|:
-name|LLCPath
-argument_list|(
-name|llcPath
-argument_list|)
-block|,
-name|gcc
-argument_list|(
-argument|Gcc
-argument_list|)
-block|{
-name|ToolArgs
-operator|.
-name|clear
-argument_list|()
-block|;
-if|if
-condition|(
-name|Args
-condition|)
-name|ToolArgs
-operator|=
-operator|*
-name|Args
-expr_stmt|;
-block|}
-operator|~
-name|CBE
-argument_list|()
-block|{
-name|delete
-name|gcc
-block|; }
-comment|/// compileProgram - Compile the specified program from bitcode to executable
-comment|/// code.  This does not produce any output, it is only used when debugging
-comment|/// the code generator.  Returns false if the code generator fails.
-name|virtual
-name|void
-name|compileProgram
-argument_list|(
-argument|const std::string&Bitcode
-argument_list|,
-argument|std::string *Error
-argument_list|,
-argument|unsigned Timeout =
-literal|0
-argument_list|,
-argument|unsigned MemoryLimit =
-literal|0
-argument_list|)
-block|;
-name|virtual
-name|int
-name|ExecuteProgram
-argument_list|(
-argument|const std::string&Bitcode
-argument_list|,
-argument|const std::vector<std::string>&Args
-argument_list|,
-argument|const std::string&InputFile
-argument_list|,
-argument|const std::string&OutputFile
-argument_list|,
-argument|std::string *Error
-argument_list|,
-argument|const std::vector<std::string>&GCCArgs =                                std::vector<std::string>()
-argument_list|,
-argument|const std::vector<std::string>&SharedLibs =                                std::vector<std::string>()
-argument_list|,
-argument|unsigned Timeout =
-literal|0
-argument_list|,
-argument|unsigned MemoryLimit =
-literal|0
-argument_list|)
-block|;
-comment|/// OutputCode - Compile the specified program from bitcode to code
-comment|/// understood by the GCC driver (either C or asm).  If the code generator
-comment|/// fails, it sets Error, otherwise, this function returns the type of code
-comment|/// emitted.
-name|virtual
-name|GCC
-operator|::
-name|FileType
-name|OutputCode
-argument_list|(
-argument|const std::string&Bitcode
-argument_list|,
-argument|sys::Path&OutFile
-argument_list|,
-argument|std::string&Error
-argument_list|,
-argument|unsigned Timeout =
-literal|0
-argument_list|,
-argument|unsigned MemoryLimit =
-literal|0
-argument_list|)
-block|; }
-decl_stmt|;
 comment|//===---------------------------------------------------------------------===//
 comment|// LLC Implementation of AbstractIntepreter interface
 comment|//
@@ -1064,7 +832,7 @@ name|OutputCode
 argument_list|(
 argument|const std::string&Bitcode
 argument_list|,
-argument|sys::Path&OutFile
+argument|std::string&OutFile
 argument_list|,
 argument|std::string&Error
 argument_list|,

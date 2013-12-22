@@ -168,18 +168,66 @@ argument_list|)
 specifier|const
 block|;
 name|bool
+name|hasReservedCallFrame
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|hasFP
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-expr|}
+block|;
+name|void
+name|processFunctionBeforeCalleeSavedScan
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|RegScavenger *RS = NULL
+argument_list|)
+specifier|const
+block|;
+name|private
+operator|:
+comment|// Remap input registers to output registers for leaf procedure.
+name|void
+name|remapRegsForLeafProc
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|// Returns true if MF is a leaf procedure.
+name|bool
+name|isLeafProc
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|// Emits code for adjusting SP in function prologue/epilogue.
+name|void
+name|emitSPAdjustment
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|int NumBytes
+argument_list|,
+argument|unsigned ADDrr
+argument_list|,
+argument|unsigned ADDri
+argument_list|)
+specifier|const
 block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

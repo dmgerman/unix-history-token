@@ -105,14 +105,12 @@ operator|~
 name|ManagedStringPool
 argument_list|()
 block|{
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|std
 operator|::
 name|string
 operator|*
-block|,
-literal|8
 operator|>
 operator|::
 name|iterator

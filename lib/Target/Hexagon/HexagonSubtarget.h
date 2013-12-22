@@ -113,6 +113,11 @@ range|:
 name|public
 name|HexagonGenSubtargetInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|bool
 name|UseMemOps
 block|;

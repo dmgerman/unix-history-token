@@ -193,104 +193,6 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
-comment|// createProfileLoaderPass - This pass loads information from a profile dump
-comment|// file.
-comment|//
-name|ModulePass
-modifier|*
-name|createProfileLoaderPass
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|&
-name|ProfileLoaderPassID
-decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createProfileMetadataLoaderPass - This pass loads information from a
-comment|// profile dump file and sets branch weight metadata.
-comment|//
-name|ModulePass
-modifier|*
-name|createProfileMetadataLoaderPass
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|&
-name|ProfileMetadataLoaderPassID
-decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createNoProfileInfoPass - This pass implements the default "no profile".
-comment|//
-name|ImmutablePass
-modifier|*
-name|createNoProfileInfoPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createProfileEstimatorPass - This pass estimates profiling information
-comment|// instead of loading it from a previous run.
-comment|//
-name|FunctionPass
-modifier|*
-name|createProfileEstimatorPass
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|&
-name|ProfileEstimatorPassID
-decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createProfileVerifierPass - This pass verifies profiling information.
-comment|//
-name|FunctionPass
-modifier|*
-name|createProfileVerifierPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createPathProfileLoaderPass - This pass loads information from a path
-comment|// profile dump file.
-comment|//
-name|ModulePass
-modifier|*
-name|createPathProfileLoaderPass
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|&
-name|PathProfileLoaderPassID
-decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createNoPathProfileInfoPass - This pass implements the default
-comment|// "no path profile".
-comment|//
-name|ImmutablePass
-modifier|*
-name|createNoPathProfileInfoPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createPathProfileVerifierPass - This pass verifies path profiling
-comment|// information.
-comment|//
-name|ModulePass
-modifier|*
-name|createPathProfileVerifierPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
 comment|// createDSAAPass - This pass implements simple context sensitive alias
 comment|// analysis.
 comment|//
@@ -346,6 +248,16 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createCostModelAnalysisPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// createDelinearizationPass - This pass implements attempts to restore
+comment|// multidimensional array indices from linearized expressions.
+comment|//
+name|FunctionPass
+modifier|*
+name|createDelinearizationPass
 parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//

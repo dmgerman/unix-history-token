@@ -457,6 +457,11 @@ name|std
 operator|::
 name|ostream
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|raw_os_ostream
 name|ros_
 block|;
@@ -1572,17 +1577,17 @@ name|virtual
 operator|~
 name|TestFactoryBase
 argument_list|()
-block|{}
+expr_stmt|;
 comment|// Creates a test instance to run. The instance is both created and destroyed
 comment|// within TestInfoImpl::Run()
 name|virtual
 name|Test
-operator|*
+modifier|*
 name|CreateTest
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|protected
 label|:
 name|TestFactoryBase

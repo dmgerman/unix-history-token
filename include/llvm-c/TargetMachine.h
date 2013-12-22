@@ -106,7 +106,9 @@ typedef|;
 comment|/** Returns the first llvm::Target in the registered targets list. */
 name|LLVMTargetRef
 name|LLVMGetFirstTarget
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/** Returns the next llvm::Target given a previous one (or null if there's none) */
 name|LLVMTargetRef
@@ -117,6 +119,35 @@ name|T
 parameter_list|)
 function_decl|;
 comment|/*===-- Target ------------------------------------------------------------===*/
+comment|/** Finds the target corresponding to the given name and stores it in \p T.    Returns 0 on success. */
+name|LLVMTargetRef
+name|LLVMGetTargetFromName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
+comment|/** Finds the target corresponding to the given triple and stores it in \p T.   Returns 0 on success. Optionally returns any error in ErrorMessage.   Use LLVMDisposeMessage to dispose the message. */
+name|LLVMBool
+name|LLVMGetTargetFromTriple
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Triple
+parameter_list|,
+name|LLVMTargetRef
+modifier|*
+name|T
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|ErrorMessage
+parameter_list|)
+function_decl|;
 comment|/** Returns the name of a target. See llvm::Target::getName */
 specifier|const
 name|char
@@ -169,14 +200,17 @@ parameter_list|(
 name|LLVMTargetRef
 name|T
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Triple
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|CPU
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Features
@@ -242,6 +276,17 @@ name|LLVMTargetMachineRef
 name|T
 parameter_list|)
 function_decl|;
+comment|/** Set the target machine's ASM verbosity. */
+name|void
+name|LLVMSetTargetMachineAsmVerbosity
+parameter_list|(
+name|LLVMTargetMachineRef
+name|T
+parameter_list|,
+name|LLVMBool
+name|VerboseAsm
+parameter_list|)
+function_decl|;
 comment|/** Emits an asm or object file for the given module to the filename. This   wraps several c++ only classes (among them a file stream). Returns any   error in ErrorMessage. Use LLVMDisposeMessage to dispose the message. */
 name|LLVMBool
 name|LLVMTargetMachineEmitToFile
@@ -286,6 +331,15 @@ parameter_list|,
 name|LLVMMemoryBufferRef
 modifier|*
 name|OutMemBuf
+parameter_list|)
+function_decl|;
+comment|/*===-- Triple ------------------------------------------------------------===*/
+comment|/** Get a triple for the host machine as a string. The result needs to be   disposed with LLVMDisposeMessage. */
+name|char
+modifier|*
+name|LLVMGetDefaultTargetTriple
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 ifdef|#

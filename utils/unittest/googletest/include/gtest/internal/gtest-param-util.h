@@ -1985,7 +1985,7 @@ name|virtual
 operator|~
 name|ParameterizedTestCaseInfoBase
 argument_list|()
-block|{}
+expr_stmt|;
 comment|// Base part of test case name for display purposes.
 name|virtual
 specifier|const

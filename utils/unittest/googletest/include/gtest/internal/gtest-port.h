@@ -4815,14 +4815,14 @@ name|virtual
 operator|~
 name|ThreadWithParamBase
 argument_list|()
-block|{}
+expr_stmt|;
 name|virtual
 name|void
 name|Run
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -5496,7 +5496,7 @@ name|virtual
 operator|~
 name|ThreadLocalValueHolderBase
 argument_list|()
-block|{}
+expr_stmt|;
 block|}
 end_decl_stmt
 

@@ -87,9 +87,9 @@ block|{
 return|return
 name|Is32bit
 condition|?
-name|subreg_32bit
+name|subreg_hl32
 else|:
-name|subreg_high
+name|subreg_h64
 return|;
 block|}
 specifier|inline
@@ -103,9 +103,9 @@ block|{
 return|return
 name|Is32bit
 condition|?
-name|subreg_low32
+name|subreg_l32
 else|:
-name|subreg_low
+name|subreg_l64
 return|;
 block|}
 block|}
@@ -127,11 +127,6 @@ name|SystemZTargetMachine
 operator|&
 name|TM
 block|;
-specifier|const
-name|SystemZInstrInfo
-operator|&
-name|TII
-block|;
 name|public
 operator|:
 name|SystemZRegisterInfo
@@ -139,11 +134,6 @@ argument_list|(
 name|SystemZTargetMachine
 operator|&
 name|tm
-argument_list|,
-specifier|const
-name|SystemZInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 comment|// Override TargetRegisterInfo.h.
@@ -174,6 +164,19 @@ name|true
 return|;
 block|}
 name|virtual
+name|bool
+name|trackLivenessAfterRegAlloc
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
 specifier|const
 name|uint16_t
 operator|*
@@ -190,23 +193,6 @@ name|BitVector
 name|getReservedRegs
 argument_list|(
 argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-name|LLVM_OVERRIDE
-block|;
-name|virtual
-name|bool
-name|saveScavengerRegister
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator SaveMBBI
-argument_list|,
-argument|MachineBasicBlock::iterator&UseMBBI
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|unsigned Reg
 argument_list|)
 specifier|const
 name|LLVM_OVERRIDE

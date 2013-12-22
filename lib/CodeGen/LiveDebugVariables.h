@@ -107,6 +107,9 @@ name|class
 name|LiveInterval
 decl_stmt|;
 name|class
+name|LiveIntervals
+decl_stmt|;
+name|class
 name|VirtRegMap
 decl_stmt|;
 name|class
@@ -156,7 +159,9 @@ name|splitRegister
 argument_list|(
 argument|unsigned OldReg
 argument_list|,
-argument|ArrayRef<LiveInterval*> NewRegs
+argument|ArrayRef<unsigned> NewRegs
+argument_list|,
+argument|LiveIntervals&LIS
 argument_list|)
 block|;
 comment|/// emitDebugValues - Emit new DBG_VALUE instructions reflecting the changes

@@ -462,11 +462,9 @@ name|MachineInstr
 operator|*
 name|MI
 argument_list|,
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|unsigned
-argument_list|,
-literal|4
 operator|>
 operator|&
 name|Defs
@@ -479,11 +477,9 @@ name|MachineInstr
 operator|*
 name|MI
 argument_list|,
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|unsigned
-argument_list|,
-literal|4
 operator|>
 operator|&
 name|Defs

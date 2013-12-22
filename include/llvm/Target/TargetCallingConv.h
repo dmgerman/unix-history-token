@@ -667,6 +667,9 @@ decl_stmt|;
 name|MVT
 name|VT
 decl_stmt|;
+name|EVT
+name|ArgVT
+decl_stmt|;
 name|bool
 name|Used
 decl_stmt|;
@@ -701,6 +704,8 @@ argument|ArgFlagsTy flags
 argument_list|,
 argument|EVT vt
 argument_list|,
+argument|EVT argvt
+argument_list|,
 argument|bool used
 argument_list|,
 argument|unsigned origIdx
@@ -734,6 +739,10 @@ name|vt
 operator|.
 name|getSimpleVT
 argument_list|()
+block|;
+name|ArgVT
+operator|=
+name|argvt
 block|;     }
 block|}
 struct|;
@@ -749,6 +758,9 @@ name|Flags
 decl_stmt|;
 name|MVT
 name|VT
+decl_stmt|;
+name|EVT
+name|ArgVT
 decl_stmt|;
 comment|/// IsFixed - Is this a "fixed" value, ie not passed through a vararg "...".
 name|bool
@@ -777,6 +789,8 @@ argument_list|(
 argument|ArgFlagsTy flags
 argument_list|,
 argument|EVT vt
+argument_list|,
+argument|EVT argvt
 argument_list|,
 argument|bool isfixed
 argument_list|,
@@ -811,6 +825,10 @@ name|vt
 operator|.
 name|getSimpleVT
 argument_list|()
+block|;
+name|ArgVT
+operator|=
+name|argvt
 block|;     }
 block|}
 struct|;

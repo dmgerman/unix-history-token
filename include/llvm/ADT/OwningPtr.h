@@ -277,6 +277,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -301,6 +302,20 @@ block|{
 return|return
 name|Ptr
 operator|==
+literal|0
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ptr
+operator|!=
 literal|0
 return|;
 block|}
@@ -568,6 +583,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()

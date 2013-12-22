@@ -90,7 +90,7 @@ name|MipsFrameLowering
 argument_list|(
 argument|STI
 argument_list|,
-literal|8
+argument|STI.stackAlignment()
 argument_list|)
 block|{}
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into

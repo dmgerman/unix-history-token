@@ -201,6 +201,62 @@ parameter_list|(
 name|vex
 parameter_list|)
 value|((vex)& 0x3)
+define|#
+directive|define
+name|rFromXOP2of3
+parameter_list|(
+name|xop
+parameter_list|)
+value|(((~(xop))& 0x80)>> 7)
+define|#
+directive|define
+name|xFromXOP2of3
+parameter_list|(
+name|xop
+parameter_list|)
+value|(((~(xop))& 0x40)>> 6)
+define|#
+directive|define
+name|bFromXOP2of3
+parameter_list|(
+name|xop
+parameter_list|)
+value|(((~(xop))& 0x20)>> 5)
+define|#
+directive|define
+name|mmmmmFromXOP2of3
+parameter_list|(
+name|xop
+parameter_list|)
+value|((xop)& 0x1f)
+define|#
+directive|define
+name|wFromXOP3of3
+parameter_list|(
+name|xop
+parameter_list|)
+value|(((xop)& 0x80)>> 7)
+define|#
+directive|define
+name|vvvvFromXOP3of3
+parameter_list|(
+name|vex
+parameter_list|)
+value|(((~(vex))& 0x78)>> 3)
+define|#
+directive|define
+name|lFromXOP3of3
+parameter_list|(
+name|xop
+parameter_list|)
+value|(((xop)& 0x4)>> 2)
+define|#
+directive|define
+name|ppFromXOP3of3
+parameter_list|(
+name|xop
+parameter_list|)
+value|((xop)& 0x3)
 comment|/*  * These enums represent Intel registers for use by the decoder.  */
 define|#
 directive|define
@@ -246,12 +302,17 @@ define|#
 directive|define
 name|REGS_XMM
 define|\
-value|ENTRY(XMM0)     \   ENTRY(XMM1)     \   ENTRY(XMM2)     \   ENTRY(XMM3)     \   ENTRY(XMM4)     \   ENTRY(XMM5)     \   ENTRY(XMM6)     \   ENTRY(XMM7)     \   ENTRY(XMM8)     \   ENTRY(XMM9)     \   ENTRY(XMM10)    \   ENTRY(XMM11)    \   ENTRY(XMM12)    \   ENTRY(XMM13)    \   ENTRY(XMM14)    \   ENTRY(XMM15)
+value|ENTRY(XMM0)     \   ENTRY(XMM1)     \   ENTRY(XMM2)     \   ENTRY(XMM3)     \   ENTRY(XMM4)     \   ENTRY(XMM5)     \   ENTRY(XMM6)     \   ENTRY(XMM7)     \   ENTRY(XMM8)     \   ENTRY(XMM9)     \   ENTRY(XMM10)    \   ENTRY(XMM11)    \   ENTRY(XMM12)    \   ENTRY(XMM13)    \   ENTRY(XMM14)    \   ENTRY(XMM15)    \   ENTRY(XMM16)    \   ENTRY(XMM17)    \   ENTRY(XMM18)    \   ENTRY(XMM19)    \   ENTRY(XMM20)    \   ENTRY(XMM21)    \   ENTRY(XMM22)    \   ENTRY(XMM23)    \   ENTRY(XMM24)    \   ENTRY(XMM25)    \   ENTRY(XMM26)    \   ENTRY(XMM27)    \   ENTRY(XMM28)    \   ENTRY(XMM29)    \   ENTRY(XMM30)    \   ENTRY(XMM31)
 define|#
 directive|define
 name|REGS_YMM
 define|\
-value|ENTRY(YMM0)     \   ENTRY(YMM1)     \   ENTRY(YMM2)     \   ENTRY(YMM3)     \   ENTRY(YMM4)     \   ENTRY(YMM5)     \   ENTRY(YMM6)     \   ENTRY(YMM7)     \   ENTRY(YMM8)     \   ENTRY(YMM9)     \   ENTRY(YMM10)    \   ENTRY(YMM11)    \   ENTRY(YMM12)    \   ENTRY(YMM13)    \   ENTRY(YMM14)    \   ENTRY(YMM15)
+value|ENTRY(YMM0)     \   ENTRY(YMM1)     \   ENTRY(YMM2)     \   ENTRY(YMM3)     \   ENTRY(YMM4)     \   ENTRY(YMM5)     \   ENTRY(YMM6)     \   ENTRY(YMM7)     \   ENTRY(YMM8)     \   ENTRY(YMM9)     \   ENTRY(YMM10)    \   ENTRY(YMM11)    \   ENTRY(YMM12)    \   ENTRY(YMM13)    \   ENTRY(YMM14)    \   ENTRY(YMM15)    \   ENTRY(YMM16)    \   ENTRY(YMM17)    \   ENTRY(YMM18)    \   ENTRY(YMM19)    \   ENTRY(YMM20)    \   ENTRY(YMM21)    \   ENTRY(YMM22)    \   ENTRY(YMM23)    \   ENTRY(YMM24)    \   ENTRY(YMM25)    \   ENTRY(YMM26)    \   ENTRY(YMM27)    \   ENTRY(YMM28)    \   ENTRY(YMM29)    \   ENTRY(YMM30)    \   ENTRY(YMM31)
+define|#
+directive|define
+name|REGS_ZMM
+define|\
+value|ENTRY(ZMM0)     \   ENTRY(ZMM1)     \   ENTRY(ZMM2)     \   ENTRY(ZMM3)     \   ENTRY(ZMM4)     \   ENTRY(ZMM5)     \   ENTRY(ZMM6)     \   ENTRY(ZMM7)     \   ENTRY(ZMM8)     \   ENTRY(ZMM9)     \   ENTRY(ZMM10)    \   ENTRY(ZMM11)    \   ENTRY(ZMM12)    \   ENTRY(ZMM13)    \   ENTRY(ZMM14)    \   ENTRY(ZMM15)    \   ENTRY(ZMM16)    \   ENTRY(ZMM17)    \   ENTRY(ZMM18)    \   ENTRY(ZMM19)    \   ENTRY(ZMM20)    \   ENTRY(ZMM21)    \   ENTRY(ZMM22)    \   ENTRY(ZMM23)    \   ENTRY(ZMM24)    \   ENTRY(ZMM25)    \   ENTRY(ZMM26)    \   ENTRY(ZMM27)    \   ENTRY(ZMM28)    \   ENTRY(ZMM29)    \   ENTRY(ZMM30)    \   ENTRY(ZMM31)
 define|#
 directive|define
 name|REGS_SEGMENT
@@ -281,7 +342,7 @@ define|#
 directive|define
 name|ALL_REGS
 define|\
-value|REGS_8BIT           \   REGS_16BIT          \   REGS_32BIT          \   REGS_64BIT          \   REGS_MMX            \   REGS_XMM            \   REGS_YMM            \   REGS_SEGMENT        \   REGS_DEBUG          \   REGS_CONTROL        \   ENTRY(RIP)
+value|REGS_8BIT           \   REGS_16BIT          \   REGS_32BIT          \   REGS_64BIT          \   REGS_MMX            \   REGS_XMM            \   REGS_YMM            \   REGS_ZMM            \   REGS_SEGMENT        \   REGS_DEBUG          \   REGS_CONTROL        \   ENTRY(RIP)
 comment|/*  * EABase - All possible values of the base field for effective-address  *   computations, a.k.a. the Mod and R/M fields of the ModR/M byte.  We  *   distinguish between bases (EA_BASE_*) and registers that just happen to be  *   referred to when Mod == 0b11 (EA_REG_*).  */
 typedef|typedef
 enum|enum
@@ -330,6 +391,7 @@ value|SIB_INDEX_##x,
 name|ALL_EA_BASES
 name|REGS_XMM
 name|REGS_YMM
+name|REGS_ZMM
 undef|#
 directive|undef
 name|ENTRY
@@ -431,6 +493,23 @@ literal|0x3
 block|}
 name|VEXLeadingOpcodeByte
 typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|XOP_MAP_SELECT_8
+init|=
+literal|0x8
+block|,
+name|XOP_MAP_SELECT_9
+init|=
+literal|0x9
+block|,
+name|XOP_MAP_SELECT_A
+init|=
+literal|0xA
+block|}
+name|XOPMapSelect
+typedef|;
 comment|/*  * VEXPrefixCode - Possible values for the VEX.pp field  */
 typedef|typedef
 enum|enum
@@ -452,6 +531,27 @@ init|=
 literal|0x3
 block|}
 name|VEXPrefixCode
+typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|TYPE_NO_VEX_XOP
+init|=
+literal|0x0
+block|,
+name|TYPE_VEX_2B
+init|=
+literal|0x1
+block|,
+name|TYPE_VEX_3B
+init|=
+literal|0x2
+block|,
+name|TYPE_XOP
+init|=
+literal|0x3
+block|}
+name|VEXXOPType
 typedef|;
 typedef|typedef
 name|uint8_t
@@ -551,16 +651,16 @@ index|[
 literal|0x100
 index|]
 decl_stmt|;
-comment|/* The value of the VEX prefix, if present */
+comment|/* The value of the VEX/XOP prefix, if present */
 name|uint8_t
-name|vexPrefix
+name|vexXopPrefix
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* The length of the VEX prefix (0 if not present) */
-name|uint8_t
-name|vexSize
+name|VEXXOPType
+name|vexXopType
 decl_stmt|;
 comment|/* The value of the REX prefix, if present */
 name|uint8_t
@@ -573,6 +673,10 @@ decl_stmt|;
 comment|/* The segment override type */
 name|SegmentOverride
 name|segmentOverride
+decl_stmt|;
+comment|/* 1 if the prefix byte, 0xf2 or 0xf3 is xacquire or xrelease */
+name|BOOL
+name|xAcquireRelease
 decl_stmt|;
 comment|/* Sizes of various critical pieces of data, in bytes */
 name|uint8_t
@@ -595,14 +699,6 @@ name|uint8_t
 name|immediateOffset
 decl_stmt|;
 comment|/* opcode state */
-comment|/* The value of the two-byte escape prefix (usually 0x0f) */
-name|uint8_t
-name|twoByteEscape
-decl_stmt|;
-comment|/* The value of the three-byte escape prefix (usually 0x38 or 0x3a) */
-name|uint8_t
-name|threeByteEscape
-decl_stmt|;
 comment|/* The last byte of the opcode, not counting any ModR/M extension */
 name|uint8_t
 name|opcode

@@ -58,12 +58,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/MemoryBuffer.h"
 end_include
 
@@ -78,50 +72,6 @@ include|#
 directive|include
 file|"llvm/Support/system_error.h"
 end_include
-
-begin_decl_stmt
-name|namespace
-name|objyaml
-block|{
-comment|// routines for writing YAML
-comment|// Write a hex stream:
-comment|//<Prefix> !hex: "<hex digits>" #|<ASCII chars>\n
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-name|writeHexStream
-argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-name|Out
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-name|arr
-argument_list|)
-expr_stmt|;
-comment|// Writes a number in hex; prefix it by 0x if it is>= 10
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-name|writeHexNumber
-argument_list|(
-argument|llvm::raw_ostream&Out
-argument_list|,
-argument|unsigned long long N
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
 
 begin_expr_stmt
 name|llvm

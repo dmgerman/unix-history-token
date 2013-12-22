@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- LegalizeTypes.h - Definition of the DAG Type Legalizer class ------===//
+comment|//===-- LegalizeTypes.h - DAG Type Legalizer class definition ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -229,6 +229,29 @@ operator|==
 name|TargetLowering
 operator|::
 name|TypeLegal
+return|;
+block|}
+name|EVT
+name|getSetCCResultType
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|TLI
+operator|.
+name|getSetCCResultType
+argument_list|(
+operator|*
+name|DAG
+operator|.
+name|getContext
+argument_list|()
+argument_list|,
+name|VT
+argument_list|)
 return|;
 block|}
 comment|/// IgnoreNodeResults - Pretend all of this node's results are legal.
@@ -804,13 +827,11 @@ operator|.
 name|getValueType
 argument_list|()
 decl_stmt|;
-name|DebugLoc
+name|SDLoc
 name|dl
-init|=
+argument_list|(
 name|Op
-operator|.
-name|getDebugLoc
-argument_list|()
+argument_list|)
 decl_stmt|;
 name|Op
 operator|=
@@ -863,13 +884,11 @@ operator|.
 name|getValueType
 argument_list|()
 decl_stmt|;
-name|DebugLoc
+name|SDLoc
 name|dl
-init|=
+argument_list|(
 name|Op
-operator|.
-name|getDebugLoc
-argument_list|()
+argument_list|)
 decl_stmt|;
 name|Op
 operator|=
@@ -2226,7 +2245,7 @@ name|CondCode
 operator|&
 name|CCCode
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|)
 decl_stmt|;
@@ -2516,6 +2535,14 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|SoftenFloatRes_FRINT
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|SoftenFloatRes_FROUND
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3091,6 +3118,22 @@ name|Hi
 parameter_list|)
 function_decl|;
 name|void
+name|ExpandFloatRes_FROUND
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|SDValue
+modifier|&
+name|Lo
+parameter_list|,
+name|SDValue
+modifier|&
+name|Hi
+parameter_list|)
+function_decl|;
+name|void
 name|ExpandFloatRes_FSIN
 parameter_list|(
 name|SDNode
@@ -3207,6 +3250,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|ExpandFloatOp_FCOPYSIGN
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|ExpandFloatOp_FP_ROUND
 parameter_list|(
 name|SDNode
@@ -3274,7 +3325,7 @@ name|CondCode
 operator|&
 name|CCCode
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|)
 decl_stmt|;
@@ -3541,7 +3592,7 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
-name|ScalarizeVecOp_EXTEND
+name|ScalarizeVecOp_UnaryOp
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3659,6 +3710,22 @@ parameter_list|)
 function_decl|;
 name|void
 name|SplitVecRes_UnaryOp
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|SDValue
+modifier|&
+name|Lo
+parameter_list|,
+name|SDValue
+modifier|&
+name|Hi
+parameter_list|)
+function_decl|;
+name|void
+name|SplitVecRes_ExtendOp
 parameter_list|(
 name|SDNode
 modifier|*
@@ -4209,6 +4276,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|WidenVecRes_BinaryCanTrap
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|WidenVecRes_Convert
 parameter_list|(
 name|SDNode
@@ -4326,11 +4401,9 @@ comment|///   Ld:      load to widen
 name|SDValue
 name|GenWidenVectorLoads
 argument_list|(
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|SDValue
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|LdChain
@@ -4348,11 +4421,9 @@ comment|///   ExtType: extension element type
 name|SDValue
 name|GenWidenVectorExtLoads
 argument_list|(
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|SDValue
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|LdChain
@@ -4374,11 +4445,9 @@ comment|///   ST:      store of a widen value
 name|void
 name|GenWidenVectorStores
 argument_list|(
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|SDValue
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|StChain
@@ -4395,11 +4464,9 @@ comment|///   ST:      store of a widen value
 name|void
 name|GenWidenVectorTruncStores
 argument_list|(
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|SDValue
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|StChain
@@ -4492,23 +4559,6 @@ name|Hi
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// GetSplitDestVTs - Compute the VTs needed for the low/hi parts of a type
-comment|/// which is split (or expanded) into two not necessarily identical pieces.
-name|void
-name|GetSplitDestVTs
-parameter_list|(
-name|EVT
-name|InVT
-parameter_list|,
-name|EVT
-modifier|&
-name|LoVT
-parameter_list|,
-name|EVT
-modifier|&
-name|HiVT
-parameter_list|)
-function_decl|;
 comment|/// GetPairElements - Use ISD::EXTRACT_ELEMENT nodes to extract the low and
 comment|/// high parts of the given value.
 name|void
@@ -4646,6 +4696,28 @@ name|Hi
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// This function will split the integer \p Op into \p NumElements
+comment|/// operations of type \p EltVT and store them in \p Ops.
+name|void
+name|IntegerToVector
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|unsigned
+name|NumElements
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|Ops
+argument_list|,
+name|EVT
+name|EltVT
+argument_list|)
+decl_stmt|;
 comment|// Generic Result Expansion.
 name|void
 name|ExpandRes_MERGE_VALUES

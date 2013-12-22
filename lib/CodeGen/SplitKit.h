@@ -110,6 +110,9 @@ name|class
 name|LiveRangeEdit
 decl_stmt|;
 name|class
+name|MachineBlockFrequencyInfo
+decl_stmt|;
+name|class
 name|MachineInstr
 decl_stmt|;
 name|class
@@ -619,6 +622,11 @@ name|TargetRegisterInfo
 modifier|&
 name|TRI
 decl_stmt|;
+specifier|const
+name|MachineBlockFrequencyInfo
+modifier|&
+name|MBFI
+decl_stmt|;
 name|public
 label|:
 comment|/// ComplementSpillMode - Select how the complement live range should be
@@ -902,6 +910,9 @@ name|VirtRegMap
 operator|&
 argument_list|,
 name|MachineDominatorTree
+operator|&
+argument_list|,
+name|MachineBlockFrequencyInfo
 operator|&
 argument_list|)
 expr_stmt|;

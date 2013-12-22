@@ -111,6 +111,17 @@ name|HiPE
 init|=
 literal|11
 block|,
+comment|// WebKit JS - Calling convention for stack based JavaScript calls
+name|WebKit_JS
+init|=
+literal|12
+block|,
+comment|// AnyReg - Calling convention for dynamic register based calls (e.g.
+comment|// stackmap and patchpoint intrinsics).
+name|AnyReg
+init|=
+literal|13
+block|,
 comment|// Target - This is the start of the target-specific calling conventions,
 comment|// e.g. fastcall and thiscall on X86.
 name|FirstTargetCC
@@ -173,17 +184,6 @@ name|PTX_Device
 init|=
 literal|72
 block|,
-comment|/// MBLAZE_INTR - Calling convention used for MBlaze interrupt routines.
-name|MBLAZE_INTR
-init|=
-literal|73
-block|,
-comment|/// MBLAZE_INTR - Calling convention used for MBlaze interrupt support
-comment|/// routines (i.e. GCC's save_volatiles attribute).
-name|MBLAZE_SVOL
-init|=
-literal|74
-block|,
 comment|/// SPIR_FUNC - Calling convention for SPIR non-kernel device functions.
 comment|/// No lowering or expansion of arguments.
 comment|/// Structures are passed as a pointer to a struct with the byval attribute.
@@ -210,6 +210,20 @@ comment|/// Intel_OCL_BI - Calling conventions for Intel OpenCL built-ins
 name|Intel_OCL_BI
 init|=
 literal|77
+block|,
+comment|/// \brief The C convention as specified in the x86-64 supplement to the
+comment|/// System V ABI, used on most non-Windows systems.
+name|X86_64_SysV
+init|=
+literal|78
+block|,
+comment|/// \brief The C convention as implemented on Windows/x86-64. This
+comment|/// convention differs from the more common \c X86_64_SysV convention
+comment|/// in a number of ways, most notably in that XMM registers used to pass
+comment|/// arguments are shadowed by GPRs, and vice versa.
+name|X86_64_Win64
+init|=
+literal|79
 block|}
 enum|;
 block|}

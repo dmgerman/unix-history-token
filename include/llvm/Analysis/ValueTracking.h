@@ -97,6 +97,9 @@ decl_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
 comment|/// ComputeMaskedBits - Determine which of the bits specified in Mask are
 comment|/// known to be either zero or one and return them in the KnownZero/KnownOne
 comment|/// bit sets.  This code only analyzes bits in Mask, in order to short-circuit
@@ -631,6 +634,13 @@ specifier|const
 name|Value
 modifier|*
 name|V
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 block|}

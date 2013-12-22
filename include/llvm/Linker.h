@@ -112,6 +112,10 @@ return|return
 name|Composite
 return|;
 block|}
+name|void
+name|deleteModule
+parameter_list|()
+function_decl|;
 comment|/// \brief Link \p Src into the composite. The source is destroyed if
 comment|/// \p Mode is DestroySource and preserved if it is PreserveSource.
 comment|/// If \p ErrorMsg is not null, information about any error is written

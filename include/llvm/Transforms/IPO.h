@@ -230,8 +230,12 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// createInternalizePass - This pass loops over all of the functions in the
-comment|/// input module, internalizing all globals (functions and variables) not in the
-comment|/// given exportList.
+comment|/// input module, internalizing all globals (functions and variables) it can.
+comment|////
+comment|/// The symbols in \p ExportList are never internalized.
+comment|///
+comment|/// The symbol in DSOList are internalized if it is safe to drop them from
+comment|/// the symbol table.
 comment|///
 comment|/// Note that commandline options that are used with the above function are not
 comment|/// used now!
@@ -245,7 +249,7 @@ specifier|const
 name|char
 operator|*
 operator|>
-name|exportList
+name|ExportList
 argument_list|)
 decl_stmt|;
 comment|/// createInternalizePass - Same as above, but with an empty exportList.

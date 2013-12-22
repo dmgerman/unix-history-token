@@ -58,6 +58,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"AMDGPUMachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -65,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/SelectionDAG.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"AMDGPUMachineFunction.h"
 end_include
 
 begin_include
@@ -89,6 +89,11 @@ range|:
 name|public
 name|AMDGPUMachineFunction
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|R600MachineFunctionInfo

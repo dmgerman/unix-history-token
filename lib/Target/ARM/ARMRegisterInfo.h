@@ -84,9 +84,6 @@ block|{
 name|class
 name|ARMSubtarget
 decl_stmt|;
-name|class
-name|ARMBaseInstrInfo
-decl_stmt|;
 name|struct
 name|ARMRegisterInfo
 range|:
@@ -102,11 +99,6 @@ name|public
 operator|:
 name|ARMRegisterInfo
 argument_list|(
-specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|tii
-argument_list|,
 specifier|const
 name|ARMSubtarget
 operator|&

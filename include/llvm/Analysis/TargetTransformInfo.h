@@ -117,6 +117,9 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
+name|Loop
+decl_stmt|;
+name|class
 name|Type
 decl_stmt|;
 name|class
@@ -429,6 +432,16 @@ name|U
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief hasBranchDivergence - Return true if branch divergence exists.
+comment|/// Branch divergence has a significantly negative impact on GPU performance
+comment|/// when threads in the same wavefront take different paths due to conditional
+comment|/// branches.
+name|virtual
+name|bool
+name|hasBranchDivergence
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Test whether calls to a function lower to actual program function
 comment|/// calls.
 comment|///
@@ -449,6 +462,60 @@ specifier|const
 name|Function
 operator|*
 name|F
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Parameters that control the generic loop unrolling transformation.
+struct|struct
+name|UnrollingPreferences
+block|{
+comment|/// The cost threshold for the unrolled loop, compared to
+comment|/// CodeMetrics.NumInsts aggregated over all basic blocks in the loop body.
+comment|/// The unrolling factor is set such that the unrolled loop body does not
+comment|/// exceed this cost. Set this to UINT_MAX to disable the loop body cost
+comment|/// restriction.
+name|unsigned
+name|Threshold
+decl_stmt|;
+comment|/// The cost threshold for the unrolled loop when optimizing for size (set
+comment|/// to UINT_MAX to disable).
+name|unsigned
+name|OptSizeThreshold
+decl_stmt|;
+comment|/// A forced unrolling factor (the number of concatenated bodies of the
+comment|/// original loop in the unrolled loop body). When set to 0, the unrolling
+comment|/// transformation will select an unrolling factor based on the current cost
+comment|/// threshold and other factors.
+name|unsigned
+name|Count
+decl_stmt|;
+comment|/// Allow partial unrolling (unrolling of loops to expand the size of the
+comment|/// loop body, not only to eliminate small constant-trip-count loops).
+name|bool
+name|Partial
+decl_stmt|;
+comment|/// Allow runtime unrolling (unrolling of loops to expand the size of the
+comment|/// loop body even when the number of loop iterations is not known at compile
+comment|/// time).
+name|bool
+name|Runtime
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Get target-customized preferences for the generic loop unrolling
+comment|/// transformation. The caller will initialize UP with the current
+comment|/// target-independent defaults.
+name|virtual
+name|void
+name|getUnrollingPreferences
+argument_list|(
+name|Loop
+operator|*
+name|L
+argument_list|,
+name|UnrollingPreferences
+operator|&
+name|UP
 argument_list|)
 decl|const
 decl_stmt|;
@@ -507,6 +574,35 @@ comment|/// TODO: Handle pre/postinc as well.
 name|virtual
 name|bool
 name|isLegalAddressingMode
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|GlobalValue
+operator|*
+name|BaseGV
+argument_list|,
+name|int64_t
+name|BaseOffset
+argument_list|,
+name|bool
+name|HasBaseReg
+argument_list|,
+name|int64_t
+name|Scale
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Return the cost of the scaling factor used in the addressing
+comment|/// mode represented by AM for this target, for a load/store
+comment|/// of the specified type.
+comment|/// If the AM is supported, the return value must be>= 0.
+comment|/// If the AM is not supported, it returns a negative value.
+comment|/// TODO: Handle pre/postinc as well.
+name|virtual
+name|int
+name|getScalingFactorCost
 argument_list|(
 name|Type
 operator|*
@@ -587,6 +683,18 @@ name|IntTyWidthInBit
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// haveFastSqrt -- Return true if the hardware has a fast square-root
+comment|/// instruction.
+name|virtual
+name|bool
+name|haveFastSqrt
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getIntImmCost - Return the expected cost of materializing the given
 comment|/// integer immediate of the specified type.
 name|virtual
@@ -624,7 +732,7 @@ name|SK_ExtractSubvector
 comment|///< ExtractSubvector Index indicates start offset.
 block|}
 enum|;
-comment|/// \brief Additonal information about an operand's possible values.
+comment|/// \brief Additional information about an operand's possible values.
 enum|enum
 name|OperandValueKind
 block|{
@@ -811,6 +919,35 @@ name|AddressSpace
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Calculate the cost of performing a vector reduction.
+comment|///
+comment|/// This is the cost of reducing the vector value of type \p Ty to a scalar
+comment|/// value using the operation denoted by \p Opcode. The form of the reduction
+comment|/// can either be a pairwise reduction or a reduction that splits the vector
+comment|/// at every reduction level.
+comment|///
+comment|/// Pairwise:
+comment|///  (v0, v1, v2, v3)
+comment|///  ((v0+v1), (v2, v3), undef, undef)
+comment|/// Split:
+comment|///  (v0, v1, v2, v3)
+comment|///  ((v0+v2), (v1+v3), undef, undef)
+name|virtual
+name|unsigned
+name|getReductionCost
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|bool
+name|IsPairwiseForm
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \returns The cost of Intrinsic instructions.
 name|virtual
 name|unsigned
@@ -850,6 +987,9 @@ comment|/// \returns The cost of the address computation. For most targets this 
 comment|/// merged into the instruction indexing mode. Some targets might want to
 comment|/// distinguish between address computation for memory operations on vector
 comment|/// types and scalar types. Such targets should override this function.
+comment|/// The 'IsComplex' parameter is a hint that the address computation is likely
+comment|/// to involve multiple instructions and as such unlikely to be merged into
+comment|/// the address indexing mode.
 name|virtual
 name|unsigned
 name|getAddressComputationCost
@@ -857,6 +997,11 @@ argument_list|(
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|bool
+name|IsComplex
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;

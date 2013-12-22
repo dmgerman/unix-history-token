@@ -103,7 +103,7 @@ name|list
 operator|<
 name|Graph
 operator|::
-name|NodeItr
+name|NodeId
 operator|>
 name|OptimalList
 expr_stmt|;
@@ -146,8 +146,8 @@ name|addToOptimalReductionList
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|optimalList
@@ -159,7 +159,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 block|}
@@ -247,8 +247,8 @@ name|shouldOptimallyReduce
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 if|if
@@ -257,7 +257,7 @@ name|g
 operator|.
 name|getNodeDegree
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|<
 literal|3
@@ -271,7 +271,7 @@ name|false
 return|;
 block|}
 comment|/// \brief Add the given node to the list of nodes to be optimally reduced.
-comment|/// @param nItr Node iterator to be added.
+comment|/// @param nId Node id to be added.
 comment|///
 comment|/// You probably don't want to over-ride this, except perhaps to record
 comment|/// statistics before calling this implementation. HeuristicBase relies on
@@ -281,15 +281,15 @@ name|addToOptimalReduceList
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|optimalList
 operator|.
 name|push_back
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 block|}
@@ -338,12 +338,14 @@ argument_list|()
 operator|.
 name|shouldOptimallyReduce
 argument_list|(
+operator|*
 name|nItr
 argument_list|)
 condition|)
 block|{
 name|addToOptimalReduceList
 argument_list|(
+operator|*
 name|nItr
 argument_list|)
 expr_stmt|;
@@ -355,6 +357,7 @@ argument_list|()
 operator|.
 name|addToHeuristicReduceList
 argument_list|(
+operator|*
 name|nItr
 argument_list|)
 expr_stmt|;
@@ -383,8 +386,8 @@ name|false
 return|;
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 operator|=
 name|optimalList
 operator|.
@@ -402,7 +405,7 @@ name|s
 operator|.
 name|getSolverDegree
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 condition|)
 block|{
@@ -413,7 +416,7 @@ name|s
 operator|.
 name|applyR0
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 break|break;
@@ -424,7 +427,7 @@ name|s
 operator|.
 name|applyR1
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 break|break;
@@ -435,7 +438,7 @@ name|s
 operator|.
 name|applyR2
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 break|break;
@@ -504,14 +507,14 @@ block|}
 block|}
 block|}
 comment|/// \brief Add a node to the heuristic reduce list.
-comment|/// @param nItr Node iterator to add to the heuristic reduce list.
+comment|/// @param nId Node id to add to the heuristic reduce list.
 name|void
 name|addToHeuristicList
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|llvm_unreachable
@@ -538,14 +541,14 @@ name|false
 return|;
 block|}
 comment|/// \brief Prepare a change in the costs on the given edge.
-comment|/// @param eItr Edge iterator.
+comment|/// @param eId Edge id.
 name|void
 name|preUpdateEdgeCosts
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 name|llvm_unreachable
@@ -555,14 +558,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Handle the change in the costs on the given edge.
-comment|/// @param eItr Edge iterator.
+comment|/// @param eId Edge id.
 name|void
 name|postUpdateEdgeCostts
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 name|llvm_unreachable
@@ -572,14 +575,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Handle the addition of a new edge into the PBQP graph.
-comment|/// @param eItr Edge iterator for the added edge.
+comment|/// @param eId Edge id for the added edge.
 name|void
 name|handleAddEdge
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 name|llvm_unreachable
@@ -589,8 +592,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Handle disconnection of an edge from a node.
-comment|/// @param eItr Edge iterator for edge being disconnected.
-comment|/// @param nItr Node iterator for the node being disconnected from.
+comment|/// @param eId Edge id for edge being disconnected.
+comment|/// @param nId Node id for the node being disconnected from.
 comment|///
 comment|/// Edges are frequently removed due to the removal of a node. This
 comment|/// method allows for the effect to be computed only for the remaining
@@ -600,13 +603,13 @@ name|handleRemoveEdge
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|,
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|llvm_unreachable

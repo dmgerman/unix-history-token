@@ -118,6 +118,9 @@ decl_stmt|;
 name|class
 name|RegPressureTracker
 decl_stmt|;
+name|class
+name|PressureDiffs
+decl_stmt|;
 comment|/// An individual mapping from virtual register number to SUnit.
 struct|struct
 name|VReg2SUnit
@@ -244,6 +247,18 @@ name|VirtReg2IndexFunctor
 operator|>
 name|VReg2SUnitMap
 expr_stmt|;
+comment|/// Track local uses of virtual registers. These uses are gathered by the DAG
+comment|/// builder and may be consulted by the scheduler to avoid iterating an entire
+comment|/// vreg use list.
+typedef|typedef
+name|SparseMultiSet
+operator|<
+name|VReg2SUnit
+operator|,
+name|VirtReg2IndexFunctor
+operator|>
+name|VReg2UseMap
+expr_stmt|;
 comment|/// ScheduleDAGInstrs - A ScheduleDAG subclass for scheduling lists of
 comment|/// MachineInstrs.
 name|class
@@ -282,11 +297,6 @@ comment|/// isPostRA flag indicates vregs cannot be present.
 name|bool
 name|IsPostRA
 block|;
-comment|/// UnitLatencies (misnamed) flag avoids computing def-use latencies, using
-comment|/// the def-side latency only.
-name|bool
-name|UnitLatencies
-block|;
 comment|/// The standard DAG builder does not normally include terminators as DAG
 comment|/// nodes because it does not create the necessary dependencies to prevent
 comment|/// reordering. A specialized scheduler can overide
@@ -314,13 +324,9 @@ operator|::
 name|iterator
 name|RegionEnd
 block|;
-comment|/// The index in BB of RegionEnd.
-comment|///
-comment|/// This is the instruction number from the top of the current block, not
-comment|/// the SlotIndex. It is only used by the AntiDepBreaker and should be
-comment|/// removed once that client is obsolete.
+comment|/// Instructions in this region (distance(RegionBegin, RegionEnd)).
 name|unsigned
-name|EndIndex
+name|NumRegionInstrs
 block|;
 comment|/// After calling BuildSchedGraph, each machine instruction in the current
 comment|/// scheduling region is mapped to an SUnit.
@@ -334,6 +340,12 @@ operator|*
 operator|>
 name|MISUnitMap
 block|;
+comment|/// After calling BuildSchedGraph, each vreg used in the scheduling region
+comment|/// is mapped to a set of SUnits. These include all local vreg uses, not
+comment|/// just the uses for a singly defined vreg.
+name|VReg2UseMap
+name|VRegUses
+block|;
 comment|/// State internal to DAG building.
 comment|/// -------------------------------
 comment|/// Defs, Uses - Remember where defs and uses of each register are as we
@@ -346,7 +358,7 @@ block|;
 name|Reg2SUnitsMap
 name|Uses
 block|;
-comment|/// Track the last instructon in this region defining each virtual register.
+comment|/// Track the last instruction in this region defining each virtual register.
 name|VReg2SUnitMap
 name|VRegDefs
 block|;
@@ -466,6 +478,11 @@ operator|!
 name|SU
 operator|->
 name|SchedClass
+operator|&&
+name|SchedModel
+operator|.
+name|hasInstrSchedModel
+argument_list|()
 condition|)
 name|SU
 operator|->
@@ -568,7 +585,7 @@ name|iterator
 name|end
 argument_list|,
 name|unsigned
-name|endcount
+name|regioninstrs
 argument_list|)
 decl_stmt|;
 comment|/// Notify that the scheduler has finished scheduling the current region.
@@ -589,6 +606,12 @@ parameter_list|,
 name|RegPressureTracker
 modifier|*
 name|RPTracker
+init|=
+literal|0
+parameter_list|,
+name|PressureDiffs
+modifier|*
+name|PDiffs
 init|=
 literal|0
 parameter_list|)

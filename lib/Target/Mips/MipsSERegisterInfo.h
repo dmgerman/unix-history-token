@@ -82,11 +82,6 @@ range|:
 name|public
 name|MipsRegisterInfo
 block|{
-specifier|const
-name|MipsSEInstrInfo
-operator|&
-name|TII
-block|;
 name|public
 operator|:
 name|MipsSERegisterInfo
@@ -95,11 +90,6 @@ specifier|const
 name|MipsSubtarget
 operator|&
 name|Subtarget
-argument_list|,
-specifier|const
-name|MipsSEInstrInfo
-operator|&
-name|TII
 argument_list|)
 block|;
 name|bool

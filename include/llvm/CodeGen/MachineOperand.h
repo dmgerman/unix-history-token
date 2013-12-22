@@ -1271,6 +1271,7 @@ argument_list|(
 name|isReg
 argument_list|()
 operator|&&
+operator|!
 name|IsDef
 operator|&&
 literal|"Wrong MachineOperand accessor"
@@ -2013,6 +2014,31 @@ init|=
 name|false
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|isDead
+operator|&&
+operator|!
+name|isDef
+operator|)
+operator|&&
+literal|"Dead flag on non-def"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|isKill
+operator|&&
+name|isDef
+operator|)
+operator|&&
+literal|"Kill flag on def"
+argument_list|)
+expr_stmt|;
 name|MachineOperand
 name|Op
 argument_list|(

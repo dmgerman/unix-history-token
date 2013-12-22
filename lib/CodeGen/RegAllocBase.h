@@ -160,7 +160,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/LiveIntervalUnion.h"
+file|"llvm/CodeGen/LiveInterval.h"
 end_include
 
 begin_include
@@ -205,6 +205,11 @@ comment|/// assignment order.
 name|class
 name|RegAllocBase
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 specifier|const
@@ -331,8 +336,7 @@ name|VirtReg
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|LiveInterval
-operator|*
+name|unsigned
 operator|>
 operator|&
 name|splitLVRs
@@ -344,8 +348,8 @@ comment|// Use this group name for NamedRegionTimer.
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|TimerGroupName
+index|[]
 decl_stmt|;
 name|public
 label|:

@@ -2853,27 +2853,27 @@ name|virtual
 operator|~
 name|Environment
 argument_list|()
-block|{}
+expr_stmt|;
 comment|// Override this to define how to set up the environment.
 name|virtual
 name|void
 name|SetUp
-argument_list|()
+parameter_list|()
 block|{}
 comment|// Override this to define how to tear down the environment.
 name|virtual
 name|void
 name|TearDown
-argument_list|()
+parameter_list|()
 block|{}
 name|private
-operator|:
+label|:
 comment|// If you see an error about overriding the following function or
 comment|// about it being private, you have mis-spelled SetUp() as Setup().
-expr|struct
+struct|struct
 name|Setup_should_be_spelled_SetUp
 block|{}
-expr_stmt|;
+struct|;
 name|virtual
 name|Setup_should_be_spelled_SetUp
 modifier|*
@@ -2909,20 +2909,20 @@ name|virtual
 operator|~
 name|TestEventListener
 argument_list|()
-block|{}
+expr_stmt|;
 comment|// Fired before any test activity starts.
 name|virtual
 name|void
 name|OnTestProgramStart
-argument_list|(
+parameter_list|(
 specifier|const
 name|UnitTest
-operator|&
+modifier|&
 name|unit_test
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|// Fired before each iteration of tests starts.  There may be more than
 comment|// one iteration if GTEST_FLAG(repeat) is set. iteration is the iteration
 comment|// index, starting from 0.
@@ -3121,6 +3121,11 @@ range|:
 name|public
 name|TestEventListener
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|virtual

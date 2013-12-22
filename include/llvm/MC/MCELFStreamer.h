@@ -113,34 +113,6 @@ range|:
 name|public
 name|MCObjectStreamer
 block|{
-name|protected
-operator|:
-name|MCELFStreamer
-argument_list|(
-argument|StreamerKind Kind
-argument_list|,
-argument|MCContext&Context
-argument_list|,
-argument|MCAsmBackend&TAB
-argument_list|,
-argument|raw_ostream&OS
-argument_list|,
-argument|MCCodeEmitter *Emitter
-argument_list|)
-operator|:
-name|MCObjectStreamer
-argument_list|(
-argument|Kind
-argument_list|,
-argument|Context
-argument_list|,
-argument|TAB
-argument_list|,
-argument|OS
-argument_list|,
-argument|Emitter
-argument_list|)
-block|{}
 name|public
 operator|:
 name|MCELFStreamer
@@ -148,6 +120,10 @@ argument_list|(
 name|MCContext
 operator|&
 name|Context
+argument_list|,
+name|MCTargetStreamer
+operator|*
+name|TargetStreamer
 argument_list|,
 name|MCAsmBackend
 operator|&
@@ -164,15 +140,20 @@ argument_list|)
 operator|:
 name|MCObjectStreamer
 argument_list|(
-argument|SK_ELFStreamer
+name|Context
 argument_list|,
-argument|Context
+name|TargetStreamer
 argument_list|,
-argument|TAB
+name|TAB
 argument_list|,
-argument|OS
+name|OS
 argument_list|,
-argument|Emitter
+name|Emitter
+argument_list|)
+block|,
+name|SeenIdent
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|MCELFStreamer
@@ -180,6 +161,10 @@ argument_list|(
 name|MCContext
 operator|&
 name|Context
+argument_list|,
+name|MCTargetStreamer
+operator|*
+name|TargetStreamer
 argument_list|,
 name|MCAsmBackend
 operator|&
@@ -200,17 +185,22 @@ argument_list|)
 operator|:
 name|MCObjectStreamer
 argument_list|(
-argument|SK_ELFStreamer
+name|Context
 argument_list|,
-argument|Context
+name|TargetStreamer
 argument_list|,
-argument|TAB
+name|TAB
 argument_list|,
-argument|OS
+name|OS
 argument_list|,
-argument|Emitter
+name|Emitter
 argument_list|,
-argument|Assembler
+name|Assembler
+argument_list|)
+block|,
+name|SeenIdent
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|virtual
@@ -294,7 +284,7 @@ name|Symbol
 argument_list|)
 block|;
 name|virtual
-name|void
+name|bool
 name|EmitSymbolAttribute
 argument_list|(
 argument|MCSymbol *Symbol
@@ -423,8 +413,6 @@ argument_list|(
 argument|const MCExpr *Value
 argument_list|,
 argument|unsigned Size
-argument_list|,
-argument|unsigned AddrSpace
 argument_list|)
 block|;
 name|virtual
@@ -436,12 +424,9 @@ argument_list|)
 block|;
 name|virtual
 name|void
-name|EmitTCEntry
+name|EmitIdent
 argument_list|(
-specifier|const
-name|MCSymbol
-operator|&
-name|S
+argument|StringRef IdentString
 argument_list|)
 block|;
 name|virtual
@@ -459,33 +444,14 @@ argument_list|)
 block|;
 name|virtual
 name|void
+name|Flush
+argument_list|()
+block|;
+name|virtual
+name|void
 name|FinishImpl
 argument_list|()
 block|;
-comment|/// @}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCStreamer *S
-argument_list|)
-block|{
-return|return
-name|S
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|SK_ELFStreamer
-operator|||
-name|S
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|SK_ARMELFStreamer
-return|;
-block|}
 name|private
 operator|:
 name|virtual
@@ -535,6 +501,9 @@ name|MCExpr
 operator|*
 name|expr
 argument_list|)
+block|;
+name|bool
+name|SeenIdent
 block|;    struct
 name|LocalCommon
 block|{
@@ -591,6 +560,36 @@ name|SetSectionBss
 argument_list|()
 block|; }
 decl_stmt|;
+name|MCELFStreamer
+modifier|*
+name|createARMELFStreamer
+parameter_list|(
+name|MCContext
+modifier|&
+name|Context
+parameter_list|,
+name|MCAsmBackend
+modifier|&
+name|TAB
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|MCCodeEmitter
+modifier|*
+name|Emitter
+parameter_list|,
+name|bool
+name|RelaxAll
+parameter_list|,
+name|bool
+name|NoExecStack
+parameter_list|,
+name|bool
+name|IsThumb
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

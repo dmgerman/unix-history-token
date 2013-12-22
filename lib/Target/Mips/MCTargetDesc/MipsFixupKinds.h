@@ -174,6 +174,45 @@ block|,
 comment|// resulting in - R_MIPS_CALL_LO16
 name|fixup_Mips_CALL_LO16
 block|,
+comment|// resulting in - R_MICROMIPS_26_S1
+name|fixup_MICROMIPS_26_S1
+block|,
+comment|// resulting in - R_MICROMIPS_HI16
+name|fixup_MICROMIPS_HI16
+block|,
+comment|// resulting in - R_MICROMIPS_LO16
+name|fixup_MICROMIPS_LO16
+block|,
+comment|// resulting in - R_MICROMIPS_GOT16
+name|fixup_MICROMIPS_GOT16
+block|,
+comment|// resulting in - R_MICROMIPS_PC16_S1
+name|fixup_MICROMIPS_PC16_S1
+block|,
+comment|// resulting in - R_MICROMIPS_CALL16
+name|fixup_MICROMIPS_CALL16
+block|,
+comment|// resulting in - R_MICROMIPS_GOT_DISP
+name|fixup_MICROMIPS_GOT_DISP
+block|,
+comment|// resulting in - R_MICROMIPS_GOT_PAGE
+name|fixup_MICROMIPS_GOT_PAGE
+block|,
+comment|// resulting in - R_MICROMIPS_GOT_OFST
+name|fixup_MICROMIPS_GOT_OFST
+block|,
+comment|// resulting in - R_MICROMIPS_TLS_DTPREL_HI16
+name|fixup_MICROMIPS_TLS_DTPREL_HI16
+block|,
+comment|// resulting in - R_MICROMIPS_TLS_DTPREL_LO16
+name|fixup_MICROMIPS_TLS_DTPREL_LO16
+block|,
+comment|// resulting in - R_MICROMIPS_TLS_TPREL_HI16
+name|fixup_MICROMIPS_TLS_TPREL_HI16
+block|,
+comment|// resulting in - R_MICROMIPS_TLS_TPREL_LO16
+name|fixup_MICROMIPS_TLS_TPREL_LO16
+block|,
 comment|// Marker
 name|LastTargetFixupKind
 block|,

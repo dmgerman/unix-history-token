@@ -102,11 +102,6 @@ operator|:
 name|Thumb1RegisterInfo
 argument_list|(
 specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|tii
-argument_list|,
-specifier|const
 name|ARMSubtarget
 operator|&
 name|STI

@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cerrno>
 end_include
 
@@ -127,6 +133,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -147,23 +159,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_SYS_TYPES_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_SYS_PARAM_H
 end_ifdef
 
@@ -171,23 +166,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_ASSERT_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
 end_include
 
 begin_endif
@@ -228,6 +206,23 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DLFCN_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dlfcn.h>
 end_include
 
 begin_endif

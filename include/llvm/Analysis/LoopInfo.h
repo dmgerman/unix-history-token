@@ -241,6 +241,9 @@ name|class
 name|Loop
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
 name|PHINode
 decl_stmt|;
 name|class
@@ -306,6 +309,16 @@ name|BlockT
 operator|*
 operator|>
 name|Blocks
+block|;
+name|SmallPtrSet
+operator|<
+specifier|const
+name|BlockT
+operator|*
+block|,
+literal|8
+operator|>
+name|DenseBlockSet
 block|;
 name|LoopBase
 argument_list|(
@@ -508,21 +521,12 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|std
-operator|::
-name|find
+name|DenseBlockSet
+operator|.
+name|count
 argument_list|(
-name|block_begin
-argument_list|()
-argument_list|,
-name|block_end
-argument_list|()
-argument_list|,
 name|BB
 argument_list|)
-operator|!=
-name|block_end
-argument_list|()
 return|;
 block|}
 comment|/// contains - Return true if the specified instruction is in this loop.
@@ -683,21 +687,6 @@ operator|&
 name|getBlocks
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Blocks
-return|;
-block|}
-name|std
-operator|::
-name|vector
-operator|<
-name|BlockT
-operator|*
-operator|>
-operator|&
-name|getBlocksVector
-argument_list|()
 block|{
 return|return
 name|Blocks
@@ -1398,6 +1387,67 @@ argument_list|(
 name|BB
 argument_list|)
 expr_stmt|;
+name|DenseBlockSet
+operator|.
+name|insert
+argument_list|(
+name|BB
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// reverseBlocks - interface to reverse Blocks[from, end of loop] in this loop
+end_comment
+
+begin_function
+name|void
+name|reverseBlock
+parameter_list|(
+name|unsigned
+name|from
+parameter_list|)
+block|{
+name|std
+operator|::
+name|reverse
+argument_list|(
+name|Blocks
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|from
+argument_list|,
+name|Blocks
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// reserveBlocks- interface to do reserve() for Blocks
+end_comment
+
+begin_function
+name|void
+name|reserveBlocks
+parameter_list|(
+name|unsigned
+name|size
+parameter_list|)
+block|{
+name|Blocks
+operator|.
+name|reserve
+argument_list|(
+name|size
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1517,6 +1567,13 @@ argument_list|,
 name|BB
 argument_list|)
 expr_stmt|;
+name|DenseBlockSet
+operator|.
+name|erase
+argument_list|(
+name|BB
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1607,6 +1664,13 @@ block|{
 name|Blocks
 operator|.
 name|push_back
+argument_list|(
+name|BB
+argument_list|)
+block|;
+name|DenseBlockSet
+operator|.
+name|insert
 argument_list|(
 name|BB
 argument_list|)
@@ -1835,6 +1899,34 @@ name|isAnnotatedParallel
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Return the llvm.loop loop id metadata node for this loop if it is present.
+comment|///
+comment|/// If this loop contains the same llvm.loop metadata on each branch to the
+comment|/// header then the node is returned. If any latch instruction does not
+comment|/// contain llvm.loop or or if multiple latches contain different nodes then
+comment|/// 0 is returned.
+name|MDNode
+operator|*
+name|getLoopID
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Set the llvm.loop loop id metadata for this loop.
+comment|///
+comment|/// The LoopID metadata node will be added to each terminator instruction in
+comment|/// the loop that branches to the loop header.
+comment|///
+comment|/// The LoopID metadata node should have one or more operands and the first
+comment|/// operand should should be the node itself.
+name|void
+name|setLoopID
+argument_list|(
+name|MDNode
+operator|*
+name|LoopID
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// hasDedicatedExits - Return true if no exit block for the loop
 comment|/// has a predecessor that is outside the loop.
 name|bool

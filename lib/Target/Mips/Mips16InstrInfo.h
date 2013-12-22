@@ -203,7 +203,7 @@ specifier|const
 block|;
 name|virtual
 name|unsigned
-name|GetOppositeBranchOpc
+name|getOppositeBranchOpc
 argument_list|(
 argument|unsigned Opc
 argument_list|)
@@ -272,6 +272,34 @@ argument|unsigned&NewImm
 argument_list|)
 specifier|const
 block|;
+name|unsigned
+name|basicLoadImmediate
+argument_list|(
+argument|unsigned FrameReg
+argument_list|,
+argument|int64_t Imm
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator II
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|unsigned&NewImm
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|validImmediate
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|int64_t Amount
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|validSpImm8
@@ -322,11 +350,20 @@ argument|int64_t Imm
 argument_list|)
 specifier|const
 block|;
+name|unsigned
+name|getInlineAsmLength
+argument_list|(
+argument|const char *Str
+argument_list|,
+argument|const MCAsmInfo&MAI
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 name|virtual
 name|unsigned
-name|GetAnalyzableBrOpc
+name|getAnalyzableBrOpc
 argument_list|(
 argument|unsigned Opc
 argument_list|)

@@ -69,12 +69,19 @@ directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 comment|/// formatted_raw_ostream - A raw_ostream that wraps another one and keeps track
-comment|/// of column position, allowing padding out to specific column boundaries.
+comment|/// of line and column position, allowing padding out to specific column
+comment|/// boundaries and querying the number of lines written to the stream.
 comment|///
 name|class
 name|formatted_raw_ostream
@@ -118,12 +125,19 @@ comment|///
 name|bool
 name|DeleteStream
 block|;
-comment|/// ColumnScanned - The current output column of the data that's
+comment|/// Position - The current output column and line of the data that's
 comment|/// been flushed and the portion of the buffer that's been
-comment|/// scanned.  The column scheme is zero-based.
+comment|/// scanned.  The line and column scheme is zero-based.
 comment|///
+name|std
+operator|::
+name|pair
+operator|<
 name|unsigned
-name|ColumnScanned
+block|,
+name|unsigned
+operator|>
+name|Position
 block|;
 comment|/// Scanned - This points to one past the last character in the
 comment|/// buffer we've scanned.
@@ -162,11 +176,11 @@ name|tell
 argument_list|()
 return|;
 block|}
-comment|/// ComputeColumn - Examine the given output buffer and figure out which
-comment|/// column we end up in after output.
+comment|/// ComputePosition - Examine the given output buffer and figure out the new
+comment|/// position after output.
 comment|///
 name|void
-name|ComputeColumn
+name|ComputePosition
 argument_list|(
 argument|const char *Ptr
 argument_list|,
@@ -205,8 +219,10 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|ColumnScanned
+name|Position
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 block|{
@@ -234,8 +250,10 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|ColumnScanned
+name|Position
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 block|{
@@ -317,6 +335,101 @@ argument_list|(
 argument|unsigned NewCol
 argument_list|)
 decl_stmt|;
+comment|/// getColumn - Return the column number
+name|unsigned
+name|getColumn
+parameter_list|()
+block|{
+return|return
+name|Position
+operator|.
+name|first
+return|;
+block|}
+comment|/// getLine - Return the line number
+name|unsigned
+name|getLine
+parameter_list|()
+block|{
+return|return
+name|Position
+operator|.
+name|second
+return|;
+block|}
+name|raw_ostream
+modifier|&
+name|resetColor
+parameter_list|()
+block|{
+name|TheStream
+operator|->
+name|resetColor
+argument_list|()
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|raw_ostream
+modifier|&
+name|reverseColor
+parameter_list|()
+block|{
+name|TheStream
+operator|->
+name|reverseColor
+argument_list|()
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|raw_ostream
+modifier|&
+name|changeColor
+parameter_list|(
+name|enum
+name|Colors
+name|Color
+parameter_list|,
+name|bool
+name|Bold
+parameter_list|,
+name|bool
+name|BG
+parameter_list|)
+block|{
+name|TheStream
+operator|->
+name|changeColor
+argument_list|(
+name|Color
+argument_list|,
+name|Bold
+argument_list|,
+name|BG
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|bool
+name|is_displayed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheStream
+operator|->
+name|is_displayed
+argument_list|()
+return|;
+block|}
 name|private
 label|:
 name|void

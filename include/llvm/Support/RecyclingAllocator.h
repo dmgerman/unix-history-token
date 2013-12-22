@@ -206,11 +206,16 @@ name|void
 name|PrintStats
 argument_list|()
 block|{
+name|Allocator
+operator|.
+name|PrintStats
+argument_list|()
+block|;
 name|Base
 operator|.
 name|PrintStats
 argument_list|()
-block|; }
+block|;   }
 expr|}
 block|;  }
 name|template
@@ -233,7 +238,7 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+argument|size_t size
 argument_list|,
 argument|llvm::RecyclingAllocator<AllocatorType
 argument_list|,
@@ -244,6 +249,15 @@ argument_list|,
 argument|Align>&Allocator
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|size
+operator|<=
+name|Size
+operator|&&
+literal|"allocation size exceeded"
+argument_list|)
+block|;
 return|return
 name|Allocator
 operator|.

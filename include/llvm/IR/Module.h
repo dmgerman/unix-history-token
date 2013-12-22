@@ -1162,21 +1162,6 @@ operator|...
 argument_list|)
 name|END_WITH_NULL
 decl_stmt|;
-name|Constant
-modifier|*
-name|getOrInsertTargetIntrinsic
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|FunctionType
-modifier|*
-name|Ty
-parameter_list|,
-name|AttributeSet
-name|AttributeList
-parameter_list|)
-function_decl|;
 comment|/// getFunction - Look up the specified function in the module symbol table.
 comment|/// If it does not exist, return null.
 name|Function
@@ -1195,6 +1180,7 @@ comment|/// getGlobalVariable - Look up the specified global variable in the mod
 comment|/// symbol table.  If it does not exist, return null. If AllowInternal is set
 comment|/// to true, this function will return types that have InternalLinkage. By
 comment|/// default, these types are not returned.
+specifier|const
 name|GlobalVariable
 modifier|*
 name|getGlobalVariable
@@ -1208,10 +1194,59 @@ operator|=
 name|false
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|const_cast
+operator|<
+name|Module
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getGlobalVariable
+argument_list|(
+name|Name
+argument_list|,
+name|AllowInternal
+argument_list|)
+return|;
+block|}
+name|GlobalVariable
+modifier|*
+name|getGlobalVariable
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|bool
+name|AllowInternal
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// getNamedGlobal - Return the global variable in the module with the
 comment|/// specified name, of arbitrary type.  This method returns null if a global
 comment|/// with the specified name is not found.
+name|GlobalVariable
+modifier|*
+name|getNamedGlobal
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+block|{
+return|return
+name|getGlobalVariable
+argument_list|(
+name|Name
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+specifier|const
 name|GlobalVariable
 modifier|*
 name|getNamedGlobal
@@ -1222,11 +1257,18 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|getGlobalVariable
+name|const_cast
+operator|<
+name|Module
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNamedGlobal
 argument_list|(
 name|Name
-argument_list|,
-name|true
 argument_list|)
 return|;
 block|}
@@ -1267,7 +1309,7 @@ decl_stmt|;
 comment|/// @}
 comment|/// @name Named Metadata Accessors
 comment|/// @{
-comment|/// getNamedMetadata - Return the NamedMDNode in the module with the
+comment|/// getNamedMetadata - Return the first NamedMDNode in the module with the
 comment|/// specified name. This method returns null if a NamedMDNode with the
 comment|/// specified name is not found.
 name|NamedMDNode
@@ -1315,6 +1357,17 @@ name|ModuleFlagEntry
 operator|>
 operator|&
 name|Flags
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return the corresponding value if Key appears in module flags, otherwise
+comment|/// return null.
+name|Value
+modifier|*
+name|getModuleFlag
+argument_list|(
+name|StringRef
+name|Key
 argument_list|)
 decl|const
 decl_stmt|;

@@ -412,6 +412,7 @@ name|getPointer
 argument_list|()
 return|;
 block|}
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -883,6 +884,19 @@ name|i
 argument_list|)
 argument_list|)
 block|;   }
+comment|/// \brief Return true if the call should not be treated as a call to a
+comment|/// builtin.
+name|bool
+name|isNoBuiltin
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|isNoBuiltin
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// @brief Return true if the call should not be inlined.
 name|bool
 name|isNoInline
@@ -1043,6 +1057,59 @@ argument_list|,
 name|Attribute
 operator|::
 name|ByVal
+argument_list|)
+return|;
+block|}
+name|bool
+name|doesNotAccessMemory
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|paramHasAttr
+argument_list|(
+name|ArgNo
+operator|+
+literal|1
+argument_list|,
+name|Attribute
+operator|::
+name|ReadNone
+argument_list|)
+return|;
+block|}
+name|bool
+name|onlyReadsMemory
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|paramHasAttr
+argument_list|(
+name|ArgNo
+operator|+
+literal|1
+argument_list|,
+name|Attribute
+operator|::
+name|ReadOnly
+argument_list|)
+operator|||
+name|paramHasAttr
+argument_list|(
+name|ArgNo
+operator|+
+literal|1
+argument_list|,
+name|Attribute
+operator|::
+name|ReadNone
 argument_list|)
 return|;
 block|}

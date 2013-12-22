@@ -209,6 +209,16 @@ argument|std::string *Error =
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/// \brief If this function returns true, ^Str$ is an extended regular
+comment|/// expression that matches Str and only Str.
+specifier|static
+name|bool
+name|isLiteralERE
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|struct

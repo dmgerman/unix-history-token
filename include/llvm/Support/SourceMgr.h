@@ -371,7 +371,7 @@ operator|.
 name|Buffer
 return|;
 block|}
-name|unsigned
+name|size_t
 name|getNumBuffers
 argument_list|()
 specifier|const
@@ -414,7 +414,7 @@ return|;
 block|}
 comment|/// AddNewSourceBuffer - Add a new source buffer to this source manager.  This
 comment|/// takes ownership of the memory buffer.
-name|unsigned
+name|size_t
 name|AddNewSourceBuffer
 parameter_list|(
 name|MemoryBuffer
@@ -460,7 +460,7 @@ comment|/// AddIncludeFile - Search for a file with the specified name in the cu
 comment|/// directory or in one of the IncludeDirs.  If no file is found, this returns
 comment|/// ~0, otherwise it returns the buffer ID of the stacked file.
 comment|/// The full path to the included file can be found in IncludedFile.
-name|unsigned
+name|size_t
 name|AddIncludeFile
 argument_list|(
 specifier|const
@@ -541,6 +541,48 @@ comment|/// specified string.
 comment|///
 comment|/// @param ShowColors - Display colored messages if output is a terminal and
 comment|/// the default error handler is used.
+name|void
+name|PrintMessage
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|SMLoc
+name|Loc
+argument_list|,
+name|DiagKind
+name|Kind
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Msg
+argument_list|,
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+name|Ranges
+operator|=
+name|None
+argument_list|,
+name|ArrayRef
+operator|<
+name|SMFixIt
+operator|>
+name|FixIts
+operator|=
+name|None
+argument_list|,
+name|bool
+name|ShowColors
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Emits a diagnostic to llvm::errs().
 name|void
 name|PrintMessage
 argument_list|(

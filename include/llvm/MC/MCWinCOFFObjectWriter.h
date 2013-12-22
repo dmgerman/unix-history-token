@@ -62,6 +62,11 @@ decl_stmt|;
 name|class
 name|MCWinCOFFObjectTargetWriter
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 specifier|const
 name|unsigned
 name|Machine

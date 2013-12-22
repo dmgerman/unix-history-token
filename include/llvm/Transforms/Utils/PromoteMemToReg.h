@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_decl_stmt
@@ -82,9 +82,12 @@ decl_stmt|;
 name|class
 name|AliasSetTracker
 decl_stmt|;
-comment|/// isAllocaPromotable - Return true if this alloca is legal for promotion.
-comment|/// This is true if there are only loads and stores to the alloca...
+comment|/// \brief Return true if this alloca is legal for promotion.
 comment|///
+comment|/// This is true if there are only loads, stores, and lifetime markers
+comment|/// (transitively) using this alloca. This also enforces that there is only
+comment|/// ever one layer of bitcasts or GEPs between the alloca and the lifetime
+comment|/// markers.
 name|bool
 name|isAllocaPromotable
 parameter_list|(
@@ -94,26 +97,23 @@ modifier|*
 name|AI
 parameter_list|)
 function_decl|;
-comment|/// PromoteMemToReg - Promote the specified list of alloca instructions into
-comment|/// scalar registers, inserting PHI nodes as appropriate.  This function makes
-comment|/// use of DominanceFrontier information.  This function does not modify the CFG
-comment|/// of the function at all.  All allocas must be from the same function.
+comment|/// \brief Promote the specified list of alloca instructions into scalar
+comment|/// registers, inserting PHI nodes as appropriate.
+comment|///
+comment|/// This function makes use of DominanceFrontier information.  This function
+comment|/// does not modify the CFG of the function at all.  All allocas must be from
+comment|/// the same function.
 comment|///
 comment|/// If AST is specified, the specified tracker is updated to reflect changes
 comment|/// made to the IR.
-comment|///
 name|void
 name|PromoteMemToReg
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|AllocaInst
 operator|*
 operator|>
-operator|&
 name|Allocas
 argument_list|,
 name|DominatorTree

@@ -9226,11 +9226,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param hidden if true will print hidden options
+comment|/// \param Hidden if true will print hidden options
 end_comment
 
 begin_comment
-comment|/// \param categorized if true print options in categories
+comment|/// \param Categorized if true print options in categories
 end_comment
 
 begin_function_decl
@@ -9275,7 +9275,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param [out] map will be filled with mappings where the key is the
+comment|/// \param [out] Map will be filled with mappings where the key is the
 end_comment
 
 begin_comment
@@ -9377,6 +9377,276 @@ operator|*
 operator|>
 operator|&
 name|Map
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|// Standalone command line processing utilities.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|/// \brief Saves strings in the inheritor's stable storage and returns a stable
+end_comment
+
+begin_comment
+comment|/// raw character pointer.
+end_comment
+
+begin_decl_stmt
+name|class
+name|StringSaver
+block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+name|public
+label|:
+name|virtual
+specifier|const
+name|char
+modifier|*
+name|SaveString
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Str
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+operator|~
+name|StringSaver
+argument_list|()
+block|{}
+expr_stmt|;
+comment|// Pacify -Wnon-virtual-dtor.
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// \brief Tokenizes a command line that can contain escapes and quotes.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|/// The quoting rules match those used by GCC and other tools that use
+end_comment
+
+begin_comment
+comment|/// libiberty's buildargv() or expandargv() utilities, and do not match bash.
+end_comment
+
+begin_comment
+comment|/// They differ from buildargv() on treatment of backslashes that do not escape
+end_comment
+
+begin_comment
+comment|/// a special character to make it possible to accept most Windows file paths.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param [in] Source The string to be split on whitespace with quotes.
+end_comment
+
+begin_comment
+comment|/// \param [in] Saver Delegates back to the caller for saving parsed strings.
+end_comment
+
+begin_comment
+comment|/// \param [out] NewArgv All parsed strings are appended to NewArgv.
+end_comment
+
+begin_decl_stmt
+name|void
+name|TokenizeGNUCommandLine
+argument_list|(
+name|StringRef
+name|Source
+argument_list|,
+name|StringSaver
+operator|&
+name|Saver
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+operator|&
+name|NewArgv
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Tokenizes a Windows command line which may contain quotes and escaped
+end_comment
+
+begin_comment
+comment|/// quotes.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// See MSDN docs for CommandLineToArgvW for information on the quoting rules.
+end_comment
+
+begin_comment
+comment|/// http://msdn.microsoft.com/en-us/library/windows/desktop/17w5ykft(v=vs.85).aspx
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param [in] Source The string to be split on whitespace with quotes.
+end_comment
+
+begin_comment
+comment|/// \param [in] Saver Delegates back to the caller for saving parsed strings.
+end_comment
+
+begin_comment
+comment|/// \param [out] NewArgv All parsed strings are appended to NewArgv.
+end_comment
+
+begin_decl_stmt
+name|void
+name|TokenizeWindowsCommandLine
+argument_list|(
+name|StringRef
+name|Source
+argument_list|,
+name|StringSaver
+operator|&
+name|Saver
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+operator|&
+name|NewArgv
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief String tokenization function type.  Should be compatible with either
+end_comment
+
+begin_comment
+comment|/// Windows or Unix command line tokenizers.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+argument|*TokenizerCallback
+argument_list|)
+operator|(
+name|StringRef
+name|Source
+operator|,
+name|StringSaver
+operator|&
+name|Saver
+operator|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+operator|&
+name|NewArgv
+operator|)
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// \brief Expand response files on a command line recursively using the given
+end_comment
+
+begin_comment
+comment|/// StringSaver and tokenization strategy.  Argv should contain the command line
+end_comment
+
+begin_comment
+comment|/// before expansion and will be modified in place.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param [in] Saver Delegates back to the caller for saving parsed strings.
+end_comment
+
+begin_comment
+comment|/// \param [in] Tokenizer Tokenization strategy. Typically Unix or Windows.
+end_comment
+
+begin_comment
+comment|/// \param [in,out] Argv Command line into which to expand response files.
+end_comment
+
+begin_comment
+comment|/// \return true if all @files were expanded successfully or there were none.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|ExpandResponseFiles
+argument_list|(
+name|StringSaver
+operator|&
+name|Saver
+argument_list|,
+name|TokenizerCallback
+name|Tokenizer
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+operator|&
+name|Argv
 argument_list|)
 decl_stmt|;
 end_decl_stmt

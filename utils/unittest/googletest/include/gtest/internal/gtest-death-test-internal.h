@@ -261,13 +261,13 @@ name|virtual
 operator|~
 name|DeathTest
 argument_list|()
-block|{ }
+expr_stmt|;
 comment|// A helper class that aborts a death test when it's deleted.
 name|class
 name|ReturnSentinel
 block|{
 name|public
-operator|:
+label|:
 name|explicit
 name|ReturnSentinel
 argument_list|(
@@ -298,12 +298,13 @@ name|DeathTest
 operator|*
 specifier|const
 name|test_
-block|;
+expr_stmt|;
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_
 argument_list|(
 name|ReturnSentinel
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 name|GTEST_ATTRIBUTE_UNUSED_
 expr_stmt|;
 comment|// An enumeration of possible roles that may be taken when a death
@@ -417,24 +418,37 @@ name|virtual
 operator|~
 name|DeathTestFactory
 argument_list|()
-block|{ }
+expr_stmt|;
 name|virtual
 name|bool
 name|Create
-argument_list|(
-argument|const char* statement
-argument_list|,
-argument|const RE* regex
-argument_list|,
-argument|const char* file
-argument_list|,
-argument|int line
-argument_list|,
-argument|DeathTest** test
-argument_list|)
-operator|=
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|statement
+parameter_list|,
+specifier|const
+name|RE
+modifier|*
+name|regex
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+name|DeathTest
+modifier|*
+modifier|*
+name|test
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 block|}
 empty_stmt|;
 comment|// A concrete DeathTestFactory implementation for normal use.
