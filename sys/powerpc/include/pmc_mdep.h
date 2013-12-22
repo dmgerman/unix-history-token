@@ -97,12 +97,8 @@ name|PMC_TRAPFRAME_TO_PC
 parameter_list|(
 name|TF
 parameter_list|)
-value|(0)
+value|((TF)->srr0)
 end_define
-
-begin_comment
-comment|/* Stubs */
-end_comment
 
 begin_define
 define|#
@@ -111,7 +107,7 @@ name|PMC_TRAPFRAME_TO_FP
 parameter_list|(
 name|TF
 parameter_list|)
-value|(0)
+value|((TF)->fixreg[1])
 end_define
 
 begin_define
