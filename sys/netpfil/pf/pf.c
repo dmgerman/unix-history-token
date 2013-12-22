@@ -4219,13 +4219,6 @@ name|sn
 operator|)
 argument_list|)
 expr_stmt|;
-name|LIST_REMOVE
-argument_list|(
-name|sn
-argument_list|,
-name|entry
-argument_list|)
-expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|V_pf_sources_z
