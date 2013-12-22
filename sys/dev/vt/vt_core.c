@@ -381,7 +381,7 @@ name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
-literal|"Newcons parameters"
+literal|"vt(9) parameters"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -405,7 +405,7 @@ name|debug
 argument_list|,
 literal|0
 argument_list|,
-literal|"Newcons debug level"
+literal|"vt(9) debug level"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
