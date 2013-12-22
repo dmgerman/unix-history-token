@@ -568,6 +568,15 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SORT_THREADS
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * Pop sort level from the stack (multi-threaded style)  */
 end_comment
@@ -593,20 +602,12 @@ name|sort_level
 modifier|*
 name|sl
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SORT_THREADS
-argument_list|)
 name|pthread_mutex_lock
 argument_list|(
 operator|&
 name|g_ls_mutex
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|g_ls
@@ -640,20 +641,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SORT_THREADS
-argument_list|)
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|g_ls_mutex
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sort_free
 argument_list|(
 name|saved_ls
@@ -666,6 +659,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(SORT_THREADS) */
+end_comment
 
 begin_function
 specifier|static
