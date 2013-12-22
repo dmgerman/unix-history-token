@@ -163,7 +163,18 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Timer OCP Configuration Reg */
+comment|/* OCP Configuration Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TIOCP_RESET
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* TIOCP perform soft reset */
 end_comment
 
 begin_define
@@ -174,7 +185,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* Timer IRQ End-Of-Interrupt Reg */
+comment|/* IRQ End-Of-Interrupt Reg */
 end_comment
 
 begin_define
@@ -185,7 +196,7 @@ value|0x24
 end_define
 
 begin_comment
-comment|/* Timer IRQSTATUS Raw Reg */
+comment|/* IRQSTATUS Raw Reg */
 end_comment
 
 begin_define
@@ -196,7 +207,7 @@ value|0x28
 end_define
 
 begin_comment
-comment|/* Timer IRQSTATUS Reg */
+comment|/* IRQSTATUS Reg */
 end_comment
 
 begin_define
@@ -207,7 +218,7 @@ value|0x2c
 end_define
 
 begin_comment
-comment|/* Timer IRQSTATUS Set Reg */
+comment|/* IRQSTATUS Set Reg */
 end_comment
 
 begin_define
@@ -218,7 +229,7 @@ value|0x30
 end_define
 
 begin_comment
-comment|/* Timer IRQSTATUS Clear Reg */
+comment|/* IRQSTATUS Clear Reg */
 end_comment
 
 begin_define
@@ -229,8 +240,48 @@ value|0x34
 end_define
 
 begin_comment
-comment|/* Timer IRQ Wakeup Enable Reg */
+comment|/* IRQ Wakeup Enable Reg */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_IRQ_TCAR
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* IRQ: Capture */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_IRQ_OVF
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* IRQ: Overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_IRQ_MAT
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* IRQ: Match */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_IRQ_MASK
+value|(DMT_IRQ_TCAR | DMT_IRQ_OVF | DMT_IRQ_MAT)
+end_define
 
 begin_define
 define|#
@@ -240,7 +291,205 @@ value|0x38
 end_define
 
 begin_comment
-comment|/* Timer Control Register */
+comment|/* Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_START
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Start timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_AUTOLOAD
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Auto-reload on overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_PRES_MASK
+value|(7<< 2)
+end_define
+
+begin_comment
+comment|/* Prescaler mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_PRES_ENABLE
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* Prescaler enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_COMP_ENABLE
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Compare enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_PWM_HIGH
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* PWM default output high */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAPTRAN_MASK
+value|(3<< 8)
+end_define
+
+begin_comment
+comment|/* Capture transition mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAPTRAN_NONE
+value|(0<< 8)
+end_define
+
+begin_comment
+comment|/* Capture: none */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAPTRAN_LOHI
+value|(1<< 8)
+end_define
+
+begin_comment
+comment|/* Capture lo->hi transition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAPTRAN_HILO
+value|(2<< 8)
+end_define
+
+begin_comment
+comment|/* Capture hi->lo transition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAPTRAN_BOTH
+value|(3<< 8)
+end_define
+
+begin_comment
+comment|/* Capture both transitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_TRGMODE_MASK
+value|(3<< 10)
+end_define
+
+begin_comment
+comment|/* Trigger output mode mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_TRGMODE_NONE
+value|(0<< 10)
+end_define
+
+begin_comment
+comment|/* Trigger off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_TRGMODE_OVFL
+value|(1<< 10)
+end_define
+
+begin_comment
+comment|/* Trigger on overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_TRGMODE_BOTH
+value|(2<< 10)
+end_define
+
+begin_comment
+comment|/* Trigger on match + ovflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_PWM_PTOGGLE
+value|(1<< 12)
+end_define
+
+begin_comment
+comment|/* PWM toggles */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAP_MODE_2ND
+value|(1<< 13)
+end_define
+
+begin_comment
+comment|/* Capture second event mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_GPO_CFG
+value|(1<< 14)
+end_define
+
+begin_comment
+comment|/* (no descr in datasheet) */
 end_comment
 
 begin_define
@@ -251,7 +500,7 @@ value|0x3C
 end_define
 
 begin_comment
-comment|/* Timer Counter Register */
+comment|/* Counter Register */
 end_comment
 
 begin_define
@@ -262,7 +511,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* Timer Load Reg */
+comment|/* Load Reg */
 end_comment
 
 begin_define
@@ -273,7 +522,7 @@ value|0x44
 end_define
 
 begin_comment
-comment|/* Timer Trigger Reg */
+comment|/* Trigger Reg */
 end_comment
 
 begin_define
@@ -284,7 +533,7 @@ value|0x48
 end_define
 
 begin_comment
-comment|/* Timer Write Posted Status Reg */
+comment|/* Write Posted Status Reg */
 end_comment
 
 begin_define
@@ -295,7 +544,7 @@ value|0x4C
 end_define
 
 begin_comment
-comment|/* Timer Match Reg */
+comment|/* Match Reg */
 end_comment
 
 begin_define
@@ -306,7 +555,7 @@ value|0x50
 end_define
 
 begin_comment
-comment|/* Timer Capture Reg */
+comment|/* Capture Reg */
 end_comment
 
 begin_define
@@ -317,7 +566,18 @@ value|0x54
 end_define
 
 begin_comment
-comment|/* Timer Synchr. Interface Control Reg */
+comment|/* Synchr. Interface Ctrl Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TSICR_RESET
+value|0x02
+end_define
+
+begin_comment
+comment|/* TSICR perform soft reset */
 end_comment
 
 begin_define
@@ -328,7 +588,7 @@ value|0x48
 end_define
 
 begin_comment
-comment|/* Timer Capture Reg */
+comment|/* Capture Reg */
 end_comment
 
 begin_struct
