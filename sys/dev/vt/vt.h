@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/consio.h>
 end_include
 
@@ -1398,6 +1404,48 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|vd_fb_ioctl_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|caddr_t
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|vd_fb_mmap_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+parameter_list|,
+name|vm_ooffset_t
+parameter_list|,
+name|vm_paddr_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|vm_memattr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|vt_driver
@@ -1415,6 +1463,16 @@ decl_stmt|;
 name|vd_bitbltchr_t
 modifier|*
 name|vd_bitbltchr
+decl_stmt|;
+comment|/* Framebuffer ioctls, if present. */
+name|vd_fb_ioctl_t
+modifier|*
+name|vd_fb_ioctl
+decl_stmt|;
+comment|/* Framebuffer mmap, if present. */
+name|vd_fb_mmap_t
+modifier|*
+name|vd_fb_mmap
 decl_stmt|;
 comment|/* Text mode operation. */
 name|vd_putchar_t
