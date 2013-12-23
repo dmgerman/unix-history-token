@@ -3833,12 +3833,12 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|non_interractive_message
+name|non_interactive_message
 index|[]
 init|=
 literal|"The package management tool is not yet installed on your system.\n"
-literal|"Please set ASSUME_ALWAYS_YES=yes environement variable to be able to boostrap "
-literal|"in non-interractive (stdin not being a tty)\n"
+literal|"Please set ASSUME_ALWAYS_YES=yes environment variable to be able to boostrap "
+literal|"in non-interactive (stdin not being a tty)\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -4452,7 +4452,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|non_interractive_message
+name|non_interactive_message
 argument_list|)
 expr_stmt|;
 name|exit
