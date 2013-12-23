@@ -49663,7 +49663,7 @@ block|,
 name|font_mapping_bold
 block|,
 name|NULL
-block|}
+block|, 				  }
 block|,
 operator|.
 name|vf_map_count
