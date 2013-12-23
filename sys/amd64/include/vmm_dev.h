@@ -499,6 +499,10 @@ name|IOCNUM_LAPIC_MSI
 init|=
 literal|36
 block|,
+name|IOCNUM_LAPIC_LOCAL_IRQ
+init|=
+literal|37
+block|,
 comment|/* PCI pass-thru */
 name|IOCNUM_BIND_PPTDEV
 init|=
@@ -615,6 +619,14 @@ directive|define
 name|VM_LAPIC_IRQ
 define|\
 value|_IOW('v', IOCNUM_LAPIC_IRQ, struct vm_lapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_LAPIC_LOCAL_IRQ
+define|\
+value|_IOW('v', IOCNUM_LAPIC_LOCAL_IRQ, struct vm_lapic_irq)
 end_define
 
 begin_define

@@ -287,6 +287,28 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Triggers the LAPIC local interrupt (LVT) 'vector' on 'cpu'.  'cpu' can  * be set to -1 to trigger the interrupt on all CPUs.  */
+end_comment
+
+begin_function_decl
+name|int
+name|lapic_set_local_intr
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|cpu
+parameter_list|,
+name|int
+name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|lapic_intr_msi

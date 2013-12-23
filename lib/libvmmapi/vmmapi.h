@@ -417,6 +417,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vm_lapic_local_irq
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|vcpu
+parameter_list|,
+name|int
+name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vm_lapic_msi
 parameter_list|(
 name|struct
