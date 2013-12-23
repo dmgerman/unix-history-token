@@ -4865,9 +4865,8 @@ name|auio
 operator|.
 name|uio_resid
 operator|=
-name|MJUMPAGESIZE
+literal|1000000000
 expr_stmt|;
-comment|/* XXXGL: sane limit? */
 name|flags
 operator|=
 name|MSG_DONTWAIT
