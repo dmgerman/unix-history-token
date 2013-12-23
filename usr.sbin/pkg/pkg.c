@@ -3837,7 +3837,7 @@ name|non_interactive_message
 index|[]
 init|=
 literal|"The package management tool is not yet installed on your system.\n"
-literal|"Please set ASSUME_ALWAYS_YES=yes environment variable to be able to boostrap "
+literal|"Please set ASSUME_ALWAYS_YES=yes environment variable to be able to bootstrap "
 literal|"in non-interactive (stdin not being a tty)\n"
 decl_stmt|;
 end_decl_stmt
