@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vm.h>
 end_include
 
@@ -493,6 +499,14 @@ directive|define
 name|VMM_CLEANUP
 parameter_list|()
 value|(ops != NULL ? (*ops->cleanup)() : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMM_RESUME
+parameter_list|()
+value|(ops != NULL ? (*ops->resume)() : 0)
 end_define
 
 begin_define
@@ -924,6 +938,20 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|vmm_resume
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|VMM_RESUME
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|vmm_init
 parameter_list|(
@@ -982,6 +1010,10 @@ operator|)
 return|;
 name|vmm_msr_init
 argument_list|()
+expr_stmt|;
+name|vmm_resume_p
+operator|=
+name|vmm_resume
 expr_stmt|;
 return|return
 operator|(
@@ -1056,6 +1088,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vmm_resume_p
+operator|=
+name|NULL
+expr_stmt|;
 name|iommu_cleanup
 argument_list|()
 expr_stmt|;

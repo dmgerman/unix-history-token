@@ -98,6 +98,16 @@ end_function
 begin_function
 specifier|static
 name|void
+name|amdv_resume
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
 modifier|*
 name|amdv_vminit
 parameter_list|(
@@ -470,6 +480,8 @@ block|{
 name|amdv_init
 block|,
 name|amdv_cleanup
+block|,
+name|amdv_resume
 block|,
 name|amdv_vminit
 block|,

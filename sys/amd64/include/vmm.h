@@ -129,6 +129,19 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
+function_decl|(
+modifier|*
+name|vmm_resume_func_t
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
 modifier|*
 function_decl|(
 modifier|*
@@ -414,6 +427,9 @@ decl_stmt|;
 comment|/* module wide initialization */
 name|vmm_cleanup_func_t
 name|cleanup
+decl_stmt|;
+name|vmm_resume_func_t
+name|resume
 decl_stmt|;
 name|vmi_init_func_t
 name|vminit

@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/intr_machdep.h>
 end_include
 
@@ -1177,6 +1183,20 @@ directive|endif
 name|mca_resume
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__amd64__
+if|if
+condition|(
+name|vmm_resume_p
+operator|!=
+name|NULL
+condition|)
+name|vmm_resume_p
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|intr_resume
 argument_list|(
 comment|/*suspend_cancelled*/
