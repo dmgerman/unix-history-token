@@ -619,6 +619,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTR
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -631,6 +637,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -997,6 +1008,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTR
+end_ifdef
+
 begin_comment
 comment|/*  * Inline function which wraps assertions for a valid ifp.  * The ifnet layer will set the ifma's ifp pointer to NULL if the ifp  * is detached.  */
 end_comment
@@ -1075,6 +1092,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialize an in6_mfilter structure to a known state at t0, t1  * with an empty source filter list.  */
