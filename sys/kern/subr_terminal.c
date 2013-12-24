@@ -910,7 +910,17 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* Strip off any attributes. */
+comment|/* 	 * Strip off any attributes. Also ignore input of second part of 	 * CJK fullwidth characters, as we don't want to return these 	 * characters twice. 	 */
+if|if
+condition|(
+name|TCHAR_FORMAT
+argument_list|(
+name|c
+argument_list|)
+operator|&
+name|TF_CJK_RIGHT
+condition|)
+return|return;
 name|c
 operator|=
 name|TCHAR_CHARACTER
