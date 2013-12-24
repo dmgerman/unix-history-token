@@ -878,6 +878,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|setvareq
+argument_list|(
+literal|"OPTIND=1"
+argument_list|,
+name|VTEXTFIXED
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
