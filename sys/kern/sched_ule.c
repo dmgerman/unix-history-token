@@ -6959,6 +6959,8 @@ name|td_sched
 argument_list|)
 argument_list|,
 name|SCHED_PRI_RANGE
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|pri
