@@ -15217,7 +15217,7 @@ name|ij
 operator|>=
 name|ppr
 operator|->
-name|pr_ip4s
+name|pr_ip6s
 condition|?
 operator|-
 literal|1
