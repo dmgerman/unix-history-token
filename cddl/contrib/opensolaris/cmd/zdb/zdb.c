@@ -2912,14 +2912,18 @@ modifier|*
 name|spa
 parameter_list|)
 block|{
-name|int
+name|uint64_t
 name|expected_refcount
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|uint64_t
 name|actual_refcount
 decl_stmt|;
-name|expected_refcount
-operator|=
-name|spa_feature_get_refcount
+operator|(
+name|void
+operator|)
+name|feature_get_refcount
 argument_list|(
 name|spa
 argument_list|,
@@ -2928,6 +2932,9 @@ name|spa_feature_table
 index|[
 name|SPA_FEATURE_SPACEMAP_HISTOGRAM
 index|]
+argument_list|,
+operator|&
+name|expected_refcount
 argument_list|)
 expr_stmt|;
 name|actual_refcount
@@ -2960,11 +2967,17 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"space map refcount mismatch: expected %d != "
-literal|"actual %d\n"
+literal|"space map refcount mismatch: expected %lld != "
+literal|"actual %lld\n"
 argument_list|,
+operator|(
+name|longlong_t
+operator|)
 name|expected_refcount
 argument_list|,
+operator|(
+name|longlong_t
+operator|)
 name|actual_refcount
 argument_list|)
 expr_stmt|;
@@ -3580,11 +3593,7 @@ name|spa_feature_is_active
 argument_list|(
 name|spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_SPACEMAP_HISTOGRAM
-index|]
 argument_list|)
 condition|)
 block|{
@@ -13538,11 +13547,7 @@ name|spa_feature_is_active
 argument_list|(
 name|spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_ASYNC_DESTROY
-index|]
 argument_list|)
 condition|)
 block|{
@@ -15215,11 +15220,7 @@ name|spa_feature_is_active
 argument_list|(
 name|spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_ASYNC_DESTROY
-index|]
 argument_list|)
 condition|)
 block|{

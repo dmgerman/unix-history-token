@@ -106,7 +106,7 @@ name|ds
 parameter_list|)
 define|\
 value|((ds)->ds_phys->ds_flags& DS_FLAG_INCONSISTENT)
-comment|/*  * Note: nopromote can not yet be set, but we want support for it in this  * on-disk version, so that we don't need to upgrade for it later.  */
+comment|/*  * Do not allow this dataset to be promoted.  */
 define|#
 directive|define
 name|DS_FLAG_NOPROMOTE
@@ -129,6 +129,7 @@ name|ds
 parameter_list|)
 define|\
 value|((ds)->ds_phys->ds_flags& DS_FLAG_DEFER_DESTROY)
+comment|/*  * DS_FIELD_* are strings that are used in the "extensified" dataset zap object.  * They should be of the format<reverse-dns>:<field>.  */
 comment|/*  * DS_FLAG_CI_DATASET is set if the dataset contains a file system whose  * name lookups should be performed case-insensitively.  */
 define|#
 directive|define

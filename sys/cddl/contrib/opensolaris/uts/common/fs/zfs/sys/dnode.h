@@ -431,6 +431,12 @@ name|uint64_t
 name|dn_maxblkid
 decl_stmt|;
 name|uint8_t
+name|dn_next_type
+index|[
+name|TXG_SIZE
+index|]
+decl_stmt|;
+name|uint8_t
 name|dn_next_nblkptr
 index|[
 name|TXG_SIZE

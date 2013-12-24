@@ -8898,11 +8898,7 @@ name|spa_feature_is_active
 argument_list|(
 name|spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_MULTI_VDEV_CRASH_DUMP
-index|]
 argument_list|)
 condition|)
 return|return
@@ -8945,11 +8941,7 @@ name|spa_feature_incr
 argument_list|(
 name|spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_MULTI_VDEV_CRASH_DUMP
-index|]
 argument_list|,
 name|tx
 argument_list|)
@@ -9088,11 +9080,7 @@ name|spa_feature_is_enabled
 argument_list|(
 name|spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_MULTI_VDEV_CRASH_DUMP
-index|]
 argument_list|)
 condition|)
 return|return
@@ -9180,11 +9168,7 @@ name|spa_feature_is_active
 argument_list|(
 name|spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_MULTI_VDEV_CRASH_DUMP
-index|]
 argument_list|)
 condition|?
 name|ZIO_CHECKSUM_NOPARITY

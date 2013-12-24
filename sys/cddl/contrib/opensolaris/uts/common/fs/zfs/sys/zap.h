@@ -190,6 +190,28 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+comment|/*  * Initialize an already-allocated object.  */
+name|void
+name|mzap_create_impl
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|obj
+parameter_list|,
+name|int
+name|normflags
+parameter_list|,
+name|zap_flags_t
+name|flags
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 comment|/*  * Create a new zapobj with no attributes from the given (unallocated)  * object number.  */
 name|int
 name|zap_create_claim
