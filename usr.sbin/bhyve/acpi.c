@@ -177,6 +177,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|BHYVE_PM1A_EVT_ADDR
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHYVE_PM1A_CNT_ADDR
+value|0x404
+end_define
+
+begin_define
+define|#
+directive|define
 name|BHYVE_PM_TIMER_ADDR
 value|0x408
 end_define
@@ -1398,7 +1412,9 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0004]\t\tPM1A Event Block Address : 00000000\n"
+literal|"[0004]\t\tPM1A Event Block Address : %08X\n"
+argument_list|,
+name|BHYVE_PM1A_EVT_ADDR
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1412,7 +1428,9 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0004]\t\tPM1A Control Block Address : 00000000\n"
+literal|"[0004]\t\tPM1A Control Block Address : %08X\n"
+argument_list|,
+name|BHYVE_PM1A_CNT_ADDR
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1652,7 +1670,7 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t\t\tAll CPUs support C1 (V1) : 0\n"
+literal|"\t\t\tAll CPUs support C1 (V1) : 1\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1708,7 +1726,7 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t\t\tReset Register Supported (V2) : 0\n"
+literal|"\t\t\tReset Register Supported (V2) : 1\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1834,7 +1852,7 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0008]\t\tAddress : 0000000000000001\n"
+literal|"[0008]\t\tAddress : 0000000000000CF9\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1848,7 +1866,7 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tValue to cause reset : 00\n"
+literal|"[0001]\t\tValue to cause reset : 06\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1919,7 +1937,9 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0008]\t\tAddress : 0000000000000001\n"
+literal|"[0008]\t\tAddress : 00000000%08X\n"
+argument_list|,
+name|BHYVE_PM1A_EVT_ADDR
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -2017,7 +2037,9 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0008]\t\tAddress : 0000000000000001\n"
+literal|"[0008]\t\tAddress : 00000000%08X\n"
+argument_list|,
+name|BHYVE_PM1A_CNT_ADDR
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -2815,6 +2837,41 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"{\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"  Name (_S5, Package (0x02)\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"  {\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"      0x05,\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"      Zero,\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"  })\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
