@@ -230,14 +230,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|var
-name|vppid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|var
 name|vps1
 decl_stmt|;
 end_decl_stmt
