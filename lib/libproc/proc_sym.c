@@ -1090,11 +1090,6 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|map
-operator|->
-name|pr_mapname
-operator|||
 operator|(
 name|fd
 operator|=
@@ -1113,7 +1108,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|DPRINTF
 argument_list|(
 literal|"ERROR: open %s failed"
 argument_list|,
@@ -1144,9 +1139,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|DPRINTFX
 argument_list|(
-literal|"ERROR: elf_begin() failed"
+literal|"ERROR: elf_begin() failed: %s"
+argument_list|,
+name|elf_errmsg
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1166,9 +1167,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|DPRINTFX
 argument_list|(
-literal|"ERROR: gelf_getehdr() failed"
+literal|"ERROR: gelf_getehdr() failed: %s"
+argument_list|,
+name|elf_errmsg
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1260,9 +1267,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DPRINTF
+name|DPRINTFX
 argument_list|(
-literal|"ERROR: elf_getdata() failed"
+literal|"ERROR: elf_getdata() failed: %s"
+argument_list|,
+name|elf_errmsg
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1400,9 +1413,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DPRINTF
+name|DPRINTFX
 argument_list|(
-literal|"ERROR: elf_getdata() failed"
+literal|"ERROR: elf_getdata() failed: %s"
+argument_list|,
+name|elf_errmsg
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1945,7 +1964,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DPRINTF
+name|DPRINTFX
 argument_list|(
 literal|"ERROR: couldn't find object %s"
 argument_list|,
@@ -2007,9 +2026,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|DPRINTFX
 argument_list|(
-literal|"ERROR: elf_begin() failed"
+literal|"ERROR: elf_begin() failed: %s"
+argument_list|,
+name|elf_errmsg
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2029,9 +2054,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|DPRINTFX
 argument_list|(
-literal|"ERROR: gelf_getehdr() failed"
+literal|"ERROR: gelf_getehdr() failed: %s"
+argument_list|,
+name|elf_errmsg
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2123,11 +2154,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DPRINTF
-argument_list|(
-literal|"ERROR: elf_getdata() failed"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|err2
 goto|;
@@ -2465,7 +2491,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|DPRINTF
 argument_list|(
 literal|"ERROR: open %s failed"
 argument_list|,
@@ -2496,9 +2522,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|DPRINTFX
 argument_list|(
-literal|"ERROR: elf_begin() failed"
+literal|"ERROR: elf_begin() failed: %s"
+argument_list|,
+name|elf_errmsg
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2607,9 +2639,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DPRINTF
+name|DPRINTFX
 argument_list|(
-literal|"ERROR: elf_getdata() failed"
+literal|"ERROR: elf_getdata() failed: %s"
+argument_list|,
+name|elf_errmsg
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto

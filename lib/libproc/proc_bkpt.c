@@ -326,7 +326,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|DPRINTF
 argument_list|(
 literal|"ERROR: couldn't write instruction at address 0x%"
 name|PRIuPTR
@@ -408,7 +408,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|DPRINTF
+name|DPRINTFX
 argument_list|(
 literal|"removing breakpoint at 0x%lx\n"
 argument_list|,
@@ -568,7 +568,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|DPRINTFX
 argument_list|(
 literal|"ERROR: couldn't get PC register"
 argument_list|)
@@ -600,7 +600,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|DPRINTFX
 argument_list|(
 literal|"ERROR: couldn't delete breakpoint"
 argument_list|)
@@ -644,7 +644,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|DPRINTFX
 argument_list|(
 literal|"ERROR: ptrace step failed"
 argument_list|)
@@ -677,7 +677,7 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|warn
+name|DPRINTFX
 argument_list|(
 literal|"ERROR: don't know why process stopped"
 argument_list|)
@@ -705,7 +705,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|DPRINTFX
 argument_list|(
 literal|"ERROR: couldn't restore breakpoint"
 argument_list|)
