@@ -89,46 +89,53 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Packet flow direction. */
+comment|/* Packet flow direction flags. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IN
-value|1
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUT
-value|2
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|NODIR
+value|0x4000
 end_define
 
 begin_comment
-comment|/* Working protocol. */
+comment|/* Working protocol flags. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP
-value|1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|TCP
-value|2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|UDP
-value|4
+value|0x04
 end_define
 
 begin_comment
@@ -233,11 +240,11 @@ name|alias_data
 modifier|*
 parameter_list|)
 function_decl|;
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|proto_handler
 argument_list|)
-name|entries
+name|link
 expr_stmt|;
 block|}
 struct|;
@@ -251,30 +258,12 @@ begin_define
 define|#
 directive|define
 name|EOH
-value|-1
+value|.dir = NODIR
 end_define
 
 begin_comment
 comment|/* Functions used with protocol handlers. */
 end_comment
-
-begin_function_decl
-name|void
-name|handler_chain_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|handler_chain_destroy
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -290,17 +279,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|LibAliasDetachHandlers
-parameter_list|(
-name|struct
-name|proto_handler
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|detach_handler
 parameter_list|(
 name|struct
 name|proto_handler
