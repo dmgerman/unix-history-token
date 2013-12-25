@@ -475,6 +475,11 @@ directive|define
 name|VDF_MOUSECURSOR
 value|0x40
 comment|/* Mouse cursor visible. */
+define|#
+directive|define
+name|VDF_QUIET_BELL
+value|0x80
+comment|/* Disable bell. */
 name|int
 name|vd_keyboard
 decl_stmt|;
