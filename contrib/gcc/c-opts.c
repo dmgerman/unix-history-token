@@ -1726,6 +1726,18 @@ operator|=
 name|value
 expr_stmt|;
 break|break;
+comment|/* APPLE LOCAL begin -Wnewline-eof */
+case|case
+name|OPT_Wnewline_eof
+case|:
+name|cpp_opts
+operator|->
+name|warn_newline_at_eof
+operator|=
+name|value
+expr_stmt|;
+break|break;
+comment|/* APPLE LOCAL end -Wnewline-eof */
 case|case
 name|OPT_Wnormalized_
 case|:
