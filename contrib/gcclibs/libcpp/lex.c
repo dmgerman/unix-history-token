@@ -3532,6 +3532,32 @@ operator|->
 name|base
 expr_stmt|;
 block|}
+comment|/* We assume that the current token is somewhere in the current 	 run.  */
+if|if
+condition|(
+name|pfile
+operator|->
+name|cur_token
+operator|<
+name|pfile
+operator|->
+name|cur_run
+operator|->
+name|base
+operator|||
+name|pfile
+operator|->
+name|cur_token
+operator|>=
+name|pfile
+operator|->
+name|cur_run
+operator|->
+name|limit
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|pfile
@@ -3826,7 +3852,7 @@ operator|->
 name|from_stage3
 condition|)
 block|{
-comment|/* Only warn once.  */
+comment|/* Clip to buffer size.  */
 name|buffer
 operator|->
 name|next_line
@@ -3835,6 +3861,17 @@ name|buffer
 operator|->
 name|rlimit
 expr_stmt|;
+comment|/* APPLE LOCAL begin suppress no newline warning.  */
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|warn_newline_at_eof
+argument_list|)
+condition|)
+block|{
 name|cpp_error_with_line
 argument_list|(
 name|pfile
@@ -3859,6 +3896,8 @@ argument_list|,
 literal|"no newline at end of file"
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* APPLE LOCAL end suppress no newline warning.  */
 block|}
 name|return_at_eof
 operator|=
