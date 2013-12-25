@@ -906,7 +906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is an easy way to get the generation number, but the generation is  * supplied in a more atmoic manner by the kern.devstat.all sysctl.  * Because this generation sysctl is separate from the statistics sysctl,  * the device list and the generation could change between the time that  * this function is called and the device list is retreived.  */
+comment|/*  * This is an easy way to get the generation number, but the generation is  * supplied in a more atmoic manner by the kern.devstat.all sysctl.  * Because this generation sysctl is separate from the statistics sysctl,  * the device list and the generation could change between the time that  * this function is called and the device list is retrieved.  */
 end_comment
 
 begin_function
