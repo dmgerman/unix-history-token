@@ -186,6 +186,36 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|apic_page
+block|{
+name|uint32_t
+name|reg
+index|[
+name|PAGE_SIZE
+operator|/
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|apic_page
+argument_list|)
+operator|==
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* virtual machine softc */
 end_comment
@@ -202,6 +232,14 @@ name|VM_MAXCPU
 index|]
 decl_stmt|;
 comment|/* one vmcs per virtual cpu */
+name|struct
+name|apic_page
+name|apic_page
+index|[
+name|VM_MAXCPU
+index|]
+decl_stmt|;
+comment|/* one apic page per vcpu */
 name|char
 name|msr_bitmap
 index|[

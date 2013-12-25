@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<x86/specialreg.h>
 end_include
 
@@ -80,13 +74,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmm_stat.h"
+file|"vmm_ipi.h"
 end_include
 
 begin_include
@@ -104,7 +110,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vmm_stat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vlapic.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vlapic_priv.h"
 end_include
 
 begin_include
@@ -168,7 +186,7 @@ parameter_list|,
 name|msg
 parameter_list|)
 define|\
-value|do {									\ 	uint32_t *irrptr =&(vlapic)->apic.irr0;			\ 	irrptr[0] = irrptr[0];
+value|do {									\ 	uint32_t *irrptr =&(vlapic)->apic_page->irr0;			\ 	irrptr[0] = irrptr[0];
 comment|/* silence compiler */
 value|\ 	VLAPIC_CTR1((vlapic), msg " irr0 0x%08x", irrptr[0<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " irr1 0x%08x", irrptr[1<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " irr2 0x%08x", irrptr[2<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " irr3 0x%08x", irrptr[3<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " irr4 0x%08x", irrptr[4<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " irr5 0x%08x", irrptr[5<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " irr6 0x%08x", irrptr[6<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " irr7 0x%08x", irrptr[7<< 2]);	\ } while (0)
 end_define
@@ -183,23 +201,10 @@ parameter_list|,
 name|msg
 parameter_list|)
 define|\
-value|do {									\ 	uint32_t *isrptr =&(vlapic)->apic.isr0;			\ 	isrptr[0] = isrptr[0];
+value|do {									\ 	uint32_t *isrptr =&(vlapic)->apic_page->isr0;			\ 	isrptr[0] = isrptr[0];
 comment|/* silence compiler */
 value|\ 	VLAPIC_CTR1((vlapic), msg " isr0 0x%08x", isrptr[0<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " isr1 0x%08x", isrptr[1<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " isr2 0x%08x", isrptr[2<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " isr3 0x%08x", isrptr[3<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " isr4 0x%08x", isrptr[4<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " isr5 0x%08x", isrptr[5<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " isr6 0x%08x", isrptr[6<< 2]);	\ 	VLAPIC_CTR1((vlapic), msg " isr7 0x%08x", isrptr[7<< 2]);	\ } while (0)
 end_define
-
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_VLAPIC
-argument_list|,
-literal|"vlapic"
-argument_list|,
-literal|"vlapic"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_define
 define|#
@@ -234,86 +239,6 @@ name|vlapic
 parameter_list|)
 value|(((vlapic)->msr_apicbase& APICBASE_X2APIC) ? 1 : 0)
 end_define
-
-begin_enum
-enum|enum
-name|boot_state
-block|{
-name|BS_INIT
-block|,
-name|BS_SIPI
-block|,
-name|BS_RUNNING
-block|}
-enum|;
-end_enum
-
-begin_struct
-struct|struct
-name|vlapic
-block|{
-name|struct
-name|vm
-modifier|*
-name|vm
-decl_stmt|;
-name|int
-name|vcpuid
-decl_stmt|;
-name|struct
-name|LAPIC
-name|apic
-decl_stmt|;
-name|uint32_t
-name|esr_pending
-decl_stmt|;
-name|int
-name|esr_firing
-decl_stmt|;
-name|struct
-name|callout
-name|callout
-decl_stmt|;
-comment|/* vlapic timer */
-name|struct
-name|bintime
-name|timer_fire_bt
-decl_stmt|;
-comment|/* callout expiry time */
-name|struct
-name|bintime
-name|timer_freq_bt
-decl_stmt|;
-comment|/* timer frequency */
-name|struct
-name|bintime
-name|timer_period_bt
-decl_stmt|;
-comment|/* timer period */
-name|struct
-name|mtx
-name|timer_mtx
-decl_stmt|;
-comment|/* 	 * The 'isrvec_stk' is a stack of vectors injected by the local apic. 	 * A vector is popped from the stack when the processor does an EOI. 	 * The vector on the top of the stack is used to compute the 	 * Processor Priority in conjunction with the TPR. 	 */
-name|uint8_t
-name|isrvec_stk
-index|[
-name|ISRVEC_STK_SIZE
-index|]
-decl_stmt|;
-name|int
-name|isrvec_stk_top
-decl_stmt|;
-name|uint64_t
-name|msr_apicbase
-decl_stmt|;
-name|enum
-name|boot_state
-name|boot_state
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * The 'vlapic->timer_mtx' is used to provide mutual exclusion between the  * vlapic_callout_handler() and vcpu accesses to the following registers:  * - initial count register aka icr_timer  * - current count register aka ccr_timer  * - divide config register aka dcr_timer  * - timer LVT register  *  * Note that the vlapic_callout_handler() does not write to any of these  * registers so they can be safely read from the vcpu context without locking.  */
@@ -420,10 +345,9 @@ name|ldr
 decl_stmt|;
 name|lapic
 operator|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 expr_stmt|;
 if|if
 condition|(
@@ -496,10 +420,9 @@ name|lapic
 decl_stmt|;
 name|lapic
 operator|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 expr_stmt|;
 if|if
 condition|(
@@ -569,10 +492,9 @@ return|return;
 block|}
 name|lapic
 operator|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 expr_stmt|;
 name|dfr
 operator|=
@@ -685,10 +607,9 @@ return|return;
 block|}
 name|lapic
 operator|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 expr_stmt|;
 name|lapic
 operator|->
@@ -891,10 +812,9 @@ literal|0
 expr_stmt|;
 name|lapic
 operator|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 expr_stmt|;
 name|VLAPIC_TIMER_LOCK
 argument_list|(
@@ -1048,10 +968,9 @@ name|divisor
 decl_stmt|;
 name|lapic
 operator|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 expr_stmt|;
 name|VLAPIC_TIMER_LOCK
 argument_list|(
@@ -1138,12 +1057,13 @@ name|struct
 name|LAPIC
 modifier|*
 name|lapic
-init|=
-operator|&
+decl_stmt|;
+name|lapic
+operator|=
 name|vlapic
 operator|->
-name|apic
-decl_stmt|;
+name|apic_page
+expr_stmt|;
 name|lapic
 operator|->
 name|esr
@@ -1179,10 +1099,9 @@ name|lapic
 decl_stmt|;
 name|lapic
 operator|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -1297,10 +1216,9 @@ name|LAPIC
 modifier|*
 name|lapic
 init|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -1475,10 +1393,9 @@ name|LAPIC
 modifier|*
 name|lapic
 init|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 decl_stmt|;
 name|int
 name|i
@@ -1596,10 +1513,9 @@ name|lapic
 decl_stmt|;
 name|lapic
 operator|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 expr_stmt|;
 name|lvtptr
 operator|=
@@ -1792,6 +1708,8 @@ argument_list|,
 name|vlapic
 operator|->
 name|vcpuid
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1855,8 +1773,8 @@ operator|=
 operator|&
 name|vlapic
 operator|->
-name|apic
-operator|.
+name|apic_page
+operator|->
 name|isr0
 expr_stmt|;
 for|for
@@ -1961,8 +1879,8 @@ name|tpr
 operator|=
 name|vlapic
 operator|->
-name|apic
-operator|.
+name|apic_page
+operator|->
 name|tpr
 expr_stmt|;
 if|#
@@ -2070,8 +1988,8 @@ operator|=
 operator|&
 name|vlapic
 operator|->
-name|apic
-operator|.
+name|apic_page
+operator|->
 name|isr0
 expr_stmt|;
 for|for
@@ -2178,8 +2096,8 @@ literal|0xf0
 expr_stmt|;
 name|vlapic
 operator|->
-name|apic
-operator|.
+name|apic_page
+operator|->
 name|ppr
 operator|=
 name|ppr
@@ -2212,10 +2130,9 @@ name|LAPIC
 modifier|*
 name|lapic
 init|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -2923,14 +2840,14 @@ name|KASSERT
 argument_list|(
 name|vlapic
 operator|->
-name|apic
-operator|.
+name|apic_page
+operator|->
 name|icr_timer
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"vlapic timer is disabled"
+literal|"timer is disabled"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3148,10 +3065,9 @@ argument_list|)
 expr_stmt|;
 name|lapic
 operator|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 expr_stmt|;
 name|lapic
 operator|->
@@ -4142,10 +4058,9 @@ name|LAPIC
 modifier|*
 name|lapic
 init|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 decl_stmt|;
 name|int
 name|idx
@@ -4288,10 +4203,9 @@ name|LAPIC
 modifier|*
 name|lapic
 init|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -4442,10 +4356,9 @@ name|changed
 decl_stmt|;
 name|lapic
 operator|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 expr_stmt|;
 name|old
 operator|=
@@ -4571,10 +4484,9 @@ name|LAPIC
 modifier|*
 name|lapic
 init|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -4867,7 +4779,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|APIC_OFFSET_ICR
+name|APIC_OFFSET_TIMER_ICR
 case|:
 operator|*
 name|data
@@ -4878,7 +4790,7 @@ name|icr_timer
 expr_stmt|;
 break|break;
 case|case
-name|APIC_OFFSET_CCR
+name|APIC_OFFSET_TIMER_CCR
 case|:
 operator|*
 name|data
@@ -4890,7 +4802,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|APIC_OFFSET_DCR
+name|APIC_OFFSET_TIMER_DCR
 case|:
 operator|*
 name|data
@@ -4956,10 +4868,9 @@ name|LAPIC
 modifier|*
 name|lapic
 init|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 decl_stmt|;
 name|int
 name|retval
@@ -5150,7 +5061,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|APIC_OFFSET_ICR
+name|APIC_OFFSET_TIMER_ICR
 case|:
 name|vlapic_set_icr_timer
 argument_list|(
@@ -5161,7 +5072,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|APIC_OFFSET_DCR
+name|APIC_OFFSET_TIMER_DCR
 case|:
 name|vlapic_set_dcr
 argument_list|(
@@ -5208,7 +5119,7 @@ operator|...
 name|APIC_OFFSET_IRR7
 case|:
 case|case
-name|APIC_OFFSET_CCR
+name|APIC_OFFSET_TIMER_CCR
 case|:
 default|default:
 comment|// Read only.
@@ -5223,53 +5134,60 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|vlapic
-modifier|*
+name|void
 name|vlapic_init
 parameter_list|(
 name|struct
-name|vm
+name|vlapic
 modifier|*
-name|vm
-parameter_list|,
-name|int
-name|vcpuid
+name|vlapic
 parameter_list|)
 block|{
-name|struct
-name|vlapic
-modifier|*
-name|vlapic
-decl_stmt|;
-name|vlapic
-operator|=
-name|malloc
+name|KASSERT
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vlapic
-argument_list|)
-argument_list|,
-name|M_VLAPIC
-argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
-argument_list|)
-expr_stmt|;
 name|vlapic
 operator|->
 name|vm
-operator|=
-name|vm
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"vlapic_init: vm is not initialized"
+operator|)
+argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
 name|vlapic
 operator|->
 name|vcpuid
-operator|=
+operator|>=
+literal|0
+operator|&&
+name|vlapic
+operator|->
 name|vcpuid
+operator|<
+name|VM_MAXCPU
+argument_list|,
+operator|(
+literal|"vlapic_init: vcpuid is not initialized"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vlapic
+operator|->
+name|apic_page
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"vlapic_init: apic_page is not "
+literal|"initialized"
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If the vlapic is configured in x2apic mode then it will be 	 * accessed in the critical section via the MSR emulation code. 	 * 	 * Therefore the timer mutex must be a spinlock because blockable 	 * mutexes cannot be acquired in a critical section. 	 */
 name|mtx_init
@@ -5306,6 +5224,8 @@ name|APICBASE_ENABLED
 expr_stmt|;
 if|if
 condition|(
+name|vlapic
+operator|->
 name|vcpuid
 operator|==
 literal|0
@@ -5321,11 +5241,6 @@ argument_list|(
 name|vlapic
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|vlapic
-operator|)
-return|;
 block|}
 end_function
 
@@ -5345,13 +5260,6 @@ operator|&
 name|vlapic
 operator|->
 name|callout
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|vlapic
-argument_list|,
-name|M_VLAPIC
 argument_list|)
 expr_stmt|;
 block|}
@@ -5614,6 +5522,30 @@ block|}
 end_function
 
 begin_function
+name|void
+name|vlapic_post_intr
+parameter_list|(
+name|struct
+name|vlapic
+modifier|*
+name|vlapic
+parameter_list|,
+name|int
+name|hostcpu
+parameter_list|)
+block|{
+comment|/* 	 * Post an interrupt to the vcpu currently running on 'hostcpu'. 	 * 	 * This is done by leveraging features like Posted Interrupts (Intel) 	 * Doorbell MSR (AMD AVIC) that avoid a VM exit. 	 * 	 * If neither of these features are available then fallback to 	 * sending an IPI to 'hostcpu'. 	 */
+name|ipi_cpu
+argument_list|(
+name|hostcpu
+argument_list|,
+name|vmm_ipinum
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|bool
 name|vlapic_enabled
 parameter_list|(
@@ -5628,10 +5560,9 @@ name|LAPIC
 modifier|*
 name|lapic
 init|=
-operator|&
 name|vlapic
 operator|->
-name|apic
+name|apic_page
 decl_stmt|;
 if|if
 condition|(
