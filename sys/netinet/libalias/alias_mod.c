@@ -985,6 +985,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_comment
 comment|/* Dll manipulation code - this code is not thread safe... */
 end_comment
@@ -1183,6 +1189,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 end_unit
 
