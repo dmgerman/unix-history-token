@@ -89,10 +89,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Protocol handlers struct& function. */
-end_comment
-
-begin_comment
 comment|/* Packet flow direction. */
 end_comment
 
@@ -136,7 +132,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*   * Data passed to protocol handler module, it must be filled  * right before calling find_handler() to determine which  * module is elegible to be called.  */
+comment|/*  * Data passed to protocol handler module, it must be filled  * right before calling find_handler() to determine which  * module is elegible to be called.  */
 end_comment
 
 begin_struct
@@ -182,7 +178,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * This structure contains all the information necessary to make  * a protocol handler correctly work.  */
+comment|/*  * This structure contains all the information necessary to make  * a protocol handler correctly work.  */
 end_comment
 
 begin_struct
@@ -201,6 +197,7 @@ name|uint8_t
 name|proto
 decl_stmt|;
 comment|/* Working protocol. */
+comment|/* Fingerprint * function. */
 name|int
 function_decl|(
 modifier|*
@@ -211,12 +208,12 @@ name|struct
 name|libalias
 modifier|*
 parameter_list|,
-comment|/* Fingerprint * function. */
 name|struct
 name|alias_data
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Aliasing * function. */
 name|int
 function_decl|(
 modifier|*
@@ -227,7 +224,6 @@ name|struct
 name|libalias
 modifier|*
 parameter_list|,
-comment|/* Aliasing * function. */
 name|struct
 name|ip
 modifier|*
@@ -248,7 +244,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * Used only in userland when libalias needs to keep track of all  * module loaded. In kernel land (kld mode) we don't need to care  * care about libalias modules cause it's kld to do it for us.  */
+comment|/*  * Used only in userland when libalias needs to keep track of all  * module loaded. In kernel land (kld mode) we don't need to care  * care about libalias modules cause it's kld to do it for us.  */
 end_comment
 
 begin_define
@@ -273,7 +269,7 @@ name|void
 modifier|*
 name|handle
 decl_stmt|;
-comment|/*  					 * Ptr to shared obj obtained through 					 * dlopen() - use this ptr to get access 					 * to any symbols from a loaded module 					  					 * via dlsym().  					 */
+comment|/* 				 * Ptr to shared obj obtained through 				 * dlopen() - use this ptr to get access 				 * to any symbols from a loaded module 				 * via dlsym(). 				 */
 name|SLIST_ENTRY
 argument_list|(
 argument|dll
@@ -440,7 +436,7 @@ value|-1
 end_define
 
 begin_comment
-comment|/*   * Some defines borrowed from sys/module.h used to compile a kld  * in userland as a shared lib.  */
+comment|/*  * Some defines borrowed from sys/module.h used to compile a kld  * in userland as a shared lib.  */
 end_comment
 
 begin_ifndef
