@@ -22101,6 +22101,8 @@ name|na_size
 operator|)
 condition|)
 block|{
+name|error
+operator|=
 name|nfsvno_updfilerev
 argument_list|(
 name|vp
@@ -22130,6 +22132,12 @@ name|na_size
 expr_stmt|;
 block|}
 block|}
+else|else
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Ignore callback errors for now. */
 block|}
 else|else
 block|{
@@ -22137,10 +22145,6 @@ name|NFSUNLOCKSTATE
 argument_list|()
 expr_stmt|;
 block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|out
 label|:
 name|NFSEXITCODE2
