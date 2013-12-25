@@ -7406,7 +7406,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|detach_handler
+name|LibAliasDetachHandlers
 argument_list|(
 name|p
 argument_list|)
