@@ -285,7 +285,7 @@ endif|#
 directive|endif
 break|break;
 default|default:
-name|warn
+name|DPRINTFX
 argument_list|(
 literal|"ERROR: no support for reg number %d"
 argument_list|,
@@ -511,7 +511,7 @@ endif|#
 directive|endif
 break|break;
 default|default:
-name|warn
+name|DPRINTFX
 argument_list|(
 literal|"ERROR: no support for reg number %d"
 argument_list|,
