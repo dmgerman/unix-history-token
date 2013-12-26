@@ -1092,9 +1092,6 @@ case|:
 case|case
 name|KERN_IOV_MAX
 case|:
-case|case
-name|KERN_MAXID
-case|:
 return|return
 operator|(
 operator|(
