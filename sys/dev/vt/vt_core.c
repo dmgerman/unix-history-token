@@ -1913,6 +1913,13 @@ operator||
 name|RALT
 operator|)
 case|:
+if|if
+condition|(
+name|vt_enable_altgr
+operator|!=
+literal|0
+condition|)
+break|break;
 case|case
 operator|(
 name|SPCLKEY
