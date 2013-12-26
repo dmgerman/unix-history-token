@@ -12580,7 +12580,7 @@ name|adapter
 operator|->
 name|tx_desc_base
 index|[
-name|si
+name|i
 index|]
 operator|.
 name|buffer_addr
