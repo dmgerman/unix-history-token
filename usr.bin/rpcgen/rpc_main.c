@@ -4034,6 +4034,20 @@ argument_list|,
 literal|"#include<rpc/rpc.h>\n"
 argument_list|)
 expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"#include<stdio.h>\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"#include<stdlib.h>\n"
+argument_list|)
+expr_stmt|;
 name|tell
 operator|=
 name|ftell
@@ -4494,6 +4508,30 @@ argument_list|,
 literal|"\trpcgen $(RPCGENFLAGS) $(SOURCES.x)\n\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|allfiles
+condition|)
+block|{
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\trpcgen -Sc $(RPCGENFLAGS) $(SOURCES.x) -o %s\n\n"
+argument_list|,
+name|clientname
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\trpcgen -Ss $(RPCGENFLAGS) $(SOURCES.x) -o %s\n\n"
+argument_list|,
+name|servername
+argument_list|)
+expr_stmt|;
+block|}
 name|f_print
 argument_list|(
 name|fout
