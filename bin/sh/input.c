@@ -823,9 +823,6 @@ decl_stmt|;
 name|int
 name|more
 decl_stmt|;
-name|int
-name|something
-decl_stmt|;
 name|char
 name|savec
 decl_stmt|;
@@ -931,10 +928,6 @@ name|buf
 operator|)
 expr_stmt|;
 comment|/* delete nul characters */
-name|something
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|more
@@ -962,13 +955,6 @@ goto|goto
 name|check
 goto|;
 case|case
-literal|'\t'
-case|:
-case|case
-literal|' '
-case|:
-break|break;
-case|case
 literal|'\n'
 case|:
 name|parsenleft
@@ -984,10 +970,6 @@ expr_stmt|;
 comment|/* Stop processing here */
 break|break;
 default|default:
-name|something
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 block|}
 operator|*
@@ -1059,7 +1041,17 @@ literal|0
 operator|&&
 name|hist
 operator|&&
-name|something
+name|parsenextc
+index|[
+name|strspn
+argument_list|(
+name|parsenextc
+argument_list|,
+literal|" \t\n"
+argument_list|)
+index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|HistEvent
