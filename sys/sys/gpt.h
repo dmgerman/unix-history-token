@@ -313,7 +313,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|GPT_ENT_TYPE_VSANHDR
+name|GPT_ENT_TYPE_VMVSANHDR
 define|\
 value|{0x381cfccc,0x7288,0x11e0,0x92,0xee,{0x00,0x0c,0x29,0x11,0xd0,0xb2}}
 end_define
