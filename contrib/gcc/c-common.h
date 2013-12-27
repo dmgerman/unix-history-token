@@ -2128,6 +2128,10 @@ name|binary_op_error
 parameter_list|(
 name|enum
 name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl

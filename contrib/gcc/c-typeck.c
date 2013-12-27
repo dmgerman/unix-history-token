@@ -8181,9 +8181,11 @@ name|ERROR_MARK
 condition|)
 name|error
 argument_list|(
-literal|"invalid type argument of %qs"
+literal|"invalid type argument of %qs (have %qT)"
 argument_list|,
 name|errorstring
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 return|return
@@ -32242,6 +32244,10 @@ block|{
 name|binary_op_error
 argument_list|(
 name|code
+argument_list|,
+name|type0
+argument_list|,
+name|type1
 argument_list|)
 expr_stmt|;
 return|return
@@ -33339,6 +33345,16 @@ block|{
 name|binary_op_error
 argument_list|(
 name|code
+argument_list|,
+name|TREE_TYPE
+argument_list|(
+name|op0
+argument_list|)
+argument_list|,
+name|TREE_TYPE
+argument_list|(
+name|op1
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

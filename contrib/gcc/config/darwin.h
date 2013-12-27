@@ -593,6 +593,17 @@ value|hook_bool_void_false
 end_define
 
 begin_comment
+comment|/* For efficiency, on Darwin the RTTI information that is always    emitted in the standard C++ library should not be COMDAT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_CXX_LIBRARY_RTTI_COMDAT
+value|hook_bool_void_false
+end_define
+
+begin_comment
 comment|/* We make exception information linkonce. */
 end_comment
 

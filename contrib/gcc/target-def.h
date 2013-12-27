@@ -2318,6 +2318,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|TARGET_CXX_LIBRARY_RTTI_COMDAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TARGET_CXX_LIBRARY_RTTI_COMDAT
+value|hook_bool_void_true
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|TARGET_CXX_USE_AEABI_ATEXIT
 end_ifndef
 
@@ -2356,7 +2374,7 @@ define|#
 directive|define
 name|TARGET_CXX
 define|\
-value|{						\     TARGET_CXX_GUARD_TYPE,			\     TARGET_CXX_GUARD_MASK_BIT,			\     TARGET_CXX_GET_COOKIE_SIZE,			\     TARGET_CXX_COOKIE_HAS_SIZE,			\     TARGET_CXX_IMPORT_EXPORT_CLASS,		\     TARGET_CXX_CDTOR_RETURNS_THIS,		\     TARGET_CXX_KEY_METHOD_MAY_BE_INLINE,	\     TARGET_CXX_DETERMINE_CLASS_DATA_VISIBILITY,	\     TARGET_CXX_CLASS_DATA_ALWAYS_COMDAT,        \     TARGET_CXX_USE_AEABI_ATEXIT,		\     TARGET_CXX_ADJUST_CLASS_AT_DEFINITION	\   }
+value|{						\     TARGET_CXX_GUARD_TYPE,			\     TARGET_CXX_GUARD_MASK_BIT,			\     TARGET_CXX_GET_COOKIE_SIZE,			\     TARGET_CXX_COOKIE_HAS_SIZE,			\     TARGET_CXX_IMPORT_EXPORT_CLASS,		\     TARGET_CXX_CDTOR_RETURNS_THIS,		\     TARGET_CXX_KEY_METHOD_MAY_BE_INLINE,	\     TARGET_CXX_DETERMINE_CLASS_DATA_VISIBILITY,	\     TARGET_CXX_CLASS_DATA_ALWAYS_COMDAT,        \     TARGET_CXX_LIBRARY_RTTI_COMDAT,	        \     TARGET_CXX_USE_AEABI_ATEXIT,		\     TARGET_CXX_ADJUST_CLASS_AT_DEFINITION	\   }
 end_define
 
 begin_comment

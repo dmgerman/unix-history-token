@@ -8133,7 +8133,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Print an error message for invalid operands to arith operation    CODE.  */
+comment|/* Print an error message for invalid operands to arith operation    CODE with TYPE0 for operand 0, and TYPE1 for operand 1.  */
 end_comment
 
 begin_function
@@ -8143,6 +8143,12 @@ parameter_list|(
 name|enum
 name|tree_code
 name|code
+parameter_list|,
+name|tree
+name|type0
+parameter_list|,
+name|tree
+name|type1
 parameter_list|)
 block|{
 specifier|const
@@ -8328,9 +8334,13 @@ expr_stmt|;
 block|}
 name|error
 argument_list|(
-literal|"invalid operands to binary %s"
+literal|"invalid operands to binary %s (have %qT and %qT)"
 argument_list|,
 name|opname
+argument_list|,
+name|type0
+argument_list|,
+name|type1
 argument_list|)
 expr_stmt|;
 block|}
