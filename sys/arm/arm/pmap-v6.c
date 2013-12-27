@@ -12171,17 +12171,7 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 block|{
-comment|/* 			 * Enable write permission if the access type 			 * indicates write intention. Emulate modified 			 * bit otherwise. 			 */
-if|if
-condition|(
-operator|(
-name|access
-operator|&
-name|VM_PROT_WRITE
-operator|)
-operator|!=
-literal|0
-condition|)
+comment|/* Write enable */
 name|npte
 operator|&=
 operator|~
