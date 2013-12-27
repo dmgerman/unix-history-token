@@ -4283,6 +4283,11 @@ operator|(
 name|UNHANDLED
 operator|)
 return|;
+name|regval
+operator|=
+literal|0
+expr_stmt|;
+comment|/* silence gcc */
 name|vmxctx
 operator|=
 operator|&
