@@ -30191,6 +30191,9 @@ operator|&&
 operator|(
 name|copied_so_far
 operator|>=
+operator|(
+name|uint32_t
+operator|)
 name|max
 argument_list|(
 name|so
