@@ -3290,6 +3290,16 @@ condition|(
 name|md
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_MIRROR_DEVICE_FLAG_WIPE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * Handle the case, when the size of parent provider reduced. 		 */
@@ -3875,6 +3885,18 @@ argument_list|,
 name|SX_LOCKED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_MIRROR_DEVICE_FLAG_WIPE
+operator|)
+operator|==
+literal|0
+condition|)
 name|g_mirror_fill_metadata
 argument_list|(
 name|sc
