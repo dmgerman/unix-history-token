@@ -14630,13 +14630,9 @@ name|bp
 operator|->
 name|b_resid
 operator|=
-name|bp
-operator|->
-name|b_bcount
-operator|-
 name|bip
 operator|->
-name|bio_completed
+name|bio_resid
 expr_stmt|;
 name|bp
 operator|->
