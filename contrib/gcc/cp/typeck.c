@@ -13613,6 +13613,10 @@ block|{
 name|binary_op_error
 argument_list|(
 name|code
+argument_list|,
+name|type0
+argument_list|,
+name|type1
 argument_list|)
 expr_stmt|;
 return|return

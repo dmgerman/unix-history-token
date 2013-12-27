@@ -23889,7 +23889,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"DIE %4lu: %s\n"
+literal|"DIE %4ld: %s\n"
 argument_list|,
 name|die
 operator|->
@@ -23923,7 +23923,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|" offset: %lu\n"
+literal|" offset: %ld\n"
 argument_list|,
 name|die
 operator|->
@@ -24173,7 +24173,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"die -> %lu"
+literal|"die -> %ld"
 argument_list|,
 name|AT_ref
 argument_list|(
@@ -29313,6 +29313,10 @@ name|die_abbrev
 argument_list|,
 literal|"(DIE (0x%lx) %s)"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|die
 operator|->
 name|die_offset
@@ -30120,6 +30124,10 @@ literal|0
 argument_list|,
 literal|"end of children of DIE 0x%lx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|die
 operator|->
 name|die_offset
