@@ -536,6 +536,9 @@ name|enum
 name|boot_state
 name|boot_state
 decl_stmt|;
+name|uint32_t
+name|svr_last
+decl_stmt|;
 block|}
 struct|;
 end_struct
