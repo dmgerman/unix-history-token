@@ -12213,18 +12213,7 @@ argument_list|,
 name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Enable write permission if the access type 				 * indicates write intention. Emulate modified 				 * bit otherwise. 				 */
-if|if
-condition|(
-operator|(
-name|access
-operator|&
-name|VM_PROT_WRITE
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+comment|/* 				 * XXX: Skip modified bit emulation for now. 				 *	The emulation reveals problems 				 *	that result in random failures 				 *	during memory allocation on some 				 *	platforms. 				 *	Therefore, the page is marked RW 				 *	immediately. 				 */
 name|npte
 operator|&=
 operator|~
@@ -12232,13 +12221,11 @@ operator|(
 name|L2_APX
 operator|)
 expr_stmt|;
-comment|/* 					 * The access type and permissions 					 * indicate that the page will be 					 * written as soon as returned from 					 * fault service. 					 * Mark it dirty from the outset. 					 */
 name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 name|npte
