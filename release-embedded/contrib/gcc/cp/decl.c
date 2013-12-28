@@ -946,6 +946,18 @@ begin_comment
 comment|/* States indicating how grokdeclarator() should handle declspecs marked    with __attribute__((deprecated)).  An object declared as    __attribute__((deprecated)) suppresses warnings of uses of other    deprecated items.  */
 end_comment
 
+begin_comment
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+end_comment
+
+begin_comment
+comment|/* An object declared as __attribute__((unavailable)) suppresses    any reports of being declared with unavailable or deprecated    items.  */
+end_comment
+
+begin_comment
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
+end_comment
+
 begin_enum
 enum|enum
 name|deprecated_states
@@ -953,6 +965,9 @@ block|{
 name|DEPRECATED_NORMAL
 block|,
 name|DEPRECATED_SUPPRESS
+comment|/* APPLE LOCAL "unavailable" attribute (radar 2809697) */
+block|,
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
 block|}
 enum|;
 end_enum
@@ -14760,6 +14775,10 @@ decl_stmt|;
 name|tree
 name|context
 decl_stmt|;
+comment|/* APPLE LOCAL "unavailable" attribute (radar 2809697) */
+name|tree
+name|a
+decl_stmt|;
 name|bool
 name|was_public
 decl_stmt|;
@@ -14768,7 +14787,12 @@ name|pushed_scope_p
 operator|=
 name|NULL_TREE
 expr_stmt|;
-comment|/* An object declared as __attribute__((deprecated)) suppresses      warnings of uses of other deprecated items.  */
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+comment|/* An object declared as __attribute__((unavailable)) suppresses      any reports of being declared with unavailable or deprecated      items.  An object declared as __attribute__((deprecated))      suppresses warnings of uses of other deprecated items.  */
+ifdef|#
+directive|ifdef
+name|A_LESS_INEFFICENT_WAY
+comment|/* which I really don't want to do!  */
 if|if
 condition|(
 name|lookup_attribute
@@ -14782,6 +14806,92 @@ name|deprecated_state
 operator|=
 name|DEPRECATED_SUPPRESS
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|lookup_attribute
+argument_list|(
+literal|"unavailable"
+argument_list|,
+name|attributes
+argument_list|)
+condition|)
+name|deprecated_state
+operator|=
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
+expr_stmt|;
+else|#
+directive|else
+comment|/* a more efficient way doing what lookup_attribute would do */
+for|for
+control|(
+name|a
+operator|=
+name|attributes
+init|;
+name|a
+condition|;
+name|a
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|a
+argument_list|)
+control|)
+block|{
+name|tree
+name|name
+init|=
+name|TREE_PURPOSE
+argument_list|(
+name|a
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|name
+argument_list|)
+operator|==
+name|IDENTIFIER_NODE
+condition|)
+if|if
+condition|(
+name|is_attribute_p
+argument_list|(
+literal|"deprecated"
+argument_list|,
+name|name
+argument_list|)
+condition|)
+block|{
+name|deprecated_state
+operator|=
+name|DEPRECATED_SUPPRESS
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|is_attribute_p
+argument_list|(
+literal|"unavailable"
+argument_list|,
+name|name
+argument_list|)
+condition|)
+block|{
+name|deprecated_state
+operator|=
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
+expr_stmt|;
+break|break;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 name|attributes
 operator|=
 name|chainon
@@ -26353,6 +26463,37 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+comment|/* APPLE LOCAL begin unavailable attribute (radar 2809697) --bowdidge */
+comment|/* If the entire declaration is itself tagged as unavailable then      suppress reports of unavailable/deprecated items.  If the      entire declaration is tagged as only deprecated we still      report unavailable uses.  */
+if|if
+condition|(
+name|type
+operator|&&
+name|TREE_DEPRECATED
+argument_list|(
+name|type
+argument_list|)
+operator|&&
+name|TREE_UNAVAILABLE
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|deprecated_state
+operator|!=
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
+condition|)
+name|warn_deprecated_use
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+comment|/* APPLE LOCAL end unavailable attribute (radar 2809697) --bowdidge */
 comment|/* If the entire declaration is itself tagged as deprecated then      suppress reports of deprecated items.  */
 if|if
 condition|(

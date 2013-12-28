@@ -8316,6 +8316,12 @@ name|TARGET_USES_WEAK_UNWIND_INFO
 operator|&&
 operator|!
 name|flag_asynchronous_unwind_tables
+comment|/* APPLE LOCAL begin for-fsf-4_4 5480287 */
+expr|\
+operator|&&
+name|flag_exceptions
+comment|/* APPLE LOCAL end for-fsf-4_4 5480287 */
+expr|\
 operator|&&
 name|for_eh
 condition|)
