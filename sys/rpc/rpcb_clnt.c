@@ -152,21 +152,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|timeval
-name|rmttimeout
-init|=
-block|{
-literal|3
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
 name|char
 name|nullstring
 index|[]
@@ -193,7 +178,7 @@ literal|0
 end_if
 
 begin_define
-unit|static struct timeval rpcbrmttime = { 15, 0 };
+unit|static const struct timeval rmttimeout = { 3, 0 }; static struct timeval rpcbrmttime = { 15, 0 };
 define|#
 directive|define
 name|CACHESIZE
