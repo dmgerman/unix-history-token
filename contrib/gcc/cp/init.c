@@ -8504,11 +8504,17 @@ decl_stmt|;
 name|tree
 name|to
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|for_stmt
 operator|=
 name|begin_for_stmt
-argument_list|()
+argument_list|(
+name|NULL_TREE
+argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|finish_for_init_stmt
 argument_list|(
 name|for_stmt

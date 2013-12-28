@@ -2046,14 +2046,21 @@ end_comment
 
 begin_function
 name|tree
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+function|\
 name|begin_while_stmt
 parameter_list|(
-name|void
+name|tree
+name|attribs
 parameter_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+function|\
 block|{
 name|tree
 name|r
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|r
 operator|=
 name|build_stmt
@@ -2063,8 +2070,12 @@ argument_list|,
 name|NULL_TREE
 argument_list|,
 name|NULL_TREE
+argument_list|,
+name|attribs
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|add_stmt
 argument_list|(
 name|r
@@ -2178,11 +2189,19 @@ end_comment
 
 begin_function
 name|tree
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+function|\
 name|begin_do_stmt
 parameter_list|(
-name|void
+name|tree
+name|attribs
 parameter_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+function|\
 block|{
+comment|/* APPLE LOCAL radar 4445586 */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|tree
 name|r
 init|=
@@ -2193,8 +2212,14 @@ argument_list|,
 name|NULL_TREE
 argument_list|,
 name|NULL_TREE
+argument_list|,
+name|attribs
+argument_list|,
+name|NULL_TREE
 argument_list|)
 decl_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|add_stmt
 argument_list|(
 name|r
@@ -2398,10 +2423,15 @@ end_comment
 
 begin_function
 name|tree
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+function|\
 name|begin_for_stmt
 parameter_list|(
-name|void
+name|tree
+name|attribs
 parameter_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+function|\
 block|{
 name|tree
 name|r
@@ -2416,11 +2446,17 @@ name|NULL_TREE
 argument_list|,
 name|NULL_TREE
 argument_list|,
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+argument_list|\
 name|NULL_TREE
 argument_list|,
 name|NULL_TREE
+argument_list|,
+name|attribs
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 if|if
 condition|(
 name|flag_new_for_scope

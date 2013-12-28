@@ -8599,15 +8599,20 @@ name|NULL_RTX
 argument_list|,
 name|NULL_RTX
 argument_list|,
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+argument_list|\
 name|NULL
 argument_list|,
 name|label_num
 operator|++
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 return|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\ }
 end_function
 
 begin_escape
