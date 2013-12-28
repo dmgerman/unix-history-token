@@ -4695,6 +4695,8 @@ name|warning
 argument_list|(
 name|OPT_Wstrict_overflow
 argument_list|,
+literal|"%s"
+argument_list|,
 name|gmsgid
 argument_list|)
 expr_stmt|;
