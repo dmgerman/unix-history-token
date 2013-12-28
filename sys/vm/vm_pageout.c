@@ -6168,6 +6168,10 @@ directive|endif
 name|vm_pageout_worker
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 name|uintptr_t
 operator|)
 literal|0
