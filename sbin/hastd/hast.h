@@ -469,6 +469,12 @@ name|HAST_CHECKSUM_SHA256
 value|2
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|nv
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Structure that describes single resource.  */
 end_comment
@@ -720,6 +726,18 @@ comment|/* Number of activemap flush errors. */
 name|uint64_t
 name|hr_stat_activemap_flush_error
 decl_stmt|;
+comment|/* Function to output worker specific info on control status request. */
+name|void
+function_decl|(
+modifier|*
+name|output_status_aux
+function_decl|)
+parameter_list|(
+name|struct
+name|nv
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Next resource. */
 name|TAILQ_ENTRY
 argument_list|(
