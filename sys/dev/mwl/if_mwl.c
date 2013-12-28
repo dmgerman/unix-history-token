@@ -1972,6 +1972,12 @@ begin_comment
 comment|/*  * Read/Write shorthands for accesses to BAR 0.  Note  * that all BAR 1 operations are done in the "hal" and  * there should be no reference to them here.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MWL_DEBUG
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -2003,6 +2009,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
