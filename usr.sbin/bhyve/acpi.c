@@ -174,27 +174,6 @@ name|BHYVE_ASL_COMPILER
 value|"/usr/sbin/iasl"
 end_define
 
-begin_define
-define|#
-directive|define
-name|BHYVE_PM1A_EVT_ADDR
-value|0x400
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHYVE_PM1A_CNT_ADDR
-value|0x404
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHYVE_PM_TIMER_ADDR
-value|0x408
-end_define
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -1106,14 +1085,18 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tSource : 09\n"
+literal|"[0001]\t\tSource : %02X\n"
+argument_list|,
+name|SCI_INT
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0004]\t\tInterrupt : 00000009\n"
+literal|"[0004]\t\tInterrupt : %08X\n"
+argument_list|,
+name|SCI_INT
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1127,14 +1110,14 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t\t\tPolarity : 0\n"
+literal|"\t\t\tPolarity : 3\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t\t\tTrigger Mode : 0\n"
+literal|"\t\t\tTrigger Mode : 3\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1356,7 +1339,7 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tModel : 00\n"
+literal|"[0001]\t\tModel : 01\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1370,28 +1353,36 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0002]\t\tSCI Interrupt : 0009\n"
+literal|"[0002]\t\tSCI Interrupt : %04X\n"
+argument_list|,
+name|SCI_INT
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0004]\t\tSMI Command Port : 00000000\n"
+literal|"[0004]\t\tSMI Command Port : %08X\n"
+argument_list|,
+name|SMI_CMD
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tACPI Enable Value : 00\n"
+literal|"[0001]\t\tACPI Enable Value : %02X\n"
+argument_list|,
+name|BHYVE_ACPI_ENABLE
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tACPI Disable Value : 00\n"
+literal|"[0001]\t\tACPI Disable Value : %02X\n"
+argument_list|,
+name|BHYVE_ACPI_DISABLE
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1414,7 +1405,7 @@ name|fp
 argument_list|,
 literal|"[0004]\t\tPM1A Event Block Address : %08X\n"
 argument_list|,
-name|BHYVE_PM1A_EVT_ADDR
+name|PM1A_EVT_ADDR
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1430,7 +1421,7 @@ name|fp
 argument_list|,
 literal|"[0004]\t\tPM1A Control Block Address : %08X\n"
 argument_list|,
-name|BHYVE_PM1A_CNT_ADDR
+name|PM1A_CNT_ADDR
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1453,7 +1444,7 @@ name|fp
 argument_list|,
 literal|"[0004]\t\tPM Timer Block Address : %08X\n"
 argument_list|,
-name|BHYVE_PM_TIMER_ADDR
+name|IO_PMTMR
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1684,7 +1675,7 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t\t\tControl Method Power Button (V1) : 1\n"
+literal|"\t\t\tControl Method Power Button (V1) : 0\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -1939,7 +1930,7 @@ name|fp
 argument_list|,
 literal|"[0008]\t\tAddress : 00000000%08X\n"
 argument_list|,
-name|BHYVE_PM1A_EVT_ADDR
+name|PM1A_EVT_ADDR
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -2039,7 +2030,7 @@ name|fp
 argument_list|,
 literal|"[0008]\t\tAddress : 00000000%08X\n"
 argument_list|,
-name|BHYVE_PM1A_CNT_ADDR
+name|PM1A_CNT_ADDR
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -2189,7 +2180,7 @@ name|fp
 argument_list|,
 literal|"[0008]\t\tAddress : 00000000%08X\n"
 argument_list|,
-name|BHYVE_PM_TIMER_ADDR
+name|IO_PMTMR
 argument_list|)
 expr_stmt|;
 name|EFPRINTF

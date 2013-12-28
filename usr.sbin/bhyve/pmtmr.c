@@ -74,22 +74,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"inout.h"
 end_include
 
 begin_comment
 comment|/*  * The ACPI Power Management timer is a free-running 24- or 32-bit  * timer with a frequency of 3.579545MHz  *  * This implementation will be 32-bits  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_PMTMR
-value|0x408
-end_define
-
-begin_comment
-comment|/* 4-byte i/o port for the timer */
 end_comment
 
 begin_define

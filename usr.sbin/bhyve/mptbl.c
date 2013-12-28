@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhyverun.h"
 end_include
 
@@ -934,6 +940,31 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+name|SCI_INT
+case|:
+comment|/* ACPI SCI is level triggered and active-lo. */
+name|mpie
+operator|->
+name|int_flags
+operator|=
+name|INTENTRY_FLAGS_POLARITY_ACTIVELO
+operator||
+name|INTENTRY_FLAGS_TRIGGER_LEVEL
+expr_stmt|;
+name|mpie
+operator|->
+name|int_type
+operator|=
+name|INTENTRY_TYPE_INT
+expr_stmt|;
+name|mpie
+operator|->
+name|src_bus_irq
+operator|=
+name|SCI_INT
+expr_stmt|;
+break|break;
+case|case
 literal|5
 case|:
 case|case
@@ -942,11 +973,13 @@ case|:
 case|case
 literal|11
 case|:
-comment|/* 			 * PCI Irqs set to level triggered. 			 */
+comment|/* 			 * PCI Irqs set to level triggered and active-lo. 			 */
 name|mpie
 operator|->
 name|int_flags
 operator|=
+name|INTENTRY_FLAGS_POLARITY_ACTIVELO
+operator||
 name|INTENTRY_FLAGS_TRIGGER_LEVEL
 expr_stmt|;
 name|mpie
