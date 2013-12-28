@@ -15,6 +15,12 @@ directive|define
 name|_VLAPIC_PRIV_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<x86/apicreg.h>
+end_include
+
 begin_comment
 comment|/*  * APIC Register:		Offset	   Description  */
 end_comment
@@ -472,6 +478,13 @@ name|ISRVEC_STK_SIZE
 value|(16 + 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VLAPIC_MAXLVT_INDEX
+value|APIC_LVT_CMCI
+end_define
+
 begin_struct
 struct|struct
 name|vlapic
@@ -536,8 +549,17 @@ name|enum
 name|boot_state
 name|boot_state
 decl_stmt|;
+comment|/* 	 * Copies of some registers in the virtual APIC page. We do this for 	 * a couple of different reasons: 	 * - to be able to detect what changed (e.g. svr_last) 	 * - to maintain a coherent snapshot of the register (e.g. lvt_last) 	 */
 name|uint32_t
 name|svr_last
+decl_stmt|;
+name|uint32_t
+name|lvt_last
+index|[
+name|VLAPIC_MAXLVT_INDEX
+operator|+
+literal|1
+index|]
 decl_stmt|;
 block|}
 struct|;
