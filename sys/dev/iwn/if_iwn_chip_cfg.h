@@ -1065,8 +1065,6 @@ operator||
 name|IWN_FLG_NEED_PHY_CALIB_TX_IQ
 operator||
 name|IWN_FLG_NEED_PHY_CALIB_BASE_BAND
-operator||
-name|IWN_FLG_NEED_PHY_CALIB_TEMP_OFFSET
 operator|)
 block|,
 operator|.
