@@ -400,7 +400,6 @@ literal|44
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* Not used */
 block|}
 name|ISO_RRIP_PX
 typedef|;
