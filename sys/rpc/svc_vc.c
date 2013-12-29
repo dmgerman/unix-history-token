@@ -2770,6 +2770,22 @@ name|m_next
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Block receive upcalls if we have more data pending, 	 * otherwise report our need. 	 */
+if|if
+condition|(
+name|cd
+operator|->
+name|mpending
+condition|)
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_lowat
+operator|=
+name|INT_MAX
+expr_stmt|;
+else|else
 name|so
 operator|->
 name|so_rcv
