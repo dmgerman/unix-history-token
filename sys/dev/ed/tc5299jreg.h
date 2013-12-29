@@ -57,7 +57,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_TC5299J_MII_DIROUT
+name|ED_TC5299J_MII_DIRIN
 value|0x04
 end_define
 

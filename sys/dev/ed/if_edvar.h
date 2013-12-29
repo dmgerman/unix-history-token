@@ -15,6 +15,12 @@ directive|define
 name|SYS_DEV_ED_IF_EDVAR_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<dev/mii/mii_bitbang.h>
+end_include
+
 begin_comment
 comment|/*  * ed_softc: per line info and status  */
 end_comment
@@ -159,34 +165,9 @@ name|device_t
 name|miibus
 decl_stmt|;
 comment|/* MII bus for cards with MII. */
-name|void
-function_decl|(
-modifier|*
-name|mii_writebits
-function_decl|)
-parameter_list|(
-name|struct
-name|ed_softc
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|u_int
-function_decl|(
-modifier|*
-name|mii_readbits
-function_decl|)
-parameter_list|(
-name|struct
-name|ed_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
+name|mii_bitbang_ops_t
+name|mii_bitbang_ops
+decl_stmt|;
 name|struct
 name|callout
 name|tick_ch
@@ -347,6 +328,23 @@ end_struct
 begin_define
 define|#
 directive|define
+name|ed_nic_barrier
+parameter_list|(
+name|sc
+parameter_list|,
+name|port
+parameter_list|,
+name|length
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|bus_space_barrier(sc->port_bst, sc->port_bsh, \ 	    (sc)->nic_offset + (port), (length), (flags))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ed_nic_inb
 parameter_list|(
 name|sc
@@ -500,6 +498,23 @@ name|count
 parameter_list|)
 define|\
 value|bus_space_write_multi_4(sc->port_bst, sc->port_bsh, \ 		(sc)->nic_offset + (port), (uint32_t *)(addr), (count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ed_asic_barrier
+parameter_list|(
+name|sc
+parameter_list|,
+name|port
+parameter_list|,
+name|length
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|bus_space_barrier(sc->port_bst, sc->port_bsh, \ 	    (sc)->asic_offset + (port), (length), (flags))
 end_define
 
 begin_define
