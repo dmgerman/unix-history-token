@@ -736,6 +736,26 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|isset
+argument_list|(
+name|rv
+operator|->
+name|popmap
+argument_list|,
+name|index
+argument_list|)
+argument_list|,
+operator|(
+literal|"vm_reserv_depopulate: reserv %p's popmap[%d] is clear"
+operator|,
+name|rv
+operator|,
+name|index
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|rv
 operator|->
 name|popcnt
@@ -953,6 +973,26 @@ operator|(
 literal|"vm_reserv_populate: reserv %p is free"
 operator|,
 name|rv
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|isclr
+argument_list|(
+name|rv
+operator|->
+name|popmap
+argument_list|,
+name|index
+argument_list|)
+argument_list|,
+operator|(
+literal|"vm_reserv_populate: reserv %p's popmap[%d] is set"
+operator|,
+name|rv
+operator|,
+name|index
 operator|)
 argument_list|)
 expr_stmt|;
