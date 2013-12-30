@@ -2448,7 +2448,7 @@ name|ip
 operator|->
 name|i_ump
 expr_stmt|;
-comment|/* 	 * If we are not tracking block clusters or if we have less than 2% 	 * free blocks left, then do not attempt to cluster. Running with 	 * less than 5% free block reserve is not recommended and those that 	 * choose to do so do not expect to have good file layout. 	 */
+comment|/* 	 * If we are not tracking block clusters or if we have less than 4% 	 * free blocks left, then do not attempt to cluster. Running with 	 * less than 5% free block reserve is not recommended and those that 	 * choose to do so do not expect to have good file layout. 	 */
 if|if
 condition|(
 name|fs
@@ -2461,7 +2461,7 @@ name|freespace
 argument_list|(
 name|fs
 argument_list|,
-literal|2
+literal|4
 argument_list|)
 operator|<
 literal|0
@@ -3680,7 +3680,7 @@ name|ip
 operator|->
 name|i_ump
 expr_stmt|;
-comment|/* 	 * If we are not tracking block clusters or if we have less than 2% 	 * free blocks left, then do not attempt to cluster. Running with 	 * less than 5% free block reserve is not recommended and those that 	 * choose to do so do not expect to have good file layout. 	 */
+comment|/* 	 * If we are not tracking block clusters or if we have less than 4% 	 * free blocks left, then do not attempt to cluster. Running with 	 * less than 5% free block reserve is not recommended and those that 	 * choose to do so do not expect to have good file layout. 	 */
 if|if
 condition|(
 name|fs
@@ -3693,7 +3693,7 @@ name|freespace
 argument_list|(
 name|fs
 argument_list|,
-literal|2
+literal|4
 argument_list|)
 operator|<
 literal|0
