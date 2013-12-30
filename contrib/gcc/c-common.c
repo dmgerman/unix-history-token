@@ -21751,7 +21751,15 @@ name|decl
 argument_list|)
 operator|==
 name|FUNCTION_DECL
+operator|||
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|FIELD_DECL
 condition|)
+comment|/* Removed radar 3803157 - objc attribute */
 block|{
 name|TREE_UNAVAILABLE
 argument_list|(
