@@ -293,7 +293,7 @@ argument_list|(
 name|dtrace_state_cache
 argument_list|)
 expr_stmt|;
-name|delete_unrhdr
+name|vmem_destroy
 argument_list|(
 name|dtrace_arena
 argument_list|)
