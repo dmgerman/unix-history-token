@@ -607,7 +607,9 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"AT91 device bus"
+name|soc_info
+operator|.
+name|name
 argument_list|)
 expr_stmt|;
 return|return
