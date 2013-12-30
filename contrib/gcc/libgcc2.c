@@ -7737,9 +7737,7 @@ parameter_list|(
 name|SIZE
 parameter_list|)
 define|\
-value|(SIZE< DI_SIZE							\&& SIZE> (DI_SIZE - SIZE + FSSIZE)					\
-comment|/* Don't use IBM Extended Double TFmode for TI->SF calculations.	\       The conversion from long double to float suffers from double	\       rounding, because we convert via double.  In any case, the	\       fallback code is faster.  */
-value|\&& !IS_IBM_EXTENDED (SIZE))
+value|(SIZE< DI_SIZE							\&& SIZE> (DI_SIZE - SIZE + FSSIZE)					\&& !AVOID_FP_TYPE_CONVERSION(SIZE))
 end_define
 
 begin_if
@@ -8127,19 +8125,15 @@ expr_stmt|;
 comment|/* If we lost any nonzero bits, set the lsb to ensure correct rounding.  */
 if|if
 condition|(
+operator|(
+name|UWtype
+operator|)
 name|u
-operator|&
-operator|(
-operator|(
-operator|(
-name|DWtype
-operator|)
-literal|1
 operator|<<
-name|shift
-operator|)
+operator|(
+name|W_TYPE_SIZE
 operator|-
-literal|1
+name|shift
 operator|)
 condition|)
 name|hi
@@ -8151,11 +8145,40 @@ name|FSTYPE
 name|f
 init|=
 name|hi
+decl_stmt|,
+name|e
 decl_stmt|;
-name|f
-operator|*=
+if|if
+condition|(
+name|shift
+operator|==
+name|W_TYPE_SIZE
+condition|)
+name|e
+operator|=
+name|Wtype_MAXp1_F
+expr_stmt|;
+comment|/* The following two cases could be merged if we knew that the target      supported a native unsigned->float conversion.  More often, we only      have a signed conversion, and have to add extra fixup code.  */
+elseif|else
+if|if
+condition|(
+name|shift
+operator|==
+name|W_TYPE_SIZE
+operator|-
+literal|1
+condition|)
+name|e
+operator|=
+name|Wtype_MAXp1_F
+operator|/
+literal|2
+expr_stmt|;
+else|else
+name|e
+operator|=
 operator|(
-name|UDWtype
+name|Wtype
 operator|)
 literal|1
 operator|<<
@@ -8163,6 +8186,8 @@ name|shift
 expr_stmt|;
 return|return
 name|f
+operator|*
+name|e
 return|;
 endif|#
 directive|endif
@@ -8212,9 +8237,7 @@ parameter_list|(
 name|SIZE
 parameter_list|)
 define|\
-value|(SIZE< DI_SIZE							\&& SIZE> (DI_SIZE - SIZE + FSSIZE)					\
-comment|/* Don't use IBM Extended Double TFmode for TI->SF calculations.	\       The conversion from long double to float suffers from double	\       rounding, because we convert via double.  In any case, the	\       fallback code is faster.  */
-value|\&& !IS_IBM_EXTENDED (SIZE))
+value|(SIZE< DI_SIZE							\&& SIZE> (DI_SIZE - SIZE + FSSIZE)					\&& !AVOID_FP_TYPE_CONVERSION(SIZE))
 end_define
 
 begin_if
@@ -8555,19 +8578,15 @@ expr_stmt|;
 comment|/* If we lost any nonzero bits, set the lsb to ensure correct rounding.  */
 if|if
 condition|(
+operator|(
+name|UWtype
+operator|)
 name|u
-operator|&
-operator|(
-operator|(
-operator|(
-name|UDWtype
-operator|)
-literal|1
 operator|<<
-name|shift
-operator|)
+operator|(
+name|W_TYPE_SIZE
 operator|-
-literal|1
+name|shift
 operator|)
 condition|)
 name|hi
@@ -8579,11 +8598,40 @@ name|FSTYPE
 name|f
 init|=
 name|hi
+decl_stmt|,
+name|e
 decl_stmt|;
-name|f
-operator|*=
+if|if
+condition|(
+name|shift
+operator|==
+name|W_TYPE_SIZE
+condition|)
+name|e
+operator|=
+name|Wtype_MAXp1_F
+expr_stmt|;
+comment|/* The following two cases could be merged if we knew that the target      supported a native unsigned->float conversion.  More often, we only      have a signed conversion, and have to add extra fixup code.  */
+elseif|else
+if|if
+condition|(
+name|shift
+operator|==
+name|W_TYPE_SIZE
+operator|-
+literal|1
+condition|)
+name|e
+operator|=
+name|Wtype_MAXp1_F
+operator|/
+literal|2
+expr_stmt|;
+else|else
+name|e
+operator|=
 operator|(
-name|UDWtype
+name|Wtype
 operator|)
 literal|1
 operator|<<
@@ -8591,6 +8639,8 @@ name|shift
 expr_stmt|;
 return|return
 name|f
+operator|*
+name|e
 return|;
 endif|#
 directive|endif
