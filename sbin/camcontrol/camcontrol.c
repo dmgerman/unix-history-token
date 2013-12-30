@@ -2638,7 +2638,7 @@ name|busonly
 init|=
 literal|0
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 while|while
