@@ -16131,6 +16131,8 @@ name|TREE_TYPE
 argument_list|(
 name|rhs
 argument_list|)
+argument_list|,
+name|true
 argument_list|)
 condition|)
 return|return
@@ -18876,6 +18878,8 @@ name|inside_init
 argument_list|)
 argument_list|,
 name|type
+argument_list|,
+name|true
 argument_list|)
 operator|&&
 name|TREE_CONSTANT
