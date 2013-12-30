@@ -7418,50 +7418,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Are we current address space or kernel?  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|pmap_is_current
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|)
-block|{
-return|return
-operator|(
-name|pmap
-operator|==
-name|kernel_pmap
-operator|||
-operator|(
-name|pmap
-operator|->
-name|pm_pml4
-index|[
-name|PML4PML4I
-index|]
-operator|&
-name|PG_FRAME
-operator|)
-operator|==
-operator|(
-name|PML4pml4e
-index|[
-literal|0
-index|]
-operator|&
-name|PG_FRAME
-operator|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  *	Routine:	pmap_extract  *	Function:  *		Extract the physical page address associated  *		with the given map/virtual_address pair.  */
 end_comment
 
