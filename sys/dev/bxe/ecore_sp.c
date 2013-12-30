@@ -18235,9 +18235,22 @@ operator|->
 name|ramrod_flags
 argument_list|)
 condition|)
+block|{
+name|ECORE_MSG
+argument_list|(
+name|sc
+argument_list|,
+literal|"Not configuring RSS ramrod_flags=%lx\n"
+argument_list|,
+name|p
+operator|->
+name|ramrod_flags
+argument_list|)
+expr_stmt|;
 return|return
 name|ECORE_SUCCESS
 return|;
+block|}
 name|r
 operator|->
 name|set_pending
