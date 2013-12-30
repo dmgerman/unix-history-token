@@ -70996,7 +70996,7 @@ name|V16QI_type_node
 init|=
 name|build_vector_type_for_mode
 argument_list|(
-name|intQI_type_node
+name|char_type_node
 argument_list|,
 name|V16QImode
 argument_list|)
@@ -71076,7 +71076,7 @@ name|V8QI_type_node
 init|=
 name|build_vector_type_for_mode
 argument_list|(
-name|intQI_type_node
+name|char_type_node
 argument_list|,
 name|V8QImode
 argument_list|)
