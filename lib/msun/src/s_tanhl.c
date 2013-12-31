@@ -384,16 +384,11 @@ name|double
 name|inv
 decl_stmt|,
 name|r
-decl_stmt|,
-name|w
 decl_stmt|;
 name|float
 name|fr
 decl_stmt|,
 name|fw
-decl_stmt|;
-name|uint32_t
-name|hx
 decl_stmt|;
 name|_2sumF
 argument_list|(
@@ -573,8 +568,13 @@ block|}
 name|ENTERI
 argument_list|()
 expr_stmt|;
+comment|/* |x|< 40 */
 if|if
 condition|(
+name|ix
+operator|<
+literal|0x4004
+operator|||
 name|fabsl
 argument_list|(
 name|x
@@ -628,12 +628,9 @@ return|;
 block|}
 if|if
 condition|(
-name|fabsl
-argument_list|(
-name|x
-argument_list|)
+name|ix
 operator|<
-literal|0.25
+literal|0x3ffd
 condition|)
 block|{
 comment|/* |x|<0.25 */
@@ -736,8 +733,16 @@ name|dx2
 operator|=
 name|x2
 expr_stmt|;
-name|RETURNI
-argument_list|(
+if|#
+directive|if
+literal|0
+block|RETURNI(((((((((((((((T33*dx2 + T31)*dx2 + T29)*dx2 + T27)*dx2 + 		    T25)*x2 + T23)*x2 + T21)*x2 + T19)*x2 + T17)*x2 + 		    T15)*x2 + T13)*x2 + T11)*x2 + T9)*x2 + T7)*x2 + T5)* 		    (x2*x*x2) + 		    T3*(x2*x) + x);
+else|#
+directive|else
+name|long
+name|double
+name|q
+init|=
 operator|(
 operator|(
 operator|(
@@ -831,6 +836,10 @@ name|x
 operator|*
 name|x2
 operator|)
+decl_stmt|;
+name|RETURNI
+argument_list|(
+name|q
 operator|+
 name|T3
 operator|*
@@ -843,6 +852,8 @@ operator|+
 name|x
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -864,6 +875,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ix
+operator|<
+literal|0x4001
+operator|&&
 name|fabsl
 argument_list|(
 name|x

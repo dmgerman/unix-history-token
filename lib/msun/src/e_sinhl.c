@@ -307,7 +307,7 @@ comment|/* LDBL_MANT_DIG == 64 */
 end_comment
 
 begin_comment
-comment|/* log(2**16385 - 0.5) rounded towards up: */
+comment|/* log(2**16385 - 0.5) rounded up: */
 end_comment
 
 begin_decl_stmt
