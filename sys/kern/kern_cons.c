@@ -1818,18 +1818,11 @@ if|if
 condition|(
 name|visible
 condition|)
-block|{
-name|cnputc
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 name|cnputs
 argument_list|(
-literal|" \b"
+literal|"\b \b"
 argument_list|)
 expr_stmt|;
-block|}
 name|lp
 operator|--
 expr_stmt|;
