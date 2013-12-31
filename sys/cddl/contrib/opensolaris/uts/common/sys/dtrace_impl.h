@@ -1534,11 +1534,27 @@ modifier|*
 name|dts_aggregations
 decl_stmt|;
 comment|/* aggregation array */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 name|vmem_t
 modifier|*
 name|dts_aggid_arena
 decl_stmt|;
 comment|/* arena for aggregation IDs */
+else|#
+directive|else
+name|struct
+name|unrhdr
+modifier|*
+name|dts_aggid_arena
+decl_stmt|;
+comment|/* arena for aggregation IDs */
+endif|#
+directive|endif
 name|uint64_t
 name|dts_errors
 decl_stmt|;
