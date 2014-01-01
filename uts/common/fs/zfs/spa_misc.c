@@ -285,7 +285,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * zfs_recover can be set to nonzero to attempt to recover from  * otherwise-fatal errors, typically caused by on-disk corruption.  When  * set, calls to zfs_panic_recover() will turn into warning messages.  */
+comment|/*  * zfs_recover can be set to nonzero to attempt to recover from  * otherwise-fatal errors, typically caused by on-disk corruption.  When  * set, calls to zfs_panic_recover() will turn into warning messages.  * This should only be used as a last resort, as it typically results  * in leaked space, or worse.  */
 end_comment
 
 begin_decl_stmt
