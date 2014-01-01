@@ -7067,7 +7067,7 @@ condition|)
 block|{
 name|retry
 label|:
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7091,7 +7091,7 @@ operator|)
 name|dst
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
