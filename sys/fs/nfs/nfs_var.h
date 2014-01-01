@@ -6703,7 +6703,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|nfsvno_updfilerev
 parameter_list|(
 name|vnode_t
