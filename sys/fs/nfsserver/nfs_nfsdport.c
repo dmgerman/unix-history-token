@@ -7273,11 +7273,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Updates the file rev and sets the mtime and ctime  * to the current clock time, returning the va_filerev and va_Xtime  * values.  */
+comment|/*  * Updates the file rev and sets the mtime and ctime  * to the current clock time, returning the va_filerev and va_Xtime  * values.  * Return ESTALE to indicate the vnode is VI_DOOMED.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|nfsvno_updfilerev
 parameter_list|(
 name|struct
@@ -7319,6 +7319,43 @@ operator|.
 name|va_mtime
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NFSVOPISLOCKED
+argument_list|(
+name|vp
+argument_list|)
+operator|!=
+name|LK_EXCLUSIVE
+condition|)
+block|{
+name|NFSVOPLOCK
+argument_list|(
+name|vp
+argument_list|,
+name|LK_UPGRADE
+operator||
+name|LK_RETRY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|vp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ESTALE
+operator|)
+return|;
+block|}
 operator|(
 name|void
 operator|)
@@ -7348,6 +7385,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
