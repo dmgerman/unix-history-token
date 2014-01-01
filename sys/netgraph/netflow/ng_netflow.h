@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|NGM_NETFLOW_COOKIE
-value|1309868867
+value|1365756954
 end_define
 
 begin_define
@@ -172,7 +172,7 @@ name|uint64_t
 name|nfinfo_bytes
 decl_stmt|;
 comment|/* accounted IPv4 bytes */
-name|uint32_t
+name|uint64_t
 name|nfinfo_packets
 decl_stmt|;
 comment|/* accounted IPv4 packets */
@@ -180,7 +180,7 @@ name|uint64_t
 name|nfinfo_bytes6
 decl_stmt|;
 comment|/* accounted IPv6 bytes */
-name|uint32_t
+name|uint64_t
 name|nfinfo_packets6
 decl_stmt|;
 comment|/* accounted IPv6 packets */
@@ -188,7 +188,7 @@ name|uint64_t
 name|nfinfo_sbytes
 decl_stmt|;
 comment|/* skipped IPv4 bytes */
-name|uint32_t
+name|uint64_t
 name|nfinfo_spackets
 decl_stmt|;
 comment|/* skipped IPv4 packets */
@@ -196,10 +196,18 @@ name|uint64_t
 name|nfinfo_sbytes6
 decl_stmt|;
 comment|/* skipped IPv6 bytes */
-name|uint32_t
+name|uint64_t
 name|nfinfo_spackets6
 decl_stmt|;
 comment|/* skipped IPv6 packets */
+name|uint64_t
+name|nfinfo_act_exp
+decl_stmt|;
+comment|/* active expiries */
+name|uint64_t
+name|nfinfo_inact_exp
+decl_stmt|;
+comment|/* inactive expiries */
 name|uint32_t
 name|nfinfo_used
 decl_stmt|;
@@ -229,14 +237,6 @@ name|nfinfo_alloc_fibs
 decl_stmt|;
 comment|/* fibs allocated */
 name|uint32_t
-name|nfinfo_act_exp
-decl_stmt|;
-comment|/* active expiries */
-name|uint32_t
-name|nfinfo_inact_exp
-decl_stmt|;
-comment|/* inactive expiries */
-name|uint32_t
 name|nfinfo_inact_t
 decl_stmt|;
 comment|/* flow inactive timeout */
@@ -247,6 +247,17 @@ comment|/* flow active timeout */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Parse the info structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_INFO_TYPE
+value|{					\ 	{ "IPv4 bytes",&ng_parse_uint64_type },\ 	{ "IPv4 packets",&ng_parse_uint64_type },\ 	{ "IPv6 bytes",&ng_parse_uint64_type },\ 	{ "IPv6 packets",&ng_parse_uint64_type },\ 	{ "IPv4 skipped bytes",&ng_parse_uint64_type },\ 	{ "IPv4 skipped packets",&ng_parse_uint64_type },\ 	{ "IPv6 skipped bytes",&ng_parse_uint64_type },\ 	{ "IPv6 skipped packets",&ng_parse_uint64_type },\ 	{ "Active expiries",&ng_parse_uint64_type },\ 	{ "Inactive expiries",&ng_parse_uint64_type },\ 	{ "IPv4 records used",&ng_parse_uint32_type },\ 	{ "IPv6 records used",&ng_parse_uint32_type },\ 	{ "Failed allocations",&ng_parse_uint32_type },\ 	{ "V5 failed exports",&ng_parse_uint32_type },\ 	{ "V9 failed exports",&ng_parse_uint32_type },\ 	{ "mbuf reallocations",&ng_parse_uint32_type },\ 	{ "fibs allocated",&ng_parse_uint32_type },\ 	{ "Inactive timeout",&ng_parse_uint32_type },\ 	{ "Active timeout",&ng_parse_uint32_type },\ 	{ NULL }						\ }
+end_define
 
 begin_comment
 comment|/* This structure is returned by the NGM_NETFLOW_IFINFO message */
@@ -948,17 +959,6 @@ comment|/* Parsing declarations */
 end_comment
 
 begin_comment
-comment|/* Parse the info structure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_NETFLOW_INFO_TYPE
-value|{					\ 	{ "IPv4 bytes",&ng_parse_uint64_type },\ 	{ "IPv4 packets",&ng_parse_uint32_type },\ 	{ "IPv6 bytes",&ng_parse_uint64_type },\ 	{ "IPv6 packets",&ng_parse_uint32_type },\ 	{ "IPv4 skipped bytes",&ng_parse_uint64_type },\ 	{ "IPv4 skipped packets",&ng_parse_uint32_type },\ 	{ "IPv6 skipped bytes",&ng_parse_uint64_type },\ 	{ "IPv6 skipped packets",&ng_parse_uint32_type },\ 	{ "IPv4 records used",&ng_parse_uint32_type },\ 	{ "IPv6 records used",&ng_parse_uint32_type },\ 	{ "Failed allocations",&ng_parse_uint32_type },\ 	{ "V5 failed exports",&ng_parse_uint32_type },\ 	{ "V9 failed exports",&ng_parse_uint32_type },\ 	{ "mbuf reallocations",&ng_parse_uint32_type },\ 	{ "fibs allocated",&ng_parse_uint32_type },\ 	{ "Active expiries",&ng_parse_uint32_type },\ 	{ "Inactive expiries",&ng_parse_uint32_type },\ 	{ "Inactive timeout",&ng_parse_uint32_type },\ 	{ "Active timeout",&ng_parse_uint32_type },\ 	{ NULL }						\ }
-end_define
-
-begin_comment
 comment|/* Parse the ifinfo structure */
 end_comment
 
@@ -1199,10 +1199,6 @@ name|export9
 decl_stmt|;
 comment|/* Netflow V9 export data goes there */
 name|struct
-name|ng_netflow_info
-name|info
-decl_stmt|;
-name|struct
 name|callout
 name|exp_callout
 decl_stmt|;
@@ -1243,6 +1239,75 @@ name|hash6
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* Statistics. */
+name|counter_u64_t
+name|nfinfo_bytes
+decl_stmt|;
+comment|/* accounted IPv4 bytes */
+name|counter_u64_t
+name|nfinfo_packets
+decl_stmt|;
+comment|/* accounted IPv4 packets */
+name|counter_u64_t
+name|nfinfo_bytes6
+decl_stmt|;
+comment|/* accounted IPv6 bytes */
+name|counter_u64_t
+name|nfinfo_packets6
+decl_stmt|;
+comment|/* accounted IPv6 packets */
+name|counter_u64_t
+name|nfinfo_sbytes
+decl_stmt|;
+comment|/* skipped IPv4 bytes */
+name|counter_u64_t
+name|nfinfo_spackets
+decl_stmt|;
+comment|/* skipped IPv4 packets */
+name|counter_u64_t
+name|nfinfo_sbytes6
+decl_stmt|;
+comment|/* skipped IPv6 bytes */
+name|counter_u64_t
+name|nfinfo_spackets6
+decl_stmt|;
+comment|/* skipped IPv6 packets */
+name|counter_u64_t
+name|nfinfo_act_exp
+decl_stmt|;
+comment|/* active expiries */
+name|counter_u64_t
+name|nfinfo_inact_exp
+decl_stmt|;
+comment|/* inactive expiries */
+name|uint32_t
+name|nfinfo_alloc_failed
+decl_stmt|;
+comment|/* failed allocations */
+name|uint32_t
+name|nfinfo_export_failed
+decl_stmt|;
+comment|/* failed exports */
+name|uint32_t
+name|nfinfo_export9_failed
+decl_stmt|;
+comment|/* failed exports */
+name|uint32_t
+name|nfinfo_realloc_mbuf
+decl_stmt|;
+comment|/* reallocated mbufs */
+name|uint32_t
+name|nfinfo_alloc_fibs
+decl_stmt|;
+comment|/* fibs allocated */
+name|uint32_t
+name|nfinfo_inact_t
+decl_stmt|;
+comment|/* flow inactive timeout */
+name|uint32_t
+name|nfinfo_act_t
+decl_stmt|;
+comment|/* flow active timeout */
 comment|/* Multiple FIB support */
 name|fib_export_p
 modifier|*
