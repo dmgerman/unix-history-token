@@ -88,6 +88,12 @@ name|features_for_read
 index|[]
 init|=
 block|{
+literal|"org.illumos:lz4_compress"
+block|,
+literal|"com.delphix:hole_birth"
+block|,
+literal|"com.delphix:extensible_dataset"
+block|,
 name|NULL
 block|}
 decl_stmt|;

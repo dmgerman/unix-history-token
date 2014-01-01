@@ -3538,7 +3538,7 @@ parameter_list|(
 name|buf
 parameter_list|)
 define|\
-value|((buf)->b_dva.dva_word[0] == 0&&			\ 	(buf)->b_dva.dva_word[1] == 0&&			\ 	(buf)->b_birth == 0)
+value|((buf)->b_dva.dva_word[0] == 0&&			\ 	(buf)->b_dva.dva_word[1] == 0&&			\ 	(buf)->b_cksum0 == 0)
 end_define
 
 begin_define
@@ -17215,6 +17215,24 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|BP_IS_HOLE
+argument_list|(
+name|zio
+operator|->
+name|io_bp
+argument_list|)
+condition|)
+block|{
+name|buf_discard_identity
+argument_list|(
+name|hdr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|hdr
 operator|->
 name|b_dva
@@ -17253,6 +17271,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

@@ -960,6 +960,10 @@ name|DMU_POOL_FEATURE_DESCRIPTIONS
 value|"feature_descriptions"
 define|#
 directive|define
+name|DMU_POOL_FEATURE_ENABLED_TXG
+value|"feature_enabled_txg"
+define|#
+directive|define
 name|DMU_POOL_ROOT_DATASET
 value|"root_dataset"
 define|#

@@ -65,12 +65,20 @@ name|SPA_FEATURE_MULTI_VDEV_CRASH_DUMP
 block|,
 name|SPA_FEATURE_SPACEMAP_HISTOGRAM
 block|,
+name|SPA_FEATURE_ENABLED_TXG
+block|,
+name|SPA_FEATURE_HOLE_BIRTH
+block|,
 name|SPA_FEATURE_EXTENSIBLE_DATASET
 block|,
 name|SPA_FEATURES
 block|}
 name|spa_feature_t
 typedef|;
+define|#
+directive|define
+name|SPA_FEATURE_DISABLED
+value|(-1ULL)
 typedef|typedef
 struct|struct
 name|zfeature_info
@@ -104,6 +112,10 @@ name|boolean_t
 name|fi_mos
 decl_stmt|;
 comment|/* Is the feature necessary to read the MOS? */
+comment|/* Activate this feature at the same time it is enabled */
+name|boolean_t
+name|fi_activate_on_enable
+decl_stmt|;
 comment|/* array of dependencies, terminated by SPA_FEATURE_NONE */
 specifier|const
 name|spa_feature_t
@@ -168,6 +180,17 @@ parameter_list|,
 name|spa_feature_t
 modifier|*
 name|res
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
+name|zfeature_depends_on
+parameter_list|(
+name|spa_feature_t
+name|fid
+parameter_list|,
+name|spa_feature_t
+name|check
 parameter_list|)
 function_decl|;
 specifier|extern

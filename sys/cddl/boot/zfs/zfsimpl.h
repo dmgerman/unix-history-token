@@ -573,7 +573,7 @@ parameter_list|(
 name|dva
 parameter_list|)
 define|\
-value|BF64_GET_SB((dva)->dva_word[0], 0, 24, SPA_MINBLOCKSHIFT, 0)
+value|BF64_GET_SB((dva)->dva_word[0], 0, SPA_ASIZEBITS, SPA_MINBLOCKSHIFT, 0)
 end_define
 
 begin_define
@@ -586,7 +586,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|BF64_SET_SB((dva)->dva_word[0], 0, 24, SPA_MINBLOCKSHIFT, 0, x)
+value|BF64_SET_SB((dva)->dva_word[0], 0, SPA_ASIZEBITS, \ 	SPA_MINBLOCKSHIFT, 0, x)
 end_define
 
 begin_define
@@ -687,7 +687,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(BP_IS_HOLE(bp) ? 0 : \ 	BF64_GET_SB((bp)->blk_prop, 0, 16, SPA_MINBLOCKSHIFT, 1))
+value|(BP_IS_HOLE(bp) ? 0 : \ 	BF64_GET_SB((bp)->blk_prop, 0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1))
 end_define
 
 begin_define
@@ -700,7 +700,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|BF64_SET_SB((bp)->blk_prop, 0, 16, SPA_MINBLOCKSHIFT, 1, x)
+value|BF64_SET_SB((bp)->blk_prop, 0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1, x)
 end_define
 
 begin_define
@@ -711,7 +711,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|BF64_GET_SB((bp)->blk_prop, 16, 16, SPA_MINBLOCKSHIFT, 1)
+value|BF64_GET_SB((bp)->blk_prop, 16, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1)
 end_define
 
 begin_define
@@ -724,7 +724,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|BF64_SET_SB((bp)->blk_prop, 16, 16, SPA_MINBLOCKSHIFT, 1, x)
+value|BF64_SET_SB((bp)->blk_prop, 16, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1, x)
 end_define
 
 begin_define
@@ -844,7 +844,7 @@ name|BP_GET_BYTEORDER
 parameter_list|(
 name|bp
 parameter_list|)
-value|(0 - BF64_GET((bp)->blk_prop, 63, 1))
+value|BF64_GET((bp)->blk_prop, 63, 1)
 end_define
 
 begin_define
@@ -901,17 +901,6 @@ name|bp
 parameter_list|)
 define|\
 value|(!!DVA_GET_ASIZE(&(bp)->blk_dva[0]) + \ 	!!DVA_GET_ASIZE(&(bp)->blk_dva[1]) + \ 	!!DVA_GET_ASIZE(&(bp)->blk_dva[2]))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BP_COUNT_GANG
-parameter_list|(
-name|bp
-parameter_list|)
-define|\
-value|(DVA_GET_GANG(&(bp)->blk_dva[0]) + \ 	DVA_GET_GANG(&(bp)->blk_dva[1]) + \ 	DVA_GET_GANG(&(bp)->blk_dva[2]))
 end_define
 
 begin_define
@@ -992,11 +981,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|DVA_IS_EMPTY
+parameter_list|(
+name|dva
+parameter_list|)
+value|((dva)->dva_word[0] == 0ULL&&  \ 	(dva)->dva_word[1] == 0ULL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BP_IS_HOLE
 parameter_list|(
 name|bp
 parameter_list|)
-value|((bp)->blk_birth == 0)
+value|DVA_IS_EMPTY(BP_IDENTITY(bp))
 end_define
 
 begin_define

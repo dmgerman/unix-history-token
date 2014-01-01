@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -203,8 +203,7 @@ name|len
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|((x) ^= BF32_ENCODE((x>> low) ^ (val), low, len))
+value|do { \ 	ASSERT3U(val,<, 1U<< (len)); \ 	ASSERT3U(low + len,<=, 32); \ 	(x) ^= BF32_ENCODE((x>> low) ^ (val), low, len); \ _NOTE(CONSTCOND) } while (0)
 define|#
 directive|define
 name|BF64_SET
@@ -217,8 +216,7 @@ name|len
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|((x) ^= BF64_ENCODE((x>> low) ^ (val), low, len))
+value|do { \ 	ASSERT3U(val,<, 1ULL<< (len)); \ 	ASSERT3U(low + len,<=, 64); \ 	((x) ^= BF64_ENCODE((x>> low) ^ (val), low, len)); \ _NOTE(CONSTCOND) } while (0)
 define|#
 directive|define
 name|BF32_GET_SB
@@ -267,8 +265,7 @@ name|bias
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|BF32_SET(x, low, len, ((val)>> (shift)) - (bias))
+value|do { \ 	ASSERT(IS_P2ALIGNED(val, 1U<< shift)); \ 	ASSERT3S((val)>> (shift),>=, bias); \ 	BF32_SET(x, low, len, ((val)>> (shift)) - (bias)); \ _NOTE(CONSTCOND) } while (0)
 define|#
 directive|define
 name|BF64_SET_SB
@@ -285,8 +282,7 @@ name|bias
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|BF64_SET(x, low, len, ((val)>> (shift)) - (bias))
+value|do { \ 	ASSERT(IS_P2ALIGNED(val, 1ULL<< shift)); \ 	ASSERT3S((val)>> (shift),>=, bias); \ 	BF64_SET(x, low, len, ((val)>> (shift)) - (bias)); \ _NOTE(CONSTCOND) } while (0)
 comment|/*  * We currently support nine block sizes, from 512 bytes to 128K.  * We could go higher, but the benefits are near-zero and the cost  * of COWing a giant block to modify one byte would become excessive.  */
 define|#
 directive|define
@@ -373,6 +369,7 @@ directive|define
 name|SPA_DVAS_PER_BP
 value|3
 comment|/* Number of DVAs in a bp	*/
+comment|/*  * A block is a hole when it has either 1) never been written to, or  * 2) is zero-filled. In both cases, ZFS can return all zeroes for all reads  * without physically allocating disk space. Holes are represented in the  * blkptr_t structure by zeroed blk_dva. Correct checking for holes is  * done through the BP_IS_HOLE macro. For holes, the logical size, level,  * DMU object type, and birth times are all also stored for holes that  * were written to at some point (i.e. were punched after having been filled).  */
 typedef|typedef
 struct|struct
 name|blkptr
@@ -422,7 +419,7 @@ parameter_list|(
 name|dva
 parameter_list|)
 define|\
-value|BF64_GET_SB((dva)->dva_word[0], 0, 24, SPA_MINBLOCKSHIFT, 0)
+value|BF64_GET_SB((dva)->dva_word[0], 0, SPA_ASIZEBITS, SPA_MINBLOCKSHIFT, 0)
 define|#
 directive|define
 name|DVA_SET_ASIZE
@@ -432,7 +429,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|BF64_SET_SB((dva)->dva_word[0], 0, 24, SPA_MINBLOCKSHIFT, 0, x)
+value|BF64_SET_SB((dva)->dva_word[0], 0, SPA_ASIZEBITS, \ 	SPA_MINBLOCKSHIFT, 0, x)
 define|#
 directive|define
 name|DVA_GET_GRID
@@ -506,7 +503,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|BF64_GET_SB((bp)->blk_prop, 0, 16, SPA_MINBLOCKSHIFT, 1)
+value|BF64_GET_SB((bp)->blk_prop, 0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1)
 define|#
 directive|define
 name|BP_SET_LSIZE
@@ -516,7 +513,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|BF64_SET_SB((bp)->blk_prop, 0, 16, SPA_MINBLOCKSHIFT, 1, x)
+value|BF64_SET_SB((bp)->blk_prop, 0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1, x)
 define|#
 directive|define
 name|BP_GET_PSIZE
@@ -524,7 +521,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|BF64_GET_SB((bp)->blk_prop, 16, 16, SPA_MINBLOCKSHIFT, 1)
+value|BF64_GET_SB((bp)->blk_prop, 16, SPA_PSIZEBITS, SPA_MINBLOCKSHIFT, 1)
 define|#
 directive|define
 name|BP_SET_PSIZE
@@ -534,7 +531,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|BF64_SET_SB((bp)->blk_prop, 16, 16, SPA_MINBLOCKSHIFT, 1, x)
+value|BF64_SET_SB((bp)->blk_prop, 16, SPA_PSIZEBITS, SPA_MINBLOCKSHIFT, 1, x)
 define|#
 directive|define
 name|BP_GET_COMPRESS
@@ -637,7 +634,7 @@ name|BP_GET_BYTEORDER
 parameter_list|(
 name|bp
 parameter_list|)
-value|(0 - BF64_GET((bp)->blk_prop, 63, 1))
+value|BF64_GET((bp)->blk_prop, 63, 1)
 define|#
 directive|define
 name|BP_SET_BYTEORDER
@@ -768,11 +765,18 @@ parameter_list|)
 value|DVA_GET_GANG(BP_IDENTITY(bp))
 define|#
 directive|define
+name|DVA_IS_EMPTY
+parameter_list|(
+name|dva
+parameter_list|)
+value|((dva)->dva_word[0] == 0ULL&&	\ 				(dva)->dva_word[1] == 0ULL)
+define|#
+directive|define
 name|BP_IS_HOLE
 parameter_list|(
 name|bp
 parameter_list|)
-value|((bp)->blk_birth == 0)
+value|DVA_IS_EMPTY(BP_IDENTITY(bp))
 comment|/* BP_IS_RAIDZ(bp) assumes no block compression */
 define|#
 directive|define
@@ -789,7 +793,6 @@ name|bp
 parameter_list|)
 define|\
 value|{						\ 	(bp)->blk_dva[0].dva_word[0] = 0;	\ 	(bp)->blk_dva[0].dva_word[1] = 0;	\ 	(bp)->blk_dva[1].dva_word[0] = 0;	\ 	(bp)->blk_dva[1].dva_word[1] = 0;	\ 	(bp)->blk_dva[2].dva_word[0] = 0;	\ 	(bp)->blk_dva[2].dva_word[1] = 0;	\ 	(bp)->blk_prop = 0;			\ 	(bp)->blk_pad[0] = 0;			\ 	(bp)->blk_pad[1] = 0;			\ 	(bp)->blk_phys_birth = 0;		\ 	(bp)->blk_birth = 0;			\ 	(bp)->blk_fill = 0;			\ 	ZIO_SET_CHECKSUM(&(bp)->blk_cksum, 0, 0, 0, 0);	\ }
-comment|/*  * Note: the byteorder is either 0 or -1, both of which are palindromes.  * This simplifies the endianness handling a bit.  */
 if|#
 directive|if
 name|BYTE_ORDER
@@ -804,7 +807,7 @@ directive|else
 define|#
 directive|define
 name|ZFS_HOST_BYTEORDER
-value|(-1ULL)
+value|(1ULL)
 endif|#
 directive|endif
 define|#
@@ -821,13 +824,15 @@ value|320
 comment|/*  * This macro allows code sharing between zfs, libzpool, and mdb.  * 'func' is either snprintf() or mdb_snprintf().  * 'ws' (whitespace) can be ' ' for single-line format, '\n' for multi-line.  */
 define|#
 directive|define
-name|SPRINTF_BLKPTR
+name|SNPRINTF_BLKPTR
 parameter_list|(
 name|func
 parameter_list|,
 name|ws
 parameter_list|,
 name|buf
+parameter_list|,
+name|size
 parameter_list|,
 name|bp
 parameter_list|,
@@ -838,7 +843,7 @@ parameter_list|,
 name|compress
 parameter_list|)
 define|\
-value|{									\ 	static const char *copyname[] =					\ 	    { "zero", "single", "double", "triple" };			\ 	int size = BP_SPRINTF_LEN;					\ 	int len = 0;							\ 	int copies = 0;							\ 									\ 	if (bp == NULL) {						\ 		len = func(buf + len, size - len, "<NULL>");		\ 	} else if (BP_IS_HOLE(bp)) {					\ 		len = func(buf + len, size - len, "<hole>");		\ 	} else {							\ 		for (int d = 0; d< BP_GET_NDVAS(bp); d++) {		\ 			const dva_t *dva =&bp->blk_dva[d];		\ 			if (DVA_IS_VALID(dva))				\ 				copies++;				\ 			len += func(buf + len, size - len,		\ 			    "DVA[%d]=<%llu:%llx:%llx>%c", d,		\ 			    (u_longlong_t)DVA_GET_VDEV(dva),		\ 			    (u_longlong_t)DVA_GET_OFFSET(dva),		\ 			    (u_longlong_t)DVA_GET_ASIZE(dva),		\ 			    ws);					\ 		}							\ 		if (BP_IS_GANG(bp)&&					\ 		    DVA_GET_ASIZE(&bp->blk_dva[2])<=			\ 		    DVA_GET_ASIZE(&bp->blk_dva[1]) / 2)			\ 			copies--;					\ 		len += func(buf + len, size - len,			\ 		    "[L%llu %s] %s %s %s %s %s %s%c"			\ 		    "size=%llxL/%llxP birth=%lluL/%lluP fill=%llu%c"	\ 		    "cksum=%llx:%llx:%llx:%llx",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    checksum,						\ 		    compress,						\ 		    BP_GET_BYTEORDER(bp) == 0 ? "BE" : "LE",		\ 		    BP_IS_GANG(bp) ? "gang" : "contiguous",		\ 		    BP_GET_DEDUP(bp) ? "dedup" : "unique",		\ 		    copyname[copies],					\ 		    ws,							\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)BP_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth,			\ 		    (u_longlong_t)BP_PHYSICAL_BIRTH(bp),		\ 		    (u_longlong_t)bp->blk_fill,				\ 		    ws,							\ 		    (u_longlong_t)bp->blk_cksum.zc_word[0],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[1],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[2],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[3]);		\ 	}								\ 	ASSERT(len< size);						\ }
+value|{									\ 	static const char *copyname[] =					\ 	    { "zero", "single", "double", "triple" };			\ 	int len = 0;							\ 	int copies = 0;							\ 									\ 	if (bp == NULL) {						\ 		len += func(buf + len, size - len, "<NULL>");		\ 	} else if (BP_IS_HOLE(bp)) {					\ 		len += func(buf + len, size - len, "<hole>");		\ 		if (bp->blk_birth> 0) {				\ 			len += func(buf + len, size - len,		\ 			    " birth=%lluL",				\ 			    (u_longlong_t)bp->blk_birth);		\ 		}							\ 	} else {							\ 		for (int d = 0; d< BP_GET_NDVAS(bp); d++) {		\ 			const dva_t *dva =&bp->blk_dva[d];		\ 			if (DVA_IS_VALID(dva))				\ 				copies++;				\ 			len += func(buf + len, size - len,		\ 			    "DVA[%d]=<%llu:%llx:%llx>%c", d,		\ 			    (u_longlong_t)DVA_GET_VDEV(dva),		\ 			    (u_longlong_t)DVA_GET_OFFSET(dva),		\ 			    (u_longlong_t)DVA_GET_ASIZE(dva),		\ 			    ws);					\ 		}							\ 		if (BP_IS_GANG(bp)&&					\ 		    DVA_GET_ASIZE(&bp->blk_dva[2])<=			\ 		    DVA_GET_ASIZE(&bp->blk_dva[1]) / 2)			\ 			copies--;					\ 		len += func(buf + len, size - len,			\ 		    "[L%llu %s] %s %s %s %s %s %s%c"			\ 		    "size=%llxL/%llxP birth=%lluL/%lluP fill=%llu%c"	\ 		    "cksum=%llx:%llx:%llx:%llx",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    checksum,						\ 		    compress,						\ 		    BP_GET_BYTEORDER(bp) == 0 ? "BE" : "LE",		\ 		    BP_IS_GANG(bp) ? "gang" : "contiguous",		\ 		    BP_GET_DEDUP(bp) ? "dedup" : "unique",		\ 		    copyname[copies],					\ 		    ws,							\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)BP_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth,			\ 		    (u_longlong_t)BP_PHYSICAL_BIRTH(bp),		\ 		    (u_longlong_t)bp->blk_fill,				\ 		    ws,							\ 		    (u_longlong_t)bp->blk_cksum.zc_word[0],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[1],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[2],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[3]);		\ 	}								\ 	ASSERT(len< size);						\ }
 include|#
 directive|include
 file|<sys/dmu.h>
@@ -2215,6 +2220,10 @@ specifier|const
 name|char
 modifier|*
 name|feature
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -2306,11 +2315,14 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|sprintf_blkptr
+name|snprintf_blkptr
 parameter_list|(
 name|char
 modifier|*
 name|buf
+parameter_list|,
+name|size_t
+name|buflen
 parameter_list|,
 specifier|const
 name|blkptr_t
@@ -2923,7 +2935,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) { 			\ 	char *__blkbuf = kmem_alloc(BP_SPRINTF_LEN, KM_SLEEP);	\ 	sprintf_blkptr(__blkbuf, (bp));				\ 	dprintf(fmt " %s\n", __VA_ARGS__, __blkbuf);		\ 	kmem_free(__blkbuf, BP_SPRINTF_LEN);			\ 	} \ _NOTE(CONSTCOND) } while (0)
+value|do {				\ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) {			\ 	char *__blkbuf = kmem_alloc(BP_SPRINTF_LEN, KM_SLEEP);	\ 	snprintf_blkptr(__blkbuf, BP_SPRINTF_LEN, (bp));	\ 	dprintf(fmt " %s\n", __VA_ARGS__, __blkbuf);		\ 	kmem_free(__blkbuf, BP_SPRINTF_LEN);			\ 	} \ _NOTE(CONSTCOND) } while (0)
 else|#
 directive|else
 define|#
