@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1379,8 +1379,10 @@ argument_list|,
 name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 argument_list|,
-literal|"filesystem | volume | snapshot"
+literal|"filesystem | volume | snapshot | bookmark"
 argument_list|,
 literal|"TYPE"
 argument_list|)
@@ -1788,6 +1790,8 @@ argument_list|,
 name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 argument_list|,
 literal|"CREATETXG"
 argument_list|)
@@ -1818,6 +1822,8 @@ argument_list|,
 name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 argument_list|,
 literal|"NAME"
 argument_list|)
@@ -1863,6 +1869,8 @@ argument_list|,
 name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 argument_list|,
 literal|"GUID"
 argument_list|)
@@ -1943,6 +1951,8 @@ argument_list|,
 name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 argument_list|,
 literal|"<date>"
 argument_list|,
