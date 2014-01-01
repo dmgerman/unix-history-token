@@ -10445,7 +10445,7 @@ argument_list|,
 name|attrbitp
 argument_list|)
 expr_stmt|;
-comment|/* If p and cred are NULL, it is a client side call */
+comment|/* 	 * If both p and cred are NULL, it is a client side setattr call. 	 * If both p and cred are not NULL, it is a server side reply call. 	 * If p is not NULL and cred is NULL, it is a client side callback 	 * reply call. 	 */
 if|if
 condition|(
 name|p
