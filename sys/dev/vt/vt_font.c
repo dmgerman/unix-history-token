@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|VTFONT_MAXGLYPHSIZE
-value|262144
+value|1048576
 end_define
 
 begin_define
