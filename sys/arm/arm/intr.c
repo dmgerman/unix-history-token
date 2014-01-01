@@ -148,6 +148,29 @@ name|NULL
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|arm_config_irq
+function_decl|)
+parameter_list|(
+name|int
+name|irq
+parameter_list|,
+name|enum
+name|intr_trigger
+name|trig
+parameter_list|,
+name|enum
+name|intr_polarity
+name|pol
+parameter_list|)
+init|=
+name|NULL
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Pre-format intrnames into an array of fixed-size strings containing spaces.  * This allows us to avoid the need for an intermediate table of indices into  * the names and counts arrays, while still meeting the requirements and  * assumptions of vmstat(8) and the kdb "show intrcnt" command, the two  * consumers of this data.  */
 end_comment
