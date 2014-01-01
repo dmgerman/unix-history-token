@@ -441,6 +441,17 @@ begin_comment
 comment|/* Don't flush attrcache on open */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFSMNT_NONCONTIGWR
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Enable non-contiguous writes */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
