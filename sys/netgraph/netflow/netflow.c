@@ -1299,6 +1299,9 @@ operator|->
 name|zone
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|i
 operator|->
 name|nfinfo_used6
@@ -1310,6 +1313,8 @@ operator|->
 name|zone6
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|i
 operator|->
 name|nfinfo_alloc_failed
