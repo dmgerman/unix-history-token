@@ -700,6 +700,9 @@ operator|->
 name|fi_feature
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|atomic_swap_64
 name|VERIFY3U
 argument_list|(
 operator|*
@@ -715,6 +718,15 @@ name|refcount
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|*
+name|refcount_cache
+operator|=
+name|refcount
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
