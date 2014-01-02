@@ -20372,18 +20372,6 @@ name|target_sprt
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__arm__
-comment|/* 		 * Do not use unmapped buffers on ARM. Doing so will cause 		 * failure inside bus_dmamap_sync due to lack of VA. 		 */
-name|cpi
-operator|->
-name|hba_misc
-operator|=
-name|PIM_SEQSCAN
-expr_stmt|;
-else|#
-directive|else
 name|cpi
 operator|->
 name|hba_misc
@@ -20392,8 +20380,6 @@ name|PIM_SEQSCAN
 operator||
 name|PIM_UNMAPPED
 expr_stmt|;
-endif|#
-directive|endif
 name|cpi
 operator|->
 name|hba_eng_cnt
