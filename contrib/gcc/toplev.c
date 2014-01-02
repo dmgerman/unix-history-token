@@ -7215,10 +7215,6 @@ expr_stmt|;
 name|init_expr_once
 argument_list|()
 expr_stmt|;
-comment|/* Although the actions of init_set_costs are language-independent,      it uses optabs, so we cannot call it from backend_init.  */
-name|init_set_costs
-argument_list|()
-expr_stmt|;
 name|expand_dummy_function_end
 argument_list|()
 expr_stmt|;

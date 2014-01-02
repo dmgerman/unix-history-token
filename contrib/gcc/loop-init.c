@@ -115,6 +115,25 @@ decl_stmt|;
 name|edge_iterator
 name|ei
 decl_stmt|;
+specifier|static
+name|bool
+name|first_time
+init|=
+name|true
+decl_stmt|;
+if|if
+condition|(
+name|first_time
+condition|)
+block|{
+name|first_time
+operator|=
+name|false
+expr_stmt|;
+name|init_set_costs
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* Avoid annoying special cases of edges going to exit      block.  */
 for|for
 control|(

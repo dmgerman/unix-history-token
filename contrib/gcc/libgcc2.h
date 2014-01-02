@@ -482,10 +482,6 @@ begin_comment
 comment|/* FIXME: This #ifdef probably should be removed, ie. enable the test    for mips too.  */
 end_comment
 
-begin_comment
-comment|/* Don't use IBM Extended Double TFmode for TI->SF calculations.    The conversion from long double to float suffers from double    rounding, because we convert via double.  In other cases, going    through the software fp routines is much slower than the fallback.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -495,30 +491,11 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|AVOID_FP_TYPE_CONVERSION
+name|IS_IBM_EXTENDED
 parameter_list|(
 name|SIZE
 parameter_list|)
 value|(SIZE == 106)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|WIDEST_HARDWARE_FP_SIZE
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|AVOID_FP_TYPE_CONVERSION
-parameter_list|(
-name|SIZE
-parameter_list|)
-value|(SIZE> WIDEST_HARDWARE_FP_SIZE)
 end_define
 
 begin_else
@@ -529,7 +506,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|AVOID_FP_TYPE_CONVERSION
+name|IS_IBM_EXTENDED
 parameter_list|(
 name|SIZE
 parameter_list|)
