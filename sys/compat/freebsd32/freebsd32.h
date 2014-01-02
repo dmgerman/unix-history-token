@@ -1096,6 +1096,12 @@ index|[
 name|KI_NSPARE_INT
 index|]
 decl_stmt|;
+name|int
+name|ki_flag2
+decl_stmt|;
+name|int
+name|ki_fibnum
+decl_stmt|;
 name|u_int
 name|ki_cr_flags
 decl_stmt|;
