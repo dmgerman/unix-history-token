@@ -773,6 +773,37 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+specifier|static
+specifier|const
+name|spa_feature_t
+name|bookmarks_deps
+index|[]
+init|=
+block|{
+name|SPA_FEATURE_EXTENSIBLE_DATASET
+block|,
+name|SPA_FEATURE_NONE
+block|}
+decl_stmt|;
+name|zfeature_register
+argument_list|(
+name|SPA_FEATURE_BOOKMARKS
+argument_list|,
+literal|"com.delphix:bookmarks"
+argument_list|,
+literal|"bookmarks"
+argument_list|,
+literal|"\"zfs bookmark\" command"
+argument_list|,
+name|B_TRUE
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|bookmarks_deps
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

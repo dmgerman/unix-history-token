@@ -1550,7 +1550,7 @@ name|search
 operator|.
 name|spa_name
 argument_list|,
-literal|"/@"
+literal|"/@#"
 argument_list|)
 expr_stmt|;
 if|if

@@ -71,6 +71,8 @@ name|SPA_FEATURE_HOLE_BIRTH
 block|,
 name|SPA_FEATURE_EXTENSIBLE_DATASET
 block|,
+name|SPA_FEATURE_BOOKMARKS
+block|,
 name|SPA_FEATURES
 block|}
 name|spa_feature_t
