@@ -717,7 +717,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable draft-ietf-tcpm-initcwnd-05 (Increasing initial CWND to 10)"
+literal|"Enable RFC 6928 (Increasing initial CWND to 10)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1902,7 +1902,7 @@ name|tcps_usedssthresh
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * Draft-ietf-tcpm-initcwnd-05 increases it to ten segments. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
+comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * RFC6928 increases it to ten segments. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
 if|if
 condition|(
 name|tp
