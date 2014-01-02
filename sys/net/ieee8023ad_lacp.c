@@ -4988,6 +4988,10 @@ operator|->
 name|m_pkthdr
 operator|.
 name|flowid
+operator|>>
+name|sc
+operator|->
+name|flowid_shift
 expr_stmt|;
 else|else
 name|hash
