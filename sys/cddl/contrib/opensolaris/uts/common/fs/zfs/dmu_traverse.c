@@ -1927,10 +1927,6 @@ name|err
 operator|==
 literal|0
 operator|&&
-name|lasterr
-operator|==
-literal|0
-operator|&&
 operator|(
 name|td
 operator|->

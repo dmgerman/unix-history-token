@@ -7036,6 +7036,15 @@ block|{
 name|uint64_t
 name|elapsed_nanosecs
 decl_stmt|;
+if|if
+condition|(
+name|zfs_recover
+condition|)
+return|return
+operator|(
+name|B_FALSE
+operator|)
+return|;
 name|elapsed_nanosecs
 operator|=
 name|gethrtime

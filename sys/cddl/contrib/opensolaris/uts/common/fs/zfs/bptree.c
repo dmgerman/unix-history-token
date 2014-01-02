@@ -793,6 +793,13 @@ block|{
 name|bptree_entry_phys_t
 name|bte
 decl_stmt|;
+name|int
+name|flags
+init|=
+name|TRAVERSE_PREFETCH_METADATA
+operator||
+name|TRAVERSE_POST
+decl_stmt|;
 name|ASSERT
 argument_list|(
 operator|!
@@ -840,6 +847,14 @@ operator|!=
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|zfs_recover
+condition|)
+name|flags
+operator||=
+name|TRAVERSE_HARD
+expr_stmt|;
 name|err
 operator|=
 name|traverse_dataset_destroyed
@@ -862,9 +877,7 @@ name|bte
 operator|.
 name|be_zb
 argument_list|,
-name|TRAVERSE_PREFETCH_METADATA
-operator||
-name|TRAVERSE_POST
+name|flags
 argument_list|,
 name|bptree_visit_cb
 argument_list|,
@@ -877,22 +890,11 @@ condition|(
 name|free
 condition|)
 block|{
-name|ASSERT
-argument_list|(
-name|err
-operator|==
-literal|0
-operator|||
-name|err
-operator|==
-name|ERESTART
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|err
-operator|!=
-literal|0
+operator|==
+name|ERESTART
 condition|)
 block|{
 comment|/* save bookmark for future resume */
@@ -944,8 +946,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-else|else
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
 block|{
+comment|/* 				 * We can not properly handle an i/o 				 * error, because the traversal code 				 * does not know how to resume from an 				 * arbitrary bookmark. 				 */
+name|zfs_panic_recover
+argument_list|(
+literal|"error %u from "
+literal|"traverse_dataset_destroyed()"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+block|}
 name|ba
 operator|.
 name|ba_phys
@@ -977,7 +994,6 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|ASSERT
