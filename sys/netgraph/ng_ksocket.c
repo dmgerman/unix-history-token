@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netatalk/at.h>
 end_include
 
@@ -4640,13 +4646,7 @@ name|ng_mesg
 modifier|*
 name|response
 decl_stmt|;
-name|struct
-name|uio
-name|auio
-decl_stmt|;
 name|int
-name|flags
-decl_stmt|,
 name|error
 decl_stmt|;
 name|KASSERT
@@ -4854,42 +4854,50 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* Read and forward available mbuf's */
-name|auio
-operator|.
-name|uio_td
-operator|=
-name|NULL
-expr_stmt|;
-name|auio
-operator|.
-name|uio_resid
-operator|=
-name|MJUMPAGESIZE
-expr_stmt|;
-comment|/* XXXGL: sane limit? */
-name|flags
-operator|=
-name|MSG_DONTWAIT
-expr_stmt|;
+comment|/* Read and forward available mbufs. */
 while|while
 condition|(
 literal|1
 condition|)
 block|{
 name|struct
+name|uio
+name|uio
+decl_stmt|;
+name|struct
 name|sockaddr
 modifier|*
 name|sa
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-comment|/* Try to get next packet from socket */
+name|int
+name|flags
+decl_stmt|;
+comment|/* Try to get next packet from socket. */
+name|uio
+operator|.
+name|uio_td
+operator|=
+name|NULL
+expr_stmt|;
+name|uio
+operator|.
+name|uio_resid
+operator|=
+name|IP_MAXPACKET
+expr_stmt|;
+name|flags
+operator|=
+name|MSG_DONTWAIT
+expr_stmt|;
+name|sa
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4913,7 +4921,7 @@ operator|&
 name|sa
 argument_list|,
 operator|&
-name|auio
+name|uio
 argument_list|,
 operator|&
 name|m
@@ -4928,7 +4936,24 @@ operator|!=
 literal|0
 condition|)
 break|break;
-comment|/* See if we got anything */
+comment|/* See if we got anything. */
+if|if
+condition|(
+name|flags
+operator|&
+name|MSG_TRUNC
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|m
