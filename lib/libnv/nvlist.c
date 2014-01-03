@@ -419,6 +419,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|nvlist_remove_nvpair
 argument_list|(
 name|nvl
@@ -426,6 +427,12 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+name|nvpair_free
+argument_list|(
+name|nvp
+argument_list|)
+expr_stmt|;
+block|}
 name|nvl
 operator|->
 name|nvl_magic
