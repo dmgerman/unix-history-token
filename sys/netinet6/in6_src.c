@@ -2542,10 +2542,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|&
 name|sin6_next
-operator|->
-name|sin6_addr
 argument_list|)
 expr_stmt|;
 name|IF_AFDATA_RUNLOCK
