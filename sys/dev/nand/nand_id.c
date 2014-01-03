@@ -49,7 +49,7 @@ block|,
 literal|0x75
 block|}
 block|,
-literal|"Samsung K9F5608U0B"
+literal|"Samsung K9F5608U0B NAND 32MiB 1-bit"
 block|,
 literal|0x20
 block|,
@@ -109,7 +109,7 @@ block|,
 literal|0xda
 block|}
 block|,
-literal|"Samsung NAND 256MiB 3,3V 8-bit"
+literal|"Samsung K9F2G08U0A NAND 256MiB 3,3V 8-bit"
 block|,
 literal|0x100
 block|,
@@ -129,7 +129,7 @@ block|,
 literal|0xf1
 block|}
 block|,
-literal|"Samsung NAND 128MiB 3,3V 8-bit"
+literal|"Samsung K9F1G08U0A NAND 128MiB 3,3V 8-bit"
 block|,
 literal|0x80
 block|,
@@ -189,7 +189,7 @@ block|,
 literal|0x79
 block|}
 block|,
-literal|"NAND 128MB 3,3V 8-bit"
+literal|"Hynix NAND 128MB 3,3V 8-bit"
 block|,
 literal|0x80
 block|,
