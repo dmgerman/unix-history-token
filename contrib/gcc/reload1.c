@@ -25659,8 +25659,7 @@ name|j
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If this is now RELOAD_OTHER, look for any reloads that load 	     parts of this operand and set them to RELOAD_FOR_OTHER_ADDRESS 	     if they were for inputs, RELOAD_OTHER for outputs.  Note that 	     this test is equivalent to looking for reloads for this operand 	     number.  */
-comment|/* We must take special care with RELOAD_FOR_OUTPUT_ADDRESS; it may 	     share registers with a RELOAD_FOR_INPUT, so we can not change it 	     to RELOAD_FOR_OTHER_ADDRESS.  We should never need to, since we 	     do not modify RELOAD_FOR_OUTPUT.  */
+comment|/* If this is now RELOAD_OTHER, look for any reloads that 	     load parts of this operand and set them to 	     RELOAD_FOR_OTHER_ADDRESS if they were for inputs, 	     RELOAD_OTHER for outputs.  Note that this test is 	     equivalent to looking for reloads for this operand 	     number.  	     We must take special care with RELOAD_FOR_OUTPUT_ADDRESS; 	     it may share registers with a RELOAD_FOR_INPUT, so we can 	     not change it to RELOAD_FOR_OTHER_ADDRESS.  We should 	     never need to, since we do not modify RELOAD_FOR_OUTPUT.  	     It is possible that the RELOAD_FOR_OPERAND_ADDRESS 	     instruction is assigned the same register as the earlier 	     RELOAD_FOR_OTHER_ADDRESS instruction.  Merging these two 	     instructions will cause the RELOAD_FOR_OTHER_ADDRESS 	     instruction to be deleted later on.  */
 if|if
 condition|(
 name|rld
@@ -25722,6 +25721,15 @@ operator|.
 name|when_needed
 operator|!=
 name|RELOAD_FOR_OUTPUT_ADDRESS
+operator|&&
+name|rld
+index|[
+name|j
+index|]
+operator|.
+name|when_needed
+operator|!=
+name|RELOAD_FOR_OPERAND_ADDRESS
 operator|&&
 operator|(
 operator|!
