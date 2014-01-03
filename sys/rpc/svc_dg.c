@@ -205,6 +205,9 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -977,6 +980,10 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|uint32_t
+modifier|*
+name|seq
 parameter_list|)
 block|{
 name|XDR

@@ -205,6 +205,21 @@ name|__rpc_svcxprt
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* get transport acknowledge sequence */
+name|bool_t
+function_decl|(
+modifier|*
+name|xp_ack
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_svcxprt
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* send reply */
 name|bool_t
 function_decl|(
@@ -226,6 +241,9 @@ modifier|*
 parameter_list|,
 name|struct
 name|mbuf
+modifier|*
+parameter_list|,
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -531,6 +549,15 @@ name|int
 name|xp_upcallset
 decl_stmt|;
 comment|/* socket upcall is set up */
+name|uint32_t
+name|xp_snd_cnt
+decl_stmt|;
+comment|/* # of bytes sent to socket */
+name|struct
+name|sx
+name|xp_snd_lock
+decl_stmt|;
+comment|/* protects xp_snd_cnt& sb_cc */
 else|#
 directive|else
 name|int
@@ -804,6 +831,44 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * The services connection loss list  * The dispatch routine takes request structs and runs the  * apropriate procedure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|svc_loss_callout
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|svc_loss_callout
+argument_list|)
+name|slc_link
+expr_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|slc_dispatch
+function_decl|)
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|svc_loss_callout_list
+argument_list|,
+name|svc_loss_callout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|__rpc_svcthread
@@ -900,6 +965,10 @@ name|uint64_t
 name|rq_p3
 decl_stmt|;
 comment|/* application workspace */
+name|uint32_t
+name|rq_reply_seq
+decl_stmt|;
+comment|/* reply socket sequence # */
 name|char
 name|rq_credarea
 index|[
@@ -1120,6 +1189,11 @@ name|sp_callouts
 decl_stmt|;
 comment|/* (prog,vers)->dispatch list */
 name|struct
+name|svc_loss_callout_list
+name|sp_lcallouts
+decl_stmt|;
+comment|/* loss->dispatch list */
+name|struct
 name|svcthread_list
 name|sp_threads
 decl_stmt|;
@@ -1322,6 +1396,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|SVC_ACK
+parameter_list|(
+name|xprt
+parameter_list|,
+name|ack
+parameter_list|)
+define|\
+value|((xprt)->xp_ops->xp_stat == NULL ? FALSE :	\ 	    ((ack) == NULL ? TRUE : (*(xprt)->xp_ops->xp_ack)((xprt), (ack))))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SVC_REPLY
 parameter_list|(
 name|xprt
@@ -1331,9 +1418,11 @@ parameter_list|,
 name|addr
 parameter_list|,
 name|m
+parameter_list|,
+name|seq
 parameter_list|)
 define|\
-value|(*(xprt)->xp_ops->xp_reply) ((xprt), (msg), (addr), (m))
+value|(*(xprt)->xp_ops->xp_reply) ((xprt), (msg), (addr), (m), (seq))
 end_define
 
 begin_define
@@ -1742,6 +1831,52 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|__END_DECLS
+comment|/*  * Service connection loss registration  *  * svc_loss_reg(xprt, dispatch)  *	const SVCXPRT *xprt;  *	const void (*dispatch)();  */
+name|__BEGIN_DECLS
+specifier|extern
+name|bool_t
+name|svc_loss_reg
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__END_DECLS
+comment|/*  * Service connection loss un-registration  *  * svc_loss_unreg(xprt, dispatch)  *	const SVCXPRT *xprt;  *	const void (*dispatch)();  */
+name|__BEGIN_DECLS
+specifier|extern
+name|void
+name|svc_loss_unreg
+parameter_list|(
+name|SVCPOOL
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|__END_DECLS
