@@ -235,6 +235,17 @@ begin_comment
 comment|/* nanoseconds per clock tick */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|hz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* clock ticks per second */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -246,10 +257,18 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|gethrtime
+operator|(
+operator|(
+name|getsbinuptime
 argument_list|()
-operator|/
-name|nsec_per_tick
+operator|>>
+literal|16
+operator|)
+operator|*
+name|hz
+operator|)
+operator|>>
+literal|16
 operator|)
 return|;
 block|}
