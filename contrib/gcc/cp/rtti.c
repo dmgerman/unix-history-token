@@ -840,8 +840,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|VOID_TYPE_P
+name|CLASS_TYPE_P
 argument_list|(
 name|type
 argument_list|)
@@ -1566,8 +1565,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|VOID_TYPE_P
+name|CLASS_TYPE_P
 argument_list|(
 name|type
 argument_list|)
