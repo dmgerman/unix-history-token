@@ -646,6 +646,19 @@ block|,
 block|{
 name|NULL
 block|,
+literal|"6 Bucket"
+block|,
+name|BUCKET_SIZE
+argument_list|(
+literal|6
+argument_list|)
+block|,
+literal|3072
+block|}
+block|,
+block|{
+name|NULL
+block|,
 literal|"8 Bucket"
 block|,
 name|BUCKET_SIZE
@@ -654,6 +667,19 @@ literal|8
 argument_list|)
 block|,
 literal|2048
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|"12 Bucket"
+block|,
+name|BUCKET_SIZE
+argument_list|(
+literal|12
+argument_list|)
+block|,
+literal|1536
 block|}
 block|,
 block|{
