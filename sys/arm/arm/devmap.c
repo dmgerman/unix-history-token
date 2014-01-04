@@ -670,7 +670,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map a set of physical memory pages into the kernel virtual address space.  * Return a pointer to where it is mapped. This routine is intended to be used  * for mapping device memory, NOT real memory.  */
+comment|/*  * Map a set of physical memory pages into the kernel virtual address space.  * Return a pointer to where it is mapped.  *  * This uses a pre-established static mapping if one exists for the requested  * range, otherwise it allocates kva space and maps the physical pages into it.  *  * This routine is intended to be used for mapping device memory, NOT real  * memory; the mapping type is inherently PTE_DEVICE in pmap_kenter_device().  */
 end_comment
 
 begin_function
@@ -692,6 +692,31 @@ name|tmpva
 decl_stmt|,
 name|offset
 decl_stmt|;
+name|void
+modifier|*
+name|rva
+decl_stmt|;
+comment|/* First look in the static mapping table. */
+if|if
+condition|(
+operator|(
+name|rva
+operator|=
+name|arm_devmap_ptov
+argument_list|(
+name|pa
+argument_list|,
+name|size
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|rva
+operator|)
+return|;
 name|offset
 operator|=
 name|pa
@@ -801,9 +826,28 @@ name|offset
 decl_stmt|;
 name|vm_size_t
 name|origsize
-init|=
-name|size
 decl_stmt|;
+comment|/* Nothing to do if we find the mapping in the static table. */
+if|if
+condition|(
+name|arm_devmap_vtop
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|va
+argument_list|,
+name|size
+argument_list|)
+operator|!=
+name|DEVMAP_PADDR_NOTFOUND
+condition|)
+return|return;
+name|origsize
+operator|=
+name|size
+expr_stmt|;
 name|offset
 operator|=
 name|va
