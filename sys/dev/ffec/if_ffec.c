@@ -209,6 +209,8 @@ block|,
 name|FECTYPE_IMX53
 block|,
 name|FECTYPE_IMX6
+block|,
+name|FECTYPE_MVF
 block|, }
 enum|;
 end_enum
@@ -266,13 +268,13 @@ block|,
 block|{
 literal|"fsl,mvf600-fec"
 block|,
-name|FECTYPE_GENERIC
+name|FECTYPE_MVF
 block|}
 block|,
 block|{
-literal|"fsl,vf-fec"
+literal|"fsl,mvf-fec"
 block|,
-name|FECTYPE_GENERIC
+name|FECTYPE_MVF
 block|}
 block|,
 block|{
@@ -6699,6 +6701,16 @@ name|MII_PHY_ANY
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
+operator|(
+name|sc
+operator|->
+name|fectype
+operator|&
+name|FECTYPE_MVF
+operator|)
+condition|?
+name|MIIF_FORCEANEG
+else|:
 literal|0
 argument_list|)
 expr_stmt|;
