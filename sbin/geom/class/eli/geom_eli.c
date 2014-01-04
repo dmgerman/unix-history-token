@@ -4092,6 +4092,12 @@ name|secsize
 operator|)
 operator|!=
 literal|0
+operator|||
+operator|!
+name|powerof2
+argument_list|(
+name|val
+argument_list|)
 condition|)
 block|{
 name|gctl_error
