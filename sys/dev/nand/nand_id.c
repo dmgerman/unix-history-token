@@ -49,7 +49,7 @@ block|,
 literal|0x75
 block|}
 block|,
-literal|"Samsung K9F5608U0B NAND 32MiB 1-bit"
+literal|"Samsung K9F5608U0B NAND 32MiB 8-bit"
 block|,
 literal|0x20
 block|,
@@ -66,32 +66,12 @@ block|{
 block|{
 name|NAND_MAN_SAMSUNG
 block|,
-literal|0xd3
+literal|0xf1
 block|}
 block|,
-literal|"Samsung NAND 1GiB 3,3V 8-bit"
+literal|"Samsung K9F1G08U0A NAND 128MiB 3,3V 8-bit"
 block|,
-literal|0x400
-block|,
-literal|0x800
-block|,
-literal|0x40
-block|,
-literal|0x40
-block|,
-literal|0
-block|}
-block|,
-block|{
-block|{
-name|NAND_MAN_SAMSUNG
-block|,
-literal|0xdc
-block|}
-block|,
-literal|"Samsung NAND 512MiB 3,3V 8-bit"
-block|,
-literal|0x200
+literal|0x80
 block|,
 literal|0x800
 block|,
@@ -126,12 +106,32 @@ block|{
 block|{
 name|NAND_MAN_SAMSUNG
 block|,
-literal|0xf1
+literal|0xdc
 block|}
 block|,
-literal|"Samsung K9F1G08U0A NAND 128MiB 3,3V 8-bit"
+literal|"Samsung NAND 512MiB 3,3V 8-bit"
 block|,
-literal|0x80
+literal|0x200
+block|,
+literal|0x800
+block|,
+literal|0x40
+block|,
+literal|0x40
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|NAND_MAN_SAMSUNG
+block|,
+literal|0xd3
+block|}
+block|,
+literal|"Samsung NAND 1GiB 3,3V 8-bit"
+block|,
+literal|0x400
 block|,
 literal|0x800
 block|,
