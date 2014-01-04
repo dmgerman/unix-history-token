@@ -747,7 +747,11 @@ comment|/* Total number of alloc sleeps */
 name|uint16_t
 name|uz_count
 decl_stmt|;
-comment|/* Highest amount of items in bucket */
+comment|/* Amount of items in full bucket */
+name|uint16_t
+name|uz_count_min
+decl_stmt|;
+comment|/* Minimal amount of items there */
 comment|/* The next three fields are used to print a rate-limited warnings. */
 specifier|const
 name|char

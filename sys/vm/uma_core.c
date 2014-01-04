@@ -2954,6 +2954,22 @@ name|zone
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Shrink further bucket sizes.  Price of single zone lock collision 	 * is probably lower then price of global cache drain. 	 */
+if|if
+condition|(
+name|zone
+operator|->
+name|uz_count
+operator|>
+name|zone
+operator|->
+name|uz_count_min
+condition|)
+name|zone
+operator|->
+name|uz_count
+operator|--
+expr_stmt|;
 block|}
 end_function
 
@@ -6148,6 +6164,12 @@ literal|0
 expr_stmt|;
 name|zone
 operator|->
+name|uz_count_min
+operator|=
+literal|0
+expr_stmt|;
+name|zone
+operator|->
 name|uz_flags
 operator|=
 literal|0
@@ -6648,6 +6670,14 @@ operator|->
 name|uz_count
 operator|=
 name|BUCKET_MAX
+expr_stmt|;
+name|zone
+operator|->
+name|uz_count_min
+operator|=
+name|zone
+operator|->
+name|uz_count
 expr_stmt|;
 return|return
 operator|(
