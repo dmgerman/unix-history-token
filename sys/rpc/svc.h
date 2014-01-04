@@ -552,12 +552,11 @@ comment|/* socket upcall is set up */
 name|uint32_t
 name|xp_snd_cnt
 decl_stmt|;
-comment|/* # of bytes sent to socket */
-name|struct
-name|sx
-name|xp_snd_lock
+comment|/* # of bytes to send to socket */
+name|uint32_t
+name|xp_snt_cnt
 decl_stmt|;
-comment|/* protects xp_snd_cnt& sb_cc */
+comment|/* # of bytes sent to socket */
 else|#
 directive|else
 name|int
@@ -1152,7 +1151,7 @@ struct|struct
 name|__rpc_svcpool
 block|{
 name|struct
-name|mtx
+name|mtx_padalign
 name|sp_lock
 decl_stmt|;
 comment|/* protect the transport lists */
