@@ -21,6 +21,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
+name|__used
 name|COPYRIGHT
 index|[]
 init|=
