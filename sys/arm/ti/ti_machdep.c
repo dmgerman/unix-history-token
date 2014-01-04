@@ -164,7 +164,7 @@ argument_list|,
 literal|0x01000000
 argument_list|)
 expr_stmt|;
-comment|// 16mb L4_PER devices
+comment|/*16mb L4_PER devices */
 name|arm_devmap_add_entry
 argument_list|(
 literal|0x4A000000
@@ -172,7 +172,7 @@ argument_list|,
 literal|0x01000000
 argument_list|)
 expr_stmt|;
-comment|// 16mb L4_CFG devices
+comment|/*16mb L4_CFG devices */
 elif|#
 directive|elif
 name|defined
@@ -186,7 +186,7 @@ argument_list|,
 literal|0x00400000
 argument_list|)
 expr_stmt|;
-comment|//  4mb L4_WKUP devices
+comment|/* 4mb L4_WKUP devices*/
 name|arm_devmap_add_entry
 argument_list|(
 literal|0x47400000
@@ -194,7 +194,7 @@ argument_list|,
 literal|0x00100000
 argument_list|)
 expr_stmt|;
-comment|//  1mb USB
+comment|/* 1mb USB            */
 name|arm_devmap_add_entry
 argument_list|(
 literal|0x47800000
@@ -202,7 +202,7 @@ argument_list|,
 literal|0x00100000
 argument_list|)
 expr_stmt|;
-comment|//  1mb mmchs2
+comment|/* 1mb mmchs2         */
 name|arm_devmap_add_entry
 argument_list|(
 literal|0x48000000
@@ -210,7 +210,7 @@ argument_list|,
 literal|0x01000000
 argument_list|)
 expr_stmt|;
-comment|// 16mb L4_PER devices
+comment|/*16mb L4_PER devices */
 name|arm_devmap_add_entry
 argument_list|(
 literal|0x49000000
@@ -218,7 +218,7 @@ argument_list|,
 literal|0x00100000
 argument_list|)
 expr_stmt|;
-comment|//  1mb edma3
+comment|/* 1mb edma3          */
 name|arm_devmap_add_entry
 argument_list|(
 literal|0x49800000
@@ -226,7 +226,7 @@ argument_list|,
 literal|0x00300000
 argument_list|)
 expr_stmt|;
-comment|//  3mb edma3
+comment|/* 3mb edma3          */
 name|arm_devmap_add_entry
 argument_list|(
 literal|0x4A000000
@@ -234,7 +234,7 @@ argument_list|,
 literal|0x01000000
 argument_list|)
 expr_stmt|;
-comment|// 16mb L4_FAST devices
+comment|/*16mb L4_FAST devices*/
 else|#
 directive|else
 error|#
