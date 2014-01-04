@@ -257,28 +257,6 @@ directive|include
 file|<dev/my/if_myreg.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: if_my.c,v 1.16 2003/04/15 06:37:25 mdodd Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Various supported device vendors/types and their names.  */
 end_comment
