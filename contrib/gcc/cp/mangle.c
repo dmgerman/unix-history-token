@@ -5478,6 +5478,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* APPLE LOCAL begin blocks 6040305 */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
+name|write_string
+argument_list|(
+literal|"U13block_pointer"
+argument_list|)
+expr_stmt|;
+name|write_type
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* APPLE LOCAL end blocks 6040305 */
 case|case
 name|REFERENCE_TYPE
 case|:

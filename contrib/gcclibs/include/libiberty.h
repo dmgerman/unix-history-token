@@ -667,6 +667,16 @@ name|size_t
 argument_list|)
 name|ATTRIBUTE_MALLOC
 decl_stmt|;
+comment|/* APPLE LOCAL begin retune gc params 6124839 */
+specifier|extern
+name|unsigned
+name|int
+name|ncpu_available
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* APPLE LOCAL end retune gc params 6124839 */
 comment|/* Physical memory routines.  Return values are in BYTES.  */
 specifier|extern
 name|double

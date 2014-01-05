@@ -8604,10 +8604,14 @@ end_comment
 
 begin_function
 name|void
+comment|/* APPLE LOCAL radar 6305545 */
 name|lower_nested_functions
 parameter_list|(
 name|tree
 name|fndecl
+parameter_list|,
+name|bool
+name|skip_outermost_fndecl
 parameter_list|)
 block|{
 name|struct
@@ -8638,6 +8642,19 @@ argument_list|(
 name|cgn
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin radar 6305545 */
+comment|/* If skip_outermost_fndecl is true, we are lowering nested functions of      a constructor/destructor which are cloned and thrown away. But we      still have to lower their nested functions, but not the outermost function. */
+if|if
+condition|(
+name|skip_outermost_fndecl
+condition|)
+name|root
+operator|=
+name|root
+operator|->
+name|inner
+expr_stmt|;
+comment|/* APPLE LOCAL end radar 6305545 */
 name|walk_all_functions
 argument_list|(
 name|convert_nonlocal_reference

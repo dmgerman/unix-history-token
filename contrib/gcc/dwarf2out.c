@@ -19770,6 +19770,14 @@ case|:
 return|return
 literal|"DW_AT_VMS_rtnbeg_pd_address"
 return|;
+comment|/* APPLE LOCAL begin radar 5811943 - Fix type of pointers to Blocks  */
+case|case
+name|DW_AT_APPLE_block
+case|:
+return|return
+literal|"DW_AT_APPLE_block"
+return|;
+comment|/* APPLE LOCAL end radar 5811943 - Fix type of pointers to Blocks  */
 default|default:
 return|return
 literal|"DW_AT_<unknown>"
@@ -34512,6 +34520,10 @@ case|:
 return|return
 name|error_mark_node
 return|;
+comment|/* APPLE LOCAL radar 5732232 - blocks */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
 case|case
 name|POINTER_TYPE
 case|:
@@ -34604,6 +34616,10 @@ name|FUNCTION_TYPE
 case|:
 case|case
 name|METHOD_TYPE
+case|:
+comment|/* APPLE LOCAL radar 5732232 - blocks */
+case|case
+name|BLOCK_POINTER_TYPE
 case|:
 case|case
 name|POINTER_TYPE
@@ -35322,12 +35338,17 @@ name|context_die
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* APPLE LOCAL radar 5732232 - blocks */
 elseif|else
 if|if
 condition|(
 name|code
 operator|==
 name|POINTER_TYPE
+operator|||
+name|code
+operator|==
+name|BLOCK_POINTER_TYPE
 condition|)
 block|{
 name|mod_type_die
@@ -44625,6 +44646,37 @@ name|type_die
 init|=
 name|NULL
 decl_stmt|;
+comment|/* APPLE LOCAL begin radar 5847213 */
+comment|/* APPLE LOCAL begin radar 5811943 - Fix type of pointers to blocks  */
+comment|/* APPLE LOCAL - radar 6113240 */
+comment|/* APPLE LOCAL begin radar 6300081  */
+if|if
+condition|(
+name|code
+operator|==
+name|BLOCK_POINTER_TYPE
+operator|&&
+name|generic_block_literal_struct_type
+condition|)
+block|{
+name|type
+operator|=
+name|build_pointer_type
+argument_list|(
+name|generic_block_literal_struct_type
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* APPLE LOCAL end radar 6300081  */
+comment|/* APPLE LOCAL end radar 5811943 - Fix type of pointers to Blocks  */
+comment|/* APPLE LOCAL end radar 5847213 */
 comment|/* ??? If this type is an unnamed subrange type of an integral or      floating-point type, use the inner type.  This is because we have no      support for unnamed types in base_type_die.  This can happen if this is      an Ada subrange type.  Correct solution is emit a subrange type die.  */
 if|if
 condition|(
@@ -49403,6 +49455,24 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin radar 5811943 - Fix type of pointers to Blocks  */
+if|if
+condition|(
+name|TYPE_BLOCK_IMPL_STRUCT
+argument_list|(
+name|type
+argument_list|)
+condition|)
+name|add_AT_flag
+argument_list|(
+name|type_die
+argument_list|,
+name|DW_AT_APPLE_block
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end radar 5811943 - Fix type of pointers to Blocks  */
 block|}
 else|else
 name|remove_AT
@@ -49995,6 +50065,10 @@ case|case
 name|ERROR_MARK
 case|:
 break|break;
+comment|/* APPLE LOCAL radar 5732232 - blocks */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
 case|case
 name|POINTER_TYPE
 case|:

@@ -1044,8 +1044,10 @@ operator|!=
 name|METHOD_TYPE
 condition|)
 block|{
+comment|/* APPLE LOCAL radar 6246527 */
 if|if
 condition|(
+operator|(
 name|TREE_CODE
 argument_list|(
 operator|*
@@ -1053,6 +1055,15 @@ name|anode
 argument_list|)
 operator|==
 name|POINTER_TYPE
+operator|||
+name|TREE_CODE
+argument_list|(
+operator|*
+name|anode
+argument_list|)
+operator|==
+name|BLOCK_POINTER_TYPE
+operator|)
 operator|&&
 operator|(
 name|TREE_CODE
@@ -1532,6 +1543,42 @@ condition|(
 name|fn_ptr_tmp
 condition|)
 block|{
+comment|/* APPLE LOCAL begin radar 6246527 */
+if|if
+condition|(
+name|DECL_P
+argument_list|(
+operator|*
+name|node
+argument_list|)
+operator|&&
+name|TREE_TYPE
+argument_list|(
+operator|*
+name|node
+argument_list|)
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+operator|*
+name|node
+argument_list|)
+argument_list|)
+operator|==
+name|BLOCK_POINTER_TYPE
+condition|)
+comment|/* Rebuild the block pointer type and put it in the 	        appropriate place.  */
+name|fn_ptr_tmp
+operator|=
+name|build_block_pointer_type
+argument_list|(
+name|fn_ptr_tmp
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* APPLE LOCAL end radar 6246527 */
 comment|/* Rebuild the function pointer type and put it in the 	     appropriate place.  */
 name|fn_ptr_tmp
 operator|=

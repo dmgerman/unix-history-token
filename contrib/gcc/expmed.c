@@ -11946,14 +11946,9 @@ operator|<<=
 literal|1
 control|)
 empty_stmt|;
-comment|/* If T was -1, then W will be zero after the loop.  This is another 	 case where T ends with ...111.  Handling this with (T + 1) and 	 subtract 1 produces slightly better code and results in algorithm 	 selection much faster than treating it like the ...0111 case 	 below.  */
+comment|/* APPLE LOCAL begin 7744816 DImode multiply by 0xffffffffULL */
 if|if
 condition|(
-name|w
-operator|==
-literal|0
-operator|||
-operator|(
 name|w
 operator|>
 literal|2
@@ -11962,8 +11957,8 @@ operator|&&
 name|t
 operator|!=
 literal|3
-operator|)
 condition|)
+comment|/* APPLE LOCAL end 7744816 DImode multiply by 0xffffffffULL */
 block|{
 comment|/* T ends with ...111.  Multiply by (T + 1) and subtract 1.  */
 name|op_cost

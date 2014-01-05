@@ -2264,6 +2264,10 @@ parameter_list|)
 value|TREE_CHECK2 (T, FUNCTION_TYPE, METHOD_TYPE)
 end_define
 
+begin_comment
+comment|/* APPLE LOCAL blocks 5862465 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2271,7 +2275,7 @@ name|PTR_OR_REF_CHECK
 parameter_list|(
 name|T
 parameter_list|)
-value|TREE_CHECK2 (T, POINTER_TYPE, REFERENCE_TYPE)
+value|TREE_CHECK3 (T, POINTER_TYPE, REFERENCE_TYPE, BLOCK_POINTER_TYPE)
 end_define
 
 begin_define
@@ -2531,6 +2535,10 @@ begin_comment
 comment|/* Nonzero if TYPE represents a pointer or reference type.    (It should be renamed to INDIRECT_TYPE_P.)  Keep these checks in    ascending code order.  */
 end_comment
 
+begin_comment
+comment|/* APPLE LOCAL begin blocks 5862465 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2539,8 +2547,12 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(TREE_CODE (TYPE) == POINTER_TYPE || TREE_CODE (TYPE) == REFERENCE_TYPE)
+value|(TREE_CODE (TYPE) == POINTER_TYPE \    || TREE_CODE (TYPE) == REFERENCE_TYPE \    || TREE_CODE (TYPE) == BLOCK_POINTER_TYPE)
 end_define
+
+begin_comment
+comment|/* APPLE LOCAL end blocks 5862465 */
+end_comment
 
 begin_comment
 comment|/* Nonzero if this type is a complete type.  */
@@ -6677,6 +6689,29 @@ define|\
 value|(TYPE_CHECK (NODE)->type.contains_placeholder_bits)
 end_define
 
+begin_comment
+comment|/* APPLE LOCAL begin radar 5811943 - Fix type of pointers to blocks  */
+end_comment
+
+begin_comment
+comment|/* Indicates that the struct type is a block struct, rather than    a 'normal' struct, i.e. one of its fields is a function that can    be called.  This uses the existing bit-field lang_flag_2 in the    struct tree_type, rather than creating a new bit field, as     lang_flag_2 is currently unused and we don't want to increase the     size of trees if we can avoid it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_BLOCK_IMPL_STRUCT
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TYPE_CHECK (NODE)->type.lang_flag_2)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end radar 5811943 - Fix type of pointers to Blocks  */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|die_struct
@@ -6771,6 +6806,9 @@ name|lang_flag_1
 range|:
 literal|1
 decl_stmt|;
+comment|/* APPLE LOCAL begin radar 5811943 - Fix type of pointers to Blocks  */
+comment|/* Since it is currently completely unused, and in the interest of      not making trees any bigger than they already are, lang_flag_2      in the tree_type struct will be used to indicate that a struct is a       block struct.  The macro used for these purposes is       TYPE_BLOCK_IMPL_STRUCT, rather than TYPE_LANG_FLAG_2, in order to make       its uses in the code more clear.  */
+comment|/* APPLE LOCAL end radar 5811943 - Fix type of pointers to Blocks  */
 name|unsigned
 name|lang_flag_2
 range|:
@@ -8281,6 +8319,12 @@ name|call_clobbered_flag
 range|:
 literal|1
 decl_stmt|;
+comment|/* APPLE LOCAL duplicate decls in multiple files. */
+name|unsigned
+name|duplicate_decl
+range|:
+literal|1
+decl_stmt|;
 name|unsigned
 name|int
 name|align
@@ -8878,6 +8922,20 @@ value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.defer_output)
 end_define
 
 begin_comment
+comment|/* APPLE LOCAL duplicate decls in multiple files. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_DUPLICATE_DECL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.duplicate_decl)
+end_define
+
+begin_comment
 comment|/* Nonzero for a given ..._DECL node means that no warnings should be    generated just because this node is unused.  */
 end_comment
 
@@ -9279,7 +9337,44 @@ name|tls_model
 label|:
 literal|3
 expr_stmt|;
-comment|/* 11 unused bits. */
+comment|/* APPLE LOCAL begin radar 5732232 - blocks */
+comment|/* Belong to VAR_DECL exclusively. */
+name|unsigned
+name|block_decl_byref
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|block_decl_copied
+range|:
+literal|1
+decl_stmt|;
+comment|/* APPLE LOCAL begin radar 5932809 - copyable byref blocks */
+name|unsigned
+name|copyable_byref_local_var
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|copyable_byref_local_nonpod
+range|:
+literal|1
+decl_stmt|;
+comment|/* APPLE LOCAL radar 6172148 */
+name|unsigned
+name|block_synthesized_function
+range|:
+literal|1
+decl_stmt|;
+comment|/* APPLE LOCAL radar 5847976 */
+name|unsigned
+name|block_weak
+range|:
+literal|1
+decl_stmt|;
+comment|/* 5 unused bits. */
+comment|/* APPLE LOCAL end radar 5932809 - copyable byref blocks */
+comment|/* APPLE LOCAL end radar 5732232 - blocks */
 block|}
 end_decl_stmt
 
@@ -9455,6 +9550,90 @@ name|NODE
 parameter_list|)
 value|(VAR_DECL_CHECK (NODE)->decl_with_vis.tls_model)
 end_define
+
+begin_comment
+comment|/* APPLE LOCAL begin radar 5732232 - blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_DECL_BYREF
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.block_decl_byref)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_DECL_COPIED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.block_decl_copied)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end radar 5732232 - blocks */
+end_comment
+
+begin_comment
+comment|/* APPLE LOCAL radar 6172148 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_SYNTHESIZED_FUNC
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->decl_with_vis.block_synthesized_function)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL begin radar 5932809 - copyable byref blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COPYABLE_BYREF_LOCAL_VAR
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.copyable_byref_local_var)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COPYABLE_BYREF_LOCAL_NONPOD
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.copyable_byref_local_nonpod)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL radar 5847976 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COPYABLE_WEAK_BLOCK
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.block_weak)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end radar 5932809 - copyable byref blocks */
+end_comment
 
 begin_comment
 comment|/* In a VAR_DECL, nonzero if the data should be allocated from    thread-local storage.  */
@@ -12512,6 +12691,20 @@ begin_function_decl
 specifier|extern
 name|tree
 name|build_pointer_type
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL radar 5732232 - blocks */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_block_pointer_type
 parameter_list|(
 name|tree
 parameter_list|)
@@ -18166,6 +18359,25 @@ name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL begin radar 6300081  */
+end_comment
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|tree
+name|generic_block_literal_struct_type
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* APPLE LOCAL end radar 6300081  */
+end_comment
 
 begin_endif
 endif|#

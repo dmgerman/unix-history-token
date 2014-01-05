@@ -26522,6 +26522,14 @@ name|complain
 argument_list|)
 return|;
 block|}
+comment|/* APPLE LOCAL begin blocks 6204446 */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
+return|return
+name|t
+return|;
+comment|/* APPLE LOCAL end blocks 6204446 */
 default|default:
 name|sorry
 argument_list|(

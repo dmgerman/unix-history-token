@@ -711,6 +711,33 @@ name|entry
 operator|=
 name|NULL_TREE
 expr_stmt|;
+comment|/* APPLE LOCAL begin C* language */
+comment|/* Order of label addition to stack is important for objc's foreach-stmt. */
+comment|/* APPLE LOCAL radar 4667060 */
+if|if
+condition|(
+name|inner_foreach
+operator|==
+name|integer_zero_node
+condition|)
+block|{
+name|cont_block
+operator|=
+name|begin_bc_block
+argument_list|(
+name|bc_continue
+argument_list|)
+expr_stmt|;
+name|break_block
+operator|=
+name|begin_bc_block
+argument_list|(
+name|bc_break
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|break_block
 operator|=
 name|begin_bc_block
@@ -725,6 +752,8 @@ argument_list|(
 name|bc_continue
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* APPLE LOCAL end C* language */
 comment|/* If condition is zero don't generate a loop construct.  */
 if|if
 condition|(
@@ -901,6 +930,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* APPLE LOCAL begin radar 4547045 */
+comment|/* Pop foreach's inner loop break label so outer loop's      break label becomes target of inner loop body's break statements.   */
+name|t
+operator|=
+name|NULL_TREE
+expr_stmt|;
 name|gimplify_stmt
 argument_list|(
 operator|&
@@ -924,6 +959,9 @@ argument_list|,
 name|body
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin radar 4547045 */
+comment|/* Push back inner loop's own 'break' label so rest      of code works seemlessly. */
+comment|/* APPLE LOCAL radar 4667060 */
 name|append_to_statement_list
 argument_list|(
 name|top

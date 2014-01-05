@@ -1184,6 +1184,19 @@ begin_comment
 comment|/* In cgraphunit.c  */
 end_comment
 
+begin_comment
+comment|/* APPLE LOCAL radar 6305545 */
+end_comment
+
+begin_function_decl
+name|void
+name|lower_if_nested_functions
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|bool
 name|cgraph_assemble_pending_functions

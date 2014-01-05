@@ -1802,5 +1802,49 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_comment
+comment|/* APPLE LOCAL begin radar 6353006  */
+end_comment
+
+begin_function
+name|tree
+name|lhd_build_generic_block_struct_type
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|NULL_TREE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* APPLE LOCAL end radar 6353006  */
+end_comment
+
+begin_comment
+comment|/* APPLE LOCAL begin radar 6386976  */
+end_comment
+
+begin_function
+name|bool
+name|lhd_is_runtime_specific_type
+parameter_list|(
+name|tree
+name|type
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* APPLE LOCAL end radar 6386976  */
+end_comment
+
 end_unit
 

@@ -1413,6 +1413,15 @@ name|scope
 operator|=
 name|level
 expr_stmt|;
+comment|/* APPLE LOCAL blocks 6040305 (ch) */
+name|binding
+operator|->
+name|declared_in_block
+operator|=
+name|cur_block
+operator|!=
+literal|0
+expr_stmt|;
 block|}
 else|else
 name|binding
@@ -6655,6 +6664,13 @@ operator|->
 name|value_is_inherited
 operator|=
 name|false
+expr_stmt|;
+comment|/* APPLE LOCAL blocks 6040305 (ch) */
+name|result
+operator|->
+name|declared_in_block
+operator|=
+literal|0
 expr_stmt|;
 name|IDENTIFIER_NAMESPACE_BINDINGS
 argument_list|(
@@ -16941,6 +16957,10 @@ argument_list|)
 return|;
 case|case
 name|POINTER_TYPE
+case|:
+comment|/* APPLE LOCAL blocks 6040305 */
+case|case
+name|BLOCK_POINTER_TYPE
 case|:
 case|case
 name|REFERENCE_TYPE

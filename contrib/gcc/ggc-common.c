@@ -3615,7 +3615,7 @@ argument_list|(
 name|min_expand
 argument_list|)
 expr_stmt|;
-comment|/* The heuristic is a percentage equal to 30% + 70%*(RAM/1GB), yielding      a lower bound of 30% and an upper bound of 100% (when RAM>= 1GB).  */
+comment|/* The heuristic is a percentage equal to 30% + 70%*(RAM/1GB), yielding   APPLE LOCAL retune gc params 6124839      a lower bound of 30% and an upper bound of 150% (when RAM>= 1.7GB).  */
 name|min_expand
 operator|/=
 literal|1024
@@ -3628,13 +3628,14 @@ name|min_expand
 operator|*=
 literal|70
 expr_stmt|;
+comment|/* APPLE LOCAL retune gc params 6124839 */
 name|min_expand
 operator|=
 name|MIN
 argument_list|(
 name|min_expand
 argument_list|,
-literal|70
+literal|120
 argument_list|)
 expr_stmt|;
 name|min_expand
@@ -3653,9 +3654,11 @@ end_comment
 
 begin_function
 name|int
+comment|/* APPLE LOCAL retune gc params 6124839 */
 name|ggc_min_heapsize_heuristic
 parameter_list|(
-name|void
+name|bool
+name|optimize
 parameter_list|)
 block|{
 name|double
@@ -3688,6 +3691,23 @@ name|phys_kbytes
 operator|/=
 literal|8
 expr_stmt|;
+comment|/* APPLE LOCAL begin retune gc params 6124839 */
+comment|/* Additionally, on a multicore machine, we assume that we share the      memory with others reasonably equally.  */
+name|phys_kbytes
+operator|/=
+operator|(
+name|double
+operator|)
+name|ncpu_available
+argument_list|()
+operator|/
+operator|(
+literal|2
+operator|-
+name|optimize
+operator|)
+expr_stmt|;
+comment|/* APPLE LOCAL end retune gc params 6124839 */
 if|#
 directive|if
 name|defined
@@ -3810,9 +3830,12 @@ end_function
 
 begin_function
 name|void
+comment|/* APPLE LOCAL retune gc params 6124839 */
 name|init_ggc_heuristics
 parameter_list|(
-name|void
+name|bool
+name|optimize
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 if|#
@@ -3832,12 +3855,15 @@ name|ggc_min_expand_heuristic
 argument_list|()
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL retune gc params 6124839 */
 name|set_param_value
 argument_list|(
 literal|"ggc-min-heapsize"
 argument_list|,
 name|ggc_min_heapsize_heuristic
-argument_list|()
+argument_list|(
+name|optimize
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
