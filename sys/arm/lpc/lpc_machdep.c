@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/fdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/devmap.h>
 end_include
 
