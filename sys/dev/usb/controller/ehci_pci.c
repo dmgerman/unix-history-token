@@ -405,6 +405,14 @@ literal|"Intel Panther Point USB 2.0 controller"
 operator|)
 return|;
 case|case
+literal|0x1f2c8086
+case|:
+return|return
+operator|(
+literal|"Intel Avoton USB 2.0 controller"
+operator|)
+return|;
+case|case
 literal|0x25ad8086
 case|:
 return|return
