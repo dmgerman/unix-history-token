@@ -7821,6 +7821,27 @@ name|AHCI_P_CMD_FBSCP
 expr_stmt|;
 if|if
 condition|(
+name|ch
+operator|->
+name|caps2
+operator|&
+name|AHCI_CAP2_SDS
+condition|)
+name|ch
+operator|->
+name|chscaps
+operator|=
+name|ATA_INL
+argument_list|(
+name|ch
+operator|->
+name|r_mem
+argument_list|,
+name|AHCI_P_DEVSLP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|bootverbose
 condition|)
 block|{
@@ -7828,7 +7849,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Caps:%s%s%s%s%s\n"
+literal|"Caps:%s%s%s%s%s%s\n"
 argument_list|,
 operator|(
 name|ch
@@ -7887,6 +7908,18 @@ name|AHCI_P_CMD_FBSCP
 operator|)
 condition|?
 literal|" FBSCP"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|ch
+operator|->
+name|chscaps
+operator|&
+name|AHCI_P_DEVSLP_DSP
+operator|)
+condition|?
+literal|" DSP"
 else|:
 literal|""
 argument_list|)
