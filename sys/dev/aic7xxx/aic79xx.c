@@ -45918,7 +45918,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 block|}
@@ -45929,8 +45929,9 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
-literal|0
+operator|&=
+operator|~
+name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 block|}
 name|byte
