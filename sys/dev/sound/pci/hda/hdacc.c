@@ -2155,6 +2155,14 @@ literal|"Intel Panther Point"
 block|}
 block|,
 block|{
+name|HDA_CODEC_INTELHSW
+block|,
+literal|0
+block|,
+literal|"Intel Haswell"
+block|}
+block|,
+block|{
 name|HDA_CODEC_INTELCL
 block|,
 literal|0
