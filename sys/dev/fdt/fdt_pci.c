@@ -71,12 +71,6 @@ directive|include
 file|<dev/pci/pcireg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/fdt.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -89,7 +83,25 @@ end_if
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/fdt.h>
 end_include
 
 begin_endif

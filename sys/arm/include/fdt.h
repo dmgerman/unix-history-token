@@ -83,20 +83,6 @@ name|fdtbus_bs_tag
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|mem_region
-block|{
-name|vm_offset_t
-name|mr_start
-decl_stmt|;
-name|vm_size_t
-name|mr_size
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct_decl
 struct_decl|struct
 name|arm_devmap_entry
