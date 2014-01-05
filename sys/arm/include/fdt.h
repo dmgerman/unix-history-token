@@ -107,24 +107,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|fdt_pci_devmap
-parameter_list|(
-name|phandle_t
-parameter_list|,
-name|struct
-name|arm_devmap_entry
-modifier|*
-name|devmap
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
