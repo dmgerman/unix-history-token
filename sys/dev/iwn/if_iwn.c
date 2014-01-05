@@ -31646,11 +31646,11 @@ operator|>
 name|thresh
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|IWN_DEBUG_ANY
 argument_list|,
 literal|"%s: PLCP error threshold raw (%d) comparison (%d) "
 literal|"over limit (%d); retune!\n"
