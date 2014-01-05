@@ -235,62 +235,22 @@ begin_comment
 comment|/* nanoseconds per clock tick */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* clock ticks per second */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|int64_t
+begin_define
+define|#
+directive|define
 name|ddi_get_lbolt64
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-operator|(
-name|getsbinuptime
-argument_list|()
-operator|>>
-literal|16
-operator|)
-operator|*
-name|hz
-operator|)
-operator|>>
-literal|16
-operator|)
-return|;
-block|}
-end_function
+parameter_list|()
+define|\
+value|(int64_t)(((getsbinuptime()>> 16) * hz)>> 16)
+end_define
 
-begin_function
-specifier|static
-name|__inline
-name|clock_t
+begin_define
+define|#
+directive|define
 name|ddi_get_lbolt
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ddi_get_lbolt64
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
+parameter_list|()
+value|(clock_t)ddi_get_lbolt64()
+end_define
 
 begin_else
 else|#
