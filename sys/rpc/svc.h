@@ -1402,7 +1402,7 @@ parameter_list|,
 name|ack
 parameter_list|)
 define|\
-value|((xprt)->xp_ops->xp_stat == NULL ? FALSE :	\ 	    ((ack) == NULL ? TRUE : (*(xprt)->xp_ops->xp_ack)((xprt), (ack))))
+value|((xprt)->xp_ops->xp_ack == NULL ? FALSE :	\ 	    ((ack) == NULL ? TRUE : (*(xprt)->xp_ops->xp_ack)((xprt), (ack))))
 end_define
 
 begin_define
