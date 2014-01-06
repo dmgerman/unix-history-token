@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2013 Universita` di Pisa. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2013-2014 Universita` di Pisa. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -138,7 +138,7 @@ define|#
 directive|define
 name|rtnl_unlock
 parameter_list|()
-value|D("rtnl_lock called");
+value|D("rtnl_unlock called");
 end_define
 
 begin_define
@@ -189,7 +189,7 @@ name|m
 parameter_list|,
 name|fn
 parameter_list|)
-value|do {		\ 		(m)->m_ext.ext_free = (void *)fn;	\ 		(m)->m_ext.ext_type = EXT_EXTREF;	\ 	} while (0)
+value|do {		\ 	(m)->m_ext.ext_free = (void *)fn;	\ 	(m)->m_ext.ext_type = EXT_EXTREF;	\ } while (0)
 end_define
 
 begin_define
@@ -587,6 +587,7 @@ comment|/* Enable/disable netmap mode for a generic network interface. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|generic_netmap_register
 parameter_list|(
@@ -673,7 +674,7 @@ name|enable
 condition|)
 block|{
 comment|/* Enable netmap mode. */
-comment|/* Initialize the rx queue, as generic_rx_handler() can 	 * be called as soon as netmap_catch_rx() returns. 	 */
+comment|/* Initialize the rx queue, as generic_rx_handler() can 		 * be called as soon as netmap_catch_rx() returns. 		 */
 for|for
 control|(
 name|r
@@ -703,17 +704,6 @@ operator|.
 name|rx_queue
 argument_list|)
 expr_stmt|;
-name|na
-operator|->
-name|rx_rings
-index|[
-name|r
-index|]
-operator|.
-name|nr_ntc
-operator|=
-literal|0
-expr_stmt|;
 block|}
 comment|/* Init the mitigation timer. */
 name|netmap_mitigation_init
@@ -721,7 +711,33 @@ argument_list|(
 name|gna
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Preallocate packet buffers for the tx rings. 	 */
+comment|/* 		 * Preallocate packet buffers for the tx rings. 		 */
+for|for
+control|(
+name|r
+operator|=
+literal|0
+init|;
+name|r
+operator|<
+name|na
+operator|->
+name|num_tx_rings
+condition|;
+name|r
+operator|++
+control|)
+name|na
+operator|->
+name|tx_rings
+index|[
+name|r
+index|]
+operator|.
+name|tx_pool
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|r
@@ -738,17 +754,6 @@ name|r
 operator|++
 control|)
 block|{
-name|na
-operator|->
-name|tx_rings
-index|[
-name|r
-index|]
-operator|.
-name|nr_ntc
-operator|=
-literal|0
-expr_stmt|;
 name|na
 operator|->
 name|tx_rings
@@ -801,9 +806,38 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|free_tx_pool
+name|free_tx_pools
 goto|;
 block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|na
+operator|->
+name|num_tx_desc
+condition|;
+name|i
+operator|++
+control|)
+name|na
+operator|->
+name|tx_rings
+index|[
+name|r
+index|]
+operator|.
+name|tx_pool
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -845,7 +879,7 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|free_mbufs
+name|free_tx_pools
 goto|;
 block|}
 name|na
@@ -898,7 +932,7 @@ operator||=
 name|IFCAP_NETMAP
 expr_stmt|;
 comment|/* Make netmap control the packet steering. */
-name|netmap_catch_packet_steering
+name|netmap_catch_tx
 argument_list|(
 name|gna
 argument_list|,
@@ -1004,7 +1038,7 @@ operator|~
 name|IFCAP_NETMAP
 expr_stmt|;
 comment|/* Release packet steering control. */
-name|netmap_catch_packet_steering
+name|netmap_catch_tx
 argument_list|(
 name|gna
 argument_list|,
@@ -1197,45 +1231,67 @@ label|:
 name|rtnl_unlock
 argument_list|()
 expr_stmt|;
-name|free_tx_pool
+name|free_tx_pools
 label|:
+for|for
+control|(
 name|r
-operator|--
-expr_stmt|;
+operator|=
+literal|0
+init|;
+name|r
+operator|<
+name|na
+operator|->
+name|num_tx_rings
+condition|;
+name|r
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|na
+operator|->
+name|tx_rings
+index|[
+name|r
+index|]
+operator|.
+name|tx_pool
+operator|==
+name|NULL
+condition|)
+continue|continue;
+for|for
+control|(
 name|i
 operator|=
+literal|0
+init|;
+name|i
+operator|<
 name|na
 operator|->
 name|num_tx_desc
-expr_stmt|;
-comment|/* Useless, but just to stay safe. */
-name|free_mbufs
-label|:
-name|i
-operator|--
-expr_stmt|;
-for|for
-control|(
-init|;
-name|r
-operator|>=
-literal|0
-condition|;
-name|r
-operator|--
-control|)
-block|{
-for|for
-control|(
-init|;
-name|i
-operator|>=
-literal|0
 condition|;
 name|i
-operator|--
+operator|++
 control|)
-block|{
+if|if
+condition|(
+name|na
+operator|->
+name|tx_rings
+index|[
+name|r
+index|]
+operator|.
+name|tx_pool
+index|[
+name|i
+index|]
+condition|)
 name|m_freem
 argument_list|(
 name|na
@@ -1251,7 +1307,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|na
@@ -1265,14 +1320,6 @@ name|tx_pool
 argument_list|,
 name|M_DEVBUF
 argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|na
-operator|->
-name|num_tx_desc
-operator|-
-literal|1
 expr_stmt|;
 block|}
 return|return
@@ -1394,12 +1441,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Record completed transmissions and update hwavail.  *  * nr_ntc is the oldest tx buffer not yet completed  * (same as nr_hwavail + nr_hwcur + 1),  * nr_hwcur is the first unsent buffer.  * When cleaning, we try to recover buffers between nr_ntc and nr_hwcur.  */
+comment|/* Record completed transmissions and update hwtail.  *  * The oldest tx buffer not yet completed is at nr_hwtail + 1,  * nr_hwcur is the first unsent buffer.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|u_int
 name|generic_netmap_tx_clean
 parameter_list|(
 name|struct
@@ -1409,18 +1456,26 @@ name|kring
 parameter_list|)
 block|{
 name|u_int
-name|num_slots
+specifier|const
+name|lim
 init|=
 name|kring
 operator|->
 name|nkr_num_slots
+operator|-
+literal|1
 decl_stmt|;
 name|u_int
-name|ntc
+name|nm_i
 init|=
+name|nm_next
+argument_list|(
 name|kring
 operator|->
-name|nr_ntc
+name|nr_hwtail
+argument_list|,
+name|lim
+argument_list|)
 decl_stmt|;
 name|u_int
 name|hwcur
@@ -1446,7 +1501,7 @@ name|tx_pool
 decl_stmt|;
 while|while
 condition|(
-name|ntc
+name|nm_i
 operator|!=
 name|hwcur
 condition|)
@@ -1459,7 +1514,7 @@ name|m
 init|=
 name|tx_pool
 index|[
-name|ntc
+name|nm_i
 index|]
 decl_stmt|;
 if|if
@@ -1472,10 +1527,10 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-comment|/* try to replenish the entry */
+comment|/* this is done, try to replenish the entry */
 name|tx_pool
 index|[
-name|ntc
+name|nm_i
 index|]
 operator|=
 name|m
@@ -1521,47 +1576,39 @@ block|{
 break|break;
 comment|/* This mbuf is still busy: its refcnt is 2. */
 block|}
-if|if
-condition|(
-name|unlikely
+name|n
+operator|++
+expr_stmt|;
+name|nm_i
+operator|=
+name|nm_next
 argument_list|(
-operator|++
-name|ntc
-operator|==
-name|num_slots
+name|nm_i
+argument_list|,
+name|lim
 argument_list|)
-condition|)
-block|{
-name|ntc
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|n
-operator|++
 expr_stmt|;
 block|}
 name|kring
 operator|->
-name|nr_ntc
+name|nr_hwtail
 operator|=
-name|ntc
-expr_stmt|;
-name|kring
-operator|->
-name|nr_hwavail
-operator|+=
-name|n
+name|nm_prev
+argument_list|(
+name|nm_i
+argument_list|,
+name|lim
+argument_list|)
 expr_stmt|;
 name|ND
 argument_list|(
-literal|"tx completed [%d] -> hwavail %d"
+literal|"tx completed [%d] -> hwtail %d"
 argument_list|,
 name|n
 argument_list|,
 name|kring
 operator|->
-name|nr_hwavail
+name|nr_hwtail
 argument_list|)
 expr_stmt|;
 return|return
@@ -1571,7 +1618,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We have pending packets in the driver between nr_ntc and j.  * Compute a position in the middle, to be used to generate  * a notification.  */
+comment|/*  * We have pending packets in the driver between nr_hwtail +1 and hwcur.  * Compute a position in the middle, to be used to generate  * a notification.  */
 end_comment
 
 begin_function
@@ -1599,9 +1646,16 @@ decl_stmt|;
 name|u_int
 name|ntc
 init|=
+name|nm_next
+argument_list|(
 name|kring
 operator|->
-name|nr_ntc
+name|nr_hwtail
+argument_list|,
+name|n
+operator|-
+literal|1
+argument_list|)
 decl_stmt|;
 name|u_int
 name|e
@@ -1679,7 +1733,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We have pending packets in the driver between nr_ntc and hwcur.  * Schedule a notification approximately in the middle of the two.  * There is a race but this is only called within txsync which does  * a double check.  */
+comment|/*  * We have pending packets in the driver between nr_hwtail+1 and hwcur.  * Schedule a notification approximately in the middle of the two.  * There is a race but this is only called within txsync which does  * a double check.  */
 end_comment
 
 begin_function
@@ -1706,14 +1760,24 @@ name|e
 decl_stmt|;
 if|if
 condition|(
+name|nm_next
+argument_list|(
 name|kring
 operator|->
-name|nr_ntc
+name|nr_hwtail
+argument_list|,
+name|kring
+operator|->
+name|nkr_num_slots
+operator|-
+literal|1
+argument_list|)
 operator|==
 name|hwcur
 condition|)
 block|{
 return|return;
+comment|/* all buffers are free */
 block|}
 name|e
 operator|=
@@ -1740,7 +1804,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* This can happen if there is already an event on the netmap            slot 'e': There is nothing to do. */
+comment|/* This can happen if there is already an event on the netmap 		   slot 'e': There is nothing to do. */
 return|return;
 block|}
 name|ND
@@ -1839,20 +1903,27 @@ operator|->
 name|ring
 decl_stmt|;
 name|u_int
-name|j
-decl_stmt|,
-name|k
-decl_stmt|,
-name|num_slots
+name|nm_i
+decl_stmt|;
+comment|/* index into the netmap ring */
+comment|// j
+name|u_int
+specifier|const
+name|lim
 init|=
 name|kring
 operator|->
 name|nkr_num_slots
+operator|-
+literal|1
 decl_stmt|;
-name|int
-name|new_slots
-decl_stmt|,
-name|ntx
+name|u_int
+specifier|const
+name|head
+init|=
+name|kring
+operator|->
+name|rhead
 decl_stmt|;
 name|IFRATE
 argument_list|(
@@ -1865,85 +1936,29 @@ operator|++
 argument_list|)
 expr_stmt|;
 comment|// TODO: handle the case of mbuf allocation failure
-comment|/* first, reclaim completed buffers */
-name|generic_netmap_tx_clean
-argument_list|(
-name|kring
-argument_list|)
-expr_stmt|;
-comment|/* Take a copy of ring->cur now, and never read it again. */
-name|k
-operator|=
-name|ring
-operator|->
-name|cur
-expr_stmt|;
-if|if
-condition|(
-name|unlikely
-argument_list|(
-name|k
-operator|>=
-name|num_slots
-argument_list|)
-condition|)
-block|{
-return|return
-name|netmap_ring_reinit
-argument_list|(
-name|kring
-argument_list|)
-return|;
-block|}
 name|rmb
 argument_list|()
 expr_stmt|;
-name|j
+comment|/* 	 * First part: process new packets to send. 	 */
+name|nm_i
 operator|=
 name|kring
 operator|->
 name|nr_hwcur
 expr_stmt|;
-comment|/*     * 'new_slots' counts how many new slots have been added:      * everything from hwcur to cur, excluding reserved ones, if any.      * nr_hwreserved start from hwcur and counts how many slots were      * not sent to the NIC from the previous round.      */
-name|new_slots
-operator|=
-name|k
-operator|-
-name|j
-operator|-
-name|kring
-operator|->
-name|nr_hwreserved
-expr_stmt|;
 if|if
 condition|(
-name|new_slots
-operator|<
-literal|0
-condition|)
-block|{
-name|new_slots
-operator|+=
-name|num_slots
-expr_stmt|;
-block|}
-name|ntx
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|j
+name|nm_i
 operator|!=
-name|k
+name|head
 condition|)
 block|{
-comment|/* Process new packets to send: 	 * j is the current index in the netmap ring. 	 */
+comment|/* we have new packets to send */
 while|while
 condition|(
-name|j
+name|nm_i
 operator|!=
-name|k
+name|head
 condition|)
 block|{
 name|struct
@@ -1956,10 +1971,16 @@ name|ring
 operator|->
 name|slot
 index|[
-name|j
+name|nm_i
 index|]
 decl_stmt|;
-comment|/* Current slot in the netmap ring */
+name|u_int
+name|len
+init|=
+name|slot
+operator|->
+name|len
+decl_stmt|;
 name|void
 modifier|*
 name|addr
@@ -1969,13 +1990,7 @@ argument_list|(
 name|slot
 argument_list|)
 decl_stmt|;
-name|u_int
-name|len
-init|=
-name|slot
-operator|->
-name|len
-decl_stmt|;
+comment|/* device-specific */
 name|struct
 name|mbuf
 modifier|*
@@ -1984,27 +1999,13 @@ decl_stmt|;
 name|int
 name|tx_ret
 decl_stmt|;
-if|if
-condition|(
-name|unlikely
+name|NM_CHECK_ADDR_LEN
 argument_list|(
 name|addr
-operator|==
-name|netmap_buffer_base
-operator|||
+argument_list|,
 name|len
-operator|>
-name|NETMAP_BUF_SIZE
 argument_list|)
-condition|)
-block|{
-return|return
-name|netmap_ring_reinit
-argument_list|(
-name|kring
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 comment|/* Tale a mbuf from the tx pool and copy in the user packet. */
 name|m
 operator|=
@@ -2012,7 +2013,7 @@ name|kring
 operator|->
 name|tx_pool
 index|[
-name|j
+name|nm_i
 index|]
 expr_stmt|;
 if|if
@@ -2035,7 +2036,7 @@ name|kring
 operator|->
 name|tx_pool
 index|[
-name|j
+name|nm_i
 index|]
 operator|=
 name|m
@@ -2063,7 +2064,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* XXX we should ask notifications when NS_REPORT is set,              * or roughly every half frame. We can optimize this              * by lazily requesting notifications only when a              * transmission fails. Probably the best way is to              * break on failures and set notifications when              * ring->avail == 0 || j != k              */
+comment|/* XXX we should ask notifications when NS_REPORT is set, 			 * or roughly every half frame. We can optimize this 			 * by lazily requesting notifications only when a 			 * transmission fails. Probably the best way is to 			 * break on failures and set notifications when 			 * ring->cur == ring->tail || nm_i != cur 			 */
 name|tx_ret
 operator|=
 name|generic_xmit_frame
@@ -2091,29 +2092,25 @@ name|RD
 argument_list|(
 literal|5
 argument_list|,
-literal|"start_xmit failed: err %d [%u,%u,%u,%u]"
+literal|"start_xmit failed: err %d [nm_i %u, head %u, hwtail %u]"
 argument_list|,
 name|tx_ret
 argument_list|,
-name|kring
-operator|->
-name|nr_ntc
+name|nm_i
 argument_list|,
-name|j
-argument_list|,
-name|k
+name|head
 argument_list|,
 name|kring
 operator|->
-name|nr_hwavail
+name|nr_hwtail
 argument_list|)
 expr_stmt|;
-comment|/*                  * No room for this mbuf in the device driver. 		 * Request a notification FOR A PREVIOUS MBUF,                  * then call generic_netmap_tx_clean(kring) to do the                  * double check and see if we can free more buffers.                  * If there is space continue, else break;                  * NOTE: the double check is necessary if the problem                  * occurs in the txsync call after selrecord().                  * Also, we need some way to tell the caller that not                  * all buffers were queued onto the device (this was                  * not a problem with native netmap driver where space                  * is preallocated). The bridge has a similar problem                  * and we solve it there by dropping the excess packets.                  */
+comment|/* 				 * No room for this mbuf in the device driver. 				 * Request a notification FOR A PREVIOUS MBUF, 				 * then call generic_netmap_tx_clean(kring) to do the 				 * double check and see if we can free more buffers. 				 * If there is space continue, else break; 				 * NOTE: the double check is necessary if the problem 				 * occurs in the txsync call after selrecord(). 				 * Also, we need some way to tell the caller that not 				 * all buffers were queued onto the device (this was 				 * not a problem with native netmap driver where space 				 * is preallocated). The bridge has a similar problem 				 * and we solve it there by dropping the excess packets. 				 */
 name|generic_set_tx_event
 argument_list|(
 name|kring
 argument_list|,
-name|j
+name|nm_i
 argument_list|)
 expr_stmt|;
 if|if
@@ -2143,22 +2140,14 @@ operator||
 name|NS_BUF_CHANGED
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|unlikely
-argument_list|(
-operator|++
-name|j
-operator|==
-name|num_slots
-argument_list|)
-condition|)
-name|j
+name|nm_i
 operator|=
-literal|0
-expr_stmt|;
-name|ntx
-operator|++
+name|nm_next
+argument_list|(
+name|nm_i
+argument_list|,
+name|lim
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Update hwcur to the next slot to transmit. */
@@ -2166,39 +2155,9 @@ name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|j
+name|nm_i
 expr_stmt|;
-comment|/* 	 * Report all new slots as unavailable, even those not sent.          * We account for them with with hwreserved, so that 	 * nr_hwreserved =:= cur - nr_hwcur 	 */
-name|kring
-operator|->
-name|nr_hwavail
-operator|-=
-name|new_slots
-expr_stmt|;
-name|kring
-operator|->
-name|nr_hwreserved
-operator|=
-name|k
-operator|-
-name|j
-expr_stmt|;
-if|if
-condition|(
-name|kring
-operator|->
-name|nr_hwreserved
-operator|<
-literal|0
-condition|)
-block|{
-name|kring
-operator|->
-name|nr_hwreserved
-operator|+=
-name|num_slots
-expr_stmt|;
-block|}
+comment|/* not head, we could break early */
 name|IFRATE
 argument_list|(
 name|rate_ctx
@@ -2210,51 +2169,49 @@ operator|+=
 name|ntx
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * Second, reclaim completed buffers 	 */
 if|if
 condition|(
-operator|!
+name|flags
+operator|&
+name|NAF_FORCE_RECLAIM
+operator|||
+name|nm_kr_txempty
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
+argument_list|)
 condition|)
 block|{
-comment|/* No more available slots? Set a notification event              * on a netmap slot that will be cleaned in the future.              * No doublecheck is performed, since txsync() will be              * called twice by netmap_poll().              */
+comment|/* No more available slots? Set a notification event 		 * on a netmap slot that will be cleaned in the future. 		 * No doublecheck is performed, since txsync() will be 		 * called twice by netmap_poll(). 		 */
 name|generic_set_tx_event
 argument_list|(
 name|kring
 argument_list|,
-name|j
+name|nm_i
 argument_list|)
 expr_stmt|;
 block|}
 name|ND
 argument_list|(
-literal|"tx #%d, hwavail = %d"
+literal|"tx #%d, hwtail = %d"
 argument_list|,
 name|n
 argument_list|,
 name|kring
 operator|->
-name|nr_hwavail
+name|nr_hwtail
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Synchronize the user's view to the kernel view. */
-name|ring
-operator|->
-name|avail
-operator|=
+name|generic_netmap_tx_clean
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
+argument_list|)
 expr_stmt|;
-name|ring
-operator|->
-name|reserved
-operator|=
+name|nm_txsync_finalize
+argument_list|(
 name|kring
-operator|->
-name|nr_hwreserved
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -2312,11 +2269,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|// receive ring number
-name|ND
-argument_list|(
-literal|"called"
-argument_list|)
-expr_stmt|;
 comment|/* limit the size of the queue */
 if|if
 condition|(
@@ -2396,7 +2348,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* same as send combining, filter notification if there is a 	 * pending timer, otherwise pass it up and start a timer.          */
+comment|/* same as send combining, filter notification if there is a 		 * pending timer, otherwise pass it up and start a timer. 		 */
 if|if
 condition|(
 name|likely
@@ -2494,10 +2446,15 @@ operator|->
 name|ring
 decl_stmt|;
 name|u_int
-name|j
-decl_stmt|,
+name|nm_i
+decl_stmt|;
+comment|/* index into the netmap ring */
+comment|//j,
+name|u_int
 name|n
-decl_stmt|,
+decl_stmt|;
+name|u_int
+specifier|const
 name|lim
 init|=
 name|kring
@@ -2505,6 +2462,15 @@ operator|->
 name|nkr_num_slots
 operator|-
 literal|1
+decl_stmt|;
+name|u_int
+specifier|const
+name|head
+init|=
+name|nm_rxsync_prologue
+argument_list|(
+name|kring
+argument_list|)
 decl_stmt|;
 name|int
 name|force_update
@@ -2521,20 +2487,9 @@ name|nr_kflags
 operator|&
 name|NKR_PENDINTR
 decl_stmt|;
-name|u_int
-name|k
-decl_stmt|,
-name|resvd
-init|=
-name|ring
-operator|->
-name|reserved
-decl_stmt|;
 if|if
 condition|(
-name|ring
-operator|->
-name|cur
+name|head
 operator|>
 name|lim
 condition|)
@@ -2544,7 +2499,7 @@ argument_list|(
 name|kring
 argument_list|)
 return|;
-comment|/* Import newly received packets into the netmap ring. */
+comment|/* 	 * First part: import newly received packets. 	 */
 if|if
 condition|(
 name|netmap_no_pendintr
@@ -2552,6 +2507,7 @@ operator|||
 name|force_update
 condition|)
 block|{
+comment|/* extract buffers from the rx queue, stop at most one 		 * slot before nr_hwcur (stop_i) 		 */
 name|uint16_t
 name|slot_flags
 init|=
@@ -2559,45 +2515,38 @@ name|kring
 operator|->
 name|nkr_slot_flags
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
+name|u_int
+name|stop_i
+init|=
+name|nm_prev
+argument_list|(
+name|kring
+operator|->
+name|nr_hwcur
+argument_list|,
+name|lim
+argument_list|)
 decl_stmt|;
+name|nm_i
+operator|=
+name|kring
+operator|->
+name|nr_hwtail
+expr_stmt|;
+comment|/* first empty slot in the receive ring */
+for|for
+control|(
 name|n
 operator|=
 literal|0
-expr_stmt|;
-name|j
-operator|=
-name|kring
-operator|->
-name|nr_ntc
-expr_stmt|;
-comment|/* first empty slot in the receive ring */
-comment|/* extract buffers from the rx queue, stop at most one 	 * slot before nr_hwcur (index k) 	 */
-name|k
-operator|=
-operator|(
-name|kring
-operator|->
-name|nr_hwcur
-operator|)
-condition|?
-name|kring
-operator|->
-name|nr_hwcur
-operator|-
-literal|1
-else|:
-name|lim
-expr_stmt|;
-while|while
-condition|(
-name|j
+init|;
+name|nm_i
 operator|!=
-name|k
-condition|)
+name|stop_i
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|int
 name|len
@@ -2613,10 +2562,16 @@ name|ring
 operator|->
 name|slot
 index|[
-name|j
+name|nm_i
 index|]
 argument_list|)
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+comment|/* we only check the address here on generic rx rings */
 if|if
 condition|(
 name|addr
@@ -2632,7 +2587,7 @@ name|kring
 argument_list|)
 return|;
 block|}
-comment|/* 	     * Call the locked version of the function. 	     *  XXX Ideally we could grab a batch of mbufs at once, 	     * by changing rx_queue into a ring. 	     */
+comment|/* 			 * Call the locked version of the function. 			 * XXX Ideally we could grab a batch of mbufs at once 			 * and save some locking overhead. 			 */
 name|m
 operator|=
 name|mbq_safe_dequeue
@@ -2648,6 +2603,7 @@ condition|(
 operator|!
 name|m
 condition|)
+comment|/* no more data */
 break|break;
 name|len
 operator|=
@@ -2671,7 +2627,7 @@ name|ring
 operator|->
 name|slot
 index|[
-name|j
+name|nm_i
 index|]
 operator|.
 name|len
@@ -2682,7 +2638,7 @@ name|ring
 operator|->
 name|slot
 index|[
-name|j
+name|nm_i
 index|]
 operator|.
 name|flags
@@ -2694,19 +2650,14 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unlikely
+name|nm_i
+operator|=
+name|nm_next
 argument_list|(
-name|j
-operator|++
-operator|==
+name|nm_i
+argument_list|,
 name|lim
 argument_list|)
-condition|)
-name|j
-operator|=
-literal|0
 expr_stmt|;
 name|n
 operator|++
@@ -2719,15 +2670,9 @@ condition|)
 block|{
 name|kring
 operator|->
-name|nr_ntc
+name|nr_hwtail
 operator|=
-name|j
-expr_stmt|;
-name|kring
-operator|->
-name|nr_hwavail
-operator|+=
-name|n
+name|nm_i
 expr_stmt|;
 name|IFRATE
 argument_list|(
@@ -2750,86 +2695,18 @@ name|NKR_PENDINTR
 expr_stmt|;
 block|}
 comment|// XXX should we invert the order ?
-comment|/* Skip past packets that userspace has released */
-name|j
+comment|/* 	 * Second part: skip past packets that userspace has released. 	 */
+name|nm_i
 operator|=
 name|kring
 operator|->
 name|nr_hwcur
 expr_stmt|;
-name|k
-operator|=
-name|ring
-operator|->
-name|cur
-expr_stmt|;
 if|if
 condition|(
-name|resvd
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|resvd
-operator|+
-name|ring
-operator|->
-name|avail
-operator|>=
-name|lim
-operator|+
-literal|1
-condition|)
-block|{
-name|D
-argument_list|(
-literal|"XXX invalid reserve/avail %d %d"
-argument_list|,
-name|resvd
-argument_list|,
-name|ring
-operator|->
-name|avail
-argument_list|)
-expr_stmt|;
-name|ring
-operator|->
-name|reserved
-operator|=
-name|resvd
-operator|=
-literal|0
-expr_stmt|;
-comment|// XXX panic...
-block|}
-name|k
-operator|=
-operator|(
-name|k
-operator|>=
-name|resvd
-operator|)
-condition|?
-name|k
-operator|-
-name|resvd
-else|:
-name|k
-operator|+
-name|lim
-operator|+
-literal|1
-operator|-
-name|resvd
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|j
+name|nm_i
 operator|!=
-name|k
+name|head
 condition|)
 block|{
 comment|/* Userspace has released some packets. */
@@ -2839,9 +2716,9 @@ name|n
 operator|=
 literal|0
 init|;
-name|j
+name|nm_i
 operator|!=
-name|k
+name|head
 condition|;
 name|n
 operator|++
@@ -2857,7 +2734,7 @@ name|ring
 operator|->
 name|slot
 index|[
-name|j
+name|nm_i
 index|]
 decl_stmt|;
 name|slot
@@ -2867,44 +2744,28 @@ operator|&=
 operator|~
 name|NS_BUF_CHANGED
 expr_stmt|;
-if|if
-condition|(
-name|unlikely
+name|nm_i
+operator|=
+name|nm_next
 argument_list|(
-name|j
-operator|++
-operator|==
+name|nm_i
+argument_list|,
 name|lim
 argument_list|)
-condition|)
-name|j
-operator|=
-literal|0
 expr_stmt|;
 block|}
-name|kring
-operator|->
-name|nr_hwavail
-operator|-=
-name|n
-expr_stmt|;
 name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|k
+name|head
 expr_stmt|;
 block|}
-comment|/* Tell userspace that there are new packets. */
-name|ring
-operator|->
-name|avail
-operator|=
+comment|/* tell userspace that there might be new packets. */
+name|nm_rxsync_finalize
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
-operator|-
-name|resvd
+argument_list|)
 expr_stmt|;
 name|IFRATE
 argument_list|(
@@ -3168,7 +3029,7 @@ operator|=
 operator|&
 name|generic_netmap_dtor
 expr_stmt|;
-comment|/* when using generic, IFCAP_NETMAP is set so we force      * NAF_SKIP_INTR to use the regular interrupt handler      */
+comment|/* when using generic, IFCAP_NETMAP is set so we force 	 * NAF_SKIP_INTR to use the regular interrupt handler 	 */
 name|na
 operator|->
 name|na_flags

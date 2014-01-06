@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C) 2011-2012 Luigi Rizzo  *  * BSD license  *  * A simple library that maps some pcap functions onto netmap  * This is not 100% complete but enough to let tcpdump, trafshow  * and other apps work.  *  * $FreeBSD$  */
+comment|/*  * (C) 2011-2014 Luigi Rizzo  *  * BSD license  *  * A simple library that maps some pcap functions onto netmap  * This is not 100% complete but enough to let tcpdump, trafshow  * and other apps work.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -2227,22 +2227,12 @@ argument_list|,
 name|si
 argument_list|)
 decl_stmt|;
-name|ND
-argument_list|(
-literal|"ring has %d pkts"
-argument_list|,
-name|ring
-operator|->
-name|avail
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|nm_ring_empty
+argument_list|(
 name|ring
-operator|->
-name|avail
-operator|==
-literal|0
+argument_list|)
 condition|)
 continue|continue;
 name|pme
@@ -2269,11 +2259,11 @@ operator|!=
 name|got
 operator|)
 operator|&&
+operator|!
+name|nm_ring_empty
+argument_list|(
 name|ring
-operator|->
-name|avail
-operator|>
-literal|0
+argument_list|)
 condition|)
 block|{
 name|u_int
@@ -2379,19 +2369,18 @@ argument_list|)
 expr_stmt|;
 name|ring
 operator|->
+name|head
+operator|=
+name|ring
+operator|->
 name|cur
 operator|=
-name|NETMAP_RING_NEXT
+name|nm_ring_next
 argument_list|(
 name|ring
 argument_list|,
 name|i
 argument_list|)
-expr_stmt|;
-name|ring
-operator|->
-name|avail
-operator|--
 expr_stmt|;
 name|got
 operator|++
@@ -2479,22 +2468,12 @@ argument_list|,
 name|si
 argument_list|)
 decl_stmt|;
-name|ND
-argument_list|(
-literal|"ring has %d pkts"
-argument_list|,
-name|ring
-operator|->
-name|avail
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|nm_ring_empty
+argument_list|(
 name|ring
-operator|->
-name|avail
-operator|==
-literal|0
+argument_list|)
 condition|)
 continue|continue;
 name|u_int
@@ -2581,21 +2560,20 @@ argument_list|)
 expr_stmt|;
 name|ring
 operator|->
+name|head
+operator|=
+name|ring
+operator|->
 name|cur
 operator|=
-name|NETMAP_RING_NEXT
+name|nm_ring_next
 argument_list|(
 name|ring
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ring
-operator|->
-name|avail
-operator|--
-expr_stmt|;
-comment|// if (ring->avail == 0) ioctl(me->fd, NIOCTXSYNC, NULL);
+comment|// if (ring->cur == ring->tail) ioctl(me->fd, NIOCTXSYNC, NULL);
 return|return
 name|size
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2013 Universita` di Pisa. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2013-2014 Universita` di Pisa. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -294,29 +294,74 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Intercept the packet steering routine in the tx path,  * so that we can decide which queue is used for an mbuf.  * Second argument is non-zero to intercept, 0 to restore.  *  * XXX see if FreeBSD has such a mechanism  */
+comment|/*  * Intercept the packet steering routine in the tx path,  * so that we can decide which queue is used for an mbuf.  * Second argument is non-zero to intercept, 0 to restore.  *  * actually we also need to redirect the if_transmit ?  *  * XXX see if FreeBSD has such a mechanism  */
 end_comment
 
 begin_function
 name|void
-name|netmap_catch_packet_steering
+name|netmap_catch_tx
 parameter_list|(
 name|struct
 name|netmap_generic_adapter
 modifier|*
-name|na
+name|gna
 parameter_list|,
 name|int
 name|enable
 parameter_list|)
 block|{
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+init|=
+operator|&
+name|gna
+operator|->
+name|up
+operator|.
+name|up
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|na
+operator|->
+name|ifp
+decl_stmt|;
 if|if
 condition|(
 name|enable
 condition|)
-block|{ 	}
+block|{
+name|na
+operator|->
+name|if_transmit
+operator|=
+name|ifp
+operator|->
+name|if_transmit
+expr_stmt|;
+name|ifp
+operator|->
+name|if_transmit
+operator|=
+name|netmap_transmit
+expr_stmt|;
+block|}
 else|else
-block|{ 	}
+block|{
+name|ifp
+operator|->
+name|if_transmit
+operator|=
+name|na
+operator|->
+name|if_transmit
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -413,7 +458,10 @@ expr_stmt|;
 comment|/* used for tx notification */
 name|ret
 operator|=
+name|NA
+argument_list|(
 name|ifp
+argument_list|)
 operator|->
 name|if_transmit
 argument_list|(
