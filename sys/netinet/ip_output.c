@@ -1455,6 +1455,11 @@ name|m_flags
 operator||=
 name|M_MCAST
 expr_stmt|;
+comment|/* 		 * IP destination address is multicast.  Make sure "gw" 		 * still points to the address in "ro".  (It may have been 		 * changed to point to a gateway address, above.) 		 */
+name|gw
+operator|=
+name|dst
+expr_stmt|;
 comment|/* 		 * See if the caller provided any multicast options 		 */
 if|if
 condition|(
