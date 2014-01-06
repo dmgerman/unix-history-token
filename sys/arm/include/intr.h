@@ -222,18 +222,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
-end_include
-
 begin_function_decl
 name|int
 name|arm_get_next_irq
