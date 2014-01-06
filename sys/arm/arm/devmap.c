@@ -149,17 +149,6 @@ operator|(
 name|akva_devmap_vaddr
 operator|)
 return|;
-if|if
-condition|(
-name|devmap_table
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"arm_devmap_lastaddr(): No devmap table registered."
-argument_list|)
-expr_stmt|;
 name|lowaddr
 operator|=
 name|ARM_VECTORS_HIGH
@@ -170,6 +159,10 @@ name|pd
 operator|=
 name|devmap_table
 init|;
+name|pd
+operator|!=
+name|NULL
+operator|&&
 name|pd
 operator|->
 name|pd_size
@@ -390,7 +383,11 @@ name|arm_devmap_entry
 modifier|*
 name|pd
 decl_stmt|;
-comment|/* 	 * If given a table pointer, use it, else ensure a table was previously 	 * registered.  This happens early in boot, and there's a good chance 	 * the panic message won't be seen, but there's not much we can do. 	 */
+name|devmap_bootstrap_done
+operator|=
+name|true
+expr_stmt|;
+comment|/* 	 * If given a table pointer, use it.  Otherwise, if a table was 	 * previously registered, use it.  Otherwise, no work to do. 	 */
 if|if
 condition|(
 name|table
@@ -408,11 +405,7 @@ name|devmap_table
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"arm_devmap_bootstrap(): No devmap table registered"
-argument_list|)
-expr_stmt|;
+return|return;
 for|for
 control|(
 name|pd
@@ -455,10 +448,6 @@ name|pd_cache
 argument_list|)
 expr_stmt|;
 block|}
-name|devmap_bootstrap_done
-operator|=
-name|true
-expr_stmt|;
 block|}
 end_function
 
