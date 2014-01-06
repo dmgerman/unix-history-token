@@ -95,17 +95,6 @@ directive|include
 file|<arm/allwinner/a10_wdog.h>
 end_include
 
-begin_comment
-comment|/* Start of address space used for bootstrap map */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEVMAP_BOOTSTRAP_MAP_START
-value|0xE0000000
-end_define
-
 begin_function
 name|vm_offset_t
 name|initarm_lastaddr
@@ -115,7 +104,8 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|DEVMAP_BOOTSTRAP_MAP_START
+name|arm_devmap_lastaddr
+argument_list|()
 operator|)
 return|;
 block|}
@@ -127,7 +117,7 @@ name|initarm_early_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{  }
+block|{ }
 end_function
 
 begin_function
@@ -148,40 +138,8 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_define
-define|#
-directive|define
-name|FDT_DEVMAP_MAX
-value|(1 + 2 + 1 + 1)
-end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|arm_devmap_entry
-name|fdt_devmap
-index|[
-name|FDT_DEVMAP_MAX
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * Construct pmap_devmap[] with DT-derived config data.  */
+comment|/*  * Set up static device mappings.  *  * This covers all the on-chip device with 1MB section mappings, which is good  * for performance (uses fewer TLB entries for device access).  *  * XXX It also covers a block of SRAM and some GPU (mali400) stuff that maybe  * shouldn't be device-mapped.  The original code mapped a 4MB block, but  * perhaps a 1MB block would be more appropriate.  */
 end_comment
 
 begin_function
@@ -191,71 +149,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_va
-operator|=
-literal|0xE1C00000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_pa
-operator|=
-literal|0x01C00000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_size
-operator|=
-literal|0x00400000
-expr_stmt|;
-comment|/* 4 MB */
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_prot
-operator|=
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_cache
-operator|=
-name|PTE_DEVICE
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-name|arm_devmap_register_table
+name|arm_devmap_add_entry
 argument_list|(
-operator|&
-name|fdt_devmap
-index|[
-literal|0
-index|]
+literal|0x01C00000
+argument_list|,
+literal|0x00400000
 argument_list|)
 expr_stmt|;
+comment|/* 4MB */
 return|return
 operator|(
 literal|0
