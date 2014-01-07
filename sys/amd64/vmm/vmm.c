@@ -1352,6 +1352,12 @@ argument_list|)
 expr_stmt|;
 name|vm
 operator|->
+name|vmspace
+operator|=
+name|vmspace
+expr_stmt|;
+name|vm
+operator|->
 name|cookie
 operator|=
 name|VMINIT
@@ -1417,12 +1423,6 @@ name|vm
 argument_list|,
 name|BSP
 argument_list|)
-expr_stmt|;
-name|vm
-operator|->
-name|vmspace
-operator|=
-name|vmspace
 expr_stmt|;
 operator|*
 name|retvm
