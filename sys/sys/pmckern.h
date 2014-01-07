@@ -316,7 +316,7 @@ parameter_list|,
 name|na
 parameter_list|)
 define|\
-value|do {										\ 	if (pmc_##pr##_##mo##_##fu##_##na.ps_running) {				\ 		struct pmckern_soft ks;						\ 		register_t intr;						\ 		intr = intr_disable();						\ 		PMC_FAKE_TRAPFRAME(&pmc_tf[curcpu]);				\ 		ks.pm_ev = pmc_##pr##_##mo##_##fu##_##na.ps_ev.pm_ev_code;	\ 		ks.pm_cpu = PCPU_GET(cpuid);					\ 		ks.pm_tf =&pmc_tf[curcpu];					\ 		PMC_CALL_HOOK_UNLOCKED(curthread,				\ 		    PMC_FN_SOFT_SAMPLING, (void *)&ks);			\ 		intr_restore(intr);						\ 	}									\ } while (0)
+value|do {										\ 	if (__predict_false(pmc_##pr##_##mo##_##fu##_##na.ps_running)) {	\ 		struct pmckern_soft ks;						\ 		register_t intr;						\ 		intr = intr_disable();						\ 		PMC_FAKE_TRAPFRAME(&pmc_tf[curcpu]);				\ 		ks.pm_ev = pmc_##pr##_##mo##_##fu##_##na.ps_ev.pm_ev_code;	\ 		ks.pm_cpu = PCPU_GET(cpuid);					\ 		ks.pm_tf =&pmc_tf[curcpu];					\ 		PMC_CALL_HOOK_UNLOCKED(curthread,				\ 		    PMC_FN_SOFT_SAMPLING, (void *)&ks);			\ 		intr_restore(intr);						\ 	}									\ } while (0)
 end_define
 
 begin_else
@@ -366,7 +366,7 @@ parameter_list|,
 name|tf
 parameter_list|)
 define|\
-value|do {										\ 	if (pmc_##pr##_##mo##_##fu##_##na.ps_running) {				\ 		struct pmckern_soft ks;						\ 		register_t intr;						\ 		intr = intr_disable();						\ 		ks.pm_ev = pmc_##pr##_##mo##_##fu##_##na.ps_ev.pm_ev_code;	\ 		ks.pm_cpu = PCPU_GET(cpuid);					\ 		ks.pm_tf = tf;							\ 		PMC_CALL_HOOK_UNLOCKED(curthread,				\ 		    PMC_FN_SOFT_SAMPLING, (void *)&ks);			\ 		intr_restore(intr);						\ 	}									\ } while (0)
+value|do {										\ 	if (__predict_false(pmc_##pr##_##mo##_##fu##_##na.ps_running)) {	\ 		struct pmckern_soft ks;						\ 		register_t intr;						\ 		intr = intr_disable();						\ 		ks.pm_ev = pmc_##pr##_##mo##_##fu##_##na.ps_ev.pm_ev_code;	\ 		ks.pm_cpu = PCPU_GET(cpuid);					\ 		ks.pm_tf = tf;							\ 		PMC_CALL_HOOK_UNLOCKED(curthread,				\ 		    PMC_FN_SOFT_SAMPLING, (void *)&ks);			\ 		intr_restore(intr);						\ 	}									\ } while (0)
 end_define
 
 begin_struct
