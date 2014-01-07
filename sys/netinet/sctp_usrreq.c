@@ -13505,7 +13505,7 @@ name|stcb
 condition|)
 block|{
 comment|/* simply copy out the sockaddr_storage... */
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|len
