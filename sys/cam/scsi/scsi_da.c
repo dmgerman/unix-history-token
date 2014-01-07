@@ -8100,7 +8100,7 @@ name|disk
 operator|->
 name|d_flags
 operator|=
-literal|0
+name|DISKFLAG_DIRECT_COMPLETION
 expr_stmt|;
 if|if
 condition|(

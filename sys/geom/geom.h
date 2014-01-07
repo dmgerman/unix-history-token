@@ -759,6 +759,14 @@ define|#
 directive|define
 name|G_CF_ORPHAN
 value|0x4
+define|#
+directive|define
+name|G_CF_DIRECT_SEND
+value|0x10
+define|#
+directive|define
+name|G_CF_DIRECT_RECEIVE
+value|0x20
 name|struct
 name|devstat
 modifier|*
@@ -864,6 +872,14 @@ define|#
 directive|define
 name|G_PF_ACCEPT_UNMAPPED
 value|0x8
+define|#
+directive|define
+name|G_PF_DIRECT_SEND
+value|0x10
+define|#
+directive|define
+name|G_PF_DIRECT_RECEIVE
+value|0x20
 comment|/* Two fields for the implementing class to use */
 name|void
 modifier|*
@@ -2231,6 +2247,18 @@ parameter_list|)
 define|\
 value|static moduledata_t name##_mod = {			\ 		#name, g_modevent,&class			\ 	};							\ 	DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_FIRST);
 end_define
+
+begin_function_decl
+name|int
+name|g_is_geom_thread
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

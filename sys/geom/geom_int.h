@@ -30,6 +30,28 @@ name|g_collectstats
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|G_STATS_PROVIDERS
+value|1
+end_define
+
+begin_comment
+comment|/* Collect I/O stats for providers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_STATS_CONSUMERS
+value|2
+end_define
+
+begin_comment
+comment|/* Collect I/O stats for consumers */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int

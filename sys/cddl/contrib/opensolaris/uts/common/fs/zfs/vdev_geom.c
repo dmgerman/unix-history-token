@@ -588,6 +588,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|cp
+operator|->
+name|flags
+operator||=
+name|G_CF_DIRECT_SEND
+operator||
+name|G_CF_DIRECT_RECEIVE
+expr_stmt|;
 return|return
 operator|(
 name|cp
