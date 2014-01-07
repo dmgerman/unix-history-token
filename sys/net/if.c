@@ -1576,17 +1576,6 @@ comment|/* Catch if_index overflow. */
 if|if
 condition|(
 name|idx
-operator|<
-literal|1
-condition|)
-return|return
-operator|(
-name|ENOSPC
-operator|)
-return|;
-if|if
-condition|(
-name|idx
 operator|>=
 name|V_if_indexlim
 condition|)
