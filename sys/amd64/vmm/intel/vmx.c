@@ -3631,18 +3631,16 @@ argument_list|)
 condition|)
 return|return;
 comment|/* Ask the local apic for a vector to inject */
-name|vector
-operator|=
+if|if
+condition|(
+operator|!
 name|vlapic_pending_intr
 argument_list|(
 name|vlapic
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|vector
-operator|<
-literal|0
+argument_list|)
 condition|)
 return|return;
 if|if

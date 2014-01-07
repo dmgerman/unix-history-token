@@ -3915,14 +3915,15 @@ operator|&&
 operator|(
 name|intr_disabled
 operator|||
+operator|!
 name|vlapic_pending_intr
 argument_list|(
 name|vcpu
 operator|->
 name|vlapic
+argument_list|,
+name|NULL
 argument_list|)
-operator|<
-literal|0
 operator|)
 condition|)
 block|{

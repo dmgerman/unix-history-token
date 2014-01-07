@@ -988,7 +988,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|vlapic_set_intr_ready
 parameter_list|(
 name|struct
@@ -1007,10 +1007,6 @@ name|struct
 name|LAPIC
 modifier|*
 name|lapic
-init|=
-name|vlapic
-operator|->
-name|apic_page
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -1024,22 +1020,28 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-if|if
-condition|(
-name|vector
-operator|<
-literal|0
-operator|||
+name|KASSERT
+argument_list|(
 name|vector
 operator|>=
-literal|256
-condition|)
-name|panic
-argument_list|(
-literal|"vlapic_set_intr_ready: invalid vector %d\n"
-argument_list|,
+literal|0
+operator|&&
 name|vector
+operator|<
+literal|256
+argument_list|,
+operator|(
+literal|"invalid vector %d"
+operator|,
+name|vector
+operator|)
 argument_list|)
+expr_stmt|;
+name|lapic
+operator|=
+name|vlapic
+operator|->
+name|apic_page
 expr_stmt|;
 if|if
 condition|(
@@ -1063,7 +1065,11 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1079,7 +1085,20 @@ argument_list|,
 name|APIC_ESR_RECEIVE_ILLEGAL_VECTOR
 argument_list|)
 expr_stmt|;
-return|return;
+name|VLAPIC_CTR1
+argument_list|(
+name|vlapic
+argument_list|,
+literal|"vlapic ignoring interrupt to vector %d"
+argument_list|,
+name|vector
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 name|idx
 operator|=
@@ -1161,6 +1180,11 @@ argument_list|,
 literal|"vlapic_set_intr_ready"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -1732,6 +1756,8 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|vlapic_set_intr_ready
 argument_list|(
 name|vlapic
@@ -1740,7 +1766,7 @@ name|vec
 argument_list|,
 name|false
 argument_list|)
-expr_stmt|;
+condition|)
 name|vcpu_notify_event
 argument_list|(
 name|vlapic
@@ -3705,12 +3731,32 @@ argument_list|,
 name|APIC_ESR_SEND_ILLEGAL_VECTOR
 argument_list|)
 expr_stmt|;
+name|VLAPIC_CTR1
+argument_list|(
+name|vlapic
+argument_list|,
+literal|"Ignoring invalid IPI %d"
+argument_list|,
+name|vec
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+name|VLAPIC_CTR2
+argument_list|(
+name|vlapic
+argument_list|,
+literal|"icrlo 0x%016lx triggered ipi %d"
+argument_list|,
+name|icrval
+argument_list|,
+name|vec
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mode
@@ -3887,8 +3933,21 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|VLAPIC_CTR2
+argument_list|(
+name|vlapic
+argument_list|,
+literal|"vlapic sending ipi %d "
+literal|"to vcpuid %d"
+argument_list|,
+name|vec
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 block|}
 else|else
+block|{
 name|vm_inject_nmi
 argument_list|(
 name|vlapic
@@ -3898,6 +3957,17 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|VLAPIC_CTR1
+argument_list|(
+name|vlapic
+argument_list|,
+literal|"vlapic sending ipi nmi "
+literal|"to vcpuid %d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -4115,6 +4185,10 @@ name|struct
 name|vlapic
 modifier|*
 name|vlapic
+parameter_list|,
+name|int
+modifier|*
+name|vecptr
 parameter_list|)
 block|{
 name|struct
@@ -4230,9 +4304,20 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vecptr
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|vecptr
+operator|=
+name|vector
+expr_stmt|;
 return|return
 operator|(
-name|vector
+literal|1
 operator|)
 return|;
 block|}
@@ -4242,8 +4327,7 @@ block|}
 block|}
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 block|}
