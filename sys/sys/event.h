@@ -130,8 +130,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EVFILT_SENDFILE
+value|(-12)
+end_define
+
+begin_comment
+comment|/* attached to sendfile requests */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EVFILT_SYSCOUNT
-value|11
+value|12
 end_define
 
 begin_define
@@ -1002,6 +1013,11 @@ modifier|*
 name|p_lio
 decl_stmt|;
 comment|/* LIO job pointer */
+name|void
+modifier|*
+name|p_v
+decl_stmt|;
+comment|/* generic other pointer */
 block|}
 name|kn_ptr
 union|;
