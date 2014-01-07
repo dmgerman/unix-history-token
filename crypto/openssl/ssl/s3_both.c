@@ -536,6 +536,20 @@ decl_stmt|;
 name|int
 name|slen
 decl_stmt|;
+comment|/* If no new cipher setup return immediately: other functions will 	 * set the appropriate error. 	 */
+if|if
+condition|(
+name|s
+operator|->
+name|s3
+operator|->
+name|tmp
+operator|.
+name|new_cipher
+operator|==
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 name|s
