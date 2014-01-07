@@ -489,21 +489,6 @@ modifier|*
 name|delimiters
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-operator|*
-name|get_size_type
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|set_size_type
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
 comment|/* Returns key positions.  */
 specifier|const
 name|Positions
@@ -637,11 +622,6 @@ specifier|const
 name|char
 modifier|*
 name|_delimiters
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|_size_type
 decl_stmt|;
 comment|/* Contains user-specified key choices.  */
 name|Positions
