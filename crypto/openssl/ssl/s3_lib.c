@@ -12183,11 +12183,12 @@ name|algorithm2
 decl_stmt|;
 if|if
 condition|(
-name|TLS1_get_version
-argument_list|(
 name|s
-argument_list|)
-operator|>=
+operator|->
+name|method
+operator|->
+name|version
+operator|==
 name|TLS1_2_VERSION
 operator|&&
 name|alg2

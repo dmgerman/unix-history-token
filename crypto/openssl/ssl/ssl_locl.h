@@ -1951,6 +1951,16 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|SSL_IS_DTLS
+parameter_list|(
+name|s
+parameter_list|)
+value|(s->method->version == DTLS1_VERSION)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IMPLEMENT_tls_meth_func
 parameter_list|(
 name|version
