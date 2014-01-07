@@ -8756,22 +8756,29 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|netmap_adapter_put
 argument_list|(
 name|na
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+comment|/* someone is still using the adapter, 		 * tell them that the interface is gone 		 */
 name|na
 operator|->
 name|ifp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* give them a chance to notice */
 name|netmap_enable_all_rings
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 name|NMG_UNLOCK
 argument_list|()
 expr_stmt|;

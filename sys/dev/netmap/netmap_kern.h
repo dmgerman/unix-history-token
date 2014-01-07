@@ -2684,7 +2684,7 @@ parameter_list|(
 name|na
 parameter_list|)
 define|\
-value|do {						\ 		struct netmap_adapter *__na = na;	\ 		D("putting %p:%s (%d)", __na, NM_IFPNAME(__na->ifp), __na->na_refcount);	\ 		__netmap_adapter_put(__na);		\ 	} while (0)
+value|({						\ 		struct netmap_adapter *__na = na;	\ 		D("putting %p:%s (%d)", __na, NM_IFPNAME(__na->ifp), __na->na_refcount);	\ 		__netmap_adapter_put(__na);		\ 	})
 end_define
 
 begin_else
