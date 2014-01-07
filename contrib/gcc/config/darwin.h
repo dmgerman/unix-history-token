@@ -459,6 +459,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEBUG_PUBTYPES_SECTION
+value|"__DWARF,__debug_pubtypes,regular,debug"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEBUG_STR_SECTION
 value|"__DWARF,__debug_str,regular,debug"
 end_define
