@@ -377,18 +377,6 @@ define|#
 directive|define
 name|CAM_SIM_MPSAFE
 value|0x02
-define|#
-directive|define
-name|CAM_SIM_ON_DONEQ
-value|0x04
-define|#
-directive|define
-name|CAM_SIM_POLLED
-value|0x08
-define|#
-directive|define
-name|CAM_SIM_BATCH
-value|0x10
 name|struct
 name|callout
 name|callout
@@ -403,22 +391,6 @@ name|int
 name|refcount
 decl_stmt|;
 comment|/* References to the SIM. */
-comment|/* "Pool" of inactive ccbs managed by xpt_get_ccb and xpt_release_ccb */
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|ccb_hdr
-argument_list|)
-name|ccb_freeq
-expr_stmt|;
-comment|/* 	 * Maximum size of ccb pool.  Modified as devices are added/removed 	 * or have their * opening counts changed. 	 */
-name|u_int
-name|max_ccbs
-decl_stmt|;
-comment|/* Current count of allocated ccbs */
-name|u_int
-name|ccb_count
-decl_stmt|;
 block|}
 struct|;
 end_struct
