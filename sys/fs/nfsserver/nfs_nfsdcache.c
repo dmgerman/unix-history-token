@@ -3783,6 +3783,8 @@ expr_stmt|;
 name|lastslot
 operator|=
 name|NFSRVCACHE_HASHSIZE
+operator|-
+literal|1
 expr_stmt|;
 block|}
 else|else
