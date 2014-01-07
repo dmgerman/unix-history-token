@@ -4056,6 +4056,23 @@ define|#
 directive|define
 name|EXTENDED_DEV_INFO_SHARED_CFG_SRIOV_HIDE_MENU
 value|0x00000200
+comment|/*  Overide PCIE revision ID when enabled the, 	    revision ID will set to B1=='0x11' */
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OVR_REV_ID_MASK
+value|0x00000400
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OVR_REV_ID_SHIFT
+value|10
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OVR_REV_ID_DISABLED
+value|0x00000000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OVR_REV_ID_ENABLED
+value|0x00000400
 comment|/*  Threshold in celcius for max continuous operation */
 name|uint32_t
 name|temperature_report
