@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: skeleton.c,v 1.33 2013/09/25 22:44:22 tom Exp $ */
+comment|/* $Id: skeleton.c,v 1.35 2014/01/01 16:52:33 tom Exp $ */
 end_comment
 
 begin_include
@@ -544,11 +544,7 @@ literal|"        if (yydebug)"
 block|,
 literal|"        {"
 block|,
-literal|"            yys = 0;"
-block|,
-literal|"            if (yychar<= YYMAXTOKEN) yys = yyname[yychar];"
-block|,
-literal|"            if (!yys) yys = \"illegal-symbol\";"
+literal|"            yys = yyname[YYTRANSLATE(yychar)];"
 block|,
 literal|"            printf(\"%sdebug: state %d, reading %d (%s)\\n\","
 block|,
@@ -724,11 +720,7 @@ literal|"        if (yydebug)"
 block|,
 literal|"        {"
 block|,
-literal|"            yys = 0;"
-block|,
-literal|"            if (yychar<= YYMAXTOKEN) yys = yyname[yychar];"
-block|,
-literal|"            if (!yys) yys = \"illegal-symbol\";"
+literal|"            yys = yyname[YYTRANSLATE(yychar)];"
 block|,
 literal|"            printf(\"%sdebug: state %d, error recovery discards token %d\  (%s)\\n\","
 block|,
@@ -828,11 +820,7 @@ literal|"            if (yydebug)"
 block|,
 literal|"            {"
 block|,
-literal|"                yys = 0;"
-block|,
-literal|"                if (yychar<= YYMAXTOKEN) yys = yyname[yychar];"
-block|,
-literal|"                if (!yys) yys = \"illegal-symbol\";"
+literal|"                yys = yyname[YYTRANSLATE(yychar)];"
 block|,
 literal|"                printf(\"%sdebug: state %d, reading %d (%s)\\n\","
 block|,

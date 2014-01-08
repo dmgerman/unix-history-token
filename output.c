@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: output.c,v 1.45 2013/03/05 00:29:17 tom Exp $ */
+comment|/* $Id: output.c,v 1.47 2014/01/01 17:22:38 tom Exp $ */
 end_comment
 
 begin_include
@@ -4176,6 +4176,14 @@ argument_list|,
 name|max
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define YYTRANSLATE(a) ((a)> YYMAXTOKEN ? "
+literal|"(YYMAXTOKEN + 1) : (a))\n"
+argument_list|)
+expr_stmt|;
 name|symnam
 operator|=
 name|TMALLOC
@@ -4186,7 +4194,7 @@ operator|*
 argument_list|,
 name|max
 operator|+
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|NO_SPACE
@@ -4203,7 +4211,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|max
 condition|;
 operator|++
@@ -4251,11 +4259,40 @@ index|]
 operator|=
 literal|"end-of-file"
 expr_stmt|;
+name|symnam
+index|[
+name|max
+operator|+
+literal|1
+index|]
+operator|=
+literal|"illegal-symbol"
+expr_stmt|;
+comment|/*      * bison's yytname[] array is roughly the same as byacc's yyname[] array.      * The difference is that byacc does not predefine "$end", "$error" or      * "$undefined".       *      * If the grammar declares "%token-table", define symbol "yytname" so      * an application such as ntpd can build.      */
+if|if
+condition|(
+name|token_table
+condition|)
+block|{
+name|output_line
+argument_list|(
+literal|"#undef yytname"
+argument_list|)
+expr_stmt|;
+name|output_line
+argument_list|(
+literal|"#define yytname yyname"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|output_line
 argument_list|(
 literal|"#if YYDEBUG"
 argument_list|)
 expr_stmt|;
+block|}
 name|start_str_table
 argument_list|(
 literal|"name"
@@ -4274,6 +4311,8 @@ init|;
 name|i
 operator|<=
 name|max
+operator|+
+literal|1
 condition|;
 operator|++
 name|i
@@ -4739,6 +4778,15 @@ expr_stmt|;
 name|FREE
 argument_list|(
 name|symnam
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|token_table
+condition|)
+name|output_line
+argument_list|(
+literal|"#if YYDEBUG"
 argument_list|)
 expr_stmt|;
 name|start_str_table

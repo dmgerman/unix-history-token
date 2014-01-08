@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: reader.c,v 1.37 2013/09/25 23:46:18 tom Exp $ */
+comment|/* $Id: reader.c,v 1.38 2014/01/01 14:23:27 Christos.Zoulas Exp $ */
 end_comment
 
 begin_include
@@ -1281,6 +1281,18 @@ condition|)
 return|return
 operator|(
 name|LEX_PARAM
+operator|)
+return|;
+if|if
+condition|(
+name|matchec
+argument_list|(
+literal|"token-table"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|TOKEN_TABLE
 operator|)
 return|;
 if|if
@@ -5261,6 +5273,14 @@ name|copy_param
 argument_list|(
 name|k
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TOKEN_TABLE
+case|:
+name|token_table
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
