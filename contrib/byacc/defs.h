@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: defs.h,v 1.37 2012/05/26 15:23:00 tom Exp $ */
+comment|/* $Id: defs.h,v 1.38 2014/01/01 14:23:27 Christos.Zoulas Exp $ */
 end_comment
 
 begin_ifdef
@@ -641,6 +641,13 @@ define|#
 directive|define
 name|POSIX_YACC
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOKEN_TABLE
+value|16
 end_define
 
 begin_comment
@@ -1287,6 +1294,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|pure_parser
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|token_table
 decl_stmt|;
 end_decl_stmt
 

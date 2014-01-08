@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.40 2012/09/29 13:11:00 Adrian.Bunk Exp $ */
+comment|/* $Id: main.c,v 1.41 2014/01/01 14:23:27 Christos.Zoulas Exp $ */
 end_comment
 
 begin_include
@@ -506,6 +506,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|pure_parser
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|token_table
 decl_stmt|;
 end_decl_stmt
 
