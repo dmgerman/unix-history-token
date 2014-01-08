@@ -234,6 +234,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|vd_postswitch_t
+name|vga_postswitch
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|vt_driver
@@ -259,6 +266,11 @@ operator|.
 name|vd_putchar
 operator|=
 name|vga_putchar
+block|,
+operator|.
+name|vd_postswitch
+operator|=
+name|vga_postswitch
 block|,
 operator|.
 name|vd_priority
@@ -4265,6 +4277,41 @@ operator|(
 name|CN_INTERNAL
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|vga_postswitch
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|)
+block|{
+comment|/* Reinit VGA mode, to restore view after app which change mode. */
+name|vga_initialize
+argument_list|(
+name|vd
+argument_list|,
+operator|(
+name|vd
+operator|->
+name|vd_flags
+operator|&
+name|VDF_TEXTMODE
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Ask vt(9) to update chars on visible area. */
+name|vd
+operator|->
+name|vd_flags
+operator||=
+name|VDF_INVALID
+expr_stmt|;
 block|}
 end_function
 
