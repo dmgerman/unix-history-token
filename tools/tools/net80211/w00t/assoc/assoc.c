@@ -1560,7 +1560,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 block|{
 if|if
@@ -3029,7 +3029,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 comment|/* LLC& SNAP */
 name|ptr
