@@ -1833,6 +1833,9 @@ end_endif
 
 begin_function_decl
 name|__END_DECLS
+ifdef|#
+directive|ifdef
+name|_KERNEL
 comment|/*  * Service connection loss registration  *  * svc_loss_reg(xprt, dispatch)  *	const SVCXPRT *xprt;  *	const void (*dispatch)();  */
 name|__BEGIN_DECLS
 specifier|extern
@@ -1879,6 +1882,8 @@ end_function_decl
 
 begin_function_decl
 name|__END_DECLS
+endif|#
+directive|endif
 comment|/*  * Transport registration.  *  * xprt_register(xprt)  *	SVCXPRT *xprt;  */
 name|__BEGIN_DECLS
 specifier|extern
