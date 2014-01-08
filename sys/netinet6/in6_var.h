@@ -1128,6 +1128,18 @@ parameter_list|)
 value|(	\ 	(((d)->s6_addr32[0] ^ (a)->s6_addr32[0])& (m)->s6_addr32[0]) == 0&& \ 	(((d)->s6_addr32[1] ^ (a)->s6_addr32[1])& (m)->s6_addr32[1]) == 0&& \ 	(((d)->s6_addr32[2] ^ (a)->s6_addr32[2])& (m)->s6_addr32[2]) == 0&& \ 	(((d)->s6_addr32[3] ^ (a)->s6_addr32[3])& (m)->s6_addr32[3]) == 0 )
 end_define
 
+begin_define
+define|#
+directive|define
+name|IN6_MASK_ADDR
+parameter_list|(
+name|a
+parameter_list|,
+name|m
+parameter_list|)
+value|do { \ 	(a)->s6_addr32[0]&= (m)->s6_addr32[0]; \ 	(a)->s6_addr32[1]&= (m)->s6_addr32[1]; \ 	(a)->s6_addr32[2]&= (m)->s6_addr32[2]; \ 	(a)->s6_addr32[3]&= (m)->s6_addr32[3]; \ } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif
