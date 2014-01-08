@@ -6010,8 +6010,7 @@ if|if
 condition|(
 name|fibnum
 operator|==
-operator|-
-literal|1
+name|RT_ALL_FIBS
 condition|)
 block|{
 if|if
@@ -6792,8 +6791,7 @@ name|cmd
 argument_list|,
 name|flags
 argument_list|,
-operator|-
-literal|1
+name|RT_ALL_FIBS
 argument_list|)
 operator|)
 return|;
@@ -6874,8 +6872,7 @@ case|:
 comment|/* We do support multiple FIBs. */
 name|fib
 operator|=
-operator|-
-literal|1
+name|RT_ALL_FIBS
 expr_stmt|;
 break|break;
 block|}

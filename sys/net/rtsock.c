@@ -572,13 +572,6 @@ name|RTS_FILTER_FIB
 value|M_PROTO8
 end_define
 
-begin_define
-define|#
-directive|define
-name|RTS_ALLFIBS
-value|-1
-end_define
-
 begin_struct
 specifier|static
 struct|struct
@@ -6246,7 +6239,7 @@ if|if
 condition|(
 name|fibnum
 operator|!=
-name|RTS_ALLFIBS
+name|RT_ALL_FIBS
 condition|)
 block|{
 name|KASSERT
@@ -6363,7 +6356,7 @@ name|flags
 argument_list|,
 name|error
 argument_list|,
-name|RTS_ALLFIBS
+name|RT_ALL_FIBS
 argument_list|)
 expr_stmt|;
 block|}
@@ -6914,7 +6907,7 @@ if|if
 condition|(
 name|fibnum
 operator|!=
-name|RTS_ALLFIBS
+name|RT_ALL_FIBS
 condition|)
 block|{
 name|KASSERT
@@ -7001,7 +6994,7 @@ name|error
 argument_list|,
 name|rt
 argument_list|,
-name|RTS_ALLFIBS
+name|RT_ALL_FIBS
 argument_list|)
 expr_stmt|;
 block|}
@@ -10223,8 +10216,7 @@ index|[
 literal|3
 index|]
 operator|==
-operator|-
-literal|1
+name|RT_ALL_FIBS
 operator|)
 condition|?
 name|req
