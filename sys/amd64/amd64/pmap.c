@@ -20256,7 +20256,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove all pages from specified address space  * this aids process exit speeds.  Also, this code  * is special cased for current process only, but  * can have the more generic (and slightly slower)  * mode enabled.  This is much faster than pmap_remove  * in the case of running down an entire address space.  */
+comment|/*  * Destroy all managed, non-wired mappings in the given user-space  * pmap.  This pmap cannot be active on any processor besides the  * caller.  *                                                                                  * This function cannot be applied to the kernel pmap.  Moreover, it  * is not intended for general use.  It is only to be used during  * process termination.  Consequently, it can be implemented in ways  * that make it faster than pmap_remove().  First, it can more quickly  * destroy mappings by iterating over the pmap's collection of PV  * entries, rather than searching the page table.  Second, it doesn't  * have to test and clear the page table entries atomically, because  * no processor is currently accessing the user address space.  In  * particular, a page table entry's dirty bit won't change state once  * this function starts.  */
 end_comment
 
 begin_function
@@ -20326,23 +20326,80 @@ name|freed
 decl_stmt|,
 name|idx
 decl_stmt|;
-if|if
-condition|(
+comment|/* 	 * Assert that the given pmap is only active on the current 	 * CPU.  Unfortunately, we cannot block another CPU from 	 * activating the pmap while this function is executing. 	 */
+name|KASSERT
+argument_list|(
 name|pmap
-operator|!=
+operator|==
 name|PCPU_GET
 argument_list|(
 name|curpmap
 argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"warning: pmap_remove_pages called with non-current pmap\n"
+argument_list|,
+operator|(
+literal|"non-current pmap %p"
+operator|,
+name|pmap
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+block|{
+name|cpuset_t
+name|other_cpus
+decl_stmt|;
+name|other_cpus
+operator|=
+name|all_cpus
+expr_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
+name|CPU_CLR
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|,
+operator|&
+name|other_cpus
+argument_list|)
+expr_stmt|;
+name|CPU_AND
+argument_list|(
+operator|&
+name|other_cpus
+argument_list|,
+operator|&
+name|pmap
+operator|->
+name|pm_active
+argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|CPU_EMPTY
+argument_list|(
+operator|&
+name|other_cpus
+argument_list|)
+argument_list|,
+operator|(
+literal|"pmap active %p"
+operator|,
+name|pmap
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|lock
 operator|=
 name|NULL
