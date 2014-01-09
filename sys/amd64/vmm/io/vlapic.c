@@ -5983,6 +5983,9 @@ name|vlapic
 parameter_list|,
 name|int
 name|hostcpu
+parameter_list|,
+name|int
+name|ipinum
 parameter_list|)
 block|{
 comment|/* 	 * Post an interrupt to the vcpu currently running on 'hostcpu'. 	 * 	 * This is done by leveraging features like Posted Interrupts (Intel) 	 * Doorbell MSR (AMD AVIC) that avoid a VM exit. 	 * 	 * If neither of these features are available then fallback to 	 * sending an IPI to 'hostcpu'. 	 */
@@ -6013,7 +6016,7 @@ name|ipi_cpu
 argument_list|(
 name|hostcpu
 argument_list|,
-name|vmm_ipinum
+name|ipinum
 argument_list|)
 expr_stmt|;
 block|}

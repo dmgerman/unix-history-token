@@ -15,22 +15,9 @@ directive|define
 name|_VMM_IPI_H_
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|vm
-struct_decl|;
-end_struct_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vmm_ipinum
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
-name|void
-name|vmm_ipi_init
+name|int
+name|vmm_ipi_alloc
 parameter_list|(
 name|void
 parameter_list|)
@@ -39,9 +26,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vmm_ipi_cleanup
+name|vmm_ipi_free
 parameter_list|(
-name|void
+name|int
+name|num
 parameter_list|)
 function_decl|;
 end_function_decl

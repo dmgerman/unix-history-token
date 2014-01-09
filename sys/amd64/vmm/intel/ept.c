@@ -308,7 +308,8 @@ begin_function
 name|int
 name|ept_init
 parameter_list|(
-name|void
+name|int
+name|ipinum
 parameter_list|)
 block|{
 name|int
@@ -374,7 +375,7 @@ operator|)
 return|;
 name|ept_pmap_flags
 operator|=
-name|vmm_ipinum
+name|ipinum
 operator|&
 name|PMAP_NESTED_IPIMASK
 expr_stmt|;

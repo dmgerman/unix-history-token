@@ -108,7 +108,8 @@ modifier|*
 name|vmm_init_func_t
 function_decl|)
 parameter_list|(
-name|void
+name|int
+name|ipinum
 parameter_list|)
 function_decl|;
 end_typedef

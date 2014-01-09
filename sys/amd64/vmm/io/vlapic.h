@@ -134,7 +134,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Post an interrupt to the vcpu running on 'hostcpu'. This will use a  * hardware assist if available (e.g. Posted Interrupt) or fall back to  * sending an IPI to interrupt the 'hostcpu'.  */
+comment|/*  * Post an interrupt to the vcpu running on 'hostcpu'. This will use a  * hardware assist if available (e.g. Posted Interrupt) or fall back to  * sending an 'ipinum' to interrupt the 'hostcpu'.  */
 end_comment
 
 begin_function_decl
@@ -148,6 +148,9 @@ name|vlapic
 parameter_list|,
 name|int
 name|hostcpu
+parameter_list|,
+name|int
+name|ipinum
 parameter_list|)
 function_decl|;
 end_function_decl

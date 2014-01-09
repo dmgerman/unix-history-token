@@ -1638,7 +1638,8 @@ specifier|static
 name|int
 name|vmx_init
 parameter_list|(
-name|void
+name|int
+name|ipinum
 parameter_list|)
 block|{
 name|int
@@ -2186,7 +2187,9 @@ comment|/* Initialize EPT */
 name|error
 operator|=
 name|ept_init
-argument_list|()
+argument_list|(
+name|ipinum
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
