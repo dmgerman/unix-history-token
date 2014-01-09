@@ -773,6 +773,28 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EEXIST
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"can't load %s: module "
+literal|"already loaded or "
+literal|"in kernel"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|warn
 argument_list|(
 literal|"can't load %s"
@@ -786,6 +808,7 @@ expr_stmt|;
 name|errors
 operator|++
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
