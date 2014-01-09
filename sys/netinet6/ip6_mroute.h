@@ -628,11 +628,19 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * The kernel's multicast-interface structure.  */
