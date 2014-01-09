@@ -9813,6 +9813,10 @@ case|:
 case|case
 name|REFERENCE_TYPE
 case|:
+comment|/* APPLE LOCAL blocks 5862465 */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
 case|case
 name|OFFSET_TYPE
 case|:

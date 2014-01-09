@@ -2158,7 +2158,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-return|return;
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"error retrieving radix pointers"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|fam
@@ -2329,6 +2335,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|rt_tables
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

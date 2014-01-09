@@ -3976,6 +3976,20 @@ name|RT3070_TX1_PD
 value|(1<< 5)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RT3070_RX2_PD
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3070_TX2_PD
+value|(1<< 7)
+end_define
+
 begin_comment
 comment|/* possible flags for RT3020 RF register 15 */
 end_comment
@@ -4018,6 +4032,39 @@ define|#
 directive|define
 name|RT3070_RX_LO2
 value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* possible flags for RT3053 RF register 18 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT3593_AUTOTUNE_BYPASS
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* possible flags for RT3053 RF register 50 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT3593_TX_LO2
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* possible flags for RT3053 RF register 51 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT3593_TX_LO1
+value|(1<< 4)
 end_define
 
 begin_comment
@@ -4604,6 +4651,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RT3593_RF_3053
+value|0x000d
+end_define
+
+begin_comment
+comment|/* dual-band 3T3R */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RT5592_RF_5592
 value|0x000f
 end_define
@@ -4937,6 +4995,129 @@ value|0x82
 end_define
 
 begin_comment
+comment|/* EEPROM registers for RT3593. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_FREQ_LEDS
+value|0x21
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_FREQ
+value|0x22
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_LED1
+value|0x22
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_LED2
+value|0x23
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_LED3
+value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_LNA
+value|0x26
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_LNA_5GHZ
+value|0x27
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_RSSI1_2GHZ
+value|0x28
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_RSSI2_2GHZ
+value|0x29
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_RSSI1_5GHZ
+value|0x2a
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_RSSI2_5GHZ
+value|0x2b
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_PWR2GHZ_BASE1
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_PWR2GHZ_BASE2
+value|0x37
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_PWR2GHZ_BASE3
+value|0x3e
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_PWR5GHZ_BASE1
+value|0x4b
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_PWR5GHZ_BASE2
+value|0x65
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_EEPROM_PWR5GHZ_BASE3
+value|0x7f
+end_define
+
+begin_comment
 comment|/*  * EEPROM IQ calibration.  */
 end_comment
 
@@ -5202,6 +5383,14 @@ directive|define
 name|RT3572_DEF_RF
 define|\
 value|{  0, 0x70 },	\ 	{  1, 0x81 },	\ 	{  2, 0xf1 },	\ 	{  3, 0x02 },	\ 	{  4, 0x4c },	\ 	{  5, 0x05 },	\ 	{  6, 0x4a },	\ 	{  7, 0xd8 },	\ 	{  9, 0xc3 },	\ 	{ 10, 0xf1 },	\ 	{ 11, 0xb9 },	\ 	{ 12, 0x70 },	\ 	{ 13, 0x65 },	\ 	{ 14, 0xa0 },	\ 	{ 15, 0x53 },	\ 	{ 16, 0x4c },	\ 	{ 17, 0x23 },	\ 	{ 18, 0xac },	\ 	{ 19, 0x93 },	\ 	{ 20, 0xb3 },	\ 	{ 21, 0xd0 },	\ 	{ 22, 0x00 },  	\ 	{ 23, 0x3c },	\ 	{ 24, 0x16 },	\ 	{ 25, 0x15 },	\ 	{ 26, 0x85 },	\ 	{ 27, 0x00 },	\ 	{ 28, 0x00 },	\ 	{ 29, 0x9b },	\ 	{ 30, 0x09 },	\ 	{ 31, 0x10 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT3593_DEF_RF
+define|\
+value|{  1, 0x03 },	\ 	{  3, 0x80 },	\ 	{  5, 0x00 },	\ 	{  6, 0x40 },	\ 	{  8, 0xf1 },	\ 	{  9, 0x02 },	\ 	{ 10, 0xd3 },	\ 	{ 11, 0x40 },	\ 	{ 12, 0x4e },	\ 	{ 13, 0x12 },	\ 	{ 18, 0x40 },	\ 	{ 22, 0x20 },	\ 	{ 30, 0x10 },	\ 	{ 31, 0x80 },	\ 	{ 32, 0x78 },	\ 	{ 33, 0x3b },	\ 	{ 34, 0x3c },	\ 	{ 35, 0xe0 },	\ 	{ 38, 0x86 },	\ 	{ 39, 0x23 },	\ 	{ 44, 0xd3 },	\ 	{ 45, 0xbb },	\ 	{ 46, 0x60 },	\ 	{ 49, 0x81 },	\ 	{ 50, 0x86 },	\ 	{ 51, 0x75 },	\ 	{ 52, 0x45 },	\ 	{ 53, 0x18 },	\ 	{ 54, 0x18 },	\ 	{ 55, 0x18 },	\ 	{ 56, 0xdb },	\ 	{ 57, 0x6e }
 end_define
 
 begin_define

@@ -89,35 +89,6 @@ directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
-begin_comment
-comment|/* FIXME move to tegrareg.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TEGRA2_BASE
-value|0xE0000000
-end_define
-
-begin_comment
-comment|/* KVM base for peripherials */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TEGRA2_UARTA_VA_BASE
-value|0xE0006000
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEGRA2_UARTA_PA_BASE
-value|0x70006000
-end_define
-
 begin_define
 define|#
 directive|define
@@ -143,14 +114,14 @@ begin_define
 define|#
 directive|define
 name|OSC_FREQ_DET_TRIG
-value|(1<<31)
+value|(1U<<31)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OSC_FREQ_DET_BUSY
-value|(1<<31)
+value|(1U<<31)
 end_define
 
 begin_if
@@ -174,7 +145,8 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|fdt_immr_va
+name|arm_devmap_lastaddr
+argument_list|()
 operator|)
 return|;
 block|}
@@ -186,23 +158,7 @@ name|initarm_early_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-if|if
-condition|(
-name|fdt_immr_addr
-argument_list|(
-name|TEGRA2_BASE
-argument_list|)
-operator|!=
-literal|0
-condition|)
-comment|/* FIXME ???? */
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -223,44 +179,8 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_define
-define|#
-directive|define
-name|FDT_DEVMAP_MAX
-value|(1 + 2 + 1 + 1)
-end_define
-
 begin_comment
-comment|/* FIXME */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|arm_devmap_entry
-name|fdt_devmap
-index|[
-name|FDT_DEVMAP_MAX
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Construct pmap_devmap[] with DT-derived config data.  */
+comment|/*  * Add a static mapping for the register range that includes the debug uart.  * It's not clear this is needed, but the original code established this mapping  * before conversion to the newer arm_devmap_add_entry() routine.  */
 end_comment
 
 begin_function
@@ -270,68 +190,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_va
-operator|=
-literal|0xe0000000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_pa
-operator|=
-literal|0x70000000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_size
-operator|=
-literal|0x100000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_prot
-operator|=
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_cache
-operator|=
-name|PTE_NOCACHE
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-name|arm_devmap_register_table
+name|arm_devmap_add_entry
 argument_list|(
-operator|&
-name|fdt_devmap
-index|[
-literal|0
-index|]
+literal|0x70000000
+argument_list|,
+literal|0x00100000
 argument_list|)
 expr_stmt|;
 return|return

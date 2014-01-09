@@ -1593,6 +1593,8 @@ name|i
 operator|=
 literal|0
 init|;
+name|i
+operator|<
 name|nitems
 argument_list|(
 name|padinfo

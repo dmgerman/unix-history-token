@@ -8,6 +8,10 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+end_comment
+
+begin_comment
 comment|/*  * Common name validation routines for ZFS.  These routines are shared by the  * userland code as well as the ioctl() layer to ensure that we don't  * inadvertently expose a hole through direct ioctl()s that never gets tested.  * In userland, however, we want significantly more information about _why_ the  * name is invalid.  In the kernel, we only care whether it's valid or not.  * Each routine therefore takes a 'namecheck_err_t' which describes exactly why  * the name failed to validate.  *  * Each function returns 0 on success, -1 on error.  */
 end_comment
 
@@ -137,7 +141,7 @@ end_comment
 
 begin_function
 name|int
-name|snapshot_namecheck
+name|zfs_component_namecheck
 parameter_list|(
 specifier|const
 name|char
@@ -352,7 +356,7 @@ return|;
 block|}
 return|return
 operator|(
-name|snapshot_namecheck
+name|zfs_component_namecheck
 argument_list|(
 operator|&
 name|path

@@ -378,37 +378,5 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|infohandler
-parameter_list|(
-name|int
-name|sig
-name|__unused
-parameter_list|)
-block|{
-name|got_siginfo
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|alarmhandler
-parameter_list|(
-name|int
-name|sig
-name|__unused
-parameter_list|)
-block|{
-name|got_sigalarm
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
 end_unit
 

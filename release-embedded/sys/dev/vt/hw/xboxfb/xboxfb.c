@@ -710,7 +710,7 @@ name|sc
 operator|->
 name|xbox_fb_tag
 operator|=
-name|I386_BUS_SPACE_MEM
+name|X86_BUS_SPACE_MEM
 expr_stmt|;
 name|sc
 operator|->

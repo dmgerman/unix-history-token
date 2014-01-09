@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|BXE_DRIVER_VERSION
-value|"1.78.75"
+value|"1.78.77"
 end_define
 
 begin_include
@@ -20554,6 +20554,11 @@ name|char
 modifier|*
 name|type
 decl_stmt|;
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -20597,7 +20602,9 @@ name|sc
 argument_list|,
 name|DBG_MBUF
 argument_list|,
-literal|"mbuf=%p m_len=%d m_flags=0x%b m_data=%p\n"
+literal|"%02d: mbuf=%p m_len=%d m_flags=0x%b m_data=%p\n"
+argument_list|,
+name|i
 argument_list|,
 name|m
 argument_list|,
@@ -20609,7 +20616,7 @@ name|m
 operator|->
 name|m_flags
 argument_list|,
-literal|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY"
+name|M_FLAG_BITS
 argument_list|,
 name|m
 operator|->
@@ -20631,7 +20638,9 @@ name|sc
 argument_list|,
 name|DBG_MBUF
 argument_list|,
-literal|"- m_pkthdr: len=%d flags=0x%b csum_flags=%b\n"
+literal|"%02d: - m_pkthdr: tot_len=%d flags=0x%b csum_flags=%b\n"
+argument_list|,
+name|i
 argument_list|,
 name|m
 operator|->
@@ -20643,9 +20652,7 @@ name|m
 operator|->
 name|m_flags
 argument_list|,
-literal|"\20\12M_BCAST\13M_MCAST\14M_FRAG"
-literal|"\15M_FIRSTFRAG\16M_LASTFRAG\21M_VLANTAG"
-literal|"\22M_PROMISC\23M_NOFREE"
+name|M_FLAG_BITS
 argument_list|,
 operator|(
 name|int
@@ -20656,10 +20663,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 argument_list|,
-literal|"\20\1CSUM_IP\2CSUM_TCP\3CSUM_UDP\4CSUM_IP_FRAGS"
-literal|"\5CSUM_FRAGMENT\6CSUM_TSO\11CSUM_IP_CHECKED"
-literal|"\12CSUM_IP_VALID\13CSUM_DATA_VALID"
-literal|"\14CSUM_PSEUDO_HDR"
+name|CSUM_BITS
 argument_list|)
 expr_stmt|;
 block|}
@@ -20695,6 +20699,14 @@ case|:
 name|type
 operator|=
 literal|"EXT_SFBUF"
+expr_stmt|;
+break|break;
+case|case
+name|EXT_JUMBOP
+case|:
+name|type
+operator|=
+literal|"EXT_JUMBOP"
 expr_stmt|;
 break|break;
 case|case
@@ -20774,7 +20786,9 @@ name|sc
 argument_list|,
 name|DBG_MBUF
 argument_list|,
-literal|"- m_ext: %p ext_size=%d, type=%s\n"
+literal|"%02d: - m_ext: %p ext_size=%d type=%s\n"
+argument_list|,
+name|i
 argument_list|,
 name|m
 operator|->
@@ -20814,6 +20828,9 @@ operator|=
 name|m
 operator|->
 name|m_next
+expr_stmt|;
+name|i
+operator|++
 expr_stmt|;
 block|}
 block|}
@@ -22812,12 +22829,109 @@ name|tx_window_violation_std
 operator|++
 expr_stmt|;
 block|}
-comment|/* XXX I don't like this, change to double copy packet */
-comment|/* no sense trying to defrag again, just drop the frame */
+comment|/* lets try to defragment this mbuf */
+name|fp
+operator|->
+name|eth_q_stats
+operator|.
+name|mbuf_defrag_attempts
+operator|++
+expr_stmt|;
+name|m0
+operator|=
+name|m_defrag
+argument_list|(
+operator|*
+name|m_head
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m0
+operator|==
+name|NULL
+condition|)
+block|{
+name|fp
+operator|->
+name|eth_q_stats
+operator|.
+name|mbuf_defrag_failures
+operator|++
+expr_stmt|;
+comment|/* Ugh, just drop the frame... :( */
+name|rc
+operator|=
+name|ENOBUFS
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* defrag successful, try mapping again */
+operator|*
+name|m_head
+operator|=
+name|m0
+expr_stmt|;
+name|error
+operator|=
+name|bus_dmamap_load_mbuf_sg
+argument_list|(
+name|fp
+operator|->
+name|tx_mbuf_tag
+argument_list|,
+name|tx_buf
+operator|->
+name|m_map
+argument_list|,
+name|m0
+argument_list|,
+name|segs
+argument_list|,
+operator|&
+name|nsegs
+argument_list|,
+name|BUS_DMA_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|fp
+operator|->
+name|eth_q_stats
+operator|.
+name|tx_dma_mapping_failure
+operator|++
+expr_stmt|;
+comment|/* No sense in trying to defrag/copy chain, drop it. :( */
+name|rc
+operator|=
+name|error
+expr_stmt|;
+block|}
+comment|/* if the chain is still too long then drop it */
+if|if
+condition|(
+name|__predict_false
+argument_list|(
+name|nsegs
+operator|>
+literal|12
+argument_list|)
+condition|)
+block|{
 name|rc
 operator|=
 name|ENODEV
 expr_stmt|;
+block|}
+block|}
 block|}
 name|bxe_tx_encap_continue
 label|:
@@ -23498,6 +23612,15 @@ operator|=
 name|htole16
 argument_list|(
 name|nbds
+argument_list|)
+expr_stmt|;
+name|tx_start_bd
+operator|->
+name|nbytes
+operator|=
+name|htole16
+argument_list|(
+name|hlen
 argument_list|)
 expr_stmt|;
 name|bd_prod

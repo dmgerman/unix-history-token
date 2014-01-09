@@ -2205,6 +2205,7 @@ argument_list|)
 expr_stmt|;
 name|temp
 operator|=
+operator|(
 name|XREAD4
 argument_list|(
 name|sc
@@ -2214,9 +2215,19 @@ argument_list|,
 name|XHCI_USBCMD
 argument_list|)
 operator|&
-operator|(
 name|XHCI_CMD_HCRST
+operator|)
 operator||
+operator|(
+name|XREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|oper
+argument_list|,
+name|XHCI_USBSTS
+argument_list|)
+operator|&
 name|XHCI_STS_CNR
 operator|)
 expr_stmt|;
@@ -7412,15 +7423,6 @@ argument_list|,
 name|XHCI_USBSTS
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|status
-operator|==
-literal|0
-condition|)
-goto|goto
-name|done
-goto|;
 comment|/* acknowledge interrupts */
 name|XWRITE4
 argument_list|(
@@ -7442,20 +7444,12 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|status
-operator|&
-name|XHCI_STS_EINT
-condition|)
-block|{
 comment|/* check for event(s) */
 name|xhci_interrupt_poll
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|status
@@ -7530,8 +7524,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|done
-label|:
 name|USB_BUS_UNLOCK
 argument_list|(
 operator|&

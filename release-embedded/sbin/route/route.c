@@ -5225,6 +5225,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* Do some sanity checks on resulting request */
 if|if
 condition|(
 name|so
@@ -5240,6 +5241,43 @@ block|{
 name|warnx
 argument_list|(
 literal|"destination parameter required"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|so
+index|[
+name|RTAX_NETMASK
+index|]
+operator|.
+name|ss_len
+operator|!=
+literal|0
+operator|&&
+name|so
+index|[
+name|RTAX_DST
+index|]
+operator|.
+name|ss_family
+operator|!=
+name|so
+index|[
+name|RTAX_NETMASK
+index|]
+operator|.
+name|ss_family
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"destination and netmask family need to be the same"
 argument_list|)
 expr_stmt|;
 name|usage

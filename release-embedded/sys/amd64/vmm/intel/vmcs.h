@@ -103,42 +103,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vmcs_set_defaults
+name|vmcs_init
 parameter_list|(
 name|struct
 name|vmcs
 modifier|*
 name|vmcs
-parameter_list|,
-name|u_long
-name|host_rip
-parameter_list|,
-name|u_long
-name|host_rsp
-parameter_list|,
-name|uint64_t
-name|eptp
-parameter_list|,
-name|uint32_t
-name|pinbased_ctls
-parameter_list|,
-name|uint32_t
-name|procbased_ctls
-parameter_list|,
-name|uint32_t
-name|procbased_ctls2
-parameter_list|,
-name|uint32_t
-name|exit_ctls
-parameter_list|,
-name|uint32_t
-name|entry_ctls
-parameter_list|,
-name|u_long
-name|msr_bitmap
-parameter_list|,
-name|uint16_t
-name|vpid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -506,6 +476,13 @@ name|VMCS_GUEST_TR_SELECTOR
 value|0x0000080E
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMCS_GUEST_INTR_STATUS
+value|0x00000810
+end_define
+
 begin_comment
 comment|/* 16-bit host-state fields */
 end_comment
@@ -638,6 +615,34 @@ define|#
 directive|define
 name|VMCS_EPTP
 value|0x0000201A
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_EOI_EXIT0
+value|0x0000201C
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_EOI_EXIT1
+value|0x0000201E
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_EOI_EXIT2
+value|0x00002020
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_EOI_EXIT3
+value|0x00002022
 end_define
 
 begin_comment
@@ -1752,7 +1757,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXIT_REASON_APIC
+name|EXIT_REASON_APIC_ACCESS
 value|44
 end_define
 
@@ -1824,6 +1829,13 @@ define|#
 directive|define
 name|EXIT_REASON_XSETBV
 value|55
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXIT_REASON_APIC_WRITE
+value|56
 end_define
 
 begin_comment
@@ -1970,6 +1982,44 @@ define|#
 directive|define
 name|EPT_VIOLATION_XLAT_VALID
 value|(1UL<< 8)
+end_define
+
+begin_comment
+comment|/*  * Exit qualification for APIC-access VM exit  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_ACCESS_OFFSET
+parameter_list|(
+name|qual
+parameter_list|)
+value|((qual)& 0xFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_ACCESS_TYPE
+parameter_list|(
+name|qual
+parameter_list|)
+value|(((qual)>> 12)& 0xF)
+end_define
+
+begin_comment
+comment|/*  * Exit qualification for APIC-write VM exit  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_WRITE_OFFSET
+parameter_list|(
+name|qual
+parameter_list|)
+value|((qual)& 0xFFF)
 end_define
 
 begin_endif

@@ -180,6 +180,8 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|vlapic_set_intr_ready
 argument_list|(
 name|vlapic
@@ -188,7 +190,7 @@ name|vector
 argument_list|,
 name|level
 argument_list|)
-expr_stmt|;
+condition|)
 name|vcpu_notify_event
 argument_list|(
 name|vm

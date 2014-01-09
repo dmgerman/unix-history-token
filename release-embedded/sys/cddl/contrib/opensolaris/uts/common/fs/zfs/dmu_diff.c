@@ -682,9 +682,10 @@ operator|)
 return|;
 if|if
 condition|(
+name|BP_IS_HOLE
+argument_list|(
 name|bp
-operator|==
-name|NULL
+argument_list|)
 condition|)
 block|{
 name|uint64_t
@@ -1099,6 +1100,8 @@ argument_list|(
 name|tosnap
 argument_list|,
 name|fromsnap
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{

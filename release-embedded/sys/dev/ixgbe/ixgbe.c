@@ -5823,9 +5823,10 @@ name|num_rx_desc
 operator|-
 literal|1
 operator|-
+name|nm_kr_rxspace
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
+argument_list|)
 decl_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(

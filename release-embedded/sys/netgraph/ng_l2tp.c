@@ -359,7 +359,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((int)((int16_t)(x) - (int16_t)(y)))
+value|((int16_t)((x) - (y)))
 end_define
 
 begin_define

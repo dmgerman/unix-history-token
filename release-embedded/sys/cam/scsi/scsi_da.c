@@ -728,6 +728,7 @@ decl_stmt|;
 name|uint32_t
 name|unmap_max_lba
 decl_stmt|;
+comment|/* Max LBAs in a single range */
 name|uint64_t
 name|ws_max_blks
 decl_stmt|;
@@ -3929,7 +3930,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"unable to retrieve capacity data"
+literal|"unable to retrieve capacity data\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -7192,6 +7193,8 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|,
+name|methods
+decl_stmt|,
 name|value
 decl_stmt|;
 name|softc
@@ -7276,6 +7279,18 @@ operator|(
 name|error
 operator|)
 return|;
+name|methods
+operator|=
+name|softc
+operator|->
+name|delete_available
+operator||
+operator|(
+literal|1
+operator|<<
+name|DA_DELETE_DISABLE
+operator|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -7294,9 +7309,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|softc
-operator|->
-name|delete_available
+name|methods
 operator|&
 operator|(
 literal|1
@@ -9782,11 +9795,6 @@ operator|-
 literal|1
 decl_stmt|;
 name|uint64_t
-name|totalcount
-init|=
-literal|0
-decl_stmt|;
-name|uint64_t
 name|count
 decl_stmt|;
 name|uint32_t
@@ -9934,10 +9942,6 @@ name|lba
 operator|+=
 name|c
 expr_stmt|;
-name|totalcount
-operator|+=
-name|c
-expr_stmt|;
 block|}
 while|while
 condition|(
@@ -9946,29 +9950,10 @@ operator|>
 literal|0
 condition|)
 block|{
-name|c
-operator|=
-name|min
-argument_list|(
-name|count
-argument_list|,
-name|softc
-operator|->
-name|unmap_max_lba
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|totalcount
-operator|+
-name|c
-operator|>
-name|softc
-operator|->
-name|unmap_max_lba
-operator|||
 name|ranges
-operator|>=
+operator|>
 name|softc
 operator|->
 name|unmap_max_ranges
@@ -9980,8 +9965,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"%s issuing short delete %ld> %ld"
-literal|"|| %d>= %d"
+literal|"%s issuing short delete %d> %d\n"
 argument_list|,
 name|da_delete_method_desc
 index|[
@@ -9989,14 +9973,6 @@ name|softc
 operator|->
 name|delete_method
 index|]
-argument_list|,
-name|totalcount
-operator|+
-name|c
-argument_list|,
-name|softc
-operator|->
-name|unmap_max_lba
 argument_list|,
 name|ranges
 argument_list|,
@@ -10007,6 +9983,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|c
+operator|=
+name|min
+argument_list|(
+name|count
+argument_list|,
+name|softc
+operator|->
+name|unmap_max_lba
+argument_list|)
+expr_stmt|;
 name|off
 operator|=
 operator|(
@@ -10047,10 +10034,6 @@ name|lba
 operator|+=
 name|c
 expr_stmt|;
-name|totalcount
-operator|+=
-name|c
-expr_stmt|;
 name|ranges
 operator|++
 expr_stmt|;
@@ -10077,6 +10060,7 @@ operator|->
 name|delete_queue
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Assume no range extension on the next loop iteration to 		 * avoid issuing a short delete. 		 */
 if|if
 condition|(
 name|bp1
@@ -10089,8 +10073,6 @@ name|softc
 operator|->
 name|unmap_max_ranges
 operator|||
-name|totalcount
-operator|+
 name|bp1
 operator|->
 name|bio_bcount
@@ -10104,6 +10086,14 @@ operator|>
 name|softc
 operator|->
 name|unmap_max_lba
+operator|*
+operator|(
+name|softc
+operator|->
+name|unmap_max_ranges
+operator|-
+name|ranges
+operator|)
 condition|)
 break|break;
 block|}
@@ -10587,7 +10577,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"%s issuing short delete %ld> %ld"
+literal|"%s issuing short delete %ld> %ld\n"
 argument_list|,
 name|da_delete_method_desc
 index|[
@@ -10725,7 +10715,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We calculate ws_max_blks here based off d_delmaxsize instead  * of using softc->ws_max_blks as it is absolute max for the  * device not the protocol max which may well be lower  */
+comment|/*  * We calculate ws_max_blks here based off d_delmaxsize instead  * of using softc->ws_max_blks as it is absolute max for the  * device not the protocol max which may well be lower.  */
 end_comment
 
 begin_function
@@ -10861,22 +10851,13 @@ operator|>
 name|ws_max_blks
 condition|)
 block|{
-name|count
-operator|=
-name|min
-argument_list|(
-name|count
-argument_list|,
-name|ws_max_blks
-argument_list|)
-expr_stmt|;
 name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
 argument_list|,
-literal|"%s issuing short delete %ld> %ld"
+literal|"%s issuing short delete %ld> %ld\n"
 argument_list|,
 name|da_delete_method_desc
 index|[
@@ -10885,6 +10866,15 @@ operator|->
 name|delete_method
 index|]
 argument_list|,
+name|count
+argument_list|,
+name|ws_max_blks
+argument_list|)
+expr_stmt|;
+name|count
+operator|=
+name|min
+argument_list|(
 name|count
 argument_list|,
 name|ws_max_blks

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2012-2013 Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2012-2014 Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -1100,9 +1100,10 @@ argument_list|)
 decl_stmt|;
 name|tot
 operator|+=
+name|nm_ring_space
+argument_list|(
 name|ring
-operator|->
-name|avail
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1166,6 +1167,99 @@ name|tot
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*  *  Helper routines for multiple readers from the same queue  - all readers open the device in 'passive' mode (NETMAP_PRIV_RING set).   In this mode a thread that loses the race on a poll() just continues   without calling *xsync()  - all readers share an extra 'ring' which contains the sync information.   In particular we have a shared head+tail pointers that work   together with cur and available   ON RETURN FROM THE SYSCALL:   shadow->head = ring->cur   shadow->tail = ring->tail   shadow->link[i] = i for all slots // mark invalid    */
+end_comment
+
+begin_comment
+unit|struct nm_q_arg { 	u_int want;
+comment|/* Input */
+end_comment
+
+begin_comment
+unit|u_int have;
+comment|/* Output, 0 on error */
+end_comment
+
+begin_comment
+unit|u_int head; 	u_int tail; 	struct netmap_ring *ring; };
+comment|/*  * grab a number of slots from the queue.  */
+end_comment
+
+begin_comment
+unit|struct nm_q_arg my_grab(struct nm_q_arg q) { 	const u_int ns = q.ring->num_slots;  	for (;;) {  		q.head = (volatile u_int)q.ring->head; 		q.have = ns + q.head - (volatile u_int)q.ring->tail; 		if (q.have>= ns) 			q.have -= ns; 		if (q.have == 0)
+comment|/* no space */
+end_comment
+
+begin_comment
+unit|break; 		if (q.want< q.have) 			q.have = q.want; 		q.tail = q.head + q.have; 		if (q.tail>= ns) 			q.tail -= ns; 		if (atomic_cmpset_int(&q.ring->head, q.head, q.tail) 			break;
+comment|/* success */
+end_comment
+
+begin_comment
+unit|} 	D("returns %d out of %d at %d,%d", 		q.have, q.want, q.head, q.tail);
+comment|/* the last one can clear avail ? */
+end_comment
+
+begin_comment
+unit|return q; }   int my_release(struct nm_q_arg q) { 	u_int head = q.head, tail = q.tail, i; 	struct netmap_ring *r = q.ring;
+comment|/* link the block to the next one. 	 * there is no race here because the location is mine. 	 */
+end_comment
+
+begin_comment
+unit|r->slot[head].ptr = tail;
+comment|/* this is mine */
+end_comment
+
+begin_comment
+comment|// memory barrier
+end_comment
+
+begin_comment
+unit|if (r->head != head) 		return;
+comment|/* not my turn to release */
+end_comment
+
+begin_comment
+unit|for (;;) {
+comment|// advance head
+end_comment
+
+begin_comment
+unit|r->head = head = r->slot[head].ptr;
+comment|// barrier ?
+end_comment
+
+begin_comment
+unit|if (head == r->slot[head].ptr) 			break;
+comment|// stop here
+end_comment
+
+begin_comment
+unit|}
+comment|/* we have advanced from q.head to head (r.head might be 	 * further down. 	 */
+end_comment
+
+begin_comment
+comment|// do an ioctl/poll to flush.
+end_comment
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* unused */
+end_comment
 
 end_unit
 

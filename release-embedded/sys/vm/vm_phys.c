@@ -2040,12 +2040,6 @@ name|m
 operator|->
 name|segind
 expr_stmt|;
-name|m
-operator|->
-name|flags
-operator|=
-name|PG_FREE
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m

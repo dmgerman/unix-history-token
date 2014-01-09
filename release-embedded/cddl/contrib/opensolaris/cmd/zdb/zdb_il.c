@@ -8,6 +8,10 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+end_comment
+
+begin_comment
 comment|/*  * Print intent log header and statistics.  */
 end_comment
 
@@ -115,9 +119,14 @@ index|[
 name|BP_SPRINTF_LEN
 index|]
 decl_stmt|;
-name|sprintf_blkptr
+name|snprintf_blkptr
 argument_list|(
 name|blkbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|blkbuf
+argument_list|)
 argument_list|,
 name|bp
 argument_list|)
@@ -702,6 +711,12 @@ literal|"%shas blkptr, %s\n"
 argument_list|,
 name|prefix
 argument_list|,
+operator|!
+name|BP_IS_HOLE
+argument_list|(
+name|bp
+argument_list|)
+operator|&&
 name|bp
 operator|->
 name|blk_birth
@@ -749,16 +764,6 @@ name|bp
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|bp
-operator|->
-name|blk_birth
-operator|==
-literal|0
-condition|)
-block|{
 name|bzero
 argument_list|(
 name|buf
@@ -1770,10 +1775,20 @@ argument_list|,
 literal|", "
 argument_list|)
 expr_stmt|;
-name|sprintf_blkptr
+name|snprintf_blkptr
 argument_list|(
 name|blkbuf
 operator|+
+name|strlen
+argument_list|(
+name|blkbuf
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|blkbuf
+argument_list|)
+operator|-
 name|strlen
 argument_list|(
 name|blkbuf
@@ -2033,13 +2048,13 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|BP_IS_HOLE
+argument_list|(
+operator|&
 name|zh
 operator|->
 name|zh_log
-operator|.
-name|blk_birth
-operator|==
-literal|0
+argument_list|)
 operator|||
 name|verbose
 operator|<

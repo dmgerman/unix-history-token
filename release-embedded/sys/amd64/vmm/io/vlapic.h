@@ -73,7 +73,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns a vector between 32 and 255 if an interrupt is pending in the  * IRR that can be delivered based on the current state of ISR and TPR.  *  * Note that the vector does not automatically transition to the ISR as a  * result of calling this function.  *  * Returns -1 if there is no eligible vector that can be delivered to the  * guest at this time.  */
+comment|/*  * Returns 0 if there is no eligible vector that can be delivered to the  * guest at this time and non-zero otherwise.  *  * If an eligible vector number is found and 'vecptr' is not NULL then it will  * be stored in the location pointed to by 'vecptr'.  *  * Note that the vector does not automatically transition to the ISR as a  * result of calling this function.  */
 end_comment
 
 begin_function_decl
@@ -84,6 +84,10 @@ name|struct
 name|vlapic
 modifier|*
 name|vlapic
+parameter_list|,
+name|int
+modifier|*
+name|vecptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -107,8 +111,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Returns 1 if the vcpu needs to be notified of the interrupt and 0 otherwise.  */
+end_comment
+
 begin_function_decl
-name|void
+name|int
 name|vlapic_set_intr_ready
 parameter_list|(
 name|struct
@@ -121,6 +129,28 @@ name|vector
 parameter_list|,
 name|bool
 name|level
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Post an interrupt to the vcpu running on 'hostcpu'. This will use a  * hardware assist if available (e.g. Posted Interrupt) or fall back to  * sending an 'ipinum' to interrupt the 'hostcpu'.  */
+end_comment
+
+begin_function_decl
+name|void
+name|vlapic_post_intr
+parameter_list|(
+name|struct
+name|vlapic
+modifier|*
+name|vlapic
+parameter_list|,
+name|int
+name|hostcpu
+parameter_list|,
+name|int
+name|ipinum
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -248,21 +278,6 @@ name|delmode
 parameter_list|,
 name|int
 name|vec
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vlapic_post_intr
-parameter_list|(
-name|struct
-name|vlapic
-modifier|*
-name|vlapic
-parameter_list|,
-name|int
-name|hostcpu
 parameter_list|)
 function_decl|;
 end_function_decl

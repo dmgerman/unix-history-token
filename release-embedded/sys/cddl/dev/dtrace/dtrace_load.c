@@ -115,6 +115,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|dtrace_arena
+operator|=
+name|new_unrhdr
+argument_list|(
+literal|1
+argument_list|,
+name|INT_MAX
+argument_list|,
+operator|&
+name|dtrace_unr_mtx
+argument_list|)
+expr_stmt|;
 comment|/* Register callbacks for linker file load and unload events. */
 name|dtrace_kld_load_tag
 operator|=
@@ -221,18 +233,6 @@ argument_list|(
 operator|&
 name|cpu_lock
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|dtrace_arena
-operator|=
-name|new_unrhdr
-argument_list|(
-literal|1
-argument_list|,
-name|INT_MAX
-argument_list|,
-operator|&
-name|dtrace_unr_mtx
 argument_list|)
 expr_stmt|;
 name|dtrace_state_cache

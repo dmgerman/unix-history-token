@@ -102,51 +102,26 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  * __hal_ring_block_next_pointer - Returns the dma address of next block  * @block: RxD block  *  * Returns the dma address of next block stored in the RxD block  */
 end_comment
 
-begin_function
-specifier|static
-specifier|inline
-name|dma_addr_t
+begin_comment
+unit|static inline dma_addr_t
 comment|/* LINTED */
-name|__hal_ring_block_next_pointer
-parameter_list|(
-name|vxge_hal_ring_block_t
-modifier|*
-name|block
-parameter_list|)
-block|{
-return|return
-operator|(
-name|dma_addr_t
-operator|)
-operator|*
-operator|(
-operator|(
-name|u64
-operator|*
-operator|)
-operator|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-operator|(
-name|u8
-operator|*
-operator|)
-name|block
-operator|+
-name|VXGE_HAL_RING_NEXT_BLOCK_POINTER_OFFSET
-operator|)
-operator|)
-operator|)
-return|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|__hal_ring_block_next_pointer(     vxge_hal_ring_block_t *block) { 	return (dma_addr_t)*((u64 *) ((void *)((u8 *) block + 	    VXGE_HAL_RING_NEXT_BLOCK_POINTER_OFFSET))); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * __hal_ring_block_next_pointer_set - Sets the next block pointer in RxD block  * @block: RxD block  * @dma_next: dma address of next block  *  * Sets the next block pointer in RxD block  */

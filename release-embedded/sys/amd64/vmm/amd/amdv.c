@@ -58,7 +58,8 @@ specifier|static
 name|int
 name|amdv_init
 parameter_list|(
-name|void
+name|int
+name|ipinum
 parameter_list|)
 block|{
 name|printf

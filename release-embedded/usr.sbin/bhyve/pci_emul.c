@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhyverun.h"
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|"pci_emul.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pci_lpc.h"
 end_include
 
 begin_define
@@ -292,6 +304,14 @@ begin_decl_stmt
 specifier|static
 name|int
 name|pci_emul_devices
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mem_range
+name|pci_mem_hole
 decl_stmt|;
 end_decl_stmt
 
@@ -4557,10 +4577,6 @@ name|ctx
 parameter_list|)
 block|{
 name|struct
-name|mem_range
-name|memp
-decl_stmt|;
-name|struct
 name|pci_devemu
 modifier|*
 name|pde
@@ -4714,7 +4730,7 @@ expr_stmt|;
 name|memset
 argument_list|(
 operator|&
-name|memp
+name|pci_mem_hole
 argument_list|,
 literal|0
 argument_list|,
@@ -4725,25 +4741,25 @@ name|mem_range
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memp
+name|pci_mem_hole
 operator|.
 name|name
 operator|=
 literal|"PCI hole"
 expr_stmt|;
-name|memp
+name|pci_mem_hole
 operator|.
 name|flags
 operator|=
 name|MEM_F_RW
 expr_stmt|;
-name|memp
+name|pci_mem_hole
 operator|.
 name|base
 operator|=
 name|lowmem
 expr_stmt|;
-name|memp
+name|pci_mem_hole
 operator|.
 name|size
 operator|=
@@ -4759,7 +4775,7 @@ operator|)
 operator|-
 name|lowmem
 expr_stmt|;
-name|memp
+name|pci_mem_hole
 operator|.
 name|handler
 operator|=
@@ -4770,7 +4786,7 @@ operator|=
 name|register_mem_fallback
 argument_list|(
 operator|&
-name|memp
+name|pci_mem_hole
 argument_list|)
 expr_stmt|;
 name|assert
@@ -4785,6 +4801,387 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pci_write_dsdt
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|pci_devinst
+modifier|*
+name|pi
+decl_stmt|;
+name|int
+name|slot
+decl_stmt|,
+name|func
+decl_stmt|;
+name|dsdt_indent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"Scope (_SB)"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"{"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  Device (PCI0)"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  {"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"    Name (_HID, EisaId (\"PNP0A03\"))"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"    Name (_ADR, Zero)"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"    Name (_CRS, ResourceTemplate ()"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"    {"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"      WordBusNumber (ResourceProducer, MinFixed, "
+literal|"MaxFixed, PosDecode,"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0000,             // Granularity"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0000,             // Range Minimum"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x00FF,             // Range Maximum"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0000,             // Translation Offset"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0100,             // Length"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        ,, )"
+argument_list|)
+expr_stmt|;
+name|dsdt_indent
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+name|dsdt_fixed_ioport
+argument_list|(
+literal|0xCF8
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+name|dsdt_unindent
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"      WordIO (ResourceProducer, MinFixed, MaxFixed, "
+literal|"PosDecode, EntireRange,"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0000,             // Granularity"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0000,             // Range Minimum"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0CF7,             // Range Maximum"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0000,             // Translation Offset"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0CF8,             // Length"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        ,, , TypeStatic)"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"      WordIO (ResourceProducer, MinFixed, MaxFixed, "
+literal|"PosDecode, EntireRange,"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0000,             // Granularity"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0D00,             // Range Minimum"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0xFFFF,             // Range Maximum"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0000,             // Translation Offset"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0xF300,             // Length"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        ,, , TypeStatic)"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"      DWordMemory (ResourceProducer, PosDecode, "
+literal|"MinFixed, MaxFixed, NonCacheable, ReadWrite,"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x00000000,         // Granularity"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x%08lX,         // Range Minimum\n"
+argument_list|,
+name|pci_mem_hole
+operator|.
+name|base
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x%08X,         // Range Maximum\n"
+argument_list|,
+name|PCI_EMUL_MEMLIMIT32
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x00000000,         // Translation Offset"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x%08lX,         // Length\n"
+argument_list|,
+name|PCI_EMUL_MEMLIMIT32
+operator|-
+name|pci_mem_hole
+operator|.
+name|base
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        ,, , AddressRangeMemory, TypeStatic)"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"      QWordMemory (ResourceProducer, PosDecode, "
+literal|"MinFixed, MaxFixed, NonCacheable, ReadWrite,"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0000000000000000, // Granularity"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x%016lX, // Range Minimum\n"
+argument_list|,
+name|PCI_EMUL_MEMBASE64
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x%016lX, // Range Maximum\n"
+argument_list|,
+name|PCI_EMUL_MEMLIMIT64
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x0000000000000000, // Translation Offset"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        0x%016lX, // Length\n"
+argument_list|,
+name|PCI_EMUL_MEMLIMIT64
+operator|-
+name|PCI_EMUL_MEMBASE64
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"        ,, , AddressRangeMemory, TypeStatic)"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"    })"
+argument_list|)
+expr_stmt|;
+name|dsdt_indent
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|slot
+operator|=
+literal|0
+init|;
+name|slot
+operator|<
+name|MAXSLOTS
+condition|;
+name|slot
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|func
+operator|=
+literal|0
+init|;
+name|func
+operator|<
+name|MAXFUNCS
+condition|;
+name|func
+operator|++
+control|)
+block|{
+name|pi
+operator|=
+name|pci_slotinfo
+index|[
+name|slot
+index|]
+index|[
+name|func
+index|]
+operator|.
+name|si_devi
+expr_stmt|;
+if|if
+condition|(
+name|pi
+operator|!=
+name|NULL
+operator|&&
+name|pi
+operator|->
+name|pi_d
+operator|->
+name|pe_write_dsdt
+operator|!=
+name|NULL
+condition|)
+name|pi
+operator|->
+name|pi_d
+operator|->
+name|pe_write_dsdt
+argument_list|(
+name|pi
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|dsdt_unindent
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  }"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"}"
+argument_list|)
+expr_stmt|;
+name|dsdt_unindent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6612,6 +7009,16 @@ argument_list|,
 name|IOPORT_F_OUT
 argument_list|,
 name|pci_irq_port_handler
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSRES_IO
+argument_list|(
+literal|0xC00
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 end_expr_stmt

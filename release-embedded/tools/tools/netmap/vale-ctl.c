@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2013 Michio Honda. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2013-2014 Michio Honda. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -540,13 +540,8 @@ decl_stmt|;
 if|if
 condition|(
 name|argc
-operator|!=
+operator|>
 literal|3
-operator|&&
-name|argc
-operator|!=
-literal|1
-comment|/* list all */
 condition|)
 block|{
 name|usage
@@ -561,7 +556,7 @@ literal|"\t-g interface	interface name to get info\n"
 literal|"\t-d interface	interface name to be detached\n"
 literal|"\t-a interface	interface name to be attached\n"
 literal|"\t-h interface	interface name to be attached with the host stack\n"
-literal|"\t-l list all or specified bridge's interfaces\n"
+literal|"\t-l list all or specified bridge's interfaces (default)\n"
 literal|""
 argument_list|,
 name|command
@@ -582,7 +577,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:a:h:g:l:"
+literal|"d:a:h:g:l"
 argument_list|)
 operator|)
 operator|!=
@@ -590,6 +585,11 @@ operator|-
 literal|1
 condition|)
 block|{
+name|name
+operator|=
+name|optarg
+expr_stmt|;
+comment|/* default */
 switch|switch
 condition|(
 name|ch
@@ -653,12 +653,40 @@ name|nr_cmd
 operator|=
 name|NETMAP_BDG_LIST
 expr_stmt|;
-break|break;
-block|}
+if|if
+condition|(
+name|optind
+operator|<
+name|argc
+operator|&&
+name|argv
+index|[
+name|optind
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
 name|name
 operator|=
-name|optarg
+name|NULL
 expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|optind
+operator|!=
+name|argc
+condition|)
+block|{
+comment|// fprintf(stderr, "optind %d argc %d\n", optind, argc);
+goto|goto
+name|usage
+goto|;
+block|}
 block|}
 if|if
 condition|(

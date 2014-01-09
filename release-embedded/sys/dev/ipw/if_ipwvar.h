@@ -264,12 +264,6 @@ define|#
 directive|define
 name|IPW_FLAG_ASSOCIATED
 value|0x0100
-name|int
-name|irq_rid
-decl_stmt|;
-name|int
-name|mem_rid
-decl_stmt|;
 name|struct
 name|resource
 modifier|*

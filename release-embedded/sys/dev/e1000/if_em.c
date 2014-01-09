@@ -20864,6 +20864,9 @@ name|IFCAP_NETMAP
 condition|)
 name|rdt
 operator|-=
+name|nm_kr_rxspace
+argument_list|(
+operator|&
 name|NA
 argument_list|(
 name|adapter
@@ -20875,8 +20878,7 @@ name|rx_rings
 index|[
 name|i
 index|]
-operator|.
-name|nr_hwavail
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

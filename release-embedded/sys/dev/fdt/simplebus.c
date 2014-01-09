@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -862,6 +856,8 @@ if|if
 condition|(
 name|fdt_intr_to_rl
 argument_list|(
+name|dev
+argument_list|,
 name|dt_child
 argument_list|,
 operator|&

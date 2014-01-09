@@ -110,6 +110,18 @@ modifier|*
 name|opts
 parameter_list|)
 function_decl|;
+comment|/* ACPI DSDT enumeration */
+name|void
+function_decl|(
+modifier|*
+name|pe_write_dsdt
+function_decl|)
+parameter_list|(
+name|struct
+name|pci_devinst
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* config space read/write callbacks */
 name|int
 function_decl|(
@@ -959,6 +971,15 @@ name|offset
 parameter_list|,
 name|int
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pci_write_dsdt
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

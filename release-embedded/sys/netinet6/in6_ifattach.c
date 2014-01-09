@@ -1939,8 +1939,6 @@ name|nd_prefixctl
 name|pr0
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* 	 * configure link-local address. 	 */
@@ -2308,39 +2306,19 @@ operator|.
 name|ifra_addr
 expr_stmt|;
 comment|/* apply the mask for safety. (nd6_prelist_add will apply it again) */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|4
-condition|;
-name|i
-operator|++
-control|)
-block|{
+name|IN6_MASK_ADDR
+argument_list|(
+operator|&
 name|pr0
 operator|.
 name|ndpr_prefix
 operator|.
 name|sin6_addr
-operator|.
-name|s6_addr32
-index|[
-name|i
-index|]
-operator|&=
+argument_list|,
+operator|&
 name|in6mask64
-operator|.
-name|s6_addr32
-index|[
-name|i
-index|]
+argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Initialize parameters.  The link-local prefix must always be 	 * on-link, and its lifetimes never expire. 	 */
 name|pr0
 operator|.

@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -111,7 +115,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|int
-name|snapshot_namecheck
+name|zfs_component_namecheck
 parameter_list|(
 specifier|const
 name|char

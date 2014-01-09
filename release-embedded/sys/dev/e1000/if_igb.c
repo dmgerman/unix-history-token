@@ -21738,7 +21738,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_NETMAP
-comment|/* 		 * an init() while a netmap client is active must 		 * preserve the rx buffers passed to userspace. 		 * In this driver it means we adjust RDT to 		 * somthing different from next_to_refresh 		 * (which is not used in netmap mode). 		 */
+comment|/* 		 * an init() while a netmap client is active must 		 * preserve the rx buffers passed to userspace. 		 * In this driver it means we adjust RDT to 		 * something different from next_to_refresh 		 * (which is not used in netmap mode). 		 */
 if|if
 condition|(
 name|ifp
@@ -21780,9 +21780,10 @@ name|rxr
 operator|->
 name|next_to_refresh
 operator|-
+name|nm_kr_rxspace
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
