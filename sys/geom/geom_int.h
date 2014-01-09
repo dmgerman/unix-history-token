@@ -106,6 +106,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|g_conf_printf_escaped
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|g_confdot
 parameter_list|(
 name|void
