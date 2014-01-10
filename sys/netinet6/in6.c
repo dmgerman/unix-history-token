@@ -11757,6 +11757,11 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|IF_AFDATA_WLOCK_ASSERT
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 		 * A route that covers the given address must have 		 * been installed 1st because we are doing a resolution, 		 * verify this. 		 */
 if|if
 condition|(
