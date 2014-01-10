@@ -8024,7 +8024,7 @@ operator|->
 name|na_lut_objtotal
 expr_stmt|;
 block|}
-comment|/* cross-link the netmap rings */
+comment|/* cross-link the netmap rings 		 * The original number of rings comes from hwna, 		 * rx rings on one side equals tx rings on the other. 		 */
 for|for
 control|(
 name|i
@@ -8035,7 +8035,7 @@ name|i
 operator|<=
 name|na
 operator|->
-name|num_tx_rings
+name|num_rx_rings
 condition|;
 name|i
 operator|++
@@ -8088,7 +8088,7 @@ name|i
 operator|<=
 name|na
 operator|->
-name|num_rx_rings
+name|num_tx_rings
 condition|;
 name|i
 operator|++
