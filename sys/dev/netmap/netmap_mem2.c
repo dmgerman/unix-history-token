@@ -4619,9 +4619,7 @@ goto|;
 block|}
 name|ND
 argument_list|(
-literal|"txring[%d] at %p ofs %d"
-argument_list|,
-name|i
+literal|"txring at %p"
 argument_list|,
 name|ring
 argument_list|)
@@ -4834,7 +4832,7 @@ goto|;
 block|}
 name|ND
 argument_list|(
-literal|"rxring at %p ofs %d"
+literal|"rxring at %p"
 argument_list|,
 name|ring
 argument_list|)
@@ -4953,9 +4951,9 @@ argument_list|)
 expr_stmt|;
 name|ND
 argument_list|(
-literal|"initializing slots for rxring[%d]"
+literal|"initializing slots for rxring %p"
 argument_list|,
-name|i
+name|ring
 argument_list|)
 expr_stmt|;
 if|if
