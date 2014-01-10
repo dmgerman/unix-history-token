@@ -4241,7 +4241,7 @@ name|rt
 operator|->
 name|rt_ifp
 expr_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4257,7 +4257,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6127,7 +6127,7 @@ name|ND6_EXCLUSIVE
 else|:
 literal|0
 expr_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6143,6 +6143,11 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
+name|IF_AFDATA_RUNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ln
@@ -6153,6 +6158,11 @@ block|{
 name|flags
 operator||=
 name|ND6_EXCLUSIVE
+expr_stmt|;
+name|IF_AFDATA_LOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 name|ln
 operator|=
@@ -6179,11 +6189,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|IF_AFDATA_UNLOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* do nothing if static ndp is set */
 if|if
 condition|(
@@ -7100,7 +7105,7 @@ condition|)
 block|{
 name|retry
 label|:
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7124,7 +7129,7 @@ operator|)
 name|dst
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
