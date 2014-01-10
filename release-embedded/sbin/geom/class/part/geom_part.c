@@ -2695,15 +2695,41 @@ name|gp
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|g_device_path
+argument_list|(
+name|s
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
 name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"No such geom: %s."
+literal|"No such geom %s."
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * We don't free memory allocated by g_device_path() as 			 * we are about to exit. 			 */
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"No partitioning scheme found on geom %s. Create one first using 'gpart create'."
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|pp
 operator|=
 name|LIST_FIRST
