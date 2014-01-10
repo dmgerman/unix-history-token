@@ -930,7 +930,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"usage: route [-dnqtv] command [[modifiers] args]"
+literal|"usage: route [-46dnqtv] command [[modifiers] args]"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -978,7 +978,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"nqdtv"
+literal|"46nqdtv"
 argument_list|)
 operator|)
 operator|!=
@@ -990,6 +990,66 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'4'
+case|:
+ifdef|#
+directive|ifdef
+name|INET
+name|af
+operator|=
+name|AF_INET
+expr_stmt|;
+name|aflen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"IPv4 support is not compiled in"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
+literal|'6'
+case|:
+ifdef|#
+directive|ifdef
+name|INET6
+name|af
+operator|=
+name|AF_INET6
+expr_stmt|;
+name|aflen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in6
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"IPv6 support is not compiled in"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
 case|case
 literal|'n'
 case|:
@@ -2061,6 +2121,9 @@ ifdef|#
 directive|ifdef
 name|INET
 case|case
+name|K_4
+case|:
+case|case
 name|K_INET
 case|:
 name|af
@@ -2073,6 +2136,9 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
+case|case
+name|K_6
+case|:
 case|case
 name|K_INET6
 case|:
@@ -4597,6 +4663,9 @@ ifdef|#
 directive|ifdef
 name|INET
 case|case
+name|K_4
+case|:
+case|case
 name|K_INET
 case|:
 name|af
@@ -4617,6 +4686,9 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
+case|case
+name|K_6
+case|:
 case|case
 name|K_INET6
 case|:
