@@ -118,12 +118,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -6986,21 +6980,19 @@ operator|==
 name|RTM_DELETE
 argument_list|,
 operator|(
-literal|"unexpected cmd %u"
+literal|"unexpected cmd %d"
 operator|,
 name|cmd
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fibnum
-operator|!=
-name|RT_ALL_FIBS
-condition|)
-block|{
 name|KASSERT
 argument_list|(
+name|fibnum
+operator|==
+name|RT_ALL_FIBS
+operator|||
+operator|(
 name|fibnum
 operator|>=
 literal|0
@@ -7008,10 +7000,10 @@ operator|&&
 name|fibnum
 operator|<
 name|rt_numfibs
+operator|)
 argument_list|,
 operator|(
-literal|"%s: "
-literal|"fibnum out of range 0<= %d< %d"
+literal|"%s: fib out of range 0<=%d<%d"
 operator|,
 name|__func__
 operator|,
@@ -7021,7 +7013,6 @@ name|rt_numfibs
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|rtsock_addrmsg
@@ -7038,7 +7029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Announce route addition/removal  * Users of this function MUST validate input data BEFORE calling.  * However we have to be able to handle invalid data:  * if some userland app sends us "invalid" route message (invalid mask,  * no dst, wrokg address families, etc...) we need to pass it back  * to app (and any other rtsock consumers) with rtm_errno field set to  * non-zero value.  * Returns 0 on success.  */
+comment|/*  * Announce route addition/removal.  * Users of this function MUST validate input data BEFORE calling.  * However we have to be able to handle invalid data:  * if some userland app sends us "invalid" route message (invalid mask,  * no dst, wrong address families, etc...) we need to pass it back  * to app (and any other rtsock consumers) with rtm_errno field set to  * non-zero value.  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -7076,21 +7067,19 @@ operator|==
 name|RTM_DELETE
 argument_list|,
 operator|(
-literal|"unexpected cmd %u"
+literal|"unexpected cmd %d"
 operator|,
 name|cmd
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fibnum
-operator|!=
-name|RT_ALL_FIBS
-condition|)
-block|{
 name|KASSERT
 argument_list|(
+name|fibnum
+operator|==
+name|RT_ALL_FIBS
+operator|||
+operator|(
 name|fibnum
 operator|>=
 literal|0
@@ -7098,10 +7087,10 @@ operator|&&
 name|fibnum
 operator|<
 name|rt_numfibs
+operator|)
 argument_list|,
 operator|(
-literal|"%s: "
-literal|"fibnum out of range 0<= %d< %d"
+literal|"%s: fib out of range 0<=%d<%d"
 operator|,
 name|__func__
 operator|,
@@ -7111,7 +7100,6 @@ name|rt_numfibs
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|KASSERT
 argument_list|(
 name|rt_key
@@ -7229,15 +7217,13 @@ name|cmd
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fibnum
-operator|!=
-name|RT_ALL_FIBS
-condition|)
-block|{
 name|KASSERT
 argument_list|(
+name|fibnum
+operator|==
+name|RT_ALL_FIBS
+operator|||
+operator|(
 name|fibnum
 operator|>=
 literal|0
@@ -7245,10 +7231,10 @@ operator|&&
 name|fibnum
 operator|<
 name|rt_numfibs
+operator|)
 argument_list|,
 operator|(
-literal|"%s: "
-literal|"fibnum out of range 0<= %d< %d"
+literal|"%s: fib out of range 0<=%d<%d"
 operator|,
 name|__func__
 operator|,
@@ -7258,7 +7244,6 @@ name|rt_numfibs
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 if|#
 directive|if
 name|defined
