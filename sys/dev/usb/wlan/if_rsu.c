@@ -6661,8 +6661,10 @@ condition|)
 return|return;
 name|m
 operator|=
-name|m_getcl
+name|m_get2
 argument_list|(
+name|pktlen
+argument_list|,
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
@@ -7881,8 +7883,10 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|=
-name|m_getcl
+name|m_get2
 argument_list|(
+name|pktlen
+argument_list|,
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
