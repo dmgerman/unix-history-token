@@ -388,6 +388,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vmx_call_isr
+parameter_list|(
+name|uintptr_t
+name|entry
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_long
 name|vmx_fix_cr0
 parameter_list|(

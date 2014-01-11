@@ -899,14 +899,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|VMCS_EXIT_INTERRUPTION_INFO
+name|VMCS_EXIT_INTR_INFO
 value|0x00004404
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_EXIT_INTERRUPTION_ERROR
+name|VMCS_EXIT_INTR_ERRCODE
 value|0x00004406
 end_define
 
@@ -1845,21 +1845,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMCS_INTERRUPTION_INFO_VALID
+name|VMCS_INTR_INFO_VALID
 value|(1U<< 31)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_INTERRUPTION_INFO_HW_INTR
+name|VMCS_INTR_INFO_TYPE
+parameter_list|(
+name|info
+parameter_list|)
+value|(((info)>> 8)& 0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_INFO_HW_INTR
 value|(0<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_INTERRUPTION_INFO_NMI
+name|VMCS_INTR_INFO_NMI
 value|(2<< 8)
 end_define
 

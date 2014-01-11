@@ -257,7 +257,7 @@ define|#
 directive|define
 name|VM_EXIT_CTLS_ONE_SETTING
 define|\
-value|(VM_EXIT_CTLS_ONE_SETTING_NO_PAT       	|			\ 	VM_EXIT_SAVE_PAT			|			\ 	VM_EXIT_LOAD_PAT)
+value|(VM_EXIT_CTLS_ONE_SETTING_NO_PAT       	|			\ 	VM_EXIT_ACKNOWLEDGE_INTERRUPT		|			\ 	VM_EXIT_SAVE_PAT			|			\ 	VM_EXIT_LOAD_PAT)
 end_define
 
 begin_define
@@ -2318,6 +2318,174 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|vmx_trigger_hostintr
+parameter_list|(
+name|int
+name|vector
+parameter_list|)
+block|{
+name|uintptr_t
+name|func
+decl_stmt|;
+name|struct
+name|gate_descriptor
+modifier|*
+name|gd
+decl_stmt|;
+name|gd
+operator|=
+operator|&
+name|idt
+index|[
+name|vector
+index|]
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vector
+operator|>=
+literal|32
+operator|&&
+name|vector
+operator|<=
+literal|255
+argument_list|,
+operator|(
+literal|"vmx_trigger_hostintr: "
+literal|"invalid vector %d"
+operator|,
+name|vector
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|gd
+operator|->
+name|gd_p
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"gate descriptor for vector %d not present"
+operator|,
+name|vector
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|gd
+operator|->
+name|gd_type
+operator|==
+name|SDT_SYSIGT
+argument_list|,
+operator|(
+literal|"gate descriptor for vector %d "
+literal|"has invalid type %d"
+operator|,
+name|vector
+operator|,
+name|gd
+operator|->
+name|gd_type
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|gd
+operator|->
+name|gd_dpl
+operator|==
+name|SEL_KPL
+argument_list|,
+operator|(
+literal|"gate descriptor for vector %d "
+literal|"has invalid dpl %d"
+operator|,
+name|vector
+operator|,
+name|gd
+operator|->
+name|gd_dpl
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|gd
+operator|->
+name|gd_selector
+operator|==
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|,
+operator|(
+literal|"gate descriptor "
+literal|"for vector %d has invalid selector %d"
+operator|,
+name|vector
+operator|,
+name|gd
+operator|->
+name|gd_selector
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|gd
+operator|->
+name|gd_ist
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"gate descriptor for vector %d has invalid "
+literal|"IST %d"
+operator|,
+name|vector
+operator|,
+name|gd
+operator|->
+name|gd_ist
+operator|)
+argument_list|)
+expr_stmt|;
+name|func
+operator|=
+operator|(
+operator|(
+name|long
+operator|)
+name|gd
+operator|->
+name|gd_hioffset
+operator|<<
+literal|16
+operator||
+name|gd
+operator|->
+name|gd_looffset
+operator|)
+expr_stmt|;
+name|vmx_call_isr
+argument_list|(
+name|func
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|vmx_setup_cr_shadow
 parameter_list|(
@@ -3754,9 +3922,9 @@ goto|;
 comment|/* 	 * Inject the virtual NMI. The vector must be the NMI IDT entry 	 * or the VMCS entry check will fail. 	 */
 name|info
 operator|=
-name|VMCS_INTERRUPTION_INFO_NMI
+name|VMCS_INTR_INFO_NMI
 operator||
-name|VMCS_INTERRUPTION_INFO_VALID
+name|VMCS_INTR_INFO_VALID
 expr_stmt|;
 name|info
 operator||=
@@ -3873,7 +4041,7 @@ if|if
 condition|(
 name|info
 operator|&
-name|VMCS_INTERRUPTION_INFO_VALID
+name|VMCS_INTR_INFO_VALID
 condition|)
 return|return;
 comment|/* 	 * NMI injection has priority so deal with those first 	 */
@@ -3969,9 +4137,9 @@ goto|;
 comment|/* Inject the interrupt */
 name|info
 operator|=
-name|VMCS_INTERRUPTION_INFO_HW_INTR
+name|VMCS_INTR_INFO_HW_INTR
 operator||
-name|VMCS_INTERRUPTION_INFO_VALID
+name|VMCS_INTR_INFO_VALID
 expr_stmt|;
 name|info
 operator||=
@@ -5047,6 +5215,8 @@ name|idtvec_info
 decl_stmt|,
 name|idtvec_err
 decl_stmt|,
+name|intr_info
+decl_stmt|,
 name|reason
 decl_stmt|;
 name|uint64_t
@@ -5577,6 +5747,44 @@ case|case
 name|EXIT_REASON_EXT_INTR
 case|:
 comment|/* 		 * External interrupts serve only to cause VM exits and allow 		 * the host interrupt handler to run. 		 * 		 * If this external interrupt triggers a virtual interrupt 		 * to a VM, then that state will be recorded by the 		 * host interrupt handler in the VM's softc. We will inject 		 * this virtual interrupt during the subsequent VM enter. 		 */
+name|intr_info
+operator|=
+name|vmcs_read
+argument_list|(
+name|VMCS_EXIT_INTR_INFO
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|intr_info
+operator|&
+name|VMCS_INTR_INFO_VALID
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|VMCS_INTR_INFO_TYPE
+argument_list|(
+name|intr_info
+argument_list|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"VM exit interruption info invalid: %#x"
+operator|,
+name|intr_info
+operator|)
+argument_list|)
+expr_stmt|;
+name|vmx_trigger_hostintr
+argument_list|(
+name|intr_info
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
 comment|/* 		 * This is special. We want to treat this as an 'handled' 		 * VM-exit but not increment the instruction pointer. 		 */
 name|vmm_stat_incr
 argument_list|(
@@ -7704,7 +7912,7 @@ if|if
 condition|(
 name|info
 operator|&
-name|VMCS_INTERRUPTION_INFO_VALID
+name|VMCS_INTR_INFO_VALID
 condition|)
 return|return
 operator|(
@@ -7736,7 +7944,7 @@ operator|)
 expr_stmt|;
 name|info
 operator||=
-name|VMCS_INTERRUPTION_INFO_VALID
+name|VMCS_INTR_INFO_VALID
 expr_stmt|;
 name|error
 operator|=
