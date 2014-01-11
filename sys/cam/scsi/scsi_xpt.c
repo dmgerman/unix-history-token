@@ -4158,7 +4158,7 @@ operator|==
 name|ERESTART
 condition|)
 block|{
-name|out
+name|outr
 label|:
 comment|/* Drop freeze taken due to CAM_DEV_QFREEZE */
 name|cam_release_devq
@@ -4172,11 +4172,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|FALSE
-argument_list|)
-expr_stmt|;
-name|cam_periph_release_locked
-argument_list|(
-name|periph
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4232,9 +4227,28 @@ argument_list|,
 name|priority
 argument_list|)
 expr_stmt|;
-goto|goto
 name|out
-goto|;
+label|:
+comment|/* Drop freeze taken due to CAM_DEV_QFREEZE and release. */
+name|cam_release_devq
+argument_list|(
+name|path
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|cam_periph_release_locked
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 case|case
 name|PROBE_INQUIRY
@@ -4608,7 +4622,7 @@ name|ERESTART
 condition|)
 block|{
 goto|goto
-name|out
+name|outr
 goto|;
 block|}
 elseif|else
@@ -4785,7 +4799,7 @@ name|ERESTART
 condition|)
 block|{
 goto|goto
-name|out
+name|outr
 goto|;
 block|}
 if|if
@@ -5283,7 +5297,7 @@ name|ERESTART
 condition|)
 block|{
 goto|goto
-name|out
+name|outr
 goto|;
 block|}
 elseif|else
@@ -5511,7 +5525,7 @@ name|ERESTART
 condition|)
 block|{
 goto|goto
-name|out
+name|outr
 goto|;
 block|}
 elseif|else
@@ -5728,7 +5742,7 @@ name|ERESTART
 condition|)
 block|{
 goto|goto
-name|out
+name|outr
 goto|;
 block|}
 elseif|else
@@ -5997,7 +6011,7 @@ name|ERESTART
 condition|)
 block|{
 goto|goto
-name|out
+name|outr
 goto|;
 block|}
 elseif|else
