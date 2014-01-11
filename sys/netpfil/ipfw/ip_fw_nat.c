@@ -219,7 +219,7 @@ operator|=
 operator|&
 name|V_layer3_chain
 expr_stmt|;
-name|IPFW_RLOCK
+name|IPFW_WLOCK
 argument_list|(
 name|chain
 argument_list|)
@@ -243,10 +243,9 @@ name|ptr
 operator|->
 name|if_name
 argument_list|,
-name|if_name
-argument_list|(
 name|ifp
-argument_list|)
+operator|->
+name|if_xname
 argument_list|,
 name|IF_NAMESIZE
 argument_list|)
@@ -325,7 +324,7 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-name|IPFW_RUNLOCK
+name|IPFW_WUNLOCK
 argument_list|(
 name|chain
 argument_list|)
