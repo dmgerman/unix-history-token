@@ -416,6 +416,13 @@ name|VMCS_VPID
 value|0x00000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMCS_PIR_VECTOR
+value|0x00000002
+end_define
+
 begin_comment
 comment|/* 16-bit guest-state fields */
 end_comment
@@ -608,6 +615,13 @@ define|#
 directive|define
 name|VMCS_APIC_ACCESS
 value|0x00002014
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_PIR_DESC
+value|0x00002016
 end_define
 
 begin_define
