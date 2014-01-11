@@ -533,9 +533,7 @@ name|ip
 operator|->
 name|i_flags
 operator|=
-name|ei
-operator|->
-name|e2di_flags
+literal|0
 expr_stmt|;
 name|ip
 operator|->
@@ -891,9 +889,7 @@ name|ei
 operator|->
 name|e2di_flags
 operator|=
-name|ip
-operator|->
-name|i_flags
+literal|0
 expr_stmt|;
 name|ei
 operator|->
