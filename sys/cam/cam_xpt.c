@@ -14332,17 +14332,10 @@ operator|&
 name|CAM_PERIPH_RUN_TASK
 condition|)
 break|break;
-name|xpt_lock_buses
-argument_list|()
-expr_stmt|;
+name|cam_periph_doacquire
+argument_list|(
 name|periph
-operator|->
-name|refcount
-operator|++
-expr_stmt|;
-comment|/* Unconditionally acquire */
-name|xpt_unlock_buses
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|periph
 operator|->
