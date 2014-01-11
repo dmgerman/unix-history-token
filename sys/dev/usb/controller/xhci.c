@@ -7426,7 +7426,14 @@ argument_list|,
 name|XHCI_USBSTS
 argument_list|)
 expr_stmt|;
-comment|/* acknowledge interrupts */
+comment|/* acknowledge interrupts, if any */
+if|if
+condition|(
+name|status
+operator|!=
+literal|0
+condition|)
+block|{
 name|XWRITE4
 argument_list|(
 name|sc
@@ -7447,6 +7454,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+block|}
 name|temp
 operator|=
 name|XREAD4
