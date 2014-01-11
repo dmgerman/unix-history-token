@@ -444,7 +444,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * when the descriptor is open correctly, d->self == d  */
+comment|/*  * when the descriptor is open correctly, d->self == d  * Eventually we should also use some magic number.  */
 end_comment
 
 begin_define
@@ -505,12 +505,21 @@ name|uint64_t
 modifier|*
 name|src
 init|=
+operator|(
+specifier|const
+name|uint64_t
+operator|*
+operator|)
 name|_src
 decl_stmt|;
 name|uint64_t
 modifier|*
 name|dst
 init|=
+operator|(
+name|uint64_t
+operator|*
+operator|)
 name|_dst
 decl_stmt|;
 if|if
@@ -1256,12 +1265,28 @@ operator|)
 argument_list|)
 init|=
 block|{
+operator|(
+name|void
+operator|*
+operator|)
 name|nm_open
 block|,
+operator|(
+name|void
+operator|*
+operator|)
 name|nm_inject
 block|,
+operator|(
+name|void
+operator|*
+operator|)
 name|nm_dispatch
 block|,
+operator|(
+name|void
+operator|*
+operator|)
 name|nm_nextpkt
 block|}
 decl_stmt|;
