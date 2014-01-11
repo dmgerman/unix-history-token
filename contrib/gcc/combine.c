@@ -9675,9 +9675,39 @@ operator|!=
 name|CLOBBER
 condition|)
 block|{
-comment|/* Before we can do this substitution, we must redo the test done 	 above (see detailed comments there) that ensures  that I1DEST 	 isn't mentioned in any SETs in NEWPAT that are field assignments.  */
+comment|/* Check that an autoincrement side-effect on I1 has not been lost. 	 This happens if I1DEST is mentioned in I2 and dies there, and 	 has disappeared from the new pattern.  */
 if|if
 condition|(
+operator|(
+name|FIND_REG_INC_NOTE
+argument_list|(
+name|i1
+argument_list|,
+name|NULL_RTX
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+operator|!
+name|i1_feeds_i3
+operator|&&
+name|dead_or_set_p
+argument_list|(
+name|i2
+argument_list|,
+name|i1dest
+argument_list|)
+operator|&&
+operator|!
+name|reg_overlap_mentioned_p
+argument_list|(
+name|i1dest
+argument_list|,
+name|newpat
+argument_list|)
+operator|)
+comment|/* Before we can do this substitution, we must redo the test done 	     above (see detailed comments there) that ensures  that I1DEST 	     isn't mentioned in any SETs in NEWPAT that are field assignments.  */
+operator|||
 operator|!
 name|combinable_i3pat
 argument_list|(
@@ -9692,10 +9722,6 @@ name|NULL_RTX
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|rtx
-operator|*
-operator|)
 literal|0
 argument_list|)
 condition|)
