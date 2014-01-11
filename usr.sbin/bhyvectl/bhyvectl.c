@@ -8440,7 +8440,7 @@ name|ctx
 argument_list|,
 name|vcpu
 argument_list|,
-name|VMCS_EXIT_INTERRUPTION_INFO
+name|VMCS_EXIT_INTR_INFO
 argument_list|,
 operator|&
 name|u64
@@ -8484,7 +8484,7 @@ name|ctx
 argument_list|,
 name|vcpu
 argument_list|,
-name|VMCS_EXIT_INTERRUPTION_ERROR
+name|VMCS_EXIT_INTR_ERRCODE
 argument_list|,
 operator|&
 name|u64
