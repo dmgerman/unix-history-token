@@ -234,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|SCSI_MAX_LEN
-value|0x100
+value|MAX(0x100, BULK_SIZE)
 end_define
 
 begin_define
@@ -719,6 +719,10 @@ name|usb_frlength_t
 name|actlen
 decl_stmt|;
 comment|/* bytes */
+name|usb_frlength_t
+name|buffer_size
+decl_stmt|;
+comment|/* bytes */
 name|uint8_t
 name|cmd_len
 decl_stmt|;
@@ -967,12 +971,7 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|MAX
-argument_list|(
 name|SCSI_MAX_LEN
-argument_list|,
-name|BULK_SIZE
-argument_list|)
 block|,
 operator|.
 name|flags
@@ -1074,7 +1073,7 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|BULK_SIZE
+name|SCSI_MAX_LEN
 block|,
 operator|.
 name|flags
@@ -1574,6 +1573,19 @@ literal|"Truncating long command\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|usbd_xfer_set_frame_len
+argument_list|(
+name|xfer
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bbb_cbw
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|usbd_transfer_submit
 argument_list|(
 name|xfer
@@ -1950,7 +1962,7 @@ argument_list|,
 name|ST_STATUS
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 if|if
 condition|(
@@ -1995,7 +2007,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 default|default:
 comment|/* Error */
 if|if
@@ -2023,7 +2035,7 @@ name|ST_DATA_WR_CS
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+break|break;
 block|}
 block|}
 end_function
@@ -2169,6 +2181,19 @@ break|break;
 case|case
 name|USB_ST_SETUP
 case|:
+name|usbd_xfer_set_frame_len
+argument_list|(
+name|xfer
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bbb_csw
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|usbd_transfer_submit
 argument_list|(
 name|xfer
@@ -2702,6 +2727,20 @@ name|ST_DATA_RD
 index|]
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|buffer_size
+operator|=
+name|usbd_xfer_max_len
+argument_list|(
+name|sc
+operator|->
+name|xfer
+index|[
+name|ST_DATA_RD
+index|]
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3886,17 +3925,13 @@ name|DIR_IN
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|buffer
 argument_list|,
-sizeof|sizeof
-argument_list|(
 name|sc
 operator|->
-name|buffer
-argument_list|)
+name|buffer_size
 argument_list|,
 operator|&
 name|scsi_tct_eject
