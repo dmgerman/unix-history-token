@@ -1342,11 +1342,7 @@ name|va
 argument_list|,
 name|ofs
 argument_list|,
-name|kd
-operator|->
-name|vmst
-operator|->
-name|pagesize
+literal|0
 argument_list|)
 operator|)
 return|;
