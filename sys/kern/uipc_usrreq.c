@@ -1356,6 +1356,12 @@ operator||
 name|PR_RIGHTS
 block|,
 operator|.
+name|pr_ctloutput
+operator|=
+operator|&
+name|uipc_ctloutput
+block|,
+operator|.
 name|pr_usrreqs
 operator|=
 operator|&
@@ -4229,7 +4235,7 @@ operator|&
 name|UNP_WANTCRED
 condition|)
 block|{
-comment|/* 			 * Credentials are passed only once on SOCK_STREAM. 			 */
+comment|/* 			 * Credentials are passed only once on SOCK_STREAM 			 * and SOCK_SEQPACKET. 			 */
 name|unp2
 operator|->
 name|unp_flags
