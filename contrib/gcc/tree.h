@@ -2731,6 +2731,21 @@ value|(CST_CHECK (NODE)->common.public_flag)
 end_define
 
 begin_comment
+comment|/* TREE_OVERFLOW can only be true for EXPR of CONSTANT_CLASS_P. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TREE_OVERFLOW_P
+parameter_list|(
+name|EXPR
+parameter_list|)
+define|\
+value|(CONSTANT_CLASS_P (EXPR)&& TREE_OVERFLOW (EXPR))
+end_define
+
+begin_comment
 comment|/* In a VAR_DECL, FUNCTION_DECL, NAMESPACE_DECL or TYPE_DECL,    nonzero means name is to be accessible from outside this module.    In an IDENTIFIER_NODE, nonzero means an external declaration    accessible from outside this module was previously seen    for this name in an inner scope.  */
 end_comment
 
