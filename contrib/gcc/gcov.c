@@ -1305,6 +1305,8 @@ name|fnotice
 argument_list|(
 name|stdout
 argument_list|,
+literal|"%s"
+argument_list|,
 name|_
 argument_list|(
 literal|"This is free software; see the source for copying conditions.\n"

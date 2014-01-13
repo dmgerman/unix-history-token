@@ -386,6 +386,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"%s"
+argument_list|,
 name|_
 argument_list|(
 literal|"  as it is a non-system directory that duplicates a system directory\n"
@@ -1358,6 +1360,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"%s"
+argument_list|,
 name|_
 argument_list|(
 literal|"#include \"...\" search starts here:\n"
@@ -1394,6 +1398,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"%s"
+argument_list|,
 name|_
 argument_list|(
 literal|"#include<...> search starts here:\n"
@@ -1421,6 +1427,8 @@ block|}
 name|fprintf
 argument_list|(
 name|stderr
+argument_list|,
+literal|"%s"
 argument_list|,
 name|_
 argument_list|(

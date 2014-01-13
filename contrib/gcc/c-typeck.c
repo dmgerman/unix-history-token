@@ -10835,6 +10835,8 @@ block|{
 name|error
 argument_list|(
 name|invalid_func_diag
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
@@ -11608,6 +11610,8 @@ block|{
 name|error
 argument_list|(
 name|invalid_op_diag
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
@@ -30696,6 +30700,8 @@ block|{
 name|error
 argument_list|(
 name|invalid_op_diag
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 return|return

@@ -2524,6 +2524,8 @@ block|{
 name|error
 argument_list|(
 name|invalid_conv_diag
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
