@@ -799,7 +799,7 @@ name|ENOEXEC
 case|:
 name|warnx
 argument_list|(
-literal|"an error occured while "
+literal|"an error occurred while "
 literal|"loading the module. "
 literal|"Please check dmesg(1) for "
 literal|"more details."
