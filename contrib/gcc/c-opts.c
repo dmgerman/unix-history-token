@@ -1440,6 +1440,10 @@ break|break;
 case|case
 name|OPT_Wall
 case|:
+comment|/* APPLE LOCAL -Wmost */
+case|case
+name|OPT_Wmost
+case|:
 name|set_Wunused
 argument_list|(
 name|value
@@ -1463,10 +1467,18 @@ name|warn_missing_braces
 operator|=
 name|value
 expr_stmt|;
+comment|/* APPLE LOCAL begin -Wmost --dpatel */
+if|if
+condition|(
+name|code
+operator|!=
+name|OPT_Wmost
+condition|)
 name|warn_parentheses
 operator|=
 name|value
 expr_stmt|;
+comment|/* APPLE LOCAL end -Wmost --dpatel */
 name|warn_return_type
 operator|=
 name|value
