@@ -188,6 +188,9 @@ name|uint8_t
 name|try_invalid_max_packet_size
 decl_stmt|;
 name|uint8_t
+name|try_shorter_wrapper_block
+decl_stmt|;
+name|uint8_t
 name|try_last_lba
 decl_stmt|;
 name|uint8_t
