@@ -801,7 +801,7 @@ name|warnx
 argument_list|(
 literal|"an error occurred while "
 literal|"loading the module. "
-literal|"Please check dmesg(1) for "
+literal|"Please check dmesg(8) for "
 literal|"more details."
 argument_list|)
 expr_stmt|;
