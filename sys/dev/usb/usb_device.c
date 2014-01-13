@@ -427,18 +427,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|usb_proc_callback_t
 name|usbd_clear_stall_proc
-parameter_list|(
-name|struct
-name|usb_proc_msg
-modifier|*
-name|_pm
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -5418,7 +5412,7 @@ name|_pm
 parameter_list|)
 block|{
 name|struct
-name|usb_clear_stall_msg
+name|usb_udev_msg
 modifier|*
 name|pm
 init|=
