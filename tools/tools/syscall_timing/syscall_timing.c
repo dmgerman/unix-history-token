@@ -631,7 +631,8 @@ parameter_list|)
 block|{
 name|uintmax_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|so
 decl_stmt|;
 name|so
@@ -747,7 +748,8 @@ parameter_list|)
 block|{
 name|uintmax_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|so
 decl_stmt|;
 name|so
@@ -1818,7 +1820,8 @@ parameter_list|)
 block|{
 name|uintmax_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|shmfd
 decl_stmt|;
 name|shmfd
@@ -1941,7 +1944,8 @@ name|sb
 decl_stmt|;
 name|uintmax_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|shmfd
 decl_stmt|;
 name|shmfd
@@ -4020,7 +4024,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%ju.%09ju\t%d\t"
+literal|"%ju.%09ju\t%ju\t"
 argument_list|,
 operator|(
 name|uintmax_t
