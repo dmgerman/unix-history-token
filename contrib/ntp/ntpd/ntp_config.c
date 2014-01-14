@@ -2934,6 +2934,20 @@ comment|/* not SYS_WINNT */
 block|}
 end_function
 
+begin_expr_stmt
+name|proto_config
+argument_list|(
+name|PROTO_MONITOR
+argument_list|,
+literal|0
+argument_list|,
+literal|0.
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_for
 for|for
 control|(
