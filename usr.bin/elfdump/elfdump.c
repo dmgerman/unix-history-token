@@ -1565,6 +1565,12 @@ return|return
 literal|"EM_PPC"
 return|;
 case|case
+name|EM_PPC64
+case|:
+return|return
+literal|"EM_PPC64"
+return|;
+case|case
 name|EM_ARM
 case|:
 return|return
