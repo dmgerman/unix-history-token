@@ -277,7 +277,7 @@ name|enable
 decl_stmt|;
 name|enable
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
@@ -314,7 +314,7 @@ name|enable
 decl_stmt|;
 name|enable
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
