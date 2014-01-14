@@ -155,6 +155,10 @@ name|struct
 name|pmap
 modifier|*
 name|pmap
+parameter_list|,
+name|void
+modifier|*
+name|cookie
 parameter_list|)
 block|{
 name|printf

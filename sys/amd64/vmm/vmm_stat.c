@@ -640,5 +640,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_RENDEZVOUS
+argument_list|,
+literal|"number of times rendezvous pending at exit"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
