@@ -2161,6 +2161,9 @@ name|nfsrvcache
 modifier|*
 name|rp
 parameter_list|,
+name|int
+name|have_seq
+parameter_list|,
 name|uint32_t
 name|seq
 parameter_list|)
@@ -2183,6 +2186,11 @@ literal|"nfsrvd_sentcache not locked"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|have_seq
+condition|)
+block|{
 name|hbp
 operator|=
 name|NFSRCAHASH
@@ -2240,6 +2248,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
+block|}
 name|nfsrc_unlock
 argument_list|(
 name|rp
