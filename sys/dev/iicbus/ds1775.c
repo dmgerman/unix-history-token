@@ -1160,7 +1160,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|unsigned
 name|int
 name|temp
 decl_stmt|;

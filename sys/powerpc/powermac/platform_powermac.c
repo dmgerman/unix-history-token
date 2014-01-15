@@ -690,7 +690,8 @@ parameter_list|)
 block|{
 name|cell_t
 name|cpuid
-decl_stmt|,
+decl_stmt|;
+name|int
 name|res
 decl_stmt|;
 name|cpuref
