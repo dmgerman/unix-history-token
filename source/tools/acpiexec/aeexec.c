@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -295,22 +295,16 @@ decl_stmt|;
 name|ACPI_HANDLE
 name|Handle
 decl_stmt|;
-name|ACPI_HANDLE
-name|Handle2
-init|=
-name|NULL
-decl_stmt|;
-name|ACPI_HANDLE
-name|Handle3
-init|=
-name|NULL
-decl_stmt|;
 name|ACPI_GENERIC_ADDRESS
 name|BlockAddress
 decl_stmt|;
 name|ACPI_HANDLE
 name|GpeDevice
 decl_stmt|;
+name|ACPI_OBJECT_TYPE
+name|Type
+decl_stmt|;
+comment|/* _GPE should always exist */
 name|Status
 operator|=
 name|AcpiGetHandle
@@ -321,6 +315,13 @@ literal|"\\_GPE"
 argument_list|,
 operator|&
 name|Handle
+argument_list|)
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiGetHandle
+argument_list|,
+name|Status
 argument_list|)
 expr_stmt|;
 if|if
@@ -358,6 +359,7 @@ name|Address
 operator|=
 literal|0x76540000
 expr_stmt|;
+comment|/* Attempt to install a GPE block on GPE2 (if present) */
 name|Status
 operator|=
 name|AcpiGetHandle
@@ -367,7 +369,7 @@ argument_list|,
 literal|"\\GPE2"
 argument_list|,
 operator|&
-name|Handle2
+name|Handle
 argument_list|)
 expr_stmt|;
 if|if
@@ -380,9 +382,35 @@ condition|)
 block|{
 name|Status
 operator|=
+name|AcpiGetType
+argument_list|(
+name|Handle
+argument_list|,
+operator|&
+name|Type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|||
+operator|(
+name|Type
+operator|!=
+name|ACPI_TYPE_DEVICE
+operator|)
+condition|)
+block|{
+return|return;
+block|}
+name|Status
+operator|=
 name|AcpiInstallGpeBlock
 argument_list|(
-name|Handle2
+name|Handle
 argument_list|,
 operator|&
 name|BlockAddress
@@ -403,7 +431,7 @@ name|Status
 operator|=
 name|AcpiInstallGpeHandler
 argument_list|(
-name|Handle2
+name|Handle
 argument_list|,
 literal|8
 argument_list|,
@@ -425,7 +453,7 @@ name|Status
 operator|=
 name|AcpiEnableGpe
 argument_list|(
-name|Handle2
+name|Handle
 argument_list|,
 literal|8
 argument_list|)
@@ -513,7 +541,7 @@ name|Status
 operator|=
 name|AcpiRemoveGpeHandler
 argument_list|(
-name|Handle2
+name|Handle
 argument_list|,
 literal|8
 argument_list|,
@@ -528,6 +556,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Attempt to install a GPE block on GPE3 (if present) */
 name|Status
 operator|=
 name|AcpiGetHandle
@@ -537,7 +566,7 @@ argument_list|,
 literal|"\\GPE3"
 argument_list|,
 operator|&
-name|Handle3
+name|Handle
 argument_list|)
 expr_stmt|;
 if|if
@@ -550,9 +579,35 @@ condition|)
 block|{
 name|Status
 operator|=
+name|AcpiGetType
+argument_list|(
+name|Handle
+argument_list|,
+operator|&
+name|Type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|||
+operator|(
+name|Type
+operator|!=
+name|ACPI_TYPE_DEVICE
+operator|)
+condition|)
+block|{
+return|return;
+block|}
+name|Status
+operator|=
 name|AcpiInstallGpeBlock
 argument_list|(
-name|Handle3
+name|Handle
 argument_list|,
 operator|&
 name|BlockAddress
