@@ -518,7 +518,7 @@ name|mflag
 operator|=
 name|M_NOWAIT
 expr_stmt|;
-comment|/*  	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
+comment|/* 	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
 name|prio
 operator|=
 operator|!
@@ -602,13 +602,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|TASKQ_MAGIC
-value|0x74541c
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -669,7 +662,7 @@ block|{
 name|int
 name|prio
 decl_stmt|;
-comment|/*  	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
+comment|/* 	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
 name|prio
 operator|=
 operator|!

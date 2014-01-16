@@ -148,21 +148,18 @@ name|taskq_t
 modifier|*
 name|system_taskq
 decl_stmt|;
-specifier|extern
 name|void
 name|taskq_init
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-specifier|extern
 name|void
 name|taskq_mp_init
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-specifier|extern
 name|taskq_t
 modifier|*
 name|taskq_create
@@ -182,7 +179,6 @@ parameter_list|,
 name|uint_t
 parameter_list|)
 function_decl|;
-specifier|extern
 name|taskq_t
 modifier|*
 name|taskq_create_instance
@@ -204,7 +200,6 @@ parameter_list|,
 name|uint_t
 parameter_list|)
 function_decl|;
-specifier|extern
 name|taskq_t
 modifier|*
 name|taskq_create_proc
@@ -228,7 +223,6 @@ parameter_list|,
 name|uint_t
 parameter_list|)
 function_decl|;
-specifier|extern
 name|taskq_t
 modifier|*
 name|taskq_create_sysdc
@@ -252,7 +246,6 @@ parameter_list|,
 name|uint_t
 parameter_list|)
 function_decl|;
-specifier|extern
 name|taskqid_t
 name|taskq_dispatch
 parameter_list|(
@@ -267,7 +260,6 @@ parameter_list|,
 name|uint_t
 parameter_list|)
 function_decl|;
-specifier|extern
 name|void
 name|nulltask
 parameter_list|(
@@ -275,7 +267,6 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|extern
 name|void
 name|taskq_destroy
 parameter_list|(
@@ -283,7 +274,6 @@ name|taskq_t
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|extern
 name|void
 name|taskq_wait
 parameter_list|(
@@ -291,7 +281,6 @@ name|taskq_t
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|extern
 name|void
 name|taskq_suspend
 parameter_list|(
@@ -299,7 +288,6 @@ name|taskq_t
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|extern
 name|int
 name|taskq_suspended
 parameter_list|(
@@ -307,7 +295,6 @@ name|taskq_t
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|extern
 name|void
 name|taskq_resume
 parameter_list|(
@@ -315,7 +302,6 @@ name|taskq_t
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|extern
 name|int
 name|taskq_member
 parameter_list|(
