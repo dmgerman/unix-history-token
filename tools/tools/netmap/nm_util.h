@@ -32,30 +32,22 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
+file|<stdio.h>
 end_include
 
 begin_comment
-comment|/* signal */
+comment|/* fprintf */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<sys/poll.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_comment
+comment|/* POLLIN */
+end_comment
 
 begin_include
 include|#
@@ -70,77 +62,11 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/* strcmp */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_comment
-comment|/* open */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_comment
-comment|/* close */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<ifaddrs.h>
-end_include
-
-begin_comment
-comment|/* getifaddrs */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/mman.h>
-end_include
-
-begin_comment
-comment|/* PROT_* */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_comment
-comment|/* ioctl */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_comment
-comment|/* sockaddr.. */
+comment|/* u_char */
 end_comment
 
 begin_include
@@ -156,12 +82,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -172,11 +92,11 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<ifaddrs.h>
 end_include
 
 begin_comment
-comment|/* timersub */
+comment|/* getifaddrs */
 end_comment
 
 begin_include
@@ -185,14 +105,8 @@ directive|include
 file|<net/ethernet.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
 begin_comment
-comment|/* ifreq */
+comment|/* ETHERTYPE_IP */
 end_comment
 
 begin_include
@@ -201,11 +115,19 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_comment
+comment|/* IPPROTO_* */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip.h>
 end_include
+
+begin_comment
+comment|/* struct ip */
+end_comment
 
 begin_include
 include|#
@@ -213,138 +135,21 @@ directive|include
 file|<netinet/udp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/netmap.h>
-end_include
+begin_comment
+comment|/* struct udp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_WITH_LIBS
+end_define
 
 begin_include
 include|#
 directive|include
 file|<net/netmap_user.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MY_PCAP
-end_ifndef
-
-begin_comment
-comment|/* use the system's pcap if available */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_PCAP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PCAP_ERRBUF_SIZE
-value|512
-end_define
-
-begin_typedef
-typedef|typedef
-name|void
-name|pcap_t
-typedef|;
-end_typedef
-
-begin_struct_decl
-struct_decl|struct
-name|pcap_pkthdr
-struct_decl|;
-end_struct_decl
-
-begin_define
-define|#
-directive|define
-name|pcap_inject
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|((void)a, (void)b, (void)c, -1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pcap_dispatch
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|(void)c
-end_define
-
-begin_define
-define|#
-directive|define
-name|pcap_open_live
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
-parameter_list|)
-value|((void)e, NULL)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !NO_PCAP */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<pcap/pcap.h>
-end_include
-
-begin_comment
-comment|// XXX do we need it ?
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !NO_PCAP */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// XXX hack
-end_comment
 
 begin_include
 include|#
@@ -376,19 +181,9 @@ name|ifr_flagshigh
 value|ifr_flags
 end_define
 
-begin_define
-define|#
-directive|define
-name|ifr_curcap
-value|ifr_flags
-end_define
-
-begin_define
-define|#
-directive|define
-name|ifr_reqcap
-value|ifr_flags
-end_define
+begin_comment
+comment|/* only the low 16 bits here */
+end_comment
 
 begin_define
 define|#
@@ -396,6 +191,10 @@ directive|define
 name|IFF_PPROMISC
 value|IFF_PROMISC
 end_define
+
+begin_comment
+comment|/* IFF_PPROMISC does not exist */
+end_comment
 
 begin_include
 include|#
@@ -511,6 +310,78 @@ ifdef|#
 directive|ifdef
 name|__APPLE__
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|cpuset_t
+value|uint64_t
+end_define
+
+begin_comment
+comment|// XXX
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|CPU_ZERO
+parameter_list|(
+name|cpuset_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+operator|*
+name|p
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|CPU_SET
+parameter_list|(
+name|uint32_t
+name|i
+parameter_list|,
+name|cpuset_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+operator|*
+name|p
+operator||=
+literal|1
+operator|<<
+operator|(
+name|i
+operator|&
+literal|0x3f
+operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|pthread_setaffinity_np
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|((void)a, 0)
+end_define
 
 begin_define
 define|#
@@ -638,245 +509,16 @@ define|\
 value|do {						\ 		static int t0, cnt;			\ 		if (t0 != time_second) {		\ 			t0 = time_second;		\ 			cnt = 0;			\ 		}					\ 		if (cnt++< lps)			\ 			D(format, ##__VA_ARGS__);	\ 	} while (0)
 end_define
 
-begin_comment
-comment|// XXX does it work on 32-bit machines ?
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|prefetch
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|x
-parameter_list|)
-block|{
-asm|__asm volatile("prefetcht0 %0" :: "m" (*(const unsigned long *)x));
-block|}
-end_function
-
-begin_comment
-comment|// XXX only for multiples of 64 bytes, non overlapped.
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|pkt_copy
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|_src
-parameter_list|,
-name|void
-modifier|*
-name|_dst
-parameter_list|,
-name|int
-name|l
-parameter_list|)
-block|{
-specifier|const
-name|uint64_t
-modifier|*
-name|src
-init|=
-name|_src
-decl_stmt|;
-name|uint64_t
-modifier|*
-name|dst
-init|=
-name|_dst
-decl_stmt|;
-define|#
-directive|define
-name|likely
-parameter_list|(
-name|x
-parameter_list|)
-value|__builtin_expect(!!(x), 1)
-define|#
-directive|define
-name|unlikely
-parameter_list|(
-name|x
-parameter_list|)
-value|__builtin_expect(!!(x), 0)
-if|if
-condition|(
-name|unlikely
-argument_list|(
-name|l
-operator|>=
-literal|1024
-argument_list|)
-condition|)
-block|{
-name|bcopy
-argument_list|(
-name|src
-argument_list|,
-name|dst
-argument_list|,
-name|l
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-for|for
-control|(
-init|;
-name|l
-operator|>
-literal|0
-condition|;
-name|l
-operator|-=
-literal|64
-control|)
-block|{
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-expr_stmt|;
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-expr_stmt|;
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-expr_stmt|;
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-expr_stmt|;
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-expr_stmt|;
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-expr_stmt|;
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-expr_stmt|;
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * info on a ring we handle  */
-end_comment
-
-begin_struct
-struct|struct
-name|my_ring
-block|{
-specifier|const
-name|char
-modifier|*
-name|ifname
-decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
-name|char
-modifier|*
-name|mem
-decl_stmt|;
-comment|/* userspace mmap address */
-name|u_int
-name|memsize
-decl_stmt|;
-name|u_int
-name|queueid
-decl_stmt|;
-name|u_int
-name|begin
-decl_stmt|,
-name|end
-decl_stmt|;
-comment|/* first..last+1 rings to check */
-name|struct
-name|netmap_if
-modifier|*
-name|nifp
-decl_stmt|;
-name|struct
-name|netmap_ring
-modifier|*
-name|tx
-decl_stmt|,
-modifier|*
-name|rx
-decl_stmt|;
-comment|/* shortcuts */
-name|uint32_t
-name|if_flags
-decl_stmt|;
-name|uint32_t
-name|if_reqcap
-decl_stmt|;
-name|uint32_t
-name|if_curcap
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function_decl
-name|int
+name|struct
+name|nm_desc_t
+modifier|*
 name|netmap_open
 parameter_list|(
-name|struct
-name|my_ring
+specifier|const
+name|char
 modifier|*
-name|me
+name|name
 parameter_list|,
 name|int
 name|ringid
@@ -889,22 +531,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|netmap_close
-parameter_list|(
-name|struct
-name|my_ring
-modifier|*
-name|me
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|nm_do_ioctl
 parameter_list|(
 name|struct
-name|my_ring
+name|nm_desc_t
 modifier|*
 name|me
 parameter_list|,
@@ -913,6 +543,21 @@ name|what
 parameter_list|,
 name|int
 name|subcmd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pkt_queued
+parameter_list|(
+name|struct
+name|nm_desc_t
+modifier|*
+name|d
+parameter_list|,
+name|int
+name|tx
 parameter_list|)
 function_decl|;
 end_function_decl
