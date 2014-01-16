@@ -1749,9 +1749,6 @@ modifier|*
 name|pendp
 parameter_list|)
 block|{
-name|u_int
-name|pending
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1759,12 +1756,6 @@ name|TQ_LOCK
 argument_list|(
 name|queue
 argument_list|)
-expr_stmt|;
-name|pending
-operator|=
-name|task
-operator|->
-name|ta_pending
 expr_stmt|;
 name|error
 operator|=
