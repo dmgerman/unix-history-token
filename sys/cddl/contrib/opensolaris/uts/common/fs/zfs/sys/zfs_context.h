@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -215,6 +215,9 @@ name|illumos
 include|#
 directive|include
 file|<sys/cyclic.h>
+include|#
+directive|include
+file|<sys/callo.h>
 else|#
 directive|else
 comment|/* FreeBSD */
@@ -223,6 +226,9 @@ directive|include
 file|<sys/callout.h>
 endif|#
 directive|endif
+include|#
+directive|include
+file|<sys/disp.h>
 include|#
 directive|include
 file|<machine/stdarg.h>

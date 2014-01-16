@@ -8715,9 +8715,6 @@ name|ZIO_FLAG_RAW
 operator||
 name|ZIO_FLAG_CANFAIL
 decl_stmt|;
-name|int
-name|zio_priority
-decl_stmt|;
 name|unsigned
 name|int
 name|scan_delay
@@ -8779,10 +8776,6 @@ name|zio_flags
 operator||=
 name|ZIO_FLAG_SCRUB
 expr_stmt|;
-name|zio_priority
-operator|=
-name|ZIO_PRIORITY_SCRUB
-expr_stmt|;
 name|needs_io
 operator|=
 name|B_TRUE
@@ -8810,10 +8803,6 @@ expr_stmt|;
 name|zio_flags
 operator||=
 name|ZIO_FLAG_RESILVER
-expr_stmt|;
-name|zio_priority
-operator|=
-name|ZIO_PRIORITY_RESILVER
 expr_stmt|;
 name|needs_io
 operator|=
@@ -9077,7 +9066,7 @@ name|dsl_scan_scrub_done
 argument_list|,
 name|NULL
 argument_list|,
-name|zio_priority
+name|ZIO_PRIORITY_SCRUB
 argument_list|,
 name|zio_flags
 argument_list|,
