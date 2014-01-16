@@ -11942,8 +11942,6 @@ argument_list|,
 name|old_bp
 argument_list|,
 name|METASLAB_HINTBP_AVOID
-operator||
-name|METASLAB_GANG_AVOID
 argument_list|)
 expr_stmt|;
 block|}
