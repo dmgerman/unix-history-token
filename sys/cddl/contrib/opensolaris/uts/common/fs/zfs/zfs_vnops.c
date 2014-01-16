@@ -310,7 +310,7 @@ file|<vm/vm_pageout.h>
 end_include
 
 begin_comment
-comment|/*  * Programming rules.  *  * Each vnode op performs some logical unit of work.  To do this, the ZPL must  * properly lock its in-core state, create a DMU transaction, do the work,  * record this work in the intent log (ZIL), commit the DMU transaction,  * and wait for the intent log to commit if it is a synchronous operation.  * Moreover, the vnode ops must work in both normal and log replay context.  * The ordering of events is important to avoid deadlocks and references  * to freed memory.  The example below illustrates the following Big Rules:  *  *  (1)	A check must be made in each zfs thread for a mounted file system.  *	This is done avoiding races using ZFS_ENTER(zfsvfs).  *	A ZFS_EXIT(zfsvfs) is needed before all returns.  Any znodes  *	must be checked with ZFS_VERIFY_ZP(zp).  Both of these macros  *	can return EIO from the calling function.  *  *  (2)	VN_RELE() should always be the last thing except for zil_commit()  *	(if necessary) and ZFS_EXIT(). This is for 3 reasons:  *	First, if it's the last reference, the vnode/znode  *	can be freed, so the zp may point to freed memory.  Second, the last  *	reference will call zfs_zinactive(), which may induce a lot of work --  *	pushing cached pages (which acquires range locks) and syncing out  *	cached atime changes.  Third, zfs_zinactive() may require a new tx,  *	which could deadlock the system if you were already holding one.  *	If you must call VN_RELE() within a tx then use VN_RELE_ASYNC().  *  *  (3)	All range locks must be grabbed before calling dmu_tx_assign(),  *	as they can span dmu_tx_assign() calls.  *  *  (4)	Always pass TXG_NOWAIT as the second argument to dmu_tx_assign().  *	This is critical because we don't want to block while holding locks.  *	Note, in particular, that if a lock is sometimes acquired before  *	the tx assigns, and sometimes after (e.g. z_lock), then failing to  *	use a non-blocking assign can deadlock the system.  The scenario:  *  *	Thread A has grabbed a lock before calling dmu_tx_assign().  *	Thread B is in an already-assigned tx, and blocks for this lock.  *	Thread A calls dmu_tx_assign(TXG_WAIT) and blocks in txg_wait_open()  *	forever, because the previous txg can't quiesce until B's tx commits.  *  *	If dmu_tx_assign() returns ERESTART and zfsvfs->z_assign is TXG_NOWAIT,  *	then drop all locks, call dmu_tx_wait(), and try again.  *  *  (5)	If the operation succeeded, generate the intent log entry for it  *	before dropping locks.  This ensures that the ordering of events  *	in the intent log matches the order in which they actually occurred.  *	During ZIL replay the zfs_log_* functions will update the sequence  *	number to indicate the zil transaction has replayed.  *  *  (6)	At the end of each vnode op, the DMU tx must always commit,  *	regardless of whether there were any errors.  *  *  (7)	After dropping all locks, invoke zil_commit(zilog, foid)  *	to ensure that synchronous semantics are provided when necessary.  *  * In general, this is how things should be ordered in each vnode op:  *  *	ZFS_ENTER(zfsvfs);		// exit if unmounted  * top:  *	zfs_dirent_lock(&dl, ...)	// lock directory entry (may VN_HOLD())  *	rw_enter(...);			// grab any other locks you need  *	tx = dmu_tx_create(...);	// get DMU tx  *	dmu_tx_hold_*();		// hold each object you might modify  *	error = dmu_tx_assign(tx, TXG_NOWAIT);	// try to assign  *	if (error) {  *		rw_exit(...);		// drop locks  *		zfs_dirent_unlock(dl);	// unlock directory entry  *		VN_RELE(...);		// release held vnodes  *		if (error == ERESTART) {  *			dmu_tx_wait(tx);  *			dmu_tx_abort(tx);  *			goto top;  *		}  *		dmu_tx_abort(tx);	// abort DMU tx  *		ZFS_EXIT(zfsvfs);	// finished in zfs  *		return (error);		// really out of space  *	}  *	error = do_real_work();		// do whatever this VOP does  *	if (error == 0)  *		zfs_log_*(...);		// on success, make ZIL entry  *	dmu_tx_commit(tx);		// commit DMU tx -- error or not  *	rw_exit(...);			// drop locks  *	zfs_dirent_unlock(dl);		// unlock directory entry  *	VN_RELE(...);			// release held vnodes  *	zil_commit(zilog, foid);	// synchronous when necessary  *	ZFS_EXIT(zfsvfs);		// finished in zfs  *	return (error);			// done, report error  */
+comment|/*  * Programming rules.  *  * Each vnode op performs some logical unit of work.  To do this, the ZPL must  * properly lock its in-core state, create a DMU transaction, do the work,  * record this work in the intent log (ZIL), commit the DMU transaction,  * and wait for the intent log to commit if it is a synchronous operation.  * Moreover, the vnode ops must work in both normal and log replay context.  * The ordering of events is important to avoid deadlocks and references  * to freed memory.  The example below illustrates the following Big Rules:  *  *  (1)	A check must be made in each zfs thread for a mounted file system.  *	This is done avoiding races using ZFS_ENTER(zfsvfs).  *	A ZFS_EXIT(zfsvfs) is needed before all returns.  Any znodes  *	must be checked with ZFS_VERIFY_ZP(zp).  Both of these macros  *	can return EIO from the calling function.  *  *  (2)	VN_RELE() should always be the last thing except for zil_commit()  *	(if necessary) and ZFS_EXIT(). This is for 3 reasons:  *	First, if it's the last reference, the vnode/znode  *	can be freed, so the zp may point to freed memory.  Second, the last  *	reference will call zfs_zinactive(), which may induce a lot of work --  *	pushing cached pages (which acquires range locks) and syncing out  *	cached atime changes.  Third, zfs_zinactive() may require a new tx,  *	which could deadlock the system if you were already holding one.  *	If you must call VN_RELE() within a tx then use VN_RELE_ASYNC().  *  *  (3)	All range locks must be grabbed before calling dmu_tx_assign(),  *	as they can span dmu_tx_assign() calls.  *  *  (4)	Always pass TXG_NOWAIT as the second argument to dmu_tx_assign().  *	This is critical because we don't want to block while holding locks.  *	Note, in particular, that if a lock is sometimes acquired before  *	the tx assigns, and sometimes after (e.g. z_lock), then failing to  *	use a non-blocking assign can deadlock the system.  The scenario:  *  *	Thread A has grabbed a lock before calling dmu_tx_assign().  *	Thread B is in an already-assigned tx, and blocks for this lock.  *	Thread A calls dmu_tx_assign(TXG_WAIT) and blocks in txg_wait_open()  *	forever, because the previous txg can't quiesce until B's tx commits.  *  *	If dmu_tx_assign() returns ERESTART and zfsvfs->z_assign is TXG_NOWAIT,  *	then drop all locks, call dmu_tx_wait(), and try again.  On subsequent  *	calls to dmu_tx_assign(), pass TXG_WAITED rather than TXG_NOWAIT,  *	to indicate that this operation has already called dmu_tx_wait().  *	This will ensure that we don't retry forever, waiting a short bit  *	each time.  *  *  (5)	If the operation succeeded, generate the intent log entry for it  *	before dropping locks.  This ensures that the ordering of events  *	in the intent log matches the order in which they actually occurred.  *	During ZIL replay the zfs_log_* functions will update the sequence  *	number to indicate the zil transaction has replayed.  *  *  (6)	At the end of each vnode op, the DMU tx must always commit,  *	regardless of whether there were any errors.  *  *  (7)	After dropping all locks, invoke zil_commit(zilog, foid)  *	to ensure that synchronous semantics are provided when necessary.  *  * In general, this is how things should be ordered in each vnode op:  *  *	ZFS_ENTER(zfsvfs);		// exit if unmounted  * top:  *	zfs_dirent_lock(&dl, ...)	// lock directory entry (may VN_HOLD())  *	rw_enter(...);			// grab any other locks you need  *	tx = dmu_tx_create(...);	// get DMU tx  *	dmu_tx_hold_*();		// hold each object you might modify  *	error = dmu_tx_assign(tx, waited ? TXG_WAITED : TXG_NOWAIT);  *	if (error) {  *		rw_exit(...);		// drop locks  *		zfs_dirent_unlock(dl);	// unlock directory entry  *		VN_RELE(...);		// release held vnodes  *		if (error == ERESTART) {  *			waited = B_TRUE;  *			dmu_tx_wait(tx);  *			dmu_tx_abort(tx);  *			goto top;  *		}  *		dmu_tx_abort(tx);	// abort DMU tx  *		ZFS_EXIT(zfsvfs);	// finished in zfs  *		return (error);		// really out of space  *	}  *	error = do_real_work();		// do whatever this VOP does  *	if (error == 0)  *		zfs_log_*(...);		// on success, make ZIL entry  *	dmu_tx_commit(tx);		// commit DMU tx -- error or not  *	rw_exit(...);			// drop locks  *	zfs_dirent_unlock(dl);		// unlock directory entry  *	VN_RELE(...);			// release held vnodes  *	zil_commit(zilog, foid);	// synchronous when necessary  *	ZFS_EXIT(zfsvfs);		// finished in zfs  *	return (error);			// done, report error  */
 end_comment
 
 begin_comment
@@ -6700,6 +6700,11 @@ name|have_acl
 init|=
 name|B_FALSE
 decl_stmt|;
+name|boolean_t
+name|waited
+init|=
+name|B_FALSE
+decl_stmt|;
 name|void
 modifier|*
 name|vsecp
@@ -7277,6 +7282,10 @@ name|dmu_tx_assign
 argument_list|(
 name|tx
 argument_list|,
+name|waited
+condition|?
+name|TXG_WAITED
+else|:
 name|TXG_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -7297,6 +7306,10 @@ operator|==
 name|ERESTART
 condition|)
 block|{
+name|waited
+operator|=
+name|B_TRUE
+expr_stmt|;
 name|dmu_tx_wait
 argument_list|(
 name|tx
@@ -7845,6 +7858,11 @@ name|zflg
 init|=
 name|ZEXISTS
 decl_stmt|;
+name|boolean_t
+name|waited
+init|=
+name|B_FALSE
+decl_stmt|;
 name|ZFS_ENTER
 argument_list|(
 name|zfsvfs
@@ -8267,6 +8285,10 @@ name|dmu_tx_assign
 argument_list|(
 name|tx
 argument_list|,
+name|waited
+condition|?
+name|TXG_WAITED
+else|:
 name|TXG_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -8304,6 +8326,10 @@ operator|==
 name|ERESTART
 condition|)
 block|{
+name|waited
+operator|=
+name|B_TRUE
+expr_stmt|;
 name|dmu_tx_wait
 argument_list|(
 name|tx
@@ -8891,6 +8917,11 @@ decl_stmt|;
 name|boolean_t
 name|fuid_dirtied
 decl_stmt|;
+name|boolean_t
+name|waited
+init|=
+name|B_FALSE
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|vap
@@ -9371,6 +9402,10 @@ name|dmu_tx_assign
 argument_list|(
 name|tx
 argument_list|,
+name|waited
+condition|?
+name|TXG_WAITED
+else|:
 name|TXG_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -9391,6 +9426,10 @@ operator|==
 name|ERESTART
 condition|)
 block|{
+name|waited
+operator|=
+name|B_TRUE
+expr_stmt|;
 name|dmu_tx_wait
 argument_list|(
 name|tx
@@ -9653,6 +9692,11 @@ name|zflg
 init|=
 name|ZEXISTS
 decl_stmt|;
+name|boolean_t
+name|waited
+init|=
+name|B_FALSE
+decl_stmt|;
 name|ZFS_ENTER
 argument_list|(
 name|zfsvfs
@@ -9883,6 +9927,10 @@ name|dmu_tx_assign
 argument_list|(
 name|tx
 argument_list|,
+name|waited
+condition|?
+name|TXG_WAITED
+else|:
 name|TXG_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -9924,6 +9972,10 @@ operator|==
 name|ERESTART
 condition|)
 block|{
+name|waited
+operator|=
+name|B_TRUE
+expr_stmt|;
 name|dmu_tx_wait
 argument_list|(
 name|tx
@@ -16356,6 +16408,11 @@ name|zflg
 init|=
 literal|0
 decl_stmt|;
+name|boolean_t
+name|waited
+init|=
+name|B_FALSE
+decl_stmt|;
 name|ZFS_ENTER
 argument_list|(
 name|zfsvfs
@@ -17280,6 +17337,10 @@ name|dmu_tx_assign
 argument_list|(
 name|tx
 argument_list|,
+name|waited
+condition|?
+name|TXG_WAITED
+else|:
 name|TXG_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -17351,6 +17412,10 @@ operator|==
 name|ERESTART
 condition|)
 block|{
+name|waited
+operator|=
+name|B_TRUE
+expr_stmt|;
 name|dmu_tx_wait
 argument_list|(
 name|tx
@@ -17807,6 +17872,11 @@ name|txtype
 init|=
 name|TX_SYMLINK
 decl_stmt|;
+name|boolean_t
+name|waited
+init|=
+name|B_FALSE
+decl_stmt|;
 name|int
 name|flags
 init|=
@@ -18185,6 +18255,10 @@ name|dmu_tx_assign
 argument_list|(
 name|tx
 argument_list|,
+name|waited
+condition|?
+name|TXG_WAITED
+else|:
 name|TXG_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -18205,6 +18279,10 @@ operator|==
 name|ERESTART
 condition|)
 block|{
+name|waited
+operator|=
+name|B_TRUE
+expr_stmt|;
 name|dmu_tx_wait
 argument_list|(
 name|tx
@@ -18676,6 +18754,11 @@ decl_stmt|;
 name|uid_t
 name|owner
 decl_stmt|;
+name|boolean_t
+name|waited
+init|=
+name|B_FALSE
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|tdvp
@@ -19102,6 +19185,10 @@ name|dmu_tx_assign
 argument_list|(
 name|tx
 argument_list|,
+name|waited
+condition|?
+name|TXG_WAITED
+else|:
 name|TXG_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -19122,6 +19209,10 @@ operator|==
 name|ERESTART
 condition|)
 block|{
+name|waited
+operator|=
+name|B_TRUE
+expr_stmt|;
 name|dmu_tx_wait
 argument_list|(
 name|tx

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -316,7 +316,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * header for all bonus and spill buffers.  *  * The header has a fixed portion with a variable number  * of "lengths" depending on the number of variable sized  * attribues which are determined by the "layout number"  */
+comment|/*  * header for all bonus and spill buffers.  *  * The header has a fixed portion with a variable number  * of "lengths" depending on the number of variable sized  * attributes which are determined by the "layout number"  */
 end_comment
 
 begin_define
@@ -338,7 +338,9 @@ block|{
 name|uint32_t
 name|sa_magic
 decl_stmt|;
+comment|/* BEGIN CSTYLED */
 comment|/* 	 * Encoded with hdrsize and layout number as follows: 	 * 16      10       0 	 * +--------+-------+ 	 * | hdrsz  |layout | 	 * +--------+-------+ 	 * 	 * Bits 0-10 are the layout number 	 * Bits 11-16 are the size of the header. 	 * The hdrsize is the number * 8 	 * 	 * For example. 	 * hdrsz of 1 ==> 8 byte header 	 *          2 ==> 16 byte header 	 * 	 */
+comment|/* END CSTYLED */
 name|uint16_t
 name|sa_layout_info
 decl_stmt|;

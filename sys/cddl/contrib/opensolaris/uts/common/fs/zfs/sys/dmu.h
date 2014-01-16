@@ -499,6 +499,8 @@ init|=
 literal|1
 block|,
 name|TXG_NOWAIT
+block|,
+name|TXG_WAITED
 block|, }
 name|txg_how_t
 typedef|;

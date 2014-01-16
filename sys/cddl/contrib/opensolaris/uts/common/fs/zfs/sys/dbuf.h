@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -183,6 +183,11 @@ name|struct
 name|dbuf_dirty_record
 modifier|*
 name|dr_parent
+decl_stmt|;
+comment|/* How much space was changed to dsl_pool_dirty_space() for this? */
+name|unsigned
+name|int
+name|dr_accounted
 decl_stmt|;
 union|union
 name|dirty_types
@@ -526,6 +531,9 @@ name|dn
 parameter_list|,
 name|uint64_t
 name|blkid
+parameter_list|,
+name|zio_priority_t
+name|prio
 parameter_list|)
 function_decl|;
 name|void

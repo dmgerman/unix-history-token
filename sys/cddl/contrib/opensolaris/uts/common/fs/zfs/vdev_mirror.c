@@ -1965,9 +1965,7 @@ name|io_size
 argument_list|,
 name|ZIO_TYPE_WRITE
 argument_list|,
-name|zio
-operator|->
-name|io_priority
+name|ZIO_PRIORITY_ASYNC_WRITE
 argument_list|,
 name|ZIO_FLAG_IO_REPAIR
 operator||
