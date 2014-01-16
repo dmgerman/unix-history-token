@@ -2011,6 +2011,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|sz
+operator|>
+name|INT_MAX
+operator|)
+condition|?
+name|INT_MAX
+else|:
 name|sz
 operator|)
 return|;
