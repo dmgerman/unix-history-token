@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/dmu_send.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dmu_impl.h>
 end_include
 
@@ -84,6 +90,16 @@ include|#
 directive|include
 file|<sys/sa_impl.h>
 end_include
+
+begin_comment
+comment|/*  * Number of times that zfs_free_range() took the slow path while doing  * a zfs receive.  A nonzero value indicates a potential performance problem.  */
+end_comment
+
+begin_decl_stmt
+name|uint64_t
+name|zfs_free_range_recv_miss
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -4408,7 +4424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Evict (if its unreferenced) or clear (if its referenced) any level-0  * data blocks in the free range, so that any future readers will find  * empty blocks.  Also, if we happen accross any level-1 dbufs in the  * range that have not already been marked dirty, mark them dirty so  * they stay in memory.  */
+comment|/*  * Evict (if its unreferenced) or clear (if its referenced) any level-0  * data blocks in the free range, so that any future readers will find  * empty blocks.  Also, if we happen across any level-1 dbufs in the  * range that have not already been marked dirty, mark them dirty so  * they stay in memory.  *  * This is a no-op if the dataset is in the middle of an incremental  * receive; see comment below for details.  */
 end_comment
 
 begin_function
@@ -4514,6 +4530,49 @@ operator|->
 name|dn_dbufs_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|start
+operator|>=
+name|dn
+operator|->
+name|dn_unlisted_l0_blkid
+operator|*
+name|dn
+operator|->
+name|dn_datablksz
+condition|)
+block|{
+comment|/* There can't be any dbufs in this range; no need to search. */
+name|mutex_exit
+argument_list|(
+operator|&
+name|dn
+operator|->
+name|dn_dbufs_mtx
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|dmu_objset_is_receiving
+argument_list|(
+name|dn
+operator|->
+name|dn_objset
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * If we are receiving, we expect there to be no dbufs in 		 * the range to be freed, because receive modifies each 		 * block at most once, and in offset order.  If this is 		 * not the case, it can lead to performance problems, 		 * so note that we unexpectedly took the slow path. 		 */
+name|atomic_inc_64
+argument_list|(
+operator|&
+name|zfs_free_range_recv_miss
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|db
@@ -9247,6 +9306,32 @@ name|dn_dbufs
 argument_list|,
 name|db
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|db
+operator|->
+name|db_level
+operator|==
+literal|0
+operator|&&
+name|db
+operator|->
+name|db_blkid
+operator|>=
+name|dn
+operator|->
+name|dn_unlisted_l0_blkid
+condition|)
+name|dn
+operator|->
+name|dn_unlisted_l0_blkid
+operator|=
+name|db
+operator|->
+name|db_blkid
+operator|+
+literal|1
 expr_stmt|;
 name|db
 operator|->
