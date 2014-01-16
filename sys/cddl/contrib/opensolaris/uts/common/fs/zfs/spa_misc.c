@@ -284,6 +284,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.zfs_flags"
+argument_list|,
+operator|&
+name|zfs_flags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|zfs_flags
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zfs_flags
+argument_list|,
+literal|0
+argument_list|,
+literal|"ZFS debug flags."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * zfs_recover can be set to nonzero to attempt to recover from  * otherwise-fatal errors, typically caused by on-disk corruption.  When  * set, calls to zfs_panic_recover() will turn into warning messages.  */
 end_comment
