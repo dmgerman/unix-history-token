@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -1209,16 +1209,10 @@ decl_stmt|;
 name|uint64_t
 name|io_ena
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
-comment|/* FreeBSD only. */
-name|struct
-name|ostask
-name|io_task
+comment|/* Taskq dispatching state */
+name|taskq_ent_t
+name|io_tqent
 decl_stmt|;
-endif|#
-directive|endif
 name|avl_node_t
 name|io_trim_node
 decl_stmt|;
