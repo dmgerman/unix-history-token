@@ -1932,12 +1932,7 @@ name|ia
 operator|->
 name|ia_addr
 expr_stmt|;
-name|ifa_ref
-argument_list|(
-name|ifa
-argument_list|)
-expr_stmt|;
-comment|/* if_addrhead */
+comment|/* if_addrhead is already referenced by ifa_alloc() */
 name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
@@ -2374,6 +2369,7 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
+comment|/* if_addrhead */
 name|IN_IFADDR_WLOCK
 argument_list|()
 expr_stmt|;
@@ -2405,6 +2401,7 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
+comment|/* in_ifaddrhead */
 return|return
 operator|(
 name|error
@@ -2735,15 +2732,6 @@ expr_stmt|;
 name|IN_IFADDR_WUNLOCK
 argument_list|()
 expr_stmt|;
-name|ifa_free
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
-argument_list|)
-expr_stmt|;
-comment|/* in_ifaddrhead */
 comment|/* 	 * in_scrubprefix() kills the interface route. 	 */
 name|in_scrubprefix
 argument_list|(
@@ -2857,6 +2845,15 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
+comment|/* in_ifaddrhead */
 return|return
 operator|(
 literal|0
