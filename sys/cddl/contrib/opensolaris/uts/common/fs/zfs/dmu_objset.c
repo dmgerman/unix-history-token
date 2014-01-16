@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1041,6 +1041,17 @@ condition|)
 name|aflags
 operator||=
 name|ARC_L2CACHE
+expr_stmt|;
+if|if
+condition|(
+name|DMU_OS_IS_L2COMPRESSIBLE
+argument_list|(
+name|os
+argument_list|)
+condition|)
+name|aflags
+operator||=
+name|ARC_L2COMPRESS
 expr_stmt|;
 name|dprintf_bp
 argument_list|(
@@ -4886,6 +4897,11 @@ operator|->
 name|os_phys_buf
 argument_list|,
 name|DMU_OS_IS_L2CACHEABLE
+argument_list|(
+name|os
+argument_list|)
+argument_list|,
+name|DMU_OS_IS_L2COMPRESSIBLE
 argument_list|(
 name|os
 argument_list|)

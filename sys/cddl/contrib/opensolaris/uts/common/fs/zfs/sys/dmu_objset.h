@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -336,6 +336,13 @@ name|os
 parameter_list|)
 define|\
 value|((os)->os_secondary_cache == ZFS_CACHE_ALL ||		\ 	(os)->os_secondary_cache == ZFS_CACHE_METADATA)
+define|#
+directive|define
+name|DMU_OS_IS_L2COMPRESSIBLE
+parameter_list|(
+name|os
+parameter_list|)
+value|((os)->os_compress != ZIO_COMPRESS_OFF)
 comment|/* called from zpl */
 name|int
 name|dmu_objset_hold
