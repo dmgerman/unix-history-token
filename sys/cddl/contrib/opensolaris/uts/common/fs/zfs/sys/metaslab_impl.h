@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -84,6 +84,10 @@ name|uint64_t
 name|mc_aliquot
 decl_stmt|;
 name|uint64_t
+name|mc_alloc_groups
+decl_stmt|;
+comment|/* # of allocatable groups */
+name|uint64_t
 name|mc_alloc
 decl_stmt|;
 comment|/* total allocated space */
@@ -122,6 +126,14 @@ decl_stmt|;
 name|uint64_t
 name|mg_alloc_failures
 decl_stmt|;
+name|boolean_t
+name|mg_allocatable
+decl_stmt|;
+comment|/* can we allocate? */
+name|uint64_t
+name|mg_free_capacity
+decl_stmt|;
+comment|/* percentage free */
 name|int64_t
 name|mg_bias
 decl_stmt|;
