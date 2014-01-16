@@ -775,6 +775,7 @@ operator|<<
 literal|2
 expr_stmt|;
 block|}
+comment|/* 	 * dst/gw handling: 	 * 	 * dst can be rewritten but always point to&ro->ro_dst 	 * gw is readonly but can be pointed either to dst OR rt_gatewy 	 * therefore we need restore GW if we're re-doing lookup 	 */
 name|gw
 operator|=
 name|dst
@@ -865,6 +866,10 @@ expr_stmt|;
 name|rte
 operator|=
 name|NULL
+expr_stmt|;
+name|gw
+operator|=
+name|dst
 expr_stmt|;
 block|}
 if|if
