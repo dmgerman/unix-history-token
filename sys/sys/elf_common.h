@@ -2093,6 +2093,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SHT_GNU_LIBLIST
+value|0x6ffffff7
+end_define
+
+begin_define
+define|#
+directive|define
 name|SHT_SUNW_ANNOTATE
 value|0x6ffffff7
 end_define
@@ -6201,6 +6208,17 @@ end_define
 
 begin_comment
 comment|/* GP relative 32 bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_64
+value|18
+end_define
+
+begin_comment
+comment|/* Direct 64 bit */
 end_comment
 
 begin_define
