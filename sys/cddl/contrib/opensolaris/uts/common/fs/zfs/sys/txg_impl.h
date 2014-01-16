@@ -71,6 +71,7 @@ index|[
 name|TXG_SIZE
 index|]
 decl_stmt|;
+comment|/* tx hold count on each txg */
 name|list_t
 name|tc_callbacks
 index|[
@@ -96,11 +97,11 @@ name|tx_cpu_t
 modifier|*
 name|tx_cpu
 decl_stmt|;
-comment|/* protects right to enter txg	*/
+comment|/* protects access to tx_open_txg */
 name|kmutex_t
 name|tx_sync_lock
 decl_stmt|;
-comment|/* protects tx_state_t */
+comment|/* protects the rest of this struct */
 name|uint64_t
 name|tx_open_txg
 decl_stmt|;
