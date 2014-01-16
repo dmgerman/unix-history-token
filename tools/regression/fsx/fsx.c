@@ -627,6 +627,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|mapped_msync
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -U flag disables */
+end_comment
+
+begin_decl_stmt
+name|int
 name|fsxgoodfd
 init|=
 literal|0
@@ -3540,12 +3552,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 block|{
 name|prterr
@@ -3574,13 +3581,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|mapped_msync
+operator|&&
 name|msync
 argument_list|(
 name|p
 argument_list|,
 name|map_size
 argument_list|,
-literal|0
+name|MS_SYNC
 argument_list|)
 operator|!=
 literal|0
@@ -4386,7 +4395,7 @@ name|stdout
 argument_list|,
 literal|"usage: %s"
 argument_list|,
-literal|"fsx [-dnqLOW] [-b opnum] [-c Prob] [-l flen] [-m start:end] [-o oplen] [-p progressinterval] [-r readbdy] [-s style] [-t truncbdy] [-w writebdy] [-D startingop] [-N numops] [-P dirpath] [-S seed] fname\n\ 	-b opnum: beginning operation number (default 1)\n\ 	-c P: 1 in P chance of file close+open at each op (default infinity)\n\ 	-d: debug output for all operations\n\ 	-l flen: the upper bound on file size (default 262144)\n\ 	-m startop:endop: monitor (print debug output) specified byte range (default 0:infinity)\n\ 	-n: no verifications of file size\n\ 	-o oplen: the upper bound on operation size (default 65536)\n\ 	-p progressinterval: debug output at specified operation interval\n\ 	-q: quieter operation\n\ 	-r readbdy: 4096 would make reads page aligned (default 1)\n\ 	-s style: 1 gives smaller truncates (default 0)\n\ 	-t truncbdy: 4096 would make truncates page aligned (default 1)\n\ 	-w writebdy: 4096 would make writes page aligned (default 1)\n\ 	-D startingop: debug output starting at specified operation\n\ 	-L: fsxLite - no file creations& no file size changes\n\ 	-N numops: total # operations to do (default infinity)\n\ 	-O: use oplen (see -o flag) for every op (default random)\n\ 	-P dirpath: save .fsxlog and .fsxgood files in dirpath (default ./)\n\ 	-S seed: for random # generator (default 1) 0 gets timestamp\n\ 	-W: mapped write operations DISabled\n\ 	-R: mapped read operations DISabled)\n\ 	fname: this filename is REQUIRED (no default)\n"
+literal|"fsx [-dnqLOW] [-b opnum] [-c Prob] [-l flen] [-m start:end] [-o oplen] [-p progressinterval] [-r readbdy] [-s style] [-t truncbdy] [-w writebdy] [-D startingop] [-N numops] [-P dirpath] [-S seed] fname\n\ 	-b opnum: beginning operation number (default 1)\n\ 	-c P: 1 in P chance of file close+open at each op (default infinity)\n\ 	-d: debug output for all operations\n\ 	-l flen: the upper bound on file size (default 262144)\n\ 	-m startop:endop: monitor (print debug output) specified byte range (default 0:infinity)\n\ 	-n: no verifications of file size\n\ 	-o oplen: the upper bound on operation size (default 65536)\n\ 	-p progressinterval: debug output at specified operation interval\n\ 	-q: quieter operation\n\ 	-r readbdy: 4096 would make reads page aligned (default 1)\n\ 	-s style: 1 gives smaller truncates (default 0)\n\ 	-t truncbdy: 4096 would make truncates page aligned (default 1)\n\ 	-w writebdy: 4096 would make writes page aligned (default 1)\n\ 	-D startingop: debug output starting at specified operation\n\ 	-L: fsxLite - no file creations& no file size changes\n\ 	-N numops: total # operations to do (default infinity)\n\ 	-O: use oplen (see -o flag) for every op (default random)\n\ 	-P dirpath: save .fsxlog and .fsxgood files in dirpath (default ./)\n\ 	-S seed: for random # generator (default 1) 0 gets timestamp\n\ 	-W: mapped write operations DISabled\n\ 	-R: mapped read operations DISabled)\n\ 	-U: msync after mapped write operations DISabled\n\ 	fname: this filename is REQUIRED (no default)\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4622,7 +4631,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:dl:m:no:p:qr:s:t:w:D:LN:OP:RS:W"
+literal|"b:c:dl:m:no:p:qr:s:t:w:D:LN:OP:RS:UW"
 argument_list|)
 operator|)
 operator|!=
@@ -5153,6 +5162,26 @@ argument_list|(
 name|stdout
 argument_list|,
 literal|"mapped writes DISABLED\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|mapped_msync
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"mapped msync DISABLED\n"
 argument_list|)
 expr_stmt|;
 break|break;
