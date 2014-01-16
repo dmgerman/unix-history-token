@@ -54,6 +54,26 @@ name|TIME_MAX
 value|LLONG_MAX
 end_define
 
+begin_define
+define|#
+directive|define
+name|MSEC2NSEC
+parameter_list|(
+name|m
+parameter_list|)
+value|((hrtime_t)(m) * (NANOSEC / MILLISEC))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSEC2MSEC
+parameter_list|(
+name|n
+parameter_list|)
+value|((n) / (NANOSEC / MILLISEC))
+end_define
+
 begin_typedef
 typedef|typedef
 name|longlong_t
