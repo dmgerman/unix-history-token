@@ -3682,7 +3682,7 @@ block|{
 name|uint_t
 name|flags
 init|=
-name|TASKQ_PREPOPULATE
+literal|0
 decl_stmt|;
 name|boolean_t
 name|batch
