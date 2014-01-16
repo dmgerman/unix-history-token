@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1340,6 +1344,39 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+typedef|typedef
+struct|struct
+name|taskq_ent
+block|{
+name|struct
+name|taskq_ent
+modifier|*
+name|tqent_next
+decl_stmt|;
+name|struct
+name|taskq_ent
+modifier|*
+name|tqent_prev
+decl_stmt|;
+name|task_func_t
+modifier|*
+name|tqent_func
+decl_stmt|;
+name|void
+modifier|*
+name|tqent_arg
+decl_stmt|;
+name|uintptr_t
+name|tqent_flags
+decl_stmt|;
+block|}
+name|taskq_ent_t
+typedef|;
+define|#
+directive|define
+name|TQENT_FLAG_PREALLOC
+value|0x1
+comment|/* taskq_dispatch_ent used */
 define|#
 directive|define
 name|TASKQ_PREPOPULATE
@@ -1462,6 +1499,24 @@ name|void
 modifier|*
 parameter_list|,
 name|uint_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|taskq_dispatch_ent
+parameter_list|(
+name|taskq_t
+modifier|*
+parameter_list|,
+name|task_func_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|uint_t
+parameter_list|,
+name|taskq_ent_t
+modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
