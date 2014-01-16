@@ -2214,6 +2214,9 @@ name|pp
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
