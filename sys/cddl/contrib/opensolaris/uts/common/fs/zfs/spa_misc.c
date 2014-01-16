@@ -422,7 +422,7 @@ name|zfs_deadman_synctime
 argument_list|,
 literal|0
 argument_list|,
-literal|"Stalled ZFS I/O expiration time in units of vfs.zfs.txg_synctime_ms"
+literal|"Stalled ZFS I/O expiration time in units of vfs.zfs.txg.synctime_ms"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
