@@ -2689,7 +2689,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|td
+name|curthread
 operator|->
 name|td_vp_reserv
 operator|>
