@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -811,7 +811,7 @@ name|uint64_t
 name|spa_deadman_calls
 decl_stmt|;
 comment|/* number of deadman calls */
-name|uint64_t
+name|hrtime_t
 name|spa_sync_starttime
 decl_stmt|;
 comment|/* starting time fo spa_sync */
@@ -819,6 +819,35 @@ name|uint64_t
 name|spa_deadman_synctime
 decl_stmt|;
 comment|/* deadman expiration timer */
+ifdef|#
+directive|ifdef
+name|illumos
+comment|/* 	 * spa_iokstat_lock protects spa_iokstat and 	 * spa_queue_stats[]. 	 */
+name|kmutex_t
+name|spa_iokstat_lock
+decl_stmt|;
+name|struct
+name|kstat
+modifier|*
+name|spa_iokstat
+decl_stmt|;
+comment|/* kstat of io to this pool */
+struct|struct
+block|{
+name|int
+name|spa_active
+decl_stmt|;
+name|int
+name|spa_queued
+decl_stmt|;
+block|}
+name|spa_queue_stats
+index|[
+name|ZIO_PRIORITY_NUM_QUEUEABLE
+index|]
+struct|;
+endif|#
+directive|endif
 name|hrtime_t
 name|spa_ccw_fail_time
 decl_stmt|;

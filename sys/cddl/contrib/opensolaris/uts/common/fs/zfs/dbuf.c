@@ -4597,6 +4597,8 @@ name|dn_dbufs
 argument_list|)
 init|;
 name|db
+operator|!=
+name|NULL
 condition|;
 name|db
 operator|=
@@ -6238,6 +6240,30 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|db
+operator|->
+name|db_blkid
+operator|!=
+name|DMU_BONUS_BLKID
+operator|&&
+name|os
+operator|->
+name|os_dsl_dataset
+operator|!=
+name|NULL
+condition|)
+name|dr
+operator|->
+name|dr_accounted
+operator|=
+name|db
+operator|->
+name|db
+operator|.
+name|db_size
+expr_stmt|;
 name|dr
 operator|->
 name|dr_dbuf
@@ -6706,7 +6732,7 @@ operator|->
 name|db_mtx
 argument_list|)
 expr_stmt|;
-comment|/*  possible race with dbuf_undirty() */
+comment|/* 		 * Since we've dropped the mutex, it's possible that 		 * dbuf_undirty() might have changed this out from under us. 		 */
 if|if
 condition|(
 name|db
@@ -7116,7 +7142,7 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* XXX would be nice to fix up dn_towrite_space[] */
+comment|/* 	 * Any space we accounted for in dp_dirty_* will be cleaned up by 	 * dsl_pool_sync().  This is relatively rare so the discrepancy 	 * is not a big deal. 	 */
 operator|*
 name|drp
 operator|=
@@ -8227,7 +8253,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * "Clear" the contents of this dbuf.  This will mark the dbuf  * EVICTING and clear *most* of its references.  Unfortunetely,  * when we are not holding the dn_dbufs_mtx, we can't clear the  * entry in the dn_dbufs list.  We have to wait until dbuf_destroy()  * in this case.  For callers from the DMU we will usually see:  *	dbuf_clear()->arc_buf_evict()->dbuf_do_evict()->dbuf_destroy()  * For the arc callback, we will usually see:  *	dbuf_do_evict()->dbuf_clear();dbuf_destroy()  * Sometimes, though, we will get a mix of these two:  *	DMU: dbuf_clear()->arc_buf_evict()  *	ARC: dbuf_do_evict()->dbuf_destroy()  */
+comment|/*  * "Clear" the contents of this dbuf.  This will mark the dbuf  * EVICTING and clear *most* of its references.  Unfortunately,  * when we are not holding the dn_dbufs_mtx, we can't clear the  * entry in the dn_dbufs list.  We have to wait until dbuf_destroy()  * in this case.  For callers from the DMU we will usually see:  *	dbuf_clear()->arc_buf_evict()->dbuf_do_evict()->dbuf_destroy()  * For the arc callback, we will usually see:  *	dbuf_do_evict()->dbuf_clear();dbuf_destroy()  * Sometimes, though, we will get a mix of these two:  *	DMU: dbuf_clear()->arc_buf_evict()  *	ARC: dbuf_do_evict()->dbuf_destroy()  */
 end_comment
 
 begin_function
@@ -9769,6 +9795,9 @@ name|dn
 parameter_list|,
 name|uint64_t
 name|blkid
+parameter_list|,
+name|zio_priority_t
+name|prio
 parameter_list|)
 block|{
 name|dmu_buf_impl_t
@@ -9870,19 +9899,6 @@ name|bp
 argument_list|)
 condition|)
 block|{
-name|int
-name|priority
-init|=
-name|dn
-operator|->
-name|dn_type
-operator|==
-name|DMU_OT_DDT_ZAP
-condition|?
-name|ZIO_PRIORITY_DDT_PREFETCH
-else|:
-name|ZIO_PRIORITY_ASYNC_READ
-decl_stmt|;
 name|dsl_dataset_t
 modifier|*
 name|ds
@@ -9944,7 +9960,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|priority
+name|prio
 argument_list|,
 name|ZIO_FLAG_CANFAIL
 operator||
@@ -13353,6 +13369,108 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * The SPA will call this callback several times for each zio - once  * for every physical child i/o (zio->io_phys_children times).  This  * allows the DMU to monitor the progress of each logical i/o.  For example,  * there may be 2 copies of an indirect block, or many fragments of a RAID-Z  * block.  There may be a long delay before all copies/fragments are completed,  * so this callback allows us to retire dirty space gradually, as the physical  * i/os complete.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|dbuf_write_physdone
+parameter_list|(
+name|zio_t
+modifier|*
+name|zio
+parameter_list|,
+name|arc_buf_t
+modifier|*
+name|buf
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|dmu_buf_impl_t
+modifier|*
+name|db
+init|=
+name|arg
+decl_stmt|;
+name|objset_t
+modifier|*
+name|os
+init|=
+name|db
+operator|->
+name|db_objset
+decl_stmt|;
+name|dsl_pool_t
+modifier|*
+name|dp
+init|=
+name|dmu_objset_pool
+argument_list|(
+name|os
+argument_list|)
+decl_stmt|;
+name|dbuf_dirty_record_t
+modifier|*
+name|dr
+decl_stmt|;
+name|int
+name|delta
+init|=
+literal|0
+decl_stmt|;
+name|dr
+operator|=
+name|db
+operator|->
+name|db_data_pending
+expr_stmt|;
+name|ASSERT3U
+argument_list|(
+name|dr
+operator|->
+name|dr_txg
+argument_list|,
+operator|==
+argument_list|,
+name|zio
+operator|->
+name|io_txg
+argument_list|)
+expr_stmt|;
+comment|/* 	 * The callback will be called io_phys_children times.  Retire one 	 * portion of our dirty space each time we are called.  Any rounding 	 * error will be cleaned up by dsl_pool_sync()'s call to 	 * dsl_pool_undirty_space(). 	 */
+name|delta
+operator|=
+name|dr
+operator|->
+name|dr_accounted
+operator|/
+name|zio
+operator|->
+name|io_phys_children
+expr_stmt|;
+name|dsl_pool_undirty_space
+argument_list|(
+name|dp
+argument_list|,
+name|delta
+argument_list|,
+name|zio
+operator|->
+name|io_txg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -14620,6 +14738,8 @@ name|zp
 argument_list|,
 name|dbuf_write_override_ready
 argument_list|,
+name|NULL
+argument_list|,
 name|dbuf_write_override_done
 argument_list|,
 name|dr
@@ -14741,6 +14861,8 @@ name|zp
 argument_list|,
 name|dbuf_write_nofill_ready
 argument_list|,
+name|NULL
+argument_list|,
 name|dbuf_write_nofill_done
 argument_list|,
 name|db
@@ -14800,6 +14922,8 @@ operator|&
 name|zp
 argument_list|,
 name|dbuf_write_ready
+argument_list|,
+name|dbuf_write_physdone
 argument_list|,
 name|dbuf_write_done
 argument_list|,

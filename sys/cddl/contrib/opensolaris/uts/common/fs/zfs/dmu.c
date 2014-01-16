@@ -1858,12 +1858,6 @@ name|uint32_t
 name|flags
 parameter_list|)
 block|{
-name|dsl_pool_t
-modifier|*
-name|dp
-init|=
-name|NULL
-decl_stmt|;
 name|dmu_buf_t
 modifier|*
 modifier|*
@@ -1885,9 +1879,6 @@ decl_stmt|;
 name|zio_t
 modifier|*
 name|zio
-decl_stmt|;
-name|hrtime_t
-name|start
 decl_stmt|;
 name|ASSERT
 argument_list|(
@@ -2057,31 +2048,6 @@ argument_list|,
 name|KM_SLEEP
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dn
-operator|->
-name|dn_objset
-operator|->
-name|os_dsl_dataset
-condition|)
-name|dp
-operator|=
-name|dn
-operator|->
-name|dn_objset
-operator|->
-name|os_dsl_dataset
-operator|->
-name|ds_dir
-operator|->
-name|dd_pool
-expr_stmt|;
-name|start
-operator|=
-name|gethrtime
-argument_list|()
-expr_stmt|;
 name|zio
 operator|=
 name|zio_root
@@ -2231,25 +2197,6 @@ name|zio_wait
 argument_list|(
 name|zio
 argument_list|)
-expr_stmt|;
-comment|/* track read overhead when we are in sync context */
-if|if
-condition|(
-name|dp
-operator|&&
-name|dsl_pool_sync_context
-argument_list|(
-name|dp
-argument_list|)
-condition|)
-name|dp
-operator|->
-name|dp_read_overhead
-operator|+=
-name|gethrtime
-argument_list|()
-operator|-
-name|start
 expr_stmt|;
 if|if
 condition|(
@@ -2686,6 +2633,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Issue prefetch i/os for the given blocks.  *  * Note: The assumption is that we *know* these blocks will be needed  * almost immediately.  Therefore, the prefetch i/os will be issued at  * ZIO_PRIORITY_SYNC_READ  *  * Note: indirect blocks and other metadata will be read synchronously,  * causing this function to block if they are not already cached.  */
+end_comment
+
 begin_function
 name|void
 name|dmu_prefetch
@@ -2713,8 +2664,6 @@ name|blkid
 decl_stmt|;
 name|int
 name|nblks
-decl_stmt|,
-name|i
 decl_stmt|,
 name|err
 decl_stmt|;
@@ -2778,6 +2727,8 @@ argument_list|(
 name|dn
 argument_list|,
 name|blkid
+argument_list|,
+name|ZIO_PRIORITY_SYNC_READ
 argument_list|)
 expr_stmt|;
 name|rw_exit
@@ -2894,8 +2845,9 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|int
 name|i
-operator|=
+init|=
 literal|0
 init|;
 name|i
@@ -2912,6 +2864,8 @@ argument_list|,
 name|blkid
 operator|+
 name|i
+argument_list|,
+name|ZIO_PRIORITY_SYNC_READ
 argument_list|)
 expr_stmt|;
 block|}
@@ -6983,6 +6937,8 @@ name|zp
 argument_list|,
 name|dmu_sync_late_arrival_ready
 argument_list|,
+name|NULL
+argument_list|,
 name|dmu_sync_late_arrival_done
 argument_list|,
 name|dsa
@@ -7495,6 +7451,8 @@ operator|&
 name|zp
 argument_list|,
 name|dmu_sync_ready
+argument_list|,
+name|NULL
 argument_list|,
 name|dmu_sync_done
 argument_list|,

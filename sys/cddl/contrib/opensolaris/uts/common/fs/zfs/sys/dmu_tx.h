@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -114,12 +114,25 @@ name|dmu_tx_hold
 modifier|*
 name|tx_needassign_txh
 decl_stmt|;
+comment|/* list of dmu_tx_callback_t on this dmu_tx */
 name|list_t
 name|tx_callbacks
 decl_stmt|;
-comment|/* list of dmu_tx_callback_t on this dmu_tx */
-name|uint8_t
+comment|/* placeholder for syncing context, doesn't need specific holds */
+name|boolean_t
 name|tx_anyobj
+decl_stmt|;
+comment|/* has this transaction already been delayed? */
+name|boolean_t
+name|tx_waited
+decl_stmt|;
+comment|/* time this transaction was created */
+name|hrtime_t
+name|tx_start
+decl_stmt|;
+comment|/* need to wait for sufficient dirty space */
+name|boolean_t
+name|tx_wait_dirty
 decl_stmt|;
 name|int
 name|tx_err
