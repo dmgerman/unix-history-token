@@ -1552,7 +1552,7 @@ name|str
 operator|=
 name|xstrdup
 argument_list|(
-literal|"__anon__"
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
