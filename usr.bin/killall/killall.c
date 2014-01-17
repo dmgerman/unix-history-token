@@ -569,14 +569,6 @@ name|av
 condition|)
 block|{
 case|case
-literal|'I'
-case|:
-name|Iflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'j'
 case|:
 operator|++
@@ -837,6 +829,32 @@ name|zflag
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'I'
+case|:
+comment|/* 				 * NB: do not confuse -INT with -I 				 */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"INT"
+argument_list|,
+literal|3
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|Iflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(
