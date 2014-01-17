@@ -3317,7 +3317,7 @@ operator|->
 name|sb_mbcnt
 condition|)
 block|{
-comment|/* 		 * Don't call sbdrop(sb, 0) if the leading mbuf is non-empty: 		 * we would loop forever. Panic instead. 		 */
+comment|/* 		 * Don't call sbcut(sb, 0) if the leading mbuf is non-empty: 		 * we would loop forever. Panic instead. 		 */
 if|if
 condition|(
 operator|!
