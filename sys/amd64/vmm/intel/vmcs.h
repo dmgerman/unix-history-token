@@ -1859,31 +1859,32 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMCS_INTR_INFO_VALID
+name|VMCS_INTR_VALID
 value|(1U<< 31)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_INTR_INFO_TYPE
-parameter_list|(
-name|info
-parameter_list|)
-value|(((info)>> 8)& 0x7)
+name|VMCS_INTR_T_MASK
+value|0x700
 end_define
+
+begin_comment
+comment|/* Interruption-info type */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|VMCS_INTR_INFO_HW_INTR
+name|VMCS_INTR_T_HWINTR
 value|(0<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_INTR_INFO_NMI
+name|VMCS_INTR_T_NMI
 value|(2<< 8)
 end_define
 

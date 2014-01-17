@@ -4107,9 +4107,9 @@ goto|;
 comment|/* 	 * Inject the virtual NMI. The vector must be the NMI IDT entry 	 * or the VMCS entry check will fail. 	 */
 name|info
 operator|=
-name|VMCS_INTR_INFO_NMI
+name|VMCS_INTR_T_NMI
 operator||
-name|VMCS_INTR_INFO_VALID
+name|VMCS_INTR_VALID
 expr_stmt|;
 name|info
 operator||=
@@ -4226,7 +4226,7 @@ if|if
 condition|(
 name|info
 operator|&
-name|VMCS_INTR_INFO_VALID
+name|VMCS_INTR_VALID
 condition|)
 return|return;
 comment|/* 	 * NMI injection has priority so deal with those first 	 */
@@ -4322,9 +4322,9 @@ goto|;
 comment|/* Inject the interrupt */
 name|info
 operator|=
-name|VMCS_INTR_INFO_HW_INTR
+name|VMCS_INTR_T_HWINTR
 operator||
-name|VMCS_INTR_INFO_VALID
+name|VMCS_INTR_VALID
 expr_stmt|;
 name|info
 operator||=
@@ -5396,6 +5396,8 @@ name|ecx
 decl_stmt|,
 name|edx
 decl_stmt|,
+name|gi
+decl_stmt|,
 name|idtvec_info
 decl_stmt|,
 name|idtvec_err
@@ -5412,6 +5414,17 @@ decl_stmt|;
 name|bool
 name|retu
 decl_stmt|;
+name|CTASSERT
+argument_list|(
+operator|(
+name|PINBASED_CTLS_ONE_SETTING
+operator|&
+name|PINBASED_VIRTUAL_NMI
+operator|)
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
 name|handled
 operator|=
 literal|0
@@ -5532,6 +5545,38 @@ argument_list|(
 name|VMCS_ENTRY_EXCEPTION_ERROR
 argument_list|,
 name|idtvec_err
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 			 * If 'virtual NMIs' are being used and the VM-exit 			 * happened while injecting an NMI during the previous 			 * VM-entry, then clear "blocking by NMI" in the Guest 			 * Interruptibility-state. 			 */
+if|if
+condition|(
+operator|(
+name|idtvec_info
+operator|&
+name|VMCS_INTR_T_MASK
+operator|)
+operator|==
+name|VMCS_INTR_T_NMI
+condition|)
+block|{
+name|gi
+operator|=
+name|vmcs_read
+argument_list|(
+name|VMCS_GUEST_INTERRUPTIBILITY
+argument_list|)
+expr_stmt|;
+name|gi
+operator|&=
+operator|~
+name|VMCS_INTERRUPTIBILITY_NMI_BLOCKING
+expr_stmt|;
+name|vmcs_write
+argument_list|(
+name|VMCS_GUEST_INTERRUPTIBILITY
+argument_list|,
+name|gi
 argument_list|)
 expr_stmt|;
 block|}
@@ -5944,17 +5989,18 @@ argument_list|(
 operator|(
 name|intr_info
 operator|&
-name|VMCS_INTR_INFO_VALID
+name|VMCS_INTR_VALID
 operator|)
 operator|!=
 literal|0
 operator|&&
-name|VMCS_INTR_INFO_TYPE
-argument_list|(
+operator|(
 name|intr_info
-argument_list|)
+operator|&
+name|VMCS_INTR_T_MASK
+operator|)
 operator|==
-literal|0
+name|VMCS_INTR_T_HWINTR
 argument_list|,
 operator|(
 literal|"VM exit interruption info invalid: %#x"
@@ -8188,7 +8234,7 @@ if|if
 condition|(
 name|info
 operator|&
-name|VMCS_INTR_INFO_VALID
+name|VMCS_INTR_VALID
 condition|)
 return|return
 operator|(
@@ -8220,7 +8266,7 @@ operator|)
 expr_stmt|;
 name|info
 operator||=
-name|VMCS_INTR_INFO_VALID
+name|VMCS_INTR_VALID
 expr_stmt|;
 name|error
 operator|=
