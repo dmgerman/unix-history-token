@@ -2756,6 +2756,16 @@ operator|&
 name|usb_ref_lock
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Check if the "f->refcount" variable reached zero 		 * during the unlocked time before entering wait: 		 */
+if|if
+condition|(
+name|f
+operator|->
+name|refcount
+operator|==
+literal|0
+condition|)
+break|break;
 comment|/* wait for sync */
 name|cv_wait
 argument_list|(
