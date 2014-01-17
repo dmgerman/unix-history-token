@@ -110,8 +110,6 @@ name|deflate_global
 argument_list|,
 name|entry
 argument_list|,
-name|entry
-argument_list|,
 literal|"int"
 argument_list|,
 literal|"u_int32_t"
@@ -130,8 +128,6 @@ name|deflate_global
 argument_list|,
 name|bad
 argument_list|,
-name|bad
-argument_list|,
 literal|"int"
 argument_list|,
 literal|"int"
@@ -153,8 +149,6 @@ argument_list|,
 name|deflate
 argument_list|,
 name|deflate_global
-argument_list|,
-name|iter
 argument_list|,
 name|iter
 argument_list|,
@@ -179,8 +173,6 @@ argument_list|,
 argument|deflate
 argument_list|,
 argument|deflate_global
-argument_list|,
-argument|return
 argument_list|,
 argument|return
 argument_list|,

@@ -187,8 +187,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|)
 end_define
 
@@ -265,8 +263,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|)
 end_define
 
@@ -282,8 +278,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|)
@@ -301,8 +295,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -322,8 +314,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -345,8 +335,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -370,8 +358,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -397,8 +383,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|snamp
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -426,8 +410,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|snamp
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -633,8 +615,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|)
 end_define
 
@@ -650,8 +630,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -671,8 +649,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -696,8 +672,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -725,8 +699,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -758,8 +730,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -795,8 +765,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -836,8 +804,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -941,11 +907,9 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|)
 define|\
-value|struct sdt_probe sdt_##prov##_##mod##_##func##_##name[1] = {		\ 		{ sizeof(struct sdt_probe), sdt_provider_##prov,		\ 		    { NULL, NULL }, { NULL, NULL }, #mod, #func, #sname, 0, 0,	\ 		    NULL }							\ 	};									\ 	DATA_SET(sdt_probes_set, sdt_##prov##_##mod##_##func##_##name);
+value|struct sdt_probe sdt_##prov##_##mod##_##func##_##name[1] = {		\ 		{ sizeof(struct sdt_probe), sdt_provider_##prov,		\ 		    { NULL, NULL }, { NULL, NULL }, #mod, #func, #name, 0, 0,	\ 		    NULL }							\ 	};									\ 	DATA_SET(sdt_probes_set, sdt_##prov##_##mod##_##func##_##name);
 end_define
 
 begin_define
@@ -1026,11 +990,9 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname)
+value|SDT_PROBE_DEFINE(prov, mod, func, name)
 end_define
 
 begin_define
@@ -1046,12 +1008,10 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
-name|sname
-parameter_list|,
 name|arg0
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL)
 end_define
 
 begin_define
@@ -1067,14 +1027,12 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
-name|sname
-parameter_list|,
 name|arg0
 parameter_list|,
 name|arg1
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL)
 end_define
 
 begin_define
@@ -1090,8 +1048,6 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
-name|sname
-parameter_list|,
 name|arg0
 parameter_list|,
 name|arg1
@@ -1099,7 +1055,7 @@ parameter_list|,
 name|arg2
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, NULL)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, NULL)
 end_define
 
 begin_define
@@ -1115,8 +1071,6 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
-name|sname
-parameter_list|,
 name|arg0
 parameter_list|,
 name|arg1
@@ -1126,7 +1080,7 @@ parameter_list|,
 name|arg3
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, NULL)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, NULL)
 end_define
 
 begin_define
@@ -1142,8 +1096,6 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
-name|sname
-parameter_list|,
 name|arg0
 parameter_list|,
 name|arg1
@@ -1155,7 +1107,7 @@ parameter_list|,
 name|arg4
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, NULL)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, NULL)
 end_define
 
 begin_define
@@ -1171,8 +1123,6 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
-name|sname
-parameter_list|,
 name|arg0
 parameter_list|,
 name|arg1
@@ -1186,7 +1136,7 @@ parameter_list|,
 name|arg5
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 5, arg5, NULL)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 5, arg5, NULL)
 end_define
 
 begin_define
@@ -1201,8 +1151,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -1219,7 +1167,7 @@ parameter_list|,
 name|arg6
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 5, arg5, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 6, arg6, NULL)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 5, arg5, NULL);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 6, arg6, NULL)
 end_define
 
 begin_define
@@ -1234,11 +1182,9 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname)
+value|SDT_PROBE_DEFINE(prov, mod, func, name)
 end_define
 
 begin_define
@@ -1254,14 +1200,12 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
-name|sname
-parameter_list|,
 name|arg0
 parameter_list|,
 name|xarg0
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0)
 end_define
 
 begin_define
@@ -1277,8 +1221,6 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
-name|sname
-parameter_list|,
 name|arg0
 parameter_list|,
 name|xarg0
@@ -1288,7 +1230,7 @@ parameter_list|,
 name|xarg1
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1)
 end_define
 
 begin_define
@@ -1304,8 +1246,6 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
-name|sname
-parameter_list|,
 name|arg0
 parameter_list|,
 name|xarg0
@@ -1319,7 +1259,7 @@ parameter_list|,
 name|xarg2
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, xarg2)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, xarg2)
 end_define
 
 begin_define
@@ -1334,8 +1274,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -1354,7 +1292,7 @@ parameter_list|,
 name|xarg3
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, xarg2);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, xarg3)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, xarg2);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, xarg3)
 end_define
 
 begin_define
@@ -1369,8 +1307,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -1393,7 +1329,7 @@ parameter_list|,
 name|xarg4
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, xarg2);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, xarg3);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, xarg4)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, xarg2);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, xarg3);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, xarg4)
 end_define
 
 begin_define
@@ -1408,8 +1344,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -1436,7 +1370,7 @@ parameter_list|,
 name|xarg5
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, xarg2);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, xarg3);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, xarg4);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 5, arg5, xarg5)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, xarg2);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, xarg3);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, xarg4);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 5, arg5, xarg5)
 end_define
 
 begin_define
@@ -1451,8 +1385,6 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
-parameter_list|,
-name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -1483,7 +1415,7 @@ parameter_list|, \
 name|xarg6
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, xarg2);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, xarg3);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, xarg4);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 5, arg5, xarg5);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 6, arg6, xarg6)
+value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0, xarg0);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1, xarg1);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2, xarg2);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3, xarg3);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4, xarg4);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 5, arg5, xarg5);	\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 6, arg6, xarg6)
 end_define
 
 begin_define

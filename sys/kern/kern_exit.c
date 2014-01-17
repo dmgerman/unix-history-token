@@ -342,8 +342,6 @@ name|kernel
 argument_list|, ,
 name|exit
 argument_list|,
-name|exit
-argument_list|,
 literal|"int"
 argument_list|)
 expr_stmt|;

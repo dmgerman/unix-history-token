@@ -8459,7 +8459,7 @@ condition|)
 block|{
 name|TCP_PROBE5
 argument_list|(
-name|connect_refused
+name|connect__refused
 argument_list|,
 name|NULL
 argument_list|,
@@ -8706,7 +8706,7 @@ argument_list|)
 expr_stmt|;
 name|TCP_PROBE5
 argument_list|(
-name|connect_established
+name|connect__established
 argument_list|,
 name|NULL
 argument_list|,
@@ -9901,7 +9901,7 @@ argument_list|)
 expr_stmt|;
 name|TCP_PROBE5
 argument_list|(
-name|accept_established
+name|accept__established
 argument_list|,
 name|NULL
 argument_list|,

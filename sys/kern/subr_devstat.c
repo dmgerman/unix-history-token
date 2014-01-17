@@ -122,8 +122,6 @@ name|io
 argument_list|, , ,
 name|start
 argument_list|,
-name|start
-argument_list|,
 literal|"struct bio *"
 argument_list|,
 literal|"struct devstat *"
@@ -138,7 +136,19 @@ name|io
 argument_list|, , ,
 name|done
 argument_list|,
-name|done
+literal|"struct bio *"
+argument_list|,
+literal|"struct devstat *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|io
+argument_list|, , ,
+name|wait__start
 argument_list|,
 literal|"struct bio *"
 argument_list|,
@@ -152,29 +162,7 @@ name|SDT_PROBE_DEFINE2
 argument_list|(
 name|io
 argument_list|, , ,
-name|wait_start
-argument_list|,
-name|wait
-operator|-
-name|start
-argument_list|,
-literal|"struct bio *"
-argument_list|,
-literal|"struct devstat *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE2
-argument_list|(
-name|io
-argument_list|, , ,
-name|wait_done
-argument_list|,
-name|wait
-operator|-
-name|done
+name|wait__done
 argument_list|,
 literal|"struct bio *"
 argument_list|,
@@ -220,7 +208,7 @@ define|#
 directive|define
 name|DTRACE_DEVSTAT_WAIT_START
 parameter_list|()
-value|SDT_PROBE2(io, , , wait_start, NULL, ds)
+value|SDT_PROBE2(io, , , wait__start, NULL, ds)
 end_define
 
 begin_define
@@ -228,7 +216,7 @@ define|#
 directive|define
 name|DTRACE_DEVSTAT_WAIT_DONE
 parameter_list|()
-value|SDT_PROBE2(io, , , wait_done, NULL, ds)
+value|SDT_PROBE2(io, , , wait__done, NULL, ds)
 end_define
 
 begin_decl_stmt

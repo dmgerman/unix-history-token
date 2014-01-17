@@ -1240,11 +1240,7 @@ name|SDT_PROBE_DEFINE3
 argument_list|(
 name|sched
 argument_list|, , ,
-name|change_pri
-argument_list|,
-name|change
-operator|-
-name|pri
+name|change__pri
 argument_list|,
 literal|"struct thread *"
 argument_list|,
@@ -1262,8 +1258,6 @@ name|sched
 argument_list|, , ,
 name|dequeue
 argument_list|,
-name|dequeue
-argument_list|,
 literal|"struct thread *"
 argument_list|,
 literal|"struct proc *"
@@ -1278,8 +1272,6 @@ name|SDT_PROBE_DEFINE4
 argument_list|(
 name|sched
 argument_list|, , ,
-name|enqueue
-argument_list|,
 name|enqueue
 argument_list|,
 literal|"struct thread *"
@@ -1298,11 +1290,7 @@ name|SDT_PROBE_DEFINE4
 argument_list|(
 name|sched
 argument_list|, , ,
-name|lend_pri
-argument_list|,
-name|lend
-operator|-
-name|pri
+name|lend__pri
 argument_list|,
 literal|"struct thread *"
 argument_list|,
@@ -1320,11 +1308,7 @@ name|SDT_PROBE_DEFINE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|load_change
-argument_list|,
-name|load
-operator|-
-name|change
+name|load__change
 argument_list|,
 literal|"int"
 argument_list|,
@@ -1338,11 +1322,7 @@ name|SDT_PROBE_DEFINE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|off_cpu
-argument_list|,
-name|off
-operator|-
-name|cpu
+name|off__cpu
 argument_list|,
 literal|"struct thread *"
 argument_list|,
@@ -1356,11 +1336,7 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|sched
 argument_list|, , ,
-name|on_cpu
-argument_list|,
-name|on
-operator|-
-name|cpu
+name|on__cpu
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1370,11 +1346,7 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|sched
 argument_list|, , ,
-name|remain_cpu
-argument_list|,
-name|remain
-operator|-
-name|cpu
+name|remain__cpu
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1384,8 +1356,6 @@ name|SDT_PROBE_DEFINE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|surrender
-argument_list|,
 name|surrender
 argument_list|,
 literal|"struct thread *"
@@ -1422,7 +1392,7 @@ name|SDT_PROBE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|load_change
+name|load__change
 argument_list|,
 name|NOCPU
 argument_list|,
@@ -1459,7 +1429,7 @@ name|SDT_PROBE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|load_change
+name|load__change
 argument_list|,
 name|NOCPU
 argument_list|,
@@ -3206,7 +3176,7 @@ name|SDT_PROBE3
 argument_list|(
 name|sched
 argument_list|, , ,
-name|change_pri
+name|change__pri
 argument_list|,
 name|td
 argument_list|,
@@ -3265,7 +3235,7 @@ name|SDT_PROBE4
 argument_list|(
 name|sched
 argument_list|, , ,
-name|lend_pri
+name|lend__pri
 argument_list|,
 name|td
 argument_list|,
@@ -4022,7 +3992,7 @@ name|SDT_PROBE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|off_cpu
+name|off__cpu
 argument_list|,
 name|td
 argument_list|,
@@ -4096,7 +4066,7 @@ name|SDT_PROBE0
 argument_list|(
 name|sched
 argument_list|, , ,
-name|on_cpu
+name|on__cpu
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4126,7 +4096,7 @@ name|SDT_PROBE0
 argument_list|(
 name|sched
 argument_list|, , ,
-name|remain_cpu
+name|remain__cpu
 argument_list|)
 expr_stmt|;
 ifdef|#

@@ -82,8 +82,6 @@ name|net
 argument_list|,
 name|init
 argument_list|,
-name|init
-argument_list|,
 literal|"uint32_t"
 argument_list|,
 comment|/* The Vtag for this end */
@@ -120,8 +118,6 @@ name|net
 argument_list|,
 name|ack
 argument_list|,
-name|ack
-argument_list|,
 literal|"uint32_t"
 argument_list|,
 comment|/* The Vtag for this end */
@@ -155,8 +151,6 @@ argument_list|,
 name|cwnd
 argument_list|,
 name|net
-argument_list|,
-name|rttvar
 argument_list|,
 name|rttvar
 argument_list|,
@@ -189,8 +183,6 @@ argument_list|,
 name|cwnd
 argument_list|,
 name|net
-argument_list|,
-name|rttstep
 argument_list|,
 name|rttstep
 argument_list|,
@@ -230,8 +222,6 @@ name|net
 argument_list|,
 name|fr
 argument_list|,
-name|fr
-argument_list|,
 literal|"uint32_t"
 argument_list|,
 comment|/* The Vtag for this end */
@@ -265,8 +255,6 @@ argument_list|,
 name|cwnd
 argument_list|,
 name|net
-argument_list|,
-name|to
 argument_list|,
 name|to
 argument_list|,
@@ -306,8 +294,6 @@ name|net
 argument_list|,
 name|bl
 argument_list|,
-name|bl
-argument_list|,
 literal|"uint32_t"
 argument_list|,
 comment|/* The Vtag for this end */
@@ -344,8 +330,6 @@ name|net
 argument_list|,
 name|ecn
 argument_list|,
-name|ecn
-argument_list|,
 literal|"uint32_t"
 argument_list|,
 comment|/* The Vtag for this end */
@@ -379,8 +363,6 @@ argument_list|,
 name|cwnd
 argument_list|,
 name|net
-argument_list|,
-name|pd
 argument_list|,
 name|pd
 argument_list|,
@@ -428,8 +410,6 @@ name|assoc
 argument_list|,
 name|val
 argument_list|,
-name|val
-argument_list|,
 literal|"uint32_t"
 argument_list|,
 comment|/* The Vtag for this end */
@@ -468,8 +448,6 @@ argument_list|,
 name|flightsize
 argument_list|,
 name|net
-argument_list|,
-name|val
 argument_list|,
 name|val
 argument_list|,
@@ -514,8 +492,6 @@ argument_list|,
 name|flightsize
 argument_list|,
 name|assoc
-argument_list|,
-name|val
 argument_list|,
 name|val
 argument_list|,

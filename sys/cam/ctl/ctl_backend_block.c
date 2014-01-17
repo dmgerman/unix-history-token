@@ -2762,8 +2762,6 @@ name|read
 argument_list|,
 name|file_start
 argument_list|,
-name|file_start
-argument_list|,
 literal|"uint64_t"
 argument_list|)
 expr_stmt|;
@@ -2777,8 +2775,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|write
-argument_list|,
-name|file_start
 argument_list|,
 name|file_start
 argument_list|,
@@ -2798,8 +2794,6 @@ name|read
 argument_list|,
 name|file_done
 argument_list|,
-name|file_done
-argument_list|,
 literal|"uint64_t"
 argument_list|)
 expr_stmt|;
@@ -2813,8 +2807,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|write
-argument_list|,
-name|file_done
 argument_list|,
 name|file_done
 argument_list|,
@@ -4174,8 +4166,6 @@ name|read
 argument_list|,
 name|start
 argument_list|,
-name|start
-argument_list|,
 literal|"uint64_t"
 argument_list|)
 expr_stmt|;
@@ -4189,8 +4179,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|write
-argument_list|,
-name|start
 argument_list|,
 name|start
 argument_list|,
@@ -4210,8 +4198,6 @@ name|read
 argument_list|,
 name|alloc_done
 argument_list|,
-name|alloc_done
-argument_list|,
 literal|"uint64_t"
 argument_list|)
 expr_stmt|;
@@ -4225,8 +4211,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|write
-argument_list|,
-name|alloc_done
 argument_list|,
 name|alloc_done
 argument_list|,

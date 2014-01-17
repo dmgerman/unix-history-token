@@ -203,11 +203,7 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|proc
 argument_list|, , ,
-name|lwp_exit
-argument_list|,
-name|lwp
-operator|-
-name|exit
+name|lwp__exit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
