@@ -55,6 +55,11 @@ name|struct
 name|uio
 modifier|*
 name|trl_uio
+parameter_list|,
+name|struct
+name|sf_hdtr_kq
+modifier|*
+name|hdtr_kq
 parameter_list|)
 function_decl|;
 end_function_decl
