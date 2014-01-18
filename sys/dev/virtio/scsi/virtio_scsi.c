@@ -7058,13 +7058,9 @@ index|[
 literal|3
 index|]
 operator|=
-operator|(
 name|ccbh
 operator|->
 name|target_lun
-operator|>>
-literal|8
-operator|)
 operator|&
 literal|0xFF
 expr_stmt|;
