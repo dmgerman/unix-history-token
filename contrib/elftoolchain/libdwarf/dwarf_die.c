@@ -92,7 +92,7 @@ name|DW_CHILDREN_no
 condition|)
 return|return
 operator|(
-name|DW_DLE_NO_ENTRY
+name|DW_DLV_NO_ENTRY
 operator|)
 return|;
 name|dbg
