@@ -2954,6 +2954,27 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|in6_prepare_ifra
+parameter_list|(
+name|struct
+name|in6_aliasreq
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|in6_purgeaddr
 parameter_list|(
 name|struct
