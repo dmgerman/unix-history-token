@@ -5130,7 +5130,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* 	 * If this is a new address, allocate a new ifaddr and link it 	 * into chains. 	 */
+comment|/*  * Allocate a new ifaddr and link it into chains.  */
 end_comment
 
 begin_function
@@ -5159,7 +5159,7 @@ name|in6_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-comment|/* 		 * When in6_update_ifa() is called in a process of a received 		 * RA, it is called under an interrupt context.  So, we should 		 * call malloc with M_NOWAIT. 		 */
+comment|/* 	 * When in6_alloc_ifa() is called in a process of a received 	 * RA, it is called under an interrupt context.  So, we should 	 * call malloc with M_NOWAIT. 	 */
 name|ia
 operator|=
 operator|(
@@ -5258,7 +5258,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * XXX: some functions expect that ifa_dstaddr is not 			 * NULL for p2p interfaces. 			 */
+comment|/* 		 * XXX: some functions expect that ifa_dstaddr is not 		 * NULL for p2p interfaces. 		 */
 name|ia
 operator|->
 name|ia_ifa
@@ -5817,7 +5817,6 @@ name|ia_ifa
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Beyond this point, we should call in6_purgeaddr upon an error, 	 * not just go to unlink. 	 */
 comment|/* Join necessary multicast groups. */
 name|in6m_sol
 operator|=
