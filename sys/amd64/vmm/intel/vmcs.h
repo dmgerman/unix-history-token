@@ -1853,6 +1853,17 @@ value|56
 end_define
 
 begin_comment
+comment|/*  * NMI unblocking due to IRET.  *  * Applies to VM-exits due to hardware exception or EPT fault.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXIT_QUAL_NMIUDTI
+value|(1<< 12)
+end_define
+
+begin_comment
 comment|/*  * VMCS interrupt information fields  */
 end_comment
 
