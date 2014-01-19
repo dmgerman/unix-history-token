@@ -1895,7 +1895,7 @@ name|val
 operator|=
 name|vmcs_read
 argument_list|(
-name|VMCS_EXIT_INTERRUPTION_INFO
+name|VMCS_EXIT_INTR_INFO
 argument_list|)
 expr_stmt|;
 name|db_printf
@@ -1983,7 +1983,7 @@ literal|"  Error Code: %lx"
 argument_list|,
 name|vmcs_read
 argument_list|(
-name|VMCS_EXIT_INTERRUPTION_ERROR
+name|VMCS_EXIT_INTR_ERRCODE
 argument_list|)
 argument_list|)
 expr_stmt|;

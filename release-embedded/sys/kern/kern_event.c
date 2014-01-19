@@ -1527,6 +1527,12 @@ name|user_filtops
 block|}
 block|,
 comment|/* EVFILT_USER */
+block|{
+operator|&
+name|null_filtops
+block|}
+block|,
+comment|/* EVFILT_SENDFILE */
 block|}
 struct|;
 end_struct

@@ -1342,11 +1342,7 @@ name|va
 argument_list|,
 name|ofs
 argument_list|,
-name|kd
-operator|->
-name|vmst
-operator|->
-name|pagesize
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -2015,6 +2011,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|sz
+operator|>
+name|INT_MAX
+operator|)
+condition|?
+name|INT_MAX
+else|:
 name|sz
 operator|)
 return|;

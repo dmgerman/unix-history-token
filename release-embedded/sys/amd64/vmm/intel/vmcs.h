@@ -416,6 +416,13 @@ name|VMCS_VPID
 value|0x00000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMCS_PIR_VECTOR
+value|0x00000002
+end_define
+
 begin_comment
 comment|/* 16-bit guest-state fields */
 end_comment
@@ -608,6 +615,13 @@ define|#
 directive|define
 name|VMCS_APIC_ACCESS
 value|0x00002014
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_PIR_DESC
+value|0x00002016
 end_define
 
 begin_define
@@ -899,14 +913,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|VMCS_EXIT_INTERRUPTION_INFO
+name|VMCS_EXIT_INTR_INFO
 value|0x00004404
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_EXIT_INTERRUPTION_ERROR
+name|VMCS_EXIT_INTR_ERRCODE
 value|0x00004406
 end_define
 
@@ -1839,27 +1853,49 @@ value|56
 end_define
 
 begin_comment
+comment|/*  * NMI unblocking due to IRET.  *  * Applies to VM-exits due to hardware exception or EPT fault.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXIT_QUAL_NMIUDTI
+value|(1<< 12)
+end_define
+
+begin_comment
 comment|/*  * VMCS interrupt information fields  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VMCS_INTERRUPTION_INFO_VALID
+name|VMCS_INTR_VALID
 value|(1U<< 31)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_INTERRUPTION_INFO_HW_INTR
+name|VMCS_INTR_T_MASK
+value|0x700
+end_define
+
+begin_comment
+comment|/* Interruption-info type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_T_HWINTR
 value|(0<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_INTERRUPTION_INFO_NMI
+name|VMCS_INTR_T_NMI
 value|(2<< 8)
 end_define
 

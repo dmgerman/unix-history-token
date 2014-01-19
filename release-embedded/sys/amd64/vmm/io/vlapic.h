@@ -283,6 +283,50 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Reset the trigger-mode bits for all vectors to be edge-triggered */
+end_comment
+
+begin_function_decl
+name|void
+name|vlapic_reset_tmr
+parameter_list|(
+name|struct
+name|vlapic
+modifier|*
+name|vlapic
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Set the trigger-mode bit associated with 'vector' to level-triggered if  * the (dest,phys,delmode) tuple resolves to an interrupt being delivered to  * this 'vlapic'.  */
+end_comment
+
+begin_function_decl
+name|void
+name|vlapic_set_tmr_level
+parameter_list|(
+name|struct
+name|vlapic
+modifier|*
+name|vlapic
+parameter_list|,
+name|uint32_t
+name|dest
+parameter_list|,
+name|bool
+name|phys
+parameter_list|,
+name|int
+name|delmode
+parameter_list|,
+name|int
+name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* APIC write handlers */
 end_comment
 

@@ -155,6 +155,29 @@ directive|include
 file|"kgdb.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CROSS_DEBUGGER
+end_ifdef
+
+begin_comment
+comment|/*  * We suppress the call to add_target() of core_ops in corelow.c because if  * there are multiple core_stratum targets, the find_core_target() function  * won't know which one to return and returns none. We need it to return  * our target. We only have to do that when we're building a cross-debugger  * because fbsd-threads.c is part of a native debugger and it too defines  * coreops_suppress_target with 1 as the initializer.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|coreops_suppress_target
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|CORE_ADDR

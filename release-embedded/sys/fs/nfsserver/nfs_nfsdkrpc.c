@@ -1151,8 +1151,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
+name|nfsrvd_sentcache
+argument_list|(
+name|rp
+argument_list|,
+operator|(
 name|rqst
 operator|->
 name|rq_reply_seq
@@ -1165,10 +1168,7 @@ name|xprt
 argument_list|,
 name|NULL
 argument_list|)
-condition|)
-name|nfsrvd_sentcache
-argument_list|(
-name|rp
+operator|)
 argument_list|,
 name|rqst
 operator|->

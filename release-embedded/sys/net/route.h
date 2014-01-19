@@ -220,6 +220,17 @@ begin_comment
 comment|/* number of usable routing tables */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|rt_add_addr_allfibs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Announce interfaces to all fibs */
+end_comment
+
 begin_comment
 comment|/*  * XXX kernel function pointer `rt_output' is visible to applications.  */
 end_comment

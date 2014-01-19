@@ -7404,6 +7404,9 @@ block|{
 name|uint32_t
 name|status
 decl_stmt|;
+name|uint32_t
+name|temp
+decl_stmt|;
 name|USB_BUS_LOCK
 argument_list|(
 operator|&
@@ -7423,7 +7426,14 @@ argument_list|,
 name|XHCI_USBSTS
 argument_list|)
 expr_stmt|;
-comment|/* acknowledge interrupts */
+comment|/* acknowledge interrupts, if any */
+if|if
+condition|(
+name|status
+operator|!=
+literal|0
+condition|)
+block|{
 name|XWRITE4
 argument_list|(
 name|sc
@@ -7442,6 +7452,42 @@ argument_list|,
 literal|"real interrupt (status=0x%08x)\n"
 argument_list|,
 name|status
+argument_list|)
+expr_stmt|;
+block|}
+name|temp
+operator|=
+name|XREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|runt
+argument_list|,
+name|XHCI_IMAN
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* force clearing of pending interrupts */
+if|if
+condition|(
+name|temp
+operator|&
+name|XHCI_IMAN_INTR_PEND
+condition|)
+name|XWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|runt
+argument_list|,
+name|XHCI_IMAN
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+name|temp
 argument_list|)
 expr_stmt|;
 comment|/* check for event(s) */

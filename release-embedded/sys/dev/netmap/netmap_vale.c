@@ -2023,6 +2023,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|create
+condition|?
+name|ENOMEM
+else|:
 name|ENXIO
 operator|)
 return|;
@@ -2157,7 +2161,7 @@ name|bdg_active_ports
 argument_list|)
 expr_stmt|;
 return|return
-name|EINVAL
+name|ENOMEM
 return|;
 block|}
 comment|/* record the next two ports available, but do not allocate yet */
@@ -2369,7 +2373,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|EINVAL
+name|EBUSY
 expr_stmt|;
 goto|goto
 name|out
@@ -2682,7 +2686,6 @@ return|;
 name|NMG_LOCK
 argument_list|()
 expr_stmt|;
-comment|/* XXX probably netmap_get_bdg_na() */
 name|error
 operator|=
 name|netmap_get_bdg_na
@@ -8024,7 +8027,7 @@ operator|->
 name|na_lut_objtotal
 expr_stmt|;
 block|}
-comment|/* cross-link the netmap rings */
+comment|/* cross-link the netmap rings 		 * The original number of rings comes from hwna, 		 * rx rings on one side equals tx rings on the other. 		 */
 for|for
 control|(
 name|i
@@ -8035,7 +8038,7 @@ name|i
 operator|<=
 name|na
 operator|->
-name|num_tx_rings
+name|num_rx_rings
 condition|;
 name|i
 operator|++
@@ -8088,7 +8091,7 @@ name|i
 operator|<=
 name|na
 operator|->
-name|num_rx_rings
+name|num_tx_rings
 condition|;
 name|i
 operator|++
@@ -8562,7 +8565,7 @@ operator|==
 name|NR_TX
 condition|)
 return|return
-name|ENXIO
+name|EINVAL
 return|;
 name|kring
 operator|=
@@ -8890,7 +8893,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|ENXIO
+name|EINVAL
 return|;
 return|return
 name|netmap_bwrap_notify

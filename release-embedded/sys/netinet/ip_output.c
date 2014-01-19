@@ -462,13 +462,6 @@ decl_stmt|;
 name|int
 name|mtu
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int n;
-comment|/* scratchpad */
-endif|#
-directive|endif
 name|int
 name|error
 init|=
@@ -775,6 +768,7 @@ operator|<<
 literal|2
 expr_stmt|;
 block|}
+comment|/* 	 * dst/gw handling: 	 * 	 * dst can be rewritten but always points to&ro->ro_dst. 	 * gw is readonly but can point either to dst OR rt_gateway, 	 * therefore we need restore gw if we're redoing lookup. 	 */
 name|gw
 operator|=
 name|dst
@@ -795,7 +789,7 @@ name|ia
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * If there is a cached route, 	 * check that it is to the same destination 	 * and is still up.  If not, free it and try again. 	 * The address family should also be checked in case of sharing the 	 * cache with IPv6. 	 */
+comment|/* 	 * If there is a cached route, check that it is to the same 	 * destination and is still up.  If not, free it and try again. 	 * The address family should also be checked in case of sharing 	 * the cache with IPv6. 	 */
 name|rte
 operator|=
 name|ro
@@ -865,6 +859,10 @@ expr_stmt|;
 name|rte
 operator|=
 name|NULL
+expr_stmt|;
+name|gw
+operator|=
+name|dst
 expr_stmt|;
 block|}
 if|if
@@ -3136,7 +3134,7 @@ operator|>
 name|PAGE_SIZE
 condition|)
 block|{
-comment|/*  		 * Fragment large datagrams such that each segment  		 * contains a multiple of PAGE_SIZE amount of data,  		 * plus headers. This enables a receiver to perform  		 * page-flipping zero-copy optimizations. 		 * 		 * XXX When does this help given that sender and receiver 		 * could have different page sizes, and also mtu could 		 * be less than the receiver's page size ? 		 */
+comment|/* 		 * Fragment large datagrams such that each segment 		 * contains a multiple of PAGE_SIZE amount of data, 		 * plus headers. This enables a receiver to perform 		 * page-flipping zero-copy optimizations. 		 * 		 * XXX When does this help given that sender and receiver 		 * could have different page sizes, and also mtu could 		 * be less than the receiver's page size ? 		 */
 name|int
 name|newlen
 decl_stmt|;
@@ -3179,7 +3177,7 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-comment|/* 		 * firstlen (off - hlen) must be aligned on an  		 * 8-byte boundary 		 */
+comment|/* 		 * firstlen (off - hlen) must be aligned on an 		 * 8-byte boundary 		 */
 if|if
 condition|(
 name|off

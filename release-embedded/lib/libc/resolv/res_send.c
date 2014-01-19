@@ -81,11 +81,21 @@ directive|include
 file|"port_before.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|USE_KQUEUE
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_POLL
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -4672,7 +4682,7 @@ name|POLLRDNORM
 expr_stmt|;
 name|n
 operator|=
-name|poll
+name|_poll
 argument_list|(
 operator|&
 name|pollfd

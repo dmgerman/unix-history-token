@@ -2689,10 +2689,7 @@ name|to
 argument_list|,
 name|from
 argument_list|,
-name|MBTOM
-argument_list|(
 name|how
-argument_list|)
 argument_list|)
 operator|)
 return|;

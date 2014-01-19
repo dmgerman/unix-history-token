@@ -32,11 +32,8 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|count
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|unsigned
 name|char

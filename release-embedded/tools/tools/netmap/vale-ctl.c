@@ -284,7 +284,8 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|D
+block|{
+name|ND
 argument_list|(
 literal|"Unable to %s %s to the bridge"
 argument_list|,
@@ -299,10 +300,16 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-else|else
-name|D
+name|perror
 argument_list|(
-literal|"Success to %s %s to the bridge\n"
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|ND
+argument_list|(
+literal|"Success to %s %s to the bridge"
 argument_list|,
 name|nr_cmd
 operator|==
@@ -346,13 +353,20 @@ if|if
 condition|(
 name|error
 condition|)
-name|D
+block|{
+name|ND
 argument_list|(
 literal|"Unable to obtain info for %s"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|D
 argument_list|(
@@ -462,13 +476,20 @@ if|if
 condition|(
 name|error
 condition|)
-name|D
+block|{
+name|ND
 argument_list|(
 literal|"Unable to get if info for %s"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|D
 argument_list|(
@@ -698,6 +719,7 @@ name|nr_cmd
 operator|=
 name|NETMAP_BDG_LIST
 expr_stmt|;
+return|return
 name|bdg_ctl
 argument_list|(
 name|name
@@ -706,8 +728,9 @@ name|nr_cmd
 argument_list|,
 name|nr_arg
 argument_list|)
-expr_stmt|;
-return|return
+condition|?
+literal|1
+else|:
 literal|0
 return|;
 block|}
