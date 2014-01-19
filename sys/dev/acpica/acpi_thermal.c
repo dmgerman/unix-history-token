@@ -380,6 +380,9 @@ comment|/*Thermal zone parameters*/
 name|int
 name|tz_validchecks
 decl_stmt|;
+name|int
+name|tz_insane_tmp_notified
+decl_stmt|;
 comment|/* passive cooling */
 name|struct
 name|proc
@@ -734,6 +737,16 @@ expr|struct
 name|acpi_tz_softc
 argument_list|)
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|acpi_tz_tmp_name
+init|=
+literal|"_TMP"
 decl_stmt|;
 end_decl_stmt
 
@@ -2449,13 +2462,6 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|tmp_name
-init|=
-literal|"_TMP"
-decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"acpi_tz_get_temperature"
@@ -2470,7 +2476,7 @@ name|sc
 operator|->
 name|tz_handle
 argument_list|,
-name|tmp_name
+name|acpi_tz_tmp_name
 argument_list|,
 operator|&
 name|temp
@@ -2519,7 +2525,7 @@ argument_list|,
 operator|&
 name|temp
 argument_list|,
-name|tmp_name
+name|acpi_tz_tmp_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -3531,6 +3537,19 @@ literal|2000
 operator|)
 condition|)
 block|{
+comment|/* 	 * If the value we are checking is _TMP, warn the user only 	 * once. This avoids spamming messages if, for instance, the 	 * sensor is broken and always returns an invalid temperature. 	 * 	 * This is only done for _TMP; other values always emit a 	 * warning. 	 */
+if|if
+condition|(
+name|what
+operator|!=
+name|acpi_tz_tmp_name
+operator|||
+operator|!
+name|sc
+operator|->
+name|tz_insane_tmp_notified
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -3548,13 +3567,41 @@ name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Don't warn the user again if the read value doesn't improve. */
+if|if
+condition|(
+name|what
+operator|==
+name|acpi_tz_tmp_name
+condition|)
+name|sc
+operator|->
+name|tz_insane_tmp_notified
+operator|=
+literal|1
+expr_stmt|;
+block|}
 operator|*
 name|val
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+return|return;
 block|}
+comment|/* This value is correct. Warn if it's incorrect again. */
+if|if
+condition|(
+name|what
+operator|==
+name|acpi_tz_tmp_name
+condition|)
+name|sc
+operator|->
+name|tz_insane_tmp_notified
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
