@@ -3084,7 +3084,7 @@ name|verbose
 condition|)
 name|fetch_info
 argument_list|(
-literal|"SSL options: %x"
+literal|"SSL options: %lx"
 argument_list|,
 name|ssl_ctx_options
 argument_list|)
