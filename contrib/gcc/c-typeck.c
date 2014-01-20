@@ -7876,6 +7876,20 @@ argument_list|(
 name|subdatum
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+if|if
+condition|(
+name|TREE_UNAVAILABLE
+argument_list|(
+name|subdatum
+argument_list|)
+condition|)
+name|error_unavailable_use
+argument_list|(
+name|subdatum
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 name|datum
 operator|=
 name|ref
@@ -8874,6 +8888,20 @@ argument_list|(
 name|ref
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+if|if
+condition|(
+name|TREE_UNAVAILABLE
+argument_list|(
+name|ref
+argument_list|)
+condition|)
+name|error_unavailable_use
+argument_list|(
+name|ref
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 if|if
 condition|(
 operator|!
@@ -28832,10 +28860,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Emit a general-purpose loop construct.  START_LOCUS is the location of    the beginning of the loop.  COND is the loop condition.  COND_IS_FIRST    is false for DO loops.  INCR is the FOR increment expression.  BODY is    the statement controlled by the loop.  BLAB is the break label.  CLAB is    the continue label.  Everything is allowed to be NULL.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
+begin_comment
+unit|\
+comment|/* Emit a general-purpose loop construct.  START_LOCUS is the location    of the beginning of the loop.  COND is the loop condition.    COND_IS_FIRST is false for DO loops.  INCR is the FOR increment    expression.  BODY is the statement controlled by the loop.  BLAB is    the break label.  CLAB is the continue label.  ATTRS is the    attributes associated with the loop, which at present are    associated with the topmost label.  Everything is allowed to be    NULL.  */
+end_comment
+
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
 end_comment
 
 begin_function
+unit|\
 name|void
 name|c_finish_loop
 parameter_list|(
@@ -28851,15 +28889,22 @@ parameter_list|,
 name|tree
 name|body
 parameter_list|,
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+parameter_list|\
 name|tree
 name|blab
 parameter_list|,
 name|tree
 name|clab
 parameter_list|,
+name|tree
+name|attrs
+parameter_list|,
 name|bool
 name|cond_is_first
 parameter_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+function|\
 block|{
 name|tree
 name|entry

@@ -1526,6 +1526,22 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin "unavailable" attribute (Radar 2809697) */
+if|if
+condition|(
+name|TREE_UNAVAILABLE
+argument_list|(
+name|node
+argument_list|)
+condition|)
+name|fputs
+argument_list|(
+literal|" unavailable"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end "unavailable" attribute (Radar 2809697) */
 if|if
 condition|(
 name|TREE_VISITED
