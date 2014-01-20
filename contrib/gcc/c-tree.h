@@ -607,6 +607,14 @@ name|deprecated_p
 range|:
 literal|1
 decl_stmt|;
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+comment|/* Whether the specifiers include a unavailable typedef.  */
+name|BOOL_BITFIELD
+name|unavailable_p
+range|:
+literal|1
+decl_stmt|;
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 comment|/* Whether the type defaulted to "int" because there were no type      specifiers.  */
 name|BOOL_BITFIELD
 name|default_int_p
@@ -2519,7 +2527,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|void
 name|c_finish_loop
@@ -2536,12 +2549,19 @@ name|tree
 parameter_list|,
 name|tree
 parameter_list|,
+name|tree
+parameter_list|,
 name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|tree
 name|c_begin_stmt_expr
