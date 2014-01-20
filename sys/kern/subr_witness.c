@@ -274,7 +274,7 @@ begin_define
 define|#
 directive|define
 name|WITNESS_COUNT
-value|1024
+value|1536
 end_define
 
 begin_define
