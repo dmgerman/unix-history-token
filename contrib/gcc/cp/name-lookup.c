@@ -119,21 +119,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|tree
-name|select_decl
-parameter_list|(
-specifier|const
-name|struct
-name|scope_binding
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|cxx_binding
 modifier|*
 name|binding_for_name
@@ -7718,6 +7703,57 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* LLVM LOCAL begin mainline */
+comment|/* Shift the old and new bindings around so we're comparing class and      enumeration names to each other.  */
+if|if
+condition|(
+name|oldval
+operator|&&
+name|DECL_IMPLICIT_TYPEDEF_P
+argument_list|(
+name|oldval
+argument_list|)
+condition|)
+block|{
+name|oldtype
+operator|=
+name|oldval
+expr_stmt|;
+name|oldval
+operator|=
+name|NULL_TREE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|decls
+operator|.
+name|value
+operator|&&
+name|DECL_IMPLICIT_TYPEDEF_P
+argument_list|(
+name|decls
+operator|.
+name|value
+argument_list|)
+condition|)
+block|{
+name|decls
+operator|.
+name|type
+operator|=
+name|decls
+operator|.
+name|value
+expr_stmt|;
+name|decls
+operator|.
+name|value
+operator|=
+name|NULL_TREE
+expr_stmt|;
+block|}
+comment|/* LLVM LOCAL end mainline */
 comment|/* It is impossible to overload a built-in function; any explicit      declaration eliminates the built-in declaration.  So, if OLDVAL      is a built-in, then we can just pretend it isn't there.  */
 if|if
 condition|(
@@ -7745,13 +7781,17 @@ name|oldval
 operator|=
 name|NULL_TREE
 expr_stmt|;
-comment|/* Check for using functions.  */
+comment|/* LLVM LOCAL begin mainline */
 if|if
 condition|(
 name|decls
 operator|.
 name|value
-operator|&&
+condition|)
+block|{
+comment|/* Check for using functions.  */
+if|if
+condition|(
 name|is_overloaded_fn
 argument_list|(
 name|decls
@@ -7776,14 +7816,6 @@ name|oldval
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|DECL_IMPLICIT_TYPEDEF_P
-argument_list|(
-name|oldval
-argument_list|)
-condition|)
 name|error
 argument_list|(
 literal|"%qD is already declared in this scope"
@@ -7827,7 +7859,7 @@ argument_list|(
 name|tmp
 argument_list|)
 decl_stmt|;
-comment|/* [namespace.udecl]  	     If a function declaration in namespace scope or block 	     scope has the same name and the same parameter types as a 	     function introduced by a using declaration the program is 	     ill-formed.  */
+comment|/* [namespace.udecl]  		 If a function declaration in namespace scope or block 		 scope has the same name and the same parameter types as a 		 function introduced by a using declaration the program is 		 ill-formed.  */
 for|for
 control|(
 name|tmp1
@@ -7907,7 +7939,7 @@ name|old_fn
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* There was already a non-using declaration in 		     this scope with the same parameter types. If both 		     are the same extern "C" functions, that's ok.  */
+comment|/* There was already a non-using declaration in 			 this scope with the same parameter types. If both 			 are the same extern "C" functions, that's ok.  */
 if|if
 condition|(
 name|decls_match
@@ -7931,13 +7963,13 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* If we broke out of the loop, there's no reason to add 	     this function to the using declarations for this 	     scope.  */
+comment|/* If we broke out of the loop, there's no reason to add 		 this function to the using declarations for this 		 scope.  */
 if|if
 condition|(
 name|tmp1
 condition|)
 continue|continue;
-comment|/* If we are adding to an existing OVERLOAD, then we no 	     longer know the type of the set of functions.  */
+comment|/* If we are adding to an existing OVERLOAD, then we no 		 longer know the type of the set of functions.  */
 if|if
 condition|(
 operator|*
@@ -7974,7 +8006,7 @@ operator|*
 name|newval
 argument_list|)
 expr_stmt|;
-comment|/* If there is only one function, then we use its type.  (A 	     using-declaration naming a single function can be used in 	     contexts where overload resolution cannot be 	     performed.)  */
+comment|/* If there is only one function, then we use its type.  (A 		 using-declaration naming a single function can be used in 		 contexts where overload resolution cannot be 		 performed.)  */
 if|if
 condition|(
 name|TREE_CODE
@@ -8052,6 +8084,46 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+operator|*
+name|newval
+operator|=
+name|oldval
+expr_stmt|;
+if|if
+condition|(
+name|decls
+operator|.
+name|type
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|decls
+operator|.
+name|type
+argument_list|)
+operator|==
+name|TREE_LIST
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"reference to %qD is ambiguous"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|print_candidates
+argument_list|(
+name|decls
+operator|.
+name|type
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 operator|*
 name|newtype
 operator|=
@@ -8067,7 +8139,7 @@ operator|*
 name|newtype
 operator|&&
 operator|!
-name|same_type_p
+name|decls_match
 argument_list|(
 name|oldtype
 argument_list|,
@@ -8075,18 +8147,35 @@ operator|*
 name|newtype
 argument_list|)
 condition|)
-block|{
 name|error
 argument_list|(
-literal|"using declaration %qD introduced ambiguous type %qT"
+literal|"%qD is already declared in this scope"
 argument_list|,
 name|name
-argument_list|,
-name|oldtype
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+comment|/* If *newval is empty, shift any class or enumeration name down.  */
+if|if
+condition|(
+operator|!
+operator|*
+name|newval
+condition|)
+block|{
+operator|*
+name|newval
+operator|=
+operator|*
+name|newtype
+expr_stmt|;
+operator|*
+name|newtype
+operator|=
+name|NULL_TREE
+expr_stmt|;
+block|}
+comment|/* LLVM LOCAL end mainline */
 block|}
 end_function
 
@@ -12766,14 +12855,15 @@ begin_comment
 comment|/* This should return an error not all definitions define functions.    It is not an error if we find two functions with exactly the    same signature, only if these are selected in overload resolution.    old is the current set of bindings, new the freshly-found binding.    XXX Do we want to give *all* candidates in case of ambiguity?    XXX In what way should I treat extern declarations?    XXX I don't want to repeat the entire duplicate_decls here */
 end_comment
 
+begin_comment
+comment|/* LLVM LOCAL begin mainline */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|ambiguous_decl
 parameter_list|(
-name|tree
-name|name
-parameter_list|,
 name|struct
 name|scope_binding
 modifier|*
@@ -12799,6 +12889,40 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* Copy the type.  */
+name|type
+operator|=
+name|new
+operator|->
+name|type
+expr_stmt|;
+if|if
+condition|(
+name|LOOKUP_NAMESPACES_ONLY
+argument_list|(
+name|flags
+argument_list|)
+operator|||
+operator|(
+name|type
+operator|&&
+name|hidden_name_p
+argument_list|(
+name|type
+argument_list|)
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|LOOKUP_HIDDEN
+operator|)
+operator|)
+condition|)
+name|type
+operator|=
+name|NULL_TREE
+expr_stmt|;
 comment|/* Copy the value.  */
 name|val
 operator|=
@@ -12810,6 +12934,26 @@ if|if
 condition|(
 name|val
 condition|)
+block|{
+if|if
+condition|(
+name|hidden_name_p
+argument_list|(
+name|val
+argument_list|)
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|LOOKUP_HIDDEN
+operator|)
+condition|)
+name|val
+operator|=
+name|NULL_TREE
+expr_stmt|;
+else|else
 switch|switch
 condition|(
 name|TREE_CODE
@@ -12821,7 +12965,7 @@ block|{
 case|case
 name|TEMPLATE_DECL
 case|:
-comment|/* If we expect types or namespaces, and not templates, 	   or this is not a template class.  */
+comment|/* If we expect types or namespaces, and not templates, 	       or this is not a template class.  */
 if|if
 condition|(
 operator|(
@@ -12836,11 +12980,6 @@ argument_list|(
 name|val
 argument_list|)
 operator|)
-operator|||
-name|hidden_name_p
-argument_list|(
-name|val
-argument_list|)
 condition|)
 name|val
 operator|=
@@ -12857,10 +12996,15 @@ argument_list|(
 name|flags
 argument_list|)
 operator|||
-name|hidden_name_p
-argument_list|(
-name|val
-argument_list|)
+operator|(
+name|type
+operator|&&
+operator|(
+name|flags
+operator|&
+name|LOOKUP_PREFER_TYPES
+operator|)
+operator|)
 condition|)
 name|val
 operator|=
@@ -12892,11 +13036,6 @@ name|LOOKUP_QUALIFIERS_ONLY
 argument_list|(
 name|flags
 argument_list|)
-operator|||
-name|hidden_name_p
-argument_list|(
-name|val
-argument_list|)
 condition|)
 name|val
 operator|=
@@ -12916,6 +13055,24 @@ operator|=
 name|NULL_TREE
 expr_stmt|;
 block|}
+block|}
+comment|/* If val is hidden, shift down any class or enumeration name.  */
+if|if
+condition|(
+operator|!
+name|val
+condition|)
+block|{
+name|val
+operator|=
+name|type
+expr_stmt|;
+name|type
+operator|=
+name|NULL_TREE
+expr_stmt|;
+block|}
+comment|/* LLVM LOCAL end mainline */
 if|if
 condition|(
 operator|!
@@ -12986,9 +13143,7 @@ name|build_tree_list
 argument_list|(
 name|NULL_TREE
 argument_list|,
-name|new
-operator|->
-name|value
+name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13003,24 +13158,7 @@ name|error_mark_node
 expr_stmt|;
 block|}
 block|}
-comment|/* ... and copy the type.  */
-name|type
-operator|=
-name|new
-operator|->
-name|type
-expr_stmt|;
-if|if
-condition|(
-name|LOOKUP_NAMESPACES_ONLY
-argument_list|(
-name|flags
-argument_list|)
-condition|)
-name|type
-operator|=
-name|NULL_TREE
-expr_stmt|;
+comment|/* LLVM LOCAL begin mainline */
 if|if
 condition|(
 operator|!
@@ -13046,44 +13184,37 @@ operator|!=
 name|type
 condition|)
 block|{
-if|if
-condition|(
-name|flags
-operator|&
-name|LOOKUP_COMPLAIN
-condition|)
-block|{
-name|error
+name|old
+operator|->
+name|type
+operator|=
+name|tree_cons
 argument_list|(
-literal|"%qD denotes an ambiguous type"
+name|NULL_TREE
 argument_list|,
-name|name
+name|old
+operator|->
+name|type
+argument_list|,
+name|build_tree_list
+argument_list|(
+name|NULL_TREE
+argument_list|,
+name|type
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|"%J  first type here"
-argument_list|,
-name|TYPE_MAIN_DECL
+name|TREE_TYPE
 argument_list|(
 name|old
 operator|->
 name|type
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"%J  other type here"
-argument_list|,
-name|TYPE_MAIN_DECL
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
+operator|=
+name|error_mark_node
 expr_stmt|;
 block|}
-block|}
+comment|/* LLVM LOCAL end mainline */
 block|}
 end_function
 
@@ -13423,138 +13554,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Select the right _DECL from multiple choices.  */
-end_comment
-
-begin_function
-specifier|static
-name|tree
-name|select_decl
-parameter_list|(
-specifier|const
-name|struct
-name|scope_binding
-modifier|*
-name|binding
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-block|{
-name|tree
-name|val
-decl_stmt|;
-name|val
-operator|=
-name|binding
-operator|->
-name|value
-expr_stmt|;
-name|timevar_push
-argument_list|(
-name|TV_NAME_LOOKUP
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|LOOKUP_NAMESPACES_ONLY
-argument_list|(
-name|flags
-argument_list|)
-condition|)
-block|{
-comment|/* We are not interested in types.  */
-if|if
-condition|(
-name|val
-operator|&&
-operator|(
-name|TREE_CODE
-argument_list|(
-name|val
-argument_list|)
-operator|==
-name|NAMESPACE_DECL
-operator|||
-name|TREE_CODE
-argument_list|(
-name|val
-argument_list|)
-operator|==
-name|TREE_LIST
-operator|)
-condition|)
-name|POP_TIMEVAR_AND_RETURN
-argument_list|(
-name|TV_NAME_LOOKUP
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
-name|POP_TIMEVAR_AND_RETURN
-argument_list|(
-name|TV_NAME_LOOKUP
-argument_list|,
-name|NULL_TREE
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* If looking for a type, or if there is no non-type binding, select      the value binding.  */
-if|if
-condition|(
-name|binding
-operator|->
-name|type
-operator|&&
-operator|(
-operator|!
-name|val
-operator|||
-operator|(
-name|flags
-operator|&
-name|LOOKUP_PREFER_TYPES
-operator|)
-operator|)
-condition|)
-name|val
-operator|=
-name|binding
-operator|->
-name|type
-expr_stmt|;
-comment|/* Don't return non-types if we really prefer types.  */
-elseif|else
-if|if
-condition|(
-name|val
-operator|&&
-name|LOOKUP_TYPES_ONLY
-argument_list|(
-name|flags
-argument_list|)
-operator|&&
-operator|!
-name|DECL_DECLARES_TYPE_P
-argument_list|(
-name|val
-argument_list|)
-condition|)
-name|val
-operator|=
-name|NULL_TREE
-expr_stmt|;
-name|POP_TIMEVAR_AND_RETURN
-argument_list|(
-name|TV_NAME_LOOKUP
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* Unscoped lookup of a global: iterate over current namespaces,    considering using-directives.  */
 end_comment
 
@@ -13594,12 +13593,6 @@ name|val
 init|=
 name|NULL_TREE
 decl_stmt|;
-name|struct
-name|scope_binding
-name|binding
-init|=
-name|EMPTY_SCOPE_BINDING
-decl_stmt|;
 name|timevar_push
 argument_list|(
 name|TV_NAME_LOOKUP
@@ -13619,6 +13612,12 @@ name|scope
 argument_list|)
 control|)
 block|{
+name|struct
+name|scope_binding
+name|binding
+init|=
+name|EMPTY_SCOPE_BINDING
+decl_stmt|;
 name|cxx_binding
 modifier|*
 name|b
@@ -13637,46 +13636,17 @@ if|if
 condition|(
 name|b
 condition|)
-block|{
-if|if
-condition|(
-name|b
-operator|->
-name|value
-operator|&&
-operator|(
-operator|(
-name|flags
-operator|&
-name|LOOKUP_HIDDEN
-operator|)
-operator|||
-operator|!
-name|hidden_name_p
+comment|/* LLVM LOCAL mainline */
+name|ambiguous_decl
 argument_list|(
+operator|&
+name|binding
+argument_list|,
 name|b
-operator|->
-name|value
+argument_list|,
+name|flags
 argument_list|)
-operator|)
-condition|)
-name|binding
-operator|.
-name|value
-operator|=
-name|b
-operator|->
-name|value
 expr_stmt|;
-name|binding
-operator|.
-name|type
-operator|=
-name|b
-operator|->
-name|type
-expr_stmt|;
-block|}
 comment|/* Add all _DECLs seen through local using-directives.  */
 for|for
 control|(
@@ -13779,13 +13749,9 @@ expr_stmt|;
 block|}
 name|val
 operator|=
-name|select_decl
-argument_list|(
-operator|&
 name|binding
-argument_list|,
-name|flags
-argument_list|)
+operator|.
+name|value
 expr_stmt|;
 if|if
 condition|(
@@ -13880,13 +13846,9 @@ argument_list|)
 condition|)
 name|t
 operator|=
-name|select_decl
-argument_list|(
-operator|&
 name|binding
-argument_list|,
-name|flags
-argument_list|)
+operator|.
+name|value
 expr_stmt|;
 block|}
 elseif|else
@@ -14017,10 +13979,9 @@ if|if
 condition|(
 name|val1
 condition|)
+comment|/* LLVM LOCAL mainline */
 name|ambiguous_decl
 argument_list|(
-name|name
-argument_list|,
 name|val
 argument_list|,
 name|val1
@@ -14140,10 +14101,9 @@ if|if
 condition|(
 name|binding
 condition|)
+comment|/* LLVM LOCAL mainline */
 name|ambiguous_decl
 argument_list|(
-name|name
-argument_list|,
 name|result
 argument_list|,
 name|binding
