@@ -1214,7 +1214,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"too many parameters"
+literal|"too many parameters in \"%s\""
+argument_list|,
+name|desc
 argument_list|)
 expr_stmt|;
 switch|switch

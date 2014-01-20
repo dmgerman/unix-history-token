@@ -2111,10 +2111,6 @@ operator|(
 name|FILTER_STRAY
 operator|)
 return|;
-name|irq_index
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|irq_index
@@ -2180,10 +2176,6 @@ name|irq_index
 argument_list|)
 expr_stmt|;
 block|}
-name|irq_index
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|irq_index

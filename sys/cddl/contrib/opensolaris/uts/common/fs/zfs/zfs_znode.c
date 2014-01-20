@@ -2687,6 +2687,19 @@ argument_list|,
 name|KM_SLEEP
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|curthread
+operator|->
+name|td_vp_reserv
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"zfs_znode_alloc: getnewvnode without any vnodes reserved"
+operator|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|getnewvnode
@@ -3702,11 +3715,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|getnewvnode_reserve
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|ZFS_OBJ_HOLD_ENTER
 argument_list|(
 name|zfsvfs
@@ -4870,9 +4878,6 @@ name|zfsvfs
 argument_list|,
 name|obj
 argument_list|)
-expr_stmt|;
-name|getnewvnode_drop_reserve
-argument_list|()
 expr_stmt|;
 block|}
 end_function

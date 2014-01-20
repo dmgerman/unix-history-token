@@ -4086,7 +4086,7 @@ operator|==
 name|NETMAP_ADMODE_NATIVE
 condition|)
 return|return
-name|EINVAL
+name|EOPNOTSUPP
 return|;
 comment|/* Otherwise, create a generic adapter and return it, 	 * saving the previously used netmap adapter, if any. 	 * 	 * Note that here 'prev_na', if not NULL, MUST be a 	 * native adapter, and CANNOT be a generic one. This is 	 * true because generic adapters are created on demand, and 	 * destroyed when not used anymore. Therefore, if the adapter 	 * currently attached to an interface 'ifp' is generic, it 	 * must be that 	 * (NA(ifp)->active_fds> 0 || NETMAP_OWNED_BY_KERN(NA(ifp))). 	 * Consequently, if NA(ifp) is generic, we will enter one of 	 * the branches above. This ensures that we never override 	 * a generic adapter with another generic adapter. 	 */
 name|prev_na
@@ -4176,7 +4176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MUST BE CALLED UNDER NMG_LOCK()  *  * get a refcounted reference to an interface.  * This is always called in the execution of an ioctl().  *  * Return ENXIO if the interface does not exist, EINVAL if netmap  * is not supported by the interface.  * If successful, hold a reference.  *  * When the NIC is attached to a bridge, reference is managed  * at na->na_bdg_refcount using ADD/DROP_BDG_REF() as well as  * virtual ports.  Hence, on the final DROP_BDG_REF(), the NIC  * is detached from the bridge, then ifp's refcount is dropped (this  * is equivalent to that ifp is destroyed in case of virtual ports.  *  * This function uses if_rele() when we want to prevent the NIC from  * being detached from the bridge in error handling.  But once refcount  * is acquired by this function, it must be released using nm_if_rele().  */
+comment|/*  * MUST BE CALLED UNDER NMG_LOCK()  *  * Get a refcounted reference to a netmap adapter attached  * to the interface specified by nmr.  * This is always called in the execution of an ioctl().  *  * Return ENXIO if the interface specified by the request does  * not exist, ENOTSUP if netmap is not supported by the interface,  * EBUSY if the interface is already attached to a bridge,  * EINVAL if parameters are invalid, ENOMEM if needed resources  * could not be allocated.  * If successful, hold a reference to the netmap adapter.  *  * No reference is kept on the real interface, which may then  * disappear at any time.  */
 end_comment
 
 begin_function
@@ -4302,7 +4302,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EINVAL
+name|EBUSY
 expr_stmt|;
 goto|goto
 name|out

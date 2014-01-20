@@ -2118,41 +2118,6 @@ comment|/* Not a type but a flag to allocate 				   a non-initialized mbuf */
 end_comment
 
 begin_comment
-comment|/*  * Compatibility with historic mbuf allocator.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBTOM
-parameter_list|(
-name|how
-parameter_list|)
-value|(how)
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_DONTWAIT
-value|M_NOWAIT
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_TRYWAIT
-value|M_WAITOK
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_WAIT
-value|M_WAITOK
-end_define
-
-begin_comment
 comment|/*  * String names of mbuf-related UMA(9) and malloc(9) types.  Exposed to  * !_KERNEL so that monitoring tools can look up the zones with  * libmemstat(3).  */
 end_comment
 

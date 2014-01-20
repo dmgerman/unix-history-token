@@ -1570,7 +1570,7 @@ name|m_copypacket
 argument_list|(
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1908,7 +1908,7 @@ name|n
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -2145,7 +2145,7 @@ name|m_new
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,

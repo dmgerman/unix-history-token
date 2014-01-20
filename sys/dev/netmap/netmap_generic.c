@@ -918,7 +918,9 @@ condition|)
 block|{
 name|D
 argument_list|(
-literal|"netdev_rx_handler_register() failed"
+literal|"netdev_rx_handler_register() failed (%d)"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1024,9 +1026,20 @@ endif|#
 directive|endif
 comment|/* RATE */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|na
+operator|->
+name|tx_rings
+index|[
+literal|0
+index|]
+operator|.
+name|tx_pool
+condition|)
 block|{
-comment|/* Disable netmap mode. */
+comment|/* Disable netmap mode. We enter here only if the previous 		   generic_netmap_register(na, 1) was successfull. 		   If it was not, na->tx_rings[0].tx_pool was set to NULL by the 		   error handling code below. */
 name|rtnl_lock
 argument_list|()
 expr_stmt|;
@@ -1218,7 +1231,7 @@ name|error
 condition|)
 block|{
 goto|goto
-name|alloc_tx_pool
+name|free_tx_pools
 goto|;
 block|}
 endif|#
@@ -1319,6 +1332,52 @@ operator|.
 name|tx_pool
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|na
+operator|->
+name|tx_rings
+index|[
+name|r
+index|]
+operator|.
+name|tx_pool
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|netmap_mitigation_cleanup
+argument_list|(
+name|gna
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|r
+operator|=
+literal|0
+init|;
+name|r
+operator|<
+name|na
+operator|->
+name|num_rx_rings
+condition|;
+name|r
+operator|++
+control|)
+block|{
+name|mbq_safe_destroy
+argument_list|(
+operator|&
+name|na
+operator|->
+name|rx_rings
+index|[
+name|r
+index|]
+operator|.
+name|rx_queue
 argument_list|)
 expr_stmt|;
 block|}

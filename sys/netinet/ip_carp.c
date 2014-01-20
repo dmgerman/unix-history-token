@@ -4870,9 +4870,12 @@ operator|->
 name|ia_addr
 argument_list|)
 expr_stmt|;
-name|in6_ifaddloop
+name|nd6_add_ifa_lle
+argument_list|(
+name|ifatoia6
 argument_list|(
 name|ifa
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4993,9 +4996,12 @@ operator|->
 name|ia_addr
 argument_list|)
 expr_stmt|;
-name|in6_ifremloop
+name|nd6_rem_ifa_lle
+argument_list|(
+name|ifatoia6
 argument_list|(
 name|ifa
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

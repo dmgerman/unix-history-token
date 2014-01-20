@@ -3973,10 +3973,6 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* 		 * We bump the activation count if the page has been 		 * referenced while in the inactive queue.  This makes 		 * it less likely that the page will be added back to the 		 * inactive queue prematurely again.  Here we check the  		 * page tables (or emulated bits, if any), given the upper  		 * level VM system not knowing anything about existing  		 * references. 		 */
-name|act_delta
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4002,6 +3998,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+else|else
+name|act_delta
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -4050,6 +4051,8 @@ condition|(
 name|object
 operator|->
 name|ref_count
+operator|!=
+literal|0
 condition|)
 block|{
 name|vm_page_activate
@@ -4980,17 +4983,17 @@ name|v_pdpages
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Check to see "how much" the page has been used. 		 */
-name|act_delta
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|aflags
 operator|&
 name|PGA_REFERENCED
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vm_page_aflag_clear
@@ -5001,10 +5004,15 @@ name|PGA_REFERENCED
 argument_list|)
 expr_stmt|;
 name|act_delta
-operator|+=
+operator|=
 literal|1
 expr_stmt|;
 block|}
+else|else
+name|act_delta
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		 * Unlocked object ref count check.  Two races are possible. 		 * 1) The ref was transitioning to zero and we saw non-zero, 		 *    the pmap bits will be checked unnecessarily. 		 * 2) The ref was transitioning to one and we saw zero.  		 *    The page lock prevents a new reference to this page so 		 *    we need not check the reference bits. 		 */
 if|if
 condition|(
@@ -5027,6 +5035,8 @@ comment|/* 		 * Advance or decay the act_count based on recent usage. 		 */
 if|if
 condition|(
 name|act_delta
+operator|!=
+literal|0
 condition|)
 block|{
 name|m
@@ -5053,7 +5063,6 @@ name|ACT_MAX
 expr_stmt|;
 block|}
 else|else
-block|{
 name|m
 operator|->
 name|act_count
@@ -5067,17 +5076,12 @@ argument_list|,
 name|ACT_DECLINE
 argument_list|)
 expr_stmt|;
-name|act_delta
-operator|=
-name|m
-operator|->
-name|act_count
-expr_stmt|;
-block|}
 comment|/* 		 * Move this page to the tail of the active or inactive 		 * queue depending on usage. 		 */
 if|if
 condition|(
-name|act_delta
+name|m
+operator|->
+name|act_count
 operator|==
 literal|0
 condition|)

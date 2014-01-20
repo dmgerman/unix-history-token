@@ -16867,6 +16867,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|i
+operator|+=
+name|p
+operator|-
+operator|&
+name|flagstr
+index|[
+name|i
+operator|+
+literal|1
+index|]
+expr_stmt|;
+comment|/* skip over the number */
 block|}
 block|}
 name|vd
