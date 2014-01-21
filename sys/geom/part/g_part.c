@@ -456,6 +456,12 @@ literal|"vmware-reserved"
 block|,
 name|G_PART_ALIAS_VMRESERVED
 block|}
+block|,
+block|{
+literal|"vmware-vsanhdr"
+block|,
+name|G_PART_ALIAS_VMVSANHDR
+block|}
 block|, }
 struct|;
 end_struct
