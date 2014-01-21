@@ -3144,7 +3144,7 @@ operator|=
 name|maxbuf
 expr_stmt|;
 block|}
-comment|/* 	 * Ideal allocation size for the transient bio submap if 10% 	 * of the maximal space buffer map.  This roughly corresponds 	 * to the amount of the buffer mapped for typical UFS load. 	 * 	 * Clip the buffer map to reserve space for the transient 	 * BIOs, if its extent is bigger than 90% (80% on i386) of the 	 * maximum buffer map extent on the platform. 	 * 	 * The fall-back to the maxbuf in case of maxbcache unset, 	 * allows to not trim the buffer KVA for the architectures 	 * with ample KVA space. 	 */
+comment|/* 	 * Ideal allocation size for the transient bio submap is 10% 	 * of the maximal space buffer map.  This roughly corresponds 	 * to the amount of the buffer mapped for typical UFS load. 	 * 	 * Clip the buffer map to reserve space for the transient 	 * BIOs, if its extent is bigger than 90% (80% on i386) of the 	 * maximum buffer map extent on the platform. 	 * 	 * The fall-back to the maxbuf in case of maxbcache unset, 	 * allows to not trim the buffer KVA for the architectures 	 * with ample KVA space. 	 */
 if|if
 condition|(
 name|bio_transient_maxcnt
