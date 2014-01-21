@@ -7658,6 +7658,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|xpt_print
 argument_list|(
 name|newpath
@@ -7665,6 +7666,12 @@ argument_list|,
 literal|"Can't allocate CCB to rescan target\n"
 argument_list|)
 expr_stmt|;
+name|xpt_free_path
+argument_list|(
+name|newpath
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Attempt a retry */
