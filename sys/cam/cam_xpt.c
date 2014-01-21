@@ -18031,6 +18031,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|xpt_print
 argument_list|(
 name|path
@@ -18038,6 +18039,12 @@ argument_list|,
 literal|"Can't allocate CCB to scan bus\n"
 argument_list|)
 expr_stmt|;
+name|xpt_free_path
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 name|xpt_free_path
