@@ -5700,9 +5700,8 @@ literal|0x04
 argument_list|,
 literal|0x11
 argument_list|,
-argument|SS_RDEF
+argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | EBUSY
 argument_list|,
-comment|/* XXX TBD */
 literal|"Logical unit not ready, notify (enable spinup) required"
 argument_list|)
 block|}
