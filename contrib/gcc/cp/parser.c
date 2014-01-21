@@ -29719,6 +29719,9 @@ block|{
 name|tree
 name|decl
 decl_stmt|;
+name|tree
+name|ambiguous_decls
+decl_stmt|;
 name|decl
 operator|=
 name|cp_parser_lookup_name
@@ -29738,10 +29741,18 @@ argument_list|,
 comment|/*check_dependency=*/
 name|true
 argument_list|,
-comment|/*ambiguous_decls=*/
-name|NULL
+operator|&
+name|ambiguous_decls
 argument_list|)
 expr_stmt|;
+comment|/* If the lookup was ambiguous, an error will already have been 	     issued.  */
+if|if
+condition|(
+name|ambiguous_decls
+condition|)
+return|return
+name|error_mark_node
+return|;
 comment|/* If we are parsing friend declaration, DECL may be a 	     TEMPLATE_DECL tree node here.  However, we need to check 	     whether this TEMPLATE_DECL results in valid code.  Consider 	     the following example:  	       namespace N { 		 template<class T> class C {}; 	       } 	       class X { 		 template<class T> friend class N::C; // #1, valid code 	       }; 	       template<class T> class Y { 		 friend class N::C;		       // #2, invalid code 	       };  	     For both case #1 and #2, we arrive at a TEMPLATE_DECL after 	     name lookup of `N::C'.  We see that friend declaration must 	     be template for the code to be valid.  Note that 	     processing_template_decl does not work here since it is 	     always 1 for the above two cases.  */
 name|decl
 operator|=
