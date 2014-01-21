@@ -1647,6 +1647,18 @@ name|ip
 operator|->
 name|i_flags
 expr_stmt|;
+comment|/* E4_* flags are private to the driver */
+name|vap
+operator|->
+name|va_flags
+operator|&=
+operator|!
+operator|(
+name|E4_INDEX
+operator||
+name|E4_EXTENTS
+operator|)
+expr_stmt|;
 name|vap
 operator|->
 name|va_gen
@@ -7374,7 +7386,7 @@ name|ip
 operator|->
 name|i_flags
 operator|&
-name|EXT4_EXTENTS
+name|E4_EXTENTS
 condition|)
 name|error
 operator|=

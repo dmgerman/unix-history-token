@@ -529,7 +529,7 @@ name|ip
 operator|->
 name|i_flags
 operator|&
-name|EXT4_INDEX
+name|E4_INDEX
 condition|)
 return|return
 operator|(
@@ -3534,7 +3534,7 @@ name|dp
 operator|->
 name|i_flags
 operator||=
-name|EXT4_INDEX
+name|E4_INDEX
 expr_stmt|;
 comment|/* 	 * Initialize index root. 	 */
 name|dotdot

@@ -5069,7 +5069,7 @@ name|i_next_alloc_goal
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Now we want to make sure that block pointers for unused 	 * blocks are zeroed out - ext2_balloc depends on this 	 * although for regular files and directories only 	 * 	 * If EXT4_EXTENTS flag is enabled, unused blocks aren't 	 * zeroed out because we could corrupt the extent tree. 	 */
+comment|/* 	 * Now we want to make sure that block pointers for unused 	 * blocks are zeroed out - ext2_balloc depends on this 	 * although for regular files and directories only 	 * 	 * If E4_EXTENTS is enabled, unused blocks are not zeroed 	 * out because we could corrupt the extent tree. 	 */
 if|if
 condition|(
 operator|!
@@ -5078,7 +5078,7 @@ name|ip
 operator|->
 name|i_flags
 operator|&
-name|EXT4_EXTENTS
+name|E4_EXTENTS
 operator|)
 operator|&&
 operator|(

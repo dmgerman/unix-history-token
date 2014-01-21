@@ -186,7 +186,7 @@ argument_list|)
 operator|->
 name|i_flags
 operator|&
-name|EXT4_EXTENTS
+name|E4_EXTENTS
 condition|)
 name|error
 operator|=
