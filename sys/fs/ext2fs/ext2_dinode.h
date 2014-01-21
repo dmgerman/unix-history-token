@@ -97,7 +97,7 @@ value|((ino_t)11)
 end_define
 
 begin_comment
-comment|/*  * Inode flags  * The current implementation uses only EXT2_IMMUTABLE and EXT2_APPEND flags  */
+comment|/*  * Inode flags  * The system supports EXT2_IMMUTABLE, EXT2_APPEND and EXT2_NODUMP flags.  * The current implementation also uses EXT4_INDEX, EXT4_EXTENTS and  * EXT4_HUGE_FILE with some restrictions, imposed the lack of write  * support.  */
 end_comment
 
 begin_define
@@ -163,7 +163,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* writes to file may only append */
+comment|/* Writes to file may only append */
 end_comment
 
 begin_define
@@ -174,7 +174,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* do not dump file */
+comment|/* Do not dump file */
 end_comment
 
 begin_define
@@ -185,7 +185,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* do not update atime */
+comment|/* Do not update atime */
 end_comment
 
 begin_define
@@ -196,7 +196,7 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|/* hash-indexed directory */
+comment|/* Hash-indexed directory */
 end_comment
 
 begin_define
@@ -218,7 +218,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* file data should be journaled */
+comment|/* File data should be journaled */
 end_comment
 
 begin_define
@@ -229,7 +229,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* file tail should not be merged */
+comment|/* File tail should not be merged */
 end_comment
 
 begin_define
@@ -240,7 +240,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* dirsync behaviour */
+comment|/* Dirsync behaviour */
 end_comment
 
 begin_define

@@ -72,6 +72,20 @@ name|FCR_ENET_RESET
 value|0x80000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|FCR1_I2S0_CLK_ENABLE
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR1_I2S0_ENABLE
+value|0x00002000
+end_define
+
 begin_comment
 comment|/* Used only by macio_enable_wireless() for now. */
 end_comment
