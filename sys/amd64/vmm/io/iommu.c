@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -77,12 +83,59 @@ directive|include
 file|"iommu.h"
 end_include
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_vmm
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw_vmm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|iommu
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"bhyve iommu parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
-name|boolean_t
+name|int
 name|iommu_avail
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_vmm_iommu
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|initialized
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|iommu_avail
+argument_list|,
+literal|0
+argument_list|,
+literal|"bhyve iommu initialized?"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -593,7 +646,7 @@ condition|)
 return|return;
 name|iommu_avail
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 comment|/* 	 * Create a domain for the devices owned by the host 	 */
 name|maxaddr
