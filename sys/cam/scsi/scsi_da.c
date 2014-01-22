@@ -728,7 +728,7 @@ decl_stmt|;
 name|uint32_t
 name|unmap_max_lba
 decl_stmt|;
-comment|/* Max LBAs in a single range */
+comment|/* Max LBAs in UNMAP req */
 name|uint64_t
 name|ws_max_blks
 decl_stmt|;
@@ -6699,10 +6699,6 @@ operator|)
 name|softc
 operator|->
 name|unmap_max_lba
-operator|*
-name|softc
-operator|->
-name|unmap_max_ranges
 expr_stmt|;
 break|break;
 case|case
@@ -9795,6 +9791,11 @@ operator|-
 literal|1
 decl_stmt|;
 name|uint64_t
+name|totalcount
+init|=
+literal|0
+decl_stmt|;
+name|uint64_t
 name|count
 decl_stmt|;
 name|uint32_t
@@ -9892,13 +9893,11 @@ condition|)
 block|{
 name|c
 operator|=
-name|min
+name|omin
 argument_list|(
 name|count
 argument_list|,
-name|softc
-operator|->
-name|unmap_max_lba
+name|UNMAP_RANGE_MAX
 operator|-
 name|lastcount
 argument_list|)
@@ -9942,6 +9941,10 @@ name|lba
 operator|+=
 name|c
 expr_stmt|;
+name|totalcount
+operator|+=
+name|c
+expr_stmt|;
 block|}
 while|while
 condition|(
@@ -9950,10 +9953,27 @@ operator|>
 literal|0
 condition|)
 block|{
+name|c
+operator|=
+name|omin
+argument_list|(
+name|count
+argument_list|,
+name|UNMAP_RANGE_MAX
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|ranges
+name|totalcount
+operator|+
+name|c
 operator|>
+name|softc
+operator|->
+name|unmap_max_lba
+operator|||
+name|ranges
+operator|>=
 name|softc
 operator|->
 name|unmap_max_ranges
@@ -9965,7 +9985,8 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"%s issuing short delete %d> %d\n"
+literal|"%s issuing short delete %ld> %ld"
+literal|"|| %d>= %d"
 argument_list|,
 name|da_delete_method_desc
 index|[
@@ -9973,6 +9994,14 @@ name|softc
 operator|->
 name|delete_method
 index|]
+argument_list|,
+name|totalcount
+operator|+
+name|c
+argument_list|,
+name|softc
+operator|->
+name|unmap_max_lba
 argument_list|,
 name|ranges
 argument_list|,
@@ -9983,17 +10012,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|c
-operator|=
-name|min
-argument_list|(
-name|count
-argument_list|,
-name|softc
-operator|->
-name|unmap_max_lba
-argument_list|)
-expr_stmt|;
 name|off
 operator|=
 operator|(
@@ -10034,6 +10052,10 @@ name|lba
 operator|+=
 name|c
 expr_stmt|;
+name|totalcount
+operator|+=
+name|c
+expr_stmt|;
 name|ranges
 operator|++
 expr_stmt|;
@@ -10060,7 +10082,6 @@ operator|->
 name|delete_queue
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Assume no range extension on the next loop iteration to 		 * avoid issuing a short delete. 		 */
 if|if
 condition|(
 name|bp1
@@ -10073,6 +10094,8 @@ name|softc
 operator|->
 name|unmap_max_ranges
 operator|||
+name|totalcount
+operator|+
 name|bp1
 operator|->
 name|bio_bcount
@@ -10086,14 +10109,6 @@ operator|>
 name|softc
 operator|->
 name|unmap_max_lba
-operator|*
-operator|(
-name|softc
-operator|->
-name|unmap_max_ranges
-operator|-
-name|ranges
-operator|)
 condition|)
 break|break;
 block|}
