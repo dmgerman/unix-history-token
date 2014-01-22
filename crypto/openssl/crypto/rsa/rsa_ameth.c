@@ -1702,7 +1702,7 @@ name|BIO_puts
 argument_list|(
 name|bp
 argument_list|,
-literal|"Salt Length: "
+literal|"Salt Length: 0x"
 argument_list|)
 operator|<=
 literal|0
@@ -1741,7 +1741,7 @@ name|BIO_puts
 argument_list|(
 name|bp
 argument_list|,
-literal|"20 (default)"
+literal|"0x14 (default)"
 argument_list|)
 operator|<=
 literal|0
@@ -1777,7 +1777,7 @@ name|BIO_puts
 argument_list|(
 name|bp
 argument_list|,
-literal|"Trailer Field: "
+literal|"Trailer Field: 0x"
 argument_list|)
 operator|<=
 literal|0
@@ -1816,7 +1816,7 @@ name|BIO_puts
 argument_list|(
 name|bp
 argument_list|,
-literal|"0xbc (default)"
+literal|"BC (default)"
 argument_list|)
 operator|<=
 literal|0
