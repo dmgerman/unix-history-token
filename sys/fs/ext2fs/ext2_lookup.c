@@ -3687,7 +3687,14 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* XXX: These seem to be set in the wrong place. */
+comment|/* XXX: These are set in the wrong place. */
+name|dp
+operator|->
+name|i_flags
+operator|&=
+operator|~
+name|E4_INDEX
+expr_stmt|;
 name|dp
 operator|->
 name|i_flags
@@ -3695,13 +3702,6 @@ operator||=
 name|IN_CHANGE
 operator||
 name|IN_UPDATE
-expr_stmt|;
-name|dp
-operator|->
-name|i_flags
-operator|&=
-operator|~
-name|E4_INDEX
 expr_stmt|;
 block|}
 return|return
