@@ -942,6 +942,11 @@ typedef|typedef
 struct|struct
 name|__rpc_svcthread
 block|{
+name|struct
+name|__rpc_svcpool
+modifier|*
+name|st_pool
+decl_stmt|;
 name|SVCXPRT
 modifier|*
 name|st_xprt
@@ -952,10 +957,6 @@ name|svc_reqlist
 name|st_reqs
 decl_stmt|;
 comment|/* RPC requests to execute */
-name|int
-name|st_reqcount
-decl_stmt|;
-comment|/* number of queued reqs */
 name|int
 name|st_idle
 decl_stmt|;
@@ -986,6 +987,14 @@ argument_list|)
 name|st_alink
 expr_stmt|;
 comment|/* application thread list */
+name|int
+name|st_p2
+decl_stmt|;
+comment|/* application workspace */
+name|uint64_t
+name|st_p3
+decl_stmt|;
+comment|/* application workspace */
 block|}
 name|SVCTHREAD
 typedef|;
