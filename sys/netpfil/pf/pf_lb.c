@@ -4151,6 +4151,11 @@ name|nkp
 operator|=
 name|NULL
 expr_stmt|;
+operator|*
+name|sn
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|NULL
