@@ -96,7 +96,7 @@ file|"traverse.h"
 end_include
 
 begin_comment
-comment|/* The version of DWARF which we support. */
+comment|/* The versions of DWARF which we support. */
 end_comment
 
 begin_define
@@ -104,6 +104,20 @@ define|#
 directive|define
 name|DWARF_VERSION
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF_VERSION3
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF_VERSION4
+value|4
 end_define
 
 begin_comment
@@ -8934,12 +8948,20 @@ condition|(
 name|vers
 operator|!=
 name|DWARF_VERSION
+operator|&&
+name|vers
+operator|!=
+name|DWARF_VERSION3
+operator|&&
+name|vers
+operator|!=
+name|DWARF_VERSION4
 condition|)
 block|{
 name|terminate
 argument_list|(
 literal|"file contains incompatible version %d DWARF code "
-literal|"(version 2 required)\n"
+literal|"(version 2, 3, or 4 required)\n"
 argument_list|,
 name|vers
 argument_list|)
