@@ -16909,7 +16909,7 @@ operator|*
 name|pus
 operator|=
 operator|(
-literal|188
+literal|1125
 operator|)
 expr_stmt|;
 comment|/* microseconds */
