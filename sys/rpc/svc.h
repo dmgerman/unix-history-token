@@ -956,6 +956,10 @@ name|int
 name|st_reqcount
 decl_stmt|;
 comment|/* number of queued reqs */
+name|int
+name|st_idle
+decl_stmt|;
+comment|/* thread is on idle list */
 name|struct
 name|cv
 name|st_cond
