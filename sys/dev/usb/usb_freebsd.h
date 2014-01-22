@@ -150,39 +150,12 @@ begin_comment
 comment|/* define zero ticks callout value */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|1000029
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|USB_CALLOUT_ZERO_TICKS
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|USB_CALLOUT_ZERO_TICKS
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
