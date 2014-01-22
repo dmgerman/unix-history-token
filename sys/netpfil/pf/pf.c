@@ -1990,7 +1990,7 @@ parameter_list|,
 name|pd
 parameter_list|)
 define|\
-value|do {								\ 		(s) = pf_find_state((i), (k), (d));			\ 		if ((s) == NULL || (s)->timeout == PFTM_PURGE)		\ 			return (PF_DROP);				\ 		if (PACKET_LOOPED(pd))					\ 			return (PF_PASS);				\ 		if ((d) == PF_OUT&&					\ 		    (((s)->rule.ptr->rt == PF_ROUTETO&&		\ 		    (s)->rule.ptr->direction == PF_OUT) ||		\ 		    ((s)->rule.ptr->rt == PF_REPLYTO&&			\ 		    (s)->rule.ptr->direction == PF_IN))&&		\ 		    (s)->rt_kif != NULL&&				\ 		    (s)->rt_kif != (i))					\ 			return (PF_PASS);				\ 	} while (0)
+value|do {								\ 		(s) = pf_find_state((i), (k), (d));			\ 		if ((s) == NULL)					\ 			return (PF_DROP);				\ 		if (PACKET_LOOPED(pd))					\ 			return (PF_PASS);				\ 		if ((d) == PF_OUT&&					\ 		    (((s)->rule.ptr->rt == PF_ROUTETO&&		\ 		    (s)->rule.ptr->direction == PF_OUT) ||		\ 		    ((s)->rule.ptr->rt == PF_REPLYTO&&			\ 		    (s)->rule.ptr->direction == PF_IN))&&		\ 		    (s)->rt_kif != NULL&&				\ 		    (s)->rt_kif != (i))					\ 			return (PF_PASS);				\ 	} while (0)
 end_define
 
 begin_define
@@ -6956,11 +6956,11 @@ condition|(
 name|s
 operator|->
 name|timeout
-operator|==
-name|PFTM_UNLINKED
+operator|>=
+name|PFTM_MAX
 condition|)
 block|{
-comment|/* 				 * State is being processed 				 * by pf_unlink_state() in 				 * an other thread. 				 */
+comment|/* 				 * State is either being processed by 				 * pf_unlink_state() in an other thread, or 				 * is scheduled for immediate expiry. 				 */
 name|PF_STATE_UNLOCK
 argument_list|(
 name|s
@@ -7701,19 +7701,6 @@ operator|(
 name|time_uptime
 operator|)
 return|;
-if|if
-condition|(
-name|state
-operator|->
-name|timeout
-operator|==
-name|PFTM_UNTIL_PACKET
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|KASSERT
 argument_list|(
 name|state
@@ -7964,7 +7951,7 @@ condition|(
 name|cur
 operator|->
 name|states
-operator|<=
+operator|==
 literal|0
 operator|&&
 name|cur
@@ -8097,7 +8084,7 @@ operator|->
 name|src_node
 operator|->
 name|states
-operator|<=
+operator|==
 literal|0
 condition|)
 block|{
@@ -8165,7 +8152,7 @@ operator|->
 name|nat_src_node
 operator|->
 name|states
-operator|<=
+operator|==
 literal|0
 condition|)
 block|{
