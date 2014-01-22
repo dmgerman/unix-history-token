@@ -278,7 +278,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kldstat [-v] [-i id] [-n filename]\n"
+literal|"usage: kldstat [-q] [-v] [-i id] [-n filename]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -581,15 +581,33 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|err
+block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"can't find file %s"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|quiet
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
 block|}
 name|printf
 argument_list|(
