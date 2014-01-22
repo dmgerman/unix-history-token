@@ -2189,7 +2189,7 @@ name|TYPELIST
 argument_list|,
 operator|(
 operator|&
-name|ng_generic_nodeinfoarray_type
+name|ng_generic_typeinfoarray_type
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2368,7 +2368,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|ng_generic_typeinfo_type
+name|ng_generic_typelist_type
 block|}
 block|,
 block|{
