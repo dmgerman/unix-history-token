@@ -228,7 +228,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Report an error back to the user in ascii format.  Return whatever copyout  * returned, or EINVAL if it succeeded.  */
+comment|/*  * Report an error back to the user in ascii format.  Return nerror  * or EINVAL if nerror isn't specified.  */
 end_comment
 
 begin_function
@@ -286,13 +286,6 @@ name|nerror
 operator|=
 name|EEXIST
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|req
-operator|->
-name|nerror
-condition|)
 return|return
 operator|(
 name|req
@@ -300,6 +293,20 @@ operator|->
 name|nerror
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|req
+operator|->
+name|nerror
+condition|)
+name|req
+operator|->
+name|nerror
+operator|=
+name|EINVAL
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -352,7 +359,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|req
+operator|->
+name|nerror
 operator|)
 return|;
 block|}
@@ -394,7 +403,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|nreq
+name|req
 operator|->
 name|nerror
 operator|=
