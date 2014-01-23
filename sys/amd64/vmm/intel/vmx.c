@@ -4461,21 +4461,39 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If there is already an interrupt pending then just return. This 	 * could happen for multiple reasons: 	 * - A vectoring VM-entry was aborted due to astpending or rendezvous. 	 * - A VM-exit happened during event injection. 	 * - A NMI was injected above or after "NMI window exiting" VM-exit. 	 */
-name|info
-operator|=
-name|vmcs_read
-argument_list|(
-name|VMCS_ENTRY_INTR_INFO
-argument_list|)
-expr_stmt|;
+comment|/* 	 * If interrupt-window exiting is already in effect then don't bother 	 * checking for pending interrupts. This is just an optimization and 	 * not needed for correctness. 	 */
 if|if
 condition|(
-name|info
+operator|(
+name|vmx
+operator|->
+name|cap
+index|[
+name|vcpu
+index|]
+operator|.
+name|proc_ctls
 operator|&
-name|VMCS_INTR_VALID
+name|PROCBASED_INT_WINDOW_EXITING
+operator|)
+operator|!=
+literal|0
 condition|)
+block|{
+name|VCPU_CTR0
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+literal|"Skip interrupt injection due to "
+literal|"pending int_window_exiting"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* Ask the local apic for a vector to inject */
 if|if
 condition|(
@@ -4524,9 +4542,27 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|VCPU_CTR2
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+literal|"Cannot inject vector %d due to "
+literal|"rflags %#lx"
+argument_list|,
+name|vector
+argument_list|,
+name|rflags
+argument_list|)
+expr_stmt|;
 goto|goto
 name|cantinject
 goto|;
+block|}
 name|gi
 operator|=
 name|vmcs_read
@@ -4540,9 +4576,62 @@ name|gi
 operator|&
 name|HWINTR_BLOCKING
 condition|)
+block|{
+name|VCPU_CTR2
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+literal|"Cannot inject vector %d due to "
+literal|"Guest Interruptibility-state %#x"
+argument_list|,
+name|vector
+argument_list|,
+name|gi
+argument_list|)
+expr_stmt|;
 goto|goto
 name|cantinject
 goto|;
+block|}
+name|info
+operator|=
+name|vmcs_read
+argument_list|(
+name|VMCS_ENTRY_INTR_INFO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|info
+operator|&
+name|VMCS_INTR_VALID
+condition|)
+block|{
+comment|/* 		 * This is expected and could happen for multiple reasons: 		 * - A vectoring VM-entry was aborted due to astpending 		 * - A VM-exit happened during event injection. 		 * - An NMI was injected above or after "NMI window exiting" 		 */
+name|VCPU_CTR2
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+literal|"Cannot inject vector %d due to "
+literal|"VM-entry intr info %#x"
+argument_list|,
+name|vector
+argument_list|,
+name|info
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cantinject
+goto|;
+block|}
 comment|/* Inject the interrupt */
 name|info
 operator|=
