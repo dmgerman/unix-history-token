@@ -171,12 +171,6 @@ directive|include
 file|"cesa.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
-
 begin_function_decl
 specifier|static
 name|int

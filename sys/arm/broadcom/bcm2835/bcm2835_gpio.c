@@ -143,12 +143,6 @@ directive|include
 file|"gpio_if.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
