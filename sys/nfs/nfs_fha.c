@@ -536,9 +536,6 @@ name|mbuf
 modifier|*
 name|md
 decl_stmt|;
-name|fhandle_t
-name|fh
-decl_stmt|;
 name|caddr_t
 name|dpos
 decl_stmt|;
@@ -682,6 +679,8 @@ operator|->
 name|get_fh
 argument_list|(
 operator|&
+name|i
+operator|->
 name|fh
 argument_list|,
 name|v3
@@ -700,27 +699,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|bcopy
-argument_list|(
-name|fh
-operator|.
-name|fh_fid
-operator|.
-name|fid_data
-argument_list|,
-operator|&
-name|i
-operator|->
-name|fh
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|i
-operator|->
-name|fh
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Content ourselves with zero offset for all but reads. */
 if|if
 condition|(

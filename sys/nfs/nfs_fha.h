@@ -207,7 +207,7 @@ modifier|*
 name|get_fh
 function_decl|)
 parameter_list|(
-name|fhandle_t
+name|uint64_t
 modifier|*
 name|fh
 parameter_list|,
