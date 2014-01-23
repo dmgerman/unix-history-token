@@ -1813,6 +1813,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
+name|void
+name|xprt_inactive_self
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__END_DECLS
 endif|#
 directive|endif

@@ -1777,7 +1777,7 @@ operator|->
 name|so_comp
 argument_list|)
 condition|)
-name|xprt_inactive
+name|xprt_inactive_self
 argument_list|(
 name|xprt
 argument_list|)
@@ -1847,7 +1847,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-name|xprt_inactive
+name|xprt_inactive_self
 argument_list|(
 name|xprt
 argument_list|)
@@ -3014,7 +3014,7 @@ argument_list|(
 name|so
 argument_list|)
 condition|)
-name|xprt_inactive
+name|xprt_inactive_self
 argument_list|(
 name|xprt
 argument_list|)
@@ -3151,7 +3151,7 @@ argument_list|(
 name|so
 argument_list|)
 condition|)
-name|xprt_inactive
+name|xprt_inactive_self
 argument_list|(
 name|xprt
 argument_list|)
@@ -3220,7 +3220,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-name|xprt_inactive
+name|xprt_inactive_self
 argument_list|(
 name|xprt
 argument_list|)
@@ -3252,7 +3252,7 @@ name|m
 condition|)
 block|{
 comment|/* 			 * EOF - the other end has closed the socket. 			 */
-name|xprt_inactive
+name|xprt_inactive_self
 argument_list|(
 name|xprt
 argument_list|)
@@ -3420,7 +3420,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xprt_inactive
+name|xprt_inactive_self
 argument_list|(
 name|xprt
 argument_list|)
