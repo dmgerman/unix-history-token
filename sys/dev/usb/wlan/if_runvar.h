@@ -240,13 +240,6 @@ argument_list|)
 index|]
 decl_stmt|;
 name|uint8_t
-name|desc_extra
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* used by v5592 */
-name|uint8_t
 name|ridx
 decl_stmt|;
 block|}
