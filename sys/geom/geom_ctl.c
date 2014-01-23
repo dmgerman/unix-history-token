@@ -928,6 +928,13 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|sbuf_delete
+argument_list|(
+name|req
+operator|->
+name|serror
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|req
@@ -1022,13 +1029,6 @@ argument_list|(
 name|req
 operator|->
 name|arg
-argument_list|)
-expr_stmt|;
-name|sbuf_delete
-argument_list|(
-name|req
-operator|->
-name|serror
 argument_list|)
 expr_stmt|;
 block|}
