@@ -1151,7 +1151,7 @@ struct|struct
 name|__rpc_svcpool
 block|{
 name|struct
-name|mtx_padalign
+name|mtx
 name|sp_lock
 decl_stmt|;
 comment|/* protect the transport lists */
