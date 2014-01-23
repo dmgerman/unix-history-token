@@ -428,12 +428,6 @@ operator|(
 name|ptr
 operator|)
 return|;
-if|if
-condition|(
-name|ptr
-operator|!=
-name|NULL
-condition|)
 name|g_free
 argument_list|(
 name|ptr
@@ -2355,13 +2349,6 @@ name|nerror
 operator|=
 literal|0
 expr_stmt|;
-name|req
-operator|->
-name|serror
-operator|=
-name|sbuf_new_auto
-argument_list|()
-expr_stmt|;
 comment|/* It is an error if we cannot return an error text */
 if|if
 condition|(
@@ -2397,6 +2384,13 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|req
+operator|->
+name|serror
+operator|=
+name|sbuf_new_auto
+argument_list|()
+expr_stmt|;
 comment|/* Check the version */
 if|if
 condition|(
@@ -2406,16 +2400,23 @@ name|version
 operator|!=
 name|GCTL_VERSION
 condition|)
-return|return
-operator|(
+block|{
 name|gctl_error
 argument_list|(
 name|req
 argument_list|,
 literal|"kernel and libgeom version mismatch."
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+name|req
+operator|->
+name|arg
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Get things on board */
 name|gctl_copyin
 argument_list|(
@@ -2458,6 +2459,7 @@ name|req
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|sbuf_done
@@ -2468,10 +2470,6 @@ name|serror
 argument_list|)
 condition|)
 block|{
-name|req
-operator|->
-name|nerror
-operator|=
 name|copyout
 argument_list|(
 name|sbuf_data
