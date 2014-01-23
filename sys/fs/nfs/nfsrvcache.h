@@ -55,6 +55,13 @@ argument_list|)
 name|rc_hash
 expr_stmt|;
 comment|/* Hash chain */
+name|LIST_ENTRY
+argument_list|(
+argument|nfsrvcache
+argument_list|)
+name|rc_ahash
+expr_stmt|;
+comment|/* ACK hash chain */
 name|TAILQ_ENTRY
 argument_list|(
 argument|nfsrvcache
@@ -114,6 +121,9 @@ name|cksum
 decl_stmt|;
 name|time_t
 name|cachetime
+decl_stmt|;
+name|int
+name|acked
 decl_stmt|;
 block|}
 name|ot
@@ -210,6 +220,45 @@ name|rc_cachetime
 value|rc_un2.ot.cachetime
 end_define
 
+begin_define
+define|#
+directive|define
+name|rc_acked
+value|rc_un2.ot.acked
+end_define
+
+begin_comment
+comment|/* TCP ACK values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RC_NO_SEQ
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RC_NO_ACK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RC_ACK
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RC_NACK
+value|3
+end_define
+
 begin_comment
 comment|/* Return values */
 end_comment
@@ -286,13 +335,6 @@ define|#
 directive|define
 name|RC_INPROG
 value|0x0040
-end_define
-
-begin_define
-define|#
-directive|define
-name|RC_TCPSEQ
-value|0x0080
 end_define
 
 begin_define
