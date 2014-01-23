@@ -193,6 +193,9 @@ index|]
 decl_stmt|;
 name|buferror
 argument_list|(
+name|get_errno
+argument_list|()
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
@@ -312,6 +315,9 @@ index|]
 decl_stmt|;
 name|buferror
 argument_list|(
+name|get_errno
+argument_list|()
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof

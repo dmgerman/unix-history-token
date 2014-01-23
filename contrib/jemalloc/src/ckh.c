@@ -56,7 +56,7 @@ comment|/*  * Search bucket for key and return the cell number if found; SIZE_T_
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_INLINE_C
 name|size_t
 name|ckh_bucket_search
 parameter_list|(
@@ -161,7 +161,7 @@ comment|/*  * Search table for key and return cell number if found; SIZE_T_MAX o
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_INLINE_C
 name|size_t
 name|ckh_isearch
 parameter_list|(
@@ -289,7 +289,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_INLINE_C
 name|bool
 name|ckh_try_bucket_insert
 parameter_list|(
@@ -438,7 +438,7 @@ comment|/*  * No space is available in bucket.  Randomly evict an item, then try
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_INLINE_C
 name|bool
 name|ckh_evict_reloc_insert
 parameter_list|(
@@ -712,7 +712,7 @@ block|}
 end_function
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_INLINE_C
 name|bool
 name|ckh_try_insert
 parameter_list|(
@@ -875,7 +875,7 @@ comment|/*  * Try to rebuild the hash table from scratch by inserting all items 
 end_comment
 
 begin_function
-name|JEMALLOC_INLINE
+name|JEMALLOC_INLINE_C
 name|bool
 name|ckh_rebuild
 parameter_list|(

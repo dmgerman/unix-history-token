@@ -21,39 +21,38 @@ begin_comment
 comment|/*  * Size of each radix tree node (must be a power of 2).  This impacts tree  * depth.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|(
-name|LG_SIZEOF_PTR
-operator|==
-literal|2
-operator|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|RTREE_NODESIZE
-value|(1U<< 14)
+value|(1U<< 16)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+function_decl|(
+name|rtree_alloc_t
+function_decl|)
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|RTREE_NODESIZE
-value|CACHELINE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|rtree_dalloc_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_endif
 endif|#
@@ -78,6 +77,14 @@ begin_struct
 struct|struct
 name|rtree_s
 block|{
+name|rtree_alloc_t
+modifier|*
+name|alloc
+decl_stmt|;
+name|rtree_dalloc_t
+modifier|*
+name|dalloc
+decl_stmt|;
 name|malloc_mutex_t
 name|mutex
 decl_stmt|;
@@ -126,6 +133,25 @@ name|rtree_new
 parameter_list|(
 name|unsigned
 name|bits
+parameter_list|,
+name|rtree_alloc_t
+modifier|*
+name|alloc
+parameter_list|,
+name|rtree_dalloc_t
+modifier|*
+name|dalloc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rtree_delete
+parameter_list|(
+name|rtree_t
+modifier|*
+name|rtree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -188,15 +214,14 @@ directive|ifndef
 name|JEMALLOC_ENABLE_INLINE
 end_ifndef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|JEMALLOC_DEBUG
-end_ifndef
+end_ifdef
 
 begin_function_decl
-name|void
-modifier|*
+name|uint8_t
 name|rtree_get_locked
 parameter_list|(
 name|rtree_t
@@ -215,8 +240,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|void
-modifier|*
+name|uint8_t
 name|rtree_get
 parameter_list|(
 name|rtree_t
@@ -240,8 +264,7 @@ parameter_list|,
 name|uintptr_t
 name|key
 parameter_list|,
-name|void
-modifier|*
+name|uint8_t
 name|val
 parameter_list|)
 function_decl|;
@@ -278,9 +301,9 @@ parameter_list|)
 define|\
 comment|/* The least significant bits of the key are ignored. */
 define|\
-value|JEMALLOC_INLINE void *							\ f(rtree_t *rtree, uintptr_t key)					\ {									\ 	void *ret;							\ 	uintptr_t subkey;						\ 	unsigned i, lshift, height, bits;				\ 	void **node, **child;						\ 									\ 	RTREE_LOCK(&rtree->mutex);					\ 	for (i = lshift = 0, height = rtree->height, node = rtree->root;\ 	    i< height - 1;						\ 	    i++, lshift += bits, node = child) {			\ 		bits = rtree->level2bits[i];				\ 		subkey = (key<< lshift)>> ((ZU(1)<< (LG_SIZEOF_PTR + \ 		    3)) - bits);					\ 		child = (void**)node[subkey];				\ 		if (child == NULL) {					\ 			RTREE_UNLOCK(&rtree->mutex);			\ 			return (NULL);					\ 		}							\ 	}								\ 									\
+value|JEMALLOC_INLINE uint8_t							\ f(rtree_t *rtree, uintptr_t key)					\ {									\ 	uint8_t ret;							\ 	uintptr_t subkey;						\ 	unsigned i, lshift, height, bits;				\ 	void **node, **child;						\ 									\ 	RTREE_LOCK(&rtree->mutex);					\ 	for (i = lshift = 0, height = rtree->height, node = rtree->root;\ 	    i< height - 1;						\ 	    i++, lshift += bits, node = child) {			\ 		bits = rtree->level2bits[i];				\ 		subkey = (key<< lshift)>> ((ZU(1)<< (LG_SIZEOF_PTR +	\ 		    3)) - bits);					\ 		child = (void**)node[subkey];				\ 		if (child == NULL) {					\ 			RTREE_UNLOCK(&rtree->mutex);			\ 			return (0);					\ 		}							\ 	}								\ 									\
 comment|/*								\ 	 * node is a leaf, so it contains values rather than node	\ 	 * pointers.							\ 	 */
-value|\ 	bits = rtree->level2bits[i];					\ 	subkey = (key<< lshift)>> ((ZU(1)<< (LG_SIZEOF_PTR+3)) -	\ 	    bits);							\ 	ret = node[subkey];						\ 	RTREE_UNLOCK(&rtree->mutex);					\ 									\ 	RTREE_GET_VALIDATE						\ 	return (ret);							\ }
+value|\ 	bits = rtree->level2bits[i];					\ 	subkey = (key<< lshift)>> ((ZU(1)<< (LG_SIZEOF_PTR+3)) -	\ 	    bits);							\ 	{								\ 		uint8_t *leaf = (uint8_t *)node;			\ 		ret = leaf[subkey];					\ 	}								\ 	RTREE_UNLOCK(&rtree->mutex);					\ 									\ 	RTREE_GET_VALIDATE						\ 	return (ret);							\ }
 end_define
 
 begin_ifdef
@@ -434,8 +457,7 @@ parameter_list|,
 name|uintptr_t
 name|key
 parameter_list|,
-name|void
-modifier|*
+name|uint8_t
 name|val
 parameter_list|)
 block|{
@@ -559,20 +581,33 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|child
-operator|=
+name|size_t
+name|size
+init|=
 operator|(
-name|void
-operator|*
-operator|*
+operator|(
+name|i
+operator|+
+literal|1
+operator|<
+name|height
+operator|-
+literal|1
 operator|)
-name|base_alloc
-argument_list|(
+condition|?
 sizeof|sizeof
 argument_list|(
 name|void
 operator|*
 argument_list|)
+else|:
+operator|(
+sizeof|sizeof
+argument_list|(
+name|uint8_t
+argument_list|)
+operator|)
+operator|)
 operator|<<
 name|rtree
 operator|->
@@ -582,6 +617,19 @@ name|i
 operator|+
 literal|1
 index|]
+decl_stmt|;
+name|child
+operator|=
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+name|rtree
+operator|->
+name|alloc
+argument_list|(
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -611,20 +659,7 @@ name|child
 argument_list|,
 literal|0
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|<<
-name|rtree
-operator|->
-name|level2bits
-index|[
-name|i
-operator|+
-literal|1
-index|]
+name|size
 argument_list|)
 expr_stmt|;
 name|node
@@ -671,13 +706,25 @@ operator|-
 name|bits
 operator|)
 expr_stmt|;
+block|{
+name|uint8_t
+modifier|*
+name|leaf
+init|=
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|node
+decl_stmt|;
+name|leaf
 index|[
 name|subkey
 index|]
 operator|=
 name|val
 expr_stmt|;
+block|}
 name|malloc_mutex_unlock
 argument_list|(
 operator|&

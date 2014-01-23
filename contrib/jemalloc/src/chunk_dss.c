@@ -102,22 +102,29 @@ begin_comment
 comment|/******************************************************************************/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|JEMALLOC_HAVE_SBRK
-end_ifndef
-
 begin_function
 specifier|static
 name|void
 modifier|*
-name|sbrk
+name|chunk_dss_sbrk
 parameter_list|(
 name|intptr_t
 name|increment
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|JEMALLOC_HAVE_SBRK
+return|return
+operator|(
+name|sbrk
+argument_list|(
+name|increment
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 name|not_implemented
 argument_list|()
 expr_stmt|;
@@ -126,13 +133,10 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_function
 name|dss_prec_t
@@ -331,7 +335,7 @@ block|{
 comment|/* Get the current end of the DSS. */
 name|dss_max
 operator|=
-name|sbrk
+name|chunk_dss_sbrk
 argument_list|(
 literal|0
 argument_list|)
@@ -455,7 +459,7 @@ name|size
 expr_stmt|;
 name|dss_prev
 operator|=
-name|sbrk
+name|chunk_dss_sbrk
 argument_list|(
 name|incr
 argument_list|)
@@ -643,7 +647,7 @@ operator|)
 return|;
 name|dss_base
 operator|=
-name|sbrk
+name|chunk_dss_sbrk
 argument_list|(
 literal|0
 argument_list|)
