@@ -159,6 +159,17 @@ end_struct
 
 begin_struct
 struct|struct
+name|vm_ioapic_irq
+block|{
+name|int
+name|irq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vm_capability
 block|{
 name|int
@@ -383,6 +394,18 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_hpet_cap
+block|{
+name|uint32_t
+name|capabilities
+decl_stmt|;
+comment|/* lower 32 bits of HPET capabilities */
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -446,6 +469,18 @@ name|IOCNUM_INJECT_NMI
 init|=
 literal|32
 block|,
+name|IOCNUM_IOAPIC_ASSERT_IRQ
+init|=
+literal|33
+block|,
+name|IOCNUM_IOAPIC_DEASSERT_IRQ
+init|=
+literal|34
+block|,
+name|IOCNUM_IOAPIC_PULSE_IRQ
+init|=
+literal|35
+block|,
 comment|/* PCI pass-thru */
 name|IOCNUM_BIND_PPTDEV
 init|=
@@ -484,6 +519,10 @@ block|,
 name|IOCNUM_GET_X2APIC_STATE
 init|=
 literal|61
+block|,
+name|IOCNUM_GET_HPET_CAPABILITIES
+init|=
+literal|62
 block|, }
 enum|;
 end_enum
@@ -558,6 +597,30 @@ directive|define
 name|VM_LAPIC_IRQ
 define|\
 value|_IOW('v', IOCNUM_LAPIC_IRQ, struct vm_lapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_IOAPIC_ASSERT_IRQ
+define|\
+value|_IOW('v', IOCNUM_IOAPIC_ASSERT_IRQ, struct vm_ioapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_IOAPIC_DEASSERT_IRQ
+define|\
+value|_IOW('v', IOCNUM_IOAPIC_DEASSERT_IRQ, struct vm_ioapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_IOAPIC_PULSE_IRQ
+define|\
+value|_IOW('v', IOCNUM_IOAPIC_PULSE_IRQ, struct vm_ioapic_irq)
 end_define
 
 begin_define
@@ -654,6 +717,14 @@ directive|define
 name|VM_GET_X2APIC_STATE
 define|\
 value|_IOWR('v', IOCNUM_GET_X2APIC_STATE, struct vm_x2apic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GET_HPET_CAPABILITIES
+define|\
+value|_IOR('v', IOCNUM_GET_HPET_CAPABILITIES, struct vm_hpet_cap)
 end_define
 
 begin_define

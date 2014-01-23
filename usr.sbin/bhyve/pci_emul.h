@@ -356,6 +356,9 @@ decl_stmt|;
 name|int8_t
 name|pi_lintr_pin
 decl_stmt|;
+name|int8_t
+name|pi_lintr_state
+decl_stmt|;
 name|char
 name|pi_name
 index|[

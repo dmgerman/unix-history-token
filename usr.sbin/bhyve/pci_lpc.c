@@ -26,6 +26,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vmm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/vmm_dev.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -44,13 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"inout.h"
+file|<vmmapi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioapic.h"
+file|"inout.h"
 end_include
 
 begin_include
@@ -281,7 +293,7 @@ operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
-name|ioapic_assert_pin
+name|vm_ioapic_pulse_irq
 argument_list|(
 name|lpc_bridge
 operator|->
@@ -305,33 +317,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|struct
-name|lpc_uart_softc
-modifier|*
-name|sc
-init|=
-name|arg
-decl_stmt|;
-name|assert
-argument_list|(
-name|sc
-operator|->
-name|irq
-operator|>=
-literal|0
-argument_list|)
-expr_stmt|;
-name|ioapic_deassert_pin
-argument_list|(
-name|lpc_bridge
-operator|->
-name|pi_vmctx
-argument_list|,
-name|sc
-operator|->
-name|irq
-argument_list|)
-expr_stmt|;
+comment|/*  	 * The COM devices on the LPC bus generate edge triggered interrupts, 	 * so nothing more to do here. 	 */
 block|}
 end_function
 

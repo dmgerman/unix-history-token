@@ -188,12 +188,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ioapic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"spinup_ap.h"
 end_include
 
@@ -2711,11 +2705,6 @@ condition|)
 name|exit
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-name|ioapic_init
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 if|if

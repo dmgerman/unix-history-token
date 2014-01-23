@@ -1070,7 +1070,7 @@ parameter_list|,
 name|regname
 parameter_list|)
 define|\
-value|VMM_CTR1((vmx)->vm, (vcpu), "setjmp trace " #regname " 0x%016lx", \ 		 (vmxctx)->regname)
+value|VCPU_CTR1((vmx)->vm, (vcpu), "setjmp trace " #regname " 0x%016lx",  \ 		 (vmxctx)->regname)
 end_define
 
 begin_function
@@ -1127,7 +1127,7 @@ name|vcpu
 index|]
 argument_list|)
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 operator|(
 name|vmx
@@ -1144,7 +1144,7 @@ argument_list|,
 name|vmxctx
 argument_list|)
 expr_stmt|;
-name|VMM_CTR2
+name|VCPU_CTR2
 argument_list|(
 operator|(
 name|vmx
@@ -1189,7 +1189,7 @@ operator|&
 name|host_rsp
 argument_list|)
 expr_stmt|;
-name|VMM_CTR2
+name|VCPU_CTR2
 argument_list|(
 operator|(
 name|vmx
@@ -1201,7 +1201,7 @@ operator|(
 name|vcpu
 operator|)
 argument_list|,
-literal|"vmcs host_rip 0x%016lx, host_rsp 0x%016lx"
+literal|"vmcs host_rip 0x%016lx, host_rsp %#lx"
 argument_list|,
 name|host_rip
 argument_list|,
@@ -3423,7 +3423,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|KTR
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|vmx
 operator|->
@@ -3431,7 +3431,7 @@ name|vm
 argument_list|,
 name|vcpu
 argument_list|,
-literal|"Resume execution at 0x%0lx"
+literal|"Resume execution at %#lx"
 argument_list|,
 name|vmcs_guest_rip
 argument_list|()
@@ -3469,7 +3469,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|KTR
-name|VMM_CTR3
+name|VCPU_CTR3
 argument_list|(
 name|vmx
 operator|->
@@ -3519,7 +3519,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|KTR
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|vmx
 operator|->
@@ -4114,7 +4114,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|vmx
 operator|->
@@ -4150,7 +4150,7 @@ argument_list|,
 name|vcpu
 argument_list|)
 expr_stmt|;
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|vmx
 operator|->
@@ -4389,7 +4389,7 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|vmx
 operator|->
@@ -4413,7 +4413,7 @@ argument_list|,
 name|vcpu
 argument_list|)
 expr_stmt|;
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|vmx
 operator|->
@@ -5624,7 +5624,7 @@ argument_list|,
 name|vcpu
 argument_list|)
 expr_stmt|;
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|vmx
 operator|->
@@ -5687,7 +5687,7 @@ argument_list|,
 name|vcpu
 argument_list|)
 expr_stmt|;
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|vmx
 operator|->
@@ -6664,7 +6664,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|vmx
 operator|->
