@@ -2486,7 +2486,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|svc_vc_process_pending
 parameter_list|(
 name|SVCXPRT
@@ -2598,7 +2598,11 @@ argument_list|)
 operator|-
 name|n
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 name|m_copydata
 argument_list|(
@@ -2792,6 +2796,11 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
 block|}
 end_function
 
@@ -2903,11 +2912,17 @@ operator|->
 name|eor
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|svc_vc_process_pending
 argument_list|(
 name|xprt
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
+block|}
 comment|/* Process and return complete request in cd->mreq. */
 if|if
 condition|(
