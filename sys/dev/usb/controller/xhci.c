@@ -11560,13 +11560,12 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * These fields should be initialized to zero, according to 	 * XHCI section 6.2.2 - slot context: 	 */
 name|temp
 operator|=
 name|XHCI_SCTX_3_DEV_ADDR_SET
 argument_list|(
-name|udev
-operator|->
-name|address
+literal|0
 argument_list|)
 operator||
 name|XHCI_SCTX_3_SLOT_STATE_SET
