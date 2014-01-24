@@ -6,8 +6,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_uart.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FDT
+end_ifndef
 
 begin_include
 include|#
@@ -98,14 +110,6 @@ end_decl_stmt
 begin_decl_stmt
 name|bus_space_tag_t
 name|uart_bus_space_mem
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uart_class
-name|at91_usart_class
 decl_stmt|;
 end_decl_stmt
 
@@ -304,6 +308,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

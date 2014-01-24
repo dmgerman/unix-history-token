@@ -119,14 +119,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|uart_class
-name|at91_usart_class
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|device_method_t
 name|usart_at91_methods
