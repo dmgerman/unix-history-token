@@ -809,13 +809,32 @@ decl_stmt|;
 name|char
 name|savec
 decl_stmt|;
-if|if
+while|while
 condition|(
 name|parsefile
 operator|->
 name|strpush
 condition|)
 block|{
+comment|/* 		 * Add a space to the end of an alias to ensure that the 		 * alias remains in use while parsing its last word. 		 * This avoids alias recursions. 		 */
+if|if
+condition|(
+name|parsenleft
+operator|==
+operator|-
+literal|1
+operator|&&
+name|parsefile
+operator|->
+name|strpush
+operator|->
+name|ap
+operator|!=
+name|NULL
+condition|)
+return|return
+literal|' '
+return|;
 name|popstring
 argument_list|()
 expr_stmt|;
