@@ -145,6 +145,7 @@ block|{
 name|pcell_t
 name|clock
 decl_stmt|;
+comment|/* clock-frequency is a FreeBSD-only extention. */
 if|if
 condition|(
 operator|(
@@ -166,11 +167,10 @@ operator|)
 operator|<=
 literal|0
 condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+name|clock
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|clock
