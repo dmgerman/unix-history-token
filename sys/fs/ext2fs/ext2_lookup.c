@@ -3659,9 +3659,6 @@ operator|.
 name|e2d_namlen
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|EXT2FS_HTREE
 if|if
 condition|(
 name|ext2_htree_has_idx
@@ -3687,7 +3684,6 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* XXX: These are set in the wrong place. */
 name|dp
 operator|->
 name|i_flags
@@ -3697,7 +3693,7 @@ name|E4_INDEX
 expr_stmt|;
 name|dp
 operator|->
-name|i_flags
+name|i_flag
 operator||=
 name|IN_CHANGE
 operator||
@@ -3761,9 +3757,6 @@ argument_list|)
 return|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* EXT2FS_HTREE */
 if|if
 condition|(
 name|dp
