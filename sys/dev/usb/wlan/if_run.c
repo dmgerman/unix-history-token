@@ -8331,7 +8331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read 16-bit from eFUSE ROM (RT3070 only.) */
+comment|/* Read 16-bit from eFUSE ROM for RT3xxx. */
 end_comment
 
 begin_function
