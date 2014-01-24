@@ -995,6 +995,34 @@ name|cpd
 operator|->
 name|udev
 operator|->
+name|state
+operator|==
+name|USB_STATE_DETACHED
+operator|&&
+operator|(
+name|need_uref
+operator|!=
+literal|2
+operator|)
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"device is detached\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
+if|if
+condition|(
+name|cpd
+operator|->
+name|udev
+operator|->
 name|refcount
 operator|==
 name|USB_DEV_REF_MAX
@@ -2730,6 +2758,16 @@ operator|&
 name|usb_ref_lock
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Check if the "f->refcount" variable reached zero 		 * during the unlocked time before entering wait: 		 */
+if|if
+condition|(
+name|f
+operator|->
+name|refcount
+operator|==
+literal|0
+condition|)
+break|break;
 comment|/* wait for sync */
 name|cv_wait
 argument_list|(
@@ -4023,50 +4061,23 @@ argument_list|,
 operator|&
 name|refs
 argument_list|,
-literal|0
+literal|2
+comment|/* uref and allow detached state */
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|err
-condition|)
-goto|goto
-name|done
-goto|;
-comment|/* 	 * If this function is not called directly from the root HUB 	 * thread, there is usually a need to lock the enumeration 	 * lock. Check this. 	 */
-if|if
-condition|(
-operator|!
-name|usbd_enum_is_locked
-argument_list|(
-name|cpd
-operator|->
-name|udev
-argument_list|)
 condition|)
 block|{
 name|DPRINTFN
 argument_list|(
-literal|2
+literal|0
 argument_list|,
-literal|"Locking enumeration\n"
+literal|"Cannot grab USB reference when "
+literal|"closing USB file handle\n"
 argument_list|)
 expr_stmt|;
-comment|/* reference device */
-name|err
-operator|=
-name|usb_usb_ref_device
-argument_list|(
-name|cpd
-argument_list|,
-operator|&
-name|refs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
 goto|goto
 name|done
 goto|;
