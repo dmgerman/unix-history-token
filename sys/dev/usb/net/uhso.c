@@ -1014,6 +1014,16 @@ argument_list|,
 name|UHSO_AUTO_IFACE
 argument_list|)
 block|,
+comment|/* Option GTM661W */
+name|UHSO_DEV
+argument_list|(
+name|OPTION
+argument_list|,
+name|GTM661W
+argument_list|,
+name|UHSO_AUTO_IFACE
+argument_list|)
+block|,
 comment|/* Option iCON EDGE */
 name|UHSO_DEV
 argument_list|(
