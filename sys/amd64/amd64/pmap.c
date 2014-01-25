@@ -25482,7 +25482,7 @@ name|pm_type
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * RWX = 010 or 110 will cause an unconditional EPT misconfiguration 	 * so we don't let the referenced (aka EPT_PG_READ) bit to be cleared 	 * if the EPT_PG_WRITE bit is set. 	 */
+comment|/* 	 * XWR = 010 or 110 will cause an unconditional EPT misconfiguration 	 * so we don't let the referenced (aka EPT_PG_READ) bit to be cleared 	 * if the EPT_PG_WRITE bit is set. 	 */
 if|if
 condition|(
 operator|(
@@ -25498,7 +25498,7 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* 	 * RWX = 100 is allowed only if the PMAP_SUPPORTS_EXEC_ONLY is set. 	 */
+comment|/* 	 * XWR = 100 is allowed only if the PMAP_SUPPORTS_EXEC_ONLY is set. 	 */
 if|if
 condition|(
 operator|(
