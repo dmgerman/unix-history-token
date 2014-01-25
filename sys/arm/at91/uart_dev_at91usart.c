@@ -887,6 +887,17 @@ name|int
 name|c
 parameter_list|)
 block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+condition|)
+name|eputc
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|!
