@@ -394,14 +394,16 @@ name|__ARM_EABI__
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * Unwind hints so we can unwind past functions that use  * PULLFRAMEFROMSVCANDEXIT. They are run in reverse order.  * As the last thing we do is restore the stack pointer  * we can ignore the padding at the end of struct trapframe.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|UNWINDSVCFRAME
 define|\
-value|.pad #(4);
-comment|/* Skip stack alignment */
-value|\ 	.save {r13-r15};
+value|.save {r13-r15};
 comment|/* Restore sp, lr, pc */
 value|\ 	.pad #(2*4);
 comment|/* Skip user sp and lr */

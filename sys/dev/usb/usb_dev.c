@@ -4098,7 +4098,7 @@ condition|)
 block|{
 name|DPRINTFN
 argument_list|(
-literal|0
+literal|2
 argument_list|,
 literal|"Cannot grab USB reference when "
 literal|"closing USB file handle\n"

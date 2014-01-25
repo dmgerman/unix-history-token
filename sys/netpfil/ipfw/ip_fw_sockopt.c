@@ -599,7 +599,7 @@ if|if
 condition|(
 name|chain
 operator|->
-name|rules
+name|map
 operator|==
 name|NULL
 operator|||

@@ -1639,6 +1639,7 @@ operator|->
 name|i_birthnsec
 expr_stmt|;
 block|}
+comment|/* E4_* flags are private to the filesystem. */
 name|vap
 operator|->
 name|va_flags
@@ -1646,13 +1647,8 @@ operator|=
 name|ip
 operator|->
 name|i_flags
-expr_stmt|;
-comment|/* E4_* flags are private to the driver */
-name|vap
-operator|->
-name|va_flags
-operator|&=
-operator|!
+operator|&
+operator|~
 operator|(
 name|E4_INDEX
 operator||

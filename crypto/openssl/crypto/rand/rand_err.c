@@ -112,6 +112,15 @@ block|{
 block|{
 name|ERR_REASON
 argument_list|(
+name|RAND_R_DUAL_EC_DRBG_DISABLED
+argument_list|)
+block|,
+literal|"dual ec drbg disabled"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|RAND_R_ERROR_INITIALISING_DRBG
 argument_list|)
 block|,

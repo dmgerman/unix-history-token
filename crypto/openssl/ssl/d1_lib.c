@@ -791,6 +791,12 @@ operator|->
 name|d1
 argument_list|)
 expr_stmt|;
+name|s
+operator|->
+name|d1
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 

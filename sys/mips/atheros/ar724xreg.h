@@ -346,119 +346,119 @@ begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_GE0_MII_CLK_EN
-value|(1>> 19)
+value|(1<< 19)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_SPI_EN
-value|(1>> 18)
+value|(1<< 18)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_SPI_CS_EN2
-value|(1>> 14)
+value|(1<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_SPI_CS_EN1
-value|(1>> 13)
+value|(1<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_CLK_OBS5_EN
-value|(1>> 12)
+value|(1<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_CLK_OBS4_EN
-value|(1>> 11)
+value|(1<< 11)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_CLK_OBS3_EN
-value|(1>> 10)
+value|(1<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_CLK_OBS2_EN
-value|(1>> 9)
+value|(1<< 9)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_CLK_OBS1_EN
-value|(1>> 8)
+value|(1<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_ETH_SWITCH_LED4_EN
-value|(1>> 7)
+value|(1<< 7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_ETH_SWITCH_LED3_EN
-value|(1>> 6)
+value|(1<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_ETH_SWITCH_LED2_EN
-value|(1>> 5)
+value|(1<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_ETH_SWITCH_LED1_EN
-value|(1>> 4)
+value|(1<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_ETH_SWITCH_LED0_EN
-value|(1>> 3)
+value|(1<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_UART_RTS_CTS_EN
-value|(1>> 2)
+value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_UART_EN
-value|(1>> 1)
+value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR724X_GPIO_FUNC_JTAG_DISABLE
-value|(1>> 0)
+value|(1<< 0)
 end_define
 
 begin_endif

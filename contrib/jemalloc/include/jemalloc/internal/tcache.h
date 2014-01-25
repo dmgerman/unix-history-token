@@ -1307,6 +1307,15 @@ index|[
 name|binind
 index|]
 expr_stmt|;
+name|size
+operator|=
+name|arena_bin_info
+index|[
+name|binind
+index|]
+operator|.
+name|reg_size
+expr_stmt|;
 name|ret
 operator|=
 name|tcache_alloc_easy

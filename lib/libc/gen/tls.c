@@ -44,7 +44,7 @@ end_comment
 begin_function_decl
 name|void
 modifier|*
-name|__jemalloc_a0malloc
+name|__je_a0malloc
 parameter_list|(
 name|size_t
 name|size
@@ -55,7 +55,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|__jemalloc_a0calloc
+name|__je_a0calloc
 parameter_list|(
 name|size_t
 name|num
@@ -68,7 +68,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|__jemalloc_a0free
+name|__je_a0free
 parameter_list|(
 name|void
 modifier|*
@@ -550,12 +550,12 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|__jemalloc_a0free
+name|__je_a0free
 argument_list|(
 name|dtv
 argument_list|)
 expr_stmt|;
-name|__jemalloc_a0free
+name|__je_a0free
 argument_list|(
 name|tcb
 argument_list|)
@@ -614,7 +614,7 @@ operator|)
 return|;
 name|tcb
 operator|=
-name|__jemalloc_a0calloc
+name|__je_a0calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -656,7 +656,7 @@ argument_list|,
 name|tls_static_space
 argument_list|)
 expr_stmt|;
-name|__jemalloc_a0free
+name|__je_a0free
 argument_list|(
 name|oldtcb
 argument_list|)
@@ -686,7 +686,7 @@ else|else
 block|{
 name|dtv
 operator|=
-name|__jemalloc_a0malloc
+name|__je_a0malloc
 argument_list|(
 literal|3
 operator|*
@@ -875,7 +875,7 @@ name|tlsend
 operator|-
 name|size
 expr_stmt|;
-name|__jemalloc_a0free
+name|__je_a0free
 argument_list|(
 operator|(
 name|void
@@ -884,7 +884,7 @@ operator|)
 name|tlsstart
 argument_list|)
 expr_stmt|;
-name|__jemalloc_a0free
+name|__je_a0free
 argument_list|(
 name|dtv
 argument_list|)
@@ -959,7 +959,7 @@ argument_list|)
 expr_stmt|;
 name|tls
 operator|=
-name|__jemalloc_a0calloc
+name|__je_a0calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -970,7 +970,7 @@ argument_list|)
 expr_stmt|;
 name|dtv
 operator|=
-name|__jemalloc_a0malloc
+name|__je_a0malloc
 argument_list|(
 literal|3
 operator|*

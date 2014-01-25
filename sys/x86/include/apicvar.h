@@ -6,20 +6,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_APICVAR_H_
+name|_X86_APICVAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_APICVAR_H_
+name|_X86_APICVAR_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|<machine/segments.h>
-end_include
 
 begin_comment
 comment|/*  * Local&& I/O APIC variable definitions.  */
@@ -158,6 +152,28 @@ name|IPI_INVLCACHE
 value|(APIC_IPI_INTS + 4)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IPI_LAZYPMAP
+value|(APIC_IPI_INTS + 5)
+end_define
+
+begin_comment
+comment|/* Lazy pmap release. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Vector to handle bitmap based IPIs */
 end_comment
@@ -170,7 +186,7 @@ value|(APIC_IPI_INTS + 6)
 end_define
 
 begin_comment
-comment|/* IPIs handled by IPI_BITMAPED_VECTOR  (XXX ups is there a better place?) */
+comment|/* IPIs handled by IPI_BITMAP_VECTOR */
 end_comment
 
 begin_define
@@ -1050,7 +1066,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_APICVAR_H_ */
+comment|/* _X86_APICVAR_H_ */
 end_comment
 
 end_unit

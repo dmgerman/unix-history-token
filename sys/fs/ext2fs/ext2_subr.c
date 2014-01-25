@@ -224,7 +224,7 @@ name|bpp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * E4_EXTENTS requires special treatment otherwise we can fall 	 * back to the normal path. 	 */
+comment|/* 	 * E4_EXTENTS requires special treatment as we can otherwise fall 	 * back to the normal path. 	 */
 if|if
 condition|(
 operator|!

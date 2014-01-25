@@ -571,7 +571,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<machine/apicvar.h>
+file|<x86/apicvar.h>
 end_include
 
 begin_endif
