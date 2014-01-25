@@ -9769,11 +9769,13 @@ operator|&
 name|VIRTIO_NET_HDR_F_NEEDS_CSUM
 argument_list|,
 operator|(
-literal|"%s: mbuf %p TSO without checksum offload"
+literal|"%s: mbuf %p TSO without checksum offload %#x"
 operator|,
 name|__func__
 operator|,
 name|m
+operator|,
+name|flags
 operator|)
 argument_list|)
 expr_stmt|;
