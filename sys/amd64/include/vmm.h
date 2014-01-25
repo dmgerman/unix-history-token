@@ -1635,6 +1635,8 @@ name|VM_EXITCODE_SPINDOWN_CPU
 block|,
 name|VM_EXITCODE_RENDEZVOUS
 block|,
+name|VM_EXITCODE_IOAPIC_EOI
+block|,
 name|VM_EXITCODE_MAX
 block|}
 enum|;
@@ -1774,6 +1776,14 @@ name|rflags
 decl_stmt|;
 block|}
 name|hlt
+struct|;
+struct|struct
+block|{
+name|int
+name|vector
+decl_stmt|;
+block|}
+name|ioapic_eoi
 struct|;
 block|}
 name|u

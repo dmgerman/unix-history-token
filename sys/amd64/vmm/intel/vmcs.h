@@ -659,6 +659,16 @@ name|VMCS_EOI_EXIT3
 value|0x00002022
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMCS_EOI_EXIT
+parameter_list|(
+name|vector
+parameter_list|)
+value|(VMCS_EOI_EXIT0 + ((vector) / 64) * 2)
+end_define
+
 begin_comment
 comment|/* 64-bit read-only fields */
 end_comment
@@ -1773,6 +1783,13 @@ define|#
 directive|define
 name|EXIT_REASON_APIC_ACCESS
 value|44
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXIT_REASON_VIRTUALIZED_EOI
+value|45
 end_define
 
 begin_define
