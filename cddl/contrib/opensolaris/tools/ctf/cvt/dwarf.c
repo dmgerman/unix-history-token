@@ -96,31 +96,6 @@ file|"traverse.h"
 end_include
 
 begin_comment
-comment|/* The versions of DWARF which we support. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DWARF_VERSION
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DWARF_VERSION3
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|DWARF_VERSION4
-value|4
-end_define
-
-begin_comment
 comment|/*  * We need to define a couple of our own intrinsics, to smooth out some of the  * differences between the GCC and DevPro DWARF emitters.  See the referenced  * routines and the special cases in the file comment for more details.  *  * Type IDs are 32 bits wide.  We're going to use the top of that field to  * indicate types that we've created ourselves.  */
 end_comment
 
@@ -8946,22 +8921,18 @@ expr_stmt|;
 if|if
 condition|(
 name|vers
-operator|!=
-name|DWARF_VERSION
-operator|&&
+operator|<
+literal|2
+operator|||
 name|vers
-operator|!=
-name|DWARF_VERSION3
-operator|&&
-name|vers
-operator|!=
-name|DWARF_VERSION4
+operator|>
+literal|4
 condition|)
 block|{
 name|terminate
 argument_list|(
 literal|"file contains incompatible version %d DWARF code "
-literal|"(version 2, 3, or 4 required)\n"
+literal|"(version 2, 3 or 4 required)\n"
 argument_list|,
 name|vers
 argument_list|)
