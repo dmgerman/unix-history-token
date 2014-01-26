@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2001, 2004, 2010, 2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2001, 2004, 2010, 2013 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sm_gethost.c,v 8.30 2013/02/22 22:43:33 gshapiro Exp $"
+literal|"@(#)$Id: sm_gethost.c,v 8.32 2013/11/22 20:51:36 ca Exp $"
 argument_list|)
 end_macro
 
@@ -260,6 +260,42 @@ operator|&=
 operator|~
 name|RES_USE_INET6
 expr_stmt|;
+comment|/* the function is supposed to return only the requested family */
+if|if
+condition|(
+name|h
+operator|!=
+name|NULL
+operator|&&
+name|h
+operator|->
+name|h_addrtype
+operator|!=
+name|family
+condition|)
+block|{
+if|#
+directive|if
+name|NETINET6
+name|freehostent
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+name|h
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|err
+operator|=
+name|NO_DATA
+expr_stmt|;
+block|}
+else|else
 operator|*
 name|err
 operator|=
@@ -517,6 +553,41 @@ comment|/* NETINET6 */
 endif|#
 directive|endif
 comment|/* (SOLARIS> 10000&& SOLARIS< 20400) || (defined(SOLARIS)&& SOLARIS< 204) || (defined(sony_news)&& defined(__svr4)) */
+comment|/* the function is supposed to return only the requested family */
+if|if
+condition|(
+name|h
+operator|!=
+name|NULL
+operator|&&
+name|h
+operator|->
+name|h_addrtype
+operator|!=
+name|family
+condition|)
+block|{
+if|#
+directive|if
+name|NETINET6
+name|freehostent
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+name|h
+operator|=
+name|NULL
+expr_stmt|;
+name|SM_SET_H_ERRNO
+argument_list|(
+name|NO_DATA
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|h
 return|;

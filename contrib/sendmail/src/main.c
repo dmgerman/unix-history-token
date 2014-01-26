@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006, 2008, 2009, 2011 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006, 2008, 2009, 2011 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_define
@@ -48,7 +48,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#) Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2013 Proofpoint, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 expr_stmt|;
 end_expr_stmt
 
@@ -64,7 +64,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.983 2013/03/12 15:24:52 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.988 2013/11/23 02:52:37 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -275,7 +275,7 @@ comment|/* SIGUSR1 */
 end_comment
 
 begin_comment
-comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by settings read in from /etc/mail/sendmail.cf **	(read by readcf.c). ** **	Usage: **		/usr/lib/sendmail [flags] addr ... ** **		See the associated documentation for details. ** **	Authors: **		Eric Allman, UCB/INGRES (until 10/81). **			     Britton-Lee, Inc., purveyors of fine **				database computers (11/81 - 10/88). **			     International Computer Science Institute **				(11/88 - 9/89). **			     UCB/Mammoth Project (10/89 - 7/95). **			     InReference, Inc. (8/95 - 1/97). **			     Sendmail, Inc. (1/98 - present). **		The support of my employers is gratefully acknowledged. **			Few of them (Britton-Lee in particular) have had **			anything to gain from my involvement in this project. ** **		Gregory Neil Shapiro, **			Worcester Polytechnic Institute	(until 3/98). **			Sendmail, Inc. (3/98 - present). ** **		Claus Assmann, **			Sendmail, Inc. (12/98 - present). */
+comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by settings read in from /etc/mail/sendmail.cf **	(read by readcf.c). ** **	Usage: **		/usr/lib/sendmail [flags] addr ... ** **		See the associated documentation for details. ** **	Authors: **		Eric Allman, UCB/INGRES (until 10/81). **			     Britton-Lee, Inc., purveyors of fine **				database computers (11/81 - 10/88). **			     International Computer Science Institute **				(11/88 - 9/89). **			     UCB/Mammoth Project (10/89 - 7/95). **			     InReference, Inc. (8/95 - 1/97). **			     Sendmail, Inc. (1/98 - 9/13). **		The support of my employers is gratefully acknowledged. **			Few of them (Britton-Lee in particular) have had **			anything to gain from my involvement in this project. ** **		Gregory Neil Shapiro, **			Worcester Polytechnic Institute	(until 3/98). **			Sendmail, Inc. (3/98 - 10/13). **			Proofpoint, Inc. (10/13 - present). ** **		Claus Assmann, **			Sendmail, Inc. (12/98 - 10/13). **			Proofpoint, Inc. (10/13 - present). */
 end_comment
 
 begin_decl_stmt
@@ -17491,6 +17491,121 @@ name|ul
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETINET6
+elseif|else
+if|if
+condition|(
+name|sm_strcasecmp
+argument_list|(
+operator|&
+name|line
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"gethostbyname"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|int
+name|family
+init|=
+name|AF_INET
+decl_stmt|;
+name|q
+operator|=
+name|strpbrk
+argument_list|(
+name|p
+argument_list|,
+literal|" \t"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|q
+operator|!=
+name|NULL
+condition|)
+block|{
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|q
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|q
+argument_list|)
+condition|)
+operator|*
+name|q
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+if|#
+directive|if
+name|NETINET6
+if|if
+condition|(
+operator|*
+name|q
+operator|!=
+literal|'\0'
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|q
+argument_list|,
+literal|"inet6"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|q
+argument_list|,
+literal|"AAAA"
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+name|family
+operator|=
+name|AF_INET6
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+block|}
+operator|(
+name|void
+operator|)
+name|sm_gethostbyname
+argument_list|(
+name|p
+argument_list|,
+name|family
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* NETINET || NETINET6 */
 else|else
 block|{
 operator|(
