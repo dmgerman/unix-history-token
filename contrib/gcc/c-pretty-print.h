@@ -649,6 +649,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL blocks */
+end_comment
+
+begin_function_decl
+name|void
+name|pp_c_caret
+parameter_list|(
+name|c_pretty_printer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|pp_c_arrow

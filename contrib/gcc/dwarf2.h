@@ -1281,9 +1281,25 @@ name|DW_AT_PGI_soffset
 init|=
 literal|0x3a01
 block|,
+comment|/* APPLE LOCAL begin radar 5811943 - Fix type of pointers to blocks  */
 name|DW_AT_PGI_lstride
 init|=
 literal|0x3a02
+block|,
+comment|/* APPLE LOCAL begin radar 6386976  */
+name|DW_AT_APPLE_block
+init|=
+literal|0x3fe4
+block|,
+comment|/* APPLE LOCAL end radar 5811943 - Fix type of pointers to blocks  */
+name|DW_AT_APPLE_major_runtime_vers
+init|=
+literal|0x3fe5
+block|,
+name|DW_AT_APPLE_runtime_class
+init|=
+literal|0x3fe6
+comment|/* APPLE LOCAL end radar 6386976  */
 block|}
 enum|;
 end_enum

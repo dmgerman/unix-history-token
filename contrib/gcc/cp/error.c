@@ -1650,6 +1650,10 @@ case|:
 case|case
 name|POINTER_TYPE
 case|:
+comment|/* APPLE LOCAL blocks 6040305 */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
 case|case
 name|REFERENCE_TYPE
 case|:
@@ -2259,6 +2263,10 @@ block|{
 case|case
 name|POINTER_TYPE
 case|:
+comment|/* APPLE LOCAL blocks 6040305 */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
 case|case
 name|REFERENCE_TYPE
 case|:
@@ -2299,21 +2307,36 @@ name|cxx_pp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* APPLE LOCAL begin blocks 6040305 */
 name|pp_character
 argument_list|(
 name|cxx_pp
 argument_list|,
-literal|"&*"
+literal|"&*^"
 index|[
+operator|(
 name|TREE_CODE
 argument_list|(
 name|t
 argument_list|)
 operator|==
 name|POINTER_TYPE
+operator|)
+operator|+
+operator|(
+name|TREE_CODE
+argument_list|(
+name|t
+argument_list|)
+operator|==
+name|BLOCK_POINTER_TYPE
+operator|)
+operator|*
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end blocks 6040305 */
 name|pp_base
 argument_list|(
 name|cxx_pp
@@ -2634,6 +2657,10 @@ condition|)
 block|{
 case|case
 name|POINTER_TYPE
+case|:
+comment|/* APPLE LOCAL blocks 6040305 */
+case|case
+name|BLOCK_POINTER_TYPE
 case|:
 case|case
 name|REFERENCE_TYPE

@@ -8045,12 +8045,20 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL blocks */
 name|gcc_assert
 argument_list|(
 name|POINTER_TYPE_P
 argument_list|(
 name|funtype
 argument_list|)
+operator|||
+name|TREE_CODE
+argument_list|(
+name|funtype
+argument_list|)
+operator|==
+name|BLOCK_POINTER_TYPE
 argument_list|)
 expr_stmt|;
 name|funtype

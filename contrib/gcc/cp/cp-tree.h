@@ -3189,13 +3189,32 @@ name|non_aggregate
 range|:
 literal|1
 decl_stmt|;
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
+name|unsigned
+name|has_nontrivial_destructor_body
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|destructor_nontrivial_because_of_base
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|destructor_triviality_final
+range|:
+literal|1
+decl_stmt|;
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
 comment|/* When adding a flag here, consider whether or not it ought to      apply to a template instance if it applies to the template.  If      so, make sure to copy it in instantiate_class_template!  */
 comment|/* There are some bits left to fill out a 32-bit word.  Keep track      of this by updating the size of this bitfield whenever you add or      remove a flag.  */
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
 name|unsigned
 name|dummy
 range|:
-literal|12
+literal|10
 decl_stmt|;
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
 name|tree
 name|primary_base
 decl_stmt|;
@@ -7198,7 +7217,9 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(TYPE_PTRMEM_P (TYPE)				\    || TREE_CODE (TYPE) == ENUMERAL_TYPE		\    || ARITHMETIC_TYPE_P (TYPE)			\    || TYPE_PTR_P (TYPE)				\    || TYPE_PTRMEMFUNC_P (TYPE))
+value|(TYPE_PTRMEM_P (TYPE)				\    || TREE_CODE (TYPE) == ENUMERAL_TYPE		\    || ARITHMETIC_TYPE_P (TYPE)			\    || TYPE_PTR_P (TYPE)				\
+comment|/* APPLE LOCAL blocks 6040305 */
+value|\    || TREE_CODE (TYPE) == BLOCK_POINTER_TYPE	\    || TYPE_PTRMEMFUNC_P (TYPE))
 end_define
 
 begin_comment
@@ -7363,6 +7384,56 @@ parameter_list|)
 define|\
 value|(TYPE_LANG_FLAG_4 (NODE))
 end_define
+
+begin_comment
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
+end_comment
+
+begin_comment
+comment|/* One if the body of the destructor of class type NODE has been shown to do  nothing, else zero. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASSTYPE_HAS_NONTRIVIAL_DESTRUCTOR_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(LANG_TYPE_CLASS_CHECK (NODE)->has_nontrivial_destructor_body)
+end_define
+
+begin_comment
+comment|/* One if destructor of this type must be called by its base classes because  one of its base classes' destructors must be called. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(LANG_TYPE_CLASS_CHECK (NODE)->destructor_nontrivial_because_of_base)
+end_define
+
+begin_comment
+comment|/* One if the values of CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE  and CLASSTYPE_HAS_NONTRIVIAL_DESTRUCTOR_BODY are final. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASSTYPE_DESTRUCTOR_TRIVIALITY_FINAL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(LANG_TYPE_CLASS_CHECK (NODE)->destructor_triviality_final)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
+end_comment
 
 begin_comment
 comment|/* Nonzero for class type means that copy initialization of this type can use    a bitwise copy.  */
@@ -10881,6 +10952,9 @@ name|cdk_reference
 block|,
 name|cdk_ptrmem
 block|,
+comment|/* APPLE LOCAL blocks 6040305 (ch) */
+name|cdk_block_pointer
+block|,
 name|cdk_error
 block|}
 name|cp_declarator_kind
@@ -11029,6 +11103,18 @@ decl_stmt|;
 block|}
 name|pointer
 struct|;
+comment|/* APPLE LOCAL begin blocks 6040305 (ch) */
+comment|/* For cdk_block_pointer.  */
+struct|struct
+block|{
+comment|/* The cv-qualifiers for the pointer.  */
+name|cp_cv_quals
+name|qualifiers
+decl_stmt|;
+block|}
+name|block_pointer
+struct|;
+comment|/* APPLE LOCAL end blocks 6040305 (ch) */
 block|}
 name|u
 union|;
@@ -12636,6 +12722,25 @@ begin_function_decl
 specifier|extern
 name|tree
 name|groktypename
+parameter_list|(
+name|cp_decl_specifier_seq
+modifier|*
+parameter_list|,
+specifier|const
+name|cp_declarator
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL 6339747 */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|grokblockdecl
 parameter_list|(
 name|cp_decl_specifier_seq
 modifier|*
@@ -19483,6 +19588,44 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/* APPLE LOCAL radar 5741070  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|c_return_interface_record_type
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL begin blocks 6040305 (cg) */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|cp_declarator
+modifier|*
+name|make_block_pointer_declarator
+parameter_list|(
+name|tree
+parameter_list|,
+name|cp_cv_quals
+parameter_list|,
+name|cp_declarator
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL end blocks 6040305 (cg) */
+end_comment
 
 begin_endif
 endif|#

@@ -2081,6 +2081,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Other target-independent built-ins determined by command-line      options.  */
+comment|/* APPLE LOCAL begin blocks */
+comment|/* APPLE LOCAL radar 5868913 */
+if|if
+condition|(
+name|flag_blocks
+condition|)
+name|cpp_define
+argument_list|(
+name|pfile
+argument_list|,
+literal|"__BLOCKS__=1"
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end blocks */
 if|if
 condition|(
 name|optimize_size

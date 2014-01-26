@@ -246,6 +246,12 @@ name|is_local
 range|:
 literal|1
 decl_stmt|;
+comment|/* APPLE LOCAL blocks 6040305 (ch) */
+name|unsigned
+name|declared_in_block
+range|:
+literal|1
+decl_stmt|;
 block|}
 end_decl_stmt
 
