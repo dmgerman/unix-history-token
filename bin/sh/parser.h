@@ -301,6 +301,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|forcealias
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|fixredir
 parameter_list|(
 name|union

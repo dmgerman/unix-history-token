@@ -3421,6 +3421,20 @@ end_function
 
 begin_function
 name|void
+name|forcealias
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|checkkwd
+operator||=
+name|CHKALIAS
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|fixredir
 parameter_list|(
 name|union
