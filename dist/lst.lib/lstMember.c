@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: lstMember.c,v 1.13 2009/01/23 21:26:30 dsl Exp $	*/
+comment|/*	$NetBSD: lstMember.c,v 1.14 2013/11/14 00:01:28 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: lstMember.c,v 1.13 2009/01/23 21:26:30 dsl Exp $"
+literal|"$NetBSD: lstMember.c,v 1.14 2013/11/14 00:01:28 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: lstMember.c,v 1.13 2009/01/23 21:26:30 dsl Exp $"
+literal|"$NetBSD: lstMember.c,v 1.14 2013/11/14 00:01:28 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -109,6 +109,17 @@ decl_stmt|;
 name|ListNode
 name|lNode
 decl_stmt|;
+if|if
+condition|(
+name|list
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
 name|lNode
 operator|=
 name|list
