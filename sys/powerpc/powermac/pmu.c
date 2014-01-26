@@ -2706,7 +2706,7 @@ name|sc
 argument_list|,
 name|PMU_GET_VERSION
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|cmd
 argument_list|,
