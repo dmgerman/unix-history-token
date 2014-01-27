@@ -11,6 +11,10 @@ directive|define
 name|_FDT_H
 end_define
 
+begin_comment
+comment|/*  * libfdt - Flat Device Tree manipulation  * Copyright (C) 2006 David Gibson, IBM Corporation.  * Copyright 2012 Kim Phillips, Freescale Semiconductor.  *  * libfdt is dual licensed: you can use it either under the terms of  * the GPL, or the BSD license, at your option.  *  *  a) This library is free software; you can redistribute it and/or  *     modify it under the terms of the GNU General Public License as  *     published by the Free Software Foundation; either version 2 of the  *     License, or (at your option) any later version.  *  *     This library is distributed in the hope that it will be useful,  *     but WITHOUT ANY WARRANTY; without even the implied warranty of  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *     GNU General Public License for more details.  *  *     You should have received a copy of the GNU General Public  *     License along with this library; if not, write to the Free  *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,  *     MA 02110-1301 USA  *  * Alternatively,  *  *  b) Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *     1. Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *     2. Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND  *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,  *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR  *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -21,46 +25,46 @@ begin_struct
 struct|struct
 name|fdt_header
 block|{
-name|uint32_t
+name|fdt32_t
 name|magic
 decl_stmt|;
 comment|/* magic word FDT_MAGIC */
-name|uint32_t
+name|fdt32_t
 name|totalsize
 decl_stmt|;
 comment|/* total size of DT block */
-name|uint32_t
+name|fdt32_t
 name|off_dt_struct
 decl_stmt|;
 comment|/* offset to structure */
-name|uint32_t
+name|fdt32_t
 name|off_dt_strings
 decl_stmt|;
 comment|/* offset to strings */
-name|uint32_t
+name|fdt32_t
 name|off_mem_rsvmap
 decl_stmt|;
 comment|/* offset to memory reserve map */
-name|uint32_t
+name|fdt32_t
 name|version
 decl_stmt|;
 comment|/* format version */
-name|uint32_t
+name|fdt32_t
 name|last_comp_version
 decl_stmt|;
 comment|/* last compatible version */
 comment|/* version 2 fields below */
-name|uint32_t
+name|fdt32_t
 name|boot_cpuid_phys
 decl_stmt|;
 comment|/* Which physical CPU id we're 					    booting on */
 comment|/* version 3 fields below */
-name|uint32_t
+name|fdt32_t
 name|size_dt_strings
 decl_stmt|;
 comment|/* size of the strings block */
 comment|/* version 17 fields below */
-name|uint32_t
+name|fdt32_t
 name|size_dt_struct
 decl_stmt|;
 comment|/* size of the structure block */
@@ -72,10 +76,10 @@ begin_struct
 struct|struct
 name|fdt_reserve_entry
 block|{
-name|uint64_t
+name|fdt64_t
 name|address
 decl_stmt|;
-name|uint64_t
+name|fdt64_t
 name|size
 decl_stmt|;
 block|}
@@ -86,7 +90,7 @@ begin_struct
 struct|struct
 name|fdt_node_header
 block|{
-name|uint32_t
+name|fdt32_t
 name|tag
 decl_stmt|;
 name|char
@@ -103,13 +107,13 @@ begin_struct
 struct|struct
 name|fdt_property
 block|{
-name|uint32_t
+name|fdt32_t
 name|tag
 decl_stmt|;
-name|uint32_t
+name|fdt32_t
 name|len
 decl_stmt|;
-name|uint32_t
+name|fdt32_t
 name|nameoff
 decl_stmt|;
 name|char
@@ -146,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|FDT_TAGSIZE
-value|sizeof(uint32_t)
+value|sizeof(fdt32_t)
 end_define
 
 begin_define
@@ -204,21 +208,21 @@ begin_define
 define|#
 directive|define
 name|FDT_V1_SIZE
-value|(7*sizeof(uint32_t))
+value|(7*sizeof(fdt32_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FDT_V2_SIZE
-value|(FDT_V1_SIZE + sizeof(uint32_t))
+value|(FDT_V1_SIZE + sizeof(fdt32_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FDT_V3_SIZE
-value|(FDT_V2_SIZE + sizeof(uint32_t))
+value|(FDT_V2_SIZE + sizeof(fdt32_t))
 end_define
 
 begin_define
@@ -232,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|FDT_V17_SIZE
-value|(FDT_V16_SIZE + sizeof(uint32_t))
+value|(FDT_V16_SIZE + sizeof(fdt32_t))
 end_define
 
 begin_endif
