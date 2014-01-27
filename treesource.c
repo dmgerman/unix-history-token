@@ -49,7 +49,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|bool
 name|treesource_error
 decl_stmt|;
 end_decl_stmt
@@ -72,7 +72,7 @@ name|NULL
 expr_stmt|;
 name|treesource_error
 operator|=
-literal|0
+name|false
 expr_stmt|;
 name|srcfile_push
 argument_list|(
@@ -159,7 +159,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|bool
 name|isstring
 parameter_list|(
 name|char
@@ -170,6 +170,10 @@ return|return
 operator|(
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 operator|||
@@ -494,6 +498,10 @@ if|if
 condition|(
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)

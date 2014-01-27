@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<libfdt.h>
 end_include
 

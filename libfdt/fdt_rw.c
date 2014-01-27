@@ -1642,7 +1642,7 @@ decl_stmt|;
 name|uint32_t
 name|tag
 decl_stmt|;
-name|uint32_t
+name|fdt32_t
 modifier|*
 name|endtag
 decl_stmt|;
@@ -1816,7 +1816,7 @@ expr_stmt|;
 name|endtag
 operator|=
 operator|(
-name|uint32_t
+name|fdt32_t
 operator|*
 operator|)
 operator|(
