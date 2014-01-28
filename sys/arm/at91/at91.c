@@ -208,7 +208,7 @@ block|{
 operator|*
 name|bshp
 operator|=
-name|pa
+name|bpa
 operator|-
 name|AT91_PA_BASE
 operator|+
@@ -228,11 +228,18 @@ name|AT91_BASE
 operator|+
 literal|0xff00000
 condition|)
+block|{
+operator|*
+name|bshp
+operator|=
+name|bpa
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|endpa
 operator|=
 name|round_page

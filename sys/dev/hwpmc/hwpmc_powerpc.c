@@ -562,6 +562,7 @@ argument_list|(
 name|pmc_mdep
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|IBM970
 case|:

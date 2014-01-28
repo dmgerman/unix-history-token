@@ -555,15 +555,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E4_INDEX
-value|0x01000000
+name|IN_E4INDEX
+value|0x010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|E4_EXTENTS
-value|0x02000000
+name|IN_E4EXTENTS
+value|0x020000
 end_define
 
 begin_define

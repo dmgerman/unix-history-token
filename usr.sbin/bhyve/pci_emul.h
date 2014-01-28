@@ -746,18 +746,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|pci_is_legacy
-parameter_list|(
-name|struct
-name|pci_devinst
-modifier|*
-name|pi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|pci_generate_msi
 parameter_list|(
@@ -893,9 +881,6 @@ parameter_list|(
 name|char
 modifier|*
 name|opt
-parameter_list|,
-name|int
-name|legacy
 parameter_list|)
 function_decl|;
 end_function_decl

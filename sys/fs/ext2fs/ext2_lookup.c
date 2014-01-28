@@ -3686,10 +3686,10 @@ condition|)
 block|{
 name|dp
 operator|->
-name|i_flags
+name|i_flag
 operator|&=
 operator|~
-name|E4_INDEX
+name|IN_E4INDEX
 expr_stmt|;
 name|dp
 operator|->

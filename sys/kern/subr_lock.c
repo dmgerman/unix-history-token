@@ -221,7 +221,7 @@ comment|/* Check for double-init and zero object. */
 name|KASSERT
 argument_list|(
 operator|!
-name|lock_initalized
+name|lock_initialized
 argument_list|(
 name|lock
 argument_list|)
@@ -334,7 +334,7 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
-name|lock_initalized
+name|lock_initialized
 argument_list|(
 name|lock
 argument_list|)

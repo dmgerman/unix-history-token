@@ -8976,7 +8976,11 @@ name|tm
 operator|.
 name|cpu_flags
 operator|&
+operator|(
 name|CpuSSE3
+operator||
+name|CpuSMAP
+operator|)
 operator|)
 operator|&&
 name|i

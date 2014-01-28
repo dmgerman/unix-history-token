@@ -887,6 +887,17 @@ name|int
 name|c
 parameter_list|)
 block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+condition|)
+name|eputc
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -1538,9 +1549,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|uint32_t
-name|cr
-decl_stmt|;
 name|struct
 name|at91_usart_softc
 modifier|*
@@ -1923,14 +1931,12 @@ index|]
 expr_stmt|;
 block|}
 comment|/* Turn on rx and tx */
-name|cr
-operator|=
-name|USART_CR_RSTSTA
-operator||
-name|USART_CR_RSTRX
-operator||
-name|USART_CR_RSTTX
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
 expr_stmt|;
+comment|/* Give pending character a chance to drain.  */
 name|WR4
 argument_list|(
 operator|&
@@ -1940,7 +1946,11 @@ name|sc_bas
 argument_list|,
 name|USART_CR
 argument_list|,
-name|cr
+name|USART_CR_RSTSTA
+operator||
+name|USART_CR_RSTRX
+operator||
+name|USART_CR_RSTTX
 argument_list|)
 expr_stmt|;
 name|WR4

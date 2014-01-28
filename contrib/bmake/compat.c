@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compat.c,v 1.93 2013/09/02 19:26:42 sjg Exp $	*/
+comment|/*	$NetBSD: compat.c,v 1.94 2014/01/03 00:02:01 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: compat.c,v 1.93 2013/09/02 19:26:42 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.94 2014/01/03 00:02:01 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compat.c,v 1.93 2013/09/02 19:26:42 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.94 2014/01/03 00:02:01 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -239,7 +239,7 @@ for|for
 control|(
 name|cp
 operator|=
-literal|"#=|^(){};&<>*?[]:$`\\\n"
+literal|"~#=|^(){};&<>*?[]:$`\\\n"
 init|;
 operator|*
 name|cp

@@ -235,7 +235,9 @@ begin_function
 specifier|static
 name|void
 name|bi_emac
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * EMAC 	 */
 comment|/* ETX0 */

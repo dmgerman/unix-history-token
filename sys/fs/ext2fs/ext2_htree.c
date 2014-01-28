@@ -524,9 +524,9 @@ argument_list|)
 operator|&&
 name|ip
 operator|->
-name|i_flags
+name|i_flag
 operator|&
-name|E4_INDEX
+name|IN_E4INDEX
 condition|)
 return|return
 operator|(
@@ -3527,9 +3527,9 @@ name|ep
 expr_stmt|;
 name|dp
 operator|->
-name|i_flags
+name|i_flag
 operator||=
-name|E4_INDEX
+name|IN_E4INDEX
 expr_stmt|;
 comment|/* 	 * Initialize index root. 	 */
 name|dotdot

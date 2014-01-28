@@ -417,6 +417,13 @@ parameter_list|)
 value|__asm __volatile("vmsr fpscr, %0" : : "r"(__r))
 end_define
 
+begin_define
+define|#
+directive|define
+name|_FPU_MASK_SHIFT
+value|8
+end_define
+
 begin_function
 name|__fenv_static
 specifier|inline
@@ -814,7 +821,7 @@ comment|/* We currently provide no external definitions of the functions below. 
 end_comment
 
 begin_function
-specifier|static
+name|__fenv_static
 specifier|inline
 name|int
 name|feenableexcept
@@ -838,9 +845,13 @@ operator|=
 name|__old_fpsr
 operator||
 operator|(
+operator|(
 name|__mask
 operator|&
 name|FE_ALL_EXCEPT
+operator|)
+operator|<<
+name|_FPU_MASK_SHIFT
 operator|)
 expr_stmt|;
 name|vmsr_fpscr
@@ -850,7 +861,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|__old_fpsr
+operator|>>
+name|_FPU_MASK_SHIFT
+operator|)
 operator|&
 name|FE_ALL_EXCEPT
 operator|)
@@ -859,7 +874,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|__fenv_static
 specifier|inline
 name|int
 name|fedisableexcept
@@ -884,9 +899,13 @@ name|__old_fpsr
 operator|&
 operator|~
 operator|(
+operator|(
 name|__mask
 operator|&
 name|FE_ALL_EXCEPT
+operator|)
+operator|<<
+name|_FPU_MASK_SHIFT
 operator|)
 expr_stmt|;
 name|vmsr_fpscr
@@ -896,7 +915,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|__old_fpsr
+operator|>>
+name|_FPU_MASK_SHIFT
+operator|)
 operator|&
 name|FE_ALL_EXCEPT
 operator|)
@@ -905,7 +928,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|__fenv_static
 specifier|inline
 name|int
 name|fegetexcept

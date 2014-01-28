@@ -184,7 +184,7 @@ name|enum
 name|checkstatus
 name|status
 decl_stmt|;
-name|int
+name|bool
 name|inprogress
 decl_stmt|;
 name|int
@@ -699,7 +699,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|bool
 name|run_check
 parameter_list|(
 name|struct
@@ -713,10 +713,10 @@ modifier|*
 name|dt
 parameter_list|)
 block|{
-name|int
+name|bool
 name|error
 init|=
-literal|0
+name|false
 decl_stmt|;
 name|int
 name|i
@@ -744,7 +744,7 @@ name|c
 operator|->
 name|inprogress
 operator|=
-literal|1
+name|true
 expr_stmt|;
 for|for
 control|(
@@ -775,7 +775,9 @@ name|i
 index|]
 decl_stmt|;
 name|error
-operator||=
+operator|=
+name|error
+operator|||
 name|run_check
 argument_list|(
 name|prq
@@ -892,7 +894,7 @@ name|c
 operator|->
 name|inprogress
 operator|=
-literal|0
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -912,7 +914,7 @@ operator|)
 condition|)
 name|error
 operator|=
-literal|1
+name|true
 expr_stmt|;
 return|return
 name|error
@@ -1299,6 +1301,7 @@ argument|node
 argument_list|,
 argument|prop
 argument_list|)
+block|{
 for|for
 control|(
 name|prop2
@@ -1315,6 +1318,14 @@ name|prop2
 operator|->
 name|next
 control|)
+block|{
+if|if
+condition|(
+name|prop2
+operator|->
+name|deleted
+condition|)
+continue|continue;
 if|if
 condition|(
 name|streq
@@ -1343,6 +1354,8 @@ operator|->
 name|fullpath
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -4017,7 +4030,7 @@ begin_function
 name|void
 name|process_checks
 parameter_list|(
-name|int
+name|bool
 name|force
 parameter_list|,
 name|struct
