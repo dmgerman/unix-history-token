@@ -4255,6 +4255,16 @@ name|m
 parameter_list|)
 block|{
 name|struct
+name|rtdetq
+modifier|*
+name|rte
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mb0
+decl_stmt|;
+name|struct
 name|mf6c
 modifier|*
 name|rt
@@ -4268,6 +4278,9 @@ name|struct
 name|mbuf
 modifier|*
 name|mm
+decl_stmt|;
+name|u_long
+name|hash
 decl_stmt|;
 name|mifi_t
 name|mifi
@@ -4283,6 +4296,21 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|UPCALL_TIMING
+name|struct
+name|timeval
+name|tp
+decl_stmt|;
+name|GET_TIME
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* UPCALL_TIMING */
 name|MRT6_DLOG
 argument_list|(
 name|DEBUG_FORWARD
@@ -4466,38 +4494,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-else|else
-block|{
-comment|/* 		 * If we don't have a route for packet's origin, 		 * Make a copy of the packet& 		 * send message to routing daemon 		 */
-name|struct
-name|mbuf
-modifier|*
-name|mb0
-decl_stmt|;
-name|struct
-name|rtdetq
-modifier|*
-name|rte
-decl_stmt|;
-name|u_long
-name|hash
-decl_stmt|;
-comment|/*		int i, npkts;*/
-ifdef|#
-directive|ifdef
-name|UPCALL_TIMING
-name|struct
-name|timeval
-name|tp
-decl_stmt|;
-name|GET_TIME
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* UPCALL_TIMING */
+comment|/* 	 * If we don't have a route for packet's origin, 	 * Make a copy of the packet& send message to routing daemon. 	 */
 name|MRT6STAT_INC
 argument_list|(
 name|mrt6s_no_route
@@ -4532,7 +4529,7 @@ name|ip6_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Allocate mbufs early so that we don't do extra work if we 		 * are just going to fail anyway. 		 */
+comment|/* 	 * Allocate mbufs early so that we don't do extra work if we 	 * are just going to fail anyway. 	 */
 name|rte
 operator|=
 operator|(
@@ -4580,7 +4577,7 @@ argument_list|,
 name|M_COPYALL
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Pullup packet header if needed before storing it, 		 * as other references may modify it in the meantime. 		 */
+comment|/* 	 * Pullup packet header if needed before storing it, 	 * as other references may modify it in the meantime. 	 */
 if|if
 condition|(
 name|mb0
@@ -4783,7 +4780,7 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-comment|/* 			 * Make a copy of the header to send to the user 			 * level process 			 */
+comment|/* 		 * Make a copy of the header to send to the user 		 * level process 		 */
 name|mm
 operator|=
 name|m_copy
@@ -4834,7 +4831,7 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-comment|/* 			 * Send message to routing daemon 			 */
+comment|/* 		 * Send message to routing daemon 		 */
 name|sin6
 operator|.
 name|sin6_addr
@@ -5307,7 +5304,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_function
 

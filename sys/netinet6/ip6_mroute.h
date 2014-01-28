@@ -494,24 +494,6 @@ name|u_char
 name|im6_msgtype
 decl_stmt|;
 comment|/* what type of message	    */
-if|#
-directive|if
-literal|0
-define|#
-directive|define
-name|MRT6MSG_NOCACHE
-value|1
-define|#
-directive|define
-name|MRT6MSG_WRONGMIF
-value|2
-define|#
-directive|define
-name|MRT6MSG_WHOLEPKT
-value|3
-comment|/* used for user level encap*/
-endif|#
-directive|endif
 name|u_char
 name|im6_mbz
 decl_stmt|;
