@@ -121,25 +121,6 @@ name|int
 name|err
 decl_stmt|;
 comment|/* last protocol reply code */
-struct|struct
-block|{
-comment|/* data cached after an interrupted 					   read */
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
-name|size_t
-name|pos
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
-block|}
-name|cache
-struct|;
 ifdef|#
 directive|ifdef
 name|WITH_SSL
