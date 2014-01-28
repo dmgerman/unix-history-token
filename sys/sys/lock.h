@@ -704,7 +704,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|lock_initalized
+name|lock_initialized
 parameter_list|(
 name|lo
 parameter_list|)

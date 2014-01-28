@@ -1008,7 +1008,7 @@ name|rw_initialized
 parameter_list|(
 name|rw
 parameter_list|)
-value|lock_initalized(&(rw)->lock_object)
+value|lock_initialized(&(rw)->lock_object)
 end_define
 
 begin_struct
