@@ -1639,7 +1639,6 @@ operator|->
 name|i_birthnsec
 expr_stmt|;
 block|}
-comment|/* E4_* flags are private to the filesystem. */
 name|vap
 operator|->
 name|va_flags
@@ -1647,13 +1646,6 @@ operator|=
 name|ip
 operator|->
 name|i_flags
-operator|&
-operator|~
-operator|(
-name|E4_INDEX
-operator||
-name|E4_EXTENTS
-operator|)
 expr_stmt|;
 name|vap
 operator|->
@@ -7380,9 +7372,9 @@ if|if
 condition|(
 name|ip
 operator|->
-name|i_flags
+name|i_flag
 operator|&
-name|E4_EXTENTS
+name|IN_E4EXTENTS
 condition|)
 name|error
 operator|=
