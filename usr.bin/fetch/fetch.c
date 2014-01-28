@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|MINBUFSIZE
-value|4096
+value|16384
 end_define
 
 begin_define
@@ -3901,6 +3901,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* suck in the data */
+name|setvbuf
+argument_list|(
+name|f
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOFBF
+argument_list|,
+name|B_size
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINFO
