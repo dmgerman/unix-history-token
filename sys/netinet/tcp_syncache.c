@@ -3146,7 +3146,7 @@ name|sonewconn
 argument_list|(
 name|lso
 argument_list|,
-name|SS_ISCONNECTED
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4358,6 +4358,11 @@ expr_stmt|;
 name|INP_WUNLOCK
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|soisconnected
+argument_list|(
+name|so
 argument_list|)
 expr_stmt|;
 name|TCPSTAT_INC
