@@ -6191,6 +6191,13 @@ operator|.
 name|cpu_resume
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|vmm_resume_p
+condition|)
+name|vmm_resume_p
+argument_list|()
+expr_stmt|;
 comment|/* Resume MCA and local APIC */
 name|mca_resume
 argument_list|()

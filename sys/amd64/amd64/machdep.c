@@ -967,6 +967,18 @@ begin_comment
 comment|/* lock for GDT and LDT */
 end_comment
 
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|vmm_resume_p
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
