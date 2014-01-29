@@ -363,6 +363,9 @@ name|struct
 name|virtio_softc
 name|vbsc_vs
 decl_stmt|;
+name|pthread_mutex_t
+name|vsc_mtx
+decl_stmt|;
 name|struct
 name|vqueue_info
 name|vbsc_vq
@@ -1199,6 +1202,16 @@ name|vbsc_fd
 operator|=
 name|fd
 expr_stmt|;
+name|pthread_mutex_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|vsc_mtx
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* init virtio softc and virtqueues */
 name|vi_softc_linkup
 argument_list|(
@@ -1219,6 +1232,17 @@ name|sc
 operator|->
 name|vbsc_vq
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|vbsc_vs
+operator|.
+name|vs_mtx
+operator|=
+operator|&
+name|sc
+operator|->
+name|vsc_mtx
 expr_stmt|;
 name|sc
 operator|->
@@ -1401,6 +1425,11 @@ argument_list|,
 name|PCIR_SUBDEV_0
 argument_list|,
 name|VIRTIO_TYPE_BLOCK
+argument_list|)
+expr_stmt|;
+name|pci_lintr_request
+argument_list|(
+name|pi
 argument_list|)
 expr_stmt|;
 if|if
