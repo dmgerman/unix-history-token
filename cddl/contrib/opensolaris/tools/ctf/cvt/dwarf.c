@@ -3794,8 +3794,6 @@ block|{
 name|Dwarf_Unsigned
 name|sz
 decl_stmt|,
-name|bysz
-decl_stmt|,
 name|bitsz
 decl_stmt|,
 name|bitoff
@@ -3804,6 +3802,16 @@ name|maxsz
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|_LITTLE_ENDIAN
+name|Dwarf_Unsigned
+name|bysz
+decl_stmt|;
+endif|#
+directive|endif
 name|Dwarf_Die
 name|mem
 decl_stmt|;
