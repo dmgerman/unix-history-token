@@ -392,7 +392,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform a board-level soft-reset.  *  * XXXRW: BERI doesn't yet have a board-level soft-reset.  */
+comment|/*  * Perform a board-level soft-reset.  */
 end_comment
 
 begin_function
@@ -402,13 +402,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|panic
+comment|/* XXX SMP will likely require us to do more. */
+asm|__asm__
+specifier|__volatile__
+asm|( 		"mfc0 $k0, $12\n\t" 		"li $k1, 0x00100000\n\t" 		"or $k0, $k0, $k1\n\t" 		"mtc0 $k0, $12\n");
+for|for
+control|(
+init|;
+condition|;
+control|)
+name|__asm__
+name|__volatile
 argument_list|(
-literal|"%s: not yet"
-argument_list|,
-name|__func__
+literal|"wait"
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 block|}
 end_function
 
