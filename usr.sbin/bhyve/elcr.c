@@ -29,6 +29,12 @@ directive|include
 file|"inout.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pci_lpc.h"
+end_include
+
 begin_comment
 comment|/*  * EISA interrupt Level Control Register.  *  * This is a 16-bit register with one bit for each of the IRQ0 through IRQ15.  * A level triggered irq is indicated by setting the corresponding bit to '1'.  */
 end_comment
@@ -165,6 +171,16 @@ argument_list|,
 name|IOPORT_F_INOUT
 argument_list|,
 name|elcr_handler
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSRES_IO
+argument_list|(
+name|ELCR_PORT
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 end_expr_stmt

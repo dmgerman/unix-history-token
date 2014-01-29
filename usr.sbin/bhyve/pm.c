@@ -71,6 +71,12 @@ directive|include
 file|"mevent.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pci_lpc.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|pthread_mutex_t
@@ -942,6 +948,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSRES_IO
+argument_list|(
+name|PM1A_EVT_ADDR
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * ACPI SMI Command Register  *  * This write-only register is used to enable and disable ACPI.  */
 end_comment
@@ -1103,6 +1119,16 @@ argument_list|,
 name|IOPORT_F_OUT
 argument_list|,
 name|smi_cmd_handler
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSRES_IO
+argument_list|(
+name|SMI_CMD
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

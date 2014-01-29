@@ -35,6 +35,12 @@ directive|include
 file|"inout.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pci_lpc.h"
+end_include
+
 begin_function
 specifier|static
 name|int
@@ -109,6 +115,16 @@ argument_list|,
 name|IOPORT_F_IN
 argument_list|,
 name|post_data_handler
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSRES_IO
+argument_list|(
+literal|0x84
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

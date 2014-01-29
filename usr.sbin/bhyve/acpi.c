@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pci_emul.h"
 end_include
 
 begin_comment
@@ -232,6 +244,32 @@ name|basl_stemplate
 index|[
 name|MAXPATHLEN
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * State for dsdt_line(), dsdt_indent(), and dsdt_unindent().  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|FILE
+modifier|*
+name|dsdt_fp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dsdt_indent_level
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dsdt_error
 decl_stmt|;
 end_decl_stmt
 
@@ -2720,6 +2758,267 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Helper routines for writing to the DSDT from other modules.  */
+end_comment
+
+begin_function
+name|void
+name|dsdt_line
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+if|if
+condition|(
+name|dsdt_error
+operator|!=
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fmt
+argument_list|,
+literal|""
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|dsdt_indent_level
+operator|!=
+literal|0
+condition|)
+name|EFPRINTF
+argument_list|(
+name|dsdt_fp
+argument_list|,
+literal|"%*c"
+argument_list|,
+name|dsdt_indent_level
+operator|*
+literal|2
+argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vfprintf
+argument_list|(
+name|dsdt_fp
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|err_exit
+goto|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+name|EFPRINTF
+argument_list|(
+name|dsdt_fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+return|return;
+name|err_exit
+label|:
+name|dsdt_error
+operator|=
+name|errno
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dsdt_indent
+parameter_list|(
+name|int
+name|levels
+parameter_list|)
+block|{
+name|dsdt_indent_level
+operator|+=
+name|levels
+expr_stmt|;
+name|assert
+argument_list|(
+name|dsdt_indent_level
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dsdt_unindent
+parameter_list|(
+name|int
+name|levels
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|dsdt_indent_level
+operator|>=
+name|levels
+argument_list|)
+expr_stmt|;
+name|dsdt_indent_level
+operator|-=
+name|levels
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dsdt_fixed_ioport
+parameter_list|(
+name|uint16_t
+name|iobase
+parameter_list|,
+name|uint16_t
+name|length
+parameter_list|)
+block|{
+name|dsdt_line
+argument_list|(
+literal|"IO (Decode16,"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  0x%04X,             // Range Minimum"
+argument_list|,
+name|iobase
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  0x%04X,             // Range Maximum"
+argument_list|,
+name|iobase
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  0x01,               // Alignment"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  0x%02X,               // Length"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  )"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dsdt_fixed_irq
+parameter_list|(
+name|uint8_t
+name|irq
+parameter_list|)
+block|{
+name|dsdt_line
+argument_list|(
+literal|"IRQNoFlags ()"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  {%d}"
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dsdt_fixed_mem32
+parameter_list|(
+name|uint32_t
+name|base
+parameter_list|,
+name|uint32_t
+name|length
+parameter_list|)
+block|{
+name|dsdt_line
+argument_list|(
+literal|"Memory32Fixed (ReadWrite,"
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  0x%08X,         // Address Base"
+argument_list|,
+name|base
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  0x%08X,         // Address Length"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"  )"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|int
@@ -2737,704 +3036,165 @@ name|err
 operator|=
 literal|0
 expr_stmt|;
-name|EFPRINTF
-argument_list|(
+name|dsdt_fp
+operator|=
 name|fp
-argument_list|,
-literal|"/*\n"
+expr_stmt|;
+name|dsdt_error
+operator|=
+literal|0
+expr_stmt|;
+name|dsdt_indent_level
+operator|=
+literal|0
+expr_stmt|;
+name|dsdt_line
+argument_list|(
+literal|"/*"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|" * bhyve DSDT template\n"
+literal|" * bhyve DSDT template"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|" */\n"
+literal|" */"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
 literal|"DefinitionBlock (\"bhyve_dsdt.aml\", \"DSDT\", 2,"
-literal|"\"BHYVE \", \"BVDSDT  \", 0x00000001)\n"
+literal|"\"BHYVE \", \"BVDSDT  \", 0x00000001)"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"{\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  Name (_S5, Package (0x02)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  {\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      0x05,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      Zero,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  })\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  Scope (_SB)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  {\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"    Device (PCI0)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"    {\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      Name (_HID, EisaId (\"PNP0A03\"))\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      Name (_ADR, Zero)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      Name (_UID, One)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      Name (_CRS, ResourceTemplate ()\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      {\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"        WordBusNumber (ResourceProducer, MinFixed,"
-literal|"MaxFixed, PosDecode,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0000,             // Granularity\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0000,             // Range Minimum\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x00FF,             // Range Maximum\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0000,             // Transl Offset\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0100,             // Length\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            ,, )\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"         IO (Decode16,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0CF8,             // Range Minimum\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0CF8,             // Range Maximum\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x01,               // Alignment\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x08,               // Length\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            )\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"         WordIO (ResourceProducer, MinFixed, MaxFixed,"
-literal|"PosDecode, EntireRange,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0000,             // Granularity\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0000,             // Range Minimum\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0CF7,             // Range Maximum\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0000,             // Transl Offset\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0CF8,             // Length\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            ,, , TypeStatic)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"         WordIO (ResourceProducer, MinFixed, MaxFixed,"
-literal|"PosDecode, EntireRange,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0000,             // Granularity\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0D00,             // Range Minimum\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0xFFFF,             // Range Maximum\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0000,             // Transl Offset\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0xF300,             // Length\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"             ,, , TypeStatic)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"          })\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"     }\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  }\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  Scope (_SB.PCI0)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  {\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"    Device (ISA)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"    {\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      Name (_ADR, 0x00010000)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      OperationRegion (P40C, PCI_Config, 0x60, 0x04)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"    }\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"    Device (HPET)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"    {\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      Name (_HID, EISAID(\"PNP0103\"))\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      Name (_UID, 0)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      Name (_CRS, ResourceTemplate ()\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      {\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"        DWordMemory (ResourceConsumer, PosDecode, "
-literal|"MinFixed, MaxFixed, NonCacheable, ReadWrite,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x00000000,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0xFED00000,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0xFED003FF,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x00000000,\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x00000400\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            )\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      })\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"    }\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  }\n"
+literal|"{"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  Scope (_SB.PCI0.ISA)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"  {\n"
+literal|"  Name (_S5, Package (0x02)"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"    Device (RTC)\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"    {\n"
+literal|"  {"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"      Name (_HID, EisaId (\"PNP0B00\"))\n"
-argument_list|)
-expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"      Name (_CRS, ResourceTemplate ()\n"
+literal|"      0x05,"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"      {\n"
+literal|"      Zero,"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"        IO (Decode16,\n"
+literal|"  })"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
-argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0070,             // Range Minimum\n"
-argument_list|)
+name|pci_write_dsdt
+argument_list|()
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0070,             // Range Maximum\n"
+literal|""
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"            0x10,               // Alignment\n"
+literal|"  Scope (_SB.PCI0)"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"            0x02,               // Length\n"
+literal|"  {"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"            )\n"
+literal|"    Device (HPET)"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"        IRQNoFlags ()\n"
+literal|"    {"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"            {8}\n"
+literal|"      Name (_HID, EISAID(\"PNP0103\"))"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"        IO (Decode16,\n"
+literal|"      Name (_UID, 0)"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0072,             // Range Minimum\n"
+literal|"      Name (_CRS, ResourceTemplate ()"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"            0x0072,             // Range Maximum\n"
+literal|"      {"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_indent
 argument_list|(
-name|fp
-argument_list|,
-literal|"            0x02,               // Alignment\n"
+literal|4
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_fixed_mem32
 argument_list|(
-name|fp
+literal|0xFED00000
 argument_list|,
-literal|"            0x06,               // Length\n"
+literal|0x400
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_unindent
 argument_list|(
-name|fp
-argument_list|,
-literal|"            )\n"
+literal|4
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"      })\n"
+literal|"      })"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"    }\n"
+literal|"    }"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"  }\n"
+literal|"  }"
 argument_list|)
 expr_stmt|;
-name|EFPRINTF
+name|dsdt_line
 argument_list|(
-name|fp
-argument_list|,
-literal|"}\n"
+literal|"}"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dsdt_error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|dsdt_error
+operator|)
+return|;
 name|EFFLUSH
 argument_list|(
 name|fp
