@@ -728,6 +728,7 @@ decl_stmt|;
 name|uint32_t
 name|unmap_max_lba
 decl_stmt|;
+comment|/* Max LBAs in UNMAP req */
 name|uint64_t
 name|ws_max_blks
 decl_stmt|;
@@ -3929,7 +3930,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"unable to retrieve capacity data"
+literal|"unable to retrieve capacity data\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6698,10 +6699,6 @@ operator|)
 name|softc
 operator|->
 name|unmap_max_lba
-operator|*
-name|softc
-operator|->
-name|unmap_max_ranges
 expr_stmt|;
 break|break;
 case|case
@@ -9896,13 +9893,11 @@ condition|)
 block|{
 name|c
 operator|=
-name|min
+name|omin
 argument_list|(
 name|count
 argument_list|,
-name|softc
-operator|->
-name|unmap_max_lba
+name|UNMAP_RANGE_MAX
 operator|-
 name|lastcount
 argument_list|)
@@ -9960,13 +9955,11 @@ condition|)
 block|{
 name|c
 operator|=
-name|min
+name|omin
 argument_list|(
 name|count
 argument_list|,
-name|softc
-operator|->
-name|unmap_max_lba
+name|UNMAP_RANGE_MAX
 argument_list|)
 expr_stmt|;
 if|if
@@ -10599,7 +10592,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"%s issuing short delete %ld> %ld"
+literal|"%s issuing short delete %ld> %ld\n"
 argument_list|,
 name|da_delete_method_desc
 index|[
@@ -10737,7 +10730,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We calculate ws_max_blks here based off d_delmaxsize instead  * of using softc->ws_max_blks as it is absolute max for the  * device not the protocol max which may well be lower  */
+comment|/*  * We calculate ws_max_blks here based off d_delmaxsize instead  * of using softc->ws_max_blks as it is absolute max for the  * device not the protocol max which may well be lower.  */
 end_comment
 
 begin_function
@@ -10873,22 +10866,13 @@ operator|>
 name|ws_max_blks
 condition|)
 block|{
-name|count
-operator|=
-name|min
-argument_list|(
-name|count
-argument_list|,
-name|ws_max_blks
-argument_list|)
-expr_stmt|;
 name|xpt_print
 argument_list|(
 name|periph
 operator|->
 name|path
 argument_list|,
-literal|"%s issuing short delete %ld> %ld"
+literal|"%s issuing short delete %ld> %ld\n"
 argument_list|,
 name|da_delete_method_desc
 index|[
@@ -10897,6 +10881,15 @@ operator|->
 name|delete_method
 index|]
 argument_list|,
+name|count
+argument_list|,
+name|ws_max_blks
+argument_list|)
+expr_stmt|;
+name|count
+operator|=
+name|min
+argument_list|(
 name|count
 argument_list|,
 name|ws_max_blks
