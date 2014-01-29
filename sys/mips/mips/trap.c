@@ -7174,6 +7174,9 @@ name|trap_type
 condition|)
 block|{
 case|case
+name|T_TLB_MOD
+case|:
+case|case
 name|T_TLB_ST_MISS
 case|:
 case|case
