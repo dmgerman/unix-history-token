@@ -446,6 +446,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* L1 instruction cache. */
+ifdef|#
+directive|ifdef
+name|MIPS_DISABLE_L1_CACHE
+name|cpuinfo
+operator|->
+name|l1
+operator|.
+name|ic_linesize
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 name|tmp
 operator|=
 operator|(
@@ -520,7 +533,22 @@ literal|6
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* L1 data cache. */
+ifdef|#
+directive|ifdef
+name|MIPS_DISABLE_L1_CACHE
+name|cpuinfo
+operator|->
+name|l1
+operator|.
+name|dc_linesize
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 ifndef|#
 directive|ifndef
 name|CPU_CNMIPS
@@ -716,6 +744,8 @@ name|dc_linesize
 operator|=
 literal|128
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|cpuinfo
