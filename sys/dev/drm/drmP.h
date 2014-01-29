@@ -1197,8 +1197,26 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700000
+literal|1000000
 end_if
+
+begin_define
+define|#
+directive|define
+name|DRM_SUSER
+parameter_list|(
+name|p
+parameter_list|)
+value|(priv_check(p, PRIV_KMEM_WRITE) == 0)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|>=
+literal|700000
+end_elif
 
 begin_define
 define|#
