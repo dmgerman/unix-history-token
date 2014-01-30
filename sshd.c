@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.404 2013/07/19 07:37:48 markus Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.414 2014/01/09 23:26:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1193,6 +1193,9 @@ argument_list|(
 literal|"Received SIGHUP; restarting."
 argument_list|)
 expr_stmt|;
+name|platform_pre_restart
+argument_list|()
+expr_stmt|;
 name|close_listen_socks
 argument_list|()
 expr_stmt|;
@@ -1401,7 +1404,7 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|killpg
+name|kill
 argument_list|(
 literal|0
 argument_list|,
@@ -1491,9 +1494,6 @@ name|ssh1_cookie
 argument_list|,
 name|SSH_SESSION_KEY_LENGTH
 argument_list|)
-expr_stmt|;
-name|arc4random_stir
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1900,6 +1900,20 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|logit
+argument_list|(
+literal|"Bad protocol version identification '%.100s' "
+literal|"from %s port %d"
+argument_list|,
+name|client_version_string
+argument_list|,
+name|get_remote_ipaddr
+argument_list|()
+argument_list|,
+name|get_remote_port
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|sock_in
@@ -1908,16 +1922,6 @@ expr_stmt|;
 name|close
 argument_list|(
 name|sock_out
-argument_list|)
-expr_stmt|;
-name|logit
-argument_list|(
-literal|"Bad protocol version identification '%.100s' from %s"
-argument_list|,
-name|client_version_string
-argument_list|,
-name|get_remote_ipaddr
-argument_list|()
 argument_list|)
 expr_stmt|;
 name|cleanup_exit
@@ -1944,9 +1948,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|datafellows
 operator|&
 name|SSH_BUG_PROBE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|logit
@@ -1967,9 +1975,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|datafellows
 operator|&
 name|SSH_BUG_SCANNER
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|logit
@@ -1985,6 +1997,46 @@ expr_stmt|;
 name|cleanup_exit
 argument_list|(
 literal|255
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|datafellows
+operator|&
+name|SSH_BUG_RSASIGMD5
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|logit
+argument_list|(
+literal|"Client version \"%.100s\" uses unsafe RSA signature "
+literal|"scheme; disabling use of RSA keys"
+argument_list|,
+name|remote_version
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|datafellows
+operator|&
+name|SSH_BUG_DERIVEKEY
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"Client version \"%.100s\" uses unsafe key agreement; "
+literal|"refusing connection"
+argument_list|,
+name|remote_version
 argument_list|)
 expr_stmt|;
 block|}
@@ -2470,6 +2522,16 @@ name|rnd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|rnd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rnd
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Demote the private keys to public keys. */
 name|demote_sensitive_data
 argument_list|()
@@ -2630,7 +2692,9 @@ condition|)
 name|box
 operator|=
 name|ssh_sandbox_init
-argument_list|()
+argument_list|(
+name|pmonitor
+argument_list|)
 expr_stmt|;
 name|pid
 operator|=
@@ -3056,6 +3120,16 @@ name|rnd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|rnd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rnd
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Drop privileges */
 name|do_setusercontext
 argument_list|(
@@ -3173,6 +3247,9 @@ case|:
 case|case
 name|KEY_ECDSA
 case|:
+case|case
+name|KEY_ED25519
+case|:
 if|if
 condition|(
 name|buffer_len
@@ -3253,6 +3330,9 @@ name|KEY_DSA_CERT
 case|:
 case|case
 name|KEY_ECDSA_CERT
+case|:
+case|case
+name|KEY_ED25519_CERT
 case|:
 if|if
 condition|(
@@ -3389,6 +3469,9 @@ name|KEY_DSA_CERT
 case|:
 case|case
 name|KEY_ECDSA_CERT
+case|:
+case|case
+name|KEY_ED25519_CERT
 case|:
 name|key
 operator|=
@@ -4845,6 +4928,12 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+name|u_char
+name|rnd
+index|[
+literal|256
+index|]
+decl_stmt|;
 comment|/* setup fd set for accept */
 name|fdset
 operator|=
@@ -5744,6 +5833,36 @@ expr_stmt|;
 comment|/* 			 * Ensure that our random state differs 			 * from that of the child 			 */
 name|arc4random_stir
 argument_list|()
+expr_stmt|;
+name|arc4random_buf
+argument_list|(
+name|rnd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rnd
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RAND_seed
+argument_list|(
+name|rnd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rnd
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|rnd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rnd
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* child process check (or debug mode) */
@@ -7336,6 +7455,9 @@ case|:
 case|case
 name|KEY_ECDSA
 case|:
+case|case
+name|KEY_ED25519
+case|:
 name|sensitive_data
 operator|.
 name|have_ssh2_key
@@ -8170,10 +8292,6 @@ argument_list|,
 name|log_stderr
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the random number generator. */
-name|arc4random_stir
-argument_list|()
-expr_stmt|;
 comment|/* Chdir to the root directory so that the current disk can be 	   unmounted if desired. */
 if|if
 condition|(
@@ -8440,7 +8558,14 @@ argument_list|(
 name|REEXEC_STARTUP_PIPE_FD
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|startup_pipe
+operator|!=
+name|REEXEC_STARTUP_PIPE_FD
+condition|)
+block|{
 name|dup2
 argument_list|(
 name|startup_pipe
@@ -8448,6 +8573,16 @@ argument_list|,
 name|REEXEC_STARTUP_PIPE_FD
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|startup_pipe
+argument_list|)
+expr_stmt|;
+name|startup_pipe
+operator|=
+name|REEXEC_STARTUP_PIPE_FD
+expr_stmt|;
+block|}
 name|dup2
 argument_list|(
 name|config_s
@@ -8464,18 +8599,6 @@ name|config_s
 index|[
 literal|1
 index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|startup_pipe
-operator|!=
-operator|-
-literal|1
-condition|)
-name|close
-argument_list|(
-name|startup_pipe
 argument_list|)
 expr_stmt|;
 name|execv
@@ -8527,18 +8650,6 @@ name|log_stderr
 argument_list|)
 expr_stmt|;
 comment|/* Clean up fds */
-name|startup_pipe
-operator|=
-name|REEXEC_STARTUP_PIPE_FD
-expr_stmt|;
-name|close
-argument_list|(
-name|config_s
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 name|REEXEC_CONFIG_PASS_FD
@@ -8873,11 +8984,19 @@ comment|/* LIBWRAP */
 comment|/* Log the connection. */
 name|verbose
 argument_list|(
-literal|"Connection from %.500s port %d"
+literal|"Connection from %s port %d on %s port %d"
 argument_list|,
 name|remote_ip
 argument_list|,
 name|remote_port
+argument_list|,
+name|get_local_ipaddr
+argument_list|(
+name|sock_in
+argument_list|)
+argument_list|,
+name|get_local_port
+argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We don't want to listen forever unless the other side 	 * successfully authenticates itself.  So we set up an alarm which is 	 * cleared after successful authentication.  A limit of zero 	 * indicates no limit. Note that we don't set the alarm in debugging 	 * mode; it is just annoying to have the server exit just when you 	 * are about to discover the bug. 	 */
@@ -10577,8 +10696,11 @@ index|[
 name|PROPOSAL_SERVER_HOST_KEY_ALGS
 index|]
 operator|=
+name|compat_pkalg_proposal
+argument_list|(
 name|list_hostkey_types
 argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* start key exchange */
 name|kex
@@ -10632,6 +10754,15 @@ name|KEX_ECDH_SHA2
 index|]
 operator|=
 name|kexecdh_server
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_C25519_SHA256
+index|]
+operator|=
+name|kexc25519_server
 expr_stmt|;
 name|kex
 operator|->

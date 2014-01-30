@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: xmalloc.c,v 1.28 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: xmalloc.c,v 1.29 2014/01/04 17:50:55 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -94,11 +94,8 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"xmalloc: out of memory (allocating %lu bytes)"
+literal|"xmalloc: out of memory (allocating %zu bytes)"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -169,16 +166,11 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"xcalloc: out of memory (allocating %lu bytes)"
+literal|"xcalloc: out of memory (allocating %zu bytes)"
 argument_list|,
-call|(
-name|u_long
-call|)
-argument_list|(
 name|size
 operator|*
 name|nmemb
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -269,11 +261,8 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"xrealloc: out of memory (new_size %lu bytes)"
+literal|"xrealloc: out of memory (new_size %zu bytes)"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|new_size
 argument_list|)
 expr_stmt|;

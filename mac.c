@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mac.c,v 1.24 2013/06/03 00:03:18 dtucker Exp $ */
+comment|/* $OpenBSD: mac.c,v 1.26 2014/01/04 17:50:55 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -519,7 +519,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Returns a comma-separated list of supported MACs. */
+comment|/* Returns a list of supported MACs separated by the specified char. */
 end_comment
 
 begin_function
@@ -527,7 +527,8 @@ name|char
 modifier|*
 name|mac_alg_list
 parameter_list|(
-name|void
+name|char
+name|sep
 parameter_list|)
 block|{
 name|char
@@ -577,7 +578,7 @@ name|rlen
 operator|++
 index|]
 operator|=
-literal|'\n'
+name|sep
 expr_stmt|;
 name|nlen
 operator|=
@@ -1040,15 +1041,12 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"mac_compute: mac too long %u %lu"
+literal|"mac_compute: mac too long %u %zu"
 argument_list|,
 name|mac
 operator|->
 name|mac_len
 argument_list|,
-operator|(
-name|u_long
-operator|)
 sizeof|sizeof
 argument_list|(
 name|u

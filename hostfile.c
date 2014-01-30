@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: hostfile.c,v 1.52 2013/07/12 00:19:58 djm Exp $ */
+comment|/* $OpenBSD: hostfile.c,v 1.53 2014/01/09 23:20:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"digest.h"
 end_include
 
 begin_struct

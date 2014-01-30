@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dh.h,v 1.10 2008/06/26 09:19:40 djm Exp $ */
+comment|/* $OpenBSD: dh.h,v 1.11 2013/10/08 11:42:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -135,6 +135,10 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Min and max values from RFC4419. */
+end_comment
 
 begin_define
 define|#

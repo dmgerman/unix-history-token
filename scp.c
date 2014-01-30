@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.178 2013/06/22 06:31:57 djm Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.179 2013/11/20 20:53:10 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -5665,6 +5665,10 @@ literal|0
 init|;
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -7102,6 +7106,10 @@ operator|&&
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)

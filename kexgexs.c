@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexgexs.c,v 1.16 2013/07/19 07:37:48 markus Exp $ */
+comment|/* $OpenBSD: kexgexs.c,v 1.18 2014/01/12 08:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -744,7 +744,7 @@ name|kexgex_hash
 argument_list|(
 name|kex
 operator|->
-name|evp_md
+name|hash_alg
 argument_list|,
 name|kex
 operator|->
@@ -938,7 +938,7 @@ argument_list|(
 name|dh
 argument_list|)
 expr_stmt|;
-name|kex_derive_keys
+name|kex_derive_keys_bn
 argument_list|(
 name|kex
 argument_list|,

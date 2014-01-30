@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.255 2013/11/08 00:39:15 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.256 2013/11/20 20:54:10 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -1032,6 +1032,9 @@ condition|(
 operator|!
 name|isalnum
 argument_list|(
+operator|(
+name|u_char
+operator|)
 name|display
 index|[
 name|i
@@ -3570,6 +3573,9 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|u_char
+operator|)
 operator|*
 name|s
 argument_list|)
@@ -3784,6 +3790,9 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|u_char
+operator|)
 operator|*
 operator|++
 name|s
@@ -4896,7 +4905,9 @@ argument_list|)
 expr_stmt|;
 name|channel_request_start
 argument_list|(
-name|session_ident
+name|c
+operator|->
+name|self
 argument_list|,
 literal|"break"
 argument_list|,
