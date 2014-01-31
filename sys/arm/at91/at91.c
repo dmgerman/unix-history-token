@@ -263,6 +263,12 @@ name|endpa
 operator|-
 name|pa
 argument_list|)
+operator|+
+operator|(
+name|bpa
+operator|-
+name|pa
+operator|)
 expr_stmt|;
 return|return
 operator|(
