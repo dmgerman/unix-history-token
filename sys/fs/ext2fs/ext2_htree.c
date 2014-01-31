@@ -511,9 +511,6 @@ modifier|*
 name|ip
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|EXT2FS_HTREE
 if|if
 condition|(
 name|EXT2_HAS_COMPAT_FEATURE
@@ -527,9 +524,9 @@ argument_list|)
 operator|&&
 name|ip
 operator|->
-name|i_flags
+name|i_flag
 operator|&
-name|EXT4_INDEX
+name|IN_E4INDEX
 condition|)
 return|return
 operator|(
@@ -537,8 +534,6 @@ literal|1
 operator|)
 return|;
 else|else
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -3532,9 +3527,9 @@ name|ep
 expr_stmt|;
 name|dp
 operator|->
-name|i_flags
+name|i_flag
 operator||=
-name|EXT4_INDEX
+name|IN_E4INDEX
 expr_stmt|;
 comment|/* 	 * Initialize index root. 	 */
 name|dotdot
