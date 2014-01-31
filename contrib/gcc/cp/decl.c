@@ -40769,6 +40769,13 @@ name|integer_type_node
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin warn missing prototype 6261539 */
+name|check_missing_prototype
+argument_list|(
+name|decl1
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end warn missing prototype 6261539 */
 name|start_preparsed_function
 argument_list|(
 name|decl1
