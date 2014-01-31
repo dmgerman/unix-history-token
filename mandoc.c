@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.c,v 1.73 2013/12/26 02:55:28 schwarze Exp $ */
+comment|/*	$Id: mandoc.c,v 1.74 2013/12/30 18:30:32 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -134,14 +134,12 @@ name|mandoc_escape
 parameter_list|(
 specifier|const
 name|char
-specifier|const
 modifier|*
 modifier|*
 name|end
 parameter_list|,
 specifier|const
 name|char
-specifier|const
 modifier|*
 modifier|*
 name|start

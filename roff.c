@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: roff.c,v 1.188 2013/12/25 00:50:05 schwarze Exp $ */
+comment|/*	$Id: roff.c,v 1.189 2013/12/30 18:44:06 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -3610,7 +3610,6 @@ argument_list|(
 operator|(
 specifier|const
 name|char
-specifier|const
 operator|*
 operator|*
 operator|)
