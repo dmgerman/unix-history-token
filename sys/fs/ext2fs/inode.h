@@ -548,6 +548,24 @@ begin_comment
 comment|/* Process IN_ACCESS after the 					    suspension finished */
 end_comment
 
+begin_comment
+comment|/*  * These are translation flags for some attributes that Ext4  * passes as inode flags but that we cannot pass directly.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_E4INDEX
+value|0x010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_E4EXTENTS
+value|0x020000
+end_define
+
 begin_define
 define|#
 directive|define

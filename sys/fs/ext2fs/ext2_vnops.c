@@ -7372,9 +7372,9 @@ if|if
 condition|(
 name|ip
 operator|->
-name|i_flags
+name|i_flag
 operator|&
-name|EXT4_EXTENTS
+name|IN_E4EXTENTS
 condition|)
 name|error
 operator|=
