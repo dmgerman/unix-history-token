@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: demandoc.c,v 1.6 2011/09/01 22:25:53 kristaps Exp $ */
+comment|/*	$Id: demandoc.c,v 1.7 2012/05/31 22:27:14 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -353,6 +353,8 @@ argument_list|(
 name|MPARSE_AUTO
 argument_list|,
 name|MANDOCLEVEL_FATAL
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $Id: mandocdb.h,v 1.6 2012/03/23 02:52:33 kristaps Exp $ */
+comment|/*      $Id: mandocdb.h,v 1.6.2.1 2013/09/18 00:54:20 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -23,14 +23,14 @@ begin_define
 define|#
 directive|define
 name|MANDOC_DB
-value|"mandocdb.db"
+value|"mandoc.db"
 end_define
 
 begin_define
 define|#
 directive|define
 name|MANDOC_IDX
-value|"mandocdb.index"
+value|"mandoc.index"
 end_define
 
 begin_define

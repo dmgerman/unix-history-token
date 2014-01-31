@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc.c,v 1.196 2011/09/30 00:13:28 schwarze Exp $ */
+comment|/*	$Id: mdoc.c,v 1.206 2013/12/24 19:11:46 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -599,7 +599,7 @@ specifier|const
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|)
 block|{
 name|assert
@@ -608,7 +608,7 @@ operator|!
 operator|(
 name|MDOC_HALT
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|)
@@ -616,7 +616,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|m
+name|mdoc
 operator|->
 name|first
 operator|)
@@ -635,7 +635,7 @@ specifier|const
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|)
 block|{
 name|assert
@@ -644,7 +644,7 @@ operator|!
 operator|(
 name|MDOC_HALT
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|)
@@ -653,7 +653,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|)
@@ -981,6 +981,10 @@ name|struct
 name|mparse
 modifier|*
 name|parse
+parameter_list|,
+name|char
+modifier|*
+name|defos
 parameter_list|)
 block|{
 name|struct
@@ -1006,6 +1010,12 @@ operator|->
 name|parse
 operator|=
 name|parse
+expr_stmt|;
+name|p
+operator|->
+name|defos
+operator|=
+name|defos
 expr_stmt|;
 name|p
 operator|->
@@ -1040,7 +1050,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|)
 block|{
 name|assert
@@ -1049,7 +1059,7 @@ operator|!
 operator|(
 name|MDOC_HALT
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|)
@@ -1059,7 +1069,7 @@ if|if
 condition|(
 name|mdoc_macroend
 argument_list|(
-name|m
+name|mdoc
 argument_list|)
 condition|)
 return|return
@@ -1067,7 +1077,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
@@ -1088,7 +1098,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 specifier|const
 name|struct
@@ -1108,7 +1118,7 @@ operator|!
 operator|(
 name|MDOC_HALT
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|)
@@ -1119,14 +1129,14 @@ if|if
 condition|(
 name|SEC_NONE
 operator|==
-name|m
+name|mdoc
 operator|->
 name|lastnamed
 condition|)
 block|{
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ep
 operator|->
@@ -1149,7 +1159,7 @@ name|n
 operator|=
 name|node_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ep
 operator|->
@@ -1175,7 +1185,7 @@ condition|(
 operator|!
 name|node_append
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|n
 argument_list|)
@@ -1185,7 +1195,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -1206,7 +1216,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 specifier|const
 name|struct
@@ -1226,7 +1236,7 @@ operator|!
 operator|(
 name|MDOC_HALT
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|)
@@ -1237,14 +1247,14 @@ if|if
 condition|(
 name|SEC_NONE
 operator|==
-name|m
+name|mdoc
 operator|->
 name|lastnamed
 condition|)
 block|{
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|sp
 operator|->
@@ -1265,7 +1275,7 @@ name|n
 operator|=
 name|node_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|sp
 operator|->
@@ -1289,7 +1299,7 @@ condition|(
 operator|!
 name|node_append
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|n
 argument_list|)
@@ -1299,7 +1309,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -1324,7 +1334,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|ln
@@ -1343,13 +1353,13 @@ operator|!
 operator|(
 name|MDOC_HALT
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|)
 argument_list|)
 expr_stmt|;
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
@@ -1358,46 +1368,37 @@ expr_stmt|;
 comment|/* 	 * Let the roff nS register switch SYNOPSIS mode early, 	 * such that the parser knows at all times 	 * whether this mode is on or off. 	 * Note that this mode is also switched by the Sh macro. 	 */
 if|if
 condition|(
-name|roff_regisset
+name|roff_getreg
 argument_list|(
-name|m
+name|mdoc
 operator|->
 name|roff
 argument_list|,
-name|REG_nS
+literal|"nS"
 argument_list|)
 condition|)
-block|{
-if|if
-condition|(
-name|roff_regget
-argument_list|(
-name|m
-operator|->
-name|roff
-argument_list|,
-name|REG_nS
-argument_list|)
-condition|)
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
 name|MDOC_SYNOPSIS
 expr_stmt|;
 else|else
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|&=
 operator|~
 name|MDOC_SYNOPSIS
 expr_stmt|;
-block|}
 return|return
 operator|(
-name|mandoc_getcontrol
+name|roff_getcontrol
 argument_list|(
+name|mdoc
+operator|->
+name|roff
+argument_list|,
 name|buf
 argument_list|,
 operator|&
@@ -1406,7 +1407,7 @@ argument_list|)
 condition|?
 name|mdoc_pmacro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ln
 argument_list|,
@@ -1417,7 +1418,7 @@ argument_list|)
 else|:
 name|mdoc_ptext
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ln
 argument_list|,
@@ -1458,14 +1459,14 @@ name|flags
 operator|&&
 name|MDOC_PBODY
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 condition|)
 block|{
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -1499,7 +1500,7 @@ operator|!
 operator|(
 name|MDOC_PBODY
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|)
@@ -1507,7 +1508,7 @@ condition|)
 block|{
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -1520,13 +1521,13 @@ if|if
 condition|(
 name|NULL
 operator|==
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|.
 name|msec
 condition|)
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|.
@@ -1541,13 +1542,13 @@ if|if
 condition|(
 name|NULL
 operator|==
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|.
 name|title
 condition|)
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|.
@@ -1562,13 +1563,13 @@ if|if
 condition|(
 name|NULL
 operator|==
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|.
 name|vol
 condition|)
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|.
@@ -1583,13 +1584,13 @@ if|if
 condition|(
 name|NULL
 operator|==
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|.
 name|os
 condition|)
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|.
@@ -1604,13 +1605,13 @@ if|if
 condition|(
 name|NULL
 operator|==
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|.
 name|date
 condition|)
-name|m
+name|mdoc
 operator|->
 name|meta
 operator|.
@@ -1618,7 +1619,7 @@ name|date
 operator|=
 name|mandoc_normdate
 argument_list|(
-name|m
+name|mdoc
 operator|->
 name|parse
 argument_list|,
@@ -1629,7 +1630,7 @@ argument_list|,
 name|ppos
 argument_list|)
 expr_stmt|;
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
@@ -1648,7 +1649,7 @@ operator|.
 name|fp
 operator|)
 operator|(
-name|m
+name|mdoc
 operator|,
 name|tok
 operator|,
@@ -1791,6 +1792,15 @@ operator|(
 name|MDOC_BODY
 operator|)
 case|:
+if|if
+condition|(
+name|ENDBODY_NOT
+operator|!=
+name|p
+operator|->
+name|end
+condition|)
+break|break;
 comment|/* FALLTHROUGH */
 case|case
 operator|(
@@ -1983,7 +1993,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -2022,7 +2032,7 @@ name|p
 operator|->
 name|sec
 operator|=
-name|m
+name|mdoc
 operator|->
 name|lastsec
 expr_stmt|;
@@ -2037,6 +2047,12 @@ operator|->
 name|pos
 operator|=
 name|pos
+expr_stmt|;
+name|p
+operator|->
+name|lastline
+operator|=
+name|line
 expr_stmt|;
 name|p
 operator|->
@@ -2055,7 +2071,7 @@ if|if
 condition|(
 name|MDOC_SYNOPSIS
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 condition|)
@@ -2077,7 +2093,7 @@ if|if
 condition|(
 name|MDOC_NEWLINE
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 condition|)
@@ -2087,7 +2103,7 @@ name|flags
 operator||=
 name|MDOC_LINE
 expr_stmt|;
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|&=
@@ -2109,7 +2125,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -2131,7 +2147,7 @@ name|p
 operator|=
 name|node_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -2147,7 +2163,7 @@ condition|(
 operator|!
 name|node_append
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|p
 argument_list|)
@@ -2157,7 +2173,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -2178,7 +2194,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -2198,14 +2214,14 @@ name|p
 decl_stmt|;
 name|assert
 argument_list|(
-name|m
+name|mdoc
 operator|->
 name|first
 argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|m
+name|mdoc
 operator|->
 name|last
 argument_list|)
@@ -2214,7 +2230,7 @@ name|p
 operator|=
 name|node_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -2230,7 +2246,7 @@ condition|(
 operator|!
 name|node_append
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|p
 argument_list|)
@@ -2240,7 +2256,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -2261,7 +2277,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -2283,7 +2299,7 @@ name|p
 operator|=
 name|node_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -2299,7 +2315,7 @@ condition|(
 operator|!
 name|node_append
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|p
 argument_list|)
@@ -2309,7 +2325,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -2330,7 +2346,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -2361,7 +2377,7 @@ name|p
 operator|=
 name|node_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -2380,6 +2396,14 @@ name|body
 expr_stmt|;
 name|p
 operator|->
+name|norm
+operator|=
+name|body
+operator|->
+name|norm
+expr_stmt|;
+name|p
+operator|->
 name|end
 operator|=
 name|end
@@ -2389,7 +2413,7 @@ condition|(
 operator|!
 name|node_append
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|p
 argument_list|)
@@ -2399,7 +2423,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -2420,7 +2444,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -2447,7 +2471,7 @@ name|p
 operator|=
 name|node_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -2529,7 +2553,7 @@ condition|(
 operator|!
 name|node_append
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|p
 argument_list|)
@@ -2539,7 +2563,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -2560,7 +2584,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -2587,7 +2611,7 @@ name|p
 operator|=
 name|node_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -2651,7 +2675,7 @@ condition|(
 operator|!
 name|node_append
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|p
 argument_list|)
@@ -2661,7 +2685,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -2682,7 +2706,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -2705,7 +2729,7 @@ name|n
 operator|=
 name|node_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -2722,7 +2746,7 @@ name|string
 operator|=
 name|roff_strdup
 argument_list|(
-name|m
+name|mdoc
 operator|->
 name|roff
 argument_list|,
@@ -2734,7 +2758,7 @@ condition|(
 operator|!
 name|node_append
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|n
 argument_list|)
@@ -2744,7 +2768,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -2755,6 +2779,111 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|mdoc_word_append
+parameter_list|(
+name|struct
+name|mdoc
+modifier|*
+name|mdoc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|struct
+name|mdoc_node
+modifier|*
+name|n
+decl_stmt|;
+name|char
+modifier|*
+name|addstr
+decl_stmt|,
+modifier|*
+name|newstr
+decl_stmt|;
+name|n
+operator|=
+name|mdoc
+operator|->
+name|last
+expr_stmt|;
+name|addstr
+operator|=
+name|roff_strdup
+argument_list|(
+name|mdoc
+operator|->
+name|roff
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|-
+literal|1
+operator|==
+name|asprintf
+argument_list|(
+operator|&
+name|newstr
+argument_list|,
+literal|"%s %s"
+argument_list|,
+name|n
+operator|->
+name|string
+argument_list|,
+name|addstr
+argument_list|)
+condition|)
+block|{
+name|perror
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+operator|(
+name|int
+operator|)
+name|MANDOCLEVEL_SYSERR
+argument_list|)
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|addstr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|n
+operator|->
+name|string
+argument_list|)
+expr_stmt|;
+name|n
+operator|->
+name|string
+operator|=
+name|newstr
+expr_stmt|;
+name|mdoc
+operator|->
+name|next
+operator|=
+name|MDOC_NEXT_SIBLING
+expr_stmt|;
 block|}
 end_function
 
@@ -2832,7 +2961,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|struct
 name|mdoc_node
@@ -2946,9 +3075,9 @@ block|}
 comment|/* Adjust parse point, if applicable. */
 if|if
 condition|(
-name|m
+name|mdoc
 operator|&&
-name|m
+name|mdoc
 operator|->
 name|last
 operator|==
@@ -2962,7 +3091,7 @@ operator|->
 name|prev
 condition|)
 block|{
-name|m
+name|mdoc
 operator|->
 name|last
 operator|=
@@ -2970,7 +3099,7 @@ name|n
 operator|->
 name|prev
 expr_stmt|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -2979,7 +3108,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|m
+name|mdoc
 operator|->
 name|last
 operator|=
@@ -2987,7 +3116,7 @@ name|n
 operator|->
 name|parent
 expr_stmt|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -2997,15 +3126,15 @@ block|}
 block|}
 if|if
 condition|(
-name|m
+name|mdoc
 operator|&&
-name|m
+name|mdoc
 operator|->
 name|first
 operator|==
 name|n
 condition|)
-name|m
+name|mdoc
 operator|->
 name|first
 operator|=
@@ -3021,7 +3150,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|struct
 name|mdoc_node
@@ -3045,7 +3174,7 @@ argument_list|)
 expr_stmt|;
 name|mdoc_node_delete
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|p
 operator|->
@@ -3064,7 +3193,7 @@ argument_list|)
 expr_stmt|;
 name|mdoc_node_unlink
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|p
 argument_list|)
@@ -3074,6 +3203,41 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|mdoc_node_relink
+parameter_list|(
+name|struct
+name|mdoc
+modifier|*
+name|mdoc
+parameter_list|,
+name|struct
+name|mdoc_node
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|mdoc_node_unlink
+argument_list|(
+name|mdoc
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|node_append
+argument_list|(
+name|mdoc
+argument_list|,
+name|p
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
@@ -3088,17 +3252,17 @@ comment|/*  * Pre-treat a text line.  * Text lines can consist of equations, whi
 end_comment
 
 begin_comment
-unit|static int mdoc_preptext(struct mdoc *m, int line, char *buf, int offs) { 	char		*start, *end; 	char		 delim;  	while ('\0' != buf[offs]) {
+unit|static int mdoc_preptext(struct mdoc *mdoc, int line, char *buf, int offs) { 	char		*start, *end; 	char		 delim;  	while ('\0' != buf[offs]) {
 comment|/* Mark starting position if eqn is set. */
 end_comment
 
 begin_comment
-unit|start = NULL; 		if ('\0' != (delim = roff_eqndelim(m->roff))) 			if (NULL != (start = strchr(buf + offs, delim))) 				*start++ = '\0';
+unit|start = NULL; 		if ('\0' != (delim = roff_eqndelim(mdoc->roff))) 			if (NULL != (start = strchr(buf + offs, delim))) 				*start++ = '\0';
 comment|/* Parse text as normal. */
 end_comment
 
 begin_comment
-unit|if ( ! mdoc_ptext(m, line, buf, offs)) 			return(0);
+unit|if ( ! mdoc_ptext(mdoc, line, buf, offs)) 			return(0);
 comment|/* Continue only if an equation exists. */
 end_comment
 
@@ -3113,12 +3277,12 @@ comment|/* Parse the equation itself. */
 end_comment
 
 begin_comment
-unit|roff_openeqn(m->roff, NULL, line, offs, buf);
+unit|roff_openeqn(mdoc->roff, NULL, line, offs, buf);
 comment|/* Process a finished equation? */
 end_comment
 
 begin_endif
-unit|if (roff_closeeqn(m->roff)) 			if ( ! mdoc_addeqn(m, roff_eqn(m->roff))) 				return(0); 		offs += (end - (buf + offs)); 	}   	return(1); }
+unit|if (roff_closeeqn(mdoc->roff)) 			if ( ! mdoc_addeqn(mdoc, roff_eqn(mdoc->roff))) 				return(0); 		offs += (end - (buf + offs)); 	}   	return(1); }
 endif|#
 directive|endif
 end_endif
@@ -3135,7 +3299,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -3168,14 +3332,14 @@ if|if
 condition|(
 name|SEC_NONE
 operator|==
-name|m
+name|mdoc
 operator|->
 name|lastnamed
 condition|)
 block|{
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3192,14 +3356,14 @@ return|;
 block|}
 name|assert
 argument_list|(
-name|m
+name|mdoc
 operator|->
 name|last
 argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -3230,7 +3394,7 @@ name|type
 condition|)
 block|{
 comment|/* `Bl' is open without any children. */
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
@@ -3240,7 +3404,7 @@ return|return
 operator|(
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|MDOC_It
 argument_list|,
@@ -3298,7 +3462,7 @@ name|type
 condition|)
 block|{
 comment|/* `Bl' has block-level `It' children. */
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
@@ -3308,7 +3472,7 @@ return|return
 operator|(
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|MDOC_It
 argument_list|,
@@ -3386,7 +3550,7 @@ if|if
 condition|(
 name|MDOC_LITERAL
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 condition|)
@@ -3432,7 +3596,7 @@ name|ws
 condition|)
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3461,7 +3625,7 @@ operator|!
 operator|(
 name|MDOC_LITERAL
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|)
@@ -3469,7 +3633,7 @@ condition|)
 block|{
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3491,7 +3655,7 @@ condition|(
 operator|!
 name|mdoc_elem_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3507,7 +3671,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|next
 operator|=
@@ -3515,7 +3679,10 @@ name|MDOC_NEXT_SIBLING
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|mdoc_valid_post
+argument_list|(
+name|mdoc
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3524,7 +3691,7 @@ condition|(
 operator|!
 name|mdoc_word_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3544,7 +3711,7 @@ if|if
 condition|(
 name|MDOC_LITERAL
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 condition|)
@@ -3583,7 +3750,7 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|m
+name|mdoc
 operator|->
 name|last
 operator|->
@@ -3611,7 +3778,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|ln
@@ -3657,7 +3824,7 @@ condition|)
 block|{
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ln
 argument_list|,
@@ -3772,7 +3939,7 @@ name|mandoc_vmsg
 argument_list|(
 name|MANDOCERR_MACRO
 argument_list|,
-name|m
+name|mdoc
 operator|->
 name|parse
 argument_list|,
@@ -3847,7 +4014,7 @@ index|]
 condition|)
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ln
 argument_list|,
@@ -3863,7 +4030,7 @@ if|if
 condition|(
 name|NULL
 operator|==
-name|m
+name|mdoc
 operator|->
 name|last
 operator|||
@@ -3881,7 +4048,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -3906,13 +4073,13 @@ return|;
 block|}
 name|n
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
 name|assert
 argument_list|(
-name|m
+name|mdoc
 operator|->
 name|last
 argument_list|)
@@ -3943,7 +4110,7 @@ operator|.
 name|type
 condition|)
 block|{
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
@@ -3954,7 +4121,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|MDOC_It
 argument_list|,
@@ -4019,7 +4186,7 @@ operator|.
 name|type
 condition|)
 block|{
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
@@ -4030,7 +4197,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|MDOC_It
 argument_list|,
@@ -4059,7 +4226,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -4084,7 +4251,7 @@ return|;
 name|err
 label|:
 comment|/* Error out. */
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
@@ -4267,7 +4434,7 @@ name|p
 operator|+
 literal|1
 argument_list|,
-literal|"*(Ba"
+literal|"fR|\\fP"
 argument_list|)
 condition|)
 return|return

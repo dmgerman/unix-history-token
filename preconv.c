@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: preconv.c,v 1.5 2011/07/24 18:15:14 kristaps Exp $ */
+comment|/*	$Id: preconv.c,v 1.6 2013/06/02 03:52:21 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -84,26 +84,8 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/*   * The read_whole_file() and resize_buf() functions are copied from  * read.c, including all dependency code (MAP_FILE, etc.).  */
+comment|/*   * The read_whole_file() and resize_buf() functions are copied from  * read.c, including all dependency code.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAP_FILE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAP_FILE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_enum
 enum|enum
@@ -1117,8 +1099,6 @@ name|sz
 argument_list|,
 name|PROT_READ
 argument_list|,
-name|MAP_FILE
-operator||
 name|MAP_SHARED
 argument_list|,
 name|fd

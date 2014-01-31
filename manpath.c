@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: manpath.c,v 1.8 2011/12/24 22:37:16 kristaps Exp $ */
+comment|/*	$Id: manpath.c,v 1.12 2013/11/21 01:49:18 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_include
 include|#
@@ -153,7 +147,7 @@ name|char
 name|cmd
 index|[
 operator|(
-name|MAXPATHLEN
+name|PATH_MAX
 operator|*
 literal|3
 operator|)
@@ -321,9 +315,6 @@ name|fread
 argument_list|(
 name|buf
 operator|+
-operator|(
-name|int
-operator|)
 name|bsz
 argument_list|,
 literal|1
@@ -504,9 +495,6 @@ literal|':'
 operator|==
 name|defp
 index|[
-operator|(
-name|int
-operator|)
 name|strlen
 argument_list|(
 name|defp
@@ -685,7 +673,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -747,9 +735,6 @@ operator|->
 name|paths
 argument_list|,
 operator|(
-operator|(
-name|size_t
-operator|)
 name|dirs
 operator|->
 name|sz
@@ -792,7 +777,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -965,6 +950,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)

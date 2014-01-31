@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man.h,v 1.60 2012/01/03 15:16:24 kristaps Exp $ */
+comment|/*	$Id: man.h,v 1.62 2013/10/17 20:54:58 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -92,6 +92,14 @@ block|,
 name|MAN_ft
 block|,
 name|MAN_OP
+block|,
+name|MAN_EX
+block|,
+name|MAN_EE
+block|,
+name|MAN_UR
+block|,
+name|MAN_UE
 block|,
 name|MAN_MAX
 block|}

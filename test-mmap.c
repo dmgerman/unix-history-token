@@ -32,8 +32,6 @@ literal|0
 argument_list|,
 name|PROT_READ
 argument_list|,
-name|MAP_FILE
-operator||
 name|MAP_SHARED
 argument_list|,
 operator|-

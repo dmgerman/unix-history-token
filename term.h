@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.h,v 1.90 2011/12/04 23:10:52 schwarze Exp $ */
+comment|/*	$Id: term.h,v 1.97 2013/12/25 00:39:31 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -66,6 +66,8 @@ block|,
 name|TERMFONT_BOLD
 block|,
 name|TERMFONT_UNDER
+block|,
+name|TERMFONT_BI
 block|,
 name|TERMFONT__MAX
 block|}
@@ -151,7 +153,7 @@ name|size_t
 name|maxrmargin
 decl_stmt|;
 comment|/* Max right margin. */
-name|int
+name|size_t
 name|maxcols
 decl_stmt|;
 comment|/* Max size of buf. */
@@ -163,7 +165,7 @@ name|size_t
 name|tabwidth
 decl_stmt|;
 comment|/* Distance of tab positions. */
-name|int
+name|size_t
 name|col
 decl_stmt|;
 comment|/* Bytes in buf. */
@@ -171,10 +173,18 @@ name|size_t
 name|viscol
 decl_stmt|;
 comment|/* Chars on current line. */
+name|size_t
+name|trailspace
+decl_stmt|;
+comment|/* See termp_flushln(). */
 name|int
 name|overstep
 decl_stmt|;
 comment|/* See termp_flushln(). */
+name|int
+name|skipvsp
+decl_stmt|;
+comment|/* Vertical space to skip. */
 name|int
 name|flags
 decl_stmt|;
@@ -190,32 +200,42 @@ value|(1<< 2)
 comment|/* No space before words. */
 define|#
 directive|define
-name|TERMP_NOBREAK
-value|(1<< 4)
-comment|/* See term_flushln(). */
-define|#
-directive|define
-name|TERMP_IGNDELIM
-value|(1<< 6)
-comment|/* Delims like regulars. */
-define|#
-directive|define
 name|TERMP_NONOSPACE
-value|(1<< 7)
+value|(1<< 3)
 comment|/* No space (no autounset). */
 define|#
 directive|define
-name|TERMP_DANGLE
+name|TERMP_NBRWORD
+value|(1<< 4)
+comment|/* Make next word nonbreaking. */
+define|#
+directive|define
+name|TERMP_KEEP
+value|(1<< 5)
+comment|/* Keep words together. */
+define|#
+directive|define
+name|TERMP_PREKEEP
+value|(1<< 6)
+comment|/* ...starting with the next one. */
+define|#
+directive|define
+name|TERMP_SKIPCHAR
+value|(1<< 7)
+comment|/* Skip the next character. */
+define|#
+directive|define
+name|TERMP_NOBREAK
 value|(1<< 8)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_HANG
+name|TERMP_DANGLE
 value|(1<< 9)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_TWOSPACE
+name|TERMP_HANG
 value|(1<< 10)
 comment|/* See term_flushln(). */
 define|#
@@ -233,16 +253,6 @@ directive|define
 name|TERMP_ANPREC
 value|(1<< 13)
 comment|/* See termp_an_pre(). */
-define|#
-directive|define
-name|TERMP_KEEP
-value|(1<< 14)
-comment|/* Keep words together. */
-define|#
-directive|define
-name|TERMP_PREKEEP
-value|(1<< 15)
-comment|/* ...starting with the next one. */
 name|int
 modifier|*
 name|buf

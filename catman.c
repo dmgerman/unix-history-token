@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: catman.c,v 1.10 2012/01/03 15:17:20 kristaps Exp $ */
+comment|/*	$Id: catman.c,v 1.11.2.2 2013/10/11 00:06:48 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -90,11 +90,19 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__linux__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -932,14 +940,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|pid_t
-name|pid
-decl_stmt|;
-name|pid
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|xstrlcpy
 argument_list|(
 name|fname
@@ -1773,9 +1773,10 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
-name|int
+name|size_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|c
 decl_stmt|;
 name|size_t

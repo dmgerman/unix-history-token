@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: manpath.h,v 1.5 2011/12/13 20:56:46 kristaps Exp $ */
+comment|/*	$Id: manpath.h,v 1.6 2012/06/08 10:32:40 kristaps Exp $ */
 end_comment
 
 begin_comment
@@ -27,7 +27,7 @@ begin_struct
 struct|struct
 name|manpaths
 block|{
-name|int
+name|size_t
 name|sz
 decl_stmt|;
 name|char
