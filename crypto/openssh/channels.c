@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.327 2013/11/08 00:39:15 djm Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.328 2013/12/19 01:04:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -6971,6 +6971,29 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
+name|local_ipaddr
+init|=
+name|get_local_ipaddr
+argument_list|(
+name|c
+operator|->
+name|sock
+argument_list|)
+decl_stmt|;
+name|int
+name|local_port
+init|=
+name|get_sock_port
+argument_list|(
+name|c
+operator|->
+name|sock
+argument_list|,
+literal|1
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
 name|remote_ipaddr
 init|=
 name|get_peer_ipaddr
@@ -7037,7 +7060,7 @@ sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%s: listening port %d for %.100s port %d, "
-literal|"connect from %.200s port %d"
+literal|"connect from %.200s port %d to %.100s port %d"
 argument_list|,
 name|rtype
 argument_list|,
@@ -7056,6 +7079,10 @@ argument_list|,
 name|remote_ipaddr
 argument_list|,
 name|remote_port
+argument_list|,
+name|local_ipaddr
+argument_list|,
+name|local_port
 argument_list|)
 expr_stmt|;
 name|free
@@ -7143,9 +7170,7 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
-name|c
-operator|->
-name|listening_port
+name|local_port
 argument_list|)
 expr_stmt|;
 block|}
@@ -7216,6 +7241,11 @@ block|}
 name|free
 argument_list|(
 name|remote_ipaddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|local_ipaddr
 argument_list|)
 expr_stmt|;
 block|}
@@ -13612,10 +13642,49 @@ operator|==
 literal|1
 operator|)
 condition|)
+block|{
 name|wildcard
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 			 * Notify client if they requested a specific listen 			 * address and it was overridden. 			 */
+if|if
+condition|(
+operator|*
+name|listen_addr
+operator|!=
+literal|'\0'
+operator|&&
+name|strcmp
+argument_list|(
+name|listen_addr
+argument_list|,
+literal|"0.0.0.0"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|listen_addr
+argument_list|,
+literal|"*"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|packet_send_debug
+argument_list|(
+literal|"Forwarding listen address "
+literal|"\"%s\" overridden by server "
+literal|"GatewayPorts"
+argument_list|,
+name|listen_addr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 elseif|else
 if|if
 condition|(

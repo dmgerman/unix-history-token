@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.127 2013/07/19 07:37:48 markus Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.128 2013/11/04 11:51:16 markus Exp $ */
 end_comment
 
 begin_comment
@@ -9439,6 +9439,15 @@ name|KEX_ECDH_SHA2
 index|]
 operator|=
 name|kexecdh_server
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_C25519_SHA256
+index|]
+operator|=
+name|kexc25519_server
 expr_stmt|;
 name|kex
 operator|->

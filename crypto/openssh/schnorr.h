@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: schnorr.h,v 1.1 2009/03/05 07:18:19 djm Exp $ */
+comment|/* $OpenBSD: schnorr.h,v 1.2 2014/01/09 23:20:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -72,9 +72,7 @@ modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-specifier|const
-name|EVP_MD
-modifier|*
+name|int
 parameter_list|,
 name|u_char
 modifier|*
@@ -217,10 +215,8 @@ name|BIGNUM
 modifier|*
 name|grp_g
 parameter_list|,
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
+name|int
+name|hash_alg
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -321,10 +317,8 @@ name|BIGNUM
 modifier|*
 name|grp_g
 parameter_list|,
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
+name|int
+name|hash_alg
 parameter_list|,
 specifier|const
 name|BIGNUM

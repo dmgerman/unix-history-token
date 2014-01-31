@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-hostbased.c,v 1.16 2013/06/21 00:34:49 djm Exp $ */
+comment|/* $OpenBSD: auth2-hostbased.c,v 1.17 2013/12/30 23:52:27 djm Exp $ */
 end_comment
 
 begin_comment
@@ -391,6 +391,36 @@ operator|->
 name|type
 argument_list|,
 name|pktype
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+if|if
+condition|(
+name|key_type_plain
+argument_list|(
+name|key
+operator|->
+name|type
+argument_list|)
+operator|==
+name|KEY_RSA
+operator|&&
+operator|(
+name|datafellows
+operator|&
+name|SSH_BUG_RSASIGMD5
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Refusing RSA key because peer uses unsafe "
+literal|"signature format"
 argument_list|)
 expr_stmt|;
 goto|goto

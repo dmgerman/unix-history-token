@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.91 2013/07/12 00:43:50 djm Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.92 2013/10/14 23:28:23 djm Exp $ */
 end_comment
 
 begin_comment
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -5190,6 +5196,39 @@ expr_stmt|;
 return|return
 name|iptos_str
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|lowercase
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+for|for
+control|(
+init|;
+operator|*
+name|s
+condition|;
+name|s
+operator|++
+control|)
+operator|*
+name|s
+operator|=
+name|tolower
+argument_list|(
+operator|(
+name|u_char
+operator|)
+operator|*
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

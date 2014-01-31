@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: match.c,v 1.28 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: match.c,v 1.29 2013/11/20 20:54:10 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -353,17 +353,20 @@ name|dolower
 operator|&&
 name|isupper
 argument_list|(
+operator|(
+name|u_char
+operator|)
 name|pattern
 index|[
 name|i
 index|]
 argument_list|)
 condition|?
-operator|(
-name|char
-operator|)
 name|tolower
 argument_list|(
+operator|(
+name|u_char
+operator|)
 name|pattern
 index|[
 name|i
