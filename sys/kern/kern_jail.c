@@ -1046,8 +1046,6 @@ block|,
 literal|"allow.mount.procfs"
 block|,
 literal|"allow.mount.tmpfs"
-block|,
-literal|"allow.kmem"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1095,8 +1093,6 @@ block|,
 literal|"allow.mount.noprocfs"
 block|,
 literal|"allow.mount.notmpfs"
-block|,
-literal|"allow.nokmem"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -18720,56 +18716,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Allow access to /dev/io in a jail if the non-jailed admin 		 * requests this and if /dev/io exists in the jail. This 		 * allows Xorg to probe a card. 		 */
-case|case
-name|PRIV_IO
-case|:
-if|if
-condition|(
-name|cred
-operator|->
-name|cr_prison
-operator|->
-name|pr_allow
-operator|&
-name|PR_ALLOW_KMEM
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-comment|/* 		 * Allow low level access to KMEM-like devices (e.g. to 		 * allow Xorg to use DRI). 		 */
-case|case
-name|PRIV_KMEM_WRITE
-case|:
-if|if
-condition|(
-name|cred
-operator|->
-name|cr_prison
-operator|->
-name|pr_allow
-operator|&
-name|PR_ALLOW_KMEM
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
 comment|/* 		 * Allow jailed root to set loginclass. 		 */
 case|case
 name|PRIV_PROC_SETLOGINCLASS
@@ -21234,24 +21180,6 @@ argument_list|,
 literal|"B"
 argument_list|,
 literal|"Jail may create sockets other than just UNIX/IPv4/IPv6/route"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_JAIL_PARAM
-argument_list|(
-name|_allow
-argument_list|,
-name|kmem
-argument_list|,
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-argument_list|,
-literal|"B"
-argument_list|,
-literal|"Jail may access kmem-like devices (io, dri) if they exist"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
