@@ -488,13 +488,14 @@ block|,
 name|PTE_NOCACHE
 block|, 	}
 block|,
+comment|/* There's a notion that we should do the rest of these lazily. */
 comment|/* 	 * We can't just map the OHCI registers VA == PA, because 	 * AT91xx_xxx_BASE belongs to the userland address space. 	 * We could just choose a different virtual address, but a better 	 * solution would probably be to just use pmap_mapdev() to allocate 	 * KVA, as we don't need the OHCI controller before the vm 	 * initialization is done. However, the AT91 resource allocation 	 * system doesn't know how to use pmap_mapdev() yet. 	 * Care must be taken to ensure PA and VM address do not overlap 	 * between entries. 	 */
 block|{
 comment|/* 		 * Add the ohci controller, and anything else that might be 		 * on this chip select for a VA/PA mapping. 		 */
 comment|/* Internal Memory 1MB  */
-name|AT91RM92_OHCI_BASE
+name|AT91RM92_OHCI_VA_BASE
 block|,
-name|AT91RM92_OHCI_PA_BASE
+name|AT91RM92_OHCI_BASE
 block|,
 literal|0x00100000
 block|,
@@ -507,9 +508,9 @@ block|, 	}
 block|,
 block|{
 comment|/* CompactFlash controller. Portion of EBI CS4 1MB */
-name|AT91RM92_CF_BASE
+name|AT91RM92_CF_VA_BASE
 block|,
-name|AT91RM92_CF_PA_BASE
+name|AT91RM92_CF_BASE
 block|,
 literal|0x00100000
 block|,
@@ -523,9 +524,9 @@ block|,
 comment|/* 	 * The next two should be good for the 9260, 9261 and 9G20 since 	 * addresses mapping is the same. 	 */
 block|{
 comment|/* Internal Memory 1MB  */
-name|AT91SAM9G20_OHCI_BASE
+name|AT91SAM9G20_OHCI_VA_BASE
 block|,
-name|AT91SAM9G20_OHCI_PA_BASE
+name|AT91SAM9G20_OHCI_BASE
 block|,
 literal|0x00100000
 block|,
@@ -538,9 +539,9 @@ block|, 	}
 block|,
 block|{
 comment|/* EBI CS3 256MB */
-name|AT91SAM9G20_NAND_BASE
+name|AT91SAM9G20_NAND_VA_BASE
 block|,
-name|AT91SAM9G20_NAND_PA_BASE
+name|AT91SAM9G20_NAND_BASE
 block|,
 name|AT91SAM9G20_NAND_SIZE
 block|,
@@ -554,9 +555,9 @@ block|,
 comment|/* 	 * The next should be good for the 9G45. 	 */
 block|{
 comment|/* Internal Memory 1MB  */
-name|AT91SAM9G45_OHCI_BASE
+name|AT91SAM9G45_OHCI_VA_BASE
 block|,
-name|AT91SAM9G45_OHCI_PA_BASE
+name|AT91SAM9G45_OHCI_BASE
 block|,
 literal|0x00100000
 block|,
