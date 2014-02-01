@@ -601,10 +601,7 @@ literal|1
 condition|)
 name|powerpc_fw_config_intr
 argument_list|(
-name|irq
-index|[
-literal|0
-index|]
+name|intr
 argument_list|,
 name|irq
 index|[
