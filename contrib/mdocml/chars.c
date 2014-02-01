@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: chars.c,v 1.52 2011/11/08 00:15:23 kristaps Exp $ */
+comment|/*	$Id: chars.c,v 1.54 2013/06/20 22:39:30 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ begin_define
 define|#
 directive|define
 name|LINES_MAX
-value|328
+value|329
 end_define
 
 begin_define
@@ -259,7 +259,6 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|ln
-operator|*
 operator|*
 argument_list|)
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: html.h,v 1.47 2011/10/05 21:35:17 kristaps Exp $ */
+comment|/*	$Id: html.h,v 1.49 2013/08/08 20:07:47 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -140,6 +140,8 @@ block|,
 name|HTMLFONT_BOLD
 block|,
 name|HTMLFONT_ITALIC
+block|,
+name|HTMLFONT_BI
 block|,
 name|HTMLFONT_MAX
 block|}
@@ -315,6 +317,11 @@ directive|define
 name|HTML_LITERAL
 value|(1<< 5)
 comment|/* literal (e.g.,<PRE>) context */
+define|#
+directive|define
+name|HTML_SKIPCHAR
+value|(1<< 6)
+comment|/* skip the next character */
 name|struct
 name|tagq
 name|tags
