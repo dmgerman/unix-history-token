@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2001 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_comment
@@ -37,7 +37,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: t_setreuid.c,v 8.9 2001/10/12 03:04:46 gshapiro Exp $"
+literal|"@(#)$Id: t_setreuid.c,v 8.10 2013/11/22 20:52:01 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
