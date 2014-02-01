@@ -177,27 +177,5 @@ begin_comment
 comment|/* SM_CONF_MSG */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SM_IPNODEBYNAME_FLAGS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SM_IPNODEBYNAME_FLAGS
-value|AI_DEFAULT|AI_ALL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SM_IPNODEBYNAME_FLAGS */
-end_comment
-
 end_unit
 
