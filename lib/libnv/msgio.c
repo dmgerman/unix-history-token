@@ -1619,7 +1619,12 @@ name|ptr
 operator|=
 name|buf
 expr_stmt|;
-do|do
+while|while
+condition|(
+name|size
+operator|>
+literal|0
+condition|)
 block|{
 name|fd_wait
 argument_list|(
@@ -1691,13 +1696,6 @@ operator|+=
 name|done
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|size
-operator|>
-literal|0
-condition|)
-do|;
 return|return
 operator|(
 literal|0
