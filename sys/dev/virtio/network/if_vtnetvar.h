@@ -58,6 +58,12 @@ decl_stmt|;
 name|uint64_t
 name|tx_tso_not_tcp
 decl_stmt|;
+name|uint64_t
+name|tx_defragged
+decl_stmt|;
+name|uint64_t
+name|tx_defrag_failed
+decl_stmt|;
 comment|/* 	 * These are accumulated from each Rx/Tx queue. 	 */
 name|uint64_t
 name|rx_csum_failed
@@ -233,9 +239,6 @@ name|vtxs_csum
 decl_stmt|;
 name|uint64_t
 name|vtxs_tso
-decl_stmt|;
-name|uint64_t
-name|vtxs_collapsed
 decl_stmt|;
 name|uint64_t
 name|vtxs_rescheduled
