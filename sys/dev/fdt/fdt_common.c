@@ -2319,7 +2319,11 @@ name|iparent
 argument_list|,
 name|icells
 argument_list|,
+operator|&
 name|intr
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 name|resource_list_add
