@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2009, 2011, 2012 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2009, 2011, 2012 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.998 2013/03/12 15:24:53 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.1000 2013/11/22 20:51:56 ca Exp $"
 argument_list|)
 end_macro
 
@@ -11278,7 +11278,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SORTQ -- sort the work list ** **	First the old WorkQ is cleared away. Then the WorkList is sorted **	for all items so that important (higher sorting value) items are not **	trunctated off. Then the most important items are moved from **	WorkList to WorkQ. The lower count of 'max' or MaxListCount items **	are moved. ** **	Parameters: **		max -- maximum number of items to be placed in WorkQ ** **	Returns: **		the number of items in WorkQ ** **	Side Effects: **		WorkQ gets released and filled with new work. WorkList **		gets released. Work items get sorted in order. */
+comment|/* **  SORTQ -- sort the work list ** **	First the old WorkQ is cleared away. Then the WorkList is sorted **	for all items so that important (higher sorting value) items are not **	truncated off. Then the most important items are moved from **	WorkList to WorkQ. The lower count of 'max' or MaxListCount items **	are moved. ** **	Parameters: **		max -- maximum number of items to be placed in WorkQ ** **	Returns: **		the number of items in WorkQ ** **	Side Effects: **		WorkQ gets released and filled with new work. WorkList **		gets released. Work items get sorted in order. */
 end_comment
 
 begin_function

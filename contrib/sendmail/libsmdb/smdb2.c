@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2003, 2009 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
+comment|/* ** Copyright (c) 1999-2003, 2009 Proofpoint, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb2.c,v 8.80 2009/11/12 23:07:49 ca Exp $"
+literal|"@(#)$Id: smdb2.c,v 8.83 2013/11/22 20:51:49 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2450,6 +2450,17 @@ name|smdb_db
 argument_list|)
 expr_stmt|;
 comment|/* ok to be NULL */
+if|if
+condition|(
+name|db2
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|db2
+argument_list|)
+expr_stmt|;
 return|return
 name|SMDBE_MALLOC
 return|;
