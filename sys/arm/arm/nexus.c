@@ -1687,10 +1687,13 @@ name|FDT_MAP_IRQ
 argument_list|(
 name|intr_parent
 argument_list|,
+name|fdt32_to_cpu
+argument_list|(
 name|intr
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
