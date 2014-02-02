@@ -1670,10 +1670,7 @@ name|FDT_MAP_IRQ
 argument_list|(
 name|intr_parent
 argument_list|,
-name|intr
-index|[
-literal|0
-index|]
+name|interrupt
 argument_list|)
 expr_stmt|;
 return|return
