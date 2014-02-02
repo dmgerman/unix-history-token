@@ -1228,5 +1228,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|PCPU_SIZE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
