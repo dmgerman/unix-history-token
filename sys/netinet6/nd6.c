@@ -7064,17 +7064,9 @@ comment|/* 	 * Address resolution or Neighbor Unreachability Detection 	 * for t
 name|flags
 operator|=
 operator|(
-operator|(
-name|m
-operator|!=
-name|NULL
-operator|)
-operator|||
-operator|(
 name|lle
 operator|!=
 name|NULL
-operator|)
 operator|)
 condition|?
 name|LLE_EXCLUSIVE
