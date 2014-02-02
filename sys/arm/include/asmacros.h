@@ -486,7 +486,7 @@ parameter_list|(
 name|tmp
 parameter_list|)
 define|\
-value|ldr	tmp, .Lcurthread     \ 	ldr	tmp, [tmp]
+value|ldr	tmp, .Lcurthread;     \ 	ldr	tmp, [tmp]
 end_define
 
 begin_endif
