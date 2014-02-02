@@ -127,6 +127,25 @@ name|CPU_MASK
 value|(0xf)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|get_pcpu
+parameter_list|()
+value|(pcpup)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -134,6 +153,11 @@ name|get_pcpu
 parameter_list|()
 value|__extension__ ({			  		\     	int id;								\         __asm __volatile("mrc p15, 0, %0, c0, c0, 5" : "=r" (id));	\     	(pcpup + (id& CPU_MASK));					\     })
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
