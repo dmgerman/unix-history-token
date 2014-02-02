@@ -142,6 +142,13 @@ name|TCON0_CTRL1
 value|0x00
 end_define
 
+begin_define
+define|#
+directive|define
+name|TCON_BYPASS
+value|(1<< 29)
+end_define
+
 begin_struct
 struct|struct
 name|tcon_softc
@@ -231,11 +238,7 @@ name|tcon_sc
 argument_list|,
 name|TCON0_CTRL1
 argument_list|,
-operator|(
-literal|1
-operator|<<
-literal|29
-operator|)
+name|TCON_BYPASS
 argument_list|)
 expr_stmt|;
 return|return
