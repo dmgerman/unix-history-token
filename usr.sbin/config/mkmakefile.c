@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -188,6 +194,51 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|void
+name|errout
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Lookup a file, by name.  */
@@ -1645,22 +1696,13 @@ name|wd
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: missing include filename.\n"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1740,11 +1782,8 @@ name|wd
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: No type for %s.\n"
 argument_list|,
 name|fname
@@ -1752,12 +1791,6 @@ argument_list|,
 name|this
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|tp
 operator|=
 name|fl_lookup
@@ -1830,12 +1863,10 @@ argument_list|,
 literal|"standard"
 argument_list|)
 condition|)
-block|{
 name|std
 operator|=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1847,11 +1878,8 @@ argument_list|,
 literal|"optional"
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: \"%s\" %s must be optional or standard\n"
 argument_list|,
 name|fname
@@ -1861,12 +1889,6 @@ argument_list|,
 name|this
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|nextparam
 label|:
 name|wd
@@ -1917,11 +1939,8 @@ name|nreqs
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: what is %s optional on?\n"
 argument_list|,
 name|fname
@@ -1929,12 +1948,6 @@ argument_list|,
 name|this
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|filetype
@@ -2056,11 +2069,8 @@ name|nreqs
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: syntax error describing %s\n"
 argument_list|,
 name|fname
@@ -2068,12 +2078,6 @@ argument_list|,
 name|this
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|compile
 operator|+=
 name|match
@@ -2123,18 +2127,16 @@ name|compilewith
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: alternate rule required when "
-literal|"\"no-implicit-rule\" is specified.\n"
+literal|"\"no-implicit-rule\" is specified for %s.\n"
 argument_list|,
 name|fname
+argument_list|,
+name|this
 argument_list|)
 expr_stmt|;
-block|}
 name|imp_rule
 operator|++
 expr_stmt|;
@@ -2190,11 +2192,8 @@ name|wd
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %s missing dependency string.\n"
 argument_list|,
 name|fname
@@ -2202,12 +2201,6 @@ argument_list|,
 name|this
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|depends
 operator|=
 name|ns
@@ -2250,11 +2243,8 @@ name|wd
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %s missing clean file list.\n"
 argument_list|,
 name|fname
@@ -2262,12 +2252,6 @@ argument_list|,
 name|this
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|clean
 operator|=
 name|ns
@@ -2310,11 +2294,8 @@ name|wd
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %s missing compile command string.\n"
 argument_list|,
 name|fname
@@ -2322,12 +2303,6 @@ argument_list|,
 name|this
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|compilewith
 operator|=
 name|ns
@@ -2370,11 +2345,8 @@ name|wd
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %s missing warning text string.\n"
 argument_list|,
 name|fname
@@ -2382,12 +2354,6 @@ argument_list|,
 name|this
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|warning
 operator|=
 name|ns
@@ -2430,8 +2396,7 @@ name|wd
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
+name|errout
 argument_list|(
 literal|"%s: %s missing object prefix string.\n"
 argument_list|,
@@ -2440,12 +2405,6 @@ argument_list|,
 name|this
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|objprefix
 operator|=
 name|ns
@@ -2533,11 +2492,8 @@ if|if
 condition|(
 name|std
 condition|)
-block|{
-name|fprintf
+name|errout
 argument_list|(
-name|stderr
-argument_list|,
 literal|"standard entry %s has optional inclusion specifier %s!\n"
 argument_list|,
 name|this
@@ -2545,12 +2501,6 @@ argument_list|,
 name|wd
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|nreqs
 operator|++
 expr_stmt|;
