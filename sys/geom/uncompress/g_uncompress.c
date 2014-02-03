@@ -1068,7 +1068,7 @@ condition|(
 operator|(
 name|err
 operator|)
-operator|&&
+operator|||
 operator|(
 name|inflateReset
 argument_list|(
