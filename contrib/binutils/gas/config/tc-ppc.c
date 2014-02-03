@@ -3228,7 +3228,7 @@ name|unsigned
 name|long
 name|ppc_cpu
 init|=
-literal|0
+name|PPC_OPCODE_ANY
 decl_stmt|;
 end_decl_stmt
 
