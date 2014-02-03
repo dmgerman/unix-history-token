@@ -1708,7 +1708,7 @@ name|pidfile_open
 argument_list|(
 name|path_dhclient_pidfile
 argument_list|,
-literal|0600
+literal|0644
 argument_list|,
 operator|&
 name|otherpid
