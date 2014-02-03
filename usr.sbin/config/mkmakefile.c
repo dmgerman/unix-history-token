@@ -1512,8 +1512,6 @@ name|no_obj
 decl_stmt|,
 name|before_depend
 decl_stmt|,
-name|mandatory
-decl_stmt|,
 name|nowerror
 decl_stmt|;
 name|fp
@@ -1542,7 +1540,7 @@ argument_list|)
 expr_stmt|;
 name|next
 label|:
-comment|/* 	 * include "filename" 	 * filename    [ standard | mandatory | optional ] 	 *	[ dev* [ | dev* ... ] | profiling-routine ] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] [ warning "text warning" ] 	 *	[ obj-prefix "file prefix"] 	 */
+comment|/* 	 * include "filename" 	 * filename    [ standard | optional ] 	 *	[ dev* [ | dev* ... ] | profiling-routine ] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] [ warning "text warning" ] 	 *	[ obj-prefix "file prefix"] 	 */
 name|wd
 operator|=
 name|get_word
@@ -1800,8 +1798,6 @@ literal|0
 expr_stmt|;
 name|std
 operator|=
-name|mandatory
-operator|=
 literal|0
 expr_stmt|;
 name|imp_rule
@@ -1842,23 +1838,6 @@ name|std
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * If an entry is marked "mandatory", config will abort if it's 	 * not called by a configuration line in the config file.  Apart 	 * from this, the device is handled like one marked "optional". 	 */
-block|}
-elseif|else
-if|if
-condition|(
-name|eq
-argument_list|(
-name|wd
-argument_list|,
-literal|"mandatory"
-argument_list|)
-condition|)
-block|{
-name|mandatory
-operator|=
-literal|1
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1876,7 +1855,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: \"%s\" %s must be optional, mandatory or standard\n"
+literal|"%s: \"%s\" %s must be optional or standard\n"
 argument_list|,
 name|fname
 argument_list|,
@@ -2600,28 +2579,6 @@ expr_stmt|;
 goto|goto
 name|nextparam
 goto|;
-block|}
-if|if
-condition|(
-name|mandatory
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: mandatory device \"%s\" not found\n"
-argument_list|,
-name|fname
-argument_list|,
-name|wd
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
