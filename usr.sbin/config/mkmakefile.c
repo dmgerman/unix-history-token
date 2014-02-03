@@ -2475,9 +2475,6 @@ goto|goto
 name|nextparam
 goto|;
 block|}
-name|nreqs
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|eq
@@ -2550,6 +2547,9 @@ goto|goto
 name|nextparam
 goto|;
 block|}
+name|nreqs
+operator|++
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|dp
