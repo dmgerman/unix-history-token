@@ -97,6 +97,17 @@ name|USB_HAVE_PF
 value|1
 end_define
 
+begin_comment
+comment|/* define zero ticks callout value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_CALLOUT_ZERO_TICKS
+value|1
+end_define
+
 begin_define
 define|#
 directive|define
