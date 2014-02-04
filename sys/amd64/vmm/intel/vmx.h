@@ -164,9 +164,6 @@ decl_stmt|;
 name|uint32_t
 name|proc_ctls
 decl_stmt|;
-name|uint32_t
-name|proc_ctls2
-decl_stmt|;
 block|}
 struct|;
 end_struct

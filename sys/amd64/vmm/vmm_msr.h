@@ -54,10 +54,6 @@ name|msr
 parameter_list|,
 name|uint64_t
 name|val
-parameter_list|,
-name|bool
-modifier|*
-name|retu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -76,10 +72,6 @@ name|vcpu
 parameter_list|,
 name|u_int
 name|msr
-parameter_list|,
-name|bool
-modifier|*
-name|retu
 parameter_list|)
 function_decl|;
 end_function_decl

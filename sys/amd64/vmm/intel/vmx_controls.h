@@ -195,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|PROCBASED_SECONDARY_CONTROLS
-value|(1U<< 31)
+value|(1<< 31)
 end_define
 
 begin_comment
@@ -263,13 +263,6 @@ define|#
 directive|define
 name|PROCBASED2_PAUSE_LOOP_EXITING
 value|(1<< 10)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PROCBASED2_ENABLE_INVPCID
-value|(1<< 12)
 end_define
 
 begin_comment

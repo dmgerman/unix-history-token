@@ -516,10 +516,6 @@ name|num
 parameter_list|,
 name|uint64_t
 name|val
-parameter_list|,
-name|bool
-modifier|*
-name|retu
 parameter_list|)
 block|{
 name|int
@@ -547,8 +543,6 @@ argument_list|,
 name|num
 argument_list|,
 name|val
-argument_list|,
-name|retu
 argument_list|)
 operator|)
 return|;
@@ -645,10 +639,6 @@ name|cpu
 parameter_list|,
 name|u_int
 name|num
-parameter_list|,
-name|bool
-modifier|*
-name|retu
 parameter_list|)
 block|{
 name|int
@@ -687,8 +677,6 @@ name|num
 argument_list|,
 operator|&
 name|result
-argument_list|,
-name|retu
 argument_list|)
 expr_stmt|;
 goto|goto
