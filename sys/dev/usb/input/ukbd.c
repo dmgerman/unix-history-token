@@ -2403,6 +2403,16 @@ operator|->
 name|sc_inputs
 operator|==
 literal|0
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|UKBD_FLAG_GONE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* start transfer, if not already started */
@@ -6674,6 +6684,52 @@ operator|->
 name|sc_callout
 argument_list|)
 expr_stmt|;
+comment|/* kill any stuck keys */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|UKBD_FLAG_ATTACHED
+condition|)
+block|{
+comment|/* stop receiving events from the USB keyboard */
+name|usbd_transfer_stop
+argument_list|(
+name|sc
+operator|->
+name|sc_xfer
+index|[
+name|UKBD_INTR_DT
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* release all leftover keys, if any */
+name|memset
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_ndata
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_ndata
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* process releasing of all keys */
+name|ukbd_interrupt
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|ukbd_disable
 argument_list|(
 operator|&
