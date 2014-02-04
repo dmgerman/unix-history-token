@@ -648,7 +648,7 @@ literal|"\011<b20>"
 literal|"\012<b20>"
 literal|"\013PauseFilter"
 literal|"\014<b20>"
-literal|"\013PauseFilterThreshold"
+literal|"\015PauseFilterThreshold"
 argument_list|)
 expr_stmt|;
 comment|/* SVM Lock */
@@ -1857,19 +1857,11 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|svm_npf_paging
 parameter_list|(
 name|uint64_t
 name|exitinfo1
-parameter_list|,
-name|int
-modifier|*
-name|type
-parameter_list|,
-name|int
-modifier|*
-name|prot
 parameter_list|)
 block|{
 if|if
@@ -1878,23 +1870,16 @@ name|exitinfo1
 operator|&
 name|VMCB_NPF_INFO1_W
 condition|)
-operator|*
-name|type
-operator|=
+return|return
+operator|(
 name|VM_PROT_WRITE
-expr_stmt|;
-else|else
-operator|*
-name|type
-operator|=
+operator|)
+return|;
+return|return
+operator|(
 name|VM_PROT_READ
-expr_stmt|;
-comment|/* XXX: protection is not used. */
-operator|*
-name|prot
-operator|=
-literal|0
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -2142,6 +2127,8 @@ name|bool
 name|update_rip
 decl_stmt|,
 name|loop
+decl_stmt|,
+name|retu
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -2293,7 +2280,7 @@ operator|==
 name|MSR_EFER
 condition|)
 block|{
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -2315,6 +2302,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|retu
+operator|=
+name|false
+expr_stmt|;
 if|if
 condition|(
 name|info1
@@ -2374,6 +2365,9 @@ argument_list|,
 name|ecx
 argument_list|,
 name|val
+argument_list|,
+operator|&
+name|retu
 argument_list|)
 condition|)
 block|{
@@ -2392,7 +2386,16 @@ operator|=
 name|false
 expr_stmt|;
 block|}
-name|VMM_CTR3
+else|else
+name|loop
+operator|=
+name|retu
+condition|?
+name|false
+else|:
+name|true
+expr_stmt|;
+name|VCPU_CTR3
 argument_list|(
 name|svm_sc
 operator|->
@@ -2456,6 +2459,9 @@ argument_list|,
 name|vcpu
 argument_list|,
 name|ecx
+argument_list|,
+operator|&
+name|retu
 argument_list|)
 condition|)
 block|{
@@ -2464,7 +2470,16 @@ operator|=
 name|false
 expr_stmt|;
 block|}
-name|VMM_CTR3
+else|else
+name|loop
+operator|=
+name|retu
+condition|?
+name|false
+else|:
+name|true
+expr_stmt|;
+name|VCPU_CTR3
 argument_list|(
 name|svm_sc
 operator|->
@@ -2515,7 +2530,7 @@ name|update_rip
 operator|=
 name|false
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -2645,7 +2660,7 @@ operator|.
 name|sctx_rdx
 argument_list|)
 expr_stmt|;
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -2694,7 +2709,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -2708,7 +2723,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -2725,6 +2740,18 @@ name|exitcode
 operator|=
 name|VM_EXITCODE_HLT
 expr_stmt|;
+name|vmexit
+operator|->
+name|u
+operator|.
+name|hlt
+operator|.
+name|rflags
+operator|=
+name|state
+operator|->
+name|rflags
+expr_stmt|;
 name|loop
 operator|=
 name|false
@@ -2734,7 +2761,7 @@ break|break;
 case|case
 name|VMCB_EXIT_PAUSE
 case|:
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -2796,7 +2823,7 @@ operator|&
 name|VMCB_NPF_INFO1_RSV
 condition|)
 block|{
-name|VMM_CTR2
+name|VCPU_CTR2
 argument_list|(
 name|svm_sc
 operator|->
@@ -2828,7 +2855,7 @@ name|info2
 argument_list|)
 condition|)
 block|{
-name|VMM_CTR3
+name|VCPU_CTR3
 argument_list|(
 name|svm_sc
 operator|->
@@ -2864,11 +2891,6 @@ name|gpa
 operator|=
 name|info2
 expr_stmt|;
-name|svm_npf_paging
-argument_list|(
-name|info1
-argument_list|,
-operator|&
 name|vmexit
 operator|->
 name|u
@@ -2876,15 +2898,10 @@ operator|.
 name|paging
 operator|.
 name|fault_type
-argument_list|,
-operator|&
-name|vmexit
-operator|->
-name|u
-operator|.
-name|paging
-operator|.
-name|protection
+operator|=
+name|svm_npf_paging
+argument_list|(
+name|info1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2897,7 +2914,7 @@ name|info1
 argument_list|)
 condition|)
 block|{
-name|VMM_CTR3
+name|VCPU_CTR3
 argument_list|(
 name|svm_sc
 operator|->
@@ -2966,7 +2983,7 @@ break|break;
 case|case
 name|VMCB_EXIT_SHUTDOWN
 case|:
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -2985,7 +3002,7 @@ break|break;
 case|case
 name|VMCB_EXIT_INVALID
 case|:
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -3011,7 +3028,7 @@ name|update_rip
 operator|=
 name|false
 expr_stmt|;
-name|VMM_CTR3
+name|VCPU_CTR3
 argument_list|(
 name|svm_sc
 operator|->
@@ -3031,7 +3048,7 @@ argument_list|,
 name|info2
 argument_list|)
 expr_stmt|;
-name|VMM_CTR3
+name|VCPU_CTR3
 argument_list|(
 name|svm_sc
 operator|->
@@ -3092,7 +3109,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -3149,7 +3166,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -3257,7 +3274,7 @@ name|false
 argument_list|)
 condition|)
 block|{
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -3284,7 +3301,7 @@ argument_list|,
 name|vcpu
 argument_list|)
 expr_stmt|;
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -3377,7 +3394,7 @@ operator|&
 name|VMCB_EVENTINJ_VALID
 condition|)
 block|{
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -3402,7 +3419,7 @@ operator|->
 name|intr_shadow
 condition|)
 block|{
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -3458,7 +3475,7 @@ operator|>
 literal|255
 condition|)
 block|{
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -3494,7 +3511,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -3523,7 +3540,7 @@ name|false
 argument_list|)
 condition|)
 block|{
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -3551,7 +3568,7 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -3669,7 +3686,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -3709,7 +3726,7 @@ name|intinfo
 argument_list|)
 condition|)
 block|{
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -3934,7 +3951,7 @@ name|lastcpu
 operator|=
 name|curcpu
 expr_stmt|;
-name|VMM_CTR3
+name|VCPU_CTR3
 argument_list|(
 name|svm_sc
 operator|->
@@ -4004,7 +4021,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -4029,15 +4046,6 @@ name|rip
 expr_stmt|;
 break|break;
 block|}
-name|lapic_timer_tick
-argument_list|(
-name|svm_sc
-operator|->
-name|vm
-argument_list|,
-name|vcpu
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4233,7 +4241,7 @@ name|svm_sc
 operator|=
 name|arg
 expr_stmt|;
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -4799,7 +4807,7 @@ argument_list|,
 name|vcpu
 argument_list|)
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -4864,7 +4872,7 @@ operator|&
 literal|0xFF
 operator|)
 expr_stmt|;
-name|VMM_CTR3
+name|VCPU_CTR3
 argument_list|(
 name|svm_sc
 operator|->
@@ -4969,7 +4977,7 @@ name|vcpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -5127,7 +5135,7 @@ argument_list|,
 name|vcpu
 argument_list|)
 expr_stmt|;
-name|VMM_CTR3
+name|VCPU_CTR3
 argument_list|(
 name|svm_sc
 operator|->
@@ -5260,7 +5268,7 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -5303,7 +5311,7 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -5352,7 +5360,7 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -5374,7 +5382,7 @@ case|case
 name|VM_CAP_UNRESTRICTED_GUEST
 case|:
 comment|/* SVM doesn't need special capability for SMP.*/
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
@@ -5483,7 +5491,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -5520,7 +5528,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -5560,7 +5568,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|VMM_CTR1
+name|VCPU_CTR1
 argument_list|(
 name|svm_sc
 operator|->
@@ -5582,7 +5590,7 @@ break|break;
 case|case
 name|VM_CAP_UNRESTRICTED_GUEST
 case|:
-name|VMM_CTR0
+name|VCPU_CTR0
 argument_list|(
 name|svm_sc
 operator|->
