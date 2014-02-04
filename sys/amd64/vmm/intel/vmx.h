@@ -120,17 +120,7 @@ comment|/* 	 * XXX todo debug registers and fpu state 	 */
 name|int
 name|inst_fail_status
 decl_stmt|;
-name|long
-name|eptgen
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-comment|/* cached pmap->pm_eptgen */
-comment|/* 	 * The 'eptp' and the 'pmap' do not change during the lifetime of 	 * the VM so it is safe to keep a copy in each vcpu's vmxctx. 	 */
-name|vm_paddr_t
-name|eptp
-decl_stmt|;
+comment|/* 	 * The pmap needs to be deactivated in vmx_exit_guest() 	 * so keep a copy of the 'pmap' in each vmxctx. 	 */
 name|struct
 name|pmap
 modifier|*
@@ -323,6 +313,13 @@ name|vm
 modifier|*
 name|vm
 decl_stmt|;
+name|long
+name|eptgen
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+comment|/* cached pmap->pm_eptgen */
 block|}
 struct|;
 end_struct
@@ -446,6 +443,11 @@ name|struct
 name|vmxctx
 modifier|*
 name|ctx
+parameter_list|,
+name|struct
+name|vmx
+modifier|*
+name|vmx
 parameter_list|,
 name|int
 name|launched
