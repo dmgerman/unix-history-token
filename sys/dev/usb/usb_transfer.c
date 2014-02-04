@@ -9320,6 +9320,8 @@ name|USB_MS_TO_TICKS
 argument_list|(
 name|ms
 argument_list|)
+operator|+
+name|USB_CALLOUT_ZERO_TICKS
 argument_list|,
 name|cb
 argument_list|,
