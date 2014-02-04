@@ -1483,7 +1483,7 @@ comment|/* 64-bit LBA support */
 define|#
 directive|define
 name|AAC_FLAGS_NOMSI
-value|(1<< 31)
+value|(1U<< 31)
 comment|/* Broken MSI */
 name|u_int32_t
 name|supported_options

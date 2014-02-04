@@ -1004,7 +1004,7 @@ operator|->
 name|val_seq
 operator|<
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -1066,7 +1066,7 @@ operator|-
 name|sequence
 operator|<
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -1386,7 +1386,7 @@ operator|-
 name|sequence
 operator|<
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

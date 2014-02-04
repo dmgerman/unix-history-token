@@ -2024,7 +2024,7 @@ begin_define
 define|#
 directive|define
 name|DPLL_VCO_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3646,7 +3646,7 @@ begin_define
 define|#
 directive|define
 name|SDVO_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3838,7 +3838,7 @@ begin_define
 define|#
 directive|define
 name|DVO_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4064,7 +4064,7 @@ begin_define
 define|#
 directive|define
 name|LVDS_PORT_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -4193,7 +4193,7 @@ begin_define
 define|#
 directive|define
 name|PP_ON
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -4285,7 +4285,7 @@ begin_define
 define|#
 directive|define
 name|PFIT_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4484,7 +4484,7 @@ begin_define
 define|#
 directive|define
 name|TV_ENC_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -4809,7 +4809,7 @@ begin_define
 define|#
 directive|define
 name|TVDAC_STATE_CHG
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -5408,7 +5408,7 @@ begin_define
 define|#
 directive|define
 name|TV_BURST_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -5627,7 +5627,7 @@ begin_define
 define|#
 directive|define
 name|TV_EQUAL_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -5871,7 +5871,7 @@ begin_define
 define|#
 directive|define
 name|TV_SC_DDA1_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -6163,7 +6163,7 @@ begin_define
 define|#
 directive|define
 name|TV_AUTO_SCALE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -6343,7 +6343,7 @@ begin_define
 define|#
 directive|define
 name|TV_CC_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -6411,7 +6411,7 @@ begin_define
 define|#
 directive|define
 name|TV_CC_RDY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -7516,7 +7516,7 @@ begin_define
 define|#
 directive|define
 name|VGA_DISP_DISABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

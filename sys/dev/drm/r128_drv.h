@@ -1103,7 +1103,7 @@ begin_define
 define|#
 directive|define
 name|R128_DST_TILE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1215,7 +1215,7 @@ begin_define
 define|#
 directive|define
 name|R128_GUI_ACTIVE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1285,7 +1285,7 @@ begin_define
 define|#
 directive|define
 name|R128_PC_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1534,7 +1534,7 @@ begin_define
 define|#
 directive|define
 name|R128_PM4_BUFFER_DL_DONE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1583,7 +1583,7 @@ begin_define
 define|#
 directive|define
 name|R128_PM4_GUI_ACTIVE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

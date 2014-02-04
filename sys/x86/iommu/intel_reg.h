@@ -780,7 +780,7 @@ begin_define
 define|#
 directive|define
 name|DMAR_GCMD_TE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -890,7 +890,7 @@ begin_define
 define|#
 directive|define
 name|DMAR_GSTS_TES
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1022,7 +1022,7 @@ begin_define
 define|#
 directive|define
 name|DMAR_CCMD_ICC32
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1231,7 +1231,7 @@ begin_define
 define|#
 directive|define
 name|DMAR_IOTLB_IVT32
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1486,7 +1486,7 @@ begin_define
 define|#
 directive|define
 name|DMAR_FECTL_IM
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1567,7 +1567,7 @@ begin_define
 define|#
 directive|define
 name|DMAR_FRCD2_F32
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1674,7 +1674,7 @@ begin_define
 define|#
 directive|define
 name|DMAR_PMEN_EPM
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -2114,7 +2114,7 @@ begin_define
 define|#
 directive|define
 name|DMAR_IECTL_IM
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment

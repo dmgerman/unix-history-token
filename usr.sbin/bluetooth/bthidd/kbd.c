@@ -197,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|E0PREFIX
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

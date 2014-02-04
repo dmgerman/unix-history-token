@@ -12872,7 +12872,7 @@ index|]
 operator|=
 name|htonl
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 argument_list|)

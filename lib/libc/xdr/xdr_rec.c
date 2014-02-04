@@ -301,7 +301,7 @@ begin_define
 define|#
 directive|define
 name|LAST_FRAG
-value|((u_int32_t)(1<< 31))
+value|((u_int32_t)(1U<< 31))
 end_define
 
 begin_typedef

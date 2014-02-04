@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|FEC_IER_HBERR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -419,7 +419,7 @@ begin_define
 define|#
 directive|define
 name|FEC_MIBC_DIS
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -451,7 +451,7 @@ begin_define
 define|#
 directive|define
 name|FEC_RCR_GRS
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1409,7 +1409,7 @@ begin_define
 define|#
 directive|define
 name|FEC_TXDESC_READY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1465,7 +1465,7 @@ begin_define
 define|#
 directive|define
 name|FEC_RXDESC_EMPTY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

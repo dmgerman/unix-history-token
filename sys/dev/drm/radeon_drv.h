@@ -3010,7 +3010,7 @@ begin_define
 define|#
 directive|define
 name|RS480_PDC_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3787,7 +3787,7 @@ begin_define
 define|#
 directive|define
 name|R300_PIPE_AUTO_CONFIG
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3990,14 +3990,14 @@ begin_define
 define|#
 directive|define
 name|RADEON_DST_TILE_MICRO
-value|(2<< 30)
+value|(2U<< 30)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RADEON_DST_TILE_BOTH
-value|(3<< 30)
+value|(3U<< 30)
 end_define
 
 begin_define
@@ -4580,7 +4580,7 @@ begin_define
 define|#
 directive|define
 name|R300_RB2D_DC_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4734,7 +4734,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_RB3D_ZC_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4762,7 +4762,7 @@ begin_define
 define|#
 directive|define
 name|R300_ZC_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4797,7 +4797,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_RB3D_DC_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4909,7 +4909,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_Z_DECOMPRESSION_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -5173,7 +5173,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_RBBM_ACTIVE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -5933,7 +5933,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_RB_RPTR_WR_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -6406,7 +6406,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_VTX_Z_PRESENT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -8453,7 +8453,7 @@ begin_define
 define|#
 directive|define
 name|R600_GUI_ACTIVE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -8621,7 +8621,7 @@ begin_define
 define|#
 directive|define
 name|R600_RB_RPTR_WR_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -9201,7 +9201,7 @@ begin_define
 define|#
 directive|define
 name|R600_PREZ_MUST_WAIT_FOR_POSTZ_DONE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -9613,7 +9613,7 @@ begin_define
 define|#
 directive|define
 name|R600_BILINEAR_PRECISION_8_BIT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -10208,7 +10208,7 @@ begin_define
 define|#
 directive|define
 name|R600_BARYC_AT_SAMPLE_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

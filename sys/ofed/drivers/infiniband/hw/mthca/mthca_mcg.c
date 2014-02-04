@@ -694,7 +694,7 @@ operator|->
 name|qp_num
 operator||
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -734,7 +734,7 @@ index|]
 operator|&
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 argument_list|)
@@ -755,7 +755,7 @@ operator|->
 name|qp_num
 operator||
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -1186,7 +1186,7 @@ operator|->
 name|qp_num
 operator||
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -1209,7 +1209,7 @@ index|]
 operator|&
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 argument_list|)

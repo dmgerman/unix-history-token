@@ -6202,7 +6202,7 @@ name|cpu_port_config
 operator|&=
 operator|~
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

@@ -1088,7 +1088,7 @@ begin_define
 define|#
 directive|define
 name|IWN_RESET_LINK_PWR_MGMT_DIS
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1435,7 +1435,7 @@ begin_define
 define|#
 directive|define
 name|IWN_DRAM_INT_TBL_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1475,7 +1475,7 @@ begin_define
 define|#
 directive|define
 name|IWN_BSM_WR_CTRL_START
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1556,7 +1556,7 @@ begin_define
 define|#
 directive|define
 name|IWN_INT_FH_RX
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1637,7 +1637,7 @@ begin_define
 define|#
 directive|define
 name|IWN_FH_TX_CONFIG_DMA_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1711,7 +1711,7 @@ begin_define
 define|#
 directive|define
 name|IWN_FH_RX_CONFIG_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1770,7 +1770,7 @@ begin_define
 define|#
 directive|define
 name|IWN_FH_TX_CONFIG_DMA_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2010,7 +2010,7 @@ begin_define
 define|#
 directive|define
 name|IWN_FW_UPDATED
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

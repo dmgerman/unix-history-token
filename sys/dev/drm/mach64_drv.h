@@ -1061,7 +1061,7 @@ begin_define
 define|#
 directive|define
 name|MACH64_LAST_DESCRIPTOR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1796,7 +1796,7 @@ begin_define
 define|#
 directive|define
 name|MACH64_FIFO_ERR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2652,7 +2652,7 @@ begin_define
 define|#
 directive|define
 name|MACH64_CRTC_VBLANK2_INT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

@@ -1454,7 +1454,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_TXDLY_INT_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1518,7 +1518,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_USB_TX_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2158,7 +2158,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_CAP_ADC_FEQ
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2215,7 +2215,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_SEL_EFUSE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2438,7 +2438,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_RF_REG_CTRL
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2633,7 +2633,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_NAV_UPD
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2921,7 +2921,7 @@ begin_define
 define|#
 directive|define
 name|RT3593_LNA_PE_G2_POL
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
