@@ -4038,6 +4038,12 @@ case|case
 name|UHSO_PORT_TYPE_DIAG2
 case|:
 case|case
+name|UHSO_PORT_TYPE_GPS
+case|:
+case|case
+name|UHSO_PORT_TYPE_GPSCTL
+case|:
+case|case
 name|UHSO_PORT_TYPE_CTL
 case|:
 case|case
