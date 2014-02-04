@@ -455,6 +455,8 @@ decl_stmt|,
 name|resid
 decl_stmt|,
 name|sz
+decl_stmt|,
+name|maxsz
 decl_stmt|;
 name|int
 name|c
@@ -487,6 +489,17 @@ name|md
 operator|->
 name|md_size
 expr_stmt|;
+name|maxsz
+operator|=
+name|min
+argument_list|(
+name|DFLTPHYS
+argument_list|,
+name|di
+operator|->
+name|maxiosize
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"  chunk %d: %lu bytes "
@@ -506,15 +519,12 @@ condition|)
 block|{
 name|sz
 operator|=
-operator|(
+name|min
+argument_list|(
 name|resid
-operator|>
-name|DFLTPHYS
-operator|)
-condition|?
-name|DFLTPHYS
-else|:
-name|resid
+argument_list|,
+name|maxsz
+argument_list|)
 expr_stmt|;
 name|va
 operator|=
@@ -703,7 +713,7 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|Elf32_Phdr
+name|Elf_Phdr
 name|phdr
 decl_stmt|;
 name|int
@@ -945,7 +955,7 @@ modifier|*
 name|di
 parameter_list|)
 block|{
-name|Elf32_Ehdr
+name|Elf_Ehdr
 name|ehdr
 decl_stmt|;
 name|uint32_t
@@ -1014,7 +1024,7 @@ index|[
 name|EI_CLASS
 index|]
 operator|=
-name|ELFCLASS32
+name|ELF_TARG_CLASS
 expr_stmt|;
 if|#
 directive|if
@@ -1072,8 +1082,9 @@ name|ehdr
 operator|.
 name|e_machine
 operator|=
-name|EM_PPC
+name|ELF_ARCH
 expr_stmt|;
+comment|/* Defined in powerpc/include/elf.h */
 name|ehdr
 operator|.
 name|e_phoff
@@ -1098,7 +1109,7 @@ name|e_phentsize
 operator|=
 sizeof|sizeof
 argument_list|(
-name|Elf32_Phdr
+name|Elf_Phdr
 argument_list|)
 expr_stmt|;
 name|ehdr
@@ -1107,7 +1118,7 @@ name|e_shentsize
 operator|=
 sizeof|sizeof
 argument_list|(
-name|Elf32_Shdr
+name|Elf_Shdr
 argument_list|)
 expr_stmt|;
 comment|/* Calculate dump size. */
@@ -1256,13 +1267,9 @@ expr_stmt|;
 comment|/* Dump leader */
 name|error
 operator|=
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 operator|&
 name|kdh
@@ -1369,13 +1376,9 @@ goto|;
 comment|/* Dump trailer */
 name|error
 operator|=
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 operator|&
 name|kdh
@@ -1398,13 +1401,9 @@ goto|goto
 name|fail
 goto|;
 comment|/* Signal completion, signoff and exit stage left. */
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 name|NULL
 argument_list|,
@@ -1443,6 +1442,18 @@ condition|)
 name|printf
 argument_list|(
 literal|"\nDump aborted\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|error
+operator|==
+name|ENOSPC
+condition|)
+name|printf
+argument_list|(
+literal|"\nDump failed. Partition too small.\n"
 argument_list|)
 expr_stmt|;
 else|else

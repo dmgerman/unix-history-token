@@ -1196,10 +1196,13 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"reg %d has %x reg %d has %x\n"
+literal|"reg %d has %jx reg %d has %jx\n"
 operator|,
 name|ra
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|fixreg
@@ -1209,6 +1212,9 @@ index|]
 operator|,
 name|rb
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|fixreg
@@ -1405,10 +1411,13 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"reg %d has %x reg %d has %x\n"
+literal|"reg %d has %jx reg %d has %jx\n"
 operator|,
 name|ra
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|fixreg
@@ -1418,6 +1427,9 @@ index|]
 operator|,
 name|rb
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|fixreg
@@ -1526,10 +1538,13 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"reg %d has %x displ %x\n"
+literal|"reg %d has %jx displ %jx\n"
 operator|,
 name|ra
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|fixreg
@@ -1537,6 +1552,9 @@ index|[
 name|ra
 index|]
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|addr
 operator|)
 argument_list|)
@@ -1841,7 +1859,7 @@ operator|==
 name|OPC_load_st_62
 condition|)
 block|{
-comment|/* These are 64-bit extenstions */
+comment|/* These are 64-bit extensions */
 return|return
 operator|(
 name|NOTFPU
@@ -2298,7 +2316,7 @@ operator|*
 name|a
 operator|^=
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -2617,7 +2635,7 @@ operator|*
 name|a
 operator||=
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -2683,7 +2701,7 @@ name|a
 operator|&=
 operator|~
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -2983,20 +3001,7 @@ name|i_a
 operator|.
 name|i_frc
 expr_stmt|;
-name|type
-operator|=
-name|FTYPE_SNG
-expr_stmt|;
-if|if
-condition|(
-name|instr
-operator|.
-name|i_any
-operator|.
-name|i_opcd
-operator|&
-literal|0x4
-condition|)
+comment|/* 			 * All arithmetic operations work on registers, which 			 * are stored as doubles. 			 */
 name|type
 operator|=
 name|FTYPE_DBL
@@ -3867,6 +3872,59 @@ operator|)
 return|;
 break|break;
 block|}
+comment|/* If the instruction was single precision, round */
+if|if
+condition|(
+operator|!
+operator|(
+name|instr
+operator|.
+name|i_any
+operator|.
+name|i_opcd
+operator|&
+literal|0x4
+operator|)
+condition|)
+block|{
+name|fpu_implode
+argument_list|(
+name|fe
+argument_list|,
+name|fp
+argument_list|,
+name|FTYPE_SNG
+argument_list|,
+operator|(
+name|u_int
+operator|*
+operator|)
+operator|&
+name|fs
+operator|->
+name|fpreg
+index|[
+name|rt
+index|]
+argument_list|)
+expr_stmt|;
+name|fpu_explode
+argument_list|(
+name|fe
+argument_list|,
+name|fp
+operator|=
+operator|&
+name|fe
+operator|->
+name|fe_f1
+argument_list|,
+name|FTYPE_SNG
+argument_list|,
+name|rt
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -4099,12 +4157,15 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"fpu_execute: cr[%d] (cr=%x)<= %x\n"
+literal|"fpu_execute: cr[%d] (cr=%jx)<= %x\n"
 operator|,
 name|bf
 operator|/
 literal|4
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tf
 operator|->
 name|cr

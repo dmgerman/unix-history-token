@@ -493,7 +493,7 @@ comment|/* fixes for encoding */
 name|size_t
 name|outer_len
 decl_stmt|;
-name|size_t
+name|asn_len_t
 name|scoped_len
 decl_stmt|;
 name|u_char

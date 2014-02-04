@@ -41,8 +41,7 @@ begin_comment
 comment|/*  * Trap frame.  Pushed onto the kernel stack on a trap (synchronous exception).  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|trapframe
 block|{
@@ -110,9 +109,8 @@ name|register_t
 name|tf_pad
 decl_stmt|;
 block|}
-name|trapframe_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/* Register numbers */

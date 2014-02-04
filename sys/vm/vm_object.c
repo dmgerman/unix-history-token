@@ -7172,6 +7172,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|prev_object
 operator|->
 name|type
@@ -7183,6 +7184,17 @@ operator|->
 name|type
 operator|!=
 name|OBJT_SWAP
+operator|)
+operator|||
+operator|(
+name|prev_object
+operator|->
+name|flags
+operator|&
+name|OBJ_TMPFS
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|VM_OBJECT_WUNLOCK

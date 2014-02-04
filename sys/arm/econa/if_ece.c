@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_vlan_var.h>
 end_include
 
@@ -6196,7 +6202,7 @@ name|cpu_port_config
 operator|&=
 operator|~
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

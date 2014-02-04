@@ -60281,6 +60281,12 @@ argument_list|(
 name|BUILT_IN_POPCOUNT
 argument_list|)
 operator|:
+case|case
+name|BUILT_IN_BSWAP32
+case|:
+case|case
+name|BUILT_IN_BSWAP64
+case|:
 comment|/* Always true.  */
 return|return
 literal|1

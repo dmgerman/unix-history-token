@@ -1933,7 +1933,7 @@ name|mi_valid
 operator|=
 name|false
 expr_stmt|;
-comment|/* Kluge alert.  In order to be sure that code like this  	 #define HASH # 	 HASH define foo bar  	 does not cause '#define foo bar' to get executed when 	 compiled with -save-temps, we recognize directives in 	 -fpreprocessed mode only if the # is in column 1.  macro.c 	 puts a space in front of any '#' at the start of a macro.  */
+comment|/* Kluge alert.  In order to be sure that code like this  	 #define HASH # 	 HASH define foo bar  	 does not cause '#define foo bar' to get executed when 	 compiled with -save-temps, we recognize directives in 	 -fpreprocessed mode only if the # is in column 1.  macro.c 	 puts a space in front of any '#' at the start of a macro. 	  	 We exclude the -fdirectives-only case because macro expansion 	 has not been performed yet, and block comments can cause spaces 	 to preceed the directive.  */
 if|if
 condition|(
 name|CPP_OPTION
@@ -1941,6 +1941,14 @@ argument_list|(
 name|pfile
 argument_list|,
 name|preprocessed
+argument_list|)
+operator|&&
+operator|!
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|directives_only
 argument_list|)
 operator|&&
 operator|(

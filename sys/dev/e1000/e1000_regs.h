@@ -187,6 +187,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_MPHY_ADDR_CTRL
+value|0x0024
+end_define
+
+begin_comment
+comment|/* GbE MPHY Address Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_DATA
+value|0x0E10
+end_define
+
+begin_comment
+comment|/* GBE MPHY Data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_STAT
+value|0x0E0C
+end_define
+
+begin_comment
+comment|/* GBE MPHY Statistics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PPHY_CTRL
+value|0x5b48
+end_define
+
+begin_comment
+comment|/* PCIe PHY Control */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_I350_BARCTRL
 value|0x5BFC
 end_define
@@ -657,6 +701,17 @@ end_define
 
 begin_comment
 comment|/* LED Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDMUX
+value|0x08130
+end_define
+
+begin_comment
+comment|/* LED MUX Control */
 end_comment
 
 begin_define
@@ -1293,6 +1348,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_EMIADD
+value|0x10
+end_define
+
+begin_comment
+comment|/* Extended Memory Indirect Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EMIDATA
+value|0x11
+end_define
+
+begin_comment
+comment|/* Extended Memory Indirect Data */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_SRWR
 value|0x12018
 end_define
@@ -1556,7 +1633,7 @@ begin_define
 define|#
 directive|define
 name|E1000_TQAVCC_QUEUE_MODE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1592,6 +1669,28 @@ name|_s
 parameter_list|)
 value|((_s)<< (6 * _n))
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MMDAC
+value|13
+end_define
+
+begin_comment
+comment|/* MMD Access Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MMDAAD
+value|14
+end_define
+
+begin_comment
+comment|/* MMD Access Address/Data */
+end_comment
 
 begin_comment
 comment|/* Convenience macros  *  * Note: "_n" is the queue number of the register to be written to.  *  * Example usage:  * E1000_RDBAL_REG(current_rx_queue)  */
@@ -4138,28 +4237,6 @@ end_define
 
 begin_comment
 comment|/* Host Interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_FFMT
-value|0x09000
-end_define
-
-begin_comment
-comment|/* Flexible Filter Mask Table - RW Array */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_FFVT
-value|0x09800
-end_define
-
-begin_comment
-comment|/* Flexible Filter Value Table - RW Array */
 end_comment
 
 begin_define

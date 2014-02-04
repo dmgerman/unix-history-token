@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_random.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -116,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rman.h>
 end_include
 
@@ -165,6 +177,12 @@ begin_include
 include|#
 directive|include
 file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -9912,6 +9930,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|uint64_t
+name|attachtime
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -9974,6 +9995,11 @@ name|parent
 argument_list|,
 name|dev
 argument_list|)
+expr_stmt|;
+name|attachtime
+operator|=
+name|get_cyclecount
+argument_list|()
 expr_stmt|;
 name|dev
 operator|->
@@ -10072,6 +10098,53 @@ name|error
 operator|)
 return|;
 block|}
+name|attachtime
+operator|=
+name|get_cyclecount
+argument_list|()
+operator|-
+name|attachtime
+expr_stmt|;
+comment|/* 	 * 4 bits per device is a reasonable value for desktop and server 	 * hardware with good get_cyclecount() implementations, but may 	 * need to be adjusted on other platforms. 	 */
+ifdef|#
+directive|ifdef
+name|RANDOM_DEBUG
+name|printf
+argument_list|(
+literal|"%s(): feeding %d bit(s) of entropy from %s%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+literal|4
+argument_list|,
+name|dev
+operator|->
+name|driver
+operator|->
+name|name
+argument_list|,
+name|dev
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|random_harvest
+argument_list|(
+operator|&
+name|attachtime
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|attachtime
+argument_list|)
+argument_list|,
+literal|4
+argument_list|,
+name|RANDOM_ATTACH
+argument_list|)
+expr_stmt|;
 name|device_sysctl_update
 argument_list|(
 name|dev

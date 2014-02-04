@@ -914,8 +914,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_I210_COPPER_FLASHLESS
+value|0x157B
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_I210_SERDES_FLASHLESS
+value|0x157C
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_I211_COPPER
 value|0x1539
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_I354_BACKPLANE_1GBPS
+value|0x1F40
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_I354_SGMII
+value|0x1F41
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_I354_BACKPLANE_2_5GBPS
+value|0x1F45
 end_define
 
 begin_define
@@ -1101,6 +1136,8 @@ name|e1000_82580
 block|,
 name|e1000_i350
 block|,
+name|e1000_i354
+block|,
 name|e1000_i210
 block|,
 name|e1000_i211
@@ -1155,6 +1192,8 @@ block|,
 name|e1000_nvm_eeprom_microwire
 block|,
 name|e1000_nvm_flash_hw
+block|,
+name|e1000_nvm_invm
 block|,
 name|e1000_nvm_flash_sw
 block|}
@@ -1574,6 +1613,17 @@ value|4
 end_define
 
 begin_comment
+comment|/* Number of packet split data buffers (not including the header buffer) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_PAGE_BUFFERS
+value|(MAX_PS_BUFFERS - 1)
+end_define
+
+begin_comment
 comment|/* Receive Descriptor - Packet Split */
 end_comment
 
@@ -1648,13 +1698,13 @@ block|{
 name|__le16
 name|header_status
 decl_stmt|;
+comment|/* length of buffers 1-3 */
 name|__le16
 name|length
 index|[
-literal|3
+name|PS_PAGE_BUFFERS
 index|]
 decl_stmt|;
-comment|/* length of buffers 1-3 */
 block|}
 name|upper
 struct|;
@@ -3886,6 +3936,12 @@ decl_stmt|;
 name|struct
 name|sfp_e1000_flags
 name|eth_flags
+decl_stmt|;
+name|u8
+name|media_port
+decl_stmt|;
+name|bool
+name|media_changed
 decl_stmt|;
 block|}
 struct|;

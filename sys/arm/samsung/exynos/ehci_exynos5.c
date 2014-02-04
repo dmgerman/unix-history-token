@@ -307,7 +307,7 @@ begin_define
 define|#
 directive|define
 name|HOST_CTRL_RESET_PHY_ALL
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment

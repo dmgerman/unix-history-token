@@ -31,6 +31,12 @@ directive|include
 file|<atf-c/macros.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<atf-c/utils.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif

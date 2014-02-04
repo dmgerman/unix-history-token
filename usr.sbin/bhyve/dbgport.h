@@ -15,13 +15,6 @@ directive|define
 name|_DBGPORT_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_GDB_PORT
-value|6466
-end_define
-
 begin_function_decl
 name|void
 name|init_dbgport

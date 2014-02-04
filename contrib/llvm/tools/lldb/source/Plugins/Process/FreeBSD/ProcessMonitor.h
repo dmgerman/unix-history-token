@@ -514,6 +514,38 @@ name|int
 name|regset
 argument_list|)
 decl_stmt|;
+comment|/// Reads the value of the thread-specific pointer for a given thread ID.
+name|bool
+name|ReadThreadPointer
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|value
+argument_list|)
+decl_stmt|;
+comment|/// Returns current thread IDs in process
+name|size_t
+name|GetCurrentThreadIDs
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|tid_t
+operator|>
+operator|&
+name|thread_ids
+argument_list|)
+decl_stmt|;
 comment|/// Writes a ptrace_lwpinfo structure corresponding to the given thread ID
 comment|/// to the memory region pointed to by @p lwpinfo.
 name|bool
@@ -533,6 +565,19 @@ operator|&
 name|error_no
 argument_list|)
 decl_stmt|;
+comment|/// Suspends or unsuspends a thread prior to process resume or step.
+name|bool
+name|ThreadSuspend
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|,
+name|bool
+name|suspend
+argument_list|)
+decl_stmt|;
 comment|/// Writes the raw event message code (vis-a-vis PTRACE_GETEVENTMSG)
 comment|/// corresponding to the given thread IDto the memory pointed to by @p
 comment|/// message.
@@ -550,29 +595,29 @@ operator|*
 name|message
 argument_list|)
 decl_stmt|;
-comment|/// Resumes the given thread.  If @p signo is anything but
-comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
+comment|/// Resumes the process.  If @p signo is anything but
+comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the process.
 name|bool
 name|Resume
 argument_list|(
 name|lldb
 operator|::
 name|tid_t
-name|tid
+name|unused
 argument_list|,
 name|uint32_t
 name|signo
 argument_list|)
 decl_stmt|;
-comment|/// Single steps the given thread.  If @p signo is anything but
-comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
+comment|/// Single steps the process.  If @p signo is anything but
+comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the process.
 name|bool
 name|SingleStep
 argument_list|(
 name|lldb
 operator|::
 name|tid_t
-name|tid
+name|unused
 argument_list|,
 name|uint32_t
 name|signo
@@ -597,6 +642,16 @@ name|void
 name|StopMonitor
 parameter_list|()
 function_decl|;
+comment|// Waits for the initial stop message from a new thread.
+name|bool
+name|WaitForInitialTIDStop
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 name|ProcessFreeBSD
@@ -618,19 +673,26 @@ operator|::
 name|pid_t
 name|m_pid
 expr_stmt|;
-name|lldb_private
-operator|::
-name|Mutex
-name|m_server_mutex
-expr_stmt|;
 name|int
 name|m_terminal_fd
 decl_stmt|;
-name|int
-name|m_client_fd
+comment|// current operation which must be executed on the privileged thread
+name|Operation
+modifier|*
+name|m_operation
 decl_stmt|;
-name|int
-name|m_server_fd
+name|lldb_private
+operator|::
+name|Mutex
+name|m_operation_mutex
+expr_stmt|;
+comment|// semaphores notified when Operation is ready to be processed and when
+comment|// the operation is complete.
+name|sem_t
+name|m_operation_pending
+decl_stmt|;
+name|sem_t
+name|m_operation_done
 decl_stmt|;
 struct|struct
 name|OperationArgs
@@ -800,10 +862,6 @@ name|LaunchArgs
 modifier|*
 name|args
 parameter_list|)
-function_decl|;
-name|bool
-name|EnableIPC
-parameter_list|()
 function_decl|;
 name|struct
 name|AttachArgs
@@ -1013,14 +1071,6 @@ comment|/// Stops the operation thread used to attach/launch a process.
 name|void
 name|StopOpThread
 parameter_list|()
-function_decl|;
-name|void
-name|CloseFD
-parameter_list|(
-name|int
-modifier|&
-name|fd
-parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

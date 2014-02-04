@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: create.c,v 1.69 2013/02/03 19:15:17 christos Exp $	*/
+comment|/*	$NetBSD: create.c,v 1.72 2013/10/17 17:22:59 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: create.c,v 1.69 2013/02/03 19:15:17 christos Exp $"
+literal|"$NetBSD: create.c,v 1.72 2013/10/17 17:22:59 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -143,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -1255,11 +1261,10 @@ argument_list|,
 operator|&
 name|offset
 argument_list|,
-literal|"device=%#llx"
+literal|"device=%#jx"
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|p
 operator|->
@@ -1306,8 +1311,8 @@ name|F_SIZE
 operator|&&
 operator|(
 name|flavor
-operator|!=
-name|F_NETBSD6
+operator|==
+name|F_FREEBSD9
 operator|||
 name|S_ISREG
 argument_list|(
@@ -1326,11 +1331,10 @@ argument_list|,
 operator|&
 name|offset
 argument_list|,
-literal|"size=%lld"
+literal|"size=%ju"
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|p
 operator|->
@@ -1364,10 +1368,10 @@ argument_list|,
 operator|&
 name|offset
 argument_list|,
-literal|"time=%ld.%09ld"
+literal|"time=%jd.%09ld"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|p
 operator|->
@@ -1395,10 +1399,10 @@ argument_list|,
 operator|&
 name|offset
 argument_list|,
-literal|"time=%ld.%09ld"
+literal|"time=%jd.%09ld"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|p
 operator|->

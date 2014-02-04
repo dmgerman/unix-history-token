@@ -32,6 +32,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -62,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/pfvar.h>
 end_include
 
@@ -69,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/in6_var.h>
 end_include
 
 begin_expr_stmt

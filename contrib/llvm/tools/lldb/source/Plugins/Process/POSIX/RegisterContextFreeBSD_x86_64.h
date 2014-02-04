@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterContextFreeBSD_x86_64.h ---------------------------*- C++ -*-===//
+comment|//===-- RegisterContextFreeBSD_x86_64.h -------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/POSIX/RegisterContext_x86_64.h"
+file|"RegisterContextPOSIX.h"
 end_include
 
 begin_decl_stmt
@@ -54,35 +54,35 @@ name|class
 name|RegisterContextFreeBSD_x86_64
 range|:
 name|public
-name|RegisterContext_x86_64
+name|RegisterInfoInterface
 block|{
 name|public
 operator|:
 name|RegisterContextFreeBSD_x86_64
 argument_list|(
-argument|lldb_private::Thread&thread
-argument_list|,
-argument|uint32_t concrete_frame_idx
+specifier|const
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|target_arch
 argument_list|)
+block|;
+name|virtual
+operator|~
+name|RegisterContextFreeBSD_x86_64
+argument_list|()
 block|;
 name|size_t
 name|GetGPRSize
 argument_list|()
 block|;
-name|protected
-operator|:
-name|virtual
 specifier|const
 name|lldb_private
 operator|::
 name|RegisterInfo
 operator|*
 name|GetRegisterInfo
-argument_list|()
-block|;
-name|virtual
-name|void
-name|UpdateRegisterInfo
 argument_list|()
 block|; }
 decl_stmt|;

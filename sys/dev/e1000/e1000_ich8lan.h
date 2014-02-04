@@ -298,7 +298,7 @@ value|(1<< 27)
 end_define
 
 begin_comment
-comment|/* Bit redefined for ICH8M */
+comment|/* different on ICH8M */
 end_comment
 
 begin_define
@@ -346,6 +346,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_FEXTNVM6_ENABLE_K1_ENTRY_CONDITION
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIE_ICH8_SNOOP_ALL
 value|PCIE_NO_SNOOP_ALL
 end_define
@@ -361,11 +368,11 @@ begin_define
 define|#
 directive|define
 name|E1000_PCH2_RAR_ENTRIES
-value|5
+value|11
 end_define
 
 begin_comment
-comment|/* RAR[0], SHRA[0-3] */
+comment|/* RAR[0-6], SHRA[0-3] */
 end_comment
 
 begin_define
@@ -646,6 +653,10 @@ name|HV_STATS_PAGE
 value|778
 end_define
 
+begin_comment
+comment|/* Half-duplex collision counts */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -654,7 +665,7 @@ value|PHY_REG(HV_STATS_PAGE, 16)
 end_define
 
 begin_comment
-comment|/* Single Collision Count */
+comment|/* Single Collision */
 end_comment
 
 begin_define
@@ -672,7 +683,7 @@ value|PHY_REG(HV_STATS_PAGE, 18)
 end_define
 
 begin_comment
-comment|/* Excessive Coll. Count */
+comment|/* Excessive Coll. */
 end_comment
 
 begin_define
@@ -690,7 +701,7 @@ value|PHY_REG(HV_STATS_PAGE, 20)
 end_define
 
 begin_comment
-comment|/* Multiple Coll. Count */
+comment|/* Multiple Collision */
 end_comment
 
 begin_define
@@ -708,7 +719,7 @@ value|PHY_REG(HV_STATS_PAGE, 23)
 end_define
 
 begin_comment
-comment|/* Late Collision Count */
+comment|/* Late Collision */
 end_comment
 
 begin_define
@@ -726,7 +737,7 @@ value|PHY_REG(HV_STATS_PAGE, 25)
 end_define
 
 begin_comment
-comment|/* Collision Count */
+comment|/* Collision */
 end_comment
 
 begin_define
@@ -762,7 +773,7 @@ value|PHY_REG(HV_STATS_PAGE, 29)
 end_define
 
 begin_comment
-comment|/* Transmit with no CRS */
+comment|/* Tx with no CRS */
 end_comment
 
 begin_define
@@ -1032,6 +1043,49 @@ comment|/* SW Semaphore flag timeout in ms */
 end_comment
 
 begin_comment
+comment|/* Inband Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I217_INBAND_CTRL
+value|PHY_REG(770, 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I217_INBAND_CTRL_LINK_STAT_TX_TIMEOUT_MASK
+value|0x3F00
+end_define
+
+begin_define
+define|#
+directive|define
+name|I217_INBAND_CTRL_LINK_STAT_TX_TIMEOUT_SHIFT
+value|8
+end_define
+
+begin_comment
+comment|/* Low Power Idle GPIO Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I217_LPI_GPIO_CTRL
+value|PHY_REG(772, 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I217_LPI_GPIO_CTRL_AUTO_EN_LPI
+value|0x0800
+end_define
+
+begin_comment
 comment|/* PHY Low Power Idle Control */
 end_comment
 
@@ -1069,6 +1123,28 @@ directive|define
 name|I82579_LPI_CTRL_FORCE_PLL_LOCK_COUNT
 value|0x80
 end_define
+
+begin_comment
+comment|/* 82579 DFT Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I82579_DFT_CTRL
+value|PHY_REG(769, 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I82579_DFT_CTRL_GATE_PHY_RESET
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Gate PHY Reset on MAC Reset */
+end_comment
 
 begin_comment
 comment|/* Extended Management Interface (EMI) Registers */
@@ -1147,7 +1223,7 @@ begin_define
 define|#
 directive|define
 name|I82579_EEE_PCS_STATUS
-value|0x182D
+value|0x182E
 end_define
 
 begin_comment
@@ -1195,7 +1271,7 @@ value|(1<< 1)
 end_define
 
 begin_comment
-comment|/* 100BaseTx EEE supported */
+comment|/* 100BaseTx EEE */
 end_comment
 
 begin_define
@@ -1206,7 +1282,7 @@ value|(1<< 2)
 end_define
 
 begin_comment
-comment|/* 1000BaseTx EEE supported */
+comment|/* 1000BaseTx EEE */
 end_comment
 
 begin_define
@@ -1586,6 +1662,48 @@ parameter_list|,
 name|u16
 modifier|*
 name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_write_emi_reg_locked
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u16
+name|addr
+parameter_list|,
+name|u16
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_set_eee_pchlan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|e1000_toggle_lanphypc_pch_lpt
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
 parameter_list|)
 function_decl|;
 end_function_decl

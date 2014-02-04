@@ -2211,6 +2211,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UIPROTO_CDC_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|UIPROTO_CDC_AT
 value|1
 end_define

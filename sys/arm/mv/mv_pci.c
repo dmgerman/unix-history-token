@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|PCI_CFG_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1126,7 +1126,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|pcib
 argument_list|,
-name|fdtbus
+name|nexus
 argument_list|,
 name|mv_pcib_driver
 argument_list|,

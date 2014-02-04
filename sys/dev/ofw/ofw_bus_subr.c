@@ -862,6 +862,66 @@ block|}
 end_function
 
 begin_function
+specifier|const
+name|struct
+name|ofw_compat_data
+modifier|*
+name|ofw_bus_search_compatible
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|struct
+name|ofw_compat_data
+modifier|*
+name|compat
+parameter_list|)
+block|{
+if|if
+condition|(
+name|compat
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+for|for
+control|(
+init|;
+name|compat
+operator|->
+name|ocd_str
+operator|!=
+name|NULL
+condition|;
+operator|++
+name|compat
+control|)
+block|{
+if|if
+condition|(
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+name|compat
+operator|->
+name|ocd_str
+argument_list|)
+condition|)
+break|break;
+block|}
+return|return
+operator|(
+name|compat
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|int
 name|ofw_bus_has_prop
 parameter_list|(
@@ -909,12 +969,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FDT
-end_ifndef
-
 begin_function
 name|void
 name|ofw_bus_setup_iinfo
@@ -939,7 +993,7 @@ name|msksz
 decl_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -976,7 +1030,7 @@ name|ii
 operator|->
 name|opi_imapsz
 operator|=
-name|OF_getprop_alloc
+name|OF_getencprop_alloc
 argument_list|(
 name|node
 argument_list|,
@@ -1006,7 +1060,7 @@ condition|)
 block|{
 name|msksz
 operator|=
-name|OF_getprop_alloc
+name|OF_getencprop_alloc
 argument_list|(
 name|node
 argument_list|,
@@ -1128,9 +1182,17 @@ name|opi_addrc
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|node
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|rv
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1149,9 +1211,10 @@ name|regsz
 condition|)
 name|panic
 argument_list|(
-literal|"ofw_bus_lookup_imap: could not get reg property"
+literal|"ofw_bus_lookup_imap: cannot get reg property"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ofw_bus_search_intrmap
@@ -1411,7 +1474,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_searchprop
+name|OF_searchencprop
 argument_list|(
 name|OF_xref_phandle
 argument_list|(
@@ -1537,15 +1600,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !FDT */
-end_comment
 
 end_unit
 

@@ -709,7 +709,10 @@ name|tcpsz
 decl_stmt|;
 name|int
 name|slen
+init|=
+literal|0
 decl_stmt|;
+comment|/* silence gcc */
 name|ip_t
 modifier|*
 name|ip

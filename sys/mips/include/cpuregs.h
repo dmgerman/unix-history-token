@@ -353,6 +353,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_MIPS74KC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_UNCACHED
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CACHED
+value|0x00
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -683,6 +711,26 @@ name|COP0_SYNC
 value|ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_MIPS74KC
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|COP0_SYNC
+value|.word 0xc0
+end_define
+
+begin_comment
+comment|/* ehb */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -696,7 +744,7 @@ begin_define
 define|#
 directive|define
 name|COP0_SYNC
-value|ssnop; ssnop; ssnop; ssnop; ssnop
+value|ssnop; ssnop; ssnop; ssnop; .word 0xc0;
 end_define
 
 begin_endif

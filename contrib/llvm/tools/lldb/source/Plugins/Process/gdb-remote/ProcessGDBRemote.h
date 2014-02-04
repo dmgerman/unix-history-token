@@ -664,6 +664,18 @@ return|return
 name|m_gdb_comm
 return|;
 block|}
+comment|//----------------------------------------------------------------------
+comment|// Override SetExitStatus so we can disconnect from the remote GDB server
+comment|//----------------------------------------------------------------------
+name|virtual
+name|bool
+name|SetExitStatus
+argument_list|(
+argument|int exit_status
+argument_list|,
+argument|const char *cstr
+argument_list|)
+block|;
 name|protected
 operator|:
 name|friend
@@ -840,6 +852,27 @@ operator|&
 name|response
 argument_list|)
 block|;
+name|bool
+name|ParsePythonTargetDefinition
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|target_definition_fspec
+argument_list|)
+block|;
+name|bool
+name|ParseRegisters
+argument_list|(
+name|lldb_private
+operator|::
+name|ScriptInterpreterObject
+operator|*
+name|registers_array
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Broadcaster event bits definitions.
 comment|//------------------------------------------------------------------
@@ -989,11 +1022,6 @@ name|tid_sig_collection
 name|m_continue_S_tids
 block|;
 comment|// 'S' for step with signal
-name|lldb
-decl|::
-name|addr_t
-name|m_dispatch_queue_offsets_addr
-empty_stmt|;
 name|size_t
 name|m_max_memory_size
 block|;
@@ -1017,6 +1045,9 @@ decl|::
 name|CommandObjectSP
 name|m_command_sp
 empty_stmt|;
+name|int64_t
+name|m_breakpoint_pc_offset
+block|;
 name|bool
 name|StartAsyncThread
 parameter_list|()
@@ -1026,15 +1057,16 @@ name|StopAsyncThread
 parameter_list|()
 function_decl|;
 specifier|static
-name|void
-modifier|*
+name|lldb
+operator|::
+name|thread_result_t
 name|AsyncThread
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|arg
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 specifier|static
 name|bool
 name|MonitorDebugserverProcess

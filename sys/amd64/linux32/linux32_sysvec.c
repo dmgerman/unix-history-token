@@ -3269,23 +3269,16 @@ name|sf_sc
 operator|.
 name|sc_eflags
 expr_stmt|;
-comment|/* 	 * XXX do allow users to change the privileged flag PSL_RF.  The 	 * cpu sets PSL_RF in tf_eflags for faults.  Debuggers should 	 * sometimes set it there too.  tf_eflags is kept in the signal 	 * context during signal handling and there is no other place 	 * to remember it, so the PSL_RF bit may be corrupted by the 	 * signal handler without us knowing.  Corruption of the PSL_RF 	 * bit at worst causes one more or one less debugger trap, so 	 * allowing it is fairly harmless. 	 */
 if|if
 condition|(
 operator|!
 name|EFLAGS_SECURE
 argument_list|(
 name|eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|,
 name|regs
 operator|->
 name|tf_rflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|)
 condition|)
 return|return
@@ -3740,23 +3733,16 @@ name|context
 operator|->
 name|sc_eflags
 expr_stmt|;
-comment|/* 	 * XXX do allow users to change the privileged flag PSL_RF.  The 	 * cpu sets PSL_RF in tf_eflags for faults.  Debuggers should 	 * sometimes set it there too.  tf_eflags is kept in the signal 	 * context during signal handling and there is no other place 	 * to remember it, so the PSL_RF bit may be corrupted by the 	 * signal handler without us knowing.  Corruption of the PSL_RF 	 * bit at worst causes one more or one less debugger trap, so 	 * allowing it is fairly harmless. 	 */
 if|if
 condition|(
 operator|!
 name|EFLAGS_SECURE
 argument_list|(
 name|eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|,
 name|regs
 operator|->
 name|tf_rflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|)
 condition|)
 return|return

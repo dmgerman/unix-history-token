@@ -1866,10 +1866,7 @@ name|vm
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
-name|lapic_set_intr
+name|lapic_intr_edge
 argument_list|(
 name|ppt
 operator|->

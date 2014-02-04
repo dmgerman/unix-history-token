@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_global.h"
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -851,19 +863,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|xnb_add_mbuf_cksum
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|mbufc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|xnb_stop
 parameter_list|(
 name|struct
@@ -958,6 +957,38 @@ name|int
 name|xnb_dump_rings
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|static
+name|void
+name|xnb_add_mbuf_cksum
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|mbufc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6616,11 +6647,24 @@ name|len
 operator|=
 name|total_size
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|xnb_add_mbuf_cksum
 argument_list|(
 name|mbufc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -8044,6 +8088,20 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_comment
 comment|/**  * Add IP, TCP, and/or UDP checksums to every mbuf in a chain.  The first mbuf  * in the chain must start with a struct ether_header.  *  * XXX This function will perform incorrectly on UDP packets that are split up  * into multiple ethernet frames.  */
 end_comment
@@ -8375,6 +8433,15 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET || INET6 */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -8454,9 +8521,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
 name|struct
 name|ifreq
 modifier|*
@@ -8469,6 +8533,9 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ifaddr
 modifier|*

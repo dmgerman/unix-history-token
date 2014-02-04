@@ -25,6 +25,18 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -109,10 +121,10 @@ name|int
 name|queue_extra_entries
 decl_stmt|;
 name|int
-name|devq_openings
+name|total_openings
 decl_stmt|;
 name|int
-name|devq_allocating
+name|devq_openings
 decl_stmt|;
 name|int
 name|dev_openings
@@ -137,6 +149,10 @@ begin_struct
 struct|struct
 name|cam_devq
 block|{
+name|struct
+name|mtx
+name|send_mtx
+decl_stmt|;
 name|struct
 name|camq
 name|send_queue

@@ -3,26 +3,32 @@ begin_comment
 comment|/*-  * Copyright (c) 2000-2013 Mark R V Murray  * Copyright (c) 2004 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"opt_random.h"
+end_include
+
 begin_if
 if|#
 directive|if
 operator|!
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|YARROW_RNG
+name|RANDOM_YARROW
 end_define
 
 begin_elif
@@ -30,19 +36,39 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 end_elif
 
 begin_error
 error|#
 directive|error
-literal|"Must define either YARROW_RNG or FORTUNA_RNG"
+literal|"Must define either RANDOM_YARROW or RANDOM_FORTUNA"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|RANDOM_FORTUNA
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Fortuna is not yet implemented"
 end_error
 
 begin_endif
@@ -163,12 +189,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/random/random_adaptors.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/random/randomdev.h>
 end_include
 
@@ -178,12 +198,24 @@ directive|include
 file|<dev/random/randomdev_soft.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/random/random_harvestq.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/random/random_adaptors.h>
+end_include
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 end_if
 
@@ -203,7 +235,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 end_if
 
@@ -217,12 +249,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"random_harvestq.h"
-end_include
 
 begin_function_decl
 specifier|static
@@ -266,7 +292,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 end_if
 
@@ -303,11 +329,6 @@ operator|=
 name|random_yarrow_read
 block|,
 operator|.
-name|write
-operator|=
-name|randomdev_write
-block|,
-operator|.
 name|poll
 operator|=
 name|randomdev_poll
@@ -320,8 +341,16 @@ block|,
 operator|.
 name|seeded
 operator|=
-literal|1
-block|, }
+literal|0
+block|,
+comment|/* This will be seeded during entropy processing */
+operator|.
+name|priority
+operator|=
+literal|90
+block|,
+comment|/* High priority, so top of the list. Fortuna may still win. */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -349,7 +378,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 end_if
 
@@ -386,11 +415,6 @@ operator|=
 name|random_fortuna_read
 block|,
 operator|.
-name|write
-operator|=
-name|randomdev_write
-block|,
-operator|.
 name|poll
 operator|=
 name|randomdev_poll
@@ -403,8 +427,16 @@ block|,
 operator|.
 name|seeded
 operator|=
-literal|1
-block|, }
+literal|0
+block|,
+comment|/* This will be excplicitly seeded at startup when secured */
+operator|.
+name|priority
+operator|=
+literal|100
+block|,
+comment|/* High priority, so top of the list. Beat Yarrow. */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -426,6 +458,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.random.sys.seeded"
+argument_list|,
+operator|&
+name|random_context
+operator|.
+name|seeded
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* List for the dynamic sysctls */
@@ -486,6 +531,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
+operator|(
 name|sysctl_handle_int
 argument_list|(
 name|oidp
@@ -500,6 +546,7 @@ name|oid_arg2
 argument_list|,
 name|req
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -523,7 +570,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 name|random_yarrow_init_alg
 argument_list|(
@@ -537,7 +584,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 name|random_fortuna_init_alg
 argument_list|(
@@ -593,7 +640,7 @@ name|random_context
 operator|.
 name|seeded
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|random_check_boolean
 argument_list|,
@@ -712,7 +759,7 @@ name|harvest
 operator|.
 name|interrupt
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|random_check_boolean
 argument_list|,
@@ -744,7 +791,7 @@ name|harvest
 operator|.
 name|swi
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|random_check_boolean
 argument_list|,
@@ -808,7 +855,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 name|random_yarrow_deinit_alg
 argument_list|()
@@ -819,7 +866,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 name|random_fortuna_deinit_alg
 argument_list|()
@@ -832,89 +879,6 @@ operator|&
 name|random_clist
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|randomdev_write
-parameter_list|(
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|count
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|u_int
-name|chunk
-decl_stmt|;
-comment|/* 	 * Break the input up into HARVESTSIZE chunks. The writer has too 	 * much control here, so "estimate" the entropy as zero. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|count
-condition|;
-name|i
-operator|+=
-name|HARVESTSIZE
-control|)
-block|{
-name|chunk
-operator|=
-name|HARVESTSIZE
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|+
-name|chunk
-operator|>=
-name|count
-condition|)
-name|chunk
-operator|=
-call|(
-name|u_int
-call|)
-argument_list|(
-name|count
-operator|-
-name|i
-argument_list|)
-expr_stmt|;
-name|random_harvestq_internal
-argument_list|(
-name|get_cyclecount
-argument_list|()
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|buf
-operator|+
-name|i
-argument_list|,
-name|chunk
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|RANDOM_WRITE
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -933,12 +897,6 @@ operator|.
 name|seeded
 condition|)
 block|{
-name|random_context
-operator|.
-name|seeded
-operator|=
-literal|1
-expr_stmt|;
 name|selwakeuppri
 argument_list|(
 operator|&
@@ -955,7 +913,19 @@ operator|&
 name|random_context
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"random: unblocking device.\n"
+argument_list|)
+expr_stmt|;
+name|random_context
+operator|.
+name|seeded
+operator|=
+literal|1
+expr_stmt|;
 block|}
+comment|/* Do arc4random(9) a favour while we are about it. */
 operator|(
 name|void
 operator|)
@@ -1031,7 +1001,9 @@ name|random_reseed_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|revents
+operator|)
 return|;
 block|}
 end_function
@@ -1082,7 +1054,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Entropy device is blocking.\n"
+literal|"random: blocking on read.\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1113,7 +1085,9 @@ name|random_reseed_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1152,8 +1126,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
+comment|/* This ultimately calls randomdev_unblock() */
 name|random_yarrow_reseed
 argument_list|()
 expr_stmt|;
@@ -1163,8 +1138,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
+comment|/* This ultimately calls randomdev_unblock() */
 name|random_fortuna_reseed
 argument_list|()
 expr_stmt|;
@@ -1180,6 +1156,7 @@ name|randomdev_modevent
 parameter_list|(
 name|module_t
 name|mod
+name|__unused
 parameter_list|,
 name|int
 name|type
@@ -1187,6 +1164,7 @@ parameter_list|,
 name|void
 modifier|*
 name|unused
+name|__unused
 parameter_list|)
 block|{
 switch|switch

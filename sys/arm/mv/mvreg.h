@@ -750,12 +750,38 @@ begin_comment
 comment|/*  * Power Control  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_KIRKWOOD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL
+value|0x18
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|CPU_PM_CTRL
 value|0x1C
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

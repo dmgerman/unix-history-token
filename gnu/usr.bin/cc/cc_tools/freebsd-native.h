@@ -22,14 +22,14 @@ begin_define
 define|#
 directive|define
 name|FBSD_MAJOR
-value|10
+value|11
 end_define
 
 begin_define
 define|#
 directive|define
 name|FBSD_CC_VER
-value|1000001
+value|1100001
 end_define
 
 begin_comment
@@ -94,7 +94,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 end_ifdef
 
 begin_define

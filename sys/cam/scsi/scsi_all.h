@@ -4943,7 +4943,7 @@ name|SVPD_BDC_RATE_NOT_REPORTED
 value|0x00
 define|#
 directive|define
-name|SVPD_BDC_RATE_NONE_ROTATING
+name|SVPD_BDC_RATE_NON_ROTATING
 value|0x01
 name|u_int8_t
 name|reserved1
@@ -8208,6 +8208,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|scsi_print_inquiry
+parameter_list|(
+name|struct
+name|scsi_inquiry_data
+modifier|*
+name|inq_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|scsi_print_inquiry_short
 parameter_list|(
 name|struct
 name|scsi_inquiry_data

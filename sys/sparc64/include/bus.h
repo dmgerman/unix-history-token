@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996, 1997, 1998, 2001 The NetBSD Foundation, Inc. 
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Eduardo E. Horvath. All rights reserved.  * Copyright (c) 1996 Charles M. Hannum.  All rights reserved.  * Copyright (c) 1996 Christopher G. Demetriou.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Christopher G. Demetriou  *	for the NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * 	from: NetBSD: bus.h,v 1.58 2008/04/28 20:23:36 martin Exp  *	and  *	from: FreeBSD: src/sys/alpha/include/bus.h,v 1.9 2001/01/09  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1997-1999 Eduardo E. Horvath. All rights reserved.  * Copyright (c) 1996 Charles M. Hannum.  All rights reserved.  * Copyright (c) 1996 Christopher G. Demetriou.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Christopher G. Demetriou  *	for the NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	from: NetBSD: bus.h,v 1.58 2008/04/28 20:23:36 martin Exp  *	and  *	from: FreeBSD: src/sys/alpha/include/bus.h,v 1.9 2001/01/09  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -176,29 +176,9 @@ name|void
 modifier|*
 name|bst_cookie
 decl_stmt|;
-name|bus_space_tag_t
-name|bst_parent
-decl_stmt|;
 name|int
 name|bst_type
 decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|bst_bus_barrier
-function_decl|)
-parameter_list|(
-name|bus_space_tag_t
-parameter_list|,
-name|bus_space_handle_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
 block|}
 struct|;
 end_struct
@@ -291,23 +271,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* This macro finds the first "upstream" implementation of method `f' */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BS_CALL
-parameter_list|(
-name|t
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|while (t->f == NULL)						\ 		t = t->bst_parent;					\ 	return (*(t)->f)
-end_define
-
 begin_function
 specifier|static
 name|__inline
@@ -316,36 +279,29 @@ name|bus_space_barrier
 parameter_list|(
 name|bus_space_tag_t
 name|t
+name|__unused
 parameter_list|,
 name|bus_space_handle_t
 name|h
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|o
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|s
+name|__unused
 parameter_list|,
 name|int
 name|f
+name|__unused
 parameter_list|)
 block|{
-name|_BS_CALL
+comment|/* 	 * We have lots of alternatives depending on whether we're 	 * synchronizing loads with loads, loads with stores, stores 	 * with loads, or stores with stores.  The only ones that seem 	 * generic are #Sync and #MemIssue.  We use #Sync for safety. 	 */
+name|membar
 argument_list|(
-name|t
-argument_list|,
-name|bst_bus_barrier
-argument_list|)
-argument_list|(
-name|t
-argument_list|,
-name|h
-argument_list|,
-name|o
-argument_list|,
-name|s
-argument_list|,
-name|f
+name|Sync
 argument_list|)
 expr_stmt|;
 block|}
@@ -359,15 +315,18 @@ name|bus_space_subregion
 parameter_list|(
 name|bus_space_tag_t
 name|t
+name|__unused
 parameter_list|,
 name|bus_space_handle_t
 name|h
 parameter_list|,
 name|bus_size_t
 name|o
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|s
+name|__unused
 parameter_list|,
 name|bus_space_handle_t
 modifier|*

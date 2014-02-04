@@ -5649,7 +5649,260 @@ comment|// The address of the version Dependency table.
 name|DT_VERNEEDNUM
 init|=
 literal|0X6FFFFFFF
+block|,
 comment|// The number of entries in DT_VERNEED.
+comment|// Mips specific dynamic table entry tags.
+name|DT_MIPS_RLD_VERSION
+init|=
+literal|0x70000001
+block|,
+comment|// 32 bit version number for runtime
+comment|// linker interface.
+name|DT_MIPS_TIME_STAMP
+init|=
+literal|0x70000002
+block|,
+comment|// Time stamp.
+name|DT_MIPS_ICHECKSUM
+init|=
+literal|0x70000003
+block|,
+comment|// Checksum of external strings
+comment|// and common sizes.
+name|DT_MIPS_IVERSION
+init|=
+literal|0x70000004
+block|,
+comment|// Index of version string
+comment|// in string table.
+name|DT_MIPS_FLAGS
+init|=
+literal|0x70000005
+block|,
+comment|// 32 bits of flags.
+name|DT_MIPS_BASE_ADDRESS
+init|=
+literal|0x70000006
+block|,
+comment|// Base address of the segment.
+name|DT_MIPS_MSYM
+init|=
+literal|0x70000007
+block|,
+comment|// Address of .msym section.
+name|DT_MIPS_CONFLICT
+init|=
+literal|0x70000008
+block|,
+comment|// Address of .conflict section.
+name|DT_MIPS_LIBLIST
+init|=
+literal|0x70000009
+block|,
+comment|// Address of .liblist section.
+name|DT_MIPS_LOCAL_GOTNO
+init|=
+literal|0x7000000a
+block|,
+comment|// Number of local global offset
+comment|// table entries.
+name|DT_MIPS_CONFLICTNO
+init|=
+literal|0x7000000b
+block|,
+comment|// Number of entries
+comment|// in the .conflict section.
+name|DT_MIPS_LIBLISTNO
+init|=
+literal|0x70000010
+block|,
+comment|// Number of entries
+comment|// in the .liblist section.
+name|DT_MIPS_SYMTABNO
+init|=
+literal|0x70000011
+block|,
+comment|// Number of entries
+comment|// in the .dynsym section.
+name|DT_MIPS_UNREFEXTNO
+init|=
+literal|0x70000012
+block|,
+comment|// Index of first external dynamic symbol
+comment|// not referenced locally.
+name|DT_MIPS_GOTSYM
+init|=
+literal|0x70000013
+block|,
+comment|// Index of first dynamic symbol
+comment|// in global offset table.
+name|DT_MIPS_HIPAGENO
+init|=
+literal|0x70000014
+block|,
+comment|// Number of page table entries
+comment|// in global offset table.
+name|DT_MIPS_RLD_MAP
+init|=
+literal|0x70000016
+block|,
+comment|// Address of run time loader map,
+comment|// used for debugging.
+name|DT_MIPS_DELTA_CLASS
+init|=
+literal|0x70000017
+block|,
+comment|// Delta C++ class definition.
+name|DT_MIPS_DELTA_CLASS_NO
+init|=
+literal|0x70000018
+block|,
+comment|// Number of entries
+comment|// in DT_MIPS_DELTA_CLASS.
+name|DT_MIPS_DELTA_INSTANCE
+init|=
+literal|0x70000019
+block|,
+comment|// Delta C++ class instances.
+name|DT_MIPS_DELTA_INSTANCE_NO
+init|=
+literal|0x7000001A
+block|,
+comment|// Number of entries
+comment|// in DT_MIPS_DELTA_INSTANCE.
+name|DT_MIPS_DELTA_RELOC
+init|=
+literal|0x7000001B
+block|,
+comment|// Delta relocations.
+name|DT_MIPS_DELTA_RELOC_NO
+init|=
+literal|0x7000001C
+block|,
+comment|// Number of entries
+comment|// in DT_MIPS_DELTA_RELOC.
+name|DT_MIPS_DELTA_SYM
+init|=
+literal|0x7000001D
+block|,
+comment|// Delta symbols that Delta
+comment|// relocations refer to.
+name|DT_MIPS_DELTA_SYM_NO
+init|=
+literal|0x7000001E
+block|,
+comment|// Number of entries
+comment|// in DT_MIPS_DELTA_SYM.
+name|DT_MIPS_DELTA_CLASSSYM
+init|=
+literal|0x70000020
+block|,
+comment|// Delta symbols that hold
+comment|// class declarations.
+name|DT_MIPS_DELTA_CLASSSYM_NO
+init|=
+literal|0x70000021
+block|,
+comment|// Number of entries
+comment|// in DT_MIPS_DELTA_CLASSSYM.
+name|DT_MIPS_CXX_FLAGS
+init|=
+literal|0x70000022
+block|,
+comment|// Flags indicating information
+comment|// about C++ flavor.
+name|DT_MIPS_PIXIE_INIT
+init|=
+literal|0x70000023
+block|,
+comment|// Pixie information.
+name|DT_MIPS_SYMBOL_LIB
+init|=
+literal|0x70000024
+block|,
+comment|// Address of .MIPS.symlib
+name|DT_MIPS_LOCALPAGE_GOTIDX
+init|=
+literal|0x70000025
+block|,
+comment|// The GOT index of the first PTE
+comment|// for a segment
+name|DT_MIPS_LOCAL_GOTIDX
+init|=
+literal|0x70000026
+block|,
+comment|// The GOT index of the first PTE
+comment|// for a local symbol
+name|DT_MIPS_HIDDEN_GOTIDX
+init|=
+literal|0x70000027
+block|,
+comment|// The GOT index of the first PTE
+comment|// for a hidden symbol
+name|DT_MIPS_PROTECTED_GOTIDX
+init|=
+literal|0x70000028
+block|,
+comment|// The GOT index of the first PTE
+comment|// for a protected symbol
+name|DT_MIPS_OPTIONS
+init|=
+literal|0x70000029
+block|,
+comment|// Address of `.MIPS.options'.
+name|DT_MIPS_INTERFACE
+init|=
+literal|0x7000002A
+block|,
+comment|// Address of `.interface'.
+name|DT_MIPS_DYNSTR_ALIGN
+init|=
+literal|0x7000002B
+block|,
+comment|// Unknown.
+name|DT_MIPS_INTERFACE_SIZE
+init|=
+literal|0x7000002C
+block|,
+comment|// Size of the .interface section.
+name|DT_MIPS_RLD_TEXT_RESOLVE_ADDR
+init|=
+literal|0x7000002D
+block|,
+comment|// Size of rld_text_resolve
+comment|// function stored in the GOT.
+name|DT_MIPS_PERF_SUFFIX
+init|=
+literal|0x7000002E
+block|,
+comment|// Default suffix of DSO to be added
+comment|// by rld on dlopen() calls.
+name|DT_MIPS_COMPACT_SIZE
+init|=
+literal|0x7000002F
+block|,
+comment|// Size of compact relocation
+comment|// section (O32).
+name|DT_MIPS_GP_VALUE
+init|=
+literal|0x70000030
+block|,
+comment|// GP value for auxiliary GOTs.
+name|DT_MIPS_AUX_DYNAMIC
+init|=
+literal|0x70000031
+block|,
+comment|// Address of auxiliary .dynamic.
+name|DT_MIPS_PLTGOT
+init|=
+literal|0x70000032
+block|,
+comment|// Address of the base of the PLTGOT.
+name|DT_MIPS_RWPLT
+init|=
+literal|0x70000034
+comment|// Points to the base
+comment|// of a writable PLT.
 block|}
 enum|;
 comment|// DT_FLAGS values.
@@ -5767,6 +6020,95 @@ name|DF_1_DISPRELPND
 init|=
 literal|0x00010000
 comment|// Disp reloc applied at run-time.
+block|}
+enum|;
+comment|// DT_MIPS_FLAGS values.
+enum|enum
+block|{
+name|RHF_NONE
+init|=
+literal|0x00000000
+block|,
+comment|// No flags.
+name|RHF_QUICKSTART
+init|=
+literal|0x00000001
+block|,
+comment|// Uses shortcut pointers.
+name|RHF_NOTPOT
+init|=
+literal|0x00000002
+block|,
+comment|// Hash size is not a power of two.
+name|RHS_NO_LIBRARY_REPLACEMENT
+init|=
+literal|0x00000004
+block|,
+comment|// Ignore LD_LIBRARY_PATH.
+name|RHF_NO_MOVE
+init|=
+literal|0x00000008
+block|,
+comment|// DSO address may not be relocated.
+name|RHF_SGI_ONLY
+init|=
+literal|0x00000010
+block|,
+comment|// SGI specific features.
+name|RHF_GUARANTEE_INIT
+init|=
+literal|0x00000020
+block|,
+comment|// Guarantee that .init will finish
+comment|// executing before any non-init
+comment|// code in DSO is called.
+name|RHF_DELTA_C_PLUS_PLUS
+init|=
+literal|0x00000040
+block|,
+comment|// Contains Delta C++ code.
+name|RHF_GUARANTEE_START_INIT
+init|=
+literal|0x00000080
+block|,
+comment|// Guarantee that .init will start
+comment|// executing before any non-init
+comment|// code in DSO is called.
+name|RHF_PIXIE
+init|=
+literal|0x00000100
+block|,
+comment|// Generated by pixie.
+name|RHF_DEFAULT_DELAY_LOAD
+init|=
+literal|0x00000200
+block|,
+comment|// Delay-load DSO by default.
+name|RHF_REQUICKSTART
+init|=
+literal|0x00000400
+block|,
+comment|// Object may be requickstarted
+name|RHF_REQUICKSTARTED
+init|=
+literal|0x00000800
+block|,
+comment|// Object has been requickstarted
+name|RHF_CORD
+init|=
+literal|0x00001000
+block|,
+comment|// Generated by cord.
+name|RHF_NO_UNRES_UNDEF
+init|=
+literal|0x00002000
+block|,
+comment|// Object contains no unresolved
+comment|// undef symbols.
+name|RHF_RLD_ORDER_SAFE
+init|=
+literal|0x00004000
+comment|// Symbol table is in a safe order.
 block|}
 enum|;
 comment|// ElfXX_VerDef structure version (GNU versioning)

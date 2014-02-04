@@ -10,6 +10,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1205,6 +1219,8 @@ name|REQUEST_COMPLETION_FLAG
 expr_stmt|;
 name|vstor_packet
 operator|->
+name|u
+operator|.
 name|version
 operator|.
 name|major_minor
@@ -1214,6 +1230,8 @@ expr_stmt|;
 comment|/* revision is only significant for Windows guests */
 name|vstor_packet
 operator|->
+name|u
+operator|.
 name|version
 operator|.
 name|revision
@@ -1905,6 +1923,8 @@ name|REQUEST_COMPLETION_FLAG
 expr_stmt|;
 name|vstor_packet
 operator|->
+name|u
+operator|.
 name|vm_srb
 operator|.
 name|length
@@ -1917,6 +1937,8 @@ argument_list|)
 expr_stmt|;
 name|vstor_packet
 operator|->
+name|u
+operator|.
 name|vm_srb
 operator|.
 name|sense_info_len
@@ -1925,6 +1947,8 @@ name|SENSE_BUFFER_SIZE
 expr_stmt|;
 name|vstor_packet
 operator|->
+name|u
+operator|.
 name|vm_srb
 operator|.
 name|transfer_len
@@ -2100,6 +2124,8 @@ operator|=
 operator|&
 name|vstor_packet
 operator|->
+name|u
+operator|.
 name|vm_srb
 expr_stmt|;
 name|request
@@ -2156,6 +2182,8 @@ name|sense_data
 argument_list|,
 name|vm_srb
 operator|->
+name|u
+operator|.
 name|sense_data
 argument_list|,
 name|vm_srb
@@ -5146,6 +5174,8 @@ name|reqp
 operator|->
 name|vstor_packet
 operator|.
+name|u
+operator|.
 name|vm_srb
 operator|.
 name|port
@@ -5165,6 +5195,8 @@ expr_stmt|;
 name|reqp
 operator|->
 name|vstor_packet
+operator|.
+name|u
 operator|.
 name|vm_srb
 operator|.
@@ -5186,6 +5218,8 @@ name|reqp
 operator|->
 name|vstor_packet
 operator|.
+name|u
+operator|.
 name|vm_srb
 operator|.
 name|target_id
@@ -5199,6 +5233,8 @@ expr_stmt|;
 name|reqp
 operator|->
 name|vstor_packet
+operator|.
+name|u
 operator|.
 name|vm_srb
 operator|.
@@ -5213,6 +5249,8 @@ expr_stmt|;
 name|reqp
 operator|->
 name|vstor_packet
+operator|.
+name|u
 operator|.
 name|vm_srb
 operator|.
@@ -5240,7 +5278,11 @@ name|reqp
 operator|->
 name|vstor_packet
 operator|.
+name|u
+operator|.
 name|vm_srb
+operator|.
+name|u
 operator|.
 name|cdb
 argument_list|,
@@ -5265,7 +5307,11 @@ name|reqp
 operator|->
 name|vstor_packet
 operator|.
+name|u
+operator|.
 name|vm_srb
+operator|.
+name|u
 operator|.
 name|cdb
 argument_list|,
@@ -5299,6 +5345,8 @@ name|reqp
 operator|->
 name|vstor_packet
 operator|.
+name|u
+operator|.
 name|vm_srb
 operator|.
 name|data_in
@@ -5312,6 +5360,8 @@ case|:
 name|reqp
 operator|->
 name|vstor_packet
+operator|.
+name|u
 operator|.
 name|vm_srb
 operator|.
@@ -5327,6 +5377,8 @@ name|reqp
 operator|->
 name|vstor_packet
 operator|.
+name|u
+operator|.
 name|vm_srb
 operator|.
 name|data_in
@@ -5338,6 +5390,8 @@ default|default:
 name|reqp
 operator|->
 name|vstor_packet
+operator|.
+name|u
 operator|.
 name|vm_srb
 operator|.
@@ -5550,6 +5604,8 @@ operator|&
 name|reqp
 operator|->
 name|vstor_packet
+operator|.
+name|u
 operator|.
 name|vm_srb
 decl_stmt|;

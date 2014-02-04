@@ -442,6 +442,9 @@ decl_stmt|;
 name|uint32_t
 name|low_fa
 decl_stmt|;
+name|uint32_t
+name|bad_plcp_ht
+decl_stmt|;
 name|uint8_t
 name|cck_state
 decl_stmt|;
@@ -869,6 +872,10 @@ define|#
 directive|define
 name|IWN_FLAG_PAN_SUPPORT
 value|(1<< 9)
+define|#
+directive|define
+name|IWN_FLAG_BTCOEX
+value|(1<< 10)
 name|uint8_t
 name|hw_type
 decl_stmt|;
@@ -1026,6 +1033,7 @@ name|struct
 name|task
 name|sc_radiooff_task
 decl_stmt|;
+comment|/* Calibration information */
 name|struct
 name|callout
 name|calib_to
@@ -1036,6 +1044,9 @@ decl_stmt|;
 name|struct
 name|iwn_calib_state
 name|calib
+decl_stmt|;
+name|int
+name|last_calib_ticks
 decl_stmt|;
 name|struct
 name|callout
@@ -1053,7 +1064,7 @@ name|struct
 name|iwn_calib_info
 name|calibcmd
 index|[
-literal|5
+name|IWN5000_PHY_CALIB_MAX_RESULT
 index|]
 decl_stmt|;
 name|uint32_t
@@ -1194,6 +1205,10 @@ decl_stmt|;
 name|int
 name|sc_scan_timer
 decl_stmt|;
+comment|/* Are we doing a scan? */
+name|int
+name|sc_is_scanning
+decl_stmt|;
 name|struct
 name|ieee80211_tx_ampdu
 modifier|*
@@ -1315,7 +1330,8 @@ comment|/* 	 * The current power save level, this may differ from the 	 * config
 name|int
 name|current_pwrsave_level
 decl_stmt|;
-comment|/* For specifique params */
+comment|/* For specific params */
+specifier|const
 name|struct
 name|iwn_base_params
 modifier|*

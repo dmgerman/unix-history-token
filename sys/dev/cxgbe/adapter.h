@@ -42,7 +42,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -85,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -811,6 +841,10 @@ name|flags
 decl_stmt|;
 name|int
 name|if_flags
+decl_stmt|;
+name|uint16_t
+modifier|*
+name|rss
 decl_stmt|;
 name|uint16_t
 name|viid
@@ -1964,7 +1998,10 @@ name|int
 name|fl_starve_threshold
 decl_stmt|;
 name|int
-name|s_qpp
+name|eq_s_qpp
+decl_stmt|;
+name|int
+name|iq_s_qpp
 decl_stmt|;
 name|int
 name|nrxq

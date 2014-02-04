@@ -194,6 +194,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* To avoid running past the ending '\0', don't:    - call d_peek_next_char if d_peek_char returned '\0'    - call d_advance with an 'i' that is too large    - call d_check_char(di, '\0')    Everything else is safe.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -229,11 +233,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|d_check_char
+parameter_list|(
+name|di
+parameter_list|,
+name|c
+parameter_list|)
+value|(d_peek_char(di) == c ? ((di)->n++, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|d_next_char
 parameter_list|(
 name|di
 parameter_list|)
-value|(*((di)->n++))
+value|(d_peek_char(di) == '\0' ? '\0' : *((di)->n++))
 end_define
 
 begin_define

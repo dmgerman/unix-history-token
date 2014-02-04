@@ -429,6 +429,9 @@ comment|/* Mount points in fstab(5) form */
 name|IP_MOUNT_DEVFS
 block|,
 comment|/* Mount /dev under prison root */
+name|IP_MOUNT_FDESCFS
+block|,
+comment|/* Mount /dev/fd under prison root */
 name|IP_MOUNT_FSTAB
 block|,
 comment|/* A standard fstab(5) file */

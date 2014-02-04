@@ -121,7 +121,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
@@ -879,7 +879,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|driver_t
 name|spibus_driver
 init|=

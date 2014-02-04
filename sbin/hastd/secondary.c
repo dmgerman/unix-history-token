@@ -253,6 +253,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|size_t
+name|hio_free_list_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|pthread_mutex_t
 name|hio_free_list_lock
 decl_stmt|;
@@ -282,6 +289,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|size_t
+name|hio_disk_list_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|pthread_mutex_t
 name|hio_disk_list_lock
 decl_stmt|;
@@ -308,6 +322,13 @@ argument_list|)
 name|hio_send_list
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|size_t
+name|hio_send_list_size
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -382,7 +403,7 @@ name|name
 parameter_list|,
 name|hio
 parameter_list|)
-value|do {					\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock);				\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list);			\ 	TAILQ_INSERT_TAIL(&hio_##name##_list, (hio), hio_next);		\ 	mtx_unlock(&hio_##name##_list_lock);				\ 	if (_wakeup)							\ 		cv_broadcast(&hio_##name##_list_cond);			\ } while (0)
+value|do {					\ 	mtx_lock(&hio_##name##_list_lock);				\ 	if (TAILQ_EMPTY(&hio_##name##_list))				\ 		cv_broadcast(&hio_##name##_list_cond);			\ 	TAILQ_INSERT_TAIL(&hio_##name##_list, (hio), hio_next);		\ 	hio_##name##_list_size++;					\ 	mtx_unlock(&hio_##name##_list_lock);				\ } while (0)
 end_define
 
 begin_define
@@ -394,8 +415,58 @@ name|name
 parameter_list|,
 name|hio
 parameter_list|)
-value|do {					\ 	mtx_lock(&hio_##name##_list_lock);				\ 	while (((hio) = TAILQ_FIRST(&hio_##name##_list)) == NULL) {	\ 		cv_wait(&hio_##name##_list_cond,			\&hio_##name##_list_lock);				\ 	}								\ 	TAILQ_REMOVE(&hio_##name##_list, (hio), hio_next);		\ 	mtx_unlock(&hio_##name##_list_lock);				\ } while (0)
+value|do {					\ 	mtx_lock(&hio_##name##_list_lock);				\ 	while (((hio) = TAILQ_FIRST(&hio_##name##_list)) == NULL) {	\ 		cv_wait(&hio_##name##_list_cond,			\&hio_##name##_list_lock);				\ 	}								\ 	PJDLOG_ASSERT(hio_##name##_list_size != 0);			\ 	hio_##name##_list_size--;					\ 	TAILQ_REMOVE(&hio_##name##_list, (hio), hio_next);		\ 	mtx_unlock(&hio_##name##_list_lock);				\ } while (0)
 end_define
+
+begin_function
+specifier|static
+name|void
+name|output_status_aux
+parameter_list|(
+name|struct
+name|nv
+modifier|*
+name|nvout
+parameter_list|)
+block|{
+name|nv_add_uint64
+argument_list|(
+name|nvout
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|hio_free_list_size
+argument_list|,
+literal|"idle_queue_size"
+argument_list|)
+expr_stmt|;
+name|nv_add_uint64
+argument_list|(
+name|nvout
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|hio_disk_list_size
+argument_list|,
+literal|"local_queue_size"
+argument_list|)
+expr_stmt|;
+name|nv_add_uint64
+argument_list|(
+name|nvout
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|hio_send_list_size
+argument_list|,
+literal|"send_queue_size"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -672,6 +743,9 @@ name|hio
 argument_list|,
 name|hio_next
 argument_list|)
+expr_stmt|;
+name|hio_free_list_size
+operator|++
 expr_stmt|;
 block|}
 block|}
@@ -1750,6 +1824,12 @@ block|}
 name|gres
 operator|=
 name|res
+expr_stmt|;
+name|res
+operator|->
+name|output_status_aux
+operator|=
+name|output_status_aux
 expr_stmt|;
 name|mode
 operator|=

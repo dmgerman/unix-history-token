@@ -481,14 +481,14 @@ name|int
 name|defaultBufferSize
 decl_stmt|;
 comment|/* used for CLOBs in text mode,                                   * and when fld size is indeterminate */
-name|int
+name|intptr_t
 name|transaction_mode
 decl_stmt|;
-name|int
+name|intptr_t
 name|dboptions
 decl_stmt|;
 comment|/* driver options re SQLGetData */
-name|int
+name|intptr_t
 name|default_transaction_mode
 decl_stmt|;
 name|int
@@ -1441,7 +1441,7 @@ block|{
 name|SQLRETURN
 name|rc
 decl_stmt|;
-name|int
+name|intptr_t
 name|maxsize
 decl_stmt|,
 name|textsize
@@ -1653,6 +1653,9 @@ index|[
 name|icol
 index|]
 operator|=
+operator|(
+name|SQLSMALLINT
+operator|)
 name|type
 expr_stmt|;
 comment|/* size if retrieved as text */
@@ -1822,6 +1825,9 @@ index|[
 name|icol
 index|]
 operator|=
+operator|(
+name|SQLINTEGER
+operator|)
 name|maxsize
 expr_stmt|;
 name|rc
@@ -1854,6 +1860,9 @@ index|[
 name|icol
 index|]
 operator|=
+operator|(
+name|SQLINTEGER
+operator|)
 name|maxsize
 expr_stmt|;
 if|if
@@ -3622,7 +3631,7 @@ index|[
 name|col
 index|]
 decl_stmt|;
-name|int
+name|intptr_t
 name|options
 init|=
 name|row
@@ -4070,7 +4079,7 @@ modifier|*
 modifier|*
 name|attrs
 parameter_list|,
-name|int
+name|intptr_t
 modifier|*
 modifier|*
 name|attrvals
@@ -4134,7 +4143,7 @@ name|MAX_PARAMS
 operator|*
 sizeof|sizeof
 argument_list|(
-name|int
+name|intptr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5552,14 +5561,15 @@ name|attrs
 init|=
 name|NULL
 decl_stmt|,
+name|connect
+init|=
+literal|0
+decl_stmt|;
+name|intptr_t
 modifier|*
 name|attrvals
 init|=
 name|NULL
-decl_stmt|,
-name|connect
-init|=
-literal|0
 decl_stmt|;
 name|err_step
 operator|=
@@ -5932,7 +5942,7 @@ operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|intptr_t
 argument_list|)
 argument_list|,
 name|NULL
@@ -5961,7 +5971,7 @@ operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|intptr_t
 argument_list|)
 argument_list|,
 name|NULL

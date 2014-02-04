@@ -21,23 +21,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -70,12 +53,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_struct_decl
-struct_decl|struct
-name|ifnet
-struct_decl|;
-end_struct_decl
 
 begin_endif
 endif|#
@@ -327,15 +304,8 @@ begin_comment
 comment|/* (i) is a point-to-point link */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IFF_SMART
-value|0x20
-end_define
-
 begin_comment
-comment|/* (i) interface manages own routes */
+comment|/*			0x20		   was IFF_SMART */
 end_comment
 
 begin_define
@@ -563,7 +533,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_DYING|IFF_CANTCONFIG)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_PROMISC|\ 	    IFF_DYING|IFF_CANTCONFIG)
 end_define
 
 begin_comment
@@ -904,6 +874,17 @@ end_define
 
 begin_comment
 comment|/* can offload checksum on IPv6 TX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_HWSTATS
+value|0x800000
+end_define
+
+begin_comment
+comment|/* manages counters internally */
 end_comment
 
 begin_define
@@ -1515,7 +1496,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Compat with pre-10.x */
+comment|/* 9.x compat */
 end_comment
 
 begin_struct
@@ -1795,46 +1776,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Structure for SIOC[AGD]LIFADDR  */
-end_comment
-
-begin_struct
-struct|struct
-name|if_laddrreq
-block|{
-name|char
-name|iflr_name
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-name|u_int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|IFLR_PREFIX
-value|0x8000
-comment|/* in: prefix given  out: kernel fills id */
-name|u_int
-name|prefixlen
-decl_stmt|;
-comment|/* in/out */
-name|struct
-name|sockaddr_storage
-name|addr
-decl_stmt|;
-comment|/* in/out */
-name|struct
-name|sockaddr_storage
-name|dstaddr
-decl_stmt|;
-comment|/* out */
-block|}
-struct|;
-end_struct
-
 begin_endif
 endif|#
 directive|endif
@@ -1958,27 +1899,6 @@ end_function_decl
 begin_macro
 name|__END_DECLS
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* XXX - this should go away soon. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
 
 begin_endif
 endif|#

@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -4081,7 +4087,7 @@ name|int
 name|attach
 parameter_list|)
 block|{
-comment|/* NB: identify vap's by if_start */
+comment|/* NB: identify vap's by if_init */
 if|if
 condition|(
 name|dlt
@@ -4090,9 +4096,9 @@ name|DLT_IEEE802_11_RADIO
 operator|&&
 name|ifp
 operator|->
-name|if_transmit
+name|if_init
 operator|==
-name|ieee80211_vap_transmit
+name|ieee80211_init
 condition|)
 block|{
 name|struct

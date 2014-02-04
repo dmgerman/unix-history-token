@@ -342,6 +342,35 @@ return|return
 name|false
 return|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Retrieves the per-module TLS block for a given thread.
+comment|///
+comment|/// @param[in] module
+comment|///     The module to query TLS data for.
+comment|///
+comment|/// @param[in] thread
+comment|///     The specific thread to query TLS data for.
+comment|///
+comment|/// @return
+comment|///     If the given thread has TLS data allocated for the
+comment|///     module, the address of the TLS block. Otherwise
+comment|///     LLDB_INVALID_ADDRESS is returned.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetThreadLocalData
+argument_list|(
+argument|const lldb::ModuleSP module
+argument_list|,
+argument|const lldb::ThreadSP thread
+argument_list|)
+block|{
+return|return
+name|LLDB_INVALID_ADDRESS
+return|;
+block|}
 name|protected
 operator|:
 comment|//------------------------------------------------------------------

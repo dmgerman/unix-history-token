@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -1682,6 +1676,12 @@ argument_list|,
 name|r
 argument_list|)
 operator|)
+expr_stmt|;
+break|break;
+default|default:
+name|res
+operator|=
+name|ENXIO
 expr_stmt|;
 break|break;
 block|}

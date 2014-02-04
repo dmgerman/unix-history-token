@@ -110,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/trap_aim.h>
+file|<machine/trap.h>
 end_include
 
 begin_include

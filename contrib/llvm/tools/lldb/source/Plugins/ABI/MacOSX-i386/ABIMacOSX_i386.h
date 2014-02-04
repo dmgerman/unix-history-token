@@ -110,17 +110,7 @@ argument|lldb::addr_t func_addr
 argument_list|,
 argument|lldb::addr_t return_addr
 argument_list|,
-argument|lldb::addr_t *arg1_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg2_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg3_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg4_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg5_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg6_ptr = NULL
+argument|llvm::ArrayRef<lldb::addr_t> args
 argument_list|)
 specifier|const
 block|;
@@ -235,13 +225,21 @@ argument_list|(
 argument|lldb::addr_t cfa
 argument_list|)
 block|{
-comment|// Make sure the stack call frame addresses are are 8 byte aligned
+comment|// Darwin call frame addresses must be 16-byte aligned, but other OS's
+comment|// only need 4-byte alignment.  Otherwise the ABI matches, so we have
+comment|// this one minor override here.
+if|if
+condition|(
+name|target_is_darwin
+condition|)
+block|{
+comment|// Make sure the stack call frame addresses are are 16 byte aligned
 if|if
 condition|(
 name|cfa
 operator|&
 operator|(
-literal|8ull
+literal|16ull
 operator|-
 literal|1ull
 operator|)
@@ -249,7 +247,26 @@ condition|)
 return|return
 name|false
 return|;
-comment|// Not 8 byte aligned
+comment|// Not 16 byte aligned
+block|}
+else|else
+block|{
+comment|// Make sure the stack call frame addresses are are 4 byte aligned
+if|if
+condition|(
+name|cfa
+operator|&
+operator|(
+literal|4ull
+operator|-
+literal|1ull
+operator|)
+condition|)
+return|return
+name|false
+return|;
+comment|// Not 4 byte aligned
+block|}
 if|if
 condition|(
 name|cfa
@@ -259,20 +276,15 @@ condition|)
 return|return
 name|false
 return|;
-end_decl_stmt
-
-begin_comment
 comment|// Zero is not a valid stack address
-end_comment
-
-begin_return
 return|return
 name|true
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_decl_stmt
-unit|}      virtual
+name|virtual
 name|bool
 name|CodeAddressIsValid
 argument_list|(
@@ -428,20 +440,30 @@ name|private
 label|:
 end_label
 
-begin_expr_stmt
+begin_macro
 name|ABIMacOSX_i386
-argument_list|()
-operator|:
+argument_list|(
+argument|bool is_darwin
+argument_list|)
+end_macro
+
+begin_expr_stmt
+unit|:
 name|lldb_private
 operator|::
 name|ABI
 argument_list|()
+operator|,
+name|target_is_darwin
+argument_list|(
+argument|is_darwin
+argument_list|)
 block|{ }
-end_expr_stmt
-
-begin_comment
 comment|// Call CreateInstance instead.
-end_comment
+name|bool
+name|target_is_darwin
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 unit|};

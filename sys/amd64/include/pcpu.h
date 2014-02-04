@@ -67,7 +67,9 @@ value|\ 	uint64_t pc_dbreg[16];
 comment|/* ddb debugging regs */
 value|\ 	int pc_dbreg_cmd;
 comment|/* ddb debugging reg cmd */
-value|\ 	char	__pad[161]
+value|\ 	u_int	pc_vcpu_id;
+comment|/* Xen vCPU ID */
+value|\ 	char	__pad[157]
 end_define
 
 begin_comment

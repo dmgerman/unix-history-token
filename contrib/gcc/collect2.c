@@ -128,7 +128,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 end_ifdef
 
 begin_undef
@@ -2822,7 +2822,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 end_ifdef
 
 begin_comment
@@ -3662,7 +3662,7 @@ literal|"gstrip"
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 comment|/* If we look for a program in the compiler directories, we just use      the short name, since these directories are already system-specific.      But it we look for a program in the system directories, we need to      qualify the program name with the target machine.  */
 specifier|const
 name|char
@@ -3828,7 +3828,7 @@ name|gstrip_suffix
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* CROSS_COMPILE */
+comment|/* CROSS_DIRECTORY_STRUCTURE */
 specifier|const
 name|char
 modifier|*
@@ -4696,7 +4696,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 name|c_file_name
 operator|=
 name|concat

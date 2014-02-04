@@ -1112,6 +1112,10 @@ name|temp
 operator|=
 name|alloc_history_entry
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|string
 argument_list|,
 name|hist_inittime

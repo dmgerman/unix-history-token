@@ -665,7 +665,7 @@ name|CTLADM_CMD_ISLOGOUT
 block|,
 name|CTLADM_ARG_NONE
 block|,
-literal|"ah:c:i:"
+literal|"ac:i:p:"
 block|}
 block|,
 block|{
@@ -675,7 +675,7 @@ name|CTLADM_CMD_ISTERMINATE
 block|,
 name|CTLADM_ARG_NONE
 block|,
-literal|"ah:c:i:"
+literal|"ac:i:p:"
 block|}
 block|,
 block|{
@@ -3732,7 +3732,6 @@ name|entry
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|entry
 argument_list|)
 argument_list|)
@@ -16383,7 +16382,7 @@ operator|)
 name|islist
 operator|->
 name|level
-operator|>
+operator|>=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -17525,7 +17524,7 @@ argument_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Session ID:      %d\n"
+literal|"Session ID:       %d\n"
 argument_list|,
 name|conn
 operator|->
@@ -17534,7 +17533,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Initiator name:  %s\n"
+literal|"Initiator name:   %s\n"
 argument_list|,
 name|conn
 operator|->
@@ -17543,7 +17542,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Initiator addr:  %s\n"
+literal|"Initiator portal: %s\n"
 argument_list|,
 name|conn
 operator|->
@@ -17552,7 +17551,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Initiator alias: %s\n"
+literal|"Initiator alias:  %s\n"
 argument_list|,
 name|conn
 operator|->
@@ -17561,7 +17560,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Target name:     %s\n"
+literal|"Target name:      %s\n"
 argument_list|,
 name|conn
 operator|->
@@ -17570,7 +17569,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Target alias:    %s\n"
+literal|"Target alias:     %s\n"
 argument_list|,
 name|conn
 operator|->
@@ -17579,7 +17578,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Header digest:   %s\n"
+literal|"Header digest:    %s\n"
 argument_list|,
 name|conn
 operator|->
@@ -17588,7 +17587,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Data digest:     %s\n"
+literal|"Data digest:      %s\n"
 argument_list|,
 name|conn
 operator|->
@@ -17597,7 +17596,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DataSegmentLen:  %s\n"
+literal|"DataSegmentLen:   %s\n"
 argument_list|,
 name|conn
 operator|->
@@ -17606,7 +17605,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ImmediateData:   %s\n"
+literal|"ImmediateData:    %s\n"
 argument_list|,
 name|conn
 operator|->
@@ -17619,7 +17618,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"iSER (RDMA):     %s\n"
+literal|"iSER (RDMA):      %s\n"
 argument_list|,
 name|conn
 operator|->
@@ -17645,7 +17644,7 @@ literal|"%4s %-16s %-36s %-36s\n"
 argument_list|,
 literal|"ID"
 argument_list|,
-literal|"Address"
+literal|"Portal"
 argument_list|,
 literal|"Initiator name"
 argument_list|,
@@ -17792,35 +17791,6 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'h'
-case|:
-name|initiator_addr
-operator|=
-name|strdup
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|initiator_addr
-operator|==
-name|NULL
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s: strdup"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|nargs
-operator|++
-expr_stmt|;
-break|break;
-case|case
 literal|'c'
 case|:
 name|connection_id
@@ -17867,6 +17837,35 @@ name|nargs
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'p'
+case|:
+name|initiator_addr
+operator|=
+name|strdup
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|initiator_addr
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: strdup"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|nargs
+operator|++
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -17881,7 +17880,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: either -a, -h, -c, or -i must be specified"
+literal|"%s: either -a, -c, -i, or -p must be specified"
 argument_list|,
 name|__func__
 argument_list|)
@@ -17896,7 +17895,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: only one of -a, -h, -c, or -i may be specified"
+literal|"%s: only one of -a, -c, -i, or -p may be specified"
 argument_list|,
 name|__func__
 argument_list|)
@@ -18171,35 +18170,6 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'h'
-case|:
-name|initiator_addr
-operator|=
-name|strdup
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|initiator_addr
-operator|==
-name|NULL
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s: strdup"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|nargs
-operator|++
-expr_stmt|;
-break|break;
-case|case
 literal|'c'
 case|:
 name|connection_id
@@ -18246,6 +18216,35 @@ name|nargs
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'p'
+case|:
+name|initiator_addr
+operator|=
+name|strdup
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|initiator_addr
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: strdup"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|nargs
+operator|++
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -18260,7 +18259,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: either -a, -h, -c, or -i must be specified"
+literal|"%s: either -a, -c, -i, or -p must be specified"
 argument_list|,
 name|__func__
 argument_list|)
@@ -18275,7 +18274,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: only one of -a, -h, -c, or -i may be specified"
+literal|"%s: only one of -a, -c, -i, or -p may be specified"
 argument_list|,
 name|__func__
 argument_list|)
@@ -18626,7 +18625,7 @@ operator|)
 name|devlist
 operator|->
 name|level
-operator|>
+operator|>=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -19963,8 +19962,8 @@ literal|"                            [-s len fmt [args]] [-c] [-d delete_id]\n"
 literal|"         ctladm port<-l | -o<on|off> | [-w wwnn][-W wwpn]>\n"
 literal|"                            [-p targ_port] [-t port_type] [-q] [-x]\n"
 literal|"         ctladm islist      [-v | -x]\n"
-literal|"         ctladm islogout<-A | -a addr | -c connection-id | -n name>\n"
-literal|"         ctladm isterminate<-A | -a addr | -c connection-id | -n name>\n"
+literal|"         ctladm islogout<-a | -c connection-id | -i name | -p portal>\n"
+literal|"         ctladm isterminate<-a | -c connection-id | -i name | -p portal>\n"
 literal|"         ctladm dumpooa\n"
 literal|"         ctladm dumpstructs\n"
 literal|"         ctladm help\n"

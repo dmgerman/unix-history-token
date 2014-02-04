@@ -70,11 +70,16 @@ define|#
 directive|define
 name|PCB_FPU
 value|1
-comment|/* Process had FPU initialized */
+comment|/* Process uses FPU */
+define|#
+directive|define
+name|PCB_FPREGS
+value|2
+comment|/* Process had FPU registers initialized */
 define|#
 directive|define
 name|PCB_VEC
-value|2
+value|4
 comment|/* Process had Altivec initialized */
 struct|struct
 name|fpu
@@ -153,12 +158,6 @@ name|aim
 struct|;
 struct|struct
 block|{
-name|register_t
-name|ctr
-decl_stmt|;
-name|register_t
-name|xer
-decl_stmt|;
 name|register_t
 name|dbcr0
 decl_stmt|;

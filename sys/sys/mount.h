@@ -1561,15 +1561,80 @@ begin_comment
 comment|/* Don't send KNOTEs from VOP hooks */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function
+specifier|static
+specifier|inline
+name|int
 name|MNT_SHARED_WRITES
 parameter_list|(
+name|struct
+name|mount
+modifier|*
 name|mp
 parameter_list|)
-value|(((mp) != NULL)&& 	\ 				((mp)->mnt_kern_flag& MNTK_SHARED_WRITES))
-end_define
+block|{
+return|return
+operator|(
+name|mp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_SHARED_WRITES
+operator|)
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|MNT_EXTENDED_SHARED
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|mp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_EXTENDED_SHARED
+operator|)
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Sysctl CTL_VFS definitions.  *  * Second level identifier specifies which filesystem. Second level  * identifier VFS_VFSCONF returns information about all filesystems.  * Second level identifier VFS_GENERIC is non-terminal.  */
@@ -2976,7 +3041,7 @@ name|VFS_PROLOGUE
 parameter_list|(
 name|MP
 parameter_list|)
-value|do {					\ 	int _enable_stops;						\ 									\ 	_enable_stops = ((MP) != NULL&&				\ 	    ((MP)->mnt_vfc->vfc_flags& VFCF_SBDRY)&& sigdeferstop())
+value|do {					\ 	struct mount *mp__;						\ 	int _enable_stops;						\ 									\ 	mp__ = (MP);							\ 	_enable_stops = (mp__ != NULL&&				\ 	    (mp__->mnt_vfc->vfc_flags& VFCF_SBDRY)&& sigdeferstop())
 end_define
 
 begin_define
@@ -3277,14 +3342,6 @@ parameter_list|)
 define|\
 value|static struct vfsconf fsname ## _vfsconf = {		\ 		.vfc_version = VFS_VERSION,			\ 		.vfc_name = #fsname,				\ 		.vfc_vfsops =&vfsops,				\ 		.vfc_typenum = -1,				\ 		.vfc_flags = flags,				\ 	};							\ 	static moduledata_t fsname ## _mod = {			\ 		#fsname,					\ 		vfs_modevent,					\& fsname ## _vfsconf				\ 	};							\ 	DECLARE_MODULE(fsname, fsname ## _mod, SI_SUB_VFS, SI_ORDER_MIDDLE)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|mountrootfsname
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * exported vnode operations  */

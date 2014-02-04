@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_sched.h"
 end_include
 
@@ -369,7 +363,25 @@ name|rusage
 argument_list|,
 name|add
 argument_list|,
-name|add
+literal|"struct proc *"
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"uint64_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE3
+argument_list|(
+name|racct
+argument_list|,
+name|kernel
+argument_list|,
+name|rusage
+argument_list|,
+name|add__failure
 argument_list|,
 literal|"struct proc *"
 argument_list|,
@@ -389,35 +401,7 @@ name|kernel
 argument_list|,
 name|rusage
 argument_list|,
-name|add_failure
-argument_list|,
-name|add
-operator|-
-name|failure
-argument_list|,
-literal|"struct proc *"
-argument_list|,
-literal|"int"
-argument_list|,
-literal|"uint64_t"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE3
-argument_list|(
-name|racct
-argument_list|,
-name|kernel
-argument_list|,
-name|rusage
-argument_list|,
-name|add_cred
-argument_list|,
-name|add
-operator|-
-name|cred
+name|add__cred
 argument_list|,
 literal|"struct ucred *"
 argument_list|,
@@ -437,11 +421,7 @@ name|kernel
 argument_list|,
 name|rusage
 argument_list|,
-name|add_force
-argument_list|,
-name|add
-operator|-
-name|force
+name|add__force
 argument_list|,
 literal|"struct proc *"
 argument_list|,
@@ -463,8 +443,6 @@ name|rusage
 argument_list|,
 name|set
 argument_list|,
-name|set
-argument_list|,
 literal|"struct proc *"
 argument_list|,
 literal|"int"
@@ -483,11 +461,7 @@ name|kernel
 argument_list|,
 name|rusage
 argument_list|,
-name|set_failure
-argument_list|,
-name|set
-operator|-
-name|failure
+name|set__failure
 argument_list|,
 literal|"struct proc *"
 argument_list|,
@@ -509,8 +483,6 @@ name|rusage
 argument_list|,
 name|sub
 argument_list|,
-name|sub
-argument_list|,
 literal|"struct proc *"
 argument_list|,
 literal|"int"
@@ -529,11 +501,7 @@ name|kernel
 argument_list|,
 name|rusage
 argument_list|,
-name|sub_cred
-argument_list|,
-name|sub
-operator|-
-name|cred
+name|sub__cred
 argument_list|,
 literal|"struct ucred *"
 argument_list|,
@@ -555,8 +523,6 @@ name|racct
 argument_list|,
 name|create
 argument_list|,
-name|create
-argument_list|,
 literal|"struct racct *"
 argument_list|)
 expr_stmt|;
@@ -573,8 +539,6 @@ name|racct
 argument_list|,
 name|destroy
 argument_list|,
-name|destroy
-argument_list|,
 literal|"struct racct *"
 argument_list|)
 expr_stmt|;
@@ -590,30 +554,6 @@ argument_list|,
 name|racct
 argument_list|,
 name|join
-argument_list|,
-name|join
-argument_list|,
-literal|"struct racct *"
-argument_list|,
-literal|"struct racct *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE2
-argument_list|(
-name|racct
-argument_list|,
-name|kernel
-argument_list|,
-name|racct
-argument_list|,
-name|join_failure
-argument_list|,
-name|join
-operator|-
-name|failure
 argument_list|,
 literal|"struct racct *"
 argument_list|,
@@ -631,7 +571,23 @@ name|kernel
 argument_list|,
 name|racct
 argument_list|,
-name|leave
+name|join__failure
+argument_list|,
+literal|"struct racct *"
+argument_list|,
+literal|"struct racct *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|racct
+argument_list|,
+name|kernel
+argument_list|,
+name|racct
 argument_list|,
 name|leave
 argument_list|,
@@ -2789,7 +2745,7 @@ name|kernel
 argument_list|,
 name|rusage
 argument_list|,
-name|add_failure
+name|add__failure
 argument_list|,
 name|p
 argument_list|,
@@ -2924,7 +2880,7 @@ name|kernel
 argument_list|,
 name|rusage
 argument_list|,
-name|add_cred
+name|add__cred
 argument_list|,
 name|cred
 argument_list|,
@@ -3069,7 +3025,7 @@ name|kernel
 argument_list|,
 name|rusage
 argument_list|,
-name|add_force
+name|add__force
 argument_list|,
 name|p
 argument_list|,
@@ -3302,7 +3258,7 @@ name|kernel
 argument_list|,
 name|rusage
 argument_list|,
-name|set_failure
+name|set__failure
 argument_list|,
 name|p
 argument_list|,
@@ -3926,7 +3882,7 @@ name|kernel
 argument_list|,
 name|rusage
 argument_list|,
-name|sub_cred
+name|sub__cred
 argument_list|,
 name|cred
 argument_list|,

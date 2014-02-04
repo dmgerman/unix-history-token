@@ -43,19 +43,6 @@ name|__ASSEMBLY__
 end_ifndef
 
 begin_comment
-comment|/* Force a proper event-channel callback from Xen. */
-end_comment
-
-begin_function_decl
-name|void
-name|force_evtchn_callback
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
 end_comment
 

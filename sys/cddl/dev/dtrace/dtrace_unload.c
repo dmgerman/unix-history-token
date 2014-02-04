@@ -387,6 +387,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|taskq_destroy
+argument_list|(
+name|dtrace_taskq
+argument_list|)
+expr_stmt|;
 comment|/* Reset our hook for exceptions. */
 name|dtrace_invop_uninit
 argument_list|()

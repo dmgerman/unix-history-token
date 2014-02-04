@@ -276,6 +276,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/machdep.h>
 end_include
 
@@ -295,12 +307,6 @@ begin_include
 include|#
 directive|include
 file|<machine/pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pmap.h>
 end_include
 
 begin_include
@@ -658,15 +664,6 @@ specifier|static
 name|struct
 name|pv_addr
 name|kernelstack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|pmap_devmap
-modifier|*
-name|pmap_devmap_bootstrap_table
 decl_stmt|;
 end_decl_stmt
 
@@ -1600,11 +1597,6 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-name|cpu_setup
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
 name|identify_arm_cpu
 argument_list|()
 expr_stmt|;
@@ -5565,6 +5557,9 @@ operator|>
 name|PAGE_SIZE
 condition|)
 block|{
+name|vm_size_t
+name|size
+decl_stmt|;
 name|phys_avail
 index|[
 name|j
@@ -5577,6 +5572,15 @@ index|]
 operator|.
 name|mr_start
 expr_stmt|;
+name|size
+operator|=
+name|availmem_regions
+index|[
+name|i
+index|]
+operator|.
+name|mr_size
+expr_stmt|;
 if|if
 condition|(
 name|phys_avail
@@ -5586,6 +5590,7 @@ index|]
 operator|==
 literal|0
 condition|)
+block|{
 name|phys_avail
 index|[
 name|j
@@ -5593,6 +5598,11 @@ index|]
 operator|+=
 name|PAGE_SIZE
 expr_stmt|;
+name|size
+operator|-=
+name|PAGE_SIZE
+expr_stmt|;
+block|}
 name|phys_avail
 index|[
 name|j
@@ -5607,12 +5617,7 @@ index|]
 operator|.
 name|mr_start
 operator|+
-name|availmem_regions
-index|[
-name|i
-index|]
-operator|.
-name|mr_size
+name|size
 expr_stmt|;
 block|}
 else|else
@@ -6121,9 +6126,7 @@ operator|=
 name|curr
 expr_stmt|;
 comment|/* Platform-specific initialisation */
-name|vm_max_kernel_address
-operator|=
-name|initarm_lastaddr
+name|initarm_early_init
 argument_list|()
 expr_stmt|;
 name|pcpu0_init
@@ -6614,18 +6617,23 @@ argument_list|,
 name|PTE_CACHE
 argument_list|)
 expr_stmt|;
-comment|/* Map pmap_devmap[] entries */
+comment|/* Establish static device mappings. */
 name|err_devmap
 operator|=
-name|platform_devmap_init
+name|initarm_devmap_init
 argument_list|()
 expr_stmt|;
-name|pmap_devmap_bootstrap
+name|arm_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|pmap_devmap_bootstrap_table
+name|NULL
 argument_list|)
+expr_stmt|;
+name|vm_max_kernel_address
+operator|=
+name|initarm_lastaddr
+argument_list|()
 expr_stmt|;
 name|cpu_domains
 argument_list|(
@@ -6667,6 +6675,12 @@ name|PMAP_DOMAIN_KERNEL
 operator|*
 literal|2
 operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Now that proper page tables are installed, call cpu_setup() to enable 	 * instruction and data caches and other chip-specific features. 	 */
+name|cpu_setup
+argument_list|(
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Only after the SOC registers block is mapped we can perform device 	 * tree fixups, as they may attempt to read parameters from hardware. 	 */

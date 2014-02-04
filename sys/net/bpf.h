@@ -3352,6 +3352,65 @@ name|BPF_MEMWORDS
 value|16
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_EVENTHANDLER_H_
+end_ifdef
+
+begin_comment
+comment|/* BPF attach/detach events */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|bpf_track_fn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+comment|/* dlt */
+parameter_list|,
+name|int
+comment|/* 1 =>'s attach */
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|bpf_track
+argument_list|,
+name|bpf_track_fn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_EVENTHANDLER_H_ */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

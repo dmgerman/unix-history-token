@@ -860,7 +860,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* XXX workaround to have working console on manut prompt */
+comment|/* XXX workaround to have working console on mount prompt */
 if|if
 condition|(
 name|sc

@@ -77,10 +77,6 @@ directive|include
 file|<contrib/octeon-sdk/cvmx-rng.h>
 end_include
 
-begin_comment
-comment|/*  * XXX  * random_harvest(9) says to call it with no more than 16 bytes, but at least  * safe(4) seems to violate that rule.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -313,7 +309,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
@@ -483,9 +479,7 @@ operator|)
 operator|/
 literal|2
 argument_list|,
-literal|0
-argument_list|,
-name|RANDOM_PURE
+name|RANDOM_PURE_OCTEON
 argument_list|)
 expr_stmt|;
 name|callout_reset

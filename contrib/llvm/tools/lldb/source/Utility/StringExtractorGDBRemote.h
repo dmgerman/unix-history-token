@@ -148,6 +148,8 @@ name|eServerPacketType_qHostInfo
 block|,
 name|eServerPacketType_qLaunchGDBServer
 block|,
+name|eServerPacketType_qKillSpawnedProcess
+block|,
 name|eServerPacketType_qLaunchSuccess
 block|,
 name|eServerPacketType_qProcessInfoPID
@@ -156,7 +158,11 @@ name|eServerPacketType_qSpeedTest
 block|,
 name|eServerPacketType_qUserName
 block|,
+name|eServerPacketType_qGetWorkingDir
+block|,
 name|eServerPacketType_QEnvironment
+block|,
+name|eServerPacketType_QLaunchArch
 block|,
 name|eServerPacketType_QSetDisableASLR
 block|,
@@ -169,6 +175,34 @@ block|,
 name|eServerPacketType_QSetWorkingDir
 block|,
 name|eServerPacketType_QStartNoAckMode
+block|,
+name|eServerPacketType_qPlatform_shell
+block|,
+name|eServerPacketType_qPlatform_mkdir
+block|,
+name|eServerPacketType_qPlatform_chmod
+block|,
+name|eServerPacketType_vFile_open
+block|,
+name|eServerPacketType_vFile_close
+block|,
+name|eServerPacketType_vFile_pread
+block|,
+name|eServerPacketType_vFile_pwrite
+block|,
+name|eServerPacketType_vFile_size
+block|,
+name|eServerPacketType_vFile_mode
+block|,
+name|eServerPacketType_vFile_exists
+block|,
+name|eServerPacketType_vFile_md5
+block|,
+name|eServerPacketType_vFile_stat
+block|,
+name|eServerPacketType_vFile_symlink
+block|,
+name|eServerPacketType_vFile_unlink
 block|}
 block|;
 name|ServerPacketType
@@ -223,7 +257,17 @@ comment|// digits. Otherwise the error encoded in XX is returned.
 name|uint8_t
 name|GetError
 argument_list|()
-block|; }
+block|;
+name|size_t
+name|GetEscapedBinaryData
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|str
+argument_list|)
+block|;  }
 decl_stmt|;
 end_decl_stmt
 

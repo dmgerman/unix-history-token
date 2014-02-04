@@ -43,6 +43,12 @@ directive|define
 name|liblldb_Process_h_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/Config.h"
+end_include
+
 begin_comment
 comment|// C Includes
 end_comment
@@ -51,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<spawn.h>
 end_include
 
 begin_comment
@@ -668,6 +668,18 @@ return|return
 name|m_arch
 return|;
 block|}
+name|void
+name|SetArchitecture
+parameter_list|(
+name|ArchSpec
+name|arch
+parameter_list|)
+block|{
+name|m_arch
+operator|=
+name|arch
+expr_stmt|;
+block|}
 name|lldb
 operator|::
 name|pid_t
@@ -1246,11 +1258,14 @@ argument_list|,
 argument|bool write
 argument_list|)
 block|;
+ifndef|#
+directive|ifndef
+name|LLDB_DISABLE_POSIX
 specifier|static
 name|bool
 name|AddPosixSpawnFileAction
 argument_list|(
-name|posix_spawn_file_actions_t
+name|void
 operator|*
 name|file_actions
 argument_list|,
@@ -1268,6 +1283,8 @@ operator|&
 name|error
 argument_list|)
 block|;
+endif|#
+directive|endif
 name|int
 name|GetFD
 argument_list|()
@@ -2312,6 +2329,9 @@ name|will_debug
 parameter_list|,
 name|bool
 name|first_arg_is_full_shell_command
+parameter_list|,
+name|int32_t
+name|num_resumes
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4023,15 +4043,7 @@ decl_stmt|;
 comment|// For WaitForStateChangeEventsPrivate
 name|friend
 name|class
-name|CommandObjectProcessLaunch
-decl_stmt|;
-name|friend
-name|class
 name|ProcessEventData
-decl_stmt|;
-name|friend
-name|class
-name|CommandObjectBreakpointCommand
 decl_stmt|;
 name|friend
 name|class
@@ -4831,7 +4843,6 @@ name|virtual
 name|Error
 name|Launch
 parameter_list|(
-specifier|const
 name|ProcessLaunchInfo
 modifier|&
 name|launch_info
@@ -4880,6 +4891,19 @@ name|virtual
 name|DynamicLoader
 modifier|*
 name|GetDynamicLoader
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Get the system runtime plug-in for this process.
+comment|///
+comment|/// @return
+comment|///   Returns a pointer to the SystemRuntime plugin for this Process
+comment|///   if one is available.  Else returns NULL.
+comment|//------------------------------------------------------------------
+name|virtual
+name|SystemRuntime
+modifier|*
+name|GetSystemRuntime
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -5999,20 +6023,10 @@ name|ThreadPlanSP
 operator|&
 name|thread_plan_sp
 argument_list|,
-name|bool
-name|stop_others
-argument_list|,
-name|bool
-name|run_others
-argument_list|,
-name|bool
-name|unwind_on_error
-argument_list|,
-name|bool
-name|ignore_breakpoints
-argument_list|,
-name|uint32_t
-name|timeout_usec
+specifier|const
+name|EvaluateExpressionOptions
+operator|&
+name|options
 argument_list|,
 name|Stream
 operator|&
@@ -7561,6 +7575,33 @@ return|return
 name|m_thread_list
 return|;
 block|}
+comment|// When ExtendedBacktraces are requested, the HistoryThreads that are
+comment|// created need an owner -- they're saved here in the Process.  The
+comment|// threads in this list are not iterated over - driver programs need to
+comment|// request the extended backtrace calls starting from a root concrete
+comment|// thread one by one.
+name|ThreadList
+modifier|&
+name|GetExtendedThreadList
+parameter_list|()
+block|{
+return|return
+name|m_extended_thread_list
+return|;
+block|}
+name|ThreadList
+operator|::
+name|ThreadIterable
+name|Threads
+argument_list|()
+block|{
+return|return
+name|m_thread_list
+operator|.
+name|Threads
+argument_list|()
+return|;
+block|}
 name|uint32_t
 name|GetNextThreadIndexID
 parameter_list|(
@@ -7610,23 +7651,19 @@ operator|&
 name|event_sp
 argument_list|)
 expr_stmt|;
+comment|// Returns the process state when it is stopped. If specified, event_sp_ptr
+comment|// is set to the event which triggered the stop. If wait_always = false,
+comment|// and the process is already stopped, this function returns immediately.
 name|lldb
 operator|::
 name|StateType
 name|WaitForProcessToStop
 argument_list|(
-specifier|const
-name|TimeValue
-operator|*
-name|timeout
+argument|const TimeValue *timeout
 argument_list|,
-name|lldb
-operator|::
-name|EventSP
-operator|*
-name|event_sp_ptr
-operator|=
-name|NULL
+argument|lldb::EventSP *event_sp_ptr = NULL
+argument_list|,
+argument|bool wait_always = true
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -8421,6 +8458,14 @@ name|m_thread_list
 decl_stmt|;
 comment|///< The threads for this process as the user will see them. This is usually the same as
 comment|///< m_thread_list_real, but might be different if there is an OS plug-in creating memory threads
+name|ThreadList
+name|m_extended_thread_list
+decl_stmt|;
+comment|///< Owner for extended threads that may be generated, cleared on natural stops
+name|uint32_t
+name|m_extended_thread_stop_id
+decl_stmt|;
+comment|///< The natural stop id when extended_thread_list was last updated
 name|std
 operator|::
 name|vector
@@ -8472,6 +8517,14 @@ operator|<
 name|OperatingSystem
 operator|>
 name|m_os_ap
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SystemRuntime
+operator|>
+name|m_system_runtime_ap
 expr_stmt|;
 name|UnixSignals
 name|m_unix_signals
@@ -8661,20 +8714,22 @@ name|ResumePrivateStateThread
 parameter_list|()
 function_decl|;
 specifier|static
-name|void
-modifier|*
+name|lldb
+operator|::
+name|thread_result_t
 name|PrivateStateThread
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|arg
-parameter_list|)
-function_decl|;
-name|void
-modifier|*
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|thread_result_t
 name|RunPrivateStateThread
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|void
 name|HandlePrivateEvent
 argument_list|(

@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -2615,7 +2609,7 @@ literal|"spi0_d0"
 argument_list|,
 literal|"uart2_txd"
 argument_list|,
-literal|"i2C2_SCL"
+literal|"I2C2_SCL"
 argument_list|,
 literal|"ehrpwm0B"
 argument_list|,
@@ -2632,7 +2626,7 @@ name|_PIN
 argument_list|(
 literal|0x958
 argument_list|,
-literal|"SPIO_D1"
+literal|"SPI0_D1"
 argument_list|,
 literal|4
 argument_list|,
@@ -2891,7 +2885,7 @@ literal|"I2C2_SCL"
 argument_list|,
 literal|"spi1_cs1"
 argument_list|,
-literal|"pr1_uart0_rts_n	"
+literal|"pr1_uart0_rts_n"
 argument_list|,
 literal|"pr1_edc_latch1_in"
 argument_list|,

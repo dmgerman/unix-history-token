@@ -417,6 +417,8 @@ block|{
 name|uint16_t
 name|len
 decl_stmt|;
+name|retry
+label|:
 if|if
 condition|(
 name|fread
@@ -449,6 +451,25 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * XXX: Though zero-size records are valid in theory, 			 * they can never occur in practice. Zero-size records 			 * indicate file corruption. Seek one byte forward, to 			 * see if we can find a record there. 			 */
+name|ungetc
+argument_list|(
+literal|'\0'
+argument_list|,
+name|uf
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 if|if
 condition|(
 name|len

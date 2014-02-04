@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<opt_kdtrace.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -2762,8 +2756,6 @@ name|read
 argument_list|,
 name|file_start
 argument_list|,
-name|file_start
-argument_list|,
 literal|"uint64_t"
 argument_list|)
 expr_stmt|;
@@ -2777,8 +2769,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|write
-argument_list|,
-name|file_start
 argument_list|,
 name|file_start
 argument_list|,
@@ -2798,8 +2788,6 @@ name|read
 argument_list|,
 name|file_done
 argument_list|,
-name|file_done
-argument_list|,
 literal|"uint64_t"
 argument_list|)
 expr_stmt|;
@@ -2813,8 +2801,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|write
-argument_list|,
-name|file_done
 argument_list|,
 name|file_done
 argument_list|,
@@ -4174,8 +4160,6 @@ name|read
 argument_list|,
 name|start
 argument_list|,
-name|start
-argument_list|,
 literal|"uint64_t"
 argument_list|)
 expr_stmt|;
@@ -4189,8 +4173,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|write
-argument_list|,
-name|start
 argument_list|,
 name|start
 argument_list|,
@@ -4210,8 +4192,6 @@ name|read
 argument_list|,
 name|alloc_done
 argument_list|,
-name|alloc_done
-argument_list|,
 literal|"uint64_t"
 argument_list|)
 expr_stmt|;
@@ -4225,8 +4205,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|write
-argument_list|,
-name|alloc_done
 argument_list|,
 name|alloc_done
 argument_list|,
@@ -6516,6 +6494,7 @@ break|break;
 case|case
 name|CTL_BE_BLOCK_NONE
 case|:
+break|break;
 default|default:
 name|panic
 argument_list|(
@@ -6599,6 +6578,7 @@ break|break;
 case|case
 name|CTL_BE_BLOCK_NONE
 case|:
+break|break;
 default|default:
 name|panic
 argument_list|(
@@ -7010,7 +6990,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s is not a disk or file"
+literal|"%s is not a disk or plain file"
 argument_list|,
 name|be_lun
 operator|->
@@ -7075,61 +7055,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|ctl_be_block_mem_ctor
-parameter_list|(
-name|void
-modifier|*
-name|mem
-parameter_list|,
-name|int
-name|size
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|ctl_be_block_mem_dtor
-parameter_list|(
-name|void
-modifier|*
-name|mem
-parameter_list|,
-name|int
-name|size
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|bzero
-argument_list|(
-name|mem
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -7297,9 +7222,9 @@ name|lunname
 argument_list|,
 name|MAXPHYS
 argument_list|,
-name|ctl_be_block_mem_ctor
+name|NULL
 argument_list|,
-name|ctl_be_block_mem_dtor
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

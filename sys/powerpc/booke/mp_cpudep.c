@@ -213,6 +213,15 @@ name|pcpup
 operator|->
 name|pc_idlethread
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("mr 13,%0" :: "r"(pcpup->pc_curthread));
+else|#
+directive|else
+asm|__asm __volatile("mr 2,%0" :: "r"(pcpup->pc_curthread));
+endif|#
+directive|endif
 name|pcpup
 operator|->
 name|pc_curpcb

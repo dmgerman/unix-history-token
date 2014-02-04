@@ -408,7 +408,7 @@ index|[]
 init|=
 literal|"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 literal|"abcdefghijklmnopqrstuvwxyz"
-literal|"0123456789(),-./:?"
+literal|"0123456789'(),-./:?"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,7 +419,7 @@ name|char
 name|option
 index|[]
 init|=
-literal|"!\"#$%&';<=>@[]^_`{|}"
+literal|"!\"#$%&*;<=>@[]^_`{|}"
 decl_stmt|;
 end_decl_stmt
 
@@ -697,6 +697,24 @@ name|psenc
 operator|->
 name|chlen
 expr_stmt|;
+name|memcpy
+argument_list|(
+name|sv
+operator|.
+name|ch
+argument_list|,
+name|psenc
+operator|->
+name|ch
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sv
+operator|.
+name|ch
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|psenc
 operator|=
@@ -972,6 +990,17 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+else|else
+block|{
+name|psenc
+operator|->
+name|chlen
+operator|--
+expr_stmt|;
+name|i
+operator|--
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1173,11 +1202,6 @@ name|__restrict
 name|nresult
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|s0
-decl_stmt|;
 name|uint32_t
 name|u32
 decl_stmt|;
@@ -1223,11 +1247,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|s0
-operator|=
-operator|*
-name|s
-expr_stmt|;
 if|if
 condition|(
 name|psenc
@@ -1242,7 +1261,9 @@ name|psenc
 operator|->
 name|cache
 operator|>>
-literal|2
+name|psenc
+operator|->
+name|bits
 operator|)
 operator|&
 name|UTF16_MAX
@@ -1278,8 +1299,7 @@ argument_list|,
 operator|&
 name|hi
 argument_list|,
-operator|&
-name|s0
+name|s
 argument_list|,
 name|n
 argument_list|,
@@ -1376,8 +1396,7 @@ argument_list|,
 operator|&
 name|lo
 argument_list|,
-operator|&
-name|s0
+name|s
 argument_list|,
 name|n
 argument_list|,
@@ -1454,11 +1473,6 @@ name|nr
 expr_stmt|;
 name|done
 label|:
-operator|*
-name|s
-operator|=
-name|s0
-expr_stmt|;
 if|if
 condition|(
 name|pwc

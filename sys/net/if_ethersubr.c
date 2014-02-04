@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -186,12 +192,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/pf_mtag.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/pfil.h>
 end_include
 
@@ -199,6 +199,12 @@ begin_include
 include|#
 directive|include
 file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netpfil/pf/pf_mtag.h>
 end_include
 
 begin_if
@@ -2630,6 +2636,17 @@ operator|~
 name|M_HASFCS
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_HWSTATS
+operator|)
+condition|)
 name|ifp
 operator|->
 name|if_ibytes
@@ -3086,9 +3103,7 @@ operator|)
 argument_list|,
 literal|12
 argument_list|,
-literal|3
-argument_list|,
-literal|0
+literal|2
 argument_list|,
 name|RANDOM_NET_ETHER
 argument_list|)
@@ -3349,7 +3364,30 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-comment|/* 	 * We will rely on rcvif being set properly in the deferred context, 	 * so assert it is correct here. 	 */
+name|struct
+name|mbuf
+modifier|*
+name|mn
+decl_stmt|;
+comment|/* 	 * The drivers are allowed to pass in a chain of packets linked with 	 * m_nextpkt. We split them up into separate packets here and pass 	 * them up. This allows the drivers to amortize the receive lock. 	 */
+while|while
+condition|(
+name|m
+condition|)
+block|{
+name|mn
+operator|=
+name|m
+operator|->
+name|m_nextpkt
+expr_stmt|;
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 		 * We will rely on rcvif being set properly in the deferred context, 		 * so assert it is correct here. 		 */
 name|KASSERT
 argument_list|(
 name|m
@@ -3374,6 +3412,11 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
+name|mn
+expr_stmt|;
+block|}
 block|}
 end_function
 

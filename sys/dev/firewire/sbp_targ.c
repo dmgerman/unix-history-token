@@ -7010,7 +7010,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 name|bytes
@@ -8374,7 +8374,7 @@ operator|(
 name|orb0
 operator|&
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

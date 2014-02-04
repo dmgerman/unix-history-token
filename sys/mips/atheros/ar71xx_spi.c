@@ -173,6 +173,36 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPI_BARRIER_WRITE
+parameter_list|(
+name|sc
+parameter_list|)
+value|bus_barrier((sc)->sc_mem_res, 0, 0, 	\ 					    BUS_SPACE_BARRIER_WRITE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPI_BARRIER_READ
+parameter_list|(
+name|sc
+parameter_list|)
+value|bus_barrier((sc)->sc_mem_res, 0, 0, 	\ 					    BUS_SPACE_BARRIER_READ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPI_BARRIER_RW
+parameter_list|(
+name|sc
+parameter_list|)
+value|bus_barrier((sc)->sc_mem_res, 0, 0, 	\ 					    BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPI_WRITE
 parameter_list|(
 name|sc
@@ -181,7 +211,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|do {	\ 		bus_write_4(sc->sc_mem_res, (reg), (val)); \ 	} while (0)
+value|do {				\ 		bus_write_4(sc->sc_mem_res, (reg), (val));	\ 	} while (0)
 end_define
 
 begin_define
@@ -263,7 +293,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
@@ -347,6 +377,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Flush out read before reading the control register */
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_reg_ctrl
@@ -358,6 +394,7 @@ argument_list|,
 name|AR71XX_SPI_CTRL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX TODO: document what the SPI control register does. 	 */
 name|SPI_WRITE
 argument_list|(
 name|sc
@@ -367,6 +404,12 @@ argument_list|,
 literal|0x43
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Ensure the config register write has gone out before configuring 	 * the chip select mask. 	 */
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|SPI_WRITE
 argument_list|(
 name|sc
@@ -374,6 +417,12 @@ argument_list|,
 name|AR71XX_SPI_IO_CTRL
 argument_list|,
 name|SPI_IO_CTRL_CSMASK
+argument_list|)
+expr_stmt|;
+comment|/* 	 * .. and ensure the write has gone out before continuing. 	 */
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|device_add_child
@@ -426,6 +475,12 @@ operator|<<
 name|cs
 operator|)
 expr_stmt|;
+comment|/* 	 * Make sure any other writes have gone out to the 	 * device before changing the chip select line; 	 * then ensure that it has made it out to the device 	 * before continuing. 	 */
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|SPI_WRITE
 argument_list|(
 name|sc
@@ -433,6 +488,11 @@ argument_list|,
 name|AR71XX_SPI_IO_CTRL
 argument_list|,
 name|ioctrl
+argument_list|)
+expr_stmt|;
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -544,6 +604,11 @@ operator|&
 operator|~
 name|SPI_IO_CTRL_DO
 expr_stmt|;
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|SPI_WRITE
 argument_list|(
 name|sc
@@ -551,6 +616,11 @@ argument_list|,
 name|AR71XX_SPI_IO_CTRL
 argument_list|,
 name|iod
+argument_list|)
+expr_stmt|;
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|SPI_WRITE
@@ -566,6 +636,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Provide falling edge for connected device by clear clock bit. 	 */
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|SPI_WRITE
 argument_list|(
 name|sc
@@ -573,6 +648,11 @@ argument_list|,
 name|AR71XX_SPI_IO_CTRL
 argument_list|,
 name|iod
+argument_list|)
+expr_stmt|;
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|rds
@@ -828,6 +908,13 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+comment|/* 	 * Ensure any other writes to the device are finished 	 * before we tear down the SPI device. 	 */
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Restore the control register; ensure it has hit the 	 * hardware before continuing. 	 */
 name|SPI_WRITE
 argument_list|(
 name|sc
@@ -839,6 +926,12 @@ operator|->
 name|sc_reg_ctrl
 argument_list|)
 expr_stmt|;
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * And now, put the flash back into mapped IO mode and 	 * ensure _that_ has completed before we finish up. 	 */
 name|SPI_WRITE
 argument_list|(
 name|sc
@@ -846,6 +939,11 @@ argument_list|,
 name|AR71XX_SPI_FS
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|SPI_BARRIER_WRITE
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 if|if

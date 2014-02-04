@@ -474,6 +474,10 @@ operator|&&
 name|req
 operator|->
 name|newptr
+operator|&&
+name|newnmbclusters
+operator|!=
+name|nmbclusters
 condition|)
 block|{
 if|if
@@ -593,6 +597,10 @@ operator|&&
 name|req
 operator|->
 name|newptr
+operator|&&
+name|newnmbjumbop
+operator|!=
+name|nmbjumbop
 condition|)
 block|{
 if|if
@@ -707,6 +715,10 @@ operator|&&
 name|req
 operator|->
 name|newptr
+operator|&&
+name|newnmbjumbo9
+operator|!=
+name|nmbjumbo9
 condition|)
 block|{
 if|if
@@ -821,6 +833,10 @@ operator|&&
 name|req
 operator|->
 name|newptr
+operator|&&
+name|newnmbjumbo16
+operator|!=
+name|nmbjumbo16
 condition|)
 block|{
 if|if
@@ -935,6 +951,10 @@ operator|&&
 name|req
 operator|->
 name|newptr
+operator|&&
+name|newnmbufs
+operator|!=
+name|nmbufs
 condition|)
 block|{
 if|if

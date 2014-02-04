@@ -75,7 +75,7 @@ decl_stmt|;
 define|#
 directive|define
 name|TD_OWN
-value|(1<< 31)
+value|(1U<< 31)
 define|#
 directive|define
 name|TD_LAST
@@ -113,7 +113,7 @@ decl_stmt|;
 define|#
 directive|define
 name|RD_BROADCAST
-value|(1<< 31)
+value|(1U<< 31)
 define|#
 directive|define
 name|RD_MULTICAST

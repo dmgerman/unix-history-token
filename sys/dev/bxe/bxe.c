@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|BXE_DRIVER_VERSION
-value|"1.78.17"
+value|"1.78.75"
 end_define
 
 begin_include
@@ -808,7 +808,8 @@ comment|/* Debug */
 end_comment
 
 begin_decl_stmt
-name|uint32_t
+name|unsigned
+name|long
 name|bxe_debug
 init|=
 literal|0
@@ -816,7 +817,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|TUNABLE_ULONG
 argument_list|(
 literal|"hw.bxe.debug"
 argument_list|,
@@ -827,7 +828,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_ULONG
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -874,7 +875,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -919,7 +920,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -945,7 +946,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|bxe_max_rx_bufs
 init|=
 literal|0
@@ -964,7 +965,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -990,7 +991,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|bxe_hc_rx_ticks
 init|=
 literal|25
@@ -1009,7 +1010,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1035,7 +1036,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|bxe_hc_tx_ticks
 init|=
 literal|50
@@ -1054,7 +1055,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1080,7 +1081,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|bxe_rx_budget
 init|=
 literal|0xffffffff
@@ -1099,7 +1100,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1125,7 +1126,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|bxe_max_aggregation_size
 init|=
 literal|0
@@ -1144,7 +1145,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1190,7 +1191,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1235,7 +1236,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1280,7 +1281,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -10647,11 +10648,10 @@ name|sc
 argument_list|,
 name|DBG_SP
 argument_list|,
-literal|"SPQE -> %p\n"
+literal|"SPQE -> %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -10666,7 +10666,7 @@ name|sc
 argument_list|,
 name|DBG_SP
 argument_list|,
-literal|"FUNC_RDATA -> %p / %p\n"
+literal|"FUNC_RDATA -> %p / %#jx\n"
 argument_list|,
 name|BXE_SP
 argument_list|(
@@ -10676,8 +10676,7 @@ name|func_rdata
 argument_list|)
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|BXE_SP_MAPPING
 argument_list|(
@@ -15023,11 +15022,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|BXE_FP_TX_UNLOCK
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|BLOGE
 argument_list|(
 name|sc
@@ -15037,6 +15031,11 @@ argument_list|,
 name|fp
 operator|->
 name|index
+argument_list|)
+expr_stmt|;
+name|BXE_FP_TX_UNLOCK
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 name|atomic_store_rel_long
@@ -15233,13 +15232,21 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* reset the watchdog timer if there are pending transmits */
 if|if
 condition|(
 name|tx_bd_avail
-operator|>=
+operator|<
 name|BXE_TX_CLEANUP_THRESHOLD
 condition|)
+block|{
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_OACTIVE
+expr_stmt|;
+block|}
+else|else
 block|{
 name|ifp
 operator|->
@@ -15248,18 +15255,34 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
+block|}
 if|if
 condition|(
-name|tx_bd_avail
-operator|>=
-operator|(
-name|TX_BD_USABLE
-operator|-
-literal|1
-operator|)
+name|fp
+operator|->
+name|tx_pkt_prod
+operator|!=
+name|fp
+operator|->
+name|tx_pkt_cons
 condition|)
 block|{
-comment|/* clear watchdog if the tx chain is empty */
+comment|/* reset the watchdog timer if there are pending transmits */
+name|fp
+operator|->
+name|watchdog_timer
+operator|=
+name|BXE_TX_TIMEOUT
+expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+else|else
+block|{
+comment|/* clear watchdog when there are no pending transmits */
 name|fp
 operator|->
 name|watchdog_timer
@@ -15272,19 +15295,6 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* reset watchdog if there are pending transmits */
-name|fp
-operator|->
-name|watchdog_timer
-operator|=
-name|BXE_TX_TIMEOUT
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
 block|}
 end_function
 
@@ -24425,6 +24435,7 @@ operator|<
 name|BXE_TX_CLEANUP_THRESHOLD
 condition|)
 block|{
+comment|/* bxe_txeof will set IFF_DRV_OACTIVE appropriately */
 name|bxe_txeof
 argument_list|(
 name|sc
@@ -24432,23 +24443,17 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* close TX if we're still running low */
 if|if
 condition|(
-name|tx_bd_avail
-operator|<
-name|BXE_TX_CLEANUP_THRESHOLD
-condition|)
-block|{
 name|ifp
 operator|->
 name|if_drv_flags
-operator|&=
-operator|~
+operator|&
 name|IFF_DRV_OACTIVE
-expr_stmt|;
+condition|)
+block|{
 break|break;
+block|}
 block|}
 block|}
 comment|/* all TX packets were dequeued and/or the tx ring is full */
@@ -24903,6 +24908,7 @@ operator|<
 name|BXE_TX_CLEANUP_THRESHOLD
 condition|)
 block|{
+comment|/* bxe_txeof will set IFF_DRV_OACTIVE appropriately */
 name|bxe_txeof
 argument_list|(
 name|sc
@@ -24910,23 +24916,17 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* close TX if we're still running low */
 if|if
 condition|(
-name|tx_bd_avail
-operator|<
-name|BXE_TX_CLEANUP_THRESHOLD
-condition|)
-block|{
 name|ifp
 operator|->
 name|if_drv_flags
-operator|&=
-operator|~
+operator|&
 name|IFF_DRV_OACTIVE
-expr_stmt|;
+condition|)
+block|{
 break|break;
+block|}
 block|}
 name|next
 operator|=
@@ -29087,11 +29087,10 @@ name|sc
 argument_list|,
 name|DBG_LOAD
 argument_list|,
-literal|"statistics request base address set to %p\n"
+literal|"statistics request base address set to %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -29104,11 +29103,10 @@ name|sc
 argument_list|,
 name|DBG_LOAD
 argument_list|,
-literal|"statistics data base address set to %p\n"
+literal|"statistics data base address set to %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -60781,7 +60779,7 @@ argument_list|,
 name|DBG_LOAD
 argument_list|,
 literal|"User Config: "
-literal|"debug=0x%x "
+literal|"debug=0x%lx "
 literal|"interrupt_mode=%d "
 literal|"queue_count=%d "
 literal|"hc_rx_ticks=%d "
@@ -60869,11 +60867,39 @@ case|case
 name|ELINK_ETH_PHY_SFPP_10G_FIBER
 case|:
 case|case
-name|ELINK_ETH_PHY_SFP_1G_FIBER
-case|:
-case|case
 name|ELINK_ETH_PHY_XFP_FIBER
 case|:
+name|BLOGI
+argument_list|(
+name|sc
+argument_list|,
+literal|"Found 10Gb Fiber media.\n"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|media
+operator|=
+name|IFM_10G_SR
+expr_stmt|;
+break|break;
+case|case
+name|ELINK_ETH_PHY_SFP_1G_FIBER
+case|:
+name|BLOGI
+argument_list|(
+name|sc
+argument_list|,
+literal|"Found 1Gb Fiber media.\n"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|media
+operator|=
+name|IFM_1000_SX
+expr_stmt|;
+break|break;
 case|case
 name|ELINK_ETH_PHY_KR
 case|:
@@ -60914,6 +60940,20 @@ break|break;
 case|case
 name|ELINK_ETH_PHY_BASE_T
 case|:
+if|if
+condition|(
+name|sc
+operator|->
+name|link_params
+operator|.
+name|speed_cap_mask
+index|[
+literal|0
+index|]
+operator|&
+name|PORT_HW_CFG_SPEED_CAPABILITY_D0_10G
+condition|)
+block|{
 name|BLOGI
 argument_list|(
 name|sc
@@ -60927,6 +60967,23 @@ name|media
 operator|=
 name|IFM_10G_T
 expr_stmt|;
+block|}
+else|else
+block|{
+name|BLOGI
+argument_list|(
+name|sc
+argument_list|,
+literal|"Found 1000Base-T media.\n"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|media
+operator|=
+name|IFM_1000_T
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ELINK_ETH_PHY_NOT_PRESENT

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: head/lib/libz/zopen.c 84228 2001-09-30 22:39:00Z dillon $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -136,6 +136,38 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|fpos_t
+name|xgzseek
+parameter_list|(
+name|void
+modifier|*
+name|cookie
+parameter_list|,
+name|fpos_t
+name|offset
+parameter_list|,
+name|int
+name|whence
+parameter_list|)
+block|{
+return|return
+name|gzseek
+argument_list|(
+name|cookie
+argument_list|,
+operator|(
+name|z_off_t
+operator|)
+name|offset
+argument_list|,
+name|whence
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|FILE
 modifier|*
 name|zopen
@@ -187,7 +219,7 @@ name|xgzread
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|xgzseek
 argument_list|,
 name|xgzclose
 argument_list|)
@@ -204,7 +236,7 @@ name|NULL
 argument_list|,
 name|xgzwrite
 argument_list|,
-name|NULL
+name|xgzseek
 argument_list|,
 name|xgzclose
 argument_list|)

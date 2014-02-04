@@ -3070,6 +3070,24 @@ literal|0
 block|if (flags& BUS_SPACE_BARRIER_WRITE) 		mips_dcache_wbinv_all();
 endif|#
 directive|endif
+if|if
+condition|(
+name|flags
+operator|&
+name|BUS_SPACE_BARRIER_READ
+condition|)
+name|rmb
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|BUS_SPACE_BARRIER_WRITE
+condition|)
+name|wmb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

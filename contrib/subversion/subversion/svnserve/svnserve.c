@@ -171,6 +171,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_subr_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"winservice.h"
 end_include
 
@@ -1736,6 +1742,18 @@ argument_list|)
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
+name|svn_io_remove_file2
+argument_list|(
+name|filename
+argument_list|,
+name|TRUE
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SVN_ERR
+argument_list|(
 name|svn_io_file_open
 argument_list|(
 operator|&
@@ -1747,7 +1765,7 @@ name|APR_WRITE
 operator||
 name|APR_CREATE
 operator||
-name|APR_TRUNCATE
+name|APR_EXCL
 argument_list|,
 name|APR_OS_DEFAULT
 argument_list|,
@@ -1853,12 +1871,14 @@ name|my_version
 argument_list|)
 expr_stmt|;
 return|return
-name|svn_ver_check_list
+name|svn_ver_check_list2
 argument_list|(
 operator|&
 name|my_version
 argument_list|,
 name|checklist
+argument_list|,
+name|svn_ver_equal
 argument_list|)
 return|;
 block|}

@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|GPT_CR_FO3
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

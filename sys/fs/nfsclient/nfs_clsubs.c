@@ -17,12 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|"opt_kdtrace.h"
-end_include
-
 begin_comment
 comment|/*  * These functions support the macros and help fiddle mbuf chains for  * the nfs op functions. They do things like create the rpc header and  * copy data between mbuf chains and uio lists.  */
 end_comment

@@ -629,6 +629,8 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|isa
+operator|.
+name|isa_conf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -969,6 +971,11 @@ name|conn
 argument_list|)
 expr_stmt|;
 name|pdu_send
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|pdu_delete
 argument_list|(
 name|request
 argument_list|)

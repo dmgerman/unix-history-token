@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|PTE_PAGETABLE
-value|4
+value|6
 end_define
 
 begin_else
@@ -107,6 +107,13 @@ define|#
 directive|define
 name|PTE_CACHE
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_DEVICE
+value|PTE_NOCACHE
 end_define
 
 begin_define
@@ -896,6 +903,19 @@ end_function_decl
 begin_function_decl
 name|void
 name|pmap_kenter_nocache
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_paddr_t
+name|pa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_kenter_device
 parameter_list|(
 name|vm_offset_t
 name|va
@@ -2104,6 +2124,10 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_81342
 argument_list|)
+operator|||
+name|ARM_ARCH_6
+operator|||
+name|ARM_ARCH_7A
 end_elif
 
 begin_define
@@ -2416,6 +2440,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_L2_PIPT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_sync_l2
+parameter_list|(
+name|pte
+parameter_list|,
+name|size
+parameter_list|)
+value|cpu_l2cache_wb_range(vtophys(pte), size)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_sync_l2
+parameter_list|(
+name|pte
+parameter_list|,
+name|size
+parameter_list|)
+value|cpu_l2cache_wb_range(pte, size)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2424,7 +2488,7 @@ parameter_list|(
 name|pte
 parameter_list|)
 define|\
-value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 		cpu_l2cache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 	} else								\ 		cpu_drain_writebuf();					\ } while (
+value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 		cpu_drain_writebuf();					\ 		_sync_l2((vm_offset_t)(pte), sizeof(pt_entry_t));\ 	} else								\ 		cpu_drain_writebuf();					\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -2441,7 +2505,7 @@ parameter_list|)
 define|\
 value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm_offset_t)(pte),			\ 		    (cnt)<< 2);
 comment|/* * sizeof(pt_entry_t) */
-value|\ 		cpu_l2cache_wb_range((vm_offset_t)(pte), 		\ 		    (cnt)<< 2);
+value|\ 		cpu_drain_writebuf();					\ 		_sync_l2((vm_offset_t)(pte),		 		\ 		    (cnt)<< 2);
 comment|/* * sizeof(pt_entry_t) */
 value|\ 	} else								\ 		cpu_drain_writebuf();					\ } while (
 comment|/*CONSTCOND*/
@@ -3159,92 +3223,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * This structure is used by machine-dependent code to describe  * static mappings of devices, created at bootstrap time.  */
-end_comment
-
-begin_struct
-struct|struct
-name|pmap_devmap
-block|{
-name|vm_offset_t
-name|pd_va
-decl_stmt|;
-comment|/* virtual address */
-name|vm_paddr_t
-name|pd_pa
-decl_stmt|;
-comment|/* physical address */
-name|vm_size_t
-name|pd_size
-decl_stmt|;
-comment|/* size of region */
-name|vm_prot_t
-name|pd_prot
-decl_stmt|;
-comment|/* protection code */
-name|int
-name|pd_cache
-decl_stmt|;
-comment|/* cache attributes */
-block|}
-struct|;
-end_struct
-
-begin_function_decl
-specifier|const
-name|struct
-name|pmap_devmap
-modifier|*
-name|pmap_devmap_find_pa
-parameter_list|(
-name|vm_paddr_t
-parameter_list|,
-name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|struct
-name|pmap_devmap
-modifier|*
-name|pmap_devmap_find_va
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmap_devmap_bootstrap
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-specifier|const
-name|struct
-name|pmap_devmap
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmap_devmap_register
-parameter_list|(
-specifier|const
-name|struct
-name|pmap_devmap
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -3378,45 +3356,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|ARM_NOCACHE_KVA_SIZE
-value|0x1000000
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|arm_nocache_startaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-modifier|*
-name|arm_remap_nocache
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|arm_unmap_nocache
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern

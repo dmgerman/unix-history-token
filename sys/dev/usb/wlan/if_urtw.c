@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -8998,6 +9004,8 @@ operator|->
 name|vap
 expr_stmt|;
 comment|/* enable s/w bmiss handling for sta mode */
+if|if
+condition|(
 name|ieee80211_vap_setup
 argument_list|(
 name|ic
@@ -9018,7 +9026,24 @@ name|bssid
 argument_list|,
 name|mac
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* out of memory */
+name|free
+argument_list|(
+name|uvp
+argument_list|,
+name|M_80211_VAP
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* override state transition machine */
 name|uvp
 operator|->
@@ -12712,17 +12737,12 @@ operator|+
 name|acktime
 expr_stmt|;
 block|}
-operator|*
-operator|(
-name|uint16_t
-operator|*
-operator|)
+name|USETW
+argument_list|(
 name|wh
 operator|->
 name|i_dur
-operator|=
-name|htole16
-argument_list|(
+argument_list|,
 name|dur
 argument_list|)
 expr_stmt|;

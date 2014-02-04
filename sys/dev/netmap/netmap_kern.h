@@ -35,7 +35,7 @@ name|likely
 parameter_list|(
 name|x
 parameter_list|)
-value|__builtin_expect(!!(x), 1)
+value|__builtin_expect((long)!!(x), 1L)
 end_define
 
 begin_define
@@ -45,7 +45,7 @@ name|unlikely
 parameter_list|(
 name|x
 parameter_list|)
-value|__builtin_expect(!!(x), 0)
+value|__builtin_expect((long)!!(x), 0L)
 end_define
 
 begin_define
@@ -53,13 +53,6 @@ define|#
 directive|define
 name|NM_LOCK_T
 value|struct mtx
-end_define
-
-begin_define
-define|#
-directive|define
-name|NM_RWLOCK_T
-value|struct rwlock
 end_define
 
 begin_define
@@ -91,6 +84,13 @@ parameter_list|)
 value|((ifp)->if_input)(ifp, m)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NM_ATOMIC_T
+value|volatile int
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -104,17 +104,6 @@ begin_define
 define|#
 directive|define
 name|NM_LOCK_T
-value|safe_spinlock_t
-end_define
-
-begin_comment
-comment|// see bsd_glue.h
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NM_RWLOCK_T
 value|safe_spinlock_t
 end_define
 
@@ -151,6 +140,13 @@ parameter_list|)
 value|netif_rx(m)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NM_ATOMIC_T
+value|volatile long unsigned int
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -167,6 +163,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* DEV_NETMAP */
+end_comment
 
 begin_comment
 comment|/*  * IFCAP_NETMAP goes into net_device's priv_flags (if_capenable).  * This was 16 bits up to linux 2.6.36, so we need a 16 bit value on older  * platforms and tolerate the clash with IFF_DYNAMIC and IFF_BRIDGE_PORT.  * For the 32-bit value, 0x100000 has no clashes until at least 3.5.1  */
@@ -369,8 +369,31 @@ name|netmap_priv_d
 struct_decl|;
 end_struct_decl
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|nm_dump_buf
+parameter_list|(
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+name|lim
+parameter_list|,
+name|char
+modifier|*
+name|dst
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * private, kernel view of a ring. Keeps track of the status of  * a ring across system calls.  *  *	nr_hwcur	index of the next buffer to refill.  *			It corresponds to ring->cur - ring->reserved  *  *	nr_hwavail	the number of slots "owned" by userspace.  *			nr_hwavail =:= ring->avail + ring->reserved  *  * The indexes in the NIC and netmap rings are offset by nkr_hwofs slots.  * This is so that, on a reset, buffers owned by userspace are not  * modified by the kernel. In particular:  * RX rings: the next empty buffer (hwcur + hwavail + hwofs) coincides with  * 	the next empty buffer as known by the hardware (next_to_check or so).  * TX rings: hwcur + hwofs coincides with next_to_send  *  * For received packets, slot->flags is set to nkr_slot_flags  * so we can provide a proper initial value (e.g. set NS_FORWARD  * when operating in 'transparent' mode).  */
+comment|/*  * private, kernel view of a ring. Keeps track of the status of  * a ring across system calls.  *  *	nr_hwcur	index of the next buffer to refill.  *			It corresponds to ring->cur - ring->reserved  *  *	nr_hwavail	the number of slots "owned" by userspace.  *			nr_hwavail =:= ring->avail + ring->reserved  *  * The indexes in the NIC and netmap rings are offset by nkr_hwofs slots.  * This is so that, on a reset, buffers owned by userspace are not  * modified by the kernel. In particular:  * RX rings: the next empty buffer (hwcur + hwavail + hwofs) coincides with  * 	the next empty buffer as known by the hardware (next_to_check or so).  * TX rings: hwcur + hwofs coincides with next_to_send  *  * Clients cannot issue concurrent syscall on a ring. The system  * detects this and reports an error using two flags,  * NKR_WBUSY and NKR_RBUSY  * For received packets, slot->flags is set to nkr_slot_flags  * so we can provide a proper initial value (e.g. set NS_FORWARD  * when operating in 'transparent' mode).  *  * The following fields are used to implement lock-free copy of packets  * from input to output ports in VALE switch:  *	nkr_hwlease	buffer after the last one being copied.  *			A writer in nm_bdg_flush reserves N buffers  *			from nr_hwlease, advances it, then does the  *			copy outside the lock.  *			In RX rings (used for VALE ports),  *			nkr_hwcur + nkr_hwavail<= nkr_hwlease< nkr_hwcur+N-1  *			In TX rings (used for NIC or host stack ports)  *			nkr_hwcur<= nkr_hwlease< nkr_hwcur+ nkr_hwavail  *	nkr_leases	array of nkr_num_slots where writers can report  *			completion of their block. NR_NOSLOT (~0) indicates  *			that the writer has not finished yet  *	nkr_lease_idx	index of next free slot in nr_leases, to be assigned   *  * The kring is manipulated by txsync/rxsync and generic netmap function.  * q_lock is used to arbitrate access to the kring from within the netmap  * code, and this and other protections guarantee that there is never  * more than 1 concurrent call to txsync or rxsync. So we are free  * to manipulate the kring from within txsync/rxsync without any extra  * locks.  */
 end_comment
 
 begin_struct
@@ -382,13 +405,13 @@ name|netmap_ring
 modifier|*
 name|ring
 decl_stmt|;
-name|u_int
+name|uint32_t
 name|nr_hwcur
 decl_stmt|;
-name|int
+name|uint32_t
 name|nr_hwavail
 decl_stmt|;
-name|u_int
+name|uint32_t
 name|nr_kflags
 decl_stmt|;
 comment|/* private driver flags */
@@ -397,17 +420,17 @@ directive|define
 name|NKR_PENDINTR
 value|0x1
 comment|// Pending interrupt.
-name|u_int
+name|uint32_t
 name|nkr_num_slots
 decl_stmt|;
+name|int32_t
+name|nkr_hwofs
+decl_stmt|;
+comment|/* offset between NIC and netmap ring */
 name|uint16_t
 name|nkr_slot_flags
 decl_stmt|;
 comment|/* initial value for flags */
-name|int
-name|nkr_hwofs
-decl_stmt|;
-comment|/* offset between NIC and netmap ring */
 name|struct
 name|netmap_adapter
 modifier|*
@@ -418,6 +441,20 @@ name|nm_bdg_fwd
 modifier|*
 name|nkr_ft
 decl_stmt|;
+name|uint32_t
+modifier|*
+name|nkr_leases
+decl_stmt|;
+define|#
+directive|define
+name|NR_NOSLOT
+value|((uint32_t)~0)
+name|uint32_t
+name|nkr_hwlease
+decl_stmt|;
+name|uint32_t
+name|nkr_lease_idx
+decl_stmt|;
 name|NM_SELINFO_T
 name|si
 decl_stmt|;
@@ -425,7 +462,15 @@ comment|/* poll/select wait queue */
 name|NM_LOCK_T
 name|q_lock
 decl_stmt|;
-comment|/* used if no device lock available */
+comment|/* protects kring and ring. */
+name|NM_ATOMIC_T
+name|nr_busy
+decl_stmt|;
+comment|/* prevent concurrent syscalls */
+specifier|volatile
+name|int
+name|nkr_stopped
+decl_stmt|;
 block|}
 name|__attribute__
 argument_list|(
@@ -438,6 +483,44 @@ operator|)
 argument_list|)
 struct|;
 end_struct
+
+begin_comment
+comment|/* return the next index, with wraparound */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|uint32_t
+name|nm_next
+parameter_list|(
+name|uint32_t
+name|i
+parameter_list|,
+name|uint32_t
+name|lim
+parameter_list|)
+block|{
+return|return
+name|unlikely
+argument_list|(
+name|i
+operator|==
+name|lim
+argument_list|)
+condition|?
+literal|0
+else|:
+name|i
+operator|+
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *  * Here is the layout for the Rx and Tx rings.         RxRING                            TxRING        +-----------------+            +-----------------+       |                 |            |                 |       |XXX free slot XXX|            |XXX free slot XXX|       +-----------------+            +-----------------+       |                 |<-hwcur     |                 |<-hwcur       | reserved    h   |            | (ready          |       +-----------  w  -+            |  to be          |  cur->|             a   |            |  sent)      h   |       |             v   |            +----------   w   |       |             a   |       cur->| (being      a   |       |             i   |            |  prepared)  v   |       | avail       l   |            |             a   |       +-----------------+            +  a  ------  i   +       |                 | ...        |  v          l   |<-hwlease       | (being          | ...        |  a              | ...       |  prepared)      | ...        |  i              | ...       +-----------------+ ...        |  l              | ...       |                 |<-hwlease   +-----------------+       |                 |            |                 |       |                 |            |                 |       |                 |            |                 |       |                 |            |                 |       +-----------------+            +-----------------+   * The cur/avail (user view) and hwcur/hwavail (kernel view)  * are used in the normal operation of the card.  *  * When a ring is the output of a switch port (Rx ring for  * a VALE port, Tx ring for the host stack or NIC), slots  * are reserved in blocks through 'hwlease' which points  * to the next unused slot.  * On an Rx ring, hwlease is always after hwavail,  * and completions cause avail to advance.  * On a Tx ring, hwlease is always between cur and hwavail,  * and completions cause cur to advance.  *  * nm_kr_space() returns the maximum number of slots that  * can be assigned.  * nm_kr_lease() reserves the required number of buffers,  *    advances nkr_hwlease and also returns an entry in  *    a circular array where completions should be reported.  */
+end_comment
 
 begin_comment
 comment|/*  * This struct extends the 'struct adapter' (or  * equivalent) device descriptor. It contains all fields needed to  * support netmap operation.  */
@@ -465,6 +548,16 @@ directive|define
 name|NAF_SW_ONLY
 value|2
 comment|/* forward packets only to sw adapter */
+define|#
+directive|define
+name|NAF_BDG_MAYSLEEP
+value|4
+comment|/* the bridge is allowed to sleep when 				 * forwarding packets coming from this 				 * interface 				 */
+define|#
+directive|define
+name|NAF_MEM_OWNER
+value|8
+comment|/* the adapter is responsible for the 				 * deallocation of the memory allocator 				 */
 name|int
 name|refcount
 decl_stmt|;
@@ -478,10 +571,6 @@ name|int
 name|na_multi
 decl_stmt|;
 comment|/* threads attached to multiple hw queues */
-name|int
-name|separate_locks
-decl_stmt|;
-comment|/* set if the interface suports different 			       locks for rx, tx and core. */
 name|u_int
 name|num_rx_rings
 decl_stmt|;
@@ -557,23 +646,6 @@ name|int
 name|onoff
 parameter_list|)
 function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|nm_lock
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|int
-name|what
-parameter_list|,
-name|u_int
-name|ringid
-parameter_list|)
-function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -588,7 +660,7 @@ name|u_int
 name|ring
 parameter_list|,
 name|int
-name|lock
+name|flags
 parameter_list|)
 function_decl|;
 name|int
@@ -605,9 +677,17 @@ name|u_int
 name|ring
 parameter_list|,
 name|int
-name|lock
+name|flags
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|NAF_FORCE_READ
+value|1
+define|#
+directive|define
+name|NAF_FORCE_RECLAIM
+value|2
 comment|/* return configuration information */
 name|int
 function_decl|(
@@ -654,6 +734,12 @@ name|netmap_priv_d
 modifier|*
 name|na_kpriv
 decl_stmt|;
+comment|/* memory allocator */
+name|struct
+name|netmap_mem_d
+modifier|*
+name|nm_mem
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|linux
@@ -669,7 +755,344 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The combination of "enable" (ifp->if_capenable& IFCAP_NETMAP)  * and refcount gives the status of the interface, namely:  *  *	enable	refcount	Status  *  *	FALSE	0		normal operation  *	FALSE	!= 0		-- (impossible)  *	TRUE	1		netmap mode  *	TRUE	0		being deleted.  */
+comment|/*  * Available space in the ring.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|uint32_t
+name|nm_kr_space
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|k
+parameter_list|,
+name|int
+name|is_rx
+parameter_list|)
+block|{
+name|int
+name|space
+decl_stmt|;
+if|if
+condition|(
+name|is_rx
+condition|)
+block|{
+name|int
+name|busy
+init|=
+name|k
+operator|->
+name|nkr_hwlease
+operator|-
+name|k
+operator|->
+name|nr_hwcur
+decl_stmt|;
+if|if
+condition|(
+name|busy
+operator|<
+literal|0
+condition|)
+name|busy
+operator|+=
+name|k
+operator|->
+name|nkr_num_slots
+expr_stmt|;
+name|space
+operator|=
+name|k
+operator|->
+name|nkr_num_slots
+operator|-
+literal|1
+operator|-
+name|busy
+expr_stmt|;
+block|}
+else|else
+block|{
+name|space
+operator|=
+name|k
+operator|->
+name|nr_hwcur
+operator|+
+name|k
+operator|->
+name|nr_hwavail
+operator|-
+name|k
+operator|->
+name|nkr_hwlease
+expr_stmt|;
+if|if
+condition|(
+name|space
+operator|<
+literal|0
+condition|)
+name|space
+operator|+=
+name|k
+operator|->
+name|nkr_num_slots
+expr_stmt|;
+block|}
+if|#
+directive|if
+literal|0
+comment|// sanity check
+block|if (k->nkr_hwlease>= k->nkr_num_slots || 		k->nr_hwcur>= k->nkr_num_slots || 		k->nr_hwavail>= k->nkr_num_slots || 		busy< 0 || 		busy>= k->nkr_num_slots) { 		D("invalid kring, cur %d avail %d lease %d lease_idx %d lim %d",			k->nr_hwcur, k->nr_hwavail, k->nkr_hwlease, 			k->nkr_lease_idx, k->nkr_num_slots); 	}
+endif|#
+directive|endif
+return|return
+name|space
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* return update position */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|uint32_t
+name|nm_kr_rxpos
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|k
+parameter_list|)
+block|{
+name|uint32_t
+name|pos
+init|=
+name|k
+operator|->
+name|nr_hwcur
+operator|+
+name|k
+operator|->
+name|nr_hwavail
+decl_stmt|;
+if|if
+condition|(
+name|pos
+operator|>=
+name|k
+operator|->
+name|nkr_num_slots
+condition|)
+name|pos
+operator|-=
+name|k
+operator|->
+name|nkr_num_slots
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (pos>= k->nkr_num_slots || 		k->nkr_hwlease>= k->nkr_num_slots || 		k->nr_hwcur>= k->nkr_num_slots || 		k->nr_hwavail>= k->nkr_num_slots || 		k->nkr_lease_idx>= k->nkr_num_slots) { 		D("invalid kring, cur %d avail %d lease %d lease_idx %d lim %d",			k->nr_hwcur, k->nr_hwavail, k->nkr_hwlease, 			k->nkr_lease_idx, k->nkr_num_slots); 	}
+endif|#
+directive|endif
+return|return
+name|pos
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* make a lease on the kring for N positions. return the  * lease index  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|uint32_t
+name|nm_kr_lease
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|k
+parameter_list|,
+name|u_int
+name|n
+parameter_list|,
+name|int
+name|is_rx
+parameter_list|)
+block|{
+name|uint32_t
+name|lim
+init|=
+name|k
+operator|->
+name|nkr_num_slots
+operator|-
+literal|1
+decl_stmt|;
+name|uint32_t
+name|lease_idx
+init|=
+name|k
+operator|->
+name|nkr_lease_idx
+decl_stmt|;
+name|k
+operator|->
+name|nkr_leases
+index|[
+name|lease_idx
+index|]
+operator|=
+name|NR_NOSLOT
+expr_stmt|;
+name|k
+operator|->
+name|nkr_lease_idx
+operator|=
+name|nm_next
+argument_list|(
+name|lease_idx
+argument_list|,
+name|lim
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+name|nm_kr_space
+argument_list|(
+name|k
+argument_list|,
+name|is_rx
+argument_list|)
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"invalid request for %d slots"
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"x"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* XXX verify that there are n slots */
+name|k
+operator|->
+name|nkr_hwlease
+operator|+=
+name|n
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|->
+name|nkr_hwlease
+operator|>
+name|lim
+condition|)
+name|k
+operator|->
+name|nkr_hwlease
+operator|-=
+name|lim
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|->
+name|nkr_hwlease
+operator|>=
+name|k
+operator|->
+name|nkr_num_slots
+operator|||
+name|k
+operator|->
+name|nr_hwcur
+operator|>=
+name|k
+operator|->
+name|nkr_num_slots
+operator|||
+name|k
+operator|->
+name|nr_hwavail
+operator|>=
+name|k
+operator|->
+name|nkr_num_slots
+operator|||
+name|k
+operator|->
+name|nkr_lease_idx
+operator|>=
+name|k
+operator|->
+name|nkr_num_slots
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"invalid kring %s, cur %d avail %d lease %d lease_idx %d lim %d"
+argument_list|,
+name|k
+operator|->
+name|na
+operator|->
+name|ifp
+operator|->
+name|if_xname
+argument_list|,
+name|k
+operator|->
+name|nr_hwcur
+argument_list|,
+name|k
+operator|->
+name|nr_hwavail
+argument_list|,
+name|k
+operator|->
+name|nkr_hwlease
+argument_list|,
+name|k
+operator|->
+name|nkr_lease_idx
+argument_list|,
+name|k
+operator|->
+name|nkr_num_slots
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|lease_idx
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * XXX NETMAP_DELETING() is unused  *  * The combination of "enable" (ifp->if_capenable& IFCAP_NETMAP)  * and refcount gives the status of the interface, namely:  *  *	enable	refcount	Status  *  *	FALSE	0		normal operation  *	FALSE	!= 0		-- (impossible)  *	TRUE	1		netmap mode  *	TRUE	0		being deleted.  */
 end_comment
 
 begin_define
@@ -683,78 +1106,7 @@ value|(  ((_na)->refcount == 0)&&	\ 	( (_na)->ifp->if_capenable& IFCAP_NETMAP) )
 end_define
 
 begin_comment
-comment|/*  * parameters for (*nm_lock)(adapter, what, index)  */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-name|NETMAP_NO_LOCK
-init|=
-literal|0
-block|,
-name|NETMAP_CORE_LOCK
-block|,
-name|NETMAP_CORE_UNLOCK
-block|,
-name|NETMAP_TX_LOCK
-block|,
-name|NETMAP_TX_UNLOCK
-block|,
-name|NETMAP_RX_LOCK
-block|,
-name|NETMAP_RX_UNLOCK
-block|,
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-define|#
-directive|define
-name|NETMAP_REG_LOCK
-value|NETMAP_CORE_LOCK
-define|#
-directive|define
-name|NETMAP_REG_UNLOCK
-value|NETMAP_CORE_UNLOCK
-else|#
-directive|else
-name|NETMAP_REG_LOCK
-block|,
-name|NETMAP_REG_UNLOCK
-endif|#
-directive|endif
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/* How to handle locking support in netmap_rx_irq/netmap_tx_irq */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETMAP_LOCKED_ENTER
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* already locked on enter */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETMAP_LOCKED_EXIT
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* keep locked on exit */
-end_comment
-
-begin_comment
-comment|/*  * The following are support routines used by individual drivers to  * support netmap operation.  *  * netmap_attach() initializes a struct netmap_adapter, allocating the  * 	struct netmap_ring's and the struct selinfo.  *  * netmap_detach() frees the memory allocated by netmap_attach().  *  * netmap_start() replaces the if_transmit routine of the interface,  *	and is used to intercept packets coming from the stack.  *  * netmap_load_map/netmap_reload_map are helper routines to set/reset  *	the dmamap for a packet buffer  *  * netmap_reset() is a helper routine to be called in the driver  *	when reinitializing a ring.  */
+comment|/*  * The following are support routines used by individual drivers to  * support netmap operation.  *  * netmap_attach() initializes a struct netmap_adapter, allocating the  * 	struct netmap_ring's and the struct selinfo.  *  * netmap_detach() frees the memory allocated by netmap_attach().  *  * netmap_transmit() replaces the if_transmit routine of the interface,  *	and is used to intercept packets coming from the stack.  *  * netmap_load_map/netmap_reload_map are helper routines to set/reset  *	the dmamap for a packet buffer  *  * netmap_reset() is a helper routine to be called in the driver  *	when reinitializing a ring.  */
 end_comment
 
 begin_function_decl
@@ -765,7 +1117,7 @@ name|struct
 name|netmap_adapter
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -783,7 +1135,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|netmap_start
+name|netmap_transmit
 parameter_list|(
 name|struct
 name|ifnet
@@ -826,7 +1178,7 @@ name|enum
 name|txrx
 name|tx
 parameter_list|,
-name|int
+name|u_int
 name|n
 parameter_list|,
 name|u_int
@@ -842,6 +1194,31 @@ parameter_list|(
 name|struct
 name|netmap_kring
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|nm_bound_var
+parameter_list|(
+name|u_int
+modifier|*
+name|v
+parameter_list|,
+name|u_int
+name|dflt
+parameter_list|,
+name|u_int
+name|lo
+parameter_list|,
+name|u_int
+name|hi
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1721,9 +2098,9 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
-name|int
+name|u_int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1740,6 +2117,51 @@ name|_q
 parameter_list|)
 value|netmap_rx_irq(_n, _q, NULL)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_NETMAP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
+
+begin_function_decl
+name|void
+name|netmap_disable_all_rings
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netmap_enable_all_rings
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -765,12 +765,8 @@ directive|define
 name|AAC_INIT_STRUCT_REVISION_7
 value|7
 name|u_int32_t
-name|MiniPortRevision
+name|NoOfMSIXVectors
 decl_stmt|;
-define|#
-directive|define
-name|AAC_INIT_STRUCT_MINIPORT_REVISION
-value|1
 name|u_int32_t
 name|FilesystemRevision
 decl_stmt|;
@@ -2112,6 +2108,31 @@ value|0x00000100
 end_define
 
 begin_comment
+comment|/*  * for dual FW image support  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_FLASH_UPD_PENDING
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FLASH_UPD_SUCCESS
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_FLASH_UPD_FAILED
+value|0x00008000
+end_define
+
+begin_comment
 comment|/*  * Data types relating to control and monitoring of the NVRAM/WriteCache   * subsystem.  */
 end_comment
 
@@ -3437,6 +3458,17 @@ value|245
 end_define
 
 begin_comment
+comment|/* General CT_xxx return status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CT_OK
+value|218
+end_define
+
+begin_comment
 comment|/* CT_PM_DRIVER_SUPPORT parameter */
 end_comment
 
@@ -3582,9 +3614,17 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+struct|struct
+block|{
 name|u_int32_t
 name|BlockSize
 decl_stmt|;
+name|u_int32_t
+name|bdLgclPhysMap
+decl_stmt|;
+block|}
+name|BlockDevice
+struct|;
 block|}
 name|ObjExtension
 union|;
@@ -4069,6 +4109,13 @@ define|\
 value|(AAC_FIB_DATASIZE - sizeof (u_int32_t) - \ 	((sizeof (u_int32_t)) * (MAX_FIB_PARAMS + 1)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|CNT_SIZE
+value|5
+end_define
+
 begin_struct
 struct|struct
 name|aac_fsa_ctm
@@ -4102,6 +4149,44 @@ decl_stmt|;
 name|struct
 name|aac_fsa_ctm
 name|CTCommand
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* check config. */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|CFACT_CONTINUE
+init|=
+literal|0
+block|,
+comment|/* continue without pause */
+name|CFACT_PAUSE
+block|,
+comment|/* pause, then continue */
+name|CFACT_ABORT
+comment|/* abort */
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|aac_cf_status_hdr
+block|{
+name|u_int32_t
+name|action
+decl_stmt|;
+name|u_int32_t
+name|flags
+decl_stmt|;
+name|u_int32_t
+name|recordcount
 decl_stmt|;
 block|}
 struct|;
@@ -4736,6 +4821,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AAC_SRC_IOAR
+value|0x18
+end_define
+
+begin_comment
+comment|/* IOA->host interrupt register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AAC_SRC_IDBR
 value|0x20
 end_define
@@ -4818,7 +4914,18 @@ value|0xc4
 end_define
 
 begin_comment
-comment|/* inbound queue address 64-bit (high) */
+comment|/* inbound queue address 64-bit (high)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_SRC_ODBR_MSI
+value|0xc8
+end_define
+
+begin_comment
+comment|/* MSI register for sync./AIF */
 end_comment
 
 begin_define
@@ -4909,50 +5016,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AAC_DB_COMMAND_READY
-value|(1<<1)
-end_define
-
-begin_comment
-comment|/* posted one or more commands */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AAC_DB_RESPONSE_READY
-value|(1<<2)
-end_define
-
-begin_comment
-comment|/* one or more commands complete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AAC_DB_COMMAND_NOT_FULL
-value|(1<<3)
-end_define
-
-begin_comment
-comment|/* command queue not full */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AAC_DB_RESPONSE_NOT_FULL
-value|(1<<4)
-end_define
-
-begin_comment
-comment|/* response queue not full */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|AAC_DB_AIF_PENDING
 value|(1<<6)
 end_define
@@ -4973,7 +5036,7 @@ value|(1<<1)
 end_define
 
 begin_comment
-comment|/* response sent (not shifted) */
+comment|/* response sent (not shifted)*/
 end_comment
 
 begin_comment
@@ -5003,28 +5066,212 @@ comment|/* Host completed printf processing */
 end_comment
 
 begin_comment
-comment|/*  * Mask containing the interrupt bits we care about.  We don't anticipate (or  * want) interrupts not in this mask.  */
+comment|/*  * Interrupts  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AAC_DB_INTERRUPTS
-value|(AAC_DB_COMMAND_READY  |	\ 				 AAC_DB_RESPONSE_READY |	\ 				 AAC_DB_PRINTF)
+name|AAC_MAX_MSIX
+value|32
+end_define
+
+begin_comment
+comment|/* vectors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_PCI_MSI_ENABLE
+value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
-name|AAC_DB_INT_NEW_COMM
-value|0x08
+name|AAC_MSI_SYNC_STATUS
+value|0x1000
+end_define
+
+begin_enum
+enum|enum
+block|{
+name|AAC_ENABLE_INTERRUPT
+init|=
+literal|0x0
+block|,
+name|AAC_DISABLE_INTERRUPT
+block|,
+name|AAC_ENABLE_MSIX
+block|,
+name|AAC_DISABLE_MSIX
+block|,
+name|AAC_CLEAR_AIF_BIT
+block|,
+name|AAC_CLEAR_SYNC_BIT
+block|,
+name|AAC_ENABLE_INTX
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|AAC_INT_MODE_INTX
+value|(1<<0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AAC_DB_INT_NEW_COMM_TYPE1
-value|0x04
+name|AAC_INT_MODE_MSI
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_INT_MODE_AIF
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_INT_MODE_SYNC
+value|(1<<3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_INT_ENABLE_TYPE1_INTX
+value|0xfffffffb
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_INT_ENABLE_TYPE1_MSIX
+value|0xfffffffa
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_INT_DISABLE_ALL
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* Bit definitions in IOA->Host Interrupt Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_TRANSITION_TO_OPERATIONAL
+value|(0x80000000>> 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IOARCB_TRANSFER_FAILED
+value|(0x80000000>> 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IOA_UNIT_CHECK
+value|(0x80000000>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_NO_HOST_RRQ_FOR_CMD_RESPONSE
+value|(0x80000000>> 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_CRITICAL_IOA_OP_IN_PROGRESS
+value|(0x80000000>> 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IOARRIN_LOST
+value|(0x80000000>> 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_SYSTEM_BUS_MMIO_ERROR
+value|(0x80000000>> 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IOA_PROCESSOR_IN_ERROR_STATE
+value|(0x80000000>> 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_HOST_RRQ_VALID
+value|(0x80000000>> 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_OPERATIONAL_STATUS
+value|(0x80000000>> 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_ALLOW_MSIX_VECTOR0
+value|(0x80000000>> 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IOA_ERROR_INTERRUPTS
+value|(PMC_IOARCB_TRANSFER_FAILED | \ 					 PMC_IOA_UNIT_CHECK | \ 					 PMC_NO_HOST_RRQ_FOR_CMD_RESPONSE | \ 					 PMC_IOARRIN_LOST | \ 					 PMC_SYSTEM_BUS_MMIO_ERROR | \ 					 PMC_IOA_PROCESSOR_IN_ERROR_STATE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_ALL_INTERRUPT_BITS
+value|(PMC_IOA_ERROR_INTERRUPTS | \ 					 PMC_HOST_RRQ_VALID | \ 					 PMC_TRANSITION_TO_OPERATIONAL | \ 					 PMC_ALLOW_MSIX_VECTOR0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_GLOBAL_INT_BIT2
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_GLOBAL_INT_BIT0
+value|0x00000001
 end_define
 
 end_unit

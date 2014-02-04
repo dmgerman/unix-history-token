@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__RANDOM_HARVEST_H__
+name|SYS_DEV_RANDOM_RANDOM_HARVESTQ_H_INCLUDED
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__RANDOM_HARVEST_H__
+name|SYS_DEV_RANDOM_RANDOM_HARVESTQ_H_INCLUDED
 end_define
 
 begin_typedef
@@ -63,8 +63,6 @@ name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
-name|u_int
-parameter_list|,
 name|enum
 name|esource
 parameter_list|)
@@ -78,13 +76,21 @@ name|random_kthread_control
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|harvest_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* __RANDOM_HARVEST_H__ */
+comment|/* SYS_DEV_RANDOM_RANDOM_HARVESTQ_H_INCLUDED */
 end_comment
 
 end_unit

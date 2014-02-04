@@ -4200,7 +4200,7 @@ name|zil_lwb_write_done
 argument_list|,
 name|lwb
 argument_list|,
-name|ZIO_PRIORITY_LOG_WRITE
+name|ZIO_PRIORITY_SYNC_WRITE
 argument_list|,
 name|ZIO_FLAG_CANFAIL
 operator||

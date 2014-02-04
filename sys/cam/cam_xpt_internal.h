@@ -16,6 +16,12 @@ name|_CAM_CAM_XPT_INTERNAL_H
 value|1
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
+end_include
+
 begin_comment
 comment|/* Forward Declarations */
 end_comment
@@ -169,26 +175,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure for queueing a device in a run queue.  * There is one run queue for allocating new ccbs,  * and another for sending ccbs to the controller.  */
-end_comment
-
-begin_struct
-struct|struct
-name|cam_ed_qinfo
-block|{
-name|cam_pinfo
-name|pinfo
-decl_stmt|;
-name|struct
-name|cam_ed
-modifier|*
-name|device
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * The CAM EDT (Existing Device Table) contains the device information for  * all devices for all busses in the system.  The table contains a  * cam_ed structure for each device on the bus.  */
 end_comment
 
@@ -196,16 +182,15 @@ begin_struct
 struct|struct
 name|cam_ed
 block|{
+name|cam_pinfo
+name|devq_entry
+decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|cam_ed
 argument_list|)
 name|links
 expr_stmt|;
-name|struct
-name|cam_ed_qinfo
-name|devq_entry
-decl_stmt|;
 name|struct
 name|cam_et
 modifier|*
@@ -219,11 +204,6 @@ decl_stmt|;
 name|lun_id_t
 name|lun_id
 decl_stmt|;
-name|struct
-name|camq
-name|drvq
-decl_stmt|;
-comment|/* 					 * Queue of type drivers wanting to do 					 * work on this device. 					 */
 name|struct
 name|cam_ccbq
 name|ccbq
@@ -380,6 +360,14 @@ argument|cam_ed
 argument_list|)
 name|highpowerq_entry
 expr_stmt|;
+name|struct
+name|mtx
+name|device_mtx
+decl_stmt|;
+name|struct
+name|task
+name|device_destroy_task
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -431,6 +419,11 @@ name|scsi_report_luns_data
 modifier|*
 name|luns
 decl_stmt|;
+name|struct
+name|mtx
+name|luns_mtx
+decl_stmt|;
+comment|/* Protection for luns field. */
 block|}
 struct|;
 end_struct
@@ -489,6 +482,11 @@ name|xpt_xport
 modifier|*
 name|xport
 decl_stmt|;
+name|struct
+name|mtx
+name|eb_mtx
+decl_stmt|;
+comment|/* Bus topology mutex. */
 block|}
 struct|;
 end_struct
@@ -585,25 +583,6 @@ name|struct
 name|cam_ed
 modifier|*
 name|device
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|xpt_schedule_dev
-parameter_list|(
-name|struct
-name|camq
-modifier|*
-name|queue
-parameter_list|,
-name|cam_pinfo
-modifier|*
-name|dev_pinfo
-parameter_list|,
-name|u_int32_t
-name|new_priority
 parameter_list|)
 function_decl|;
 end_function_decl

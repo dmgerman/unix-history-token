@@ -219,6 +219,15 @@ argument_list|()
 block|{     }
 name|virtual
 name|bool
+name|ExceptionBreakpointsAreSet
+argument_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
 name|ExceptionBreakpointsExplainStop
 argument_list|(
 argument|lldb::StopInfoSP stop_reason

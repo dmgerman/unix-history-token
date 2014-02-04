@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -103,6 +97,12 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|arm_devmap_entry
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|fdt_localbus_devmap
@@ -110,7 +110,7 @@ parameter_list|(
 name|phandle_t
 parameter_list|,
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 parameter_list|,
 name|int
@@ -128,7 +128,7 @@ parameter_list|(
 name|phandle_t
 parameter_list|,
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|devmap
 parameter_list|,

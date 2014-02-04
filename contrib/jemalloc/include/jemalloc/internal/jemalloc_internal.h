@@ -905,6 +905,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * JEMALLOC_ALWAYS_INLINE is used within header files for functions that are  * static inline functions if inlining is enabled, and single-definition  * library-private functions if inlining is disabled.  *  * JEMALLOC_ALWAYS_INLINE_C is for use in .c files, in which case the denoted  * functions are always static, regardless of whether inlining is enabled.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -919,6 +923,13 @@ begin_define
 define|#
 directive|define
 name|JEMALLOC_ALWAYS_INLINE
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_ALWAYS_INLINE_C
+value|static
 end_define
 
 begin_define
@@ -958,6 +969,14 @@ define|\
 value|static inline JEMALLOC_ATTR(unused) JEMALLOC_ATTR(always_inline)
 end_define
 
+begin_define
+define|#
+directive|define
+name|JEMALLOC_ALWAYS_INLINE_C
+define|\
+value|static inline JEMALLOC_ATTR(always_inline)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -967,6 +986,13 @@ begin_define
 define|#
 directive|define
 name|JEMALLOC_ALWAYS_INLINE
+value|static inline
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_ALWAYS_INLINE_C
 value|static inline
 end_define
 

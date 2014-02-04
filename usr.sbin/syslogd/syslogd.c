@@ -132,6 +132,17 @@ begin_comment
 comment|/* timeout passed to ttymsg */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RCVBUF_MINSIZE
+value|(80 * 1024)
+end_define
+
+begin_comment
+comment|/* minimum size of dgram rcv buffer */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1778,7 +1789,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|double_rbuf
+name|increase_rcvbuf
 parameter_list|(
 name|int
 parameter_list|)
@@ -2892,14 +2903,14 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|double_rbuf
+block|}
+name|increase_rcvbuf
 argument_list|(
 name|fx
 operator|->
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -6692,10 +6703,16 @@ case|case
 name|ENETDOWN
 case|:
 case|case
+name|ENETUNREACH
+case|:
+case|case
 name|EHOSTUNREACH
 case|:
 case|case
 name|EHOSTDOWN
+case|:
+case|case
+name|EADDRNOTAVAIL
 case|:
 break|break;
 comment|/* case EBADF: */
@@ -6709,7 +6726,9 @@ comment|/* case ECONNREFUSED: */
 default|default:
 name|dprintf
 argument_list|(
-literal|"removing entry\n"
+literal|"removing entry: errno=%d\n"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|f
@@ -14541,7 +14560,7 @@ condition|(
 operator|!
 name|SecureMode
 condition|)
-name|double_rbuf
+name|increase_rcvbuf
 argument_list|(
 operator|*
 name|s
@@ -14607,17 +14626,24 @@ end_function
 begin_function
 specifier|static
 name|void
-name|double_rbuf
+name|increase_rcvbuf
 parameter_list|(
 name|int
 name|fd
 parameter_list|)
 block|{
 name|socklen_t
-name|slen
-decl_stmt|,
 name|len
+decl_stmt|,
+name|slen
 decl_stmt|;
+name|slen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getsockopt
@@ -14638,9 +14664,16 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|len
-operator|*=
-literal|2
+operator|<
+name|RCVBUF_MINSIZE
+condition|)
+block|{
+name|len
+operator|=
+name|RCVBUF_MINSIZE
 expr_stmt|;
 name|setsockopt
 argument_list|(
@@ -14653,9 +14686,13 @@ argument_list|,
 operator|&
 name|len
 argument_list|,
-name|slen
+sizeof|sizeof
+argument_list|(
+name|len
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function

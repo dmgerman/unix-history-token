@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -346,14 +340,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * These hooks are necessary for the pid, usdt and fasttrap providers.  */
+comment|/*  * These hooks are necessary for the pid and usdt providers.  */
 end_comment
-
-begin_decl_stmt
-name|dtrace_fasttrap_probe_ptr_t
-name|dtrace_fasttrap_probe_ptr
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|dtrace_pid_probe_ptr_t
@@ -442,7 +430,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TRAP_MSG
-value|33
+value|32
 end_define
 
 begin_decl_stmt
@@ -552,9 +540,6 @@ comment|/* 31 unused (reserved) */
 literal|"DTrace pid return trap"
 block|,
 comment|/* 32 T_DTRACE_RET */
-literal|"DTrace fasttrap probe trap"
-block|,
-comment|/* 33 T_DTRACE_PROBE */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -885,10 +870,6 @@ if|if
 condition|(
 name|type
 operator|==
-name|T_DTRACE_PROBE
-operator|||
-name|type
-operator|==
 name|T_DTRACE_RET
 operator|||
 name|type
@@ -908,28 +889,6 @@ operator|&
 name|regs
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|T_DTRACE_PROBE
-operator|&&
-name|dtrace_fasttrap_probe_ptr
-operator|!=
-name|NULL
-operator|&&
-name|dtrace_fasttrap_probe_ptr
-argument_list|(
-operator|&
-name|regs
-argument_list|)
-operator|==
-literal|0
-condition|)
-goto|goto
-name|out
-goto|;
-elseif|else
 if|if
 condition|(
 name|type

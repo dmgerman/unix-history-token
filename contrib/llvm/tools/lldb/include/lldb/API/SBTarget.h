@@ -679,6 +679,24 @@ name|GetProcess
 argument_list|()
 expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|/// Install any binaries that need to be installed.
+comment|///
+comment|/// This function does nothing when debugging on the host system.
+comment|/// When connected to remote platforms, the target's main executable
+comment|/// and any modules that have their remote install path set will be
+comment|/// installed on the remote platform. If the main executable doesn't
+comment|/// have an install location set, it will be installed in the remote
+comment|/// platform's working directory.
+comment|///
+comment|/// @return
+comment|///     An error describing anything that went wrong during
+comment|///     installation.
+comment|//------------------------------------------------------------------
+name|SBError
+name|Install
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|/// Launch a new process.
 comment|///
 comment|/// Launch a new process by spawning a new process using the
@@ -1627,6 +1645,18 @@ name|SBType
 name|GetBasicType
 argument_list|(
 argument|lldb::BasicType type
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBValue
+name|CreateValueFromAddress
+argument_list|(
+argument|const char *name
+argument_list|,
+argument|lldb::SBAddress addr
+argument_list|,
+argument|lldb::SBType type
 argument_list|)
 expr_stmt|;
 name|SBSourceManager

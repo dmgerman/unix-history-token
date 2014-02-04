@@ -108,11 +108,15 @@ name|RETURN_OFFSET
 value|4
 end_define
 
+begin_comment
+comment|/* Offset to LR Save word (ppc64).  CR Save area sits between back chain and LR */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RETURN_OFFSET64
-value|8
+value|16
 end_define
 
 begin_define

@@ -1155,17 +1155,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
-name|JEMALLOC_ATTR
-argument_list|(
-argument|always_inline
-argument_list|)
+begin_function
+name|JEMALLOC_ALWAYS_INLINE_C
 name|void
 name|malloc_thread_init
-argument_list|(
-argument|void
-argument_list|)
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * TSD initialization can't be safely done as a side effect of 	 * deallocation, because it is possible for a thread to do nothing but 	 * deallocate its TLS data via free(), in which case writing to TLS 	 * would cause write-after-free memory corruption.  The quarantine 	 * facility *only* gets used as a side effect of deallocation, so make 	 * a best effort attempt at initializing its TSD by hooking all 	 * allocation events. 	 */
 if|if
@@ -1178,19 +1174,15 @@ name|quarantine_alloc_hook
 argument_list|()
 expr_stmt|;
 block|}
-end_expr_stmt
+end_function
 
-begin_expr_stmt
-specifier|static
-name|JEMALLOC_ATTR
-argument_list|(
-argument|always_inline
-argument_list|)
+begin_function
+name|JEMALLOC_ALWAYS_INLINE_C
 name|bool
 name|malloc_init
-argument_list|(
-argument|void
-argument_list|)
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1209,18 +1201,16 @@ return|;
 name|malloc_thread_init
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|false
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|bool
 name|malloc_conf_next
 parameter_list|(
@@ -1847,11 +1837,18 @@ case|case
 literal|1
 case|:
 block|{
+name|int
+name|linklen
+init|=
+literal|0
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|_WIN32
 name|int
-name|linklen
+name|saved_errno
+init|=
+name|errno
 decl_stmt|;
 specifier|const
 name|char
@@ -1870,9 +1867,7 @@ literal|"/etc/malloc.conf"
 endif|#
 directive|endif
 decl_stmt|;
-if|if
-condition|(
-operator|(
+comment|/* 			 * Try to use the contents of the "/etc/malloc.conf" 			 * symbolic link's name. 			 */
 name|linklen
 operator|=
 name|readlink
@@ -1888,13 +1883,29 @@ argument_list|)
 operator|-
 literal|1
 argument_list|)
-operator|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|linklen
+operator|==
 operator|-
 literal|1
 condition|)
 block|{
-comment|/* 				 * Use the contents of the "/etc/malloc.conf" 				 * symbolic link's name. 				 */
+comment|/* No configuration specified. */
+name|linklen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* restore errno */
+name|set_errno
+argument_list|(
+name|saved_errno
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|buf
 index|[
 name|linklen
@@ -1906,24 +1917,6 @@ name|opts
 operator|=
 name|buf
 expr_stmt|;
-block|}
-else|else
-endif|#
-directive|endif
-block|{
-comment|/* No configuration specified. */
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|opts
-operator|=
-name|buf
-expr_stmt|;
-block|}
 break|break;
 block|}
 case|case
@@ -5767,26 +5760,28 @@ directive|ifdef
 name|JEMALLOC_EXPERIMENTAL
 end_ifdef
 
-begin_expr_stmt
-specifier|static
-name|JEMALLOC_ATTR
-argument_list|(
-argument|always_inline
-argument_list|)
+begin_function
+name|JEMALLOC_ALWAYS_INLINE_C
 name|void
-operator|*
+modifier|*
 name|iallocm
-argument_list|(
-argument|size_t usize
-argument_list|,
-argument|size_t alignment
-argument_list|,
-argument|bool zero
-argument_list|,
-argument|bool try_tcache
-argument_list|,
-argument|arena_t *arena
-argument_list|)
+parameter_list|(
+name|size_t
+name|usize
+parameter_list|,
+name|size_t
+name|alignment
+parameter_list|,
+name|bool
+name|zero
+parameter_list|,
+name|bool
+name|try_tcache
+parameter_list|,
+name|arena_t
+modifier|*
+name|arena
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -5798,12 +5793,12 @@ name|alignment
 operator|==
 literal|0
 operator|)
-operator|?
+condition|?
 name|s2u
 argument_list|(
 name|usize
 argument_list|)
-operator|:
+else|:
 name|sa2u
 argument_list|(
 name|usize
@@ -5812,7 +5807,7 @@ name|alignment
 argument_list|)
 operator|)
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|alignment
@@ -5866,7 +5861,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_function
 name|int

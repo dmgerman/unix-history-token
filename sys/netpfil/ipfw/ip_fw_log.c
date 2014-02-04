@@ -133,6 +133,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_clone.h>
 end_include
 
@@ -326,6 +332,56 @@ parameter_list|)
 value|((struct icmp6_hdr *)(p))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|snprintf
+end_undef
+
+begin_define
+define|#
+directive|define
+name|snprintf
+value|sprintf
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNPARGS
+parameter_list|(
+name|buf
+parameter_list|,
+name|len
+parameter_list|)
+value|buf + len
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNP
+parameter_list|(
+name|buf
+parameter_list|)
+value|buf
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__APPLE__ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -347,6 +403,15 @@ name|buf
 parameter_list|)
 value|buf, sizeof(buf)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__APPLE__ */
+end_comment
 
 begin_ifdef
 ifdef|#

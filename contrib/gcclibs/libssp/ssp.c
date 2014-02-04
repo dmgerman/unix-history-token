@@ -133,6 +133,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_decl_stmt
 name|void
 modifier|*
@@ -467,6 +473,8 @@ else|else
 name|syslog
 argument_list|(
 name|LOG_CRIT
+argument_list|,
+literal|"%s"
 argument_list|,
 name|msg3
 argument_list|)

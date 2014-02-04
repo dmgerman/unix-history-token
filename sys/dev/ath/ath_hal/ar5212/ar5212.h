@@ -1234,6 +1234,25 @@ name|uint8_t
 name|ah_maxTxTrigLev
 decl_stmt|;
 comment|/* max tx trigger level */
+comment|/* 	 * Channel Tx, Rx, Rx Clear State 	 */
+name|uint32_t
+name|ah_cycleCount
+decl_stmt|;
+name|uint32_t
+name|ah_ctlBusy
+decl_stmt|;
+name|uint32_t
+name|ah_rxBusy
+decl_stmt|;
+name|uint32_t
+name|ah_txBusy
+decl_stmt|;
+name|uint32_t
+name|ah_rx_chainmask
+decl_stmt|;
+name|uint32_t
+name|ah_tx_chainmask
+decl_stmt|;
 block|}
 struct|;
 end_struct

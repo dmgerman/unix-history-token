@@ -1033,6 +1033,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_RXDADV_PKTTYPE_ILMASK
+value|0x000000F0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_PKTTYPE_TLMASK
+value|0x00000F00
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_RXDADV_PKTTYPE_NONE
 value|0x00000000
 end_define
@@ -2033,7 +2047,7 @@ begin_define
 define|#
 directive|define
 name|E1000_ETQF_QUEUE_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -2161,7 +2175,7 @@ begin_define
 define|#
 directive|define
 name|E1000_DTXSWC_VMDQ_LOOPBACK_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -2723,10 +2737,54 @@ end_function_decl
 
 begin_function_decl
 name|s32
+name|e1000_read_emi_reg
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u16
+name|addr
+parameter_list|,
+name|u16
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
 name|e1000_set_eee_i350
 parameter_list|(
 name|struct
 name|e1000_hw
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_set_eee_i354
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_get_eee_status_i354
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+parameter_list|,
+name|bool
 modifier|*
 parameter_list|)
 function_decl|;

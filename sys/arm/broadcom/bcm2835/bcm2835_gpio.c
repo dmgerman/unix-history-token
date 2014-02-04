@@ -110,12 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -148,12 +142,6 @@ include|#
 directive|include
 file|"gpio_if.h"
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
 
 begin_ifdef
 ifdef|#
@@ -2806,7 +2794,7 @@ name|OID_AUTO
 argument_list|,
 literal|"pin"
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 name|NULL
 argument_list|,

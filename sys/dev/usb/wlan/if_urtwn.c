@@ -154,6 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -728,6 +734,13 @@ argument_list|(
 name|REALTEK
 argument_list|,
 name|RTL8192CU
+argument_list|)
+block|,
+name|URTWN_DEV
+argument_list|(
+name|REALTEK
+argument_list|,
+name|RTL8188CU_0
 argument_list|)
 block|,
 name|URTWN_DEV
@@ -3322,6 +3335,8 @@ operator|->
 name|vap
 expr_stmt|;
 comment|/* enable s/w bmiss handling for sta mode */
+if|if
+condition|(
 name|ieee80211_vap_setup
 argument_list|(
 name|ic
@@ -3342,7 +3357,24 @@ name|bssid
 argument_list|,
 name|mac
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* out of memory */
+name|free
+argument_list|(
+name|uvp
+argument_list|,
+name|M_80211_VAP
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* override state transition machine */
 name|uvp
 operator|->

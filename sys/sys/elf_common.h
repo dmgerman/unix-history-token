@@ -3717,6 +3717,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DF_1_INTERPOSE
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Interpose all objects but main */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DF_1_NODEFLIB
 value|0x00000800
 end_define

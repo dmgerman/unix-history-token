@@ -246,6 +246,11 @@ modifier|&
 name|error
 parameter_list|)
 function_decl|;
+name|virtual
+name|TypeImpl
+name|GetTypeImpl
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 name|virtual
@@ -296,6 +301,9 @@ operator|::
 name|DynamicValueType
 name|m_use_dynamic
 expr_stmt|;
+name|TypeImpl
+name|m_type_impl
+decl_stmt|;
 name|private
 label|:
 name|friend

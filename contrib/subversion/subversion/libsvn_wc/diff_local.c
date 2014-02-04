@@ -670,28 +670,25 @@ name|eb
 operator|->
 name|db
 decl_stmt|;
-switch|switch
+if|if
+condition|(
+operator|!
+name|status
+operator|->
+name|versioned
+condition|)
+return|return
+name|SVN_NO_ERROR
+return|;
+comment|/* unversioned (includes dir externals) */
+if|if
 condition|(
 name|status
 operator|->
 name|node_status
-condition|)
-block|{
-case|case
-name|svn_wc_status_unversioned
-case|:
-case|case
-name|svn_wc_status_ignored
-case|:
-return|return
-name|SVN_NO_ERROR
-return|;
-comment|/* No diff */
-case|case
+operator|==
 name|svn_wc_status_conflicted
-case|:
-if|if
-condition|(
+operator|&&
 name|status
 operator|->
 name|text_status
@@ -709,11 +706,6 @@ comment|/* Node is an actual only node describing a tree conflict */
 return|return
 name|SVN_NO_ERROR
 return|;
-block|}
-break|break;
-default|default:
-break|break;
-comment|/* Go check other conditions */
 block|}
 comment|/* Not text/prop modified, not copied. Easy out */
 if|if
@@ -1551,6 +1543,12 @@ block|}
 if|if
 condition|(
 name|local_only
+operator|&&
+operator|(
+name|db_status
+operator|!=
+name|svn_wc__db_status_deleted
+operator|)
 condition|)
 block|{
 if|if

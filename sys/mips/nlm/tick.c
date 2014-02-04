@@ -1095,20 +1095,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|if
-condition|(
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"can't attach more clocks"
-argument_list|)
-expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -1118,7 +1104,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
@@ -1165,6 +1151,20 @@ name|clock_softc
 modifier|*
 name|sc
 decl_stmt|;
+if|if
+condition|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"can't attach more clocks"
+argument_list|)
+expr_stmt|;
 name|softc
 operator|=
 name|sc

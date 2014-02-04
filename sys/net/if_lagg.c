@@ -2295,6 +2295,16 @@ name|IFF_BROADCAST
 operator||
 name|IFF_MULTICAST
 expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+name|ifp
+operator|->
+name|if_capabilities
+operator|=
+name|IFCAP_HWSTATS
+expr_stmt|;
 comment|/* 	 * Attach as an ordinary ethernet device, children will be attached 	 * as special device IFT_IEEE8023ADLAG. 	 */
 name|ether_ifattach
 argument_list|(

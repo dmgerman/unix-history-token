@@ -1043,6 +1043,12 @@ literal|1
 decl_stmt|;
 comment|/* Immediately load filtees */
 name|bool
+name|z_interpose
+range|:
+literal|1
+decl_stmt|;
+comment|/* Interpose all objects but main */
+name|bool
 name|z_nodeflib
 range|:
 literal|1
@@ -1498,6 +1504,31 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|malloc_aligned
+parameter_list|(
+name|size_t
+name|size
+parameter_list|,
+name|size_t
+name|align
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|free_aligned
+parameter_list|(
+name|void
+modifier|*
+name|ptr
 parameter_list|)
 function_decl|;
 end_function_decl

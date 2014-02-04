@@ -212,6 +212,8 @@ operator|::
 name|Error
 name|DoResume
 argument_list|()
+operator|=
+literal|0
 block|;
 name|virtual
 name|lldb_private
@@ -232,6 +234,8 @@ name|DoDetach
 argument_list|(
 argument|bool keep_stopped
 argument_list|)
+operator|=
+literal|0
 block|;
 name|virtual
 name|lldb_private
@@ -247,6 +251,11 @@ name|lldb_private
 operator|::
 name|Error
 name|DoDestroy
+argument_list|()
+block|;
+name|virtual
+name|void
+name|DoDidExec
 argument_list|()
 block|;
 name|virtual
@@ -465,6 +474,7 @@ block|;
 comment|//--------------------------------------------------------------------------
 comment|// ProcessPOSIX internal API.
 comment|/// Registers the given message with this process.
+name|virtual
 name|void
 name|SendMessage
 argument_list|(
@@ -473,6 +483,8 @@ name|ProcessMessage
 operator|&
 name|message
 argument_list|)
+operator|=
+literal|0
 block|;
 name|ProcessMonitor
 operator|&
@@ -529,6 +541,12 @@ comment|/// Adds the thread to the list of threads for which we have received th
 comment|/// The \p stop_tid paramter indicates the thread which the stop happened for.
 name|bool
 name|AddThreadForInitialStopIfNeeded
+argument_list|(
+argument|lldb::tid_t stop_tid
+argument_list|)
+block|;
+name|bool
+name|WaitingForInitialStop
 argument_list|(
 argument|lldb::tid_t stop_tid
 argument_list|)

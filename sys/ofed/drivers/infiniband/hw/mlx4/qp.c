@@ -1414,7 +1414,7 @@ name|wqe_cnt
 condition|?
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 argument_list|)
@@ -11515,7 +11515,7 @@ name|owner_opcode
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 argument_list|)
@@ -16706,7 +16706,7 @@ operator|=
 name|cpu_to_be32
 argument_list|(
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -17083,7 +17083,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 argument_list|)
@@ -18760,7 +18760,7 @@ name|wqe_cnt
 condition|?
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 argument_list|)

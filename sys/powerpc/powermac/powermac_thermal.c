@@ -231,6 +231,13 @@ decl_stmt|;
 name|int
 name|last_val
 decl_stmt|;
+define|#
+directive|define
+name|MAX_CRITICAL_COUNT
+value|6
+name|int
+name|critical_count
+decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
 argument|pmac_sens_le
@@ -404,11 +411,16 @@ operator|->
 name|max_temp
 condition|)
 block|{
+name|sensor
+operator|->
+name|critical_count
+operator|++
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"WARNING: Current temperature (%s: %d.%d C) "
-literal|"exceeds critical temperature (%d.%d C)! "
-literal|"Shutting down!\n"
+literal|"exceeds critical temperature (%d.%d C); "
+literal|"count=%d\n"
 argument_list|,
 name|sensor
 operator|->
@@ -459,12 +471,59 @@ name|ZERO_C_TO_K
 operator|)
 operator|%
 literal|10
+argument_list|,
+name|sensor
+operator|->
+name|critical_count
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sensor
+operator|->
+name|critical_count
+operator|>=
+name|MAX_CRITICAL_COUNT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: %s temperature exceeded "
+literal|"critical temperature %d times in a row; "
+literal|"shutting down!\n"
+argument_list|,
+name|sensor
+operator|->
+name|sensor
+operator|->
+name|name
+argument_list|,
+name|sensor
+operator|->
+name|critical_count
 argument_list|)
 expr_stmt|;
 name|shutdown_nice
 argument_list|(
 name|RB_POWEROFF
 argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|sensor
+operator|->
+name|critical_count
+operator|>
+literal|0
+condition|)
+name|sensor
+operator|->
+name|critical_count
+operator|--
 expr_stmt|;
 block|}
 block|}
@@ -745,6 +804,18 @@ operator|->
 name|sensor
 operator|=
 name|sensor
+expr_stmt|;
+name|list_entry
+operator|->
+name|last_val
+operator|=
+literal|0
+expr_stmt|;
+name|list_entry
+operator|->
+name|critical_count
+operator|=
+literal|0
 expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(

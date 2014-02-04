@@ -23,12 +23,6 @@ directive|include
 file|"opt_callout_profiling.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_kdtrace.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -198,11 +192,7 @@ name|callout_execute
 argument_list|,
 name|kernel
 argument_list|, ,
-name|callout_start
-argument_list|,
-name|callout
-operator|-
-name|start
+name|callout__start
 argument_list|,
 literal|"struct callout *"
 argument_list|)
@@ -216,11 +206,7 @@ name|callout_execute
 argument_list|,
 name|kernel
 argument_list|, ,
-name|callout_end
-argument_list|,
-name|callout
-operator|-
-name|end
+name|callout__end
 argument_list|,
 literal|"struct callout *"
 argument_list|)
@@ -3114,7 +3100,7 @@ name|callout_execute
 argument_list|,
 name|kernel
 argument_list|, ,
-name|callout_start
+name|callout__start
 argument_list|,
 name|c
 argument_list|,
@@ -3138,7 +3124,7 @@ name|callout_execute
 argument_list|,
 name|kernel
 argument_list|, ,
-name|callout_end
+name|callout__end
 argument_list|,
 name|c
 argument_list|,

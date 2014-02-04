@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -26,6 +20,14 @@ include|#
 directive|include
 file|<sys/sdt.h>
 end_include
+
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|sdt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Hook for the DTrace probe function. The SDT provider will set this to  * dtrace_probe() when it loads.  */

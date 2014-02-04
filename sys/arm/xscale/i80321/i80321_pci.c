@@ -106,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/xscale/i80321/i80321reg.h>
 end_include
 

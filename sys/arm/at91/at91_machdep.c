@@ -200,6 +200,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -461,7 +467,7 @@ end_comment
 begin_decl_stmt
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|at91_devmap
 index|[]
 init|=
@@ -2291,7 +2297,7 @@ name|PTE_PAGETABLE
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_devmap_bootstrap
+name|arm_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
@@ -2397,6 +2403,11 @@ argument_list|,
 name|CPU_CONTROL_MMU_ENABLE
 argument_list|)
 expr_stmt|;
+name|cpu_setup
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 name|set_stackptrs
 argument_list|(
 literal|0
@@ -2475,13 +2486,16 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Always use the 256MB of KVA we have available between the kernel and devices */
 name|vm_max_kernel_address
 operator|=
 name|KERNVIRTADDR
 operator|+
-literal|3
-operator|*
-name|memsize
+operator|(
+literal|256
+operator|<<
+literal|20
+operator|)
 expr_stmt|;
 name|pmap_bootstrap
 argument_list|(

@@ -3,7 +3,7 @@ begin_define
 define|#
 directive|define
 name|VI_VERSION
-value|"2.1.1 (2012-10-07)"
+value|"2.1.2 (2012-11-02)"
 end_define
 
 end_unit

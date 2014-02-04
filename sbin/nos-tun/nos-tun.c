@@ -243,11 +243,7 @@ name|addr
 argument_list|)
 operator|)
 operator|==
-operator|(
-name|in_addr_t
-operator|)
-operator|-
-literal|1
+name|INADDR_NONE
 condition|)
 block|{
 name|hp

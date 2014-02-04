@@ -1414,6 +1414,8 @@ argument_list|(
 name|AF_UNIX
 argument_list|,
 name|SOCK_DGRAM
+operator||
+name|SOCK_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -1423,18 +1425,6 @@ operator|-
 literal|1
 condition|)
 return|return;
-operator|(
-name|void
-operator|)
-name|_fcntl
-argument_list|(
-name|LogFile
-argument_list|,
-name|F_SETFD
-argument_list|,
-name|FD_CLOEXEC
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(

@@ -2235,12 +2235,12 @@ literal|0
 condition|)
 name|pin
 operator|=
-name|LVT_LINT0
+name|APIC_LVT_LINT0
 expr_stmt|;
 else|else
 name|pin
 operator|=
-name|LVT_LINT1
+name|APIC_LVT_LINT1
 expr_stmt|;
 name|lapic_set_lvt_mode
 argument_list|(
@@ -2496,7 +2496,7 @@ name|madt_set_ids
 argument_list|,
 name|SI_SUB_CPU
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|madt_set_ids
 argument_list|,

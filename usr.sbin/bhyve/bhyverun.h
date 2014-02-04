@@ -106,6 +106,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|fbsdrun_set_capabilities
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|fbsdrun_addcpu
 parameter_list|(
 name|struct
@@ -152,6 +167,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|fbsdrun_disable_x2apic
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fbsdrun_virtio_msix
 parameter_list|(
 name|void
 parameter_list|)

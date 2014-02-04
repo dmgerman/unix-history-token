@@ -59,6 +59,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Since we are compiled outside of the normal kernel build process, we  * need to include opt_global.h manually.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_global.h"
+end_include
+
 begin_include
 include|#
 directive|include
@@ -81,16 +91,6 @@ begin_include
 include|#
 directive|include
 file|<machine/stdarg.h>
-end_include
-
-begin_comment
-comment|/*  * Since we are compiled outside of the normal kernel build process, we  * need to include opt_global.h manually.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_global.h"
 end_include
 
 begin_ifndef

@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -161,6 +155,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -2401,7 +2401,7 @@ name|rte
 operator|->
 name|next
 decl_stmt|;
-name|m_free
+name|m_freem
 argument_list|(
 name|rte
 operator|->

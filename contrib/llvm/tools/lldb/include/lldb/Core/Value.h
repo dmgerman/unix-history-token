@@ -447,7 +447,7 @@ operator|=
 operator|*
 operator|(
 specifier|const
-name|__uint64_t
+name|uint64_t
 operator|*
 operator|)
 name|bytes

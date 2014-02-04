@@ -1214,6 +1214,8 @@ name|NULL
 condition|)
 name|nfsv4_setsequence
 argument_list|(
+name|nmp
+argument_list|,
 name|nd
 argument_list|,
 name|NFSMNT_MDSSESSION
@@ -1230,6 +1232,8 @@ expr_stmt|;
 else|else
 name|nfsv4_setsequence
 argument_list|(
+name|nmp
+argument_list|,
 name|nd
 argument_list|,
 name|sep

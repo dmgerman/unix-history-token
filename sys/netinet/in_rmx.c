@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -1720,7 +1726,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|in_ifadown
 parameter_list|(
 name|struct
@@ -1744,19 +1750,23 @@ decl_stmt|;
 name|int
 name|fibnum
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|ifa
 operator|->
 name|ifa_addr
 operator|->
 name|sa_family
-operator|!=
+operator|==
 name|AF_INET
-condition|)
-return|return
-literal|1
-return|;
+argument_list|,
+operator|(
+literal|"%s: wrong family"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|fibnum
@@ -1823,9 +1833,6 @@ name|IFA_ROUTE
 expr_stmt|;
 comment|/* XXXlocking? */
 block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 

@@ -85,14 +85,14 @@ begin_define
 define|#
 directive|define
 name|INADDR_ANY
-value|(u_int32_t)0x00000000
+value|((in_addr_t)0x00000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INADDR_BROADCAST
-value|(u_int32_t)0xffffffff
+value|((in_addr_t)0xffffffff)
 end_define
 
 begin_comment
@@ -1845,7 +1845,7 @@ name|IN_CLASSA
 parameter_list|(
 name|i
 parameter_list|)
-value|(((u_int32_t)(i)& 0x80000000) == 0)
+value|(((in_addr_t)(i)& 0x80000000) == 0)
 end_define
 
 begin_define
@@ -1883,7 +1883,7 @@ name|IN_CLASSB
 parameter_list|(
 name|i
 parameter_list|)
-value|(((u_int32_t)(i)& 0xc0000000) == 0x80000000)
+value|(((in_addr_t)(i)& 0xc0000000) == 0x80000000)
 end_define
 
 begin_define
@@ -1921,7 +1921,7 @@ name|IN_CLASSC
 parameter_list|(
 name|i
 parameter_list|)
-value|(((u_int32_t)(i)& 0xe0000000) == 0xc0000000)
+value|(((in_addr_t)(i)& 0xe0000000) == 0xc0000000)
 end_define
 
 begin_define
@@ -1952,7 +1952,7 @@ name|IN_CLASSD
 parameter_list|(
 name|i
 parameter_list|)
-value|(((u_int32_t)(i)& 0xf0000000) == 0xe0000000)
+value|(((in_addr_t)(i)& 0xf0000000) == 0xe0000000)
 end_define
 
 begin_define
@@ -2005,7 +2005,7 @@ name|IN_EXPERIMENTAL
 parameter_list|(
 name|i
 parameter_list|)
-value|(((u_int32_t)(i)& 0xf0000000) == 0xf0000000)
+value|(((in_addr_t)(i)& 0xf0000000) == 0xf0000000)
 end_define
 
 begin_define
@@ -2015,7 +2015,7 @@ name|IN_BADCLASS
 parameter_list|(
 name|i
 parameter_list|)
-value|(((u_int32_t)(i)& 0xf0000000) == 0xf0000000)
+value|(((in_addr_t)(i)& 0xf0000000) == 0xf0000000)
 end_define
 
 begin_define
@@ -2025,7 +2025,7 @@ name|IN_LINKLOCAL
 parameter_list|(
 name|i
 parameter_list|)
-value|(((u_int32_t)(i)& 0xffff0000) == 0xa9fe0000)
+value|(((in_addr_t)(i)& 0xffff0000) == 0xa9fe0000)
 end_define
 
 begin_define
@@ -2035,7 +2035,7 @@ name|IN_LOOPBACK
 parameter_list|(
 name|i
 parameter_list|)
-value|(((u_int32_t)(i)& 0xff000000) == 0x7f000000)
+value|(((in_addr_t)(i)& 0xff000000) == 0x7f000000)
 end_define
 
 begin_define
@@ -2045,7 +2045,7 @@ name|IN_ZERONET
 parameter_list|(
 name|i
 parameter_list|)
-value|(((u_int32_t)(i)& 0xff000000) == 0)
+value|(((in_addr_t)(i)& 0xff000000) == 0)
 end_define
 
 begin_define
@@ -2055,7 +2055,7 @@ name|IN_PRIVATE
 parameter_list|(
 name|i
 parameter_list|)
-value|((((u_int32_t)(i)& 0xff000000) == 0x0a000000) || \ 			 (((u_int32_t)(i)& 0xfff00000) == 0xac100000) || \ 			 (((u_int32_t)(i)& 0xffff0000) == 0xc0a80000))
+value|((((in_addr_t)(i)& 0xff000000) == 0x0a000000) || \ 			 (((in_addr_t)(i)& 0xfff00000) == 0xac100000) || \ 			 (((in_addr_t)(i)& 0xffff0000) == 0xc0a80000))
 end_define
 
 begin_define
@@ -2065,7 +2065,7 @@ name|IN_LOCAL_GROUP
 parameter_list|(
 name|i
 parameter_list|)
-value|(((u_int32_t)(i)& 0xffffff00) == 0xe0000000)
+value|(((in_addr_t)(i)& 0xffffff00) == 0xe0000000)
 end_define
 
 begin_define
@@ -2082,7 +2082,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_LOOPBACK
-value|(u_int32_t)0x7f000001
+value|((in_addr_t)0x7f000001)
 end_define
 
 begin_ifndef
@@ -2095,7 +2095,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_NONE
-value|0xffffffff
+value|((in_addr_t)0xffffffff)
 end_define
 
 begin_comment
@@ -2111,7 +2111,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_UNSPEC_GROUP
-value|(u_int32_t)0xe0000000
+value|((in_addr_t)0xe0000000)
 end_define
 
 begin_comment
@@ -2122,7 +2122,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_ALLHOSTS_GROUP
-value|(u_int32_t)0xe0000001
+value|((in_addr_t)0xe0000001)
 end_define
 
 begin_comment
@@ -2133,7 +2133,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_ALLRTRS_GROUP
-value|(u_int32_t)0xe0000002
+value|((in_addr_t)0xe0000002)
 end_define
 
 begin_comment
@@ -2144,7 +2144,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_ALLRPTS_GROUP
-value|(u_int32_t)0xe0000016
+value|((in_addr_t)0xe0000016)
 end_define
 
 begin_comment
@@ -2155,7 +2155,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_CARP_GROUP
-value|(u_int32_t)0xe0000012
+value|((in_addr_t)0xe0000012)
 end_define
 
 begin_comment
@@ -2166,7 +2166,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_PFSYNC_GROUP
-value|(u_int32_t)0xe00000f0
+value|((in_addr_t)0xe00000f0)
 end_define
 
 begin_comment
@@ -2177,7 +2177,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_ALLMDNS_GROUP
-value|(u_int32_t)0xe00000fb
+value|((in_addr_t)0xe00000fb)
 end_define
 
 begin_comment
@@ -2188,7 +2188,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_MAX_LOCAL_GROUP
-value|(u_int32_t)0xe00000ff
+value|((in_addr_t)0xe00000ff)
 end_define
 
 begin_comment
@@ -2210,7 +2210,7 @@ begin_define
 define|#
 directive|define
 name|IN_RFC3021_MASK
-value|(u_int32_t)0xfffffffe
+value|((in_addr_t)0xfffffffe)
 end_define
 
 begin_comment
@@ -3357,24 +3357,6 @@ end_comment
 begin_comment
 comment|/*  * Definitions for inet sysctl operations.  *  * Third level is protocol number.  * Fourth level is desired variable within that protocol.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IPPROTO_MAXID
-value|(IPPROTO_AH + 1)
-end_define
-
-begin_comment
-comment|/* don't list to IPPROTO_MAX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_IPPROTO_NAMES
-value|{ \ 	{ "ip", CTLTYPE_NODE }, \ 	{ "icmp", CTLTYPE_NODE }, \ 	{ "igmp", CTLTYPE_NODE }, \ 	{ "ggp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "tcp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ "egp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "pup", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "udp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "idp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "ipsec", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, \ 	{ 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, \ 	{ 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, \ 	{ 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, \ 	{ 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, \ 	{ 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, \ 	{ 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, \ 	{ 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, \ 	{ 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "pim", CTLTYPE_NODE }, \ }
-end_define
 
 begin_comment
 comment|/*  * Names for IP sysctl objects  */

@@ -5051,6 +5051,20 @@ name|m_386
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Byteswap was added for 80486.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|int
+name|x86_bswap
+init|=
+operator|~
+name|m_386
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|const
 name|int
@@ -70982,7 +70996,7 @@ name|V16QI_type_node
 init|=
 name|build_vector_type_for_mode
 argument_list|(
-name|intQI_type_node
+name|char_type_node
 argument_list|,
 name|V16QImode
 argument_list|)
@@ -71062,7 +71076,7 @@ name|V8QI_type_node
 init|=
 name|build_vector_type_for_mode
 argument_list|(
-name|intQI_type_node
+name|char_type_node
 argument_list|,
 name|V8QImode
 argument_list|)

@@ -19,6 +19,12 @@ begin_comment
 comment|/*  * Interface address.  One of these structures  * is allocated for each interface with an internet address.  * The ifaddr structure contains the protocol-independent part  * of the structure and is assumed to be first.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|ipx_ifaddr
@@ -65,6 +71,15 @@ comment|/* space for my network mask */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_struct
 struct|struct

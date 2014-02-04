@@ -1906,6 +1906,20 @@ operator|==
 name|from_real
 argument_list|)
 expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|to_mode
+operator|!=
+name|BLKmode
+argument_list|)
+expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|from_mode
+operator|!=
+name|BLKmode
+argument_list|)
+expr_stmt|;
 comment|/* If the source and destination are already the same, then there's      nothing to do.  */
 if|if
 condition|(
@@ -20042,6 +20056,36 @@ name|temp
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|GET_MODE
+argument_list|(
+name|target
+argument_list|)
+operator|==
+name|BLKmode
+condition|)
+name|emit_block_move
+argument_list|(
+name|target
+argument_list|,
+name|temp
+argument_list|,
+name|expr_size
+argument_list|(
+name|exp
+argument_list|)
+argument_list|,
+operator|(
+name|call_param_p
+condition|?
+name|BLOCK_OP_CALL_PARM
+else|:
+name|BLOCK_OP_NORMAL
+operator|)
+argument_list|)
+expr_stmt|;
 else|else
 name|convert_move
 argument_list|(
@@ -31815,7 +31859,7 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Optimize the special-case of a zero lower bound. 		     		       We convert the low_bound to sizetype to avoid some problems 		       with constant folding.  (E.g. suppose the lower bound is 1, 		       and its mode is QI.  Without the conversion,l (ARRAY 		       +(INDEX-(unsigned char)1)) becomes ((ARRAY+(-(unsigned char)1)) 		       +INDEX), which becomes (ARRAY+255+INDEX).  Opps!)  */
+comment|/* Optimize the special-case of a zero lower bound.  		       We convert the low_bound to sizetype to avoid some problems 		       with constant folding.  (E.g. suppose the lower bound is 1, 		       and its mode is QI.  Without the conversion,l (ARRAY 		       +(INDEX-(unsigned char)1)) becomes ((ARRAY+(-(unsigned char)1)) 		       +INDEX), which becomes (ARRAY+255+INDEX).  Opps!)  */
 if|if
 condition|(
 operator|!
@@ -34219,7 +34263,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* As a last resort, spill op0 to memory, and reload it in a  	 different mode.  */
+comment|/* As a last resort, spill op0 to memory, and reload it in a 	 different mode.  */
 elseif|else
 if|if
 condition|(

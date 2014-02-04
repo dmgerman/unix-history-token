@@ -98,13 +98,6 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|gdtset
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|shared_info_t
 modifier|*
 name|HYPERVISOR_shared_info

@@ -18,6 +18,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR934X_GMAC_BASE
+value|(AR71XX_APB_BASE + 0x00070000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_GMAC_SIZE
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR934X_WMAC_BASE
 value|(AR71XX_APB_BASE + 0x00100000)
 end_define
@@ -55,6 +69,108 @@ define|#
 directive|define
 name|AR934X_SRIF_SIZE
 value|0x1000
+end_define
+
+begin_comment
+comment|/* AR934x GMAC configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR934X_GMAC_REG_ETH_CFG
+value|(AR934X_GMAC_BASE + 0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_RGMII_GMAC0
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_MII_GMAC0
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_GMII_GMAC0
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_MII_GMAC0_MASTER
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_MII_GMAC0_SLAVE
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_MII_GMAC0_ERR_EN
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_SW_ONLY_MODE
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_SW_PHY_SWAP
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_SW_APB_ACCESS
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_RMII_GMAC0
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_MII_CNTL_SPEED
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_RMII_GMAC0_MASTER
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_ETH_CFG_SW_ACC_MSB_FIRST
+value|(1<< 13)
 end_define
 
 begin_define
@@ -111,6 +227,27 @@ define|#
 directive|define
 name|AR934X_PLL_CPU_DDR_CLK_CTRL_REG
 value|(AR71XX_PLL_CPU_BASE + 0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_PLL_SWITCH_CLOCK_CONTROL_REG
+value|(AR71XX_PLL_CPU_BASE + 0x24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_PLL_SWITCH_CLOCK_CONTROL_MDIO_CLK_SEL
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_PLL_ETH_XMII_CONTROL_REG
+value|(AR71XX_PLL_CPU_BASE + 0x2c)
 end_define
 
 begin_define
@@ -333,8 +470,183 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR934X_RESET_HOST
+value|(1U<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_SLIC
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_HDMA
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_EXTERNAL
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_RTC
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_PCIE_EP_INT
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_CHKSUM_ACC
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_FULL_CHIP
+value|(1<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_GE1_MDIO
+value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_GE0_MDIO
+value|(1<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_CPU_NMI
+value|(1<< 21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_CPU_COLD
+value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_HOST_RESET_INT
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_PCIE_EP
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_UART1
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_DDR
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_USB_PHY_PLL_PWD_EXT
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_NANDF
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_GE1_MAC
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_ETH_SWITCH_ANALOG
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR934X_RESET_USB_PHY_ANALOG
 value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_HOST_DMA_INT
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_GE0_MAC
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_ETH_SWITCH
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_PCIE_PHY
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_PCIE
+value|(1<< 6)
 end_define
 
 begin_define
@@ -356,6 +668,27 @@ define|#
 directive|define
 name|AR934X_RESET_USBSUS_OVERRIDE
 value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_LUT
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_MBOX
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_RESET_I2S
+value|(1<< 0)
 end_define
 
 begin_define
@@ -688,6 +1021,31 @@ define|#
 directive|define
 name|AR934X_SRIF_DPLL2_OUTDIV_MASK
 value|0x7
+end_define
+
+begin_comment
+comment|/* XXX verify! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR934X_PLL_VAL_1000
+value|0x16000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_PLL_VAL_100
+value|0x00000101
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR934X_PLL_VAL_10
+value|0x00001616
 end_define
 
 begin_endif

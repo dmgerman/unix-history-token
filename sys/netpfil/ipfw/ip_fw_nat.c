@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -3108,7 +3120,7 @@ begin_define
 define|#
 directive|define
 name|IPFW_NAT_SI_SUB_FIREWALL
-value|SI_SUB_PROTO_IFATTACHDOMAIN
+value|(SI_SUB_PROTO_IFATTACHDOMAIN + 1)
 end_define
 
 begin_define

@@ -8662,6 +8662,10 @@ operator|==
 name|ENOENT
 condition|)
 block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Capability \"%s\" is not available\n"

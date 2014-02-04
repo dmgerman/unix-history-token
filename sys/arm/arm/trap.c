@@ -231,7 +231,8 @@ begin_function_decl
 name|void
 name|swi_handler
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|)
 function_decl|;
@@ -241,7 +242,8 @@ begin_function_decl
 name|void
 name|undefinedinstruction
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|)
 function_decl|;
@@ -336,7 +338,8 @@ modifier|*
 name|func
 function_decl|)
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|u_int
@@ -366,7 +369,8 @@ specifier|static
 name|int
 name|dab_fatal
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|u_int
@@ -389,7 +393,8 @@ specifier|static
 name|int
 name|dab_align
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|u_int
@@ -412,7 +417,8 @@ specifier|static
 name|int
 name|dab_buserr
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|u_int
@@ -645,7 +651,8 @@ name|__inline
 name|int
 name|data_abort_fixup
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|tf
 parameter_list|,
@@ -782,7 +789,8 @@ begin_function
 name|void
 name|data_abort_handler
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|tf
 parameter_list|)
@@ -1666,7 +1674,8 @@ specifier|static
 name|int
 name|dab_fatal
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|tf
 parameter_list|,
@@ -1924,6 +1933,8 @@ name|debugger_on_panic
 operator|||
 name|kdb_active
 condition|)
+if|if
+condition|(
 name|kdb_trap
 argument_list|(
 name|fsr
@@ -1932,7 +1943,12 @@ literal|0
 argument_list|,
 name|tf
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 endif|#
 directive|endif
 name|panic
@@ -1953,7 +1969,8 @@ specifier|static
 name|int
 name|dab_align
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|tf
 parameter_list|,
@@ -2088,7 +2105,8 @@ specifier|static
 name|int
 name|dab_buserr
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|tf
 parameter_list|,
@@ -2157,7 +2175,8 @@ name|tf
 operator|!=
 operator|(
 operator|(
-name|trapframe_t
+expr|struct
+name|trapframe
 operator|*
 operator|)
 name|pcb
@@ -2333,7 +2352,8 @@ name|__inline
 name|int
 name|prefetch_abort_fixup
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|tf
 parameter_list|,
@@ -2456,14 +2476,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void prefetch_abort_handler(trapframe_t *tf)  *  * Abort handler called when instruction execution occurs at  * a non existent or restricted (access permissions) memory page.  * If the address is invalid and we were in SVC mode then panic as  * the kernel should never prefetch abort.  * If the address is invalid and the page is mapped then the user process  * does no have read permission so send it a signal.  * Otherwise fault the page in and try again.  */
+comment|/*  * void prefetch_abort_handler(struct trapframe *tf)  *  * Abort handler called when instruction execution occurs at  * a non existent or restricted (access permissions) memory page.  * If the address is invalid and we were in SVC mode then panic as  * the kernel should never prefetch abort.  * If the address is invalid and the page is mapped then the user process  * does no have read permission so send it a signal.  * Otherwise fault the page in and try again.  */
 end_comment
 
 begin_function
 name|void
 name|prefetch_abort_handler
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|tf
 parameter_list|)
@@ -3480,7 +3501,8 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|frame
 parameter_list|)
@@ -3597,7 +3619,8 @@ begin_function
 name|void
 name|swi_handler
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|frame
 parameter_list|)

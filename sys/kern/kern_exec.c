@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -397,8 +391,6 @@ name|kernel
 argument_list|, ,
 name|exec
 argument_list|,
-name|exec
-argument_list|,
 literal|"char *"
 argument_list|)
 expr_stmt|;
@@ -411,11 +403,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|exec_failure
-argument_list|,
-name|exec
-operator|-
-name|failure
+name|exec__failure
 argument_list|,
 literal|"int"
 argument_list|)
@@ -429,11 +417,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|exec_success
-argument_list|,
-name|exec
-operator|-
-name|success
+name|exec__success
 argument_list|,
 literal|"char *"
 argument_list|)
@@ -620,6 +604,34 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|disallow_high_osrel
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|disallow_high_osrel
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|disallow_high_osrel
+argument_list|,
+literal|0
+argument_list|,
+literal|"Disallow execution of binaries built for higher version of the world"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2402,6 +2414,63 @@ name|args
 operator|->
 name|fname
 expr_stmt|;
+if|if
+condition|(
+name|disallow_high_osrel
+operator|&&
+name|P_OSREL_MAJOR
+argument_list|(
+name|p
+operator|->
+name|p_osrel
+argument_list|)
+operator|>
+name|P_OSREL_MAJOR
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+name|uprintf
+argument_list|(
+literal|"Osrel %d for image %s too high\n"
+argument_list|,
+name|p
+operator|->
+name|p_osrel
+argument_list|,
+name|imgp
+operator|->
+name|execpath
+operator|!=
+name|NULL
+condition|?
+name|imgp
+operator|->
+name|execpath
+else|:
+literal|"<unresolved>"
+argument_list|)
+expr_stmt|;
+name|vn_lock
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+name|LK_SHARED
+operator||
+name|LK_RETRY
+argument_list|)
+expr_stmt|;
+goto|goto
+name|exec_fail_dealloc
+goto|;
+block|}
 comment|/* 	 * Copy out strings (args and env) and initialize stack base 	 */
 if|if
 condition|(
@@ -3386,7 +3455,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|exec_success
+name|exec__success
 argument_list|,
 name|args
 operator|->
@@ -3674,7 +3743,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|exec_failure
+name|exec__failure
 argument_list|,
 name|error
 argument_list|,

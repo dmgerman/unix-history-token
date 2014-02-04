@@ -25,6 +25,12 @@ directive|include
 file|<sys/tree.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -104,18 +110,6 @@ name|mld_ifinfo
 struct_decl|;
 end_struct_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/counter.h>
-end_include
-
 begin_struct
 struct|struct
 name|in6_ifextra
@@ -151,56 +145,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_struct
-struct|struct
-name|in6_ifextra
-block|{
-name|void
-modifier|*
-name|in6_ifstat
-decl_stmt|;
-name|void
-modifier|*
-name|icmp6_ifstat
-decl_stmt|;
-name|struct
-name|nd_ifinfo
-modifier|*
-name|nd_ifinfo
-decl_stmt|;
-name|struct
-name|scope6_id
-modifier|*
-name|scope6_id
-decl_stmt|;
-name|struct
-name|lltable
-modifier|*
-name|lltable
-decl_stmt|;
-name|struct
-name|mld_ifinfo
-modifier|*
-name|mld_ifinfo
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
 
 begin_define
 define|#
@@ -211,6 +155,20 @@ name|ifp
 parameter_list|)
 value|(((struct in6_ifextra *)(ifp)->if_afdata[AF_INET6])->lltable)
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_IFADDR
+argument_list|)
+end_if
 
 begin_struct
 struct|struct
@@ -322,6 +280,11 @@ name|in6_ifaddr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* control structure to manage address selection policy */

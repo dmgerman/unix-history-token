@@ -203,6 +203,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|powerpc_fw_config_intr
+parameter_list|(
+name|int
+name|irq
+parameter_list|,
+name|int
+name|sense_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

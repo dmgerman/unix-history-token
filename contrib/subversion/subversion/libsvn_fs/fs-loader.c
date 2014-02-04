@@ -254,6 +254,7 @@ block|,
 endif|#
 directive|endif
 name|NULL
+comment|/* End of static list: this needs to be reset to NULL if the             common_pool used when setting it has been cleared. */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1436,6 +1437,12 @@ name|svn_pool_create
 argument_list|(
 name|pool
 argument_list|)
+expr_stmt|;
+name|base_defn
+operator|.
+name|next
+operator|=
+name|NULL
 expr_stmt|;
 name|SVN_ERR
 argument_list|(

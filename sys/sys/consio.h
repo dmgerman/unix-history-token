@@ -634,7 +634,7 @@ begin_define
 define|#
 directive|define
 name|CONS_LOCAL_CURSOR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -749,6 +749,79 @@ name|fnt16_t
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|vfnt_map
+block|{
+name|uint32_t
+name|src
+decl_stmt|;
+name|uint16_t
+name|dst
+decl_stmt|;
+name|uint16_t
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|vfnt_map
+name|vfnt_map_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|vfnt
+block|{
+name|vfnt_map_t
+modifier|*
+name|normal
+decl_stmt|;
+name|vfnt_map_t
+modifier|*
+name|bold
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|glyphs
+decl_stmt|;
+name|unsigned
+name|int
+name|nnormal
+decl_stmt|;
+name|unsigned
+name|int
+name|nbold
+decl_stmt|;
+name|unsigned
+name|int
+name|nglyphs
+decl_stmt|;
+name|unsigned
+name|int
+name|width
+decl_stmt|;
+name|unsigned
+name|int
+name|height
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|vfnt
+name|vfnt_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -789,6 +862,20 @@ define|#
 directive|define
 name|GIO_FONT8x16
 value|_IOR('c', 69, fnt16_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIO_VFONT
+value|_IOW('c', 70, vfnt_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIO_VFONT
+value|_IOR('c', 71, vfnt_t)
 end_define
 
 begin_comment

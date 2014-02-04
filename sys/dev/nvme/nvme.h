@@ -1374,7 +1374,7 @@ index|]
 decl_stmt|;
 comment|/* bytes 3072-4095: vendor specific */
 name|uint8_t
-name|reserved7
+name|vs
 index|[
 literal|1024
 index|]
@@ -1893,7 +1893,7 @@ decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|io_completed
 index|[
 name|NVME_TEST_MAX_THREADS

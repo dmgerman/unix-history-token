@@ -717,7 +717,7 @@ argument_list|(
 operator|&
 name|sbuf
 argument_list|,
-literal|"DOMAIN: %d\n"
+literal|"\nDOMAIN %d:\n"
 argument_list|,
 name|dom
 argument_list|)
@@ -741,7 +741,7 @@ argument_list|(
 operator|&
 name|sbuf
 argument_list|,
-literal|"FREE LIST %d:\n"
+literal|"\nFREE LIST %d:\n"
 literal|"\n  ORDER (SIZE)  |  NUMBER"
 literal|"\n              "
 argument_list|,
@@ -876,7 +876,7 @@ argument_list|(
 operator|&
 name|sbuf
 argument_list|,
-literal|"  |  %6.6d"
+literal|"  |  %6d"
 argument_list|,
 name|fl
 index|[
@@ -896,23 +896,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|sbuf_printf
-argument_list|(
-operator|&
-name|sbuf
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
 block|}
-name|sbuf_printf
-argument_list|(
-operator|&
-name|sbuf
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
 block|}
 name|error
 operator|=

@@ -2497,7 +2497,7 @@ argument_list|)
 expr_stmt|;
 name|return_VALUE
 argument_list|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 argument_list|)
 expr_stmt|;
 block|}

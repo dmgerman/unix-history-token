@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -147,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -648,6 +660,50 @@ directive|define
 name|V_dyn_max
 value|VNET(dyn_max)
 end_define
+
+begin_comment
+comment|/* for userspace, we emulate the uma_zone_counter with ipfw_dyn_count */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ipfw_dyn_count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of objects */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USERSPACE
+end_ifdef
+
+begin_comment
+comment|/* emulation of UMA object counters for userspace */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|uma_zone_get_cur
+parameter_list|(
+name|x
+parameter_list|)
+value|ipfw_dyn_count
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USERSPACE */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2633,6 +2689,9 @@ return|return
 name|NULL
 return|;
 block|}
+name|ipfw_dyn_count
+operator|++
+expr_stmt|;
 comment|/* 	 * refcount on parent is already incremented, so 	 * it is safe to use parent unlocked. 	 */
 if|if
 condition|(
@@ -5428,6 +5487,9 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
+name|ipfw_dyn_count
+operator|--
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -5456,6 +5518,9 @@ name|V_ipfw_dyn_rule_zone
 argument_list|,
 name|q
 argument_list|)
+expr_stmt|;
+name|ipfw_dyn_count
+operator|--
 expr_stmt|;
 block|}
 comment|/* 	 * The rest code MUST be called from timer routine only 	 * without holding any locks 	 */

@@ -1328,7 +1328,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"The pdfork(2) system call is not available; recompile the kernel with options PROCDESC"
+literal|"The pdfork(2) system call is not available - kernel too old."
 argument_list|)
 expr_stmt|;
 block|}

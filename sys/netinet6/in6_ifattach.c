@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -3442,6 +3448,18 @@ name|in6_multi_mship
 modifier|*
 name|imm
 decl_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_afdata
+index|[
+name|AF_INET6
+index|]
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* remove neighbor management table */
 name|nd6_purge
 argument_list|(

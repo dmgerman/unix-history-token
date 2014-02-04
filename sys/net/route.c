@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -672,16 +678,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|domain
-modifier|*
-name|dom
-decl_stmt|;
-name|int
-name|max_keylen
-init|=
-literal|0
-decl_stmt|;
 comment|/* whack the tunable ints into  line. */
 if|if
 condition|(
@@ -703,40 +699,6 @@ name|rt_numfibs
 operator|=
 literal|1
 expr_stmt|;
-for|for
-control|(
-name|dom
-operator|=
-name|domains
-init|;
-name|dom
-condition|;
-name|dom
-operator|=
-name|dom
-operator|->
-name|dom_next
-control|)
-if|if
-condition|(
-name|dom
-operator|->
-name|dom_maxrtkey
-operator|>
-name|max_keylen
-condition|)
-name|max_keylen
-operator|=
-name|dom
-operator|->
-name|dom_maxrtkey
-expr_stmt|;
-name|rn_init
-argument_list|(
-name|max_keylen
-argument_list|)
-expr_stmt|;
-comment|/* init all zeroes, all ones, mask table */
 block|}
 end_function
 
@@ -1089,6 +1051,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|V_rt_tables
+argument_list|,
+name|M_RTABLE
+argument_list|)
+expr_stmt|;
+name|uma_zdestroy
+argument_list|(
+name|V_rtzone
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

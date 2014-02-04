@@ -635,6 +635,8 @@ expr_stmt|;
 if|if
 condition|(
 name|err
+operator|>
+literal|0
 condition|)
 return|return
 operator|(

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -216,6 +216,7 @@ decl_stmt|;
 block|}
 name|spa_config_dirent_t
 typedef|;
+typedef|typedef
 enum|enum
 name|zio_taskq_type
 block|{
@@ -231,8 +232,9 @@ name|ZIO_TASKQ_INTERRUPT_HIGH
 block|,
 name|ZIO_TASKQ_TYPES
 block|}
-enum|;
-comment|/*  * State machine for the zpool-pooname process.  The states transitions  * are done as follows:  *  *	From		   To			Routine  *	PROC_NONE	-> PROC_CREATED		spa_activate()  *	PROC_CREATED	-> PROC_ACTIVE		spa_thread()  *	PROC_ACTIVE	-> PROC_DEACTIVATE	spa_deactivate()  *	PROC_DEACTIVATE	-> PROC_GONE		spa_thread()  *	PROC_GONE	-> PROC_NONE		spa_deactivate()  */
+name|zio_taskq_type_t
+typedef|;
+comment|/*  * State machine for the zpool-poolname process.  The states transitions  * are done as follows:  *  *	From		   To			Routine  *	PROC_NONE	-> PROC_CREATED		spa_activate()  *	PROC_CREATED	-> PROC_ACTIVE		spa_thread()  *	PROC_ACTIVE	-> PROC_DEACTIVATE	spa_deactivate()  *	PROC_DEACTIVATE	-> PROC_GONE		spa_thread()  *	PROC_GONE	-> PROC_NONE		spa_deactivate()  */
 typedef|typedef
 enum|enum
 name|spa_proc_state
@@ -253,6 +255,21 @@ name|SPA_PROC_GONE
 comment|/* spa_thread() is exiting, spa_proc =&p0 */
 block|}
 name|spa_proc_state_t
+typedef|;
+typedef|typedef
+struct|struct
+name|spa_taskqs
+block|{
+name|uint_t
+name|stqs_count
+decl_stmt|;
+name|taskq_t
+modifier|*
+modifier|*
+name|stqs_taskq
+decl_stmt|;
+block|}
+name|spa_taskqs_t
 typedef|;
 struct|struct
 name|spa
@@ -322,8 +339,7 @@ name|uint64_t
 name|spa_import_flags
 decl_stmt|;
 comment|/* import specific flags */
-name|taskq_t
-modifier|*
+name|spa_taskqs_t
 name|spa_zio_taskq
 index|[
 name|ZIO_TYPES
@@ -800,7 +816,7 @@ name|uint64_t
 name|spa_deadman_calls
 decl_stmt|;
 comment|/* number of deadman calls */
-name|uint64_t
+name|hrtime_t
 name|spa_sync_starttime
 decl_stmt|;
 comment|/* starting time fo spa_sync */
@@ -808,6 +824,35 @@ name|uint64_t
 name|spa_deadman_synctime
 decl_stmt|;
 comment|/* deadman expiration timer */
+ifdef|#
+directive|ifdef
+name|illumos
+comment|/* 	 * spa_iokstat_lock protects spa_iokstat and 	 * spa_queue_stats[]. 	 */
+name|kmutex_t
+name|spa_iokstat_lock
+decl_stmt|;
+name|struct
+name|kstat
+modifier|*
+name|spa_iokstat
+decl_stmt|;
+comment|/* kstat of io to this pool */
+struct|struct
+block|{
+name|int
+name|spa_active
+decl_stmt|;
+name|int
+name|spa_queued
+decl_stmt|;
+block|}
+name|spa_queue_stats
+index|[
+name|ZIO_PRIORITY_NUM_QUEUEABLE
+index|]
+struct|;
+endif|#
+directive|endif
 name|hrtime_t
 name|spa_ccw_fail_time
 decl_stmt|;
@@ -841,6 +886,36 @@ name|char
 modifier|*
 name|spa_config_path
 decl_stmt|;
+specifier|extern
+name|void
+name|spa_taskq_dispatch_ent
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|zio_type_t
+name|t
+parameter_list|,
+name|zio_taskq_type_t
+name|q
+parameter_list|,
+name|task_func_t
+modifier|*
+name|func
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|uint_t
+name|flags
+parameter_list|,
+name|taskq_ent_t
+modifier|*
+name|ent
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

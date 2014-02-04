@@ -28,17 +28,6 @@ file|<machine/intr_machdep.h>
 end_include
 
 begin_comment
-comment|/* Max interrupt number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDT_INTR_MAX
-value|INTR_VECTORS
-end_define
-
-begin_comment
 comment|/* Map phandle/intpin pair to global IRQ number */
 end_comment
 
@@ -52,17 +41,6 @@ parameter_list|,
 name|pin
 parameter_list|)
 value|powerpc_get_irq(node, pin)
-end_define
-
-begin_comment
-comment|/*  * Bus space tag. XXX endianess info needs to be derived from the blob.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|fdtbus_bs_tag
-value|(&bs_be_tag)
 end_define
 
 begin_endif

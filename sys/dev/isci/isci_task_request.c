@@ -311,9 +311,37 @@ break|break;
 case|case
 name|SCI_TASK_FAILURE_INVALID_STATE
 case|:
+name|retry_task
+operator|=
+name|TRUE
+expr_stmt|;
+name|isci_log_message
+argument_list|(
+literal|0
+argument_list|,
+literal|"ISCI"
+argument_list|,
+literal|"task failure (invalid state) - retrying\n"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|SCI_TASK_FAILURE_INSUFFICIENT_RESOURCES
 case|:
+name|retry_task
+operator|=
+name|TRUE
+expr_stmt|;
+name|isci_log_message
+argument_list|(
+literal|0
+argument_list|,
+literal|"ISCI"
+argument_list|,
+literal|"task failure (insufficient resources) - retrying\n"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|SCI_FAILURE_TIMEOUT
 case|:
@@ -327,9 +355,7 @@ literal|0
 argument_list|,
 literal|"ISCI"
 argument_list|,
-literal|"unhandled task completion code 0x%x\n"
-argument_list|,
-name|completion_status
+literal|"task timeout - retrying\n"
 argument_list|)
 expr_stmt|;
 break|break;

@@ -971,6 +971,18 @@ name|line_entry
 argument_list|)
 decl|const
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|// Returns true if the section should be valid, but isn't because
+comment|// the shared pointer to the section can't be reconstructed from
+comment|// a weak pointer that contains a valid weak reference to a section.
+comment|// Returns false if the section weak pointer has no reference to
+comment|// a section, or if the section is still valid
+comment|//------------------------------------------------------------------
+name|bool
+name|SectionWasDeleted
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------
@@ -993,6 +1005,19 @@ operator|>
 name|m_offset
 expr_stmt|;
 comment|///< Offset into section if \a m_section_wp is valid...
+comment|//------------------------------------------------------------------
+comment|// Returns true if the m_section_wp once had a reference to a valid
+comment|// section shared pointer, but no longer does. This can happen if
+comment|// we have an address from a module that gets unloaded and deleted.
+comment|// This function should only be called if GetSection() returns an
+comment|// empty shared pointer and you want to know if this address used to
+comment|// have a valid section.
+comment|//------------------------------------------------------------------
+name|bool
+name|SectionWasDeletedPrivate
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|//----------------------------------------------------------------------

@@ -200,6 +200,8 @@ decl_stmt|;
 name|uint32_t
 name|div
 decl_stmt|;
+name|u_ar71xx_mdio_freq
+operator|=
 name|u_ar71xx_refclk
 operator|=
 name|AR724X_BASE_FREQ

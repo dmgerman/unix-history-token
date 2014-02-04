@@ -230,6 +230,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -12341,8 +12347,6 @@ name|flags
 operator|&=
 operator|~
 operator|(
-name|IFF_SMART
-operator||
 name|IFF_DRV_OACTIVE
 operator||
 name|IFF_SIMPLEX

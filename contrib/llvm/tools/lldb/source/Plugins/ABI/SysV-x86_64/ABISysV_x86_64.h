@@ -104,17 +104,7 @@ argument|lldb::addr_t functionAddress
 argument_list|,
 argument|lldb::addr_t returnAddress
 argument_list|,
-argument|lldb::addr_t *arg1_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg2_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg3_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg4_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg5_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg6_ptr = NULL
+argument|llvm::ArrayRef<lldb::addr_t> args
 argument_list|)
 specifier|const
 block|;
@@ -224,13 +214,13 @@ argument_list|(
 argument|lldb::addr_t cfa
 argument_list|)
 block|{
-comment|// Make sure the stack call frame addresses are are 8 byte aligned
+comment|// Make sure the stack call frame addresses are 16 byte aligned
 if|if
 condition|(
 name|cfa
 operator|&
 operator|(
-literal|8ull
+literal|16ull
 operator|-
 literal|1ull
 operator|)
@@ -238,7 +228,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|// Not 8 byte aligned
+comment|// Not 16 byte aligned
 if|if
 condition|(
 name|cfa

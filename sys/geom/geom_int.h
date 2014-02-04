@@ -30,6 +30,28 @@ name|g_collectstats
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|G_STATS_PROVIDERS
+value|1
+end_define
+
+begin_comment
+comment|/* Collect I/O stats for providers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_STATS_CONSUMERS
+value|2
+end_define
+
+begin_comment
+comment|/* Collect I/O stats for consumers */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -100,6 +122,25 @@ name|struct
 name|g_consumer
 modifier|*
 name|cp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|g_conf_printf_escaped
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -720,6 +720,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_CORTEXA5
+value|0x410fc050
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_CORTEXA7
 value|0x410fc070
 end_define
@@ -868,34 +875,12 @@ end_endif
 begin_define
 define|#
 directive|define
-name|CPU_ID_MV88SV581X_V6
-value|0x560F5810
-end_define
-
-begin_comment
-comment|/* Marvell Sheeva 88SV581x v6 Core */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CPU_ID_MV88SV581X_V7
 value|0x561F5810
 end_define
 
 begin_comment
 comment|/* Marvell Sheeva 88SV581x v7 Core */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_MV88SV584X_V6
-value|0x561F5840
-end_define
-
-begin_comment
-comment|/* Marvell Sheeva 88SV584x v6 Core */
 end_comment
 
 begin_define
@@ -916,34 +901,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPU_ID_ARM_88SV581X_V6
-value|0x410fb760
-end_define
-
-begin_comment
-comment|/* Marvell Sheeva 88SV581x v6 Core */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CPU_ID_ARM_88SV581X_V7
 value|0x413FC080
 end_define
 
 begin_comment
 comment|/* Marvell Sheeva 88SV581x v7 Core */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM_88SV584X_V6
-value|0x410FB020
-end_define
-
-begin_comment
-comment|/* Marvell Sheeva 88SV584x v6 Core */
 end_comment
 
 begin_define
@@ -2100,7 +2063,7 @@ begin_define
 define|#
 directive|define
 name|CPUV7_CT_CTYPE_WT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

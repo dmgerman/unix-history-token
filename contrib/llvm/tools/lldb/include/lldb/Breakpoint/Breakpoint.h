@@ -573,6 +573,30 @@ argument|size_t index
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|/// Removes all invalid breakpoint locations.
+comment|///
+comment|/// Removes all breakpoint locations with architectures that aren't
+comment|/// compatible with \a arch. Also remove any breakpoint locations
+comment|/// with whose locations have address where the section has been
+comment|/// deleted (module and object files no longer exist).
+comment|///
+comment|/// This is typically used after the process calls exec, or anytime
+comment|/// the architecture of the target changes.
+comment|///
+comment|/// @param[in] arch
+comment|///     If valid, check the module in each breakpoint to make sure
+comment|///     they are compatible, otherwise, ignore architecture.
+comment|//------------------------------------------------------------------
+name|void
+name|RemoveInvalidLocations
+parameter_list|(
+specifier|const
+name|ArchSpec
+modifier|&
+name|arch
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|// The next section deals with various breakpoint options.
 comment|//------------------------------------------------------------------
 comment|//------------------------------------------------------------------
@@ -1004,6 +1028,15 @@ name|break_id_t
 name|bp_loc_id
 argument_list|)
 decl_stmt|;
+name|bool
+name|IsHardware
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_hardware
+return|;
+block|}
 name|protected
 label|:
 name|friend
@@ -1022,23 +1055,15 @@ comment|//------------------------------------------------------------------
 comment|// This is the generic constructor
 name|Breakpoint
 argument_list|(
-name|Target
-operator|&
-name|target
+argument|Target&target
 argument_list|,
-name|lldb
-operator|::
-name|SearchFilterSP
-operator|&
-name|filter_sp
+argument|lldb::SearchFilterSP&filter_sp
 argument_list|,
-name|lldb
-operator|::
-name|BreakpointResolverSP
-operator|&
-name|resolver_sp
+argument|lldb::BreakpointResolverSP&resolver_sp
+argument_list|,
+argument|bool hardware
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|friend
 name|class
 name|BreakpointLocation
@@ -1063,6 +1088,10 @@ comment|//------------------------------------------------------------------
 name|bool
 name|m_being_created
 decl_stmt|;
+name|bool
+name|m_hardware
+decl_stmt|;
+comment|// If this breakpoint is required to use a hardware breakpoint
 name|Target
 modifier|&
 name|m_target

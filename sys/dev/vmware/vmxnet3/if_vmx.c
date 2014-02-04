@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -103,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -6913,8 +6925,6 @@ operator|->
 name|guest
 operator|=
 name|VMXNET3_GOS_FREEBSD
-operator||
-name|VMXNET3_GUEST_OS_VERSION
 operator||
 ifdef|#
 directive|ifdef

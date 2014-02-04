@@ -439,7 +439,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
@@ -1212,7 +1212,7 @@ name|cpu
 init|=
 name|PCPU_GET
 argument_list|(
-name|acpi_id
+name|vcpu_id
 argument_list|)
 decl_stmt|;
 name|struct
@@ -1357,7 +1357,7 @@ name|cpu
 init|=
 name|PCPU_GET
 argument_list|(
-name|acpi_id
+name|vcpu_id
 argument_list|)
 decl_stmt|;
 name|struct

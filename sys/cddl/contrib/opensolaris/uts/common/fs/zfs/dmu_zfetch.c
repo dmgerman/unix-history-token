@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1408,6 +1412,8 @@ argument_list|,
 name|blkid
 operator|+
 name|i
+argument_list|,
+name|ZIO_PRIORITY_ASYNC_READ
 argument_list|)
 expr_stmt|;
 block|}

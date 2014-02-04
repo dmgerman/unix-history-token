@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_random.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -189,10 +195,6 @@ name|u_int
 name|bits
 decl_stmt|;
 comment|/* estimated bits of entropy */
-name|u_int
-name|frac
-decl_stmt|;
-comment|/* fractional bits of entropy 					   (given as 1024/n) */
 block|}
 name|source
 index|[
@@ -392,6 +394,10 @@ begin_comment
 comment|/* Nothing to see here, folks, just an ugly mess. */
 end_comment
 
+begin_comment
+comment|/* TODO: Make a Galois counter instead? */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -466,7 +472,14 @@ name|enum
 name|esource
 name|src
 decl_stmt|;
-comment|/* Unpack the event into the appropriate source accumulator */
+if|#
+directive|if
+literal|0
+comment|/* Do this better with DTrace */
+block|{ 		int i;  		printf("Harvest:%16jX ", event->somecounter); 		for (i = 0; i< event->size; i++) 			printf("%02X", event->entropy[i]); 		for (; i< 16; i++) 			printf("  "); 		printf(" %2d %2d %02X\n", event->size, event->bits, event->source); 	}
+endif|#
+directive|endif
+comment|/* Accumulate the event into the appropriate pool */
 name|pl
 operator|=
 name|random_state
@@ -503,49 +516,13 @@ operator|.
 name|hash
 argument_list|,
 name|event
-operator|->
-name|entropy
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|event
-operator|->
-name|entropy
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|randomdev_hash_iterate
-argument_list|(
-operator|&
-name|random_state
-operator|.
-name|pool
-index|[
-name|pl
-index|]
-operator|.
-name|hash
-argument_list|,
-operator|&
-name|event
-operator|->
-name|somecounter
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|event
-operator|->
-name|somecounter
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|source
-operator|->
-name|frac
-operator|+=
-name|event
-operator|->
-name|frac
 expr_stmt|;
 name|source
 operator|->
@@ -554,23 +531,7 @@ operator|+=
 name|event
 operator|->
 name|bits
-operator|+
-operator|(
-name|source
-operator|->
-name|frac
-operator|>>
-literal|12
-operator|)
 expr_stmt|;
-comment|/* bits + frac/0x1000 */
-name|source
-operator|->
-name|frac
-operator|&=
-literal|0xFFF
-expr_stmt|;
-comment|/* Keep the fractional bits */
 comment|/* Count the over-threshold sources in each pool */
 for|for
 control|(
@@ -1072,6 +1033,12 @@ name|enum
 name|esource
 name|j
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("Yarrow: %s reseed\n", fastslow == FAST ? "fast" : "slow");
+endif|#
+directive|endif
 comment|/* The reseed task must not be jumped on */
 name|mtx_lock
 argument_list|(
@@ -1359,7 +1326,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 for|for
 control|(
 name|j
@@ -1373,7 +1339,6 @@ condition|;
 name|j
 operator|++
 control|)
-block|{
 name|random_state
 operator|.
 name|pool
@@ -1390,24 +1355,6 @@ name|bits
 operator|=
 literal|0
 expr_stmt|;
-name|random_state
-operator|.
-name|pool
-index|[
-name|i
-index|]
-operator|.
-name|source
-index|[
-name|j
-index|]
-operator|.
-name|frac
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
 comment|/* 6. Wipe memory of intermediate values */
 name|memset
 argument_list|(
@@ -1517,6 +1464,22 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
+comment|/* Check for final read request */
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+operator|&&
+name|count
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* The reseed task must not be jumped on */
 name|mtx_lock
 argument_list|(
@@ -1774,7 +1737,9 @@ name|random_reseed_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -1872,6 +1837,102 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|RANDOM_DEBUG
+name|int
+name|i
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"%s(): fast:"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|RANDOM_START
+init|;
+name|i
+operator|<
+name|ENTROPYSOURCE
+condition|;
+operator|++
+name|i
+control|)
+name|printf
+argument_list|(
+literal|" %d"
+argument_list|,
+name|random_state
+operator|.
+name|pool
+index|[
+name|FAST
+index|]
+operator|.
+name|source
+index|[
+name|i
+index|]
+operator|.
+name|bits
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s(): slow:"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|RANDOM_START
+init|;
+name|i
+operator|<
+name|ENTROPYSOURCE
+condition|;
+operator|++
+name|i
+control|)
+name|printf
+argument_list|(
+literal|" %d"
+argument_list|,
+name|random_state
+operator|.
+name|pool
+index|[
+name|SLOW
+index|]
+operator|.
+name|source
+index|[
+name|i
+index|]
+operator|.
+name|bits
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|reseed
 argument_list|(
 name|SLOW

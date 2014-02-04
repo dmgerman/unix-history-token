@@ -1843,7 +1843,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|0
+operator|(
+name|BUS_PROBE_NOWILDCARD
+operator|)
 return|;
 block|}
 end_function

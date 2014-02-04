@@ -1004,6 +1004,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|USR_BUSY
+value|1
+end_define
+
+begin_comment
+comment|/* Uart Busy. Serial transfer in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USR_TXFIFO_NOTFULL
 value|2
 end_define

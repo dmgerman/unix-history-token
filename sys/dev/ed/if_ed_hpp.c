@@ -110,6 +110,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_comment
+comment|/* XXX: ed_hpp_set_physical_link() */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 

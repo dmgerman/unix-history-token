@@ -173,6 +173,12 @@ directive|include
 file|<sys/mman.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2391,12 +2397,27 @@ name|fs_path
 operator|=
 name|path
 expr_stmt|;
+if|if
+condition|(
+name|cap_rightsp
+operator|!=
+name|NULL
+condition|)
 name|entry
 operator|->
 name|fs_cap_rights
 operator|=
 operator|*
 name|cap_rightsp
+expr_stmt|;
+else|else
+name|cap_rights_init
+argument_list|(
+operator|&
+name|entry
+operator|->
+name|fs_cap_rights
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2844,7 +2865,7 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2894,7 +2915,7 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2944,7 +2965,7 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2996,7 +3017,7 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3046,7 +3067,7 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3105,7 +3126,7 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3431,7 +3452,7 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3723,7 +3744,7 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4895,7 +4916,7 @@ name|offset
 argument_list|,
 name|path
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

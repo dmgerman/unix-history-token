@@ -4390,22 +4390,12 @@ argument_list|,
 name|_
 argument_list|(
 literal|"%s, version %s\n"
-literal|"   compiled %s, %s on %s\n\n"
+literal|"   compiled on %s\n\n"
 argument_list|)
 argument_list|,
 name|pgm_name
 argument_list|,
 name|SVN_VERSION
-argument_list|,
-name|svn_version_ext_build_date
-argument_list|(
-name|info
-argument_list|)
-argument_list|,
-name|svn_version_ext_build_time
-argument_list|(
-name|info
-argument_list|)
 argument_list|,
 name|svn_version_ext_build_host
 argument_list|(

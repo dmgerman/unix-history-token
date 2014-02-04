@@ -179,6 +179,12 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2217,9 +2223,14 @@ block|}
 block|}
 name|bcopy
 argument_list|(
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|void
+operator|*
+argument_list|)
 argument_list|,
 name|sockp
 operator|->

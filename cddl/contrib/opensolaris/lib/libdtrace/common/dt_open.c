@@ -1894,6 +1894,46 @@ begin_operator
 operator|,
 end_operator
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
+begin_block
+block|{
+literal|"memstr"
+operator|,
+name|DT_IDENT_FUNC
+operator|,
+literal|0
+operator|,
+name|DIF_SUBR_MEMSTR
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_0
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"string(void *, char, size_t)"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_block
 block|{
 literal|"min"
@@ -3672,15 +3712,6 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_block
 block|{
 literal|"uaddr"
@@ -3705,11 +3736,6 @@ end_block
 begin_operator
 operator|,
 end_operator
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
@@ -3736,15 +3762,6 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_block
 block|{
 literal|"ufunc"
@@ -3769,11 +3786,6 @@ end_block
 begin_operator
 operator|,
 end_operator
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
@@ -3800,15 +3812,6 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_block
 block|{
 literal|"umod"
@@ -3833,11 +3836,6 @@ end_block
 begin_operator
 operator|,
 end_operator
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
@@ -3914,15 +3912,6 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_block
 block|{
 literal|"usym"
@@ -3947,11 +3936,6 @@ end_block
 begin_operator
 operator|,
 end_operator
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{

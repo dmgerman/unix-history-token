@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"bcm2835_dma.h"
 end_include
 
@@ -282,7 +276,7 @@ begin_define
 define|#
 directive|define
 name|CS_RESET
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

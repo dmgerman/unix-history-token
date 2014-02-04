@@ -12354,20 +12354,13 @@ name|flag_inline_trees
 operator|=
 literal|2
 expr_stmt|;
-comment|/* Force minimum function alignment if using the least significant      bit of function pointers to store the virtual bit.  */
 if|if
 condition|(
-name|TARGET_PTRMEMFUNC_VBIT_LOCATION
-operator|==
-name|ptrmemfunc_vbit_in_pfn
-operator|&&
-name|force_align_functions_log
-operator|<
-literal|1
+name|flag_visibility_ms_compat
 condition|)
-name|force_align_functions_log
+name|default_visibility
 operator|=
-literal|1
+name|VISIBILITY_HIDDEN
 expr_stmt|;
 comment|/* Initially, C.  */
 name|current_lang_name
@@ -18708,22 +18701,23 @@ name|decl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* An in-class declaration of a static data member should be 	 external; it is only a declaration, and not a definition.  */
+comment|/* An in-class declaration of a static data member should be 	 external; it is only a declaration, and not a definition. */
 if|if
 condition|(
 name|init
+operator|==
+name|NULL_TREE
+operator|&&
+name|DECL_INITIAL
+argument_list|(
+name|decl
+argument_list|)
 operator|==
 name|NULL_TREE
 condition|)
 name|gcc_assert
 argument_list|(
 name|DECL_EXTERNAL
-argument_list|(
-name|decl
-argument_list|)
-operator|||
-operator|!
-name|TREE_PUBLIC
 argument_list|(
 name|decl
 argument_list|)
@@ -22394,6 +22388,38 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+comment|/* If pointers to member functions use the least significant bit to      indicate whether a function is virtual, ensure a pointer      to this function will have that bit clear.  */
+if|if
+condition|(
+name|TARGET_PTRMEMFUNC_VBIT_LOCATION
+operator|==
+name|ptrmemfunc_vbit_in_pfn
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|METHOD_TYPE
+operator|&&
+name|DECL_ALIGN
+argument_list|(
+name|decl
+argument_list|)
+operator|<
+literal|2
+operator|*
+name|BITS_PER_UNIT
+condition|)
+name|DECL_ALIGN
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+literal|2
+operator|*
+name|BITS_PER_UNIT
+expr_stmt|;
 if|if
 condition|(
 name|friendp
@@ -24648,6 +24674,10 @@ elseif|else
 if|if
 condition|(
 name|pedantic
+operator|&&
+name|warn_vla
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -24656,7 +24686,7 @@ name|name
 condition|)
 name|pedwarn
 argument_list|(
-literal|"ISO C++ forbids variable-size array %qD"
+literal|"ISO C++ forbids variable length array %qD"
 argument_list|,
 name|name
 argument_list|)
@@ -24664,7 +24694,37 @@ expr_stmt|;
 else|else
 name|pedwarn
 argument_list|(
-literal|"ISO C++ forbids variable-size array"
+literal|"ISO C++ forbids variable length array"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|warn_vla
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|name
+condition|)
+name|warning
+argument_list|(
+name|OPT_Wvla
+argument_list|,
+literal|"variable length array %qD is used"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|warning
+argument_list|(
+name|OPT_Wvla
+argument_list|,
+literal|"variable length array is used"
 argument_list|)
 expr_stmt|;
 block|}

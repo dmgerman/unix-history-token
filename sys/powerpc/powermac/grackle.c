@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -154,22 +160,6 @@ include|#
 directive|include
 file|"pcib_if.h"
 end_include
-
-begin_function_decl
-name|int
-name|badaddr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_comment
 comment|/*  * Device interface.  */
@@ -276,6 +266,32 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|badaddr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|setfault
+parameter_list|(
+name|faultbuf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* defined in locore.S */
+end_comment
 
 begin_comment
 comment|/*  * Driver methods.  */
@@ -924,6 +940,145 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|badaddr
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|faultbuf
+name|env
+decl_stmt|,
+modifier|*
+name|oldfaultbuf
+decl_stmt|;
+name|int
+name|x
+decl_stmt|;
+comment|/* Get rid of any stale machine checks that have been waiting.  */
+asm|__asm __volatile ("sync; isync");
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|oldfaultbuf
+operator|=
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_onfault
+expr_stmt|;
+if|if
+condition|(
+name|setfault
+argument_list|(
+name|env
+argument_list|)
+condition|)
+block|{
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_onfault
+operator|=
+name|oldfaultbuf
+expr_stmt|;
+asm|__asm __volatile ("sync");
+return|return
+literal|1
+return|;
+block|}
+asm|__asm __volatile ("sync");
+switch|switch
+condition|(
+name|size
+condition|)
+block|{
+case|case
+literal|1
+case|:
+name|x
+operator|=
+operator|*
+operator|(
+specifier|volatile
+name|int8_t
+operator|*
+operator|)
+name|addr
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|x
+operator|=
+operator|*
+operator|(
+specifier|volatile
+name|int16_t
+operator|*
+operator|)
+name|addr
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|x
+operator|=
+operator|*
+operator|(
+specifier|volatile
+name|int32_t
+operator|*
+operator|)
+name|addr
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"badaddr: invalid size (%zd)"
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Make sure we took the machine check, if we caused one. */
+asm|__asm __volatile ("sync; isync");
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_onfault
+operator|=
+name|oldfaultbuf
+expr_stmt|;
+asm|__asm __volatile ("sync");
+comment|/* To be sure. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

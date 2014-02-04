@@ -94,31 +94,13 @@ operator|::
 name|thread_t
 name|ThreadCreate
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|const char *name
 argument_list|,
-name|void
-operator|*
-call|(
-modifier|*
-name|thread_function
-call|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
+argument|thread_func_t thread_function
 argument_list|,
-name|void
-operator|*
-name|thread_arg
+argument|void *thread_arg
 argument_list|,
-name|lldb
-operator|::
-name|SBError
-operator|*
-name|err
+argument|lldb::SBError *err
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -162,8 +144,7 @@ operator|::
 name|thread_t
 name|thread
 argument_list|,
-name|void
-operator|*
+name|thread_result_t
 operator|*
 name|result
 argument_list|,

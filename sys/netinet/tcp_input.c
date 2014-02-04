@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -165,6 +159,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -2721,7 +2721,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  *	- there is no delayed ack timer in progress and  *	- our last ack wasn't a 0-sized window.  We never want to delay  *	  the ack that opens up a 0-sized window and  *		- delayed acks are enabled or  *		- this is a half-synchronized T/TCP connection.  */
+comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  *	- there is no delayed ack timer in progress and  *	- our last ack wasn't a 0-sized window.  We never want to delay  *	  the ack that opens up a 0-sized window and  *		- delayed acks are enabled or  *		- this is a half-synchronized T/TCP connection.  *	- the segment size is not larger than the MSS and LRO wasn't used  *	  for this segment.  */
 end_comment
 
 begin_define
@@ -2730,9 +2730,11 @@ directive|define
 name|DELAY_ACK
 parameter_list|(
 name|tp
+parameter_list|,
+name|tlen
 parameter_list|)
 define|\
-value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
+value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (tlen<= tp->t_maxopd)&&					\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
 end_define
 
 begin_comment
@@ -6308,9 +6310,14 @@ name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -6354,9 +6361,14 @@ name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -6475,9 +6487,14 @@ name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -6645,6 +6662,11 @@ name|struct
 name|in_conninfo
 modifier|*
 name|inc
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mfree
 decl_stmt|;
 name|struct
 name|tcpopt
@@ -8231,6 +8253,8 @@ condition|(
 name|DELAY_ACK
 argument_list|(
 name|tp
+argument_list|,
+name|tlen
 argument_list|)
 condition|)
 block|{
@@ -8435,15 +8459,20 @@ condition|)
 block|{
 name|TCP_PROBE5
 argument_list|(
-name|connect_refused
+name|connect__refused
 argument_list|,
 name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -8583,6 +8612,8 @@ condition|(
 name|DELAY_ACK
 argument_list|(
 name|tp
+argument_list|,
+name|tlen
 argument_list|)
 operator|&&
 name|tlen
@@ -8675,15 +8706,20 @@ argument_list|)
 expr_stmt|;
 name|TCP_PROBE5
 argument_list|(
-name|connect_established
+name|connect__established
 argument_list|,
 name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -9865,15 +9901,20 @@ argument_list|)
 expr_stmt|;
 name|TCP_PROBE5
 argument_list|(
-name|accept_established
+name|accept__established
 argument_list|,
 name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -10067,6 +10108,13 @@ operator|==
 name|tp
 operator|->
 name|snd_wnd
+operator|&&
+operator|!
+operator|(
+name|thflags
+operator|&
+name|TH_FIN
+operator|)
 condition|)
 block|{
 name|TCPSTAT_INC
@@ -10074,7 +10122,7 @@ argument_list|(
 name|tcps_rcvdupack
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If we have outstanding data (other than 				 * a window probe), this is a completely 				 * duplicate ack (ie, window info didn't 				 * change), the ack is the biggest we've 				 * seen and we've seen exactly our rexmt 				 * threshhold of them, assume a packet 				 * has been dropped and retransmit it. 				 * Kludge snd_nxt& the congestion 				 * window so we send only this one 				 * packet. 				 * 				 * We know we're losing at the current 				 * window size so do congestion avoidance 				 * (set ssthresh to half the current window 				 * and pull our congestion window back to 				 * the new ssthresh). 				 * 				 * Dup acks mean that packets have left the 				 * network (they're now cached at the receiver) 				 * so bump cwnd by the amount in the receiver 				 * to keep a constant cwnd packets in the 				 * network. 				 * 				 * When using TCP ECN, notify the peer that 				 * we reduced the cwnd. 				 */
+comment|/* 				 * If we have outstanding data (other than 				 * a window probe), this is a completely 				 * duplicate ack (ie, window info didn't 				 * change and FIN isn't set), 				 * the ack is the biggest we've 				 * seen and we've seen exactly our rexmt 				 * threshhold of them, assume a packet 				 * has been dropped and retransmit it. 				 * Kludge snd_nxt& the congestion 				 * window so we send only this one 				 * packet. 				 * 				 * We know we're losing at the current 				 * window size so do congestion avoidance 				 * (set ssthresh to half the current window 				 * and pull our congestion window back to 				 * the new ssthresh). 				 * 				 * Dup acks mean that packets have left the 				 * network (they're now cached at the receiver) 				 * so bump cwnd by the amount in the receiver 				 * to keep a constant cwnd packets in the 				 * network. 				 * 				 * When using TCP ECN, notify the peer that 				 * we reduced the cwnd. 				 */
 if|if
 condition|(
 operator|!
@@ -11188,7 +11236,9 @@ name|so_snd
 operator|.
 name|sb_cc
 expr_stmt|;
-name|sbdrop_locked
+name|mfree
+operator|=
+name|sbcut_locked
 argument_list|(
 operator|&
 name|so
@@ -11212,7 +11262,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sbdrop_locked
+name|mfree
+operator|=
+name|sbcut_locked
 argument_list|(
 operator|&
 name|so
@@ -11237,6 +11289,11 @@ comment|/* NB: sowwakeup_locked() does an implicit unlock. */
 name|sowwakeup_locked
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|mfree
 argument_list|)
 expr_stmt|;
 comment|/* Detect una wraparound. */
@@ -11947,6 +12004,8 @@ condition|(
 name|DELAY_ACK
 argument_list|(
 name|tp
+argument_list|,
+name|tlen
 argument_list|)
 condition|)
 name|tp

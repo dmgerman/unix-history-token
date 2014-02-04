@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -151,6 +157,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -1063,11 +1075,11 @@ name|NULL
 condition|)
 block|{
 comment|/* out of buffers, cleanup */
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: no buffer?\n"
 argument_list|,
@@ -2126,11 +2138,11 @@ name|bfs_txrate0
 operator|==
 literal|0
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
 literal|"%s: bf=%p, txrate0=%d\n"
 argument_list|,
@@ -2156,11 +2168,11 @@ name|ratecode
 operator|==
 literal|0
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
 literal|"%s: bf=%p, rix0=%d\n"
 argument_list|,
@@ -2532,11 +2544,11 @@ operator|->
 name|axq_qnum
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: bf=%p, bfs_tx_queue=%d, axq_qnum=%d\n"
 argument_list|,
@@ -3017,11 +3029,11 @@ operator|->
 name|axq_qnum
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: bf=%p, bfs_tx_queue=%d, axq_qnum=%d\n"
 argument_list|,
@@ -4677,11 +4689,11 @@ name|bfs_txrate0
 operator|==
 literal|0
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: bf=%p, txrate0=%d\n"
 argument_list|,
@@ -5305,11 +5317,11 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Other control/mgmt frame; bypass software queuing 		 * for now! 		 */
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: %6D: Node is asleep; sending mgmt "
 literal|"(type=%d, subtype=%d)\n"
@@ -6211,7 +6223,7 @@ comment|/* 	 * There are two known scenarios where the frame AC doesn't match 	 
 if|#
 directive|if
 literal|0
-block|if (txq != sc->sc_ac2q[pri]) { 		device_printf(sc->sc_dev, 		    "%s: txq=%p (%d), pri=%d, pri txq=%p (%d)\n", 		    __func__, 		    txq, 		    txq->axq_qnum, 		    pri, 		    sc->sc_ac2q[pri], 		    sc->sc_ac2q[pri]->axq_qnum); 	}
+block|if (txq != sc->sc_ac2q[pri]) { 		DPRINTF(sc, ATH_DEBUG_XMIT,  		    "%s: txq=%p (%d), pri=%d, pri txq=%p (%d)\n", 		    __func__, 		    txq, 		    txq->axq_qnum, 		    pri, 		    sc->sc_ac2q[pri], 		    sc->sc_ac2q[pri]->axq_qnum); 	}
 endif|#
 directive|endif
 comment|/* 	 * Calculate miscellaneous flags. 	 */
@@ -7637,7 +7649,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|device_printf(sc->sc_dev, 		    "%s: overriding tid %d pri %d -> %d\n", 		    __func__, o_tid, pri, TID_TO_WME_AC(o_tid));
+block|DPRINTF(sc, ATH_DEBUG_XMIT,  		    "%s: overriding tid %d pri %d -> %d\n", 		    __func__, o_tid, pri, TID_TO_WME_AC(o_tid));
 endif|#
 directive|endif
 name|pri
@@ -8727,11 +8739,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: sc_inreset_cnt> 0; bailing\n"
 argument_list|,
@@ -9463,11 +9475,11 @@ operator|.
 name|bfs_dobaw
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: dobaw=0, seqno=%d, window %d:%d\n"
 argument_list|,
@@ -9500,11 +9512,11 @@ name|bf_state
 operator|.
 name|bfs_addedbaw
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: re-added? tid=%d, seqno %d; window %d:%d; "
 literal|"baw head=%d tail=%d\n"
@@ -9566,11 +9578,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: bf=%p: outside of BAW?? tid=%d, seqno %d; window %d:%d; "
 literal|"baw head=%d tail=%d\n"
@@ -9708,11 +9720,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: ba packet dup (index=%d, cindex=%d, "
 literal|"head=%d, tail=%d)\n"
@@ -9732,11 +9744,11 @@ operator|->
 name|baw_tail
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: BA bf: %p; seqno=%d ; new bf: %p; seqno=%d\n"
 argument_list|,
@@ -9943,11 +9955,11 @@ operator|.
 name|bfs_seqno
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: retransmitted buffer"
 literal|" has mismatching seqno's, BA session may hang.\n"
@@ -9955,11 +9967,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: old seqno=%d, new_seqno=%d\n"
 argument_list|,
@@ -9991,11 +10003,11 @@ operator|!=
 name|old_bf
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: ath_buf pointer incorrect; "
 literal|" has m BA session may hang.\n"
@@ -10003,11 +10015,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: old bf=%p, new bf=%p\n"
 argument_list|,
@@ -10178,11 +10190,11 @@ operator|!=
 name|bf
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: comp bf=%p, seq=%d; slot bf=%p, seqno=%d\n"
 argument_list|,
@@ -11089,11 +11101,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
 literal|"%s: bfs_aggr=%d, bfs_nframes=%d\n"
 argument_list|,
@@ -12066,11 +12078,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
 literal|"%s: %6D: paused=0?\n"
 argument_list|,
@@ -12147,11 +12159,11 @@ operator|==
 literal|1
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
 literal|"%s: filtered?!\n"
 argument_list|,
@@ -12213,11 +12225,11 @@ name|tid
 operator|->
 name|isfiltered
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
 literal|"%s: not filtered?!\n"
 argument_list|,
@@ -12915,11 +12927,11 @@ operator|->
 name|bar_tx
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: bar_tx is 1?!\n"
 argument_list|,
@@ -13018,11 +13030,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: %6D: TID=%d, bar_tx=%d, bar_wait=%d: ?\n"
 argument_list|,
@@ -13233,11 +13245,11 @@ operator|==
 literal|1
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: %6D: TID=%d, bar_tx=%d, bar_wait=%d: ?\n"
 argument_list|,
@@ -13398,11 +13410,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: %6D: TID=%d, failed to TX BAR, continue!\n"
 argument_list|,
@@ -13525,7 +13537,7 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * This has become a non-fatal error now 		 */
-block|if (! bf->bf_state.bfs_addedbaw) 			device_printf(sc->sc_dev, 			    "%s: wasn't added: seqno %d\n", 			    __func__, SEQNO(bf->bf_state.bfs_seqno));
+block|if (! bf->bf_state.bfs_addedbaw) 			DPRINTF(sc, ATH_DEBUG_SW_TX_BAW 			    "%s: wasn't added: seqno %d\n", 			    __func__, SEQNO(bf->bf_state.bfs_seqno));
 endif|#
 directive|endif
 block|}
@@ -13594,7 +13606,14 @@ name|struct
 name|ath_txq
 modifier|*
 name|txq
-init|=
+decl_stmt|;
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+name|tap
+decl_stmt|;
+name|txq
+operator|=
 name|sc
 operator|->
 name|sc_ac2q
@@ -13603,12 +13622,7 @@ name|tid
 operator|->
 name|ac
 index|]
-decl_stmt|;
-name|struct
-name|ieee80211_tx_ampdu
-modifier|*
-name|tap
-decl_stmt|;
+expr_stmt|;
 name|tap
 operator|=
 name|ath_tx_get_tx_tid
@@ -13620,11 +13634,11 @@ operator|->
 name|tid
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: %s: %6D: bf=%p: addbaw=%d, dobaw=%d, "
 literal|"seqno=%d, retry=%d\n"
@@ -13669,11 +13683,11 @@ operator|.
 name|bfs_retries
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: %s: %6D: bf=%p: txq[%d] axq_depth=%d, axq_aggr_depth=%d\n"
 argument_list|,
@@ -13702,11 +13716,11 @@ operator|->
 name|axq_aggr_depth
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: %s: %6D: bf=%p: tid txq_depth=%d hwq_depth=%d, bar_wait=%d, "
 literal|"isfiltered=%d\n"
@@ -13740,11 +13754,11 @@ operator|->
 name|isfiltered
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: %s: %6D: tid %d: "
 literal|"sched=%d, paused=%d, "
@@ -14689,7 +14703,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * If the frame was filtered, stick it on the filter frame 	 * queue and complain about it.  It shouldn't happen! 	 */
-block|if ((ts->ts_status& HAL_TXERR_FILT) || 	    (ts->ts_status != 0&& atid->isfiltered)) { 		device_printf(sc->sc_dev, 		    "%s: isfiltered=%d, ts_status=%d: huh?\n", 		    __func__, 		    atid->isfiltered, 		    ts->ts_status); 		ath_tx_tid_filt_comp_buf(sc, atid, bf); 	}
+block|if ((ts->ts_status& HAL_TXERR_FILT) || 	    (ts->ts_status != 0&& atid->isfiltered)) { 		DPRINTF(sc, ATH_DEBUG_SW_TX, 		    "%s: isfiltered=%d, ts_status=%d: huh?\n", 		    __func__, 		    atid->isfiltered, 		    ts->ts_status); 		ath_tx_tid_filt_comp_buf(sc, atid, bf); 	}
 endif|#
 directive|endif
 if|if
@@ -14698,11 +14712,11 @@ name|atid
 operator|->
 name|isfiltered
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: filtered?!\n"
 argument_list|,
@@ -14717,11 +14731,11 @@ name|hwq_depth
 operator|<
 literal|0
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: hwq_depth< 0: %d\n"
 argument_list|,
@@ -15137,11 +15151,11 @@ name|bf_state
 operator|.
 name|bfs_addedbaw
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: wasn't added: seqno %d\n"
 argument_list|,
@@ -15351,7 +15365,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|device_printf(sc->sc_dev, "%s: ATH_BUF_BUSY; cloning\n", 	    __func__);
+block|DPRINTF(sc, ATH_DEBUG_XMIT, "%s: ATH_BUF_BUSY; cloning\n", 	    __func__);
 endif|#
 directive|endif
 if|if
@@ -15362,11 +15376,11 @@ name|NULL
 condition|)
 block|{
 comment|/* Failed to clone */
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: failed to clone a busy buffer\n"
 argument_list|,
@@ -15398,11 +15412,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: failed to setup dma for clone\n"
 argument_list|,
@@ -15676,11 +15690,11 @@ name|bf_state
 operator|.
 name|bfs_addedbaw
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: wasn't added: seqno %d\n"
 argument_list|,
@@ -16019,11 +16033,11 @@ name|bf_state
 operator|.
 name|bfs_addedbaw
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
 literal|"%s: wasn't added: seqno %d\n"
 argument_list|,
@@ -16826,11 +16840,11 @@ name|hwq_depth
 operator|<
 literal|0
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
 literal|"%s: hwq_depth< 0: %d\n"
 argument_list|,
@@ -16869,11 +16883,11 @@ name|atid
 operator|->
 name|isfiltered
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
 literal|"%s: isfiltered=1, normal_comp?\n"
 argument_list|,
@@ -16924,11 +16938,11 @@ name|fail
 operator|!=
 literal|0
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
 literal|"%s: isfiltered=1, fail=%d\n"
 argument_list|,
@@ -17001,11 +17015,11 @@ name|bf_state
 operator|.
 name|bfs_addedbaw
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
 literal|"%s: wasn't added: seqno %d\n"
 argument_list|,
@@ -17218,7 +17232,7 @@ if|#
 directive|if
 literal|0
 comment|/* Occasionally, the MAC sends a tx status for the wrong TID. */
-block|if (tid != ts.ts_tid) { 		device_printf(sc->sc_dev, "%s: tid %d != hw tid %d\n", 		    __func__, tid, ts.ts_tid); 		tx_ok = 0; 	}
+block|if (tid != ts.ts_tid) { 		DPRINTF(sc, ATH_DEBUG_SW_TX_AGGR, "%s: tid %d != hw tid %d\n", 		    __func__, tid, ts.ts_tid); 		tx_ok = 0; 	}
 endif|#
 directive|endif
 comment|/* AR5416 BA bug; this requires an interface reset */
@@ -17234,11 +17248,11 @@ name|hasba
 operator|)
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
 literal|"%s: AR5416 bug: hasba=%d; txok=%d, isaggr=%d, "
 literal|"seq_st=%d\n"
@@ -17415,11 +17429,11 @@ name|bf_state
 operator|.
 name|bfs_addedbaw
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
 literal|"%s: wasn't added: seqno %d\n"
 argument_list|,
@@ -17521,11 +17535,11 @@ name|nframes
 operator|!=
 name|nf
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
 literal|"%s: num frames seen=%d; bf nframes=%d\n"
 argument_list|,
@@ -17884,11 +17898,11 @@ name|tid
 operator|==
 name|IEEE80211_NONQOS_TID
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: TID=16!\n"
 argument_list|,
@@ -17940,11 +17954,11 @@ name|hwq_depth
 operator|<
 literal|0
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: hwq_depth< 0: %d\n"
 argument_list|,
@@ -17983,11 +17997,11 @@ name|atid
 operator|->
 name|isfiltered
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: isfiltered=1, normal_comp?\n"
 argument_list|,
@@ -18052,11 +18066,11 @@ name|fail
 operator|!=
 literal|0
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: isfiltered=1, fail=%d\n"
 argument_list|,
@@ -18122,11 +18136,11 @@ name|bf_state
 operator|.
 name|bfs_addedbaw
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: wasn't added: seqno %d\n"
 argument_list|,
@@ -18309,11 +18323,11 @@ name|bf_state
 operator|.
 name|bfs_addedbaw
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: wasn't added: seqno %d\n"
 argument_list|,
@@ -18521,11 +18535,11 @@ name|tid
 operator|==
 name|IEEE80211_NONQOS_TID
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: called for TID=NONQOS_TID?\n"
 argument_list|,
@@ -18611,11 +18625,11 @@ name|bfs_nframes
 operator|>
 literal|1
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: aggr=%d, nframes=%d\n"
 argument_list|,
@@ -19058,11 +19072,11 @@ name|bfs_tid
 operator|==
 name|IEEE80211_NONQOS_TID
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: TID=16?\n"
 argument_list|,
@@ -19202,11 +19216,11 @@ operator|->
 name|tid
 argument_list|)
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: tid=%d, ampdu pending?\n"
 argument_list|,
@@ -19230,11 +19244,11 @@ operator|->
 name|tid
 argument_list|)
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: tid=%d, ampdu running?\n"
 argument_list|,
@@ -19302,11 +19316,11 @@ operator|.
 name|bfs_tid
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX
 argument_list|,
 literal|"%s: bfs_tid %d !="
 literal|" tid %d\n"
@@ -20776,11 +20790,11 @@ name|bar_wait
 operator|==
 literal|0
 condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
 literal|"%s: huh? bar_tx=%d, bar_wait=%d\n"
 argument_list|,
@@ -21024,11 +21038,11 @@ operator|->
 name|an_is_powersave
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: %6D: node was already asleep!\n"
 argument_list|,
@@ -21165,11 +21179,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: an=%p: node was already awake\n"
 argument_list|,

@@ -5442,7 +5442,7 @@ name|sc
 argument_list|,
 name|MPS_XINFO
 argument_list|,
-literal|"%s code %x target %d lun %d\n"
+literal|"%s code %x target %d lun %jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5450,6 +5450,9 @@ name|ac_code
 argument_list|,
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun_id
 argument_list|)
 expr_stmt|;

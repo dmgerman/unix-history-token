@@ -551,7 +551,8 @@ begin_function
 name|void
 name|undefinedinstruction
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|frame
 parameter_list|)

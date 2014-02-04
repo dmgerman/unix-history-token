@@ -3391,7 +3391,7 @@ argument_list|(
 name|stdout
 argument_list|,
 literal|"%-33s  at scbus%d "
-literal|"target %d lun %d ("
+literal|"target %d lun %jx ("
 argument_list|,
 name|tmpstr
 argument_list|,
@@ -3403,6 +3403,9 @@ name|dev_result
 operator|->
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dev_result
 operator|->
 name|target_lun
@@ -13652,7 +13655,7 @@ name|optarg
 argument_list|,
 literal|"master"
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{

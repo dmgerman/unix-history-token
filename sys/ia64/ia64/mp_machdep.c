@@ -211,6 +211,13 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|smp_disabled
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -836,7 +843,7 @@ literal|8
 operator|)
 operator||
 operator|(
-name|PAGE_SHIFT
+name|LOG2_ID_PAGE_SIZE
 operator|<<
 literal|2
 operator|)
@@ -856,7 +863,7 @@ literal|8
 operator|)
 operator||
 operator|(
-name|PAGE_SHIFT
+name|LOG2_ID_PAGE_SIZE
 operator|<<
 literal|2
 operator|)
@@ -985,6 +992,9 @@ name|idlethread
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pmap_invalidate_all
+argument_list|()
+expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -1024,9 +1034,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|ia64_srlz_d
-argument_list|()
-expr_stmt|;
-name|ia64_enable_intr
 argument_list|()
 expr_stmt|;
 name|sched_throw
@@ -1116,6 +1123,11 @@ name|cpuid
 decl_stmt|,
 name|sapic_id
 decl_stmt|;
+if|if
+condition|(
+name|smp_disabled
+condition|)
+return|return;
 name|sapic_id
 operator|=
 name|SAPIC_ID_SET

@@ -5811,7 +5811,7 @@ condition|)
 name|qpn
 operator||=
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

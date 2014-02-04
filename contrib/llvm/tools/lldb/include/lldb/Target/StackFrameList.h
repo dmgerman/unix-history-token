@@ -240,6 +240,13 @@ name|show_frame_info
 parameter_list|,
 name|uint32_t
 name|num_frames_with_source
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|frame_marker
+init|=
+name|NULL
 parameter_list|)
 function_decl|;
 name|protected

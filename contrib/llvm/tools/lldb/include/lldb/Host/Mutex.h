@@ -55,7 +55,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"lldb/lldb-types.h"
 end_include
 
 begin_include
@@ -431,10 +431,12 @@ comment|// Member variables
 comment|//------------------------------------------------------------------
 comment|// TODO: Hide the mutex in the implementation file in case we ever need to port to an
 comment|// architecture that doesn't have pthread mutexes.
-name|pthread_mutex_t
+name|lldb
+operator|::
+name|mutex_t
 name|m_mutex
-decl_stmt|;
-comment|///< The pthread mutex object.
+expr_stmt|;
+comment|///< The OS mutex object.
 name|private
 label|:
 comment|//------------------------------------------------------------------
@@ -443,11 +445,13 @@ comment|///
 comment|/// @return
 comment|///     A pointer to the pthread mutex object owned by this object.
 comment|//------------------------------------------------------------------
-name|pthread_mutex_t
-modifier|*
+name|lldb
+operator|::
+name|mutex_t
+operator|*
 name|GetMutex
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|Mutex
 argument_list|(
 specifier|const

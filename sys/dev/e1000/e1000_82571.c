@@ -3411,6 +3411,7 @@ block|{
 name|eewr
 operator|=
 operator|(
+operator|(
 name|data
 index|[
 name|i
@@ -3430,6 +3431,7 @@ name|E1000_NVM_RW_ADDR_SHIFT
 operator|)
 operator||
 name|E1000_NVM_RW_REG_START
+operator|)
 expr_stmt|;
 name|ret_val
 operator|=
@@ -4000,15 +4002,6 @@ break|break;
 default|default:
 break|break;
 block|}
-if|if
-condition|(
-name|ret_val
-condition|)
-name|DEBUGOUT
-argument_list|(
-literal|"Cannot acquire MDIO ownership\n"
-argument_list|)
-expr_stmt|;
 name|ctrl
 operator|=
 name|E1000_READ_REG
@@ -4045,11 +4038,32 @@ name|type
 condition|)
 block|{
 case|case
+name|e1000_82573
+case|:
+comment|/* Release mutex only if the hw semaphore is acquired */
+if|if
+condition|(
+operator|!
+name|ret_val
+condition|)
+name|e1000_put_hw_semaphore_82573
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
 case|:
+comment|/* Release mutex only if the hw semaphore is acquired */
+if|if
+condition|(
+operator|!
+name|ret_val
+condition|)
 name|e1000_put_hw_semaphore_82574
 argument_list|(
 name|hw
@@ -4422,6 +4436,7 @@ expr_stmt|;
 name|reg_data
 operator|=
 operator|(
+operator|(
 name|reg_data
 operator|&
 operator|~
@@ -4431,6 +4446,7 @@ operator||
 name|E1000_TXDCTL_FULL_TX_DESC_WB
 operator||
 name|E1000_TXDCTL_COUNT_DESC
+operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -4506,6 +4522,7 @@ expr_stmt|;
 name|reg_data
 operator|=
 operator|(
+operator|(
 name|reg_data
 operator|&
 operator|~
@@ -4515,6 +4532,7 @@ operator||
 name|E1000_TXDCTL_FULL_TX_DESC_WB
 operator||
 name|E1000_TXDCTL_COUNT_DESC
+operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(

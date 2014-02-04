@@ -2611,9 +2611,7 @@ literal|32
 operator|/
 literal|2
 argument_list|,
-literal|0
-argument_list|,
-name|RANDOM_PURE
+name|RANDOM_PURE_GLXSB
 argument_list|)
 expr_stmt|;
 block|}

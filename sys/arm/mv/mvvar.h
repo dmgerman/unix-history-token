@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/vm.h>
 end_include
 
@@ -124,16 +118,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|pmap_devmap
-name|pmap_devmap
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

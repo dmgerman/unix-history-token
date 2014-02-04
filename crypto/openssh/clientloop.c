@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.253 2013/06/07 15:37:52 dtucker Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.255 2013/11/08 00:39:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3307,8 +3307,10 @@ name|channel_reply_ctx
 modifier|*
 name|cr
 init|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3415,8 +3417,10 @@ return|return;
 block|}
 name|gc
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -5871,8 +5875,10 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*

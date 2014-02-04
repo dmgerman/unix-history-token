@@ -3896,6 +3896,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|THREAD_CAN_SLEEP
+parameter_list|()
+value|((curthread)->td_no_sleeping == 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PIDHASH
 parameter_list|(
 name|pid

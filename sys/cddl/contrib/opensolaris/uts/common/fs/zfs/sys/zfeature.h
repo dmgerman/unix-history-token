@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -152,6 +152,18 @@ function_decl|;
 specifier|extern
 name|boolean_t
 name|spa_feature_is_active
+parameter_list|(
+name|struct
+name|spa
+modifier|*
+parameter_list|,
+name|zfeature_info_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_feature_get_refcount
 parameter_list|(
 name|struct
 name|spa

@@ -11,6 +11,18 @@ begin_comment
 comment|/*-  * Copyright (c) 2007, 2008  *	Damien Bergamini<damien.bergamini@free.fr>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__IF_IWNREG_H__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__IF_IWNREG_H__
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1088,7 +1100,7 @@ begin_define
 define|#
 directive|define
 name|IWN_RESET_LINK_PWR_MGMT_DIS
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1210,6 +1222,13 @@ define|#
 directive|define
 name|IWN_GP_DRIVER_REG_BIT_RADIO_IQ_INVERT
 value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_DRIVER_NONE
+value|0
 end_define
 
 begin_comment
@@ -1435,7 +1454,7 @@ begin_define
 define|#
 directive|define
 name|IWN_DRAM_INT_TBL_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1475,7 +1494,7 @@ begin_define
 define|#
 directive|define
 name|IWN_BSM_WR_CTRL_START
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1556,7 +1575,7 @@ begin_define
 define|#
 directive|define
 name|IWN_INT_FH_RX
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1637,7 +1656,7 @@ begin_define
 define|#
 directive|define
 name|IWN_FH_TX_CONFIG_DMA_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1711,7 +1730,7 @@ begin_define
 define|#
 directive|define
 name|IWN_FH_RX_CONFIG_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1770,7 +1789,7 @@ begin_define
 define|#
 directive|define
 name|IWN_FH_TX_CONFIG_DMA_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2010,7 +2029,7 @@ begin_define
 define|#
 directive|define
 name|IWN_FW_UPDATED
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3776,7 +3795,7 @@ name|uint16_t
 name|len
 decl_stmt|;
 name|uint8_t
-name|reserved1
+name|scan_flags
 decl_stmt|;
 name|uint8_t
 name|nchan
@@ -3892,10 +3911,14 @@ name|IWN_SCAN_MAXSZ
 value|(MCLBYTES - 4)
 end_define
 
+begin_comment
+comment|/*  * For active scan, listen ACTIVE_DWELL_TIME (msec) on each channel after  * sending probe req.  This should be set long enough to hear probe responses  * from more than one AP.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|IWN_ACTIVE_DWELL_TIME_24
+name|IWN_ACTIVE_DWELL_TIME_2GHZ
 value|(30)
 end_define
 
@@ -3906,28 +3929,32 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IWN_ACTIVE_DWELL_TIME_52
+name|IWN_ACTIVE_DWELL_TIME_5GHZ
 value|(20)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_ACTIVE_DWELL_FACTOR_24
+name|IWN_ACTIVE_DWELL_FACTOR_2GHZ
 value|(3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_ACTIVE_DWELL_FACTOR_52
+name|IWN_ACTIVE_DWELL_FACTOR_5GHZ
 value|(2)
 end_define
+
+begin_comment
+comment|/*  * For passive scan, listen PASSIVE_DWELL_TIME (msec) on each channel.  * Must be set longer than active dwell time.  * For the most reliable scan, set> AP beacon interval (typically 100msec).  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IWN_PASSIVE_DWELL_TIME_24
+name|IWN_PASSIVE_DWELL_TIME_2GHZ
 value|(20)
 end_define
 
@@ -3938,7 +3965,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IWN_PASSIVE_DWELL_TIME_52
+name|IWN_PASSIVE_DWELL_TIME_5GHZ
 value|(10)
 end_define
 
@@ -3961,6 +3988,38 @@ define|#
 directive|define
 name|IWN_SCAN_CHAN_TIMEOUT
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_MAX_SCAN_CHANNEL
+value|50
+end_define
+
+begin_comment
+comment|/*  * If active scanning is requested but a certain channel is  * marked passive, we can do active scanning if we detect  * transmissions.  *  * There is an issue with some firmware versions that triggers  * a sysassert on a "good CRC threshold" of zero (== disabled),  * on a radar channel even though this means that we should NOT  * send probes.  *  * The "good CRC threshold" is the number of frames that we  * need to receive during our dwell time on a channel before  * sending out probes -- setting this to a huge value will  * mean we never reach it, but at the same time work around  * the aforementioned issue. Thus use IWL_GOOD_CRC_TH_NEVER  * here instead of IWL_GOOD_CRC_TH_DISABLED.  *  * This was fixed in later versions along with some other  * scan changes, and the threshold behaves as a flag in those  * versions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_GOOD_CRC_TH_DISABLED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GOOD_CRC_TH_DEFAULT
+value|htole16(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GOOD_CRC_TH_NEVER
+value|htole16(0xffff)
 end_define
 
 begin_comment
@@ -4515,6 +4574,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Define maximal number of calib result send to runtime firmware  * PS: TEMP_OFFSET count for 2 (std and v2)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN5000_PHY_CALIB_MAX_RESULT
+value|8
+end_define
+
+begin_comment
 comment|/* Structures for command IWN_CMD_PHY_CALIB. */
 end_comment
 
@@ -4988,6 +5058,17 @@ end_define
 
 begin_comment
 comment|/* waiting to see traffic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_TX_FAIL_STA_INVALID
+value|0x8b
+end_define
+
+begin_comment
+comment|/* XXX STA invalid (???) */
 end_comment
 
 begin_struct
@@ -6081,6 +6162,173 @@ value|IWN5000_FW_TEXT_MAXSZ
 end_define
 
 begin_comment
+comment|/*  * Microcode flags TLV (18.)  */
+end_comment
+
+begin_comment
+comment|/**  * enum iwn_ucode_tlv_flag - ucode API flags  * @IWN_UCODE_TLV_FLAGS_PAN: This is PAN capable microcode; this previously  *      was a separate TLV but moved here to save space.  * @IWN_UCODE_TLV_FLAGS_NEWSCAN: new uCode scan behaviour on hidden SSID,  *      treats good CRC threshold as a boolean  * @IWN_UCODE_TLV_FLAGS_MFP: This uCode image supports MFP (802.11w).  * @IWN_UCODE_TLV_FLAGS_P2P: This uCode image supports P2P.  * @IWN_UCODE_TLV_FLAGS_DW_BC_TABLE: The SCD byte count table is in DWORDS  * @IWN_UCODE_TLV_FLAGS_UAPSD: This uCode image supports uAPSD  * @IWN_UCODE_TLV_FLAGS_SHORT_BL: 16 entries of black list instead of 64 in scan  *      offload profile config command.  * @IWN_UCODE_TLV_FLAGS_RX_ENERGY_API: supports rx signal strength api  * @IWN_UCODE_TLV_FLAGS_TIME_EVENT_API_V2: using the new time event API.  * @IWN_UCODE_TLV_FLAGS_D3_6_IPV6_ADDRS: D3 image supports up to six  *      (rather than two) IPv6 addresses  * @IWN_UCODE_TLV_FLAGS_BF_UPDATED: new beacon filtering API  * @IWN_UCODE_TLV_FLAGS_NO_BASIC_SSID: not sending a probe with the SSID element  *      from the probe request template.  * @IWN_UCODE_TLV_FLAGS_D3_CONTINUITY_API: modified D3 API to allow keeping  *      connection when going back to D0  * @IWN_UCODE_TLV_FLAGS_NEW_NSOFFL_SMALL: new NS offload (small version)  * @IWN_UCODE_TLV_FLAGS_NEW_NSOFFL_LARGE: new NS offload (large version)  * @IWN_UCODE_TLV_FLAGS_SCHED_SCAN: this uCode image supports scheduled scan.  * @IWN_UCODE_TLV_FLAGS_STA_KEY_CMD: new ADD_STA and ADD_STA_KEY command API  * @IWN_UCODE_TLV_FLAGS_DEVICE_PS_CMD: support device wide power command  *      containing CAM (Continuous Active Mode) indication.  */
+end_comment
+
+begin_enum
+enum|enum
+name|iwn_ucode_tlv_flag
+block|{
+name|IWN_UCODE_TLV_FLAGS_PAN
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_NEWSCAN
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_MFP
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_P2P
+init|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_DW_BC_TABLE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_NEWBT_COEX
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_UAPSD
+init|=
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_SHORT_BL
+init|=
+operator|(
+literal|1
+operator|<<
+literal|7
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_RX_ENERGY_API
+init|=
+operator|(
+literal|1
+operator|<<
+literal|8
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_TIME_EVENT_API_V2
+init|=
+operator|(
+literal|1
+operator|<<
+literal|9
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_D3_6_IPV6_ADDRS
+init|=
+operator|(
+literal|1
+operator|<<
+literal|10
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_BF_UPDATED
+init|=
+operator|(
+literal|1
+operator|<<
+literal|11
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_NO_BASIC_SSID
+init|=
+operator|(
+literal|1
+operator|<<
+literal|12
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_D3_CONTINUITY_API
+init|=
+operator|(
+literal|1
+operator|<<
+literal|14
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_NEW_NSOFFL_SMALL
+init|=
+operator|(
+literal|1
+operator|<<
+literal|15
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_NEW_NSOFFL_LARGE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|16
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_SCHED_SCAN
+init|=
+operator|(
+literal|1
+operator|<<
+literal|17
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_STA_KEY_CMD
+init|=
+operator|(
+literal|1
+operator|<<
+literal|19
+operator|)
+block|,
+name|IWN_UCODE_TLV_FLAGS_DEVICE_PS_CMD
+init|=
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+block|, }
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Offsets into EEPROM.  */
 end_comment
 
@@ -6673,6 +6921,33 @@ name|IWN5000_EEPROM_BAND6
 block|,
 name|IWN5000_EEPROM_NO_HT40
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint32_t
+name|iwn2030_regulatory_bands
+index|[
+name|IWN_NBANDS
+index|]
+init|=
+block|{
+name|IWN5000_EEPROM_BAND1
+block|,
+name|IWN5000_EEPROM_BAND2
+block|,
+name|IWN5000_EEPROM_BAND3
+block|,
+name|IWN5000_EEPROM_BAND4
+block|,
+name|IWN5000_EEPROM_BAND5
+block|,
+name|IWN6000_EEPROM_BAND6
+block|,
+name|IWN5000_EEPROM_BAND7
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -8460,6 +8735,9 @@ decl_stmt|;
 name|uint32_t
 name|energy_ofdm
 decl_stmt|;
+name|uint32_t
+name|barker_mrc
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -8505,6 +8783,8 @@ block|,
 literal|100
 block|,
 literal|100
+block|,
+literal|390
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8548,6 +8828,8 @@ block|,
 literal|95
 block|,
 literal|95
+block|,
+literal|390
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8591,7 +8873,9 @@ block|,
 literal|95
 block|,
 literal|95
-block|}
+block|,
+literal|390
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -8632,7 +8916,9 @@ block|,
 literal|95
 block|,
 literal|95
-block|}
+block|,
+literal|390
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -8673,6 +8959,51 @@ block|,
 literal|97
 block|,
 literal|100
+block|,
+literal|390
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|iwn_sensitivity_limits
+name|iwn6235_sensitivity_limits
+init|=
+block|{
+literal|105
+block|,
+literal|110
+block|,
+literal|192
+block|,
+literal|232
+block|,
+literal|80
+block|,
+literal|145
+block|,
+literal|128
+block|,
+literal|232
+block|,
+literal|125
+block|,
+literal|175
+block|,
+literal|160
+block|,
+literal|310
+block|,
+literal|100
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|336
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -9129,6 +9460,15 @@ parameter_list|)
 define|\
 value|bus_space_barrier((sc)->sc_st, (sc)->sc_sh, 0, (sc)->sc_sz,	\ 	    BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __IF_IWNREG_H__ */
+end_comment
 
 end_unit
 

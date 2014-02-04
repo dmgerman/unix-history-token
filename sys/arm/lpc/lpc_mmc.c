@@ -158,12 +158,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -208,18 +202,6 @@ include|#
 directive|include
 file|<arm/lpc/lpcvar.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
 
 begin_ifdef
 ifdef|#

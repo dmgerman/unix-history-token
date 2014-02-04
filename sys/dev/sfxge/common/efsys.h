@@ -705,7 +705,7 @@ typedef|;
 comment|/* PROBE */
 ifndef|#
 directive|ifndef
-name|KDTRACE_HOOKS
+name|DTRACE_PROBE
 define|#
 directive|define
 name|EFSYS_PROBE
@@ -868,7 +868,7 @@ name|_arg7
 parameter_list|)
 else|#
 directive|else
-comment|/* KDTRACE_HOOKS */
+comment|/* DTRACE_PROBE */
 define|#
 directive|define
 name|EFSYS_PROBE
@@ -1164,7 +1164,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* KDTRACE_HOOKS */
+comment|/* DTRACE_PROBE */
 comment|/* DMA */
 typedef|typedef
 name|uint64_t

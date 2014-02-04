@@ -1427,9 +1427,16 @@ name|tp
 operator|->
 name|lb_len
 operator|<
+operator|(
 name|len
 operator|+
 literal|32
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|CHAR_T
+argument_list|)
 condition|)
 block|{
 name|text_lfree

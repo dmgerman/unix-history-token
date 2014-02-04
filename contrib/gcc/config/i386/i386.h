@@ -762,6 +762,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|int
+name|x86_bswap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
 name|x86_partial_flag_reg_stall
 decl_stmt|;
 end_decl_stmt
@@ -1220,6 +1228,13 @@ define|#
 directive|define
 name|TARGET_XADD
 value|(x86_xadd& (1<< ix86_arch))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_BSWAP
+value|(x86_bswap& (1<< ix86_arch))
 end_define
 
 begin_ifndef

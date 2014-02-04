@@ -1452,9 +1452,7 @@ name|NBBY
 operator|/
 literal|2
 argument_list|,
-literal|0
-argument_list|,
-name|RANDOM_PURE
+name|RANDOM_PURE_UBSEC
 argument_list|)
 expr_stmt|;
 block|}

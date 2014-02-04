@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -4316,23 +4310,16 @@ block|}
 else|else
 block|{
 comment|/* 		 * Don't allow users to change privileged or reserved flags. 		 */
-comment|/* 		 * XXX do allow users to change the privileged flag PSL_RF. 		 * The cpu sets PSL_RF in tf_eflags for faults.  Debuggers 		 * should sometimes set it there too.  tf_eflags is kept in 		 * the signal context during signal handling and there is no 		 * other place to remember it, so the PSL_RF bit may be 		 * corrupted by the signal handler without us knowing. 		 * Corruption of the PSL_RF bit at worst causes one more or 		 * one less debugger trap, so allowing it is fairly harmless. 		 */
 if|if
 condition|(
 operator|!
 name|EFL_SECURE
 argument_list|(
 name|eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|,
 name|regs
 operator|->
 name|tf_eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|)
 condition|)
 block|{
@@ -4959,23 +4946,16 @@ block|}
 else|else
 block|{
 comment|/* 		 * Don't allow users to change privileged or reserved flags. 		 */
-comment|/* 		 * XXX do allow users to change the privileged flag PSL_RF. 		 * The cpu sets PSL_RF in tf_eflags for faults.  Debuggers 		 * should sometimes set it there too.  tf_eflags is kept in 		 * the signal context during signal handling and there is no 		 * other place to remember it, so the PSL_RF bit may be 		 * corrupted by the signal handler without us knowing. 		 * Corruption of the PSL_RF bit at worst causes one more or 		 * one less debugger trap, so allowing it is fairly harmless. 		 */
 if|if
 condition|(
 operator|!
 name|EFL_SECURE
 argument_list|(
 name|eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|,
 name|regs
 operator|->
 name|tf_eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|)
 condition|)
 block|{
@@ -5525,23 +5505,16 @@ block|}
 else|else
 block|{
 comment|/* 		 * Don't allow users to change privileged or reserved flags. 		 */
-comment|/* 		 * XXX do allow users to change the privileged flag PSL_RF. 		 * The cpu sets PSL_RF in tf_eflags for faults.  Debuggers 		 * should sometimes set it there too.  tf_eflags is kept in 		 * the signal context during signal handling and there is no 		 * other place to remember it, so the PSL_RF bit may be 		 * corrupted by the signal handler without us knowing. 		 * Corruption of the PSL_RF bit at worst causes one more or 		 * one less debugger trap, so allowing it is fairly harmless. 		 */
 if|if
 condition|(
 operator|!
 name|EFL_SECURE
 argument_list|(
 name|eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|,
 name|regs
 operator|->
 name|tf_eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|)
 condition|)
 block|{
@@ -6370,7 +6343,7 @@ argument_list|(
 name|sbt
 argument_list|)
 expr_stmt|;
-comment|/* Switch timers mack into active mode. */
+comment|/* Switch timers back into active mode. */
 if|if
 condition|(
 operator|!

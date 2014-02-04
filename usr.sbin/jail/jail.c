@@ -424,6 +424,8 @@ name|IP__MOUNT_FROM_FSTAB
 block|,
 name|IP_MOUNT_DEVFS
 block|,
+name|IP_MOUNT_FDESCFS
+block|,
 name|IP_EXEC_PRESTART
 block|,
 name|IP__OP
@@ -461,6 +463,8 @@ block|,
 name|IP__OP
 block|,
 name|IP_EXEC_POSTSTOP
+block|,
+name|IP_MOUNT_FDESCFS
 block|,
 name|IP_MOUNT_DEVFS
 block|,
@@ -2435,7 +2439,10 @@ operator||
 name|JF_WILD
 operator|)
 operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|verbose
 operator|>=
 literal|0
@@ -2449,6 +2456,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|failed
+argument_list|(
+name|j
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|jail_remove_done
 goto|;

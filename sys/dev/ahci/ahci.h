@@ -841,6 +841,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SC_IPM_DIS_DEVSLEEP
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SACTIVE
 value|16
 end_define
@@ -1787,6 +1794,83 @@ name|AHCI_P_FBS_DWE_SHIFT
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP
+value|0x44
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP_ADSE
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP_DSP
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP_DETO
+value|0x000003fc
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP_DETO_SHIFT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP_MDAT
+value|0x00007c00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP_MDAT_SHIFT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP_DITO
+value|0x01ff8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP_DITO_SHIFT
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP_DM
+value|0x0e000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_DEVSLP_DM_SHIFT
+value|25
+end_define
+
 begin_comment
 comment|/* Just to be sure, if building as module. */
 end_comment
@@ -1903,7 +1987,7 @@ value|(AHCI_PRD_MASK + 1)
 define|#
 directive|define
 name|AHCI_PRD_IPC
-value|(1<< 31)
+value|(1U<< 31)
 block|}
 name|__packed
 struct|;
@@ -2244,6 +2328,10 @@ name|uint32_t
 name|chcaps
 decl_stmt|;
 comment|/* Channel capabilities */
+name|uint32_t
+name|chscaps
+decl_stmt|;
+comment|/* Channel sleep capabilities */
 name|int
 name|quirks
 decl_stmt|;
@@ -2275,6 +2363,18 @@ name|mtx
 name|mtx
 decl_stmt|;
 comment|/* state lock */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ccb_hdr
+argument_list|)
+name|doneq
+expr_stmt|;
+comment|/* queue of completed CCBs */
+name|int
+name|batch
+decl_stmt|;
+comment|/* doneq is in use */
 name|int
 name|devices
 decl_stmt|;
@@ -2581,6 +2681,14 @@ name|int
 name|cccv
 decl_stmt|;
 comment|/* CCC vector */
+name|int
+name|direct
+decl_stmt|;
+comment|/* Direct command completion */
+name|int
+name|msi
+decl_stmt|;
+comment|/* MSI interupts */
 struct|struct
 block|{
 name|void

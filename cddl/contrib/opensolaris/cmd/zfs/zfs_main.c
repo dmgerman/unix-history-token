@@ -172,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libzfs.h>
 end_include
 
@@ -1302,9 +1308,9 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\treceive [-vnFu]<filesystem|volume|"
+literal|"\treceive|recv [-vnFu]<filesystem|volume|"
 literal|"snapshot>\n"
-literal|"\treceive [-vnFu] [-d | -e]<filesystem>\n"
+literal|"\treceive|recv [-vnFu] [-d | -e]<filesystem>\n"
 argument_list|)
 operator|)
 return|;
@@ -1377,7 +1383,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tsnapshot [-r] [-o property=value] ... "
+literal|"\tsnapshot|snap [-r] [-o property=value] ... "
 literal|"<filesystem@snapname|volume@snapname> ...\n"
 argument_list|)
 operator|)
@@ -1389,7 +1395,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tunmount [-f] "
+literal|"\tunmount|umount [-f] "
 literal|"<-a | filesystem|mountpoint>\n"
 argument_list|)
 operator|)
@@ -9087,7 +9093,7 @@ block|{
 literal|0
 block|}
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 name|int
@@ -14167,6 +14173,8 @@ literal|"volume"
 block|,
 literal|"snapshot"
 block|,
+literal|"snap"
+block|,
 literal|"all"
 block|,
 name|NULL
@@ -14205,13 +14213,16 @@ break|break;
 case|case
 literal|2
 case|:
+case|case
+literal|3
+case|:
 name|types
 operator||=
 name|ZFS_TYPE_SNAPSHOT
 expr_stmt|;
 break|break;
 case|case
-literal|3
+literal|4
 case|:
 name|types
 operator|=
@@ -16431,7 +16442,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 name|nvlist_t
@@ -31524,6 +31535,22 @@ condition|)
 name|cmdname
 operator|=
 literal|"receive"
+expr_stmt|;
+comment|/* 		 * The 'snap' command is an alias for 'snapshot' 		 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cmdname
+argument_list|,
+literal|"snap"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|cmdname
+operator|=
+literal|"snapshot"
 expr_stmt|;
 comment|/* 		 * Special case '-?' 		 */
 if|if

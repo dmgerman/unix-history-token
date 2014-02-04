@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- lldb_EmulateInstructionARM.h ------------------------------------*- C++ -*-===//
+comment|//===-- lldb_EmulateInstructionARM.h ----------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -204,7 +204,7 @@ argument_list|)
 expr_stmt|;
 specifier|static
 name|bool
-name|SupportsEmulatingIntructionsOfTypeStatic
+name|SupportsEmulatingInstructionsOfTypeStatic
 parameter_list|(
 name|InstructionType
 name|inst_type
@@ -338,14 +338,14 @@ comment|//    {
 comment|//    }
 name|virtual
 name|bool
-name|SupportsEmulatingIntructionsOfType
+name|SupportsEmulatingInstructionsOfType
 parameter_list|(
 name|InstructionType
 name|inst_type
 parameter_list|)
 block|{
 return|return
-name|SupportsEmulatingIntructionsOfTypeStatic
+name|SupportsEmulatingInstructionsOfTypeStatic
 argument_list|(
 name|inst_type
 argument_list|)

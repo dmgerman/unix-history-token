@@ -215,7 +215,7 @@ end_function
 begin_function
 name|svn_error_t
 modifier|*
-name|svn_ver_check_list
+name|svn_ver__check_list2
 parameter_list|(
 specifier|const
 name|svn_version_t
@@ -226,6 +226,21 @@ specifier|const
 name|svn_version_checklist_t
 modifier|*
 name|checklist
+parameter_list|,
+name|svn_boolean_t
+function_decl|(
+modifier|*
+name|comparator
+function_decl|)
+parameter_list|(
+specifier|const
+name|svn_version_t
+modifier|*
+parameter_list|,
+specifier|const
+name|svn_version_t
+modifier|*
+parameter_list|)
 parameter_list|)
 block|{
 name|svn_error_t
@@ -272,7 +287,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|svn_ver_compatible
+name|comparator
 argument_list|(
 name|my_version
 argument_list|,
@@ -289,7 +304,7 @@ name|err
 argument_list|,
 name|_
 argument_list|(
-literal|"Version mismatch in '%s':"
+literal|"Version mismatch in '%s'%s:"
 literal|" found %d.%d.%d%s,"
 literal|" expected %d.%d.%d%s"
 argument_list|)
@@ -300,6 +315,26 @@ name|i
 index|]
 operator|.
 name|label
+argument_list|,
+name|comparator
+operator|==
+name|svn_ver_equal
+condition|?
+name|_
+argument_list|(
+literal|" (expecting equality)"
+argument_list|)
+else|:
+name|comparator
+operator|==
+name|svn_ver_compatible
+condition|?
+name|_
+argument_list|(
+literal|" (expecting compatibility)"
+argument_list|)
+else|:
+literal|""
 argument_list|,
 name|lib_version
 operator|->
@@ -430,13 +465,13 @@ name|info
 operator|->
 name|build_date
 operator|=
-name|__DATE__
+name|NULL
 expr_stmt|;
 name|info
 operator|->
 name|build_time
 operator|=
-name|__TIME__
+name|NULL
 expr_stmt|;
 name|info
 operator|->

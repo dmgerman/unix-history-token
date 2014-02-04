@@ -78,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/raw_cb.h>
+file|<net/vnet.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/vnet.h>
+file|<net/raw_cb.h>
 end_include
 
 begin_comment

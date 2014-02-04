@@ -172,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_clone.h>
 end_include
 
@@ -4772,9 +4778,7 @@ operator|)
 argument_list|,
 literal|12
 argument_list|,
-literal|3
-argument_list|,
-literal|0
+literal|2
 argument_list|,
 name|RANDOM_NET_TUN
 argument_list|)

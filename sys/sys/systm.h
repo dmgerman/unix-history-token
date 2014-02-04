@@ -242,7 +242,7 @@ comment|/* Running as virtual machine guest? */
 end_comment
 
 begin_comment
-comment|/*  * Detected virtual machine guest types. The intention is to expand  * and/or add to the VM_GUEST_VM type if specific VM functionality is  * ever implemented (e.g. vendor-specific paravirtualization features).  */
+comment|/*  * Detected virtual machine guest types. The intention is to expand  * and/or add to the VM_GUEST_VM type if specific VM functionality is  * ever implemented (e.g. vendor-specific paravirtualization features).  * Keep in sync with vm_guest_sysctl_names[].  */
 end_comment
 
 begin_enum
@@ -256,6 +256,10 @@ block|,
 name|VM_GUEST_VM
 block|,
 name|VM_GUEST_XEN
+block|,
+name|VM_GUEST_HV
+block|,
+name|VM_LAST
 block|}
 enum|;
 end_enum
@@ -551,11 +555,25 @@ name|iosize_max_clamp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|devfs_iosize_max_clamp
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|IOSIZE_MAX
 value|(iosize_max_clamp ? INT_MAX : SSIZE_MAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVFS_IOSIZE_MAX
+value|(devfs_iosize_max_clamp ? INT_MAX : SSIZE_MAX)
 end_define
 
 begin_comment

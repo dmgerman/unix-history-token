@@ -99,9 +99,11 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_comment
-comment|/* for IFF_* flags		*/
-end_comment
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
 
 begin_include
 include|#
@@ -1156,7 +1158,7 @@ name|SYSINIT
 argument_list|(
 name|device_poll
 argument_list|,
-name|SI_SUB_CLOCKS
+name|SI_SUB_SOFTINTR
 argument_list|,
 name|SI_ORDER_MIDDLE
 argument_list|,

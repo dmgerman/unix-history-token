@@ -8088,7 +8088,7 @@ name|csio
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:%d:%d XPT_SCSI_IO: "
+literal|"%s:%d:%jx XPT_SCSI_IO: "
 literal|"cmd: %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x"
 literal|", flags: 0x%02x, "
 literal|"%db cmd/%db data/%db sense\n"
@@ -8116,6 +8116,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ocb
 operator|->
 name|ccb
@@ -12366,7 +12369,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"invalid target %d lun %d\n"
+literal|"invalid target %d lun %jx\n"
 argument_list|,
 name|ccb
 operator|->
@@ -12374,6 +12377,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -12419,7 +12425,7 @@ literal|1
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s:%d:%d:func_code 0x%04x: "
+literal|"%s:%d:%jx:func_code 0x%04x: "
 literal|"Invalid target (target needed)\n"
 argument_list|,
 name|device_get_nameunit
@@ -12437,6 +12443,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -12495,7 +12504,7 @@ literal|0
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s:%d:%d func_code 0x%04x: "
+literal|"%s:%d:%jx func_code 0x%04x: "
 literal|"Invalid target (no wildcard)\n"
 argument_list|,
 name|device_get_nameunit
@@ -12513,6 +12522,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -12599,7 +12611,7 @@ literal|2
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s:%d:%d XPT_SCSI_IO: "
+literal|"%s:%d:%jx XPT_SCSI_IO: "
 literal|"cmd: %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x"
 literal|", flags: 0x%02x, "
 literal|"%db cmd/%db data/%db sense\n"
@@ -12619,6 +12631,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -12872,7 +12887,7 @@ index|]
 operator|=
 name|htonl
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 argument_list|)
@@ -13189,7 +13204,7 @@ literal|1
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s:%d:%d:%d:XPT_CALC_GEOMETRY: "
+literal|"%s:%d:%d:%jx:XPT_CALC_GEOMETRY: "
 if|#
 directive|if
 name|defined
@@ -13230,6 +13245,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -13436,7 +13454,7 @@ literal|1
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s:%d:%d XPT_PATH_INQ:.\n"
+literal|"%s:%d:%jx XPT_PATH_INQ:.\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -13453,6 +13471,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -13710,7 +13731,7 @@ literal|1
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s:%d:%d XPT_GET_TRAN_SETTINGS:.\n"
+literal|"%s:%d:%jx XPT_GET_TRAN_SETTINGS:.\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -13727,6 +13748,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h

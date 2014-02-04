@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"Platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Utility/PseudoTerminal.h"
 end_include
 
@@ -277,19 +283,11 @@ name|GetScriptLanguage
 argument_list|()
 specifier|const
 block|;
-name|size_t
-name|GetNumSourceCommandFiles
-argument_list|()
-specifier|const
-block|;
-specifier|const
-name|char
-operator|*
-name|GetSourceCommandFileAtIndex
+name|void
+name|ExecuteInitialCommands
 argument_list|(
-argument|uint32_t idx
+argument|bool before_file
 argument_list|)
-specifier|const
 block|;
 name|bool
 name|GetDebugMode
@@ -311,6 +309,18 @@ block|;
 name|void
 name|Clear
 argument_list|()
+block|;
+name|void
+name|AddInitialCommand
+argument_list|(
+argument|const char *command
+argument_list|,
+argument|bool before_file
+argument_list|,
+argument|bool is_file
+argument_list|,
+argument|lldb::SBError&error
+argument_list|)
 block|;
 comment|//static OptionDefinition m_cmd_option_table[];
 name|std
@@ -344,12 +354,39 @@ name|vector
 operator|<
 name|std
 operator|::
+name|pair
+operator|<
+name|bool
+block|,
+name|std
+operator|::
 name|string
 operator|>
-name|m_source_command_files
+expr|>
+name|m_initial_commands
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|bool
+block|,
+name|std
+operator|::
+name|string
+operator|>
+expr|>
+name|m_after_file_commands
 block|;
 name|bool
 name|m_debug_mode
+block|;
+name|bool
+name|m_source_quietly
 block|;
 name|bool
 name|m_print_version

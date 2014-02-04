@@ -194,6 +194,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -402,7 +408,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|econa_devmap
 index|[]
 init|=
@@ -1095,7 +1101,7 @@ name|PTE_PAGETABLE
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_devmap_bootstrap
+name|arm_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
@@ -1188,6 +1194,11 @@ expr_stmt|;
 comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
 name|cpu_idcache_wbinv_all
 argument_list|()
+expr_stmt|;
+name|cpu_setup
+argument_list|(
+literal|""
+argument_list|)
 expr_stmt|;
 comment|/* Set stack for exception handlers */
 name|data_abort_handler_address

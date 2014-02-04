@@ -28,6 +28,8 @@ block|,
 name|AR8X16_SWITCH_AR8226
 block|,
 name|AR8X16_SWITCH_AR8316
+block|,
+name|AR8X16_SWITCH_AR9340
 block|, }
 name|ar8x16_switch_type
 typedef|;
@@ -79,7 +81,14 @@ name|is_gmii
 decl_stmt|;
 comment|/* PHY mode is GMII (XXX which PHY?) */
 name|int
+name|is_mii
+decl_stmt|;
+comment|/* PHY mode is MII (XXX which PHY?) */
+name|int
 name|page
+decl_stmt|;
+name|int
+name|is_internal_switch
 decl_stmt|;
 name|ar8x16_switch_type
 name|sc_switchtype

@@ -489,6 +489,13 @@ argument_list|(
 name|eExecutionPolicyOnlyWhenNeeded
 argument_list|)
 operator|,
+name|m_language
+argument_list|(
+name|lldb
+operator|::
+name|eLanguageTypeUnknown
+argument_list|)
+operator|,
 name|m_coerce_to_id
 argument_list|(
 name|false
@@ -509,7 +516,22 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|m_run_others
+name|m_try_others
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|m_stop_others
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|m_debug
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|m_trap_exceptions
 argument_list|(
 name|true
 argument_list|)
@@ -535,8 +557,7 @@ return|return
 name|m_execution_policy
 return|;
 block|}
-name|EvaluateExpressionOptions
-modifier|&
+name|void
 name|SetExecutionPolicy
 parameter_list|(
 name|ExecutionPolicy
@@ -549,10 +570,31 @@ name|m_execution_policy
 operator|=
 name|policy
 expr_stmt|;
+block|}
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguage
+argument_list|()
+specifier|const
+block|{
 return|return
-operator|*
-name|this
+name|m_language
 return|;
+block|}
+name|void
+name|SetLanguage
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|)
+block|{
+name|m_language
+operator|=
+name|language
+expr_stmt|;
 block|}
 name|bool
 name|DoesCoerceToId
@@ -563,8 +605,7 @@ return|return
 name|m_coerce_to_id
 return|;
 block|}
-name|EvaluateExpressionOptions
-modifier|&
+name|void
 name|SetCoerceToId
 parameter_list|(
 name|bool
@@ -577,10 +618,6 @@ name|m_coerce_to_id
 operator|=
 name|coerce
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
 block|}
 name|bool
 name|DoesUnwindOnError
@@ -591,8 +628,7 @@ return|return
 name|m_unwind_on_error
 return|;
 block|}
-name|EvaluateExpressionOptions
-modifier|&
+name|void
 name|SetUnwindOnError
 parameter_list|(
 name|bool
@@ -605,10 +641,6 @@ name|m_unwind_on_error
 operator|=
 name|unwind
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
 block|}
 name|bool
 name|DoesIgnoreBreakpoints
@@ -619,8 +651,7 @@ return|return
 name|m_ignore_breakpoints
 return|;
 block|}
-name|EvaluateExpressionOptions
-modifier|&
+name|void
 name|SetIgnoreBreakpoints
 parameter_list|(
 name|bool
@@ -633,10 +664,6 @@ name|m_ignore_breakpoints
 operator|=
 name|ignore
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
 block|}
 name|bool
 name|DoesKeepInMemory
@@ -647,8 +674,7 @@ return|return
 name|m_keep_in_memory
 return|;
 block|}
-name|EvaluateExpressionOptions
-modifier|&
+name|void
 name|SetKeepInMemory
 parameter_list|(
 name|bool
@@ -661,10 +687,6 @@ name|m_keep_in_memory
 operator|=
 name|keep
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
 block|}
 name|lldb
 operator|::
@@ -677,8 +699,7 @@ return|return
 name|m_use_dynamic
 return|;
 block|}
-name|EvaluateExpressionOptions
-modifier|&
+name|void
 name|SetUseDynamic
 argument_list|(
 name|lldb
@@ -695,10 +716,6 @@ name|m_use_dynamic
 operator|=
 name|dynamic
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
 block|}
 name|uint32_t
 name|GetTimeoutUsec
@@ -709,8 +726,7 @@ return|return
 name|m_timeout_usec
 return|;
 block|}
-name|EvaluateExpressionOptions
-modifier|&
+name|void
 name|SetTimeoutUsec
 parameter_list|(
 name|uint32_t
@@ -723,44 +739,105 @@ name|m_timeout_usec
 operator|=
 name|timeout
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
 block|}
 name|bool
-name|GetRunOthers
+name|GetTryAllThreads
 argument_list|()
 specifier|const
 block|{
 return|return
-name|m_run_others
+name|m_try_others
 return|;
 block|}
-name|EvaluateExpressionOptions
-modifier|&
-name|SetRunOthers
+name|void
+name|SetTryAllThreads
 parameter_list|(
 name|bool
-name|run_others
+name|try_others
 init|=
 name|true
 parameter_list|)
 block|{
-name|m_run_others
+name|m_try_others
 operator|=
-name|run_others
+name|try_others
 expr_stmt|;
+block|}
+name|bool
+name|GetStopOthers
+argument_list|()
+specifier|const
+block|{
 return|return
-operator|*
-name|this
+name|m_stop_others
 return|;
+block|}
+name|void
+name|SetStopOthers
+parameter_list|(
+name|bool
+name|stop_others
+init|=
+name|true
+parameter_list|)
+block|{
+name|m_stop_others
+operator|=
+name|stop_others
+expr_stmt|;
+block|}
+name|bool
+name|GetDebug
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_debug
+return|;
+block|}
+name|void
+name|SetDebug
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|m_debug
+operator|=
+name|b
+expr_stmt|;
+block|}
+name|bool
+name|GetTrapExceptions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_trap_exceptions
+return|;
+block|}
+name|void
+name|SetTrapExceptions
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|m_trap_exceptions
+operator|=
+name|b
+expr_stmt|;
 block|}
 name|private
 label|:
 name|ExecutionPolicy
 name|m_execution_policy
 decl_stmt|;
+name|lldb
+operator|::
+name|LanguageType
+name|m_language
+expr_stmt|;
 name|bool
 name|m_coerce_to_id
 decl_stmt|;
@@ -774,7 +851,16 @@ name|bool
 name|m_keep_in_memory
 decl_stmt|;
 name|bool
-name|m_run_others
+name|m_try_others
+decl_stmt|;
+name|bool
+name|m_stop_others
+decl_stmt|;
+name|bool
+name|m_debug
+decl_stmt|;
+name|bool
+name|m_trap_exceptions
 decl_stmt|;
 name|lldb
 operator|::
@@ -1230,11 +1316,13 @@ argument|const FileSpec&file
 argument_list|,
 argument|uint32_t line_no
 argument_list|,
-argument|LazyBool check_inlines = eLazyBoolCalculate
+argument|LazyBool check_inlines
 argument_list|,
-argument|LazyBool skip_prologue = eLazyBoolCalculate
+argument|LazyBool skip_prologue
 argument_list|,
-argument|bool internal = false
+argument|bool internal
+argument_list|,
+argument|bool request_hardware
 argument_list|)
 expr_stmt|;
 comment|// Use this to create breakpoint that matches regex against the source lines in files given in source_file_list:
@@ -1249,7 +1337,9 @@ argument|const FileSpecList *source_file_list
 argument_list|,
 argument|RegularExpression&source_regex
 argument_list|,
-argument|bool internal = false
+argument|bool internal
+argument_list|,
+argument|bool request_hardware
 argument_list|)
 expr_stmt|;
 comment|// Use this to create a breakpoint from a load address
@@ -1260,7 +1350,9 @@ name|CreateBreakpoint
 argument_list|(
 argument|lldb::addr_t load_addr
 argument_list|,
-argument|bool internal = false
+argument|bool internal
+argument_list|,
+argument|bool request_hardware
 argument_list|)
 expr_stmt|;
 comment|// Use this to create Address breakpoints:
@@ -1271,7 +1363,9 @@ name|CreateBreakpoint
 argument_list|(
 argument|Address&addr
 argument_list|,
-argument|bool internal = false
+argument|bool internal
+argument_list|,
+argument|bool request_hardware
 argument_list|)
 expr_stmt|;
 comment|// Use this to create a function breakpoint by regexp in containingModule/containingSourceFiles, or all modules if it is NULL
@@ -1288,9 +1382,11 @@ argument|const FileSpecList *containingSourceFiles
 argument_list|,
 argument|RegularExpression&func_regexp
 argument_list|,
-argument|LazyBool skip_prologue = eLazyBoolCalculate
+argument|LazyBool skip_prologue
 argument_list|,
-argument|bool internal = false
+argument|bool internal
+argument_list|,
+argument|bool request_hardware
 argument_list|)
 expr_stmt|;
 comment|// Use this to create a function breakpoint by name in containingModule, or all modules if it is NULL
@@ -1309,9 +1405,11 @@ argument|const char *func_name
 argument_list|,
 argument|uint32_t func_name_type_mask
 argument_list|,
-argument|LazyBool skip_prologue = eLazyBoolCalculate
+argument|LazyBool skip_prologue
 argument_list|,
-argument|bool internal = false
+argument|bool internal
+argument_list|,
+argument|bool request_hardware
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -1325,7 +1423,7 @@ argument|bool catch_bp
 argument_list|,
 argument|bool throw_bp
 argument_list|,
-argument|bool internal = false
+argument|bool internal
 argument_list|)
 expr_stmt|;
 comment|// This is the same as the func_name breakpoint except that you can specify a vector of names.  This is cheaper
@@ -1346,9 +1444,11 @@ argument|size_t num_names
 argument_list|,
 argument|uint32_t func_name_type_mask
 argument_list|,
-argument|LazyBool skip_prologue = eLazyBoolCalculate
+argument|LazyBool skip_prologue
 argument_list|,
-argument|bool internal = false
+argument|bool internal
+argument_list|,
+argument|bool request_hardware
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -1364,9 +1464,11 @@ argument|const std::vector<std::string>&func_names
 argument_list|,
 argument|uint32_t func_name_type_mask
 argument_list|,
-argument|LazyBool skip_prologue = eLazyBoolCalculate
+argument|LazyBool skip_prologue
 argument_list|,
-argument|bool internal = false
+argument|bool internal
+argument_list|,
+argument|bool request_hardware
 argument_list|)
 expr_stmt|;
 comment|// Use this to create a general breakpoint:
@@ -1379,7 +1481,9 @@ argument|lldb::SearchFilterSP&filter_sp
 argument_list|,
 argument|lldb::BreakpointResolverSP&resolver_sp
 argument_list|,
-argument|bool internal = false
+argument|bool internal
+argument_list|,
+argument|bool request_hardware
 argument_list|)
 expr_stmt|;
 comment|// Use this to create a watchpoint:
@@ -1685,6 +1789,9 @@ parameter_list|(
 name|ModuleList
 modifier|&
 name|module_list
+parameter_list|,
+name|bool
+name|delete_locations
 parameter_list|)
 function_decl|;
 name|void
@@ -1694,6 +1801,28 @@ name|ModuleList
 modifier|&
 name|module_list
 parameter_list|)
+function_decl|;
+name|void
+name|ClearModules
+parameter_list|(
+name|bool
+name|delete_locations
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Called as the last function in Process::DidExec().
+comment|///
+comment|/// Process::DidExec() will clear a lot of state in the process,
+comment|/// then try to reload a dynamic loader plugin to discover what
+comment|/// binaries are currently available and then this function should
+comment|/// be called to allow the target to do any cleanup after everything
+comment|/// has been figured out. It can remove breakpoints that no longer
+comment|/// make sense as the exec might have changed the target
+comment|/// architecture, and unloaded some modules that might get deleted.
+comment|//------------------------------------------------------------------
+name|void
+name|DidExec
+parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Gets the module for the main executable.
@@ -2216,6 +2345,18 @@ modifier|*
 name|GetClangASTImporter
 parameter_list|()
 function_decl|;
+comment|//----------------------------------------------------------------------
+comment|// Install any files through the platform that need be to installed
+comment|// prior to launching or attaching.
+comment|//----------------------------------------------------------------------
+name|Error
+name|Install
+parameter_list|(
+name|ProcessLaunchInfo
+modifier|*
+name|launch_info
+parameter_list|)
+function_decl|;
 comment|// Since expressions results can persist beyond the lifetime of a process,
 comment|// and the const expression results are available after a process is gone,
 comment|// we provide a way for expressions to be evaluated from the Target itself.
@@ -2490,34 +2631,6 @@ parameter_list|()
 block|{
 return|return
 name|m_suppress_stop_hooks
-return|;
-block|}
-name|bool
-name|SetSuppressSyntheticValue
-parameter_list|(
-name|bool
-name|suppress
-parameter_list|)
-block|{
-name|bool
-name|old_value
-init|=
-name|m_suppress_synthetic_value
-decl_stmt|;
-name|m_suppress_synthetic_value
-operator|=
-name|suppress
-expr_stmt|;
-return|return
-name|old_value
-return|;
-block|}
-name|bool
-name|GetSuppressSyntheticValue
-parameter_list|()
-block|{
-return|return
-name|m_suppress_synthetic_value
 return|;
 block|}
 comment|//    StopHookSP&

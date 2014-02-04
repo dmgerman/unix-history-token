@@ -10,6 +10,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -384,6 +398,8 @@ operator|->
 name|header
 operator|.
 name|message_flags
+operator|.
+name|u
 operator|.
 name|message_pending
 condition|)
@@ -1016,31 +1032,17 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
-name|BUS_ADD_CHILD
-argument_list|(
-name|parent
-argument_list|,
-literal|0
-argument_list|,
-literal|"vmbus"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|device_find_child
-argument_list|(
-name|parent
-argument_list|,
-literal|"vmbus"
-argument_list|,
-literal|0
-argument_list|)
-operator|==
-name|NULL
+operator|!
+name|hv_vmbus_query_hypervisor_presence
+argument_list|()
 condition|)
-block|{
+return|return;
+name|vm_guest
+operator|=
+name|VM_GUEST_HV
+expr_stmt|;
 name|BUS_ADD_CHILD
 argument_list|(
 name|parent
@@ -1052,7 +1054,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1076,17 +1077,6 @@ argument_list|,
 literal|"VMBUS: probe\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hv_vmbus_query_hypervisor_presence
-argument_list|()
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -1096,7 +1086,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
@@ -1674,7 +1664,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/*  	 * If the system has already booted and thread 	 * scheduling is possible indicated by the global 	 * cold set to zero, we just call the driver 	 * initialization directly. 	 */
+if|if
+condition|(
+name|vm_guest
+operator|!=
+name|VM_GUEST_HV
+condition|)
+return|return;
+comment|/*  	 * If the system has already booted and thread 	 * scheduling is possible, as indicated by the 	 * global cold set to zero, we just call the driver 	 * initialization directly. 	 */
 if|if
 condition|(
 operator|!

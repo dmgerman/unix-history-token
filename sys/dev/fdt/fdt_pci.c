@@ -77,6 +77,26 @@ directive|include
 file|<machine/fdt.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -1077,7 +1097,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|ihandle_t
+name|phandle_t
 name|iph
 decl_stmt|;
 name|pcell_t
@@ -1233,7 +1253,7 @@ argument_list|)
 expr_stmt|;
 name|intr_par
 operator|=
-name|OF_instance_to_package
+name|OF_xref_phandle
 argument_list|(
 name|iph
 argument_list|)
@@ -1407,7 +1427,7 @@ name|powerpc_config_intr
 argument_list|(
 name|FDT_MAP_IRQ
 argument_list|(
-name|intr_par
+name|iph
 argument_list|,
 operator|*
 name|interrupt
@@ -1468,7 +1488,7 @@ name|phandle_t
 name|node
 parameter_list|,
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|devmap
 parameter_list|,

@@ -821,9 +821,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"platform frequency: %lld\n"
+literal|"platform frequency: %lld MHz\n"
 argument_list|,
 name|platform_counter_freq
+operator|/
+literal|1000000
 argument_list|)
 expr_stmt|;
 name|printf
@@ -831,6 +833,15 @@ argument_list|(
 literal|"CPU reference clock: %d MHz\n"
 argument_list|,
 name|u_ar71xx_refclk
+operator|/
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CPU MDIO clock: %d MHz\n"
+argument_list|,
+name|u_ar71xx_mdio_freq
 operator|/
 literal|1000000
 argument_list|)
@@ -1019,6 +1030,14 @@ argument_list|()
 expr_stmt|;
 comment|/* 	 * Reset USB devices  	 */
 name|ar71xx_init_usb_peripheral
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Reset internal ethernet switch, if one exists 	 */
+name|ar71xx_reset_ethernet_switch
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Initialise the gmac driver. 	 */
+name|ar71xx_init_gmac
 argument_list|()
 expr_stmt|;
 name|kdb_init

@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|P4_CCCR_OVF
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

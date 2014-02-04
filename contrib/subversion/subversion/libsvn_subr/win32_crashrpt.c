@@ -1856,7 +1856,14 @@ name|fprintf
 argument_list|(
 name|log_file
 argument_list|,
-literal|"%s=%s"
+literal|"%.*s=%s"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|sym_info
+operator|->
+name|NameLen
 argument_list|,
 name|sym_info
 operator|->
@@ -1901,7 +1908,14 @@ name|fprintf
 argument_list|(
 name|log_file
 argument_list|,
-literal|"        %s = %s\n"
+literal|"        %.*s = %s\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|sym_info
+operator|->
+name|NameLen
 argument_list|,
 name|sym_info
 operator|->
@@ -2038,7 +2052,7 @@ name|fprintf
 argument_list|(
 name|log_file
 argument_list|,
-literal|"#%d  0x%08I64x in %.200s("
+literal|"#%d  0x%08I64x in %.*s("
 argument_list|,
 name|nr_of_frame
 argument_list|,
@@ -2047,6 +2061,21 @@ operator|.
 name|AddrPC
 operator|.
 name|Offset
+argument_list|,
+name|pIHS
+operator|->
+name|NameLen
+operator|>
+literal|200
+condition|?
+literal|200
+else|:
+operator|(
+name|int
+operator|)
+name|pIHS
+operator|->
+name|NameLen
 argument_list|,
 name|pIHS
 operator|->

@@ -781,7 +781,7 @@ begin_define
 define|#
 directive|define
 name|PLL_SW_UPDATE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1030,7 +1030,7 @@ begin_define
 define|#
 directive|define
 name|RST_WDOG_LAST
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1569,7 +1569,7 @@ begin_define
 define|#
 directive|define
 name|MAC_CFG1_SOFT_RESET
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1772,7 +1772,7 @@ begin_define
 define|#
 directive|define
 name|MAC_MII_CFG_RESET
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1794,6 +1794,13 @@ define|#
 directive|define
 name|MAC_MII_CFG_CLOCK_SELECT_MASK
 value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_MII_CFG_CLOCK_SELECT_MASK_AR933X
+value|0xf
 end_define
 
 begin_define
@@ -1843,6 +1850,66 @@ define|#
 directive|define
 name|MAC_MII_CFG_CLOCK_DIV_28
 value|7
+end_define
+
+begin_comment
+comment|/* .. and the AR933x/AR934x extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAC_MII_CFG_CLOCK_DIV_34
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_MII_CFG_CLOCK_DIV_42
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_MII_CFG_CLOCK_DIV_50
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_MII_CFG_CLOCK_DIV_58
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_MII_CFG_CLOCK_DIV_66
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_MII_CFG_CLOCK_DIV_74
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_MII_CFG_CLOCK_DIV_82
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_MII_CFG_CLOCK_DIV_98
+value|15
 end_define
 
 begin_define

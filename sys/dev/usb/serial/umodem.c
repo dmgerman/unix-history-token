@@ -300,6 +300,23 @@ argument|UIPROTO_CDC_AT
 argument_list|)
 block|}
 block|,
+block|{
+name|USB_IFACE_CLASS
+argument_list|(
+name|UICLASS_CDC
+argument_list|)
+block|,
+name|USB_IFACE_SUBCLASS
+argument_list|(
+name|UISUBCLASS_ABSTRACT_CONTROL_MODEL
+argument_list|)
+block|,
+name|USB_IFACE_PROTOCOL
+argument_list|(
+argument|UIPROTO_CDC_NONE
+argument_list|)
+block|}
+block|,
 comment|/* Huawei Modem class match */
 block|{
 name|USB_IFACE_CLASS
