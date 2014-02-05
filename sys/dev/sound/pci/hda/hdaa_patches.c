@@ -554,13 +554,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|HDAC_QUIRKS_LEN
-value|(sizeof(hdac_quirks) / sizeof(hdac_quirks[0]))
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -1706,7 +1699,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|HDAC_QUIRKS_LEN
+name|nitems
+argument_list|(
+name|hdac_quirks
+argument_list|)
 condition|;
 name|i
 operator|++
