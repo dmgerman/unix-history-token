@@ -2445,10 +2445,7 @@ literal|0
 expr_stmt|;
 name|nextparam
 label|:
-name|not
-operator|=
-literal|0
-expr_stmt|;
+empty_stmt|;
 block|}
 if|if
 condition|(
