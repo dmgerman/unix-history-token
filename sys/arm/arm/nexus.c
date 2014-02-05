@@ -126,12 +126,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<dev/ofw/ofw_nexus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
@@ -147,10 +141,10 @@ directive|include
 file|"ofw_bus_if.h"
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 specifier|static
@@ -271,11 +265,6 @@ name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -439,9 +428,6 @@ name|nexus_methods
 index|[]
 init|=
 block|{
-ifndef|#
-directive|ifndef
-name|FDT
 comment|/* Device interface */
 name|DEVMETHOD
 argument_list|(
@@ -479,8 +465,6 @@ argument_list|,
 name|nexus_alloc_resource
 argument_list|)
 block|,
-endif|#
-directive|endif
 name|DEVMETHOD
 argument_list|(
 name|bus_activate_resource
@@ -544,12 +528,6 @@ name|nexus_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FDT
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|driver_t
@@ -565,36 +543,6 @@ comment|/* no softc */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|DEFINE_CLASS_1
-argument_list|(
-name|nexus
-argument_list|,
-name|nexus_driver
-argument_list|,
-name|nexus_methods
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ofw_nexus_softc
-argument_list|)
-argument_list|,
-name|ofw_nexus_driver
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|DRIVER_MODULE
@@ -613,12 +561,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FDT
-end_ifndef
 
 begin_function
 specifier|static
@@ -1016,11 +958,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

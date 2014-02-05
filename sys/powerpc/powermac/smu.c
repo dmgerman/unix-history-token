@@ -816,7 +816,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|smu
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|smu_driver
 argument_list|,
