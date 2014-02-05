@@ -175,6 +175,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_MACBOOKPRO92
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x7270)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_SCH
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x811b)
 end_define
@@ -1400,8 +1407,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|APPLE_MACBOOKAIR31
+value|0x0d9410de
+end_define
+
+begin_define
+define|#
+directive|define
 name|APPLE_MACBOOKPRO55
 value|0xcb7910de
+end_define
+
+begin_define
+define|#
+directive|define
+name|APPLE_MACBOOKPRO71
+value|0xcb8910de
 end_define
 
 begin_comment
