@@ -1495,7 +1495,7 @@ block|{
 if|if
 condition|(
 name|extlen
-operator|==
+operator|<=
 literal|0
 operator|||
 operator|(
