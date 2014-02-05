@@ -988,6 +988,8 @@ operator|!
 name|lvt
 operator|->
 name|lvt_edgetrigger
+operator|&&
+name|bootverbose
 condition|)
 block|{
 name|printf
