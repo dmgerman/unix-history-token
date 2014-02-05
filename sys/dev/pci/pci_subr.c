@@ -437,7 +437,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Some Host-PCI bridge drivers know which resource ranges they can  * decode and should only allocate subranges to child PCI devices.  * This API provides a way to manage this.  The bridge drive should  * initialize this structure during attach and call  * pcib_host_res_decodes() on each resource range it decodes.  It can  * then use pcib_host_res_alloc() and pcib_host_res_adjust() as helper  * routines for BUS_ALLOC_RESOURCE() and BUS_ADJUST_RESOURCE().  This  * API assumes that resources for any decoded ranges can be safely  * allocated from the parent via bus_generic_alloc_resource().  */
+comment|/*  * Some Host-PCI bridge drivers know which resource ranges they can  * decode and should only allocate subranges to child PCI devices.  * This API provides a way to manage this.  The bridge driver should  * initialize this structure during attach and call  * pcib_host_res_decodes() on each resource range it decodes.  It can  * then use pcib_host_res_alloc() and pcib_host_res_adjust() as helper  * routines for BUS_ALLOC_RESOURCE() and BUS_ADJUST_RESOURCE().  This  * API assumes that resources for any decoded ranges can be safely  * allocated from the parent via bus_generic_alloc_resource().  */
 end_comment
 
 begin_function
