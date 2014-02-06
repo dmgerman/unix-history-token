@@ -199,6 +199,10 @@ name|register_t
 name|abp_r3
 decl_stmt|;
 comment|/* r3 from the boot loader */
+name|vm_offset_t
+name|abp_physaddr
+decl_stmt|;
+comment|/* The kernel physical address */
 block|}
 struct|;
 end_struct
