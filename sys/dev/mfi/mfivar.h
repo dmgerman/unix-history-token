@@ -527,6 +527,14 @@ define|#
 directive|define
 name|MFI_FLAGS_MRSAS
 value|(1<<9)
+define|#
+directive|define
+name|MFI_FLAGS_INVADER
+value|(1<<10)
+define|#
+directive|define
+name|MFI_FLAGS_FURY
+value|(1<<11)
 comment|// Start: LSIP200113393
 name|bus_dma_tag_t
 name|verbuf_h_dmat
