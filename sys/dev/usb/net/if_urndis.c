@@ -4229,6 +4229,8 @@ name|urndis_packet_msg
 argument_list|,
 name|rm_dataoffset
 argument_list|)
+argument_list|,
+name|actlen
 argument_list|)
 expr_stmt|;
 goto|goto

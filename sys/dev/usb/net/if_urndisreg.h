@@ -147,7 +147,7 @@ name|sc
 parameter_list|,
 name|what
 parameter_list|)
-value|mtx_assert(&(sc)->sc_mtx, (x))
+value|mtx_assert(&(sc)->sc_mtx, (what))
 end_define
 
 begin_define
