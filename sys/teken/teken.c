@@ -1684,7 +1684,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|taken_trim_cursor_pos
+name|teken_trim_cursor_pos
 parameter_list|(
 name|teken_t
 modifier|*
@@ -1792,7 +1792,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|taken_trim_cursor_pos
+name|teken_trim_cursor_pos
 argument_list|(
 name|t
 argument_list|,
@@ -1828,7 +1828,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|taken_trim_cursor_pos
+name|teken_trim_cursor_pos
 argument_list|(
 name|t
 argument_list|,
