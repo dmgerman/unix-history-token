@@ -876,6 +876,10 @@ decl_stmt|;
 name|uint8_t
 name|tx_chan
 decl_stmt|;
+name|uint8_t
+name|rx_chan_map
+decl_stmt|;
+comment|/* rx MPS channel bitmap */
 comment|/* These need to be int as they are used in sysctl */
 name|int
 name|ntxq

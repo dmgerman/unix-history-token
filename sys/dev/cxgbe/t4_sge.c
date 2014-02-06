@@ -13618,11 +13618,9 @@ return|;
 else|else
 return|return
 operator|(
-literal|1
-operator|<<
 name|pi
 operator|->
-name|tx_chan
+name|rx_chan_map
 operator|)
 return|;
 block|}
@@ -14408,11 +14406,9 @@ name|fl
 argument_list|,
 name|intr_idx
 argument_list|,
-literal|1
-operator|<<
 name|pi
 operator|->
-name|tx_chan
+name|rx_chan_map
 argument_list|)
 expr_stmt|;
 if|if
