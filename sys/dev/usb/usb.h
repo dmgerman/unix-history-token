@@ -2654,6 +2654,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UIPROTO_RNDIS
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
 name|UICLASS_IAD
 value|0xEF
 end_define
@@ -2661,6 +2668,20 @@ end_define
 begin_comment
 comment|/* Interface Association Descriptor */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UISUBCLASS_SYNC
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIPROTO_ACTIVESYNC
+value|0x01
+end_define
 
 begin_define
 define|#
