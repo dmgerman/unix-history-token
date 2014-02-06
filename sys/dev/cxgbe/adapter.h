@@ -1998,6 +1998,9 @@ name|int
 name|fl_starve_threshold
 decl_stmt|;
 name|int
+name|fl_starve_threshold2
+decl_stmt|;
+name|int
 name|eq_s_qpp
 decl_stmt|;
 name|int
