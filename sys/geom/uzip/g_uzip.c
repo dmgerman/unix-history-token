@@ -605,7 +605,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: done: start_blk %d, pos %lld, upos %lld (%lld, %d, %d)\n"
+literal|"%s: done: start_blk %d, pos %jd, upos %jd (%jd, %d, %zd)\n"
 operator|,
 name|gp
 operator|->
@@ -613,10 +613,19 @@ name|name
 operator|,
 name|start_blk
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|pos
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|upos
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|bp2
 operator|->
 name|bio_offset
@@ -809,20 +818,35 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: done: inflate failed (%lld + %lld -> %lld + %lld + %lld)\n"
+literal|"%s: done: inflate failed (%jd + %jd -> %jd + %jd + %jd)\n"
 operator|,
 name|gp
 operator|->
 name|name
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|pos
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|uoff
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|upos
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|ulen
 operator|)
 argument_list|)
@@ -852,20 +876,35 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: done: inflated %lld + %lld -> %lld + %lld + %lld\n"
+literal|"%s: done: inflated %jd + %jd -> %jd + %jd + %jd\n"
 operator|,
 name|gp
 operator|->
 name|name
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|pos
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|uoff
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|upos
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|ulen
 operator|)
 argument_list|)
@@ -972,7 +1011,7 @@ comment|/* 	 * Finish processing the request. 	 */
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: done: (%d, %lld, %ld)\n"
+literal|"%s: done: (%d, %jd, %ld)\n"
 operator|,
 name|gp
 operator|->
@@ -982,6 +1021,9 @@ name|bp2
 operator|->
 name|bio_error
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|bp2
 operator|->
 name|bio_completed
@@ -1284,18 +1326,27 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: start: cached 0 + %lld, %lld + 0 + %lld\n"
+literal|"%s: start: cached 0 + %jd, %jd + 0 + %jd\n"
 operator|,
 name|gp
 operator|->
 name|name
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|bio_length
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|uoff
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|bio_length
@@ -1360,7 +1411,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: start (%d..%d), %s: %d + %lld, %s: %d + %lld\n"
+literal|"%s: start (%d..%d), %s: %d + %jd, %s: %d + %jd\n"
 operator|,
 name|gp
 operator|->
@@ -1378,6 +1429,9 @@ name|pp
 operator|->
 name|sectorsize
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|pp
 operator|->
 name|mediasize
@@ -1390,6 +1444,9 @@ name|pp2
 operator|->
 name|sectorsize
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|pp2
 operator|->
 name|mediasize
@@ -1458,20 +1515,29 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: start %lld + %lld -> %lld + %lld -> %lld + %lld\n"
+literal|"%s: start %jd + %jd -> %ju + %ju -> %jd + %jd\n"
 operator|,
 name|gp
 operator|->
 name|name
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|bio_offset
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|bio_length
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|sc
 operator|->
 name|offsets
@@ -1479,6 +1545,9 @@ index|[
 name|start_blk
 index|]
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|sc
 operator|->
 name|offsets
@@ -1493,10 +1562,16 @@ index|[
 name|start_blk
 index|]
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|bp2
 operator|->
 name|bio_offset
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|bp2
 operator|->
 name|bio_length
@@ -1957,7 +2032,7 @@ comment|/* 	 * Read cloop header, look for CLOOP magic, perform 	 * other validi
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: media sectorsize %u, mediasize %lld\n"
+literal|"%s: media sectorsize %u, mediasize %jd\n"
 operator|,
 name|gp
 operator|->
@@ -1967,6 +2042,9 @@ name|pp
 operator|->
 name|sectorsize
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|pp
 operator|->
 name|mediasize
@@ -2577,7 +2655,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: taste ok (%d, %lld), (%d, %d), %x\n"
+literal|"%s: taste ok (%d, %jd), (%d, %d), %x\n"
 operator|,
 name|gp
 operator|->
@@ -2587,6 +2665,9 @@ name|pp2
 operator|->
 name|sectorsize
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|pp2
 operator|->
 name|mediasize
