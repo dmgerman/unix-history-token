@@ -249,7 +249,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NET_FLOWTABLE_H_ */
+comment|/* !_NET_FLOWTABLE_H_ */
 end_comment
 
 end_unit
