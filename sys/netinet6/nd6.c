@@ -7271,6 +7271,11 @@ name|flags
 operator||=
 name|LLE_EXCLUSIVE
 expr_stmt|;
+name|LLE_RUNLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
