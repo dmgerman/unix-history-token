@@ -1948,13 +1948,11 @@ decl_stmt|;
 comment|/* 		 * The flow table returns route entries valid for up to 30 		 * seconds; we rely on the remainder of ip_output() taking no 		 * longer than that long for the stability of ro_rt.  The 		 * flow ID assignment must have happened before this point. 		 */
 name|fle
 operator|=
-name|flowtable_lookup_mbuf
+name|flowtable_lookup
 argument_list|(
-name|V_ip6_ft
+name|AF_INET6
 argument_list|,
 name|m
-argument_list|,
-name|AF_INET6
 argument_list|)
 expr_stmt|;
 if|if
