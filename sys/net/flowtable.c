@@ -641,7 +641,7 @@ name|fl_rtalloc_t
 modifier|*
 name|ft_rtalloc
 decl_stmt|;
-comment|/* 	 * XXX need to pad out  	 */
+comment|/* 	 * XXX need to pad out 	 */
 name|struct
 name|mtx
 modifier|*
@@ -866,7 +866,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * TODO:  * - Make flowtable stats per-cpu, aggregated at sysctl call time,  *   to avoid extra cache evictions caused by incrementing a shared  *   counter  * - add sysctls to resize&& flush flow tables   * - Add per flowtable sysctls for statistics and configuring timeouts  * - add saturation counter to rtentry to support per-packet load-balancing  *   add flag to indicate round-robin flow, add list lookup from head      for flows  * - add sysctl / device node / syscall to support exporting and importing  *   of flows with flag to indicate that a flow was imported so should  *   not be considered for auto-cleaning  * - support explicit connection state (currently only ad-hoc for DSR)  * - idetach() cleanup for options VIMAGE builds.  */
+comment|/*  * TODO:  * - Make flowtable stats per-cpu, aggregated at sysctl call time,  *   to avoid extra cache evictions caused by incrementing a shared  *   counter  * - add sysctls to resize&& flush flow tables  * - Add per flowtable sysctls for statistics and configuring timeouts  * - add saturation counter to rtentry to support per-packet load-balancing  *   add flag to indicate round-robin flow, add list lookup from head      for flows  * - add sysctl / device node / syscall to support exporting and importing  *   of flows with flag to indicate that a flow was imported so should  *   not be considered for auto-cleaning  * - support explicit connection state (currently only ad-hoc for DSR)  * - idetach() cleanup for options VIMAGE builds.  */
 end_comment
 
 begin_expr_stmt
@@ -5988,7 +5988,7 @@ name|sockaddr_in
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The harvested source and destination addresses 		 * may contain port information if the packet is  		 * from a transport protocol (e.g. TCP/UDP). The  		 * port field must be cleared before performing  		 * a route lookup. 		 */
+comment|/* 		 * The harvested source and destination addresses 		 * may contain port information if the packet is 		 * from a transport protocol (e.g. TCP/UDP). The 		 * port field must be cleared before performing 		 * a route lookup. 		 */
 operator|(
 operator|(
 expr|struct
@@ -6190,7 +6190,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Ports are zero and this isn't a transmit cache 	 * - thus not a protocol for which we need to keep  	 * state 	 * FL_HASH_ALL => key[0] != 0 for TCP || UDP || SCTP 	 */
+comment|/* 	 * Ports are zero and this isn't a transmit cache 	 * - thus not a protocol for which we need to keep 	 * state 	 * FL_HASH_ALL => key[0] != 0 for TCP || UDP || SCTP 	 */
 if|if
 condition|(
 name|hash
@@ -7155,7 +7155,7 @@ argument_list|(
 name|nentry
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In the local transmit case the table truly is  	 * just a cache - so everything is eligible for 	 * replacement after 5s of non-use 	 */
+comment|/* 	 * In the local transmit case the table truly is 	 * just a cache - so everything is eligible for 	 * replacement after 5s of non-use 	 */
 if|if
 condition|(
 name|flags
@@ -7256,7 +7256,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The rest of the code is devoted to garbage collection of expired entries.  * It is a new additon made necessary by the switch to dynamically allocating  * flow tables.  *   */
+comment|/*  * The rest of the code is devoted to garbage collection of expired entries.  * It is a new additon made necessary by the switch to dynamically allocating  * flow tables.  *  */
 end_comment
 
 begin_function
