@@ -1660,12 +1660,10 @@ name|access
 parameter_list|,
 name|ptr
 parameter_list|,
-name|val
-parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_ASSERT_TYPE(UINT64, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_counter_u64, "QU", descr)
+value|SYSCTL_ASSERT_TYPE(UINT64, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    ptr, 0, sysctl_handle_counter_u64, "QU", descr)
 end_define
 
 begin_define
