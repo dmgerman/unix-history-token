@@ -1915,6 +1915,7 @@ name|max_width
 decl_stmt|,
 name|max_height
 decl_stmt|;
+specifier|const
 name|struct
 name|drm_mode_config_funcs
 modifier|*

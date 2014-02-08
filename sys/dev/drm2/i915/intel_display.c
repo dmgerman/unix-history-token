@@ -17546,6 +17546,7 @@ name|drm_crtc
 modifier|*
 name|crtc
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
