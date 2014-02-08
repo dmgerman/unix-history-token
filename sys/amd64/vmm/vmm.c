@@ -320,6 +320,9 @@ modifier|*
 name|guestfpu
 decl_stmt|;
 comment|/* guest fpu state */
+name|uint64_t
+name|guest_xcr0
+decl_stmt|;
 name|void
 modifier|*
 name|stats
@@ -984,6 +987,12 @@ name|vcpu_id
 argument_list|,
 name|X2APIC_ENABLED
 argument_list|)
+expr_stmt|;
+name|vcpu
+operator|->
+name|guest_xcr0
+operator|=
+name|XFEATURE_ENABLED_X87
 expr_stmt|;
 name|vcpu
 operator|->
@@ -3636,6 +3645,23 @@ operator|->
 name|guestfpu
 argument_list|)
 expr_stmt|;
+comment|/* restore guest XCR0 if XSAVE is enabled in the host */
+if|if
+condition|(
+name|rcr4
+argument_list|()
+operator|&
+name|CR4_XSAVE
+condition|)
+name|load_xcr
+argument_list|(
+literal|0
+argument_list|,
+name|vcpu
+operator|->
+name|guest_xcr0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The FPU is now "dirty" with the guest's state so turn on emulation 	 * to trap any access to the FPU by the host. 	 */
 name|fpu_start_emulating
 argument_list|()
@@ -3670,6 +3696,33 @@ argument_list|(
 literal|"fpu emulation not enabled in host!"
 argument_list|)
 expr_stmt|;
+comment|/* save guest XCR0 and restore host XCR0 */
+if|if
+condition|(
+name|rcr4
+argument_list|()
+operator|&
+name|CR4_XSAVE
+condition|)
+block|{
+name|vcpu
+operator|->
+name|guest_xcr0
+operator|=
+name|rxcr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|load_xcr
+argument_list|(
+literal|0
+argument_list|,
+name|vmm_get_host_xcr0
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* save guest FPU state */
 name|fpu_stop_emulating
 argument_list|()
