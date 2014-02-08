@@ -3699,7 +3699,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a standard dump_avail array.  Can't make the phys_avail  * since we need to do that after we call pmap_bootstrap, but this  * is needed before pmap_boostrap.  *  * ARM_USE_SMALL_ALLOC uses dump_avail, so it must be filled before  * calling pmap_bootstrap.  */
+comment|/*  * Make a standard dump_avail array.  Can't make the phys_avail  * since we need to do that after we call pmap_bootstrap, but this  * is needed before pmap_boostrap.  */
 end_comment
 
 begin_function
