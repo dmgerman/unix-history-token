@@ -1233,13 +1233,6 @@ name|FL_STALE
 value|(1<<8)
 end_define
 
-begin_define
-define|#
-directive|define
-name|FL_OVERWRITE
-value|(1<<10)
-end_define
-
 begin_function_decl
 specifier|static
 name|struct
@@ -4358,15 +4351,6 @@ argument_list|,
 name|newfle
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|FL_OVERWRITE
-condition|)
-goto|goto
-name|skip
-goto|;
 return|return
 operator|(
 name|EEXIST
