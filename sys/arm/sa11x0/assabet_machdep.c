@@ -440,24 +440,6 @@ end_comment
 
 begin_decl_stmt
 name|vm_paddr_t
-name|phys_avail
-index|[
-literal|10
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_paddr_t
-name|dump_avail
-index|[
-literal|4
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_paddr_t
 name|physical_start
 decl_stmt|;
 end_decl_stmt

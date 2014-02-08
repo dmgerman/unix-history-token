@@ -367,24 +367,6 @@ comment|/* Physical and virtual addresses for some global pages */
 end_comment
 
 begin_decl_stmt
-name|vm_paddr_t
-name|phys_avail
-index|[
-literal|10
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_paddr_t
-name|dump_avail
-index|[
-literal|4
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pv_addr
 name|systempage
