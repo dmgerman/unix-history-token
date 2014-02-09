@@ -267,31 +267,6 @@ directive|include
 file|<arm/xscale/ixp425/ixp425var.h>
 end_include
 
-begin_comment
-comment|/* kernel text starts where we were loaded at boot */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERNEL_TEXT_OFF
-value|(KERNPHYSADDR  - PHYSADDR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNEL_TEXT_BASE
-value|(KERNBASE + KERNEL_TEXT_OFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNEL_TEXT_PHYS
-value|(PHYSADDR + KERNEL_TEXT_OFF)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -814,6 +789,19 @@ decl_stmt|;
 name|uint32_t
 name|memsize
 decl_stmt|;
+comment|/* kernel text starts where we were loaded at boot */
+define|#
+directive|define
+name|KERNEL_TEXT_OFF
+value|(abp->abp_physaddr  - PHYSADDR)
+define|#
+directive|define
+name|KERNEL_TEXT_BASE
+value|(KERNBASE + KERNEL_TEXT_OFF)
+define|#
+directive|define
+name|KERNEL_TEXT_PHYS
+value|(PHYSADDR + KERNEL_TEXT_OFF)
 name|lastaddr
 operator|=
 name|parse_boot_param
@@ -853,7 +841,9 @@ expr_stmt|;
 comment|/* 	 * We allocate memory downwards from where we were loaded 	 * by RedBoot; first the L1 page table, then NUM_KERNEL_PTS 	 * entries in the L2 page table.  Past that we re-align the 	 * allocation boundary so later data structures (stacks, etc) 	 * can be mapped with different attributes (write-back vs 	 * write-through).  Note this leaves a gap for expansion 	 * (or might be repurposed). 	 */
 name|freemempos
 operator|=
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 comment|/* macros to simplify initial memory allocation */
 define|#
@@ -875,7 +865,7 @@ name|var
 parameter_list|,
 name|np
 parameter_list|)
-value|do {					\ 	alloc_pages((var).pv_pa, (np));					\ 	(var).pv_va = (var).pv_pa + (KERNVIRTADDR - KERNPHYSADDR);	\ } while (0)
+value|do {					\ 	alloc_pages((var).pv_pa, (np));					\ 	(var).pv_va = (var).pv_pa + (KERNVIRTADDR - abp->abp_physaddr);	\ } while (0)
 comment|/* force L1 page table alignment */
 while|while
 condition|(
@@ -991,7 +981,9 @@ operator|+
 operator|(
 name|KERNVIRTADDR
 operator|-
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 operator|)
 expr_stmt|;
 block|}

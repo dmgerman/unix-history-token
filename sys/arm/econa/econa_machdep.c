@@ -579,7 +579,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_va, (np));         \ 	(var).pv_pa = (var).pv_va + (KERNPHYSADDR - KERNVIRTADDR);
+value|alloc_pages((var).pv_va, (np));         \ 	(var).pv_pa = (var).pv_va + (abp->abp_physaddr - KERNVIRTADDR);
 define|#
 directive|define
 name|alloc_pages
@@ -701,7 +701,9 @@ name|pv_va
 operator|-
 name|KERNVIRTADDR
 operator|+
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 block|}
 block|}
