@@ -1330,7 +1330,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|nvlist_add_descriptor
+name|nvlist_move_descriptor
 argument_list|(
 name|nvlout
 argument_list|,
