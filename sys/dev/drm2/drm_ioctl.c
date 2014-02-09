@@ -27,6 +27,12 @@ directive|include
 file|<dev/drm2/drmP.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/drm2/drm_core.h>
+end_include
+
 begin_comment
 comment|/*  * Beginning in revision 1.1 of the DRM interface, getunique will return  * a unique in the form pci:oooo:bb:dd.f (o=domain, b=bus, d=device, f=function)  * before setunique has been called.  The format for the bus-specific part of  * the unique is not defined for any other bus.  */
 end_comment
@@ -1032,20 +1038,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|DRM_IF_MAJOR
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IF_MINOR
-value|2
-end_define
 
 begin_function
 name|int
