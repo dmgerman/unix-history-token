@@ -21,7 +21,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|arm_physmem_kernaddr
 decl_stmt|;
 end_decl_stmt
@@ -48,7 +48,7 @@ begin_function_decl
 name|void
 name|arm_physmem_hardware_region
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -61,7 +61,7 @@ begin_function_decl
 name|void
 name|arm_physmem_exclude_region
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t

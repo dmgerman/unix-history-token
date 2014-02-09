@@ -73,7 +73,7 @@ begin_struct
 struct|struct
 name|region
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|addr
 decl_stmt|;
 name|vm_size_t
@@ -185,7 +185,7 @@ comment|/* The address at which the kernel was loaded.  Set early in initarm(). 
 end_comment
 
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|arm_physmem_kernaddr
 decl_stmt|;
 end_decl_stmt
@@ -738,7 +738,7 @@ parameter_list|,
 name|size_t
 name|rcnt
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|addr
 parameter_list|,
 name|vm_size_t
@@ -848,7 +848,7 @@ begin_function
 name|void
 name|arm_physmem_hardware_region
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -935,7 +935,7 @@ begin_function
 name|void
 name|arm_physmem_exclude_region
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
