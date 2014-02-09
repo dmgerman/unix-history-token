@@ -246,6 +246,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/physmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -550,6 +556,12 @@ name|parse_boot_param
 argument_list|(
 name|abp
 argument_list|)
+expr_stmt|;
+name|arm_physmem_kernaddr
+operator|=
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 name|set_cpufuncs
 argument_list|()

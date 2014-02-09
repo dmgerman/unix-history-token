@@ -181,6 +181,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* The address at which the kernel was loaded.  Set early in initarm(). */
+end_comment
+
+begin_decl_stmt
+name|vm_offset_t
+name|arm_physmem_kernaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Print the contents of the physical and excluded region tables using the  * provided printf-like output function (which will be either printf or  * db_printf).  */
 end_comment
 

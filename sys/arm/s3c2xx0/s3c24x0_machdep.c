@@ -786,6 +786,12 @@ argument_list|(
 name|abp
 argument_list|)
 expr_stmt|;
+name|arm_physmem_kernaddr
+operator|=
+name|abp
+operator|->
+name|abp_physaddr
+expr_stmt|;
 name|i
 operator|=
 literal|0

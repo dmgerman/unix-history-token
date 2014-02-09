@@ -16,6 +16,17 @@ name|_MACHINE_PHYSMEM_H_
 end_define
 
 begin_comment
+comment|/*  * The physical address at which the kernel was loaded.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|arm_physmem_kernaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Routines to help configure physical ram.  *  * Multiple regions of contiguous physical ram can be added (in any order).  *  * Multiple regions of physical ram that should be excluded from crash dumps, or  * memory allocation, or both, can be added (in any order).  *  * After all early kernel init is done and it's time to configure all  * remainining non-excluded physical ram for use by other parts of the kernel,  * arm_physmem_init_kernel_globals() processes the hardware regions and  * exclusion regions to generate the global dump_avail and phys_avail arrays  * that communicate physical ram configuration to other parts of the kernel.  */
 end_comment
 
