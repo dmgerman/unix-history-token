@@ -1023,11 +1023,6 @@ name|void
 parameter_list|)
 block|{
 name|int
-name|physaddr
-init|=
-name|KERNPHYSADDR
-decl_stmt|;
-name|int
 name|tmp1
 decl_stmt|;
 name|unsigned
@@ -1048,6 +1043,34 @@ operator|)
 operator|+
 literal|4
 decl_stmt|;
+name|unsigned
+name|int
+name|pc
+decl_stmt|,
+name|kernphysaddr
+decl_stmt|;
+comment|/* 	 * Figure out the physical address the kernel was loaded at.  This 	 * assumes the entry point (this code right here) is in the first page, 	 * which will always be the case for this trampoline code. 	 */
+asm|__asm __volatile("mov %0, pc\n"
+block|:
+literal|"=r"
+operator|(
+name|pc
+operator|)
+block|)
+function|;
+end_function
+
+begin_expr_stmt
+name|kernphysaddr
+operator|=
+name|pc
+operator|&
+operator|~
+name|PAGE_MASK
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -1064,19 +1087,7 @@ name|defined
 argument_list|(
 name|LOADERRAMADDR
 argument_list|)
-name|unsigned
-name|int
-name|pc
-decl_stmt|;
-asm|__asm __volatile("mov %0, pc\n"
-block|:
-literal|"=r"
-operator|(
-name|pc
-operator|)
-block|)
-function|;
-end_function
+end_if
 
 begin_if
 if|if
@@ -1315,7 +1326,7 @@ operator|)
 operator|,
 literal|"+r"
 operator|(
-name|physaddr
+name|kernphysaddr
 operator|)
 operator|,
 literal|"+r"
