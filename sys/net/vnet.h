@@ -895,7 +895,7 @@ parameter_list|,    \
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_OPAQUE|CTLFLAG_VNET|(access), ptr, len, 		\ 	    vnet_sysctl_handle_opaque, fmt, descr)
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_OPAQUE|CTLFLAG_VNET|(access), ptr, len, 		\ 	    sysctl_handle_opaque, fmt, descr)
 end_define
 
 begin_define
