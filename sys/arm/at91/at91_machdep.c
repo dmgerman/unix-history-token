@@ -2385,6 +2385,29 @@ operator|=
 name|board_init
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|memsize
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"board_init() failed, cannot determine ram size; "
+literal|"assuming 16MB\n"
+argument_list|)
+expr_stmt|;
+name|memsize
+operator|=
+literal|16
+operator|*
+literal|1024
+operator|*
+literal|1024
+expr_stmt|;
+block|}
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
 name|cpu_control
 argument_list|(
