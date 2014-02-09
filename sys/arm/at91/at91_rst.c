@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -77,6 +83,42 @@ directive|include
 file|<arm/at91/at91board.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/fdt/fdt_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|FDT_HACKS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -99,6 +141,12 @@ begin_comment
 comment|/* sample NRST at hz/RST_TICK intervals */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FDT
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -110,6 +158,11 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 specifier|static
@@ -303,6 +356,26 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|FDT
+if|if
+condition|(
+operator|!
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"atmel,at91sam9260-rstc"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+endif|#
+directive|endif
 name|device_set_desc
 argument_list|(
 name|dev
@@ -341,6 +414,8 @@ name|int
 name|rid
 decl_stmt|,
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|at91_rst_sc
 operator|=
@@ -411,6 +486,9 @@ goto|goto
 name|out
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|FDT_HACKS
 name|rid
 operator|=
 literal|0
@@ -495,6 +573,8 @@ argument_list|,
 literal|"could not establish interrupt handler.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|WR4
 argument_list|(
 name|at91_rst_sc
@@ -588,6 +668,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FDT_HACKS
+end_ifndef
 
 begin_function
 specifier|static
@@ -749,6 +835,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -801,6 +892,35 @@ name|at91_rst_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|at91_rst
+argument_list|,
+name|simplebus
+argument_list|,
+name|at91_rst_driver
+argument_list|,
+name|at91_rst_devclass
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -818,6 +938,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
