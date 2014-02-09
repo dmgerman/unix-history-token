@@ -2969,6 +2969,21 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
+name|use_msi
+function_decl|)
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+name|flags
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
 name|firstopen
 function_decl|)
 parameter_list|(
@@ -3683,14 +3698,22 @@ modifier|*
 name|id_entry
 decl_stmt|;
 comment|/* PCI ID, name, and chipset private */
-name|u_int16_t
+name|uint16_t
 name|pci_device
 decl_stmt|;
 comment|/* PCI device id */
-name|u_int16_t
+name|uint16_t
 name|pci_vendor
 decl_stmt|;
 comment|/* PCI vendor id */
+name|uint16_t
+name|pci_subdevice
+decl_stmt|;
+comment|/* PCI subsystem device id */
+name|uint16_t
+name|pci_subvendor
+decl_stmt|;
+comment|/* PCI subsystem vendor id */
 name|char
 modifier|*
 name|unique
