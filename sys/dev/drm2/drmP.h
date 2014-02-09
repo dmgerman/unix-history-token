@@ -7722,6 +7722,28 @@ name|KTR_DRM_REG
 value|KTR_SPARE3
 end_define
 
+begin_comment
+comment|/* Error codes conversion from Linux to FreeBSD. */
+end_comment
+
+begin_comment
+comment|/* XXXKIB what is the right code for EREMOTEIO on FreeBSD? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EREMOTEIO
+value|ENXIO
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERESTARTSYS
+value|ERESTART
+end_define
+
 begin_endif
 endif|#
 directive|endif

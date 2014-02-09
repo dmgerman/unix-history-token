@@ -93,17 +93,6 @@ name|DP_LINK_CONFIGURATION_SIZE
 value|9
 end_define
 
-begin_comment
-comment|/* XXXKIB what is the right code for the FreeBSD ? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EREMOTEIO
-value|ENXIO
-end_define
-
 begin_struct
 struct|struct
 name|intel_dp
