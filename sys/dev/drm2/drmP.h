@@ -1744,6 +1744,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_MDELAY
+parameter_list|(
+name|msecs
+parameter_list|)
+value|do { int loops = (msecs);		\ 	                          while (loops--) DELAY(1000);		\ 				} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_TIME_SLICE
 value|(hz/20)
 end_define

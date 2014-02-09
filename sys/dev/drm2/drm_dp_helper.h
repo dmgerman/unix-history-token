@@ -16,7 +16,7 @@ name|_DRM_DP_HELPER_H_
 end_define
 
 begin_comment
-comment|/* From the VESA DisplayPort spec */
+comment|/*  * Unless otherwise noted, all values are from the DP 1.1a spec.  Note that  * DP and DPCD versions are independent.  Differences from 1.0 are not noted,  * 1.0 devices basically don't exist in the wild.  *  * Abbreviations, in chronological order:  *  * eDP: Embedded DisplayPort version 1  * DPI: DisplayPort Interoperability Guideline v1.1a  * 1.2: DisplayPort 1.2  *  * 1.2 formally includes both eDP and DPI definitions.  */
 end_comment
 
 begin_define
@@ -160,6 +160,10 @@ name|DP_TPS3_SUPPORTED
 value|(1<< 6)
 end_define
 
+begin_comment
+comment|/* 1.2 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -235,9 +239,116 @@ end_define
 begin_define
 define|#
 directive|define
+name|DP_DETAILED_CAP_INFO_AVAILABLE
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* DPI */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DP_MAIN_LINK_CHANNEL_CODING
 value|0x006
 end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DOWN_STREAM_PORT_COUNT
+value|0x007
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_PORT_COUNT_MASK
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_MSA_TIMING_PAR_IGNORED
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* eDP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP_OUI_SUPPORT
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_I2C_SPEED_CAP
+value|0x00c
+end_define
+
+begin_comment
+comment|/* DPI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP_I2C_SPEED_1K
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_I2C_SPEED_5K
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_I2C_SPEED_10K
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_I2C_SPEED_100K
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_I2C_SPEED_400K
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_I2C_SPEED_1M
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_EDP_CONFIGURATION_CAP
+value|0x00d
+end_define
+
+begin_comment
+comment|/* XXX 1.2? */
+end_comment
 
 begin_define
 define|#
@@ -246,12 +357,42 @@ name|DP_TRAINING_AUX_RD_INTERVAL
 value|0x00e
 end_define
 
+begin_comment
+comment|/* XXX 1.2? */
+end_comment
+
+begin_comment
+comment|/* Multiple stream transport */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP_MSTM_CAP
+value|0x021
+end_define
+
+begin_comment
+comment|/* 1.2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP_MST_CAP
+value|(1<< 0)
+end_define
+
 begin_define
 define|#
 directive|define
 name|DP_PSR_SUPPORT
 value|0x070
 end_define
+
+begin_comment
+comment|/* XXX 1.2? */
+end_comment
 
 begin_define
 define|#
@@ -266,6 +407,10 @@ directive|define
 name|DP_PSR_CAPS
 value|0x071
 end_define
+
+begin_comment
+comment|/* XXX 1.2? */
+end_comment
 
 begin_define
 define|#
@@ -338,6 +483,113 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * 0x80-0x8f describe downstream port capabilities, but there are two layouts  * based on whether DP_DETAILED_CAP_INFO_AVAILABLE was set.  If it was not,  * each port's descriptor is one byte wide.  If it was set, each port's is  * four bytes wide, starting with the one byte from the base info.  As of  * DP interop v1.1a only VGA defines additional detail.  */
+end_comment
+
+begin_comment
+comment|/* offset 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP_DOWNSTREAM_PORT_0
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_PORT_TYPE_MASK
+value|(7<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_PORT_TYPE_DP
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_PORT_TYPE_VGA
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_PORT_TYPE_DVI
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_PORT_TYPE_HDMI
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_PORT_TYPE_NON_EDID
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_PORT_HPD
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* offset 1 for VGA is maximum megapixels per second / 8 */
+end_comment
+
+begin_comment
+comment|/* offset 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP_DS_VGA_MAX_BPC_MASK
+value|(3<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_VGA_8BPC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_VGA_10BPC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_VGA_12BPC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_DS_VGA_16BPC
+value|3
+end_define
+
+begin_comment
 comment|/* link configuration */
 end_comment
 
@@ -368,6 +620,10 @@ directive|define
 name|DP_LINK_BW_5_4
 value|0x14
 end_define
+
+begin_comment
+comment|/* 1.2 */
+end_comment
 
 begin_define
 define|#
@@ -424,6 +680,10 @@ directive|define
 name|DP_TRAINING_PATTERN_3
 value|3
 end_define
+
+begin_comment
+comment|/* 1.2 */
+end_comment
 
 begin_define
 define|#
@@ -652,6 +912,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|DP_MSA_TIMING_PAR_IGNORE_EN
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* eDP */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DP_MAIN_LINK_CHANNEL_CODING_SET
 value|0x108
 end_define
@@ -666,9 +937,71 @@ end_define
 begin_define
 define|#
 directive|define
+name|DP_I2C_SPEED_CONTROL_STATUS
+value|0x109
+end_define
+
+begin_comment
+comment|/* DPI */
+end_comment
+
+begin_comment
+comment|/* bitmask as for DP_I2C_SPEED_CAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP_EDP_CONFIGURATION_SET
+value|0x10a
+end_define
+
+begin_comment
+comment|/* XXX 1.2? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP_MSTM_CTRL
+value|0x111
+end_define
+
+begin_comment
+comment|/* 1.2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP_MST_EN
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_UP_REQ_EN
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_UPSTREAM_IS_SRC
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DP_PSR_EN_CFG
 value|0x170
 end_define
+
+begin_comment
+comment|/* XXX 1.2? */
+end_comment
 
 begin_define
 define|#
@@ -696,6 +1029,34 @@ define|#
 directive|define
 name|DP_PSR_FRAME_CAPTURE
 value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_SINK_COUNT
+value|0x200
+end_define
+
+begin_comment
+comment|/* prior to 1.2 bit 7 was reserved mbz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP_GET_SINK_COUNT
+parameter_list|(
+name|x
+parameter_list|)
+value|((((x)& 0x80)>> 1) | ((x)& 0x3f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_SINK_CP_READY
+value|(1<< 6)
 end_define
 
 begin_define
@@ -999,6 +1360,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|DP_SOURCE_OUI
+value|0x300
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_SINK_OUI
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_BRANCH_OUI
+value|0x500
+end_define
+
+begin_define
+define|#
+directive|define
 name|DP_SET_POWER
 value|0x600
 end_define
@@ -1024,6 +1406,10 @@ name|DP_PSR_ERROR_STATUS
 value|0x2006
 end_define
 
+begin_comment
+comment|/* XXX 1.2? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1045,6 +1431,10 @@ name|DP_PSR_ESI
 value|0x2007
 end_define
 
+begin_comment
+comment|/* XXX 1.2? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1058,6 +1448,10 @@ directive|define
 name|DP_PSR_STATUS
 value|0x2008
 end_define
+
+begin_comment
+comment|/* XXX 1.2? */
+end_comment
 
 begin_define
 define|#
@@ -1223,6 +1617,179 @@ name|adapter
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|DP_LINK_STATUS_SIZE
+value|6
+end_define
+
+begin_function_decl
+name|bool
+name|drm_dp_channel_eq_ok
+parameter_list|(
+name|u8
+name|link_status
+index|[
+name|DP_LINK_STATUS_SIZE
+index|]
+parameter_list|,
+name|int
+name|lane_count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|drm_dp_clock_recovery_ok
+parameter_list|(
+name|u8
+name|link_status
+index|[
+name|DP_LINK_STATUS_SIZE
+index|]
+parameter_list|,
+name|int
+name|lane_count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u8
+name|drm_dp_get_adjust_request_voltage
+parameter_list|(
+name|u8
+name|link_status
+index|[
+name|DP_LINK_STATUS_SIZE
+index|]
+parameter_list|,
+name|int
+name|lane
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u8
+name|drm_dp_get_adjust_request_pre_emphasis
+parameter_list|(
+name|u8
+name|link_status
+index|[
+name|DP_LINK_STATUS_SIZE
+index|]
+parameter_list|,
+name|int
+name|lane
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|DP_RECEIVER_CAP_SIZE
+value|0xf
+end_define
+
+begin_function_decl
+name|void
+name|drm_dp_link_train_clock_recovery_delay
+parameter_list|(
+name|u8
+name|dpcd
+index|[
+name|DP_RECEIVER_CAP_SIZE
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|drm_dp_link_train_channel_eq_delay
+parameter_list|(
+name|u8
+name|dpcd
+index|[
+name|DP_RECEIVER_CAP_SIZE
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u8
+name|drm_dp_link_rate_to_bw_code
+parameter_list|(
+name|int
+name|link_rate
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|drm_dp_bw_code_to_link_rate
+parameter_list|(
+name|u8
+name|link_bw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|drm_dp_max_link_rate
+parameter_list|(
+name|u8
+name|dpcd
+index|[
+name|DP_RECEIVER_CAP_SIZE
+index|]
+parameter_list|)
+block|{
+return|return
+name|drm_dp_bw_code_to_link_rate
+argument_list|(
+name|dpcd
+index|[
+name|DP_MAX_LINK_RATE
+index|]
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|u8
+name|drm_dp_max_lane_count
+parameter_list|(
+name|u8
+name|dpcd
+index|[
+name|DP_RECEIVER_CAP_SIZE
+index|]
+parameter_list|)
+block|{
+return|return
+name|dpcd
+index|[
+name|DP_MAX_LANE_COUNT
+index|]
+operator|&
+name|DP_MAX_LANE_COUNT_MASK
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#
