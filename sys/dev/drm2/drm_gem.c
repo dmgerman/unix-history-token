@@ -637,7 +637,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"Dandling obj %p"
+literal|"Dangling obj %p"
 operator|,
 name|obj
 operator|)
