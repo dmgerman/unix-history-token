@@ -690,12 +690,6 @@ expr_stmt|;
 name|set_cpufuncs
 argument_list|()
 expr_stmt|;
-name|physmem
-operator|=
-name|memsize
-operator|/
-name|PAGE_SIZE
-expr_stmt|;
 name|pcpu0_init
 argument_list|()
 expr_stmt|;

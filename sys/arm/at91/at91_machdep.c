@@ -2385,12 +2385,6 @@ operator|=
 name|board_init
 argument_list|()
 expr_stmt|;
-name|physmem
-operator|=
-name|memsize
-operator|/
-name|PAGE_SIZE
-expr_stmt|;
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
 name|cpu_control
 argument_list|(
