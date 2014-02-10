@@ -1427,7 +1427,7 @@ name|MRT6_INIT
 condition|)
 return|return
 operator|(
-name|EACCES
+name|EPERM
 operator|)
 return|;
 switch|switch
