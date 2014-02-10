@@ -1115,7 +1115,7 @@ name|g
 parameter_list|,
 name|rt
 parameter_list|)
-value|do { \ 	struct mf6c *_rt = mf6ctable[MF6CHASH(o,g)]; \ 	rt = NULL; \ 	MRT6STAT_INC(mrt6s_mfc_lookups); \ 	while (_rt) { \ 		if (IN6_ARE_ADDR_EQUAL(&_rt->mf6c_origin.sin6_addr,&(o))&& \ 		    IN6_ARE_ADDR_EQUAL(&_rt->mf6c_mcastgrp.sin6_addr,&(g))&& \ 		    (_rt->mf6c_stall == NULL)) { \ 			rt = _rt; \ 			break; \ 		} \ 		_rt = _rt->mf6c_next; \ 	} \ 	if (rt == NULL) { \ 		MRT6STAT_INC(mrt6s_mfc_misses); \ 	} \ } while (
+value|do { \ 	struct mf6c *_rt = mf6ctable[MF6CHASH(o,g)]; \ 	rt = NULL; \ 	while (_rt) { \ 		if (IN6_ARE_ADDR_EQUAL(&_rt->mf6c_origin.sin6_addr,&(o))&& \ 		    IN6_ARE_ADDR_EQUAL(&_rt->mf6c_mcastgrp.sin6_addr,&(g))&& \ 		    (_rt->mf6c_stall == NULL)) { \ 			rt = _rt; \ 			break; \ 		} \ 		_rt = _rt->mf6c_next; \ 	} \ 	if (rt == NULL) { \ 		MRT6STAT_INC(mrt6s_mfc_misses); \ 	} \ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -4488,6 +4488,11 @@ operator|->
 name|ip6_dst
 argument_list|,
 name|rt
+argument_list|)
+expr_stmt|;
+name|MRT6STAT_INC
+argument_list|(
+name|mrt6s_mfc_lookups
 argument_list|)
 expr_stmt|;
 comment|/* Entry exists, so forward if necessary */
