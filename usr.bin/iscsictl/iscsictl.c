@@ -1796,9 +1796,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|bool
-name|show_periphs
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -2206,10 +2203,6 @@ operator|&
 name|state
 operator|->
 name|iss_conf
-expr_stmt|;
-name|show_periphs
-operator|=
-name|false
 expr_stmt|;
 name|printf
 argument_list|(
