@@ -1236,6 +1236,24 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Common UMA_ZONE_PCPU zones.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|pcpu_zone_64
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|pcpu_zone_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Exported statistics structures to be used by user space monitoring tools.  * Statistics stream consists of a uma_stream_header, followed by a series of  * alternative uma_type_header and uma_type_stat structures.  */
 end_comment
 
