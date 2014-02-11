@@ -1047,6 +1047,12 @@ if|if
 condition|(
 name|response
 operator|->
+name|ip_data_len
+operator|!=
+literal|0
+operator|&&
+name|response
+operator|->
 name|ip_conn
 operator|->
 name|ic_data_crc32c
@@ -2407,6 +2413,12 @@ name|ICL_CONN_STATE_DATA_DIGEST
 expr_stmt|;
 if|if
 condition|(
+name|request
+operator|->
+name|ip_data_len
+operator|==
+literal|0
+operator|||
 name|ic
 operator|->
 name|ic_data_crc32c
