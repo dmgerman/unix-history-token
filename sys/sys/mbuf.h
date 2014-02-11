@@ -318,7 +318,7 @@ comment|/* layer 5 header length */
 union|union
 block|{
 name|uint8_t
-name|eigth
+name|eight
 index|[
 literal|8
 index|]
@@ -358,7 +358,7 @@ comment|/* Layer specific non-persistent local storage for reassembly, etc. */
 union|union
 block|{
 name|uint8_t
-name|eigth
+name|eight
 index|[
 literal|8
 index|]
