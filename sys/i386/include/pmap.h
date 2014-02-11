@@ -1744,7 +1744,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|caddr_t
-name|CADDR1
+name|CADDR3
 decl_stmt|;
 end_decl_stmt
 
@@ -1752,7 +1752,7 @@ begin_decl_stmt
 specifier|extern
 name|pt_entry_t
 modifier|*
-name|CMAP1
+name|CMAP3
 decl_stmt|;
 end_decl_stmt
 
