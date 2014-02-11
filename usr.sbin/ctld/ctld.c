@@ -5121,7 +5121,7 @@ name|auth_group_find
 argument_list|(
 name|conf
 argument_list|,
-literal|"no-access"
+literal|"default"
 argument_list|)
 expr_stmt|;
 name|assert
@@ -5264,6 +5264,17 @@ operator|->
 name|ag_name
 operator|!=
 name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|ag
+operator|->
+name|ag_name
+argument_list|,
+literal|"default"
+argument_list|)
+operator|!=
+literal|0
 operator|&&
 name|strcmp
 argument_list|(
