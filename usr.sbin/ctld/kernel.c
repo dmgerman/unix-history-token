@@ -3576,11 +3576,37 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|log_warn
+block|{
+name|log_err
 argument_list|(
-literal|"error issuing CTL_ISCSI_LISTEN ioctl"
+literal|1
+argument_list|,
+literal|"error issuing CTL_ISCSI ioctl"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|req
+operator|.
+name|status
+operator|!=
+name|CTL_ISCSI_OK
+condition|)
+block|{
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"error returned from CTL iSCSI listen: %s"
+argument_list|,
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3630,7 +3656,31 @@ condition|)
 block|{
 name|log_warn
 argument_list|(
-literal|"error issuing CTL_ISCSI_LISTEN ioctl"
+literal|"error issuing CTL_ISCSI ioctl"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|req
+operator|.
+name|status
+operator|!=
+name|CTL_ISCSI_OK
+condition|)
+block|{
+name|log_warnx
+argument_list|(
+literal|"error returned from CTL iSCSI accept: %s"
+argument_list|,
+name|req
+operator|.
+name|error_str
 argument_list|)
 expr_stmt|;
 return|return
@@ -3749,6 +3799,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|log_err
 argument_list|(
 literal|1
@@ -3757,6 +3808,7 @@ literal|"error issuing CTL_ISCSI ioctl; "
 literal|"dropping connection"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|req
@@ -3765,6 +3817,7 @@ name|status
 operator|!=
 name|CTL_ISCSI_OK
 condition|)
+block|{
 name|log_errx
 argument_list|(
 literal|1
@@ -3777,6 +3830,7 @@ operator|.
 name|error_str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3898,6 +3952,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|log_err
 argument_list|(
 literal|1
@@ -3906,6 +3961,7 @@ literal|"error issuing CTL_ISCSI ioctl; "
 literal|"dropping connection"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|req
@@ -3914,6 +3970,7 @@ name|status
 operator|!=
 name|CTL_ISCSI_OK
 condition|)
+block|{
 name|log_errx
 argument_list|(
 literal|1
@@ -3926,6 +3983,7 @@ operator|.
 name|error_str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
