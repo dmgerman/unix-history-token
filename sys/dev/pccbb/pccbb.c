@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcib_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pccard/pccardreg.h>
 end_include
 
@@ -6927,7 +6933,9 @@ name|result
 operator|=
 name|sc
 operator|->
-name|secbus
+name|bus
+operator|.
+name|sec
 expr_stmt|;
 return|return
 operator|(
@@ -6960,16 +6968,6 @@ name|uintptr_t
 name|value
 parameter_list|)
 block|{
-name|struct
-name|cbb_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|brdev
-argument_list|)
-decl_stmt|;
 switch|switch
 condition|(
 name|which
@@ -6986,15 +6984,9 @@ return|;
 case|case
 name|PCIB_IVAR_BUS
 case|:
-name|sc
-operator|->
-name|secbus
-operator|=
-name|value
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EINVAL
 operator|)
 return|;
 block|}
