@@ -1686,6 +1686,8 @@ argument_list|(
 name|path
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|==

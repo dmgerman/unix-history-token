@@ -260,6 +260,8 @@ argument_list|(
 name|_PATH_TTY
 argument_list|,
 name|O_RDWR
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|==
