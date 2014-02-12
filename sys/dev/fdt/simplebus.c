@@ -2143,6 +2143,9 @@ name|name
 decl_stmt|,
 modifier|*
 name|type
+decl_stmt|,
+modifier|*
+name|compat
 decl_stmt|;
 if|if
 condition|(
@@ -2160,6 +2163,13 @@ expr_stmt|;
 name|type
 operator|=
 name|ofw_bus_get_type
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
+name|compat
+operator|=
+name|ofw_bus_get_compat
 argument_list|(
 name|child
 argument_list|)
@@ -2187,17 +2197,44 @@ name|child
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|child
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|" type %s (no driver attached)\n"
+literal|" disabled"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+condition|)
+name|printf
+argument_list|(
+literal|" type %s"
 argument_list|,
 name|type
-operator|!=
-name|NULL
-condition|?
-name|type
-else|:
-literal|"unknown"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|compat
+condition|)
+name|printf
+argument_list|(
+literal|" compat %s"
+argument_list|,
+name|compat
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" (no driver attached)\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2235,6 +2272,21 @@ name|device_get_ivars
 argument_list|(
 name|child
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|child
+argument_list|)
+condition|)
+name|rv
+operator|+=
+name|printf
+argument_list|(
+literal|" disabled"
 argument_list|)
 expr_stmt|;
 name|rv
