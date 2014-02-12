@@ -16974,15 +16974,23 @@ return|;
 block|}
 end_if
 
+begin_comment
+comment|// We might have constant size array now, but fortunately it has the same
+end_comment
+
+begin_comment
+comment|// location layout.
+end_comment
+
 begin_decl_stmt
-name|VariableArrayTypeLoc
+name|ArrayTypeLoc
 name|NewTL
 init|=
 name|TLB
 operator|.
 name|push
 operator|<
-name|VariableArrayTypeLoc
+name|ArrayTypeLoc
 operator|>
 operator|(
 name|Result
