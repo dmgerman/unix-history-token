@@ -165,6 +165,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/armreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpuconf.h>
 end_include
 
@@ -1297,9 +1303,11 @@ name|vm_map
 expr_stmt|;
 block|}
 comment|/* 	 * We need to know whether the page should be mapped as R or R/W.  On 	 * armv6 and later the fault status register indicates whether the 	 * access was a read or write.  Prior to armv6, we know that a 	 * permission fault can only be the result of a write to a read-only 	 * location, so we can deal with those quickly.  Otherwise we need to 	 * disassemble the faulting instruction to determine if it was a write. 	 */
-ifdef|#
-directive|ifdef
-name|_ARM_ARCH_6
+if|#
+directive|if
+name|ARM_ARCH_6
+operator|||
+name|ARM_ARCH_7A
 name|ftype
 operator|=
 operator|(
@@ -1405,9 +1413,9 @@ operator|=
 name|VM_PROT_READ
 expr_stmt|;
 block|}
+block|}
 endif|#
 directive|endif
-block|}
 comment|/* 	 * See if the fault is as a result of ref/mod emulation, 	 * or domain mismatch. 	 */
 ifdef|#
 directive|ifdef
