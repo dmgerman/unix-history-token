@@ -4977,11 +4977,11 @@ argument_list|)
 operator|==
 name|FALSE
 condition|)
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
+name|panic
+argument_list|(
+literal|"Cannot install FDT"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|OF_init
@@ -4995,11 +4995,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
+name|panic
+argument_list|(
+literal|"OF_init failed with the found device tree"
+argument_list|)
+expr_stmt|;
 comment|/* Grab physical memory regions information from device tree. */
 if|if
 condition|(
