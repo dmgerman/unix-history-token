@@ -2494,7 +2494,9 @@ operator|==
 name|OBJT_SWAP
 argument_list|,
 operator|(
-literal|"vm_object_terminate: non-swap obj %p has cred"
+literal|"%s: non-swap obj %p has cred"
+operator|,
+name|__func__
 operator|,
 name|object
 operator|)
