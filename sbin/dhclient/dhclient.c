@@ -2278,7 +2278,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 argument_list|,
 name|CAP_READ
 argument_list|)
