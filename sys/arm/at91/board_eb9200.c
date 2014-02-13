@@ -132,7 +132,7 @@ name|ARM_BOARD
 argument_list|(
 argument|KB9200
 argument_list|,
-literal|"Kwikbyte KB920x"
+literal|"Embest ATEB9200"
 argument_list|)
 end_macro
 
