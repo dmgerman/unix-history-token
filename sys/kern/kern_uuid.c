@@ -1829,7 +1829,7 @@ name|uuid
 operator|->
 name|time_mid
 operator|=
-name|le16dec
+name|be16dec
 argument_list|(
 name|p
 operator|+
