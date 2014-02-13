@@ -27,19 +27,6 @@ end_comment
 
 begin_function_decl
 name|void
-name|imx_devmap_addentry
-parameter_list|(
-name|vm_paddr_t
-name|_pa
-parameter_list|,
-name|vm_size_t
-name|_sz
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|imx_wdog_cpu_reset
 parameter_list|(
 name|vm_offset_t
@@ -124,15 +111,6 @@ end_function_decl
 begin_function_decl
 name|u_int
 name|imx_soc_family
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|imx_devmap_init
 parameter_list|(
 name|void
 parameter_list|)
