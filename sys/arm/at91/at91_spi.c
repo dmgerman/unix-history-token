@@ -502,6 +502,23 @@ condition|)
 goto|goto
 name|out
 goto|;
+ifdef|#
+directive|ifdef
+name|FDT
+comment|/* 	 * Disable devices need to hold their resources, so return now and not attach 	 * the spibus, setup interrupt handlers, etc. 	 */
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 comment|/* 	 * Set up the hardware. 	 */
 name|WR4
 argument_list|(

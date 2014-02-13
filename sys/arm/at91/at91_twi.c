@@ -526,6 +526,23 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FDT
+comment|/* 	 * Disable devices need to hold their resources, so return now and not attach 	 * the iicbus, setup interrupt handlers, etc. 	 */
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 comment|/* 	 * Activate the interrupt 	 */
 name|err
 operator|=
