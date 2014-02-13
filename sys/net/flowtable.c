@@ -4576,10 +4576,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|flags
-operator|&
-name|FL_NOAUTO
-operator|||
 name|flow_full
 argument_list|(
 name|ft
