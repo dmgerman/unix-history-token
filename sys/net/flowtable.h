@@ -61,17 +61,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FL_PCPU
-value|(1<<1)
-end_define
-
-begin_comment
-comment|/* pcpu cache */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|FL_NOAUTO
 value|(1<<2)
 end_define
