@@ -318,6 +318,146 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHC_PRES_STATE
+value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_CIHB
+value|(1<<  0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_CDIHB
+value|(1<<  1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_DLA
+value|(1<<  2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_SDSTB
+value|(1<<  3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_IPGOFF
+value|(1<<  4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_HCKOFF
+value|(1<<  5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_PEROFF
+value|(1<<  6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_SDOFF
+value|(1<<  7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_WTA
+value|(1<<  8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_RTA
+value|(1<<  9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_BWEN
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_BREN
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_RTR
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_CINST
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_CDPL
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_WPSPL
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_CLSL
+value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_DLSL_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_DLSL_MASK
+value|(0xffU<< SDHC_PRES_DLSL_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHC_PROT_CTRL
 value|0x28
 end_define
@@ -984,14 +1124,14 @@ name|RD4
 argument_list|(
 name|sc
 argument_list|,
-name|SDHCI_PRESENT_STATE
+name|SDHC_PRES_STATE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|wrk32
 operator|&
-literal|0x08
+name|SDHC_PRES_SDSTB
 condition|)
 name|val32
 operator||=
@@ -1066,15 +1206,9 @@ argument_list|)
 decl_stmt|;
 name|uint32_t
 name|val32
+decl_stmt|,
+name|wrk32
 decl_stmt|;
-comment|/* 	 * The hardware leaves the base clock frequency out of the capabilities 	 * register; fill it in.  The timeout clock is the same as the active 	 * output sdclock; we indicate that with a quirk setting so don't 	 * populate the timeout frequency bits. 	 * 	 * XXX Turn off (for now) features the hardware can do but this driver 	 * doesn't yet handle (1.8v, suspend/resume, etc). 	 */
-if|if
-condition|(
-name|off
-operator|==
-name|SDHCI_CAPABILITIES
-condition|)
-block|{
 name|val32
 operator|=
 name|RD4
@@ -1084,6 +1218,14 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The hardware leaves the base clock frequency out of the capabilities 	 * register; fill it in.  The timeout clock is the same as the active 	 * output sdclock; we indicate that with a quirk setting so don't 	 * populate the timeout frequency bits. 	 * 	 * XXX Turn off (for now) features the hardware can do but this driver 	 * doesn't yet handle (1.8v, suspend/resume, etc). 	 */
+if|if
+condition|(
+name|off
+operator|==
+name|SDHCI_CAPABILITIES
+condition|)
+block|{
 name|val32
 operator|&=
 operator|~
@@ -1116,15 +1258,48 @@ name|val32
 operator|)
 return|;
 block|}
-name|val32
-operator|=
-name|RD4
-argument_list|(
-name|sc
-argument_list|,
+comment|/* 	 * The hardware moves bits around in the present state register to make 	 * room for all 8 data line state bits.  To translate, mask out all the 	 * bits which are not in the same position in both registers (this also 	 * masks out some freescale-specific bits in locations defined as 	 * reserved by sdhci), then shift the data line and retune request bits 	 * down to their standard locations. 	 */
+if|if
+condition|(
 name|off
-argument_list|)
+operator|==
+name|SDHCI_PRESENT_STATE
+condition|)
+block|{
+name|wrk32
+operator|=
+name|val32
 expr_stmt|;
+name|val32
+operator|&=
+literal|0x000F0F07
+expr_stmt|;
+name|val32
+operator||=
+operator|(
+name|wrk32
+operator|>>
+literal|4
+operator|)
+operator|&
+name|SDHCI_STATE_DAT_MASK
+expr_stmt|;
+name|val32
+operator||=
+operator|(
+name|wrk32
+operator|>>
+literal|9
+operator|)
+operator|&
+name|SDHCI_RETUNE_REQUEST
+expr_stmt|;
+return|return
+operator|(
+name|val32
+operator|)
+return|;
+block|}
 comment|/* 	 * imx_sdhci_intr() can synthesize a DATA_END interrupt following a 	 * command with an R1B response, mix it into the hardware status. 	 */
 if|if
 condition|(
@@ -1133,12 +1308,15 @@ operator|==
 name|SDHCI_INT_STATUS
 condition|)
 block|{
+return|return
+operator|(
 name|val32
-operator||=
+operator||
 name|sc
 operator|->
 name|r1bfix_intmask
-expr_stmt|;
+operator|)
+return|;
 block|}
 return|return
 name|val32
@@ -2150,10 +2328,10 @@ name|RD4
 argument_list|(
 name|sc
 argument_list|,
-name|SDHCI_PRESENT_STATE
+name|SDHC_PRES_STATE
 argument_list|)
 operator|&
-name|SDHCI_DAT_ACTIVE
+name|SDHC_PRES_DLA
 operator|)
 condition|)
 block|{
