@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -5174,7 +5180,7 @@ block|{
 name|printf
 argument_list|(
 literal|"  [ Evaluations: %-8llu  Packets: %-8llu  "
-literal|"Bytes: %-10llu  States: %-6lu]\n"
+literal|"Bytes: %-10llu  States: %-6ju]\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -5228,7 +5234,7 @@ index|]
 argument_list|)
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|rule
 operator|->
@@ -5247,7 +5253,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"  [ Inserted: uid %u pid %u "
-literal|"State Creations: %-6lu]\n"
+literal|"State Creations: %-6ju]\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -5264,7 +5270,7 @@ operator|->
 name|cpid
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|rule
 operator|->
