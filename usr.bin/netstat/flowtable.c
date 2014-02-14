@@ -138,7 +138,7 @@ name|p
 argument_list|(
 name|ft_fail_lle_invalid
 argument_list|,
-literal|"\t%ju lookups w/ no resolved ARP%s\n"
+literal|"\t%ju lookups w/ no resolved Layer 2 address%s\n"
 argument_list|)
 expr_stmt|;
 undef|#
