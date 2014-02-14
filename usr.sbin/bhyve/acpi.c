@@ -3166,7 +3166,7 @@ argument_list|)
 expr_stmt|;
 name|dsdt_line
 argument_list|(
-literal|"  Scope (_SB.PCI0)"
+literal|"  Scope (_SB.PC00)"
 argument_list|)
 expr_stmt|;
 name|dsdt_line

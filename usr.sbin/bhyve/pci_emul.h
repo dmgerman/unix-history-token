@@ -639,7 +639,10 @@ name|pci_lintr_cb
 function_decl|)
 parameter_list|(
 name|int
-name|slot
+name|b
+parameter_list|,
+name|int
+name|s
 parameter_list|,
 name|int
 name|pin
@@ -1016,7 +1019,8 @@ begin_function_decl
 name|int
 name|pci_count_lintr
 parameter_list|(
-name|void
+name|int
+name|bus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1025,6 +1029,9 @@ begin_function_decl
 name|void
 name|pci_walk_lintr
 parameter_list|(
+name|int
+name|bus
+parameter_list|,
 name|pci_lintr_cb
 name|cb
 parameter_list|,

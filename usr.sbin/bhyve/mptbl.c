@@ -837,13 +837,41 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|bus
+decl_stmt|,
+name|count
+decl_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|bus
+operator|=
+literal|0
+init|;
+name|bus
+operator|<=
+name|PCI_BUSMAX
+condition|;
+name|bus
+operator|++
+control|)
+name|count
+operator|+=
+name|pci_count_lintr
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Always include entries for the first 16 pins along with a entry 	 * for each active PCI INTx pin. 	 */
 return|return
 operator|(
 literal|16
 operator|+
-name|pci_count_lintr
-argument_list|()
+name|count
 operator|)
 return|;
 block|}
@@ -854,6 +882,9 @@ specifier|static
 name|void
 name|mpt_generate_pci_int
 parameter_list|(
+name|int
+name|bus
+parameter_list|,
 name|int
 name|slot
 parameter_list|,
@@ -913,7 +944,7 @@ name|mpie
 operator|->
 name|src_bus_id
 operator|=
-literal|0
+name|bus
 expr_stmt|;
 name|mpie
 operator|->
@@ -971,6 +1002,8 @@ parameter_list|)
 block|{
 name|int
 name|pin
+decl_stmt|,
+name|bus
 decl_stmt|;
 comment|/* 	 * The following config is taken from kernel mptable.c 	 * mptable_parse_default_config_ints(...), for now  	 * just use the default config, tweek later if needed. 	 */
 comment|/* First, generate the first 16 pins. */
@@ -1105,8 +1138,23 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* Next, generate entries for any PCI INTx interrupts. */
+for|for
+control|(
+name|bus
+operator|=
+literal|0
+init|;
+name|bus
+operator|<=
+name|PCI_BUSMAX
+condition|;
+name|bus
+operator|++
+control|)
 name|pci_walk_lintr
 argument_list|(
+name|bus
+argument_list|,
 name|mpt_generate_pci_int
 argument_list|,
 operator|&
