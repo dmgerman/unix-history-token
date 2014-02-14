@@ -1116,32 +1116,12 @@ argument_list|(
 name|flash_addr
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|cal_data
-index|[
+if|#
+directive|if
 literal|0
-index|]
-operator|!=
-name|AR5416_EEPROM_MAGIC
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"%s: Invalid calibration data from 0x%x\n"
-argument_list|,
-name|__func__
-argument_list|,
-operator|(
-name|uintptr_t
-operator|)
-name|flash_addr
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+block|if (cal_data[0] != AR5416_EEPROM_MAGIC) { 		device_printf(dev, "%s: Invalid calibration data from 0x%x\n", 		    __func__, (uintptr_t) flash_addr); 		return; 	}
+endif|#
+directive|endif
 comment|/* Save bar(0) address - just to flush bar(0) (SoC WAR) ? */
 name|bar0
 operator|=
