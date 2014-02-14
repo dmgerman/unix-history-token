@@ -5174,7 +5174,7 @@ block|{
 name|printf
 argument_list|(
 literal|"  [ Evaluations: %-8llu  Packets: %-8llu  "
-literal|"Bytes: %-10llu  States: %-6u]\n"
+literal|"Bytes: %-10llu  States: %-6lu]\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -5227,6 +5227,9 @@ literal|1
 index|]
 argument_list|)
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|rule
 operator|->
 name|states_cur
@@ -5244,7 +5247,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"  [ Inserted: uid %u pid %u "
-literal|"State Creations: %-6u]\n"
+literal|"State Creations: %-6lu]\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -5260,6 +5263,9 @@ name|rule
 operator|->
 name|cpid
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|rule
 operator|->
 name|states_tot

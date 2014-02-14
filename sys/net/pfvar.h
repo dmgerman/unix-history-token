@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/refcount.h>
 end_include
 
@@ -1824,16 +1830,7 @@ name|PFTM_MAX
 index|]
 decl_stmt|;
 name|u_int32_t
-name|states_cur
-decl_stmt|;
-name|u_int32_t
-name|states_tot
-decl_stmt|;
-name|u_int32_t
 name|max_states
-decl_stmt|;
-name|u_int32_t
-name|src_nodes
 decl_stmt|;
 name|u_int32_t
 name|max_src_nodes
@@ -1841,10 +1838,6 @@ decl_stmt|;
 name|u_int32_t
 name|max_src_states
 decl_stmt|;
-name|u_int32_t
-name|spare1
-decl_stmt|;
-comment|/* netgraph */
 name|u_int32_t
 name|max_src_conn
 decl_stmt|;
@@ -1879,6 +1872,15 @@ name|cuid
 decl_stmt|;
 name|pid_t
 name|cpid
+decl_stmt|;
+name|counter_u64_t
+name|states_cur
+decl_stmt|;
+name|counter_u64_t
+name|states_tot
+decl_stmt|;
+name|counter_u64_t
+name|src_nodes
 decl_stmt|;
 name|u_int16_t
 name|return_icmp
