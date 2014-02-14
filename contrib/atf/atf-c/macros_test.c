@@ -5052,20 +5052,96 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|BUILD_TC_FAIL
+name|ATF_TC
 argument_list|(
 name|detect_unused_tests
-argument_list|,
-literal|"unused_test.c"
-argument_list|,
-literal|"Tests that defining an unused test case raises a warning (and thus "
-literal|"an error)"
-argument_list|,
-literal|"Build of unused_test.c passed; unused test cases are not properly "
-literal|"detected"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_macro
+name|ATF_TC_HEAD
+argument_list|(
+argument|detect_unused_tests
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"descr"
+argument_list|,
+literal|"Tests that defining an unused test case raises a "
+literal|"warning (and thus an error)"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|detect_unused_tests
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+specifier|const
+name|char
+modifier|*
+name|validate_compiler
+init|=
+literal|"struct test_struct { int dummy; };\n"
+literal|"#define define_unused static struct test_struct unused\n"
+literal|"define_unused;\n"
+decl_stmt|;
+name|atf_utils_create_file
+argument_list|(
+literal|"compiler_test.c"
+argument_list|,
+literal|"%s"
+argument_list|,
+name|validate_compiler
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|build_check_c_o
+argument_list|(
+literal|"compiler_test.c"
+argument_list|)
+condition|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"Compiler does not raise a warning on an unused "
+literal|"static global variable declared by a macro"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|build_check_c_o_srcdir
+argument_list|(
+name|tc
+argument_list|,
+literal|"unused_test.c"
+argument_list|)
+condition|)
+name|atf_tc_fail
+argument_list|(
+literal|"Build of unused_test.c passed; unused test cases are "
+literal|"not properly detected"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/* ---------------------------------------------------------------------  * Main.  * --------------------------------------------------------------------- */
