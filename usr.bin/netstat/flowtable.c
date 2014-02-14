@@ -134,6 +134,13 @@ argument_list|,
 literal|"\t%ju free%s\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|ft_fail_lle_invalid
+argument_list|,
+literal|"\t%ju lookups w/ no resolved ARP%s\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p2

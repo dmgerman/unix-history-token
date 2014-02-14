@@ -37,6 +37,9 @@ decl_stmt|;
 name|uint64_t
 name|ft_lookups
 decl_stmt|;
+name|uint64_t
+name|ft_fail_lle_invalid
+decl_stmt|;
 block|}
 struct|;
 end_struct
