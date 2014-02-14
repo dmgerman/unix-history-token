@@ -115,6 +115,13 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|ft_inserts
+argument_list|,
+literal|"\t%ju insert%s\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|ft_collisions
 argument_list|,
 literal|"\t%ju collision%s\n"
@@ -138,7 +145,7 @@ name|p
 argument_list|(
 name|ft_fail_lle_invalid
 argument_list|,
-literal|"\t%ju lookups w/ no resolved Layer 2 address%s\n"
+literal|"\t%ju lookup%s with not resolved Layer 2 address\n"
 argument_list|)
 expr_stmt|;
 undef|#
