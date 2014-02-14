@@ -569,6 +569,12 @@ literal|54
 index|]
 decl_stmt|;
 name|int8_t
+name|txpow3
+index|[
+literal|54
+index|]
+decl_stmt|;
+name|int8_t
 name|rssi_2ghz
 index|[
 literal|3
