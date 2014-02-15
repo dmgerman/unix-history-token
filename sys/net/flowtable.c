@@ -5008,11 +5008,14 @@ name|success
 label|:
 if|if
 condition|(
+operator|!
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_FLOWID
+operator|)
 condition|)
 block|{
 name|m
