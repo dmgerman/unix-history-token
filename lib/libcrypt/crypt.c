@@ -155,35 +155,12 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAS_DES
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|CRYPT_DEFAULT
-value|"des"
+value|"sha512"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CRYPT_DEFAULT
-value|"md5"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
