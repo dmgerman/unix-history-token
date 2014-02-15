@@ -14903,7 +14903,8 @@ argument_list|,
 name|L2_PTE_NUM_TOTAL
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Now invalidate L1 slot as it was not invalidated in 		 * pmap_free_l2_bucket() due to L1_TYPE mismatch. 		 */
+block|}
+comment|/* Now invalidate L1 slot */
 operator|*
 name|pl1pd
 operator|=
@@ -14914,7 +14915,24 @@ argument_list|(
 name|pl1pd
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|L1_S_EXECUTABLE
+argument_list|(
+name|l1pd
+argument_list|)
+condition|)
+name|cpu_tlb_flushID_SE
+argument_list|(
+name|sva
+argument_list|)
+expr_stmt|;
+else|else
+name|cpu_tlb_flushD_SE
+argument_list|(
+name|sva
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

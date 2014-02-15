@@ -2323,6 +2323,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|L1_S_EXECUTABLE
+parameter_list|(
+name|pd
+parameter_list|)
+value|(!((pd)& L1_S_XN))
+end_define
+
+begin_define
+define|#
+directive|define
 name|L1_S_REFERENCED
 parameter_list|(
 name|pd
