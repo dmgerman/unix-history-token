@@ -944,6 +944,13 @@ name|RUN_DEV
 argument_list|(
 name|DLINK
 argument_list|,
+name|DWA127
+argument_list|)
+block|,
+name|RUN_DEV
+argument_list|(
+name|DLINK
+argument_list|,
 name|DWA140B3
 argument_list|)
 block|,
