@@ -330,7 +330,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"fsl,fslq-ocotp"
+literal|"fsl,imx6q-ocotp"
 argument_list|)
 operator|==
 literal|0
@@ -344,7 +344,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Freescale i.MX6 On-Chip One-Time-Programmable Memory"
+literal|"Freescale On-Chip One-Time-Programmable Memory"
 argument_list|)
 expr_stmt|;
 return|return
