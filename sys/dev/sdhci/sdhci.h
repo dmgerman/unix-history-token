@@ -1185,6 +1185,11 @@ name|card_callout
 decl_stmt|;
 comment|/* Card insert delay callout */
 name|struct
+name|callout
+name|timeout_callout
+decl_stmt|;
+comment|/* Card command/data response timeout */
+name|struct
 name|mmc_host
 name|host
 decl_stmt|;
