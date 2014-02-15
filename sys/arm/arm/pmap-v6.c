@@ -13185,18 +13185,6 @@ name|l1pd
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * These should only happen for the kernel pmap. 		 */
-name|KASSERT
-argument_list|(
-name|pmap
-operator|==
-name|kernel_pmap
-argument_list|,
-operator|(
-literal|"unexpected section"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* XXX: what to do about the bits> 32 ? */
 if|if
 condition|(
