@@ -6,18 +6,18 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IMX6_OCOTPVAR_H
+name|FSL_OCOTPVAR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTPVAR_H
+name|FSL_OCOTPVAR_H
 end_define
 
 begin_function_decl
 name|uint32_t
-name|imx6_ocotp_read_4
+name|fsl_ocotp_read_4
 parameter_list|(
 name|bus_size_t
 name|_offset

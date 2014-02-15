@@ -78,19 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/freescale/imx/imx6_ocotpreg.h>
+file|<arm/freescale/fsl_ocotpreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/freescale/imx/imx6_ocotpvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/freescale/imx/imx_machdep.h>
+file|<arm/freescale/fsl_ocotpvar.h>
 end_include
 
 begin_struct
@@ -336,7 +330,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"fsl,imx6q-ocotp"
+literal|"fsl,fslq-ocotp"
 argument_list|)
 operator|==
 literal|0
@@ -363,7 +357,7 @@ end_function
 
 begin_function
 name|uint32_t
-name|imx6_ocotp_read_4
+name|fsl_ocotp_read_4
 parameter_list|(
 name|bus_size_t
 name|off
@@ -377,18 +371,18 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"imx6_ocotp_read_4: softc not set!"
+literal|"fsl_ocotp_read_4: softc not set!"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|off
 operator|>
-name|IMX6_OCOTP_LAST_REG
+name|FSL_OCOTP_LAST_REG
 condition|)
 name|panic
 argument_list|(
-literal|"imx6_ocotp_read_4: offset out of range"
+literal|"fsl_ocotp_read_4: offset out of range"
 argument_list|)
 expr_stmt|;
 return|return

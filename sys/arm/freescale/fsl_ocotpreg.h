@@ -6,342 +6,342 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IMX6_OCOTPREG_H
+name|FSL_OCOTPREG_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTPREG_H
+name|FSL_OCOTPREG_H
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CTRL
+name|FSL_OCOTP_CTRL
 value|0x000
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CTRL_SET
+name|FSL_OCOTP_CTRL_SET
 value|0x004
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CTRL_CLR
+name|FSL_OCOTP_CTRL_CLR
 value|0x008
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CTRL_TOG
+name|FSL_OCOTP_CTRL_TOG
 value|0x00C
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_TIMING
+name|FSL_OCOTP_TIMING
 value|0x010
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_DATA
+name|FSL_OCOTP_DATA
 value|0x020
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_READ_CTRL
+name|FSL_OCOTP_READ_CTRL
 value|0x030
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_READ_FUSE_DATA
+name|FSL_OCOTP_READ_FUSE_DATA
 value|0x040
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SW_STICKY
+name|FSL_OCOTP_SW_STICKY
 value|0x050
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SCS
+name|FSL_OCOTP_SCS
 value|0x060
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SCS_SET
+name|FSL_OCOTP_SCS_SET
 value|0x064
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SCS_CLR
+name|FSL_OCOTP_SCS_CLR
 value|0x068
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SCS_TOG
+name|FSL_OCOTP_SCS_TOG
 value|0x06C
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_VERSION
+name|FSL_OCOTP_VERSION
 value|0x090
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_LOCK
+name|FSL_OCOTP_LOCK
 value|0x400
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CFG0
+name|FSL_OCOTP_CFG0
 value|0x410
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CFG1
+name|FSL_OCOTP_CFG1
 value|0x420
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CFG2
+name|FSL_OCOTP_CFG2
 value|0x430
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CFG3
+name|FSL_OCOTP_CFG3
 value|0x440
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CFG4
+name|FSL_OCOTP_CFG4
 value|0x450
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CFG5
+name|FSL_OCOTP_CFG5
 value|0x460
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_CFG6
+name|FSL_OCOTP_CFG6
 value|0x470
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_MEM0
+name|FSL_OCOTP_MEM0
 value|0x480
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_MEM1
+name|FSL_OCOTP_MEM1
 value|0x490
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_MEM2
+name|FSL_OCOTP_MEM2
 value|0x4A0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_MEM3
+name|FSL_OCOTP_MEM3
 value|0x4B0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_ANA0
+name|FSL_OCOTP_ANA0
 value|0x4D0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_ANA1
+name|FSL_OCOTP_ANA1
 value|0x4E0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_ANA2
+name|FSL_OCOTP_ANA2
 value|0x4F0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SRK0
+name|FSL_OCOTP_SRK0
 value|0x580
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SRK1
+name|FSL_OCOTP_SRK1
 value|0x590
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SRK2
+name|FSL_OCOTP_SRK2
 value|0x5A0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SRK3
+name|FSL_OCOTP_SRK3
 value|0x5B0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SRK4
+name|FSL_OCOTP_SRK4
 value|0x5C0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SRK5
+name|FSL_OCOTP_SRK5
 value|0x5D0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SRK6
+name|FSL_OCOTP_SRK6
 value|0x5E0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SRK7
+name|FSL_OCOTP_SRK7
 value|0x5F0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_HSJC_RESP0
+name|FSL_OCOTP_HSJC_RESP0
 value|0x600
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_HSJC_RESP1
+name|FSL_OCOTP_HSJC_RESP1
 value|0x610
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_MAC0
+name|FSL_OCOTP_MAC0
 value|0x620
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_MAC1
+name|FSL_OCOTP_MAC1
 value|0x630
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_GP1
+name|FSL_OCOTP_GP1
 value|0x660
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_GP2
+name|FSL_OCOTP_GP2
 value|0x670
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_MISC_CONF
+name|FSL_OCOTP_MISC_CONF
 value|0x6D0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_FIELD_RETURN
+name|FSL_OCOTP_FIELD_RETURN
 value|0x6E0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_SRK_REVOKE
+name|FSL_OCOTP_SRK_REVOKE
 value|0x6F0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IMX6_OCOTP_LAST_REG
-value|IMX6_OCOTP_SRK_REVOKE
+name|FSL_OCOTP_LAST_REG
+value|FSL_OCOTP_SRK_REVOKE
 end_define
 
 begin_endif
