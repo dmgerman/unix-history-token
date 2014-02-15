@@ -5180,7 +5180,9 @@ block|{
 name|printf
 argument_list|(
 literal|"  [ Evaluations: %-8llu  Packets: %-8llu  "
-literal|"Bytes: %-10llu  States: %-6ju]\n"
+literal|"Bytes: %-10llu  States: %-6"
+name|PRIuPTR
+literal|"]\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -5234,7 +5236,7 @@ index|]
 argument_list|)
 argument_list|,
 operator|(
-name|uintmax_t
+name|uintptr_t
 operator|)
 name|rule
 operator|->
@@ -5253,7 +5255,9 @@ condition|)
 name|printf
 argument_list|(
 literal|"  [ Inserted: uid %u pid %u "
-literal|"State Creations: %-6ju]\n"
+literal|"State Creations: %-6"
+name|PRIuPTR
+literal|"]\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -5270,7 +5274,7 @@ operator|->
 name|cpid
 argument_list|,
 operator|(
-name|uintmax_t
+name|uintptr_t
 operator|)
 name|rule
 operator|->
@@ -5871,7 +5875,9 @@ block|{
 name|printf
 argument_list|(
 literal|"%s %llu %llu %llu %llu"
-literal|" %llu %llu %llu %llu\n"
+literal|" %llu %llu %llu %"
+name|PRIuPTR
+literal|"\n"
 argument_list|,
 name|pr
 operator|.
@@ -5997,9 +6003,7 @@ literal|1
 index|]
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintptr_t
 operator|)
 name|pr
 operator|.
