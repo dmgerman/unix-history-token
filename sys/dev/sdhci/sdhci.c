@@ -3523,7 +3523,9 @@ name|sdhci_reset
 argument_list|(
 name|slot
 argument_list|,
-name|SDHCI_RESET_ALL
+name|SDHCI_RESET_CMD
+operator||
+name|SDHCI_RESET_DATA
 argument_list|)
 expr_stmt|;
 name|slot
@@ -4039,7 +4041,7 @@ literal|0xff
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Start timeout callout; no command should take more than a second. */
+comment|/* Start timeout callout. */
 name|callout_reset
 argument_list|(
 operator|&
@@ -4047,6 +4049,8 @@ name|slot
 operator|->
 name|timeout_callout
 argument_list|,
+literal|2
+operator|*
 name|hz
 argument_list|,
 name|sdhci_timeout
