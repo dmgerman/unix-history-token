@@ -105,10 +105,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
 if|if
 condition|(
 operator|!
