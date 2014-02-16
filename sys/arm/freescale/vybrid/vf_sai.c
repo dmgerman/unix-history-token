@@ -1871,6 +1871,12 @@ name|sc
 operator|->
 name|dma_size
 expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|->
+name|run
+condition|)
 name|chn_intr
 argument_list|(
 name|ch
@@ -2352,7 +2358,7 @@ name|tcd
 operator|->
 name|smod
 operator|=
-literal|18
+literal|17
 expr_stmt|;
 comment|/* dma_size range */
 name|tcd
@@ -2494,6 +2500,12 @@ literal|0
 block|device_printf(scp->dev, "trigger start\n");
 endif|#
 directive|endif
+name|ch
+operator|->
+name|run
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|PCMTRIG_STOP
@@ -2507,6 +2519,12 @@ literal|0
 block|device_printf(scp->dev, "trigger stop or abort\n");
 endif|#
 directive|endif
+name|ch
+operator|->
+name|run
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 block|}
 name|snd_mtxunlock
@@ -3419,7 +3437,7 @@ name|sc
 operator|->
 name|dma_size
 operator|=
-literal|262144
+literal|131072
 expr_stmt|;
 comment|/* 	 * Must use dma_size boundary as modulo feature required. 	 * Modulo feature allows setup circular buffer. 	 */
 name|err
