@@ -235,9 +235,7 @@ name|fatal
 label|:
 name|panic
 argument_list|(
-literal|"cannot find/map the ocotp registers, %d"
-argument_list|,
-name|where
+literal|"cannot find/map the ocotp registers"
 argument_list|)
 expr_stmt|;
 block|}
