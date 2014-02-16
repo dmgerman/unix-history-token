@@ -206,12 +206,9 @@ begin_comment
 comment|/* Define to 1 if vsnprintf is in std */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_VSNPRINTF_IN_STD
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_VSNPRINTF_IN_STD */
+end_comment
 
 begin_comment
 comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
