@@ -2583,6 +2583,8 @@ argument_list|)
 expr_stmt|;
 name|path
 operator|=
+name|tpath
+operator|=
 name|offensive
 expr_stmt|;
 name|offensive
@@ -2666,6 +2668,8 @@ name|tpath
 argument_list|)
 expr_stmt|;
 name|path
+operator|=
+name|tpath
 operator|=
 name|offensive
 expr_stmt|;
