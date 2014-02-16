@@ -645,11 +645,9 @@ name|TargetRegisterInfo
 modifier|&
 name|TRI
 decl_stmt|;
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|CCValAssign
-operator|,
-literal|16
 operator|>
 operator|&
 name|Locs
@@ -772,10 +770,7 @@ argument|MachineFunction&MF
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
-argument|SmallVector<CCValAssign
-argument_list|,
-literal|16
-argument|>&locs
+argument|SmallVectorImpl<CCValAssign>&locs
 argument_list|,
 argument|LLVMContext&C
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SelectionDAGBuilder.h - Selection-DAG building --------------------===//
+comment|//===-- SelectionDAGBuilder.h - Selection-DAG building --------*- C++ -*---===//
 end_comment
 
 begin_comment
@@ -117,6 +117,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|AddrSpaceCastInst
+decl_stmt|;
 name|class
 name|AliasAnalysis
 decl_stmt|;
@@ -268,9 +271,11 @@ comment|///
 name|class
 name|SelectionDAGBuilder
 block|{
-comment|/// CurDebugLoc - current file + line number.  Changes as we build the DAG.
-name|DebugLoc
-name|CurDebugLoc
+comment|/// CurInst - The current instruction being visited
+specifier|const
+name|Instruction
+modifier|*
+name|CurInst
 decl_stmt|;
 name|DenseMap
 operator|<
@@ -706,6 +711,98 @@ name|CaseRec
 operator|>
 name|CaseRecVector
 expr_stmt|;
+comment|/// The comparison function for sorting the switch case values in the vector.
+comment|/// WARNING: Case ranges should be disjoint!
+struct|struct
+name|CaseCmp
+block|{
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|Case
+operator|&
+name|C1
+operator|,
+specifier|const
+name|Case
+operator|&
+name|C2
+operator|)
+block|{
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|ConstantInt
+operator|>
+operator|(
+name|C1
+operator|.
+name|Low
+operator|)
+operator|&&
+name|isa
+operator|<
+name|ConstantInt
+operator|>
+operator|(
+name|C2
+operator|.
+name|High
+operator|)
+argument_list|)
+block|;
+specifier|const
+name|ConstantInt
+operator|*
+name|CI1
+operator|=
+name|cast
+operator|<
+specifier|const
+name|ConstantInt
+operator|>
+operator|(
+name|C1
+operator|.
+name|Low
+operator|)
+block|;
+specifier|const
+name|ConstantInt
+operator|*
+name|CI2
+operator|=
+name|cast
+operator|<
+specifier|const
+name|ConstantInt
+operator|>
+operator|(
+name|C2
+operator|.
+name|High
+operator|)
+block|;
+return|return
+name|CI1
+operator|->
+name|getValue
+argument_list|()
+operator|.
+name|slt
+argument_list|(
+name|CI2
+operator|->
+name|getValue
+argument_list|()
+argument_list|)
+return|;
+block|}
+block|}
+struct|;
 struct|struct
 name|CaseBitsCmp
 block|{
@@ -1153,21 +1250,377 @@ name|Cases
 decl_stmt|;
 block|}
 struct|;
+comment|/// A class which encapsulates all of the information needed to generate a
+comment|/// stack protector check and signals to isel via its state being initialized
+comment|/// that a stack protector needs to be generated.
+comment|///
+comment|/// *NOTE* The following is a high level documentation of SelectionDAG Stack
+comment|/// Protector Generation. The reason that it is placed here is for a lack of
+comment|/// other good places to stick it.
+comment|///
+comment|/// High Level Overview of SelectionDAG Stack Protector Generation:
+comment|///
+comment|/// Previously, generation of stack protectors was done exclusively in the
+comment|/// pre-SelectionDAG Codegen LLVM IR Pass "Stack Protector". This necessitated
+comment|/// splitting basic blocks at the IR level to create the success/failure basic
+comment|/// blocks in the tail of the basic block in question. As a result of this,
+comment|/// calls that would have qualified for the sibling call optimization were no
+comment|/// longer eligible for optimization since said calls were no longer right in
+comment|/// the "tail position" (i.e. the immediate predecessor of a ReturnInst
+comment|/// instruction).
+comment|///
+comment|/// Then it was noticed that since the sibling call optimization causes the
+comment|/// callee to reuse the caller's stack, if we could delay the generation of
+comment|/// the stack protector check until later in CodeGen after the sibling call
+comment|/// decision was made, we get both the tail call optimization and the stack
+comment|/// protector check!
+comment|///
+comment|/// A few goals in solving this problem were:
+comment|///
+comment|///   1. Preserve the architecture independence of stack protector generation.
+comment|///
+comment|///   2. Preserve the normal IR level stack protector check for platforms like
+comment|///      OpenBSD for which we support platform specific stack protector
+comment|///      generation.
+comment|///
+comment|/// The main problem that guided the present solution is that one can not
+comment|/// solve this problem in an architecture independent manner at the IR level
+comment|/// only. This is because:
+comment|///
+comment|///   1. The decision on whether or not to perform a sibling call on certain
+comment|///      platforms (for instance i386) requires lower level information
+comment|///      related to available registers that can not be known at the IR level.
+comment|///
+comment|///   2. Even if the previous point were not true, the decision on whether to
+comment|///      perform a tail call is done in LowerCallTo in SelectionDAG which
+comment|///      occurs after the Stack Protector Pass. As a result, one would need to
+comment|///      put the relevant callinst into the stack protector check success
+comment|///      basic block (where the return inst is placed) and then move it back
+comment|///      later at SelectionDAG/MI time before the stack protector check if the
+comment|///      tail call optimization failed. The MI level option was nixed
+comment|///      immediately since it would require platform specific pattern
+comment|///      matching. The SelectionDAG level option was nixed because
+comment|///      SelectionDAG only processes one IR level basic block at a time
+comment|///      implying one could not create a DAG Combine to move the callinst.
+comment|///
+comment|/// To get around this problem a few things were realized:
+comment|///
+comment|///   1. While one can not handle multiple IR level basic blocks at the
+comment|///      SelectionDAG Level, one can generate multiple machine basic blocks
+comment|///      for one IR level basic block. This is how we handle bit tests and
+comment|///      switches.
+comment|///
+comment|///   2. At the MI level, tail calls are represented via a special return
+comment|///      MIInst called "tcreturn". Thus if we know the basic block in which we
+comment|///      wish to insert the stack protector check, we get the correct behavior
+comment|///      by always inserting the stack protector check right before the return
+comment|///      statement. This is a "magical transformation" since no matter where
+comment|///      the stack protector check intrinsic is, we always insert the stack
+comment|///      protector check code at the end of the BB.
+comment|///
+comment|/// Given the aforementioned constraints, the following solution was devised:
+comment|///
+comment|///   1. On platforms that do not support SelectionDAG stack protector check
+comment|///      generation, allow for the normal IR level stack protector check
+comment|///      generation to continue.
+comment|///
+comment|///   2. On platforms that do support SelectionDAG stack protector check
+comment|///      generation:
+comment|///
+comment|///     a. Use the IR level stack protector pass to decide if a stack
+comment|///        protector is required/which BB we insert the stack protector check
+comment|///        in by reusing the logic already therein. If we wish to generate a
+comment|///        stack protector check in a basic block, we place a special IR
+comment|///        intrinsic called llvm.stackprotectorcheck right before the BB's
+comment|///        returninst or if there is a callinst that could potentially be
+comment|///        sibling call optimized, before the call inst.
+comment|///
+comment|///     b. Then when a BB with said intrinsic is processed, we codegen the BB
+comment|///        normally via SelectBasicBlock. In said process, when we visit the
+comment|///        stack protector check, we do not actually emit anything into the
+comment|///        BB. Instead, we just initialize the stack protector descriptor
+comment|///        class (which involves stashing information/creating the success
+comment|///        mbbb and the failure mbb if we have not created one for this
+comment|///        function yet) and export the guard variable that we are going to
+comment|///        compare.
+comment|///
+comment|///     c. After we finish selecting the basic block, in FinishBasicBlock if
+comment|///        the StackProtectorDescriptor attached to the SelectionDAGBuilder is
+comment|///        initialized, we first find a splice point in the parent basic block
+comment|///        before the terminator and then splice the terminator of said basic
+comment|///        block into the success basic block. Then we code-gen a new tail for
+comment|///        the parent basic block consisting of the two loads, the comparison,
+comment|///        and finally two branches to the success/failure basic blocks. We
+comment|///        conclude by code-gening the failure basic block if we have not
+comment|///        code-gened it already (all stack protector checks we generate in
+comment|///        the same function, use the same failure basic block).
+name|class
+name|StackProtectorDescriptor
+block|{
 name|public
 label|:
-comment|// TLI - This is information that describes the available target features we
-comment|// need for lowering.  This indicates when operations are unavailable,
-comment|// implemented with a libcall, etc.
+name|StackProtectorDescriptor
+argument_list|()
+operator|:
+name|ParentMBB
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|SuccessMBB
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FailureMBB
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Guard
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+operator|~
+name|StackProtectorDescriptor
+argument_list|()
+block|{ }
+comment|/// Returns true if all fields of the stack protector descriptor are
+comment|/// initialized implying that we should/are ready to emit a stack protector.
+name|bool
+name|shouldEmitStackProtector
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParentMBB
+operator|&&
+name|SuccessMBB
+operator|&&
+name|FailureMBB
+operator|&&
+name|Guard
+return|;
+block|}
+comment|/// Initialize the stack protector descriptor structure for a new basic
+comment|/// block.
+name|void
+name|initialize
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|MBB
+parameter_list|,
+specifier|const
+name|CallInst
+modifier|&
+name|StackProtCheckCall
+parameter_list|)
+block|{
+comment|// Make sure we are not initialized yet.
+name|assert
+argument_list|(
+operator|!
+name|shouldEmitStackProtector
+argument_list|()
+operator|&&
+literal|"Stack Protector Descriptor is "
+literal|"already initialized!"
+argument_list|)
+expr_stmt|;
+name|ParentMBB
+operator|=
+name|MBB
+expr_stmt|;
+name|SuccessMBB
+operator|=
+name|AddSuccessorMBB
+argument_list|(
+name|BB
+argument_list|,
+name|MBB
+argument_list|)
+expr_stmt|;
+name|FailureMBB
+operator|=
+name|AddSuccessorMBB
+argument_list|(
+name|BB
+argument_list|,
+name|MBB
+argument_list|,
+name|FailureMBB
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Guard
+condition|)
+name|Guard
+operator|=
+name|StackProtCheckCall
+operator|.
+name|getArgOperand
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Reset state that changes when we handle different basic blocks.
+comment|///
+comment|/// This currently includes:
+comment|///
+comment|/// 1. The specific basic block we are generating a
+comment|/// stack protector for (ParentMBB).
+comment|///
+comment|/// 2. The successor machine basic block that will contain the tail of
+comment|/// parent mbb after we create the stack protector check (SuccessMBB). This
+comment|/// BB is visited only on stack protector check success.
+name|void
+name|resetPerBBState
+parameter_list|()
+block|{
+name|ParentMBB
+operator|=
+literal|0
+expr_stmt|;
+name|SuccessMBB
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/// Reset state that only changes when we switch functions.
+comment|///
+comment|/// This currently includes:
+comment|///
+comment|/// 1. FailureMBB since we reuse the failure code path for all stack
+comment|/// protector checks created in an individual function.
+comment|///
+comment|/// 2.The guard variable since the guard variable we are checking against is
+comment|/// always the same.
+name|void
+name|resetPerFunctionState
+parameter_list|()
+block|{
+name|FailureMBB
+operator|=
+literal|0
+expr_stmt|;
+name|Guard
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|MachineBasicBlock
+modifier|*
+name|getParentMBB
+parameter_list|()
+block|{
+return|return
+name|ParentMBB
+return|;
+block|}
+name|MachineBasicBlock
+modifier|*
+name|getSuccessMBB
+parameter_list|()
+block|{
+return|return
+name|SuccessMBB
+return|;
+block|}
+name|MachineBasicBlock
+modifier|*
+name|getFailureMBB
+parameter_list|()
+block|{
+return|return
+name|FailureMBB
+return|;
+block|}
+specifier|const
+name|Value
+modifier|*
+name|getGuard
+parameter_list|()
+block|{
+return|return
+name|Guard
+return|;
+block|}
+name|private
+label|:
+comment|/// The basic block for which we are generating the stack protector.
+comment|///
+comment|/// As a result of stack protector generation, we will splice the
+comment|/// terminators of this basic block into the successor mbb SuccessMBB and
+comment|/// replace it with a compare/branch to the successor mbbs
+comment|/// SuccessMBB/FailureMBB depending on whether or not the stack protector
+comment|/// was violated.
+name|MachineBasicBlock
+modifier|*
+name|ParentMBB
+decl_stmt|;
+comment|/// A basic block visited on stack protector check success that contains the
+comment|/// terminators of ParentMBB.
+name|MachineBasicBlock
+modifier|*
+name|SuccessMBB
+decl_stmt|;
+comment|/// This basic block visited on stack protector check failure that will
+comment|/// contain a call to __stack_chk_fail().
+name|MachineBasicBlock
+modifier|*
+name|FailureMBB
+decl_stmt|;
+comment|/// The guard variable which we will compare against the stored value in the
+comment|/// stack protector stack slot.
+specifier|const
+name|Value
+modifier|*
+name|Guard
+decl_stmt|;
+comment|/// Add a successor machine basic block to ParentMBB. If the successor mbb
+comment|/// has not been created yet (i.e. if SuccMBB = 0), then the machine basic
+comment|/// block will be created.
+name|MachineBasicBlock
+modifier|*
+name|AddSuccessorMBB
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|ParentMBB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SuccMBB
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+name|private
+label|:
 specifier|const
 name|TargetMachine
 modifier|&
 name|TM
 decl_stmt|;
-specifier|const
-name|TargetLowering
-modifier|&
-name|TLI
-decl_stmt|;
+name|public
+label|:
 name|SelectionDAG
 modifier|&
 name|DAG
@@ -1216,6 +1669,11 @@ name|BitTestBlock
 operator|>
 name|BitTestCases
 expr_stmt|;
+comment|/// A StackProtectorDescriptor structure used to communicate stack protector
+comment|/// information in between SelectBasicBlock and FinishBasicBlock.
+name|StackProtectorDescriptor
+name|SPDescriptor
+decl_stmt|;
 comment|// Emit PHI-node-operand constants only once even if used by multiple
 comment|// PHI nodes.
 name|DenseMap
@@ -1281,6 +1739,11 @@ argument_list|,
 argument|CodeGenOpt::Level ol
 argument_list|)
 block|:
+name|CurInst
+argument_list|(
+name|NULL
+argument_list|)
+operator|,
 name|SDNodeOrder
 argument_list|(
 literal|0
@@ -1291,14 +1754,6 @@ argument_list|(
 name|dag
 operator|.
 name|getTarget
-argument_list|()
-argument_list|)
-operator|,
-name|TLI
-argument_list|(
-name|dag
-operator|.
-name|getTargetLoweringInfo
 argument_list|()
 argument_list|)
 operator|,
@@ -1376,13 +1831,35 @@ name|SDValue
 name|getControlRoot
 parameter_list|()
 function_decl|;
+name|SDLoc
+name|getCurSDLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SDLoc
+argument_list|(
+name|CurInst
+argument_list|,
+name|SDNodeOrder
+argument_list|)
+return|;
+block|}
 name|DebugLoc
 name|getCurDebugLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|CurDebugLoc
+name|CurInst
+operator|?
+name|CurInst
+operator|->
+name|getDebugLoc
+argument_list|()
+operator|:
+name|DebugLoc
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -1404,18 +1881,6 @@ name|V
 parameter_list|,
 name|unsigned
 name|Reg
-parameter_list|)
-function_decl|;
-comment|/// AssignOrderingToNode - Assign an ordering to the node. The order is gotten
-comment|/// from how the code appeared in the source. The ordering is used by the
-comment|/// scheduler to effectively turn off scheduling.
-name|void
-name|AssignOrderingToNode
-parameter_list|(
-specifier|const
-name|SDNode
-modifier|*
-name|Node
 parameter_list|)
 function_decl|;
 name|void
@@ -1674,6 +2139,27 @@ init|=
 name|NULL
 parameter_list|)
 function_decl|;
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|LowerCallOperands
+argument_list|(
+argument|const CallInst&CI
+argument_list|,
+argument|unsigned ArgIdx
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|bool useVoidTy = false
+argument_list|)
+expr_stmt|;
 comment|/// UpdateSplitBlock - When an MBB was split during scheduling, update the
 comment|/// references that ned to refer to the last resulting block.
 name|void
@@ -1883,6 +2369,26 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|SwitchBB
+parameter_list|)
+function_decl|;
+name|void
+name|visitSPDescriptorParent
+parameter_list|(
+name|StackProtectorDescriptor
+modifier|&
+name|SPD
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|ParentBB
+parameter_list|)
+function_decl|;
+name|void
+name|visitSPDescriptorFailure
+parameter_list|(
+name|StackProtectorDescriptor
+modifier|&
+name|SPD
 parameter_list|)
 function_decl|;
 name|void
@@ -2442,6 +2948,15 @@ name|I
 parameter_list|)
 function_decl|;
 name|void
+name|visitAddrSpaceCast
+parameter_list|(
+specifier|const
+name|User
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
 name|visitExtractElement
 parameter_list|(
 specifier|const
@@ -2595,6 +3110,54 @@ name|I
 parameter_list|)
 function_decl|;
 name|bool
+name|visitMemChrCall
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|bool
+name|visitStrCpyCall
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|,
+name|bool
+name|isStpcpy
+parameter_list|)
+function_decl|;
+name|bool
+name|visitStrCmpCall
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|bool
+name|visitStrLenCall
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|bool
+name|visitStrNLenCall
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|bool
 name|visitUnaryFloatCall
 parameter_list|(
 specifier|const
@@ -2694,6 +3257,24 @@ name|I
 parameter_list|)
 function_decl|;
 name|void
+name|visitStackmap
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitPatchpoint
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
 name|visitUserOp1
 parameter_list|(
 specifier|const
@@ -2723,6 +3304,21 @@ literal|"UserOp2 should not exist at instruction selection time!"
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|processIntegerCallValue
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|&
+name|I
+parameter_list|,
+name|SDValue
+name|Value
+parameter_list|,
+name|bool
+name|IsSigned
+parameter_list|)
+function_decl|;
 name|void
 name|HandlePHINodesInSuccessorBlocks
 parameter_list|(

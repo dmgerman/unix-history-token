@@ -159,6 +159,9 @@ decl_stmt|;
 name|class
 name|Stmt
 decl_stmt|;
+name|class
+name|CallExpr
+decl_stmt|;
 name|namespace
 name|ento
 block|{
@@ -386,16 +389,6 @@ block|}
 name|virtual
 name|bool
 name|supportsLogicalOpControlFlow
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|supportsAllBlockEdges
 argument_list|()
 specifier|const
 block|{
@@ -1241,6 +1234,11 @@ name|ID
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Given an exploded node, retrieve the statement that should be used
 comment|/// for the diagnostic location.
 specifier|static
@@ -1255,7 +1253,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// \brief Retrieve the statement corresponding to the sucessor node.
+comment|/// \brief Retrieve the statement corresponding to the successor node.
 specifier|static
 specifier|const
 name|Stmt
@@ -1443,6 +1441,11 @@ block|;
 specifier|const
 name|DisplayHint
 name|Hint
+block|;
+comment|/// \brief In the containing bug report, this piece is the last piece from
+comment|/// the main source file.
+name|bool
+name|LastInMainSourceFile
 block|;
 comment|/// A constant string that can be used to tag the PathDiagnosticPiece,
 comment|/// typically with the identification of the creator.  The actual pointer
@@ -1680,6 +1683,41 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+name|void
+name|setAsLastInMainSourceFile
+parameter_list|()
+block|{
+name|LastInMainSourceFile
+operator|=
+name|true
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|isLastInMainSourceFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LastInMainSourceFile
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|virtual
+name|void
+name|dump
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 unit|};
 name|class
@@ -1736,11 +1774,19 @@ return|return
 name|Result
 return|;
 block|}
-expr|}
-block|;
+name|LLVM_ATTRIBUTE_USED
+name|void
+name|dump
+argument_list|()
+specifier|const
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|PathDiagnosticSpotPiece
-operator|:
+range|:
 name|public
 name|PathDiagnosticPiece
 block|{
@@ -2100,11 +2146,10 @@ name|hasCallStackHint
 argument_list|()
 block|{
 return|return
-operator|(
 name|CallStackHint
-operator|!=
-literal|0
-operator|)
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 comment|/// Produce the hint for the given node. The node contains
@@ -2133,6 +2178,12 @@ return|return
 literal|""
 return|;
 block|}
+name|virtual
+name|void
+name|dump
+argument_list|()
+specifier|const
+block|;
 specifier|static
 specifier|inline
 name|bool
@@ -2451,6 +2502,12 @@ name|Decl
 operator|*
 name|caller
 argument_list|)
+block|;
+name|virtual
+name|void
+name|dump
+argument_list|()
+specifier|const
 block|;
 name|virtual
 name|void
@@ -2783,16 +2840,25 @@ return|;
 block|}
 name|virtual
 name|void
+name|dump
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|PathDiagnosticMacroPiece
-operator|:
+range|:
 name|public
 name|PathDiagnosticSpotPiece
 block|{
@@ -2891,19 +2957,37 @@ return|;
 block|}
 name|virtual
 name|void
+name|dump
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// PathDiagnostic - PathDiagnostic objects represent a single path-sensitive
+end_comment
+
+begin_comment
 comment|///  diagnostic.  It represents an ordered-collection of PathDiagnosticPieces,
+end_comment
+
+begin_comment
 comment|///  each which represent the pieces of the path.
+end_comment
+
+begin_decl_stmt
 name|class
 name|PathDiagnostic
-operator|:
+range|:
 name|public
 name|llvm
 operator|::
@@ -2944,6 +3028,7 @@ name|string
 operator|>
 name|OtherDesc
 block|;
+comment|/// \brief Loc The location of the path diagnostic report.
 name|PathDiagnosticLocation
 name|Loc
 block|;
@@ -3026,26 +3111,43 @@ name|back
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Return a mutable version of 'path'.
+end_comment
+
+begin_function
 name|PathPieces
-operator|&
+modifier|&
 name|getMutablePieces
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|pathImpl
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Return the unrolled size of the path.
+end_comment
+
+begin_function_decl
 name|unsigned
 name|full_size
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
 name|void
 name|pushActivePath
-argument_list|(
-argument|PathPieces *p
-argument_list|)
+parameter_list|(
+name|PathPieces
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|pathStack
 operator|.
@@ -3053,10 +3155,14 @@ name|push_back
 argument_list|(
 name|p
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|popActivePath
-argument_list|()
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -3072,6 +3178,9 @@ name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isWithinCall
 argument_list|()
@@ -3085,11 +3194,16 @@ name|empty
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setEndOfPath
-argument_list|(
-argument|PathDiagnosticPiece *EndPiece
-argument_list|)
+parameter_list|(
+name|PathDiagnosticPiece
+modifier|*
+name|EndPiece
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -3101,14 +3215,14 @@ argument_list|()
 operator|&&
 literal|"End location already set!"
 argument_list|)
-block|;
+expr_stmt|;
 name|Loc
 operator|=
 name|EndPiece
 operator|->
 name|getLocation
 argument_list|()
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 name|Loc
@@ -3118,7 +3232,7 @@ argument_list|()
 operator|&&
 literal|"Invalid location for end-of-path piece"
 argument_list|)
-block|;
+expr_stmt|;
 name|getActivePath
 argument_list|()
 operator|.
@@ -3126,26 +3240,86 @@ name|push_back
 argument_list|(
 name|EndPiece
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|appendToDesc
+parameter_list|(
+name|StringRef
+name|S
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|ShortDesc
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|ShortDesc
+operator|.
+name|append
+argument_list|(
+name|S
+argument_list|)
+expr_stmt|;
+name|VerboseDesc
+operator|.
+name|append
+argument_list|(
+name|S
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|resetPath
-argument_list|()
+parameter_list|()
 block|{
 name|pathStack
 operator|.
 name|clear
 argument_list|()
-block|;
+expr_stmt|;
 name|pathImpl
 operator|.
 name|clear
 argument_list|()
-block|;
+expr_stmt|;
 name|Loc
 operator|=
 name|PathDiagnosticLocation
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief If the last piece of the report point to the header file, resets
+end_comment
+
+begin_comment
+comment|/// the location of the report to be the last location in the main source
+end_comment
+
+begin_comment
+comment|/// file.
+end_comment
+
+begin_function_decl
+name|void
+name|resetDiagnosticLocationToMainFile
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|StringRef
 name|getVerboseDescription
 argument_list|()
@@ -3155,6 +3329,9 @@ return|return
 name|VerboseDesc
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|StringRef
 name|getShortDescription
 argument_list|()
@@ -3171,6 +3348,9 @@ operator|:
 name|ShortDesc
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|StringRef
 name|getBugType
 argument_list|()
@@ -3180,6 +3360,9 @@ return|return
 name|BugType
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|StringRef
 name|getCategory
 argument_list|()
@@ -3189,9 +3372,21 @@ return|return
 name|Category
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Return the semantic context where an issue occurred.  If the
+end_comment
+
+begin_comment
 comment|/// issue occurs along a path, this represents the "central" area
+end_comment
+
+begin_comment
 comment|/// where the bug manifests.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|Decl
 operator|*
@@ -3203,6 +3398,9 @@ return|return
 name|DeclWithIssue
 return|;
 block|}
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -3216,6 +3414,9 @@ operator|::
 name|const_iterator
 name|meta_iterator
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|meta_iterator
 name|meta_begin
 argument_list|()
@@ -3228,6 +3429,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|meta_iterator
 name|meta_end
 argument_list|()
@@ -3240,11 +3444,15 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|addMeta
-argument_list|(
-argument|StringRef s
-argument_list|)
+parameter_list|(
+name|StringRef
+name|s
+parameter_list|)
 block|{
 name|OtherDesc
 operator|.
@@ -3252,7 +3460,11 @@ name|push_back
 argument_list|(
 name|s
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|PathDiagnosticLocation
 name|getLocation
 argument_list|()
@@ -3265,14 +3477,14 @@ operator|.
 name|isValid
 argument_list|()
 operator|&&
-literal|"No end-of-path location set yet!"
+literal|"No report location set yet!"
 argument_list|)
 block|;
 return|return
 name|Loc
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Get the location on which the report should be uniqued.

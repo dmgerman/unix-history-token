@@ -241,6 +241,8 @@ name|IITDescriptorKind
 block|{
 name|Void
 block|,
+name|VarArg
+block|,
 name|MMX
 block|,
 name|Metadata

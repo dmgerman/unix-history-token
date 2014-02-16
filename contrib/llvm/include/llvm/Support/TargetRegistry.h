@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm-c/Disassembler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -156,10 +162,19 @@ name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
+name|MCSymbolizer
+decl_stmt|;
+name|class
+name|MCRelocationInfo
+decl_stmt|;
+name|class
 name|MCTargetAsmParser
 decl_stmt|;
 name|class
 name|TargetMachine
+decl_stmt|;
+name|class
+name|MCTargetStreamer
 decl_stmt|;
 name|class
 name|TargetOptions
@@ -177,6 +192,10 @@ parameter_list|(
 name|MCContext
 modifier|&
 name|Ctx
+parameter_list|,
+name|MCTargetStreamer
+modifier|*
+name|TargetStreamer
 parameter_list|,
 name|formatted_raw_ostream
 modifier|&
@@ -208,6 +227,44 @@ name|TAB
 parameter_list|,
 name|bool
 name|ShowInst
+parameter_list|)
+function_decl|;
+name|MCRelocationInfo
+modifier|*
+name|createMCRelocationInfo
+parameter_list|(
+name|StringRef
+name|TT
+parameter_list|,
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
+name|MCSymbolizer
+modifier|*
+name|createMCSymbolizer
+parameter_list|(
+name|StringRef
+name|TT
+parameter_list|,
+name|LLVMOpInfoCallback
+name|GetOpInfo
+parameter_list|,
+name|LLVMSymbolLookupCallback
+name|SymbolLookUp
+parameter_list|,
+name|void
+modifier|*
+name|DisInfo
+parameter_list|,
+name|MCContext
+modifier|*
+name|Ctx
+parameter_list|,
+name|MCRelocationInfo
+modifier|*
+name|RelInfo
 parameter_list|)
 function_decl|;
 comment|/// Target - Wrapper for Target specific information.
@@ -251,9 +308,9 @@ name|MCAsmInfoCtorFnTy
 function_decl|)
 parameter_list|(
 specifier|const
-name|Target
+name|MCRegisterInfo
 modifier|&
-name|T
+name|MRI
 parameter_list|,
 name|StringRef
 name|TT
@@ -414,6 +471,11 @@ name|Target
 modifier|&
 name|T
 parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
 name|StringRef
 name|TT
 parameter_list|,
@@ -436,6 +498,11 @@ parameter_list|,
 name|MCAsmParser
 modifier|&
 name|P
+parameter_list|,
+specifier|const
+name|MCInstrInfo
+modifier|&
+name|MII
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -605,6 +672,52 @@ name|bool
 name|ShowInst
 parameter_list|)
 function_decl|;
+typedef|typedef
+name|MCRelocationInfo
+modifier|*
+function_decl|(
+modifier|*
+name|MCRelocationInfoCtorTy
+function_decl|)
+parameter_list|(
+name|StringRef
+name|TT
+parameter_list|,
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|MCSymbolizer
+modifier|*
+function_decl|(
+modifier|*
+name|MCSymbolizerCtorTy
+function_decl|)
+parameter_list|(
+name|StringRef
+name|TT
+parameter_list|,
+name|LLVMOpInfoCallback
+name|GetOpInfo
+parameter_list|,
+name|LLVMSymbolLookupCallback
+name|SymbolLookUp
+parameter_list|,
+name|void
+modifier|*
+name|DisInfo
+parameter_list|,
+name|MCContext
+modifier|*
+name|Ctx
+parameter_list|,
+name|MCRelocationInfo
+modifier|*
+name|RelInfo
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// Next - The next registered target in the linked list, maintained by the
@@ -709,6 +822,16 @@ comment|/// AsmStreamer, if registered (default = llvm::createAsmStreamer).
 name|AsmStreamerCtorTy
 name|AsmStreamerCtorFn
 decl_stmt|;
+comment|/// MCRelocationInfoCtorFn - Construction function for this target's
+comment|/// MCRelocationInfo, if registered (default = llvm::createMCRelocationInfo)
+name|MCRelocationInfoCtorTy
+name|MCRelocationInfoCtorFn
+decl_stmt|;
+comment|/// MCSymbolizerCtorFn - Construction function for this target's
+comment|/// MCSymbolizer, if registered (default = llvm::createMCSymbolizer)
+name|MCSymbolizerCtorTy
+name|MCSymbolizerCtorFn
+decl_stmt|;
 name|public
 label|:
 name|Target
@@ -716,7 +839,17 @@ argument_list|()
 operator|:
 name|AsmStreamerCtorFn
 argument_list|(
-argument|llvm::createAsmStreamer
+literal|0
+argument_list|)
+operator|,
+name|MCRelocationInfoCtorFn
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|MCSymbolizerCtorFn
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 comment|/// @name Target Information
@@ -794,90 +927,6 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// hasAsmParser - Check if this target supports .s parsing.
-name|bool
-name|hasMCAsmParser
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCAsmParserCtorFn
-operator|!=
-literal|0
-return|;
-block|}
-comment|/// hasAsmPrinter - Check if this target supports .s printing.
-name|bool
-name|hasAsmPrinter
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AsmPrinterCtorFn
-operator|!=
-literal|0
-return|;
-block|}
-comment|/// hasMCDisassembler - Check if this target has a disassembler.
-name|bool
-name|hasMCDisassembler
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCDisassemblerCtorFn
-operator|!=
-literal|0
-return|;
-block|}
-comment|/// hasMCInstPrinter - Check if this target has an instruction printer.
-name|bool
-name|hasMCInstPrinter
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCInstPrinterCtorFn
-operator|!=
-literal|0
-return|;
-block|}
-comment|/// hasMCCodeEmitter - Check if this target supports instruction encoding.
-name|bool
-name|hasMCCodeEmitter
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCCodeEmitterCtorFn
-operator|!=
-literal|0
-return|;
-block|}
-comment|/// hasMCObjectStreamer - Check if this target supports streaming to files.
-name|bool
-name|hasMCObjectStreamer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCObjectStreamerCtorFn
-operator|!=
-literal|0
-return|;
-block|}
-comment|/// hasAsmStreamer - Check if this target supports streaming to files.
-name|bool
-name|hasAsmStreamer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AsmStreamerCtorFn
-operator|!=
-literal|0
-return|;
-block|}
 comment|/// @}
 comment|/// @name Feature Constructors
 comment|/// @{
@@ -892,6 +941,11 @@ name|MCAsmInfo
 modifier|*
 name|createMCAsmInfo
 argument_list|(
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|MRI
+argument_list|,
 name|StringRef
 name|Triple
 argument_list|)
@@ -908,8 +962,7 @@ return|;
 return|return
 name|MCAsmInfoCtorFn
 argument_list|(
-operator|*
-name|this
+name|MRI
 argument_list|,
 name|Triple
 argument_list|)
@@ -1171,6 +1224,11 @@ name|MCAsmBackend
 modifier|*
 name|createMCAsmBackend
 argument_list|(
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|MRI
+argument_list|,
 name|StringRef
 name|Triple
 argument_list|,
@@ -1193,6 +1251,8 @@ argument_list|(
 operator|*
 name|this
 argument_list|,
+name|MRI
+argument_list|,
 name|Triple
 argument_list|,
 name|CPU
@@ -1214,6 +1274,11 @@ argument_list|,
 name|MCAsmParser
 operator|&
 name|Parser
+argument_list|,
+specifier|const
+name|MCInstrInfo
+operator|&
+name|MII
 argument_list|)
 decl|const
 block|{
@@ -1231,6 +1296,8 @@ argument_list|(
 name|STI
 argument_list|,
 name|Parser
+argument_list|,
+name|MII
 argument_list|)
 return|;
 block|}
@@ -1510,7 +1577,10 @@ name|ShowInst
 argument_list|)
 decl|const
 block|{
-comment|// AsmStreamerCtorFn is default to llvm::createAsmStreamer
+if|if
+condition|(
+name|AsmStreamerCtorFn
+condition|)
 return|return
 name|AsmStreamerCtorFn
 argument_list|(
@@ -1533,6 +1603,135 @@ argument_list|,
 name|TAB
 argument_list|,
 name|ShowInst
+argument_list|)
+return|;
+return|return
+name|llvm
+operator|::
+name|createAsmStreamer
+argument_list|(
+name|Ctx
+argument_list|,
+literal|0
+argument_list|,
+name|OS
+argument_list|,
+name|isVerboseAsm
+argument_list|,
+name|useLoc
+argument_list|,
+name|useCFI
+argument_list|,
+name|useDwarfDirectory
+argument_list|,
+name|InstPrint
+argument_list|,
+name|CE
+argument_list|,
+name|TAB
+argument_list|,
+name|ShowInst
+argument_list|)
+return|;
+block|}
+comment|/// createMCRelocationInfo - Create a target specific MCRelocationInfo.
+comment|///
+comment|/// \param TT The target triple.
+comment|/// \param Ctx The target context.
+name|MCRelocationInfo
+modifier|*
+name|createMCRelocationInfo
+argument_list|(
+name|StringRef
+name|TT
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+block|{
+name|MCRelocationInfoCtorTy
+name|Fn
+init|=
+name|MCRelocationInfoCtorFn
+condition|?
+name|MCRelocationInfoCtorFn
+else|:
+name|llvm
+operator|::
+name|createMCRelocationInfo
+decl_stmt|;
+return|return
+name|Fn
+argument_list|(
+name|TT
+argument_list|,
+name|Ctx
+argument_list|)
+return|;
+block|}
+comment|/// createMCSymbolizer - Create a target specific MCSymbolizer.
+comment|///
+comment|/// \param TT The target triple.
+comment|/// \param GetOpInfo The function to get the symbolic information for operands.
+comment|/// \param SymbolLookUp The function to lookup a symbol name.
+comment|/// \param DisInfo The pointer to the block of symbolic information for above call
+comment|/// back.
+comment|/// \param Ctx The target context.
+comment|/// \param RelInfo The relocation information for this target. Takes ownership.
+name|MCSymbolizer
+modifier|*
+name|createMCSymbolizer
+argument_list|(
+name|StringRef
+name|TT
+argument_list|,
+name|LLVMOpInfoCallback
+name|GetOpInfo
+argument_list|,
+name|LLVMSymbolLookupCallback
+name|SymbolLookUp
+argument_list|,
+name|void
+operator|*
+name|DisInfo
+argument_list|,
+name|MCContext
+operator|*
+name|Ctx
+argument_list|,
+name|MCRelocationInfo
+operator|*
+name|RelInfo
+argument_list|)
+decl|const
+block|{
+name|MCSymbolizerCtorTy
+name|Fn
+init|=
+name|MCSymbolizerCtorFn
+condition|?
+name|MCSymbolizerCtorFn
+else|:
+name|llvm
+operator|::
+name|createMCSymbolizer
+decl_stmt|;
+return|return
+name|Fn
+argument_list|(
+name|TT
+argument_list|,
+name|GetOpInfo
+argument_list|,
+name|SymbolLookUp
+argument_list|,
+name|DisInfo
+argument_list|,
+name|Ctx
+argument_list|,
+name|RelInfo
 argument_list|)
 return|;
 block|}
@@ -2081,14 +2280,6 @@ name|MCAsmInfoCtorFnTy
 name|Fn
 argument_list|)
 block|{
-comment|// Ignore duplicate registration.
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCAsmInfoCtorFn
-condition|)
 name|T
 operator|.
 name|MCAsmInfoCtorFn
@@ -2149,14 +2340,6 @@ name|MCCodeGenInfoCtorFnTy
 name|Fn
 argument_list|)
 block|{
-comment|// Ignore duplicate registration.
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCCodeGenInfoCtorFn
-condition|)
 name|T
 operator|.
 name|MCCodeGenInfoCtorFn
@@ -2217,14 +2400,6 @@ name|MCInstrInfoCtorFnTy
 name|Fn
 argument_list|)
 block|{
-comment|// Ignore duplicate registration.
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCInstrInfoCtorFn
-condition|)
 name|T
 operator|.
 name|MCInstrInfoCtorFn
@@ -2257,14 +2432,6 @@ name|MCInstrAnalysisCtorFnTy
 name|Fn
 argument_list|)
 block|{
-comment|// Ignore duplicate registration.
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCInstrAnalysisCtorFn
-condition|)
 name|T
 operator|.
 name|MCInstrAnalysisCtorFn
@@ -2325,14 +2492,6 @@ name|MCRegInfoCtorFnTy
 name|Fn
 argument_list|)
 block|{
-comment|// Ignore duplicate registration.
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCRegInfoCtorFn
-condition|)
 name|T
 operator|.
 name|MCRegInfoCtorFn
@@ -2393,14 +2552,6 @@ name|MCSubtargetInfoCtorFnTy
 name|Fn
 argument_list|)
 block|{
-comment|// Ignore duplicate registration.
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCSubtargetInfoCtorFn
-condition|)
 name|T
 operator|.
 name|MCSubtargetInfoCtorFn
@@ -2461,14 +2612,6 @@ name|TargetMachineCtorTy
 name|Fn
 argument_list|)
 block|{
-comment|// Ignore duplicate registration.
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|TargetMachineCtorFn
-condition|)
 name|T
 operator|.
 name|TargetMachineCtorFn
@@ -2529,13 +2672,6 @@ name|MCAsmBackendCtorTy
 name|Fn
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCAsmBackendCtorFn
-condition|)
 name|T
 operator|.
 name|MCAsmBackendCtorFn
@@ -2596,13 +2732,6 @@ name|MCAsmParserCtorTy
 name|Fn
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCAsmParserCtorFn
-condition|)
 name|T
 operator|.
 name|MCAsmParserCtorFn
@@ -2663,14 +2792,6 @@ name|AsmPrinterCtorTy
 name|Fn
 argument_list|)
 block|{
-comment|// Ignore duplicate registration.
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|AsmPrinterCtorFn
-condition|)
 name|T
 operator|.
 name|AsmPrinterCtorFn
@@ -2731,13 +2852,6 @@ name|MCDisassemblerCtorTy
 name|Fn
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCDisassemblerCtorFn
-condition|)
 name|T
 operator|.
 name|MCDisassemblerCtorFn
@@ -2798,13 +2912,6 @@ name|MCInstPrinterCtorTy
 name|Fn
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCInstPrinterCtorFn
-condition|)
 name|T
 operator|.
 name|MCInstPrinterCtorFn
@@ -2865,13 +2972,6 @@ name|MCCodeEmitterCtorTy
 name|Fn
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCCodeEmitterCtorFn
-condition|)
 name|T
 operator|.
 name|MCCodeEmitterCtorFn
@@ -2932,13 +3032,6 @@ name|MCObjectStreamerCtorTy
 name|Fn
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|MCObjectStreamerCtorFn
-condition|)
 name|T
 operator|.
 name|MCObjectStreamerCtorFn
@@ -2999,17 +3092,129 @@ name|AsmStreamerCtorTy
 name|Fn
 argument_list|)
 block|{
-if|if
-condition|(
 name|T
 operator|.
 name|AsmStreamerCtorFn
-operator|==
-name|createAsmStreamer
-condition|)
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// RegisterMCRelocationInfo - Register an MCRelocationInfo
+end_comment
+
+begin_comment
+comment|/// implementation for the given target.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients are responsible for ensuring that registration doesn't occur
+end_comment
+
+begin_comment
+comment|/// while another thread is attempting to access the registry. Typically
+end_comment
+
+begin_comment
+comment|/// this is done by initializing all targets at program startup.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param T - The target being registered.
+end_comment
+
+begin_comment
+comment|/// @param Fn - A function to construct an MCRelocationInfo for the target.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterMCRelocationInfo
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|MCRelocationInfoCtorTy
+name|Fn
+argument_list|)
+block|{
 name|T
 operator|.
-name|AsmStreamerCtorFn
+name|MCRelocationInfoCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// RegisterMCSymbolizer - Register an MCSymbolizer
+end_comment
+
+begin_comment
+comment|/// implementation for the given target.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients are responsible for ensuring that registration doesn't occur
+end_comment
+
+begin_comment
+comment|/// while another thread is attempting to access the registry. Typically
+end_comment
+
+begin_comment
+comment|/// this is done by initializing all targets at program startup.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param T - The target being registered.
+end_comment
+
+begin_comment
+comment|/// @param Fn - A function to construct an MCSymbolizer for the target.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterMCSymbolizer
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|MCSymbolizerCtorTy
+name|Fn
+argument_list|)
+block|{
+name|T
+operator|.
+name|MCSymbolizerCtorFn
 operator|=
 name|Fn
 expr_stmt|;
@@ -3198,7 +3403,8 @@ name|MCAsmInfo
 operator|*
 name|Allocator
 argument_list|(
-argument|const Target&T
+argument|const MCRegisterInfo&
+comment|/*MRI*/
 argument_list|,
 argument|StringRef TT
 argument_list|)
@@ -3207,8 +3413,6 @@ return|return
 name|new
 name|MCAsmInfoImpl
 argument_list|(
-name|T
-argument_list|,
 name|TT
 argument_list|)
 return|;
@@ -3336,13 +3540,17 @@ name|MCCodeGenInfo
 operator|*
 name|Allocator
 argument_list|(
-argument|StringRef TT
+argument|StringRef
+comment|/*TT*/
 argument_list|,
-argument|Reloc::Model RM
+argument|Reloc::Model
+comment|/*RM*/
 argument_list|,
-argument|CodeModel::Model CM
+argument|CodeModel::Model
+comment|/*CM*/
 argument_list|,
-argument|CodeGenOpt::Level OL
+argument|CodeGenOpt::Level
+comment|/*OL*/
 argument_list|)
 block|{
 return|return
@@ -3738,7 +3946,8 @@ name|MCRegisterInfo
 operator|*
 name|Allocator
 argument_list|(
-argument|StringRef TT
+argument|StringRef
+comment|/*TT*/
 argument_list|)
 block|{
 return|return
@@ -3870,11 +4079,14 @@ name|MCSubtargetInfo
 operator|*
 name|Allocator
 argument_list|(
-argument|StringRef TT
+argument|StringRef
+comment|/*TT*/
 argument_list|,
-argument|StringRef CPU
+argument|StringRef
+comment|/*CPU*/
 argument_list|,
-argument|StringRef FS
+argument|StringRef
+comment|/*FS*/
 argument_list|)
 block|{
 return|return
@@ -4109,6 +4321,8 @@ name|Allocator
 argument_list|(
 argument|const Target&T
 argument_list|,
+argument|const MCRegisterInfo&MRI
+argument_list|,
 argument|StringRef Triple
 argument_list|,
 argument|StringRef CPU
@@ -4119,6 +4333,8 @@ name|new
 name|MCAsmBackendImpl
 argument_list|(
 name|T
+argument_list|,
+name|MRI
 argument_list|,
 name|Triple
 argument_list|,
@@ -4195,6 +4411,8 @@ argument_list|(
 argument|MCSubtargetInfo&STI
 argument_list|,
 argument|MCAsmParser&P
+argument_list|,
+argument|const MCInstrInfo&MII
 argument_list|)
 block|{
 return|return
@@ -4204,6 +4422,8 @@ argument_list|(
 name|STI
 argument_list|,
 name|P
+argument_list|,
+name|MII
 argument_list|)
 return|;
 block|}
@@ -4354,13 +4574,17 @@ name|MCCodeEmitter
 operator|*
 name|Allocator
 argument_list|(
-argument|const MCInstrInfo&II
+argument|const MCInstrInfo&
+comment|/*II*/
 argument_list|,
-argument|const MCRegisterInfo&MRI
+argument|const MCRegisterInfo&
+comment|/*MRI*/
 argument_list|,
-argument|const MCSubtargetInfo&STI
+argument|const MCSubtargetInfo&
+comment|/*STI*/
 argument_list|,
-argument|MCContext&Ctx
+argument|MCContext&
+comment|/*Ctx*/
 argument_list|)
 block|{
 return|return

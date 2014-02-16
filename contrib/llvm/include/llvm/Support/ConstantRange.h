@@ -157,6 +157,25 @@ name|Lower
 decl_stmt|,
 name|Upper
 decl_stmt|;
+if|#
+directive|if
+name|LLVM_HAS_RVALUE_REFERENCES
+comment|// If we have move semantics, pass APInts by value and move them into place.
+typedef|typedef
+name|APInt
+name|APIntMoveTy
+typedef|;
+else|#
+directive|else
+comment|// Otherwise pass by const ref to save one copy.
+typedef|typedef
+specifier|const
+name|APInt
+modifier|&
+name|APIntMoveTy
+typedef|;
+endif|#
+directive|endif
 name|public
 label|:
 comment|/// Initialize a full (the default) or empty set for the specified bit width.
@@ -177,28 +196,19 @@ comment|/// Initialize a range to hold the single specified value.
 comment|///
 name|ConstantRange
 argument_list|(
-specifier|const
-name|APInt
-operator|&
-name|Value
+argument|APIntMoveTy Value
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|/// @brief Initialize a range of values explicitly. This will assert out if
 comment|/// Lower==Upper and Lower != Min or Max value for its type. It will also
 comment|/// assert out if the two APInt's are not the same bit width.
 name|ConstantRange
 argument_list|(
-specifier|const
-name|APInt
-operator|&
-name|Lower
+argument|APIntMoveTy Lower
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Upper
+argument|APIntMoveTy Upper
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|/// makeICmpRegion - Produce the smallest range that contains all values that
 comment|/// might satisfy the comparison specified by Pred when compared to any value
 comment|/// contained within Other.

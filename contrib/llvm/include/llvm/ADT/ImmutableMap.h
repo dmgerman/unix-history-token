@@ -1194,6 +1194,10 @@ expr_stmt|;
 name|public
 label|:
 typedef|typedef
+name|ptrdiff_t
+name|difference_type
+typedef|;
+typedef|typedef
 name|typename
 name|ImmutableMap
 operator|<

@@ -14,13 +14,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_BASIC_CONVERTUTF_H
+name|LLVM_SUPPORT_CONVERTUTF_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_BASIC_CONVERTUTF_H
+name|LLVM_SUPPORT_CONVERTUTF_H
 end_define
 
 begin_comment
@@ -119,6 +119,20 @@ define|#
 directive|define
 name|UNI_MAX_UTF8_BYTES_PER_CODE_POINT
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNI_UTF16_BYTE_ORDER_MARK_NATIVE
+value|0xFEFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNI_UTF16_BYTE_ORDER_MARK_SWAPPED
+value|0xFFFE
 end_define
 
 begin_typedef
@@ -386,6 +400,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -511,6 +531,34 @@ name|flags
 argument_list|)
 return|;
 block|}
+comment|/**  * Returns true if a blob of text starts with a UTF-16 big or little endian byte  * order mark.  */
+name|bool
+name|hasUTF16ByteOrderMark
+argument_list|(
+name|ArrayRef
+operator|<
+name|char
+operator|>
+name|SrcBytes
+argument_list|)
+decl_stmt|;
+comment|/**  * Converts a stream of raw bytes assumed to be UTF16 into a UTF8 std::string.  *  * \param [in] SrcBytes A buffer of what is assumed to be UTF-16 encoded text.  * \param [out] Out Converted UTF-8 is stored here on success.  * \returns true on success  */
+name|bool
+name|convertUTF16ToUTF8String
+argument_list|(
+name|ArrayRef
+operator|<
+name|char
+operator|>
+name|SrcBytes
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Out
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

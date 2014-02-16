@@ -191,6 +191,11 @@ comment|/// \brief This is the scope for a function-level C++ try or catch scope
 name|FnTryCatchScope
 init|=
 literal|0x4000
+block|,
+comment|/// \brief This is the scope of OpenMP executable directive
+name|OpenMPDirectiveScope
+init|=
+literal|0x8000
 block|}
 enum|;
 name|private
@@ -277,11 +282,10 @@ expr_stmt|;
 name|DeclSetTy
 name|DeclsInScope
 decl_stmt|;
-comment|/// Entity - The entity with which this scope is associated. For
+comment|/// The DeclContext with which this scope is associated. For
 comment|/// example, the entity of a class scope is the class itself, the
-comment|/// entity of a function scope is a function, etc. This field is
-comment|/// maintained by the Action implementation.
-name|void
+comment|/// entity of a function scope is a function, etc.
+name|DeclContext
 modifier|*
 name|Entity
 decl_stmt|;
@@ -632,7 +636,7 @@ operator|!=
 literal|0
 return|;
 block|}
-name|void
+name|DeclContext
 operator|*
 name|getEntity
 argument_list|()
@@ -645,7 +649,7 @@ block|}
 name|void
 name|setEntity
 parameter_list|(
-name|void
+name|DeclContext
 modifier|*
 name|E
 parameter_list|)
@@ -912,6 +916,23 @@ return|;
 block|}
 return|return
 name|false
+return|;
+block|}
+comment|/// \brief Determines whether this scope is the OpenMP directive scope
+name|bool
+name|isOpenMPDirectiveScope
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getFlags
+argument_list|()
+operator|&
+name|Scope
+operator|::
+name|OpenMPDirectiveScope
+operator|)
 return|;
 block|}
 comment|/// \brief Determine whether this scope is a C++ 'try' block.

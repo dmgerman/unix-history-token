@@ -771,6 +771,17 @@ name|CastInst
 argument_list|)
 block|;}
 name|RetTy
+name|visitAddrSpaceCastInst
+argument_list|(
+argument|AddrSpaceCastInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|CastInst
+argument_list|)
+block|;}
+name|RetTy
 name|visitSelectInst
 argument_list|(
 argument|SelectInst&I

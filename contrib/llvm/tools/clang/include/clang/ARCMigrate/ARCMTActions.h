@@ -209,11 +209,8 @@ operator|::
 name|string
 name|MigrateDir
 block|;
-name|bool
-name|MigrateLiterals
-block|;
-name|bool
-name|MigrateSubscripting
+name|unsigned
+name|ObjCMigAction
 block|;
 name|FileRemapper
 name|Remapper
@@ -230,9 +227,7 @@ argument|FrontendAction *WrappedAction
 argument_list|,
 argument|StringRef migrateDir
 argument_list|,
-argument|bool migrateLiterals
-argument_list|,
-argument|bool migrateSubscripting
+argument|unsigned migrateAction
 argument_list|)
 block|;
 name|protected

@@ -127,8 +127,14 @@ argument|const char *filename
 argument_list|,
 argument|std::string&ErrorInfo
 argument_list|,
-argument|unsigned Flags =
-literal|0
+argument|sys::fs::OpenFlags Flags = sys::fs::F_None
+argument_list|)
+empty_stmt|;
+name|tool_output_file
+argument_list|(
+argument|const char *Filename
+argument_list|,
+argument|int FD
 argument_list|)
 empty_stmt|;
 comment|/// os - Return the contained raw_fd_ostream.

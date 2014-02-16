@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/FoldingSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -2009,7 +2003,15 @@ comment|///        parameters to the given call.
 end_comment
 
 begin_comment
-comment|/// \param IsConst Specifies if the pointer is const.
+comment|/// \param Kind The reason of pointer escape.
+end_comment
+
+begin_comment
+comment|/// \param ITraits Information about invalidation for a particular
+end_comment
+
+begin_comment
+comment|///        region/symbol.
 end_comment
 
 begin_comment
@@ -2036,10 +2038,9 @@ parameter_list|,
 name|PointerEscapeKind
 name|Kind
 parameter_list|,
-name|bool
-name|IsConst
-init|=
-name|false
+name|RegionAndSymbolInvalidationTraits
+modifier|*
+name|ITraits
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2526,7 +2527,7 @@ argument|const CallEvent *Call
 argument_list|,
 argument|PointerEscapeKind Kind
 argument_list|,
-argument|bool IsConst
+argument|RegionAndSymbolInvalidationTraits *ITraits
 argument_list|)
 operator|>
 name|CheckPointerEscapeFunc
@@ -3170,136 +3171,6 @@ name|StmtCheckers
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|CachedStmtCheckersKey
-block|{
-name|unsigned
-name|StmtKind
-decl_stmt|;
-name|bool
-name|IsPreVisit
-decl_stmt|;
-name|CachedStmtCheckersKey
-argument_list|()
-operator|:
-name|StmtKind
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|IsPreVisit
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
-name|CachedStmtCheckersKey
-argument_list|(
-argument|unsigned stmtKind
-argument_list|,
-argument|bool isPreVisit
-argument_list|)
-operator|:
-name|StmtKind
-argument_list|(
-name|stmtKind
-argument_list|)
-operator|,
-name|IsPreVisit
-argument_list|(
-argument|isPreVisit
-argument_list|)
-block|{ }
-specifier|static
-name|CachedStmtCheckersKey
-name|getSentinel
-argument_list|()
-block|{
-return|return
-name|CachedStmtCheckersKey
-argument_list|(
-operator|~
-literal|0U
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-name|unsigned
-name|getHashValue
-argument_list|()
-specifier|const
-block|{
-name|llvm
-operator|::
-name|FoldingSetNodeID
-name|ID
-block|;
-name|ID
-operator|.
-name|AddInteger
-argument_list|(
-name|StmtKind
-argument_list|)
-block|;
-name|ID
-operator|.
-name|AddBoolean
-argument_list|(
-name|IsPreVisit
-argument_list|)
-block|;
-return|return
-name|ID
-operator|.
-name|ComputeHash
-argument_list|()
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|CachedStmtCheckersKey
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-return|return
-name|StmtKind
-operator|==
-name|RHS
-operator|.
-name|StmtKind
-operator|&&
-name|IsPreVisit
-operator|==
-name|RHS
-operator|.
-name|IsPreVisit
-return|;
-block|}
-block|}
-struct|;
-end_struct
-
-begin_macro
-name|friend
-end_macro
-
-begin_expr_stmt
-unit|struct
-name|llvm
-operator|::
-name|DenseMapInfo
-operator|<
-name|CachedStmtCheckersKey
-operator|>
-expr_stmt|;
-end_expr_stmt
-
 begin_typedef
 typedef|typedef
 name|SmallVector
@@ -3318,7 +3189,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
-name|CachedStmtCheckersKey
+name|unsigned
 operator|,
 name|CachedStmtCheckers
 operator|>
@@ -3333,8 +3204,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|const
 name|CachedStmtCheckers
-modifier|*
+modifier|&
 name|getCachedStmtCheckersFor
 parameter_list|(
 specifier|const
@@ -3593,112 +3465,6 @@ end_comment
 begin_comment
 unit|}
 comment|// end clang namespace
-end_comment
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-comment|/// Define DenseMapInfo so that CachedStmtCheckersKey can be used as key
-comment|/// in DenseMap and DenseSets.
-name|template
-operator|<
-operator|>
-expr|struct
-name|DenseMapInfo
-operator|<
-name|clang
-operator|::
-name|ento
-operator|::
-name|CheckerManager
-operator|::
-name|CachedStmtCheckersKey
-operator|>
-block|{
-specifier|static
-specifier|inline
-name|clang
-operator|::
-name|ento
-operator|::
-name|CheckerManager
-operator|::
-name|CachedStmtCheckersKey
-name|getEmptyKey
-argument_list|()
-block|{
-return|return
-name|clang
-operator|::
-name|ento
-operator|::
-name|CheckerManager
-operator|::
-name|CachedStmtCheckersKey
-argument_list|()
-return|;
-block|}
-specifier|static
-specifier|inline
-name|clang
-operator|::
-name|ento
-operator|::
-name|CheckerManager
-operator|::
-name|CachedStmtCheckersKey
-name|getTombstoneKey
-argument_list|()
-block|{
-return|return
-name|clang
-operator|::
-name|ento
-operator|::
-name|CheckerManager
-operator|::
-name|CachedStmtCheckersKey
-operator|::
-name|getSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|unsigned
-name|getHashValue
-argument_list|(
-argument|clang::ento::CheckerManager::CachedStmtCheckersKey S
-argument_list|)
-block|{
-return|return
-name|S
-operator|.
-name|getHashValue
-argument_list|()
-return|;
-block|}
-specifier|static
-name|bool
-name|isEqual
-argument_list|(
-argument|clang::ento::CheckerManager::CachedStmtCheckersKey LHS
-argument_list|,
-argument|clang::ento::CheckerManager::CachedStmtCheckersKey RHS
-argument_list|)
-block|{
-return|return
-name|LHS
-operator|==
-name|RHS
-return|;
-block|}
-expr|}
-block|; }
-end_decl_stmt
-
-begin_comment
-comment|// end namespace llvm
 end_comment
 
 begin_endif

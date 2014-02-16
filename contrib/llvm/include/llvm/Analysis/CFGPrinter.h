@@ -218,7 +218,13 @@ argument|const BasicBlock *Node
 argument_list|,
 argument|const Function *
 argument_list|)
+block|{     enum
 block|{
+name|MaxColumns
+operator|=
+literal|80
+block|}
+block|;
 name|std
 operator|::
 name|string
@@ -290,6 +296,16 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Process string output to make it nicer...
+name|unsigned
+name|ColNum
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
+name|LastSpace
+init|=
+literal|0
+decl_stmt|;
 for|for
 control|(
 name|unsigned
@@ -307,6 +323,7 @@ condition|;
 operator|++
 name|i
 control|)
+block|{
 if|if
 condition|(
 name|OutStr
@@ -340,6 +357,14 @@ literal|1
 argument_list|,
 literal|'l'
 argument_list|)
+expr_stmt|;
+name|ColNum
+operator|=
+literal|0
+expr_stmt|;
+name|LastSpace
+operator|=
+literal|0
 expr_stmt|;
 block|}
 elseif|else
@@ -389,6 +414,65 @@ name|Idx
 argument_list|)
 expr_stmt|;
 operator|--
+name|i
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ColNum
+operator|==
+name|MaxColumns
+condition|)
+block|{
+comment|// Wrap lines.
+if|if
+condition|(
+name|LastSpace
+condition|)
+block|{
+name|OutStr
+operator|.
+name|insert
+argument_list|(
+name|LastSpace
+argument_list|,
+literal|"\\l..."
+argument_list|)
+expr_stmt|;
+name|ColNum
+operator|=
+name|i
+operator|-
+name|LastSpace
+expr_stmt|;
+name|LastSpace
+operator|=
+literal|0
+expr_stmt|;
+name|i
+operator|+=
+literal|3
+expr_stmt|;
+comment|// The loop will advance 'i' again.
+block|}
+comment|// Else keep trying to find a space.
+block|}
+else|else
+operator|++
+name|ColNum
+expr_stmt|;
+if|if
+condition|(
+name|OutStr
+index|[
+name|i
+index|]
+operator|==
+literal|' '
+condition|)
+name|LastSpace
+operator|=
 name|i
 expr_stmt|;
 block|}

@@ -107,13 +107,16 @@ directive|define
 name|LLVM_SUPPORT_DEBUG_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|raw_ostream
-decl_stmt|;
 comment|/// DEBUG_TYPE macro - Files can specify a DEBUG_TYPE as a string, which causes
 comment|/// all of their DEBUG statements to be activatable with -debug-only=thatstring.
 ifndef|#

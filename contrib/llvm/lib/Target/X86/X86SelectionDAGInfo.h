@@ -117,7 +117,7 @@ name|EmitTargetCodeForMemset
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -141,7 +141,7 @@ name|EmitTargetCodeForMemcpy
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SDValue Chain
 argument_list|,

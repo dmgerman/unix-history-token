@@ -32,43 +32,47 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines the DelayedDiagnostic class, which is used to
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// record diagnostics that are being conditionally produced during
+comment|/// \brief Defines the classes clang::DelayedDiagnostic and
 end_comment
 
 begin_comment
-comment|// declarator parsing.  Certain kinds of diagnostics --- notably
+comment|/// clang::AccessedEntity.
 end_comment
 
 begin_comment
-comment|// deprecation and access control --- are suppressed based on
+comment|///
 end_comment
 
 begin_comment
-comment|// semantic properties of the parsed declaration that aren't known
+comment|/// DelayedDiangostic is used to record diagnostics that are being
 end_comment
 
 begin_comment
-comment|// until it is fully parsed.
+comment|/// conditionally produced during declarator parsing.  Certain kinds of
 end_comment
 
 begin_comment
-comment|//
+comment|/// diagnostics -- notably deprecation and access control -- are suppressed
 end_comment
 
 begin_comment
-comment|// This file also defines AccessedEntity.
+comment|/// based on semantic properties of the parsed declaration that aren't known
 end_comment
 
 begin_comment
-comment|//
+comment|/// until it is fully parsed.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -858,8 +862,7 @@ block|}
 union|;
 block|}
 empty_stmt|;
-comment|/// DelayedDiagnosticPool - A collection of diagnostics which were
-comment|/// delayed.
+comment|/// \brief A collection of diagnostics which were delayed.
 name|class
 name|DelayedDiagnosticPool
 block|{

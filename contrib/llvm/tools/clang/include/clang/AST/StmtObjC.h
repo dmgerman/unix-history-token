@@ -891,7 +891,7 @@ name|ObjCAtTryStmt
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|SourceLocation atTryLoc
 argument_list|,
@@ -909,7 +909,7 @@ name|ObjCAtTryStmt
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|unsigned NumCatchStmts
 argument_list|,

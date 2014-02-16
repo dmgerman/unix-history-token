@@ -749,8 +749,6 @@ name|Name
 init|=
 name|AP
 operator|.
-name|Mang
-operator|->
 name|getSymbol
 argument_list|(
 name|GVar
@@ -914,11 +912,64 @@ name|EmitFunctionBodyEnd
 argument_list|()
 block|;
 name|void
+name|emitImplicitDef
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|void
 name|EmitInstruction
 argument_list|(
 specifier|const
 name|MachineInstr
 operator|*
+argument_list|)
+block|;
+name|void
+name|lowerToMCInst
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MCInst
+operator|&
+name|OutMI
+argument_list|)
+block|;
+name|bool
+name|lowerOperand
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|,
+name|MCOperand
+operator|&
+name|MCOp
+argument_list|)
+block|;
+name|MCOperand
+name|GetSymbolRef
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|Symbol
+argument_list|)
+block|;
+name|unsigned
+name|encodeVirtualRegister
+argument_list|(
+argument|unsigned Reg
 argument_list|)
 block|;
 name|void
@@ -938,32 +989,6 @@ specifier|const
 name|GlobalVariable
 operator|*
 name|GVar
-argument_list|)
-block|;
-name|void
-name|printOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int opNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|,
-argument|const char *Modifier =
-literal|0
-argument_list|)
-block|;
-name|void
-name|printLdStCode
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int opNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|,
-argument|const char *Modifier =
-literal|0
 argument_list|)
 block|;
 name|void
@@ -1090,9 +1115,7 @@ name|emitVirtualRegister
 argument_list|(
 argument|unsigned int vr
 argument_list|,
-argument|bool isVec
-argument_list|,
-argument|raw_ostream&O
+argument|raw_ostream&
 argument_list|)
 block|;
 name|void
@@ -1160,34 +1183,6 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-name|bool
-name|PrintAsmOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|unsigned AsmVariant
-argument_list|,
-argument|const char *ExtraCode
-argument_list|,
-argument|raw_ostream&
-argument_list|)
-block|;
-name|bool
-name|PrintAsmMemoryOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|unsigned AsmVariant
-argument_list|,
-argument|const char *ExtraCode
-argument_list|,
-argument|raw_ostream&
-argument_list|)
-block|;
 name|void
 name|printReturnValStr
 argument_list|(
@@ -1211,6 +1206,47 @@ argument_list|,
 name|raw_ostream
 operator|&
 name|O
+argument_list|)
+block|;
+name|bool
+name|PrintAsmOperand
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|unsigned AsmVariant
+argument_list|,
+argument|const char *ExtraCode
+argument_list|,
+argument|raw_ostream&
+argument_list|)
+block|;
+name|void
+name|printOperand
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int opNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|,
+argument|const char *Modifier =
+literal|0
+argument_list|)
+block|;
+name|bool
+name|PrintAsmMemoryOperand
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|unsigned AsmVariant
+argument_list|,
+argument|const char *ExtraCode
+argument_list|,
+argument|raw_ostream&
 argument_list|)
 block|;
 name|protected
@@ -1250,23 +1286,35 @@ block|;
 comment|// The contents are specific for each
 comment|// MachineFunction. But the size of the
 comment|// array is not.
-name|std
-operator|::
-name|map
+typedef|typedef
+name|DenseMap
 operator|<
 name|unsigned
-block|,
+operator|,
 name|unsigned
 operator|>
+name|VRegMap
+expr_stmt|;
+typedef|typedef
+name|DenseMap
+operator|<
+specifier|const
+name|TargetRegisterClass
 operator|*
-name|VRidGlobal2LocalMap
-block|;
+operator|,
+name|VRegMap
+operator|>
+name|VRegRCMap
+expr_stmt|;
+name|VRegRCMap
+name|VRegMapping
+decl_stmt|;
 comment|// cache the subtarget here.
 specifier|const
 name|NVPTXSubtarget
-operator|&
+modifier|&
 name|nvptxSubtarget
-block|;
+decl_stmt|;
 comment|// Build the map between type name and ID based on module's type
 comment|// symbol table.
 name|std
@@ -1276,13 +1324,13 @@ operator|<
 specifier|const
 name|Type
 operator|*
-block|,
+operator|,
 name|std
 operator|::
 name|string
 operator|>
 name|TypeNameMap
-block|;
+expr_stmt|;
 comment|// List of variables demoted to a function scope.
 name|std
 operator|::
@@ -1291,7 +1339,7 @@ operator|<
 specifier|const
 name|Function
 operator|*
-block|,
+operator|,
 name|std
 operator|::
 name|vector
@@ -1302,7 +1350,7 @@ operator|*
 operator|>
 expr|>
 name|localDecls
-block|;
+expr_stmt|;
 comment|// To record filename to ID mapping
 name|std
 operator|::
@@ -1311,40 +1359,44 @@ operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 name|unsigned
 operator|>
 name|filenameMap
-block|;
+expr_stmt|;
 name|void
 name|recordAndEmitFilenames
-argument_list|(
+parameter_list|(
 name|Module
-operator|&
-argument_list|)
-block|;
+modifier|&
+parameter_list|)
+function_decl|;
 name|void
 name|emitPTXGlobalVariable
-argument_list|(
+parameter_list|(
 specifier|const
 name|GlobalVariable
-operator|*
+modifier|*
 name|GVar
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|O
+parameter_list|)
+function_decl|;
+name|void
+name|emitPTXAddressSpace
+argument_list|(
+name|unsigned
+name|int
+name|AddressSpace
 argument_list|,
 name|raw_ostream
 operator|&
 name|O
 argument_list|)
-block|;
-name|void
-name|emitPTXAddressSpace
-argument_list|(
-argument|unsigned int AddressSpace
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|std
 operator|::
 name|string
@@ -1355,137 +1407,144 @@ argument_list|,
 argument|bool = true
 argument_list|)
 specifier|const
-block|;
+expr_stmt|;
 name|void
 name|printScalarConstant
-argument_list|(
+parameter_list|(
 specifier|const
 name|Constant
-operator|*
+modifier|*
 name|CPV
-argument_list|,
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|O
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|printFPConstant
-argument_list|(
+parameter_list|(
 specifier|const
 name|ConstantFP
-operator|*
+modifier|*
 name|Fp
-argument_list|,
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|O
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|bufferLEByte
-argument_list|(
-argument|const Constant *CPV
-argument_list|,
-argument|int Bytes
-argument_list|,
-argument|AggBuffer *aggBuffer
-argument_list|)
-block|;
-name|void
-name|bufferAggregateConstant
-argument_list|(
+parameter_list|(
 specifier|const
 name|Constant
-operator|*
-name|CV
-argument_list|,
+modifier|*
+name|CPV
+parameter_list|,
+name|int
+name|Bytes
+parameter_list|,
 name|AggBuffer
-operator|*
+modifier|*
 name|aggBuffer
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+name|void
+name|bufferAggregateConstant
+parameter_list|(
+specifier|const
+name|Constant
+modifier|*
+name|CV
+parameter_list|,
+name|AggBuffer
+modifier|*
+name|aggBuffer
+parameter_list|)
+function_decl|;
 name|void
 name|printOperandProper
-argument_list|(
+parameter_list|(
 specifier|const
 name|MachineOperand
-operator|&
+modifier|&
 name|MO
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|emitLinkageDirective
-argument_list|(
+parameter_list|(
 specifier|const
 name|GlobalValue
-operator|*
+modifier|*
 name|V
-argument_list|,
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|O
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|emitDeclarations
-argument_list|(
+parameter_list|(
 specifier|const
 name|Module
-operator|&
-argument_list|,
+modifier|&
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|O
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|emitDeclaration
-argument_list|(
+parameter_list|(
 specifier|const
 name|Function
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|O
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 specifier|static
 specifier|const
 name|char
-operator|*
+modifier|*
 name|getRegisterName
-argument_list|(
-argument|unsigned RegNo
-argument_list|)
-block|;
+parameter_list|(
+name|unsigned
+name|RegNo
+parameter_list|)
+function_decl|;
 name|void
 name|emitDemotedVars
-argument_list|(
+parameter_list|(
 specifier|const
 name|Function
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|raw_ostream
-operator|&
-argument_list|)
-block|;
+modifier|&
+parameter_list|)
+function_decl|;
 name|LineReader
-operator|*
+modifier|*
 name|reader
-block|;
+decl_stmt|;
 name|LineReader
-operator|*
+modifier|*
 name|getReader
 argument_list|(
 name|std
 operator|::
 name|string
 argument_list|)
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|NVPTXAsmPrinter
 argument_list|(
 name|TargetMachine
@@ -1503,7 +1562,7 @@ name|TM
 argument_list|,
 name|Streamer
 argument_list|)
-block|,
+operator|,
 name|nvptxSubtarget
 argument_list|(
 argument|TM.getSubtarget<NVPTXSubtarget>()
@@ -1512,10 +1571,6 @@ block|{
 name|CurrentBankselLabelInBasicBlock
 operator|=
 literal|""
-block|;
-name|VRidGlobal2LocalMap
-operator|=
-name|NULL
 block|;
 name|reader
 operator|=
@@ -1536,39 +1591,41 @@ decl_stmt|;
 block|}
 name|bool
 name|ignoreLoc
-argument_list|(
+parameter_list|(
 specifier|const
 name|MachineInstr
-operator|&
-argument_list|)
-block|;
-name|virtual
-name|void
+modifier|&
+parameter_list|)
+function_decl|;
+name|std
+operator|::
+name|string
 name|getVirtualRegisterName
 argument_list|(
-name|unsigned
-argument_list|,
-name|bool
-argument_list|,
-name|raw_ostream
-operator|&
+argument|unsigned
 argument_list|)
-block|;
+specifier|const
+expr_stmt|;
 name|DebugLoc
 name|prevDebugLoc
-block|;
+decl_stmt|;
 name|void
 name|emitLineNumberAsDotLoc
-argument_list|(
+parameter_list|(
 specifier|const
 name|MachineInstr
-operator|&
-argument_list|)
-block|; }
-block|; }
+modifier|&
+parameter_list|)
+function_decl|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end of namespace
 end_comment
 

@@ -129,6 +129,12 @@ directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/BlockFrequency.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -200,11 +206,11 @@ block|;
 comment|// Block frequencies are computed once. Indexed by block number.
 name|SmallVector
 operator|<
-name|float
+name|BlockFrequency
 block|,
 literal|4
 operator|>
-name|BlockFrequency
+name|BlockFrequencies
 block|;
 name|public
 operator|:
@@ -376,7 +382,7 @@ argument_list|()
 block|;
 comment|/// getBlockFrequency - Return the estimated block execution frequency per
 comment|/// function invocation.
-name|float
+name|BlockFrequency
 name|getBlockFrequency
 argument_list|(
 argument|unsigned Number
@@ -384,7 +390,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|BlockFrequency
+name|BlockFrequencies
 index|[
 name|Number
 index|]

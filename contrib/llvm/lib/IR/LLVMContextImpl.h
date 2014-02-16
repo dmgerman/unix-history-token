@@ -1884,6 +1884,23 @@ expr_stmt|;
 name|IntrinsicIDCacheTy
 name|IntrinsicIDCache
 decl_stmt|;
+comment|/// \brief Mapping from a function to its prefix data, which is stored as the
+comment|/// operand of an unparented ReturnInst so that the prefix data has a Use.
+typedef|typedef
+name|DenseMap
+operator|<
+specifier|const
+name|Function
+operator|*
+operator|,
+name|ReturnInst
+operator|*
+operator|>
+name|PrefixDataMapTy
+expr_stmt|;
+name|PrefixDataMapTy
+name|PrefixDataMap
+decl_stmt|;
 name|int
 name|getOrAddScopeRecordIdxEntry
 parameter_list|(

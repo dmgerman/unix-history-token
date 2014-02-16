@@ -81,9 +81,6 @@ name|class
 name|MachineFunction
 decl_stmt|;
 name|class
-name|Mangler
-decl_stmt|;
-name|class
 name|MipsAsmPrinter
 decl_stmt|;
 comment|/// MipsMCInstLower - This class is used to lower an MachineInstr into an
@@ -102,10 +99,6 @@ name|MCContext
 modifier|*
 name|Ctx
 decl_stmt|;
-name|Mangler
-modifier|*
-name|Mang
-decl_stmt|;
 name|MipsAsmPrinter
 modifier|&
 name|AsmPrinter
@@ -122,10 +115,6 @@ expr_stmt|;
 name|void
 name|Initialize
 parameter_list|(
-name|Mangler
-modifier|*
-name|mang
-parameter_list|,
 name|MCContext
 modifier|*
 name|C

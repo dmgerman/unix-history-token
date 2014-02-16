@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//  These functions are implemented by lib/VMCore/AutoUpgrade.cpp.
+comment|//  These functions are implemented by lib/IR/AutoUpgrade.cpp.
 end_comment
 
 begin_comment
@@ -64,16 +64,28 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|CallInst
+decl_stmt|;
+name|class
+name|Constant
+decl_stmt|;
+name|class
+name|Function
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 name|class
 name|GlobalVariable
 decl_stmt|;
 name|class
-name|Function
+name|Type
 decl_stmt|;
 name|class
-name|CallInst
+name|Value
 decl_stmt|;
 comment|/// This is a more granular function that simply checks an intrinsic function
 comment|/// for upgrading, and returns true if it requires upgrading. It may return
@@ -126,6 +138,68 @@ parameter_list|(
 name|GlobalVariable
 modifier|*
 name|GV
+parameter_list|)
+function_decl|;
+comment|/// If the TBAA tag for the given instruction uses the scalar TBAA format,
+comment|/// we upgrade it to the struct-path aware TBAA format.
+name|void
+name|UpgradeInstWithTBAATag
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
+function_decl|;
+comment|/// This is an auto-upgrade for bitcast between pointers with different
+comment|/// address spaces: the instruction is replaced by a pair ptrtoint+inttoptr.
+name|Instruction
+modifier|*
+name|UpgradeBitCastInst
+parameter_list|(
+name|unsigned
+name|Opc
+parameter_list|,
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|Type
+modifier|*
+name|DestTy
+parameter_list|,
+name|Instruction
+modifier|*
+modifier|&
+name|Temp
+parameter_list|)
+function_decl|;
+comment|/// This is an auto-upgrade for bitcast constant expression between pointers
+comment|/// with different address spaces: the instruction is replaced by a pair
+comment|/// ptrtoint+inttoptr.
+name|Value
+modifier|*
+name|UpgradeBitCastExpr
+parameter_list|(
+name|unsigned
+name|Opc
+parameter_list|,
+name|Constant
+modifier|*
+name|C
+parameter_list|,
+name|Type
+modifier|*
+name|DestTy
+parameter_list|)
+function_decl|;
+comment|/// Check the debug info version number, if it is out-dated, drop the debug
+comment|/// info. Return true if module is modified.
+name|bool
+name|UpgradeDebugInfo
+parameter_list|(
+name|Module
+modifier|&
+name|M
 parameter_list|)
 function_decl|;
 block|}

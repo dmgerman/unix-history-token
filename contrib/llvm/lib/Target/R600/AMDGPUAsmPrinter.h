@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- AMDGPUAsmPrinter.h - Print AMDGPU assembly code -------------------===//
+comment|//===-- AMDGPUAsmPrinter.h - Print AMDGPU assembly code ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -69,6 +69,18 @@ directive|include
 file|"llvm/CodeGen/AsmPrinter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -92,14 +104,7 @@ name|MCStreamer
 operator|&
 name|Streamer
 argument_list|)
-operator|:
-name|AsmPrinter
-argument_list|(
-argument|TM
-argument_list|,
-argument|Streamer
-argument_list|)
-block|{ }
+block|;
 name|virtual
 name|bool
 name|runOnMachineFunction
@@ -149,6 +154,26 @@ name|MachineInstr
 operator|*
 name|MI
 argument_list|)
+block|;
+name|protected
+operator|:
+name|bool
+name|DisasmEnabled
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|DisasmLines
+block|,
+name|HexLines
+block|;
+name|size_t
+name|DisasmLineMaxLen
 block|; }
 decl_stmt|;
 block|}

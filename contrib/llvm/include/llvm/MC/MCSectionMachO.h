@@ -130,6 +130,10 @@ operator|:
 comment|/// These are the section type and attributes fields.  A MachO section can
 comment|/// have only one Type, but can have any of the attributes specified.
 expr|enum
+name|LLVM_ENUM_INT_TYPE
+argument_list|(
+argument|uint32_t
+argument_list|)
 block|{
 comment|// TypeAndAttributes bitmasks.
 name|SECTION_TYPE

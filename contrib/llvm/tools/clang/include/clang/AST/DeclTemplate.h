@@ -133,6 +133,12 @@ decl_stmt|;
 name|class
 name|TypeAliasTemplateDecl
 decl_stmt|;
+name|class
+name|VarTemplateDecl
+decl_stmt|;
+name|class
+name|VarTemplatePartialSpecializationDecl
+decl_stmt|;
 comment|/// \brief Stores a template parameter of any kind.
 typedef|typedef
 name|llvm
@@ -2207,7 +2213,7 @@ name|getCanonicalDecl
 parameter_list|()
 block|{
 return|return
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 return|;
 block|}
@@ -2219,7 +2225,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 return|;
 block|}
@@ -2394,6 +2400,11 @@ name|redeclarable_base
 operator|::
 name|getMostRecentDecl
 expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|isFirstDecl
+expr_stmt|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -2525,9 +2536,10 @@ name|Common
 argument_list|()
 operator|:
 name|InjectedArgs
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
+block|,
+name|LazySpecializations
+argument_list|()
 block|{ }
 comment|/// \brief The function template specializations for this function
 comment|/// template, including explicit specializations and instantiations.
@@ -2549,6 +2561,15 @@ comment|/// require the use of this information.
 name|TemplateArgument
 operator|*
 name|InjectedArgs
+block|;
+comment|/// \brief If non-null, points to an array of specializations known only
+comment|/// by their external declaration IDs.
+comment|///
+comment|/// The first value in the array is the number of of specializations
+comment|/// that follow.
+name|uint32_t
+operator|*
+name|LazySpecializations
 block|;   }
 block|;
 name|FunctionTemplateDecl
@@ -2611,6 +2632,12 @@ name|friend
 name|class
 name|FunctionDecl
 block|;
+comment|/// \brief Load any lazily-loaded specializations from the external source.
+name|void
+name|LoadLazySpecializations
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Retrieve the set of function template specializations of this
 comment|/// function template.
 name|llvm
@@ -2623,14 +2650,7 @@ operator|&
 name|getSpecializations
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getCommonPtr
-argument_list|()
-operator|->
-name|Specializations
-return|;
-block|}
+block|;
 comment|/// \brief Add a specialization of this function template.
 comment|///
 comment|/// \param InsertPos Insert position in the FoldingSetVector, must have been
@@ -2746,8 +2766,15 @@ operator|<
 name|FunctionTemplateDecl
 operator|>
 operator|(
+name|static_cast
+operator|<
 name|RedeclarableTemplateDecl
-operator|::
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getPreviousDecl
 argument_list|()
 operator|)
@@ -2768,8 +2795,16 @@ operator|<
 name|FunctionTemplateDecl
 operator|>
 operator|(
+name|static_cast
+operator|<
+specifier|const
 name|RedeclarableTemplateDecl
-operator|::
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getPreviousDecl
 argument_list|()
 operator|)
@@ -2837,15 +2872,9 @@ comment|/// Although the C++ standard has no notion of the "injected" template
 comment|/// arguments for a function template, the notion is convenient when
 comment|/// we need to perform substitutions inside the definition of a function
 comment|/// template.
-name|std
-operator|::
-name|pair
+name|ArrayRef
 operator|<
-specifier|const
 name|TemplateArgument
-operator|*
-block|,
-name|unsigned
 operator|>
 name|getInjectedTemplateArgs
 argument_list|()
@@ -4527,6 +4556,7 @@ name|PartialSpecialization
 block|;
 comment|/// \brief The template argument list deduced for the class template
 comment|/// partial specialization itself.
+specifier|const
 name|TemplateArgumentList
 operator|*
 name|TemplateArgs
@@ -4585,6 +4615,7 @@ operator|*
 name|ExplicitInfo
 block|;
 comment|/// \brief The template arguments used to describe this specialization.
+specifier|const
 name|TemplateArgumentList
 operator|*
 name|TemplateArgs
@@ -4688,18 +4719,19 @@ name|CXXRecordDecl
 operator|*
 name|Recent
 operator|=
-name|cast
+name|static_cast
 operator|<
 name|CXXRecordDecl
+operator|*
 operator|>
 operator|(
-name|CXXRecordDecl
-operator|::
+name|this
+operator|)
+operator|->
 name|getMostRecentDecl
 argument_list|()
-operator|)
 block|;
-if|if
+while|while
 condition|(
 operator|!
 name|isa
@@ -5122,7 +5154,7 @@ name|setInstantiationOf
 argument_list|(
 argument|ClassTemplatePartialSpecializationDecl *PartialSpec
 argument_list|,
-argument|TemplateArgumentList *TemplateArgs
+argument|const TemplateArgumentList *TemplateArgs
 argument_list|)
 end_macro
 
@@ -5574,18 +5606,10 @@ name|TemplateParams
 block|;
 comment|/// \brief The source info for the template arguments as written.
 comment|/// FIXME: redundant with TypeAsWritten?
-name|TemplateArgumentLoc
+specifier|const
+name|ASTTemplateArgumentListInfo
 operator|*
 name|ArgsAsWritten
-block|;
-name|unsigned
-name|NumArgsAsWritten
-block|;
-comment|/// \brief Sequence number indicating when this class template partial
-comment|/// specialization was added to the set of partial specializations for
-comment|/// its owning class template.
-name|unsigned
-name|SequenceNumber
 block|;
 comment|/// \brief The class template partial specialization from which this
 comment|/// class template partial specialization was instantiated.
@@ -5625,13 +5649,9 @@ argument|const TemplateArgument *Args
 argument_list|,
 argument|unsigned NumArgs
 argument_list|,
-argument|TemplateArgumentLoc *ArgInfos
-argument_list|,
-argument|unsigned NumArgInfos
+argument|const ASTTemplateArgumentListInfo *ArgsAsWritten
 argument_list|,
 argument|ClassTemplatePartialSpecializationDecl *PrevDecl
-argument_list|,
-argument|unsigned SequenceNumber
 argument_list|)
 block|;
 name|ClassTemplatePartialSpecializationDecl
@@ -5648,16 +5668,6 @@ literal|0
 argument_list|)
 block|,
 name|ArgsAsWritten
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NumArgsAsWritten
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|SequenceNumber
 argument_list|(
 literal|0
 argument_list|)
@@ -5699,8 +5709,6 @@ argument_list|,
 argument|QualType CanonInjectedType
 argument_list|,
 argument|ClassTemplatePartialSpecializationDecl *PrevDecl
-argument_list|,
-argument|unsigned SequenceNumber
 argument_list|)
 block|;
 specifier|static
@@ -5724,8 +5732,15 @@ operator|<
 name|ClassTemplatePartialSpecializationDecl
 operator|>
 operator|(
+name|static_cast
+operator|<
 name|ClassTemplateSpecializationDecl
-operator|::
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getMostRecentDecl
 argument_list|()
 operator|)
@@ -5743,7 +5758,8 @@ name|TemplateParams
 return|;
 block|}
 comment|/// Get the template arguments as written.
-name|TemplateArgumentLoc
+specifier|const
+name|ASTTemplateArgumentListInfo
 operator|*
 name|getTemplateArgsAsWritten
 argument_list|()
@@ -5751,27 +5767,6 @@ specifier|const
 block|{
 return|return
 name|ArgsAsWritten
-return|;
-block|}
-comment|/// Get the number of template arguments as written.
-name|unsigned
-name|getNumTemplateArgsAsWritten
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumArgsAsWritten
-return|;
-block|}
-comment|/// \brief Get the sequence number for this class template partial
-comment|/// specialization.
-name|unsigned
-name|getSequenceNumber
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SequenceNumber
 return|;
 block|}
 comment|/// \brief Retrieve the member class template partial specialization from
@@ -5808,7 +5803,7 @@ operator|<
 name|ClassTemplatePartialSpecializationDecl
 operator|>
 operator|(
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 operator|)
 block|;
@@ -5836,7 +5831,7 @@ operator|<
 name|ClassTemplatePartialSpecializationDecl
 operator|>
 operator|(
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 operator|)
 block|;
@@ -5878,7 +5873,7 @@ operator|<
 name|ClassTemplatePartialSpecializationDecl
 operator|>
 operator|(
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 operator|)
 block|;
@@ -5905,7 +5900,7 @@ operator|<
 name|ClassTemplatePartialSpecializationDecl
 operator|>
 operator|(
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 operator|)
 block|;
@@ -6064,7 +6059,7 @@ name|QualType
 name|InjectedClassNameType
 block|;
 comment|/// \brief If non-null, points to an array of specializations (including
-comment|/// partial specializations) known ownly by their external declaration IDs.
+comment|/// partial specializations) known only by their external declaration IDs.
 comment|///
 comment|/// The first value in the array is the number of of specializations/
 comment|/// partial specializations that follow.
@@ -6324,8 +6319,15 @@ operator|<
 name|ClassTemplateDecl
 operator|>
 operator|(
+name|static_cast
+operator|<
 name|RedeclarableTemplateDecl
-operator|::
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getPreviousDecl
 argument_list|()
 operator|)
@@ -6346,11 +6348,65 @@ operator|<
 name|ClassTemplateDecl
 operator|>
 operator|(
+name|static_cast
+operator|<
+specifier|const
 name|RedeclarableTemplateDecl
-operator|::
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getPreviousDecl
 argument_list|()
 operator|)
+return|;
+block|}
+name|ClassTemplateDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|ClassTemplateDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|RedeclarableTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|ClassTemplateDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|ClassTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
 return|;
 block|}
 name|ClassTemplateDecl
@@ -6398,19 +6454,6 @@ operator|*
 name|InsertPos
 argument_list|)
 block|;
-comment|/// \brief Return the next partial specialization sequence number.
-name|unsigned
-name|getNextPartialSpecSequenceNumber
-argument_list|()
-block|{
-return|return
-name|getPartialSpecializations
-argument_list|()
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
 comment|/// \brief Retrieve the partial specializations as an ordered list.
 name|void
 name|getPartialSpecializations
@@ -7222,8 +7265,15 @@ operator|<
 name|TypeAliasTemplateDecl
 operator|>
 operator|(
+name|static_cast
+operator|<
 name|RedeclarableTemplateDecl
-operator|::
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getPreviousDecl
 argument_list|()
 operator|)
@@ -7253,8 +7303,16 @@ operator|<
 name|TypeAliasTemplateDecl
 operator|>
 operator|(
+name|static_cast
+operator|<
+specifier|const
 name|RedeclarableTemplateDecl
-operator|::
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getPreviousDecl
 argument_list|()
 operator|)
@@ -7677,10 +7735,2108 @@ argument_list|(
 argument|FTD
 argument_list|)
 block|{ }
+comment|/// \brief Represents a variable template specialization, which refers to
+comment|/// a variable template with a given set of template arguments.
+comment|///
+comment|/// Variable template specializations represent both explicit
+comment|/// specializations of variable templates, as in the example below, and
+comment|/// implicit instantiations of variable templates.
+comment|///
+comment|/// \code
+comment|/// template<typename T> constexpr T pi = T(3.1415926535897932385);
+comment|///
+comment|/// template<>
+comment|/// constexpr float pi<float>; // variable template specialization pi<float>
+comment|/// \endcode
+name|class
+name|VarTemplateSpecializationDecl
+operator|:
+name|public
+name|VarDecl
+operator|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+comment|/// \brief Structure that stores information about a variable template
+comment|/// specialization that was instantiated from a variable template partial
+comment|/// specialization.
+block|struct
+name|SpecializedPartialSpecialization
+block|{
+comment|/// \brief The variable template partial specialization from which this
+comment|/// variable template specialization was instantiated.
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|PartialSpecialization
+block|;
+comment|/// \brief The template argument list deduced for the variable template
+comment|/// partial specialization itself.
+specifier|const
+name|TemplateArgumentList
+operator|*
+name|TemplateArgs
+block|;   }
+block|;
+comment|/// \brief The template that this specialization specializes.
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|VarTemplateDecl
+operator|*
+block|,
+name|SpecializedPartialSpecialization
+operator|*
+operator|>
+name|SpecializedTemplate
+block|;
+comment|/// \brief Further info for explicit template specialization/instantiation.
+block|struct
+name|ExplicitSpecializationInfo
+block|{
+comment|/// \brief The type-as-written.
+name|TypeSourceInfo
+operator|*
+name|TypeAsWritten
+block|;
+comment|/// \brief The location of the extern keyword.
+name|SourceLocation
+name|ExternLoc
+block|;
+comment|/// \brief The location of the template keyword.
+name|SourceLocation
+name|TemplateKeywordLoc
+block|;
+name|ExplicitSpecializationInfo
+argument_list|()
+operator|:
+name|TypeAsWritten
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ExternLoc
+argument_list|()
+block|,
+name|TemplateKeywordLoc
+argument_list|()
+block|{}
+block|}
+block|;
+comment|/// \brief Further info for explicit template specialization/instantiation.
+comment|/// Does not apply to implicit specializations.
+name|ExplicitSpecializationInfo
+operator|*
+name|ExplicitInfo
+block|;
+comment|/// \brief The template arguments used to describe this specialization.
+specifier|const
+name|TemplateArgumentList
+operator|*
+name|TemplateArgs
+block|;
+name|TemplateArgumentListInfo
+name|TemplateArgsInfo
+block|;
+comment|/// \brief The point where this template was instantiated (if any).
+name|SourceLocation
+name|PointOfInstantiation
+block|;
+comment|/// \brief The kind of specialization this declaration refers to.
+comment|/// Really a value of type TemplateSpecializationKind.
+name|unsigned
+name|SpecializationKind
+operator|:
+literal|3
+block|;
+name|protected
+operator|:
+name|VarTemplateSpecializationDecl
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|Kind DK
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
+argument_list|,
+argument|VarTemplateDecl *SpecializedTemplate
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|,
+argument|StorageClass S
+argument_list|,
+argument|const TemplateArgument *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|)
+block|;
+name|explicit
+name|VarTemplateSpecializationDecl
+argument_list|(
+argument|Kind DK
+argument_list|)
+block|;
+name|public
+operator|:
+specifier|static
+name|VarTemplateSpecializationDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
+argument_list|,
+argument|VarTemplateDecl *SpecializedTemplate
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|,
+argument|StorageClass S
+argument_list|,
+argument|const TemplateArgument *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|)
+block|;
+specifier|static
+name|VarTemplateSpecializationDecl
+operator|*
+name|CreateDeserialized
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned ID
+argument_list|)
+block|;
+name|virtual
+name|void
+name|getNameForDiagnostic
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|const PrintingPolicy&Policy
+argument_list|,
+argument|bool Qualified
+argument_list|)
+specifier|const
+block|;
+name|VarTemplateSpecializationDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+block|{
+name|VarDecl
+operator|*
+name|Recent
+operator|=
+name|static_cast
+operator|<
+name|VarDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
+block|;
+return|return
+name|cast
+operator|<
+name|VarTemplateSpecializationDecl
+operator|>
+operator|(
+name|Recent
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the template that this specialization specializes.
+name|VarTemplateDecl
+operator|*
+name|getSpecializedTemplate
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Retrieve the template arguments of the variable template
+end_comment
+
+begin_comment
+comment|/// specialization.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|TemplateArgumentList
+operator|&
+name|getTemplateArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|TemplateArgs
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// TODO: Always set this when creating the new specialization?
+end_comment
+
+begin_function_decl
+name|void
+name|setTemplateArgsInfo
+parameter_list|(
+specifier|const
+name|TemplateArgumentListInfo
+modifier|&
+name|ArgsInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+specifier|const
+name|TemplateArgumentListInfo
+operator|&
+name|getTemplateArgsInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TemplateArgsInfo
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine the kind of specialization that this
+end_comment
+
+begin_comment
+comment|/// declaration represents.
+end_comment
+
+begin_expr_stmt
+name|TemplateSpecializationKind
+name|getSpecializationKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|TemplateSpecializationKind
+operator|>
+operator|(
+name|SpecializationKind
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|isExplicitSpecialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSpecializationKind
+argument_list|()
+operator|==
+name|TSK_ExplicitSpecialization
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief True if this declaration is an explicit specialization,
+end_comment
+
+begin_comment
+comment|/// explicit instantiation declaration, or explicit instantiation
+end_comment
+
+begin_comment
+comment|/// definition.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isExplicitInstantiationOrSpecialization
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getTemplateSpecializationKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|TSK_ExplicitSpecialization
+case|:
+case|case
+name|TSK_ExplicitInstantiationDeclaration
+case|:
+case|case
+name|TSK_ExplicitInstantiationDefinition
+case|:
+return|return
+name|true
+return|;
+case|case
+name|TSK_Undeclared
+case|:
+case|case
+name|TSK_ImplicitInstantiation
+case|:
+return|return
+name|false
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"bad template specialization kind"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+unit|}    void
+name|setSpecializationKind
+argument_list|(
+argument|TemplateSpecializationKind TSK
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|SpecializationKind
+operator|=
+name|TSK
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/// \brief Get the point of instantiation (if any), or null if none.
+end_comment
+
+begin_expr_stmt
+name|SourceLocation
+name|getPointOfInstantiation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointOfInstantiation
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setPointOfInstantiation
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Loc
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+literal|"point of instantiation must be valid!"
+argument_list|)
+expr_stmt|;
+name|PointOfInstantiation
+operator|=
+name|Loc
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief If this variable template specialization is an instantiation of
+end_comment
+
+begin_comment
+comment|/// a template (rather than an explicit specialization), return the
+end_comment
+
+begin_comment
+comment|/// variable template or variable template partial specialization from which
+end_comment
+
+begin_comment
+comment|/// it was instantiated.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|VarTemplateDecl
+operator|*
+operator|,
+name|VarTemplatePartialSpecializationDecl
+operator|*
+operator|>
+name|getInstantiatedFrom
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getSpecializationKind
+argument_list|()
+operator|!=
+name|TSK_ImplicitInstantiation
+operator|&&
+name|getSpecializationKind
+argument_list|()
+operator|!=
+name|TSK_ExplicitInstantiationDefinition
+operator|&&
+name|getSpecializationKind
+argument_list|()
+operator|!=
+name|TSK_ExplicitInstantiationDeclaration
+condition|)
+return|return
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|VarTemplateDecl
+operator|*
+operator|,
+name|VarTemplatePartialSpecializationDecl
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|SpecializedPartialSpecialization
+modifier|*
+name|PartialSpec
+init|=
+name|SpecializedTemplate
+operator|.
+name|dyn_cast
+operator|<
+name|SpecializedPartialSpecialization
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|PartialSpec
+operator|->
+name|PartialSpecialization
+return|;
+end_if
+
+begin_return
+return|return
+name|SpecializedTemplate
+operator|.
+name|get
+operator|<
+name|VarTemplateDecl
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+end_return
+
+begin_comment
 unit|}
+comment|/// \brief Retrieve the variable template or variable template partial
+end_comment
+
+begin_comment
+comment|/// specialization which was specialized by this.
+end_comment
+
+begin_expr_stmt
+unit|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|VarTemplateDecl
+operator|*
+operator|,
+name|VarTemplatePartialSpecializationDecl
+operator|*
+operator|>
+name|getSpecializedTemplateOrPartial
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|SpecializedPartialSpecialization
+modifier|*
+name|PartialSpec
+init|=
+name|SpecializedTemplate
+operator|.
+name|dyn_cast
+operator|<
+name|SpecializedPartialSpecialization
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|PartialSpec
+operator|->
+name|PartialSpecialization
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|SpecializedTemplate
+operator|.
+name|get
+operator|<
+name|VarTemplateDecl
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Retrieve the set of template arguments that should be used
+end_comment
+
+begin_comment
+comment|/// to instantiate the initializer of the variable template or variable
+end_comment
+
+begin_comment
+comment|/// template partial specialization from which this variable template
+end_comment
+
+begin_comment
+comment|/// specialization was instantiated.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns For a variable template specialization instantiated from the
+end_comment
+
+begin_comment
+comment|/// primary template, this function will return the same template arguments
+end_comment
+
+begin_comment
+comment|/// as getTemplateArgs(). For a variable template specialization instantiated
+end_comment
+
+begin_comment
+comment|/// from a variable template partial specialization, this function will the
+end_comment
+
+begin_comment
+comment|/// return deduced template arguments for the variable template partial
+end_comment
+
+begin_comment
+comment|/// specialization itself.
+end_comment
+
+begin_expr_stmt
+unit|const
+name|TemplateArgumentList
+operator|&
+name|getTemplateInstantiationArgs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|SpecializedPartialSpecialization
+modifier|*
+name|PartialSpec
+init|=
+name|SpecializedTemplate
+operator|.
+name|dyn_cast
+operator|<
+name|SpecializedPartialSpecialization
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+operator|*
+name|PartialSpec
+operator|->
+name|TemplateArgs
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getTemplateArgs
+argument_list|()
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Note that this variable template specialization is actually an
+end_comment
+
+begin_comment
+comment|/// instantiation of the given variable template partial specialization whose
+end_comment
+
+begin_comment
+comment|/// template arguments have been deduced.
+end_comment
+
+begin_macro
+unit|void
+name|setInstantiationOf
+argument_list|(
+argument|VarTemplatePartialSpecializationDecl *PartialSpec
+argument_list|,
+argument|const TemplateArgumentList *TemplateArgs
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|assert
+argument_list|(
+operator|!
+name|SpecializedTemplate
+operator|.
+name|is
+operator|<
+name|SpecializedPartialSpecialization
+operator|*
+operator|>
+operator|(
+operator|)
+operator|&&
+literal|"Already set to a variable template partial specialization!"
+argument_list|)
+expr_stmt|;
+name|SpecializedPartialSpecialization
+modifier|*
+name|PS
+init|=
+name|new
+argument_list|(
+argument|getASTContext()
+argument_list|)
+name|SpecializedPartialSpecialization
+argument_list|()
+decl_stmt|;
+name|PS
+operator|->
+name|PartialSpecialization
+operator|=
+name|PartialSpec
+expr_stmt|;
+name|PS
+operator|->
+name|TemplateArgs
+operator|=
+name|TemplateArgs
+expr_stmt|;
+name|SpecializedTemplate
+operator|=
+name|PS
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/// \brief Note that this variable template specialization is an instantiation
+end_comment
+
+begin_comment
+comment|/// of the given variable template.
+end_comment
+
+begin_function
+name|void
+name|setInstantiationOf
+parameter_list|(
+name|VarTemplateDecl
+modifier|*
+name|TemplDecl
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|SpecializedTemplate
+operator|.
+name|is
+operator|<
+name|SpecializedPartialSpecialization
+operator|*
+operator|>
+operator|(
+operator|)
+operator|&&
+literal|"Previously set to a variable template partial specialization!"
+argument_list|)
+expr_stmt|;
+name|SpecializedTemplate
+operator|=
+name|TemplDecl
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Sets the type of this specialization as it was written by
+end_comment
+
+begin_comment
+comment|/// the user.
+end_comment
+
+begin_function
+name|void
+name|setTypeAsWritten
+parameter_list|(
+name|TypeSourceInfo
+modifier|*
+name|T
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|ExplicitInfo
+condition|)
+name|ExplicitInfo
+operator|=
+name|new
+argument_list|(
+argument|getASTContext()
+argument_list|)
+name|ExplicitSpecializationInfo
+expr_stmt|;
+name|ExplicitInfo
+operator|->
+name|TypeAsWritten
+operator|=
+name|T
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Gets the type of this specialization as it was written by
+end_comment
+
+begin_comment
+comment|/// the user, if it was so written.
+end_comment
+
+begin_expr_stmt
+name|TypeSourceInfo
+operator|*
+name|getTypeAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExplicitInfo
+operator|?
+name|ExplicitInfo
+operator|->
+name|TypeAsWritten
+operator|:
+literal|0
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Gets the location of the extern keyword, if present.
+end_comment
+
+begin_expr_stmt
+name|SourceLocation
+name|getExternLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExplicitInfo
+operator|?
+name|ExplicitInfo
+operator|->
+name|ExternLoc
+operator|:
+name|SourceLocation
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Sets the location of the extern keyword.
+end_comment
+
+begin_function
+name|void
+name|setExternLoc
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|ExplicitInfo
+condition|)
+name|ExplicitInfo
+operator|=
+name|new
+argument_list|(
+argument|getASTContext()
+argument_list|)
+name|ExplicitSpecializationInfo
+expr_stmt|;
+name|ExplicitInfo
+operator|->
+name|ExternLoc
+operator|=
+name|Loc
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Sets the location of the template keyword.
+end_comment
+
+begin_function
+name|void
+name|setTemplateKeywordLoc
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|ExplicitInfo
+condition|)
+name|ExplicitInfo
+operator|=
+name|new
+argument_list|(
+argument|getASTContext()
+argument_list|)
+name|ExplicitSpecializationInfo
+expr_stmt|;
+name|ExplicitInfo
+operator|->
+name|TemplateKeywordLoc
+operator|=
+name|Loc
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Gets the location of the template keyword, if present.
+end_comment
+
+begin_expr_stmt
+name|SourceLocation
+name|getTemplateKeywordLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExplicitInfo
+operator|?
+name|ExplicitInfo
+operator|->
+name|TemplateKeywordLoc
+operator|:
+name|SourceLocation
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+decl|const
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|TemplateArgs
+operator|->
+name|data
+argument_list|()
+argument_list|,
+name|TemplateArgs
+operator|->
+name|size
+argument_list|()
+argument_list|,
+name|getASTContext
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+specifier|const
+name|TemplateArgument
+operator|*
+name|TemplateArgs
+argument_list|,
+name|unsigned
+name|NumTemplateArgs
+argument_list|,
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|NumTemplateArgs
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|unsigned
+name|Arg
+init|=
+literal|0
+init|;
+name|Arg
+operator|!=
+name|NumTemplateArgs
+condition|;
+operator|++
+name|Arg
+control|)
+name|TemplateArgs
+index|[
+name|Arg
+index|]
+operator|.
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|Context
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_function
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|classofKind
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
+block|{
+return|return
+name|K
+operator|>=
+name|firstVarTemplateSpecialization
+operator|&&
+name|K
+operator|<=
+name|lastVarTemplateSpecialization
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+unit|};
+name|class
+name|VarTemplatePartialSpecializationDecl
+range|:
+name|public
+name|VarTemplateSpecializationDecl
+block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+comment|/// \brief The list of template parameters
+name|TemplateParameterList
+operator|*
+name|TemplateParams
+block|;
+comment|/// \brief The source info for the template arguments as written.
+comment|/// FIXME: redundant with TypeAsWritten?
+specifier|const
+name|ASTTemplateArgumentListInfo
+operator|*
+name|ArgsAsWritten
+block|;
+comment|/// \brief The variable template partial specialization from which this
+comment|/// variable template partial specialization was instantiated.
+comment|///
+comment|/// The boolean value will be true to indicate that this variable template
+comment|/// partial specialization was specialized at this level.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|VarTemplatePartialSpecializationDecl
+operator|*
+block|,
+literal|1
+block|,
+name|bool
+operator|>
+name|InstantiatedFromMember
+block|;
+name|VarTemplatePartialSpecializationDecl
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|,
+argument|VarTemplateDecl *SpecializedTemplate
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|,
+argument|StorageClass S
+argument_list|,
+argument|const TemplateArgument *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|const ASTTemplateArgumentListInfo *ArgInfos
+argument_list|)
+block|;
+name|VarTemplatePartialSpecializationDecl
+argument_list|()
+operator|:
+name|VarTemplateSpecializationDecl
+argument_list|(
+name|VarTemplatePartialSpecialization
+argument_list|)
+block|,
+name|TemplateParams
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ArgsAsWritten
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|InstantiatedFromMember
+argument_list|(
+literal|0
+argument_list|,
+argument|false
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|static
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|,
+argument|VarTemplateDecl *SpecializedTemplate
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|,
+argument|StorageClass S
+argument_list|,
+argument|const TemplateArgument *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|const TemplateArgumentListInfo&ArgInfos
+argument_list|)
+block|;
+specifier|static
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|CreateDeserialized
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned ID
+argument_list|)
+block|;
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|VarTemplatePartialSpecializationDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|VarTemplateSpecializationDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Get the list of template parameters
+name|TemplateParameterList
+operator|*
+name|getTemplateParameters
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TemplateParams
+return|;
+block|}
+comment|/// Get the template arguments as written.
+specifier|const
+name|ASTTemplateArgumentListInfo
+operator|*
+name|getTemplateArgsAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArgsAsWritten
+return|;
+block|}
+comment|/// \brief Retrieve the member variable template partial specialization from
+comment|/// which this particular variable template partial specialization was
+comment|/// instantiated.
+comment|///
+comment|/// \code
+comment|/// template<typename T>
+comment|/// struct Outer {
+comment|///   template<typename U> U Inner;
+comment|///   template<typename U> U* Inner<U*> = (U*)(0); // #1
+comment|/// };
+comment|///
+comment|/// template int* Outer<float>::Inner<int*>;
+comment|/// \endcode
+comment|///
+comment|/// In this example, the instantiation of \c Outer<float>::Inner<int*> will
+comment|/// end up instantiating the partial specialization
+comment|/// \c Outer<float>::Inner<U*>, which itself was instantiated from the
+comment|/// variable template partial specialization \c Outer<T>::Inner<U*>. Given
+comment|/// \c Outer<float>::Inner<U*>, this function would return
+comment|/// \c Outer<T>::Inner<U*>.
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|getInstantiatedFromMember
+argument_list|()
+block|{
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|First
+operator|=
+name|cast
+operator|<
+name|VarTemplatePartialSpecializationDecl
+operator|>
+operator|(
+name|getFirstDecl
+argument_list|()
+operator|)
+block|;
+return|return
+name|First
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|void
+name|setInstantiatedFromMember
+argument_list|(
+argument|VarTemplatePartialSpecializationDecl *PartialSpec
+argument_list|)
+block|{
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|First
+operator|=
+name|cast
+operator|<
+name|VarTemplatePartialSpecializationDecl
+operator|>
+operator|(
+name|getFirstDecl
+argument_list|()
+operator|)
+block|;
+name|First
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|setPointer
+argument_list|(
+name|PartialSpec
+argument_list|)
+block|;   }
+comment|/// \brief Determines whether this variable template partial specialization
+comment|/// was a specialization of a member partial specialization.
+comment|///
+comment|/// In the following example, the member template partial specialization
+comment|/// \c X<int>::Inner<T*> is a member specialization.
+comment|///
+comment|/// \code
+comment|/// template<typename T>
+comment|/// struct X {
+comment|///   template<typename U> U Inner;
+comment|///   template<typename U> U* Inner<U*> = (U*)(0);
+comment|/// };
+comment|///
+comment|/// template<> template<typename T>
+comment|/// U* X<int>::Inner<T*> = (T*)(0) + 1;
+comment|/// \endcode
+name|bool
+name|isMemberSpecialization
+argument_list|()
+block|{
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|First
+operator|=
+name|cast
+operator|<
+name|VarTemplatePartialSpecializationDecl
+operator|>
+operator|(
+name|getFirstDecl
+argument_list|()
+operator|)
+block|;
+return|return
+name|First
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+comment|/// \brief Note that this member template is a specialization.
+name|void
+name|setMemberSpecialization
+argument_list|()
+block|{
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|First
+operator|=
+name|cast
+operator|<
+name|VarTemplatePartialSpecializationDecl
+operator|>
+operator|(
+name|getFirstDecl
+argument_list|()
+operator|)
+block|;
+name|assert
+argument_list|(
+name|First
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getPointer
+argument_list|()
+operator|&&
+literal|"Only member templates can be member template specializations"
+argument_list|)
+block|;
+return|return
+name|First
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|setInt
+argument_list|(
+name|true
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+argument_list|(
+argument|Kind K
+argument_list|)
+block|{
+return|return
+name|K
+operator|==
+name|VarTemplatePartialSpecialization
+return|;
+block|}
+name|friend
+name|class
+name|ASTDeclReader
+block|;
+name|friend
+name|class
+name|ASTDeclWriter
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Declaration of a variable template.
+end_comment
+
+begin_decl_stmt
+name|class
+name|VarTemplateDecl
+range|:
+name|public
+name|RedeclarableTemplateDecl
+block|{
+specifier|static
+name|void
+name|DeallocateCommon
+argument_list|(
+name|void
+operator|*
+name|Ptr
+argument_list|)
+block|;
+name|protected
+operator|:
+comment|/// \brief Data that is common to all of the declarations of a given
+comment|/// variable template.
+expr|struct
+name|Common
+operator|:
+name|CommonBase
+block|{
+name|Common
+argument_list|()
+operator|:
+name|LazySpecializations
+argument_list|()
+block|{}
+comment|/// \brief The variable template specializations for this variable
+comment|/// template, including explicit specializations and instantiations.
+name|llvm
+operator|::
+name|FoldingSetVector
+operator|<
+name|VarTemplateSpecializationDecl
+operator|>
+name|Specializations
+block|;
+comment|/// \brief The variable template partial specializations for this variable
+comment|/// template.
+name|llvm
+operator|::
+name|FoldingSetVector
+operator|<
+name|VarTemplatePartialSpecializationDecl
+operator|>
+name|PartialSpecializations
+block|;
+comment|/// \brief If non-null, points to an array of specializations (including
+comment|/// partial specializations) known ownly by their external declaration IDs.
+comment|///
+comment|/// The first value in the array is the number of of specializations/
+comment|/// partial specializations that follow.
+name|uint32_t
+operator|*
+name|LazySpecializations
+block|;   }
+block|;
+comment|/// \brief Load any lazily-loaded specializations from the external source.
+name|void
+name|LoadLazySpecializations
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Retrieve the set of specializations of this variable template.
+name|llvm
+operator|::
+name|FoldingSetVector
+operator|<
+name|VarTemplateSpecializationDecl
+operator|>
+operator|&
+name|getSpecializations
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Retrieve the set of partial specializations of this class
+comment|/// template.
+name|llvm
+operator|::
+name|FoldingSetVector
+operator|<
+name|VarTemplatePartialSpecializationDecl
+operator|>
+operator|&
+name|getPartialSpecializations
+argument_list|()
+block|;
+name|VarTemplateDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|DeclarationName Name
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|,
+argument|NamedDecl *Decl
+argument_list|)
+operator|:
+name|RedeclarableTemplateDecl
+argument_list|(
+argument|VarTemplate
+argument_list|,
+argument|DC
+argument_list|,
+argument|L
+argument_list|,
+argument|Name
+argument_list|,
+argument|Params
+argument_list|,
+argument|Decl
+argument_list|)
+block|{}
+name|VarTemplateDecl
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|RedeclarableTemplateDecl
+argument_list|(
+argument|VarTemplate
+argument_list|,
+literal|0
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|DeclarationName()
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+name|CommonBase
+operator|*
+name|newCommon
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
+block|;
+name|Common
+operator|*
+name|getCommonPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|Common
+operator|*
+operator|>
+operator|(
+name|RedeclarableTemplateDecl
+operator|::
+name|getCommonPtr
+argument_list|()
+operator|)
+return|;
+block|}
+name|public
+operator|:
+comment|/// \brief Get the underlying variable declarations of the template.
+name|VarDecl
+operator|*
+name|getTemplatedDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|VarDecl
+operator|*
+operator|>
+operator|(
+name|TemplatedDecl
+operator|)
+return|;
+block|}
+comment|/// \brief Returns whether this template declaration defines the primary
+comment|/// variable pattern.
+name|bool
+name|isThisDeclarationADefinition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTemplatedDecl
+argument_list|()
+operator|->
+name|isThisDeclarationADefinition
+argument_list|()
+return|;
+block|}
+name|VarTemplateDecl
+operator|*
+name|getDefinition
+argument_list|()
+block|;
+comment|/// \brief Create a variable template node.
+specifier|static
+name|VarTemplateDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|DeclarationName Name
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|,
+argument|NamedDecl *Decl
+argument_list|,
+argument|VarTemplateDecl *PrevDecl
+argument_list|)
+block|;
+comment|/// \brief Create an empty variable template node.
+specifier|static
+name|VarTemplateDecl
+operator|*
+name|CreateDeserialized
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned ID
+argument_list|)
+block|;
+comment|/// \brief Return the specialization with the provided arguments if it exists,
+comment|/// otherwise return the insertion point.
+name|VarTemplateSpecializationDecl
+operator|*
+name|findSpecialization
+argument_list|(
+argument|const TemplateArgument *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|void *&InsertPos
+argument_list|)
+block|;
+comment|/// \brief Insert the specified specialization knowing that it is not already
+comment|/// in. InsertPos must be obtained from findSpecialization.
+name|void
+name|AddSpecialization
+argument_list|(
+name|VarTemplateSpecializationDecl
+operator|*
+name|D
+argument_list|,
+name|void
+operator|*
+name|InsertPos
+argument_list|)
+block|;
+name|VarTemplateDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|VarTemplateDecl
+operator|>
+operator|(
+name|RedeclarableTemplateDecl
+operator|::
+name|getCanonicalDecl
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|VarTemplateDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|VarTemplateDecl
+operator|>
+operator|(
+name|RedeclarableTemplateDecl
+operator|::
+name|getCanonicalDecl
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the previous declaration of this variable template, or
+comment|/// NULL if no such declaration exists.
+name|VarTemplateDecl
+operator|*
+name|getPreviousDecl
+argument_list|()
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|VarTemplateDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|RedeclarableTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getPreviousDecl
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the previous declaration of this variable template, or
+comment|/// NULL if no such declaration exists.
+specifier|const
+name|VarTemplateDecl
+operator|*
+name|getPreviousDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|VarTemplateDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|RedeclarableTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getPreviousDecl
+argument_list|()
+operator|)
+return|;
+block|}
+name|VarTemplateDecl
+operator|*
+name|getInstantiatedFromMemberTemplate
+argument_list|()
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|VarTemplateDecl
+operator|>
+operator|(
+name|RedeclarableTemplateDecl
+operator|::
+name|getInstantiatedFromMemberTemplate
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Return the partial specialization with the provided arguments if it
+comment|/// exists, otherwise return the insertion point.
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|findPartialSpecialization
+argument_list|(
+argument|const TemplateArgument *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|void *&InsertPos
+argument_list|)
+block|;
+comment|/// \brief Insert the specified partial specialization knowing that it is not
+comment|/// already in. InsertPos must be obtained from findPartialSpecialization.
+name|void
+name|AddPartialSpecialization
+argument_list|(
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|D
+argument_list|,
+name|void
+operator|*
+name|InsertPos
+argument_list|)
+block|;
+comment|/// \brief Retrieve the partial specializations as an ordered list.
+name|void
+name|getPartialSpecializations
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|VarTemplatePartialSpecializationDecl
+operator|*
+operator|>
+operator|&
+name|PS
+argument_list|)
+block|;
+comment|/// \brief Find a variable template partial specialization which was
+comment|/// instantiated
+comment|/// from the given member partial specialization.
+comment|///
+comment|/// \param D a member variable template partial specialization.
+comment|///
+comment|/// \returns the variable template partial specialization which was
+comment|/// instantiated
+comment|/// from the given member partial specialization, or NULL if no such partial
+comment|/// specialization exists.
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|findPartialSpecInstantiatedFromMember
+argument_list|(
+name|VarTemplatePartialSpecializationDecl
+operator|*
+name|D
+argument_list|)
+block|;
+typedef|typedef
+name|SpecIterator
+operator|<
+name|VarTemplateSpecializationDecl
+operator|>
+name|spec_iterator
+expr_stmt|;
+name|spec_iterator
+name|spec_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeSpecIterator
+argument_list|(
+name|getSpecializations
+argument_list|()
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+name|spec_iterator
+name|spec_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeSpecIterator
+argument_list|(
+name|getSpecializations
+argument_list|()
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|SpecIterator
+operator|<
+name|VarTemplatePartialSpecializationDecl
+operator|>
+name|partial_spec_iterator
+expr_stmt|;
+end_typedef
+
+begin_function
+name|partial_spec_iterator
+name|partial_spec_begin
+parameter_list|()
+block|{
+return|return
+name|makeSpecIterator
+argument_list|(
+name|getPartialSpecializations
+argument_list|()
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|partial_spec_iterator
+name|partial_spec_end
+parameter_list|()
+block|{
+return|return
+name|makeSpecIterator
+argument_list|(
+name|getPartialSpecializations
+argument_list|()
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// Implement isa/cast/dyncast support
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|classofKind
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
+block|{
+return|return
+name|K
+operator|==
+name|VarTemplate
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};  }
 comment|/* end of namespace clang */
 end_comment
 

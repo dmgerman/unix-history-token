@@ -20,6 +20,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__AVX2INTRIN_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__AVX2INTRIN_H
+end_define
+
 begin_comment
 comment|/* SSE4 Multiple Packed Sums of Absolute Difference.  */
 end_comment
@@ -4725,12 +4737,10 @@ operator|,
 name|__nodebug__
 operator|)
 argument_list|)
-name|_mm_broadcastsi128_si256
+name|_mm256_broadcastsi128_si256
 argument_list|(
 name|__m128i
-specifier|const
-operator|*
-name|__a
+name|__X
 argument_list|)
 block|{
 return|return
@@ -4739,7 +4749,7 @@ name|__m256i
 operator|)
 name|__builtin_ia32_vbroadcastsi256
 argument_list|(
-name|__a
+name|__X
 argument_list|)
 return|;
 block|}
@@ -6151,7 +6161,7 @@ name|mask
 parameter_list|,
 name|s
 parameter_list|)
-value|__extension__ ({ \   __m128i __a = (a); \   int const *__m = (m); \   __m128i __i = (i); \   __m128i __mask = (mask); \   (__m128i)__builtin_ia32_gatherd_q((__v2di)__a, (const __v2di *)__m, \              (__v4si)__i, (__v2di)__mask, (s)); })
+value|__extension__ ({ \   __m128i __a = (a); \   long long const *__m = (m); \   __m128i __i = (i); \   __m128i __mask = (mask); \   (__m128i)__builtin_ia32_gatherd_q((__v2di)__a, (const __v2di *)__m, \              (__v4si)__i, (__v2di)__mask, (s)); })
 end_define
 
 begin_define
@@ -6169,7 +6179,7 @@ name|mask
 parameter_list|,
 name|s
 parameter_list|)
-value|__extension__ ({ \   __m256i __a = (a); \   int const *__m = (m); \   __m128i __i = (i); \   __m256i __mask = (mask); \   (__m256i)__builtin_ia32_gatherd_q256((__v4di)__a, (const __v4di *)__m, \              (__v4si)__i, (__v4di)__mask, (s)); })
+value|__extension__ ({ \   __m256i __a = (a); \   long long const *__m = (m); \   __m128i __i = (i); \   __m256i __mask = (mask); \   (__m256i)__builtin_ia32_gatherd_q256((__v4di)__a, (const __v4di *)__m, \              (__v4si)__i, (__v4di)__mask, (s)); })
 end_define
 
 begin_define
@@ -6187,7 +6197,7 @@ name|mask
 parameter_list|,
 name|s
 parameter_list|)
-value|__extension__ ({ \   __m128i __a = (a); \   int const *__m = (m); \   __m128i __i = (i); \   __m128i __mask = (mask); \   (__m128i)__builtin_ia32_gatherq_q((__v2di)__a, (const __v2di *)__m, \              (__v2di)__i, (__v2di)__mask, (s)); })
+value|__extension__ ({ \   __m128i __a = (a); \   long long const *__m = (m); \   __m128i __i = (i); \   __m128i __mask = (mask); \   (__m128i)__builtin_ia32_gatherq_q((__v2di)__a, (const __v2di *)__m, \              (__v2di)__i, (__v2di)__mask, (s)); })
 end_define
 
 begin_define
@@ -6205,7 +6215,7 @@ name|mask
 parameter_list|,
 name|s
 parameter_list|)
-value|__extension__ ({ \   __m256i __a = (a); \   int const *__m = (m); \   __m256i __i = (i); \   __m256i __mask = (mask); \   (__m256i)__builtin_ia32_gatherq_q256((__v4di)__a, (const __v4di *)__m, \              (__v4di)__i, (__v4di)__mask, (s)); })
+value|__extension__ ({ \   __m256i __a = (a); \   long long const *__m = (m); \   __m256i __i = (i); \   __m256i __mask = (mask); \   (__m256i)__builtin_ia32_gatherq_q256((__v4di)__a, (const __v4di *)__m, \              (__v4di)__i, (__v4di)__mask, (s)); })
 end_define
 
 begin_define
@@ -6387,7 +6397,7 @@ name|i
 parameter_list|,
 name|s
 parameter_list|)
-value|__extension__ ({ \   int const *__m = (m); \   __m128i __i = (i); \   (__m128i)__builtin_ia32_gatherd_q((__v2di)_mm_setzero_si128(), \              (const __v2di *)__m, (__v4si)__i, \              (__v2di)_mm_set1_epi64x(-1), (s)); })
+value|__extension__ ({ \   long long const *__m = (m); \   __m128i __i = (i); \   (__m128i)__builtin_ia32_gatherd_q((__v2di)_mm_setzero_si128(), \              (const __v2di *)__m, (__v4si)__i, \              (__v2di)_mm_set1_epi64x(-1), (s)); })
 end_define
 
 begin_define
@@ -6401,7 +6411,7 @@ name|i
 parameter_list|,
 name|s
 parameter_list|)
-value|__extension__ ({ \   int const *__m = (m); \   __m128i __i = (i); \   (__m256i)__builtin_ia32_gatherd_q256((__v4di)_mm256_setzero_si256(), \              (const __v4di *)__m, (__v4si)__i, \              (__v4di)_mm256_set1_epi64x(-1), (s)); })
+value|__extension__ ({ \   long long const *__m = (m); \   __m128i __i = (i); \   (__m256i)__builtin_ia32_gatherd_q256((__v4di)_mm256_setzero_si256(), \              (const __v4di *)__m, (__v4si)__i, \              (__v4di)_mm256_set1_epi64x(-1), (s)); })
 end_define
 
 begin_define
@@ -6415,7 +6425,7 @@ name|i
 parameter_list|,
 name|s
 parameter_list|)
-value|__extension__ ({ \   int const *__m = (m); \   __m128i __i = (i); \   (__m128i)__builtin_ia32_gatherq_q((__v2di)_mm_setzero_si128(), \              (const __v2di *)__m, (__v2di)__i, \              (__v2di)_mm_set1_epi64x(-1), (s)); })
+value|__extension__ ({ \   long long const *__m = (m); \   __m128i __i = (i); \   (__m128i)__builtin_ia32_gatherq_q((__v2di)_mm_setzero_si128(), \              (const __v2di *)__m, (__v2di)__i, \              (__v2di)_mm_set1_epi64x(-1), (s)); })
 end_define
 
 begin_define
@@ -6429,8 +6439,17 @@ name|i
 parameter_list|,
 name|s
 parameter_list|)
-value|__extension__ ({ \   int const *__m = (m); \   __m256i __i = (i); \   (__m256i)__builtin_ia32_gatherq_q256((__v4di)_mm256_setzero_si256(), \              (const __v4di *)__m, (__v4di)__i, \              (__v4di)_mm256_set1_epi64x(-1), (s)); })
+value|__extension__ ({ \   long long const *__m = (m); \   __m256i __i = (i); \   (__m256i)__builtin_ia32_gatherq_q256((__v4di)_mm256_setzero_si256(), \              (const __v4di *)__m, (__v4di)__i, \              (__v4di)_mm256_set1_epi64x(-1), (s)); })
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __AVX2INTRIN_H */
+end_comment
 
 end_unit
 

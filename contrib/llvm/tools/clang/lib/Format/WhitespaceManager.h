@@ -102,6 +102,13 @@ comment|/// \brief Manages the whitespaces around tokens and their replacements.
 comment|///
 comment|/// This includes special handling for certain constructs, e.g. the alignment of
 comment|/// trailing line comments.
+comment|///
+comment|/// To guarantee correctness of alignment operations, the \c WhitespaceManager
+comment|/// must be informed about every token in the source file; for each token, there
+comment|/// must be exactly one call to either \c replaceWhitespace or
+comment|/// \c addUntouchableToken.
+comment|///
+comment|/// There may be multiple calls to \c breakToken for a given token.
 name|class
 name|WhitespaceManager
 block|{
@@ -109,16 +116,13 @@ name|public
 label|:
 name|WhitespaceManager
 argument_list|(
-name|SourceManager
-operator|&
-name|SourceMgr
+argument|SourceManager&SourceMgr
 argument_list|,
-specifier|const
-name|FormatStyle
-operator|&
-name|Style
+argument|const FormatStyle&Style
+argument_list|,
+argument|bool UseCRLF
 argument_list|)
-operator|:
+block|:
 name|SourceMgr
 argument_list|(
 name|SourceMgr
@@ -126,55 +130,72 @@ argument_list|)
 operator|,
 name|Style
 argument_list|(
-argument|Style
+name|Style
+argument_list|)
+operator|,
+name|UseCRLF
+argument_list|(
+argument|UseCRLF
 argument_list|)
 block|{}
+comment|/// \brief Prepares the \c WhitespaceManager for another run.
+name|void
+name|reset
+argument_list|()
+expr_stmt|;
 comment|/// \brief Replaces the whitespace in front of \p Tok. Only call once for
 comment|/// each \c AnnotatedToken.
 name|void
 name|replaceWhitespace
-argument_list|(
-argument|const AnnotatedToken&Tok
-argument_list|,
-argument|unsigned NewLines
-argument_list|,
-argument|unsigned Spaces
-argument_list|,
-argument|unsigned WhitespaceStartColumn
-argument_list|)
-expr_stmt|;
-comment|/// \brief Like \c replaceWhitespace, but additionally adds right-aligned
-comment|/// backslashes to escape newlines inside a preprocessor directive.
-comment|///
-comment|/// This function and \c replaceWhitespace have the same behavior if
-comment|/// \c Newlines == 0.
-name|void
-name|replacePPWhitespace
 parameter_list|(
-specifier|const
-name|AnnotatedToken
+name|FormatToken
 modifier|&
 name|Tok
 parameter_list|,
 name|unsigned
-name|NewLines
+name|Newlines
+parameter_list|,
+name|unsigned
+name|IndentLevel
 parameter_list|,
 name|unsigned
 name|Spaces
 parameter_list|,
 name|unsigned
-name|WhitespaceStartColumn
+name|StartOfTokenColumn
+parameter_list|,
+name|bool
+name|InPPDirective
+init|=
+name|false
 parameter_list|)
 function_decl|;
-comment|/// \brief Inserts a line break into the middle of a token.
+comment|/// \brief Adds information about an unchangable token's whitespace.
 comment|///
-comment|/// Will break at \p Offset inside \p Tok, putting \p Prefix before the line
-comment|/// break and \p Postfix before the rest of the token starts in the next line.
-comment|///
-comment|/// \p InPPDirective, \p Spaces, \p WhitespaceStartColumn and \p Style are
-comment|/// used to generate the correct line break.
+comment|/// Needs to be called for every token for which \c replaceWhitespace
+comment|/// was not called.
 name|void
-name|breakToken
+name|addUntouchableToken
+parameter_list|(
+specifier|const
+name|FormatToken
+modifier|&
+name|Tok
+parameter_list|,
+name|bool
+name|InPPDirective
+parameter_list|)
+function_decl|;
+comment|/// \brief Inserts or replaces whitespace in the middle of a token.
+comment|///
+comment|/// Inserts \p PreviousPostfix, \p Newlines, \p Spaces and \p CurrentPrefix
+comment|/// (in this order) at \p Offset inside \p Tok, replacing \p ReplaceChars
+comment|/// characters.
+comment|///
+comment|/// When \p InPPDirective is true, escaped newlines are inserted. \p Spaces is
+comment|/// used to align backslashes correctly.
+name|void
+name|replaceWhitespaceInToken
 parameter_list|(
 specifier|const
 name|FormatToken
@@ -188,19 +209,22 @@ name|unsigned
 name|ReplaceChars
 parameter_list|,
 name|StringRef
-name|Prefix
+name|PreviousPostfix
 parameter_list|,
 name|StringRef
-name|Postfix
+name|CurrentPrefix
 parameter_list|,
 name|bool
 name|InPPDirective
 parameter_list|,
 name|unsigned
-name|Spaces
+name|Newlines
 parameter_list|,
 name|unsigned
-name|WhitespaceStartColumn
+name|IndentLevel
+parameter_list|,
+name|unsigned
+name|Spaces
 parameter_list|)
 function_decl|;
 comment|/// \brief Returns all the \c Replacements created during formatting.
@@ -212,210 +236,280 @@ operator|&
 name|generateReplacements
 argument_list|()
 expr_stmt|;
-name|void
-name|addReplacement
-parameter_list|(
+name|private
+label|:
+comment|/// \brief Represents a change before a token, a break inside a token,
+comment|/// or the layout of an unchanged token (or whitespace within).
+struct|struct
+name|Change
+block|{
+comment|/// \brief Functor to sort changes in original source order.
+name|class
+name|IsBeforeInFile
+block|{
+name|public
+label|:
+name|IsBeforeInFile
+argument_list|(
 specifier|const
-name|SourceLocation
+name|SourceManager
+operator|&
+name|SourceMgr
+argument_list|)
+operator|:
+name|SourceMgr
+argument_list|(
+argument|SourceMgr
+argument_list|)
+block|{}
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|Change
+operator|&
+name|C1
+operator|,
+specifier|const
+name|Change
+operator|&
+name|C2
+operator|)
+specifier|const
+expr_stmt|;
+name|private
+label|:
+specifier|const
+name|SourceManager
 modifier|&
-name|SourceLoc
+name|SourceMgr
+decl_stmt|;
+block|}
+empty_stmt|;
+name|Change
+argument_list|()
+block|{}
+comment|/// \brief Creates a \c Change.
+comment|///
+comment|/// The generated \c Change will replace the characters at
+comment|/// \p OriginalWhitespaceRange with a concatenation of
+comment|/// \p PreviousLinePostfix, \p NewlinesBefore line breaks, \p Spaces spaces
+comment|/// and \p CurrentLinePrefix.
+comment|///
+comment|/// \p StartOfTokenColumn and \p InPPDirective will be used to lay out
+comment|/// trailing comments and escaped newlines.
+name|Change
+argument_list|(
+argument|bool CreateReplacement
+argument_list|,
+argument|const SourceRange&OriginalWhitespaceRange
+argument_list|,
+argument|unsigned IndentLevel
+argument_list|,
+argument|unsigned Spaces
+argument_list|,
+argument|unsigned StartOfTokenColumn
+argument_list|,
+argument|unsigned NewlinesBefore
+argument_list|,
+argument|StringRef PreviousLinePostfix
+argument_list|,
+argument|StringRef CurrentLinePrefix
+argument_list|,
+argument|tok::TokenKind Kind
+argument_list|,
+argument|bool ContinuesPPDirective
+argument_list|)
+empty_stmt|;
+name|bool
+name|CreateReplacement
+decl_stmt|;
+comment|// Changes might be in the middle of a token, so we cannot just keep the
+comment|// FormatToken around to query its information.
+name|SourceRange
+name|OriginalWhitespaceRange
+decl_stmt|;
+name|unsigned
+name|StartOfTokenColumn
+decl_stmt|;
+name|unsigned
+name|NewlinesBefore
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|PreviousLinePostfix
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|CurrentLinePrefix
+expr_stmt|;
+comment|// The kind of the token whose whitespace this change replaces, or in which
+comment|// this change inserts whitespace.
+comment|// FIXME: Currently this is not set correctly for breaks inside comments, as
+comment|// the \c BreakableToken is still doing its own alignment.
+name|tok
+operator|::
+name|TokenKind
+name|Kind
+expr_stmt|;
+name|bool
+name|ContinuesPPDirective
+decl_stmt|;
+comment|// The number of nested blocks the token is in. This is used to add tabs
+comment|// only for the indentation, and not for alignment, when
+comment|// UseTab = US_ForIndentation.
+name|unsigned
+name|IndentLevel
+decl_stmt|;
+comment|// The number of spaces in front of the token or broken part of the token.
+comment|// This will be adapted when aligning tokens.
+name|unsigned
+name|Spaces
+decl_stmt|;
+comment|// \c IsTrailingComment, \c TokenLength, \c PreviousEndOfTokenColumn and
+comment|// \c EscapedNewlineColumn will be calculated in
+comment|// \c calculateLineBreakInformation.
+name|bool
+name|IsTrailingComment
+decl_stmt|;
+name|unsigned
+name|TokenLength
+decl_stmt|;
+name|unsigned
+name|PreviousEndOfTokenColumn
+decl_stmt|;
+name|unsigned
+name|EscapedNewlineColumn
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Calculate \c IsTrailingComment, \c TokenLength for the last tokens
+comment|/// or token parts in a line and \c PreviousEndOfTokenColumn and
+comment|/// \c EscapedNewlineColumn for the first tokens or token parts in a line.
+name|void
+name|calculateLineBreakInformation
+parameter_list|()
+function_decl|;
+comment|/// \brief Align trailing comments over all \c Changes.
+name|void
+name|alignTrailingComments
+parameter_list|()
+function_decl|;
+comment|/// \brief Align trailing comments from change \p Start to change \p End at
+comment|/// the specified \p Column.
+name|void
+name|alignTrailingComments
+parameter_list|(
+name|unsigned
+name|Start
 parameter_list|,
 name|unsigned
-name|ReplaceChars
+name|End
+parameter_list|,
+name|unsigned
+name|Column
+parameter_list|)
+function_decl|;
+comment|/// \brief Align escaped newlines over all \c Changes.
+name|void
+name|alignEscapedNewlines
+parameter_list|()
+function_decl|;
+comment|/// \brief Align escaped newlines from change \p Start to change \p End at
+comment|/// the specified \p Column.
+name|void
+name|alignEscapedNewlines
+parameter_list|(
+name|unsigned
+name|Start
+parameter_list|,
+name|unsigned
+name|End
+parameter_list|,
+name|unsigned
+name|Column
+parameter_list|)
+function_decl|;
+comment|/// \brief Fill \c Replaces with the replacements for all effective changes.
+name|void
+name|generateChanges
+parameter_list|()
+function_decl|;
+comment|/// \brief Stores \p Text as the replacement for the whitespace in \p Range.
+name|void
+name|storeReplacement
+parameter_list|(
+specifier|const
+name|SourceRange
+modifier|&
+name|Range
 parameter_list|,
 name|StringRef
 name|Text
 parameter_list|)
 function_decl|;
 name|void
-name|addUntouchableComment
-parameter_list|(
-name|unsigned
-name|Column
-parameter_list|)
-function_decl|;
-comment|/// \brief Try to align all stashed comments.
-name|void
-name|alignComments
-parameter_list|()
-function_decl|;
-comment|/// \brief Try to align all stashed escaped newlines.
-name|void
-name|alignEscapedNewlines
-parameter_list|()
-function_decl|;
-name|private
-label|:
+name|appendNewlineText
+argument_list|(
 name|std
 operator|::
 name|string
-name|getNewLineText
-argument_list|(
-argument|unsigned NewLines
-argument_list|,
-argument|unsigned Spaces
-argument_list|)
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|getNewLineText
-argument_list|(
-argument|unsigned NewLines
-argument_list|,
-argument|unsigned Spaces
-argument_list|,
-argument|unsigned WhitespaceStartColumn
-argument_list|,
-argument|unsigned EscapedNewlineColumn
-argument_list|)
-expr_stmt|;
-comment|/// \brief Structure to store tokens for later layout and alignment.
-struct|struct
-name|StoredToken
-block|{
-name|StoredToken
-argument_list|(
-argument|SourceLocation ReplacementLoc
-argument_list|,
-argument|unsigned ReplacementLength
-argument_list|,
-argument|unsigned MinColumn
-argument_list|,
-argument|unsigned MaxColumn
-argument_list|,
-argument|unsigned NewLines
-argument_list|,
-argument|unsigned Spaces
-argument_list|)
-block|:
-name|ReplacementLoc
-argument_list|(
-name|ReplacementLoc
-argument_list|)
-operator|,
-name|ReplacementLength
-argument_list|(
-name|ReplacementLength
-argument_list|)
-operator|,
-name|MinColumn
-argument_list|(
-name|MinColumn
-argument_list|)
-operator|,
-name|MaxColumn
-argument_list|(
-name|MaxColumn
-argument_list|)
-operator|,
-name|NewLines
-argument_list|(
-name|NewLines
-argument_list|)
-operator|,
-name|Spaces
-argument_list|(
-name|Spaces
-argument_list|)
-operator|,
-name|Untouchable
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-name|SourceLocation
-name|ReplacementLoc
-expr_stmt|;
-name|unsigned
-name|ReplacementLength
-decl_stmt|;
-name|unsigned
-name|MinColumn
-decl_stmt|;
-name|unsigned
-name|MaxColumn
-decl_stmt|;
-name|unsigned
-name|NewLines
-decl_stmt|;
-name|unsigned
-name|Spaces
-decl_stmt|;
-name|bool
-name|Untouchable
-decl_stmt|;
-name|std
-operator|::
-name|string
-name|Prefix
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|Postfix
-expr_stmt|;
-block|}
-struct|;
-name|SmallVector
-operator|<
-name|StoredToken
-operator|,
-literal|16
-operator|>
-name|Comments
-expr_stmt|;
-name|SmallVector
-operator|<
-name|StoredToken
-operator|,
-literal|16
-operator|>
-name|EscapedNewlines
-expr_stmt|;
-typedef|typedef
-name|SmallVector
-operator|<
-name|StoredToken
-operator|,
-literal|16
-operator|>
-operator|::
-name|iterator
-name|token_iterator
-expr_stmt|;
-comment|/// \brief Put all the comments between \p I and \p E into \p Column.
-name|void
-name|alignComments
-parameter_list|(
-name|token_iterator
-name|I
-parameter_list|,
-name|token_iterator
-name|E
-parameter_list|,
-name|unsigned
-name|Column
-parameter_list|)
-function_decl|;
-comment|/// \brief Stores \p Text as the replacement for the whitespace in front of
-comment|/// \p Tok.
-name|void
-name|storeReplacement
-argument_list|(
-name|SourceLocation
-name|Loc
-argument_list|,
-name|unsigned
-name|Length
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
+operator|&
 name|Text
+argument_list|,
+name|unsigned
+name|Newlines
 argument_list|)
 decl_stmt|;
+name|void
+name|appendNewlineText
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|Text
+argument_list|,
+name|unsigned
+name|Newlines
+argument_list|,
+name|unsigned
+name|PreviousEndOfTokenColumn
+argument_list|,
+name|unsigned
+name|EscapedNewlineColumn
+argument_list|)
+decl_stmt|;
+name|void
+name|appendIndentText
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|Text
+argument_list|,
+name|unsigned
+name|IndentLevel
+argument_list|,
+name|unsigned
+name|Spaces
+argument_list|,
+name|unsigned
+name|WhitespaceStartColumn
+argument_list|)
+decl_stmt|;
+name|SmallVector
+operator|<
+name|Change
+operator|,
+literal|16
+operator|>
+name|Changes
+expr_stmt|;
 name|SourceManager
 modifier|&
 name|SourceMgr
@@ -429,6 +523,9 @@ specifier|const
 name|FormatStyle
 modifier|&
 name|Style
+decl_stmt|;
+name|bool
+name|UseCRLF
 decl_stmt|;
 block|}
 empty_stmt|;

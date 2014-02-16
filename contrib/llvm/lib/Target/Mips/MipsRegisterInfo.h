@@ -140,6 +140,17 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Code Generation virtual methods...
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getPointerRegClass
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|unsigned Kind
+argument_list|)
+specifier|const
+block|;
 name|unsigned
 name|getRegPressureLimit
 argument_list|(
@@ -167,6 +178,13 @@ argument_list|(
 argument|CallingConv::ID
 argument_list|)
 specifier|const
+block|;
+specifier|static
+specifier|const
+name|uint32_t
+operator|*
+name|getMips16RetHelperMask
+argument_list|()
 block|;
 name|BitVector
 name|getReservedRegs
@@ -220,17 +238,6 @@ name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
-specifier|const
-block|;
-comment|/// Exception handling queries.
-name|unsigned
-name|getEHExceptionRegister
-argument_list|()
-specifier|const
-block|;
-name|unsigned
-name|getEHHandlerRegister
-argument_list|()
 specifier|const
 block|;
 comment|/// \brief Return GPR register class.

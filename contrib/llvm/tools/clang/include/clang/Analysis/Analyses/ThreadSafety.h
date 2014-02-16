@@ -52,11 +52,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// See http://clang.llvm.org/docs/LanguageExtensions.html#threadsafety for more
+comment|// See http://clang.llvm.org/docs/LanguageExtensions.html#thread-safety-annotation-checking
 end_comment
 
 begin_comment
-comment|// information.
+comment|// for more information.
 end_comment
 
 begin_comment

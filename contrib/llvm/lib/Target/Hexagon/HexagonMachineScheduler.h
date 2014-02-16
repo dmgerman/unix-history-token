@@ -655,11 +655,6 @@ name|TargetSchedModel
 operator|*
 name|SchedModel
 block|;
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
-block|;
 comment|// State of the top and bottom scheduled instruction boundaries.
 name|SchedBoundary
 name|Top
@@ -694,11 +689,6 @@ literal|0
 argument_list|)
 block|,
 name|SchedModel
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|TRI
 argument_list|(
 literal|0
 argument_list|)
@@ -837,7 +827,7 @@ argument|const ReadyQueue&Q
 argument_list|,
 argument|SUnit *SU
 argument_list|,
-argument|PressureElement P = PressureElement()
+argument|PressureChange P = PressureChange()
 argument_list|)
 block|;
 endif|#

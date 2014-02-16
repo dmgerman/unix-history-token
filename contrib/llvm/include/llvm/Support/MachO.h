@@ -62,20 +62,20 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
-begin_comment
-comment|// NOTE: The enums in this file are intentially named to be different than those
-end_comment
-
-begin_comment
-comment|// in the headers in /usr/include/mach (on darwin systems) to avoid conflicts
-end_comment
-
-begin_comment
-comment|// with those macros.
-end_comment
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Host.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -85,1066 +85,1248 @@ name|namespace
 name|MachO
 block|{
 comment|// Enums from<mach-o/loader.h>
-enum|enum
+name|enum
+name|LLVM_ENUM_INT_TYPE
+function|(
+name|uint32_t
+function|)
 block|{
 comment|// Constants for the "magic" field in llvm::MachO::mach_header and
 comment|// llvm::MachO::mach_header_64
-name|HeaderMagic32
-init|=
+name|MH_MAGIC
+operator|=
 literal|0xFEEDFACEu
-block|,
-comment|// MH_MAGIC
-name|HeaderMagic32Swapped
-init|=
+operator|,
+name|MH_CIGAM
+operator|=
 literal|0xCEFAEDFEu
-block|,
-comment|// MH_CIGAM
-name|HeaderMagic64
-init|=
+operator|,
+name|MH_MAGIC_64
+operator|=
 literal|0xFEEDFACFu
-block|,
-comment|// MH_MAGIC_64
-name|HeaderMagic64Swapped
-init|=
+operator|,
+name|MH_CIGAM_64
+operator|=
 literal|0xCFFAEDFEu
-block|,
-comment|// MH_CIGAM_64
-name|UniversalMagic
-init|=
+operator|,
+name|FAT_MAGIC
+operator|=
 literal|0xCAFEBABEu
-block|,
-comment|// FAT_MAGIC
-name|UniversalMagicSwapped
-init|=
+operator|,
+name|FAT_CIGAM
+operator|=
 literal|0xBEBAFECAu
-block|,
-comment|// FAT_CIGAM
+block|}
+empty_stmt|;
+enum|enum
+name|HeaderFileType
+block|{
 comment|// Constants for the "filetype" field in llvm::MachO::mach_header and
 comment|// llvm::MachO::mach_header_64
-name|HeaderFileTypeObject
+name|MH_OBJECT
 init|=
 literal|0x1u
 block|,
-comment|// MH_OBJECT
-name|HeaderFileTypeExecutable
+name|MH_EXECUTE
 init|=
 literal|0x2u
 block|,
-comment|// MH_EXECUTE
-name|HeaderFileTypeFixedVMShlib
+name|MH_FVMLIB
 init|=
 literal|0x3u
 block|,
-comment|// MH_FVMLIB
-name|HeaderFileTypeCore
+name|MH_CORE
 init|=
 literal|0x4u
 block|,
-comment|// MH_CORE
-name|HeaderFileTypePreloadedExecutable
+name|MH_PRELOAD
 init|=
 literal|0x5u
 block|,
-comment|// MH_PRELOAD
-name|HeaderFileTypeDynamicShlib
+name|MH_DYLIB
 init|=
 literal|0x6u
 block|,
-comment|// MH_DYLIB
-name|HeaderFileTypeDynamicLinkEditor
+name|MH_DYLINKER
 init|=
 literal|0x7u
 block|,
-comment|// MH_DYLINKER
-name|HeaderFileTypeBundle
+name|MH_BUNDLE
 init|=
 literal|0x8u
 block|,
-comment|// MH_BUNDLE
-name|HeaderFileTypeDynamicShlibStub
+name|MH_DYLIB_STUB
 init|=
 literal|0x9u
 block|,
-comment|// MH_DYLIB_STUB
-name|HeaderFileTypeDSYM
+name|MH_DSYM
 init|=
 literal|0xAu
 block|,
-comment|// MH_DSYM
-name|HeaderFileTypeKextBundle
+name|MH_KEXT_BUNDLE
 init|=
 literal|0xBu
-block|,
-comment|// MH_KEXT_BUNDLE
+block|}
+enum|;
+enum|enum
+block|{
 comment|// Constant bits for the "flags" field in llvm::MachO::mach_header and
 comment|// llvm::MachO::mach_header_64
-name|HeaderFlagBitNoUndefinedSymbols
+name|MH_NOUNDEFS
 init|=
 literal|0x00000001u
 block|,
-comment|// MH_NOUNDEFS
-name|HeaderFlagBitIsIncrementalLinkObject
+name|MH_INCRLINK
 init|=
 literal|0x00000002u
 block|,
-comment|// MH_INCRLINK
-name|HeaderFlagBitIsDynamicLinkObject
+name|MH_DYLDLINK
 init|=
 literal|0x00000004u
 block|,
-comment|// MH_DYLDLINK
-name|HeaderFlagBitBindAtLoad
+name|MH_BINDATLOAD
 init|=
 literal|0x00000008u
 block|,
-comment|// MH_BINDATLOAD
-name|HeaderFlagBitPrebound
+name|MH_PREBOUND
 init|=
 literal|0x00000010u
 block|,
-comment|// MH_PREBOUND
-name|HeaderFlagBitSplitSegments
+name|MH_SPLIT_SEGS
 init|=
 literal|0x00000020u
 block|,
-comment|// MH_SPLIT_SEGS
-name|HeaderFlagBitLazyInit
+name|MH_LAZY_INIT
 init|=
 literal|0x00000040u
 block|,
-comment|// MH_LAZY_INIT
-name|HeaderFlagBitTwoLevelNamespace
+name|MH_TWOLEVEL
 init|=
 literal|0x00000080u
 block|,
-comment|// MH_TWOLEVEL
-name|HeaderFlagBitForceFlatNamespace
+name|MH_FORCE_FLAT
 init|=
 literal|0x00000100u
 block|,
-comment|// MH_FORCE_FLAT
-name|HeaderFlagBitNoMultipleDefintions
+name|MH_NOMULTIDEFS
 init|=
 literal|0x00000200u
 block|,
-comment|// MH_NOMULTIDEFS
-name|HeaderFlagBitNoFixPrebinding
+name|MH_NOFIXPREBINDING
 init|=
 literal|0x00000400u
 block|,
-comment|// MH_NOFIXPREBINDING
-name|HeaderFlagBitPrebindable
+name|MH_PREBINDABLE
 init|=
 literal|0x00000800u
 block|,
-comment|// MH_PREBINDABLE
-name|HeaderFlagBitAllModulesBound
+name|MH_ALLMODSBOUND
 init|=
 literal|0x00001000u
 block|,
-comment|// MH_ALLMODSBOUND
-name|HeaderFlagBitSubsectionsViaSymbols
+name|MH_SUBSECTIONS_VIA_SYMBOLS
 init|=
 literal|0x00002000u
 block|,
-comment|// MH_SUBSECTIONS_VIA_SYMBOLS
-name|HeaderFlagBitCanonical
+name|MH_CANONICAL
 init|=
 literal|0x00004000u
 block|,
-comment|// MH_CANONICAL
-name|HeaderFlagBitWeakDefines
+name|MH_WEAK_DEFINES
 init|=
 literal|0x00008000u
 block|,
-comment|// MH_WEAK_DEFINES
-name|HeaderFlagBitBindsToWeak
+name|MH_BINDS_TO_WEAK
 init|=
 literal|0x00010000u
 block|,
-comment|// MH_BINDS_TO_WEAK
-name|HeaderFlagBitAllowStackExecution
+name|MH_ALLOW_STACK_EXECUTION
 init|=
 literal|0x00020000u
 block|,
-comment|// MH_ALLOW_STACK_EXECUTION
-name|HeaderFlagBitRootSafe
+name|MH_ROOT_SAFE
 init|=
 literal|0x00040000u
 block|,
-comment|// MH_ROOT_SAFE
-name|HeaderFlagBitSetUIDSafe
+name|MH_SETUID_SAFE
 init|=
 literal|0x00080000u
 block|,
-comment|// MH_SETUID_SAFE
-name|HeaderFlagBitNoReexportedDylibs
+name|MH_NO_REEXPORTED_DYLIBS
 init|=
 literal|0x00100000u
 block|,
-comment|// MH_NO_REEXPORTED_DYLIBS
-name|HeaderFlagBitPIE
+name|MH_PIE
 init|=
 literal|0x00200000u
 block|,
-comment|// MH_PIE
-name|HeaderFlagBitDeadStrippableDylib
+name|MH_DEAD_STRIPPABLE_DYLIB
 init|=
 literal|0x00400000u
-block|,
-comment|// MH_DEAD_STRIPPABLE_DYLIB
-comment|// Constants for the "cmd" field in llvm::MachO::load_command
-name|LoadCommandDynamicLinkerRequired
-init|=
+block|}
+enum|;
+name|enum
+name|LLVM_ENUM_INT_TYPE
+function|(
+name|uint32_t
+function|)
+block|{
+comment|// Flags for the "cmd" field in llvm::MachO::load_command
+name|LC_REQ_DYLD
+operator|=
 literal|0x80000000u
-block|,
-comment|// LC_REQ_DYLD
-name|LoadCommandSegment32
-init|=
+block|}
+empty_stmt|;
+name|enum
+name|LoadCommandType
+name|LLVM_ENUM_INT_TYPE
+parameter_list|(
+name|uint32_t
+parameter_list|)
+block|{
+comment|// Constants for the "cmd" field in llvm::MachO::load_command
+name|LC_SEGMENT
+operator|=
 literal|0x00000001u
-block|,
-comment|// LC_SEGMENT
-name|LoadCommandSymtab
-init|=
+operator|,
+name|LC_SYMTAB
+operator|=
 literal|0x00000002u
-block|,
-comment|// LC_SYMTAB
-name|LoadCommandSymSeg
-init|=
+operator|,
+name|LC_SYMSEG
+operator|=
 literal|0x00000003u
-block|,
-comment|// LC_SYMSEG
-name|LoadCommandThread
-init|=
+operator|,
+name|LC_THREAD
+operator|=
 literal|0x00000004u
-block|,
-comment|// LC_THREAD
-name|LoadCommandUnixThread
-init|=
+operator|,
+name|LC_UNIXTHREAD
+operator|=
 literal|0x00000005u
-block|,
-comment|// LC_UNIXTHREAD
-name|LoadCommandFixedVMShlibLoad
-init|=
+operator|,
+name|LC_LOADFVMLIB
+operator|=
 literal|0x00000006u
-block|,
-comment|// LC_LOADFVMLIB
-name|LoadCommandFixedVMShlibIdent
-init|=
+operator|,
+name|LC_IDFVMLIB
+operator|=
 literal|0x00000007u
-block|,
-comment|// LC_IDFVMLIB
-name|LoadCommandIdent
-init|=
+operator|,
+name|LC_IDENT
+operator|=
 literal|0x00000008u
-block|,
-comment|// LC_IDENT
-name|LoadCommandFixedVMFileInclusion
-init|=
+operator|,
+name|LC_FVMFILE
+operator|=
 literal|0x00000009u
-block|,
-comment|// LC_FVMFILE
-name|LoadCommandPrePage
-init|=
+operator|,
+name|LC_PREPAGE
+operator|=
 literal|0x0000000Au
-block|,
-comment|// LC_PREPAGE
-name|LoadCommandDynamicSymtabInfo
-init|=
+operator|,
+name|LC_DYSYMTAB
+operator|=
 literal|0x0000000Bu
-block|,
-comment|// LC_DYSYMTAB
-name|LoadCommandDylibLoad
-init|=
+operator|,
+name|LC_LOAD_DYLIB
+operator|=
 literal|0x0000000Cu
-block|,
-comment|// LC_LOAD_DYLIB
-name|LoadCommandDylibIdent
-init|=
+operator|,
+name|LC_ID_DYLIB
+operator|=
 literal|0x0000000Du
-block|,
-comment|// LC_ID_DYLIB
-name|LoadCommandDynamicLinkerLoad
-init|=
+operator|,
+name|LC_LOAD_DYLINKER
+operator|=
 literal|0x0000000Eu
-block|,
-comment|// LC_LOAD_DYLINKER
-name|LoadCommandDynamicLinkerIdent
-init|=
+operator|,
+name|LC_ID_DYLINKER
+operator|=
 literal|0x0000000Fu
-block|,
-comment|// LC_ID_DYLINKER
-name|LoadCommandDylibPrebound
-init|=
+operator|,
+name|LC_PREBOUND_DYLIB
+operator|=
 literal|0x00000010u
-block|,
-comment|// LC_PREBOUND_DYLIB
-name|LoadCommandRoutines32
-init|=
+operator|,
+name|LC_ROUTINES
+operator|=
 literal|0x00000011u
-block|,
-comment|// LC_ROUTINES
-name|LoadCommandSubFramework
-init|=
+operator|,
+name|LC_SUB_FRAMEWORK
+operator|=
 literal|0x00000012u
-block|,
-comment|// LC_SUB_FRAMEWORK
-name|LoadCommandSubUmbrella
-init|=
+operator|,
+name|LC_SUB_UMBRELLA
+operator|=
 literal|0x00000013u
-block|,
-comment|// LC_SUB_UMBRELLA
-name|LoadCommandSubClient
-init|=
+operator|,
+name|LC_SUB_CLIENT
+operator|=
 literal|0x00000014u
-block|,
-comment|// LC_SUB_CLIENT
-name|LoadCommandSubLibrary
-init|=
+operator|,
+name|LC_SUB_LIBRARY
+operator|=
 literal|0x00000015u
-block|,
-comment|// LC_SUB_LIBRARY
-name|LoadCommandTwoLevelHints
-init|=
+operator|,
+name|LC_TWOLEVEL_HINTS
+operator|=
 literal|0x00000016u
-block|,
-comment|// LC_TWOLEVEL_HINTS
-name|LoadCommandPreBindChecksum
-init|=
+operator|,
+name|LC_PREBIND_CKSUM
+operator|=
 literal|0x00000017u
-block|,
-comment|// LC_PREBIND_CKSUM
-name|LoadCommandDylibLoadWeak
-init|=
+operator|,
+name|LC_LOAD_WEAK_DYLIB
+operator|=
 literal|0x80000018u
-block|,
-comment|// LC_LOAD_WEAK_DYLIB
-name|LoadCommandSegment64
-init|=
+operator|,
+name|LC_SEGMENT_64
+operator|=
 literal|0x00000019u
-block|,
-comment|// LC_SEGMENT_64
-name|LoadCommandRoutines64
-init|=
+operator|,
+name|LC_ROUTINES_64
+operator|=
 literal|0x0000001Au
-block|,
-comment|// LC_ROUTINES_64
-name|LoadCommandUUID
-init|=
+operator|,
+name|LC_UUID
+operator|=
 literal|0x0000001Bu
-block|,
-comment|// LC_UUID
-name|LoadCommandRunpath
-init|=
+operator|,
+name|LC_RPATH
+operator|=
 literal|0x8000001Cu
-block|,
-comment|// LC_RPATH
-name|LoadCommandCodeSignature
-init|=
+operator|,
+name|LC_CODE_SIGNATURE
+operator|=
 literal|0x0000001Du
-block|,
-comment|// LC_CODE_SIGNATURE
-name|LoadCommandSegmentSplitInfo
-init|=
+operator|,
+name|LC_SEGMENT_SPLIT_INFO
+operator|=
 literal|0x0000001Eu
-block|,
-comment|// LC_SEGMENT_SPLIT_INFO
-name|LoadCommandDylibReexport
-init|=
+operator|,
+name|LC_REEXPORT_DYLIB
+operator|=
 literal|0x8000001Fu
-block|,
-comment|// LC_REEXPORT_DYLIB
-name|LoadCommandDylibLazyLoad
-init|=
+operator|,
+name|LC_LAZY_LOAD_DYLIB
+operator|=
 literal|0x00000020u
-block|,
-comment|// LC_LAZY_LOAD_DYLIB
-name|LoadCommandEncryptionInfo
-init|=
+operator|,
+name|LC_ENCRYPTION_INFO
+operator|=
 literal|0x00000021u
-block|,
-comment|// LC_ENCRYPTION_INFO
-name|LoadCommandDynamicLinkerInfo
-init|=
+operator|,
+name|LC_DYLD_INFO
+operator|=
 literal|0x00000022u
-block|,
-comment|// LC_DYLD_INFO
-name|LoadCommandDynamicLinkerInfoOnly
-init|=
+operator|,
+name|LC_DYLD_INFO_ONLY
+operator|=
 literal|0x80000022u
-block|,
-comment|// LC_DYLD_INFO_ONLY
-name|LoadCommandDylibLoadUpward
-init|=
+operator|,
+name|LC_LOAD_UPWARD_DYLIB
+operator|=
 literal|0x80000023u
-block|,
-comment|// LC_LOAD_UPWARD_DYLIB
-name|LoadCommandVersionMinMacOSX
-init|=
+operator|,
+name|LC_VERSION_MIN_MACOSX
+operator|=
 literal|0x00000024u
-block|,
-comment|// LC_VERSION_MIN_MACOSX
-name|LoadCommandVersionMinIPhoneOS
-init|=
+operator|,
+name|LC_VERSION_MIN_IPHONEOS
+operator|=
 literal|0x00000025u
-block|,
-comment|// LC_VERSION_MIN_IPHONEOS
-name|LoadCommandFunctionStarts
-init|=
+operator|,
+name|LC_FUNCTION_STARTS
+operator|=
 literal|0x00000026u
-block|,
-comment|// LC_FUNCTION_STARTS
-name|LoadCommandDyldEnvironment
-init|=
+operator|,
+name|LC_DYLD_ENVIRONMENT
+operator|=
 literal|0x00000027u
-block|,
-comment|// LC_DYLD_ENVIRONMENT
-name|LoadCommandMain
-init|=
+operator|,
+name|LC_MAIN
+operator|=
 literal|0x80000028u
-block|,
-comment|// LC_MAIN
-name|LoadCommandDataInCode
-init|=
+operator|,
+name|LC_DATA_IN_CODE
+operator|=
 literal|0x00000029u
-block|,
-comment|// LC_DATA_IN_CODE
-name|LoadCommandSourceVersion
-init|=
+operator|,
+name|LC_SOURCE_VERSION
+operator|=
 literal|0x0000002Au
-block|,
-comment|// LC_SOURCE_VERSION
-name|LoadCommandCodeSignDRs
-init|=
+operator|,
+name|LC_DYLIB_CODE_SIGN_DRS
+operator|=
 literal|0x0000002Bu
-block|,
-comment|// LC_DYLIB_CODE_SIGN_DRS
+operator|,
+comment|//                        0x0000002Cu,
+name|LC_LINKER_OPTIONS
+operator|=
+literal|0x0000002Du
+block|}
+empty_stmt|;
+name|enum
+name|LLVM_ENUM_INT_TYPE
+function|(
+name|uint32_t
+function|)
+block|{
 comment|// Constant bits for the "flags" field in llvm::MachO::segment_command
-name|SegmentCommandFlagBitHighVM
-init|=
+name|SG_HIGHVM
+operator|=
 literal|0x1u
-block|,
-comment|// SG_HIGHVM
-name|SegmentCommandFlagBitFixedVMLibrary
-init|=
+operator|,
+name|SG_FVMLIB
+operator|=
 literal|0x2u
-block|,
-comment|// SG_FVMLIB
-name|SegmentCommandFlagBitNoRelocations
-init|=
+operator|,
+name|SG_NORELOC
+operator|=
 literal|0x4u
-block|,
-comment|// SG_NORELOC
-name|SegmentCommandFlagBitProtectedVersion1
-init|=
+operator|,
+name|SG_PROTECTED_VERSION_1
+operator|=
 literal|0x8u
-block|,
-comment|// SG_PROTECTED_VERSION_1
+operator|,
 comment|// Constant masks for the "flags" field in llvm::MachO::section and
 comment|// llvm::MachO::section_64
-name|SectionFlagMaskSectionType
-init|=
+name|SECTION_TYPE
+operator|=
 literal|0x000000ffu
-block|,
+operator|,
 comment|// SECTION_TYPE
-name|SectionFlagMaskAllAttributes
-init|=
+name|SECTION_ATTRIBUTES
+operator|=
 literal|0xffffff00u
-block|,
+operator|,
 comment|// SECTION_ATTRIBUTES
-name|SectionFlagMaskUserAttributes
-init|=
+name|SECTION_ATTRIBUTES_USR
+operator|=
 literal|0xff000000u
-block|,
+operator|,
 comment|// SECTION_ATTRIBUTES_USR
-name|SectionFlagMaskSystemAttributes
-init|=
+name|SECTION_ATTRIBUTES_SYS
+operator|=
 literal|0x00ffff00u
-block|,
 comment|// SECTION_ATTRIBUTES_SYS
+block|}
+empty_stmt|;
+enum|enum
+name|SectionType
+block|{
 comment|// Constant masks for the "flags[7:0]" field in llvm::MachO::section and
 comment|// llvm::MachO::section_64 (mask "flags" with SECTION_TYPE)
-name|SectionTypeRegular
+name|S_REGULAR
 init|=
 literal|0x00u
 block|,
-comment|// S_REGULAR
-name|SectionTypeZeroFill
+name|S_ZEROFILL
 init|=
 literal|0x01u
 block|,
-comment|// S_ZEROFILL
-name|SectionTypeCStringLiterals
+name|S_CSTRING_LITERALS
 init|=
 literal|0x02u
 block|,
-comment|// S_CSTRING_LITERALS
-name|SectionType4ByteLiterals
+name|S_4BYTE_LITERALS
 init|=
 literal|0x03u
 block|,
-comment|// S_4BYTE_LITERALS
-name|SectionType8ByteLiterals
+name|S_8BYTE_LITERALS
 init|=
 literal|0x04u
 block|,
-comment|// S_8BYTE_LITERALS
-name|SectionTypeLiteralPointers
+name|S_LITERAL_POINTERS
 init|=
 literal|0x05u
 block|,
-comment|// S_LITERAL_POINTERS
-name|SectionTypeNonLazySymbolPointers
+name|S_NON_LAZY_SYMBOL_POINTERS
 init|=
 literal|0x06u
 block|,
-comment|// S_NON_LAZY_SYMBOL_POINTERS
-name|SectionTypeLazySymbolPointers
+name|S_LAZY_SYMBOL_POINTERS
 init|=
 literal|0x07u
 block|,
-comment|// S_LAZY_SYMBOL_POINTERS
-name|SectionTypeSymbolStubs
+name|S_SYMBOL_STUBS
 init|=
 literal|0x08u
 block|,
-comment|// S_SYMBOL_STUBS
-name|SectionTypeModuleInitFunctionPointers
+name|S_MOD_INIT_FUNC_POINTERS
 init|=
 literal|0x09u
 block|,
-comment|// S_MOD_INIT_FUNC_POINTERS
-name|SectionTypeModuleTermFunctionPointers
+name|S_MOD_TERM_FUNC_POINTERS
 init|=
 literal|0x0au
 block|,
-comment|// S_MOD_TERM_FUNC_POINTERS
-name|SectionTypeCoalesced
+name|S_COALESCED
 init|=
 literal|0x0bu
 block|,
-comment|// S_COALESCED
-name|SectionTypeZeroFillLarge
+name|S_GB_ZEROFILL
 init|=
 literal|0x0cu
 block|,
-comment|// S_GB_ZEROFILL
-name|SectionTypeInterposing
+name|S_INTERPOSING
 init|=
 literal|0x0du
 block|,
-comment|// S_INTERPOSING
-name|SectionType16ByteLiterals
+name|S_16BYTE_LITERALS
 init|=
 literal|0x0eu
 block|,
-comment|// S_16BYTE_LITERALS
-name|SectionTypeDTraceObjectFormat
+name|S_DTRACE_DOF
 init|=
 literal|0x0fu
 block|,
-comment|// S_DTRACE_DOF
-name|SectionTypeLazyDylibSymbolPointers
+name|S_LAZY_DYLIB_SYMBOL_POINTERS
 init|=
 literal|0x10u
 block|,
-comment|// S_LAZY_DYLIB_SYMBOL_POINTERS
+name|S_THREAD_LOCAL_REGULAR
+init|=
+literal|0x11u
+block|,
+name|S_THREAD_LOCAL_ZEROFILL
+init|=
+literal|0x12u
+block|,
+name|S_THREAD_LOCAL_VARIABLES
+init|=
+literal|0x13u
+block|,
+name|S_THREAD_LOCAL_VARIABLE_POINTERS
+init|=
+literal|0x14u
+block|,
+name|S_THREAD_LOCAL_INIT_FUNCTION_POINTERS
+init|=
+literal|0x15u
+block|}
+enum|;
+name|enum
+name|LLVM_ENUM_INT_TYPE
+function|(
+name|uint32_t
+function|)
+block|{
 comment|// Constant masks for the "flags[31:24]" field in llvm::MachO::section and
 comment|// llvm::MachO::section_64 (mask "flags" with SECTION_ATTRIBUTES_USR)
-name|SectionAttrUserPureInstructions
-init|=
+name|S_ATTR_PURE_INSTRUCTIONS
+operator|=
 literal|0x80000000u
-block|,
-comment|// S_ATTR_PURE_INSTRUCTIONS
-name|SectionAttrUserNoTableOfContents
-init|=
+operator|,
+name|S_ATTR_NO_TOC
+operator|=
 literal|0x40000000u
-block|,
-comment|// S_ATTR_NO_TOC
-name|SectionAttrUserCanStripStaticSymbols
-init|=
+operator|,
+name|S_ATTR_STRIP_STATIC_SYMS
+operator|=
 literal|0x20000000u
-block|,
-comment|// S_ATTR_STRIP_STATIC_SYMS
-name|SectionAttrUserNoDeadStrip
-init|=
+operator|,
+name|S_ATTR_NO_DEAD_STRIP
+operator|=
 literal|0x10000000u
-block|,
-comment|// S_ATTR_NO_DEAD_STRIP
-name|SectionAttrUserLiveSupport
-init|=
+operator|,
+name|S_ATTR_LIVE_SUPPORT
+operator|=
 literal|0x08000000u
-block|,
-comment|// S_ATTR_LIVE_SUPPORT
-name|SectionAttrUserSelfModifyingCode
-init|=
+operator|,
+name|S_ATTR_SELF_MODIFYING_CODE
+operator|=
 literal|0x04000000u
-block|,
-comment|// S_ATTR_SELF_MODIFYING_CODE
-name|SectionAttrUserDebug
-init|=
+operator|,
+name|S_ATTR_DEBUG
+operator|=
 literal|0x02000000u
-block|,
-comment|// S_ATTR_DEBUG
+operator|,
 comment|// Constant masks for the "flags[23:8]" field in llvm::MachO::section and
 comment|// llvm::MachO::section_64 (mask "flags" with SECTION_ATTRIBUTES_SYS)
-name|SectionAttrSytemSomeInstructions
-init|=
+name|S_ATTR_SOME_INSTRUCTIONS
+operator|=
 literal|0x00000400u
-block|,
-comment|// S_ATTR_SOME_INSTRUCTIONS
-name|SectionAttrSytemHasExternalRelocations
-init|=
+operator|,
+name|S_ATTR_EXT_RELOC
+operator|=
 literal|0x00000200u
-block|,
-comment|// S_ATTR_EXT_RELOC
-name|SectionAttrSytemHasLocalRelocations
-init|=
+operator|,
+name|S_ATTR_LOC_RELOC
+operator|=
 literal|0x00000100u
-block|,
-comment|// S_ATTR_LOC_RELOC
-name|IndirectSymbolLocal
-init|=
+operator|,
+comment|// Constant masks for the value of an indirect symbol in an indirect
+comment|// symbol table
+name|INDIRECT_SYMBOL_LOCAL
+operator|=
 literal|0x80000000u
-block|,
-comment|// INDIRECT_SYMBOL_LOCAL
-name|IndirectSymbolAbsolute
-init|=
+operator|,
+name|INDIRECT_SYMBOL_ABS
+operator|=
 literal|0x40000000u
-block|,
-comment|// INDIRECT_SYMBOL_ABS
-name|RebaseTypePointer
+block|}
+empty_stmt|;
+enum|enum
+name|DataRegionType
+block|{
+comment|// Constants for the "kind" field in a data_in_code_entry structure
+name|DICE_KIND_DATA
 init|=
 literal|1u
 block|,
-comment|// REBASE_TYPE_POINTER
-name|RebaseTypeTextAbsolute32
+name|DICE_KIND_JUMP_TABLE8
 init|=
 literal|2u
 block|,
-comment|// REBASE_TYPE_TEXT_ABSOLUTE32
-name|RebaseTypeTextPCRelative32
+name|DICE_KIND_JUMP_TABLE16
 init|=
 literal|3u
 block|,
-comment|// REBASE_TYPE_TEXT_PCREL32
-name|RebaseOpcodeMask
+name|DICE_KIND_JUMP_TABLE32
+init|=
+literal|4u
+block|,
+name|DICE_KIND_ABS_JUMP_TABLE32
+init|=
+literal|5u
+block|}
+enum|;
+enum|enum
+name|RebaseType
+block|{
+name|REBASE_TYPE_POINTER
+init|=
+literal|1u
+block|,
+name|REBASE_TYPE_TEXT_ABSOLUTE32
+init|=
+literal|2u
+block|,
+name|REBASE_TYPE_TEXT_PCREL32
+init|=
+literal|3u
+block|}
+enum|;
+enum|enum
+block|{
+name|REBASE_OPCODE_MASK
 init|=
 literal|0xF0u
 block|,
-comment|// REBASE_OPCODE_MASK
-name|RebaseImmediateMask
+name|REBASE_IMMEDIATE_MASK
 init|=
 literal|0x0Fu
-block|,
-comment|// REBASE_IMMEDIATE_MASK
-name|RebaseOpcodeDone
+block|}
+enum|;
+enum|enum
+name|RebaseOpcode
+block|{
+name|REBASE_OPCODE_DONE
 init|=
 literal|0x00u
 block|,
-comment|// REBASE_OPCODE_DONE
-name|RebaseOpcodeSetTypeImmediate
+name|REBASE_OPCODE_SET_TYPE_IMM
 init|=
 literal|0x10u
 block|,
-comment|// REBASE_OPCODE_SET_TYPE_IMM
-name|RebaseOpcodeSetSegmentAndOffsetULEB
+name|REBASE_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB
 init|=
 literal|0x20u
 block|,
-comment|// REBASE_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB
-name|RebaseOpcodeAddAddressULEB
+name|REBASE_OPCODE_ADD_ADDR_ULEB
 init|=
 literal|0x30u
 block|,
-comment|// REBASE_OPCODE_ADD_ADDR_ULEB
-name|RebaseOpcodeAddAddressImmediateScaled
+name|REBASE_OPCODE_ADD_ADDR_IMM_SCALED
 init|=
 literal|0x40u
 block|,
-comment|// REBASE_OPCODE_ADD_ADDR_IMM_SCALED
-name|RebaseOpcodeDoRebaseImmediateTimes
+name|REBASE_OPCODE_DO_REBASE_IMM_TIMES
 init|=
 literal|0x50u
 block|,
-comment|// REBASE_OPCODE_DO_REBASE_IMM_TIMES
-name|RebaseOpcodeDoRebaseULEBTimes
+name|REBASE_OPCODE_DO_REBASE_ULEB_TIMES
 init|=
 literal|0x60u
 block|,
-comment|// REBASE_OPCODE_DO_REBASE_ULEB_TIMES
-name|RebaseOpcodeDoRebaseAddAddressULEB
+name|REBASE_OPCODE_DO_REBASE_ADD_ADDR_ULEB
 init|=
 literal|0x70u
 block|,
-comment|// REBASE_OPCODE_DO_REBASE_ADD_ADDR_ULEB
-name|RebaseOpcodeDoRebaseULEBTimesSkippingULEB
+name|REBASE_OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB
 init|=
 literal|0x80u
-block|,
-comment|// REBASE_OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB
-name|BindTypePointer
+block|}
+enum|;
+enum|enum
+name|BindType
+block|{
+name|BIND_TYPE_POINTER
 init|=
 literal|1u
 block|,
-comment|// BIND_TYPE_POINTER
-name|BindTypeTextAbsolute32
+name|BIND_TYPE_TEXT_ABSOLUTE32
 init|=
 literal|2u
 block|,
-comment|// BIND_TYPE_TEXT_ABSOLUTE32
-name|BindTypeTextPCRelative32
+name|BIND_TYPE_TEXT_PCREL32
 init|=
 literal|3u
-block|,
-comment|// BIND_TYPE_TEXT_PCREL32
-name|BindSpecialDylibSelf
+block|}
+enum|;
+enum|enum
+name|BindSpecialDylib
+block|{
+name|BIND_SPECIAL_DYLIB_SELF
 init|=
-literal|0u
+literal|0
 block|,
-comment|// BIND_SPECIAL_DYLIB_SELF
-name|BindSpecialDylibMainExecutable
-init|=
-operator|-
-literal|1u
-block|,
-comment|// BIND_SPECIAL_DYLIB_MAIN_EXECUTABLE
-name|BindSpecialDylibFlatLookup
+name|BIND_SPECIAL_DYLIB_MAIN_EXECUTABLE
 init|=
 operator|-
-literal|2u
+literal|1
 block|,
-comment|// BIND_SPECIAL_DYLIB_FLAT_LOOKUP
-name|BindSymbolFlagsWeakImport
+name|BIND_SPECIAL_DYLIB_FLAT_LOOKUP
+init|=
+operator|-
+literal|2
+block|}
+enum|;
+enum|enum
+block|{
+name|BIND_SYMBOL_FLAGS_WEAK_IMPORT
 init|=
 literal|0x1u
 block|,
-comment|// BIND_SYMBOL_FLAGS_WEAK_IMPORT
-name|BindSymbolFlagsNonWeakDefinition
+name|BIND_SYMBOL_FLAGS_NON_WEAK_DEFINITION
 init|=
 literal|0x8u
 block|,
-comment|// BIND_SYMBOL_FLAGS_NON_WEAK_DEFINITION
-name|BindOpcodeMask
+name|BIND_OPCODE_MASK
 init|=
 literal|0xF0u
 block|,
-comment|// BIND_OPCODE_MASK
-name|BindImmediateMask
+name|BIND_IMMEDIATE_MASK
 init|=
 literal|0x0Fu
-block|,
-comment|// BIND_IMMEDIATE_MASK
-name|BindOpcodeDone
+block|}
+enum|;
+enum|enum
+name|BindOpcode
+block|{
+name|BIND_OPCODE_DONE
 init|=
 literal|0x00u
 block|,
-comment|// BIND_OPCODE_DONE
-name|BindOpcodeSetDylibOrdinalImmediate
+name|BIND_OPCODE_SET_DYLIB_ORDINAL_IMM
 init|=
 literal|0x10u
 block|,
-comment|// BIND_OPCODE_SET_DYLIB_ORDINAL_IMM
-name|BindOpcodeSetDylibOrdinalULEB
+name|BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB
 init|=
 literal|0x20u
 block|,
-comment|// BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB
-name|BindOpcodeSetDylibSpecialImmediate
+name|BIND_OPCODE_SET_DYLIB_SPECIAL_IMM
 init|=
 literal|0x30u
 block|,
-comment|// BIND_OPCODE_SET_DYLIB_SPECIAL_IMM
-name|BindOpcodeSetSymbolTrailingFlagsImmediate
+name|BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMM
 init|=
 literal|0x40u
 block|,
-comment|// BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMM
-name|BindOpcodeSetTypeImmediate
+name|BIND_OPCODE_SET_TYPE_IMM
 init|=
 literal|0x50u
 block|,
-comment|// BIND_OPCODE_SET_TYPE_IMM
-name|BindOpcodeSetAppendSLEB
+name|BIND_OPCODE_SET_ADDEND_SLEB
 init|=
 literal|0x60u
 block|,
-comment|// BIND_OPCODE_SET_ADDEND_SLEB
-name|BindOpcodeSetSegmentAndOffsetULEB
+name|BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB
 init|=
 literal|0x70u
 block|,
-comment|// BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB
-name|BindOpcodeAddAddressULEB
+name|BIND_OPCODE_ADD_ADDR_ULEB
 init|=
 literal|0x80u
 block|,
-comment|// BIND_OPCODE_ADD_ADDR_ULEB
-name|BindOpcodeDoBind
+name|BIND_OPCODE_DO_BIND
 init|=
 literal|0x90u
 block|,
-comment|// BIND_OPCODE_DO_BIND
-name|BindOpcodeDoBindAddAddressULEB
+name|BIND_OPCODE_DO_BIND_ADD_ADDR_ULEB
 init|=
 literal|0xA0u
 block|,
-comment|// BIND_OPCODE_DO_BIND_ADD_ADDR_ULEB
-name|BindOpcodeDoBindAddAddressImmediateScaled
+name|BIND_OPCODE_DO_BIND_ADD_ADDR_IMM_SCALED
 init|=
 literal|0xB0u
 block|,
-comment|// BIND_OPCODE_DO_BIND_ADD_ADDR_IMM_SCALED
-name|BindOpcodeDoBindULEBTimesSkippingULEB
+name|BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB
 init|=
 literal|0xC0u
-block|,
-comment|// BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB
-name|ExportSymbolFlagsKindMask
+block|}
+enum|;
+enum|enum
+block|{
+name|EXPORT_SYMBOL_FLAGS_KIND_MASK
 init|=
 literal|0x03u
 block|,
-comment|// EXPORT_SYMBOL_FLAGS_KIND_MASK
-name|ExportSymbolFlagsKindRegular
-init|=
-literal|0x00u
-block|,
-comment|// EXPORT_SYMBOL_FLAGS_KIND_REGULAR
-name|ExportSymbolFlagsKindThreadLocal
-init|=
-literal|0x01u
-block|,
-comment|// EXPORT_SYMBOL_FLAGS_KIND_THREAD_LOCAL
-name|ExportSymbolFlagsWeakDefinition
+name|EXPORT_SYMBOL_FLAGS_WEAK_DEFINITION
 init|=
 literal|0x04u
 block|,
-comment|// EXPORT_SYMBOL_FLAGS_WEAK_DEFINITION
-name|ExportSymbolFlagsIndirectDefinition
+name|EXPORT_SYMBOL_FLAGS_REEXPORT
 init|=
 literal|0x08u
 block|,
-comment|// EXPORT_SYMBOL_FLAGS_INDIRECT_DEFINITION
-name|ExportSymbolFlagsHasSpecializations
+name|EXPORT_SYMBOL_FLAGS_STUB_AND_RESOLVER
 init|=
 literal|0x10u
+block|}
+enum|;
+enum|enum
+name|ExportSymbolKind
+block|{
+name|EXPORT_SYMBOL_FLAGS_KIND_REGULAR
+init|=
+literal|0x00u
 block|,
-comment|// EXPORT_SYMBOL_FLAGS_HAS_SPECIALIZATIONS
+name|EXPORT_SYMBOL_FLAGS_KIND_THREAD_LOCAL
+init|=
+literal|0x01u
+block|}
+enum|;
+enum|enum
+block|{
 comment|// Constant masks for the "n_type" field in llvm::MachO::nlist and
 comment|// llvm::MachO::nlist_64
-name|NlistMaskStab
+name|N_STAB
 init|=
 literal|0xe0
 block|,
-comment|// N_STAB
-name|NlistMaskPrivateExternal
+name|N_PEXT
 init|=
 literal|0x10
 block|,
-comment|// N_PEXT
-name|NlistMaskType
+name|N_TYPE
 init|=
 literal|0x0e
 block|,
-comment|// N_TYPE
-name|NlistMaskExternal
+name|N_EXT
 init|=
 literal|0x01
-block|,
-comment|// N_EXT
+block|}
+enum|;
+enum|enum
+name|NListType
+block|{
 comment|// Constants for the "n_type& N_TYPE" llvm::MachO::nlist and
 comment|// llvm::MachO::nlist_64
-name|NListTypeUndefined
+name|N_UNDF
 init|=
 literal|0x0u
 block|,
-comment|// N_UNDF
-name|NListTypeAbsolute
+name|N_ABS
 init|=
 literal|0x2u
 block|,
-comment|// N_ABS
-name|NListTypeSection
+name|N_SECT
 init|=
 literal|0xeu
 block|,
-comment|// N_SECT
-name|NListTypePreboundUndefined
+name|N_PBUD
 init|=
 literal|0xcu
 block|,
-comment|// N_PBUD
-name|NListTypeIndirect
+name|N_INDR
 init|=
 literal|0xau
-block|,
-comment|// N_INDR
-comment|// Constant masks for the "n_sect" field in llvm::MachO::nlist and
+block|}
+enum|;
+enum|enum
+name|SectionOrdinal
+block|{
+comment|// Constants for the "n_sect" field in llvm::MachO::nlist and
 comment|// llvm::MachO::nlist_64
-name|NListSectionNoSection
+name|NO_SECT
 init|=
 literal|0u
 block|,
-comment|// NO_SECT
-name|NListSectionMaxSection
+name|MAX_SECT
 init|=
 literal|0xffu
-block|,
-comment|// MAX_SECT
-name|NListDescWeakRef
+block|}
+enum|;
+enum|enum
+block|{
+comment|// Constant masks for the "n_desc" field in llvm::MachO::nlist and
+comment|// llvm::MachO::nlist_64
+name|N_ARM_THUMB_DEF
 init|=
-literal|0x40u
+literal|0x0008u
 block|,
-name|NListDescWeakDef
+name|N_NO_DEAD_STRIP
 init|=
-literal|0x80u
+literal|0x0020u
 block|,
+name|N_WEAK_REF
+init|=
+literal|0x0040u
+block|,
+name|N_WEAK_DEF
+init|=
+literal|0x0080u
+block|,
+name|N_SYMBOL_RESOLVER
+init|=
+literal|0x0100u
+block|}
+enum|;
+enum|enum
+name|StabType
+block|{
 comment|// Constant values for the "n_type" field in llvm::MachO::nlist and
 comment|// llvm::MachO::nlist_64 when "(n_type& NlistMaskStab) != 0"
-name|StabGlobalSymbol
+name|N_GSYM
 init|=
 literal|0x20u
 block|,
-comment|// N_GSYM
-name|StabFunctionName
+name|N_FNAME
 init|=
 literal|0x22u
 block|,
-comment|// N_FNAME
-name|StabFunction
+name|N_FUN
 init|=
 literal|0x24u
 block|,
-comment|// N_FUN
-name|StabStaticSymbol
+name|N_STSYM
 init|=
 literal|0x26u
 block|,
-comment|// N_STSYM
-name|StabLocalCommon
+name|N_LCSYM
 init|=
 literal|0x28u
 block|,
-comment|// N_LCSYM
-name|StabBeginSymbol
+name|N_BNSYM
 init|=
 literal|0x2Eu
 block|,
-comment|// N_BNSYM
-name|StabSourceFileOptions
+name|N_OPT
 init|=
 literal|0x3Cu
 block|,
-comment|// N_OPT
-name|StabRegisterSymbol
+name|N_RSYM
 init|=
 literal|0x40u
 block|,
-comment|// N_RSYM
-name|StabSourceLine
+name|N_SLINE
 init|=
 literal|0x44u
 block|,
-comment|// N_SLINE
-name|StabEndSymbol
+name|N_ENSYM
 init|=
 literal|0x4Eu
 block|,
-comment|// N_ENSYM
-name|StabStructureType
+name|N_SSYM
 init|=
 literal|0x60u
 block|,
-comment|// N_SSYM
-name|StabSourceFileName
+name|N_SO
 init|=
 literal|0x64u
 block|,
-comment|// N_SO
-name|StabObjectFileName
+name|N_OSO
 init|=
 literal|0x66u
 block|,
-comment|// N_OSO
-name|StabLocalSymbol
+name|N_LSYM
 init|=
 literal|0x80u
 block|,
-comment|// N_LSYM
-name|StabBeginIncludeFileName
+name|N_BINCL
 init|=
 literal|0x82u
 block|,
-comment|// N_BINCL
-name|StabIncludeFileName
+name|N_SOL
 init|=
 literal|0x84u
 block|,
-comment|// N_SOL
-name|StabCompilerParameters
+name|N_PARAMS
 init|=
 literal|0x86u
 block|,
-comment|// N_PARAMS
-name|StabCompilerVersion
+name|N_VERSION
 init|=
 literal|0x88u
 block|,
-comment|// N_VERSION
-name|StabCompilerOptLevel
+name|N_OLEVEL
 init|=
 literal|0x8Au
 block|,
-comment|// N_OLEVEL
-name|StabParameter
+name|N_PSYM
 init|=
 literal|0xA0u
 block|,
-comment|// N_PSYM
-name|StabEndIncludeFile
+name|N_EINCL
 init|=
 literal|0xA2u
 block|,
-comment|// N_EINCL
-name|StabAlternateEntry
+name|N_ENTRY
 init|=
 literal|0xA4u
 block|,
-comment|// N_ENTRY
-name|StabLeftBracket
+name|N_LBRAC
 init|=
 literal|0xC0u
 block|,
-comment|// N_LBRAC
-name|StabDeletedIncludeFile
+name|N_EXCL
 init|=
 literal|0xC2u
 block|,
-comment|// N_EXCL
-name|StabRightBracket
+name|N_RBRAC
 init|=
 literal|0xE0u
 block|,
-comment|// N_RBRAC
-name|StabBeginCommon
+name|N_BCOMM
 init|=
 literal|0xE2u
 block|,
-comment|// N_BCOMM
-name|StabEndCommon
+name|N_ECOMM
 init|=
 literal|0xE4u
 block|,
-comment|// N_ECOMM
-name|StabEndCommonLocal
+name|N_ECOML
 init|=
 literal|0xE8u
 block|,
-comment|// N_ECOML
-name|StabLength
+name|N_LENG
 init|=
 literal|0xFEu
-comment|// N_LENG
+block|}
+enum|;
+name|enum
+name|LLVM_ENUM_INT_TYPE
+function|(
+name|uint32_t
+function|)
+block|{
+comment|// Constant values for the r_symbolnum field in an
+comment|// llvm::MachO::relocation_info structure when r_extern is 0.
+name|R_ABS
+operator|=
+literal|0
+operator|,
+comment|// Constant bits for the r_address field in an
+comment|// llvm::MachO::relocation_info structure.
+name|R_SCATTERED
+operator|=
+literal|0x80000000
+block|}
+empty_stmt|;
+enum|enum
+name|RelocationInfoType
+block|{
+comment|// Constant values for the r_type field in an
+comment|// llvm::MachO::relocation_info or llvm::MachO::scattered_relocation_info
+comment|// structure.
+name|GENERIC_RELOC_VANILLA
+init|=
+literal|0
+block|,
+name|GENERIC_RELOC_PAIR
+init|=
+literal|1
+block|,
+name|GENERIC_RELOC_SECTDIFF
+init|=
+literal|2
+block|,
+name|GENERIC_RELOC_PB_LA_PTR
+init|=
+literal|3
+block|,
+name|GENERIC_RELOC_LOCAL_SECTDIFF
+init|=
+literal|4
+block|,
+name|GENERIC_RELOC_TLV
+init|=
+literal|5
+block|,
+comment|// Constant values for the r_type field in a PowerPC architecture
+comment|// llvm::MachO::relocation_info or llvm::MachO::scattered_relocation_info
+comment|// structure.
+name|PPC_RELOC_VANILLA
+init|=
+name|GENERIC_RELOC_VANILLA
+block|,
+name|PPC_RELOC_PAIR
+init|=
+name|GENERIC_RELOC_PAIR
+block|,
+name|PPC_RELOC_BR14
+init|=
+literal|2
+block|,
+name|PPC_RELOC_BR24
+init|=
+literal|3
+block|,
+name|PPC_RELOC_HI16
+init|=
+literal|4
+block|,
+name|PPC_RELOC_LO16
+init|=
+literal|5
+block|,
+name|PPC_RELOC_HA16
+init|=
+literal|6
+block|,
+name|PPC_RELOC_LO14
+init|=
+literal|7
+block|,
+name|PPC_RELOC_SECTDIFF
+init|=
+literal|8
+block|,
+name|PPC_RELOC_PB_LA_PTR
+init|=
+literal|9
+block|,
+name|PPC_RELOC_HI16_SECTDIFF
+init|=
+literal|10
+block|,
+name|PPC_RELOC_LO16_SECTDIFF
+init|=
+literal|11
+block|,
+name|PPC_RELOC_HA16_SECTDIFF
+init|=
+literal|12
+block|,
+name|PPC_RELOC_JBSR
+init|=
+literal|13
+block|,
+name|PPC_RELOC_LO14_SECTDIFF
+init|=
+literal|14
+block|,
+name|PPC_RELOC_LOCAL_SECTDIFF
+init|=
+literal|15
+block|,
+comment|// Constant values for the r_type field in an ARM architecture
+comment|// llvm::MachO::relocation_info or llvm::MachO::scattered_relocation_info
+comment|// structure.
+name|ARM_RELOC_VANILLA
+init|=
+name|GENERIC_RELOC_VANILLA
+block|,
+name|ARM_RELOC_PAIR
+init|=
+name|GENERIC_RELOC_PAIR
+block|,
+name|ARM_RELOC_SECTDIFF
+init|=
+name|GENERIC_RELOC_SECTDIFF
+block|,
+name|ARM_RELOC_LOCAL_SECTDIFF
+init|=
+literal|3
+block|,
+name|ARM_RELOC_PB_LA_PTR
+init|=
+literal|4
+block|,
+name|ARM_RELOC_BR24
+init|=
+literal|5
+block|,
+name|ARM_THUMB_RELOC_BR22
+init|=
+literal|6
+block|,
+name|ARM_THUMB_32BIT_BRANCH
+init|=
+literal|7
+block|,
+comment|// obsolete
+name|ARM_RELOC_HALF
+init|=
+literal|8
+block|,
+name|ARM_RELOC_HALF_SECTDIFF
+init|=
+literal|9
+block|,
+comment|// Constant values for the r_type field in an x86_64 architecture
+comment|// llvm::MachO::relocation_info or llvm::MachO::scattered_relocation_info
+comment|// structure
+name|X86_64_RELOC_UNSIGNED
+init|=
+literal|0
+block|,
+name|X86_64_RELOC_SIGNED
+init|=
+literal|1
+block|,
+name|X86_64_RELOC_BRANCH
+init|=
+literal|2
+block|,
+name|X86_64_RELOC_GOT_LOAD
+init|=
+literal|3
+block|,
+name|X86_64_RELOC_GOT
+init|=
+literal|4
+block|,
+name|X86_64_RELOC_SUBTRACTOR
+init|=
+literal|5
+block|,
+name|X86_64_RELOC_SIGNED_1
+init|=
+literal|6
+block|,
+name|X86_64_RELOC_SIGNED_2
+init|=
+literal|7
+block|,
+name|X86_64_RELOC_SIGNED_4
+init|=
+literal|8
+block|,
+name|X86_64_RELOC_TLV
+init|=
+literal|9
+block|}
+enum|;
+comment|// Values for segment_command.initprot.
+comment|// From<mach/vm_prot.h>
+enum|enum
+block|{
+name|VM_PROT_READ
+init|=
+literal|0x1
+block|,
+name|VM_PROT_WRITE
+init|=
+literal|0x2
+block|,
+name|VM_PROT_EXECUTE
+init|=
+literal|0x4
 block|}
 enum|;
 comment|// Structs from<mach-o/loader.h>
@@ -1914,6 +2096,34 @@ decl_stmt|;
 block|}
 struct|;
 struct|struct
+name|data_in_code_entry
+block|{
+name|uint32_t
+name|offset
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+name|uint16_t
+name|kind
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|source_version_command
+block|{
+name|uint32_t
+name|cmd
+decl_stmt|;
+name|uint32_t
+name|cmdsize
+decl_stmt|;
+name|uint64_t
+name|version
+decl_stmt|;
+block|}
+struct|;
+struct|struct
 name|encryption_info_command
 block|{
 name|uint32_t
@@ -1992,6 +2202,20 @@ decl_stmt|;
 block|}
 struct|;
 struct|struct
+name|linker_options_command
+block|{
+name|uint32_t
+name|cmd
+decl_stmt|;
+name|uint32_t
+name|cmdsize
+decl_stmt|;
+name|uint32_t
+name|count
+decl_stmt|;
+block|}
+struct|;
+struct|struct
 name|symseg_command
 block|{
 name|uint32_t
@@ -2036,6 +2260,65 @@ name|header_addr
 decl_stmt|;
 block|}
 struct|;
+struct|struct
+name|tlv_descriptor_32
+block|{
+name|uint32_t
+name|thunk
+decl_stmt|;
+name|uint32_t
+name|key
+decl_stmt|;
+name|uint32_t
+name|offset
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|tlv_descriptor_64
+block|{
+name|uint64_t
+name|thunk
+decl_stmt|;
+name|uint64_t
+name|key
+decl_stmt|;
+name|uint64_t
+name|offset
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|tlv_descriptor
+block|{
+name|uintptr_t
+name|thunk
+decl_stmt|;
+name|uintptr_t
+name|key
+decl_stmt|;
+name|uintptr_t
+name|offset
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|entry_point_command
+block|{
+name|uint32_t
+name|cmd
+decl_stmt|;
+name|uint32_t
+name|cmdsize
+decl_stmt|;
+name|uint64_t
+name|entryoff
+decl_stmt|;
+name|uint64_t
+name|stacksize
+decl_stmt|;
+block|}
+struct|;
 comment|// Structs from<mach-o/fat.h>
 struct|struct
 name|fat_header
@@ -2068,7 +2351,119 @@ name|align
 decl_stmt|;
 block|}
 struct|;
-comment|// Structs from<mach-o/fat.h>
+comment|// Structs from<mach-o/reloc.h>
+struct|struct
+name|relocation_info
+block|{
+name|int32_t
+name|r_address
+decl_stmt|;
+name|uint32_t
+name|r_symbolnum
+range|:
+literal|24
+decl_stmt|,
+name|r_pcrel
+range|:
+literal|1
+decl_stmt|,
+name|r_length
+range|:
+literal|2
+decl_stmt|,
+name|r_extern
+range|:
+literal|1
+decl_stmt|,
+name|r_type
+range|:
+literal|4
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|scattered_relocation_info
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BYTE_ORDER
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|BIG_ENDIAN
+argument_list|)
+operator|&&
+operator|(
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+operator|)
+name|uint32_t
+name|r_scattered
+range|:
+literal|1
+decl_stmt|,
+name|r_pcrel
+range|:
+literal|1
+decl_stmt|,
+name|r_length
+range|:
+literal|2
+decl_stmt|,
+name|r_type
+range|:
+literal|4
+decl_stmt|,
+name|r_address
+range|:
+literal|24
+decl_stmt|;
+else|#
+directive|else
+name|uint32_t
+name|r_address
+range|:
+literal|24
+decl_stmt|,
+name|r_type
+range|:
+literal|4
+decl_stmt|,
+name|r_length
+range|:
+literal|2
+decl_stmt|,
+name|r_pcrel
+range|:
+literal|1
+decl_stmt|,
+name|r_scattered
+range|:
+literal|1
+decl_stmt|;
+endif|#
+directive|endif
+name|int32_t
+name|r_value
+decl_stmt|;
+block|}
+struct|;
+comment|// Structs NOT from<mach-o/reloc.h>, but that make LLVM's life easier
+struct|struct
+name|any_relocation_info
+block|{
+name|uint32_t
+name|r_word0
+decl_stmt|,
+name|r_word1
+decl_stmt|;
+block|}
+struct|;
+comment|// Structs from<mach-o/nlist.h>
 struct|struct
 name|nlist
 block|{
@@ -2225,87 +2620,400 @@ operator|)
 expr_stmt|;
 block|}
 comment|// Enums from<mach/machine.h>
-enum|enum
+name|enum
+name|LLVM_ENUM_INT_TYPE
+function|(
+name|uint32_t
+function|)
 block|{
 comment|// Capability bits used in the definition of cpu_type.
-name|CPUArchMask
-init|=
+name|CPU_ARCH_MASK
+operator|=
 literal|0xff000000
-block|,
+operator|,
 comment|// Mask for architecture bits
-name|CPUArchABI64
-init|=
+name|CPU_ARCH_ABI64
+operator|=
 literal|0x01000000
-block|,
 comment|// 64 bit ABI
+block|}
+empty_stmt|;
 comment|// Constants for the cputype field.
-name|CPUTypeI386
+enum|enum
+name|CPUType
+block|{
+name|CPU_TYPE_ANY
+init|=
+operator|-
+literal|1
+block|,
+name|CPU_TYPE_X86
 init|=
 literal|7
 block|,
-name|CPUTypeX86_64
+name|CPU_TYPE_I386
 init|=
-name|CPUTypeI386
-operator||
-name|CPUArchABI64
+name|CPU_TYPE_X86
 block|,
-name|CPUTypeARM
+name|CPU_TYPE_X86_64
+init|=
+name|CPU_TYPE_X86
+operator||
+name|CPU_ARCH_ABI64
+block|,
+comment|/* CPU_TYPE_MIPS      = 8, */
+name|CPU_TYPE_MC98000
+init|=
+literal|10
+block|,
+comment|// Old Motorola PowerPC
+name|CPU_TYPE_ARM
 init|=
 literal|12
 block|,
-name|CPUTypeSPARC
+name|CPU_TYPE_SPARC
 init|=
 literal|14
 block|,
-name|CPUTypePowerPC
+name|CPU_TYPE_POWERPC
 init|=
 literal|18
 block|,
-name|CPUTypePowerPC64
+name|CPU_TYPE_POWERPC64
 init|=
-name|CPUTypePowerPC
+name|CPU_TYPE_POWERPC
 operator||
-name|CPUArchABI64
-block|,
+name|CPU_ARCH_ABI64
+block|}
+enum|;
+name|enum
+name|LLVM_ENUM_INT_TYPE
+function|(
+name|uint32_t
+function|)
+block|{
+comment|// Capability bits used in the definition of cpusubtype.
+name|CPU_SUB_TYPE_MASK
+operator|=
+literal|0xff000000
+operator|,
+comment|// Mask for architecture bits
+name|CPU_SUB_TYPE_LIB64
+operator|=
+literal|0x80000000
+operator|,
+comment|// 64 bit libraries
+comment|// Special CPU subtype constants.
+name|CPU_SUBTYPE_MULTIPLE
+operator|=
+operator|~
+literal|0u
+block|}
+empty_stmt|;
 comment|// Constants for the cpusubtype field.
-comment|// X86
-name|CPUSubType_I386_ALL
+enum|enum
+name|CPUSubTypeX86
+block|{
+name|CPU_SUBTYPE_I386_ALL
 init|=
 literal|3
 block|,
-name|CPUSubType_X86_64_ALL
+name|CPU_SUBTYPE_386
 init|=
 literal|3
 block|,
-comment|// ARM
-name|CPUSubType_ARM_ALL
+name|CPU_SUBTYPE_486
 init|=
-literal|0
+literal|4
 block|,
-name|CPUSubType_ARM_V4T
+name|CPU_SUBTYPE_486SX
+init|=
+literal|0x84
+block|,
+name|CPU_SUBTYPE_586
 init|=
 literal|5
 block|,
-name|CPUSubType_ARM_V5
+name|CPU_SUBTYPE_PENT
 init|=
-literal|7
+name|CPU_SUBTYPE_586
 block|,
-name|CPUSubType_ARM_V6
+name|CPU_SUBTYPE_PENTPRO
+init|=
+literal|0x16
+block|,
+name|CPU_SUBTYPE_PENTII_M3
+init|=
+literal|0x36
+block|,
+name|CPU_SUBTYPE_PENTII_M5
+init|=
+literal|0x56
+block|,
+name|CPU_SUBTYPE_CELERON
+init|=
+literal|0x67
+block|,
+name|CPU_SUBTYPE_CELERON_MOBILE
+init|=
+literal|0x77
+block|,
+name|CPU_SUBTYPE_PENTIUM_3
+init|=
+literal|0x08
+block|,
+name|CPU_SUBTYPE_PENTIUM_3_M
+init|=
+literal|0x18
+block|,
+name|CPU_SUBTYPE_PENTIUM_3_XEON
+init|=
+literal|0x28
+block|,
+name|CPU_SUBTYPE_PENTIUM_M
+init|=
+literal|0x09
+block|,
+name|CPU_SUBTYPE_PENTIUM_4
+init|=
+literal|0x0a
+block|,
+name|CPU_SUBTYPE_PENTIUM_4_M
+init|=
+literal|0x1a
+block|,
+name|CPU_SUBTYPE_ITANIUM
+init|=
+literal|0x0b
+block|,
+name|CPU_SUBTYPE_ITANIUM_2
+init|=
+literal|0x1b
+block|,
+name|CPU_SUBTYPE_XEON
+init|=
+literal|0x0c
+block|,
+name|CPU_SUBTYPE_XEON_MP
+init|=
+literal|0x1c
+block|,
+name|CPU_SUBTYPE_X86_ALL
+init|=
+literal|3
+block|,
+name|CPU_SUBTYPE_X86_64_ALL
+init|=
+literal|3
+block|,
+name|CPU_SUBTYPE_X86_ARCH1
+init|=
+literal|4
+block|,
+name|CPU_SUBTYPE_X86_64_H
+init|=
+literal|8
+block|}
+enum|;
+specifier|static
+specifier|inline
+name|int
+name|CPU_SUBTYPE_INTEL
+parameter_list|(
+name|int
+name|Family
+parameter_list|,
+name|int
+name|Model
+parameter_list|)
+block|{
+return|return
+name|Family
+operator||
+operator|(
+name|Model
+operator|<<
+literal|4
+operator|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|int
+name|CPU_SUBTYPE_INTEL_FAMILY
+parameter_list|(
+name|CPUSubTypeX86
+name|ST
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+name|ST
+operator|)
+operator|&
+literal|0x0f
+return|;
+block|}
+specifier|static
+specifier|inline
+name|int
+name|CPU_SUBTYPE_INTEL_MODEL
+parameter_list|(
+name|CPUSubTypeX86
+name|ST
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+name|ST
+operator|)
+operator|>>
+literal|4
+return|;
+block|}
+enum|enum
+block|{
+name|CPU_SUBTYPE_INTEL_FAMILY_MAX
+init|=
+literal|15
+block|,
+name|CPU_SUBTYPE_INTEL_MODEL_ALL
+init|=
+literal|0
+block|}
+enum|;
+enum|enum
+name|CPUSubTypeARM
+block|{
+name|CPU_SUBTYPE_ARM_ALL
+init|=
+literal|0
+block|,
+name|CPU_SUBTYPE_ARM_V4T
+init|=
+literal|5
+block|,
+name|CPU_SUBTYPE_ARM_V6
 init|=
 literal|6
 block|,
-name|CPUSubType_ARM_V7
+name|CPU_SUBTYPE_ARM_V5
+init|=
+literal|7
+block|,
+name|CPU_SUBTYPE_ARM_V5TEJ
+init|=
+literal|7
+block|,
+name|CPU_SUBTYPE_ARM_XSCALE
+init|=
+literal|8
+block|,
+name|CPU_SUBTYPE_ARM_V7
 init|=
 literal|9
 block|,
-comment|// PowerPC
-name|CPUSubType_POWERPC_ALL
+name|CPU_SUBTYPE_ARM_V7F
+init|=
+literal|10
+block|,
+name|CPU_SUBTYPE_ARM_V7S
+init|=
+literal|11
+block|,
+name|CPU_SUBTYPE_ARM_V7K
+init|=
+literal|12
+block|,
+name|CPU_SUBTYPE_ARM_V6M
+init|=
+literal|14
+block|,
+name|CPU_SUBTYPE_ARM_V7M
+init|=
+literal|15
+block|,
+name|CPU_SUBTYPE_ARM_V7EM
+init|=
+literal|16
+block|}
+enum|;
+enum|enum
+name|CPUSubTypeSPARC
+block|{
+name|CPU_SUBTYPE_SPARC_ALL
+init|=
+literal|0
+block|}
+enum|;
+enum|enum
+name|CPUSubTypePowerPC
+block|{
+name|CPU_SUBTYPE_POWERPC_ALL
 init|=
 literal|0
 block|,
-name|CPUSubType_SPARC_ALL
+name|CPU_SUBTYPE_POWERPC_601
 init|=
-literal|0
+literal|1
+block|,
+name|CPU_SUBTYPE_POWERPC_602
+init|=
+literal|2
+block|,
+name|CPU_SUBTYPE_POWERPC_603
+init|=
+literal|3
+block|,
+name|CPU_SUBTYPE_POWERPC_603e
+init|=
+literal|4
+block|,
+name|CPU_SUBTYPE_POWERPC_603ev
+init|=
+literal|5
+block|,
+name|CPU_SUBTYPE_POWERPC_604
+init|=
+literal|6
+block|,
+name|CPU_SUBTYPE_POWERPC_604e
+init|=
+literal|7
+block|,
+name|CPU_SUBTYPE_POWERPC_620
+init|=
+literal|8
+block|,
+name|CPU_SUBTYPE_POWERPC_750
+init|=
+literal|9
+block|,
+name|CPU_SUBTYPE_POWERPC_7400
+init|=
+literal|10
+block|,
+name|CPU_SUBTYPE_POWERPC_7450
+init|=
+literal|11
+block|,
+name|CPU_SUBTYPE_POWERPC_970
+init|=
+literal|100
+block|,
+name|CPU_SUBTYPE_MC980000_ALL
+init|=
+name|CPU_SUBTYPE_POWERPC_ALL
+block|,
+name|CPU_SUBTYPE_MC98601
+init|=
+name|CPU_SUBTYPE_POWERPC_601
 block|}
 enum|;
 block|}

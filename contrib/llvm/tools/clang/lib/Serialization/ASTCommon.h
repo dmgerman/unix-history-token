@@ -88,6 +88,10 @@ block|,
 name|UPD_CXX_ADDED_ANONYMOUS_NAMESPACE
 block|,
 name|UPD_CXX_INSTANTIATED_STATIC_DATA_MEMBER
+block|,
+name|UPD_CXX_DEDUCED_RETURN_TYPE
+block|,
+name|UPD_DECL_MARKED_USED
 block|}
 enum|;
 name|TypeIdx

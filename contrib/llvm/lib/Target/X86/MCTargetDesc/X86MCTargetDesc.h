@@ -97,6 +97,9 @@ name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
+name|MCRelocationInfo
+decl_stmt|;
+name|class
 name|Target
 decl_stmt|;
 name|class
@@ -322,6 +325,11 @@ name|Target
 modifier|&
 name|T
 parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
 name|StringRef
 name|TT
 parameter_list|,
@@ -337,6 +345,11 @@ specifier|const
 name|Target
 modifier|&
 name|T
+parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
 parameter_list|,
 name|StringRef
 name|TT
@@ -394,6 +407,26 @@ name|OS
 parameter_list|,
 name|bool
 name|Is64Bit
+parameter_list|)
+function_decl|;
+comment|/// createX86_64MachORelocationInfo - Construct X86-64 Mach-O relocation info.
+name|MCRelocationInfo
+modifier|*
+name|createX86_64MachORelocationInfo
+parameter_list|(
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
+comment|/// createX86_64ELFORelocationInfo - Construct X86-64 ELF relocation info.
+name|MCRelocationInfo
+modifier|*
+name|createX86_64ELFRelocationInfo
+parameter_list|(
+name|MCContext
+modifier|&
+name|Ctx
 parameter_list|)
 function_decl|;
 block|}

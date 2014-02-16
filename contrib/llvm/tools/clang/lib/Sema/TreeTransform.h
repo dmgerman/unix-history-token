@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/StmtOpenMP.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Lex/Preprocessor.h"
 end_include
 
@@ -415,12 +421,21 @@ comment|/// if none of the children have changed.
 comment|///
 comment|/// Subclasses may override this function to specify when the transformation
 comment|/// should rebuild all AST nodes.
+comment|///
+comment|/// We must always rebuild all AST nodes when performing variadic template
+comment|/// pack expansion, in order to avoid violating the AST invariant that each
+comment|/// statement node appears at most once in its containing declaration.
 name|bool
 name|AlwaysRebuild
 argument_list|()
 block|{
 return|return
-name|false
+name|SemaRef
+operator|.
+name|ArgumentPackSubstitutionIndex
+operator|!=
+operator|-
+literal|1
 return|;
 block|}
 comment|/// \brief Returns the location of the entity being transformed, if that
@@ -744,6 +759,23 @@ name|StmtResult
 name|TransformStmt
 argument_list|(
 name|Stmt
+operator|*
+name|S
+argument_list|)
+block|;
+comment|/// \brief Transform the given statement.
+comment|///
+comment|/// By default, this routine transforms a statement by delegating to the
+comment|/// appropriate TransformOMPXXXClause function to transform a specific kind
+comment|/// of clause. Subclasses may override this function to transform statements
+comment|/// using some other mechanism.
+comment|///
+comment|/// \returns the transformed OpenMP clause.
+name|OMPClause
+operator|*
+name|TransformOMPClause
+argument_list|(
+name|OMPClause
 operator|*
 name|S
 argument_list|)
@@ -1302,6 +1334,17 @@ operator|*
 name|E
 argument_list|)
 block|;
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|ExprResult
+operator|,
+name|QualType
+operator|>
+name|InitCaptureInfoTy
+expr_stmt|;
 comment|/// \brief Transform the captures and body of a lambda expression.
 name|ExprResult
 name|TransformLambdaScope
@@ -1313,24 +1356,48 @@ argument_list|,
 name|CXXMethodDecl
 operator|*
 name|CallOperator
+argument_list|,
+name|ArrayRef
+operator|<
+name|InitCaptureInfoTy
+operator|>
+name|InitCaptureExprsAndTypes
 argument_list|)
-block|;
+expr_stmt|;
+name|TemplateParameterList
+modifier|*
+name|TransformTemplateParameterList
+parameter_list|(
+name|TemplateParameterList
+modifier|*
+name|TPL
+parameter_list|)
+block|{
+return|return
+name|TPL
+return|;
+block|}
 name|ExprResult
 name|TransformAddressOfOperand
-argument_list|(
+parameter_list|(
 name|Expr
-operator|*
+modifier|*
 name|E
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|ExprResult
 name|TransformDependentScopeDeclRefExpr
-argument_list|(
-argument|DependentScopeDeclRefExpr *E
-argument_list|,
-argument|bool IsAddressOfOperand
-argument_list|)
-block|;
+parameter_list|(
+name|DependentScopeDeclRefExpr
+modifier|*
+name|E
+parameter_list|,
+name|bool
+name|IsAddressOfOperand
+parameter_list|)
+function_decl|;
+comment|// FIXME: We use LLVM_ATTRIBUTE_NOINLINE because inlining causes a ridiculous
+comment|// amount of stack usage with clang.
 define|#
 directive|define
 name|STMT
@@ -1340,7 +1407,7 @@ parameter_list|,
 name|Parent
 parameter_list|)
 define|\
-value|StmtResult Transform##Node(Node *S);
+value|LLVM_ATTRIBUTE_NOINLINE \   StmtResult Transform##Node(Node *S);
 define|#
 directive|define
 name|EXPR
@@ -1350,7 +1417,7 @@ parameter_list|,
 name|Parent
 parameter_list|)
 define|\
-value|ExprResult Transform##Node(Node *E);
+value|LLVM_ATTRIBUTE_NOINLINE \   ExprResult Transform##Node(Node *E);
 define|#
 directive|define
 name|ABSTRACT_STMT
@@ -1360,30 +1427,47 @@ parameter_list|)
 include|#
 directive|include
 file|"clang/AST/StmtNodes.inc"
+define|#
+directive|define
+name|OPENMP_CLAUSE
+parameter_list|(
+name|Name
+parameter_list|,
+name|Class
+parameter_list|)
+define|\
+value|LLVM_ATTRIBUTE_NOINLINE \   OMPClause *Transform ## Class(Class *S);
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
 comment|/// \brief Build a new pointer type given its pointee type.
 comment|///
 comment|/// By default, performs semantic analysis when building the pointer type.
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildPointerType
-argument_list|(
-argument|QualType PointeeType
-argument_list|,
-argument|SourceLocation Sigil
-argument_list|)
-block|;
+parameter_list|(
+name|QualType
+name|PointeeType
+parameter_list|,
+name|SourceLocation
+name|Sigil
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new block pointer type given its pointee type.
 comment|///
 comment|/// By default, performs semantic analysis when building the block pointer
 comment|/// type. Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildBlockPointerType
-argument_list|(
-argument|QualType PointeeType
-argument_list|,
-argument|SourceLocation Sigil
-argument_list|)
-block|;
+parameter_list|(
+name|QualType
+name|PointeeType
+parameter_list|,
+name|SourceLocation
+name|Sigil
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new reference type given the type it references.
 comment|///
 comment|/// By default, performs semantic analysis when building the
@@ -1394,14 +1478,17 @@ comment|/// \param LValue whether the type was written with an lvalue sigil
 comment|/// or an rvalue sigil.
 name|QualType
 name|RebuildReferenceType
-argument_list|(
-argument|QualType ReferentType
-argument_list|,
-argument|bool LValue
-argument_list|,
-argument|SourceLocation Sigil
-argument_list|)
-block|;
+parameter_list|(
+name|QualType
+name|ReferentType
+parameter_list|,
+name|bool
+name|LValue
+parameter_list|,
+name|SourceLocation
+name|Sigil
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new member pointer type given the pointee type and the
 comment|/// class type it refers into.
 comment|///
@@ -1409,14 +1496,17 @@ comment|/// By default, performs semantic analysis when building the member poin
 comment|/// type. Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildMemberPointerType
-argument_list|(
-argument|QualType PointeeType
-argument_list|,
-argument|QualType ClassType
-argument_list|,
-argument|SourceLocation Sigil
-argument_list|)
-block|;
+parameter_list|(
+name|QualType
+name|PointeeType
+parameter_list|,
+name|QualType
+name|ClassType
+parameter_list|,
+name|SourceLocation
+name|Sigil
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new array type given the element type, size
 comment|/// modifier, size of the array (if known), size expression, and index type
 comment|/// qualifiers.
@@ -1427,19 +1517,32 @@ comment|/// Also by default, all of the other Rebuild*Array
 name|QualType
 name|RebuildArrayType
 argument_list|(
-argument|QualType ElementType
+name|QualType
+name|ElementType
 argument_list|,
-argument|ArrayType::ArraySizeModifier SizeMod
+name|ArrayType
+operator|::
+name|ArraySizeModifier
+name|SizeMod
 argument_list|,
-argument|const llvm::APInt *Size
+specifier|const
+name|llvm
+operator|::
+name|APInt
+operator|*
+name|Size
 argument_list|,
-argument|Expr *SizeExpr
+name|Expr
+operator|*
+name|SizeExpr
 argument_list|,
-argument|unsigned IndexTypeQuals
+name|unsigned
+name|IndexTypeQuals
 argument_list|,
-argument|SourceRange BracketsRange
+name|SourceRange
+name|BracketsRange
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Build a new constant array type given the element type, size
 comment|/// modifier, (known) size of the array, and index type qualifiers.
 comment|///
@@ -1448,17 +1551,28 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildConstantArrayType
 argument_list|(
-argument|QualType ElementType
+name|QualType
+name|ElementType
 argument_list|,
-argument|ArrayType::ArraySizeModifier SizeMod
+name|ArrayType
+operator|::
+name|ArraySizeModifier
+name|SizeMod
 argument_list|,
-argument|const llvm::APInt&Size
+specifier|const
+name|llvm
+operator|::
+name|APInt
+operator|&
+name|Size
 argument_list|,
-argument|unsigned IndexTypeQuals
+name|unsigned
+name|IndexTypeQuals
 argument_list|,
-argument|SourceRange BracketsRange
+name|SourceRange
+name|BracketsRange
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Build a new incomplete array type given the element type, size
 comment|/// modifier, and index type qualifiers.
 comment|///
@@ -1467,15 +1581,21 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildIncompleteArrayType
 argument_list|(
-argument|QualType ElementType
+name|QualType
+name|ElementType
 argument_list|,
-argument|ArrayType::ArraySizeModifier SizeMod
+name|ArrayType
+operator|::
+name|ArraySizeModifier
+name|SizeMod
 argument_list|,
-argument|unsigned IndexTypeQuals
+name|unsigned
+name|IndexTypeQuals
 argument_list|,
-argument|SourceRange BracketsRange
+name|SourceRange
+name|BracketsRange
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Build a new variable-length array type given the element type,
 comment|/// size modifier, size expression, and index type qualifiers.
 comment|///
@@ -1484,17 +1604,25 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildVariableArrayType
 argument_list|(
-argument|QualType ElementType
+name|QualType
+name|ElementType
 argument_list|,
-argument|ArrayType::ArraySizeModifier SizeMod
+name|ArrayType
+operator|::
+name|ArraySizeModifier
+name|SizeMod
 argument_list|,
-argument|Expr *SizeExpr
+name|Expr
+operator|*
+name|SizeExpr
 argument_list|,
-argument|unsigned IndexTypeQuals
+name|unsigned
+name|IndexTypeQuals
 argument_list|,
-argument|SourceRange BracketsRange
+name|SourceRange
+name|BracketsRange
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Build a new dependent-sized array type given the element type,
 comment|/// size modifier, size expression, and index type qualifiers.
 comment|///
@@ -1503,17 +1631,25 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildDependentSizedArrayType
 argument_list|(
-argument|QualType ElementType
+name|QualType
+name|ElementType
 argument_list|,
-argument|ArrayType::ArraySizeModifier SizeMod
+name|ArrayType
+operator|::
+name|ArraySizeModifier
+name|SizeMod
 argument_list|,
-argument|Expr *SizeExpr
+name|Expr
+operator|*
+name|SizeExpr
 argument_list|,
-argument|unsigned IndexTypeQuals
+name|unsigned
+name|IndexTypeQuals
 argument_list|,
-argument|SourceRange BracketsRange
+name|SourceRange
+name|BracketsRange
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Build a new vector type given the element type and
 comment|/// number of elements.
 comment|///
@@ -1522,13 +1658,18 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildVectorType
 argument_list|(
-argument|QualType ElementType
+name|QualType
+name|ElementType
 argument_list|,
-argument|unsigned NumElements
+name|unsigned
+name|NumElements
 argument_list|,
-argument|VectorType::VectorKind VecKind
+name|VectorType
+operator|::
+name|VectorKind
+name|VecKind
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Build a new extended vector type given the element type and
 comment|/// number of elements.
 comment|///
@@ -1536,14 +1677,17 @@ comment|/// By default, performs semantic analysis when building the vector type
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildExtVectorType
-argument_list|(
-argument|QualType ElementType
-argument_list|,
-argument|unsigned NumElements
-argument_list|,
-argument|SourceLocation AttributeLoc
-argument_list|)
-block|;
+parameter_list|(
+name|QualType
+name|ElementType
+parameter_list|,
+name|unsigned
+name|NumElements
+parameter_list|,
+name|SourceLocation
+name|AttributeLoc
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new potentially dependently-sized extended vector type
 comment|/// given the element type and number of elements.
 comment|///
@@ -1551,14 +1695,18 @@ comment|/// By default, performs semantic analysis when building the vector type
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildDependentSizedExtVectorType
-argument_list|(
-argument|QualType ElementType
-argument_list|,
-argument|Expr *SizeExpr
-argument_list|,
-argument|SourceLocation AttributeLoc
-argument_list|)
-block|;
+parameter_list|(
+name|QualType
+name|ElementType
+parameter_list|,
+name|Expr
+modifier|*
+name|SizeExpr
+parameter_list|,
+name|SourceLocation
+name|AttributeLoc
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new function type.
 comment|///
 comment|/// By default, performs semantic analysis when building the function type.
@@ -1566,36 +1714,51 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildFunctionProtoType
 argument_list|(
-argument|QualType T
+name|QualType
+name|T
 argument_list|,
-argument|llvm::MutableArrayRef<QualType> ParamTypes
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
+name|QualType
+operator|>
+name|ParamTypes
 argument_list|,
-argument|const FunctionProtoType::ExtProtoInfo&EPI
+specifier|const
+name|FunctionProtoType
+operator|::
+name|ExtProtoInfo
+operator|&
+name|EPI
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Build a new unprototyped function type.
 name|QualType
 name|RebuildFunctionNoProtoType
-argument_list|(
-argument|QualType ResultType
-argument_list|)
-block|;
+parameter_list|(
+name|QualType
+name|ResultType
+parameter_list|)
+function_decl|;
 comment|/// \brief Rebuild an unresolved typename type, given the decl that
 comment|/// the UnresolvedUsingTypenameDecl was transformed to.
 name|QualType
 name|RebuildUnresolvedUsingType
-argument_list|(
+parameter_list|(
 name|Decl
-operator|*
+modifier|*
 name|D
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new typedef type.
 name|QualType
 name|RebuildTypedefType
-argument_list|(
-argument|TypedefNameDecl *Typedef
-argument_list|)
+parameter_list|(
+name|TypedefNameDecl
+modifier|*
+name|Typedef
+parameter_list|)
 block|{
 return|return
 name|SemaRef
@@ -1611,9 +1774,11 @@ block|}
 comment|/// \brief Build a new class/struct/union type.
 name|QualType
 name|RebuildRecordType
-argument_list|(
-argument|RecordDecl *Record
-argument_list|)
+parameter_list|(
+name|RecordDecl
+modifier|*
+name|Record
+parameter_list|)
 block|{
 return|return
 name|SemaRef
@@ -1629,9 +1794,11 @@ block|}
 comment|/// \brief Build a new Enum type.
 name|QualType
 name|RebuildEnumType
-argument_list|(
-argument|EnumDecl *Enum
-argument_list|)
+parameter_list|(
+name|EnumDecl
+modifier|*
+name|Enum
+parameter_list|)
 block|{
 return|return
 name|SemaRef
@@ -1650,54 +1817,68 @@ comment|/// By default, performs semantic analysis when building the typeof type
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildTypeOfExprType
-argument_list|(
-argument|Expr *Underlying
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-block|;
+parameter_list|(
+name|Expr
+modifier|*
+name|Underlying
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new typeof(type) type.
 comment|///
 comment|/// By default, builds a new TypeOfType with the given underlying type.
 name|QualType
 name|RebuildTypeOfType
-argument_list|(
-argument|QualType Underlying
-argument_list|)
-block|;
+parameter_list|(
+name|QualType
+name|Underlying
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new unary transform type.
 name|QualType
 name|RebuildUnaryTransformType
 argument_list|(
-argument|QualType BaseType
+name|QualType
+name|BaseType
 argument_list|,
-argument|UnaryTransformType::UTTKind UKind
+name|UnaryTransformType
+operator|::
+name|UTTKind
+name|UKind
 argument_list|,
-argument|SourceLocation Loc
+name|SourceLocation
+name|Loc
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Build a new C++11 decltype type.
 comment|///
 comment|/// By default, performs semantic analysis when building the decltype type.
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildDecltypeType
-argument_list|(
-argument|Expr *Underlying
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-block|;
+parameter_list|(
+name|Expr
+modifier|*
+name|Underlying
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new C++11 auto type.
 comment|///
 comment|/// By default, builds a new AutoType with the given deduced type.
 name|QualType
 name|RebuildAutoType
-argument_list|(
-argument|QualType Deduced
-argument_list|,
-argument|bool IsDecltypeAuto
-argument_list|)
+parameter_list|(
+name|QualType
+name|Deduced
+parameter_list|,
+name|bool
+name|IsDecltypeAuto
+parameter_list|)
 block|{
 comment|// Note, IsDependent is always false here: we implicitly convert an 'auto'
 comment|// which has been deduced to a dependent type into an undeduced 'auto', so
@@ -1712,6 +1893,9 @@ argument_list|(
 name|Deduced
 argument_list|,
 name|IsDecltypeAuto
+argument_list|,
+comment|/*IsDependent*/
+name|false
 argument_list|)
 return|;
 block|}
@@ -1722,23 +1906,28 @@ comment|/// specialization type. Subclasses may override this routine to provide
 comment|/// different behavior.
 name|QualType
 name|RebuildTemplateSpecializationType
-argument_list|(
-argument|TemplateName Template
-argument_list|,
-argument|SourceLocation TemplateLoc
-argument_list|,
-argument|TemplateArgumentListInfo&Args
-argument_list|)
-block|;
+parameter_list|(
+name|TemplateName
+name|Template
+parameter_list|,
+name|SourceLocation
+name|TemplateLoc
+parameter_list|,
+name|TemplateArgumentListInfo
+modifier|&
+name|Args
+parameter_list|)
+function_decl|;
 comment|/// \brief Build a new parenthesized type.
 comment|///
 comment|/// By default, builds a new ParenType type from the inner type.
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildParenType
-argument_list|(
-argument|QualType InnerType
-argument_list|)
+parameter_list|(
+name|QualType
+name|InnerType
+parameter_list|)
 block|{
 return|return
 name|SemaRef
@@ -1758,15 +1947,19 @@ comment|/// the nested-name-specifier and the named type.
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildElaboratedType
-argument_list|(
-argument|SourceLocation KeywordLoc
-argument_list|,
-argument|ElaboratedTypeKeyword Keyword
-argument_list|,
-argument|NestedNameSpecifierLoc QualifierLoc
-argument_list|,
-argument|QualType Named
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|KeywordLoc
+parameter_list|,
+name|ElaboratedTypeKeyword
+name|Keyword
+parameter_list|,
+name|NestedNameSpecifierLoc
+name|QualifierLoc
+parameter_list|,
+name|QualType
+name|Named
+parameter_list|)
 block|{
 return|return
 name|SemaRef
@@ -1793,33 +1986,41 @@ comment|/// nested-name-specifier and the given type. Subclasses may override
 comment|/// this routine to provide different behavior.
 name|QualType
 name|RebuildDependentTemplateSpecializationType
-argument_list|(
-argument|ElaboratedTypeKeyword Keyword
-argument_list|,
-argument|NestedNameSpecifierLoc QualifierLoc
-argument_list|,
-argument|const IdentifierInfo *Name
-argument_list|,
-argument|SourceLocation NameLoc
-argument_list|,
-argument|TemplateArgumentListInfo&Args
-argument_list|)
+parameter_list|(
+name|ElaboratedTypeKeyword
+name|Keyword
+parameter_list|,
+name|NestedNameSpecifierLoc
+name|QualifierLoc
+parameter_list|,
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|Name
+parameter_list|,
+name|SourceLocation
+name|NameLoc
+parameter_list|,
+name|TemplateArgumentListInfo
+modifier|&
+name|Args
+parameter_list|)
 block|{
 comment|// Rebuild the template name.
 comment|// TODO: avoid TemplateName abstraction
 name|CXXScopeSpec
 name|SS
-block|;
+decl_stmt|;
 name|SS
 operator|.
 name|Adopt
 argument_list|(
 name|QualifierLoc
 argument_list|)
-block|;
+expr_stmt|;
 name|TemplateName
 name|InstName
-operator|=
+init|=
 name|getDerived
 argument_list|()
 operator|.
@@ -1837,7 +2038,7 @@ argument_list|()
 argument_list|,
 literal|0
 argument_list|)
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|InstName
@@ -1880,7 +2081,7 @@ comment|// Otherwise, make an elaborated type wrapping a non-dependent
 comment|// specialization.
 name|QualType
 name|T
-operator|=
+init|=
 name|getDerived
 argument_list|()
 operator|.
@@ -1892,7 +2093,7 @@ name|NameLoc
 argument_list|,
 name|Args
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|T
@@ -1938,29 +2139,11 @@ name|T
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new typename type that refers to an identifier.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis when building the typename type
-end_comment
-
-begin_comment
 comment|/// (or elaborated type). Subclasses may override this routine to provide
-end_comment
-
-begin_comment
 comment|/// different behavior.
-end_comment
-
-begin_function
 name|QualType
 name|RebuildDependentNameType
 parameter_list|(
@@ -2452,25 +2635,10 @@ name|T
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new pack expansion type.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, builds a new PackExpansionType type from the given pattern.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|QualType
 name|RebuildPackExpansionType
 argument_list|(
@@ -2506,25 +2674,10 @@ name|NumExpansions
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new atomic type given its value type.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis when building the atomic type.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function_decl
 name|QualType
 name|RebuildAtomicType
 parameter_list|(
@@ -2535,33 +2688,12 @@ name|SourceLocation
 name|KWLoc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Build a new template name given a nested name specifier, a flag
-end_comment
-
-begin_comment
 comment|/// indicating whether the "template" keyword was provided, and the template
-end_comment
-
-begin_comment
 comment|/// that the template name refers to.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, builds the new template name directly. Subclasses may override
-end_comment
-
-begin_comment
 comment|/// this routine to provide different behavior.
-end_comment
-
-begin_function_decl
 name|TemplateName
 name|RebuildTemplateName
 parameter_list|(
@@ -2577,37 +2709,13 @@ modifier|*
 name|Template
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Build a new template name given a nested name specifier and the
-end_comment
-
-begin_comment
 comment|/// name that is referred to as a template.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to determine whether the name can
-end_comment
-
-begin_comment
 comment|/// be resolved to a specific template, then builds the appropriate kind of
-end_comment
-
-begin_comment
 comment|/// template name. Subclasses may override this routine to provide different
-end_comment
-
-begin_comment
 comment|/// behavior.
-end_comment
-
-begin_function_decl
 name|TemplateName
 name|RebuildTemplateName
 parameter_list|(
@@ -2631,37 +2739,13 @@ modifier|*
 name|FirstQualifierInScope
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Build a new template name given a nested name specifier and the
-end_comment
-
-begin_comment
 comment|/// overloaded operator name that is referred to as a template.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to determine whether the name can
-end_comment
-
-begin_comment
 comment|/// be resolved to a specific template, then builds the appropriate kind of
-end_comment
-
-begin_comment
 comment|/// template name. Subclasses may override this routine to provide different
-end_comment
-
-begin_comment
 comment|/// behavior.
-end_comment
-
-begin_function_decl
 name|TemplateName
 name|RebuildTemplateName
 parameter_list|(
@@ -2679,37 +2763,13 @@ name|QualType
 name|ObjectType
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Build a new template name given a template template parameter pack
-end_comment
-
-begin_comment
 comment|/// and the
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to determine whether the name can
-end_comment
-
-begin_comment
 comment|/// be resolved to a specific template, then builds the appropriate kind of
-end_comment
-
-begin_comment
 comment|/// template name. Subclasses may override this routine to provide different
-end_comment
-
-begin_comment
 comment|/// behavior.
-end_comment
-
-begin_function
 name|TemplateName
 name|RebuildTemplateName
 parameter_list|(
@@ -2737,25 +2797,10 @@ name|ArgPack
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new compound statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildCompoundStmt
 parameter_list|(
@@ -2788,25 +2833,10 @@ name|IsStmtExpr
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new case statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildCaseStmt
 parameter_list|(
@@ -2846,25 +2876,10 @@ name|ColonLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Attach the body to a new case statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildCaseStmtBody
 parameter_list|(
@@ -2891,25 +2906,10 @@ return|return
 name|S
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new default statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildDefaultStmt
 parameter_list|(
@@ -2941,25 +2941,10 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new label statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildLabelStmt
 parameter_list|(
@@ -2993,25 +2978,10 @@ name|SubStmt
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new label statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|StmtResult
 name|RebuildAttributedStmt
 argument_list|(
@@ -3044,25 +3014,10 @@ name|SubStmt
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new "if" statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|StmtResult
 name|RebuildIfStmt
 argument_list|(
@@ -3110,25 +3065,10 @@ name|Else
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Start building a new switch statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildSwitchStmtStart
 parameter_list|(
@@ -3158,25 +3098,10 @@ name|CondVar
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Attach the body to the switch statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildSwitchStmtBody
 parameter_list|(
@@ -3206,25 +3131,10 @@ name|Body
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new while statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|StmtResult
 name|RebuildWhileStmt
 argument_list|(
@@ -3261,25 +3171,10 @@ name|Body
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new do-while statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildDoStmt
 parameter_list|(
@@ -3324,25 +3219,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new for statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|StmtResult
 name|RebuildForStmt
 argument_list|(
@@ -3402,25 +3282,10 @@ name|Body
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new goto statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildGotoStmt
 parameter_list|(
@@ -3449,25 +3314,10 @@ name|Label
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new indirect goto statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildIndirectGotoStmt
 parameter_list|(
@@ -3496,25 +3346,10 @@ name|Target
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new return statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildReturnStmt
 parameter_list|(
@@ -3538,42 +3373,28 @@ name|Result
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new declaration statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildDeclStmt
-parameter_list|(
+argument_list|(
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
 name|Decl
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|Decls
-parameter_list|,
-name|unsigned
-name|NumDecls
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|StartLoc
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|EndLoc
-parameter_list|)
+argument_list|)
 block|{
 name|Sema
 operator|::
@@ -3586,8 +3407,6 @@ operator|.
 name|BuildDeclaratorGroup
 argument_list|(
 name|Decls
-argument_list|,
-name|NumDecls
 argument_list|)
 expr_stmt|;
 return|return
@@ -3604,25 +3423,10 @@ name|EndLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new inline asm statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildGCCAsmStmt
 parameter_list|(
@@ -3693,25 +3497,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new MS style inline asm statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|StmtResult
 name|RebuildMSAsmStmt
 argument_list|(
@@ -3787,25 +3576,10 @@ name|EndLoc
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new Objective-C \@try statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildObjCAtTryStmt
 parameter_list|(
@@ -3840,25 +3614,10 @@ name|Finally
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Rebuild an Objective-C exception declaration.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new declaration.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|VarDecl
 modifier|*
 name|RebuildObjCExceptionDecl
@@ -3902,25 +3661,10 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C \@catch statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildObjCAtCatchStmt
 parameter_list|(
@@ -3955,25 +3699,10 @@ name|Body
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C \@finally statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildObjCAtFinallyStmt
 parameter_list|(
@@ -3997,25 +3726,10 @@ name|Body
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C \@throw statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildObjCAtThrowStmt
 parameter_list|(
@@ -4039,25 +3753,212 @@ name|Operand
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/// \brief Rebuild the operand to an Objective-C \@synchronized statement.
-end_comment
-
-begin_comment
+comment|/// \brief Build a new OpenMP parallel directive.
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
+name|StmtResult
+name|RebuildOMPParallelDirective
+argument_list|(
+name|ArrayRef
+operator|<
+name|OMPClause
+operator|*
+operator|>
+name|Clauses
+argument_list|,
+name|Stmt
+operator|*
+name|AStmt
+argument_list|,
+name|SourceLocation
+name|StartLoc
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+block|{
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|ActOnOpenMPParallelDirective
+argument_list|(
+name|Clauses
+argument_list|,
+name|AStmt
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+return|;
+block|}
+comment|/// \brief Build a new OpenMP 'default' clause.
+comment|///
+comment|/// By default, performs semantic analysis to build the new statement.
+comment|/// Subclasses may override this routine to provide different behavior.
+name|OMPClause
+modifier|*
+name|RebuildOMPDefaultClause
+parameter_list|(
+name|OpenMPDefaultClauseKind
+name|Kind
+parameter_list|,
+name|SourceLocation
+name|KindKwLoc
+parameter_list|,
+name|SourceLocation
+name|StartLoc
+parameter_list|,
+name|SourceLocation
+name|LParenLoc
+parameter_list|,
+name|SourceLocation
+name|EndLoc
+parameter_list|)
+block|{
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|ActOnOpenMPDefaultClause
+argument_list|(
+name|Kind
+argument_list|,
+name|KindKwLoc
+argument_list|,
+name|StartLoc
+argument_list|,
+name|LParenLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+return|;
+block|}
+comment|/// \brief Build a new OpenMP 'private' clause.
+comment|///
+comment|/// By default, performs semantic analysis to build the new statement.
+comment|/// Subclasses may override this routine to provide different behavior.
+name|OMPClause
+modifier|*
+name|RebuildOMPPrivateClause
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VarList
+argument_list|,
+name|SourceLocation
+name|StartLoc
+argument_list|,
+name|SourceLocation
+name|LParenLoc
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+block|{
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|ActOnOpenMPPrivateClause
+argument_list|(
+name|VarList
+argument_list|,
+name|StartLoc
+argument_list|,
+name|LParenLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+return|;
+block|}
+comment|/// \brief Build a new OpenMP 'firstprivate' clause.
+comment|///
+comment|/// By default, performs semantic analysis to build the new statement.
+comment|/// Subclasses may override this routine to provide different behavior.
+name|OMPClause
+modifier|*
+name|RebuildOMPFirstprivateClause
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VarList
+argument_list|,
+name|SourceLocation
+name|StartLoc
+argument_list|,
+name|SourceLocation
+name|LParenLoc
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+block|{
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|ActOnOpenMPFirstprivateClause
+argument_list|(
+name|VarList
+argument_list|,
+name|StartLoc
+argument_list|,
+name|LParenLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+return|;
+block|}
+name|OMPClause
+modifier|*
+name|RebuildOMPSharedClause
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VarList
+argument_list|,
+name|SourceLocation
+name|StartLoc
+argument_list|,
+name|SourceLocation
+name|LParenLoc
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+block|{
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|ActOnOpenMPSharedClause
+argument_list|(
+name|VarList
+argument_list|,
+name|StartLoc
+argument_list|,
+name|LParenLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+return|;
+block|}
+comment|/// \brief Rebuild the operand to an Objective-C \@synchronized statement.
+comment|///
+comment|/// By default, performs semantic analysis to build the new statement.
+comment|/// Subclasses may override this routine to provide different behavior.
 name|ExprResult
 name|RebuildObjCAtSynchronizedOperand
 parameter_list|(
@@ -4081,25 +3982,10 @@ name|object
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C \@synchronized statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildObjCAtSynchronizedStmt
 parameter_list|(
@@ -4129,25 +4015,10 @@ name|Body
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C \@autoreleasepool statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildObjCAutoreleasePoolStmt
 parameter_list|(
@@ -4171,25 +4042,10 @@ name|Body
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C fast enumeration statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildObjCForCollectionStmt
 parameter_list|(
@@ -4255,25 +4111,10 @@ name|Body
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ exception declaration.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new decaration.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|VarDecl
 modifier|*
 name|RebuildExceptionDecl
@@ -4335,25 +4176,10 @@ return|return
 name|Var
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ catch statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildCXXCatchStmt
 parameter_list|(
@@ -4387,38 +4213,27 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ try statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildCXXTryStmt
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|TryLoc
-parameter_list|,
+argument_list|,
 name|Stmt
-modifier|*
+operator|*
 name|TryBlock
-parameter_list|,
-name|MultiStmtArg
+argument_list|,
+name|ArrayRef
+operator|<
+name|Stmt
+operator|*
+operator|>
 name|Handlers
-parameter_list|)
+argument_list|)
 block|{
 return|return
 name|getSema
@@ -4434,25 +4249,10 @@ name|Handlers
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++0x range-based for statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildCXXForRangeStmt
 parameter_list|(
@@ -4611,25 +4411,10 @@ name|BFRK_Rebuild
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++0x range-based for statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|RebuildMSDependentExistsStmt
 parameter_list|(
@@ -4668,25 +4453,10 @@ name|Nested
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Attach body to a C++0x range-based for statement.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to finish the new statement.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|StmtResult
 name|FinishCXXForRangeStmt
 parameter_list|(
@@ -4711,9 +4481,6 @@ name|Body
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|StmtResult
 name|RebuildSEHTryStmt
 parameter_list|(
@@ -4748,9 +4515,6 @@ name|Handler
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|StmtResult
 name|RebuildSEHExceptStmt
 parameter_list|(
@@ -4780,9 +4544,6 @@ name|Block
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|StmtResult
 name|RebuildSEHFinallyStmt
 parameter_list|(
@@ -4806,25 +4567,10 @@ name|Block
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new expression that references a declaration.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildDeclarationNameExpr
 parameter_list|(
@@ -4855,25 +4601,10 @@ name|RequiresADL
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new expression that references a declaration.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildDeclRefExpr
 parameter_list|(
@@ -4919,25 +4650,10 @@ name|VD
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new expression in parentheses.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildParenExpr
 parameter_list|(
@@ -4966,25 +4682,10 @@ name|SubExpr
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new pseudo-destructor expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function_decl
 name|ExprResult
 name|RebuildCXXPseudoDestructorExpr
 parameter_list|(
@@ -5016,25 +4717,10 @@ name|PseudoDestructorTypeStorage
 name|Destroyed
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Build a new unary operator expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildUnaryOperator
 parameter_list|(
@@ -5066,25 +4752,10 @@ name|SubExpr
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new builtin offsetof expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|ExprResult
 name|RebuildOffsetOfExpr
 argument_list|(
@@ -5126,29 +4797,11 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new sizeof, alignof or vec_step expression with a
-end_comment
-
-begin_comment
 comment|/// type argument.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildUnaryExprOrTypeTrait
 parameter_list|(
@@ -5182,29 +4835,11 @@ name|R
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new sizeof, alignof or vec step expression with an
-end_comment
-
-begin_comment
 comment|/// expression argument.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildUnaryExprOrTypeTrait
 parameter_list|(
@@ -5252,25 +4887,10 @@ return|return
 name|Result
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new array subscript expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildArraySubscriptExpr
 parameter_list|(
@@ -5308,25 +4928,10 @@ name|RBracketLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new call expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCallExpr
 parameter_list|(
@@ -5371,25 +4976,10 @@ name|ExecConfig
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new member access expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildMemberExpr
 parameter_list|(
@@ -5652,25 +5242,10 @@ name|ExplicitTemplateArgs
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new binary operator expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildBinaryOperator
 parameter_list|(
@@ -5708,25 +5283,10 @@ name|RHS
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new conditional operator expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildConditionalOperator
 parameter_list|(
@@ -5767,25 +5327,10 @@ name|RHS
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C-style cast expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCStyleCastExpr
 parameter_list|(
@@ -5820,25 +5365,10 @@ name|SubExpr
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new compound literal expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCompoundLiteralExpr
 parameter_list|(
@@ -5873,25 +5403,10 @@ name|Init
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new extended vector element access expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildExtVectorElementExpr
 parameter_list|(
@@ -5955,25 +5470,10 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new initializer list expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildInitList
 parameter_list|(
@@ -6051,25 +5551,10 @@ return|return
 name|Result
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new designated initializer expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildDesignatedInitExpr
 parameter_list|(
@@ -6122,29 +5607,11 @@ return|return
 name|Result
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new value-initialized expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, builds the implicit value initialization without performing
-end_comment
-
-begin_comment
 comment|/// any semantic analysis. Subclasses may override this routine to provide
-end_comment
-
-begin_comment
 comment|/// different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildImplicitValueInitExpr
 parameter_list|(
@@ -6168,25 +5635,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new \c va_arg expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildVAArgExpr
 parameter_list|(
@@ -6221,25 +5673,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new expression list in parentheses.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildParenListExpr
 parameter_list|(
@@ -6267,29 +5704,11 @@ name|SubExprs
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new address-of-label expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis, using the name of the label
-end_comment
-
-begin_comment
 comment|/// rather than attempting to map the label statement itself.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildAddrLabelExpr
 parameter_list|(
@@ -6318,25 +5737,10 @@ name|Label
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new GNU statement expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildStmtExpr
 parameter_list|(
@@ -6365,25 +5769,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new __builtin_choose_expr expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildChooseExpr
 parameter_list|(
@@ -6423,54 +5812,40 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new generic selection expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildGenericSelectionExpr
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|KeyLoc
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|DefaultLoc
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|RParenLoc
-parameter_list|,
+argument_list|,
 name|Expr
-modifier|*
+operator|*
 name|ControllingExpr
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|TypeSourceInfo
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|Types
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|Expr
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|Exprs
-parameter_list|,
-name|unsigned
-name|NumAssocs
-parameter_list|)
+argument_list|)
 block|{
 return|return
 name|getSema
@@ -6489,46 +5864,17 @@ argument_list|,
 name|Types
 argument_list|,
 name|Exprs
-argument_list|,
-name|NumAssocs
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new overloaded operator call expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// The semantic analysis provides the behavior of template instantiation,
-end_comment
-
-begin_comment
 comment|/// copying with transformations that turn what looks like an overloaded
-end_comment
-
-begin_comment
 comment|/// operator call into a use of a builtin operator, performing
-end_comment
-
-begin_comment
 comment|/// argument-dependent lookup, etc. Subclasses may override this routine to
-end_comment
-
-begin_comment
 comment|/// provide different behavior.
-end_comment
-
-begin_function_decl
 name|ExprResult
 name|RebuildCXXOperatorCallExpr
 parameter_list|(
@@ -6551,33 +5897,12 @@ modifier|*
 name|Second
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Build a new C++ "named" cast expression, such as static_cast or
-end_comment
-
-begin_comment
 comment|/// reinterpret_cast.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, this routine dispatches to one of the more-specific routines
-end_comment
-
-begin_comment
 comment|/// for a particular named case, e.g., RebuildCXXStaticCastExpr().
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|ExprResult
 name|RebuildCXXNamedCastExpr
 argument_list|(
@@ -6727,25 +6052,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new C++ static_cast expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXStaticCastExpr
 parameter_list|(
@@ -6805,25 +6115,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ dynamic_cast expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXDynamicCastExpr
 parameter_list|(
@@ -6883,25 +6178,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ reinterpret_cast expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXReinterpretCastExpr
 parameter_list|(
@@ -6961,25 +6241,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ const_cast expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXConstCastExpr
 parameter_list|(
@@ -7039,25 +6304,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ functional-style cast expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXFunctionalCastExpr
 parameter_list|(
@@ -7098,25 +6348,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ typeid(type) expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXTypeidExpr
 parameter_list|(
@@ -7150,25 +6385,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ typeid(expr) expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXTypeidExpr
 parameter_list|(
@@ -7202,25 +6422,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ __uuidof(type) expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXUuidofExpr
 parameter_list|(
@@ -7254,25 +6459,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ __uuidof(expr) expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXUuidofExpr
 parameter_list|(
@@ -7306,29 +6496,11 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ "this" expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, builds a new "this" expression without performing any
-end_comment
-
-begin_comment
 comment|/// semantic analysis. Subclasses may override this routine to provide
-end_comment
-
-begin_comment
 comment|/// different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXThisExpr
 parameter_list|(
@@ -7371,25 +6543,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ throw expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXThrowExpr
 parameter_list|(
@@ -7418,29 +6575,11 @@ name|IsThrownVariableInScope
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ default-argument expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, builds a new default-argument expression, which does not
-end_comment
-
-begin_comment
 comment|/// require any semantic analysis. Subclasses may override this routine to
-end_comment
-
-begin_comment
 comment|/// provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXDefaultArgExpr
 parameter_list|(
@@ -7474,29 +6613,11 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++11 default-initialization expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, builds a new default field initialization expression, which
-end_comment
-
-begin_comment
 comment|/// does not require any semantic analysis. Subclasses may override this
-end_comment
-
-begin_comment
 comment|/// routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXDefaultInitExpr
 parameter_list|(
@@ -7530,25 +6651,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ zero-initialization expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXScalarValueInitExpr
 parameter_list|(
@@ -7579,25 +6685,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ "new" expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXNewExpr
 parameter_list|(
@@ -7668,25 +6759,10 @@ name|Initializer
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new C++ "delete" expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXDeleteExpr
 parameter_list|(
@@ -7720,25 +6796,10 @@ name|Operand
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new unary type trait expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildUnaryTypeTrait
 parameter_list|(
@@ -7772,25 +6833,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new binary type trait expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildBinaryTypeTrait
 parameter_list|(
@@ -7830,25 +6876,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new type trait expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|ExprResult
 name|RebuildTypeTrait
 argument_list|(
@@ -7885,25 +6916,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new array type trait expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildArrayTypeTrait
 parameter_list|(
@@ -7943,25 +6959,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new expression trait expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildExpressionTrait
 parameter_list|(
@@ -7995,29 +6996,11 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new (previously unresolved) declaration reference
-end_comment
-
-begin_comment
 comment|/// expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildDependentScopeDeclRefExpr
 parameter_list|(
@@ -8089,25 +7072,10 @@ name|IsAddressOfOperand
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new template-id expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildTemplateIdExpr
 parameter_list|(
@@ -8150,25 +7118,10 @@ name|TemplateArgs
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new object-construction expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|ExprResult
 name|RebuildCXXConstructExpr
 argument_list|(
@@ -8263,25 +7216,10 @@ name|ParenRange
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new object-construction expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXTemporaryObjectExpr
 parameter_list|(
@@ -8315,25 +7253,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new object-construction expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXUnresolvedConstructExpr
 parameter_list|(
@@ -8367,25 +7290,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new member reference expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXDependentScopeMemberExpr
 parameter_list|(
@@ -8458,25 +7366,10 @@ name|TemplateArgs
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new member reference expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildUnresolvedMemberExpr
 parameter_list|(
@@ -8548,25 +7441,10 @@ name|TemplateArgs
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new noexcept expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildCXXNoexceptExpr
 parameter_list|(
@@ -8597,13 +7475,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new expression to compute the length of a parameter pack.
-end_comment
-
-begin_decl_stmt
 name|ExprResult
 name|RebuildSizeOfPackExpr
 argument_list|(
@@ -8681,25 +7553,10 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new Objective-C boxed expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildObjCBoxedExpr
 parameter_list|(
@@ -8723,25 +7580,10 @@ name|ValueExpr
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C array literal.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildObjCArrayLiteral
 parameter_list|(
@@ -8774,9 +7616,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|ExprResult
 name|RebuildObjCSubscriptRefExpr
 parameter_list|(
@@ -8818,25 +7657,10 @@ name|setterMethod
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C dictionary literal.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildObjCDictionaryLiteral
 parameter_list|(
@@ -8865,25 +7689,10 @@ name|NumElements
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C \@encode expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildObjCEncodeExpr
 parameter_list|(
@@ -8916,13 +7725,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C class message.
-end_comment
-
-begin_decl_stmt
 name|ExprResult
 name|RebuildObjCMessageExpr
 argument_list|(
@@ -8983,13 +7786,7 @@ name|Args
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new Objective-C instance message.
-end_comment
-
-begin_decl_stmt
 name|ExprResult
 name|RebuildObjCMessageExpr
 argument_list|(
@@ -9050,25 +7847,10 @@ name|Args
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new Objective-C ivar reference expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildObjCIvarRefExpr
 parameter_list|(
@@ -9212,25 +7994,10 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C property reference expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildObjCPropertyRefExpr
 parameter_list|(
@@ -9372,25 +8139,10 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C property reference expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildObjCPropertyRefExpr
 parameter_list|(
@@ -9441,25 +8193,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new Objective-C "isa" expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildObjCIsaExpr
 parameter_list|(
@@ -9604,25 +8341,10 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Build a new shuffle vector expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_function
 name|ExprResult
 name|RebuildShuffleVectorExpr
 parameter_list|(
@@ -9823,29 +8545,45 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
+comment|/// \brief Build a new convert vector expression.
+name|ExprResult
+name|RebuildConvertVectorExpr
+parameter_list|(
+name|SourceLocation
+name|BuiltinLoc
+parameter_list|,
+name|Expr
+modifier|*
+name|SrcExpr
+parameter_list|,
+name|TypeSourceInfo
+modifier|*
+name|DstTInfo
+parameter_list|,
+name|SourceLocation
+name|RParenLoc
+parameter_list|)
+block|{
+return|return
+name|SemaRef
+operator|.
+name|SemaConvertVectorExpr
+argument_list|(
+name|SrcExpr
+argument_list|,
+name|DstTInfo
+argument_list|,
+name|BuiltinLoc
+argument_list|,
+name|RParenLoc
+argument_list|)
+return|;
+block|}
 comment|/// \brief Build a new template argument pack expansion.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build a new pack expansion
-end_comment
-
-begin_comment
 comment|/// for a template argument. Subclasses may override this routine to provide
-end_comment
-
-begin_comment
 comment|/// different behavior.
-end_comment
-
-begin_decl_stmt
 name|TemplateArgumentLoc
 name|RebuildPackExpansion
 argument_list|(
@@ -10039,29 +8777,11 @@ name|TemplateArgumentLoc
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new expression pack expansion.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build a new pack expansion
-end_comment
-
-begin_comment
 comment|/// for an expression. Subclasses may override this routine to provide
-end_comment
-
-begin_comment
 comment|/// different behavior.
-end_comment
-
-begin_decl_stmt
 name|ExprResult
 name|RebuildPackExpansion
 argument_list|(
@@ -10093,25 +8813,10 @@ name|NumExpansions
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Build a new atomic operation expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
-end_comment
-
-begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-end_comment
-
-begin_decl_stmt
 name|ExprResult
 name|RebuildAtomicExpr
 argument_list|(
@@ -10155,14 +8860,8 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_function_decl
 name|TypeLoc
 name|TransformTypeInObjectScope
 parameter_list|(
@@ -10181,9 +8880,6 @@ modifier|&
 name|SS
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|TypeSourceInfo
 modifier|*
 name|TransformTypeInObjectScope
@@ -10204,10 +8900,14 @@ modifier|&
 name|SS
 parameter_list|)
 function_decl|;
-end_function_decl
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
-unit|};
 name|template
 operator|<
 name|typename
@@ -10363,6 +9063,68 @@ return|;
 end_return
 
 begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|OMPClause
+operator|*
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformOMPClause
+argument_list|(
+argument|OMPClause *S
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|S
+condition|)
+return|return
+name|S
+return|;
+end_expr_stmt
+
+begin_switch
+switch|switch
+condition|(
+name|S
+operator|->
+name|getClauseKind
+argument_list|()
+condition|)
+block|{
+default|default:
+break|break;
+comment|// Transform individual clause nodes
+define|#
+directive|define
+name|OPENMP_CLAUSE
+parameter_list|(
+name|Name
+parameter_list|,
+name|Class
+parameter_list|)
+define|\
+value|case OMPC_ ## Name :                                                         \     return getDerived().Transform ## Class(cast<Class>(S));
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+block|}
+end_switch
+
+begin_return
+return|return
+name|S
+return|;
+end_return
+
+begin_expr_stmt
 unit|}   template
 operator|<
 name|typename
@@ -10511,6 +9273,30 @@ argument_list|()
 expr_stmt|;
 end_if
 
+begin_if
+if|if
+condition|(
+name|MaterializeTemporaryExpr
+modifier|*
+name|MTE
+init|=
+name|dyn_cast
+operator|<
+name|MaterializeTemporaryExpr
+operator|>
+operator|(
+name|Init
+operator|)
+condition|)
+name|Init
+operator|=
+name|MTE
+operator|->
+name|GetTemporaryExpr
+argument_list|()
+expr_stmt|;
+end_if
+
 begin_while
 while|while
 condition|(
@@ -10557,6 +9343,34 @@ operator|->
 name|getSubExprAsWritten
 argument_list|()
 expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|CXXStdInitializerListExpr
+modifier|*
+name|ILE
+init|=
+name|dyn_cast
+operator|<
+name|CXXStdInitializerListExpr
+operator|>
+operator|(
+name|Init
+operator|)
+condition|)
+return|return
+name|TransformInitializer
+argument_list|(
+name|ILE
+operator|->
+name|getSubExpr
+argument_list|()
+argument_list|,
+name|CXXDirectInit
+argument_list|)
+return|;
 end_if
 
 begin_comment
@@ -10829,7 +9643,7 @@ name|Parens
 init|=
 name|Construct
 operator|->
-name|getParenRange
+name|getParenOrBraceRange
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -13674,18 +12488,16 @@ expr_stmt|;
 name|TemplateArgumentLoc
 name|Pattern
 init|=
-name|In
-operator|.
-name|getPackExpansionPattern
-argument_list|(
-name|Ellipsis
-argument_list|,
-name|OrigNumExpansions
-argument_list|,
 name|getSema
 argument_list|()
 operator|.
-name|Context
+name|getTemplateArgumentPackExpansionPattern
+argument_list|(
+name|In
+argument_list|,
+name|Ellipsis
+argument_list|,
+name|OrigNumExpansions
 argument_list|)
 decl_stmt|;
 name|SmallVector
@@ -14636,6 +13448,11 @@ name|AutoTy
 operator|->
 name|isDecltypeAuto
 argument_list|()
+argument_list|,
+name|AutoTy
+operator|->
+name|isDependentType
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|TLB
@@ -14653,12 +13470,10 @@ comment|// already-qualified type.
 name|SourceRange
 name|R
 init|=
-name|TLB
+name|T
 operator|.
-name|getTemporaryTypeLoc
-argument_list|(
-name|Result
-argument_list|)
+name|getUnqualifiedLoc
+argument_list|()
 operator|.
 name|getSourceRange
 argument_list|()
@@ -15437,6 +14252,117 @@ end_expr_stmt
 
 begin_expr_stmt
 name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|QualType
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformDecayedType
+argument_list|(
+argument|TypeLocBuilder&TLB
+argument_list|,
+argument|DecayedTypeLoc TL
+argument_list|)
+block|{
+name|QualType
+name|OriginalType
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformType
+argument_list|(
+name|TLB
+argument_list|,
+name|TL
+operator|.
+name|getOriginalLoc
+argument_list|()
+argument_list|)
+block|;
+if|if
+condition|(
+name|OriginalType
+operator|.
+name|isNull
+argument_list|()
+condition|)
+return|return
+name|QualType
+argument_list|()
+return|;
+name|QualType
+name|Result
+operator|=
+name|TL
+operator|.
+name|getType
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|getDerived
+argument_list|()
+operator|.
+name|AlwaysRebuild
+argument_list|()
+operator|||
+name|OriginalType
+operator|!=
+name|TL
+operator|.
+name|getOriginalLoc
+argument_list|()
+operator|.
+name|getType
+argument_list|()
+condition|)
+name|Result
+operator|=
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getDecayedType
+argument_list|(
+name|OriginalType
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_expr_stmt
+name|TLB
+operator|.
+name|push
+operator|<
+name|DecayedTypeLoc
+operator|>
+operator|(
+name|Result
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Nothing to set for DecayedTypeLoc.
+end_comment
+
+begin_return
+return|return
+name|Result
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
 operator|<
 name|typename
 name|Derived
@@ -27322,14 +26248,6 @@ operator|.
 name|RebuildDeclStmt
 argument_list|(
 name|Decls
-operator|.
-name|data
-argument_list|()
-argument_list|,
-name|Decls
-operator|.
-name|size
-argument_list|()
 argument_list|,
 name|S
 operator|->
@@ -29178,7 +28096,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}   template
+unit|}  template
 operator|<
 name|typename
 name|Derived
@@ -29203,12 +28121,6 @@ literal|0
 block|;
 if|if
 condition|(
-name|S
-operator|->
-name|getExceptionDecl
-argument_list|()
-condition|)
-block|{
 name|VarDecl
 modifier|*
 name|ExceptionDecl
@@ -29217,7 +28129,8 @@ name|S
 operator|->
 name|getExceptionDecl
 argument_list|()
-decl_stmt|;
+condition|)
+block|{
 name|TypeSourceInfo
 modifier|*
 name|T
@@ -30628,8 +29541,18 @@ argument_list|)
 block|{
 name|StmtResult
 name|TryBlock
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformCompoundStmt
+argument_list|(
+name|S
+operator|->
+name|getTryBlock
+argument_list|()
+argument_list|)
 block|;
-comment|//  = getDerived().TransformCompoundStmt(S->getTryBlock());
 if|if
 condition|(
 name|TryBlock
@@ -30656,6 +29579,20 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|Handler
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+name|StmtError
+argument_list|()
+return|;
+end_if
 
 begin_if
 if|if
@@ -30746,8 +29683,18 @@ argument_list|)
 block|{
 name|StmtResult
 name|Block
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformCompoundStmt
+argument_list|(
+name|S
+operator|->
+name|getBlock
+argument_list|()
+argument_list|)
 block|;
-comment|//  = getDerived().TransformCompoundStatement(S->getBlock());
 if|if
 condition|(
 name|Block
@@ -30825,12 +29772,19 @@ argument_list|()
 return|;
 name|StmtResult
 name|Block
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformCompoundStmt
+argument_list|(
+name|S
+operator|->
+name|getBlock
+argument_list|()
+argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|//  = getDerived().TransformCompoundStatement(S->getBlock());
-end_comment
 
 begin_if
 if|if
@@ -30932,7 +29886,735 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|StmtResult
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformOMPParallelDirective
+argument_list|(
+argument|OMPParallelDirective *D
+argument_list|)
+block|{
+name|DeclarationNameInfo
+name|DirName
+block|;
+name|getSema
+argument_list|()
+operator|.
+name|StartOpenMPDSABlock
+argument_list|(
+name|OMPD_parallel
+argument_list|,
+name|DirName
+argument_list|,
+literal|0
+argument_list|)
+block|;
+comment|// Transform the clauses
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|OMPClause
+operator|*
+block|,
+literal|16
+operator|>
+name|TClauses
+block|;
+name|ArrayRef
+operator|<
+name|OMPClause
+operator|*
+operator|>
+name|Clauses
+operator|=
+name|D
+operator|->
+name|clauses
+argument_list|()
+block|;
+name|TClauses
+operator|.
+name|reserve
+argument_list|(
+name|Clauses
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|;
+for|for
+control|(
+name|ArrayRef
+operator|<
+name|OMPClause
+operator|*
+operator|>
+operator|::
+name|iterator
+name|I
+operator|=
+name|Clauses
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|E
+operator|=
+name|Clauses
+operator|.
+name|end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|I
+condition|)
+block|{
+name|OMPClause
+modifier|*
+name|Clause
+init|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformOMPClause
+argument_list|(
+operator|*
+name|I
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Clause
+condition|)
+block|{
+name|getSema
+argument_list|()
+operator|.
+name|EndOpenMPDSABlock
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|StmtError
+argument_list|()
+return|;
+block|}
+name|TClauses
+operator|.
+name|push_back
+argument_list|(
+name|Clause
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+unit|}     else
+block|{
+name|TClauses
+operator|.
+name|push_back
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+unit|}   if
+operator|(
+operator|!
+name|D
+operator|->
+name|getAssociatedStmt
+argument_list|()
+operator|)
+block|{
+name|getSema
+argument_list|()
+operator|.
+name|EndOpenMPDSABlock
+argument_list|(
+literal|0
+argument_list|)
+block|;
+return|return
+name|StmtError
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|StmtResult
+name|AssociatedStmt
+init|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformStmt
+argument_list|(
+name|D
+operator|->
+name|getAssociatedStmt
+argument_list|()
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|AssociatedStmt
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+block|{
+name|getSema
+argument_list|()
+operator|.
+name|EndOpenMPDSABlock
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|StmtError
+argument_list|()
+return|;
+block|}
+end_if
+
+begin_decl_stmt
+name|StmtResult
+name|Res
+init|=
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildOMPParallelDirective
+argument_list|(
+name|TClauses
+argument_list|,
+name|AssociatedStmt
+operator|.
+name|take
+argument_list|()
+argument_list|,
+name|D
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|D
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|getSema
+argument_list|()
+operator|.
+name|EndOpenMPDSABlock
+argument_list|(
+name|Res
+operator|.
+name|get
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|Res
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|OMPClause
+operator|*
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformOMPDefaultClause
+argument_list|(
+argument|OMPDefaultClause *C
+argument_list|)
+block|{
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildOMPDefaultClause
+argument_list|(
+name|C
+operator|->
+name|getDefaultKind
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getDefaultKindKwLoc
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getLParenLoc
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|OMPClause
+operator|*
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformOMPPrivateClause
+argument_list|(
+argument|OMPPrivateClause *C
+argument_list|)
+block|{
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|Expr
+operator|*
+block|,
+literal|16
+operator|>
+name|Vars
+block|;
+name|Vars
+operator|.
+name|reserve
+argument_list|(
+name|C
+operator|->
+name|varlist_size
+argument_list|()
+argument_list|)
+block|;
+for|for
+control|(
+name|OMPPrivateClause
+operator|::
+name|varlist_iterator
+name|I
+operator|=
+name|C
+operator|->
+name|varlist_begin
+argument_list|()
+operator|,
+name|E
+operator|=
+name|C
+operator|->
+name|varlist_end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+block|{
+name|ExprResult
+name|EVar
+init|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformExpr
+argument_list|(
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+operator|*
+name|I
+operator|)
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|EVar
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+name|Vars
+operator|.
+name|push_back
+argument_list|(
+name|EVar
+operator|.
+name|take
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildOMPPrivateClause
+argument_list|(
+name|Vars
+argument_list|,
+name|C
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getLParenLoc
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|OMPClause
+operator|*
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformOMPFirstprivateClause
+argument_list|(
+argument|OMPFirstprivateClause *C
+argument_list|)
+block|{
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|Expr
+operator|*
+block|,
+literal|16
+operator|>
+name|Vars
+block|;
+name|Vars
+operator|.
+name|reserve
+argument_list|(
+name|C
+operator|->
+name|varlist_size
+argument_list|()
+argument_list|)
+block|;
+for|for
+control|(
+name|OMPFirstprivateClause
+operator|::
+name|varlist_iterator
+name|I
+operator|=
+name|C
+operator|->
+name|varlist_begin
+argument_list|()
+operator|,
+name|E
+operator|=
+name|C
+operator|->
+name|varlist_end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+block|{
+name|ExprResult
+name|EVar
+init|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformExpr
+argument_list|(
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+operator|*
+name|I
+operator|)
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|EVar
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+name|Vars
+operator|.
+name|push_back
+argument_list|(
+name|EVar
+operator|.
+name|take
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildOMPFirstprivateClause
+argument_list|(
+name|Vars
+argument_list|,
+name|C
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getLParenLoc
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|OMPClause
+operator|*
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformOMPSharedClause
+argument_list|(
+argument|OMPSharedClause *C
+argument_list|)
+block|{
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|Expr
+operator|*
+block|,
+literal|16
+operator|>
+name|Vars
+block|;
+name|Vars
+operator|.
+name|reserve
+argument_list|(
+name|C
+operator|->
+name|varlist_size
+argument_list|()
+argument_list|)
+block|;
+for|for
+control|(
+name|OMPSharedClause
+operator|::
+name|varlist_iterator
+name|I
+operator|=
+name|C
+operator|->
+name|varlist_begin
+argument_list|()
+operator|,
+name|E
+operator|=
+name|C
+operator|->
+name|varlist_end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+block|{
+name|ExprResult
+name|EVar
+init|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformExpr
+argument_list|(
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+operator|*
+name|I
+operator|)
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|EVar
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+name|Vars
+operator|.
+name|push_back
+argument_list|(
+name|EVar
+operator|.
+name|take
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildOMPSharedClause
+argument_list|(
+name|Vars
+argument_list|,
+name|C
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getLParenLoc
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -30945,7 +30627,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|Derived
@@ -31662,19 +31344,8 @@ name|release
 argument_list|()
 argument_list|,
 name|AssocTypes
-operator|.
-name|data
-argument_list|()
 argument_list|,
 name|AssocExprs
-operator|.
-name|data
-argument_list|()
-argument_list|,
-name|E
-operator|->
-name|getNumAssocs
-argument_list|()
 argument_list|)
 return|;
 end_return
@@ -31865,6 +31536,17 @@ argument_list|)
 block|{
 name|ExprResult
 name|SubExpr
+block|;
+if|if
+condition|(
+name|E
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|UO_AddrOf
+condition|)
+name|SubExpr
 operator|=
 name|TransformAddressOfOperand
 argument_list|(
@@ -31873,7 +31555,21 @@ operator|->
 name|getSubExpr
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
+else|else
+name|SubExpr
+operator|=
+name|TransformExpr
+argument_list|(
+name|E
+operator|->
+name|getSubExpr
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|SubExpr
@@ -31885,7 +31581,7 @@ return|return
 name|ExprError
 argument_list|()
 return|;
-end_expr_stmt
+end_if
 
 begin_if
 if|if
@@ -36864,13 +36560,9 @@ name|RebuildCXXFunctionalCastExpr
 argument_list|(
 name|Type
 argument_list|,
-comment|/*FIXME:*/
 name|E
 operator|->
-name|getSubExpr
-argument_list|()
-operator|->
-name|getLocStart
+name|getLParenLoc
 argument_list|()
 argument_list|,
 name|SubExpr
@@ -37369,110 +37061,15 @@ argument_list|(
 argument|CXXThisExpr *E
 argument_list|)
 block|{
-name|DeclContext
-operator|*
-name|DC
-operator|=
-name|getSema
-argument_list|()
-operator|.
-name|getFunctionLevelDeclContext
-argument_list|()
-block|;
 name|QualType
 name|T
+operator|=
+name|getSema
+argument_list|()
+operator|.
+name|getCurrentThisType
+argument_list|()
 block|;
-if|if
-condition|(
-name|CXXMethodDecl
-modifier|*
-name|MD
-init|=
-name|dyn_cast
-operator|<
-name|CXXMethodDecl
-operator|>
-operator|(
-name|DC
-operator|)
-condition|)
-name|T
-operator|=
-name|MD
-operator|->
-name|getThisType
-argument_list|(
-name|getSema
-argument_list|()
-operator|.
-name|Context
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|CXXRecordDecl
-modifier|*
-name|Record
-init|=
-name|dyn_cast
-operator|<
-name|CXXRecordDecl
-operator|>
-operator|(
-name|DC
-operator|)
-condition|)
-block|{
-name|T
-operator|=
-name|getSema
-argument_list|()
-operator|.
-name|Context
-operator|.
-name|getPointerType
-argument_list|(
-name|getSema
-argument_list|()
-operator|.
-name|Context
-operator|.
-name|getRecordType
-argument_list|(
-name|Record
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_else
-else|else
-block|{
-name|assert
-argument_list|(
-name|SemaRef
-operator|.
-name|Context
-operator|.
-name|getDiagnostics
-argument_list|()
-operator|.
-name|hasErrorOccurred
-argument_list|()
-operator|&&
-literal|"this in the wrong scope?"
-argument_list|)
-expr_stmt|;
-return|return
-name|ExprError
-argument_list|()
-return|;
-block|}
-end_else
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -37511,7 +37108,7 @@ name|E
 argument_list|)
 return|;
 block|}
-end_if
+end_expr_stmt
 
 begin_return
 return|return
@@ -39417,6 +39014,12 @@ operator|)
 condition|)
 continue|continue;
 else|else
+block|{
+name|R
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 return|return
 name|ExprError
 argument_list|()
@@ -39425,12 +39028,13 @@ block|}
 end_expr_stmt
 
 begin_comment
+unit|}
 comment|// Expand using declarations.
 end_comment
 
-begin_if
-if|if
-condition|(
+begin_expr_stmt
+unit|if
+operator|(
 name|isa
 operator|<
 name|UsingDecl
@@ -39438,12 +39042,12 @@ operator|>
 operator|(
 name|InstD
 operator|)
-condition|)
+operator|)
 block|{
 name|UsingDecl
-modifier|*
+operator|*
 name|UD
-init|=
+operator|=
 name|cast
 operator|<
 name|UsingDecl
@@ -39451,7 +39055,7 @@ operator|>
 operator|(
 name|InstD
 operator|)
-decl_stmt|;
+block|;
 for|for
 control|(
 name|UsingDecl
@@ -39486,12 +39090,14 @@ operator|*
 name|I
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_continue
 continue|continue;
-block|}
-end_if
+end_continue
 
 begin_expr_stmt
-name|R
+unit|}      R
 operator|.
 name|addDecl
 argument_list|(
@@ -39609,10 +39215,17 @@ condition|(
 operator|!
 name|NamingClass
 condition|)
+block|{
+name|R
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 return|return
 name|ExprError
 argument_list|()
 return|;
+block|}
 name|R
 operator|.
 name|setNamingClass
@@ -39726,10 +39339,17 @@ argument_list|,
 name|TransArgs
 argument_list|)
 condition|)
+block|{
+name|R
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 return|return
 name|ExprError
 argument_list|()
 return|;
+block|}
 end_if
 
 begin_return
@@ -40508,6 +40128,71 @@ return|return
 name|ExprError
 argument_list|()
 return|;
+if|if
+condition|(
+name|To
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+condition|)
+block|{
+name|To
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildPackExpansionType
+argument_list|(
+name|To
+argument_list|,
+name|PatternTL
+operator|.
+name|getSourceRange
+argument_list|()
+argument_list|,
+name|ExpansionTL
+operator|.
+name|getEllipsisLoc
+argument_list|()
+argument_list|,
+name|NumExpansions
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|To
+operator|.
+name|isNull
+argument_list|()
+condition|)
+return|return
+name|ExprError
+argument_list|()
+return|;
+name|PackExpansionTypeLoc
+name|ToExpansionTL
+init|=
+name|TLB
+operator|.
+name|push
+operator|<
+name|PackExpansionTypeLoc
+operator|>
+operator|(
+name|To
+operator|)
+decl_stmt|;
+name|ToExpansionTL
+operator|.
+name|setEllipsisLoc
+argument_list|(
+name|ExpansionTL
+operator|.
+name|getEllipsisLoc
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 name|Args
 operator|.
 name|push_back
@@ -41083,6 +40768,14 @@ argument_list|,
 argument|bool IsAddressOfOperand
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|E
+operator|->
+name|getQualifierLoc
+argument_list|()
+argument_list|)
+block|;
 name|NestedNameSpecifierLoc
 name|QualifierLoc
 operator|=
@@ -41622,7 +41315,7 @@ argument_list|()
 argument_list|,
 name|E
 operator|->
-name|getParenRange
+name|getParenOrBraceRange
 argument_list|()
 argument_list|)
 return|;
@@ -41973,14 +41666,244 @@ argument_list|(
 argument|LambdaExpr *E
 argument_list|)
 block|{
-comment|// Transform the type of the lambda parameters and start the definition of
-comment|// the lambda itself.
-name|TypeSourceInfo
-operator|*
-name|MethodTy
-operator|=
-name|TransformType
+comment|// Transform any init-capture expressions before entering the scope of the
+comment|// lambda body, because they are not semantically within that scope.
+name|SmallVector
+operator|<
+name|InitCaptureInfoTy
+block|,
+literal|8
+operator|>
+name|InitCaptureExprsAndTypes
+block|;
+name|InitCaptureExprsAndTypes
+operator|.
+name|resize
 argument_list|(
+name|E
+operator|->
+name|explicit_capture_end
+argument_list|()
+operator|-
+name|E
+operator|->
+name|explicit_capture_begin
+argument_list|()
+argument_list|)
+block|;
+for|for
+control|(
+name|LambdaExpr
+operator|::
+name|capture_iterator
+name|C
+operator|=
+name|E
+operator|->
+name|capture_begin
+argument_list|()
+operator|,
+name|CEnd
+operator|=
+name|E
+operator|->
+name|capture_end
+argument_list|()
+init|;
+name|C
+operator|!=
+name|CEnd
+condition|;
+operator|++
+name|C
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|C
+operator|->
+name|isInitCapture
+argument_list|()
+condition|)
+continue|continue;
+name|EnterExpressionEvaluationContext
+name|EEEC
+argument_list|(
+name|getSema
+argument_list|()
+argument_list|,
+name|Sema
+operator|::
+name|PotentiallyEvaluated
+argument_list|)
+decl_stmt|;
+name|ExprResult
+name|NewExprInitResult
+init|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformInitializer
+argument_list|(
+name|C
+operator|->
+name|getCapturedVar
+argument_list|()
+operator|->
+name|getInit
+argument_list|()
+argument_list|,
+name|C
+operator|->
+name|getCapturedVar
+argument_list|()
+operator|->
+name|getInitStyle
+argument_list|()
+operator|==
+name|VarDecl
+operator|::
+name|CallInit
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|NewExprInitResult
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+name|ExprError
+argument_list|()
+return|;
+name|Expr
+modifier|*
+name|NewExprInit
+init|=
+name|NewExprInitResult
+operator|.
+name|get
+argument_list|()
+decl_stmt|;
+name|VarDecl
+modifier|*
+name|OldVD
+init|=
+name|C
+operator|->
+name|getCapturedVar
+argument_list|()
+decl_stmt|;
+name|QualType
+name|NewInitCaptureType
+init|=
+name|getSema
+argument_list|()
+operator|.
+name|performLambdaInitCaptureInitialization
+argument_list|(
+name|C
+operator|->
+name|getLocation
+argument_list|()
+argument_list|,
+name|OldVD
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isReferenceType
+argument_list|()
+argument_list|,
+name|OldVD
+operator|->
+name|getIdentifier
+argument_list|()
+argument_list|,
+name|NewExprInit
+argument_list|)
+decl_stmt|;
+name|NewExprInitResult
+operator|=
+name|NewExprInit
+expr_stmt|;
+name|InitCaptureExprsAndTypes
+index|[
+name|C
+operator|-
+name|E
+operator|->
+name|capture_begin
+argument_list|()
+index|]
+operator|=
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|NewExprInitResult
+argument_list|,
+name|NewInitCaptureType
+argument_list|)
+expr_stmt|;
+block|}
+name|LambdaScopeInfo
+operator|*
+name|LSI
+operator|=
+name|getSema
+argument_list|()
+operator|.
+name|PushLambdaScope
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Transform the template parameters, and add them to the current
+end_comment
+
+begin_comment
+comment|// instantiation scope. The null case is handled correctly.
+end_comment
+
+begin_expr_stmt
+name|LSI
+operator|->
+name|GLTemplateParameterList
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformTemplateParameterList
+argument_list|(
+name|E
+operator|->
+name|getTemplateParameterList
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Check to see if the TypeSourceInfo of the call operator needs to
+end_comment
+
+begin_comment
+comment|// be transformed, and if so do the transformation in the
+end_comment
+
+begin_comment
+comment|// CurrentInstantiationScope.
+end_comment
+
+begin_decl_stmt
+name|TypeSourceInfo
+modifier|*
+name|OldCallOpTSI
+init|=
 name|E
 operator|->
 name|getCallOperator
@@ -41988,22 +41911,260 @@ argument_list|()
 operator|->
 name|getTypeSourceInfo
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FunctionProtoTypeLoc
+name|OldCallOpFPTL
+init|=
+name|OldCallOpTSI
+operator|->
+name|getTypeLoc
+argument_list|()
+operator|.
+name|getAs
+operator|<
+name|FunctionProtoTypeLoc
+operator|>
+operator|(
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|TypeSourceInfo
+modifier|*
+name|NewCallOpTSI
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|bool
+name|CallOpWasAlreadyTransformed
+init|=
+name|getDerived
+argument_list|()
+operator|.
+name|AlreadyTransformed
+argument_list|(
+name|OldCallOpTSI
+operator|->
+name|getType
+argument_list|()
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Use the Old Call Operator's TypeSourceInfo if it is already transformed.
+end_comment
+
+begin_if
+if|if
+condition|(
+name|CallOpWasAlreadyTransformed
+condition|)
+name|NewCallOpTSI
+operator|=
+name|OldCallOpTSI
+expr_stmt|;
+else|else
+block|{
+comment|// Transform the TypeSourceInfo of the Original Lambda's Call Operator.
+comment|// The transformation MUST be done in the CurrentInstantiationScope since
+comment|// it introduces a mapping of the original to the newly created
+comment|// transformed parameters.
+name|TypeLocBuilder
+name|NewCallOpTLBuilder
+decl_stmt|;
+name|QualType
+name|NewCallOpType
+init|=
+name|TransformFunctionProtoType
+argument_list|(
+name|NewCallOpTLBuilder
+argument_list|,
+name|OldCallOpFPTL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+name|NewCallOpTSI
+operator|=
+name|NewCallOpTLBuilder
+operator|.
+name|getTypeSourceInfo
+argument_list|(
+name|getSema
+argument_list|()
+operator|.
+name|Context
+argument_list|,
+name|NewCallOpType
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_comment
+comment|// Extract the ParmVarDecls from the NewCallOpTSI and add them to
+end_comment
+
+begin_comment
+comment|// the vector below - this will be used to synthesize the
+end_comment
+
+begin_comment
+comment|// NewCallOperator.  Additionally, add the parameters of the untransformed
+end_comment
+
+begin_comment
+comment|// lambda call operator to the CurrentInstantiationScope.
+end_comment
+
+begin_expr_stmt
+name|SmallVector
+operator|<
+name|ParmVarDecl
+operator|*
+operator|,
+literal|4
+operator|>
+name|Params
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+name|FunctionProtoTypeLoc
+name|NewCallOpFPTL
+init|=
+name|NewCallOpTSI
+operator|->
+name|getTypeLoc
+argument_list|()
+operator|.
+name|castAs
+operator|<
+name|FunctionProtoTypeLoc
+operator|>
+operator|(
+operator|)
+decl_stmt|;
+name|ParmVarDecl
+modifier|*
+modifier|*
+name|NewParamDeclArray
+init|=
+name|NewCallOpFPTL
+operator|.
+name|getParmArray
+argument_list|()
+decl_stmt|;
+specifier|const
+name|unsigned
+name|NewNumArgs
+init|=
+name|NewCallOpFPTL
+operator|.
+name|getNumArgs
+argument_list|()
+decl_stmt|;
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|;
+name|I
+operator|<
+name|NewNumArgs
+condition|;
+operator|++
+name|I
+control|)
+block|{
+comment|// If this call operator's type does not require transformation,
+comment|// the parameters do not get added to the current instantiation scope,
+comment|// - so ADD them! This allows the following to compile when the enclosing
+comment|// template is specialized and the entire lambda expression has to be
+comment|// transformed.
+comment|// template<class T> void foo(T t) {
+comment|//   auto L = [](auto a) {
+comment|//       auto M = [](char b) {<-- note: non-generic lambda
+comment|//         auto N = [](auto c) {
+comment|//            int x = sizeof(a);
+comment|//            x = sizeof(b);<-- specifically this line
+comment|//            x = sizeof(c);
+comment|//          };
+comment|//        };
+comment|//      };
+comment|//    }
+comment|// foo('a')
+if|if
+condition|(
+name|CallOpWasAlreadyTransformed
+condition|)
+name|getDerived
+argument_list|()
+operator|.
+name|transformedLocalDecl
+argument_list|(
+name|NewParamDeclArray
+index|[
+name|I
+index|]
+argument_list|,
+name|NewParamDeclArray
+index|[
+name|I
+index|]
+argument_list|)
+expr_stmt|;
+comment|// Add to Params array, so these parameters can be used to create
+comment|// the newly transformed call operator.
+name|Params
+operator|.
+name|push_back
+argument_list|(
+name|NewParamDeclArray
+index|[
+name|I
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_block
+
+begin_if
 if|if
 condition|(
 operator|!
-name|MethodTy
+name|NewCallOpTSI
 condition|)
 return|return
 name|ExprError
 argument_list|()
 return|;
+end_if
+
+begin_comment
 comment|// Create the local class that will describe the lambda.
+end_comment
+
+begin_decl_stmt
 name|CXXRecordDecl
-operator|*
+modifier|*
 name|Class
-operator|=
+init|=
 name|getSema
 argument_list|()
 operator|.
@@ -42014,13 +42175,18 @@ operator|->
 name|getIntroducerRange
 argument_list|()
 argument_list|,
-name|MethodTy
+name|NewCallOpTSI
 argument_list|,
 comment|/*KnownDependent=*/
 name|false
+argument_list|,
+name|E
+operator|->
+name|getCaptureDefault
+argument_list|()
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|getDerived
@@ -42039,83 +42205,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// Transform lambda parameters.
-end_comment
-
-begin_expr_stmt
-name|SmallVector
-operator|<
-name|QualType
-operator|,
-literal|4
-operator|>
-name|ParamTypes
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SmallVector
-operator|<
-name|ParmVarDecl
-operator|*
-operator|,
-literal|4
-operator|>
-name|Params
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|getDerived
-argument_list|()
-operator|.
-name|TransformFunctionTypeParams
-argument_list|(
-name|E
-operator|->
-name|getLocStart
-argument_list|()
-argument_list|,
-name|E
-operator|->
-name|getCallOperator
-argument_list|()
-operator|->
-name|param_begin
-argument_list|()
-argument_list|,
-name|E
-operator|->
-name|getCallOperator
-argument_list|()
-operator|->
-name|param_size
-argument_list|()
-argument_list|,
-literal|0
-argument_list|,
-name|ParamTypes
-argument_list|,
-operator|&
-name|Params
-argument_list|)
-condition|)
-return|return
-name|ExprError
-argument_list|()
-return|;
-end_if
-
-begin_comment
 comment|// Build the call operator.
 end_comment
 
 begin_decl_stmt
 name|CXXMethodDecl
 modifier|*
-name|CallOperator
+name|NewCallOperator
 init|=
 name|getSema
 argument_list|()
@@ -42129,7 +42225,7 @@ operator|->
 name|getIntroducerRange
 argument_list|()
 argument_list|,
-name|MethodTy
+name|NewCallOpTSI
 argument_list|,
 name|E
 operator|->
@@ -42145,6 +42241,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|LSI
+operator|->
+name|CallOperator
+operator|=
+name|NewCallOperator
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|getDerived
 argument_list|()
 operator|.
@@ -42155,7 +42260,7 @@ operator|->
 name|getCallOperator
 argument_list|()
 argument_list|,
-name|CallOperator
+name|NewCallOperator
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42169,7 +42274,9 @@ name|TransformLambdaScope
 argument_list|(
 name|E
 argument_list|,
-name|CallOperator
+name|NewCallOperator
+argument_list|,
+name|InitCaptureExprsAndTypes
 argument_list|)
 return|;
 end_return
@@ -42191,8 +42298,15 @@ argument_list|(
 argument|LambdaExpr *E
 argument_list|,
 argument|CXXMethodDecl *CallOperator
+argument_list|,
+argument|ArrayRef<InitCaptureInfoTy> InitCaptureExprsAndTypes
 argument_list|)
 block|{
+name|bool
+name|Invalid
+operator|=
+name|false
+block|;
 comment|// Introduce the context of the call operator.
 name|Sema
 operator|::
@@ -42205,18 +42319,25 @@ argument_list|,
 name|CallOperator
 argument_list|)
 block|;
-comment|// Enter the scope of the lambda.
-name|sema
-operator|::
 name|LambdaScopeInfo
 operator|*
+specifier|const
 name|LSI
 operator|=
 name|getSema
 argument_list|()
 operator|.
-name|enterLambdaScope
+name|getCurLambda
+argument_list|()
+block|;
+comment|// Enter the scope of the lambda.
+name|getSema
+argument_list|()
+operator|.
+name|buildLambdaScope
 argument_list|(
+name|LSI
+argument_list|,
 name|CallOperator
 argument_list|,
 name|E
@@ -42227,6 +42348,11 @@ argument_list|,
 name|E
 operator|->
 name|getCaptureDefault
+argument_list|()
+argument_list|,
+name|E
+operator|->
+name|getCaptureDefaultLoc
 argument_list|()
 argument_list|,
 name|E
@@ -42246,11 +42372,6 @@ argument_list|()
 argument_list|)
 block|;
 comment|// Transform captures.
-name|bool
-name|Invalid
-operator|=
-name|false
-block|;
 name|bool
 name|FinishedExplicitCaptures
 operator|=
@@ -42343,6 +42464,152 @@ expr_stmt|;
 continue|continue;
 block|}
 end_if
+
+begin_comment
+comment|// Rebuild init-captures, including the implied field declaration.
+end_comment
+
+begin_if
+if|if
+condition|(
+name|C
+operator|->
+name|isInitCapture
+argument_list|()
+condition|)
+block|{
+name|InitCaptureInfoTy
+name|InitExprTypePair
+init|=
+name|InitCaptureExprsAndTypes
+index|[
+name|C
+operator|-
+name|E
+operator|->
+name|capture_begin
+argument_list|()
+index|]
+decl_stmt|;
+name|ExprResult
+name|Init
+init|=
+name|InitExprTypePair
+operator|.
+name|first
+decl_stmt|;
+name|QualType
+name|InitQualType
+init|=
+name|InitExprTypePair
+operator|.
+name|second
+decl_stmt|;
+if|if
+condition|(
+name|Init
+operator|.
+name|isInvalid
+argument_list|()
+operator|||
+name|InitQualType
+operator|.
+name|isNull
+argument_list|()
+condition|)
+block|{
+name|Invalid
+operator|=
+name|true
+expr_stmt|;
+continue|continue;
+block|}
+name|VarDecl
+modifier|*
+name|OldVD
+init|=
+name|C
+operator|->
+name|getCapturedVar
+argument_list|()
+decl_stmt|;
+name|VarDecl
+modifier|*
+name|NewVD
+init|=
+name|getSema
+argument_list|()
+operator|.
+name|createLambdaInitCaptureVarDecl
+argument_list|(
+name|OldVD
+operator|->
+name|getLocation
+argument_list|()
+argument_list|,
+name|InitExprTypePair
+operator|.
+name|second
+argument_list|,
+name|OldVD
+operator|->
+name|getIdentifier
+argument_list|()
+argument_list|,
+name|Init
+operator|.
+name|get
+argument_list|()
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|NewVD
+condition|)
+name|Invalid
+operator|=
+name|true
+expr_stmt|;
+else|else
+block|{
+name|getDerived
+argument_list|()
+operator|.
+name|transformedLocalDecl
+argument_list|(
+name|OldVD
+argument_list|,
+name|NewVD
+argument_list|)
+expr_stmt|;
+block|}
+name|getSema
+argument_list|()
+operator|.
+name|buildInitCaptureField
+argument_list|(
+name|LSI
+argument_list|,
+name|NewVD
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+end_if
+
+begin_expr_stmt
+name|assert
+argument_list|(
+name|C
+operator|->
+name|capturesVariable
+argument_list|()
+operator|&&
+literal|"unexpected kind of lambda capture"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// Determine the capture kind for Sema.
@@ -42451,10 +42718,13 @@ argument_list|,
 name|NumExpansions
 argument_list|)
 condition|)
-return|return
-name|ExprError
-argument_list|()
-return|;
+block|{
+name|Invalid
+operator|=
+name|true
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|ShouldExpand
@@ -44543,6 +44813,38 @@ argument_list|(
 name|E
 operator|->
 name|GetTemporaryExpr
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|ExprResult
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformCXXStdInitializerListExpr
+argument_list|(
+argument|CXXStdInitializerListExpr *E
+argument_list|)
+block|{
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|TransformExpr
+argument_list|(
+name|E
+operator|->
+name|getSubExpr
 argument_list|()
 argument_list|)
 return|;
@@ -46824,6 +47126,141 @@ operator|<
 name|Derived
 operator|>
 operator|::
+name|TransformConvertVectorExpr
+argument_list|(
+argument|ConvertVectorExpr *E
+argument_list|)
+block|{
+name|ExprResult
+name|SrcExpr
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformExpr
+argument_list|(
+name|E
+operator|->
+name|getSrcExpr
+argument_list|()
+argument_list|)
+block|;
+if|if
+condition|(
+name|SrcExpr
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+name|ExprError
+argument_list|()
+return|;
+name|TypeSourceInfo
+operator|*
+name|Type
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformType
+argument_list|(
+name|E
+operator|->
+name|getTypeSourceInfo
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+operator|!
+name|Type
+condition|)
+return|return
+name|ExprError
+argument_list|()
+return|;
+end_if
+
+begin_if
+if|if
+condition|(
+operator|!
+name|getDerived
+argument_list|()
+operator|.
+name|AlwaysRebuild
+argument_list|()
+operator|&&
+name|Type
+operator|==
+name|E
+operator|->
+name|getTypeSourceInfo
+argument_list|()
+operator|&&
+name|SrcExpr
+operator|.
+name|get
+argument_list|()
+operator|==
+name|E
+operator|->
+name|getSrcExpr
+argument_list|()
+condition|)
+return|return
+name|SemaRef
+operator|.
+name|Owned
+argument_list|(
+name|E
+argument_list|)
+return|;
+end_if
+
+begin_return
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildConvertVectorExpr
+argument_list|(
+name|E
+operator|->
+name|getBuiltinLoc
+argument_list|()
+argument_list|,
+name|SrcExpr
+operator|.
+name|get
+argument_list|()
+argument_list|,
+name|Type
+argument_list|,
+name|E
+operator|->
+name|getRParenLoc
+argument_list|()
+argument_list|)
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|ExprResult
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
 name|TransformBlockExpr
 argument_list|(
 argument|BlockExpr *E
@@ -46980,59 +47417,6 @@ argument_list|()
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// Don't allow returning a objc interface by value.
-end_comment
-
-begin_if
-if|if
-condition|(
-name|exprResultType
-operator|->
-name|isObjCObjectType
-argument_list|()
-condition|)
-block|{
-name|getSema
-argument_list|()
-operator|.
-name|Diag
-argument_list|(
-name|E
-operator|->
-name|getCaretLocation
-argument_list|()
-argument_list|,
-name|diag
-operator|::
-name|err_object_cannot_be_passed_returned_by_value
-argument_list|)
-operator|<<
-literal|0
-operator|<<
-name|exprResultType
-expr_stmt|;
-name|getSema
-argument_list|()
-operator|.
-name|ActOnBlockError
-argument_list|(
-name|E
-operator|->
-name|getCaretLocation
-argument_list|()
-argument_list|,
-comment|/*Scope=*/
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-name|ExprError
-argument_list|()
-return|;
-block|}
-end_if
 
 begin_decl_stmt
 name|QualType
@@ -47766,14 +48150,11 @@ specifier|const
 name|unsigned
 name|NumTypes
 init|=
-sizeof|sizeof
+name|llvm
+operator|::
+name|array_lengthof
 argument_list|(
 name|Types
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|QualType
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -48382,7 +48763,7 @@ name|assert
 argument_list|(
 name|Using
 operator|->
-name|isTypeName
+name|hasTypename
 argument_list|()
 operator|&&
 literal|"UnresolvedUsingTypenameDecl transformed to non-typename using"
@@ -48877,13 +49258,8 @@ block|;
 return|return
 name|Template
 operator|.
-name|template
-name|getAsVal
-operator|<
-name|TemplateName
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 return|;
 block|}
 end_expr_stmt

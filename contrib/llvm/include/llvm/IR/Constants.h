@@ -429,7 +429,6 @@ block|}
 comment|/// Return the constant as a 64-bit unsigned integer value after it
 comment|/// has been zero extended as appropriate for the type of this constant. Note
 comment|/// that this method can assert if the value does not fit in 64 bits.
-comment|/// @deprecated
 comment|/// @brief Return the zero extended value.
 specifier|inline
 name|uint64_t
@@ -447,7 +446,6 @@ block|}
 comment|/// Return the constant as a 64-bit integer value after it has been sign
 comment|/// extended as appropriate for the type of this constant. Note that
 comment|/// this method can assert if the value does not fit in 64 bits.
-comment|/// @deprecated
 comment|/// @brief Return the sign extended value.
 specifier|inline
 name|int64_t
@@ -3465,6 +3463,20 @@ block|;
 specifier|static
 name|Constant
 operator|*
+name|getAddrSpaceCast
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
 name|getNSWNeg
 argument_list|(
 argument|Constant *C
@@ -3869,7 +3881,8 @@ name|Ty
 comment|///< The type to trunc or bitcast C to
 argument_list|)
 block|;
-comment|/// @brief Create a BitCast or a PtrToInt cast constant expression
+comment|/// @brief Create a BitCast, AddrSpaceCast, or a PtrToInt cast constant
+comment|/// expression.
 specifier|static
 name|Constant
 operator|*
@@ -3884,6 +3897,24 @@ name|Type
 operator|*
 name|Ty
 comment|///< The type to which cast should be made
+argument_list|)
+block|;
+comment|/// @brief Create a BitCast or AddrSpaceCast for a pointer type depending on
+comment|/// the address space.
+specifier|static
+name|Constant
+operator|*
+name|getPointerBitCastOrAddrSpaceCast
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|,
+comment|///< The constant to addrspacecast or bitcast
+name|Type
+operator|*
+name|Ty
+comment|///< The type to bitcast or addrspacecast C to
 argument_list|)
 block|;
 comment|/// @brief Create a ZExt, Bitcast or Trunc for integer -> integer casts

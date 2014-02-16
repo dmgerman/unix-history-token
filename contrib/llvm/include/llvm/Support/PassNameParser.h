@@ -36,15 +36,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file the PassNameParser and FilteredPassNameParser<> classes, which are
+comment|// This file contains the PassNameParser and FilteredPassNameParser<> classes,
 end_comment
 
 begin_comment
-comment|// used to add command line arguments to a utility for all of the passes that
+comment|// which are used to add command line arguments to a utility for all of the
 end_comment
 
 begin_comment
-comment|// have been registered into the system.
+comment|// passes that have been registered into the system.
 end_comment
 
 begin_comment
@@ -429,50 +429,32 @@ comment|// ValLessThan - Provide a sorting comparator for Values elements...
 specifier|static
 name|int
 name|ValLessThan
-parameter_list|(
+argument_list|(
 specifier|const
-name|void
-modifier|*
-name|VT1
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|VT2
-parameter_list|)
-block|{
-typedef|typedef
 name|PassNameParser
 operator|::
 name|OptionInfo
-name|ValType
-expr_stmt|;
+operator|*
+name|VT1
+argument_list|,
+specifier|const
+name|PassNameParser
+operator|::
+name|OptionInfo
+operator|*
+name|VT2
+argument_list|)
+block|{
 return|return
 name|std
 operator|::
 name|strcmp
 argument_list|(
-name|static_cast
-operator|<
-specifier|const
-name|ValType
-operator|*
-operator|>
-operator|(
 name|VT1
-operator|)
 operator|->
 name|Name
 argument_list|,
-name|static_cast
-operator|<
-specifier|const
-name|ValType
-operator|*
-operator|>
-operator|(
 name|VT2
-operator|)
 operator|->
 name|Name
 argument_list|)

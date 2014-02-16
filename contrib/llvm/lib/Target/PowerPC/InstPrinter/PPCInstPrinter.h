@@ -78,9 +78,8 @@ range|:
 name|public
 name|MCInstPrinter
 block|{
-comment|// 0 -> AIX, 1 -> Darwin.
-name|unsigned
-name|SyntaxVariant
+name|bool
+name|IsDarwin
 block|;
 name|public
 operator|:
@@ -92,7 +91,7 @@ argument|const MCInstrInfo&MII
 argument_list|,
 argument|const MCRegisterInfo&MRI
 argument_list|,
-argument|unsigned syntaxVariant
+argument|bool isDarwin
 argument_list|)
 operator|:
 name|MCInstPrinter
@@ -104,9 +103,9 @@ argument_list|,
 name|MRI
 argument_list|)
 block|,
-name|SyntaxVariant
+name|IsDarwin
 argument_list|(
-argument|syntaxVariant
+argument|isDarwin
 argument_list|)
 block|{}
 name|bool
@@ -115,9 +114,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SyntaxVariant
-operator|==
-literal|1
+name|IsDarwin
 return|;
 block|}
 name|virtual
@@ -238,16 +235,6 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printS16X4ImmOperand
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
 name|printBranchOperand
 argument_list|(
 argument|const MCInst *MI
@@ -258,7 +245,17 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printAbsAddrOperand
+name|printAbsBranchOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printTLSCall
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -288,38 +285,7 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printMemRegImmShifted
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
 name|printMemRegReg
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-comment|// FIXME: Remove
-name|void
-name|printSymbolLo
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
-name|printSymbolHi
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

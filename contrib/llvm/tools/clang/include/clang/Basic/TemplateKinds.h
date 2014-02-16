@@ -85,6 +85,10 @@ comment|/// type. The template itself could be a class template, template
 comment|/// template parameter, or C++0x template alias.
 name|TNK_Type_template
 block|,
+comment|/// The name refers to a variable template whose specialization produces a
+comment|/// variable.
+name|TNK_Var_template
+block|,
 comment|/// The name refers to a dependent template name. Whether the
 comment|/// template name is assumed to refer to a type template or a
 comment|/// function template depends on the context in which the template

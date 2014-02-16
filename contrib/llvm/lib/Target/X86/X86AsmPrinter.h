@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/StackMaps.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -104,6 +110,36 @@ name|X86Subtarget
 operator|*
 name|Subtarget
 block|;
+name|StackMaps
+name|SM
+block|;
+comment|// Parses operands of PATCHPOINT and STACKMAP to produce stack map Location
+comment|// structures. Returns a result location and an iterator to the operand
+comment|// immediately following the operands consumed.
+comment|//
+comment|// This method is implemented in X86MCInstLower.cpp.
+specifier|static
+name|std
+operator|::
+name|pair
+operator|<
+name|StackMaps
+operator|::
+name|Location
+block|,
+name|MachineInstr
+operator|::
+name|const_mop_iterator
+operator|>
+name|stackmapOperandParser
+argument_list|(
+argument|MachineInstr::const_mop_iterator MOI
+argument_list|,
+argument|MachineInstr::const_mop_iterator MOE
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+block|;
 name|public
 operator|:
 name|explicit
@@ -120,9 +156,16 @@ argument_list|)
 operator|:
 name|AsmPrinter
 argument_list|(
-argument|TM
+name|TM
 argument_list|,
-argument|Streamer
+name|Streamer
+argument_list|)
+block|,
+name|SM
+argument_list|(
+argument|*this
+argument_list|,
+argument|stackmapOperandParser
 argument_list|)
 block|{
 name|Subtarget
@@ -313,28 +356,6 @@ name|runOnMachineFunction
 argument_list|(
 argument|MachineFunction&F
 argument_list|)
-name|LLVM_OVERRIDE
-block|;
-name|void
-name|PrintDebugValueComment
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|raw_ostream
-operator|&
-name|OS
-argument_list|)
-block|;
-name|virtual
-name|MachineLocation
-name|getDebugValueLocation
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|)
-specifier|const
 name|LLVM_OVERRIDE
 block|; }
 decl_stmt|;

@@ -113,6 +113,43 @@ block|,
 comment|// Extract bits 41-32 of an address.
 comment|// Assembler: %hm(addr)
 name|MO_HM
+block|,
+comment|// TargetFlags for Thread Local Storage.
+name|MO_TLS_GD_HI22
+block|,
+name|MO_TLS_GD_LO10
+block|,
+name|MO_TLS_GD_ADD
+block|,
+name|MO_TLS_GD_CALL
+block|,
+name|MO_TLS_LDM_HI22
+block|,
+name|MO_TLS_LDM_LO10
+block|,
+name|MO_TLS_LDM_ADD
+block|,
+name|MO_TLS_LDM_CALL
+block|,
+name|MO_TLS_LDO_HIX22
+block|,
+name|MO_TLS_LDO_LOX10
+block|,
+name|MO_TLS_LDO_ADD
+block|,
+name|MO_TLS_IE_HI22
+block|,
+name|MO_TLS_IE_LO10
+block|,
+name|MO_TLS_IE_LD
+block|,
+name|MO_TLS_IE_LDX
+block|,
+name|MO_TLS_IE_ADD
+block|,
+name|MO_TLS_LE_HIX22
+block|,
+name|MO_TLS_LE_LOX10
 block|}
 enum|;
 block|}

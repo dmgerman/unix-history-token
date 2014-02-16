@@ -587,6 +587,7 @@ specifier|static
 name|SCEV
 operator|::
 name|NoWrapFlags
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|maskFlags
 argument_list|(
 argument|SCEV::NoWrapFlags Flags
@@ -611,6 +612,7 @@ specifier|static
 name|SCEV
 operator|::
 name|NoWrapFlags
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|setFlags
 argument_list|(
 argument|SCEV::NoWrapFlags Flags
@@ -635,6 +637,7 @@ specifier|static
 name|SCEV
 operator|::
 name|NoWrapFlags
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|clearFlags
 argument_list|(
 argument|SCEV::NoWrapFlags Flags
@@ -1114,9 +1117,11 @@ specifier|const
 name|SCEV
 operator|*
 block|,
+name|SmallVector
+operator|<
 name|std
 operator|::
-name|map
+name|pair
 operator|<
 specifier|const
 name|Loop
@@ -1125,6 +1130,9 @@ block|,
 specifier|const
 name|SCEV
 operator|*
+operator|>
+block|,
+literal|2
 operator|>
 expr|>
 name|ValuesAtScopes
@@ -1136,15 +1144,20 @@ specifier|const
 name|SCEV
 operator|*
 block|,
+name|SmallVector
+operator|<
 name|std
 operator|::
-name|map
+name|pair
 operator|<
 specifier|const
 name|Loop
 operator|*
 block|,
 name|LoopDisposition
+operator|>
+block|,
+literal|2
 operator|>
 expr|>
 name|LoopDispositions
@@ -1171,15 +1184,20 @@ specifier|const
 name|SCEV
 operator|*
 block|,
+name|SmallVector
+operator|<
 name|std
 operator|::
-name|map
+name|pair
 operator|<
 specifier|const
 name|BasicBlock
 operator|*
 block|,
 name|BlockDisposition
+operator|>
+block|,
+literal|2
 operator|>
 expr|>
 name|BlockDispositions
@@ -1427,23 +1445,6 @@ operator|*
 name|SymName
 argument_list|)
 block|;
-comment|/// getBECount - Subtract the end and start values and divide by the step,
-comment|/// rounding up, to get the number of times the backedge is executed. Return
-comment|/// CouldNotCompute if an intermediate computation overflows.
-specifier|const
-name|SCEV
-operator|*
-name|getBECount
-argument_list|(
-argument|const SCEV *Start
-argument_list|,
-argument|const SCEV *End
-argument_list|,
-argument|const SCEV *Step
-argument_list|,
-argument|bool NoWrap
-argument_list|)
-block|;
 comment|/// getBackedgeTakenInfo - Return the BackedgeTakenInfo for the given
 comment|/// loop, lazily computing new values if the loop hasn't been analyzed
 comment|/// yet.
@@ -1598,6 +1599,20 @@ argument_list|,
 argument|bool IsSubExpr
 argument_list|)
 block|;
+name|ExitLimit
+name|HowManyGreaterThans
+argument_list|(
+argument|const SCEV *LHS
+argument_list|,
+argument|const SCEV *RHS
+argument_list|,
+argument|const Loop *L
+argument_list|,
+argument|bool isSigned
+argument_list|,
+argument|bool IsSubExpr
+argument_list|)
+block|;
 comment|/// getPredecessorWithUniqueSuccessorForBB - Return a predecessor of BB
 comment|/// (which may not be an immediate predecessor) which has exactly one
 comment|/// successor from which BB is reachable, or null if no such block is
@@ -1715,6 +1730,15 @@ name|SCEV
 operator|*
 name|S
 argument_list|)
+block|;
+comment|/// Return false iff given SCEV contains a SCEVUnknown with NULL value-
+comment|/// pointer.
+name|bool
+name|checkValidity
+argument_list|(
+argument|const SCEV *S
+argument_list|)
+specifier|const
 block|;
 name|public
 operator|:
@@ -2290,7 +2314,8 @@ operator|*
 name|getCouldNotCompute
 argument_list|()
 block|;
-comment|/// getSizeOfExpr - Return an expression for sizeof on the given type.
+comment|/// getSizeOfExpr - Return an expression for sizeof AllocTy that is type
+comment|/// IntTy
 comment|///
 specifier|const
 name|SCEV
@@ -2299,47 +2324,26 @@ name|getSizeOfExpr
 argument_list|(
 name|Type
 operator|*
-name|AllocTy
-argument_list|)
-block|;
-comment|/// getAlignOfExpr - Return an expression for alignof on the given type.
-comment|///
-specifier|const
-name|SCEV
-operator|*
-name|getAlignOfExpr
-argument_list|(
+name|IntTy
+argument_list|,
 name|Type
 operator|*
 name|AllocTy
 argument_list|)
 block|;
-comment|/// getOffsetOfExpr - Return an expression for offsetof on the given field.
+comment|/// getOffsetOfExpr - Return an expression for offsetof on the given field
+comment|/// with type IntTy
 comment|///
 specifier|const
 name|SCEV
 operator|*
 name|getOffsetOfExpr
 argument_list|(
+argument|Type *IntTy
+argument_list|,
 argument|StructType *STy
 argument_list|,
 argument|unsigned FieldNo
-argument_list|)
-block|;
-comment|/// getOffsetOfExpr - Return an expression for offsetof on the given field.
-comment|///
-specifier|const
-name|SCEV
-operator|*
-name|getOffsetOfExpr
-argument_list|(
-name|Type
-operator|*
-name|CTy
-argument_list|,
-name|Constant
-operator|*
-name|FieldNo
 argument_list|)
 block|;
 comment|/// getNegativeSCEV - Return the SCEV object corresponding to -V.
@@ -3012,6 +3016,52 @@ name|void
 name|verifyAnalysis
 argument_list|()
 specifier|const
+block|;
+name|private
+operator|:
+comment|/// Compute the backedge taken count knowing the interval difference, the
+comment|/// stride and presence of the equality in the comparison.
+specifier|const
+name|SCEV
+operator|*
+name|computeBECount
+argument_list|(
+argument|const SCEV *Delta
+argument_list|,
+argument|const SCEV *Stride
+argument_list|,
+argument|bool Equality
+argument_list|)
+block|;
+comment|/// Verify if an linear IV with positive stride can overflow when in a
+comment|/// less-than comparison, knowing the invariant term of the comparison,
+comment|/// the stride and the knowledge of NSW/NUW flags on the recurrence.
+name|bool
+name|doesIVOverflowOnLT
+argument_list|(
+argument|const SCEV *RHS
+argument_list|,
+argument|const SCEV *Stride
+argument_list|,
+argument|bool IsSigned
+argument_list|,
+argument|bool NoWrap
+argument_list|)
+block|;
+comment|/// Verify if an linear IV with negative stride can overflow when in a
+comment|/// greater-than comparison, knowing the invariant term of the comparison,
+comment|/// the stride and the knowledge of NSW/NUW flags on the recurrence.
+name|bool
+name|doesIVOverflowOnGT
+argument_list|(
+argument|const SCEV *RHS
+argument_list|,
+argument|const SCEV *Stride
+argument_list|,
+argument|bool IsSigned
+argument_list|,
+argument|bool NoWrap
+argument_list|)
 block|;
 name|private
 operator|:

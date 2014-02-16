@@ -316,6 +316,17 @@ name|MCSection
 modifier|*
 name|DwarfAddrSection
 decl_stmt|;
+comment|/// Sections for newer gnu pubnames and pubtypes.
+specifier|const
+name|MCSection
+modifier|*
+name|DwarfGnuPubNamesSection
+decl_stmt|;
+specifier|const
+name|MCSection
+modifier|*
+name|DwarfGnuPubTypesSection
+decl_stmt|;
 comment|// Extra TLS Variable Data section.  If the target needs to put additional
 comment|// information for a TLS variable, it'll go here.
 specifier|const
@@ -340,6 +351,12 @@ modifier|*
 name|TLSBSSSection
 decl_stmt|;
 comment|// Defaults to ".tbss".
+comment|/// StackMap section.
+specifier|const
+name|MCSection
+modifier|*
+name|StackMapSection
+decl_stmt|;
 comment|/// EHFrameSection - EH frame section. It is initialized on demand so it
 comment|/// can be overwritten (with uniquing).
 specifier|const
@@ -711,6 +728,28 @@ block|}
 specifier|const
 name|MCSection
 operator|*
+name|getDwarfGnuPubNamesSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfGnuPubNamesSection
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
+name|getDwarfGnuPubTypesSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfGnuPubTypesSection
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
 name|getDwarfDebugInlineSection
 argument_list|()
 specifier|const
@@ -927,6 +966,17 @@ specifier|const
 block|{
 return|return
 name|TLSBSSSection
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
+name|getStackMapSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackMapSection
 return|;
 block|}
 comment|/// ELF specific sections.

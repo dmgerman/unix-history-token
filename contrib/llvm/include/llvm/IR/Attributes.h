@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/PointerLikeTypeTraits.h"
 end_include
 
@@ -184,9 +190,16 @@ comment|///< 0 means unaligned (different from align(1))
 name|AlwaysInline
 block|,
 comment|///< inline=always
+name|Builtin
+block|,
+comment|///< Callee is recognized as a builtin, despite
+comment|///< nobuiltin attribute on its declaration.
 name|ByVal
 block|,
 comment|///< Pass structure by value
+name|Cold
+block|,
+comment|///< Marks function as being in a cold path.
 name|InlineHint
 block|,
 comment|///< Source said inlining was desirable
@@ -236,6 +249,9 @@ comment|///< Function doesn't unwind stack
 name|OptimizeForSize
 block|,
 comment|///< opt_size
+name|OptimizeNone
+block|,
+comment|///< Function must not be optimized.
 name|ReadNone
 block|,
 comment|///< Function does not access memory
@@ -548,19 +564,23 @@ name|AttributeSet
 block|{
 name|public
 label|:
-enum|enum
+name|enum
 name|AttrIndex
+name|LLVM_ENUM_INT_TYPE
+parameter_list|(
+name|unsigned
+parameter_list|)
 block|{
 name|ReturnIndex
-init|=
+operator|=
 literal|0U
-block|,
+operator|,
 name|FunctionIndex
-init|=
+operator|=
 operator|~
 literal|0U
 block|}
-enum|;
+empty_stmt|;
 name|private
 label|:
 name|friend
@@ -776,6 +796,24 @@ name|Index
 argument_list|,
 name|StringRef
 name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
+name|AttributeSet
+name|addAttribute
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|unsigned
+name|Index
+argument_list|,
+name|StringRef
+name|Kind
+argument_list|,
+name|StringRef
+name|Value
 argument_list|)
 decl|const
 decl_stmt|;

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
@@ -104,16 +110,32 @@ comment|// is the target address.  The arguments start at operand 2.
 comment|// There is an optional glue operand at the end.
 name|CALL
 block|,
+name|SIBCALL
+block|,
 comment|// Wraps a TargetGlobalAddress that should be loaded using PC-relative
 comment|// accesses (LARL).  Operand 0 is the address.
 name|PCREL_WRAPPER
 block|,
-comment|// Signed integer and floating-point comparisons.  The operands are the
-comment|// two values to compare.
-name|CMP
+comment|// Used in cases where an offset is applied to a TargetGlobalAddress.
+comment|// Operand 0 is the full TargetGlobalAddress and operand 1 is a
+comment|// PCREL_WRAPPER for an anchor point.  This is used so that we can
+comment|// cheaply refer to either the full address or the anchor point
+comment|// as a register base.
+name|PCREL_OFFSET
 block|,
-comment|// Likewise unsigned integer comparison.
-name|UCMP
+comment|// Integer comparisons.  There are three operands: the two values
+comment|// to compare, and an integer of type SystemZICMP.
+name|ICMP
+block|,
+comment|// Floating-point comparisons.  The two operands are the values to compare.
+name|FCMP
+block|,
+comment|// Test under mask.  The first operand is ANDed with the second operand
+comment|// and the condition codes are set on the result.  The third operand is
+comment|// a boolean that is true if the condition codes need to distinguish
+comment|// between CCMASK_TM_MIXED_MSB_0 and CCMASK_TM_MIXED_MSB_1 (which the
+comment|// register forms do but the memory forms don't).
+name|TM
 block|,
 comment|// Branches if a condition is true.  Operand 0 is the chain operand;
 comment|// operand 1 is the 4-bit condition-code mask, with bit N in
@@ -140,11 +162,63 @@ comment|// first input operands are GR128s.  The trailing numbers are the
 comment|// widths of the second operand in bits.
 name|UMUL_LOHI64
 block|,
+name|SDIVREM32
+block|,
 name|SDIVREM64
 block|,
 name|UDIVREM32
 block|,
 name|UDIVREM64
+block|,
+comment|// Use a series of MVCs to copy bytes from one memory location to another.
+comment|// The operands are:
+comment|// - the target address
+comment|// - the source address
+comment|// - the constant length
+comment|//
+comment|// This isn't a memory opcode because we'd need to attach two
+comment|// MachineMemOperands rather than one.
+name|MVC
+block|,
+comment|// Like MVC, but implemented as a loop that handles X*256 bytes
+comment|// followed by straight-line code to handle the rest (if any).
+comment|// The value of X is passed as an additional operand.
+name|MVC_LOOP
+block|,
+comment|// Similar to MVC and MVC_LOOP, but for logic operations (AND, OR, XOR).
+name|NC
+block|,
+name|NC_LOOP
+block|,
+name|OC
+block|,
+name|OC_LOOP
+block|,
+name|XC
+block|,
+name|XC_LOOP
+block|,
+comment|// Use CLC to compare two blocks of memory, with the same comments
+comment|// as for MVC and MVC_LOOP.
+name|CLC
+block|,
+name|CLC_LOOP
+block|,
+comment|// Use an MVST-based sequence to implement stpcpy().
+name|STPCPY
+block|,
+comment|// Use a CLST-based sequence to implement strcmp().  The two input operands
+comment|// are the addresses of the strings to compare.
+name|STRCMP
+block|,
+comment|// Use an SRST-based sequence to search a block of memory.  The first
+comment|// operand is the end address, the second is the start, and the third
+comment|// is the character to search for.  CC is set to 1 on success and 2
+comment|// on failure.
+name|SEARCH_STRING
+block|,
+comment|// Store the CC value in bits 29 and 28 of an integer.
+name|IPM
 block|,
 comment|// Wrappers around the inner loop of an 8- or 16-bit ATOMIC_SWAP or
 comment|// ATOMIC_LOAD_<op>.
@@ -192,6 +266,45 @@ comment|//            operand into the high bits
 comment|// Operand 4: the negative of operand 2, for rotating the other way
 comment|// Operand 5: the width of the field in bits (8 or 16)
 name|ATOMIC_CMP_SWAPW
+block|,
+comment|// Prefetch from the second operand using the 4-bit control code in
+comment|// the first operand.  The code is 1 for a load prefetch and 2 for
+comment|// a store prefetch.
+name|PREFETCH
+block|}
+enum|;
+comment|// Return true if OPCODE is some kind of PC-relative address.
+specifier|inline
+name|bool
+name|isPCREL
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|)
+block|{
+return|return
+name|Opcode
+operator|==
+name|PCREL_WRAPPER
+operator|||
+name|Opcode
+operator|==
+name|PCREL_OFFSET
+return|;
+block|}
+block|}
+name|namespace
+name|SystemZICMP
+block|{
+comment|// Describes whether an integer comparison needs to be signed or unsigned,
+comment|// or whether either type is OK.
+enum|enum
+block|{
+name|Any
+block|,
+name|UnsignedOnly
+block|,
+name|SignedOnly
 block|}
 enum|;
 block|}
@@ -237,29 +350,22 @@ name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
-argument|EVT VT
-argument_list|)
-specifier|const
-block|{
-return|return
-name|MVT
-operator|::
-name|i32
-return|;
-block|}
-name|virtual
-name|bool
-name|isFMAFasterThanMulAndAdd
-argument_list|(
+argument|LLVMContext&
+argument_list|,
 argument|EVT
 argument_list|)
 specifier|const
 name|LLVM_OVERRIDE
-block|{
-return|return
-name|true
-return|;
-block|}
+block|;
+name|virtual
+name|bool
+name|isFMAFasterThanFMulAndFAdd
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
 name|virtual
 name|bool
 name|isFPImmLegal
@@ -269,6 +375,51 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
+name|bool
+name|isLegalAddressingMode
+argument_list|(
+argument|const AddrMode&AM
+argument_list|,
+argument|Type *Ty
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
+name|bool
+name|allowsUnalignedMemoryAccesses
+argument_list|(
+argument|EVT VT
+argument_list|,
+argument|bool *Fast
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
+name|bool
+name|isTruncateFree
+argument_list|(
+argument|Type *
+argument_list|,
+argument|Type *
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
+name|bool
+name|isTruncateFree
+argument_list|(
+argument|EVT
+argument_list|,
+argument|EVT
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
 block|;
 name|virtual
 specifier|const
@@ -296,7 +447,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 name|LLVM_OVERRIDE
@@ -364,6 +515,26 @@ specifier|const
 name|LLVM_OVERRIDE
 block|;
 name|virtual
+name|bool
+name|allowTruncateForTailCall
+argument_list|(
+argument|Type *
+argument_list|,
+argument|Type *
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
+name|bool
+name|mayBeEmittedAsTailCall
+argument_list|(
+argument|CallInst *CI
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -375,7 +546,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -409,7 +580,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -429,6 +600,15 @@ operator|&
 name|TM
 block|;
 comment|// Implement LowerOperation for individual opcodes.
+name|SDValue
+name|lowerSETCC
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|SDValue
 name|lowerBR_CC
 argument_list|(
@@ -520,6 +700,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|lowerSMUL_LOHI
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|lowerUMUL_LOHI
 argument_list|(
 argument|SDValue Op
@@ -602,6 +791,32 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|lowerPREFETCH
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+comment|// If the last instruction before MBBI in MBB was some form of COMPARE,
+comment|// try to replace it with a COMPARE AND BRANCH just before MBBI.
+comment|// CCMask and Target are the BRC-like operands for the branch.
+comment|// Return true if the change was made.
+name|bool
+name|convertPrevCompareToBranch
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|unsigned CCMask
+argument_list|,
+argument|MachineBasicBlock *Target
+argument_list|)
+specifier|const
+block|;
 comment|// Implement EmitInstrWithCustomInserter for individual operation types.
 name|MachineBasicBlock
 operator|*
@@ -610,6 +825,22 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|emitCondStore
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned StoreOpcode
+argument_list|,
+argument|unsigned STOCOpcode
+argument_list|,
+argument|bool Invert
 argument_list|)
 specifier|const
 block|;
@@ -666,6 +897,30 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|emitMemMemWrapper
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|emitStringWrapper
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|; }

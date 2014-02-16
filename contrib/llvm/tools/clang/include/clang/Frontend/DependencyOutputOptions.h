@@ -92,6 +92,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< Add missing headers to dependency list
+name|unsigned
+name|PrintShowIncludes
+range|:
+literal|1
+decl_stmt|;
+comment|///< Print cl.exe style /showIncludes info.
 comment|/// The file to write dependency output to.
 name|std
 operator|::
@@ -143,6 +149,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|AddMissingHeaderDeps
+operator|=
+literal|0
+expr_stmt|;
+name|PrintShowIncludes
 operator|=
 literal|0
 expr_stmt|;

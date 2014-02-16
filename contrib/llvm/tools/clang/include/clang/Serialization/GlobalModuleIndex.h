@@ -139,6 +139,9 @@ decl_stmt|;
 name|class
 name|FileManager
 decl_stmt|;
+name|class
+name|IdentifierIterator
+decl_stmt|;
 name|namespace
 name|serialization
 block|{

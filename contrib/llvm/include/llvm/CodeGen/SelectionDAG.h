@@ -146,9 +146,6 @@ name|class
 name|MDNode
 decl_stmt|;
 name|class
-name|SDNodeOrdering
-decl_stmt|;
-name|class
 name|SDDbgValue
 decl_stmt|;
 name|class
@@ -160,6 +157,171 @@ decl_stmt|;
 name|class
 name|TargetTransformInfo
 decl_stmt|;
+name|class
+name|SDVTListNode
+range|:
+name|public
+name|FoldingSetNode
+block|{
+name|friend
+expr|struct
+name|FoldingSetTrait
+operator|<
+name|SDVTListNode
+operator|>
+block|;
+comment|/// FastID - A reference to an Interned FoldingSetNodeID for this node.
+comment|/// The Allocator in SelectionDAG holds the data.
+comment|/// SDVTList contains all types which are frequently accessed in SelectionDAG.
+comment|/// The size of this list is not expected big so it won't introduce memory penalty.
+name|FoldingSetNodeIDRef
+name|FastID
+block|;
+specifier|const
+name|EVT
+operator|*
+name|VTs
+block|;
+name|unsigned
+name|int
+name|NumVTs
+block|;
+comment|/// The hash value for SDVTList is fixed so cache it to avoid hash calculation
+name|unsigned
+name|HashValue
+block|;
+name|public
+operator|:
+name|SDVTListNode
+argument_list|(
+argument|const FoldingSetNodeIDRef ID
+argument_list|,
+argument|const EVT *VT
+argument_list|,
+argument|unsigned int Num
+argument_list|)
+operator|:
+name|FastID
+argument_list|(
+name|ID
+argument_list|)
+block|,
+name|VTs
+argument_list|(
+name|VT
+argument_list|)
+block|,
+name|NumVTs
+argument_list|(
+argument|Num
+argument_list|)
+block|{
+name|HashValue
+operator|=
+name|ID
+operator|.
+name|ComputeHash
+argument_list|()
+block|;   }
+name|SDVTList
+name|getSDVTList
+argument_list|()
+block|{
+name|SDVTList
+name|result
+operator|=
+block|{
+name|VTs
+block|,
+name|NumVTs
+block|}
+block|;
+return|return
+name|result
+return|;
+block|}
+expr|}
+block|;
+comment|// Specialize FoldingSetTrait for SDVTListNode
+comment|// To avoid computing temp FoldingSetNodeID and hash value.
+name|template
+operator|<
+operator|>
+expr|struct
+name|FoldingSetTrait
+operator|<
+name|SDVTListNode
+operator|>
+operator|:
+name|DefaultFoldingSetTrait
+operator|<
+name|SDVTListNode
+operator|>
+block|{
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|const SDVTListNode&X
+argument_list|,
+argument|FoldingSetNodeID& ID
+argument_list|)
+block|{
+name|ID
+operator|=
+name|X
+operator|.
+name|FastID
+block|;   }
+specifier|static
+name|bool
+name|Equals
+argument_list|(
+argument|const SDVTListNode&X
+argument_list|,
+argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|unsigned IDHash
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+block|{
+if|if
+condition|(
+name|X
+operator|.
+name|HashValue
+operator|!=
+name|IDHash
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|ID
+operator|==
+name|X
+operator|.
+name|FastID
+return|;
+block|}
+specifier|static
+name|unsigned
+name|ComputeHash
+argument_list|(
+argument|const SDVTListNode&X
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+block|{
+return|return
+name|X
+operator|.
+name|HashValue
+return|;
+block|}
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -267,7 +429,7 @@ name|SDNode
 operator|&
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 comment|/// SDDbgInfo - Keeps track of dbg_value information through SDISel.  We do
 comment|/// not build SDNodes for these so as not to perturb the generated code;
 comment|/// instead the info is kept off to the side in this structure. Each SDNode may
@@ -286,20 +448,21 @@ name|SmallVector
 operator|<
 name|SDDbgValue
 operator|*
-operator|,
+block|,
 literal|32
 operator|>
 name|DbgValues
-expr_stmt|;
+block|;
 name|SmallVector
 operator|<
 name|SDDbgValue
 operator|*
-operator|,
+block|,
 literal|32
 operator|>
 name|ByvalParmDbgValues
-expr_stmt|;
+block|;
+typedef|typedef
 name|DenseMap
 operator|<
 specifier|const
@@ -314,44 +477,41 @@ operator|,
 literal|2
 operator|>
 expr|>
-name|DbgValMap
+name|DbgValMapType
 expr_stmt|;
+name|DbgValMapType
+name|DbgValMap
+block|;
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|SDDbgInfo
 operator|&
 operator|)
 name|LLVM_DELETED_FUNCTION
-decl_stmt|;
+block|;
 name|SDDbgInfo
 argument_list|(
 argument|const SDDbgInfo&
 argument_list|)
 name|LLVM_DELETED_FUNCTION
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|SDDbgInfo
 argument_list|()
 block|{}
 name|void
 name|add
-parameter_list|(
-name|SDDbgValue
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|SDNode
-modifier|*
-name|Node
-parameter_list|,
-name|bool
-name|isParameter
-parameter_list|)
+argument_list|(
+argument|SDDbgValue *V
+argument_list|,
+argument|const SDNode *Node
+argument_list|,
+argument|bool isParameter
+argument_list|)
 block|{
 if|if
 condition|(
@@ -436,20 +596,7 @@ argument_list|(
 argument|const SDNode *Node
 argument_list|)
 block|{
-name|DenseMap
-operator|<
-specifier|const
-name|SDNode
-operator|*
-block|,
-name|SmallVector
-operator|<
-name|SDDbgValue
-operator|*
-block|,
-literal|2
-operator|>
-expr|>
+name|DbgValMapType
 operator|::
 name|iterator
 name|I
@@ -485,18 +632,22 @@ operator|(
 operator|)
 return|;
 block|}
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|SDDbgValue
 operator|*
-operator|,
-literal|32
 operator|>
 operator|::
 name|iterator
 name|DbgIterator
 expr_stmt|;
+end_typedef
+
+begin_function
 name|DbgIterator
 name|DbgBegin
 parameter_list|()
@@ -508,6 +659,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 name|DbgIterator
 name|DbgEnd
 parameter_list|()
@@ -519,6 +673,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 name|DbgIterator
 name|ByvalParmDbgBegin
 parameter_list|()
@@ -530,6 +687,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 name|DbgIterator
 name|ByvalParmDbgEnd
 parameter_list|()
@@ -541,14 +701,10 @@ name|end
 argument_list|()
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_decl_stmt
+unit|};
 name|class
 name|SelectionDAG
 decl_stmt|;
@@ -632,11 +788,6 @@ modifier|&
 name|TM
 decl_stmt|;
 specifier|const
-name|TargetLowering
-modifier|&
-name|TLI
-decl_stmt|;
-specifier|const
 name|TargetSelectionDAGInfo
 modifier|&
 name|TSI
@@ -645,6 +796,11 @@ specifier|const
 name|TargetTransformInfo
 modifier|*
 name|TTI
+decl_stmt|;
+specifier|const
+name|TargetLowering
+modifier|*
+name|TLI
 decl_stmt|;
 name|MachineFunction
 modifier|*
@@ -717,12 +873,6 @@ comment|/// Allocator - Pool allocation for misc. objects that are created once 
 comment|/// SelectionDAG.
 name|BumpPtrAllocator
 name|Allocator
-decl_stmt|;
-comment|/// SDNodeOrdering - The ordering of the SDNodes. It roughly corresponds to
-comment|/// the ordering of the original LLVM instructions.
-name|SDNodeOrdering
-modifier|*
-name|Ordering
 decl_stmt|;
 comment|/// DbgInfo - Tracks dbg_value information through SDISel.
 name|SDDbgInfo
@@ -824,6 +974,14 @@ parameter_list|)
 function_decl|;
 block|}
 struct|;
+comment|/// NewNodesMustHaveLegalTypes - When true, additional steps are taken to
+comment|/// ensure that getConstant() and similar functions return DAG nodes that
+comment|/// have legal types. This is important after type legalization since
+comment|/// any illegally typed nodes generated after this point will not experience
+comment|/// type legalization.
+name|bool
+name|NewNodesMustHaveLegalTypes
+decl_stmt|;
 name|private
 label|:
 comment|/// DAGUpdateListener is a friend so it can manipulate the listener stack.
@@ -919,6 +1077,11 @@ specifier|const
 name|TargetTransformInfo
 modifier|*
 name|TTI
+parameter_list|,
+specifier|const
+name|TargetLowering
+modifier|*
+name|TLI
 parameter_list|)
 function_decl|;
 comment|/// clear - Clear state and free memory necessary to make this
@@ -958,6 +1121,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|TLI
 return|;
 block|}
@@ -1668,7 +1832,7 @@ name|GlobalValue
 modifier|*
 name|GV
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -1699,7 +1863,7 @@ name|GlobalValue
 modifier|*
 name|GV
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2012,7 +2176,7 @@ name|MachineBasicBlock
 modifier|*
 name|MBB
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|)
 function_decl|;
@@ -2036,7 +2200,7 @@ name|char
 modifier|*
 name|Sym
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -2089,7 +2253,7 @@ function_decl|;
 name|SDValue
 name|getEHLabel
 parameter_list|(
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -2172,7 +2336,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|unsigned
@@ -2220,7 +2384,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|unsigned
@@ -2300,7 +2464,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -2371,7 +2535,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|unsigned
@@ -2434,7 +2598,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|unsigned
@@ -2521,7 +2685,7 @@ argument_list|(
 name|EVT
 name|VT
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDValue
@@ -2555,7 +2719,7 @@ parameter_list|(
 name|EVT
 name|VT
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -2578,7 +2742,7 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2593,7 +2757,7 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2608,7 +2772,7 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2623,7 +2787,7 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2634,7 +2798,7 @@ comment|/// getNOT - Create a bitwise NOT operation as (XOR Val, -1).
 name|SDValue
 name|getNOT
 parameter_list|(
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|SDValue
@@ -2646,7 +2810,7 @@ parameter_list|)
 function_decl|;
 comment|/// getCALLSEQ_START - Return a new CALLSEQ_START node, which always must have
 comment|/// a glue result (to ensure it's not CSE'd).  CALLSEQ_START does not have a
-comment|/// useful DebugLoc.
+comment|/// useful SDLoc.
 name|SDValue
 name|getCALLSEQ_START
 parameter_list|(
@@ -2655,6 +2819,9 @@ name|Chain
 parameter_list|,
 name|SDValue
 name|Op
+parameter_list|,
+name|SDLoc
+name|DL
 parameter_list|)
 block|{
 name|SDVTList
@@ -2688,8 +2855,7 @@ name|ISD
 operator|::
 name|CALLSEQ_START
 argument_list|,
-name|DebugLoc
-argument_list|()
+name|DL
 argument_list|,
 name|VTs
 argument_list|,
@@ -2701,7 +2867,7 @@ return|;
 block|}
 comment|/// getCALLSEQ_END - Return a new CALLSEQ_END node, which always must have a
 comment|/// glue result (to ensure it's not CSE'd).  CALLSEQ_END does not have
-comment|/// a useful DebugLoc.
+comment|/// a useful SDLoc.
 name|SDValue
 name|getCALLSEQ_END
 parameter_list|(
@@ -2716,6 +2882,9 @@ name|Op2
 parameter_list|,
 name|SDValue
 name|InGlue
+parameter_list|,
+name|SDLoc
+name|DL
 parameter_list|)
 block|{
 name|SDVTList
@@ -2775,8 +2944,7 @@ name|ISD
 operator|::
 name|CALLSEQ_END
 argument_list|,
-name|DebugLoc
-argument_list|()
+name|DL
 argument_list|,
 name|NodeTys
 argument_list|,
@@ -2809,7 +2977,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-comment|/// getUNDEF - Return an UNDEF node.  UNDEF does not have a useful DebugLoc.
+comment|/// getUNDEF - Return an UNDEF node.  UNDEF does not have a useful SDLoc.
 name|SDValue
 name|getUNDEF
 parameter_list|(
@@ -2824,7 +2992,7 @@ name|ISD
 operator|::
 name|UNDEF
 argument_list|,
-name|DebugLoc
+name|SDLoc
 argument_list|()
 argument_list|,
 name|VT
@@ -2832,7 +3000,7 @@ argument_list|)
 return|;
 block|}
 comment|/// getGLOBAL_OFFSET_TABLE - Return a GLOBAL_OFFSET_TABLE node.  This does
-comment|/// not have a useful DebugLoc.
+comment|/// not have a useful SDLoc.
 name|SDValue
 name|getGLOBAL_OFFSET_TABLE
 parameter_list|(
@@ -2847,7 +3015,7 @@ name|ISD
 operator|::
 name|GLOBAL_OFFSET_TABLE
 argument_list|,
-name|DebugLoc
+name|SDLoc
 argument_list|()
 argument_list|,
 name|VT
@@ -2862,7 +3030,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2875,7 +3043,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2891,7 +3059,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2910,7 +3078,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2932,7 +3100,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2957,7 +3125,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -2985,7 +3153,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -3006,7 +3174,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -3027,7 +3195,7 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 argument_list|,
 name|ArrayRef
@@ -3051,7 +3219,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 specifier|const
@@ -3077,7 +3245,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3098,7 +3266,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3111,7 +3279,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3127,7 +3295,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3146,7 +3314,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3168,7 +3336,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3193,7 +3361,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3232,7 +3400,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -3266,7 +3434,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -3297,7 +3465,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -3325,7 +3493,7 @@ comment|///
 name|SDValue
 name|getSetCC
 argument_list|(
-name|DebugLoc
+name|SDLoc
 name|DL
 argument_list|,
 name|EVT
@@ -3382,6 +3550,17 @@ operator|&&
 literal|"Cannot compare scalars to vectors"
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|Cond
+operator|!=
+name|ISD
+operator|::
+name|SETCC_INVALID
+operator|&&
+literal|"Cannot create a setCC of an invalid node."
+argument_list|)
+expr_stmt|;
 return|return
 name|getNode
 argument_list|(
@@ -3404,13 +3583,98 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|// getSelect - Helper function to make it easier to build Select's if you just
+comment|// have operands and don't want to check for vector.
+name|SDValue
+name|getSelect
+parameter_list|(
+name|SDLoc
+name|DL
+parameter_list|,
+name|EVT
+name|VT
+parameter_list|,
+name|SDValue
+name|Cond
+parameter_list|,
+name|SDValue
+name|LHS
+parameter_list|,
+name|SDValue
+name|RHS
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|LHS
+operator|.
+name|getValueType
+argument_list|()
+operator|==
+name|RHS
+operator|.
+name|getValueType
+argument_list|()
+operator|&&
+literal|"Cannot use select on differing types"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|VT
+operator|.
+name|isVector
+argument_list|()
+operator|==
+name|LHS
+operator|.
+name|getValueType
+argument_list|()
+operator|.
+name|isVector
+argument_list|()
+operator|&&
+literal|"Cannot mix vectors and scalars"
+argument_list|)
+expr_stmt|;
+return|return
+name|getNode
+argument_list|(
+name|Cond
+operator|.
+name|getValueType
+argument_list|()
+operator|.
+name|isVector
+argument_list|()
+condition|?
+name|ISD
+operator|::
+name|VSELECT
+else|:
+name|ISD
+operator|::
+name|SELECT
+argument_list|,
+name|DL
+argument_list|,
+name|VT
+argument_list|,
+name|Cond
+argument_list|,
+name|LHS
+argument_list|,
+name|RHS
+argument_list|)
+return|;
+block|}
 comment|/// getSelectCC - Helper function to make it easier to build SelectCC's if you
 comment|/// just have an ISD::CondCode instead of an SDValue.
 comment|///
 name|SDValue
 name|getSelectCC
 argument_list|(
-name|DebugLoc
+name|SDLoc
 name|DL
 argument_list|,
 name|SDValue
@@ -3468,7 +3732,7 @@ parameter_list|(
 name|EVT
 name|VT
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -3492,7 +3756,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -3529,7 +3793,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -3566,7 +3830,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -3602,7 +3866,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -3636,7 +3900,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -3672,7 +3936,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -3698,6 +3962,41 @@ name|SynchronizationScope
 name|SynchScope
 parameter_list|)
 function_decl|;
+comment|/// getAtomic - Gets a node for an atomic op, produces result and chain and
+comment|/// takes N operands.
+name|SDValue
+name|getAtomic
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|SDLoc
+name|dl
+parameter_list|,
+name|EVT
+name|MemVT
+parameter_list|,
+name|SDVTList
+name|VTList
+parameter_list|,
+name|SDValue
+modifier|*
+name|Ops
+parameter_list|,
+name|unsigned
+name|NumOps
+parameter_list|,
+name|MachineMemOperand
+modifier|*
+name|MMO
+parameter_list|,
+name|AtomicOrdering
+name|Ordering
+parameter_list|,
+name|SynchronizationScope
+name|SynchScope
+parameter_list|)
+function_decl|;
 comment|/// getMemIntrinsicNode - Creates a MemIntrinsicNode that may produce a
 comment|/// result and takes a list of operands. Opcode may be INTRINSIC_VOID,
 comment|/// INTRINSIC_W_CHAIN, or a target-specific opcode with a value not
@@ -3708,7 +4007,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 specifier|const
@@ -3760,7 +4059,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDVTList
@@ -3807,7 +4106,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDVTList
@@ -3841,7 +4140,7 @@ parameter_list|,
 name|unsigned
 name|NumOps
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|)
 function_decl|;
@@ -3854,7 +4153,7 @@ parameter_list|(
 name|EVT
 name|VT
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -3894,6 +4193,26 @@ literal|0
 parameter_list|)
 function_decl|;
 name|SDValue
+name|getLoad
+parameter_list|(
+name|EVT
+name|VT
+parameter_list|,
+name|SDLoc
+name|dl
+parameter_list|,
+name|SDValue
+name|Chain
+parameter_list|,
+name|SDValue
+name|Ptr
+parameter_list|,
+name|MachineMemOperand
+modifier|*
+name|MMO
+parameter_list|)
+function_decl|;
+name|SDValue
 name|getExtLoad
 argument_list|(
 name|ISD
@@ -3901,7 +4220,7 @@ operator|::
 name|LoadExtType
 name|ExtType
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|EVT
@@ -3937,12 +4256,40 @@ literal|0
 argument_list|)
 decl_stmt|;
 name|SDValue
+name|getExtLoad
+argument_list|(
+name|ISD
+operator|::
+name|LoadExtType
+name|ExtType
+argument_list|,
+name|SDLoc
+name|dl
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|SDValue
+name|Chain
+argument_list|,
+name|SDValue
+name|Ptr
+argument_list|,
+name|EVT
+name|MemVT
+argument_list|,
+name|MachineMemOperand
+operator|*
+name|MMO
+argument_list|)
+decl_stmt|;
+name|SDValue
 name|getIndexedLoad
 argument_list|(
 name|SDValue
 name|OrigLoad
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDValue
@@ -3973,7 +4320,7 @@ argument_list|,
 name|EVT
 name|VT
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDValue
@@ -4034,7 +4381,7 @@ argument_list|,
 name|EVT
 name|VT
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDValue
@@ -4062,7 +4409,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -4097,7 +4444,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -4117,7 +4464,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -4155,7 +4502,7 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|SDValue
@@ -4178,7 +4525,7 @@ argument_list|(
 name|SDValue
 name|OrigStoe
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDValue
@@ -4211,6 +4558,26 @@ specifier|const
 name|MDNode
 modifier|*
 name|MD
+parameter_list|)
+function_decl|;
+comment|/// getAddrSpaceCast - Return an AddrSpaceCastSDNode.
+name|SDValue
+name|getAddrSpaceCast
+parameter_list|(
+name|SDLoc
+name|dl
+parameter_list|,
+name|EVT
+name|VT
+parameter_list|,
+name|SDValue
+name|Ptr
+parameter_list|,
+name|unsigned
+name|SrcAS
+parameter_list|,
+name|unsigned
+name|DestAS
 parameter_list|)
 function_decl|;
 comment|/// getShiftAmountOperand - Return the specified value casted to
@@ -4711,7 +5078,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -4725,7 +5092,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -4742,7 +5109,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -4762,7 +5129,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -4785,7 +5152,7 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|EVT
@@ -4805,7 +5172,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -4822,7 +5189,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -4842,7 +5209,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -4865,7 +5232,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -4891,7 +5258,7 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|EVT
@@ -4914,7 +5281,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -4940,7 +5307,7 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 parameter_list|,
 name|EVT
@@ -4969,7 +5336,7 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|EVT
@@ -4995,7 +5362,7 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|EVT
@@ -5024,7 +5391,7 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|ArrayRef
@@ -5047,7 +5414,7 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDVTList
@@ -5068,7 +5435,7 @@ parameter_list|(
 name|int
 name|SRIdx
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -5086,7 +5453,7 @@ parameter_list|(
 name|int
 name|SRIdx
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|DL
 parameter_list|,
 name|EVT
@@ -5528,30 +5895,6 @@ name|PPCDoubleDouble
 return|;
 block|}
 block|}
-comment|/// AssignOrdering - Assign an order to the SDNode.
-name|void
-name|AssignOrdering
-parameter_list|(
-specifier|const
-name|SDNode
-modifier|*
-name|SD
-parameter_list|,
-name|unsigned
-name|Order
-parameter_list|)
-function_decl|;
-comment|/// GetOrdering - Get the order for the SDNode.
-name|unsigned
-name|GetOrdering
-argument_list|(
-specifier|const
-name|SDNode
-operator|*
-name|SD
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// AddDbgValue - Add a dbg_value SDNode. If SD is non-null that means the
 comment|/// value is produced by SD.
 name|void
@@ -5736,7 +6079,7 @@ operator|::
 name|CondCode
 name|Cond
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|)
 decl_stmt|;
@@ -5919,6 +6262,141 @@ name|Ptr
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// GetSplitDestVTs - Compute the VTs needed for the low/hi parts of a type
+comment|/// which is split (or expanded) into two not necessarily identical pieces.
+name|std
+operator|::
+name|pair
+operator|<
+name|EVT
+operator|,
+name|EVT
+operator|>
+name|GetSplitDestVTs
+argument_list|(
+argument|const EVT&VT
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// SplitVector - Split the vector with EXTRACT_SUBVECTOR using the provides
+comment|/// VTs and return the low/high part.
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|SplitVector
+argument_list|(
+specifier|const
+name|SDValue
+operator|&
+name|N
+argument_list|,
+specifier|const
+name|SDLoc
+operator|&
+name|DL
+argument_list|,
+specifier|const
+name|EVT
+operator|&
+name|LoVT
+argument_list|,
+specifier|const
+name|EVT
+operator|&
+name|HiVT
+argument_list|)
+expr_stmt|;
+comment|/// SplitVector - Split the vector with EXTRACT_SUBVECTOR and return the
+comment|/// low/high part.
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|SplitVector
+argument_list|(
+argument|const SDValue&N
+argument_list|,
+argument|const SDLoc&DL
+argument_list|)
+block|{
+name|EVT
+name|LoVT
+block|,
+name|HiVT
+block|;
+name|llvm
+operator|::
+name|tie
+argument_list|(
+name|LoVT
+argument_list|,
+name|HiVT
+argument_list|)
+operator|=
+name|GetSplitDestVTs
+argument_list|(
+name|N
+operator|.
+name|getValueType
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|SplitVector
+argument_list|(
+name|N
+argument_list|,
+name|DL
+argument_list|,
+name|LoVT
+argument_list|,
+name|HiVT
+argument_list|)
+return|;
+block|}
+comment|/// SplitVectorOperand - Split the node's operand with EXTRACT_SUBVECTOR and
+comment|/// return the low/high part.
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|SplitVectorOperand
+argument_list|(
+argument|const SDNode *N
+argument_list|,
+argument|unsigned OpNo
+argument_list|)
+block|{
+return|return
+name|SplitVector
+argument_list|(
+name|N
+operator|->
+name|getOperand
+argument_list|(
+name|OpNo
+argument_list|)
+argument_list|,
+name|SDLoc
+argument_list|(
+name|N
+argument_list|)
+argument_list|)
+return|;
+block|}
 name|private
 label|:
 name|bool
@@ -5998,13 +6476,13 @@ parameter_list|)
 function_decl|;
 name|SDNode
 modifier|*
-name|UpdadeDebugLocOnMergedSDNode
+name|UpdadeSDLocOnMergedSDNode
 parameter_list|(
 name|SDNode
 modifier|*
 name|N
 parameter_list|,
-name|DebugLoc
+name|SDLoc
 name|loc
 parameter_list|)
 function_decl|;
@@ -6037,13 +6515,11 @@ name|allnodes_clear
 parameter_list|()
 function_decl|;
 comment|/// VTList - List of non-single value types.
-name|std
-operator|::
-name|vector
+name|FoldingSet
 operator|<
-name|SDVTList
+name|SDVTListNode
 operator|>
-name|VTList
+name|VTListMap
 expr_stmt|;
 comment|/// CondCodeNodes - Maps to auto-CSE operations.
 name|std

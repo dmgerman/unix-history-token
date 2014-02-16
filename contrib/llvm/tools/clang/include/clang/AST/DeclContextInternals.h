@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
@@ -112,12 +118,12 @@ block|{
 name|class
 name|DependentDiagnostic
 decl_stmt|;
-comment|/// StoredDeclsList - This is an array of decls optimized a common case of only
-comment|/// containing one entry.
+comment|/// \brief An array of decls optimized for the common case of only containing
+comment|/// one entry.
 struct|struct
 name|StoredDeclsList
 block|{
-comment|/// DeclsTy - When in vector form, this is what the Data pointer points to.
+comment|/// \brief When in vector form, this is what the Data pointer points to.
 typedef|typedef
 name|SmallVector
 operator|<
@@ -128,8 +134,25 @@ literal|4
 operator|>
 name|DeclsTy
 expr_stmt|;
+comment|/// \brief A collection of declarations, with a flag to indicate if we have
+comment|/// further external declarations.
+typedef|typedef
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|DeclsTy
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|DeclsAndHasExternalTy
+expr_stmt|;
 comment|/// \brief The stored data, which will be either a pointer to a NamedDecl,
-comment|/// or a pointer to a vector.
+comment|/// or a pointer to a vector with a flag to indicate if there are further
+comment|/// external declarations.
 name|llvm
 operator|::
 name|PointerUnion
@@ -137,8 +160,7 @@ operator|<
 name|NamedDecl
 operator|*
 operator|,
-name|DeclsTy
-operator|*
+name|DeclsAndHasExternalTy
 operator|>
 name|Data
 expr_stmt|;
@@ -173,11 +195,11 @@ argument_list|()
 condition|)
 name|Data
 operator|=
-name|new
-name|DeclsTy
+name|DeclsAndHasExternalTy
 argument_list|(
-operator|*
-name|RHSVec
+argument|new DeclsTy(*RHSVec)
+argument_list|,
+argument|RHS.hasExternalDecls()
 argument_list|)
 expr_stmt|;
 block|}
@@ -241,11 +263,11 @@ argument_list|()
 condition|)
 name|Data
 operator|=
-name|new
-name|DeclsTy
+name|DeclsAndHasExternalTy
 argument_list|(
-operator|*
-name|RHSVec
+argument|new DeclsTy(*RHSVec)
+argument_list|,
+argument|hasExternalDecls()
 argument_list|)
 expr_stmt|;
 return|return
@@ -283,9 +305,8 @@ operator|(
 operator|)
 return|;
 block|}
-name|DeclsTy
-modifier|*
-name|getAsVector
+name|DeclsAndHasExternalTy
+name|getAsVectorAndHasExternal
 argument_list|()
 decl|const
 block|{
@@ -294,12 +315,97 @@ name|Data
 operator|.
 name|dyn_cast
 operator|<
-name|DeclsTy
-operator|*
+name|DeclsAndHasExternalTy
 operator|>
 operator|(
 operator|)
 return|;
+block|}
+name|DeclsTy
+modifier|*
+name|getAsVector
+argument_list|()
+decl|const
+block|{
+return|return
+name|getAsVectorAndHasExternal
+argument_list|()
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasExternalDecls
+argument_list|()
+decl|const
+block|{
+return|return
+name|getAsVectorAndHasExternal
+argument_list|()
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+name|void
+name|setHasExternalDecls
+argument_list|()
+block|{
+if|if
+condition|(
+name|DeclsTy
+modifier|*
+name|Vec
+init|=
+name|getAsVector
+argument_list|()
+condition|)
+name|Data
+operator|=
+name|DeclsAndHasExternalTy
+argument_list|(
+name|Vec
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|DeclsTy
+modifier|*
+name|VT
+init|=
+name|new
+name|DeclsTy
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|NamedDecl
+modifier|*
+name|OldD
+init|=
+name|getAsDecl
+argument_list|()
+condition|)
+name|VT
+operator|->
+name|push_back
+argument_list|(
+name|OldD
+argument_list|)
+expr_stmt|;
+name|Data
+operator|=
+name|DeclsAndHasExternalTy
+argument_list|(
+name|VT
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|void
 name|setOnlyValue
@@ -553,6 +659,17 @@ name|end
 argument_list|()
 argument_list|)
 expr_stmt|;
+comment|// Don't have any external decls any more.
+name|Data
+operator|=
+name|DeclsAndHasExternalTy
+argument_list|(
+operator|&
+name|Vec
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/// getLookupResult - Return an array of all the decls that this list
@@ -790,6 +907,15 @@ operator|*
 name|D
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isNull
+argument_list|()
+operator|&&
+literal|"don't AddSubsequentDecl when we have no decls"
+argument_list|)
+expr_stmt|;
 comment|// If this is the second decl added to the list, convert this to vector
 comment|// form.
 if|if
@@ -819,7 +945,12 @@ argument_list|)
 expr_stmt|;
 name|Data
 operator|=
+name|DeclsAndHasExternalTy
+argument_list|(
 name|VT
+argument_list|,
+name|false
+argument_list|)
 expr_stmt|;
 block|}
 name|DeclsTy

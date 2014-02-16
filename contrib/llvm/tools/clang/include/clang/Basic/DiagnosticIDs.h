@@ -91,9 +91,6 @@ decl_stmt|;
 name|class
 name|SourceLocation
 decl_stmt|;
-struct_decl|struct
-name|WarningOption
-struct_decl|;
 comment|// Import the diagnostic enums themselves.
 name|namespace
 name|diag
@@ -101,8 +98,14 @@ block|{
 comment|// Start position for diagnostics.
 enum|enum
 block|{
+name|DIAG_START_COMMON
+init|=
+literal|0
+block|,
 name|DIAG_START_DRIVER
 init|=
+name|DIAG_START_COMMON
+operator|+
 literal|300
 block|,
 name|DIAG_START_FRONTEND
@@ -187,8 +190,6 @@ name|GROUP
 parameter_list|,\
 name|SFINAE
 parameter_list|,
-name|ACCESS
-parameter_list|,
 name|CATEGORY
 parameter_list|,
 name|NOWERROR
@@ -196,6 +197,9 @@ parameter_list|,
 name|SHOWINSYSHEADER
 parameter_list|)
 value|ENUM,
+define|#
+directive|define
+name|COMMONSTART
 include|#
 directive|include
 file|"clang/Basic/DiagnosticCommonKinds.inc"
@@ -443,8 +447,9 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|/// \brief Used for handling and querying diagnostic IDs. Can be used and shared
-comment|/// by multiple Diagnostics for multiple translation units.
+comment|/// \brief Used for handling and querying diagnostic IDs.
+comment|///
+comment|/// Can be used and shared by multiple Diagnostics for multiple translation units.
 name|class
 name|DiagnosticIDs
 range|:
@@ -456,7 +461,7 @@ operator|>
 block|{
 name|public
 operator|:
-comment|/// Level The level of the diagnostic, after it has been through mapping.
+comment|/// \brief The level of the diagnostic, after it has been through mapping.
 expr|enum
 name|Level
 block|{
@@ -666,8 +671,8 @@ argument_list|)
 block|;
 comment|/// \brief Get the set of all diagnostic IDs in the group with the given name.
 comment|///
-comment|/// \param Diags [out] - On return, the diagnostics in the group.
-comment|/// \returns True if the given group is unknown, false otherwise.
+comment|/// \param[out] Diags - On return, the diagnostics in the group.
+comment|/// \returns \c true if the given group is unknown, \c false otherwise.
 name|bool
 name|getDiagnosticsInGroup
 argument_list|(
@@ -696,24 +701,14 @@ argument_list|)
 block|;
 name|private
 operator|:
-comment|/// \brief Get the set of all diagnostic IDs in the given group.
-comment|///
-comment|/// \param Diags [out] - On return, the diagnostics in the group.
-name|void
-name|getDiagnosticsInGroup
-argument_list|(
-argument|const WarningOption *Group
-argument_list|,
-argument|SmallVectorImpl<diag::kind>&Diags
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Based on the way the client configured the DiagnosticsEngine
-comment|/// object, classify the specified diagnostic ID into a Level, consumable by
+comment|/// \brief Classify the specified diagnostic ID into a Level, consumable by
 comment|/// the DiagnosticClient.
 comment|///
-comment|/// \param Loc The source location we are interested in finding out the
-comment|/// diagnostic state. Can be null in order to query the latest state.
+comment|/// The classification is based on the way the client configured the
+comment|/// DiagnosticsEngine object.
+comment|///
+comment|/// \param Loc The source location for which we are interested in finding out
+comment|/// the diagnostic state. Can be null in order to query the latest state.
 name|DiagnosticIDs
 operator|::
 name|Level

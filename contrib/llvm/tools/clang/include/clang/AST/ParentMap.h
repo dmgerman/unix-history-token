@@ -100,6 +100,23 @@ modifier|*
 name|S
 parameter_list|)
 function_decl|;
+comment|/// Manually sets the parent of \p S to \p Parent.
+comment|///
+comment|/// If \p S is already in the map, this method will update the mapping.
+name|void
+name|setParent
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|Stmt
+modifier|*
+name|Parent
+parameter_list|)
+function_decl|;
 name|Stmt
 modifier|*
 name|getParent

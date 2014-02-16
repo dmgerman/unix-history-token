@@ -2235,11 +2235,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Returns a pointer to the first instructon in this block that is not a
+comment|/// Returns a pointer to the first instruction in this block that is not a
 end_comment
 
 begin_comment
-comment|/// PHINode instruction. When adding instruction to the beginning of the
+comment|/// PHINode instruction. When adding instructions to the beginning of the
 end_comment
 
 begin_comment
@@ -3919,7 +3919,155 @@ block|}
 end_function
 
 begin_comment
-unit|};  }
+unit|};
+comment|/// MachineInstrSpan provides an interface to get an iteration range
+end_comment
+
+begin_comment
+comment|/// containing the instruction it was initialized with, along with all
+end_comment
+
+begin_comment
+comment|/// those instructions inserted prior to or following that instruction
+end_comment
+
+begin_comment
+comment|/// at some point after the MachineInstrSpan is constructed.
+end_comment
+
+begin_decl_stmt
+name|class
+name|MachineInstrSpan
+block|{
+name|MachineBasicBlock
+modifier|&
+name|MBB
+decl_stmt|;
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+operator|,
+name|B
+operator|,
+name|E
+expr_stmt|;
+name|public
+label|:
+name|MachineInstrSpan
+argument_list|(
+argument|MachineBasicBlock::iterator I
+argument_list|)
+block|:
+name|MBB
+argument_list|(
+operator|*
+name|I
+operator|->
+name|getParent
+argument_list|()
+argument_list|)
+operator|,
+name|I
+argument_list|(
+name|I
+argument_list|)
+operator|,
+name|B
+argument_list|(
+name|I
+operator|==
+name|MBB
+operator|.
+name|begin
+argument_list|()
+condition|?
+name|MBB
+operator|.
+name|end
+argument_list|()
+else|:
+name|llvm
+operator|::
+name|prior
+argument_list|(
+name|I
+argument_list|)
+argument_list|)
+operator|,
+name|E
+argument_list|(
+argument|llvm::next(I)
+argument_list|)
+block|{}
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|begin
+argument_list|()
+block|{
+return|return
+name|B
+operator|==
+name|MBB
+operator|.
+name|end
+argument_list|()
+condition|?
+name|MBB
+operator|.
+name|begin
+argument_list|()
+else|:
+name|llvm
+operator|::
+name|next
+argument_list|(
+name|B
+argument_list|)
+return|;
+block|}
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|end
+argument_list|()
+block|{
+return|return
+name|E
+return|;
+block|}
+name|bool
+name|empty
+parameter_list|()
+block|{
+return|return
+name|begin
+argument_list|()
+operator|==
+name|end
+argument_list|()
+return|;
+block|}
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|getInitial
+argument_list|()
+block|{
+return|return
+name|I
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

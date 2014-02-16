@@ -115,31 +115,53 @@ decl_stmt|;
 enum|enum
 name|LanguageID
 block|{
-name|C_LANG
+name|GNU_LANG
 init|=
 literal|0x1
+block|,
+comment|// builtin requires GNU mode.
+name|C_LANG
+init|=
+literal|0x2
 block|,
 comment|// builtin for c only.
 name|CXX_LANG
 init|=
-literal|0x2
+literal|0x4
 block|,
 comment|// builtin for cplusplus only.
 name|OBJC_LANG
 init|=
-literal|0x4
+literal|0x8
 block|,
 comment|// builtin for objective-c and objective-c++
+name|MS_LANG
+init|=
+literal|0x10
+block|,
+comment|// builtin requires MS mode.
 name|ALL_LANGUAGES
 init|=
-operator|(
 name|C_LANG
 operator||
 name|CXX_LANG
 operator||
 name|OBJC_LANG
-operator|)
-comment|//builtin is for all languages.
+block|,
+comment|// builtin for all languages.
+name|ALL_GNU_LANGUAGES
+init|=
+name|ALL_LANGUAGES
+operator||
+name|GNU_LANG
+block|,
+comment|// builtin requires GNU mode.
+name|ALL_MS_LANGUAGES
+init|=
+name|ALL_LANGUAGES
+operator||
+name|MS_LANG
+comment|// builtin requires MS mode.
 block|}
 enum|;
 name|namespace
@@ -300,7 +322,7 @@ modifier|&
 name|LangOpts
 parameter_list|)
 function_decl|;
-comment|/// \brief Popular the vector with the names of all of the builtins.
+comment|/// \brief Populate the vector with the names of all of the builtins.
 name|void
 name|GetBuiltinNames
 argument_list|(
@@ -312,9 +334,6 @@ operator|*
 operator|>
 operator|&
 name|Names
-argument_list|,
-name|bool
-name|NoBuiltins
 argument_list|)
 decl_stmt|;
 comment|/// \brief Return the identifier name for the specified builtin,
@@ -699,6 +718,23 @@ name|unsigned
 name|ID
 argument_list|)
 decl|const
+decl_stmt|;
+comment|/// \brief Is this builtin supported according to the given language options?
+name|bool
+name|BuiltinIsSupported
+argument_list|(
+specifier|const
+name|Builtin
+operator|::
+name|Info
+operator|&
+name|BuiltinInfo
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
+argument_list|)
 decl_stmt|;
 block|}
 empty_stmt|;

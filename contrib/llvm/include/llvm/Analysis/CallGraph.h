@@ -273,13 +273,14 @@ comment|// CallGraph class definition
 comment|//
 name|class
 name|CallGraph
+range|:
+name|public
+name|ModulePass
 block|{
-name|protected
-label|:
 name|Module
-modifier|*
+operator|*
 name|Mod
-decl_stmt|;
+block|;
 comment|// The module this call graph represents
 typedef|typedef
 name|std
@@ -299,6 +300,54 @@ name|FunctionMapTy
 name|FunctionMap
 decl_stmt|;
 comment|// Map from a function to its node
+comment|// Root is root of the call graph, or the external node if a 'main' function
+comment|// couldn't be found.
+comment|//
+name|CallGraphNode
+modifier|*
+name|Root
+decl_stmt|;
+comment|// ExternalCallingNode - This node has edges to all external functions and
+comment|// those internal functions that have their address taken.
+name|CallGraphNode
+modifier|*
+name|ExternalCallingNode
+decl_stmt|;
+comment|// CallsExternalNode - This node has edges to it from all functions making
+comment|// indirect calls or calling an external function.
+name|CallGraphNode
+modifier|*
+name|CallsExternalNode
+decl_stmt|;
+comment|/// Replace the function represented by this node by another.
+comment|/// This does not rescan the body of the function, so it is suitable when
+comment|/// splicing the body of one function to another while also updating all
+comment|/// callers from the old function to the new.
+comment|///
+name|void
+name|spliceFunction
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|From
+parameter_list|,
+specifier|const
+name|Function
+modifier|*
+name|To
+parameter_list|)
+function_decl|;
+comment|// Add a function to the call graph, and link the node to all of the functions
+comment|// that it calls.
+name|void
+name|addToCallGraph
+parameter_list|(
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
 name|public
 label|:
 specifier|static
@@ -469,8 +518,7 @@ name|second
 return|;
 block|}
 comment|/// Returns the CallGraphNode which is used to represent undetermined calls
-comment|/// into the callgraph.  Override this if you want behavioral inheritance.
-name|virtual
+comment|/// into the callgraph.
 name|CallGraphNode
 operator|*
 name|getExternalCallingNode
@@ -478,10 +526,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|ExternalCallingNode
 return|;
 block|}
-name|virtual
 name|CallGraphNode
 operator|*
 name|getCallsExternalNode
@@ -489,23 +536,20 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|CallsExternalNode
 return|;
 block|}
 comment|/// Return the root/main method in the module, or some other root node, such
-comment|/// as the externalcallingnode.  Overload these if you behavioral
-comment|/// inheritance.
-name|virtual
+comment|/// as the externalcallingnode.
 name|CallGraphNode
 modifier|*
 name|getRoot
 parameter_list|()
 block|{
 return|return
-literal|0
+name|Root
 return|;
 block|}
-name|virtual
 specifier|const
 name|CallGraphNode
 operator|*
@@ -514,7 +558,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|Root
 return|;
 block|}
 comment|//===---------------------------------------------------------------------
@@ -536,28 +580,6 @@ modifier|*
 name|CGN
 parameter_list|)
 function_decl|;
-name|Function
-modifier|*
-name|removeFunctionFromModule
-parameter_list|(
-name|Function
-modifier|*
-name|F
-parameter_list|)
-block|{
-return|return
-name|removeFunctionFromModule
-argument_list|(
-operator|(
-operator|*
-name|this
-operator|)
-index|[
-name|F
-index|]
-argument_list|)
-return|;
-block|}
 comment|/// getOrInsertFunction - This method is identical to calling operator[], but
 comment|/// it will insert a new CallGraphNode for the specified function if one does
 comment|/// not already exist.
@@ -571,54 +593,39 @@ modifier|*
 name|F
 parameter_list|)
 function_decl|;
-comment|/// spliceFunction - Replace the function represented by this node by another.
-comment|/// This does not rescan the body of the function, so it is suitable when
-comment|/// splicing the body of one function to another while also updating all
-comment|/// callers from the old function to the new.
-comment|///
-name|void
-name|spliceFunction
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|From
-parameter_list|,
-specifier|const
-name|Function
-modifier|*
-name|To
-parameter_list|)
-function_decl|;
-comment|//===---------------------------------------------------------------------
-comment|// Pass infrastructure interface glue code.
-comment|//
-name|protected
-label|:
 name|CallGraph
 argument_list|()
-block|{}
-name|public
-label|:
+expr_stmt|;
 name|virtual
 operator|~
 name|CallGraph
 argument_list|()
 block|{
-name|destroy
+name|releaseMemory
 argument_list|()
 block|; }
-comment|/// initialize - Call this method before calling other methods,
-comment|/// re/initializes the state of the CallGraph.
-comment|///
+name|virtual
 name|void
-name|initialize
+name|getAnalysisUsage
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|AnalysisUsage&AU
 argument_list|)
+specifier|const
 expr_stmt|;
+name|virtual
+name|bool
+name|runOnModule
+parameter_list|(
+name|Module
+modifier|&
+name|M
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|releaseMemory
+parameter_list|()
+function_decl|;
 name|void
 name|print
 argument_list|(
@@ -626,6 +633,7 @@ name|raw_ostream
 operator|&
 name|o
 argument_list|,
+specifier|const
 name|Module
 operator|*
 argument_list|)
@@ -636,19 +644,26 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-name|protected
-label|:
-comment|// destroy - Release memory for the call graph
-name|virtual
-name|void
-name|destroy
-parameter_list|()
-function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// CallGraphNode class definition.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_decl_stmt
 name|class
 name|CallGraphNode
 block|{
@@ -1159,13 +1174,37 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// GraphTraits specializations for call graphs so that they can be treated as
+end_comment
+
+begin_comment
 comment|// graphs by the generic graph algorithms.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// Provide graph traits for tranversing call graphs using standard graph
+end_comment
+
+begin_comment
 comment|// traversals.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1180,12 +1219,18 @@ typedef|typedef
 name|CallGraphNode
 name|NodeType
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|CallGraphNode
 operator|::
 name|CallRecord
 name|CGNPairTy
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1198,6 +1243,9 @@ operator|*
 operator|>
 name|CGNDerefFun
 expr_stmt|;
+end_typedef
+
+begin_function
 specifier|static
 name|NodeType
 modifier|*
@@ -1212,6 +1260,9 @@ return|return
 name|CGN
 return|;
 block|}
+end_function
+
+begin_typedef
 typedef|typedef
 name|mapped_iterator
 operator|<
@@ -1223,6 +1274,9 @@ name|CGNDerefFun
 operator|>
 name|ChildIteratorType
 expr_stmt|;
+end_typedef
+
+begin_function
 specifier|static
 specifier|inline
 name|ChildIteratorType
@@ -1248,6 +1302,9 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|ChildIteratorType
@@ -1273,6 +1330,9 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|CallGraphNode
 modifier|*
@@ -1288,14 +1348,10 @@ operator|.
 name|second
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>

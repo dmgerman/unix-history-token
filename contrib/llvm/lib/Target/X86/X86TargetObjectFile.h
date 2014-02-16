@@ -130,6 +130,17 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|)
+block|;
+comment|/// \brief Describe a TLS variable address within debug info.
+name|virtual
+specifier|const
+name|MCExpr
+operator|*
+name|getDebugThreadLocalSymbol
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

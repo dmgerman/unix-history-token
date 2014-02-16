@@ -110,9 +110,9 @@ decl_stmt|;
 struct_decl|struct
 name|EVT
 struct_decl|;
-comment|/// MVT - Machine Value Type.  Every type that is supported natively by some
-comment|/// processor targeted by LLVM occurs here.  This means that any legal value
-comment|/// type can be represented by a MVT.
+comment|/// MVT - Machine Value Type. Every type that is supported natively by some
+comment|/// processor targeted by LLVM occurs here. This means that any legal value
+comment|/// type can be represented by an MVT.
 name|class
 name|MVT
 block|{
@@ -241,114 +241,119 @@ init|=
 literal|18
 block|,
 comment|// 64 x i1
-name|v2i8
+name|v1i8
 init|=
 literal|19
+block|,
+comment|//  1 x i8
+name|v2i8
+init|=
+literal|20
 block|,
 comment|//  2 x i8
 name|v4i8
 init|=
-literal|20
+literal|21
 block|,
 comment|//  4 x i8
 name|v8i8
 init|=
-literal|21
+literal|22
 block|,
 comment|//  8 x i8
 name|v16i8
 init|=
-literal|22
+literal|23
 block|,
 comment|// 16 x i8
 name|v32i8
 init|=
-literal|23
+literal|24
 block|,
 comment|// 32 x i8
 name|v64i8
 init|=
-literal|24
+literal|25
 block|,
 comment|// 64 x i8
 name|v1i16
 init|=
-literal|25
+literal|26
 block|,
 comment|//  1 x i16
 name|v2i16
 init|=
-literal|26
+literal|27
 block|,
 comment|//  2 x i16
 name|v4i16
 init|=
-literal|27
+literal|28
 block|,
 comment|//  4 x i16
 name|v8i16
 init|=
-literal|28
+literal|29
 block|,
 comment|//  8 x i16
 name|v16i16
 init|=
-literal|29
+literal|30
 block|,
 comment|// 16 x i16
 name|v32i16
 init|=
-literal|30
+literal|31
 block|,
 comment|// 32 x i16
 name|v1i32
 init|=
-literal|31
+literal|32
 block|,
 comment|//  1 x i32
 name|v2i32
 init|=
-literal|32
+literal|33
 block|,
 comment|//  2 x i32
 name|v4i32
 init|=
-literal|33
+literal|34
 block|,
 comment|//  4 x i32
 name|v8i32
 init|=
-literal|34
+literal|35
 block|,
 comment|//  8 x i32
 name|v16i32
 init|=
-literal|35
+literal|36
 block|,
 comment|// 16 x i32
 name|v1i64
 init|=
-literal|36
+literal|37
 block|,
 comment|//  1 x i64
 name|v2i64
 init|=
-literal|37
+literal|38
 block|,
 comment|//  2 x i64
 name|v4i64
 init|=
-literal|38
+literal|39
 block|,
 comment|//  4 x i64
 name|v8i64
 init|=
-literal|39
+literal|40
 block|,
 comment|//  8 x i64
 name|v16i64
 init|=
-literal|40
+literal|41
 block|,
 comment|// 16 x i64
 name|FIRST_INTEGER_VECTOR_VALUETYPE
@@ -361,42 +366,62 @@ name|v16i64
 block|,
 name|v2f16
 init|=
-literal|41
+literal|42
 block|,
 comment|//  2 x f16
+name|v4f16
+init|=
+literal|43
+block|,
+comment|//  4 x f16
+name|v8f16
+init|=
+literal|44
+block|,
+comment|//  8 x f16
+name|v1f32
+init|=
+literal|45
+block|,
+comment|//  1 x f32
 name|v2f32
 init|=
-literal|42
+literal|46
 block|,
 comment|//  2 x f32
 name|v4f32
 init|=
-literal|43
+literal|47
 block|,
 comment|//  4 x f32
 name|v8f32
 init|=
-literal|44
+literal|48
 block|,
 comment|//  8 x f32
 name|v16f32
 init|=
-literal|45
+literal|49
 block|,
 comment|// 16 x f32
+name|v1f64
+init|=
+literal|50
+block|,
+comment|//  1 x f64
 name|v2f64
 init|=
-literal|46
+literal|51
 block|,
 comment|//  2 x f64
 name|v4f64
 init|=
-literal|47
+literal|52
 block|,
 comment|//  4 x f64
 name|v8f64
 init|=
-literal|48
+literal|53
 block|,
 comment|//  8 x f64
 name|FIRST_FP_VECTOR_VALUETYPE
@@ -417,29 +442,29 @@ name|v8f64
 block|,
 name|x86mmx
 init|=
-literal|49
+literal|54
 block|,
 comment|// This is an X86 MMX value
 name|Glue
 init|=
-literal|50
+literal|55
 block|,
 comment|// This glues nodes together during pre-RA sched
 name|isVoid
 init|=
-literal|51
+literal|56
 block|,
 comment|// This has no value
 name|Untyped
 init|=
-literal|52
+literal|57
 block|,
 comment|// This value takes a register, but has
 comment|// unspecified type.  The register class
 comment|// will be determined by the opcode.
 name|LAST_VALUETYPE
 init|=
-literal|53
+literal|58
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
@@ -814,6 +839,12 @@ name|SimpleTy
 operator|==
 name|MVT
 operator|::
+name|v1f64
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
 name|v2f32
 operator|)
 return|;
@@ -1097,6 +1128,9 @@ return|return
 name|i1
 return|;
 case|case
+name|v1i8
+case|:
+case|case
 name|v2i8
 case|:
 case|case
@@ -1177,9 +1211,18 @@ return|;
 case|case
 name|v2f16
 case|:
+case|case
+name|v4f16
+case|:
+case|case
+name|v8f16
+case|:
 return|return
 name|f16
 return|;
+case|case
+name|v1f32
+case|:
 case|case
 name|v2f32
 case|:
@@ -1195,6 +1238,9 @@ case|:
 return|return
 name|f32
 return|;
+case|case
+name|v1f64
+case|:
 case|case
 name|v2f64
 case|:
@@ -1283,6 +1329,9 @@ case|case
 name|v8i64
 case|:
 case|case
+name|v8f16
+case|:
+case|case
 name|v8f32
 case|:
 case|case
@@ -1305,6 +1354,9 @@ name|v4i32
 case|:
 case|case
 name|v4i64
+case|:
+case|case
+name|v4f16
 case|:
 case|case
 name|v4f32
@@ -1343,6 +1395,9 @@ return|return
 literal|2
 return|;
 case|case
+name|v1i8
+case|:
+case|case
 name|v1i16
 case|:
 case|case
@@ -1350,6 +1405,12 @@ name|v1i32
 case|:
 case|case
 name|v1i64
+case|:
+case|case
+name|v1f32
+case|:
+case|case
+name|v1f64
 case|:
 return|return
 literal|1
@@ -1366,6 +1427,20 @@ condition|(
 name|SimpleTy
 condition|)
 block|{
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"getSizeInBits called on extended MVT."
+argument_list|)
+expr_stmt|;
+case|case
+name|Other
+case|:
+name|llvm_unreachable
+argument_list|(
+literal|"Value type is non-standard value, Other."
+argument_list|)
+expr_stmt|;
 case|case
 name|iPTR
 case|:
@@ -1399,12 +1474,6 @@ argument_list|(
 literal|"Value type is metadata."
 argument_list|)
 expr_stmt|;
-default|default:
-name|llvm_unreachable
-argument_list|(
-literal|"getSizeInBits called on extended MVT."
-argument_list|)
-expr_stmt|;
 case|case
 name|i1
 case|:
@@ -1425,6 +1494,9 @@ literal|4
 return|;
 case|case
 name|i8
+case|:
+case|case
+name|v1i8
 case|:
 case|case
 name|v8i1
@@ -1469,6 +1541,9 @@ case|case
 name|v2f16
 case|:
 case|case
+name|v1f32
+case|:
+case|case
 name|v1i32
 case|:
 return|return
@@ -1499,7 +1574,13 @@ case|case
 name|v1i64
 case|:
 case|case
+name|v4f16
+case|:
+case|case
 name|v2f32
+case|:
+case|case
+name|v1f64
 case|:
 return|return
 literal|64
@@ -1530,6 +1611,9 @@ name|v4i32
 case|:
 case|case
 name|v2i64
+case|:
+case|case
+name|v8f16
 case|:
 case|case
 name|v4f32
@@ -1936,6 +2020,17 @@ if|if
 condition|(
 name|NumElements
 operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|v1i8
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
 literal|2
 condition|)
 return|return
@@ -2209,12 +2304,45 @@ name|MVT
 operator|::
 name|v2f16
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|MVT
+operator|::
+name|v4f16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|v8f16
+return|;
 break|break;
 case|case
 name|MVT
 operator|::
 name|f32
 case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|v1f32
+return|;
 if|if
 condition|(
 name|NumElements
@@ -2265,6 +2393,17 @@ name|MVT
 operator|::
 name|f64
 case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|v1f64
+return|;
 if|if
 condition|(
 name|NumElements

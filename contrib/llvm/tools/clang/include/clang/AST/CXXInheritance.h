@@ -889,22 +889,18 @@ block|}
 comment|// Iterate over the set of overriding virtual methods in a given
 comment|// subobject.
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|UniqueVirtualMethod
-operator|,
-literal|4
 operator|>
 operator|::
 name|iterator
 name|overriding_iterator
 expr_stmt|;
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|UniqueVirtualMethod
-operator|,
-literal|4
 operator|>
 operator|::
 name|const_iterator

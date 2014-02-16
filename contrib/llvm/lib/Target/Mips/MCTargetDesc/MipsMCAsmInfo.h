@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCAsmInfo.h"
+file|"llvm/MC/MCAsmInfoELF.h"
 end_include
 
 begin_decl_stmt
@@ -73,13 +73,10 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
-name|Target
-decl_stmt|;
-name|class
 name|MipsMCAsmInfo
 range|:
 name|public
-name|MCAsmInfo
+name|MCAsmInfoELF
 block|{
 name|virtual
 name|void
@@ -91,8 +88,6 @@ operator|:
 name|explicit
 name|MipsMCAsmInfo
 argument_list|(
-argument|const Target&T
-argument_list|,
 argument|StringRef TT
 argument_list|)
 block|;   }

@@ -355,8 +355,12 @@ operator|*
 name|MangleCtx
 return|;
 block|}
-comment|/// Returns true if the given instance method is one of the
-comment|/// kinds that the ABI says returns 'this'.
+comment|/// Returns true if the given constructor or destructor is one of the
+comment|/// kinds that the ABI says returns 'this' (only applies when called
+comment|/// non-virtually for destructors).
+comment|///
+comment|/// There currently is no way to indicate if a destructor returns 'this'
+comment|/// when called virtually, and code generation does not support the case.
 name|virtual
 name|bool
 name|HasThisReturn
@@ -669,6 +673,19 @@ operator|*
 name|E
 argument_list|)
 expr_stmt|;
+comment|/// \brief Computes the non-virtual adjustment needed for a member pointer
+comment|/// conversion along an inheritance path stored in an APValue.  Unlike
+comment|/// getMemberPointerAdjustment(), the adjustment can be negative if the path
+comment|/// is from a derived type to a base type.
+name|CharUnits
+name|getMemberPointerPathAdjustment
+parameter_list|(
+specifier|const
+name|APValue
+modifier|&
+name|MP
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// Adjust the given non-null pointer to an object of polymorphic
@@ -692,11 +709,41 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|GetVirtualBaseClassOffset
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|This
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|ClassDecl
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|BaseClassDecl
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 comment|/// Build the signature of the given constructor variant by adding
-comment|/// any required parameters.  For convenience, ResTy has been
-comment|/// initialized to 'void', and ArgTys has been initialized with the
-comment|/// type of 'this' (although this may be changed by the ABI) and
-comment|/// will have the formal parameters added to it afterwards.
+comment|/// any required parameters.  For convenience, ArgTys has been initialized
+comment|/// with the type of 'this' and ResTy has been initialized with the type of
+comment|/// 'this' if HasThisReturn(GlobalDecl(Ctor, T)) is true or 'void' otherwise
+comment|/// (although both may be changed by the ABI).
 comment|///
 comment|/// If there are ever any ABIs where the implicit parameters are
 comment|/// intermixed with the formal parameters, we can address those
@@ -737,12 +784,47 @@ argument_list|(
 name|CodeGenFunction
 operator|&
 name|CGF
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
 argument_list|)
 expr_stmt|;
+comment|/// Emit the code to initialize hidden members required
+comment|/// to handle virtual inheritance, if needed by the ABI.
+name|virtual
+name|void
+name|initializeHiddenVirtualInheritanceMembers
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+block|{}
+comment|/// Emit constructor variants required by this ABI.
+name|virtual
+name|void
+name|EmitCXXConstructors
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|D
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// Build the signature of the given destructor variant by adding
-comment|/// any required parameters.  For convenience, ResTy has been
-comment|/// initialized to 'void' and ArgTys has been initialized with the
-comment|/// type of 'this' (although this may be changed by the ABI).
+comment|/// any required parameters.  For convenience, ArgTys has been initialized
+comment|/// with the type of 'this' and ResTy has been initialized with the type of
+comment|/// 'this' if HasThisReturn(GlobalDecl(Dtor, T)) is true or 'void' otherwise
+comment|/// (although both may be changed by the ABI).
 name|virtual
 name|void
 name|BuildDestructorSignature
@@ -769,12 +851,88 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// Returns true if the given destructor type should be emitted as a linkonce
+comment|/// delegating thunk, regardless of whether the dtor is defined in this TU or
+comment|/// not.
+name|virtual
+name|bool
+name|useThunkForDtorVariant
+argument_list|(
+specifier|const
+name|CXXDestructorDecl
+operator|*
+name|Dtor
+argument_list|,
+name|CXXDtorType
+name|DT
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// Emit destructor variants required by this ABI.
+name|virtual
+name|void
+name|EmitCXXDestructors
+parameter_list|(
+specifier|const
+name|CXXDestructorDecl
+modifier|*
+name|D
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// Get the type of the implicit "this" parameter used by a method. May return
+comment|/// zero if no specific type is applicable, e.g. if the ABI expects the "this"
+comment|/// parameter to point to some artificial offset in a complete object due to
+comment|/// vbases being reordered.
+name|virtual
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|getThisArgumentTypeForMethod
+parameter_list|(
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|MD
+parameter_list|)
+block|{
+return|return
+name|MD
+operator|->
+name|getParent
+argument_list|()
+return|;
+block|}
+comment|/// Perform ABI-specific "this" argument adjustment required prior to
+comment|/// a virtual function call.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|adjustThisArgumentForVirtualCall
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|GlobalDecl GD
+argument_list|,
+argument|llvm::Value *This
+argument_list|)
+block|{
+return|return
+name|This
+return|;
+block|}
 comment|/// Build the ABI-specific portion of the parameter list for a
 comment|/// function.  This generally involves a 'this' parameter and
 comment|/// possibly some extra data for constructors and destructors.
 comment|///
 comment|/// ABIs may also choose to override the return type, which has been
-comment|/// initialized with the formal return type of the function.
+comment|/// initialized with the type of 'this' if HasThisReturn(CGF.CurGD) is true or
+comment|/// the formal return type of the function otherwise.
 name|virtual
 name|void
 name|BuildInstanceFunctionParams
@@ -794,6 +952,26 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Perform ABI-specific "this" parameter adjustment in a virtual function
+comment|/// prologue.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|adjustThisParameterInVirtualFunctionPrologue
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|GlobalDecl GD
+argument_list|,
+argument|llvm::Value *This
+argument_list|)
+block|{
+return|return
+name|This
+return|;
+block|}
 comment|/// Emit the ABI-specific prolog for the function.
 name|virtual
 name|void
@@ -808,34 +986,141 @@ literal|0
 function_decl|;
 comment|/// Emit the constructor call. Return the function that is called.
 name|virtual
+name|void
+name|EmitConstructorCall
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|CXXConstructorDecl
+operator|*
+name|D
+argument_list|,
+name|CXXCtorType
+name|Type
+argument_list|,
+name|bool
+name|ForVirtualBase
+argument_list|,
+name|bool
+name|Delegating
+argument_list|,
 name|llvm
 operator|::
 name|Value
 operator|*
-name|EmitConstructorCall
+name|This
+argument_list|,
+name|CallExpr
+operator|::
+name|const_arg_iterator
+name|ArgBeg
+argument_list|,
+name|CallExpr
+operator|::
+name|const_arg_iterator
+name|ArgEnd
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|/// Emits the VTable definitions required for the given record type.
+name|virtual
+name|void
+name|emitVTableDefinitions
+parameter_list|(
+name|CodeGenVTables
+modifier|&
+name|CGVT
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// Get the address point of the vtable for the given base subobject while
+comment|/// building a constructor or a destructor. On return, NeedsVirtualOffset
+comment|/// tells if a virtual base adjustment is needed in order to get the offset
+comment|/// of the base subobject.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getVTableAddressPointInStructor
 argument_list|(
 argument|CodeGenFunction&CGF
 argument_list|,
-argument|const CXXConstructorDecl *D
+argument|const CXXRecordDecl *RD
 argument_list|,
-argument|CXXCtorType Type
+argument|BaseSubobject Base
 argument_list|,
-argument|bool ForVirtualBase
+argument|const CXXRecordDecl *NearestVBase
 argument_list|,
-argument|bool Delegating
+argument|bool&NeedsVirtualOffset
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Get the address point of the vtable for the given base subobject while
+comment|/// building a constexpr.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getVTableAddressPointForConstExpr
+argument_list|(
+argument|BaseSubobject Base
+argument_list|,
+argument|const CXXRecordDecl *VTableClass
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Get the address of the vtable for the given record decl which should be
+comment|/// used for the vptr at the given offset in RD.
+name|virtual
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|getAddrOfVTable
+argument_list|(
+argument|const CXXRecordDecl *RD
+argument_list|,
+argument|CharUnits VPtrOffset
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Build a virtual function pointer in the ABI-specific way.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getVirtualFunctionPointer
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|GlobalDecl GD
 argument_list|,
 argument|llvm::Value *This
 argument_list|,
-argument|CallExpr::const_arg_iterator ArgBeg
-argument_list|,
-argument|CallExpr::const_arg_iterator ArgEnd
+argument|llvm::Type *Ty
 argument_list|)
 operator|=
 literal|0
 expr_stmt|;
 comment|/// Emit the ABI-specific virtual destructor call.
 name|virtual
-name|RValue
+name|void
 name|EmitVirtualDestructorCall
 argument_list|(
 name|CodeGenFunction
@@ -853,9 +1138,6 @@ argument_list|,
 name|SourceLocation
 name|CallLoc
 argument_list|,
-name|ReturnValueSlot
-name|ReturnValue
-argument_list|,
 name|llvm
 operator|::
 name|Value
@@ -865,6 +1147,103 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|void
+name|adjustCallArgsForDestructorThunk
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|GlobalDecl
+name|GD
+parameter_list|,
+name|CallArgList
+modifier|&
+name|CallArgs
+parameter_list|)
+block|{}
+comment|/// Emit any tables needed to implement virtual inheritance.  For Itanium,
+comment|/// this emits virtual table tables.  For the MSVC++ ABI, this emits virtual
+comment|/// base tables.
+name|virtual
+name|void
+name|emitVirtualInheritanceTables
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|void
+name|setThunkLinkage
+argument_list|(
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Thunk
+argument_list|,
+name|bool
+name|ForVTable
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|performThisAdjustment
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|This
+argument_list|,
+specifier|const
+name|ThisAdjustment
+operator|&
+name|TA
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|performReturnAdjustment
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Ret
+argument_list|,
+specifier|const
+name|ReturnAdjustment
+operator|&
+name|RA
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 name|virtual
 name|void
 name|EmitReturnFromThunk
@@ -896,6 +1275,17 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Returns true iff static data members that are initialized in the
+comment|/// class definition should have linkonce linkage.
+name|virtual
+name|bool
+name|isInlineInitializedStaticDataMemberLinkOnce
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/**************************** Array cookies ******************************/
 comment|/// Returns the extra size required in order to store the array
 comment|/// cookie for the given new-expression.  May return 0 to indicate that no
@@ -997,6 +1387,15 @@ operator|&
 name|CookieSize
 argument_list|)
 decl_stmt|;
+comment|/// Return whether the given global decl needs a VTT parameter.
+name|virtual
+name|bool
+name|NeedsVTTParameter
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 comment|/// Returns the extra size required in order to store the array
@@ -1066,6 +1465,8 @@ argument_list|,
 name|bool
 name|PerformInit
 argument_list|)
+init|=
+literal|0
 decl_stmt|;
 comment|/// Emit code to force the execution of a destructor during global
 comment|/// teardown.  The default implementation of this uses atexit.

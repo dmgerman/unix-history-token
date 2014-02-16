@@ -264,6 +264,17 @@ name|void
 name|EndSourceFileAction
 parameter_list|()
 block|{}
+comment|/// \brief Callback at the end of processing a single input, to determine
+comment|/// if the output files should be erased or not.
+comment|///
+comment|/// By default it returns true if a compiler error occurred.
+comment|/// This is guaranteed to only be called following a successful call to
+comment|/// BeginSourceFileAction (and BeginSourceFile).
+name|virtual
+name|bool
+name|shouldEraseOutputFiles
+parameter_list|()
+function_decl|;
 comment|/// @}
 name|public
 label|:
@@ -329,8 +340,9 @@ argument_list|)
 block|;
 return|return
 name|CurrentASTUnit
-operator|!=
-literal|0
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 specifier|const

@@ -597,6 +597,7 @@ argument_list|()
 return|;
 block|}
 comment|/// Return true for a valid index.
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -812,6 +813,35 @@ argument_list|()
 operator|-
 name|getIndex
 argument_list|()
+return|;
+block|}
+comment|/// Return the scaled distance from this index to the given one, where all
+comment|/// slots on the same instruction have zero distance.
+name|int
+name|getInstrDistance
+argument_list|(
+argument|SlotIndex other
+argument_list|)
+specifier|const
+block|{
+return|return
+operator|(
+name|other
+operator|.
+name|listEntry
+argument_list|()
+operator|->
+name|getIndex
+argument_list|()
+operator|-
+name|listEntry
+argument_list|()
+operator|->
+name|getIndex
+argument_list|()
+operator|)
+operator|/
+name|Slot_Count
 return|;
 block|}
 comment|/// isBlock - Returns true if this is a block boundary slot.

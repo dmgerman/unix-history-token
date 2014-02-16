@@ -436,7 +436,7 @@ argument_list|,
 argument|uint64_t Offset
 argument_list|)
 expr_stmt|;
-comment|/// Get the sclar tag MDNode for a given scalar type.
+comment|/// Get the scalar tag MDNode for a given scalar type.
 name|llvm
 operator|::
 name|MDNode

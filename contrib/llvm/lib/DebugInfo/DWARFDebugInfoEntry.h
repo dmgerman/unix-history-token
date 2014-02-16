@@ -72,14 +72,17 @@ name|class
 name|DWARFCompileUnit
 decl_stmt|;
 name|class
+name|DWARFUnit
+decl_stmt|;
+name|class
 name|DWARFContext
 decl_stmt|;
 name|class
 name|DWARFFormValue
 decl_stmt|;
-name|class
-name|DWARFInlinedSubroutineChain
-decl_stmt|;
+struct_decl|struct
+name|DWARFDebugInfoEntryInlinedChain
+struct_decl|;
 comment|/// DWARFDebugInfoEntryMinimal - A DIE with only the minimum required data.
 name|class
 name|DWARFDebugInfoEntryMinimal
@@ -132,7 +135,7 @@ name|dump
 argument_list|(
 argument|raw_ostream&OS
 argument_list|,
-argument|const DWARFCompileUnit *cu
+argument|const DWARFUnit *u
 argument_list|,
 argument|unsigned recurseDepth
 argument_list|,
@@ -149,9 +152,9 @@ operator|&
 name|OS
 argument_list|,
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|cu
+name|u
 argument_list|,
 name|uint32_t
 operator|*
@@ -170,38 +173,16 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Extracts a debug info entry, which is a child of a given compile unit,
+comment|/// Extracts a debug info entry, which is a child of a given unit,
 comment|/// starting at a given offset. If DIE can't be extracted, returns false and
 comment|/// doesn't change OffsetPtr.
 name|bool
 name|extractFast
 parameter_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 modifier|*
-name|CU
-parameter_list|,
-specifier|const
-name|uint8_t
-modifier|*
-name|FixedFormSizes
-parameter_list|,
-name|uint32_t
-modifier|*
-name|OffsetPtr
-parameter_list|)
-function_decl|;
-comment|/// Extract a debug info entry for a given compile unit from the
-comment|/// .debug_info and .debug_abbrev data starting at the given offset.
-comment|/// If compile unit can't be parsed, returns false and doesn't change
-comment|/// OffsetPtr.
-name|bool
-name|extract
-parameter_list|(
-specifier|const
-name|DWARFCompileUnit
-modifier|*
-name|CU
+name|U
 parameter_list|,
 name|uint32_t
 modifier|*
@@ -479,27 +460,21 @@ return|return
 name|AbbrevDecl
 return|;
 block|}
-name|uint32_t
+name|bool
 name|getAttributeValue
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|cu
+name|U
 argument_list|,
 specifier|const
 name|uint16_t
-name|attr
+name|Attr
 argument_list|,
 name|DWARFFormValue
 operator|&
-name|formValue
-argument_list|,
-name|uint32_t
-operator|*
-name|end_attr_offset_ptr
-operator|=
-literal|0
+name|FormValue
 argument_list|)
 decl|const
 decl_stmt|;
@@ -509,35 +484,52 @@ modifier|*
 name|getAttributeValueAsString
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|cu
+name|U
 argument_list|,
 specifier|const
 name|uint16_t
-name|attr
+name|Attr
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|fail_value
+name|FailValue
 argument_list|)
 decl|const
 decl_stmt|;
 name|uint64_t
-name|getAttributeValueAsUnsigned
+name|getAttributeValueAsAddress
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|cu
+name|U
 argument_list|,
 specifier|const
 name|uint16_t
-name|attr
+name|Attr
 argument_list|,
 name|uint64_t
-name|fail_value
+name|FailValue
+argument_list|)
+decl|const
+decl_stmt|;
+name|uint64_t
+name|getAttributeValueAsUnsignedConstant
+argument_list|(
+specifier|const
+name|DWARFUnit
+operator|*
+name|U
+argument_list|,
+specifier|const
+name|uint16_t
+name|Attr
+argument_list|,
+name|uint64_t
+name|FailValue
 argument_list|)
 decl|const
 decl_stmt|;
@@ -545,33 +537,33 @@ name|uint64_t
 name|getAttributeValueAsReference
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|cu
+name|U
 argument_list|,
 specifier|const
 name|uint16_t
-name|attr
+name|Attr
 argument_list|,
 name|uint64_t
-name|fail_value
+name|FailValue
 argument_list|)
 decl|const
 decl_stmt|;
-name|int64_t
-name|getAttributeValueAsSigned
+name|uint64_t
+name|getAttributeValueAsSectionOffset
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|cu
+name|U
 argument_list|,
 specifier|const
 name|uint16_t
-name|attr
+name|Attr
 argument_list|,
-name|int64_t
-name|fail_value
+name|uint64_t
+name|FailValue
 argument_list|)
 decl|const
 decl_stmt|;
@@ -581,9 +573,9 @@ name|bool
 name|getLowAndHighPC
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|CU
+name|U
 argument_list|,
 name|uint64_t
 operator|&
@@ -599,13 +591,16 @@ name|void
 name|buildAddressRangeTable
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|CU
+name|U
 argument_list|,
 name|DWARFDebugAranges
 operator|*
 name|DebugAranges
+argument_list|,
+name|uint32_t
+name|CUOffsetInAranges
 argument_list|)
 decl|const
 decl_stmt|;
@@ -613,9 +608,9 @@ name|bool
 name|addressRangeContainsAddress
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|CU
+name|U
 argument_list|,
 specifier|const
 name|uint64_t
@@ -633,9 +628,9 @@ modifier|*
 name|getSubroutineName
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|CU
+name|U
 argument_list|)
 decl|const
 decl_stmt|;
@@ -645,9 +640,9 @@ name|void
 name|getCallerFrame
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|CU
+name|U
 argument_list|,
 name|uint32_t
 operator|&
@@ -663,30 +658,16 @@ name|CallColumn
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// InlinedChain - represents a chain of inlined_subroutine
-comment|/// DIEs, (possibly ending with subprogram DIE), all of which are contained
-comment|/// in some concrete inlined instance tree. Address range for each DIE
-comment|/// (except the last DIE) in this chain is contained in address
-comment|/// range for next DIE in the chain.
-typedef|typedef
-name|SmallVector
-operator|<
-name|DWARFDebugInfoEntryMinimal
-operator|,
-literal|4
-operator|>
-name|InlinedChain
-expr_stmt|;
 comment|/// Get inlined chain for a given address, rooted at the current DIE.
 comment|/// Returns empty chain if address is not contained in address range
 comment|/// of current DIE.
-name|InlinedChain
+name|DWARFDebugInfoEntryInlinedChain
 name|getInlinedChainForAddress
 argument_list|(
 specifier|const
-name|DWARFCompileUnit
+name|DWARFUnit
 operator|*
-name|CU
+name|U
 argument_list|,
 specifier|const
 name|uint64_t
@@ -696,6 +677,37 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|/// DWARFDebugInfoEntryInlinedChain - represents a chain of inlined_subroutine
+comment|/// DIEs, (possibly ending with subprogram DIE), all of which are contained
+comment|/// in some concrete inlined instance tree. Address range for each DIE
+comment|/// (except the last DIE) in this chain is contained in address
+comment|/// range for next DIE in the chain.
+struct|struct
+name|DWARFDebugInfoEntryInlinedChain
+block|{
+name|DWARFDebugInfoEntryInlinedChain
+argument_list|()
+operator|:
+name|U
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|SmallVector
+operator|<
+name|DWARFDebugInfoEntryMinimal
+operator|,
+literal|4
+operator|>
+name|DIEs
+expr_stmt|;
+specifier|const
+name|DWARFUnit
+modifier|*
+name|U
+decl_stmt|;
+block|}
+struct|;
 block|}
 end_decl_stmt
 

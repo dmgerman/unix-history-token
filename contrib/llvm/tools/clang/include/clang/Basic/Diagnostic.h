@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/type_traits.h"
 end_include
 
@@ -2090,6 +2084,34 @@ name|Ignored
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Determine whether the previous diagnostic was ignored. This can
+end_comment
+
+begin_comment
+comment|/// be used by clients that want to determine whether notes attached to a
+end_comment
+
+begin_comment
+comment|/// diagnostic will be suppressed.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isLastDiagnosticIgnored
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LastDiagLevel
+operator|==
+name|DiagnosticIDs
+operator|::
+name|Ignored
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Controls whether otherwise-unmapped extension diagnostics are
@@ -4162,6 +4184,19 @@ operator|::
 name|MaxRanges
 return|;
 block|}
+name|bool
+name|hasMaxFixItHints
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumFixits
+operator|==
+name|DiagnosticsEngine
+operator|::
+name|MaxFixItHints
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -5294,6 +5329,7 @@ name|StoredDiagnostic
 argument_list|()
 expr_stmt|;
 comment|/// \brief Evaluates true when this object stores a diagnostic.
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()

@@ -250,13 +250,6 @@ comment|/// models may provide additional information about specific edges.
 name|unsigned
 name|Latency
 decl_stmt|;
-comment|/// Record MinLatency seperately from "expected" Latency.
-comment|///
-comment|/// FIXME: this field is not packed on LP64. Convert to 16-bit DAG edge
-comment|/// latency after introducing saturating truncation.
-name|unsigned
-name|MinLatency
-decl_stmt|;
 name|public
 label|:
 comment|/// SDep - Construct a null SDep. This is only for use by container
@@ -344,10 +337,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-name|MinLatency
-operator|=
-name|Latency
-expr_stmt|;
 block|}
 name|SDep
 argument_list|(
@@ -367,11 +356,6 @@ name|Contents
 argument_list|()
 operator|,
 name|Latency
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|MinLatency
 argument_list|(
 literal|0
 argument_list|)
@@ -472,12 +456,6 @@ operator|==
 name|Other
 operator|.
 name|Latency
-operator|&&
-name|MinLatency
-operator|==
-name|Other
-operator|.
-name|MinLatency
 return|;
 block|}
 name|bool
@@ -522,31 +500,6 @@ name|Lat
 parameter_list|)
 block|{
 name|Latency
-operator|=
-name|Lat
-expr_stmt|;
-block|}
-comment|/// getMinLatency - Return the minimum latency for this edge. Minimum
-comment|/// latency is used for scheduling groups, while normal (expected) latency
-comment|/// is for instruction cost and critical path.
-name|unsigned
-name|getMinLatency
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MinLatency
-return|;
-block|}
-comment|/// setMinLatency - Set the minimum latency for this edge.
-name|void
-name|setMinLatency
-parameter_list|(
-name|unsigned
-name|Lat
-parameter_list|)
-block|{
-name|MinLatency
 operator|=
 name|Lat
 expr_stmt|;
@@ -886,14 +839,18 @@ name|SUnit
 block|{
 name|private
 label|:
-enum|enum
+name|enum
+name|LLVM_ENUM_INT_TYPE
+function|(
+name|unsigned
+function|)
 block|{
 name|BoundaryID
-init|=
+operator|=
 operator|~
 literal|0u
 block|}
-enum|;
+empty_stmt|;
 name|SDNode
 modifier|*
 name|Node
@@ -939,44 +896,36 @@ name|Succs
 expr_stmt|;
 comment|// All sunit successors.
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|SDep
-operator|,
-literal|4
 operator|>
 operator|::
 name|iterator
 name|pred_iterator
 expr_stmt|;
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|SDep
-operator|,
-literal|4
 operator|>
 operator|::
 name|iterator
 name|succ_iterator
 expr_stmt|;
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|SDep
-operator|,
-literal|4
 operator|>
 operator|::
 name|const_iterator
 name|const_pred_iterator
 expr_stmt|;
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|SDep
-operator|,
-literal|4
 operator|>
 operator|::
 name|const_iterator

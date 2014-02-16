@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"SparcJITInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"SparcSelectionDAGInfo.h"
 end_include
 
@@ -136,6 +142,9 @@ name|TSInfo
 block|;
 name|SparcFrameLowering
 name|FrameLowering
+block|;
+name|SparcJITInfo
+name|JITInfo
 block|;
 name|public
 operator|:
@@ -242,6 +251,17 @@ name|TSInfo
 return|;
 block|}
 name|virtual
+name|SparcJITInfo
+operator|*
+name|getJITInfo
+argument_list|()
+block|{
+return|return
+operator|&
+name|JITInfo
+return|;
+block|}
+name|virtual
 specifier|const
 name|DataLayout
 operator|*
@@ -263,6 +283,19 @@ argument_list|(
 name|PassManagerBase
 operator|&
 name|PM
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|addCodeEmitter
+argument_list|(
+name|PassManagerBase
+operator|&
+name|PM
+argument_list|,
+name|JITCodeEmitter
+operator|&
+name|JCE
 argument_list|)
 block|; }
 decl_stmt|;

@@ -138,16 +138,6 @@ name|assume
 argument_list|(
 argument|ProgramStateRef state
 argument_list|,
-argument|Loc Cond
-argument_list|,
-argument|bool Assumption
-argument_list|)
-block|;
-name|ProgramStateRef
-name|assume
-argument_list|(
-argument|ProgramStateRef state
-argument_list|,
 argument|NonLoc Cond
 argument_list|,
 argument|bool Assumption
@@ -297,16 +287,6 @@ argument_list|(
 argument|SVal X
 argument_list|)
 specifier|const
-block|;
-name|ProgramStateRef
-name|assumeAux
-argument_list|(
-argument|ProgramStateRef state
-argument_list|,
-argument|Loc Cond
-argument_list|,
-argument|bool Assumption
-argument_list|)
 block|;
 name|ProgramStateRef
 name|assumeAux

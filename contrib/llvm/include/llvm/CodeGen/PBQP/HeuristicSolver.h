@@ -136,7 +136,7 @@ name|list
 operator|<
 name|Graph
 operator|::
-name|EdgeItr
+name|EdgeId
 operator|>
 name|SolverEdges
 expr_stmt|;
@@ -178,8 +178,8 @@ name|addSolverEdge
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 operator|++
@@ -195,7 +195,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|eItr
+name|eId
 argument_list|)
 return|;
 block|}
@@ -361,7 +361,7 @@ name|vector
 operator|<
 name|Graph
 operator|::
-name|NodeItr
+name|NodeId
 operator|>
 name|stack
 expr_stmt|;
@@ -424,7 +424,7 @@ name|g
 return|;
 block|}
 comment|/// \brief Get the heuristic data attached to the given node.
-comment|/// @param nItr Node iterator.
+comment|/// @param nId Node id.
 comment|/// @return The heuristic data attached to the given node.
 name|HeuristicNodeData
 modifier|&
@@ -432,14 +432,14 @@ name|getHeuristicNodeData
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 return|return
 name|getSolverNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|getHeuristicData
@@ -447,7 +447,7 @@ argument_list|()
 return|;
 block|}
 comment|/// \brief Get the heuristic data attached to the given edge.
-comment|/// @param eItr Edge iterator.
+comment|/// @param eId Edge id.
 comment|/// @return The heuristic data attached to the given node.
 name|HeuristicEdgeData
 modifier|&
@@ -455,14 +455,14 @@ name|getHeuristicEdgeData
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 return|return
 name|getSolverEdgeData
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 operator|.
 name|getHeuristicData
@@ -471,7 +471,7 @@ return|;
 block|}
 comment|/// \brief Begin iterator for the set of edges adjacent to the given node in
 comment|///        the solver graph.
-comment|/// @param nItr Node iterator.
+comment|/// @param nId Node id.
 comment|/// @return Begin iterator for the set of edges adjacent to the given node
 comment|///         in the solver graph.
 name|SolverEdgeItr
@@ -479,14 +479,14 @@ name|solverEdgesBegin
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 return|return
 name|getSolverNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|solverEdgesBegin
@@ -495,7 +495,7 @@ return|;
 block|}
 comment|/// \brief End iterator for the set of edges adjacent to the given node in
 comment|///        the solver graph.
-comment|/// @param nItr Node iterator.
+comment|/// @param nId Node id.
 comment|/// @return End iterator for the set of edges adjacent to the given node in
 comment|///         the solver graph.
 name|SolverEdgeItr
@@ -503,14 +503,14 @@ name|solverEdgesEnd
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 return|return
 name|getSolverNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|solverEdgesEnd
@@ -518,7 +518,7 @@ argument_list|()
 return|;
 block|}
 comment|/// \brief Remove a node from the solver graph.
-comment|/// @param eItr Edge iterator for edge to be removed.
+comment|/// @param eId Edge id for edge to be removed.
 comment|///
 comment|/// Does<i>not</i> notify the heuristic of the removal. That should be
 comment|/// done manually if necessary.
@@ -527,8 +527,8 @@ name|removeSolverEdge
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 name|EdgeData
@@ -537,7 +537,7 @@ name|eData
 init|=
 name|getSolverEdgeData
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 name|NodeData
@@ -550,7 +550,7 @@ name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 decl_stmt|,
@@ -563,7 +563,7 @@ name|g
 operator|.
 name|getEdgeNode2
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -628,19 +628,19 @@ name|s
 return|;
 block|}
 comment|/// \brief Add to the end of the stack.
-comment|/// @param nItr Node iterator to add to the reduction stack.
+comment|/// @param nId Node id to add to the reduction stack.
 name|void
 name|pushToStack
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|getSolverNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|clearSolverEdges
@@ -650,26 +650,26 @@ name|stack
 operator|.
 name|push_back
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Returns the solver degree of the given node.
-comment|/// @param nItr Node iterator for which degree is requested.
+comment|/// @param nId Node id for which degree is requested.
 comment|/// @return Node degree in the<i>solver</i> graph (not the original graph).
 name|unsigned
 name|getSolverDegree
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 return|return
 name|getSolverNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|getSolverDegree
@@ -677,7 +677,7 @@ argument_list|()
 return|;
 block|}
 comment|/// \brief Set the solution of the given node.
-comment|/// @param nItr Node iterator to set solution for.
+comment|/// @param nId Node id to set solution for.
 comment|/// @param selection Selection for node.
 name|void
 name|setSolution
@@ -685,9 +685,9 @@ argument_list|(
 specifier|const
 name|Graph
 operator|::
-name|NodeItr
+name|NodeId
 operator|&
-name|nItr
+name|nId
 argument_list|,
 name|unsigned
 name|selection
@@ -697,7 +697,7 @@ name|s
 operator|.
 name|setSelection
 argument_list|(
-name|nItr
+name|nId
 argument_list|,
 name|selection
 argument_list|)
@@ -713,7 +713,7 @@ name|g
 operator|.
 name|adjEdgesBegin
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|,
 name|aeEnd
@@ -722,7 +722,7 @@ name|g
 operator|.
 name|adjEdgesEnd
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 init|;
 name|aeItr
@@ -735,8 +735,8 @@ control|)
 block|{
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|(
 operator|*
 name|aeItr
@@ -744,33 +744,33 @@ argument_list|)
 expr_stmt|;
 name|Graph
 operator|::
-name|NodeItr
-name|anItr
+name|NodeId
+name|anId
 argument_list|(
 name|g
 operator|.
 name|getEdgeOtherNode
 argument_list|(
-name|eItr
+name|eId
 argument_list|,
-name|nItr
+name|nId
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|getSolverNodeData
 argument_list|(
-name|anItr
+name|anId
 argument_list|)
 operator|.
 name|addSolverEdge
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 comment|/// \brief Apply rule R0.
-comment|/// @param nItr Node iterator for node to apply R0 to.
+comment|/// @param nId Node id for node to apply R0 to.
 comment|///
 comment|/// Node will be automatically pushed to the solver stack.
 name|void
@@ -778,15 +778,15 @@ name|applyR0
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|assert
 argument_list|(
 name|getSolverNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|getSolverDegree
@@ -800,7 +800,7 @@ expr_stmt|;
 comment|// Nothing to do. Just push the node onto the reduction stack.
 name|pushToStack
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 name|s
@@ -810,7 +810,7 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/// \brief Apply rule R1.
-comment|/// @param xnItr Node iterator for node to apply R1 to.
+comment|/// @param xnId Node id for node to apply R1 to.
 comment|///
 comment|/// Node will be automatically pushed to the solver stack.
 name|void
@@ -818,8 +818,8 @@ name|applyR1
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|xnItr
+name|NodeId
+name|xnId
 argument_list|)
 block|{
 name|NodeData
@@ -828,7 +828,7 @@ name|nd
 init|=
 name|getSolverNodeData
 argument_list|(
-name|xnItr
+name|xnId
 argument_list|)
 decl_stmt|;
 name|assert
@@ -845,8 +845,8 @@ argument_list|)
 expr_stmt|;
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 operator|=
 operator|*
 name|nd
@@ -863,7 +863,7 @@ name|g
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -875,32 +875,32 @@ name|g
 operator|.
 name|getNodeCosts
 argument_list|(
-name|xnItr
+name|xnId
 argument_list|)
 decl_stmt|;
 comment|// Duplicate a little to avoid transposing matrices.
 if|if
 condition|(
-name|xnItr
+name|xnId
 operator|==
 name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 condition|)
 block|{
 name|Graph
 operator|::
-name|NodeItr
-name|ynItr
+name|NodeId
+name|ynId
 operator|=
 name|g
 operator|.
 name|getEdgeNode2
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 name|Vector
@@ -911,7 +911,7 @@ name|g
 operator|.
 name|getNodeCosts
 argument_list|(
-name|ynItr
+name|ynId
 argument_list|)
 decl_stmt|;
 for|for
@@ -1005,9 +1005,9 @@ name|h
 operator|.
 name|handleRemoveEdge
 argument_list|(
-name|eItr
+name|eId
 argument_list|,
-name|ynItr
+name|ynId
 argument_list|)
 expr_stmt|;
 block|}
@@ -1015,14 +1015,14 @@ else|else
 block|{
 name|Graph
 operator|::
-name|NodeItr
-name|ynItr
+name|NodeId
+name|ynId
 operator|=
 name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 name|Vector
@@ -1033,7 +1033,7 @@ name|g
 operator|.
 name|getNodeCosts
 argument_list|(
-name|ynItr
+name|ynId
 argument_list|)
 decl_stmt|;
 for|for
@@ -1127,15 +1127,15 @@ name|h
 operator|.
 name|handleRemoveEdge
 argument_list|(
-name|eItr
+name|eId
 argument_list|,
-name|ynItr
+name|ynId
 argument_list|)
 expr_stmt|;
 block|}
 name|removeSolverEdge
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1152,7 +1152,7 @@ argument_list|)
 expr_stmt|;
 name|pushToStack
 argument_list|(
-name|xnItr
+name|xnId
 argument_list|)
 expr_stmt|;
 name|s
@@ -1162,7 +1162,7 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/// \brief Apply rule R2.
-comment|/// @param xnItr Node iterator for node to apply R2 to.
+comment|/// @param xnId Node id for node to apply R2 to.
 comment|///
 comment|/// Node will be automatically pushed to the solver stack.
 name|void
@@ -1170,15 +1170,15 @@ name|applyR2
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|xnItr
+name|NodeId
+name|xnId
 argument_list|)
 block|{
 name|assert
 argument_list|(
 name|getSolverNodeData
 argument_list|(
-name|xnItr
+name|xnId
 argument_list|)
 operator|.
 name|getSolverDegree
@@ -1195,7 +1195,7 @@ name|nd
 init|=
 name|getSolverNodeData
 argument_list|(
-name|xnItr
+name|xnId
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -1207,7 +1207,7 @@ name|g
 operator|.
 name|getNodeCosts
 argument_list|(
-name|xnItr
+name|xnId
 argument_list|)
 decl_stmt|;
 name|SolverEdgeItr
@@ -1220,13 +1220,13 @@ argument_list|()
 decl_stmt|;
 name|Graph
 operator|::
-name|EdgeItr
-name|yxeItr
+name|EdgeId
+name|yxeId
 operator|=
 operator|*
 name|aeItr
 operator|,
-name|zxeItr
+name|zxeId
 operator|=
 operator|*
 operator|(
@@ -1236,27 +1236,27 @@ operator|)
 expr_stmt|;
 name|Graph
 operator|::
-name|NodeItr
-name|ynItr
+name|NodeId
+name|ynId
 operator|=
 name|g
 operator|.
 name|getEdgeOtherNode
 argument_list|(
-name|yxeItr
+name|yxeId
 argument_list|,
-name|xnItr
+name|xnId
 argument_list|)
 operator|,
-name|znItr
+name|znId
 operator|=
 name|g
 operator|.
 name|getEdgeOtherNode
 argument_list|(
-name|zxeItr
+name|zxeId
 argument_list|,
-name|xnItr
+name|xnId
 argument_list|)
 expr_stmt|;
 name|bool
@@ -1267,10 +1267,10 @@ name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|yxeItr
+name|yxeId
 argument_list|)
 operator|==
-name|xnItr
+name|xnId
 operator|)
 decl_stmt|,
 name|flipEdge2
@@ -1280,10 +1280,10 @@ name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|zxeItr
+name|zxeId
 argument_list|)
 operator|==
-name|xnItr
+name|xnId
 operator|)
 decl_stmt|;
 specifier|const
@@ -1300,7 +1300,7 @@ name|g
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|yxeItr
+name|yxeId
 argument_list|)
 operator|.
 name|transpose
@@ -1312,7 +1312,7 @@ name|g
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|yxeItr
+name|yxeId
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -1329,7 +1329,7 @@ name|g
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|zxeItr
+name|zxeId
 argument_list|)
 operator|.
 name|transpose
@@ -1341,7 +1341,7 @@ name|g
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|zxeItr
+name|zxeId
 argument_list|)
 decl_stmt|;
 name|unsigned
@@ -1520,16 +1520,16 @@ name|zxeCosts
 decl_stmt|;
 name|Graph
 operator|::
-name|EdgeItr
-name|yzeItr
+name|EdgeId
+name|yzeId
 operator|=
 name|g
 operator|.
 name|findEdge
 argument_list|(
-name|ynItr
+name|ynId
 argument_list|,
-name|znItr
+name|znId
 argument_list|)
 expr_stmt|;
 name|bool
@@ -1539,23 +1539,23 @@ name|false
 decl_stmt|;
 if|if
 condition|(
-name|yzeItr
+name|yzeId
 operator|==
 name|g
 operator|.
-name|edgesEnd
+name|invalidEdgeId
 argument_list|()
 condition|)
 block|{
-name|yzeItr
+name|yzeId
 operator|=
 name|g
 operator|.
 name|addEdge
 argument_list|(
-name|ynItr
+name|ynId
 argument_list|,
-name|znItr
+name|znId
 argument_list|,
 name|delta
 argument_list|)
@@ -1575,25 +1575,25 @@ name|g
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|)
 decl_stmt|;
 name|h
 operator|.
 name|preUpdateEdgeCosts
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ynItr
+name|ynId
 operator|==
 name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|)
 condition|)
 block|{
@@ -1618,7 +1618,7 @@ name|nullCostEdge
 init|=
 name|tryNormaliseEdgeMatrix
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|)
 decl_stmt|;
 if|if
@@ -1632,7 +1632,7 @@ name|h
 operator|.
 name|postUpdateEdgeCosts
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|)
 expr_stmt|;
 block|}
@@ -1654,23 +1654,23 @@ name|h
 operator|.
 name|handleRemoveEdge
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|,
-name|ynItr
+name|ynId
 argument_list|)
 expr_stmt|;
 name|h
 operator|.
 name|handleRemoveEdge
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|,
-name|znItr
+name|znId
 argument_list|)
 expr_stmt|;
 name|removeSolverEdge
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|)
 expr_stmt|;
 block|}
@@ -1678,7 +1678,7 @@ name|g
 operator|.
 name|removeEdge
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|)
 expr_stmt|;
 block|}
@@ -1702,7 +1702,7 @@ name|g
 operator|.
 name|setEdgeData
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|,
 operator|&
 name|edgeDataList
@@ -1713,14 +1713,14 @@ argument_list|)
 expr_stmt|;
 name|addSolverEdge
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|)
 expr_stmt|;
 name|h
 operator|.
 name|handleAddEdge
 argument_list|(
-name|yzeItr
+name|yzeId
 argument_list|)
 expr_stmt|;
 block|}
@@ -1728,33 +1728,33 @@ name|h
 operator|.
 name|handleRemoveEdge
 argument_list|(
-name|yxeItr
+name|yxeId
 argument_list|,
-name|ynItr
+name|ynId
 argument_list|)
 expr_stmt|;
 name|removeSolverEdge
 argument_list|(
-name|yxeItr
+name|yxeId
 argument_list|)
 expr_stmt|;
 name|h
 operator|.
 name|handleRemoveEdge
 argument_list|(
-name|zxeItr
+name|zxeId
 argument_list|,
-name|znItr
+name|znId
 argument_list|)
 expr_stmt|;
 name|removeSolverEdge
 argument_list|(
-name|zxeItr
+name|zxeId
 argument_list|)
 expr_stmt|;
 name|pushToStack
 argument_list|(
-name|xnItr
+name|xnId
 argument_list|)
 expr_stmt|;
 name|s
@@ -1784,8 +1784,8 @@ name|getSolverNodeData
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 return|return
@@ -1800,7 +1800,7 @@ name|g
 operator|.
 name|getNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|)
 return|;
@@ -1811,8 +1811,8 @@ name|getSolverEdgeData
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 return|return
@@ -1827,7 +1827,7 @@ name|g
 operator|.
 name|getEdgeData
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 operator|)
 return|;
@@ -1837,8 +1837,8 @@ name|addSolverEdge
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 name|EdgeData
@@ -1847,7 +1847,7 @@ name|eData
 init|=
 name|getSolverEdgeData
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 name|NodeData
@@ -1860,7 +1860,7 @@ name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 decl_stmt|,
@@ -1873,7 +1873,7 @@ name|g
 operator|.
 name|getEdgeNode2
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -1885,7 +1885,7 @@ name|n1Data
 operator|.
 name|addSolverEdge
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1897,7 +1897,7 @@ name|n2Data
 operator|.
 name|addSolverEdge
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1958,6 +1958,7 @@ name|g
 operator|.
 name|setNodeData
 argument_list|(
+operator|*
 name|nItr
 argument_list|,
 operator|&
@@ -2008,6 +2009,7 @@ name|g
 operator|.
 name|setEdgeData
 argument_list|(
+operator|*
 name|eItr
 argument_list|,
 operator|&
@@ -2019,6 +2021,7 @@ argument_list|)
 expr_stmt|;
 name|addSolverEdge
 argument_list|(
+operator|*
 name|eItr
 argument_list|)
 expr_stmt|;
@@ -2072,13 +2075,21 @@ operator|++
 name|nItr
 control|)
 block|{
+name|Graph
+operator|::
+name|NodeId
+name|nId
+operator|=
+operator|*
+name|nItr
+expr_stmt|;
 if|if
 condition|(
 name|g
 operator|.
 name|getNodeCosts
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|getLength
@@ -2093,7 +2104,7 @@ name|vector
 operator|<
 name|Graph
 operator|::
-name|EdgeItr
+name|EdgeId
 operator|>
 name|edgesToRemove
 expr_stmt|;
@@ -2108,7 +2119,7 @@ name|g
 operator|.
 name|adjEdgesBegin
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|,
 name|aeEnd
@@ -2117,7 +2128,7 @@ name|g
 operator|.
 name|adjEdgesEnd
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 init|;
 name|aeItr
@@ -2130,8 +2141,8 @@ control|)
 block|{
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 operator|=
 operator|*
 name|aeItr
@@ -2142,36 +2153,36 @@ name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 operator|==
-name|nItr
+name|nId
 condition|)
 block|{
 name|Graph
 operator|::
-name|NodeItr
-name|otherNodeItr
+name|NodeId
+name|otherNodeId
 operator|=
 name|g
 operator|.
 name|getEdgeNode2
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 name|g
 operator|.
 name|getNodeCosts
 argument_list|(
-name|otherNodeItr
+name|otherNodeId
 argument_list|)
 operator|+=
 name|g
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 operator|.
 name|getRowAsVector
@@ -2184,28 +2195,28 @@ else|else
 block|{
 name|Graph
 operator|::
-name|NodeItr
-name|otherNodeItr
+name|NodeId
+name|otherNodeId
 operator|=
 name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 name|g
 operator|.
 name|getNodeCosts
 argument_list|(
-name|otherNodeItr
+name|otherNodeId
 argument_list|)
 operator|+=
 name|g
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 operator|.
 name|getColAsVector
@@ -2218,7 +2229,7 @@ name|edgesToRemove
 operator|.
 name|push_back
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 block|}
@@ -2271,7 +2282,7 @@ name|vector
 operator|<
 name|Graph
 operator|::
-name|EdgeItr
+name|EdgeId
 operator|>
 name|edgesToProcess
 expr_stmt|;
@@ -2311,6 +2322,7 @@ name|edgesToProcess
 operator|.
 name|push_back
 argument_list|(
+operator|*
 name|eItr
 argument_list|)
 expr_stmt|;
@@ -2349,15 +2361,15 @@ name|tryToEliminateEdge
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 if|if
 condition|(
 name|tryNormaliseEdgeMatrix
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 condition|)
 block|{
@@ -2365,7 +2377,7 @@ name|g
 operator|.
 name|removeEdge
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 return|return
@@ -2381,9 +2393,9 @@ name|tryNormaliseEdgeMatrix
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
+name|EdgeId
 operator|&
-name|eItr
+name|eId
 argument_list|)
 block|{
 specifier|const
@@ -2408,7 +2420,7 @@ name|g
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 name|Vector
@@ -2423,7 +2435,7 @@ name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 decl_stmt|,
@@ -2438,7 +2450,7 @@ name|g
 operator|.
 name|getEdgeNode2
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -2698,8 +2710,8 @@ name|computeSolution
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|NodeData
@@ -2708,7 +2720,7 @@ name|nodeData
 init|=
 name|getSolverNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 decl_stmt|;
 name|Vector
@@ -2718,7 +2730,7 @@ name|g
 operator|.
 name|getNodeCosts
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -2750,8 +2762,8 @@ control|)
 block|{
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|(
 operator|*
 name|solvedEdgeItr
@@ -2765,31 +2777,31 @@ name|g
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|nItr
+name|nId
 operator|==
 name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 condition|)
 block|{
 name|Graph
 operator|::
-name|NodeItr
+name|NodeId
 name|adjNode
 argument_list|(
 name|g
 operator|.
 name|getEdgeNode2
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2817,14 +2829,14 @@ else|else
 block|{
 name|Graph
 operator|::
-name|NodeItr
+name|NodeId
 name|adjNode
 argument_list|(
 name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2851,7 +2863,7 @@ block|}
 block|}
 name|setSolution
 argument_list|(
-name|nItr
+name|nId
 argument_list|,
 name|v
 operator|.

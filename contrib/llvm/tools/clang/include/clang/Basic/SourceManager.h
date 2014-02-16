@@ -3337,8 +3337,6 @@ name|getFileIDSize
 argument_list|(
 name|FID
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 return|;
 block|}
@@ -4145,6 +4143,80 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Returns true if the given MacroID location points at the beginning
+end_comment
+
+begin_comment
+comment|/// of the immediate macro expansion.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param MacroBegin If non-null and function returns true, it is set to the
+end_comment
+
+begin_comment
+comment|/// begin location of the immediate macro expansion.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isAtStartOfImmediateMacroExpansion
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|SourceLocation
+operator|*
+name|MacroBegin
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Returns true if the given MacroID location points at the character
+end_comment
+
+begin_comment
+comment|/// end of the immediate macro expansion.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param MacroEnd If non-null and function returns true, it is set to the
+end_comment
+
+begin_comment
+comment|/// character end location of the immediate macro expansion.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isAtEndOfImmediateMacroExpansion
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|SourceLocation
+operator|*
+name|MacroEnd
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Returns true if \p Loc is inside the [\p Start, +\p Length)
 end_comment
 
@@ -4773,12 +4845,63 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Returns true if both SourceLocations correspond to the same file.
+comment|/// \brief Returns whether the PresumedLoc for a given SourceLocation is
+end_comment
+
+begin_comment
+comment|/// in the main file.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This computes the "presumed" location for a SourceLocation, then checks
+end_comment
+
+begin_comment
+comment|/// whether it came from a file other than the main file. This is different
+end_comment
+
+begin_comment
+comment|/// from isWrittenInMainFile() because it takes line marker directives into
+end_comment
+
+begin_comment
+comment|/// account.
 end_comment
 
 begin_decl_stmt
 name|bool
-name|isFromSameFile
+name|isInMainFile
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Returns true if the spelling locations for both SourceLocations
+end_comment
+
+begin_comment
+comment|/// are part of the same file buffer.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This check ignores line marker directives.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isWrittenInSameFile
 argument_list|(
 name|SourceLocation
 name|Loc1
@@ -4803,16 +4926,24 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Returns true if the file of provided SourceLocation is the main
+comment|/// \brief Returns true if the spelling location for the given location
 end_comment
 
 begin_comment
-comment|/// file.
+comment|/// is in the main file buffer.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This check ignores line marker directives.
 end_comment
 
 begin_decl_stmt
 name|bool
-name|isFromMainFile
+name|isWrittenInMainFile
 argument_list|(
 name|SourceLocation
 name|Loc
@@ -5786,6 +5917,8 @@ argument_list|(
 name|FID
 operator|.
 name|ID
+argument_list|,
+name|Invalid
 argument_list|)
 return|;
 end_return
@@ -6094,6 +6227,9 @@ operator|&
 name|getSLocEntryByID
 argument_list|(
 argument|int ID
+argument_list|,
+argument|bool *Invalid =
+literal|0
 argument_list|)
 specifier|const
 block|{
@@ -6117,6 +6253,8 @@ return|return
 name|getLoadedSLocEntryByID
 argument_list|(
 name|ID
+argument_list|,
+name|Invalid
 argument_list|)
 return|;
 end_expr_stmt
@@ -6132,6 +6270,8 @@ operator|>
 operator|(
 name|ID
 operator|)
+argument_list|,
+name|Invalid
 argument_list|)
 return|;
 end_return
@@ -6308,6 +6448,44 @@ name|getOffset
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Returns the previous in-order FileID or an invalid FileID if there
+end_comment
+
+begin_comment
+comment|/// is no previous one.
+end_comment
+
+begin_decl_stmt
+name|FileID
+name|getPreviousFileID
+argument_list|(
+name|FileID
+name|FID
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Returns the next in-order FileID or an invalid FileID if there is
+end_comment
+
+begin_comment
+comment|/// no next one.
+end_comment
+
+begin_decl_stmt
+name|FileID
+name|getNextFileID
+argument_list|(
+name|FileID
+name|FID
+argument_list|)
+decl|const
+decl_stmt|;
 end_decl_stmt
 
 begin_comment

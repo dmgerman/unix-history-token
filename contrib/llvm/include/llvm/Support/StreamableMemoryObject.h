@@ -110,6 +110,7 @@ name|uint64_t
 name|getBase
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 operator|=
 literal|0
 block|;
@@ -124,6 +125,7 @@ name|uint64_t
 name|getExtent
 argument_list|()
 specifier|const
+name|LLVM_OVERRIDE
 operator|=
 literal|0
 block|;
@@ -139,9 +141,10 @@ name|readByte
 argument_list|(
 argument|uint64_t address
 argument_list|,
-argument|uint8_t* ptr
+argument|uint8_t *ptr
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 operator|=
 literal|0
 block|;
@@ -154,11 +157,9 @@ comment|///                   readBytes will fail.
 comment|///
 comment|/// @param address  - The address of the first byte, in the same space as
 comment|///                   getBase().
-comment|/// @param size     - The maximum number of bytes to copy.
+comment|/// @param size     - The number of bytes to copy.
 comment|/// @param buf      - A pointer to a buffer to be filled in.  Must be non-NULL
 comment|///                   and large enough to hold size bytes.
-comment|/// @param copied   - A pointer to a nunber that is filled in with the number
-comment|///                   of bytes actually read.  May be NULL.
 comment|/// @result         - 0 if successful; -1 if not.  Failure may be due to a
 comment|///                   bounds violation or an implementation-specific error.
 name|virtual
@@ -169,11 +170,10 @@ argument|uint64_t address
 argument_list|,
 argument|uint64_t size
 argument_list|,
-argument|uint8_t* buf
-argument_list|,
-argument|uint64_t* copied
+argument|uint8_t *buf
 argument_list|)
 specifier|const
+name|LLVM_OVERRIDE
 operator|=
 literal|0
 block|;
@@ -272,7 +272,7 @@ name|readByte
 argument_list|(
 argument|uint64_t address
 argument_list|,
-argument|uint8_t* ptr
+argument|uint8_t *ptr
 argument_list|)
 specifier|const
 name|LLVM_OVERRIDE
@@ -285,9 +285,7 @@ argument|uint64_t address
 argument_list|,
 argument|uint64_t size
 argument_list|,
-argument|uint8_t* buf
-argument_list|,
-argument|uint64_t* copied
+argument|uint8_t *buf
 argument_list|)
 specifier|const
 name|LLVM_OVERRIDE

@@ -120,6 +120,8 @@ enum|enum
 block|{
 name|ID_Archive
 block|,
+name|ID_MachOUniversalBinary
+block|,
 comment|// Object and children.
 name|ID_StartObjects
 block|,
@@ -270,6 +272,17 @@ return|return
 name|TypeID
 operator|==
 name|ID_Archive
+return|;
+block|}
+name|bool
+name|isMachOUniversalBinary
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeID
+operator|==
+name|ID_MachOUniversalBinary
 return|;
 block|}
 name|bool

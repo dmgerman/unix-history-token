@@ -117,6 +117,12 @@ directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FileSystem.h"
+end_include
+
 begin_comment
 comment|// FIXME: Enhance libsystem to support inode and other fields in stat.
 end_comment
@@ -159,13 +165,6 @@ block|{
 name|class
 name|MemoryBuffer
 decl_stmt|;
-name|namespace
-name|sys
-block|{
-name|class
-name|Path
-decl_stmt|;
-block|}
 block|}
 end_decl_stmt
 
@@ -249,18 +248,21 @@ name|unsigned
 name|UID
 decl_stmt|;
 comment|// A unique (small) ID for the file.
-name|dev_t
-name|Device
+name|llvm
+operator|::
+name|sys
+operator|::
+name|fs
+operator|::
+name|UniqueID
+name|UniqueID
+expr_stmt|;
+name|bool
+name|IsNamedPipe
 decl_stmt|;
-comment|// ID for the device containing the file.
-name|ino_t
-name|Inode
+name|bool
+name|InPCH
 decl_stmt|;
-comment|// Inode number for the file.
-name|mode_t
-name|FileMode
-decl_stmt|;
-comment|// The file mode as returned by 'stat'.
 comment|/// FD - The file descriptor for the file entry if it is opened and owned
 comment|/// by the FileEntry.  If not, this is set to -1.
 name|mutable
@@ -275,11 +277,11 @@ name|public
 label|:
 name|FileEntry
 argument_list|(
-argument|dev_t device
+argument|llvm::sys::fs::UniqueID UniqueID
 argument_list|,
-argument|ino_t inode
+argument|bool IsNamedPipe
 argument_list|,
-argument|mode_t m
+argument|bool InPCH
 argument_list|)
 block|:
 name|Name
@@ -287,19 +289,19 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Device
+name|UniqueID
 argument_list|(
-name|device
+name|UniqueID
 argument_list|)
 operator|,
-name|Inode
+name|IsNamedPipe
 argument_list|(
-name|inode
+name|IsNamedPipe
 argument_list|)
 operator|,
-name|FileMode
+name|InPCH
 argument_list|(
-name|m
+name|InPCH
 argument_list|)
 operator|,
 name|FD
@@ -317,19 +319,21 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Device
+name|UniqueID
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 operator|,
-name|Inode
+name|IsNamedPipe
 argument_list|(
-literal|0
+name|false
 argument_list|)
 operator|,
-name|FileMode
+name|InPCH
 argument_list|(
-literal|0
+name|false
 argument_list|)
 operator|,
 name|FD
@@ -432,22 +436,30 @@ return|return
 name|UID
 return|;
 block|}
-name|ino_t
-name|getInode
+specifier|const
+name|llvm
+operator|::
+name|sys
+operator|::
+name|fs
+operator|::
+name|UniqueID
+operator|&
+name|getUniqueID
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Inode
+name|UniqueID
 return|;
 block|}
-name|dev_t
-name|getDevice
+name|bool
+name|isInPCH
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Device
+name|InPCH
 return|;
 block|}
 name|time_t
@@ -457,15 +469,6 @@ specifier|const
 block|{
 return|return
 name|ModTime
-return|;
-block|}
-name|mode_t
-name|getFileMode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FileMode
 return|;
 block|}
 comment|/// \brief Return the directory the file lives in.
@@ -492,25 +495,11 @@ operator|)
 specifier|const
 block|{
 return|return
-name|Device
+name|UniqueID
 operator|<
 name|RHS
 operator|.
-name|Device
-operator|||
-operator|(
-name|Device
-operator|==
-name|RHS
-operator|.
-name|Device
-operator|&&
-name|Inode
-operator|<
-name|RHS
-operator|.
-name|Inode
-operator|)
+name|UniqueID
 return|;
 block|}
 comment|/// \brief Check whether the file is a named pipe (and thus can't be opened by
@@ -519,9 +508,16 @@ name|bool
 name|isNamedPipe
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|IsNamedPipe
+return|;
+block|}
 block|}
 empty_stmt|;
+struct_decl|struct
+name|FileData
+struct_decl|;
 comment|/// \brief Implements support for file system lookup, file system caching,
 comment|/// and directory search management.
 comment|///
@@ -667,7 +663,7 @@ name|getStatValue
 argument_list|(
 argument|const char *Path
 argument_list|,
-argument|struct stat&StatBuf
+argument|FileData&Data
 argument_list|,
 argument|bool isFile
 argument_list|,
@@ -831,7 +827,7 @@ name|getNoncachedStatValue
 argument_list|(
 argument|StringRef Path
 argument_list|,
-argument|struct stat&StatBuf
+argument|llvm::sys::fs::file_status&Result
 argument_list|)
 block|;
 comment|/// \brief Remove the real file \p Entry from the cache.

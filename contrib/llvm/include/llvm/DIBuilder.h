@@ -78,7 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -113,6 +125,9 @@ name|class
 name|DIBasicType
 decl_stmt|;
 name|class
+name|DICompileUnit
+decl_stmt|;
+name|class
 name|DICompositeType
 decl_stmt|;
 name|class
@@ -137,7 +152,7 @@ name|class
 name|DIGlobalVariable
 decl_stmt|;
 name|class
-name|DIImportedModule
+name|DIImportedEntity
 decl_stmt|;
 name|class
 name|DINameSpace
@@ -184,10 +199,6 @@ name|VMContext
 decl_stmt|;
 name|MDNode
 modifier|*
-name|TheCU
-decl_stmt|;
-name|MDNode
-modifier|*
 name|TempEnumTypes
 decl_stmt|;
 name|MDNode
@@ -225,10 +236,14 @@ literal|4
 operator|>
 name|AllEnumTypes
 expr_stmt|;
+comment|/// Use TrackingVH to collect RetainTypes, since they can be updated
+comment|/// later on.
 name|SmallVector
 operator|<
-name|Value
-operator|*
+name|TrackingVH
+operator|<
+name|MDNode
+operator|>
 operator|,
 literal|4
 operator|>
@@ -261,6 +276,42 @@ literal|4
 operator|>
 name|AllImportedModules
 expr_stmt|;
+name|DITemplateValueParameter
+name|createTemplateValueParameter
+parameter_list|(
+name|unsigned
+name|Tag
+parameter_list|,
+name|DIDescriptor
+name|Scope
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|DIType
+name|Ty
+parameter_list|,
+name|Value
+modifier|*
+name|Val
+parameter_list|,
+name|MDNode
+modifier|*
+name|File
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|LineNo
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|ColumnNo
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 name|DIBuilder
 argument_list|(
 argument|const DIBuilder&
@@ -287,16 +338,6 @@ modifier|&
 name|M
 parameter_list|)
 function_decl|;
-specifier|const
-name|MDNode
-modifier|*
-name|getCU
-parameter_list|()
-block|{
-return|return
-name|TheCU
-return|;
-block|}
 enum|enum
 name|ComplexAddrKind
 block|{
@@ -328,7 +369,7 @@ comment|/// @param RV       This indicates runtime version for languages like
 comment|///                 Objective-C.
 comment|/// @param SplitName The name of the file that we'll split debug info out
 comment|///                  into.
-name|void
+name|DICompileUnit
 name|createCompileUnit
 parameter_list|(
 name|unsigned
@@ -378,17 +419,22 @@ parameter_list|(
 name|StringRef
 name|Name
 parameter_list|,
-name|uint64_t
+name|int64_t
 name|Val
 parameter_list|)
 function_decl|;
-comment|/// createNullPtrType - Create C++0x nullptr type.
-name|DIType
-name|createNullPtrType
+comment|/// \brief Create a DWARF unspecified type.
+name|DIBasicType
+name|createUnspecifiedType
 parameter_list|(
 name|StringRef
 name|Name
 parameter_list|)
+function_decl|;
+comment|/// \brief Create C++11 nullptr type.
+name|DIBasicType
+name|createNullPtrType
+parameter_list|()
 function_decl|;
 comment|/// createBasicType - Create debugging information entry for a basic
 comment|/// type.
@@ -503,7 +549,7 @@ name|Context
 parameter_list|)
 function_decl|;
 comment|/// createFriend - Create debugging information entry for a 'friend'.
-name|DIType
+name|DIDerivedType
 name|createFriend
 parameter_list|(
 name|DIType
@@ -586,7 +632,7 @@ comment|/// @param LineNo     Line number.
 comment|/// @param Ty         Type of the static member.
 comment|/// @param Flags      Flags to encode member attribute, e.g. private.
 comment|/// @param Val        Const initializer of the member.
-name|DIType
+name|DIDerivedType
 name|createStaticMemberType
 argument_list|(
 name|DIDescriptor
@@ -631,7 +677,7 @@ comment|///                           selector.
 comment|/// @param PropertySetterName Name of the Objective C property setter
 comment|///                           selector.
 comment|/// @param PropertyAttributes Objective C property attributes.
-name|DIType
+name|DIDerivedType
 name|createObjCIVar
 parameter_list|(
 name|StringRef
@@ -693,7 +739,7 @@ comment|/// @param OffsetInBits Member offset.
 comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Ty           Parent type.
 comment|/// @param PropertyNode Property associated with this ivar.
-name|DIType
+name|DIDerivedType
 name|createObjCIVar
 parameter_list|(
 name|StringRef
@@ -774,6 +820,7 @@ comment|///                     for this type. This is used in
 comment|///                     DW_AT_containing_type. See DWARF documentation
 comment|///                     for more info.
 comment|/// @param TemplateParms Template type parameters.
+comment|/// @param UniqueIdentifier A unique identifier for the class.
 name|DICompositeType
 name|createClassType
 parameter_list|(
@@ -807,17 +854,23 @@ parameter_list|,
 name|DIArray
 name|Elements
 parameter_list|,
-name|MDNode
-modifier|*
+name|DIType
 name|VTableHolder
 init|=
-literal|0
+name|DIType
+argument_list|()
 parameter_list|,
 name|MDNode
 modifier|*
 name|TemplateParms
 init|=
 literal|0
+parameter_list|,
+name|StringRef
+name|UniqueIdentifier
+init|=
+name|StringRef
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// createStructType - Create debugging information entry for a struct.
@@ -830,6 +883,7 @@ comment|/// @param AlignInBits  Member alignment.
 comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Elements     Struct elements.
 comment|/// @param RunTimeLang  Optional parameter, Objective-C runtime version.
+comment|/// @param UniqueIdentifier A unique identifier for the struct.
 name|DICompositeType
 name|createStructType
 parameter_list|(
@@ -865,11 +919,17 @@ name|RunTimeLang
 init|=
 literal|0
 parameter_list|,
-name|MDNode
-modifier|*
+name|DIType
 name|VTableHolder
 init|=
-literal|0
+name|DIType
+argument_list|()
+parameter_list|,
+name|StringRef
+name|UniqueIdentifier
+init|=
+name|StringRef
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// createUnionType - Create debugging information entry for an union.
@@ -882,6 +942,7 @@ comment|/// @param AlignInBits  Member alignment.
 comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Elements     Union elements.
 comment|/// @param RunTimeLang  Optional parameter, Objective-C runtime version.
+comment|/// @param UniqueIdentifier A unique identifier for the union.
 name|DICompositeType
 name|createUnionType
 parameter_list|(
@@ -913,6 +974,12 @@ name|unsigned
 name|RunTimeLang
 init|=
 literal|0
+parameter_list|,
+name|StringRef
+name|UniqueIdentifier
+init|=
+name|StringRef
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// createTemplateTypeParameter - Create debugging information for template
@@ -957,7 +1024,7 @@ comment|/// value parameter.
 comment|/// @param Scope        Scope in which this type is defined.
 comment|/// @param Name         Value parameter name.
 comment|/// @param Ty           Parameter type.
-comment|/// @param Value        Constant parameter value.
+comment|/// @param Val          Constant parameter value.
 comment|/// @param File         File where this type parameter is defined.
 comment|/// @param LineNo       Line number.
 comment|/// @param ColumnNo     Column Number.
@@ -973,8 +1040,89 @@ parameter_list|,
 name|DIType
 name|Ty
 parameter_list|,
-name|uint64_t
 name|Value
+modifier|*
+name|Val
+parameter_list|,
+name|MDNode
+modifier|*
+name|File
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|LineNo
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|ColumnNo
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// \brief Create debugging information for a template template parameter.
+comment|/// @param Scope        Scope in which this type is defined.
+comment|/// @param Name         Value parameter name.
+comment|/// @param Ty           Parameter type.
+comment|/// @param Val          The fully qualified name of the template.
+comment|/// @param File         File where this type parameter is defined.
+comment|/// @param LineNo       Line number.
+comment|/// @param ColumnNo     Column Number.
+name|DITemplateValueParameter
+name|createTemplateTemplateParameter
+parameter_list|(
+name|DIDescriptor
+name|Scope
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|DIType
+name|Ty
+parameter_list|,
+name|StringRef
+name|Val
+parameter_list|,
+name|MDNode
+modifier|*
+name|File
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|LineNo
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|ColumnNo
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// \brief Create debugging information for a template parameter pack.
+comment|/// @param Scope        Scope in which this type is defined.
+comment|/// @param Name         Value parameter name.
+comment|/// @param Ty           Parameter type.
+comment|/// @param Val          An array of types in the pack.
+comment|/// @param File         File where this type parameter is defined.
+comment|/// @param LineNo       Line number.
+comment|/// @param ColumnNo     Column Number.
+name|DITemplateValueParameter
+name|createTemplateParameterPack
+parameter_list|(
+name|DIDescriptor
+name|Scope
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|DIType
+name|Ty
+parameter_list|,
+name|DIArray
+name|Val
 parameter_list|,
 name|MDNode
 modifier|*
@@ -1019,7 +1167,7 @@ comment|/// @param Size         Array size.
 comment|/// @param AlignInBits  Alignment.
 comment|/// @param Ty           Element type.
 comment|/// @param Subscripts   Subscripts.
-name|DIType
+name|DICompositeType
 name|createVectorType
 parameter_list|(
 name|uint64_t
@@ -1045,6 +1193,7 @@ comment|/// @param SizeInBits     Member size.
 comment|/// @param AlignInBits    Member alignment.
 comment|/// @param Elements       Enumeration elements.
 comment|/// @param UnderlyingType Underlying type of a C++11/ObjC fixed enum.
+comment|/// @param UniqueIdentifier A unique identifier for the enum.
 name|DICompositeType
 name|createEnumerationType
 parameter_list|(
@@ -1071,6 +1220,12 @@ name|Elements
 parameter_list|,
 name|DIType
 name|UnderlyingType
+parameter_list|,
+name|StringRef
+name|UniqueIdentifier
+init|=
+name|StringRef
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// createSubroutineType - Create subroutine type.
@@ -1105,7 +1260,7 @@ name|Ty
 parameter_list|)
 function_decl|;
 comment|/// createForwardDecl - Create a temporary forward-declared type.
-name|DIType
+name|DICompositeType
 name|createForwardDecl
 parameter_list|(
 name|unsigned
@@ -1137,6 +1292,12 @@ name|uint64_t
 name|AlignInBits
 init|=
 literal|0
+parameter_list|,
+name|StringRef
+name|UniqueIdentifier
+init|=
+name|StringRef
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// retainType - Retain DIType in a module even if it is not referenced
@@ -1309,7 +1470,7 @@ comment|/// @param Ty          Variable Type
 comment|/// @param AlwaysPreserve Boolean. Set to true if debug info for this
 comment|///                       variable should be preserved in optimized build.
 comment|/// @param Flags          Flags, e.g. artificial variable.
-comment|/// @param ArgNo       If this variable is an arugment then this argument's
+comment|/// @param ArgNo       If this variable is an argument then this argument's
 comment|///                    number. 1 indicates 1st argument.
 name|DIVariable
 name|createLocalVariable
@@ -1358,7 +1519,7 @@ comment|/// @param F           File where this variable is defined.
 comment|/// @param LineNo      Line number.
 comment|/// @param Ty          Variable Type
 comment|/// @param Addr        An array of complex address operations.
-comment|/// @param ArgNo       If this variable is an arugment then this argument's
+comment|/// @param ArgNo       If this variable is an argument then this argument's
 comment|///                    number. 1 indicates 1st argument.
 name|DIVariable
 name|createComplexVariable
@@ -1428,7 +1589,68 @@ parameter_list|,
 name|unsigned
 name|LineNo
 parameter_list|,
-name|DIType
+name|DICompositeType
+name|Ty
+parameter_list|,
+name|bool
+name|isLocalToUnit
+parameter_list|,
+name|bool
+name|isDefinition
+parameter_list|,
+name|unsigned
+name|ScopeLine
+parameter_list|,
+name|unsigned
+name|Flags
+init|=
+literal|0
+parameter_list|,
+name|bool
+name|isOptimized
+init|=
+name|false
+parameter_list|,
+name|Function
+modifier|*
+name|Fn
+init|=
+literal|0
+parameter_list|,
+name|MDNode
+modifier|*
+name|TParam
+init|=
+literal|0
+parameter_list|,
+name|MDNode
+modifier|*
+name|Decl
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// FIXME: this is added for dragonegg. Once we update dragonegg
+comment|/// to call resolve function, this will be removed.
+name|DISubprogram
+name|createFunction
+parameter_list|(
+name|DIScopeRef
+name|Scope
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|StringRef
+name|LinkageName
+parameter_list|,
+name|DIFile
+name|File
+parameter_list|,
+name|unsigned
+name|LineNo
+parameter_list|,
+name|DICompositeType
 name|Ty
 parameter_list|,
 name|bool
@@ -1506,7 +1728,7 @@ parameter_list|,
 name|unsigned
 name|LineNo
 parameter_list|,
-name|DIType
+name|DICompositeType
 name|Ty
 parameter_list|,
 name|bool
@@ -1525,11 +1747,11 @@ name|VTableIndex
 init|=
 literal|0
 parameter_list|,
-name|MDNode
-modifier|*
+name|DIType
 name|VTableHolder
 init|=
-literal|0
+name|DIType
+argument_list|()
 parameter_list|,
 name|unsigned
 name|Flags
@@ -1617,7 +1839,7 @@ comment|/// \brief Create a descriptor for an imported module.
 comment|/// @param Context The scope this module is imported into
 comment|/// @param NS The namespace being imported here
 comment|/// @param Line Line number
-name|DIImportedModule
+name|DIImportedEntity
 name|createImportedModule
 parameter_list|(
 name|DIScope
@@ -1625,6 +1847,50 @@ name|Context
 parameter_list|,
 name|DINameSpace
 name|NS
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|StringRef
+name|Name
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a descriptor for an imported module.
+comment|/// @param Context The scope this module is imported into
+comment|/// @param NS An aliased namespace
+comment|/// @param Line Line number
+name|DIImportedEntity
+name|createImportedModule
+parameter_list|(
+name|DIScope
+name|Context
+parameter_list|,
+name|DIImportedEntity
+name|NS
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a descriptor for an imported function.
+comment|/// @param Context The scope this module is imported into
+comment|/// @param Decl The declaration (or definition) of a function, type, or
+comment|///             variable
+comment|/// @param Line Line number
+name|DIImportedEntity
+name|createImportedDeclaration
+parameter_list|(
+name|DIScope
+name|Context
+parameter_list|,
+name|DIDescriptor
+name|Decl
 parameter_list|,
 name|unsigned
 name|Line

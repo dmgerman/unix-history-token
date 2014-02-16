@@ -162,6 +162,8 @@ name|JoinedClass
 block|,
 name|SeparateClass
 block|,
+name|RemainingArgsClass
+block|,
 name|CommaJoinedClass
 block|,
 name|MultiArgClass
@@ -349,6 +351,49 @@ name|AliasID
 argument_list|)
 return|;
 block|}
+comment|/// \brief Get the alias arguments as a \0 separated list.
+comment|/// E.g. ["foo", "bar"] would be returned as "foo\0bar\0".
+specifier|const
+name|char
+operator|*
+name|getAliasArgs
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Info
+operator|&&
+literal|"Must have a valid info!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|Info
+operator|->
+name|AliasArgs
+operator|||
+name|Info
+operator|->
+name|AliasArgs
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+operator|)
+operator|&&
+literal|"AliasArgs should be either 0 or non-empty."
+argument_list|)
+block|;
+return|return
+name|Info
+operator|->
+name|AliasArgs
+return|;
+block|}
 comment|/// \brief Get the default prefix for this option.
 name|StringRef
 name|getPrefix
@@ -495,6 +540,9 @@ case|:
 case|case
 name|JoinedOrSeparateClass
 case|:
+case|case
+name|RemainingArgsClass
+case|:
 return|return
 name|RenderSeparateStyle
 return|;
@@ -592,9 +640,9 @@ comment|/// If the option accepts the current argument, accept() sets
 comment|/// Index to the position where argument parsing should resume
 comment|/// (even if the argument is missing values).
 comment|///
-comment|/// \parm ArgSize The number of bytes taken up by the matched Option prefix
-comment|///               and name. This is used to determine where joined values
-comment|///               start.
+comment|/// \param ArgSize The number of bytes taken up by the matched Option prefix
+comment|///                and name. This is used to determine where joined values
+comment|///                start.
 name|Arg
 modifier|*
 name|accept

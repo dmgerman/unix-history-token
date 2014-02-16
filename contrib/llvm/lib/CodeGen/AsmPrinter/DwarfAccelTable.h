@@ -271,14 +271,6 @@ decl_stmt|;
 name|class
 name|DwarfAccelTable
 block|{
-enum|enum
-name|HashFunctionType
-block|{
-name|eHashFunctionDJB
-init|=
-literal|0u
-block|}
-enum|;
 specifier|static
 name|uint32_t
 name|HashDJB
@@ -396,7 +388,9 @@ argument_list|)
 operator|,
 name|hash_function
 argument_list|(
-name|eHashFunctionDJB
+name|dwarf
+operator|::
+name|DW_hash_function_djb
 argument_list|)
 operator|,
 name|bucket_count
@@ -487,66 +481,12 @@ comment|//
 comment|// uint32_t die_offset_base
 comment|// uint32_t atom_count
 comment|// atom_count Atoms
-enum|enum
-name|AtomType
-block|{
-name|eAtomTypeNULL
-init|=
-literal|0u
-block|,
-name|eAtomTypeDIEOffset
-init|=
-literal|1u
-block|,
-comment|// DIE offset, check form for encoding
-name|eAtomTypeCUOffset
-init|=
-literal|2u
-block|,
-comment|// DIE offset of the compiler unit header that
-comment|// contains the item in question
-name|eAtomTypeTag
-init|=
-literal|3u
-block|,
-comment|// DW_TAG_xxx value, should be encoded as
-comment|// DW_FORM_data1 (if no tags exceed 255) or
-comment|// DW_FORM_data2.
-name|eAtomTypeNameFlags
-init|=
-literal|4u
-block|,
-comment|// Flags from enum NameFlags
-name|eAtomTypeTypeFlags
-init|=
-literal|5u
-comment|// Flags from enum TypeFlags
-block|}
-enum|;
-enum|enum
-name|TypeFlags
-block|{
-name|eTypeFlagClassMask
-init|=
-literal|0x0000000fu
-block|,
-comment|// Always set for C++, only set for ObjC if this is the
-comment|// @implementation for a class.
-name|eTypeFlagClassIsImplementation
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|1
-operator|)
-block|}
-enum|;
 comment|// Make these public so that they can be used as a general interface to
 comment|// the class.
 struct|struct
 name|Atom
 block|{
-name|AtomType
+name|uint16_t
 name|type
 decl_stmt|;
 comment|// enum AtomType
@@ -556,7 +496,7 @@ decl_stmt|;
 comment|// DWARF DW_FORM_ defines
 name|Atom
 argument_list|(
-argument|AtomType type
+argument|uint16_t type
 argument_list|,
 argument|uint16_t form
 argument_list|)
@@ -571,31 +511,21 @@ argument_list|(
 argument|form
 argument_list|)
 block|{}
-specifier|static
-specifier|const
-name|char
-operator|*
-name|AtomTypeString
-argument_list|(
-expr|enum
-name|AtomType
-argument_list|)
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
 name|print
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|O
-parameter_list|)
+argument_list|(
+argument|raw_ostream&O
+argument_list|)
 block|{
 name|O
 operator|<<
 literal|"Type: "
 operator|<<
+name|dwarf
+operator|::
 name|AtomTypeString
 argument_list|(
 name|type
@@ -613,19 +543,17 @@ name|form
 argument_list|)
 operator|<<
 literal|"\n"
-expr_stmt|;
-block|}
+block|;     }
 name|void
 name|dump
-parameter_list|()
+argument_list|()
 block|{
 name|print
 argument_list|(
 name|dbgs
 argument_list|()
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 endif|#
 directive|endif
 block|}
@@ -665,7 +593,7 @@ argument|AtomList.begin()
 argument_list|,
 argument|AtomList.end()
 argument_list|)
-block|{ }
+block|{}
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -764,7 +692,7 @@ name|Flags
 argument_list|(
 argument|Flags
 argument_list|)
-block|{ }
+block|{}
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -841,7 +769,7 @@ name|HashData
 argument_list|(
 argument|StringRef S
 argument_list|,
-argument|ArrayRef<HashDataContents*> Data
+argument|ArrayRef<HashDataContents *> Data
 argument_list|)
 block|:
 name|Str
@@ -1167,9 +1095,7 @@ parameter_list|(
 name|AsmPrinter
 modifier|*
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 parameter_list|)
 function_decl|;
 name|void

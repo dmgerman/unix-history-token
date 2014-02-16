@@ -323,6 +323,28 @@ name|B
 argument_list|)
 return|;
 block|}
+specifier|inline
+specifier|const
+name|BasicBlock
+operator|*
+name|findNearestCommonDominator
+argument_list|(
+argument|const BasicBlock *A
+argument_list|,
+argument|const BasicBlock *B
+argument_list|)
+block|{
+return|return
+name|DT
+operator|->
+name|findNearestCommonDominator
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
 name|virtual
 name|void
 name|releaseMemory

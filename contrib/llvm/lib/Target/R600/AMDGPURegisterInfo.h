@@ -117,11 +117,6 @@ name|TargetMachine
 operator|&
 name|TM
 block|;
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
-block|;
 specifier|static
 specifier|const
 name|uint16_t
@@ -132,11 +127,6 @@ argument_list|(
 name|TargetMachine
 operator|&
 name|tm
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 name|virtual
@@ -201,6 +191,33 @@ return|return
 name|NULL
 return|;
 block|}
+name|virtual
+name|unsigned
+name|getHWRegIndex
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+literal|"Unimplemented"
+argument_list|)
+block|;
+return|return
+literal|0
+return|;
+block|}
+comment|/// \returns the sub reg enum value for the given \p Channel
+comment|/// (e.g. getSubRegFromChannel(0) -> AMDGPU::sub0)
+name|unsigned
+name|getSubRegFromChannel
+argument_list|(
+argument|unsigned Channel
+argument_list|)
+specifier|const
+block|;
 specifier|const
 name|uint16_t
 operator|*

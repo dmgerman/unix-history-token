@@ -150,6 +150,11 @@ specifier|const
 name|MSP430RegisterInfo
 name|RI
 block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit

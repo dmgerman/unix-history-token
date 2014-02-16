@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Object/MachOFormat.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/MachO.h"
 end_include
 
 begin_include
@@ -318,11 +318,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|object
+name|MachO
 operator|::
-name|macho
-operator|::
-name|RelocationEntry
+name|any_relocation_info
 operator|>
 expr|>
 name|Relocations
@@ -507,20 +505,16 @@ name|getCPUType
 argument_list|()
 operator|&
 operator|~
-name|object
+name|MachO
 operator|::
-name|mach
-operator|::
-name|CTFM_ArchMask
+name|CPU_ARCH_MASK
 block|;
 return|return
 name|CPUType
 operator|==
-name|object
+name|MachO
 operator|::
-name|mach
-operator|::
-name|CTM_ARM
+name|CPU_TYPE_ARM
 return|;
 block|}
 comment|/// @}
@@ -655,7 +649,7 @@ name|addRelocation
 argument_list|(
 argument|const MCSectionData *SD
 argument_list|,
-argument|object::macho::RelocationEntry&MRE
+argument|MachO::any_relocation_info&MRE
 argument_list|)
 block|{
 name|Relocations

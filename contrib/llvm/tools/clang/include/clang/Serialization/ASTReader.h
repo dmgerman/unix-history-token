@@ -381,7 +381,7 @@ name|class
 name|TargetOptions
 decl_stmt|;
 name|class
-name|ASTUnresolvedSet
+name|LazyASTUnresolvedSet
 decl_stmt|;
 comment|/// \brief Abstract interface for callback invocations by the ASTReader.
 comment|///
@@ -553,20 +553,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// \brief Receives a HeaderFileInfo entry.
-name|virtual
-name|void
-name|ReadHeaderFileInfo
-parameter_list|(
-specifier|const
-name|HeaderFileInfo
-modifier|&
-name|HFI
-parameter_list|,
-name|unsigned
-name|ID
-parameter_list|)
-block|{}
 comment|/// \brief Receives __COUNTER__ value.
 name|virtual
 name|void
@@ -631,9 +617,6 @@ name|ASTReader
 operator|&
 name|Reader
 block|;
-name|unsigned
-name|NumHeaderInfos
-block|;
 name|public
 operator|:
 name|PCHValidator
@@ -654,12 +637,7 @@ argument_list|)
 block|,
 name|Reader
 argument_list|(
-name|Reader
-argument_list|)
-block|,
-name|NumHeaderInfos
-argument_list|(
-literal|0
+argument|Reader
 argument_list|)
 block|{}
 name|virtual
@@ -689,15 +667,6 @@ argument_list|,
 argument|bool Complain
 argument_list|,
 argument|std::string&SuggestedPredefines
-argument_list|)
-block|;
-name|virtual
-name|void
-name|ReadHeaderFileInfo
-argument_list|(
-argument|const HeaderFileInfo&HFI
-argument_list|,
-argument|unsigned ID
 argument_list|)
 block|;
 name|virtual
@@ -790,6 +759,13 @@ operator|,
 literal|64
 operator|>
 name|RecordData
+expr_stmt|;
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+name|uint64_t
+operator|>
+name|RecordDataImpl
 expr_stmt|;
 comment|/// \brief The result of reading the control block of an AST file, which
 comment|/// can fail for various reasons.
@@ -951,6 +927,11 @@ decl_stmt|;
 comment|/// \brief The module manager which manages modules and their dependencies
 name|ModuleManager
 name|ModuleMgr
+decl_stmt|;
+comment|/// \brief The location where the module file will be considered as
+comment|/// imported from. For non-module AST types it should be invalid.
+name|SourceLocation
+name|CurrentImportLoc
 decl_stmt|;
 comment|/// \brief The global module index, if loaded.
 name|llvm
@@ -2086,6 +2067,15 @@ literal|8
 operator|>
 name|UndefinedButUsed
 expr_stmt|;
+comment|// \brief A list of late parsed template function data.
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|1
+operator|>
+name|LateParsedTemplates
+expr_stmt|;
 comment|/// \brief A list of modules that were imported by precompiled headers or
 comment|/// any other non-module AST file.
 name|SmallVector
@@ -2380,6 +2370,23 @@ name|PendingDeclContextInfo
 operator|>
 name|PendingDeclContextInfos
 expr_stmt|;
+comment|/// \brief The set of NamedDecls that have been loaded, but are members of a
+comment|/// context that has been merged into another context where the corresponding
+comment|/// declaration is either missing or has not yet been loaded.
+comment|///
+comment|/// We will check whether the corresponding declaration is in fact missing
+comment|/// once recursing loading has been completed.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|NamedDecl
+operator|*
+operator|,
+literal|16
+operator|>
+name|PendingOdrMergeChecks
+expr_stmt|;
 comment|/// \brief The set of Objective-C categories that have been deserialized
 comment|/// since the last time the declaration chains were linked.
 name|llvm
@@ -2474,20 +2481,35 @@ argument_list|,
 argument|serialization::GlobalDeclID CanonID
 argument_list|)
 expr_stmt|;
-comment|/// \brief Ready to load the previous declaration of the given Decl.
-name|void
-name|loadAndAttachPreviousDecl
-argument_list|(
-name|Decl
-operator|*
-name|D
-argument_list|,
-name|serialization
+comment|/// \brief A mapping from DeclContexts to the semantic DeclContext that we
+comment|/// are treating as the definition of the entity. This is used, for instance,
+comment|/// when merging implicit instantiations of class templates across modules.
+name|llvm
 operator|::
-name|DeclID
-name|ID
-argument_list|)
-decl_stmt|;
+name|DenseMap
+operator|<
+name|DeclContext
+operator|*
+operator|,
+name|DeclContext
+operator|*
+operator|>
+name|MergedDeclContexts
+expr_stmt|;
+comment|/// \brief A mapping from canonical declarations of enums to their canonical
+comment|/// definitions. Only populated when using modules in C++.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|EnumDecl
+operator|*
+operator|,
+name|EnumDecl
+operator|*
+operator|>
+name|EnumDefinitions
+expr_stmt|;
 comment|/// \brief When reading a Stmt tree, Stmt operands are placed in this stack.
 name|SmallVector
 operator|<
@@ -2502,6 +2524,8 @@ comment|/// \brief What kind of records we are reading.
 enum|enum
 name|ReadingKind
 block|{
+name|Read_None
+block|,
 name|Read_Decl
 block|,
 name|Read_Type
@@ -3722,6 +3746,9 @@ specifier|const
 block|{
 return|return
 name|GlobalIndex
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 comment|/// \brief Attempts to load the global index.
@@ -3741,6 +3768,11 @@ expr_stmt|;
 comment|/// \brief Initializes the ASTContext
 name|void
 name|InitializeContext
+parameter_list|()
+function_decl|;
+comment|/// \brief Update the state of Sema after loading some additional modules.
+name|void
+name|UpdateSema
 parameter_list|()
 function_decl|;
 comment|/// \brief Add in-memory (virtual file) buffer.
@@ -4187,6 +4219,25 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|Idx
+parameter_list|)
+function_decl|;
+specifier|const
+name|ASTTemplateArgumentListInfo
+modifier|*
+name|ReadASTTemplateArgumentListInfo
+parameter_list|(
+name|ModuleFile
+modifier|&
+name|F
+parameter_list|,
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Index
 parameter_list|)
 function_decl|;
 comment|/// \brief Reads a declarator info from the given record.
@@ -4994,6 +5045,25 @@ operator|&
 name|Pending
 argument_list|)
 decl_stmt|;
+name|virtual
+name|void
+name|ReadLateParsedTemplates
+argument_list|(
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|FunctionDecl
+operator|*
+argument_list|,
+name|LateParsedTemplate
+operator|*
+operator|>
+operator|&
+name|LPTMap
+argument_list|)
+decl_stmt|;
 comment|/// \brief Load a selector from disk, registering its ID if it exists.
 name|void
 name|LoadSelector
@@ -5534,11 +5604,9 @@ comment|/// \brief Read a template argument array.
 name|void
 name|ReadTemplateArgumentList
 argument_list|(
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|TemplateArgument
-argument_list|,
-literal|8
 operator|>
 operator|&
 name|TemplArgs
@@ -5565,7 +5633,7 @@ name|ModuleFile
 modifier|&
 name|F
 parameter_list|,
-name|ASTUnresolvedSet
+name|LazyASTUnresolvedSet
 modifier|&
 name|Set
 parameter_list|,
@@ -5706,7 +5774,7 @@ modifier|&
 name|ModuleFile
 parameter_list|,
 specifier|const
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|,
@@ -5943,7 +6011,7 @@ modifier|&
 name|M
 parameter_list|,
 specifier|const
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|,

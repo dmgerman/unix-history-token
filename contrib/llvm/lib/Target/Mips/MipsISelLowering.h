@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/MipsBaseInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/CallingConvLower.h"
 end_include
 
@@ -159,8 +165,8 @@ name|CMovFP_T
 block|,
 name|CMovFP_F
 block|,
-comment|// Floating Point Rounding
-name|FPRound
+comment|// FP-to-int truncation node.
+name|TruncIntFP
 block|,
 comment|// Return
 name|Ret
@@ -168,10 +174,12 @@ block|,
 name|EH_RETURN
 block|,
 comment|// Node used to extract integer from accumulator.
-name|ExtractLOHI
+name|MFHI
+block|,
+name|MFLO
 block|,
 comment|// Node used to insert integers to accumulator.
-name|InsertLOHI
+name|MTLOHI
 block|,
 comment|// Mult nodes.
 name|Mult
@@ -295,6 +303,69 @@ comment|// DSP setcc and select_cc nodes.
 name|SETCC_DSP
 block|,
 name|SELECT_CC_DSP
+block|,
+comment|// Vector comparisons.
+comment|// These take a vector and return a boolean.
+name|VALL_ZERO
+block|,
+name|VANY_ZERO
+block|,
+name|VALL_NONZERO
+block|,
+name|VANY_NONZERO
+block|,
+comment|// These take a vector and return a vector bitmask.
+name|VCEQ
+block|,
+name|VCLE_S
+block|,
+name|VCLE_U
+block|,
+name|VCLT_S
+block|,
+name|VCLT_U
+block|,
+comment|// Element-wise vector max/min.
+name|VSMAX
+block|,
+name|VSMIN
+block|,
+name|VUMAX
+block|,
+name|VUMIN
+block|,
+comment|// Vector Shuffle with mask as an operand
+name|VSHF
+block|,
+comment|// Generic shuffle
+name|SHF
+block|,
+comment|// 4-element set shuffle.
+name|ILVEV
+block|,
+comment|// Interleave even elements
+name|ILVOD
+block|,
+comment|// Interleave odd elements
+name|ILVL
+block|,
+comment|// Interleave left elements
+name|ILVR
+block|,
+comment|// Interleave right elements
+name|PCKEV
+block|,
+comment|// Pack even elements
+name|PCKOD
+block|,
+comment|// Pack odd elements
+comment|// Combined (XOR (OR $a, $b), -1)
+name|VNOR
+block|,
+comment|// Extended vector element extraction
+name|VEXTRACT_SEXT_ELT
+block|,
+name|VEXTRACT_ZEXT_ELT
 block|,
 comment|// Load/Store Left/Right nodes.
 name|LWL
@@ -420,6 +491,8 @@ comment|/// getSetCCResultType - get the ISD::SETCC result ValueType
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
@@ -487,41 +560,505 @@ argument|EVT Ty
 argument_list|)
 specifier|const
 block|;
+comment|// This method creates the following nodes, which are necessary for
+comment|// computing a local symbol's address:
+comment|//
+comment|// (add (load (wrapper $gp, %got(sym)), %lo(sym))
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
 name|SDValue
 name|getAddrLocal
 argument_list|(
-argument|SDValue Op
+argument|NodeTy *N
+argument_list|,
+argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|bool HasMips64
 argument_list|)
 specifier|const
+block|{
+name|SDLoc
+name|DL
+argument_list|(
+name|N
+argument_list|)
 block|;
+name|unsigned
+name|GOTFlag
+operator|=
+name|HasMips64
+condition|?
+name|MipsII
+operator|::
+name|MO_GOT_PAGE
+else|:
+name|MipsII
+operator|::
+name|MO_GOT
+block|;
+name|SDValue
+name|GOT
+operator|=
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|MipsISD
+operator|::
+name|Wrapper
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|getGlobalReg
+argument_list|(
+name|DAG
+argument_list|,
+name|Ty
+argument_list|)
+argument_list|,
+name|getTargetNode
+argument_list|(
+name|N
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+argument_list|,
+name|GOTFlag
+argument_list|)
+argument_list|)
+block|;
+name|SDValue
+name|Load
+operator|=
+name|DAG
+operator|.
+name|getLoad
+argument_list|(
+name|Ty
+argument_list|,
+name|DL
+argument_list|,
+name|DAG
+operator|.
+name|getEntryNode
+argument_list|()
+argument_list|,
+name|GOT
+argument_list|,
+name|MachinePointerInfo
+operator|::
+name|getGOT
+argument_list|()
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+literal|0
+argument_list|)
+block|;
+name|unsigned
+name|LoFlag
+operator|=
+name|HasMips64
+condition|?
+name|MipsII
+operator|::
+name|MO_GOT_OFST
+else|:
+name|MipsII
+operator|::
+name|MO_ABS_LO
+block|;
+name|SDValue
+name|Lo
+operator|=
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|MipsISD
+operator|::
+name|Lo
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|getTargetNode
+argument_list|(
+name|N
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+argument_list|,
+name|LoFlag
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|ISD
+operator|::
+name|ADD
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|Load
+argument_list|,
+name|Lo
+argument_list|)
+return|;
+block|}
+comment|// This method creates the following nodes, which are necessary for
+comment|// computing a global symbol's address:
+comment|//
+comment|// (load (wrapper $gp, %got(sym)))
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
 name|SDValue
 name|getAddrGlobal
 argument_list|(
-argument|SDValue Op
+argument|NodeTy *N
+argument_list|,
+argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|unsigned Flag
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|const MachinePointerInfo&PtrInfo
 argument_list|)
 specifier|const
+block|{
+name|SDLoc
+name|DL
+argument_list|(
+name|N
+argument_list|)
 block|;
+name|SDValue
+name|Tgt
+operator|=
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|MipsISD
+operator|::
+name|Wrapper
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|getGlobalReg
+argument_list|(
+name|DAG
+argument_list|,
+name|Ty
+argument_list|)
+argument_list|,
+name|getTargetNode
+argument_list|(
+name|N
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+argument_list|,
+name|Flag
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|DAG
+operator|.
+name|getLoad
+argument_list|(
+name|Ty
+argument_list|,
+name|DL
+argument_list|,
+name|Chain
+argument_list|,
+name|Tgt
+argument_list|,
+name|PtrInfo
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+comment|// This method creates the following nodes, which are necessary for
+comment|// computing a global symbol's address in large-GOT mode:
+comment|//
+comment|// (load (wrapper (add %hi(sym), $gp), %lo(sym)))
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
 name|SDValue
 name|getAddrGlobalLargeGOT
 argument_list|(
-argument|SDValue Op
+argument|NodeTy *N
+argument_list|,
+argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|unsigned HiFlag
 argument_list|,
 argument|unsigned LoFlag
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|const MachinePointerInfo&PtrInfo
 argument_list|)
 specifier|const
+block|{
+name|SDLoc
+name|DL
+argument_list|(
+name|N
+argument_list|)
 block|;
+name|SDValue
+name|Hi
+operator|=
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|MipsISD
+operator|::
+name|Hi
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|getTargetNode
+argument_list|(
+name|N
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+argument_list|,
+name|HiFlag
+argument_list|)
+argument_list|)
+block|;
+name|Hi
+operator|=
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|ISD
+operator|::
+name|ADD
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|Hi
+argument_list|,
+name|getGlobalReg
+argument_list|(
+name|DAG
+argument_list|,
+name|Ty
+argument_list|)
+argument_list|)
+block|;
+name|SDValue
+name|Wrapper
+operator|=
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|MipsISD
+operator|::
+name|Wrapper
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|Hi
+argument_list|,
+name|getTargetNode
+argument_list|(
+name|N
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+argument_list|,
+name|LoFlag
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|DAG
+operator|.
+name|getLoad
+argument_list|(
+name|Ty
+argument_list|,
+name|DL
+argument_list|,
+name|Chain
+argument_list|,
+name|Wrapper
+argument_list|,
+name|PtrInfo
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+comment|// This method creates the following nodes, which are necessary for
+comment|// computing a symbol's address in non-PIC mode:
+comment|//
+comment|// (add %hi(sym), %lo(sym))
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
+name|SDValue
+name|getAddrNonPIC
+argument_list|(
+argument|NodeTy *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|{
+name|SDLoc
+name|DL
+argument_list|(
+name|N
+argument_list|)
+block|;
+name|SDValue
+name|Hi
+operator|=
+name|getTargetNode
+argument_list|(
+name|N
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+argument_list|,
+name|MipsII
+operator|::
+name|MO_ABS_HI
+argument_list|)
+block|;
+name|SDValue
+name|Lo
+operator|=
+name|getTargetNode
+argument_list|(
+name|N
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+argument_list|,
+name|MipsII
+operator|::
+name|MO_ABS_LO
+argument_list|)
+block|;
+return|return
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|ISD
+operator|::
+name|ADD
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|MipsISD
+operator|::
+name|Hi
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|Hi
+argument_list|)
+argument_list|,
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|MipsISD
+operator|::
+name|Lo
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|Lo
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// This function fills Ops, which is the list of operands that will later
 comment|/// be used when a function call node is created. It also generates
 comment|/// copyToReg nodes to set up argument registers.
@@ -592,13 +1129,25 @@ name|MipsCC
 block|{
 name|public
 operator|:
+expr|enum
+name|SpecialCallingConvType
+block|{
+name|Mips16RetHelperConv
+block|,
+name|NoSpecialCallingConv
+block|}
+block|;
 name|MipsCC
 argument_list|(
 argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool IsO32
 argument_list|,
+argument|bool IsFP64
+argument_list|,
 argument|CCState&Info
+argument_list|,
+argument|SpecialCallingConvType SpecialCallingConv = NoSpecialCallingConv
 argument_list|)
 block|;
 name|void
@@ -682,9 +1231,9 @@ specifier|const
 block|{
 return|return
 name|IsO32
-operator|?
+condition|?
 literal|4
-operator|:
+else|:
 literal|8
 return|;
 block|}
@@ -710,11 +1259,9 @@ argument_list|()
 specifier|const
 block|;
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|ByValArgInfo
-operator|,
-literal|2
 operator|>
 operator|::
 name|const_iterator
@@ -856,6 +1403,11 @@ name|CallConv
 block|;
 name|bool
 name|IsO32
+block|,
+name|IsFP64
+block|;
+name|SpecialCallingConvType
+name|SpecialCallingConv
 block|;
 name|SmallVector
 operator|<
@@ -865,6 +1417,26 @@ literal|2
 operator|>
 name|ByValArgs
 block|;     }
+block|;
+name|protected
+operator|:
+name|SDValue
+name|lowerLOAD
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerSTORE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
 block|;
 comment|// Subtarget Info
 specifier|const
@@ -881,6 +1453,85 @@ name|IsO32
 block|;
 name|private
 operator|:
+comment|// Create a TargetGlobalAddress node.
+name|SDValue
+name|getTargetNode
+argument_list|(
+argument|GlobalAddressSDNode *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+comment|// Create a TargetExternalSymbol node.
+name|SDValue
+name|getTargetNode
+argument_list|(
+argument|ExternalSymbolSDNode *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+comment|// Create a TargetBlockAddress node.
+name|SDValue
+name|getTargetNode
+argument_list|(
+argument|BlockAddressSDNode *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+comment|// Create a TargetJumpTable node.
+name|SDValue
+name|getTargetNode
+argument_list|(
+argument|JumpTableSDNode *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+comment|// Create a TargetConstantPool node.
+name|SDValue
+name|getTargetNode
+argument_list|(
+argument|ConstantPoolSDNode *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+name|MipsCC
+operator|::
+name|SpecialCallingConvType
+name|getSpecialCallingConv
+argument_list|(
+argument|SDValue Callee
+argument_list|)
+specifier|const
+block|;
 comment|// Lower Operand helpers
 name|SDValue
 name|LowerCallResult
@@ -895,7 +1546,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1082,25 +1733,16 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|lowerLOAD
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|lowerSTORE
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|lowerADD
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerFP_TO_SINT
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1132,7 +1774,7 @@ name|copyByValRegs
 argument_list|(
 argument|SDValue Chain
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|std::vector<SDValue>&OutChains
 argument_list|,
@@ -1156,16 +1798,13 @@ name|passByValArg
 argument_list|(
 argument|SDValue Chain
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|std::deque< std::pair<unsigned
 argument_list|,
 argument|SDValue>>&RegsToPass
 argument_list|,
-argument|SmallVector<SDValue
-argument_list|,
-literal|8
-argument|>&MemOpChains
+argument|SmallVectorImpl<SDValue>&MemOpChains
 argument_list|,
 argument|SDValue StackPtr
 argument_list|,
@@ -1197,7 +1836,7 @@ argument|const MipsCC&CC
 argument_list|,
 argument|SDValue Chain
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -1215,7 +1854,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1234,7 +1873,7 @@ argument|SDValue Chain
 argument_list|,
 argument|SDValue Arg
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|bool IsTailCall
 argument_list|,
@@ -1282,7 +1921,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -1307,6 +1946,26 @@ argument|const char *constraint
 argument_list|)
 specifier|const
 block|;
+comment|/// This function parses registers that appear in inline-asm constraints.
+comment|/// It returns pair (0, 0) on failure.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|>
+name|parseRegForInlineAsmConstraint
+argument_list|(
+argument|const StringRef&C
+argument_list|,
+argument|MVT VT
+argument_list|)
+specifier|const
+block|;
 name|std
 operator|::
 name|pair
@@ -1321,7 +1980,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
