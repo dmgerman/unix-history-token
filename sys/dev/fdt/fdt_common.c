@@ -990,7 +990,7 @@ return|;
 block|}
 name|child
 operator|=
-name|fdt_search_compatible
+name|fdt_depth_search_compatible
 argument_list|(
 name|node
 argument_list|,
