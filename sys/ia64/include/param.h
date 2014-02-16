@@ -312,6 +312,28 @@ comment|/* pages of kstack guard; 0 disables */
 end_comment
 
 begin_comment
+comment|/* The default size of identity mappings in region 6& 7. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOG2_ID_PAGE_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOG2_ID_PAGE_SIZE
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Mach derived conversion macros  */
 end_comment
 
