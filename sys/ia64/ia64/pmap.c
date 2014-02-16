@@ -5909,6 +5909,9 @@ name|PAGE_SHIFT
 operator|<<
 literal|2
 expr_stmt|;
+name|ia64_mf
+argument_list|()
+expr_stmt|;
 name|pte
 operator|->
 name|tag
@@ -5962,15 +5965,21 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|error
-condition|)
-return|return
+operator|==
+literal|0
+argument_list|,
 operator|(
+literal|"%s: pmap_remove_vhpt returned %d"
+operator|,
+name|__func__
+operator|,
 name|error
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|pmap_invalidate_page
 argument_list|(
 name|va
