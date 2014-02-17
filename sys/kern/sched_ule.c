@@ -8581,9 +8581,9 @@ name|sched
 argument_list|, , ,
 name|off_cpu
 argument_list|,
-name|td
+name|newtd
 argument_list|,
-name|td
+name|newtd
 operator|->
 name|td_proc
 argument_list|)
