@@ -344,14 +344,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * These hooks are necessary for the pid, usdt and fasttrap providers.  */
+comment|/*  * These hooks are necessary for the pid and usdt providers.  */
 end_comment
-
-begin_decl_stmt
-name|dtrace_fasttrap_probe_ptr_t
-name|dtrace_fasttrap_probe_ptr
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|dtrace_pid_probe_ptr_t
@@ -2584,7 +2578,7 @@ ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
 comment|/* 	 * A trap can occur while DTrace executes a probe. Before 	 * executing the probe, DTrace blocks re-scheduling and sets 	 * a flag in it's per-cpu flags to indicate that it doesn't 	 * want to fault. On returning from the probe, the no-fault 	 * flag is cleared and finally re-scheduling is enabled. 	 * 	 * If the DTrace kernel module has registered a trap handler, 	 * call it and if it returns non-zero, assume that it has 	 * handled the trap and modified the trap frame so that this 	 * function can return normally. 	 */
-comment|/* 	 * XXXDTRACE: add fasttrap and pid  probes handlers here (if ever) 	 */
+comment|/* 	 * XXXDTRACE: add pid probe handler here (if ever) 	 */
 if|if
 condition|(
 operator|!
