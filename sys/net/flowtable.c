@@ -2050,7 +2050,7 @@ modifier|*
 name|ft
 parameter_list|)
 block|{
-comment|/*  	 * flowtable_free_stale() calls w/o critical section, but 	 * with sched_bind(). Since pointer is stable throughout 	 * ft lifetime, it is safe, otherwise... 	 * 	 * CRITICAL_ASSERT(curthread); 	 */
+comment|/* 	 * flowtable_free_stale() calls w/o critical section, but 	 * with sched_bind(). Since pointer is stable throughout 	 * ft lifetime, it is safe, otherwise... 	 * 	 * CRITICAL_ASSERT(curthread); 	 */
 return|return
 operator|(
 operator|*
