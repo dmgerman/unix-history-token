@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2014 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -20138,6 +20138,26 @@ argument_list|,
 name|ab
 argument_list|)
 expr_stmt|;
+name|abl2
+operator|=
+name|ab
+operator|->
+name|b_l2hdr
+expr_stmt|;
+comment|/* 		 * Release the temporary compressed buffer as soon as possible. 		 */
+if|if
+condition|(
+name|abl2
+operator|->
+name|b_compress
+operator|!=
+name|ZIO_COMPRESS_OFF
+condition|)
+name|l2arc_release_cdata_buf
+argument_list|(
+name|ab
+argument_list|)
+expr_stmt|;
 name|hash_lock
 operator|=
 name|HDR_LOCK
@@ -20162,26 +20182,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|abl2
-operator|=
-name|ab
-operator|->
-name|b_l2hdr
-expr_stmt|;
-comment|/* 		 * Release the temporary compressed buffer as soon as possible. 		 */
-if|if
-condition|(
-name|abl2
-operator|->
-name|b_compress
-operator|!=
-name|ZIO_COMPRESS_OFF
-condition|)
-name|l2arc_release_cdata_buf
-argument_list|(
-name|ab
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|zio
