@@ -475,20 +475,6 @@ value|2
 end_define
 
 begin_comment
-comment|/* Maximum number of allowed items-per-slab if the slab header is OFFPAGE */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u_int
-name|uma_max_ipers
-init|=
-name|SLAB_SETSIZE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Only mbuf clusters use ref zones.  Just provide enough references  * to support the one user.  New code should not use the ref facility.  */
 end_comment
 
@@ -5774,7 +5760,7 @@ name|keg
 operator|->
 name|uk_ipers
 operator|<=
-name|uma_max_ipers
+name|SLAB_SETSIZE
 argument_list|,
 operator|(
 literal|"%s: keg->uk_ipers too high(%d) increase max_ipers"
