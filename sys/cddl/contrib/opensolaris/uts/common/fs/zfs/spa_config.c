@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -681,7 +681,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Synchronize pool configuration to disk.  This must be called with the  * namespace lock held.  */
+comment|/*  * Synchronize pool configuration to disk.  This must be called with the  * namespace lock held. Synchronizing the pool cache is typically done after  * the configuration has been synced to the MOS. This exposes a window where  * the MOS config will have been updated but the cache file has not. If  * the system were to crash at that instant then the cached config may not  * contain the correct information to open the pool and an explicity import  * would be required.  */
 end_comment
 
 begin_function
