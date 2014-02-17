@@ -5962,7 +5962,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Make sure the alignment requirement hasn't increased. 		 */
+comment|/* 		 * Detect if the alignment requirement has increased. 		 * We don't want to make the pool unavailable, just 		 * issue a warning instead. 		 */
 if|if
 condition|(
 name|ashift
@@ -5972,24 +5972,26 @@ operator|->
 name|vdev_top
 operator|->
 name|vdev_ashift
+operator|&&
+name|vd
+operator|->
+name|vdev_ops
+operator|->
+name|vdev_op_leaf
 condition|)
 block|{
-name|vdev_set_state
+name|cmn_err
 argument_list|(
+name|CE_WARN
+argument_list|,
+literal|"Disk, '%s', has a block alignment that is "
+literal|"larger than the pool's alignment\n"
+argument_list|,
 name|vd
-argument_list|,
-name|B_TRUE
-argument_list|,
-name|VDEV_STATE_CANT_OPEN
-argument_list|,
-name|VDEV_AUX_BAD_LABEL
+operator|->
+name|vdev_path
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 block|}
 name|vd
 operator|->
