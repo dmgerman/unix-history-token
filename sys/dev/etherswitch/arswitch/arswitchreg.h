@@ -2197,6 +2197,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR8327_REG_MDIO_CTRL
+value|0x03c
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR8327_REG_SERVICE_TAG
 value|0x048
 end_define
