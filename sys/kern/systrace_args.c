@@ -1066,7 +1066,7 @@ name|p
 operator|->
 name|from
 expr_stmt|;
-comment|/* struct sockaddr *__restrict */
+comment|/* struct sockaddr * */
 name|uarg
 index|[
 literal|5
@@ -1079,7 +1079,7 @@ name|p
 operator|->
 name|fromlenaddr
 expr_stmt|;
-comment|/* __socklen_t *__restrict */
+comment|/* __socklen_t * */
 operator|*
 name|n_args
 operator|=
@@ -1121,7 +1121,7 @@ name|p
 operator|->
 name|name
 expr_stmt|;
-comment|/* struct sockaddr *__restrict */
+comment|/* struct sockaddr * */
 name|uarg
 index|[
 literal|2
@@ -1134,7 +1134,7 @@ name|p
 operator|->
 name|anamelen
 expr_stmt|;
-comment|/* __socklen_t *__restrict */
+comment|/* __socklen_t * */
 operator|*
 name|n_args
 operator|=
@@ -1176,7 +1176,7 @@ name|p
 operator|->
 name|asa
 expr_stmt|;
-comment|/* struct sockaddr *__restrict */
+comment|/* struct sockaddr * */
 name|uarg
 index|[
 literal|2
@@ -1189,7 +1189,7 @@ name|p
 operator|->
 name|alen
 expr_stmt|;
-comment|/* __socklen_t *__restrict */
+comment|/* __socklen_t * */
 operator|*
 name|n_args
 operator|=
@@ -1231,7 +1231,7 @@ name|p
 operator|->
 name|asa
 expr_stmt|;
-comment|/* struct sockaddr *__restrict */
+comment|/* struct sockaddr * */
 name|uarg
 index|[
 literal|2
@@ -1244,7 +1244,7 @@ name|p
 operator|->
 name|alen
 expr_stmt|;
-comment|/* __socklen_t *__restrict */
+comment|/* __socklen_t * */
 operator|*
 name|n_args
 operator|=
@@ -18660,7 +18660,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *__restrict"
+literal|"struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -18668,7 +18668,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"__socklen_t *__restrict"
+literal|"__socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -18698,7 +18698,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *__restrict"
+literal|"struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -18706,7 +18706,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *__restrict"
+literal|"__socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -18736,7 +18736,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *__restrict"
+literal|"struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -18744,7 +18744,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *__restrict"
+literal|"__socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -18774,7 +18774,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *__restrict"
+literal|"struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -18782,7 +18782,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *__restrict"
+literal|"__socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
