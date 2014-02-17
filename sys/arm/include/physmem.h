@@ -108,6 +108,7 @@ file|<machine/ofw_machdep.h>
 end_include
 
 begin_function
+specifier|static
 specifier|inline
 name|void
 name|arm_physmem_hardware_regions
@@ -146,6 +147,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|void
 name|arm_physmem_exclude_regions
