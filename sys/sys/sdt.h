@@ -881,7 +881,7 @@ parameter_list|(
 name|prov
 parameter_list|)
 define|\
-value|struct sdt_provider sdt_provider_##prov[1] = {				\ 		{ #prov, { NULL, NULL }, { NULL, NULL }, 0, 0 }			\ 	};									\ 	DATA_SET(sdt_providers_set, sdt_provider_##prov);
+value|struct sdt_provider sdt_provider_##prov[1] = {				\ 		{ #prov, { NULL, NULL }, 0, 0 }					\ 	};									\ 	DATA_SET(sdt_providers_set, sdt_provider_##prov);
 end_define
 
 begin_define
@@ -1795,14 +1795,6 @@ argument_list|)
 name|prov_entry
 expr_stmt|;
 comment|/* SDT provider list entry. */
-name|TAILQ_HEAD
-argument_list|(
-argument|probe_list_head
-argument_list|,
-argument|sdt_probe
-argument_list|)
-name|probe_list
-expr_stmt|;
 name|uintptr_t
 name|id
 decl_stmt|;
