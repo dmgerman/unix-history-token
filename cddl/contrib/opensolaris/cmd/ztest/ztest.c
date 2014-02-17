@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>.  All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>.  All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3207,6 +3207,33 @@ name|spa_normal_class
 argument_list|(
 name|ztest_spa
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Before we kill off ztest, make sure that the config is updated. 	 * See comment above spa_config_sync(). 	 */
+name|mutex_enter
+argument_list|(
+operator|&
+name|spa_namespace_lock
+argument_list|)
+expr_stmt|;
+name|spa_config_sync
+argument_list|(
+name|ztest_spa
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|spa_namespace_lock
+argument_list|)
+expr_stmt|;
+name|zfs_dbgmsg_print
+argument_list|(
+name|FTAG
 argument_list|)
 expr_stmt|;
 operator|(
@@ -13780,7 +13807,7 @@ name|oldguid
 decl_stmt|,
 name|pguid
 decl_stmt|;
-name|size_t
+name|uint64_t
 name|oldsize
 decl_stmt|,
 name|newsize
@@ -14516,16 +14543,10 @@ literal|"returned %d, expected %d"
 argument_list|,
 name|oldpath
 argument_list|,
-operator|(
-name|longlong_t
-operator|)
 name|oldsize
 argument_list|,
 name|newpath
 argument_list|,
-operator|(
-name|longlong_t
-operator|)
 name|newsize
 argument_list|,
 name|replacing
@@ -24091,7 +24112,9 @@ argument_list|)
 operator|||
 name|vd0
 operator|->
-name|vdev_resilvering
+name|vdev_resilver_txg
+operator|!=
+literal|0
 operator|)
 condition|)
 block|{
@@ -27961,6 +27984,11 @@ name|spa_normal_class
 argument_list|(
 name|spa
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|zfs_dbgmsg_print
+argument_list|(
+name|FTAG
 argument_list|)
 expr_stmt|;
 name|umem_free
