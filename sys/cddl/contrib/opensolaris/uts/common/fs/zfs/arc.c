@@ -22448,6 +22448,11 @@ argument_list|,
 name|l2hdr
 operator|->
 name|b_asize
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|SPA_MINBLOCKSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -23214,6 +23219,11 @@ name|l2arc_vdev_present
 argument_list|(
 name|vd
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|vdev_ashift_optimize
+argument_list|(
+name|vd
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Create a new l2arc device entry. 	 */

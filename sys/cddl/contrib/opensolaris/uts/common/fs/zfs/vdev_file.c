@@ -116,7 +116,11 @@ name|max_psize
 parameter_list|,
 name|uint64_t
 modifier|*
-name|ashift
+name|logical_ashift
+parameter_list|,
+name|uint64_t
+modifier|*
+name|physical_ashift
 parameter_list|)
 block|{
 name|vdev_file_t
@@ -524,7 +528,12 @@ operator|.
 name|va_size
 expr_stmt|;
 operator|*
-name|ashift
+name|logical_ashift
+operator|=
+name|SPA_MINBLOCKSHIFT
+expr_stmt|;
+operator|*
+name|physical_ashift
 operator|=
 name|SPA_MINBLOCKSHIFT
 expr_stmt|;
