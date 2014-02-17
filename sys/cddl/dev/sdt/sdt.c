@@ -267,7 +267,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|sdt_kld_unload
+name|sdt_kld_unload_try
 parameter_list|(
 name|void
 modifier|*
@@ -426,7 +426,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|eventhandler_tag
-name|sdt_kld_unload_tag
+name|sdt_kld_unload_try_tag
 decl_stmt|;
 end_decl_stmt
 
@@ -1335,7 +1335,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|sdt_kld_unload
+name|sdt_kld_unload_try
 parameter_list|(
 name|void
 modifier|*
@@ -1585,13 +1585,13 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
-name|sdt_kld_unload_tag
+name|sdt_kld_unload_try_tag
 operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|kld_unload
+name|kld_unload_try
 argument_list|,
-name|sdt_kld_unload
+name|sdt_kld_unload_try
 argument_list|,
 name|NULL
 argument_list|,
@@ -1637,9 +1637,9 @@ argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
-name|kld_unload
+name|kld_unload_try
 argument_list|,
-name|sdt_kld_unload_tag
+name|sdt_kld_unload_try_tag
 argument_list|)
 expr_stmt|;
 name|sdt_probe_func

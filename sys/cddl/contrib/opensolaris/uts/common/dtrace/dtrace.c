@@ -1241,7 +1241,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|eventhandler_tag
-name|dtrace_kld_unload_tag
+name|dtrace_kld_unload_try_tag
 decl_stmt|;
 end_decl_stmt
 
@@ -64472,7 +64472,7 @@ expr_stmt|;
 block|}
 specifier|static
 name|void
-name|dtrace_kld_unload
+name|dtrace_kld_unload_try
 parameter_list|(
 name|void
 modifier|*

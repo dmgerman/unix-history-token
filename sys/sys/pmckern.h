@@ -98,14 +98,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|PMC_FN_KLD_LOAD
+name|PMC_FN_UNUSED1
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|PMC_FN_KLD_UNLOAD
+name|PMC_FN_UNUSED2
 value|6
 end_define
 

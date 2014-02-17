@@ -171,9 +171,9 @@ argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
-name|kld_unload
+name|kld_unload_try
 argument_list|,
-name|dtrace_kld_unload_tag
+name|dtrace_kld_unload_try_tag
 argument_list|)
 expr_stmt|;
 if|if
