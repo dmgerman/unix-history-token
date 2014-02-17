@@ -49,6 +49,32 @@ directive|include
 file|<sys/zio.h>
 end_include
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_zfs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|metaslab
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"ZFS metaslab"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Allow allocations to switch to gang blocks quickly. We do this to  * avoid having to load lots of space_maps in a given txg. There are,  * however, some cases where we want to avoid "fast" ganging and instead  * we want to do an exhaustive search of all metaslabs on this device.  * Currently we don't allow any gang, zil, or dump device related allocations  * to "fast" gang.  */
 end_comment
@@ -88,6 +114,38 @@ begin_comment
 comment|/* force gang blocks */
 end_comment
 
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.metaslab.gang_bang"
+argument_list|,
+operator|&
+name|metaslab_gang_bang
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_QUAD
+argument_list|(
+name|_vfs_zfs_metaslab
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|gang_bang
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|metaslab_gang_bang
+argument_list|,
+literal|0
+argument_list|,
+literal|"Force gang block allocation for blocks larger than or equal to this value"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * The in-core space map representation is more compact than its on-disk form.  * The zfs_condense_pct determines how much more compact the in-core  * space_map representation must be before we compact it on-disk.  * Values should be greater than or equal to 100.  */
 end_comment
@@ -113,9 +171,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_DECL
+name|TUNABLE_INT
 argument_list|(
-name|_vfs_zfs
+literal|"vfs.zfs.mg_alloc_failures"
+argument_list|,
+operator|&
+name|zfs_mg_alloc_failures
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -129,7 +190,7 @@ name|OID_AUTO
 argument_list|,
 name|mg_alloc_failures
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfs_mg_alloc_failures
@@ -137,17 +198,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Number of allowed allocation failures per vdev"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.mg_alloc_failures"
-argument_list|,
-operator|&
-name|zfs_mg_alloc_failures
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -177,6 +227,38 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.debug"
+argument_list|,
+operator|&
+name|metaslab_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_metaslab
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|metaslab_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Metaslab debugging: when set, keeps all space maps in core to verify frees"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Minimum size which forces the dynamic allocator to change  * it's allocation strategy.  Once the space map cannot satisfy  * an allocation of this size then it switches to using more  * aggressive strategy (i.e search by size rather than offset).  */
 end_comment
@@ -188,6 +270,38 @@ init|=
 name|SPA_MAXBLOCKSIZE
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.metaslab.df_alloc_threshold"
+argument_list|,
+operator|&
+name|metaslab_df_alloc_threshold
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_QUAD
+argument_list|(
+name|_vfs_zfs_metaslab
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|df_alloc_threshold
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|metaslab_df_alloc_threshold
+argument_list|,
+literal|0
+argument_list|,
+literal|"Minimum size which forces the dynamic allocator to change it's allocation strategy"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * The minimum free space, in percent, which must be available  * in a space map to continue allocations in a first-fit fashion.  * Once the space_map's free space drops below this level we dynamically  * switch to using best-fit allocations.  */
@@ -201,6 +315,38 @@ literal|4
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.df_free_pct"
+argument_list|,
+operator|&
+name|metaslab_df_free_pct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_metaslab
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|df_free_pct
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|metaslab_df_free_pct
+argument_list|,
+literal|0
+argument_list|,
+literal|"The minimum free space, in percent, which must be available in a space map to continue allocations in a first-fit fashion"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * A metaslab is considered "free" if it contains a contiguous  * segment which is greater than metaslab_min_alloc_size.  */
 end_comment
@@ -212,6 +358,38 @@ init|=
 name|DMU_MAX_ACCESS
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.metaslab.min_alloc_size"
+argument_list|,
+operator|&
+name|metaslab_min_alloc_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_QUAD
+argument_list|(
+name|_vfs_zfs_metaslab
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|min_alloc_size
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|metaslab_min_alloc_size
+argument_list|,
+literal|0
+argument_list|,
+literal|"A metaslab is considered \"free\" if it contains a contiguous segment which is greater than vfs.zfs.metaslab.min_alloc_size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Max number of space_maps to prefetch.  */
@@ -225,6 +403,38 @@ name|SPA_DVAS_PER_BP
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.prefetch_limit"
+argument_list|,
+operator|&
+name|metaslab_prefetch_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_metaslab
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|prefetch_limit
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|metaslab_prefetch_limit
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of space_maps to prefetch"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Percentage bonus multiplier for metaslabs that are in the bonus area.  */
 end_comment
@@ -236,6 +446,38 @@ init|=
 literal|150
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.smo_bonus_pct"
+argument_list|,
+operator|&
+name|metaslab_smo_bonus_pct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_metaslab
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|smo_bonus_pct
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|metaslab_smo_bonus_pct
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of space_maps to prefetch"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Should we be willing to write data to degraded vdevs?  */
