@@ -322,6 +322,87 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pci_vpd_element
+block|{
+name|char
+name|pve_keyword
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|pve_flags
+decl_stmt|;
+name|uint8_t
+name|pve_datalen
+decl_stmt|;
+name|uint8_t
+name|pve_data
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|PVE_FLAG_IDENT
+value|0x01
+end_define
+
+begin_comment
+comment|/* Element is the string identifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVE_FLAG_RW
+value|0x02
+end_define
+
+begin_comment
+comment|/* Element is read/write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVE_NEXT
+parameter_list|(
+name|pve
+parameter_list|)
+define|\
+value|((struct pci_vpd_element *)((char *)(pve) +			\ 	    sizeof(struct pci_vpd_element) + (pve)->pve_datalen))
+end_define
+
+begin_struct
+struct|struct
+name|pci_list_vpd_io
+block|{
+name|struct
+name|pcisel
+name|plvi_sel
+decl_stmt|;
+comment|/* device to operate on */
+name|size_t
+name|plvi_len
+decl_stmt|;
+comment|/* size of the data area */
+name|struct
+name|pci_vpd_element
+modifier|*
+name|plvi_data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -355,6 +436,13 @@ define|#
 directive|define
 name|PCIOCGETBAR
 value|_IOWR('p', 6, struct pci_bar_io)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIOCLISTVPD
+value|_IOWR('p', 7, struct pci_list_vpd_io)
 end_define
 
 begin_endif
