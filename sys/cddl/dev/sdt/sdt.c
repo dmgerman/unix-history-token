@@ -992,7 +992,6 @@ operator|->
 name|ndx
 condition|)
 block|{
-comment|/* XXX */
 name|desc
 operator|->
 name|dtargd_mapping
@@ -1019,6 +1018,33 @@ name|dtargd_native
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|argtype
+operator|->
+name|xtype
+operator|!=
+name|NULL
+condition|)
+name|strlcpy
+argument_list|(
+name|desc
+operator|->
+name|dtargd_xlate
+argument_list|,
+name|argtype
+operator|->
+name|xtype
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|desc
+operator|->
+name|dtargd_xlate
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|desc
 operator|->
 name|dtargd_xlate
@@ -1028,7 +1054,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* XXX */
 block|}
 block|}
 block|}
