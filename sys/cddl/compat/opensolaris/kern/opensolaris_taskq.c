@@ -709,5 +709,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|taskq_wait
+parameter_list|(
+name|taskq_t
+modifier|*
+name|tq
+parameter_list|)
+block|{
+name|taskqueue_drain_all
+argument_list|(
+name|tq
+operator|->
+name|tq_queue
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 
