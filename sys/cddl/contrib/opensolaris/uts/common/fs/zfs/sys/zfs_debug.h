@@ -80,6 +80,10 @@ specifier|extern
 name|int
 name|zfs_flags
 decl_stmt|;
+specifier|extern
+name|int
+name|zfs_recover
+decl_stmt|;
 define|#
 directive|define
 name|ZFS_DEBUG_DPRINTF
