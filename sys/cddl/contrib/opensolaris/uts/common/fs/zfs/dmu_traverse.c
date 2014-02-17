@@ -1688,13 +1688,13 @@ argument_list|,
 operator|&
 name|osp
 operator|->
-name|os_userused_dnode
+name|os_groupused_dnode
 argument_list|,
 name|zb
 operator|->
 name|zb_objset
 argument_list|,
-name|DMU_USERUSED_OBJECT
+name|DMU_GROUPUSED_OBJECT
 argument_list|)
 expr_stmt|;
 name|prefetch_dnode_metadata
@@ -1704,7 +1704,7 @@ argument_list|,
 operator|&
 name|osp
 operator|->
-name|os_groupused_dnode
+name|os_userused_dnode
 argument_list|,
 name|zb
 operator|->
@@ -1767,7 +1767,7 @@ operator|=
 operator|&
 name|osp
 operator|->
-name|os_userused_dnode
+name|os_groupused_dnode
 expr_stmt|;
 name|err
 operator|=
@@ -1781,7 +1781,7 @@ name|zb
 operator|->
 name|zb_objset
 argument_list|,
-name|DMU_USERUSED_OBJECT
+name|DMU_GROUPUSED_OBJECT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1823,7 +1823,7 @@ operator|=
 operator|&
 name|osp
 operator|->
-name|os_groupused_dnode
+name|os_userused_dnode
 expr_stmt|;
 name|err
 operator|=
@@ -1837,7 +1837,7 @@ name|zb
 operator|->
 name|zb_objset
 argument_list|,
-name|DMU_GROUPUSED_OBJECT
+name|DMU_USERUSED_OBJECT
 argument_list|)
 expr_stmt|;
 block|}
