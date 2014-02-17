@@ -381,21 +381,11 @@ value|fuword32
 define|#
 directive|define
 name|fasttrap_suword32
-parameter_list|(
-name|_k
-parameter_list|,
-name|_u
-parameter_list|)
-value|copyout((_k), (_u), sizeof(uint32_t))
+value|suword32
 define|#
 directive|define
 name|fasttrap_suword64
-parameter_list|(
-name|_k
-parameter_list|,
-name|_u
-parameter_list|)
-value|copyout((_k), (_u), sizeof(uint64_t))
+value|suword64
 ifdef|#
 directive|ifdef
 name|__amd64__
@@ -406,7 +396,7 @@ value|fuword64
 define|#
 directive|define
 name|fasttrap_sulword
-value|fasttrap_suword64
+value|suword64
 else|#
 directive|else
 define|#
@@ -416,7 +406,7 @@ value|fuword32
 define|#
 directive|define
 name|fasttrap_sulword
-value|fasttrap_suword32
+value|suword32
 endif|#
 directive|endif
 specifier|extern
