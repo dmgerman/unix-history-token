@@ -210,9 +210,6 @@ index|]
 operator|&&
 operator|!
 name|Gbl_DisasmFlag
-operator|&&
-operator|!
-name|Gbl_GetAllTables
 condition|)
 block|{
 name|printf
@@ -671,15 +668,16 @@ case|case
 literal|'g'
 case|:
 comment|/* Get all ACPI tables */
-name|Gbl_GetAllTables
-operator|=
-name|TRUE
+name|printf
+argument_list|(
+literal|"-g option is deprecated, use acpidump utility instead\n"
+argument_list|)
 expr_stmt|;
-name|Gbl_DoCompile
-operator|=
-name|FALSE
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
-break|break;
 case|case
 literal|'h'
 case|:

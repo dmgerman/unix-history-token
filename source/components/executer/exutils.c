@@ -135,39 +135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReacquireInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Reacquire the interpreter execution region from within the  *              interpreter code. Failure to enter the interpreter region is a  *              fatal system error. Used in conjunction with  *              RelinquishInterpreter  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiExReacquireInterpreter
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|ExReacquireInterpreter
-argument_list|)
-expr_stmt|;
-comment|/*      * If the global serialized flag is set, do not release the interpreter,      * since it was not actually released by AcpiExRelinquishInterpreter.      * This forces the interpreter to be single threaded.      */
-if|if
-condition|(
-operator|!
-name|AcpiGbl_AllMethodsSerialized
-condition|)
-block|{
-name|AcpiExEnterInterpreter
-argument_list|()
-expr_stmt|;
-block|}
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExitInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Exit the interpreter execution region. This is the top level  *              routine used to exit the interpreter when all processing has  *              been completed.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExitInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Exit the interpreter execution region. This is the top level  *              routine used to exit the interpreter when all processing has  *              been completed, or when the method blocks.  *  * Cases where the interpreter is unlocked internally:  *      1) Method will be blocked on a Sleep() AML opcode  *      2) Method will be blocked on an Acquire() AML opcode  *      3) Method will be blocked on a Wait() AML opcode  *      4) Method will be blocked to acquire the global lock  *      5) Method will be blocked waiting to execute a serialized control  *          method that is currently executing  *      6) About to invoke a user-installed opregion handler  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -208,38 +176,6 @@ operator|,
 literal|"Could not release AML Interpreter mutex"
 operator|)
 argument_list|)
-expr_stmt|;
-block|}
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExRelinquishInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Exit the interpreter execution region, from within the  *              interpreter - before attempting an operation that will possibly  *              block the running thread.  *  * Cases where the interpreter is unlocked internally  *      1) Method to be blocked on a Sleep() AML opcode  *      2) Method to be blocked on an Acquire() AML opcode  *      3) Method to be blocked on a Wait() AML opcode  *      4) Method to be blocked to acquire the global lock  *      5) Method to be blocked waiting to execute a serialized control method  *          that is currently executing  *      6) About to invoke a user-installed opregion handler  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiExRelinquishInterpreter
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|ExRelinquishInterpreter
-argument_list|)
-expr_stmt|;
-comment|/*      * If the global serialized flag is set, do not release the interpreter.      * This forces the interpreter to be single threaded.      */
-if|if
-condition|(
-operator|!
-name|AcpiGbl_AllMethodsSerialized
-condition|)
-block|{
-name|AcpiExExitInterpreter
-argument_list|()
 expr_stmt|;
 block|}
 name|return_VOID

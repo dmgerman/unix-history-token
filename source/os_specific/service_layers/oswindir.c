@@ -171,6 +171,11 @@ argument_list|(
 literal|"Could not allocate buffer for wildcard pathname\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|SearchInfo
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL

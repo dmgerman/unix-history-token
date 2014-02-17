@@ -525,8 +525,6 @@ name|ASL_FILE_INPUT
 index|]
 operator|.
 name|Filename
-argument_list|,
-name|Gbl_GetAllTables
 argument_list|)
 expr_stmt|;
 if|if
@@ -685,8 +683,6 @@ comment|/*      * AML Disassembly (Optional)      */
 if|if
 condition|(
 name|Gbl_DisasmFlag
-operator|||
-name|Gbl_GetAllTables
 condition|)
 block|{
 name|Status

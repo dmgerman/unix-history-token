@@ -50,6 +50,42 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AslAbort  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Dump the error log and abort the compiler. Used for serious  *              I/O errors.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AslAbort
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|AePrintErrorLog
+argument_list|(
+name|ASL_FILE_STDERR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_DebugFlag
+condition|)
+block|{
+comment|/* Print error summary to stdout also */
+name|AePrintErrorLog
+argument_list|(
+name|ASL_FILE_STDOUT
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AeClearErrorLog  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Empty the error list  *  ******************************************************************************/
 end_comment
 
@@ -1853,6 +1889,8 @@ block|{
 comment|/* Check if user wants to ignore this exception */
 if|if
 condition|(
+name|Gbl_AllExceptionsDisabled
+operator|||
 name|AslIsExceptionDisabled
 argument_list|(
 name|Level

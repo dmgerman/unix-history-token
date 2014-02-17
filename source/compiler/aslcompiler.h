@@ -661,6 +661,15 @@ end_comment
 
 begin_function_decl
 name|void
+name|AslAbort
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AslError
 parameter_list|(
 name|UINT8
@@ -1734,15 +1743,6 @@ end_function_decl
 begin_comment
 comment|/*  * aslfiles - File I/O support  */
 end_comment
-
-begin_function_decl
-name|void
-name|AslAbort
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

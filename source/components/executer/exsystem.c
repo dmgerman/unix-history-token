@@ -101,7 +101,7 @@ name|AE_TIME
 condition|)
 block|{
 comment|/* We must wait, so unlock the interpreter */
-name|AcpiExRelinquishInterpreter
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 name|Status
@@ -130,7 +130,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Reacquire the interpreter */
-name|AcpiExReacquireInterpreter
+name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
 block|}
@@ -196,7 +196,7 @@ name|AE_TIME
 condition|)
 block|{
 comment|/* We must wait, so unlock the interpreter */
-name|AcpiExRelinquishInterpreter
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 name|Status
@@ -223,7 +223,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Reacquire the interpreter */
-name|AcpiExReacquireInterpreter
+name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
 block|}
@@ -312,7 +312,7 @@ name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
 comment|/* Since this thread will sleep, we must release the interpreter */
-name|AcpiExRelinquishInterpreter
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 comment|/*      * For compatibility with other ACPI implementations and to prevent      * accidental deep sleeps, limit the sleep time to something reasonable.      */
@@ -334,7 +334,7 @@ name|HowLong
 argument_list|)
 expr_stmt|;
 comment|/* And now we must get the interpreter again */
-name|AcpiExReacquireInterpreter
+name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
 return|return

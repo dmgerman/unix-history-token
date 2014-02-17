@@ -964,7 +964,7 @@ comment|/*    ASL_MSG_OEM_TABLE */
 literal|"OEM table - unknown contents"
 block|,
 comment|/*    ASL_MSG_RESERVED_VALUE */
-literal|"Reserved field must be zero"
+literal|"Reserved field"
 block|,
 comment|/*    ASL_MSG_UNKNOWN_LABEL */
 literal|"Label is undefined"

@@ -19,6 +19,19 @@ directive|define
 name|__ACBUFFER_H__
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+end_pragma
+
+begin_comment
+comment|/* Set default struct packing */
+end_comment
+
 begin_comment
 comment|/*  * Contains buffer structures for these predefined names:  * _FDE, _GRT, _GTM, _PLD, _SRT  */
 end_comment
@@ -921,6 +934,19 @@ end_define
 
 begin_comment
 comment|/* Offset 128+16=144, Len 16 */
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_comment
+comment|/* Restore original struct packing */
 end_comment
 
 begin_endif

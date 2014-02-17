@@ -19,6 +19,19 @@ directive|define
 name|_ACDISPAT_H_
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+end_pragma
+
+begin_comment
+comment|/* Set default struct packing */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -357,7 +370,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * dsload - Parser/Interpreter interface, pass 1 namespace load callbacks  */
+comment|/*  * dsload - Parser/Interpreter interface  */
 end_comment
 
 begin_function_decl
@@ -373,6 +386,10 @@ name|PassNumber
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* dsload - pass 1 namespace load callbacks */
+end_comment
 
 begin_function_decl
 name|ACPI_STATUS
@@ -402,7 +419,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * dsload - Parser/Interpreter interface, pass 2 namespace load callbacks  */
+comment|/* dsload - pass 2 namespace load callbacks */
 end_comment
 
 begin_function_decl
@@ -582,11 +599,15 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiDsParseMethod
+name|AcpiDsAutoSerializeMethod
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1154,6 +1175,19 @@ name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_comment
+comment|/* Restore original struct packing */
+end_comment
 
 begin_endif
 endif|#

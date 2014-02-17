@@ -464,7 +464,11 @@ name|ACPI_PREDEFINED_INFO
 modifier|*
 name|ThisName
 decl_stmt|;
-comment|/* Check parent method for a match against the predefined name list */
+comment|/*      * Check parent method for a match against the predefined name list.      *      * Note: Disable compiler errors/warnings because any errors will be      * caught when analyzing the parent method. Eliminates duplicate errors.      */
+name|Gbl_AllExceptionsDisabled
+operator|=
+name|TRUE
+expr_stmt|;
 name|Index
 operator|=
 name|ApCheckForPredefinedName
@@ -481,6 +485,10 @@ name|Asl
 operator|.
 name|NameSeg
 argument_list|)
+expr_stmt|;
+name|Gbl_AllExceptionsDisabled
+operator|=
+name|FALSE
 expr_stmt|;
 switch|switch
 condition|(

@@ -11948,7 +11948,7 @@ block|,
 comment|/* 00000000    "SPMIA..." */
 literal|0x04
 block|,
-literal|0xED
+literal|0x00
 block|,
 literal|0x49
 block|,
@@ -11997,23 +11997,23 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x28
+literal|0x14
 block|,
-literal|0x05
+literal|0x01
 block|,
-literal|0x10
+literal|0x14
 block|,
 literal|0x20
 block|,
 literal|0x00
 block|,
-literal|0x00
+literal|0x01
 block|,
 literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000020    "(.. ...." */
+comment|/* 00000020    "... ...." */
 literal|0x00
 block|,
 literal|0x00

@@ -766,6 +766,16 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* Is not a recognizeable object */
+name|AcpiOsPrintf
+argument_list|(
+literal|"Not a known ACPI internal object, descriptor type %2.2X\n"
+argument_list|,
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjPtr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|Size
 operator|=
 literal|16

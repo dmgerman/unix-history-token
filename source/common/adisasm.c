@@ -530,7 +530,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdAmlDisassemble  *  * PARAMETERS:  Filename            - AML input filename  *              OutToFile           - TRUE if output should go to a file  *              Prefix              - Path prefix for output  *              OutFilename         - where the filename is returned  *              GetAllTables        - TRUE if all tables are desired  *  * RETURN:      Status  *  * DESCRIPTION: Disassemble an entire ACPI table  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdAmlDisassemble  *  * PARAMETERS:  Filename            - AML input filename  *              OutToFile           - TRUE if output should go to a file  *              Prefix              - Path prefix for output  *              OutFilename         - where the filename is returned  *  * RETURN:      Status  *  * DESCRIPTION: Disassemble an entire ACPI table  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -552,9 +552,6 @@ name|char
 modifier|*
 modifier|*
 name|OutFilename
-parameter_list|,
-name|BOOLEAN
-name|GetAllTables
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -769,11 +766,7 @@ block|{
 name|Status
 operator|=
 name|AdGetLocalTables
-argument_list|(
-name|Filename
-argument_list|,
-name|GetAllTables
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1870,19 +1863,14 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdGetLocalTables  *  * PARAMETERS:  Filename            - Not used  *              GetAllTables        - TRUE if all tables are desired  *  * RETURN:      Status  *  * DESCRIPTION: Get the ACPI tables from either memory or a file  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdGetLocalTables  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Get the ACPI tables from either memory or a file  *  *****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AdGetLocalTables
 parameter_list|(
-name|char
-modifier|*
-name|Filename
-parameter_list|,
-name|BOOLEAN
-name|GetAllTables
+name|void
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -1896,26 +1884,16 @@ modifier|*
 name|NewTable
 decl_stmt|;
 name|UINT32
-name|NumTables
-decl_stmt|;
-name|UINT32
-name|PointerSize
-decl_stmt|;
-name|UINT32
 name|TableIndex
 decl_stmt|;
-if|if
-condition|(
-name|GetAllTables
-condition|)
-block|{
+comment|/* Get the DSDT via table override */
 name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-name|ACPI_SIG_RSDT
+name|ACPI_SIG_DSDT
 argument_list|)
 expr_stmt|;
 name|AcpiOsTableOverride
@@ -1937,7 +1915,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Could not obtain RSDT\n"
+literal|"Could not obtain DSDT\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1946,152 +1924,6 @@ name|AE_NO_ACPI_TABLES
 operator|)
 return|;
 block|}
-else|else
-block|{
-name|AdWriteTable
-argument_list|(
-name|NewTable
-argument_list|,
-name|NewTable
-operator|->
-name|Length
-argument_list|,
-name|ACPI_SIG_RSDT
-argument_list|,
-name|NewTable
-operator|->
-name|OemTableId
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ACPI_COMPARE_NAME
-argument_list|(
-name|NewTable
-operator|->
-name|Signature
-argument_list|,
-name|ACPI_SIG_RSDT
-argument_list|)
-condition|)
-block|{
-name|PointerSize
-operator|=
-sizeof|sizeof
-argument_list|(
-name|UINT32
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|PointerSize
-operator|=
-sizeof|sizeof
-argument_list|(
-name|UINT64
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*          * Determine the number of tables pointed to by the RSDT/XSDT.          * This is defined by the ACPI Specification to be the number of          * pointers contained within the RSDT/XSDT. The size of the pointers          * is architecture-dependent.          */
-name|NumTables
-operator|=
-operator|(
-name|NewTable
-operator|->
-name|Length
-operator|-
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|)
-operator|)
-operator|/
-name|PointerSize
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"There are %u tables defined in the %4.4s\n\n"
-argument_list|,
-name|NumTables
-argument_list|,
-name|NewTable
-operator|->
-name|Signature
-argument_list|)
-expr_stmt|;
-comment|/* Get the FADT */
-name|ACPI_MOVE_32_TO_32
-argument_list|(
-name|TableHeader
-operator|.
-name|Signature
-argument_list|,
-name|ACPI_SIG_FADT
-argument_list|)
-expr_stmt|;
-name|AcpiOsTableOverride
-argument_list|(
-operator|&
-name|TableHeader
-argument_list|,
-operator|&
-name|NewTable
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NewTable
-condition|)
-block|{
-name|AdWriteTable
-argument_list|(
-name|NewTable
-argument_list|,
-name|NewTable
-operator|->
-name|Length
-argument_list|,
-name|ACPI_SIG_FADT
-argument_list|,
-name|NewTable
-operator|->
-name|OemTableId
-argument_list|)
-expr_stmt|;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-comment|/* Don't bother with FACS, it is usually all zeros */
-block|}
-comment|/* Always get the DSDT */
-name|ACPI_MOVE_32_TO_32
-argument_list|(
-name|TableHeader
-operator|.
-name|Signature
-argument_list|,
-name|ACPI_SIG_DSDT
-argument_list|)
-expr_stmt|;
-name|AcpiOsTableOverride
-argument_list|(
-operator|&
-name|TableHeader
-argument_list|,
-operator|&
-name|NewTable
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NewTable
-condition|)
-block|{
 name|AdWriteTable
 argument_list|(
 name|NewTable
@@ -2147,31 +1979,6 @@ name|AE_NO_ACPI_TABLES
 operator|)
 return|;
 block|}
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not obtain DSDT\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|AE_NO_ACPI_TABLES
-operator|)
-return|;
-block|}
-if|#
-directive|if
-literal|0
-comment|/* TBD: Future implementation */
-block|AcpiOsPrintf ("\n");
-comment|/* Get all SSDTs */
-block|ACPI_MOVE_32_TO_32 (TableHeader.Signature, ACPI_SIG_SSDT);     do     {         NewTable = NULL;         Status = AcpiOsTableOverride (&TableHeader,&NewTable);      } while (NewTable);
-endif|#
-directive|endif
 return|return
 operator|(
 name|AE_OK

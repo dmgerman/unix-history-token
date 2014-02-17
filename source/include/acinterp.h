@@ -19,6 +19,19 @@ directive|define
 name|__ACINTERP_H__
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+end_pragma
+
+begin_comment
+comment|/* Set default struct packing */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -218,6 +231,50 @@ directive|define
 name|ACPI_EXD_REFERENCE
 value|13
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXD_LIST
+value|14
+end_define
+
+begin_comment
+comment|/* Operand object list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXD_HDLR_LIST
+value|15
+end_define
+
+begin_comment
+comment|/* Address Handler list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXD_RGN_LIST
+value|16
+end_define
+
+begin_comment
+comment|/* Region list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXD_NODE
+value|17
+end_define
+
+begin_comment
+comment|/* Namespace Node */
+end_comment
 
 begin_comment
 comment|/* restore default alignment */
@@ -1612,24 +1669,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|AcpiExReacquireInterpreter
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AcpiExRelinquishInterpreter
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|BOOLEAN
 name|AcpiExTruncateFor32bitTable
 parameter_list|(
@@ -1925,6 +1964,19 @@ name|RegionContext
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_comment
+comment|/* Restore original struct packing */
+end_comment
 
 begin_endif
 endif|#

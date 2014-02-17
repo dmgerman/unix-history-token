@@ -55,6 +55,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|ACPI_DISASSEMBLER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|ACPI_DEBUGGER
 argument_list|)
 end_if

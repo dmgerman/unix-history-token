@@ -599,9 +599,8 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Ensure that reserved fields are set to zero */
-comment|/* TBD: should we set to zero, or just make this an ERROR? */
-comment|/* TBD: Probably better to use a flag */
+comment|/*      * Ensure that reserved fields are set properly. Note: uses      * the DT_NON_ZERO flag to indicate that the reserved value      * must be exactly one. Otherwise, the value must be zero.      * This is sufficient for now.      */
+comment|/* TBD: Should use a flag rather than compare "Reserved" */
 if|if
 condition|(
 operator|!
@@ -613,12 +612,20 @@ name|Name
 argument_list|,
 literal|"Reserved"
 argument_list|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
+name|Flags
+operator|&
+name|DT_NON_ZERO
+condition|)
+block|{
+if|if
+condition|(
 name|Value
 operator|!=
-literal|0
-operator|)
+literal|1
 condition|)
 block|{
 name|DtError
@@ -629,7 +636,32 @@ name|ASL_MSG_RESERVED_VALUE
 argument_list|,
 name|Field
 argument_list|,
-literal|"Setting to zero"
+literal|"Must be one, setting to one"
+argument_list|)
+expr_stmt|;
+name|Value
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|Value
+operator|!=
+literal|0
+condition|)
+block|{
+name|DtError
+argument_list|(
+name|ASL_WARNING
+argument_list|,
+name|ASL_MSG_RESERVED_VALUE
+argument_list|,
+name|Field
+argument_list|,
+literal|"Must be zero, setting to zero"
 argument_list|)
 expr_stmt|;
 name|Value
@@ -637,19 +669,21 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+block|}
 comment|/* Check if the value must be non-zero */
+elseif|else
 if|if
 condition|(
-operator|(
-name|Value
-operator|==
-literal|0
-operator|)
-operator|&&
 operator|(
 name|Flags
 operator|&
 name|DT_NON_ZERO
+operator|)
+operator|&&
+operator|(
+name|Value
+operator|==
+literal|0
 operator|)
 condition|)
 block|{

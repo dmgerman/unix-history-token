@@ -771,7 +771,9 @@ argument_list|,
 name|TokenOffset
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 block|}
 comment|/* Get the macro body. Token now points to start of body */
@@ -926,7 +928,9 @@ name|Token
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 break|break;
 block|}
@@ -1012,7 +1016,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 name|DbgPrint
 argument_list|(
@@ -1081,6 +1087,15 @@ operator|=
 name|ArgCount
 expr_stmt|;
 block|}
+return|return;
+name|ErrorExit
+label|:
+name|ACPI_FREE
+argument_list|(
+name|Args
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 

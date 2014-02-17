@@ -752,6 +752,10 @@ name|ObjDesc
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
+name|StartDesc
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
 modifier|*
 name|LastObjPtr
 decl_stmt|;
@@ -827,6 +831,10 @@ operator|->
 name|AddressSpace
 operator|.
 name|RegionList
+expr_stmt|;
+name|StartDesc
+operator|=
+name|ObjDesc
 expr_stmt|;
 name|LastObjPtr
 operator|=
@@ -1095,6 +1103,28 @@ name|Region
 operator|.
 name|Next
 expr_stmt|;
+comment|/* Prevent infinite loop if list is corrupted */
+if|if
+condition|(
+name|ObjDesc
+operator|==
+name|StartDesc
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Circular handler list in region object %p"
+operator|,
+name|RegionObj
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_VOID
+expr_stmt|;
+block|}
 block|}
 comment|/* If we get here, the region was not in the handler's region list */
 name|ACPI_DEBUG_PRINT

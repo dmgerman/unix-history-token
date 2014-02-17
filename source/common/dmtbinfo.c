@@ -11692,9 +11692,10 @@ argument_list|)
 block|,
 literal|"Reserved"
 block|,
-literal|0
+name|DT_NON_ZERO
 block|}
 block|,
+comment|/* Value must be 1 */
 block|{
 name|ACPI_DMT_UINT16
 block|,

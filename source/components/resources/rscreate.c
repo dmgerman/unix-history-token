@@ -615,7 +615,7 @@ operator|-
 literal|4
 operator|)
 expr_stmt|;
-comment|/* Each sub-package must be of length 4 */
+comment|/* Each subpackage must be of length 4 */
 if|if
 condition|(
 operator|(
@@ -656,7 +656,7 @@ name|AE_AML_PACKAGE_LIMIT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Dereference the sub-package.          * The SubObjectList will now point to an array of the four IRQ          * elements: [Address, Pin, Source, SourceIndex]          */
+comment|/*          * Dereference the subpackage.          * The SubObjectList will now point to an array of the four IRQ          * elements: [Address, Pin, Source, SourceIndex]          */
 name|SubObjectList
 operator|=
 operator|(
@@ -678,6 +678,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ObjDesc
+operator|||
 name|ObjDesc
 operator|->
 name|Common
@@ -729,6 +732,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ObjDesc
+operator|||
 name|ObjDesc
 operator|->
 name|Common
@@ -1002,6 +1008,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ObjDesc
+operator|||
 name|ObjDesc
 operator|->
 name|Common

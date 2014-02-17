@@ -931,7 +931,7 @@ name|Elements
 operator|=
 name|Pkg2Elements
 expr_stmt|;
-comment|/* Sub-package elements */
+comment|/* Subpackage elements */
 name|Pkg2Elements
 index|[
 literal|0

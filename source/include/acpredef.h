@@ -19,8 +19,21 @@ directive|define
 name|__ACPREDEF_H__
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+end_pragma
+
 begin_comment
-comment|/******************************************************************************  *  * Return Package types  *  * 1) PTYPE1 packages do not contain sub-packages.  *  * ACPI_PTYPE1_FIXED: Fixed-length length, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *  * ACPI_PTYPE1_VAR: Variable-length length. Zero-length package is allowed:  *      object type (Int/Buf/Ref)  *  * ACPI_PTYPE1_OPTION: Package has some required and some optional elements  *      (Used for _PRW)  *  *  * 2) PTYPE2 packages contain a Variable-length number of sub-packages. Each  *    of the different types describe the contents of each of the sub-packages.  *  * ACPI_PTYPE2: Each subpackage contains 1 or 2 object types. Zero-length  *      parent package is allowed:  *      object type  *      count  *      object type  *      count  *      (Used for _ALR,_MLS,_PSS,_TRT,_TSS)  *  * ACPI_PTYPE2_COUNT: Each subpackage has a count as first element.  *      Zero-length parent package is allowed:  *      object type  *      (Used for _CSD,_PSD,_TSD)  *  * ACPI_PTYPE2_PKG_COUNT: Count of subpackages at start, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *      (Used for _CST)  *  * ACPI_PTYPE2_FIXED: Each subpackage is of Fixed-length. Zero-length  *      parent package is allowed.  *      (Used for _PRT)  *  * ACPI_PTYPE2_MIN: Each subpackage has a Variable-length but minimum length.  *      Zero-length parent package is allowed:  *      (Used for _HPX)  *  * ACPI_PTYPE2_REV_FIXED: Revision at start, each subpackage is Fixed-length  *      (Used for _ART, _FPS)  *  * ACPI_PTYPE2_FIX_VAR: Each subpackage consists of some fixed-length elements  *      followed by an optional element. Zero-length parent package is allowed.  *      object type  *      count  *      object type  *      count = 0 (optional)  *      (Used for _DLM)  *  *****************************************************************************/
+comment|/* Set default struct packing */
+end_comment
+
+begin_comment
+comment|/******************************************************************************  *  * Return Package types  *  * 1) PTYPE1 packages do not contain subpackages.  *  * ACPI_PTYPE1_FIXED: Fixed-length length, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *  * ACPI_PTYPE1_VAR: Variable-length length. Zero-length package is allowed:  *      object type (Int/Buf/Ref)  *  * ACPI_PTYPE1_OPTION: Package has some required and some optional elements  *      (Used for _PRW)  *  *  * 2) PTYPE2 packages contain a Variable-length number of subpackages. Each  *    of the different types describe the contents of each of the subpackages.  *  * ACPI_PTYPE2: Each subpackage contains 1 or 2 object types. Zero-length  *      parent package is allowed:  *      object type  *      count  *      object type  *      count  *      (Used for _ALR,_MLS,_PSS,_TRT,_TSS)  *  * ACPI_PTYPE2_COUNT: Each subpackage has a count as first element.  *      Zero-length parent package is allowed:  *      object type  *      (Used for _CSD,_PSD,_TSD)  *  * ACPI_PTYPE2_PKG_COUNT: Count of subpackages at start, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *      (Used for _CST)  *  * ACPI_PTYPE2_FIXED: Each subpackage is of Fixed-length. Zero-length  *      parent package is allowed.  *      (Used for _PRT)  *  * ACPI_PTYPE2_MIN: Each subpackage has a Variable-length but minimum length.  *      Zero-length parent package is allowed:  *      (Used for _HPX)  *  * ACPI_PTYPE2_REV_FIXED: Revision at start, each subpackage is Fixed-length  *      (Used for _ART, _FPS)  *  * ACPI_PTYPE2_FIX_VAR: Each subpackage consists of some fixed-length elements  *      followed by an optional element. Zero-length parent package is allowed.  *      object type  *      count  *      object type  *      count = 0 (optional)  *      (Used for _DLM)  *  *****************************************************************************/
 end_comment
 
 begin_enum
@@ -2226,7 +2239,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/*      * For _HPX, a single package is returned, containing a variable-length number      * of sub-packages. Each sub-package contains a PCI record setting.      * There are several different type of record settings, of different      * lengths, but all elements of all settings are Integers.      */
+comment|/*      * For _HPX, a single package is returned, containing a variable-length number      * of subpackages. Each subpackage contains a PCI record setting.      * There are several different type of record settings, of different      * lengths, but all elements of all settings are Integers.      */
 block|{
 block|{
 literal|"_HPX"
@@ -2959,6 +2972,41 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+block|{
+block|{
+literal|"_PRP"
+block|,
+name|METHOD_0ARGS
+block|,
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_PACKAGE
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* Variable-length (Pkgs) each: 1 Str, 1 Int/Str/Pkg */
+name|PACKAGE_INFO
+argument_list|(
+name|ACPI_PTYPE2
+argument_list|,
+name|ACPI_RTYPE_STRING
+argument_list|,
+literal|1
+argument_list|,
+name|ACPI_RTYPE_INTEGER
+operator||
+name|ACPI_RTYPE_STRING
+operator||
+name|ACPI_RTYPE_PACKAGE
+operator||
+name|ACPI_RTYPE_REFERENCE
+argument_list|,
+literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -5128,6 +5176,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_comment
+comment|/* Restore original struct packing */
+end_comment
 
 begin_endif
 endif|#

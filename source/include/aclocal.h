@@ -19,6 +19,19 @@ directive|define
 name|__ACLOCAL_H__
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+end_pragma
+
+begin_comment
+comment|/* Set default struct packing */
+end_comment
+
 begin_comment
 comment|/* acpisrc:StructDefs -- for acpisrc conversion */
 end_comment
@@ -4013,6 +4026,19 @@ block|}
 name|AH_PREDEFINED_NAME
 typedef|;
 end_typedef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_comment
+comment|/* Restore original struct packing */
+end_comment
 
 begin_endif
 endif|#

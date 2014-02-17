@@ -19,6 +19,19 @@ directive|define
 name|__ACEVENTS_H__
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+end_pragma
+
+begin_comment
+comment|/* Set default struct packing */
+end_comment
+
 begin_comment
 comment|/*  * evevent  */
 end_comment
@@ -787,6 +800,19 @@ argument_list|(
 argument|void AcpiEvTerminate (     void)
 argument_list|)
 end_macro
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_comment
+comment|/* Restore original struct packing */
+end_comment
 
 begin_endif
 endif|#

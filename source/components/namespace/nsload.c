@@ -256,7 +256,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"**** Begin Table Method Parsing and Object Initialization\n"
+literal|"**** Begin Table Object Initialization\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -274,7 +274,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"**** Completed Table Method Parsing and Object Initialization\n"
+literal|"**** Completed Table Object Initialization\n"
 operator|)
 argument_list|)
 expr_stmt|;

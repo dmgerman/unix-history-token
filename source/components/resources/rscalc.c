@@ -1229,7 +1229,7 @@ name|Index
 operator|++
 control|)
 block|{
-comment|/* Dereference the sub-package */
+comment|/* Dereference the subpackage */
 name|PackageElement
 operator|=
 operator|*

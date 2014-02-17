@@ -459,7 +459,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Clear the entry in all cases */
+comment|/* Clear the Node entry in all cases */
 name|Node
 operator|->
 name|Object
@@ -476,6 +476,7 @@ operator|==
 name|ACPI_DESC_TYPE_OPERAND
 condition|)
 block|{
+comment|/* Unlink object from front of possible object list */
 name|Node
 operator|->
 name|Object
@@ -486,6 +487,7 @@ name|Common
 operator|.
 name|NextObject
 expr_stmt|;
+comment|/* Handle possible 2-descriptor object */
 if|if
 condition|(
 name|Node
@@ -493,11 +495,9 @@ operator|->
 name|Object
 operator|&&
 operator|(
-operator|(
 name|Node
 operator|->
 name|Object
-operator|)
 operator|->
 name|Common
 operator|.

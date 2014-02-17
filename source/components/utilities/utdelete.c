@@ -122,6 +122,10 @@ name|NextDesc
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
+name|StartDesc
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
 modifier|*
 name|LastObjPtr
 decl_stmt|;
@@ -588,6 +592,10 @@ name|AddressSpace
 operator|.
 name|RegionList
 expr_stmt|;
+name|StartDesc
+operator|=
+name|NextDesc
+expr_stmt|;
 name|LastObjPtr
 operator|=
 operator|&
@@ -597,7 +605,7 @@ name|AddressSpace
 operator|.
 name|RegionList
 expr_stmt|;
-comment|/* Remove the region object from the handler's list */
+comment|/* Remove the region object from the handler list */
 while|while
 condition|(
 name|NextDesc
@@ -621,7 +629,7 @@ name|Next
 expr_stmt|;
 break|break;
 block|}
-comment|/* Walk the linked list of handler */
+comment|/* Walk the linked list of handlers */
 name|LastObjPtr
 operator|=
 operator|&
@@ -639,6 +647,28 @@ name|Region
 operator|.
 name|Next
 expr_stmt|;
+comment|/* Prevent infinite loop if list is corrupted */
+if|if
+condition|(
+name|NextDesc
+operator|==
+name|StartDesc
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Circular region list in address handler object %p"
+operator|,
+name|HandlerDesc
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_VOID
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

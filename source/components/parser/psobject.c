@@ -549,6 +549,13 @@ name|Status
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|Status
+operator|!=
+name|AE_CTRL_TERMINATE
+condition|)
+block|{
 name|ACPI_EXCEPTION
 argument_list|(
 operator|(
@@ -560,6 +567,7 @@ literal|"During name lookup/catalog"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -606,10 +614,9 @@ operator|==
 name|AE_CTRL_PENDING
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_CTRL_PARSE_PENDING
-argument_list|)
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS

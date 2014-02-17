@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20140114
+value|0x20140214
 end_define
 
 begin_include
@@ -53,6 +53,19 @@ include|#
 directive|include
 file|"acbuffer.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+end_pragma
+
+begin_comment
+comment|/* Set default struct packing */
+end_comment
 
 begin_comment
 comment|/*  * Globals that are publically available  */
@@ -122,7 +135,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|UINT8
-name|AcpiGbl_AllMethodsSerialized
+name|AcpiGbl_AutoSerializeMethods
 decl_stmt|;
 end_decl_stmt
 
@@ -1909,6 +1922,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_comment
+comment|/* Restore original struct packing */
+end_comment
 
 begin_endif
 endif|#

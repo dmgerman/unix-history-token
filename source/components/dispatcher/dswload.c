@@ -108,8 +108,36 @@ name|PassNumber
 condition|)
 block|{
 case|case
+literal|0
+case|:
+comment|/* Parse only - caller will setup callbacks */
+name|WalkState
+operator|->
+name|ParseFlags
+operator|=
+name|ACPI_PARSE_LOAD_PASS1
+operator||
+name|ACPI_PARSE_DELETE_TREE
+operator||
+name|ACPI_PARSE_DISASSEMBLE
+expr_stmt|;
+name|WalkState
+operator|->
+name|DescendingCallback
+operator|=
+name|NULL
+expr_stmt|;
+name|WalkState
+operator|->
+name|AscendingCallback
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+case|case
 literal|1
 case|:
+comment|/* Load pass 1 */
 name|WalkState
 operator|->
 name|ParseFlags
@@ -134,6 +162,7 @@ break|break;
 case|case
 literal|2
 case|:
+comment|/* Load pass 2 */
 name|WalkState
 operator|->
 name|ParseFlags
@@ -158,6 +187,7 @@ break|break;
 case|case
 literal|3
 case|:
+comment|/* Execution pass */
 ifndef|#
 directive|ifndef
 name|ACPI_NO_METHOD_EXECUTION

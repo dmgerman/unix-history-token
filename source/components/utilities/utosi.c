@@ -40,6 +40,10 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/******************************************************************************  *  * ACPICA policy for new _OSI strings:  *  * It is the stated policy of ACPICA that new _OSI strings will be integrated  * into this module as soon as possible after they are defined. It is strongly  * recommended that all ACPICA hosts mirror this policy and integrate any  * changes to this module as soon as possible. There are several historical  * reasons behind this policy:  *  * 1) New BIOSs tend to test only the case where the host responds TRUE to  *    the latest version of Windows, which would respond to the latest/newest  *    _OSI string. Not responding TRUE to the latest version of Windows will  *    risk executing untested code paths throughout the DSDT and SSDTs.  *  * 2) If a new _OSI string is recognized only after a significant delay, this  *    has the potential to cause problems on existing working machines because  *    of the possibility that a new and different path through the ASL code  *    will be executed.  *  * 3) New _OSI strings are tending to come out about once per year. A delay  *    in recognizing a new string for a significant amount of time risks the  *    release of another string which only compounds the initial problem.  *  *****************************************************************************/
+end_comment
+
+begin_comment
 comment|/*  * Strings supported by the _OSI predefined control method (which is  * implemented internally within this module.)  *  * March 2009: Removed "Linux" as this host no longer wants to respond true  * for this string. Basically, the only safe OS strings are windows-related  * and in many or most cases represent the only test path within the  * BIOS-provided ASL code.  *  * The last element of each entry is used to track the newest version of  * Windows that the BIOS has requested.  */
 end_comment
 
@@ -183,6 +187,17 @@ name|ACPI_OSI_WIN_8
 block|}
 block|,
 comment|/* Windows 8 and Server 2012 - Added 08/2012 */
+block|{
+literal|"Windows 2013"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|ACPI_OSI_WIN_8
+block|}
+block|,
+comment|/* Windows 8.1 and Server 2012 R2 - Added 01/2014 */
 comment|/* Feature Group Strings */
 block|{
 literal|"Extended Address Space Descriptor"

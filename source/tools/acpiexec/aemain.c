@@ -291,6 +291,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-ds"
+argument_list|,
+literal|"Disable method auto-serialization"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-dt"
 argument_list|,
 literal|"Disable allocation tracking (performance)"
@@ -320,13 +327,6 @@ argument_list|(
 literal|"-el"
 argument_list|,
 literal|"Enable loading of additional test tables"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-em"
-argument_list|,
-literal|"Enable Interpreter Serialized Mode"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -535,6 +535,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'s'
+case|:
+name|AcpiGbl_AutoSerializeMethods
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 ifdef|#
@@ -601,19 +609,6 @@ case|:
 name|AcpiGbl_LoadTestTables
 operator|=
 name|TRUE
-expr_stmt|;
-break|break;
-case|case
-literal|'m'
-case|:
-name|AcpiGbl_AllMethodsSerialized
-operator|=
-name|TRUE
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Enabling AML Interpreter serialized mode\n"
-argument_list|)
 expr_stmt|;
 break|break;
 case|case

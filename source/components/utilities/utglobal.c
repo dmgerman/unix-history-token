@@ -56,11 +56,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * We want the debug switches statically initialized so they  * are already set when the debugger is entered.  */
-end_comment
-
-begin_comment
-comment|/* Debug switch - level and trace mask */
+comment|/* Debug output control masks */
 end_comment
 
 begin_ifdef
@@ -95,10 +91,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Debug switch - layer (component) mask */
-end_comment
-
 begin_decl_stmt
 name|UINT32
 name|AcpiDbgLayer
@@ -107,65 +99,53 @@ name|ACPI_COMPONENT_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|UINT32
-name|AcpiGbl_NestingLevel
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* Debugger globals */
+comment|/* AcpiGbl_FADT is a local copy of the FADT, converted to a common format. */
 end_comment
 
 begin_decl_stmt
-name|BOOLEAN
-name|AcpiGbl_DbTerminateThreads
-init|=
-name|FALSE
+name|ACPI_TABLE_FADT
+name|AcpiGbl_FADT
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|BOOLEAN
-name|AcpiGbl_AbortMethod
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|BOOLEAN
-name|AcpiGbl_MethodExecuting
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* System flags */
-end_comment
 
 begin_decl_stmt
 name|UINT32
-name|AcpiGbl_StartupFlags
-init|=
-literal|0
+name|AcpiGbl_TraceFlags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_NAME
+name|AcpiGbl_TraceMethodName
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|BOOLEAN
+name|AcpiGbl_SystemAwakeAndRunning
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT32
+name|AcpiCurrentGpeCount
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* System starts uninitialized */
+comment|/*  * ACPI 5.0 introduces the concept of a "reduced hardware platform", meaning  * that the ACPI hardware is no longer required. A flag in the FADT indicates  * a reduced HW machine, and that flag is duplicated here for convenience.  */
 end_comment
 
 begin_decl_stmt
 name|BOOLEAN
-name|AcpiGbl_Shutdown
-init|=
-name|TRUE
+name|AcpiGbl_ReducedHardware
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Various state name strings */
+end_comment
 
 begin_decl_stmt
 specifier|const
@@ -925,10 +905,6 @@ name|AcpiGbl_CmSingleStep
 operator|=
 name|FALSE
 expr_stmt|;
-name|AcpiGbl_DbTerminateThreads
-operator|=
-name|FALSE
-expr_stmt|;
 name|AcpiGbl_Shutdown
 operator|=
 name|FALSE
@@ -1082,6 +1058,15 @@ operator|=
 name|FALSE
 expr_stmt|;
 name|AcpiGbl_DisableMemTracking
+operator|=
+name|FALSE
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUGGER
+name|AcpiGbl_DbTerminateThreads
 operator|=
 name|FALSE
 expr_stmt|;

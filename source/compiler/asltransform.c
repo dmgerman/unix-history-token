@@ -923,14 +923,6 @@ name|CaseOp
 condition|)
 block|{
 comment|/* Add an ELSE to complete the previous CASE */
-if|if
-condition|(
-operator|!
-name|Conditional
-condition|)
-block|{
-return|return;
-block|}
 name|NewOp
 operator|=
 name|TrCreateLeafNode
@@ -1550,14 +1542,6 @@ name|CaseOp
 condition|)
 block|{
 comment|/* Convert the DEFAULT node to an ELSE */
-if|if
-condition|(
-operator|!
-name|Conditional
-condition|)
-block|{
-return|return;
-block|}
 name|TrAmlInitNode
 argument_list|(
 name|DefaultOp

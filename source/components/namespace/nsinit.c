@@ -276,20 +276,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"%u Control Methods found\n"
+literal|"%u Control Methods found\n%u Op Regions found\n"
 operator|,
 name|Info
 operator|.
 name|MethodCount
-operator|)
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_DISPATCH
-operator|,
-literal|"%u Op Regions found\n"
 operator|,
 name|Info
 operator|.

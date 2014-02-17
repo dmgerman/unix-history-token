@@ -19,6 +19,19 @@ directive|define
 name|_ACAPPS
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+end_pragma
+
+begin_comment
+comment|/* Set default struct packing */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -286,9 +299,6 @@ name|char
 modifier|*
 modifier|*
 name|OutFilename
-parameter_list|,
-name|BOOLEAN
-name|GetAllTables
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -331,12 +341,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AdGetLocalTables
 parameter_list|(
-name|char
-modifier|*
-name|Filename
-parameter_list|,
-name|BOOLEAN
-name|GetAllTables
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -555,6 +560,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_comment
+comment|/* Restore original struct packing */
+end_comment
 
 begin_endif
 endif|#

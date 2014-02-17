@@ -480,13 +480,6 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-g"
-argument_list|,
-literal|"Get ACPI tables and write to files (*.dat)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-in"
 argument_list|,
 literal|"Ignore NoOp opcodes"
@@ -859,39 +852,6 @@ name|UtExpandLineBuffers
 argument_list|()
 expr_stmt|;
 comment|/* Perform global actions first/only */
-if|if
-condition|(
-name|Gbl_GetAllTables
-condition|)
-block|{
-name|Status
-operator|=
-name|AslDoOneFile
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|Gbl_DisassembleAll

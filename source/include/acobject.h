@@ -19,6 +19,19 @@ directive|define
 name|_ACOBJECT_H
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+end_pragma
+
+begin_comment
+comment|/* Set default struct packing */
+end_comment
+
 begin_comment
 comment|/* acpisrc:StructDefs -- for acpisrc conversion */
 end_comment
@@ -1303,8 +1316,13 @@ pragma|#
 directive|pragma
 name|pack
 name|(
+name|pop
 name|)
 end_pragma
+
+begin_comment
+comment|/* Restore original struct packing */
+end_comment
 
 begin_endif
 endif|#
