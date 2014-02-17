@@ -4511,6 +4511,11 @@ argument_list|)
 operator|)
 return|;
 block|}
+name|getnewvnode_reserve
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|tx
 operator|=
 name|dmu_tx_create
@@ -4742,6 +4747,9 @@ name|dmu_tx_commit
 argument_list|(
 name|tx
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 operator|*
 name|xvpp

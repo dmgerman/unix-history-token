@@ -6866,6 +6866,11 @@ operator|)
 return|;
 block|}
 block|}
+name|getnewvnode_reserve
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|top
 label|:
 operator|*
@@ -6993,6 +6998,9 @@ name|SET_ERROR
 argument_list|(
 name|EISDIR
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
@@ -7303,6 +7311,9 @@ name|dmu_tx_abort
 argument_list|(
 name|tx
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
@@ -7620,6 +7631,9 @@ block|}
 block|}
 name|out
 label|:
+name|getnewvnode_drop_reserve
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|dl
@@ -9144,6 +9158,11 @@ name|error
 operator|)
 return|;
 block|}
+name|getnewvnode_reserve
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * First make sure the new directory doesn't exist. 	 * 	 * Existence is checked first to make sure we don't return 	 * EACCES instead of EEXIST which can cause some applications 	 * to fail. 	 */
 name|top
 label|:
@@ -9181,6 +9200,9 @@ argument_list|(
 operator|&
 name|acl_ids
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
@@ -9222,6 +9244,9 @@ argument_list|(
 name|dl
 argument_list|)
 expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
+expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
 name|zfsvfs
@@ -9254,6 +9279,9 @@ name|zfs_dirent_unlock
 argument_list|(
 name|dl
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
@@ -9424,6 +9452,9 @@ argument_list|(
 name|tx
 argument_list|)
 expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
+expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
 name|zfsvfs
@@ -9543,6 +9574,9 @@ name|dmu_tx_commit
 argument_list|(
 name|tx
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 name|zfs_dirent_unlock
 argument_list|(
@@ -17951,6 +17985,11 @@ name|error
 operator|)
 return|;
 block|}
+name|getnewvnode_reserve
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|top
 label|:
 comment|/* 	 * Attempt to lock directory; fail if entry already exists. 	 */
@@ -17985,6 +18024,9 @@ argument_list|(
 operator|&
 name|acl_ids
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
@@ -18026,6 +18068,9 @@ argument_list|(
 name|dl
 argument_list|)
 expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
+expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
 name|zfsvfs
@@ -18058,6 +18103,9 @@ name|zfs_dirent_unlock
 argument_list|(
 name|dl
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
@@ -18244,6 +18292,9 @@ name|dmu_tx_abort
 argument_list|(
 name|tx
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
@@ -18436,6 +18487,9 @@ name|dmu_tx_commit
 argument_list|(
 name|tx
 argument_list|)
+expr_stmt|;
+name|getnewvnode_drop_reserve
+argument_list|()
 expr_stmt|;
 name|zfs_dirent_unlock
 argument_list|(
