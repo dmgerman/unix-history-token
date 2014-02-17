@@ -13996,7 +13996,7 @@ argument_list|)
 operator||
 name|SM
 argument_list|(
-name|R92C_TXAGC_MCS08
+name|R92C_TXAGC_MCS09
 argument_list|,
 name|power
 index|[
