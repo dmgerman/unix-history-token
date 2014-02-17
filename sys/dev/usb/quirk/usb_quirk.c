@@ -194,7 +194,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEV_QUIRKS_MAX
-value|256
+value|320
 end_define
 
 begin_define
