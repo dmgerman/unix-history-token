@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifdef
@@ -617,6 +617,23 @@ argument_list|,
 literal|"lz4_compress"
 argument_list|,
 literal|"LZ4 compression algorithm support."
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|zfeature_register
+argument_list|(
+name|SPA_FEATURE_MULTI_VDEV_CRASH_DUMP
+argument_list|,
+literal|"com.joyent:multi_vdev_crash_dump"
+argument_list|,
+literal|"multi_vdev_crash_dump"
+argument_list|,
+literal|"Crash dumps to multiple vdev pools."
 argument_list|,
 name|B_FALSE
 argument_list|,
