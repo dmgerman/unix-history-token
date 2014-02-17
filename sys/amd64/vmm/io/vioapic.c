@@ -174,7 +174,7 @@ name|VIOAPIC_LOCK
 parameter_list|(
 name|vioapic
 parameter_list|)
-value|mtx_lock(&((vioapic)->mtx))
+value|mtx_lock_spin(&((vioapic)->mtx))
 end_define
 
 begin_define
@@ -184,7 +184,7 @@ name|VIOAPIC_UNLOCK
 parameter_list|(
 name|vioapic
 parameter_list|)
-value|mtx_unlock(&((vioapic)->mtx))
+value|mtx_unlock_spin(&((vioapic)->mtx))
 end_define
 
 begin_define
@@ -2119,7 +2119,7 @@ literal|"vioapic lock"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_DEF
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* Initialize all redirection entries to mask all interrupts */
