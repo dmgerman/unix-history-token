@@ -2973,7 +2973,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 block|}
 name|m
@@ -6297,7 +6297,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 if|if
 condition|(

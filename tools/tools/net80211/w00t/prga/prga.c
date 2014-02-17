@@ -750,7 +750,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 operator|)
 condition|)
 block|{
@@ -1238,7 +1238,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 name|wh
 operator|->
@@ -2578,7 +2578,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 name|wh
 operator|->

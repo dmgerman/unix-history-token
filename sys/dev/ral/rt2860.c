@@ -7158,7 +7158,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 block|{
 comment|/* frame is decrypted by hardware */
@@ -7170,7 +7170,7 @@ literal|1
 index|]
 operator|&=
 operator|~
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 block|}
 endif|#
@@ -8130,7 +8130,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 block|{
 name|k

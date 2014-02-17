@@ -13447,7 +13447,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 name|m
 operator|->
@@ -13466,7 +13466,7 @@ literal|1
 index|]
 operator|&=
 operator|~
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 else|#
 directive|else
@@ -13479,7 +13479,7 @@ index|]
 operator|&=
 operator|~
 operator|(
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 operator||
 name|IEEE80211_FC1_PWR_MGT
 operator|)
@@ -15032,7 +15032,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 name|ismcast
 operator|=
