@@ -173,8 +173,6 @@ name|enter
 argument_list|,
 name|done
 argument_list|,
-name|done
-argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -195,8 +193,6 @@ name|enter_negative
 argument_list|,
 name|done
 argument_list|,
-name|done
-argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -212,8 +208,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|fullpath
-argument_list|,
-name|entry
 argument_list|,
 name|entry
 argument_list|,
@@ -233,8 +227,6 @@ name|fullpath
 argument_list|,
 name|hit
 argument_list|,
-name|hit
-argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -252,8 +244,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|fullpath
-argument_list|,
-name|miss
 argument_list|,
 name|miss
 argument_list|,
@@ -270,8 +260,6 @@ argument_list|,
 argument|namecache
 argument_list|,
 argument|fullpath
-argument_list|,
-argument|return
 argument_list|,
 argument|return
 argument_list|,
@@ -298,8 +286,6 @@ name|lookup
 argument_list|,
 name|hit
 argument_list|,
-name|hit
-argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -318,11 +304,7 @@ name|namecache
 argument_list|,
 name|lookup
 argument_list|,
-name|hit_negative
-argument_list|,
-name|hit
-operator|-
-name|negative
+name|hit__negative
 argument_list|,
 literal|"struct vnode *"
 argument_list|,
@@ -339,8 +321,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|lookup
-argument_list|,
-name|miss
 argument_list|,
 name|miss
 argument_list|,
@@ -362,8 +342,6 @@ name|purge
 argument_list|,
 name|done
 argument_list|,
-name|done
-argument_list|,
 literal|"struct vnode *"
 argument_list|)
 expr_stmt|;
@@ -377,8 +355,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|purge_negative
-argument_list|,
-name|done
 argument_list|,
 name|done
 argument_list|,
@@ -398,8 +374,6 @@ name|purgevfs
 argument_list|,
 name|done
 argument_list|,
-name|done
-argument_list|,
 literal|"struct mount *"
 argument_list|)
 expr_stmt|;
@@ -413,8 +387,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|zap
-argument_list|,
-name|done
 argument_list|,
 name|done
 argument_list|,
@@ -435,8 +407,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|zap_negative
-argument_list|,
-name|done
 argument_list|,
 name|done
 argument_list|,
@@ -3292,7 +3262,7 @@ name|namecache
 argument_list|,
 name|lookup
 argument_list|,
-name|hit_negative
+name|hit__negative
 argument_list|,
 name|dvp
 argument_list|,

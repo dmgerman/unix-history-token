@@ -331,11 +331,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_send
-argument_list|,
-name|signal
-operator|-
-name|send
+name|signal__send
 argument_list|,
 literal|"struct thread *"
 argument_list|,
@@ -353,11 +349,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_clear
-argument_list|,
-name|signal
-operator|-
-name|clear
+name|signal__clear
 argument_list|,
 literal|"int"
 argument_list|,
@@ -373,11 +365,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_discard
-argument_list|,
-name|signal
-operator|-
-name|discard
+name|signal__discard
 argument_list|,
 literal|"struct thread *"
 argument_list|,
@@ -6572,7 +6560,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_clear
+name|signal__clear
 argument_list|,
 name|sig
 argument_list|,
@@ -10701,7 +10689,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_send
+name|signal__send
 argument_list|,
 name|td
 argument_list|,
@@ -10741,7 +10729,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_discard
+name|signal__discard
 argument_list|,
 name|td
 argument_list|,

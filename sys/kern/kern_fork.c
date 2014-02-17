@@ -309,8 +309,6 @@ name|kernel
 argument_list|, ,
 name|create
 argument_list|,
-name|create
-argument_list|,
 literal|"struct proc *"
 argument_list|,
 literal|"struct proc *"

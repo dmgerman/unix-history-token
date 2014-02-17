@@ -352,8 +352,6 @@ name|ctor
 argument_list|,
 name|entry
 argument_list|,
-name|entry
-argument_list|,
 literal|"struct proc *"
 argument_list|,
 literal|"int"
@@ -373,8 +371,6 @@ argument_list|,
 argument|kernel
 argument_list|,
 argument|ctor
-argument_list|,
-argument|return
 argument_list|,
 argument|return
 argument_list|,
@@ -403,8 +399,6 @@ name|dtor
 argument_list|,
 name|entry
 argument_list|,
-name|entry
-argument_list|,
 literal|"struct proc *"
 argument_list|,
 literal|"int"
@@ -424,8 +418,6 @@ argument_list|,
 argument|kernel
 argument_list|,
 argument|dtor
-argument_list|,
-argument|return
 argument_list|,
 argument|return
 argument_list|,
@@ -452,8 +444,6 @@ name|init
 argument_list|,
 name|entry
 argument_list|,
-name|entry
-argument_list|,
 literal|"struct proc *"
 argument_list|,
 literal|"int"
@@ -471,8 +461,6 @@ argument_list|,
 argument|kernel
 argument_list|,
 argument|init
-argument_list|,
-argument|return
 argument_list|,
 argument|return
 argument_list|,

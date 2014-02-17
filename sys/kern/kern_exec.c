@@ -391,8 +391,6 @@ name|kernel
 argument_list|, ,
 name|exec
 argument_list|,
-name|exec
-argument_list|,
 literal|"char *"
 argument_list|)
 expr_stmt|;
@@ -405,11 +403,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|exec_failure
-argument_list|,
-name|exec
-operator|-
-name|failure
+name|exec__failure
 argument_list|,
 literal|"int"
 argument_list|)
@@ -423,11 +417,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|exec_success
-argument_list|,
-name|exec
-operator|-
-name|success
+name|exec__success
 argument_list|,
 literal|"char *"
 argument_list|)
@@ -3493,7 +3483,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|exec_success
+name|exec__success
 argument_list|,
 name|args
 operator|->
@@ -3819,7 +3809,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|exec_failure
+name|exec__failure
 argument_list|,
 name|error
 argument_list|,

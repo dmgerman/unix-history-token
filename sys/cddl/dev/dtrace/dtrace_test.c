@@ -84,8 +84,6 @@ name|test
 argument_list|, , ,
 name|sdttest
 argument_list|,
-name|sdttest
-argument_list|,
 literal|"int"
 argument_list|,
 literal|"int"

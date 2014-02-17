@@ -587,8 +587,6 @@ argument_list|(
 name|sched
 argument_list|, , ,
 name|sleep
-argument_list|,
-name|sleep
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -598,8 +596,6 @@ name|SDT_PROBE_DEFINE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|wakeup
-argument_list|,
 name|wakeup
 argument_list|,
 literal|"struct thread *"

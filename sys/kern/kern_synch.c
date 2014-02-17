@@ -382,8 +382,6 @@ argument_list|(
 name|sched
 argument_list|, , ,
 name|preempt
-argument_list|,
-name|preempt
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -397,11 +395,7 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|sched
 argument_list|, , ,
-name|cpucaps_sleep
-argument_list|,
-name|cpucaps
-operator|-
-name|sleep
+name|cpucaps__sleep
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -411,11 +405,7 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|sched
 argument_list|, , ,
-name|cpucaps_wakeup
-argument_list|,
-name|cpucaps
-operator|-
-name|wakeup
+name|cpucaps__wakeup
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -425,11 +415,7 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|sched
 argument_list|, , ,
-name|schedctl_nopreempt
-argument_list|,
-name|schedctl
-operator|-
-name|nopreempt
+name|schedctl__nopreempt
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -439,11 +425,7 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|sched
 argument_list|, , ,
-name|schedctl_preempt
-argument_list|,
-name|schedctl
-operator|-
-name|preempt
+name|schedctl__preempt
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -453,11 +435,7 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|sched
 argument_list|, , ,
-name|schedctl_yield
-argument_list|,
-name|schedctl
-operator|-
-name|yield
+name|schedctl__yield
 argument_list|)
 expr_stmt|;
 end_expr_stmt
