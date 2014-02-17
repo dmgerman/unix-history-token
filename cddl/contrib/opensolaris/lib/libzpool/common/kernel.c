@@ -2804,6 +2804,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|int
+name|sysctl_handle_64
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * =========================================================================  * debug printfs  * =========================================================================  */
 end_comment
