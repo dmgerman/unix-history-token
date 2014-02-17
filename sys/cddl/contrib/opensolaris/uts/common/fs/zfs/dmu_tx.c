@@ -2217,7 +2217,7 @@ expr_stmt|;
 if|if
 condition|(
 name|blkid
-operator|>=
+operator|>
 name|dn
 operator|->
 name|dn_maxblkid
@@ -2250,6 +2250,8 @@ operator|->
 name|dn_maxblkid
 operator|-
 name|blkid
+operator|+
+literal|1
 expr_stmt|;
 block|}
 name|l0span

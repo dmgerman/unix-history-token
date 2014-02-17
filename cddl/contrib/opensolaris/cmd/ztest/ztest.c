@@ -17928,6 +17928,14 @@ argument_list|,
 name|bigsize
 argument_list|)
 expr_stmt|;
+comment|/* This accounts for setting the checksum/compression. */
+name|dmu_tx_hold_bonus
+argument_list|(
+name|tx
+argument_list|,
+name|bigobj
+argument_list|)
+expr_stmt|;
 name|txg
 operator|=
 name|ztest_tx_assign
