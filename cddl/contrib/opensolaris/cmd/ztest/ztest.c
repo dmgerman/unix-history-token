@@ -26499,6 +26499,12 @@ name|spa_suspended
 argument_list|(
 name|spa
 argument_list|)
+operator|||
+name|spa
+operator|->
+name|spa_root_vdev
+operator|==
+name|NULL
 condition|)
 block|{
 name|fatal
