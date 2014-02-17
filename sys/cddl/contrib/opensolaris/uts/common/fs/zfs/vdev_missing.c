@@ -68,7 +68,11 @@ name|max_psize
 parameter_list|,
 name|uint64_t
 modifier|*
-name|ashift
+name|logical_ashift
+parameter_list|,
+name|uint64_t
+modifier|*
+name|physical_ashift
 parameter_list|)
 block|{
 comment|/* 	 * Really this should just fail.  But then the root vdev will be in the 	 * faulted state with VDEV_AUX_NO_REPLICAS, when what we really want is 	 * VDEV_AUX_BAD_GUID_SUM.  So we pretend to succeed, knowing that we 	 * will fail the GUID sum check before ever trying to open the pool. 	 */
@@ -83,7 +87,12 @@ operator|=
 literal|0
 expr_stmt|;
 operator|*
-name|ashift
+name|logical_ashift
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|physical_ashift
 operator|=
 literal|0
 expr_stmt|;

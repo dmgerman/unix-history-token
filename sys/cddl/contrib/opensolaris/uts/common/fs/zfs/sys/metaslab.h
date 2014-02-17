@@ -325,6 +325,15 @@ name|mc
 parameter_list|)
 function_decl|;
 specifier|extern
+name|uint64_t
+name|metaslab_class_get_minblocksize
+parameter_list|(
+name|metaslab_class_t
+modifier|*
+name|mc
+parameter_list|)
+function_decl|;
+specifier|extern
 name|metaslab_group_t
 modifier|*
 name|metaslab_group_create

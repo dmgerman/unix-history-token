@@ -15723,6 +15723,16 @@ name|c
 operator|++
 control|)
 block|{
+name|vdev_ashift_optimize
+argument_list|(
+name|rvd
+operator|->
+name|vdev_child
+index|[
+name|c
+index|]
+argument_list|)
+expr_stmt|;
 name|vdev_metaslab_set_size
 argument_list|(
 name|rvd

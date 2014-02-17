@@ -1689,7 +1689,10 @@ name|VDEV_AUX_EXTERNAL
 block|,
 comment|/* external diagnosis			*/
 name|VDEV_AUX_SPLIT_POOL
+block|,
 comment|/* vdev was split off into another pool	*/
+name|VDEV_AUX_ASHIFT_TOO_BIG
+comment|/* vdev's min block size is too large   */
 block|}
 name|vdev_aux_t
 typedef|;
@@ -1909,9 +1912,31 @@ name|uint64_t
 name|vs_scan_processed
 decl_stmt|;
 comment|/* scan processed bytes	*/
+name|uint64_t
+name|vs_configured_ashift
+decl_stmt|;
+comment|/* TLV vdev_ashift      */
+name|uint64_t
+name|vs_logical_ashift
+decl_stmt|;
+comment|/* vdev_logical_ashift  */
+name|uint64_t
+name|vs_physical_ashift
+decl_stmt|;
+comment|/* vdev_physical_ashift */
 block|}
 name|vdev_stat_t
 typedef|;
+define|#
+directive|define
+name|VDEV_STAT_VALID
+parameter_list|(
+name|field
+parameter_list|,
+name|uint64_t_field_count
+parameter_list|)
+define|\
+value|((uint64_t_field_count * sizeof(uint64_t))>= \      (offsetof(vdev_stat_t, field) + sizeof(((vdev_stat_t *)NULL)->field)))
 comment|/*  * DDT statistics.  Note: all fields should be 64-bit because this  * is passed between kernel and userland as an nvlist uint64 array.  */
 typedef|typedef
 struct|struct

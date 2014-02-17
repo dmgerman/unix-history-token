@@ -103,6 +103,9 @@ name|uint64_t
 name|mc_dspace
 decl_stmt|;
 comment|/* total deflated space */
+name|uint64_t
+name|mc_minblocksize
+decl_stmt|;
 block|}
 struct|;
 struct|struct

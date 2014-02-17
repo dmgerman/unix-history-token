@@ -115,7 +115,11 @@ name|max_size
 parameter_list|,
 name|uint64_t
 modifier|*
-name|ashift
+name|logical_ashift
+parameter_list|,
+name|uint64_t
+modifier|*
+name|physical_ashift
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -361,6 +365,14 @@ name|uint64_t
 name|vdev_ashift
 decl_stmt|;
 comment|/* block alignment shift	*/
+comment|/* 	 * Logical block alignment shift 	 * 	 * The smallest sized/aligned I/O supported by the device. 	 */
+name|uint64_t
+name|vdev_logical_ashift
+decl_stmt|;
+comment|/* 	 * Physical block alignment shift 	 * 	 * The device supports logical I/Os with vdev_logical_ashift 	 * size/alignment, but optimum performance will be achieved by 	 * aligning/sizing requests to vdev_physical_ashift.  Smaller 	 * requests may be inflated or incur device level read-modify-write 	 * operations. 	 * 	 * May be 0 to indicate no preference (i.e. use vdev_logical_ashift).          */
+name|uint64_t
+name|vdev_physical_ashift
+decl_stmt|;
 name|uint64_t
 name|vdev_state
 decl_stmt|;

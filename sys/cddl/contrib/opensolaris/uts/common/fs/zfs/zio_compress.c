@@ -307,6 +307,9 @@ name|dst
 parameter_list|,
 name|size_t
 name|s_len
+parameter_list|,
+name|size_t
+name|minblocksize
 parameter_list|)
 block|{
 name|uint64_t
@@ -432,10 +435,7 @@ operator|>>
 literal|3
 operator|)
 argument_list|,
-operator|(
-name|size_t
-operator|)
-name|SPA_MINBLOCKSIZE
+name|minblocksize
 argument_list|)
 expr_stmt|;
 if|if
@@ -486,10 +486,7 @@ name|P2ROUNDUP
 argument_list|(
 name|c_len
 argument_list|,
-operator|(
-name|size_t
-operator|)
-name|SPA_MINBLOCKSIZE
+name|minblocksize
 argument_list|)
 expr_stmt|;
 if|if
@@ -534,10 +531,7 @@ name|P2PHASE
 argument_list|(
 name|c_len
 argument_list|,
-operator|(
-name|size_t
-operator|)
-name|SPA_MINBLOCKSIZE
+name|minblocksize
 argument_list|)
 operator|==
 literal|0
