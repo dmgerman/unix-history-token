@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -46,15 +46,12 @@ parameter_list|(
 name|struct
 name|nvlist
 modifier|*
-name|snaps
 parameter_list|,
 name|boolean_t
-name|defer
 parameter_list|,
 name|struct
 name|nvlist
 modifier|*
-name|errlist
 parameter_list|)
 function_decl|;
 name|int
@@ -63,10 +60,8 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
 parameter_list|,
 name|boolean_t
-name|defer
 parameter_list|)
 function_decl|;
 name|int
@@ -75,7 +70,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
 parameter_list|)
 function_decl|;
 name|int
@@ -84,10 +78,8 @@ parameter_list|(
 name|struct
 name|dsl_dataset
 modifier|*
-name|ds
 parameter_list|,
 name|int
-name|expected_holds
 parameter_list|)
 function_decl|;
 name|void
@@ -96,12 +88,10 @@ parameter_list|(
 name|struct
 name|dsl_dataset
 modifier|*
-name|ds
 parameter_list|,
 name|struct
 name|dmu_tx
 modifier|*
-name|tx
 parameter_list|)
 function_decl|;
 name|int
@@ -110,11 +100,19 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|dsname
 parameter_list|,
 name|void
 modifier|*
-name|arg
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_destroy_snapshot_check_impl
+parameter_list|(
+name|struct
+name|dsl_dataset
+modifier|*
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 name|void
@@ -123,15 +121,12 @@ parameter_list|(
 name|struct
 name|dsl_dataset
 modifier|*
-name|ds
 parameter_list|,
 name|boolean_t
-name|defer
 parameter_list|,
 name|struct
 name|dmu_tx
 modifier|*
-name|tx
 parameter_list|)
 function_decl|;
 ifdef|#
