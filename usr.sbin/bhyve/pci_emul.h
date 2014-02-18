@@ -62,13 +62,6 @@ begin_comment
 comment|/* BAR registers in a Type 0 header */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PCIY_RESERVED
-value|0x00
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|vmctx
@@ -392,6 +385,12 @@ index|]
 decl_stmt|;
 name|int
 name|pi_bar_getsize
+decl_stmt|;
+name|int
+name|pi_prevcap
+decl_stmt|;
+name|int
+name|pi_capend
 decl_stmt|;
 struct|struct
 block|{
