@@ -357,6 +357,21 @@ name|size_t
 name|d_len
 parameter_list|)
 function_decl|;
+comment|/*  * Module lifetime management.  */
+specifier|extern
+name|void
+name|zio_compress_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zio_compress_fini
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus
