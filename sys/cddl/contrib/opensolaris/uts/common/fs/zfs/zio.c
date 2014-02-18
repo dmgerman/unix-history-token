@@ -549,6 +549,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|zio_use_uma
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 	 * For small buffers, we want a cache for each multiple of 	 * SPA_MINBLOCKSIZE.  For medium-size buffers, we want a cache 	 * for each quarter-power of 2.  For large buffers, we want 	 * a cache for each multiple of PAGESIZE. 	 */
 for|for
 control|(
@@ -870,6 +878,8 @@ name|c
 index|]
 expr_stmt|;
 block|}
+name|out
+label|:
 comment|/* 	 * The zio write taskqs have 1 thread per cpu, allow 1/2 of the taskqs 	 * to fail 3 times per txg or 8 failures, whichever is greater. 	 */
 if|if
 condition|(
