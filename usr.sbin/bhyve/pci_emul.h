@@ -339,8 +339,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|PBA_TABLE_ENTRY_SIZE
-value|8
+name|PBA_SIZE
+parameter_list|(
+name|msgnum
+parameter_list|)
+value|(roundup2((msgnum), 64) / 8)
 end_define
 
 begin_enum
@@ -438,16 +441,16 @@ decl_stmt|;
 name|int
 name|pba_bar
 decl_stmt|;
-name|size_t
+name|uint32_t
 name|table_offset
 decl_stmt|;
 name|int
 name|table_count
 decl_stmt|;
-name|size_t
+name|uint32_t
 name|pba_offset
 decl_stmt|;
-name|size_t
+name|int
 name|pba_size
 decl_stmt|;
 name|int
