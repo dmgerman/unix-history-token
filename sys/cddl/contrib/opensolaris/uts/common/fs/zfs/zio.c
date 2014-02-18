@@ -3703,6 +3703,8 @@ expr_stmt|;
 comment|/* 	 * Frees that are for the currently-syncing txg, are not going to be 	 * deferred, and which will not need to do a read (i.e. not GANG or 	 * DEDUP), can be processed immediately.  Otherwise, put them on the 	 * in-memory list for later processing. 	 */
 if|if
 condition|(
+name|zfs_trim_enabled
+operator|||
 name|BP_IS_GANG
 argument_list|(
 name|bp
@@ -3871,7 +3873,20 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|zfs_trim_enabled
+condition|)
+name|stage
+operator||=
+name|ZIO_STAGE_ISSUE_ASYNC
+operator||
+name|ZIO_STAGE_VDEV_IO_START
+operator||
+name|ZIO_STAGE_VDEV_IO_ASSESS
+expr_stmt|;
 comment|/* 	 * GANG and DEDUP blocks can induce a read (for the gang block header, 	 * or the DDT), so issue them asynchronously so that this thread is 	 * not tied up. 	 */
+elseif|else
 if|if
 condition|(
 name|BP_IS_GANG

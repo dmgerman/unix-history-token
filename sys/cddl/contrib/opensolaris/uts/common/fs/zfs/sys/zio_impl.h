@@ -291,7 +291,7 @@ define|#
 directive|define
 name|ZIO_FREE_PIPELINE
 define|\
-value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_STAGE_FREE_BP_INIT |		\ 	ZIO_STAGE_DVA_FREE |			\ 	ZIO_STAGE_VDEV_IO_START |		\ 	ZIO_STAGE_VDEV_IO_ASSESS)
+value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_STAGE_FREE_BP_INIT |		\ 	ZIO_STAGE_DVA_FREE)
 define|#
 directive|define
 name|ZIO_DDT_FREE_PIPELINE
