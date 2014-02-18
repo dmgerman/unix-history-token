@@ -3672,12 +3672,12 @@ literal|0
 condition|)
 name|pin
 operator|=
-name|LVT_LINT0
+name|APIC_LVT_LINT0
 expr_stmt|;
 else|else
 name|pin
 operator|=
-name|LVT_LINT1
+name|APIC_LVT_LINT1
 expr_stmt|;
 switch|switch
 condition|(
@@ -4082,7 +4082,7 @@ name|lapic_set_lvt_mode
 argument_list|(
 name|APIC_ID_ALL
 argument_list|,
-name|LVT_LINT0
+name|APIC_LVT_LINT0
 argument_list|,
 name|APIC_LVT_DM_EXTINT
 argument_list|)
@@ -4091,7 +4091,7 @@ name|lapic_set_lvt_mode
 argument_list|(
 name|APIC_ID_ALL
 argument_list|,
-name|LVT_LINT1
+name|APIC_LVT_LINT1
 argument_list|,
 name|APIC_LVT_DM_NMI
 argument_list|)
