@@ -1201,7 +1201,8 @@ name|CAP_IOCTLS_ALL
 value|SSIZE_MAX
 end_define
 
-begin_define
+begin_function_decl
+name|__BEGIN_DECLS
 define|#
 directive|define
 name|cap_rights_init
@@ -1210,9 +1211,6 @@ modifier|...
 parameter_list|)
 define|\
 value|__cap_rights_init(CAP_RIGHTS_VERSION, __VA_ARGS__, 0ULL)
-end_define
-
-begin_function_decl
 name|cap_rights_t
 modifier|*
 name|__cap_rights_init
@@ -1372,6 +1370,10 @@ name|little
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_ifdef
 ifdef|#
