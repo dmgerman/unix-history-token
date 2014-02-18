@@ -8893,6 +8893,9 @@ expr_stmt|;
 name|zfetch_init
 argument_list|()
 expr_stmt|;
+name|zio_compress_init
+argument_list|()
+expr_stmt|;
 name|l2arc_init
 argument_list|()
 expr_stmt|;
@@ -8917,6 +8920,9 @@ name|l2arc_fini
 argument_list|()
 expr_stmt|;
 name|zfetch_fini
+argument_list|()
+expr_stmt|;
+name|zio_compress_fini
 argument_list|()
 expr_stmt|;
 name|dbuf_fini
