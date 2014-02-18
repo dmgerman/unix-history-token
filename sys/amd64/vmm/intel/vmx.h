@@ -149,6 +149,20 @@ end_struct
 
 begin_struct
 struct|struct
+name|vmxevent
+block|{
+name|uint32_t
+name|intr_info
+decl_stmt|;
+name|uint32_t
+name|error_code
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vmxstate
 block|{
 name|int
@@ -157,6 +171,10 @@ decl_stmt|;
 comment|/* host cpu that this 'vcpu' last ran on */
 name|uint16_t
 name|vpid
+decl_stmt|;
+name|struct
+name|vmxevent
+name|user_event
 decl_stmt|;
 block|}
 struct|;
