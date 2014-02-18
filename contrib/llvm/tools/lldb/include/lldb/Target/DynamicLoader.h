@@ -374,6 +374,106 @@ block|}
 name|protected
 operator|:
 comment|//------------------------------------------------------------------
+comment|// Utility methods for derived classes
+comment|//------------------------------------------------------------------
+comment|/// Checks to see if the target module has changed, updates the target
+comment|/// accordingly and returns the target executable module.
+name|lldb
+operator|::
+name|ModuleSP
+name|GetTargetExecutable
+argument_list|()
+block|;
+comment|/// Updates the load address of every allocatable section in @p module.
+comment|///
+comment|/// @param module The module to traverse.
+comment|///
+comment|/// @param link_map_addr The virtual address of the link map for the @p module.
+comment|///
+comment|/// @param base_addr The virtual base address @p module is loaded at.
+name|virtual
+name|void
+name|UpdateLoadedSections
+argument_list|(
+argument|lldb::ModuleSP module
+argument_list|,
+argument|lldb::addr_t link_map_addr
+argument_list|,
+argument|lldb::addr_t base_addr
+argument_list|)
+block|;
+comment|// Utility method so base classes can share implementation of UpdateLoadedSections
+name|void
+name|UpdateLoadedSectionsCommon
+argument_list|(
+argument|lldb::ModuleSP module
+argument_list|,
+argument|lldb::addr_t base_addr
+argument_list|)
+block|;
+comment|/// Removes the loaded sections from the target in @p module.
+comment|///
+comment|/// @param module The module to traverse.
+name|virtual
+name|void
+name|UnloadSections
+argument_list|(
+argument|const lldb::ModuleSP module
+argument_list|)
+block|;
+comment|// Utility method so base classes can share implementation of UnloadSections
+name|void
+name|UnloadSectionsCommon
+argument_list|(
+argument|const lldb::ModuleSP module
+argument_list|)
+block|;
+comment|/// Locates or creates a module given by @p file and updates/loads the
+comment|/// resulting module at the virtual base address @p base_addr.
+name|lldb
+operator|::
+name|ModuleSP
+name|LoadModuleAtAddress
+argument_list|(
+argument|const lldb_private::FileSpec&file
+argument_list|,
+argument|lldb::addr_t link_map_addr
+argument_list|,
+argument|lldb::addr_t base_addr
+argument_list|)
+block|;
+specifier|const
+name|lldb_private
+operator|::
+name|SectionList
+operator|*
+name|GetSectionListFromModule
+argument_list|(
+argument|const lldb::ModuleSP module
+argument_list|)
+specifier|const
+block|;
+comment|// Read an unsigned int of the given size from memory at the given addr.
+comment|// Return -1 if the read fails, otherwise return the result as an int64_t.
+name|int64_t
+name|ReadUnsignedIntWithSizeInBytes
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|,
+argument|int size_in_bytes
+argument_list|)
+block|;
+comment|// Read a pointer from memory at the given addr.
+comment|// Return LLDB_INVALID_ADDRESS if the read fails.
+name|lldb
+operator|::
+name|addr_t
+name|ReadPointer
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
 comment|// Member variables.
 comment|//------------------------------------------------------------------
 name|Process

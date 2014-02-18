@@ -284,6 +284,15 @@ name|ThreadList
 operator|&
 name|old_thread_list
 argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|bool
+operator|>
+operator|&
+name|core_used_map
+argument_list|,
 name|bool
 operator|*
 name|did_create_ptr

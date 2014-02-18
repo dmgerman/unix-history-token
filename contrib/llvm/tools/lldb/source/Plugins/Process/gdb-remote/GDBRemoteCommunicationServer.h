@@ -155,6 +155,19 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_macro
+name|GDBRemoteCommunicationServer
+argument_list|(
+argument|bool is_platform
+argument_list|,
+argument|const lldb::PlatformSP& platform_sp
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_expr_stmt
 name|virtual
 operator|~
@@ -506,10 +519,203 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|/// Specify the program to launch and its arguments.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The LaunchProcess () command can be executed to do the lauching.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param[in] args
+end_comment
+
+begin_comment
+comment|///     The command line to launch.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param[in] argc
+end_comment
+
+begin_comment
+comment|///     The number of elements in the args array of cstring pointers.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @return
+end_comment
+
+begin_comment
+comment|///     An Error object indicating the success or failure of making
+end_comment
+
+begin_comment
+comment|///     the setting.
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_expr_stmt
+name|lldb_private
+operator|::
+name|Error
+name|SetLaunchArguments
+argument_list|(
+argument|const char *const args[]
+argument_list|,
+argument|int argc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|/// Specify the launch flags for the process.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The LaunchProcess () command can be executed to do the lauching.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param[in] launch_flags
+end_comment
+
+begin_comment
+comment|///     The launch flags to use when launching this process.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @return
+end_comment
+
+begin_comment
+comment|///     An Error object indicating the success or failure of making
+end_comment
+
+begin_comment
+comment|///     the setting.
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_expr_stmt
+name|lldb_private
+operator|::
+name|Error
+name|SetLaunchFlags
+argument_list|(
+argument|unsigned int launch_flags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|/// Launch a process with the current launch settings.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This method supports running an lldb-gdbserver or similar
+end_comment
+
+begin_comment
+comment|/// server in a situation where the startup code has been provided
+end_comment
+
+begin_comment
+comment|/// with all the information for a child process to be launched.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @return
+end_comment
+
+begin_comment
+comment|///     An Error object indicating the success or failure of the
+end_comment
+
+begin_comment
+comment|///     launch.
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_expr_stmt
+name|lldb_private
+operator|::
+name|Error
+name|LaunchProcess
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_label
 name|protected
 label|:
 end_label
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|PlatformSP
+name|m_platform_sp
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|lldb
@@ -583,7 +789,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|size_t
+name|PacketResult
 name|SendUnimplementedResponse
 parameter_list|(
 specifier|const
@@ -595,7 +801,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|size_t
+name|PacketResult
 name|SendErrorResponse
 parameter_list|(
 name|uint8_t
@@ -605,14 +811,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|size_t
+name|PacketResult
 name|SendOKResponse
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_A
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -623,7 +829,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qLaunchSuccess
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -634,7 +840,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qHostInfo
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -645,7 +851,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qLaunchGDBServer
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -656,7 +862,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qKillSpawnedProcess
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -667,7 +873,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
+name|Handle_k
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|PacketResult
 name|Handle_qPlatform_mkdir
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -678,7 +895,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qPlatform_chmod
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -689,7 +906,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qProcessInfoPID
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -700,7 +917,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qfProcessInfo
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -711,7 +928,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qsProcessInfo
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -722,7 +939,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qC
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -733,7 +950,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qUserName
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -744,7 +961,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qGroupName
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -755,7 +972,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qSpeedTest
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -766,7 +983,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_QEnvironment
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -777,7 +994,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_QLaunchArch
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -788,7 +1005,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_QSetDisableASLR
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -799,7 +1016,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_QSetWorkingDir
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -810,7 +1027,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qGetWorkingDir
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -821,7 +1038,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_QStartNoAckMode
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -832,7 +1049,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_QSetSTDIN
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -843,7 +1060,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_QSetSTDOUT
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -854,7 +1071,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_QSetSTDERR
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -865,7 +1082,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_Open
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -876,7 +1093,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_Close
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -887,7 +1104,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_pRead
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -898,7 +1115,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_pWrite
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -909,7 +1126,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_Size
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -920,7 +1137,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_Mode
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -931,7 +1148,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_Exists
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -942,7 +1159,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_symlink
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -953,7 +1170,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_unlink
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -964,7 +1181,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_Stat
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -975,7 +1192,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_vFile_MD5
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -986,7 +1203,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|PacketResult
 name|Handle_qPlatform_shell
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -1035,6 +1252,56 @@ name|signal
 argument_list|,
 name|int
 name|status
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|DebuggedProcessReaped
+argument_list|(
+name|lldb
+operator|::
+name|pid_t
+name|pid
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|ReapDebuggedProcess
+argument_list|(
+name|void
+operator|*
+name|callback_baton
+argument_list|,
+name|lldb
+operator|::
+name|pid_t
+name|pid
+argument_list|,
+name|bool
+name|exited
+argument_list|,
+name|int
+name|signal
+argument_list|,
+name|int
+name|status
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|KillSpawnedProcess
+argument_list|(
+name|lldb
+operator|::
+name|pid_t
+name|pid
 argument_list|)
 decl_stmt|;
 end_decl_stmt

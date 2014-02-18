@@ -342,6 +342,7 @@ comment|///
 comment|/// @param link_map_addr The virtual address of the link map for the @p module.
 comment|///
 comment|/// @param base_addr The virtual base address @p module is loaded at.
+name|virtual
 name|void
 name|UpdateLoadedSections
 argument_list|(
@@ -355,24 +356,11 @@ block|;
 comment|/// Removes the loaded sections from the target in @p module.
 comment|///
 comment|/// @param module The module to traverse.
+name|virtual
 name|void
 name|UnloadSections
 argument_list|(
 argument|const lldb::ModuleSP module
-argument_list|)
-block|;
-comment|/// Locates or creates a module given by @p file and updates/loads the
-comment|/// resulting module at the virtual base address @p base_addr.
-name|lldb
-operator|::
-name|ModuleSP
-name|LoadModuleAtAddress
-argument_list|(
-argument|const lldb_private::FileSpec&file
-argument_list|,
-argument|lldb::addr_t link_map_addr
-argument_list|,
-argument|lldb::addr_t base_addr
 argument_list|)
 block|;
 comment|/// Resolves the entry point for the current inferior process and sets a
@@ -421,31 +409,12 @@ name|addr_t
 name|GetEntryPoint
 argument_list|()
 block|;
-comment|/// Checks to see if the target module has changed, updates the target
-comment|/// accordingly and returns the target executable module.
-name|lldb
-operator|::
-name|ModuleSP
-name|GetTargetExecutable
-argument_list|()
-block|;
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|DynamicLoaderPOSIXDYLD
 argument_list|)
-block|;
-specifier|const
-name|lldb_private
-operator|::
-name|SectionList
-operator|*
-name|GetSectionListFromModule
-argument_list|(
-argument|const lldb::ModuleSP module
-argument_list|)
-specifier|const
 block|; }
 decl_stmt|;
 end_decl_stmt

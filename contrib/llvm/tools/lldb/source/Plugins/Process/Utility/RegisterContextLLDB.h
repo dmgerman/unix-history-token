@@ -240,6 +240,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
+name|IsTrapHandlerFrame
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
 name|GetCFA
 argument_list|(
 name|lldb
@@ -276,7 +281,7 @@ name|FrameType
 block|{
 name|eNormalFrame
 block|,
-name|eSigtrampFrame
+name|eTrapHandlerFrame
 block|,
 name|eDebuggerFrame
 block|,
@@ -328,6 +333,33 @@ name|IsSkipFrame
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Determines if a SymbolContext is a trap handler or not
+comment|///
+comment|/// Given a SymbolContext, determines if this is a trap handler function
+comment|/// aka asynchronous signal handler.
+comment|///
+comment|/// @return
+comment|///     Returns true if the SymbolContext is a trap handler.
+comment|//------------------------------------------------------------------
+name|bool
+name|IsTrapHandlerSymbol
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|SymbolContext
+operator|&
+name|m_sym_ctx
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Provide a location for where THIS function saved the CALLER's register value
 comment|// Or a frame "below" this one saved it, i.e. a function called by this one, preserved a register that this
 comment|// function didn't modify/use.
@@ -488,6 +520,22 @@ begin_empty_stmt
 unit|)))
 empty_stmt|;
 end_empty_stmt
+
+begin_decl_stmt
+name|bool
+name|IsUnwindPlanValidForCurrentPC
+argument_list|(
+name|lldb
+operator|::
+name|UnwindPlanSP
+name|unwind_plan_sp
+argument_list|,
+name|int
+operator|&
+name|valid_pc_offset
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|lldb_private

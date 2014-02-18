@@ -542,9 +542,12 @@ comment|///     any valid weak references in this object.
 comment|//------------------------------------------------------------------
 name|ExecutionContext
 name|Lock
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|bool
+name|thread_and_frame_only_if_stopped
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Returns true if this object has a weak reference to a thread.
 comment|/// The return value is only an indication of wether this object has
@@ -783,12 +786,11 @@ argument_list|)
 expr_stmt|;
 name|ExecutionContext
 argument_list|(
-specifier|const
-name|ExecutionContextRef
-operator|*
-name|exe_ctx_ref
+argument|const ExecutionContextRef *exe_ctx_ref
+argument_list|,
+argument|bool thread_and_frame_only_if_stopped = false
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|// These two variants take in a locker, and grab the target, lock the API mutex into locker, then
 comment|// fill in the rest of the shared pointers.
 name|ExecutionContext

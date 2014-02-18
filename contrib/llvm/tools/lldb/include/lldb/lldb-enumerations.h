@@ -2148,6 +2148,26 @@ name|eFilePermissionsUserRWX
 block|,     }
 name|FilePermissions
 typedef|;
+comment|//----------------------------------------------------------------------
+comment|// Queue work item types
+comment|//
+comment|// The different types of work that can be enqueued on a libdispatch
+comment|// aka Grand Central Dispatch (GCD) queue.
+comment|//----------------------------------------------------------------------
+typedef|typedef
+enum|enum
+name|QueueItemKind
+block|{
+name|eQueueItemKindUnknown
+init|=
+literal|0
+block|,
+name|eQueueItemKindFunction
+block|,
+name|eQueueItemKindBlock
+block|}
+name|QueueItemKind
+typedef|;
 block|}
 end_decl_stmt
 
