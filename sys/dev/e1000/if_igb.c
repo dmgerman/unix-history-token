@@ -18664,12 +18664,6 @@ argument_list|,
 name|txr
 operator|->
 name|me
-operator||
-operator|(
-name|NETMAP_LOCKED_ENTER
-operator||
-name|NETMAP_LOCKED_EXIT
-operator|)
 argument_list|)
 condition|)
 return|return
@@ -21738,7 +21732,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_NETMAP
-comment|/* 		 * an init() while a netmap client is active must 		 * preserve the rx buffers passed to userspace. 		 * In this driver it means we adjust RDT to 		 * somthing different from next_to_refresh 		 * (which is not used in netmap mode). 		 */
+comment|/* 		 * an init() while a netmap client is active must 		 * preserve the rx buffers passed to userspace. 		 * In this driver it means we adjust RDT to 		 * something different from next_to_refresh 		 * (which is not used in netmap mode). 		 */
 if|if
 condition|(
 name|ifp
@@ -21780,9 +21774,10 @@ name|rxr
 operator|->
 name|next_to_refresh
 operator|-
+name|nm_kr_rxspace
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -22649,18 +22644,23 @@ argument_list|,
 name|rxr
 operator|->
 name|me
-operator||
-name|NETMAP_LOCKED_ENTER
 argument_list|,
 operator|&
 name|processed
 argument_list|)
 condition|)
+block|{
+name|IGB_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 comment|/* DEV_NETMAP */
