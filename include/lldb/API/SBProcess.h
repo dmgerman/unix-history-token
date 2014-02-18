@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/API/SBQueue.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -441,6 +447,21 @@ name|uint32_t
 name|index_id
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|// Queue related functions
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetNumQueues
+parameter_list|()
+function_decl|;
+name|lldb
+operator|::
+name|SBQueue
+name|GetQueueAtIndex
+argument_list|(
+argument|size_t index
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Stepping related functions
 comment|//------------------------------------------------------------------
@@ -870,6 +891,12 @@ name|friend
 name|class
 name|SBValue
 decl_stmt|;
+name|friend
+name|class
+name|lldb_private
+operator|::
+name|QueueImpl
+expr_stmt|;
 name|lldb
 operator|::
 name|ProcessSP

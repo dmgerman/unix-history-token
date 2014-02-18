@@ -426,7 +426,7 @@ name|virtual
 name|lldb_private
 operator|::
 name|Error
-name|GetFile
+name|GetFileWithUUID
 argument_list|(
 specifier|const
 name|lldb_private
@@ -504,6 +504,11 @@ name|Stream
 operator|&
 name|strm
 argument_list|)
+block|;
+name|virtual
+name|void
+name|CalculateTrapHandlerSymbolNames
+argument_list|()
 block|;
 name|protected
 operator|:

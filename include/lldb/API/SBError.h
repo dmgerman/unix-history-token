@@ -240,13 +240,6 @@ end_decl_stmt
 begin_decl_stmt
 name|friend
 name|class
-name|SBInputReader
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|friend
-name|class
 name|SBPlatform
 decl_stmt|;
 end_decl_stmt

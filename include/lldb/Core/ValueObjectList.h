@@ -230,6 +230,16 @@ modifier|&
 name|value_object_list
 parameter_list|)
 function_decl|;
+name|void
+name|Clear
+parameter_list|()
+block|{
+name|m_value_objects
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
 name|protected
 label|:
 typedef|typedef

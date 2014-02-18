@@ -193,7 +193,6 @@ name|Module
 operator|*
 name|exe_module
 argument_list|,
-specifier|const
 name|lldb_private
 operator|::
 name|ProcessLaunchInfo
@@ -312,26 +311,6 @@ name|Error
 name|DoDeallocateMemory
 argument_list|(
 argument|lldb::addr_t ptr
-argument_list|)
-block|;
-name|virtual
-name|lldb
-operator|::
-name|addr_t
-name|ResolveIndirectFunction
-argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|Address
-operator|*
-name|address
-argument_list|,
-name|lldb_private
-operator|::
-name|Error
-operator|&
-name|error
 argument_list|)
 block|;
 name|virtual
@@ -472,6 +451,7 @@ block|;
 comment|//--------------------------------------------------------------------------
 comment|// ProcessPOSIX internal API.
 comment|/// Registers the given message with this process.
+name|virtual
 name|void
 name|SendMessage
 argument_list|(

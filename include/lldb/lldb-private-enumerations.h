@@ -244,7 +244,10 @@ name|ePathTypeLLDBSystemPlugins
 block|,
 comment|// System plug-ins directory
 name|ePathTypeLLDBUserPlugins
+block|,
 comment|// User plug-ins directory
+name|ePathTypeLLDBTempSystemDir
+comment|// The LLDB temp directory for this system
 block|}
 name|PathType
 typedef|;
@@ -504,6 +507,23 @@ comment|// Load sections and all symbols
 block|}
 name|MemoryModuleLoadLevel
 typedef|;
+comment|//----------------------------------------------------------------------
+comment|// Result enums for when reading multiple lines from IOHandlers
+comment|//----------------------------------------------------------------------
+name|enum
+name|class
+name|LineStatus
+block|{
+name|Success
+operator|,
+comment|// The line that was just edited if good and should be added to the lines
+name|Error
+operator|,
+comment|// There is an error with the current line and it needs to be re-edited before it can be accepted
+name|Done
+comment|// Lines are complete
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

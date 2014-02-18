@@ -330,8 +330,6 @@ comment|/// Reads the contents from the register identified by the given (archit
 comment|/// dependent) offset.
 comment|///
 comment|/// This method is provided for use by RegisterContextFreeBSD derivatives.
-comment|/// FIXME: The FreeBSD implementation of this function should use tid in order
-comment|///        to enable support for debugging threaded programs.
 name|bool
 name|ReadRegisterValue
 argument_list|(
@@ -362,8 +360,6 @@ comment|/// Writes the given value to the register identified by the given
 comment|/// (architecture dependent) offset.
 comment|///
 comment|/// This method is provided for use by RegisterContextFreeBSD derivatives.
-comment|/// FIXME: The FreeBSD implementation of this function should use tid in order
-comment|///        to enable support for debugging threaded programs.
 name|bool
 name|WriteRegisterValue
 argument_list|(
@@ -389,8 +385,6 @@ name|value
 argument_list|)
 decl_stmt|;
 comment|/// Reads all general purpose registers into the specified buffer.
-comment|/// FIXME: The FreeBSD implementation of this function should use tid in order
-comment|///        to enable support for debugging threaded programs.
 name|bool
 name|ReadGPR
 argument_list|(
@@ -408,8 +402,6 @@ name|buf_size
 argument_list|)
 decl_stmt|;
 comment|/// Reads all floating point registers into the specified buffer.
-comment|/// FIXME: The FreeBSD implementation of this function should use tid in order
-comment|///        to enable support for debugging threaded programs.
 name|bool
 name|ReadFPR
 argument_list|(
@@ -429,8 +421,6 @@ decl_stmt|;
 comment|/// Reads the specified register set into the specified buffer.
 comment|///
 comment|/// This method is provided for use by RegisterContextFreeBSD derivatives.
-comment|/// FIXME: The FreeBSD implementation of this function should use tid in order
-comment|///        to enable support for debugging threaded programs.
 name|bool
 name|ReadRegisterSet
 argument_list|(
@@ -452,8 +442,6 @@ name|regset
 argument_list|)
 decl_stmt|;
 comment|/// Writes all general purpose registers into the specified buffer.
-comment|/// FIXME: The FreeBSD implementation of this function should use tid in order
-comment|///        to enable support for debugging threaded programs.
 name|bool
 name|WriteGPR
 argument_list|(
@@ -471,8 +459,6 @@ name|buf_size
 argument_list|)
 decl_stmt|;
 comment|/// Writes all floating point registers into the specified buffer.
-comment|/// FIXME: The FreeBSD implementation of this function should use tid in order
-comment|///        to enable support for debugging threaded programs.
 name|bool
 name|WriteFPR
 argument_list|(
@@ -492,8 +478,6 @@ decl_stmt|;
 comment|/// Writes the specified register set into the specified buffer.
 comment|///
 comment|/// This method is provided for use by RegisterContextFreeBSD derivatives.
-comment|/// FIXME: The FreeBSD implementation of this function should use tid in order
-comment|///        to enable support for debugging threaded programs.
 name|bool
 name|WriteRegisterSet
 argument_list|(
@@ -530,6 +514,22 @@ operator|&
 name|value
 argument_list|)
 decl_stmt|;
+comment|/// Returns current thread IDs in process
+name|size_t
+name|GetCurrentThreadIDs
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|tid_t
+operator|>
+operator|&
+name|thread_ids
+argument_list|)
+decl_stmt|;
 comment|/// Writes a ptrace_lwpinfo structure corresponding to the given thread ID
 comment|/// to the memory region pointed to by @p lwpinfo.
 name|bool
@@ -547,6 +547,19 @@ argument_list|,
 name|int
 operator|&
 name|error_no
+argument_list|)
+decl_stmt|;
+comment|/// Suspends or unsuspends a thread prior to process resume or step.
+name|bool
+name|ThreadSuspend
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|,
+name|bool
+name|suspend
 argument_list|)
 decl_stmt|;
 comment|/// Writes the raw event message code (vis-a-vis PTRACE_GETEVENTMSG)
