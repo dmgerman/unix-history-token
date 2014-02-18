@@ -75,6 +75,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/filio.h>
+end_include
+
+begin_comment
+comment|/* FIONBIO */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -7460,6 +7470,18 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 case|case
+name|FIONBIO
+case|:
+case|case
+name|FIOASYNC
+case|:
+name|ND
+argument_list|(
+literal|"FIONBIO/FIOASYNC are no-ops"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|BIOCIMMEDIATE
 case|:
 case|case
@@ -8036,8 +8058,14 @@ name|kring
 argument_list|)
 condition|)
 block|{
-name|D
+if|if
+condition|(
+name|netmap_verbose
+condition|)
+name|RD
 argument_list|(
+literal|2
+argument_list|,
 literal|"%p lost race on txring %d, ok"
 argument_list|,
 name|priv
@@ -8231,8 +8259,14 @@ name|kring
 argument_list|)
 condition|)
 block|{
-name|D
+if|if
+condition|(
+name|netmap_verbose
+condition|)
+name|RD
 argument_list|(
+literal|2
+argument_list|,
 literal|"%p lost race on rxring %d, ok"
 argument_list|,
 name|priv
