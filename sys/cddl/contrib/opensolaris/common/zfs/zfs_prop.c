@@ -1912,6 +1912,21 @@ argument_list|,
 literal|"OBJSETID"
 argument_list|)
 expr_stmt|;
+name|zprop_register_hidden
+argument_list|(
+name|ZFS_PROP_INCONSISTENT
+argument_list|,
+literal|"inconsistent"
+argument_list|,
+name|PROP_TYPE_NUMBER
+argument_list|,
+name|PROP_READONLY
+argument_list|,
+name|ZFS_TYPE_DATASET
+argument_list|,
+literal|"INCONSISTENT"
+argument_list|)
+expr_stmt|;
 comment|/* oddball properties */
 name|zprop_register_impl
 argument_list|(

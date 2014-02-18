@@ -5233,6 +5233,9 @@ parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
+parameter_list|,
+name|boolean_t
+name|recv
 parameter_list|)
 block|{
 name|int
@@ -5319,6 +5322,25 @@ condition|)
 return|return
 operator|(
 name|error
+operator|)
+return|;
+comment|/* 	 * We don't allow taking snapshots of inconsistent datasets, such as 	 * those into which we are currently receiving.  However, if we are 	 * creating this snapshot as part of a receive, this check will be 	 * executed atomically with respect to the completion of the receive 	 * itself but prior to the clearing of DS_FLAG_INCONSISTENT; in this 	 * case we ignore this, knowing it will be fixed up for us shortly in 	 * dmu_recv_end_sync(). 	 */
+if|if
+condition|(
+operator|!
+name|recv
+operator|&&
+name|DS_IS_INCONSISTENT
+argument_list|(
+name|ds
+argument_list|)
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EBUSY
+argument_list|)
 operator|)
 return|;
 name|error
@@ -5551,6 +5573,8 @@ operator|+
 literal|1
 argument_list|,
 name|tx
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 name|dsl_dataset_rele
@@ -7080,6 +7104,8 @@ operator|->
 name|ddsta_snapname
 argument_list|,
 name|tx
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 if|if

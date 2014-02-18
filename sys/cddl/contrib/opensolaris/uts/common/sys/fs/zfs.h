@@ -255,6 +255,9 @@ name|ZFS_PROP_LOGICALUSED
 block|,
 name|ZFS_PROP_LOGICALREFERENCED
 block|,
+name|ZFS_PROP_INCONSISTENT
+block|,
+comment|/* not exposed to the user */
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t
