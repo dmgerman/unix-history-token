@@ -3095,8 +3095,16 @@ argument_list|(
 name|iter
 operator|->
 name|f_hash
+operator|%
+name|ft
+operator|->
+name|ft_size
 operator|==
 name|hash
+operator|%
+name|ft
+operator|->
+name|ft_size
 argument_list|,
 operator|(
 literal|"%s: wrong hash"
@@ -3433,8 +3441,16 @@ argument_list|(
 name|fle
 operator|->
 name|f_hash
+operator|%
+name|ft
+operator|->
+name|ft_size
 operator|==
 name|hash
+operator|%
+name|ft
+operator|->
+name|ft_size
 argument_list|,
 operator|(
 literal|"%s: wrong hash"
