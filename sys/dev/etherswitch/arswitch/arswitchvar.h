@@ -146,6 +146,7 @@ name|vlan_mode
 decl_stmt|;
 struct|struct
 block|{
+comment|/* Global setup */
 name|int
 function_decl|(
 modifier|*
@@ -166,6 +167,20 @@ parameter_list|(
 name|struct
 name|arswitch_softc
 modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Port functions */
+name|void
+function_decl|(
+modifier|*
+name|arswitch_port_init
+function_decl|)
+parameter_list|(
+name|struct
+name|arswitch_softc
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 block|}
