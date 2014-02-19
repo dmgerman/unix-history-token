@@ -30,6 +30,10 @@ block|,
 name|AR8X16_SWITCH_AR8316
 block|,
 name|AR8X16_SWITCH_AR9340
+block|,
+name|AR8X16_SWITCH_AR8327
+block|,
+name|AR8X16_SWITCH_AR8337
 block|, }
 name|ar8x16_switch_type
 typedef|;
