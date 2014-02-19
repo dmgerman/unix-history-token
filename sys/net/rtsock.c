@@ -516,8 +516,8 @@ name|RTS_FILTER_FIB
 value|M_PROTO8
 end_define
 
-begin_struct
-specifier|static
+begin_typedef
+typedef|typedef
 struct|struct
 block|{
 name|int
@@ -537,9 +537,27 @@ name|any_count
 decl_stmt|;
 comment|/* total attached */
 block|}
+name|route_cb_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|route_cb_t
+argument_list|,
 name|route_cb
-struct|;
-end_struct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_route_cb
+value|VNET(route_cb)
+end_define
 
 begin_decl_stmt
 name|struct
@@ -1426,7 +1444,7 @@ block|{
 case|case
 name|AF_INET
 case|:
-name|route_cb
+name|V_route_cb
 operator|.
 name|ip_count
 operator|++
@@ -1435,7 +1453,7 @@ break|break;
 case|case
 name|AF_INET6
 case|:
-name|route_cb
+name|V_route_cb
 operator|.
 name|ip6_count
 operator|++
@@ -1444,14 +1462,14 @@ break|break;
 case|case
 name|AF_IPX
 case|:
-name|route_cb
+name|V_route_cb
 operator|.
 name|ipx_count
 operator|++
 expr_stmt|;
 break|break;
 block|}
-name|route_cb
+name|V_route_cb
 operator|.
 name|any_count
 operator|++
@@ -1609,7 +1627,7 @@ block|{
 case|case
 name|AF_INET
 case|:
-name|route_cb
+name|V_route_cb
 operator|.
 name|ip_count
 operator|--
@@ -1618,7 +1636,7 @@ break|break;
 case|case
 name|AF_INET6
 case|:
-name|route_cb
+name|V_route_cb
 operator|.
 name|ip6_count
 operator|--
@@ -1627,14 +1645,14 @@ break|break;
 case|case
 name|AF_IPX
 case|:
-name|route_cb
+name|V_route_cb
 operator|.
 name|ipx_count
 operator|--
 expr_stmt|;
 break|break;
 block|}
-name|route_cb
+name|V_route_cb
 operator|.
 name|any_count
 operator|--
@@ -4561,7 +4579,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|route_cb
+name|V_route_cb
 operator|.
 name|any_count
 operator|<=
@@ -6156,7 +6174,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|route_cb
+name|V_route_cb
 operator|.
 name|any_count
 operator|==
@@ -6336,7 +6354,7 @@ name|info
 decl_stmt|;
 if|if
 condition|(
-name|route_cb
+name|V_route_cb
 operator|.
 name|any_count
 operator|==
@@ -6482,7 +6500,7 @@ name|ifa_ifp
 decl_stmt|;
 if|if
 condition|(
-name|route_cb
+name|V_route_cb
 operator|.
 name|any_count
 operator|==
@@ -6720,7 +6738,7 @@ name|rtm
 decl_stmt|;
 if|if
 condition|(
-name|route_cb
+name|V_route_cb
 operator|.
 name|any_count
 operator|==
@@ -6930,7 +6948,7 @@ name|ifmam
 decl_stmt|;
 if|if
 condition|(
-name|route_cb
+name|V_route_cb
 operator|.
 name|any_count
 operator|==
@@ -7104,7 +7122,7 @@ name|m
 decl_stmt|;
 if|if
 condition|(
-name|route_cb
+name|V_route_cb
 operator|.
 name|any_count
 operator|==
