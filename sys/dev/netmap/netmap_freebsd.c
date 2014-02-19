@@ -407,6 +407,9 @@ modifier|*
 name|check
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|uint16_t
 name|pseudolen
 init|=
@@ -452,6 +455,32 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+specifier|static
+name|int
+name|notsupported
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|notsupported
+condition|)
+block|{
+name|notsupported
+operator|=
+literal|1
+expr_stmt|;
+name|D
+argument_list|(
+literal|"inet4 segmentation not supported"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
