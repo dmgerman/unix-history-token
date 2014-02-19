@@ -1000,7 +1000,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|arswitch_port_init
+name|arswitch_port_init_8xxx
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -1231,6 +1231,15 @@ operator|.
 name|es_name
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* Default HAL methods */
+name|sc
+operator|->
+name|hal
+operator|.
+name|arswitch_port_init
+operator|=
+name|arswitch_port_init_8xxx
 expr_stmt|;
 comment|/* 	 * Attach switch related functions 	 */
 if|if
@@ -1557,6 +1566,10 @@ name|port
 operator|++
 control|)
 block|{
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_port_init
 argument_list|(
 name|sc
@@ -2152,6 +2165,35 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* XXX This would be nice to have abstracted out to be per-chip */
+comment|/* AR8327/AR8337 has a different register base */
+if|if
+condition|(
+name|AR8X16_IS_SWITCH
+argument_list|(
+name|sc
+argument_list|,
+name|AR8327
+argument_list|)
+condition|)
+name|portstatus
+operator|=
+name|arswitch_readreg
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|AR8327_REG_PORT_STATUS
+argument_list|(
+name|arswitch_portforphy
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|portstatus
 operator|=
 name|arswitch_readreg
