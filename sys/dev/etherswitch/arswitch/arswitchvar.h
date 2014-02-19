@@ -90,6 +90,9 @@ decl_stmt|;
 name|int
 name|is_internal_switch
 decl_stmt|;
+name|int
+name|mii_lo_first
+decl_stmt|;
 name|ar8x16_switch_type
 name|sc_switchtype
 decl_stmt|;
