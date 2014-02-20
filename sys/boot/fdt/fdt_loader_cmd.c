@@ -1138,7 +1138,6 @@ name|err
 operator|=
 name|fdt_check_header
 argument_list|(
-operator|&
 name|header
 argument_list|)
 expr_stmt|;
@@ -3341,8 +3340,6 @@ decl_stmt|;
 name|int
 name|chosen
 decl_stmt|,
-name|err
-decl_stmt|,
 name|eth_no
 decl_stmt|,
 name|len
@@ -3373,32 +3370,17 @@ condition|(
 name|fdtp
 operator|==
 name|NULL
-condition|)
-block|{
-name|err
-operator|=
+operator|&&
 name|fdt_setup_fdtp
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|err
+operator|!=
+literal|0
 condition|)
-block|{
-name|sprintf
-argument_list|(
-name|command_errbuf
-argument_list|,
-literal|"No valid device tree blob found!"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-block|}
 comment|/* Create /chosen node (if not exists) */
 if|if
 condition|(
@@ -3667,7 +3649,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No valid device tree blob found!"
+literal|"No valid device tree blob found!\n"
 argument_list|)
 expr_stmt|;
 return|return
