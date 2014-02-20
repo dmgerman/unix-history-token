@@ -173,6 +173,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_subr_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"svn_private_config.h"
 end_include
 
@@ -3960,12 +3966,14 @@ name|my_version
 argument_list|)
 expr_stmt|;
 return|return
-name|svn_ver_check_list
+name|svn_ver_check_list2
 argument_list|(
 operator|&
 name|my_version
 argument_list|,
 name|checklist
+argument_list|,
+name|svn_ver_equal
 argument_list|)
 return|;
 block|}
@@ -8937,6 +8945,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Ensure that stdout is flushed, so the user will see any write errors.          This makes sure that output is not silently lost. */
+name|err
+operator|=
+name|svn_error_compose_create
+argument_list|(
+name|err
+argument_list|,
+name|svn_cmdline_fflush
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|EXIT_ERROR
 argument_list|(

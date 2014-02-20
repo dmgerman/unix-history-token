@@ -198,14 +198,17 @@ define|#
 directive|define
 name|SVN_CONFIG_SECTION_AUTH
 value|"auth"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_PASSWORD_STORES
 value|"password-stores"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_KWALLET_WALLET
 value|"kwallet-wallet"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_KWALLET_SVN_APPLICATION_NAME_WITH_PID
@@ -282,10 +285,12 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_PRESERVED_CF_EXTS
 value|"preserved-conflict-file-exts"
+comment|/** @since New in 1.7. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_INTERACTIVE_CONFLICTS
 value|"interactive-conflicts"
+comment|/** @since New in 1.7. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_MEMORY_CACHE_SIZE
@@ -380,6 +385,9 @@ comment|/** @} */
 comment|/*** Configuration Default Values ***/
 comment|/* '*' matches leading dots, e.g. '*.rej' matches '.foo.rej'. */
 comment|/* We want this to be printed on two lines in the generated config file,  * but we don't want the # character to end up in the variable.  */
+ifndef|#
+directive|ifndef
+name|DOXYGEN_SHOULD_SKIP_THIS
 define|#
 directive|define
 name|SVN_CONFIG__DEFAULT_GLOBAL_IGNORES_LINE_1
@@ -390,6 +398,8 @@ directive|define
 name|SVN_CONFIG__DEFAULT_GLOBAL_IGNORES_LINE_2
 define|\
 value|"*.rej *~ #*# .#* .*.swp .DS_Store"
+endif|#
+directive|endif
 define|#
 directive|define
 name|SVN_CONFIG_DEFAULT_GLOBAL_IGNORES
@@ -1244,7 +1254,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/** Call @a walk_func with @a walk_baton and information describing  * each credential cached within the Subversion auth store located  * under @a config_dir.  If the callback sets its delete_cred return  * flag, delete the associated credential.  *  * @note Removing credentials from the config-based disk store will  * not purge them from any open svn_auth_baton_t instance.  Consider  * using svn_auth_forget_credentials() -- from the @a cleanup_func,  * even -- for this purpose.  *  * @note Removing credentials from the config-based disk store will  * not also remove any related credentials from third-party password  * stores.  (Implementations of @a walk_func which delete credentials  * may wish to consult the "passtype" element of @a hash, if any, to  * see if a third-party store -- such as "gnome-keyring" or "kwallet"  * is being used to hold the most sensitive portion of the credentials  * for this @a cred_kind and @a realmstring.)  *  * @see svn_auth_forget_credentials()  *  * @since New in 1.8.  */
+comment|/** Call @a walk_func with @a walk_baton and information describing  * each credential cached within the Subversion auth store located  * under @a config_dir.  If the callback sets its delete_cred return  * flag, delete the associated credential.  *  * If @a config_dir is not NULL, it must point to an alternative  * config directory location. If it is NULL, the default location  * is used.  *  * @note @a config_dir may only be NULL in 1.8.2 and later.  *  * @note Removing credentials from the config-based disk store will  * not purge them from any open svn_auth_baton_t instance.  Consider  * using svn_auth_forget_credentials() -- from the @a cleanup_func,  * even -- for this purpose.  *  * @note Removing credentials from the config-based disk store will  * not also remove any related credentials from third-party password  * stores.  (Implementations of @a walk_func which delete credentials  * may wish to consult the "passtype" element of @a hash, if any, to  * see if a third-party store -- such as "gnome-keyring" or "kwallet"  * is being used to hold the most sensitive portion of the credentials  * for this @a cred_kind and @a realmstring.)  *  * @see svn_auth_forget_credentials()  *  * @since New in 1.8.  */
 name|svn_error_t
 modifier|*
 name|svn_config_walk_auth_data

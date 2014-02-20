@@ -4264,6 +4264,20 @@ parameter_list|)
 function_decl|;
 comment|/* @} */
 comment|/* @defgroup svn_wc__db_upgrade  Functions for upgrading a working copy.    @{ */
+comment|/* Installs or updates Sqlite schema statistics for the current (aka latest)    working copy schema.     This function should be called once on initializing the database and after    an schema update completes */
+name|svn_error_t
+modifier|*
+name|svn_wc__db_install_schema_statistics
+parameter_list|(
+name|svn_sqlite__db_t
+modifier|*
+name|sdb
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
 comment|/* Create a new wc.db file for LOCAL_DIR_ABSPATH, which is going to be a    working copy for the repository REPOS_ROOT_URL with uuid REPOS_UUID.    Return the raw sqlite handle, repository id and working copy id    and store the database in WC_DB.     Perform temporary allocations in SCRATCH_POOL. */
 name|svn_error_t
 modifier|*
@@ -5465,7 +5479,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Like svn_wc__db_resolve_delete_raise_moved_away this should be    combined. */
+comment|/* Like svn_wc__db_resolve_delete_raise_moved_away this should be    combined.        ### LOCAL_ABSPATH specifies the move origin, but the move origin    ### is not necessary unique enough. This function needs an op_root_abspath    ### argument to differentiate between different origins.     ### See move_tests.py: move_many_update_delete for an example case.    */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_resolve_break_moved_away

@@ -1144,26 +1144,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* DARWIN || DOXYGEN */
-if|#
-directive|if
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|DARWIN
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|WIN32
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|DOXYGEN
-argument_list|)
+comment|/* Note that the gnome keyring unlock prompt related items below must be  * declared for all platforms in order to allow SWIG interfaces to be  * used regardless of the platform. */
 comment|/** A type of callback function for obtaining the GNOME Keyring password.  *  * In this callback, the client should ask the user for default keyring  * @a keyring_name password.  *  * The answer is returned in @a *keyring_password.  * @a baton is an implementation-specific closure.  * All allocations should be done in @a pool.  *  * @since New in 1.6  */
 typedef|typedef
 name|svn_error_t
@@ -1203,6 +1184,26 @@ define|#
 directive|define
 name|SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_BATON
 value|"gnome-keyring-unlock-prompt-baton"
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|DARWIN
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|DOXYGEN
+argument_list|)
 comment|/**  * Get libsvn_auth_gnome_keyring version information.  *  * @since New in 1.6  */
 specifier|const
 name|svn_version_t

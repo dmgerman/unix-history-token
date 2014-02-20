@@ -554,7 +554,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Same as the public svn_client_mergeinfo_log2 API, except for the addition  * of the TARGET_MERGEINFO_CATALOG and RESULT_POOL parameters.  *  * If TARGET_MERGEINFO_CATALOG is NULL then this acts exactly as the public  * API.  If *TARGET_MERGEINFO_CATALOG is NULL, then *TARGET_MERGEINFO_CATALOG  * is set to the a mergeinfo catalog representing the mergeinfo on  * TARGET_PATH_OR_URL@TARGET_PEG_REVISION at DEPTH, (like the public API only  * depths of svn_depth_empty or svn_depth_infinity are supported) allocated in  * RESULT_POOL.  Finally, if *TARGET_MERGEINFO_CATALOG is non-NULL, then it is  * assumed to be a mergeinfo catalog representing the mergeinfo on  * TARGET_PATH_OR_URL@TARGET_PEG_REVISION at DEPTH.  *  * The keys for the subtree mergeinfo are the repository root-relative  * paths of TARGET_PATH_OR_URL and/or its subtrees, regardless of whether  * TARGET_PATH_OR_URL is a URL or WC path.  */
+comment|/* Same as the public svn_client_mergeinfo_log2 API, except for the addition  * of the TARGET_MERGEINFO_CATALOG and RESULT_POOL parameters.  *  * If TARGET_MERGEINFO_CATALOG is NULL then this acts exactly as the public  * API.  If *TARGET_MERGEINFO_CATALOG is NULL, then *TARGET_MERGEINFO_CATALOG  * is set to the a mergeinfo catalog representing the mergeinfo on  * TARGET_PATH_OR_URL@TARGET_PEG_REVISION at DEPTH, (like the public API only  * depths of svn_depth_empty or svn_depth_infinity are supported) allocated in  * RESULT_POOL.  Finally, if *TARGET_MERGEINFO_CATALOG is non-NULL, then it is  * assumed to be a mergeinfo catalog representing the mergeinfo on  * TARGET_PATH_OR_URL@TARGET_PEG_REVISION at DEPTH.  *  * The keys for the subtree mergeinfo are the repository root-relative  * paths of TARGET_PATH_OR_URL and/or its subtrees, regardless of whether  * TARGET_PATH_OR_URL is a URL or WC path.  *  * If RA_SESSION is not NULL, use it to obtain merge information instead of  * opening a new session. The session might be reparented after usage, so  * callers should reparent the session back to their original location if  * needed.  */
 name|svn_error_t
 modifier|*
 name|svn_client__mergeinfo_log
@@ -617,6 +617,10 @@ parameter_list|,
 name|svn_client_ctx_t
 modifier|*
 name|ctx
+parameter_list|,
+name|svn_ra_session_t
+modifier|*
+name|ra_session
 parameter_list|,
 name|apr_pool_t
 modifier|*

@@ -16,7 +16,7 @@ name|APR_QUEUE_H
 end_define
 
 begin_comment
-comment|/**  * @file apr_queue.h  * @brief Thread Safe FIFO bounded queue  * @note Since most implementations of the queue are backed by a condition  * variable implementation, it isn't available on systems without threads.  * Although condition variables are some times available without threads.  */
+comment|/**  * @file apr_queue.h  * @brief Thread Safe FIFO bounded queue  * @note Since most implementations of the queue are backed by a condition  * variable implementation, it isn't available on systems without threads.  * Although condition variables are sometimes available without threads.  */
 end_comment
 
 begin_include

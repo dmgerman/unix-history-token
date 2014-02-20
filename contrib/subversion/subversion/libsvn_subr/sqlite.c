@@ -3147,6 +3147,64 @@ name|flags
 operator||=
 name|SQLITE_OPEN_NOMUTEX
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SVN_SQLITE_INLINE
+argument_list|)
+if|if
+condition|(
+name|mode
+operator|==
+name|svn_sqlite__mode_rwcreate
+condition|)
+block|{
+name|svn_node_kind_t
+name|kind
+decl_stmt|;
+comment|/* Create the file before SQLite to avoid any permissions            problems with an SQLite build that uses the default            SQLITE_DEFAULT_FILE_PERMISSIONS of 644 modified by umask.            We simply want umask permissions. */
+name|SVN_ERR
+argument_list|(
+name|svn_io_check_path
+argument_list|(
+name|path
+argument_list|,
+operator|&
+name|kind
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kind
+operator|==
+name|svn_node_none
+condition|)
+name|SVN_ERR
+argument_list|(
+name|svn_io_file_create
+argument_list|(
+name|path
+argument_list|,
+literal|""
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Open the database. Note that a handle is returned, even when an error        occurs (except for out-of-memory); thus, we can safely use it to        extract an error message and construct an svn_error_t. */
 block|{
 comment|/* We'd like to use SQLITE_ERR here, but we can't since it would          just return an error and leave the database open.  So, we need to          do this manually. */
@@ -3570,6 +3628,56 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|SQLITE_VERSION_NUMBER
+operator|>=
+literal|3008000
+operator|&&
+name|SQLITE_VERSION_NUMBER
+operator|<
+literal|3009000
+comment|/* disable SQLITE_ENABLE_STAT3/4 from 3.8.1 - 3.8.3 (but not 3.8.3.1+)    * to prevent using it when it's buggy.    * See: https://www.sqlite.org/src/info/4c86b126f2 */
+if|if
+condition|(
+name|sqlite3_libversion_number
+argument_list|()
+operator|>
+literal|3008000
+operator|&&
+name|sqlite3_libversion_number
+argument_list|()
+operator|<
+literal|3008004
+operator|&&
+name|strcmp
+argument_list|(
+name|sqlite3_sourceid
+argument_list|()
+argument_list|,
+literal|"2014-02-11"
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|sqlite3_test_control
+argument_list|(
+name|SQLITE_TESTCTRL_OPTIMIZATIONS
+argument_list|,
+operator|(
+operator|*
+name|db
+operator|)
+operator|->
+name|db3
+argument_list|,
+literal|0x800
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SQLITE3_DEBUG
@@ -3650,6 +3758,11 @@ comment|/* Disable synchronization to disable the explicit disk flushes         
 literal|"PRAGMA synchronous=OFF;"
 comment|/* Enable recursive triggers so that a user trigger will fire                  in the deletion phase of an INSERT OR REPLACE statement.                  Requires SQLite>= 3.6.18  */
 literal|"PRAGMA recursive_triggers=ON;"
+comment|/* Enforce current Sqlite default behavior. Some distributions                  might change the Sqlite defaults without realizing how this                  affects application(read: Subversion) performance/behavior. */
+literal|"PRAGMA foreign_keys=OFF;"
+comment|/* SQLITE_DEFAULT_FOREIGN_KEYS*/
+literal|"PRAGMA locking_mode = NORMAL;"
+comment|/* SQLITE_DEFAULT_LOCKING_MODE */
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3668,6 +3781,23 @@ operator|*
 name|db
 argument_list|,
 literal|"PRAGMA foreign_keys=ON;"
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SVN_SQLITE_REVERSE_UNORDERED_SELECTS
+comment|/* When enabled, this PRAGMA causes SELECT statements without an ORDER BY      clause to emit their results in the reverse order of what they normally      would.  This can help detecting invalid assumptions about the result      order.*/
+name|SVN_ERR
+argument_list|(
+name|exec_sql
+argument_list|(
+operator|*
+name|db
+argument_list|,
+literal|"PRAGMA reverse_unordered_selects=ON;"
 argument_list|)
 argument_list|)
 expr_stmt|;

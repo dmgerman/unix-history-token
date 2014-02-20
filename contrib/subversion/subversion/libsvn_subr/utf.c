@@ -630,6 +630,11 @@ name|apr_xlate_t
 modifier|*
 name|handle
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
 comment|/* The error handling doesn't support the following cases, since we don't      use them currently.  Catch this here. */
 name|SVN_ERR_ASSERT
 argument_list|(
@@ -678,6 +683,10 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+literal|"win32-xlate: "
+expr_stmt|;
 else|#
 directive|else
 name|apr_err
@@ -693,6 +702,10 @@ name|frompage
 argument_list|,
 name|pool
 argument_list|)
+expr_stmt|;
+name|name
+operator|=
+literal|"APR: "
 expr_stmt|;
 endif|#
 directive|endif
@@ -807,9 +820,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|svn_error_create
+name|svn_error_createf
 argument_list|(
-name|apr_err
+name|SVN_ERR_PLUGIN_LOAD_FAILURE
 argument_list|,
 name|svn_error_create
 argument_list|(
@@ -819,6 +832,10 @@ name|NULL
 argument_list|,
 name|apr_strerr
 argument_list|)
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|name
 argument_list|,
 name|errstr
 argument_list|)
