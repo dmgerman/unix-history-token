@@ -4391,6 +4391,14 @@ operator|->
 name|fde_file
 expr_stmt|;
 comment|/* 	 * Duplicate the source descriptor. 	 */
+name|filecaps_free
+argument_list|(
+operator|&
+name|newfde
+operator|->
+name|fde_caps
+argument_list|)
+expr_stmt|;
 operator|*
 name|newfde
 operator|=
