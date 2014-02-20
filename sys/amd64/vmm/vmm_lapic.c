@@ -654,6 +654,8 @@ name|vlapic_read
 argument_list|(
 name|vlapic
 argument_list|,
+literal|0
+argument_list|,
 name|offset
 argument_list|,
 name|rval
@@ -720,16 +722,14 @@ operator|==
 name|MSR_APICBASE
 condition|)
 block|{
+name|error
+operator|=
 name|vlapic_set_apicbase
 argument_list|(
 name|vlapic
 argument_list|,
 name|val
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
@@ -746,6 +746,8 @@ operator|=
 name|vlapic_write
 argument_list|(
 name|vlapic
+argument_list|,
+literal|0
 argument_list|,
 name|offset
 argument_list|,
@@ -836,6 +838,8 @@ name|vlapic_write
 argument_list|(
 name|vlapic
 argument_list|,
+literal|1
+argument_list|,
 name|off
 argument_list|,
 name|wval
@@ -924,6 +928,8 @@ operator|=
 name|vlapic_read
 argument_list|(
 name|vlapic
+argument_list|,
+literal|1
 argument_list|,
 name|off
 argument_list|,
