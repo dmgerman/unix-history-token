@@ -173,6 +173,10 @@ name|sysarch
 argument_list|(
 name|SPARC_UTRAP_INSTALL
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|uia
 argument_list|)
