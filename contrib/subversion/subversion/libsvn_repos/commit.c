@@ -2884,6 +2884,20 @@ name|new_revision
 argument_list|)
 condition|)
 block|{
+comment|/* The actual commit succeeded, i.e. the transaction does no longer          exist and we can't use txn_root for conflict resolution etc.           Since close_edit is supposed to release resources, do it now. */
+if|if
+condition|(
+name|eb
+operator|->
+name|txn_root
+condition|)
+name|svn_fs_close_root
+argument_list|(
+name|eb
+operator|->
+name|txn_root
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|err
@@ -3017,6 +3031,20 @@ operator|->
 name|txn_aborted
 operator|=
 name|TRUE
+expr_stmt|;
+comment|/* Since abort_edit is supposed to release resources, do it now. */
+if|if
+condition|(
+name|eb
+operator|->
+name|txn_root
+condition|)
+name|svn_fs_close_root
+argument_list|(
+name|eb
+operator|->
+name|txn_root
+argument_list|)
 expr_stmt|;
 return|return
 name|svn_error_trace

@@ -201,6 +201,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SQLITE_DEFAULT_FILE_PERMISSIONS
+value|0666
+end_define
+
 begin_include
 include|#
 directive|include
