@@ -736,6 +736,15 @@ operator|=
 operator|&
 name|arg_term
 expr_stmt|;
+comment|/* 	We have to clear the input buffer, because it contains output 	from the previous (timed out) command.       */
+name|c
+operator|->
+name|bufstart
+operator|=
+name|c
+operator|->
+name|bufend
+expr_stmt|;
 block|}
 name|c
 operator|->
