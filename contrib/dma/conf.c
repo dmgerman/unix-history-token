@@ -364,7 +364,7 @@ name|errlog
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"calloc failed"
 argument_list|)
 expr_stmt|;
 name|data

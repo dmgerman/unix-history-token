@@ -1899,7 +1899,9 @@ literal|"dma"
 expr_stmt|;
 name|setlogident
 argument_list|(
-name|NULL
+literal|"%s"
+argument_list|,
+name|logident_base
 argument_list|)
 expr_stmt|;
 if|if
@@ -2231,7 +2233,9 @@ literal|"dma"
 expr_stmt|;
 name|setlogident
 argument_list|(
-name|NULL
+literal|"%s"
+argument_list|,
+name|logident_base
 argument_list|)
 expr_stmt|;
 name|act
@@ -2405,7 +2409,7 @@ name|errlog
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"set_from failed"
 argument_list|)
 expr_stmt|;
 if|if
