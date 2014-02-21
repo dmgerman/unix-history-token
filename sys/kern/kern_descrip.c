@@ -14346,6 +14346,12 @@ name|i
 operator|=
 literal|0
 init|;
+name|fdp
+operator|->
+name|fd_refcnt
+operator|>
+literal|0
+operator|&&
 name|i
 operator|<
 name|fdp
@@ -16305,6 +16311,12 @@ name|i
 operator|=
 literal|0
 init|;
+name|fdp
+operator|->
+name|fd_refcnt
+operator|>
+literal|0
+operator|&&
 name|i
 operator|<
 name|fdp

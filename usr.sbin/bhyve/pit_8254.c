@@ -817,12 +817,6 @@ name|ctx
 operator|=
 name|ctx
 expr_stmt|;
-name|c
-operator|->
-name|mode
-operator|=
-name|mode
-expr_stmt|;
 if|if
 condition|(
 name|rw
@@ -837,6 +831,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|c
+operator|->
+name|mode
+operator|=
+name|mode
+expr_stmt|;
 name|c
 operator|->
 name|olbyte
@@ -844,6 +845,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reset latch after reprogramming */
+block|}
 return|return
 operator|(
 literal|0
