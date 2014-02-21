@@ -431,6 +431,10 @@ value|100
 comment|/* Reason codes. */
 define|#
 directive|define
+name|RAND_R_DUAL_EC_DRBG_DISABLED
+value|104
+define|#
+directive|define
 name|RAND_R_ERROR_INITIALISING_DRBG
 value|102
 define|#

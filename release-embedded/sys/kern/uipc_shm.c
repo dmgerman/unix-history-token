@@ -3453,6 +3453,8 @@ operator||
 name|O_EXCL
 operator||
 name|O_TRUNC
+operator||
+name|O_CLOEXEC
 operator|)
 operator|)
 operator|!=

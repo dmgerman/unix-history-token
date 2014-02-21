@@ -1376,7 +1376,7 @@ name|svn_client_relocate2
 argument_list|(
 name|anchor_abspath
 argument_list|,
-name|anchor_url
+name|repos_root_url
 argument_list|,
 name|new_repos_root_url
 argument_list|,

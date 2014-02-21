@@ -8945,6 +8945,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Ensure that stdout is flushed, so the user will see any write errors.          This makes sure that output is not silently lost. */
+name|err
+operator|=
+name|svn_error_compose_create
+argument_list|(
+name|err
+argument_list|,
+name|svn_cmdline_fflush
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|EXIT_ERROR
 argument_list|(

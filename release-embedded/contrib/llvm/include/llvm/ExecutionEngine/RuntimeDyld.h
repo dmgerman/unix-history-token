@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Memory.h"
 end_include
 
@@ -87,146 +93,6 @@ decl_stmt|;
 name|class
 name|ObjectImage
 decl_stmt|;
-comment|// RuntimeDyld clients often want to handle the memory management of
-comment|// what gets placed where. For JIT clients, this is the subset of
-comment|// JITMemoryManager required for dynamic loading of binaries.
-comment|//
-comment|// FIXME: As the RuntimeDyld fills out, additional routines will be needed
-comment|//        for the varying types of objects to be allocated.
-name|class
-name|RTDyldMemoryManager
-block|{
-name|RTDyldMemoryManager
-argument_list|(
-argument|const RTDyldMemoryManager&
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|RTDyldMemoryManager
-operator|&
-operator|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
-name|public
-label|:
-name|RTDyldMemoryManager
-argument_list|()
-block|{}
-name|virtual
-operator|~
-name|RTDyldMemoryManager
-argument_list|()
-expr_stmt|;
-comment|/// Allocate a memory block of (at least) the given size suitable for
-comment|/// executable code. The SectionID is a unique identifier assigned by the JIT
-comment|/// engine, and optionally recorded by the memory manager to access a loaded
-comment|/// section.
-name|virtual
-name|uint8_t
-modifier|*
-name|allocateCodeSection
-parameter_list|(
-name|uintptr_t
-name|Size
-parameter_list|,
-name|unsigned
-name|Alignment
-parameter_list|,
-name|unsigned
-name|SectionID
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// Allocate a memory block of (at least) the given size suitable for data.
-comment|/// The SectionID is a unique identifier assigned by the JIT engine, and
-comment|/// optionally recorded by the memory manager to access a loaded section.
-name|virtual
-name|uint8_t
-modifier|*
-name|allocateDataSection
-parameter_list|(
-name|uintptr_t
-name|Size
-parameter_list|,
-name|unsigned
-name|Alignment
-parameter_list|,
-name|unsigned
-name|SectionID
-parameter_list|,
-name|bool
-name|IsReadOnly
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// This method returns the address of the specified function. As such it is
-comment|/// only useful for resolving library symbols, not code generated symbols.
-comment|///
-comment|/// If AbortOnFailure is false and no function with the given name is
-comment|/// found, this function returns a null pointer. Otherwise, it prints a
-comment|/// message to stderr and aborts.
-name|virtual
-name|void
-modifier|*
-name|getPointerToNamedFunction
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-argument_list|,
-name|bool
-name|AbortOnFailure
-operator|=
-name|true
-argument_list|)
-init|=
-literal|0
-decl_stmt|;
-comment|/// This method is called when object loading is complete and section page
-comment|/// permissions can be applied.  It is up to the memory manager implementation
-comment|/// to decide whether or not to act on this method.  The memory manager will
-comment|/// typically allocate all sections as read-write and then apply specific
-comment|/// permissions when this method is called.
-comment|///
-comment|/// Returns true if an error occurred, false otherwise.
-name|virtual
-name|bool
-name|applyPermissions
-argument_list|(
-name|std
-operator|::
-name|string
-operator|*
-name|ErrMsg
-operator|=
-literal|0
-argument_list|)
-init|=
-literal|0
-decl_stmt|;
-comment|/// Register the EH frames with the runtime so that c++ exceptions work. The
-comment|/// default implementation does nothing. Look at SectionMemoryManager for one
-comment|/// that uses __register_frame.
-name|virtual
-name|void
-name|registerEHFrames
-parameter_list|(
-name|StringRef
-name|SectionData
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
 name|class
 name|RuntimeDyld
 block|{
@@ -336,12 +202,21 @@ name|uint64_t
 name|TargetAddress
 parameter_list|)
 function_decl|;
-name|StringRef
-name|getErrorString
+comment|/// Register any EH frame sections that have been loaded but not previously
+comment|/// registered with the memory manager.  Note, RuntimeDyld is responsible
+comment|/// for identifying the EH frame and calling the memory manager with the
+comment|/// EH frame section data.  However, the memory manager itself will handle
+comment|/// the actual target-specific EH frame registration.
+name|void
+name|registerEHFrames
+parameter_list|()
+function_decl|;
+name|void
+name|deregisterEHFrames
 parameter_list|()
 function_decl|;
 name|StringRef
-name|getEHFrameSection
+name|getErrorString
 parameter_list|()
 function_decl|;
 block|}

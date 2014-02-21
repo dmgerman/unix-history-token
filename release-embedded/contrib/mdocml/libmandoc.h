@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmandoc.h,v 1.29 2011/12/02 01:37:14 schwarze Exp $ */
+comment|/*	$Id: libmandoc.h,v 1.35 2013/12/15 21:23:52 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2009, 2010, 2011, 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -49,20 +49,6 @@ block|,
 comment|/* an equation was successfully parsed */
 name|ROFF_ERR
 comment|/* badness: puke and stop */
-block|}
-enum|;
-end_enum
-
-begin_enum
-enum|enum
-name|regs
-block|{
-name|REG_nS
-init|=
-literal|0
-block|,
-comment|/* nS register */
-name|REG__MAX
 block|}
 enum|;
 end_enum
@@ -192,20 +178,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mandoc_getcontrol
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mandoc_strntoi
 parameter_list|(
 specifier|const
@@ -255,6 +227,9 @@ modifier|*
 parameter_list|,
 name|struct
 name|mparse
+modifier|*
+parameter_list|,
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -449,6 +424,9 @@ name|roff
 modifier|*
 name|roff_alloc
 parameter_list|(
+name|enum
+name|mparset
+parameter_list|,
 name|struct
 name|mparse
 modifier|*
@@ -505,46 +483,37 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|roff_regisset
-parameter_list|(
-specifier|const
-name|struct
-name|roff
-modifier|*
-parameter_list|,
-name|enum
-name|regs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|unsigned
-name|int
-name|roff_regget
-parameter_list|(
-specifier|const
-name|struct
-name|roff
-modifier|*
-parameter_list|,
-name|enum
-name|regs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
-name|roff_regunset
+name|roff_setreg
 parameter_list|(
 name|struct
 name|roff
 modifier|*
 parameter_list|,
-name|enum
-name|regs
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+name|sign
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|roff_getreg
+parameter_list|(
+specifier|const
+name|struct
+name|roff
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -561,6 +530,25 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|roff_getcontrol
+parameter_list|(
+specifier|const
+name|struct
+name|roff
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;

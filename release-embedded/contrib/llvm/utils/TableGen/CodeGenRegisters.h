@@ -169,12 +169,23 @@ name|Namespace
 expr_stmt|;
 name|public
 label|:
+name|uint16_t
+name|Size
+decl_stmt|;
+name|uint16_t
+name|Offset
+decl_stmt|;
 specifier|const
 name|unsigned
 name|EnumValue
 decl_stmt|;
 name|unsigned
 name|LaneMask
+decl_stmt|;
+comment|// Are all super-registers containing this SubRegIndex covered by their
+comment|// sub-registers?
+name|bool
+name|AllSuperRegsCovered
 decl_stmt|;
 name|CodeGenSubRegIndex
 argument_list|(
@@ -367,6 +378,64 @@ name|B
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|// Synthetic subreg indices that aren't contiguous (for instance ARM
+comment|// register tuples) don't have a bit range, so it's OK to let
+comment|// B->Offset == -1. For the other cases, accumulate the offset and set
+comment|// the size here. Only do so if there is no offset yet though.
+if|if
+condition|(
+operator|(
+name|Offset
+operator|!=
+operator|(
+name|uint16_t
+operator|)
+operator|-
+literal|1
+operator|&&
+name|A
+operator|->
+name|Offset
+operator|!=
+operator|(
+name|uint16_t
+operator|)
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|B
+operator|->
+name|Offset
+operator|==
+operator|(
+name|uint16_t
+operator|)
+operator|-
+literal|1
+operator|)
+condition|)
+block|{
+name|B
+operator|->
+name|Offset
+operator|=
+name|Offset
+operator|+
+name|A
+operator|->
+name|Offset
+expr_stmt|;
+name|B
+operator|->
+name|Size
+operator|=
+name|A
+operator|->
+name|Size
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|Ins
@@ -779,20 +848,6 @@ name|Less
 operator|>
 name|Set
 expr_stmt|;
-comment|// Compute the set of registers overlapping this.
-name|void
-name|computeOverlaps
-argument_list|(
-name|Set
-operator|&
-name|Overlaps
-argument_list|,
-specifier|const
-name|CodeGenRegBank
-operator|&
-argument_list|)
-decl|const
-decl_stmt|;
 name|private
 label|:
 name|bool
@@ -1614,6 +1669,27 @@ name|unsigned
 operator|>
 name|Units
 expr_stmt|;
+name|unsigned
+name|Weight
+decl_stmt|;
+comment|// Cache the sum of all unit weights.
+name|unsigned
+name|Order
+decl_stmt|;
+comment|// Cache the sort key.
+name|RegUnitSet
+argument_list|()
+operator|:
+name|Weight
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Order
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 block|}
 struct|;
 end_struct
@@ -1820,6 +1896,15 @@ name|unsigned
 operator|>
 expr|>
 name|RegClassUnitSets
+expr_stmt|;
+comment|// Give each register unit set an order based on sorting criteria.
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|RegUnitSetOrder
 expr_stmt|;
 comment|// Add RC to *2RC maps.
 name|void
@@ -2382,6 +2467,41 @@ return|return
 name|Weight
 return|;
 block|}
+name|unsigned
+name|getRegSetIDAt
+argument_list|(
+name|unsigned
+name|Order
+argument_list|)
+decl|const
+block|{
+return|return
+name|RegUnitSetOrder
+index|[
+name|Order
+index|]
+return|;
+block|}
+specifier|const
+name|RegUnitSet
+modifier|&
+name|getRegSetAt
+argument_list|(
+name|unsigned
+name|Order
+argument_list|)
+decl|const
+block|{
+return|return
+name|RegUnitSets
+index|[
+name|RegUnitSetOrder
+index|[
+name|Order
+index|]
+index|]
+return|;
+block|}
 comment|// Increase a RegUnitWeight.
 name|void
 name|increaseRegUnitWeight
@@ -2417,7 +2537,9 @@ argument_list|()
 return|;
 block|}
 comment|// Get a set of register unit IDs for a given dimension of pressure.
+specifier|const
 name|RegUnitSet
+modifier|&
 name|getRegPressureSet
 argument_list|(
 name|unsigned
@@ -2490,6 +2612,12 @@ operator|*
 operator|>
 name|Regs
 argument_list|)
+decl_stmt|;
+comment|// Bit mask of lanes that cover their registers. A sub-register index whose
+comment|// LaneMask is contained in CoveringLanes will be completely covered by
+comment|// another sub-register with the same or larger lane mask.
+name|unsigned
+name|CoveringLanes
 decl_stmt|;
 block|}
 end_decl_stmt

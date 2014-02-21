@@ -456,6 +456,54 @@ argument|int&FrameIndex
 argument_list|)
 specifier|const
 block|;
+comment|/// isStackSlotCopy - Return true if the specified machine instruction
+comment|/// is a copy of one stack slot to another and has no other effect.
+comment|/// Provide the identity of the two frame indices.
+name|virtual
+name|bool
+name|isStackSlotCopy
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&DestFrameIndex
+argument_list|,
+argument|int&SrcFrameIndex
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Compute the size in bytes and offset within a stack slot of a spilled
+comment|/// register or subregister.
+comment|///
+comment|/// \param [out] Size in bytes of the spilled value.
+comment|/// \param [out] Offset in bytes within the stack slot.
+comment|/// \returns true if both Size and Offset are successfully computed.
+comment|///
+comment|/// Not all subregisters have computable spill slots. For example,
+comment|/// subregisters registers may not be byte-sized, and a pair of discontiguous
+comment|/// subregisters has no single offset.
+comment|///
+comment|/// Targets with nontrivial bigendian implementations may need to override
+comment|/// this, particularly to support spilled vector registers.
+name|virtual
+name|bool
+name|getStackSlotRange
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|unsigned SubIdx
+argument_list|,
+argument|unsigned&Size
+argument_list|,
+argument|unsigned&Offset
+argument_list|,
+argument|const TargetMachine *TM
+argument_list|)
+specifier|const
+block|;
 comment|/// reMaterialize - Re-issue the specified 'original' instruction at the
 comment|/// specific location targeting a new destination register.
 comment|/// The register in Orig->getOperand(0).getReg() will be substituted by
@@ -1069,35 +1117,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// emitFrameIndexDebugValue - Emit a target-dependent form of
-comment|/// DBG_VALUE encoding the address of a frame index.  Addresses would
-comment|/// normally be lowered the same way as other addresses on the target,
-comment|/// e.g. in load instructions.  For targets that do not support this
-comment|/// the debug info is simply lost.
-comment|/// If you add this for a target you should handle this DBG_VALUE in the
-comment|/// target-specific AsmPrinter code as well; you will probably get invalid
-comment|/// assembly output if you don't.
-name|virtual
-name|MachineInstr
-operator|*
-name|emitFrameIndexDebugValue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|int FrameIx
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|const MDNode *MDPtr
-argument_list|,
-argument|DebugLoc dl
-argument_list|)
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 comment|/// foldMemoryOperand - Attempt to fold a load or store of the specified stack
 comment|/// slot into the specified machine instruction for the specified operand(s).
 comment|/// If this is possible, a new instruction is returned with the specified
@@ -1321,6 +1340,16 @@ argument|unsigned&Offset
 argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|enableClusterLoads
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -1751,8 +1780,6 @@ specifier|const
 block|;
 comment|/// computeOperandLatency - Compute and return the latency of the given data
 comment|/// dependent def and use when the operand indices are already known.
-comment|///
-comment|/// FindMin may be set to get the minimum vs. expected latency.
 name|unsigned
 name|computeOperandLatency
 argument_list|(
@@ -1765,8 +1792,6 @@ argument_list|,
 argument|const MachineInstr *UseMI
 argument_list|,
 argument|unsigned UseIdx
-argument_list|,
-argument|bool FindMin = false
 argument_list|)
 specifier|const
 block|;
@@ -1783,6 +1808,14 @@ argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned *PredCost =
 literal|0
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getPredicationCost
+argument_list|(
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
@@ -1812,8 +1845,6 @@ argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
 argument|const MachineInstr *DefMI
-argument_list|,
-argument|bool FindMin
 argument_list|)
 specifier|const
 block|;
@@ -1999,6 +2030,37 @@ argument_list|)
 specifier|const
 block|{
 comment|// The default implementation returns 0 for no partial register dependency.
+return|return
+literal|0
+return|;
+block|}
+comment|/// \brief Return the minimum clearance before an instruction that reads an
+comment|/// unused register.
+comment|///
+comment|/// For example, AVX instructions may copy part of an register operand into
+comment|/// the unused high bits of the destination register.
+comment|///
+comment|/// vcvtsi2sdq %rax, %xmm0<undef>, %xmm14
+comment|///
+comment|/// In the code above, vcvtsi2sdq copies %xmm0[127:64] into %xmm14 creating a
+comment|/// false dependence on any previous write to %xmm0.
+comment|///
+comment|/// This hook works similarly to getPartialRegUpdateClearance, except that it
+comment|/// does not take an operand index. Instead sets \p OpNum to the index of the
+comment|/// unused register.
+name|virtual
+name|unsigned
+name|getUndefRegClearance
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned&OpNum
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|{
+comment|// The default implementation returns 0 for no undef register dependency.
 return|return
 literal|0
 return|;

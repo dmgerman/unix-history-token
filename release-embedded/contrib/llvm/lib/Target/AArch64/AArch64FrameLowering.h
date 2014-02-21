@@ -279,7 +279,7 @@ argument|const std::vector<CalleeSavedInfo>&CSI
 argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|,
-argument|LoadStoreMethod PossibleClasses[]
+argument|const LoadStoreMethod PossibleClasses[]
 argument_list|,
 argument|unsigned NumClasses
 argument_list|)

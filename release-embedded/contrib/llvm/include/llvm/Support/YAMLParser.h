@@ -188,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits>
 end_include
 
@@ -352,21 +358,17 @@ name|friend
 name|class
 name|Document
 decl_stmt|;
-comment|/// @brief Validate a %YAML x.x directive.
-name|void
-name|handleYAMLDirective
-parameter_list|(
-specifier|const
-name|Token
-modifier|&
-parameter_list|)
-function_decl|;
 block|}
 empty_stmt|;
 comment|/// @brief Abstract base class for all Nodes.
 name|class
 name|Node
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 enum|enum
@@ -392,6 +394,8 @@ argument_list|,
 argument|OwningPtr<Document>&
 argument_list|,
 argument|StringRef Anchor
+argument_list|,
+argument|StringRef Tag
 argument_list|)
 empty_stmt|;
 comment|/// @brief Get the value of the anchor attached to this node. If it does not
@@ -405,6 +409,26 @@ return|return
 name|Anchor
 return|;
 block|}
+comment|/// \brief Get the tag as it was written in the document. This does not
+comment|///   perform tag resolution.
+name|StringRef
+name|getRawTag
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Tag
+return|;
+block|}
+comment|/// \brief Get the verbatium tag for a given Node. This performs tag resoluton
+comment|///   and substitution.
+name|std
+operator|::
+name|string
+name|getVerbatimTag
+argument_list|()
+specifier|const
+expr_stmt|;
 name|SMRange
 name|getSourceRange
 argument_list|()
@@ -572,6 +596,10 @@ expr_stmt|;
 name|StringRef
 name|Anchor
 decl_stmt|;
+comment|/// \brief The tag as typed in the document.
+name|StringRef
+name|Tag
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// @brief A null value.
@@ -584,6 +612,11 @@ range|:
 name|public
 name|Node
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|NullNode
@@ -601,6 +634,8 @@ argument_list|(
 argument|NK_Null
 argument_list|,
 argument|D
+argument_list|,
+argument|StringRef()
 argument_list|,
 argument|StringRef()
 argument_list|)
@@ -635,6 +670,11 @@ operator|:
 name|public
 name|Node
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|ScalarNode
@@ -642,6 +682,8 @@ argument_list|(
 argument|OwningPtr<Document>&D
 argument_list|,
 argument|StringRef Anchor
+argument_list|,
+argument|StringRef Tag
 argument_list|,
 argument|StringRef Val
 argument_list|)
@@ -653,6 +695,8 @@ argument_list|,
 name|D
 argument_list|,
 name|Anchor
+argument_list|,
+name|Tag
 argument_list|)
 block|,
 name|Value
@@ -766,6 +810,11 @@ operator|:
 name|public
 name|Node
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|KeyValueNode
@@ -783,6 +832,9 @@ argument_list|(
 name|NK_KeyValue
 argument_list|,
 name|D
+argument_list|,
+name|StringRef
+argument_list|()
 argument_list|,
 name|StringRef
 argument_list|()
@@ -1238,6 +1290,11 @@ range|:
 name|public
 name|Node
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 expr|enum
@@ -1257,6 +1314,8 @@ argument|OwningPtr<Document>&D
 argument_list|,
 argument|StringRef Anchor
 argument_list|,
+argument|StringRef Tag
+argument_list|,
 argument|MappingType MT
 argument_list|)
 operator|:
@@ -1267,6 +1326,8 @@ argument_list|,
 name|D
 argument_list|,
 name|Anchor
+argument_list|,
+name|Tag
 argument_list|)
 block|,
 name|Type
@@ -1492,6 +1553,11 @@ range|:
 name|public
 name|Node
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 expr|enum
@@ -1517,6 +1583,8 @@ argument|OwningPtr<Document>&D
 argument_list|,
 argument|StringRef Anchor
 argument_list|,
+argument|StringRef Tag
+argument_list|,
 argument|SequenceType ST
 argument_list|)
 operator|:
@@ -1527,6 +1595,8 @@ argument_list|,
 name|D
 argument_list|,
 name|Anchor
+argument_list|,
+name|Tag
 argument_list|)
 block|,
 name|SeqType
@@ -1548,8 +1618,8 @@ name|WasPreviousTokenFlowEntry
 argument_list|(
 name|true
 argument_list|)
-comment|// Start with an imaginary ','.
 block|,
+comment|// Start with an imaginary ','.
 name|CurrentEntry
 argument_list|(
 literal|0
@@ -1748,6 +1818,11 @@ range|:
 name|public
 name|Node
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|AliasNode
@@ -1762,6 +1837,9 @@ argument_list|(
 name|NK_Alias
 argument_list|,
 name|D
+argument_list|,
+name|StringRef
+argument_list|()
 argument_list|,
 name|StringRef
 argument_list|()
@@ -1864,6 +1942,24 @@ name|parseBlockNode
 argument_list|()
 return|;
 block|}
+specifier|const
+name|std
+operator|::
+name|map
+operator|<
+name|StringRef
+operator|,
+name|StringRef
+operator|>
+operator|&
+name|getTagMap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TagMap
+return|;
+block|}
 name|private
 label|:
 name|friend
@@ -1890,6 +1986,17 @@ name|Node
 modifier|*
 name|Root
 decl_stmt|;
+comment|/// \brief Maps tag prefixes to their expansion.
+name|std
+operator|::
+name|map
+operator|<
+name|StringRef
+operator|,
+name|StringRef
+operator|>
+name|TagMap
+expr_stmt|;
 name|Token
 modifier|&
 name|peekNext
@@ -1918,20 +2025,19 @@ name|failed
 argument_list|()
 specifier|const
 expr_stmt|;
-name|void
-name|handleTagDirective
-parameter_list|(
-specifier|const
-name|Token
-modifier|&
-name|Tag
-parameter_list|)
-block|{
-comment|// TODO: Track tags.
-block|}
 comment|/// @brief Parse %BLAH directives and return true if any were encountered.
 name|bool
 name|parseDirectives
+parameter_list|()
+function_decl|;
+comment|/// \brief Parse %YAML
+name|void
+name|parseYAMLDirective
+parameter_list|()
+function_decl|;
+comment|/// \brief Parse %TAG
+name|void
+name|parseTAGDirective
 parameter_list|()
 function_decl|;
 comment|/// @brief Consume the next token and error if it is not \a TK.
@@ -2012,10 +2118,8 @@ name|isAtEnd
 argument_list|()
 return|;
 return|return
-operator|*
 name|Doc
 operator|==
-operator|*
 name|Other
 operator|.
 name|Doc
@@ -2166,14 +2270,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|Doc
-operator|==
-literal|0
 operator|||
+operator|!
 operator|*
 name|Doc
-operator|==
-literal|0
 return|;
 block|}
 end_expr_stmt

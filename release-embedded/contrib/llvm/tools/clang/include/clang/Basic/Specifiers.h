@@ -289,8 +289,8 @@ comment|/// Objective-C method calls.
 name|OK_ObjCSubscript
 block|}
 enum|;
-comment|// \brief Describes the kind of template specialization that a
-comment|// particular template specialization declaration represents.
+comment|/// \brief Describes the kind of template specialization that a
+comment|/// particular template specialization declaration represents.
 enum|enum
 name|TemplateSpecializationKind
 block|{
@@ -320,6 +320,27 @@ comment|/// (C++ [temp.explicit]).
 name|TSK_ExplicitInstantiationDefinition
 block|}
 enum|;
+comment|/// \brief Determine whether this template specialization kind refers
+comment|/// to an instantiation of an entity (as opposed to a non-template or
+comment|/// an explicit specialization).
+specifier|inline
+name|bool
+name|isTemplateInstantiation
+parameter_list|(
+name|TemplateSpecializationKind
+name|Kind
+parameter_list|)
+block|{
+return|return
+name|Kind
+operator|!=
+name|TSK_Undeclared
+operator|&&
+name|Kind
+operator|!=
+name|TSK_ExplicitSpecialization
+return|;
+block|}
 comment|/// \brief Thread storage-class-specifier.
 enum|enum
 name|ThreadStorageClassSpecifier
@@ -405,8 +426,6 @@ comment|/// \brief CallingConv - Specifies the calling convention that a functio
 enum|enum
 name|CallingConv
 block|{
-name|CC_Default
-block|,
 name|CC_C
 block|,
 comment|// __attribute__((cdecl))
@@ -439,6 +458,61 @@ block|,
 comment|// __attribute__((pnaclcall))
 name|CC_IntelOclBicc
 comment|// __attribute__((intel_ocl_bicc))
+block|}
+enum|;
+comment|/// \brief Checks whether the given calling convention is callee-cleanup.
+specifier|inline
+name|bool
+name|isCalleeCleanup
+parameter_list|(
+name|CallingConv
+name|CC
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|CC
+condition|)
+block|{
+case|case
+name|CC_X86StdCall
+case|:
+case|case
+name|CC_X86FastCall
+case|:
+case|case
+name|CC_X86ThisCall
+case|:
+case|case
+name|CC_X86Pascal
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
+comment|/// \brief The storage duration for an object (per C++ [basic.stc]).
+enum|enum
+name|StorageDuration
+block|{
+name|SD_FullExpression
+block|,
+comment|///< Full-expression storage duration (for temporaries).
+name|SD_Automatic
+block|,
+comment|///< Automatic storage duration (most local variables).
+name|SD_Thread
+block|,
+comment|///< Thread storage duration.
+name|SD_Static
+block|,
+comment|///< Static storage duration.
+name|SD_Dynamic
+comment|///< Dynamic storage duration.
 block|}
 enum|;
 block|}

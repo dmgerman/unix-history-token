@@ -403,11 +403,11 @@ name|class
 name|MachineConstantPool
 block|{
 specifier|const
-name|DataLayout
-modifier|*
-name|TD
+name|TargetMachine
+modifier|&
+name|TM
 decl_stmt|;
-comment|///< The machine's DataLayout.
+comment|///< The target machine.
 name|unsigned
 name|PoolAlignment
 decl_stmt|;
@@ -429,6 +429,13 @@ operator|*
 operator|>
 name|MachineCPVsSharingEntries
 expr_stmt|;
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+expr_stmt|;
 name|public
 label|:
 comment|/// @brief The only constructor.
@@ -436,14 +443,14 @@ name|explicit
 name|MachineConstantPool
 argument_list|(
 specifier|const
-name|DataLayout
-operator|*
-name|td
+name|TargetMachine
+operator|&
+name|TM
 argument_list|)
 operator|:
-name|TD
+name|TM
 argument_list|(
-name|td
+name|TM
 argument_list|)
 operator|,
 name|PoolAlignment

@@ -1438,6 +1438,8 @@ comment|/* not versioned: */
 name|SVN_ERR_WC_NOT_WORKING_COPY
 argument_list|,
 name|SVN_ERR_WC_PATH_NOT_FOUND
+argument_list|,
+name|SVN_NO_ERROR
 argument_list|)
 argument_list|)
 expr_stmt|;

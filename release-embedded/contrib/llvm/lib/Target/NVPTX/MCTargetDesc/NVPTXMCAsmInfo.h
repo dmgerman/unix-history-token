@@ -92,11 +92,6 @@ name|explicit
 name|NVPTXMCAsmInfo
 argument_list|(
 specifier|const
-name|Target
-operator|&
-name|T
-argument_list|,
-specifier|const
 name|StringRef
 operator|&
 name|TT

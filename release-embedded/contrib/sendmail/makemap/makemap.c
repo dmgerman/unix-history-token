@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002, 2004, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002, 2004, 2008 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|copyright
 argument_list|,
-literal|"@(#) Copyright (c) 1998-2002, 2004 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1992 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1992, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2002, 2004 Proofpoint, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1992 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1992, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 argument_list|)
 end_macro
 
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: makemap.c,v 8.181 2013/03/12 15:24:51 ca Exp $"
+literal|"@(#)$Id: makemap.c,v 8.183 2013/11/22 20:51:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -917,6 +917,17 @@ block|}
 if|#
 directive|if
 name|HASFCHOWN
+if|if
+condition|(
+operator|!
+name|unmake
+operator|&&
+name|geteuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Find TrustedUser value in sendmail.cf */
 if|if
 condition|(
@@ -1204,6 +1215,7 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* HASFCHOWN */

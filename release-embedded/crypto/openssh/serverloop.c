@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.168 2013/07/12 00:19:59 djm Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.169 2013/12/19 00:19:12 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1307,6 +1307,9 @@ literal|1
 expr_stmt|;
 name|max_time_milliseconds
 operator|=
+operator|(
+name|u_int64_t
+operator|)
 name|options
 operator|.
 name|client_alive_interval

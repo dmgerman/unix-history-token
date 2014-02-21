@@ -457,6 +457,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|APIC_OFFSET_SELF_IPI
+value|0x3F0
+end_define
+
+begin_comment
+comment|/* Self IPI register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VLAPIC_CTR0
 parameter_list|(
 name|vlapic
@@ -497,6 +508,25 @@ name|p2
 parameter_list|)
 define|\
 value|VCPU_CTR2((vlapic)->vm, (vlapic)->vcpuid, format, p1, p2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLAPIC_CTR3
+parameter_list|(
+name|vlapic
+parameter_list|,
+name|format
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|)
+define|\
+value|VCPU_CTR3((vlapic)->vm, (vlapic)->vcpuid, format, p1, p2, p3)
 end_define
 
 begin_define
@@ -632,6 +662,24 @@ name|vlapic
 parameter_list|,
 name|int
 name|hostcpu
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|set_tmr
+function_decl|)
+parameter_list|(
+name|struct
+name|vlapic
+modifier|*
+name|vlapic
+parameter_list|,
+name|int
+name|vector
+parameter_list|,
+name|bool
+name|level
 parameter_list|)
 function_decl|;
 block|}

@@ -10671,12 +10671,9 @@ return|return
 operator|(
 name|kbytes
 argument_list|(
-name|dbtob
-argument_list|(
 name|sb
 operator|.
-name|st_blocks
-argument_list|)
+name|st_size
 argument_list|)
 operator|)
 return|;

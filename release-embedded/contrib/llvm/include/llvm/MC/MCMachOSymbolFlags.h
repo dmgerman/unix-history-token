@@ -75,10 +75,10 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// SymbolFlags - We store the value for the 'desc' symbol field in the lowest
-comment|/// 16 bits of the implementation defined flags.
+comment|/// MachOSymbolFlags - We store the value for the 'desc' symbol field in the
+comment|/// lowest 16 bits of the implementation defined flags.
 enum|enum
-name|SymbolFlags
+name|MachOSymbolFlags
 block|{
 comment|// See<mach-o/nlist.h>.
 name|SF_DescFlagsMask

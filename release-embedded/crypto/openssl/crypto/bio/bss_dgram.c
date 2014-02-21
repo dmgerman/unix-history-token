@@ -4517,11 +4517,8 @@ name|char
 operator|*
 operator|)
 name|authchunks
-operator|+
-sizeof|sizeof
-argument_list|(
-name|sctp_assoc_t
-argument_list|)
+operator|->
+name|gauth_chunks
 init|;
 name|p
 operator|<
@@ -6062,11 +6059,8 @@ name|char
 operator|*
 operator|)
 name|authchunks
-operator|+
-sizeof|sizeof
-argument_list|(
-name|sctp_assoc_t
-argument_list|)
+operator|->
+name|gauth_chunks
 init|;
 name|p
 operator|<

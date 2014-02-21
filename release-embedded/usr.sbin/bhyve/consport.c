@@ -65,6 +65,12 @@ directive|include
 file|"inout.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pci_lpc.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -408,6 +414,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|SYSRES_IO
+argument_list|(
+name|BVM_CONSOLE_PORT
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

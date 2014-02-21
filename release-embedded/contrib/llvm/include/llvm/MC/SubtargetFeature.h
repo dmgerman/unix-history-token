@@ -131,29 +131,23 @@ name|uint64_t
 name|Implies
 decl_stmt|;
 comment|// K-V bit mask
-comment|// Compare routine for std binary search
+comment|// Compare routine for std::lower_bound
 name|bool
 name|operator
 operator|<
 operator|(
-specifier|const
-name|SubtargetFeatureKV
-operator|&
+name|StringRef
 name|S
 operator|)
 specifier|const
 block|{
 return|return
-name|strcmp
+name|StringRef
 argument_list|(
-name|Key
-argument_list|,
-name|S
-operator|.
 name|Key
 argument_list|)
 operator|<
-literal|0
+name|S
 return|;
 block|}
 block|}
@@ -178,29 +172,23 @@ modifier|*
 name|Value
 decl_stmt|;
 comment|// K-V pointer value
-comment|// Compare routine for std binary search
+comment|// Compare routine for std::lower_bound
 name|bool
 name|operator
 operator|<
 operator|(
-specifier|const
-name|SubtargetInfoKV
-operator|&
+name|StringRef
 name|S
 operator|)
 specifier|const
 block|{
 return|return
-name|strcmp
+name|StringRef
 argument_list|(
-name|Key
-argument_list|,
-name|S
-operator|.
 name|Key
 argument_list|)
 operator|<
-literal|0
+name|S
 return|;
 block|}
 block|}
@@ -325,8 +313,7 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Retrieve a formatted string of the default features for the specified
-comment|/// target triple.
+comment|/// Adds the default features for the specified target triple.
 name|void
 name|getDefaultSubtargetFeatures
 parameter_list|(

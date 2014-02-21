@@ -990,6 +990,10 @@ name|qwTrb0
 decl_stmt|;
 define|#
 directive|define
+name|XHCI_TRB_0_DIR_IN_MASK
+value|(0x80ULL<< 0)
+define|#
+directive|define
 name|XHCI_TRB_0_WLENGTH_MASK
 value|(0xFFFFULL<< 48)
 specifier|volatile

@@ -318,7 +318,7 @@ comment|/* layer 5 header length */
 union|union
 block|{
 name|uint8_t
-name|eigth
+name|eight
 index|[
 literal|8
 index|]
@@ -358,7 +358,7 @@ comment|/* Layer specific non-persistent local storage for reassembly, etc. */
 union|union
 block|{
 name|uint8_t
-name|eigth
+name|eight
 index|[
 literal|8
 index|]
@@ -2363,9 +2363,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: invalid cluster size"
+literal|"%s: invalid cluster size %d"
 argument_list|,
 name|__func__
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -2583,9 +2585,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: invalid cluster size"
+literal|"%s: invalid cluster size %d"
 argument_list|,
 name|__func__
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -3175,9 +3179,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: unknown cluster type"
+literal|"%s: unknown cluster type %d"
 argument_list|,
 name|__func__
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 break|break;

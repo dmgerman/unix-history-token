@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineInstrBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -111,6 +117,11 @@ range|:
 name|public
 name|MipsGenInstrInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|MipsTargetMachine
@@ -229,23 +240,6 @@ argument|SmallVectorImpl<MachineInstr*>&BranchInstrs
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|MachineInstr
-operator|*
-name|emitFrameIndexDebugValue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|int FrameIx
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|const MDNode *MDPtr
-argument_list|,
-argument|DebugLoc DL
-argument_list|)
-specifier|const
-block|;
 comment|/// Insert nop instruction when hazard condition is found
 name|virtual
 name|void
@@ -273,7 +267,7 @@ literal|0
 block|;
 name|virtual
 name|unsigned
-name|GetOppositeBranchOpc
+name|getOppositeBranchOpc
 argument_list|(
 argument|unsigned Opc
 argument_list|)
@@ -409,6 +403,17 @@ specifier|const
 operator|=
 literal|0
 block|;
+comment|/// Create an instruction which has the same operands and memory operands
+comment|/// as MI but has a new opcode.
+name|MachineInstrBuilder
+name|genInstrWithNewOpc
+argument_list|(
+argument|unsigned NewOpc
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;
 name|protected
 operator|:
 name|bool
@@ -434,7 +439,7 @@ name|private
 operator|:
 name|virtual
 name|unsigned
-name|GetAnalyzableBrOpc
+name|getAnalyzableBrOpc
 argument_list|(
 argument|unsigned Opc
 argument_list|)

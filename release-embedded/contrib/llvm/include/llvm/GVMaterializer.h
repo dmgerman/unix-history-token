@@ -78,7 +78,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/Support/system_error.h"
 end_include
 
 begin_decl_stmt
@@ -139,29 +139,19 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// Materialize - make sure the given GlobalValue is fully read.  If the
-comment|/// module is corrupt, this returns true and fills in the optional string with
-comment|/// information about the problem.  If successful, this returns false.
+comment|/// Materialize - make sure the given GlobalValue is fully read.
 comment|///
 name|virtual
-name|bool
+name|error_code
 name|Materialize
-argument_list|(
+parameter_list|(
 name|GlobalValue
-operator|*
+modifier|*
 name|GV
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-literal|0
-argument_list|)
+parameter_list|)
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 comment|/// Dematerialize - If the given GlobalValue is read in, and if the
 comment|/// GVMaterializer supports it, release the memory for the GV, and set it up
 comment|/// to be materialized lazily.  If the Materializer doesn't support this
@@ -176,28 +166,18 @@ modifier|*
 parameter_list|)
 block|{}
 comment|/// MaterializeModule - make sure the entire Module has been completely read.
-comment|/// On error, this returns true and fills in the optional string with
-comment|/// information about the problem.  If successful, this returns false.
 comment|///
 name|virtual
-name|bool
+name|error_code
 name|MaterializeModule
-argument_list|(
+parameter_list|(
 name|Module
-operator|*
+modifier|*
 name|M
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-literal|0
-argument_list|)
+parameter_list|)
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 block|}
 empty_stmt|;
 block|}

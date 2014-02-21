@@ -1931,12 +1931,16 @@ control|)
 block|{
 name|assert
 argument_list|(
+name|isUInt
+operator|<
+literal|8
+operator|>
+operator|(
 name|Vals
 index|[
 name|RecordIdx
 index|]
-operator|<
-literal|256
+operator|)
 operator|&&
 literal|"Value too large to emit as blob"
 argument_list|)

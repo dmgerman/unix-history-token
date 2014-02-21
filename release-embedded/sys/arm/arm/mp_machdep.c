@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/physmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/intr.h>
 end_include
 
@@ -490,7 +496,7 @@ argument_list|)
 expr_stmt|;
 name|addr
 operator|=
-name|KERNPHYSADDR
+name|arm_physmem_kernaddr
 expr_stmt|;
 name|addr_end
 operator|=
@@ -502,7 +508,7 @@ name|_end
 operator|-
 name|KERNVIRTADDR
 operator|+
-name|KERNPHYSADDR
+name|arm_physmem_kernaddr
 expr_stmt|;
 name|addr_end
 operator|&=
@@ -528,7 +534,7 @@ for|for
 control|(
 name|addr
 operator|=
-name|KERNPHYSADDR
+name|arm_physmem_kernaddr
 init|;
 name|addr
 operator|<=
@@ -585,7 +591,7 @@ index|[
 operator|(
 name|addr
 operator|-
-name|KERNPHYSADDR
+name|arm_physmem_kernaddr
 operator|+
 name|KERNVIRTADDR
 operator|)
@@ -791,11 +797,6 @@ index|[
 name|cpu
 index|]
 expr_stmt|;
-name|set_pcpu
-argument_list|(
-name|pc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * pcpu_init() updates queue, so it should not be executed in parallel 	 * on several cores 	 */
 while|while
 condition|(
@@ -887,6 +888,13 @@ operator|->
 name|pc_idlethread
 operator|->
 name|td_pcb
+expr_stmt|;
+name|set_curthread
+argument_list|(
+name|pc
+operator|->
+name|pc_idlethread
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

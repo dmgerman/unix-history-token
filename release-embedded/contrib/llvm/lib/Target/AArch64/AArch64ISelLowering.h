@@ -87,6 +87,12 @@ directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Intrinsics.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -189,6 +195,123 @@ comment|// created using the small memory model style: i.e. adrp/add or
 comment|// adrp/mem-op. This exists to prevent bare TargetAddresses which may never
 comment|// get selected.
 name|WrapperSmall
+block|,
+comment|// Vector bitwise select
+name|NEON_BSL
+block|,
+comment|// Vector move immediate
+name|NEON_MOVIMM
+block|,
+comment|// Vector Move Inverted Immediate
+name|NEON_MVNIMM
+block|,
+comment|// Vector FP move immediate
+name|NEON_FMOVIMM
+block|,
+comment|// Vector permute
+name|NEON_UZP1
+block|,
+name|NEON_UZP2
+block|,
+name|NEON_ZIP1
+block|,
+name|NEON_ZIP2
+block|,
+name|NEON_TRN1
+block|,
+name|NEON_TRN2
+block|,
+comment|// Vector Element reverse
+name|NEON_REV64
+block|,
+name|NEON_REV32
+block|,
+name|NEON_REV16
+block|,
+comment|// Vector compare
+name|NEON_CMP
+block|,
+comment|// Vector compare zero
+name|NEON_CMPZ
+block|,
+comment|// Vector compare bitwise test
+name|NEON_TST
+block|,
+comment|// Vector saturating shift
+name|NEON_QSHLs
+block|,
+name|NEON_QSHLu
+block|,
+comment|// Vector dup
+name|NEON_VDUP
+block|,
+comment|// Vector dup by lane
+name|NEON_VDUPLANE
+block|,
+comment|// Vector extract
+name|NEON_VEXTRACT
+block|,
+comment|// NEON duplicate lane loads
+name|NEON_LD2DUP
+init|=
+name|ISD
+operator|::
+name|FIRST_TARGET_MEMORY_OPCODE
+block|,
+name|NEON_LD3DUP
+block|,
+name|NEON_LD4DUP
+block|,
+comment|// NEON loads with post-increment base updates:
+name|NEON_LD1_UPD
+block|,
+name|NEON_LD2_UPD
+block|,
+name|NEON_LD3_UPD
+block|,
+name|NEON_LD4_UPD
+block|,
+name|NEON_LD1x2_UPD
+block|,
+name|NEON_LD1x3_UPD
+block|,
+name|NEON_LD1x4_UPD
+block|,
+comment|// NEON stores with post-increment base updates:
+name|NEON_ST1_UPD
+block|,
+name|NEON_ST2_UPD
+block|,
+name|NEON_ST3_UPD
+block|,
+name|NEON_ST4_UPD
+block|,
+name|NEON_ST1x2_UPD
+block|,
+name|NEON_ST1x3_UPD
+block|,
+name|NEON_ST1x4_UPD
+block|,
+comment|// NEON duplicate lane loads with post-increment base updates:
+name|NEON_LD2DUP_UPD
+block|,
+name|NEON_LD3DUP_UPD
+block|,
+name|NEON_LD4DUP_UPD
+block|,
+comment|// NEON lane loads with post-increment base updates:
+name|NEON_LD2LN_UPD
+block|,
+name|NEON_LD3LN_UPD
+block|,
+name|NEON_LD4LN_UPD
+block|,
+comment|// NEON lane store with post-increment base updates:
+name|NEON_ST2LN_UPD
+block|,
+name|NEON_ST3LN_UPD
+block|,
+name|NEON_ST4LN_UPD
 block|}
 enum|;
 block|}
@@ -242,7 +365,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -263,7 +386,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -291,11 +414,42 @@ argument|bool IsVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isKnownShuffleVector
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue&Res
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerBUILD_VECTOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|const AArch64Subtarget *ST
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerVECTOR_SHUFFLE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
@@ -306,7 +460,7 @@ argument|CCState&CCInfo
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SDValue&Chain
 argument_list|)
@@ -357,6 +511,8 @@ block|;
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
@@ -406,7 +562,7 @@ argument|SDValue&A64cc
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|DebugLoc&dl
+argument|SDLoc&dl
 argument_list|)
 specifier|const
 block|;
@@ -559,6 +715,24 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerRETURNADDR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFRAMEADDR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerGlobalAddressELFSmall
 argument_list|(
 argument|SDValue Op
@@ -592,7 +766,7 @@ argument|SDValue SymAddr
 argument_list|,
 argument|SDValue DescAddr
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -682,22 +856,18 @@ argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;
-comment|/// isFMAFasterThanMulAndAdd - Return true if an FMA operation is faster than
-comment|/// a pair of mul and add instructions. fmuladd intrinsics will be expanded to
-comment|/// FMAs when this method returns true (and FMAs are legal), otherwise fmuladd
-comment|/// is expanded to mul + add.
+comment|/// isFMAFasterThanFMulAndFAdd - Return true if an FMA operation is faster
+comment|/// than a pair of fmul and fadd instructions. fmuladd intrinsics will be
+comment|/// expanded to FMAs when this method returns true, otherwise fmuladd is
+comment|/// expanded to fmul + fadd.
 name|virtual
 name|bool
-name|isFMAFasterThanMulAndAdd
+name|isFMAFasterThanFMulAndFAdd
 argument_list|(
-argument|EVT
+argument|EVT VT
 argument_list|)
 specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
+block|;
 name|ConstraintType
 name|getConstraintType
 argument_list|(
@@ -741,29 +911,94 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|getTgtMemIntrinsic
+argument_list|(
+argument|IntrinsicInfo&Info
+argument_list|,
+argument|const CallInst&I
+argument_list|,
+argument|unsigned Intrinsic
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|protected
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+block|,
+name|uint8_t
+operator|>
+name|findRepresentativeClass
+argument_list|(
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
 name|private
 operator|:
 specifier|const
-name|AArch64Subtarget
-operator|*
-name|Subtarget
-block|;
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|RegInfo
-block|;
-specifier|const
 name|InstrItineraryData
 operator|*
 name|Itins
-block|; }
-decl_stmt|;
+block|;
+specifier|const
+name|AArch64Subtarget
+operator|*
+name|getSubtarget
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|getTargetMachine
+argument_list|()
+operator|.
+name|getSubtarget
+operator|<
+name|AArch64Subtarget
+operator|>
+operator|(
+operator|)
+return|;
 block|}
+expr|}
+block|; enum
+name|NeonModImmType
+block|{
+name|Neon_Mov_Imm
+block|,
+name|Neon_Mvn_Imm
+block|}
+block|;
+specifier|extern
+name|SDValue
+name|ScanBUILD_VECTOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|bool&isOnlyLowElement
+argument_list|,
+argument|bool&usesOnlyOneValue
+argument_list|,
+argument|bool&hasDominantValue
+argument_list|,
+argument|bool&isConstant
+argument_list|,
+argument|bool&isUNDEF
+argument_list|)
+block|; }
 end_decl_stmt
 
 begin_comment

@@ -58,6 +58,12 @@ decl_stmt|;
 name|uint64_t
 name|tx_tso_not_tcp
 decl_stmt|;
+name|uint64_t
+name|tx_defragged
+decl_stmt|;
+name|uint64_t
+name|tx_defrag_failed
+decl_stmt|;
 comment|/* 	 * These are accumulated from each Rx/Tx queue. 	 */
 name|uint64_t
 name|rx_csum_failed
@@ -131,6 +137,11 @@ name|struct
 name|virtqueue
 modifier|*
 name|vtnrx_vq
+decl_stmt|;
+name|struct
+name|sglist
+modifier|*
+name|vtnrx_sg
 decl_stmt|;
 name|int
 name|vtnrx_id
@@ -230,9 +241,6 @@ name|uint64_t
 name|vtxs_tso
 decl_stmt|;
 name|uint64_t
-name|vtxs_collapsed
-decl_stmt|;
-name|uint64_t
 name|vtxs_rescheduled
 decl_stmt|;
 block|}
@@ -256,6 +264,11 @@ name|struct
 name|virtqueue
 modifier|*
 name|vtntx_vq
+decl_stmt|;
+name|struct
+name|sglist
+modifier|*
+name|vtntx_sg
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -440,6 +453,9 @@ name|int
 name|vtnet_rx_process_limit
 decl_stmt|;
 name|int
+name|vtnet_rx_nsegs
+decl_stmt|;
+name|int
 name|vtnet_rx_nmbufs
 decl_stmt|;
 name|int
@@ -447,6 +463,9 @@ name|vtnet_rx_clsize
 decl_stmt|;
 name|int
 name|vtnet_rx_new_clsize
+decl_stmt|;
+name|int
+name|vtnet_tx_nsegs
 decl_stmt|;
 name|int
 name|vtnet_if_flags
@@ -764,8 +783,15 @@ value|65550
 end_define
 
 begin_comment
-comment|/*  * Used to preallocate the Vq indirect descriptors. The first segment  * is reserved for the header.  */
+comment|/*  * Used to preallocate the Vq indirect descriptors. The first segment  * is reserved for the header, except for mergeable buffers since the  * header is placed inline with the data.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VTNET_MRG_RX_SEGS
+value|1
+end_define
 
 begin_define
 define|#
@@ -784,8 +810,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|VTNET_MIN_TX_SEGS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|VTNET_MAX_TX_SEGS
-value|34
+value|64
 end_define
 
 begin_comment
@@ -840,7 +873,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/*  * Determine how many mbufs are in each receive buffer. For LRO without  * mergeable descriptors, we must allocate an mbuf chain large enough to  * hold both the vtnet_rx_header and the maximum receivable data.  */
+comment|/*  * Determine how many mbufs are in each receive buffer. For LRO without  * mergeable buffers, we must allocate an mbuf chain large enough to  * hold both the vtnet_rx_header and the maximum receivable data.  */
 end_comment
 
 begin_define

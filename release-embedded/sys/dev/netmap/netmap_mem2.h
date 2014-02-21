@@ -253,6 +253,13 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|nm_memid_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* We implement two kinds of netmap_mem_d structures:  *  * - global: used by hardware NICS;  *  * - private: used by VALE ports.  *  * In both cases, the netmap_mem_d structure has the same lifetime as the  * netmap_adapter of the corresponding NIC or port. It is the responsibility of  * the client code to delete the private allocator when the associated  * netmap_adapter is freed (this is implemented by the NAF_MEM_OWNER flag in  * netmap.c).  The 'refcount' field counts the number of active users of the  * structure. The global allocator uses this information to prevent/allow  * reconfiguration. The private allocators release all their memory when there  * are no active users.  By 'active user' we mean an existing netmap_priv  * structure holding a reference to the allocator.  */
 end_comment
@@ -306,6 +313,19 @@ name|finalize
 decl_stmt|;
 name|netmap_mem_deref_t
 name|deref
+decl_stmt|;
+name|nm_memid_t
+name|nm_id
+decl_stmt|;
+comment|/* allocator identifier */
+comment|/* list of all existing allocators, sorted by nm_id */
+name|struct
+name|netmap_mem_d
+modifier|*
+name|prev
+decl_stmt|,
+modifier|*
+name|next
 decl_stmt|;
 block|}
 struct|;
@@ -441,6 +461,10 @@ parameter_list|,
 name|u_int
 modifier|*
 name|memflags
+parameter_list|,
+name|uint16_t
+modifier|*
+name|id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -483,6 +507,16 @@ name|rxr
 parameter_list|,
 name|u_int
 name|rxd
+parameter_list|,
+name|u_int
+name|extra_bufs
+parameter_list|,
+name|u_int
+name|npipes
+parameter_list|,
+name|int
+modifier|*
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -507,6 +541,23 @@ name|n
 parameter_list|)
 value|((n)->pools[NETMAP_BUF_POOL]._objsize)
 end_define
+
+begin_function_decl
+name|uint32_t
+name|netmap_extra_alloc
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

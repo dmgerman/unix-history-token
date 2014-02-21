@@ -1287,6 +1287,8 @@ name|TokenKind
 name|Kind
 block|,
 name|Close
+block|,
+name|FinalToken
 block|;
 name|SourceLocation
 argument_list|(
@@ -1373,6 +1375,8 @@ argument_list|(
 argument|Parser& p
 argument_list|,
 argument|tok::TokenKind k
+argument_list|,
+argument|tok::TokenKind FinalToken = tok::semi
 argument_list|)
 operator|:
 name|GreaterThanIsOperatorScope
@@ -1391,7 +1395,12 @@ argument_list|)
 block|,
 name|Kind
 argument_list|(
-argument|k
+name|k
+argument_list|)
+block|,
+name|FinalToken
+argument_list|(
+argument|FinalToken
 argument_list|)
 block|{
 switch|switch

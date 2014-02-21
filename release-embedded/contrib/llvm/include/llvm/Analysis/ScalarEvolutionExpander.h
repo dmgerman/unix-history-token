@@ -111,6 +111,10 @@ specifier|const
 name|SCEV
 modifier|*
 name|S
+parameter_list|,
+name|ScalarEvolution
+modifier|&
+name|SE
 parameter_list|)
 function_decl|;
 comment|/// SCEVExpander - This class uses information about analyze scalars to
@@ -919,19 +923,6 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
-name|void
-name|restoreInsertPoint
-argument_list|(
-name|BasicBlock
-operator|*
-name|BB
-argument_list|,
-name|BasicBlock
-operator|::
-name|iterator
-name|I
-argument_list|)
-decl_stmt|;
 name|bool
 name|isNormalAddRecExprPHI
 parameter_list|(

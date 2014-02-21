@@ -279,7 +279,7 @@ name|size_t
 name|inl
 parameter_list|)
 block|{
-if|if
+while|while
 condition|(
 name|inl
 operator|>=
@@ -492,7 +492,7 @@ block|}
 endif|#
 directive|endif
 comment|/* KSSL_DEBUG */
-if|if
+while|while
 condition|(
 name|inl
 operator|>=
@@ -642,7 +642,7 @@ name|size_t
 name|inl
 parameter_list|)
 block|{
-if|if
+while|while
 condition|(
 name|inl
 operator|>=

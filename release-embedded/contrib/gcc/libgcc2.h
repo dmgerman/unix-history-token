@@ -70,10 +70,10 @@ specifier|extern
 name|void
 name|__clear_cache
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

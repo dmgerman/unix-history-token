@@ -655,21 +655,22 @@ comment|/// transform one of the given strings into the other. If zero,
 comment|/// the strings are identical.
 name|unsigned
 name|edit_distance
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Other
-parameter_list|,
+argument_list|,
 name|bool
 name|AllowReplacements
-init|=
+operator|=
 name|true
-parameter_list|,
+argument_list|,
 name|unsigned
 name|MaxEditDistance
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// str - Get the contents as an std::string.
 name|std
 operator|::
@@ -779,6 +780,15 @@ operator|==
 literal|0
 return|;
 block|}
+comment|/// Check if this string starts with the given \p Prefix, ignoring case.
+name|bool
+name|startswith_lower
+argument_list|(
+name|StringRef
+name|Prefix
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Check if this string ends with the given \p Suffix.
 name|bool
 name|endswith
@@ -816,6 +826,15 @@ operator|==
 literal|0
 return|;
 block|}
+comment|/// Check if this string ends with the given \p Suffix, ignoring case.
+name|bool
+name|endswith_lower
+argument_list|(
+name|StringRef
+name|Suffix
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 comment|/// @name String Searching
 comment|/// @{
@@ -2452,6 +2471,32 @@ name|true
 block|; }
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// Construct a string ref from a boolean.
+end_comment
+
+begin_function
+specifier|inline
+name|StringRef
+name|toStringRef
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+return|return
+name|StringRef
+argument_list|(
+name|B
+condition|?
+literal|"true"
+else|:
+literal|"false"
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_endif
 unit|}

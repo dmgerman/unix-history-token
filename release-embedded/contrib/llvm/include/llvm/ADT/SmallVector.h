@@ -231,6 +231,7 @@ argument_list|)
 return|;
 block|}
 name|bool
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|empty
 argument_list|()
 specifier|const
@@ -2352,6 +2353,7 @@ end_function
 
 begin_function
 name|T
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|pop_back_val
 parameter_list|()
 block|{

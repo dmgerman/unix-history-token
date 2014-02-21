@@ -77,14 +77,29 @@ name|class
 name|TargetLibraryInfo
 decl_stmt|;
 name|class
-name|PassManagerBase
-decl_stmt|;
-name|class
 name|Pass
+decl_stmt|;
+comment|// The old pass manager infrastructure is hidden in a legacy namespace now.
+name|namespace
+name|legacy
+block|{
+name|class
+name|PassManagerBase
 decl_stmt|;
 name|class
 name|FunctionPassManager
 decl_stmt|;
+block|}
+name|using
+name|legacy
+operator|::
+name|PassManagerBase
+expr_stmt|;
+name|using
+name|legacy
+operator|::
+name|FunctionPassManager
+expr_stmt|;
 comment|/// PassManagerBuilder - This class is used to set up a standard optimization
 comment|/// sequence for languages like C and C++, allowing some APIs to customize the
 comment|/// pass sequence in various ways. A simple example of using it would be:
@@ -188,9 +203,6 @@ modifier|*
 name|Inliner
 decl_stmt|;
 name|bool
-name|DisableSimplifyLibCalls
-decl_stmt|;
-name|bool
 name|DisableUnitAtATime
 decl_stmt|;
 name|bool
@@ -204,6 +216,12 @@ name|SLPVectorize
 decl_stmt|;
 name|bool
 name|LoopVectorize
+decl_stmt|;
+name|bool
+name|LateVectorize
+decl_stmt|;
+name|bool
+name|RerollLoops
 decl_stmt|;
 name|private
 label|:

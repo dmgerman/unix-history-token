@@ -15,6 +15,35 @@ directive|define
 name|_VMM_INSTRUCTION_EMUL_H_
 end_define
 
+begin_enum
+enum|enum
+name|vie_cpu_mode
+block|{
+name|CPU_MODE_COMPATIBILITY
+block|,
+comment|/* IA-32E mode (CS.L = 0) */
+name|CPU_MODE_64BIT
+block|,
+comment|/* IA-32E mode (CS.L = 1) */
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|vie_paging_mode
+block|{
+name|PAGING_MODE_FLAT
+block|,
+name|PAGING_MODE_32
+block|,
+name|PAGING_MODE_PAE
+block|,
+name|PAGING_MODE_64
+block|, }
+enum|;
+end_enum
+
 begin_comment
 comment|/*  * The data structures 'vie' and 'vie_op' are meant to be opaque to the  * consumers of instruction decoding. The only reason why their contents  * need to be exposed is because they are part of the 'vm_exit' structure.  */
 end_comment
@@ -285,6 +314,10 @@ parameter_list|,
 name|uint64_t
 name|cr3
 parameter_list|,
+name|enum
+name|vie_paging_mode
+name|paging_mode
+parameter_list|,
 name|struct
 name|vie
 modifier|*
@@ -334,6 +367,10 @@ name|cpuid
 parameter_list|,
 name|uint64_t
 name|gla
+parameter_list|,
+name|enum
+name|vie_cpu_mode
+name|cpu_mode
 parameter_list|,
 name|struct
 name|vie

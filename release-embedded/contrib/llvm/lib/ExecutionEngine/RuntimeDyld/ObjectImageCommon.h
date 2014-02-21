@@ -100,6 +100,11 @@ name|other
 argument_list|)
 block|;
 comment|// = delete
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|object

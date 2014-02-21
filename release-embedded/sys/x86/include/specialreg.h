@@ -4216,43 +4216,31 @@ name|MSR_PERFEVSEL3
 value|0xc0010003
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|MSR_PERFCTR0
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|MSR_PERFCTR1
-end_undef
-
 begin_define
 define|#
 directive|define
-name|MSR_PERFCTR0
+name|MSR_K7_PERFCTR0
 value|0xc0010004
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_PERFCTR1
+name|MSR_K7_PERFCTR1
 value|0xc0010005
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_PERFCTR2
+name|MSR_K7_PERFCTR2
 value|0xc0010006
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_PERFCTR3
+name|MSR_K7_PERFCTR3
 value|0xc0010007
 end_define
 

@@ -876,6 +876,10 @@ decl_stmt|;
 name|uint8_t
 name|tx_chan
 decl_stmt|;
+name|uint8_t
+name|rx_chan_map
+decl_stmt|;
+comment|/* rx MPS channel bitmap */
 comment|/* These need to be int as they are used in sysctl */
 name|int
 name|ntxq
@@ -885,6 +889,10 @@ name|int
 name|first_txq
 decl_stmt|;
 comment|/* index of first tx queue */
+name|int
+name|rsrv_noflowq
+decl_stmt|;
+comment|/* Reserve queue 0 for non-flowid packets */
 name|int
 name|nrxq
 decl_stmt|;
@@ -1996,6 +2004,9 @@ index|]
 decl_stmt|;
 name|int
 name|fl_starve_threshold
+decl_stmt|;
+name|int
+name|fl_starve_threshold2
 decl_stmt|;
 name|int
 name|eq_s_qpp

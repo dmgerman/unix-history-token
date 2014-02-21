@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1218,6 +1224,20 @@ argument_list|(
 name|NIRQ
 argument_list|,
 name|NIRQ
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|PCPU_SIZE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt

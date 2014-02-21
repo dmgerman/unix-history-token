@@ -264,6 +264,14 @@ name|StringRef
 name|FS
 parameter_list|)
 function_decl|;
+comment|/// InitCPUSchedModel - Recompute scheduling model based on CPU.
+name|void
+name|InitCPUSchedModel
+parameter_list|(
+name|StringRef
+name|CPU
+parameter_list|)
+function_decl|;
 comment|/// ToggleFeature - Toggle a feature and returns the re-computed feature
 comment|/// bits. This version does not change the implied bits.
 name|uint64_t

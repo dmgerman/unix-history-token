@@ -234,7 +234,7 @@ case|case
 name|ObjFW
 case|:
 return|return
-name|false
+name|true
 return|;
 case|case
 name|iOS
@@ -323,26 +323,8 @@ condition|)
 return|return
 name|false
 return|;
-comment|// Mac runtimes use legacy dispatch everywhere except x86-64
 block|}
-elseif|else
-if|if
-condition|(
-name|isNeXTFamily
-argument_list|()
-operator|&&
-name|isNonFragile
-argument_list|()
-condition|)
-return|return
-name|Arch
-operator|!=
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|x86_64
-return|;
+comment|// Mac runtimes use legacy dispatch everywhere now.
 return|return
 name|true
 return|;

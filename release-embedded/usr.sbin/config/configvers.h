@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|CONFIGVERS
-value|600012
+value|600013
 end_define
 
 begin_define

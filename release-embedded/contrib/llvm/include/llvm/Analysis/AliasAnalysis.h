@@ -2240,6 +2240,17 @@ operator|*
 name|V
 argument_list|)
 block|;
+comment|/// isNoAliasArgument - Return true if this is an argument with the noalias
+comment|/// attribute.
+name|bool
+name|isNoAliasArgument
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+block|;
 comment|/// isIdentifiedObject - Return true if this pointer refers to a distinct and
 comment|/// identifiable object.  This returns true for:
 comment|///    Global Variables and Functions (but not Global Aliases)

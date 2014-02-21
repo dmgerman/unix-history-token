@@ -635,7 +635,11 @@ name|authctxt
 operator|->
 name|krb5_user
 argument_list|,
-name|client
+name|authctxt
+operator|->
+name|pw
+operator|->
+name|pw_name
 argument_list|)
 condition|)
 block|{

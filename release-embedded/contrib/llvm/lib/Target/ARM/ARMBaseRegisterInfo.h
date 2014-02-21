@@ -291,6 +291,51 @@ name|false
 return|;
 block|}
 block|}
+specifier|static
+specifier|inline
+name|bool
+name|isCalleeSavedRegister
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|MCPhysReg
+modifier|*
+name|CSRegs
+parameter_list|)
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|;
+name|CSRegs
+index|[
+name|i
+index|]
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|Reg
+operator|==
+name|CSRegs
+index|[
+name|i
+index|]
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
 name|class
 name|ARMBaseRegisterInfo
 range|:
@@ -299,11 +344,6 @@ name|ARMGenRegisterInfo
 block|{
 name|protected
 operator|:
-specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|TII
-block|;
 specifier|const
 name|ARMSubtarget
 operator|&
@@ -323,11 +363,6 @@ comment|// Can be only subclassed.
 name|explicit
 name|ARMBaseRegisterInfo
 argument_list|(
-specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|tii
-argument_list|,
 specifier|const
 name|ARMSubtarget
 operator|&
@@ -367,17 +402,25 @@ block|;
 specifier|const
 name|uint32_t
 operator|*
+name|getNoPreservedMask
+argument_list|()
+specifier|const
+block|;
+comment|/// getThisReturnPreservedMask - Returns a call preserved mask specific to the
+comment|/// case that 'returned' is on an i32 first argument if the calling convention
+comment|/// is one that can (partially) model this attribute with a preserved mask
+comment|/// (i.e. it is a calling convention that uses the same register for the first
+comment|/// i32 argument and an i32 return value)
+comment|///
+comment|/// Should return NULL in the case that the calling convention does not have
+comment|/// this property
+specifier|const
+name|uint32_t
+operator|*
 name|getThisReturnPreservedMask
 argument_list|(
 argument|CallingConv::ID
 argument_list|)
-specifier|const
-block|;
-specifier|const
-name|uint32_t
-operator|*
-name|getNoPreservedMask
-argument_list|()
 specifier|const
 block|;
 name|BitVector
@@ -556,17 +599,6 @@ return|return
 name|BasePtr
 return|;
 block|}
-comment|// Exception handling queries.
-name|unsigned
-name|getEHExceptionRegister
-argument_list|()
-specifier|const
-block|;
-name|unsigned
-name|getEHHandlerRegister
-argument_list|()
-specifier|const
-block|;
 name|bool
 name|isLowRegister
 argument_list|(

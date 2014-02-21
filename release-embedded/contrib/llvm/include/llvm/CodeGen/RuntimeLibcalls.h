@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- CodeGen/RuntimeLibcall.h - Runtime Library Calls --------*- C++ -*-===//
+comment|//===-- CodeGen/RuntimeLibcalls.h - Runtime Library Calls -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -403,6 +403,16 @@ name|NEARBYINT_F128
 block|,
 name|NEARBYINT_PPCF128
 block|,
+name|ROUND_F32
+block|,
+name|ROUND_F64
+block|,
+name|ROUND_F80
+block|,
+name|ROUND_F128
+block|,
+name|ROUND_PPCF128
+block|,
 name|FLOOR_F32
 block|,
 name|FLOOR_F64
@@ -652,6 +662,8 @@ name|SYNC_VAL_COMPARE_AND_SWAP_4
 block|,
 name|SYNC_VAL_COMPARE_AND_SWAP_8
 block|,
+name|SYNC_VAL_COMPARE_AND_SWAP_16
+block|,
 name|SYNC_LOCK_TEST_AND_SET_1
 block|,
 name|SYNC_LOCK_TEST_AND_SET_2
@@ -659,6 +671,8 @@ block|,
 name|SYNC_LOCK_TEST_AND_SET_4
 block|,
 name|SYNC_LOCK_TEST_AND_SET_8
+block|,
+name|SYNC_LOCK_TEST_AND_SET_16
 block|,
 name|SYNC_FETCH_AND_ADD_1
 block|,
@@ -668,6 +682,8 @@ name|SYNC_FETCH_AND_ADD_4
 block|,
 name|SYNC_FETCH_AND_ADD_8
 block|,
+name|SYNC_FETCH_AND_ADD_16
+block|,
 name|SYNC_FETCH_AND_SUB_1
 block|,
 name|SYNC_FETCH_AND_SUB_2
@@ -675,6 +691,8 @@ block|,
 name|SYNC_FETCH_AND_SUB_4
 block|,
 name|SYNC_FETCH_AND_SUB_8
+block|,
+name|SYNC_FETCH_AND_SUB_16
 block|,
 name|SYNC_FETCH_AND_AND_1
 block|,
@@ -684,6 +702,8 @@ name|SYNC_FETCH_AND_AND_4
 block|,
 name|SYNC_FETCH_AND_AND_8
 block|,
+name|SYNC_FETCH_AND_AND_16
+block|,
 name|SYNC_FETCH_AND_OR_1
 block|,
 name|SYNC_FETCH_AND_OR_2
@@ -691,6 +711,8 @@ block|,
 name|SYNC_FETCH_AND_OR_4
 block|,
 name|SYNC_FETCH_AND_OR_8
+block|,
+name|SYNC_FETCH_AND_OR_16
 block|,
 name|SYNC_FETCH_AND_XOR_1
 block|,
@@ -700,6 +722,8 @@ name|SYNC_FETCH_AND_XOR_4
 block|,
 name|SYNC_FETCH_AND_XOR_8
 block|,
+name|SYNC_FETCH_AND_XOR_16
+block|,
 name|SYNC_FETCH_AND_NAND_1
 block|,
 name|SYNC_FETCH_AND_NAND_2
@@ -707,6 +731,51 @@ block|,
 name|SYNC_FETCH_AND_NAND_4
 block|,
 name|SYNC_FETCH_AND_NAND_8
+block|,
+name|SYNC_FETCH_AND_NAND_16
+block|,
+name|SYNC_FETCH_AND_MAX_1
+block|,
+name|SYNC_FETCH_AND_MAX_2
+block|,
+name|SYNC_FETCH_AND_MAX_4
+block|,
+name|SYNC_FETCH_AND_MAX_8
+block|,
+name|SYNC_FETCH_AND_MAX_16
+block|,
+name|SYNC_FETCH_AND_UMAX_1
+block|,
+name|SYNC_FETCH_AND_UMAX_2
+block|,
+name|SYNC_FETCH_AND_UMAX_4
+block|,
+name|SYNC_FETCH_AND_UMAX_8
+block|,
+name|SYNC_FETCH_AND_UMAX_16
+block|,
+name|SYNC_FETCH_AND_MIN_1
+block|,
+name|SYNC_FETCH_AND_MIN_2
+block|,
+name|SYNC_FETCH_AND_MIN_4
+block|,
+name|SYNC_FETCH_AND_MIN_8
+block|,
+name|SYNC_FETCH_AND_MIN_16
+block|,
+name|SYNC_FETCH_AND_UMIN_1
+block|,
+name|SYNC_FETCH_AND_UMIN_2
+block|,
+name|SYNC_FETCH_AND_UMIN_4
+block|,
+name|SYNC_FETCH_AND_UMIN_8
+block|,
+name|SYNC_FETCH_AND_UMIN_16
+block|,
+comment|// Stack Protector Fail.
+name|STACKPROTECTOR_CHECK_FAIL
 block|,
 name|UNKNOWN_LIBCALL
 block|}

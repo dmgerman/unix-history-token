@@ -21129,19 +21129,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If that matches source, then use this delta as is. */
+comment|/* If that matches source, then use this delta as is.          Note that we want an actual delta here.  E.g. a self-delta would          not be good enough. */
 if|if
 condition|(
 name|rep_args
 operator|->
 name|is_delta
 operator|&&
-operator|(
-name|rep_args
-operator|->
-name|is_delta_vs_empty
-operator|||
-operator|(
 name|rep_args
 operator|->
 name|base_revision
@@ -21161,8 +21155,6 @@ operator|->
 name|data_rep
 operator|->
 name|offset
-operator|)
-operator|)
 condition|)
 block|{
 comment|/* Create the delta read baton. */

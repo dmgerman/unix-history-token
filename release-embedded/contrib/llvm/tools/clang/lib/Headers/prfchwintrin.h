@@ -30,6 +30,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__PRFCHWINTRIN_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__PRFCHWINTRIN_H
+end_define
+
 begin_if
 if|#
 directive|if
@@ -80,6 +92,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __PRFCHWINTRIN_H */
+end_comment
 
 end_unit
 

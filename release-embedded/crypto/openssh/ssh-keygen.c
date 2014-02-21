@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.230 2013/07/20 01:44:37 djm Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.238 2013/12/06 13:39:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -661,6 +661,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Use new OpenSSH private key format when writing SSH2 keys instead of PEM */
+end_comment
+
+begin_decl_stmt
+name|int
+name|use_new_format
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Cipher for new-format private keys */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|new_format_cipher
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Number of KDF rounds to derive new format keys /  * number of primality trials when screening moduli.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rounds
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* argv0 */
 end_comment
 
@@ -862,6 +899,10 @@ name|type
 operator|!=
 name|KEY_ECDSA
 operator|&&
+name|type
+operator|!=
+name|KEY_ED25519
+operator|&&
 operator|*
 name|bitsp
 operator|<
@@ -995,6 +1036,17 @@ case|:
 name|name
 operator|=
 name|_PATH_SSH_CLIENT_ID_RSA
+expr_stmt|;
+break|break;
+case|case
+name|KEY_ED25519
+case|:
+case|case
+name|KEY_ED25519_CERT
+case|:
+name|name
+operator|=
+name|_PATH_SSH_CLIENT_ID_ED25519
 expr_stmt|;
 break|break;
 default|default:
@@ -4733,6 +4785,14 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|"ed25519"
+block|,
+literal|"ED25519"
+block|,
+name|_PATH_HOST_ED25519_KEY_FILE
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -4875,9 +4935,6 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|arc4random_stir
-argument_list|()
-expr_stmt|;
 name|type
 operator|=
 name|key_type_from_name
@@ -4983,6 +5040,12 @@ argument_list|,
 literal|""
 argument_list|,
 name|comment
+argument_list|,
+name|use_new_format
+argument_list|,
+name|new_format_cipher
+argument_list|,
+name|rounds
 argument_list|)
 condition|)
 block|{
@@ -5013,9 +5076,6 @@ name|key_free
 argument_list|(
 name|private
 argument_list|)
-expr_stmt|;
-name|arc4random_stir
-argument_list|()
 expr_stmt|;
 name|strlcat
 argument_list|(
@@ -5451,6 +5511,11 @@ literal|0
 decl_stmt|;
 name|int
 name|ca
+decl_stmt|;
+name|int
+name|found_key
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -6085,6 +6150,11 @@ operator|&&
 name|c
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|printf
 argument_list|(
 literal|"# Host %s found: "
@@ -6118,6 +6188,10 @@ name|ca
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|found_key
+operator|=
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -6217,6 +6291,11 @@ operator|&&
 name|c
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|printf
 argument_list|(
 literal|"# Host %s found: "
@@ -6253,6 +6332,10 @@ operator|&&
 operator|!
 name|ca
 argument_list|)
+expr_stmt|;
+name|found_key
+operator|=
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -6636,7 +6719,10 @@ block|}
 block|}
 name|exit
 argument_list|(
-literal|0
+name|find_host
+operator|&&
+operator|!
+name|found_key
 argument_list|)
 expr_stmt|;
 block|}
@@ -6940,6 +7026,12 @@ argument_list|,
 name|passphrase1
 argument_list|,
 name|comment
+argument_list|,
+name|use_new_format
+argument_list|,
+name|new_format_cipher
+argument_list|,
+name|rounds
 argument_list|)
 condition|)
 block|{
@@ -7496,6 +7588,12 @@ argument_list|,
 name|passphrase
 argument_list|,
 name|new_comment
+argument_list|,
+name|use_new_format
+argument_list|,
+name|new_format_cipher
+argument_list|,
+name|rounds
 argument_list|)
 condition|)
 block|{
@@ -8781,6 +8879,12 @@ operator|->
 name|type
 operator|!=
 name|KEY_ECDSA
+operator|&&
+name|public
+operator|->
+name|type
+operator|!=
+name|KEY_ED25519
 condition|)
 name|fatal
 argument_list|(
@@ -9625,7 +9729,7 @@ name|parse_relative_time
 argument_list|(
 name|to
 argument_list|,
-name|cert_valid_from
+name|now
 argument_list|)
 expr_stmt|;
 else|else
@@ -11114,7 +11218,7 @@ condition|)
 block|{
 name|fatal
 argument_list|(
-literal|"revoking certificated by serial number "
+literal|"revoking certificates by serial number "
 literal|"requires specification of a CA key"
 argument_list|)
 expr_stmt|;
@@ -11355,7 +11459,7 @@ condition|)
 block|{
 name|fatal
 argument_list|(
-literal|"revoking certificated by key ID "
+literal|"revoking certificates by key ID "
 literal|"requires specification of a CA key"
 argument_list|)
 expr_stmt|;
@@ -12170,7 +12274,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -a trials   Number of trials for screening DH-GEX moduli.\n"
+literal|"  -a number   Number of KDF rounds for new key format or moduli primality tests.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -12357,6 +12461,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"  -o          Enforce new private key format.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"  -P phrase   Provide old passphrase.\n"
 argument_list|)
 expr_stmt|;
@@ -12465,6 +12576,13 @@ argument_list|,
 literal|"  -z serial   Specify a serial number.\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -Z cipher   Specify a cipher for new private key format.\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -12558,10 +12676,6 @@ decl_stmt|,
 name|generator_wanted
 init|=
 literal|0
-decl_stmt|,
-name|trials
-init|=
-literal|100
 decl_stmt|;
 name|int
 name|do_gen_candidates
@@ -12715,6 +12829,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Remaining characters: EUYdw */
 while|while
 condition|(
 operator|(
@@ -12726,8 +12841,8 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ABHLQXceghiklpquvxy"
-literal|"C:D:F:G:I:J:K:M:N:O:P:R:S:T:V:W:a:b:f:g:j:m:n:r:s:t:z:"
+literal|"ABHLQXceghiklopquvxy"
+literal|"C:D:F:G:I:J:K:M:N:O:P:R:S:T:V:W:Z:a:b:f:g:j:m:n:r:s:t:z:"
 argument_list|)
 operator|)
 operator|!=
@@ -12958,6 +13073,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'o'
+case|:
+name|use_new_format
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 name|change_passphrase
@@ -13044,6 +13167,14 @@ name|add_cert_option
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+name|new_format_cipher
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -13221,10 +13352,10 @@ break|break;
 case|case
 literal|'a'
 case|:
-name|trials
+name|rounds
 operator|=
 operator|(
-name|u_int32_t
+name|int
 operator|)
 name|strtonum
 argument_list|(
@@ -13232,7 +13363,7 @@ name|optarg
 argument_list|,
 literal|1
 argument_list|,
-name|UINT_MAX
+name|INT_MAX
 argument_list|,
 operator|&
 name|errstr
@@ -13244,7 +13375,7 @@ name|errstr
 condition|)
 name|fatal
 argument_list|(
-literal|"Invalid number of trials: %s (%s)"
+literal|"Invalid number: %s (%s)"
 argument_list|,
 name|optarg
 argument_list|,
@@ -14020,7 +14151,13 @@ name|in
 argument_list|,
 name|out
 argument_list|,
-name|trials
+name|rounds
+operator|==
+literal|0
+condition|?
+literal|100
+else|:
+name|rounds
 argument_list|,
 name|generator_wanted
 argument_list|,
@@ -14060,9 +14197,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|arc4random_stir
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|key_type_name
@@ -14504,6 +14638,12 @@ argument_list|,
 name|passphrase1
 argument_list|,
 name|comment
+argument_list|,
+name|use_new_format
+argument_list|,
+name|new_format_cipher
+argument_list|,
+name|rounds
 argument_list|)
 condition|)
 block|{
@@ -14560,9 +14700,6 @@ name|key_free
 argument_list|(
 name|private
 argument_list|)
-expr_stmt|;
-name|arc4random_stir
-argument_list|()
 expr_stmt|;
 if|if
 condition|(

@@ -250,6 +250,13 @@ name|hasReturnedAttr
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Return true if this argument has the readonly or readnone attribute
+comment|/// on it in its containing function.
+name|bool
+name|onlyReadsMemory
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Add a Attribute to an argument.
 name|void
 name|addAttr

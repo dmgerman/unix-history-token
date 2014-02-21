@@ -245,16 +245,6 @@ name|memBuf
 argument_list|)
 decl_stmt|;
 name|void
-name|remap
-parameter_list|(
-name|StringRef
-name|filePath
-parameter_list|,
-name|StringRef
-name|newPath
-parameter_list|)
-function_decl|;
-name|void
 name|applyMappings
 argument_list|(
 name|PreprocessorOptions

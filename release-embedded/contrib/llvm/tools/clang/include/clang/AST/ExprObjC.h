@@ -718,7 +718,7 @@ name|ObjCArrayLiteral
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|ArrayRef<Expr *> Elements
 argument_list|,
@@ -734,7 +734,7 @@ name|ObjCArrayLiteral
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|unsigned NumElements
 argument_list|)
@@ -1230,7 +1230,7 @@ name|ObjCDictionaryLiteral
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|ArrayRef<ObjCDictionaryElement> VK
 argument_list|,
@@ -1248,7 +1248,7 @@ name|ObjCDictionaryLiteral
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|unsigned NumElements
 argument_list|,
@@ -3930,7 +3930,7 @@ name|ObjCSubscriptRefExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|Expr *base
 argument_list|,
@@ -4537,7 +4537,7 @@ name|ObjCMessageExpr
 operator|*
 name|alloc
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|ArrayRef<Expr *> Args
 argument_list|,
@@ -4555,7 +4555,7 @@ name|ObjCMessageExpr
 operator|*
 name|alloc
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|unsigned NumArgs
 argument_list|,
@@ -4613,7 +4613,7 @@ name|ObjCMessageExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -4668,7 +4668,7 @@ name|ObjCMessageExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -4719,7 +4719,7 @@ name|ObjCMessageExpr
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -4754,7 +4754,7 @@ name|ObjCMessageExpr
 operator|*
 name|CreateEmpty
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|unsigned NumArgs
 argument_list|,

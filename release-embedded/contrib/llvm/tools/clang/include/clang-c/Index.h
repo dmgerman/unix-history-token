@@ -18,19 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -60,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|19
+value|20
 end_define
 
 begin_define
@@ -456,6 +444,15 @@ name|CXSourceLocation
 name|location
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Returns non-zero if the given source location is in the main file of  * the corresponding translation unit.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_Location_isFromMainFile
+parameter_list|(
+name|CXSourceLocation
+name|location
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Retrieve a NULL (invalid) source range.  */
 name|CINDEX_LINKAGE
 name|CXSourceRange
@@ -755,7 +752,7 @@ name|CXDiagnosticSet
 name|Diags
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the child diagnostics of a CXDiagnostic.   *  * This CXDiagnosticSet does not need to be released by  * clang_diposeDiagnosticSet.  */
+comment|/**  * \brief Retrieve the child diagnostics of a CXDiagnostic.   *  * This CXDiagnosticSet does not need to be released by  * clang_disposeDiagnosticSet.  */
 name|CINDEX_LINKAGE
 name|CXDiagnosticSet
 name|clang_getChildDiagnostics
@@ -803,7 +800,7 @@ name|CXDiagnostic
 name|Diagnostic
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Options to control the display of diagnostics.  *  * The values in this enum are meant to be combined to customize the  * behavior of \c clang_displayDiagnostic().  */
+comment|/**  * \brief Options to control the display of diagnostics.  *  * The values in this enum are meant to be combined to customize the  * behavior of \c clang_formatDiagnostic().  */
 enum|enum
 name|CXDiagnosticDisplayOptions
 block|{
@@ -850,7 +847,7 @@ name|unsigned
 name|Options
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the set of display options most similar to the  * default behavior of the clang compiler.  *  * \returns A set of display options suitable for use with \c  * clang_displayDiagnostic().  */
+comment|/**  * \brief Retrieve the set of display options most similar to the  * default behavior of the clang compiler.  *  * \returns A set of display options suitable for use with \c  * clang_formatDiagnostic().  */
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_defaultDiagnosticDisplayOptions
@@ -1928,7 +1925,7 @@ name|CXCursor_CompoundStmt
 init|=
 literal|202
 block|,
-comment|/** \brief A case statment.    */
+comment|/** \brief A case statement.    */
 name|CXCursor_CaseStmt
 init|=
 literal|203
@@ -2077,9 +2074,14 @@ name|CXCursor_DeclStmt
 init|=
 literal|231
 block|,
+comment|/** \brief OpenMP parallel directive.    */
+name|CXCursor_OMPParallelDirective
+init|=
+literal|232
+block|,
 name|CXCursor_LastStmt
 init|=
-name|CXCursor_DeclStmt
+name|CXCursor_OMPParallelDirective
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit
@@ -2124,9 +2126,13 @@ name|CXCursor_AsmLabelAttr
 init|=
 literal|407
 block|,
+name|CXCursor_PackedAttr
+init|=
+literal|408
+block|,
 name|CXCursor_LastAttr
 init|=
-name|CXCursor_AsmLabelAttr
+name|CXCursor_PackedAttr
 block|,
 comment|/* Preprocessing */
 name|CXCursor_PreprocessingDirective
@@ -2814,6 +2820,22 @@ block|,
 name|CXType_Vector
 init|=
 literal|113
+block|,
+name|CXType_IncompleteArray
+init|=
+literal|114
+block|,
+name|CXType_VariableArray
+init|=
+literal|115
+block|,
+name|CXType_DependentSizedArray
+init|=
+literal|116
+block|,
+name|CXType_MemberPointer
+init|=
+literal|117
 block|}
 enum|;
 comment|/**  * \brief Describes the calling convention of a function type  */
@@ -3217,6 +3239,15 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Return the class type of an member pointer type.  *  * If a non-member-pointer type is passed in, an invalid type is returned.  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_Type_getClassType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Return the size of a type in bytes as per C++[expr.sizeof] standard.  *  * If the type declaration is invalid, CXTypeLayoutError_Invalid is returned.  * If the type declaration is an incomplete type, CXTypeLayoutError_Incomplete  *   is returned.  * If the type declaration is a dependent type, CXTypeLayoutError_Dependent is  *   returned.  */
 name|CINDEX_LINKAGE
 name|long
@@ -3240,6 +3271,31 @@ specifier|const
 name|char
 modifier|*
 name|S
+parameter_list|)
+function_decl|;
+enum|enum
+name|CXRefQualifierKind
+block|{
+comment|/** \brief No ref-qualifier was provided. */
+name|CXRefQualifier_None
+init|=
+literal|0
+block|,
+comment|/** \brief An lvalue ref-qualifier was provided (\c&). */
+name|CXRefQualifier_LValue
+block|,
+comment|/** \brief An rvalue ref-qualifier was provided (\c&&). */
+name|CXRefQualifier_RValue
+block|}
+enum|;
+comment|/**  * \brief Retrieve the ref-qualifier kind of a function or method.  *  * The ref-qualifier is returned for C++ functions or methods. For other types  * or non-C++ declarations, CXRefQualifier_None is returned.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXRefQualifierKind
+name|clang_Type_getCXXRefQualifier
+parameter_list|(
+name|CXType
+name|T
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Returns non-zero if the cursor specifies a Record member that is a  *   bitfield.  */
@@ -3691,6 +3747,15 @@ comment|/**  * \brief Given a cursor that represents an ObjC method or parameter
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_Cursor_getObjCDeclQualifiers
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Given a cursor that represents an ObjC method or property declaration,  * return non-zero if the declaration was affected by "@optional".  * Returns zero if the cursor is not such a declaration or it is "@required".  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Cursor_isObjCOptional
 parameter_list|(
 name|CXCursor
 name|C
@@ -4241,6 +4306,15 @@ parameter_list|)
 function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_CPP C++ AST introspection  *  * The routines in this group provide access information in the ASTs specific  * to C++ language features.  *  * @{  */
+comment|/**  * \brief Determine if a C++ member function or member function template is  * pure virtual.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXXMethod_isPureVirtual
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Determine if a C++ member function or member function template is   * declared 'static'.  */
 name|CINDEX_LINKAGE
 name|unsigned

@@ -118,7 +118,10 @@ name|ssh_sandbox
 modifier|*
 name|ssh_sandbox_init
 parameter_list|(
-name|void
+name|struct
+name|monitor
+modifier|*
+name|monitor
 parameter_list|)
 block|{
 name|struct
@@ -213,6 +216,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|SANDBOX_SKIP_RLIMIT_NOFILE
 if|if
 condition|(
 name|setrlimit
@@ -238,6 +244,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_RLIMIT_NPROC

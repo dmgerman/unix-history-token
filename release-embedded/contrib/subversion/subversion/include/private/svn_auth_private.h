@@ -52,6 +52,11 @@ block|{
 endif|#
 directive|endif
 comment|/* __cplusplus */
+comment|/** SSL server authority verification credential type.  *  * The followin auth parameters are available to the providers:  *  * - @c SVN_AUTH_PARAM_SSL_SERVER_FAILURES (@c apr_uint32_t*)  * - @c SVN_AUTH_PARAM_SSL_SERVER_CERT_INFO  *      (@c svn_auth_ssl_server_cert_info_t*)  *  * The following optional auth parameters are relevant to the providers:  *  * - @c SVN_AUTH_PARAM_NO_AUTH_CACHE (@c void*)  *  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_AUTH_CRED_SSL_SERVER_AUTHORITY
+value|"svn.ssl.server.authority"
 comment|/* If you add a password type for a provider which stores  * passwords on disk in encrypted form, remember to update  * svn_auth__simple_save_creds_helper. Otherwise it will be  * assumed that your provider stores passwords in plaintext. */
 define|#
 directive|define
@@ -488,6 +493,41 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|DOXYGEN
+argument_list|)
+comment|/**  * Set @a *provider to an authentication provider that implements  * ssl authority verification via the Windows CryptoApi.  *  * This provider automatically validates authority certificates with  * the CryptoApi, like Internet Explorer and the Windows network API do.  * This allows the rollout of root certificates via Windows Domain  * policies, instead of Subversion specific configuration.  *  * @note This function is only available on Windows.  */
+name|void
+name|svn_auth__get_windows_ssl_server_authority_provider
+parameter_list|(
+name|svn_auth_provider_object_t
+modifier|*
+modifier|*
+name|provider
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus

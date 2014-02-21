@@ -315,9 +315,7 @@ argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
-comment|/// hasInitializer - Unless a global variable isExternal(), it has an
-comment|/// initializer.  The initializer for the global variable/constant is held by
-comment|/// Initializer if an initializer is specified.
+comment|/// Definitions have initializers, declarations don't.
 comment|///
 specifier|inline
 name|bool

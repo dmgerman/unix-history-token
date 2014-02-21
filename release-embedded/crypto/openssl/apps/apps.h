@@ -412,7 +412,7 @@ directive|define
 name|apps_shutdown
 parameter_list|()
 define|\
-value|do { CONF_modules_unload(1); destroy_ui_method(); \ 			OBJ_cleanup(); EVP_cleanup(); ENGINE_cleanup(); \ 			CRYPTO_cleanup_all_ex_data(); ERR_remove_thread_state(NULL); \ 			ERR_free_strings(); zlib_cleanup();} while(0)
+value|do { CONF_modules_unload(1); destroy_ui_method(); \ 			OBJ_cleanup(); EVP_cleanup(); ENGINE_cleanup(); \ 			CRYPTO_cleanup_all_ex_data(); ERR_remove_thread_state(NULL); \ 			RAND_cleanup(); \ 			ERR_free_strings(); zlib_cleanup();} while(0)
 end_define
 
 begin_else
@@ -435,7 +435,7 @@ directive|define
 name|apps_shutdown
 parameter_list|()
 define|\
-value|do { CONF_modules_unload(1); destroy_ui_method(); \ 			OBJ_cleanup(); EVP_cleanup(); \ 			CRYPTO_cleanup_all_ex_data(); ERR_remove_thread_state(NULL); \ 			ERR_free_strings(); zlib_cleanup(); } while(0)
+value|do { CONF_modules_unload(1); destroy_ui_method(); \ 			OBJ_cleanup(); EVP_cleanup(); \ 			CRYPTO_cleanup_all_ex_data(); ERR_remove_thread_state(NULL); \ 			RAND_cleanup(); \ 			ERR_free_strings(); zlib_cleanup(); } while(0)
 end_define
 
 begin_endif

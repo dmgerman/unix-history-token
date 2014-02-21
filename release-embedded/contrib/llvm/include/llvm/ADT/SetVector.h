@@ -669,6 +669,7 @@ end_function
 
 begin_function
 name|T
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|pop_back_val
 parameter_list|()
 block|{

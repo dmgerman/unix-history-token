@@ -117,23 +117,6 @@ directive|include
 file|"opt_platform.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FDT
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/ofw_nexus.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_undef
 undef|#
 directive|undef
@@ -185,12 +168,6 @@ directive|define
 name|NUM_MIPS_IRQS
 value|6
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FDT
-end_ifndef
 
 begin_expr_stmt
 specifier|static
@@ -423,11 +400,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|int
@@ -549,9 +521,6 @@ name|nexus_methods
 index|[]
 init|=
 block|{
-ifndef|#
-directive|ifndef
-name|FDT
 comment|/* Device interface */
 name|DEVMETHOD
 argument_list|(
@@ -624,8 +593,6 @@ argument_list|,
 name|nexus_set_resource
 argument_list|)
 block|,
-endif|#
-directive|endif
 name|DEVMETHOD
 argument_list|(
 name|bus_setup_intr
@@ -670,12 +637,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FDT
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|driver_t
@@ -692,48 +653,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|DEFINE_CLASS_1
-argument_list|(
-name|nexus
-argument_list|,
-name|nexus_driver
-argument_list|,
-name|nexus_methods
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ofw_nexus_softc
-argument_list|)
-argument_list|,
-name|ofw_nexus_driver
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|devclass_t
 name|nexus_devclass
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FDT
-end_ifndef
 
 begin_function
 specifier|static
@@ -1916,11 +1841,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

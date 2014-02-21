@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -649,7 +655,7 @@ argument_list|()
 operator|<=
 name|attr
 operator|::
-name|LAST_MS_INHERITABLE
+name|LAST_MS_INHERITANCE
 operator|&&
 name|A
 operator|->

@@ -494,7 +494,7 @@ name|EARLY_DRIVER_MODULE
 argument_list|(
 name|xicp
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|xicp_driver
 argument_list|,
@@ -516,7 +516,7 @@ name|EARLY_DRIVER_MODULE
 argument_list|(
 name|xics
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|xics_driver
 argument_list|,

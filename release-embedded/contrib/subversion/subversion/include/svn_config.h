@@ -198,14 +198,17 @@ define|#
 directive|define
 name|SVN_CONFIG_SECTION_AUTH
 value|"auth"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_PASSWORD_STORES
 value|"password-stores"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_KWALLET_WALLET
 value|"kwallet-wallet"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_KWALLET_SVN_APPLICATION_NAME_WITH_PID
@@ -282,10 +285,12 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_PRESERVED_CF_EXTS
 value|"preserved-conflict-file-exts"
+comment|/** @since New in 1.7. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_INTERACTIVE_CONFLICTS
 value|"interactive-conflicts"
+comment|/** @since New in 1.7. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_MEMORY_CACHE_SIZE
@@ -380,6 +385,9 @@ comment|/** @} */
 comment|/*** Configuration Default Values ***/
 comment|/* '*' matches leading dots, e.g. '*.rej' matches '.foo.rej'. */
 comment|/* We want this to be printed on two lines in the generated config file,  * but we don't want the # character to end up in the variable.  */
+ifndef|#
+directive|ifndef
+name|DOXYGEN_SHOULD_SKIP_THIS
 define|#
 directive|define
 name|SVN_CONFIG__DEFAULT_GLOBAL_IGNORES_LINE_1
@@ -390,6 +398,8 @@ directive|define
 name|SVN_CONFIG__DEFAULT_GLOBAL_IGNORES_LINE_2
 define|\
 value|"*.rej *~ #*# .#* .*.swp .DS_Store"
+endif|#
+directive|endif
 define|#
 directive|define
 name|SVN_CONFIG_DEFAULT_GLOBAL_IGNORES

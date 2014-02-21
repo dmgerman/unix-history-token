@@ -29,6 +29,12 @@ begin_comment
 comment|// comment out to disable VALE support
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WITH_PIPES
+end_define
+
 begin_if
 if|#
 directive|if
@@ -692,7 +698,7 @@ name|int
 name|nkr_stopped
 decl_stmt|;
 comment|// XXX what for ?
-comment|/* support for adapters without native netmap support. 	 * On tx rings we preallocate an array of tx buffers 	 * (same size as the netmap ring), on rx rings we 	 * store incoming packets in a queue. 	 * XXX who writes to the rx queue ? 	 */
+comment|/* Support for adapters without native netmap support. 	 * On tx rings we preallocate an array of tx buffers 	 * (same size as the netmap ring), on rx rings we 	 * store incoming mbufs in a queue that is drained by 	 * a rxsync. 	 */
 name|struct
 name|mbuf
 modifier|*
@@ -716,6 +722,37 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* diagnostic */
+name|int
+function_decl|(
+modifier|*
+name|nm_sync
+function_decl|)
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+ifdef|#
+directive|ifdef
+name|WITH_PIPES
+name|struct
+name|netmap_kring
+modifier|*
+name|pipe
+decl_stmt|;
+name|struct
+name|netmap_ring
+modifier|*
+name|save_ring
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* WITH_PIPES */
 block|}
 name|__attribute__
 argument_list|(
@@ -862,6 +899,11 @@ directive|define
 name|NAF_NETMAP_ON
 value|32
 comment|/* netmap is active (either native or 				 * emulated. Where possible (e.g. FreeBSD) 				 * IFCAP_NETMAP also mirrors this flag. 				 */
+define|#
+directive|define
+name|NAF_HOST_RINGS
+value|64
+comment|/* the adapter supports the host rings */
 name|int
 name|active_fds
 decl_stmt|;
@@ -906,6 +948,12 @@ decl_stmt|,
 name|rx_si
 decl_stmt|;
 comment|/* global wait queues */
+comment|/* count users of the global wait queues */
+name|int
+name|tx_si_users
+decl_stmt|,
+name|rx_si_users
+decl_stmt|;
 comment|/* copy of if_qflush and if_transmit pointers, to intercept 	 * packets from the network stack when netmap is active. 	 */
 name|int
 function_decl|(
@@ -946,7 +994,7 @@ name|ifp
 decl_stmt|;
 comment|/* adapter is ifp->if_softc */
 comment|/*---- callbacks for this netmap adapter -----*/
-comment|/* 	 * nm_dtor() is the cleanup routine called when destroying 	 *	the adapter. 	 * 	 * nm_register() is called on NIOCREGIF and close() to enter 	 *	or exit netmap mode on the NIC 	 * 	 * nm_txsync() pushes packets to the underlying hw/switch 	 * 	 * nm_rxsync() collects packets from the underlying hw/switch 	 * 	 * nm_config() returns configuration information from the OS 	 * 	 * nm_krings_create() XXX 	 * 	 * nm_krings_delete() XXX 	 * 	 * nm_notify() is used to act after data have become available. 	 *	For hw devices this is typically a selwakeup(), 	 *	but for NIC/host ports attached to a switch (or vice-versa) 	 *	we also need to invoke the 'txsync' code downstream. 	 */
+comment|/* 	 * nm_dtor() is the cleanup routine called when destroying 	 *	the adapter. 	 * 	 * nm_register() is called on NIOCREGIF and close() to enter 	 *	or exit netmap mode on the NIC 	 * 	 * nm_txsync() pushes packets to the underlying hw/switch 	 * 	 * nm_rxsync() collects packets from the underlying hw/switch 	 * 	 * nm_config() returns configuration information from the OS 	 * 	 * nm_krings_create() create and init the krings array 	 * 	(the array layout must conform to the description 	 * 	found above the definition of netmap_krings_create) 	 * 	 * nm_krings_delete() cleanup and delete the kring array 	 * 	 * nm_notify() is used to act after data have become available. 	 *	For hw devices this is typically a selwakeup(), 	 *	but for NIC/host ports attached to a switch (or vice-versa) 	 *	we also need to invoke the 'txsync' code downstream. 	 */
 comment|/* private cleanup */
 name|void
 function_decl|(
@@ -1087,10 +1135,6 @@ parameter_list|)
 function_decl|;
 define|#
 directive|define
-name|NAF_GLOBAL_NOTIFY
-value|4
-define|#
-directive|define
 name|NAF_DISABLE_NOTIFY
 value|8
 comment|/* standard refcount to control the lifetime of the adapter 	 * (it should be equal to the lifetime of the corresponding ifp) 	 */
@@ -1117,6 +1161,24 @@ name|void
 modifier|*
 name|na_private
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_PIPES
+name|struct
+name|netmap_pipe_adapter
+modifier|*
+modifier|*
+name|na_pipes
+decl_stmt|;
+name|int
+name|na_next_pipe
+decl_stmt|;
+name|int
+name|na_max_pipes
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* WITH_PIPES */
 block|}
 struct|;
 end_struct
@@ -1171,10 +1233,14 @@ decl_stmt|;
 name|int
 name|retry
 decl_stmt|;
-name|u_int
-name|offset
-decl_stmt|;
 comment|/* Offset of ethernet header for each packet. */
+name|u_int
+name|virt_hdr_len
+decl_stmt|;
+comment|/* Maximum Frame Size, used in bdg_mismatch_datapath() */
+name|u_int
+name|mfs
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1197,6 +1263,31 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Mitigation support. */
+end_comment
+
+begin_struct
+struct|struct
+name|nm_generic_mit
+block|{
+name|struct
+name|hrtimer
+name|mit_timer
+decl_stmt|;
+name|int
+name|mit_pending
+decl_stmt|;
+name|struct
+name|netmap_adapter
+modifier|*
+name|mit_na
+decl_stmt|;
+comment|/* backpointer */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|netmap_generic_adapter
@@ -1212,7 +1303,7 @@ name|netmap_adapter
 modifier|*
 name|prev
 decl_stmt|;
-comment|/* generic netmap adapters support: 	 * a net_device_ops struct overrides ndo_select_queue(), 	 * save_if_input saves the if_input hook (FreeBSD), 	 * mit_timer and mit_pending implement rx interrupt mitigation, 	 */
+comment|/* generic netmap adapters support: 	 * a net_device_ops struct overrides ndo_select_queue(), 	 * save_if_input saves the if_input hook (FreeBSD), 	 * mit implements rx interrupt mitigation, 	 */
 name|struct
 name|net_device_ops
 name|generic_ndo
@@ -1233,11 +1324,9 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|struct
-name|hrtimer
-name|mit_timer
-decl_stmt|;
-name|int
-name|mit_pending
+name|nm_generic_mit
+modifier|*
+name|mit
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1262,6 +1351,66 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|netmap_real_tx_rings
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+block|{
+return|return
+name|na
+operator|->
+name|num_tx_rings
+operator|+
+operator|!
+operator|!
+operator|(
+name|na
+operator|->
+name|na_flags
+operator|&
+name|NAF_HOST_RINGS
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|netmap_real_rx_rings
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+block|{
+return|return
+name|na
+operator|->
+name|num_rx_rings
+operator|+
+operator|!
+operator|!
+operator|(
+name|na
+operator|->
+name|na_flags
+operator|&
+name|NAF_HOST_RINGS
+operator|)
+return|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1330,6 +1479,72 @@ end_endif
 
 begin_comment
 comment|/* WITH_VALE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_PIPES
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NM_MAXPIPES
+value|64
+end_define
+
+begin_comment
+comment|/* max number of pipes per adapter */
+end_comment
+
+begin_struct
+struct|struct
+name|netmap_pipe_adapter
+block|{
+name|struct
+name|netmap_adapter
+name|up
+decl_stmt|;
+name|u_int
+name|id
+decl_stmt|;
+comment|/* pipe identifier */
+name|int
+name|role
+decl_stmt|;
+comment|/* either NR_REG_PIPE_MASTER or NR_REG_PIPE_SLAVE */
+name|struct
+name|netmap_adapter
+modifier|*
+name|parent
+decl_stmt|;
+comment|/* adapter that owns the memory */
+name|struct
+name|netmap_pipe_adapter
+modifier|*
+name|peer
+decl_stmt|;
+comment|/* the other end of the pipe */
+name|int
+name|peer_ref
+decl_stmt|;
+comment|/* 1 iff we are holding a ref to the peer */
+name|u_int
+name|parent_slot
+decl_stmt|;
+comment|/* index in the parent pipe array */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_PIPES */
 end_comment
 
 begin_comment
@@ -1954,7 +2169,7 @@ modifier|*
 name|kring
 parameter_list|)
 block|{
-comment|/* update ring head/tail to what the kernel knows */
+comment|/* update ring tail to what the kernel knows */
 name|kring
 operator|->
 name|ring
@@ -1968,20 +2183,6 @@ operator|=
 name|kring
 operator|->
 name|nr_hwtail
-expr_stmt|;
-name|kring
-operator|->
-name|ring
-operator|->
-name|head
-operator|=
-name|kring
-operator|->
-name|rhead
-operator|=
-name|kring
-operator|->
-name|nr_hwcur
 expr_stmt|;
 comment|/* note, head/rhead/hwcur might be behind cur/rcur 	 * if no carrier 	 */
 name|ND
@@ -2177,12 +2378,6 @@ modifier|*
 name|na
 parameter_list|,
 name|u_int
-name|ntx
-parameter_list|,
-name|u_int
-name|nrx
-parameter_list|,
-name|u_int
 name|tailroom
 parameter_list|)
 function_decl|;
@@ -2239,6 +2434,9 @@ name|na
 parameter_list|,
 name|uint16_t
 name|ringid
+parameter_list|,
+name|uint32_t
+name|flags
 parameter_list|,
 name|int
 modifier|*
@@ -2503,6 +2701,135 @@ end_endif
 begin_comment
 comment|/* !WITH_VALE */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_PIPES
+end_ifdef
+
+begin_comment
+comment|/* max number of pipes per device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_MAXPIPES
+value|64
+end_define
+
+begin_comment
+comment|/* XXX how many? */
+end_comment
+
+begin_comment
+comment|/* in case of no error, returns the actual number of pipes in nmr->nr_arg1 */
+end_comment
+
+begin_function_decl
+name|int
+name|netmap_pipe_alloc
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|,
+name|struct
+name|nmreq
+modifier|*
+name|nmr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netmap_pipe_dealloc
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|netmap_get_pipe_na
+parameter_list|(
+name|struct
+name|nmreq
+modifier|*
+name|nmr
+parameter_list|,
+name|struct
+name|netmap_adapter
+modifier|*
+modifier|*
+name|na
+parameter_list|,
+name|int
+name|create
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !WITH_PIPES */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_MAXPIPES
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_pipe_alloc
+parameter_list|(
+name|_1
+parameter_list|,
+name|_2
+parameter_list|)
+value|EOPNOTSUPP
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_pipe_dealloc
+parameter_list|(
+name|_1
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_get_pipe_na
+parameter_list|(
+name|_1
+parameter_list|,
+name|_2
+parameter_list|,
+name|_3
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Various prototypes */
@@ -2875,6 +3202,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|netmap_generic_ringsize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|netmap_generic_rings
 decl_stmt|;
 end_decl_stmt
 
@@ -3628,19 +3962,26 @@ name|netmap_adapter
 modifier|*
 name|np_na
 decl_stmt|;
-name|int
-name|np_ringid
+name|uint32_t
+name|np_flags
 decl_stmt|;
 comment|/* from the ioctl */
 name|u_int
-name|np_qfirst
+name|np_txqfirst
 decl_stmt|,
-name|np_qlast
+name|np_txqlast
 decl_stmt|;
-comment|/* range of rings to scan */
+comment|/* range of tx rings to scan */
+name|u_int
+name|np_rxqfirst
+decl_stmt|,
+name|np_rxqlast
+decl_stmt|;
+comment|/* range of rx rings to scan */
 name|uint16_t
 name|np_txpoll
 decl_stmt|;
+comment|/* XXX and also np_rxpoll ? */
 name|struct
 name|netmap_mem_d
 modifier|*
@@ -3652,6 +3993,20 @@ name|int
 name|np_refcount
 decl_stmt|;
 comment|/* use with NMG_LOCK held */
+comment|/* pointers to the selinfo to be used for selrecord. 	 * Either the local or the global one depending on the 	 * number of rings. 	 */
+name|NM_SELINFO_T
+modifier|*
+name|np_rxsi
+decl_stmt|,
+modifier|*
+name|np_txsi
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|np_td
+decl_stmt|;
+comment|/* kqueue, just debugging */
 block|}
 struct|;
 end_struct
@@ -3799,7 +4154,12 @@ name|void
 name|netmap_mitigation_init
 parameter_list|(
 name|struct
-name|netmap_generic_adapter
+name|nm_generic_mit
+modifier|*
+name|mit
+parameter_list|,
+name|struct
+name|netmap_adapter
 modifier|*
 name|na
 parameter_list|)
@@ -3811,9 +4171,9 @@ name|void
 name|netmap_mitigation_start
 parameter_list|(
 name|struct
-name|netmap_generic_adapter
+name|nm_generic_mit
 modifier|*
-name|na
+name|mit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3823,9 +4183,9 @@ name|void
 name|netmap_mitigation_restart
 parameter_list|(
 name|struct
-name|netmap_generic_adapter
+name|nm_generic_mit
 modifier|*
-name|na
+name|mit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3835,9 +4195,9 @@ name|int
 name|netmap_mitigation_active
 parameter_list|(
 name|struct
-name|netmap_generic_adapter
+name|nm_generic_mit
 modifier|*
-name|na
+name|mit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3847,9 +4207,398 @@ name|void
 name|netmap_mitigation_cleanup
 parameter_list|(
 name|struct
-name|netmap_generic_adapter
+name|nm_generic_mit
+modifier|*
+name|mit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Shared declarations for the VALE switch. */
+end_comment
+
+begin_comment
+comment|/*  * Each transmit queue accumulates a batch of packets into  * a structure before forwarding. Packets to the same  * destination are put in a list using ft_next as a link field.  * ft_frags and ft_next are valid only on the first fragment.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nm_bdg_fwd
+block|{
+comment|/* forwarding entry for a bridge */
+name|void
+modifier|*
+name|ft_buf
+decl_stmt|;
+comment|/* netmap or indirect buffer */
+name|uint8_t
+name|ft_frags
+decl_stmt|;
+comment|/* how many fragments (only on 1st frag) */
+name|uint8_t
+name|_ft_port
+decl_stmt|;
+comment|/* dst port (unused) */
+name|uint16_t
+name|ft_flags
+decl_stmt|;
+comment|/* flags, e.g. indirect */
+name|uint16_t
+name|ft_len
+decl_stmt|;
+comment|/* src fragment len */
+name|uint16_t
+name|ft_next
+decl_stmt|;
+comment|/* next packet to same destination */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* struct 'virtio_net_hdr' from linux. */
+end_comment
+
+begin_struct
+struct|struct
+name|nm_vnet_hdr
+block|{
+define|#
+directive|define
+name|VIRTIO_NET_HDR_F_NEEDS_CSUM
+value|1
+comment|/* Use csum_start, csum_offset */
+define|#
+directive|define
+name|VIRTIO_NET_HDR_F_DATA_VALID
+value|2
+comment|/* Csum is valid */
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|VIRTIO_NET_HDR_GSO_NONE
+value|0
+comment|/* Not a GSO frame */
+define|#
+directive|define
+name|VIRTIO_NET_HDR_GSO_TCPV4
+value|1
+comment|/* GSO frame, IPv4 TCP (TSO) */
+define|#
+directive|define
+name|VIRTIO_NET_HDR_GSO_UDP
+value|3
+comment|/* GSO frame, IPv4 UDP (UFO) */
+define|#
+directive|define
+name|VIRTIO_NET_HDR_GSO_TCPV6
+value|4
+comment|/* GSO frame, IPv6 TCP */
+define|#
+directive|define
+name|VIRTIO_NET_HDR_GSO_ECN
+value|0x80
+comment|/* TCP has ECN set */
+name|uint8_t
+name|gso_type
+decl_stmt|;
+name|uint16_t
+name|hdr_len
+decl_stmt|;
+name|uint16_t
+name|gso_size
+decl_stmt|;
+name|uint16_t
+name|csum_start
+decl_stmt|;
+name|uint16_t
+name|csum_offset
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|WORST_CASE_GSO_HEADER
+value|(14+40+60)
+end_define
+
+begin_comment
+comment|/* IPv6 + TCP */
+end_comment
+
+begin_comment
+comment|/* Private definitions for IPv4, IPv6, UDP and TCP headers. */
+end_comment
+
+begin_struct
+struct|struct
+name|nm_iphdr
+block|{
+name|uint8_t
+name|version_ihl
+decl_stmt|;
+name|uint8_t
+name|tos
+decl_stmt|;
+name|uint16_t
+name|tot_len
+decl_stmt|;
+name|uint16_t
+name|id
+decl_stmt|;
+name|uint16_t
+name|frag_off
+decl_stmt|;
+name|uint8_t
+name|ttl
+decl_stmt|;
+name|uint8_t
+name|protocol
+decl_stmt|;
+name|uint16_t
+name|check
+decl_stmt|;
+name|uint32_t
+name|saddr
+decl_stmt|;
+name|uint32_t
+name|daddr
+decl_stmt|;
+comment|/*The options start here. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nm_tcphdr
+block|{
+name|uint16_t
+name|source
+decl_stmt|;
+name|uint16_t
+name|dest
+decl_stmt|;
+name|uint32_t
+name|seq
+decl_stmt|;
+name|uint32_t
+name|ack_seq
+decl_stmt|;
+name|uint8_t
+name|doff
+decl_stmt|;
+comment|/* Data offset + Reserved */
+name|uint8_t
+name|flags
+decl_stmt|;
+name|uint16_t
+name|window
+decl_stmt|;
+name|uint16_t
+name|check
+decl_stmt|;
+name|uint16_t
+name|urg_ptr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nm_udphdr
+block|{
+name|uint16_t
+name|source
+decl_stmt|;
+name|uint16_t
+name|dest
+decl_stmt|;
+name|uint16_t
+name|len
+decl_stmt|;
+name|uint16_t
+name|check
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nm_ipv6hdr
+block|{
+name|uint8_t
+name|priority_version
+decl_stmt|;
+name|uint8_t
+name|flow_lbl
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint16_t
+name|payload_len
+decl_stmt|;
+name|uint8_t
+name|nexthdr
+decl_stmt|;
+name|uint8_t
+name|hop_limit
+decl_stmt|;
+name|uint8_t
+name|saddr
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|uint8_t
+name|daddr
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Type used to store a checksum (in host byte order) that hasn't been  * folded yet.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rawsum_t
+value|uint32_t
+end_define
+
+begin_function_decl
+name|rawsum_t
+name|nm_csum_raw
+parameter_list|(
+name|uint8_t
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|rawsum_t
+name|cur_sum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint16_t
+name|nm_csum_ipv4
+parameter_list|(
+name|struct
+name|nm_iphdr
+modifier|*
+name|iph
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_csum_tcpudp_ipv4
+parameter_list|(
+name|struct
+name|nm_iphdr
+modifier|*
+name|iph
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|datalen
+parameter_list|,
+name|uint16_t
+modifier|*
+name|check
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_csum_tcpudp_ipv6
+parameter_list|(
+name|struct
+name|nm_ipv6hdr
+modifier|*
+name|ip6h
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|datalen
+parameter_list|,
+name|uint16_t
+modifier|*
+name|check
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint16_t
+name|nm_csum_fold
+parameter_list|(
+name|rawsum_t
+name|cur_sum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bdg_mismatch_datapath
+parameter_list|(
+name|struct
+name|netmap_vp_adapter
 modifier|*
 name|na
+parameter_list|,
+name|struct
+name|netmap_vp_adapter
+modifier|*
+name|dst_na
+parameter_list|,
+name|struct
+name|nm_bdg_fwd
+modifier|*
+name|ft_p
+parameter_list|,
+name|struct
+name|netmap_ring
+modifier|*
+name|ring
+parameter_list|,
+name|u_int
+modifier|*
+name|j
+parameter_list|,
+name|u_int
+name|lim
+parameter_list|,
+name|u_int
+modifier|*
+name|howmany
 parameter_list|)
 function_decl|;
 end_function_decl

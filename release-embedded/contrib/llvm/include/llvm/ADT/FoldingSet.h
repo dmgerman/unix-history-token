@@ -1033,7 +1033,8 @@ argument|T&X
 argument_list|,
 argument|const FoldingSetNodeID&ID
 argument_list|,
-argument|unsigned IDHash
+argument|unsigned
+comment|/*IDHash*/
 argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|)
@@ -1117,7 +1118,8 @@ argument|T&X
 argument_list|,
 argument|const FoldingSetNodeID&ID
 argument_list|,
-argument|unsigned IDHash
+argument|unsigned
+comment|/*IDHash*/
 argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|,

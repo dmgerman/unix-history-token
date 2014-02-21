@@ -9117,6 +9117,8 @@ name|addr
 decl_stmt|;
 name|vm_paddr_t
 name|pa
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|active

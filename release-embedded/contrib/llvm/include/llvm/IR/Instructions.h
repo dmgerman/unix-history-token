@@ -112,18 +112,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/IntegersSubset.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/IntegersSubsetMapping.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<iterator>
 end_include
 
@@ -3632,6 +3620,80 @@ operator|:
 name|public
 name|CmpInst
 block|{
+name|void
+name|AssertOK
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|getPredicate
+argument_list|()
+operator|>=
+name|CmpInst
+operator|::
+name|FIRST_ICMP_PREDICATE
+operator|&&
+name|getPredicate
+argument_list|()
+operator|<=
+name|CmpInst
+operator|::
+name|LAST_ICMP_PREDICATE
+operator|&&
+literal|"Invalid ICmp predicate value"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|==
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|&&
+literal|"Both operands to ICmp instruction are not of the same type!"
+argument_list|)
+block|;
+comment|// Check that the operands are the right type
+name|assert
+argument_list|(
+operator|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isIntOrIntVectorTy
+argument_list|()
+operator|||
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isPtrOrPtrVectorTy
+argument_list|()
+operator|)
+operator|&&
+literal|"Invalid operand types for ICmp instruction"
+argument_list|)
+block|;   }
 name|protected
 operator|:
 comment|/// \brief Clone an identical ICmpInst
@@ -3681,77 +3743,15 @@ argument_list|,
 argument|InsertBefore
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|pred
-operator|>=
-name|CmpInst
-operator|::
-name|FIRST_ICMP_PREDICATE
-operator|&&
-name|pred
-operator|<=
-name|CmpInst
-operator|::
-name|LAST_ICMP_PREDICATE
-operator|&&
-literal|"Invalid ICmp predicate value"
-argument_list|)
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|AssertOK
+argument_list|()
 block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to ICmp instruction are not of the same type!"
-argument_list|)
-block|;
-comment|// Check that the operands are the right type
-name|assert
-argument_list|(
-operator|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isIntOrIntVectorTy
-argument_list|()
-operator|||
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|getScalarType
-argument_list|()
-operator|->
-name|isPointerTy
-argument_list|()
-operator|)
-operator|&&
-literal|"Invalid operand types for ICmp instruction"
-argument_list|)
-block|;   }
+endif|#
+directive|endif
+block|}
 comment|/// \brief Constructor with insert-at-end semantics.
 name|ICmpInst
 argument_list|(
@@ -3789,77 +3789,15 @@ argument_list|,
 argument|&InsertAtEnd
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|pred
-operator|>=
-name|CmpInst
-operator|::
-name|FIRST_ICMP_PREDICATE
-operator|&&
-name|pred
-operator|<=
-name|CmpInst
-operator|::
-name|LAST_ICMP_PREDICATE
-operator|&&
-literal|"Invalid ICmp predicate value"
-argument_list|)
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|AssertOK
+argument_list|()
 block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to ICmp instruction are not of the same type!"
-argument_list|)
-block|;
-comment|// Check that the operands are the right type
-name|assert
-argument_list|(
-operator|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isIntOrIntVectorTy
-argument_list|()
-operator|||
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|getScalarType
-argument_list|()
-operator|->
-name|isPointerTy
-argument_list|()
-operator|)
-operator|&&
-literal|"Invalid operand types for ICmp instruction"
-argument_list|)
-block|;   }
+endif|#
+directive|endif
+block|}
 comment|/// \brief Constructor with no-insertion semantics
 name|ICmpInst
 argument_list|(
@@ -3892,77 +3830,15 @@ argument_list|,
 argument|NameStr
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|pred
-operator|>=
-name|CmpInst
-operator|::
-name|FIRST_ICMP_PREDICATE
-operator|&&
-name|pred
-operator|<=
-name|CmpInst
-operator|::
-name|LAST_ICMP_PREDICATE
-operator|&&
-literal|"Invalid ICmp predicate value"
-argument_list|)
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|AssertOK
+argument_list|()
 block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to ICmp instruction are not of the same type!"
-argument_list|)
-block|;
-comment|// Check that the operands are the right type
-name|assert
-argument_list|(
-operator|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isIntOrIntVectorTy
-argument_list|()
-operator|||
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|getScalarType
-argument_list|()
-operator|->
-name|isPointerTy
-argument_list|()
-operator|)
-operator|&&
-literal|"Invalid operand types for ICmp instruction"
-argument_list|)
-block|;   }
+endif|#
+directive|endif
+block|}
 comment|/// For example, EQ->EQ, SLE->SLE, UGT->SGT, etc.
 comment|/// @returns the predicate that would be the result if the operand were
 comment|/// regarded as signed.
@@ -5246,7 +5122,25 @@ argument_list|(
 argument|Attribute::AttrKind A
 argument_list|)
 specifier|const
+block|{
+name|assert
+argument_list|(
+name|A
+operator|!=
+name|Attribute
+operator|::
+name|NoBuiltin
+operator|&&
+literal|"Use CallInst::isNoBuiltin() to check for Attribute::NoBuiltin"
+argument_list|)
 block|;
+return|return
+name|hasFnAttrImpl
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
 comment|/// \brief Determine whether the call or the callee has the given attributes.
 name|bool
 name|paramHasAttr
@@ -5271,6 +5165,30 @@ operator|.
 name|getParamAlignment
 argument_list|(
 name|i
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return true if the call should not be treated as a call to a
+comment|/// builtin.
+name|bool
+name|isNoBuiltin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasFnAttrImpl
+argument_list|(
+name|Attribute
+operator|::
+name|NoBuiltin
+argument_list|)
+operator|&&
+operator|!
+name|hasFnAttrImpl
+argument_list|(
+name|Attribute
+operator|::
+name|Builtin
 argument_list|)
 return|;
 block|}
@@ -5672,6 +5590,13 @@ return|;
 block|}
 name|private
 operator|:
+name|bool
+name|hasFnAttrImpl
+argument_list|(
+argument|Attribute::AttrKind A
+argument_list|)
+specifier|const
+block|;
 comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
 comment|// method so that subclasses cannot accidentally use it.
 name|void
@@ -5687,7 +5612,7 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-expr|}
+block|}
 block|;
 name|template
 operator|<
@@ -10442,48 +10367,10 @@ block|;
 name|unsigned
 name|ReservedSpace
 block|;
-comment|// Operands format:
 comment|// Operand[0]    = Value to switch on
 comment|// Operand[1]    = Default basic block destination
 comment|// Operand[2n  ] = Value to match
 comment|// Operand[2n+1] = BasicBlock to go to on match
-comment|// Store case values separately from operands list. We needn't User-Use
-comment|// concept here, since it is just a case value, it will always constant,
-comment|// and case value couldn't reused with another instructions/values.
-comment|// Additionally:
-comment|// It allows us to use custom type for case values that is not inherited
-comment|// from Value. Since case value is a complex type that implements
-comment|// the subset of integers, we needn't extract sub-constants within
-comment|// slow getAggregateElement method.
-comment|// For case values we will use std::list to by two reasons:
-comment|// 1. It allows to add/remove cases without whole collection reallocation.
-comment|// 2. In most of cases we needn't random access.
-comment|// Currently case values are also stored in Operands List, but it will moved
-comment|// out in future commits.
-typedef|typedef
-name|std
-operator|::
-name|list
-operator|<
-name|IntegersSubset
-operator|>
-name|Subsets
-expr_stmt|;
-typedef|typedef
-name|Subsets
-operator|::
-name|iterator
-name|SubsetsIt
-expr_stmt|;
-typedef|typedef
-name|Subsets
-operator|::
-name|const_iterator
-name|SubsetsConstIt
-expr_stmt|;
-name|Subsets
-name|TheSubsets
-block|;
 name|SwitchInst
 argument_list|(
 specifier|const
@@ -10568,50 +10455,6 @@ specifier|const
 block|;
 name|public
 operator|:
-comment|// FIXME: Currently there are a lot of unclean template parameters,
-comment|// we need to make refactoring in future.
-comment|// All these parameters are used to implement both iterator and const_iterator
-comment|// without code duplication.
-comment|// SwitchInstTy may be "const SwitchInst" or "SwitchInst"
-comment|// ConstantIntTy may be "const ConstantInt" or "ConstantInt"
-comment|// SubsetsItTy may be SubsetsConstIt or SubsetsIt
-comment|// BasicBlockTy may be "const BasicBlock" or "BasicBlock"
-name|template
-operator|<
-name|class
-name|SwitchInstTy
-block|,
-name|class
-name|ConstantIntTy
-block|,
-name|class
-name|SubsetsItTy
-block|,
-name|class
-name|BasicBlockTy
-operator|>
-name|class
-name|CaseIteratorT
-block|;
-typedef|typedef
-name|CaseIteratorT
-operator|<
-specifier|const
-name|SwitchInst
-operator|,
-specifier|const
-name|ConstantInt
-operator|,
-name|SubsetsConstIt
-operator|,
-specifier|const
-name|BasicBlock
-operator|>
-name|ConstCaseIt
-expr_stmt|;
-name|class
-name|CaseIt
-block|;
 comment|// -2
 specifier|static
 specifier|const
@@ -10628,6 +10471,524 @@ literal|0L
 operator|-
 literal|1
 operator|)
+block|;
+name|template
+operator|<
+name|class
+name|SwitchInstTy
+block|,
+name|class
+name|ConstantIntTy
+block|,
+name|class
+name|BasicBlockTy
+operator|>
+name|class
+name|CaseIteratorT
+block|{
+name|protected
+operator|:
+name|SwitchInstTy
+operator|*
+name|SI
+block|;
+name|unsigned
+name|Index
+block|;
+name|public
+operator|:
+typedef|typedef
+name|CaseIteratorT
+operator|<
+name|SwitchInstTy
+operator|,
+name|ConstantIntTy
+operator|,
+name|BasicBlockTy
+operator|>
+name|Self
+expr_stmt|;
+comment|/// Initializes case iterator for given SwitchInst and for given
+comment|/// case number.
+name|CaseIteratorT
+argument_list|(
+argument|SwitchInstTy *SI
+argument_list|,
+argument|unsigned CaseNum
+argument_list|)
+block|{
+name|this
+operator|->
+name|SI
+operator|=
+name|SI
+block|;
+name|Index
+operator|=
+name|CaseNum
+block|;     }
+comment|/// Initializes case iterator for given SwitchInst and for given
+comment|/// TerminatorInst's successor index.
+specifier|static
+name|Self
+name|fromSuccessorIndex
+argument_list|(
+argument|SwitchInstTy *SI
+argument_list|,
+argument|unsigned SuccessorIndex
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|SuccessorIndex
+operator|<
+name|SI
+operator|->
+name|getNumSuccessors
+argument_list|()
+operator|&&
+literal|"Successor index # out of range!"
+argument_list|)
+block|;
+return|return
+name|SuccessorIndex
+operator|!=
+literal|0
+condition|?
+name|Self
+argument_list|(
+name|SI
+argument_list|,
+name|SuccessorIndex
+operator|-
+literal|1
+argument_list|)
+else|:
+name|Self
+argument_list|(
+name|SI
+argument_list|,
+name|DefaultPseudoIndex
+argument_list|)
+return|;
+block|}
+comment|/// Resolves case value for current case.
+name|ConstantIntTy
+operator|*
+name|getCaseValue
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|Index
+operator|<
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|ConstantIntTy
+operator|*
+operator|>
+operator|(
+name|SI
+operator|->
+name|getOperand
+argument_list|(
+literal|2
+operator|+
+name|Index
+operator|*
+literal|2
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/// Resolves successor for current case.
+name|BasicBlockTy
+operator|*
+name|getCaseSuccessor
+argument_list|()
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Index
+operator|<
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|||
+name|Index
+operator|==
+name|DefaultPseudoIndex
+operator|)
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+return|return
+name|SI
+operator|->
+name|getSuccessor
+argument_list|(
+name|getSuccessorIndex
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Returns number of current case.
+name|unsigned
+name|getCaseIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Index
+return|;
+block|}
+comment|/// Returns TerminatorInst's successor index for current case successor.
+name|unsigned
+name|getSuccessorIndex
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Index
+operator|==
+name|DefaultPseudoIndex
+operator|||
+name|Index
+operator|<
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|)
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+return|return
+name|Index
+operator|!=
+name|DefaultPseudoIndex
+condition|?
+name|Index
+operator|+
+literal|1
+else|:
+literal|0
+return|;
+block|}
+name|Self
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+comment|// Check index correctness after increment.
+comment|// Note: Index == getNumCases() means end().
+name|assert
+argument_list|(
+name|Index
+operator|+
+literal|1
+operator|<=
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+operator|++
+name|Index
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|Self
+name|operator
+operator|++
+operator|(
+name|int
+operator|)
+block|{
+name|Self
+name|tmp
+operator|=
+operator|*
+name|this
+block|;
+operator|++
+operator|(
+operator|*
+name|this
+operator|)
+block|;
+return|return
+name|tmp
+return|;
+block|}
+name|Self
+name|operator
+operator|--
+operator|(
+operator|)
+block|{
+comment|// Check index correctness after decrement.
+comment|// Note: Index == getNumCases() means end().
+comment|// Also allow "-1" iterator here. That will became valid after ++.
+name|assert
+argument_list|(
+operator|(
+name|Index
+operator|==
+literal|0
+operator|||
+name|Index
+operator|-
+literal|1
+operator|<=
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|)
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+operator|--
+name|Index
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|Self
+name|operator
+operator|--
+operator|(
+name|int
+operator|)
+block|{
+name|Self
+name|tmp
+operator|=
+operator|*
+name|this
+block|;
+operator|--
+operator|(
+operator|*
+name|this
+operator|)
+block|;
+return|return
+name|tmp
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|Self
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|RHS
+operator|.
+name|SI
+operator|==
+name|SI
+operator|&&
+literal|"Incompatible operators."
+argument_list|)
+block|;
+return|return
+name|RHS
+operator|.
+name|Index
+operator|==
+name|Index
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|Self
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|RHS
+operator|.
+name|SI
+operator|==
+name|SI
+operator|&&
+literal|"Incompatible operators."
+argument_list|)
+block|;
+return|return
+name|RHS
+operator|.
+name|Index
+operator|!=
+name|Index
+return|;
+block|}
+expr|}
+block|;
+typedef|typedef
+name|CaseIteratorT
+operator|<
+specifier|const
+name|SwitchInst
+operator|,
+specifier|const
+name|ConstantInt
+operator|,
+specifier|const
+name|BasicBlock
+operator|>
+name|ConstCaseIt
+expr_stmt|;
+name|class
+name|CaseIt
+operator|:
+name|public
+name|CaseIteratorT
+operator|<
+name|SwitchInst
+block|,
+name|ConstantInt
+block|,
+name|BasicBlock
+operator|>
+block|{
+typedef|typedef
+name|CaseIteratorT
+operator|<
+name|SwitchInst
+operator|,
+name|ConstantInt
+operator|,
+name|BasicBlock
+operator|>
+name|ParentTy
+expr_stmt|;
+name|public
+operator|:
+name|CaseIt
+argument_list|(
+specifier|const
+name|ParentTy
+operator|&
+name|Src
+argument_list|)
+operator|:
+name|ParentTy
+argument_list|(
+argument|Src
+argument_list|)
+block|{}
+name|CaseIt
+argument_list|(
+argument|SwitchInst *SI
+argument_list|,
+argument|unsigned CaseNum
+argument_list|)
+operator|:
+name|ParentTy
+argument_list|(
+argument|SI
+argument_list|,
+argument|CaseNum
+argument_list|)
+block|{}
+comment|/// Sets the new value for current case.
+name|void
+name|setValue
+argument_list|(
+argument|ConstantInt *V
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Index
+operator|<
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|&&
+literal|"Index out the number of cases."
+argument_list|)
+block|;
+name|SI
+operator|->
+name|setOperand
+argument_list|(
+literal|2
+operator|+
+name|Index
+operator|*
+literal|2
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
+block|;     }
+comment|/// Sets the new successor for current case.
+name|void
+name|setSuccessor
+argument_list|(
+argument|BasicBlock *S
+argument_list|)
+block|{
+name|SI
+operator|->
+name|setSuccessor
+argument_list|(
+name|getSuccessorIndex
+argument_list|()
+argument_list|,
+name|S
+argument_list|)
+block|;     }
+block|}
 block|;
 specifier|static
 name|SwitchInst
@@ -10790,11 +11151,6 @@ argument_list|(
 name|this
 argument_list|,
 literal|0
-argument_list|,
-name|TheSubsets
-operator|.
-name|begin
-argument_list|()
 argument_list|)
 return|;
 block|}
@@ -10811,11 +11167,6 @@ argument_list|(
 name|this
 argument_list|,
 literal|0
-argument_list|,
-name|TheSubsets
-operator|.
-name|begin
-argument_list|()
 argument_list|)
 return|;
 block|}
@@ -10831,11 +11182,6 @@ argument_list|(
 name|this
 argument_list|,
 name|getNumCases
-argument_list|()
-argument_list|,
-name|TheSubsets
-operator|.
-name|end
 argument_list|()
 argument_list|)
 return|;
@@ -10853,11 +11199,6 @@ argument_list|(
 name|this
 argument_list|,
 name|getNumCases
-argument_list|()
-argument_list|,
-name|TheSubsets
-operator|.
-name|end
 argument_list|()
 argument_list|)
 return|;
@@ -10877,11 +11218,6 @@ argument_list|(
 name|this
 argument_list|,
 name|DefaultPseudoIndex
-argument_list|,
-name|TheSubsets
-operator|.
-name|end
-argument_list|()
 argument_list|)
 return|;
 block|}
@@ -10896,11 +11232,6 @@ argument_list|(
 name|this
 argument_list|,
 name|DefaultPseudoIndex
-argument_list|,
-name|TheSubsets
-operator|.
-name|end
-argument_list|()
 argument_list|)
 return|;
 block|}
@@ -10938,18 +11269,10 @@ if|if
 condition|(
 name|i
 operator|.
-name|getCaseValueEx
+name|getCaseValue
 argument_list|()
-operator|.
-name|isSatisfies
-argument_list|(
-name|IntItem
-operator|::
-name|fromConstantInt
-argument_list|(
+operator|==
 name|C
-argument_list|)
-argument_list|)
 condition|)
 return|return
 name|i
@@ -10990,18 +11313,10 @@ if|if
 condition|(
 name|i
 operator|.
-name|getCaseValueEx
+name|getCaseValue
 argument_list|()
-operator|.
-name|isSatisfies
-argument_list|(
-name|IntItem
-operator|::
-name|fromConstantInt
-argument_list|(
+operator|==
 name|C
-argument_list|)
-argument_list|)
 condition|)
 return|return
 name|i
@@ -11090,7 +11405,6 @@ name|CI
 return|;
 block|}
 comment|/// addCase - Add an entry to the switch instruction...
-comment|/// @deprecated
 comment|/// Note:
 comment|/// This action invalidates case_end(). Old case_end() iterator will
 comment|/// point to the added case.
@@ -11099,22 +11413,6 @@ name|addCase
 argument_list|(
 name|ConstantInt
 operator|*
-name|OnVal
-argument_list|,
-name|BasicBlock
-operator|*
-name|Dest
-argument_list|)
-block|;
-comment|/// addCase - Add an entry to the switch instruction.
-comment|/// Note:
-comment|/// This action invalidates case_end(). Old case_end() iterator will
-comment|/// point to the added case.
-name|void
-name|addCase
-argument_list|(
-name|IntegersSubset
-operator|&
 name|OnVal
 argument_list|,
 name|BasicBlock
@@ -11131,9 +11429,7 @@ comment|/// including the case_end() iterator.
 name|void
 name|removeCase
 argument_list|(
-name|CaseIt
-operator|&
-name|i
+argument|CaseIt i
 argument_list|)
 block|;
 name|unsigned
@@ -11216,840 +11512,6 @@ operator|)
 name|NewSucc
 argument_list|)
 block|;   }
-name|uint16_t
-name|hash
-argument_list|()
-specifier|const
-block|{
-name|uint32_t
-name|NumberOfCases
-operator|=
-operator|(
-name|uint32_t
-operator|)
-name|getNumCases
-argument_list|()
-block|;
-name|uint16_t
-name|Hash
-operator|=
-operator|(
-literal|0xFFFF
-operator|&
-name|NumberOfCases
-operator|)
-operator|^
-operator|(
-name|NumberOfCases
-operator|>>
-literal|16
-operator|)
-block|;
-for|for
-control|(
-name|ConstCaseIt
-name|i
-init|=
-name|case_begin
-argument_list|()
-init|,
-name|e
-init|=
-name|case_end
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|uint32_t
-name|NumItems
-init|=
-operator|(
-name|uint32_t
-operator|)
-name|i
-operator|.
-name|getCaseValueEx
-argument_list|()
-operator|.
-name|getNumItems
-argument_list|()
-decl_stmt|;
-name|Hash
-operator|=
-operator|(
-name|Hash
-operator|<<
-literal|1
-operator|)
-operator|^
-operator|(
-literal|0xFFFF
-operator|&
-name|NumItems
-operator|)
-operator|^
-operator|(
-name|NumItems
-operator|>>
-literal|16
-operator|)
-expr_stmt|;
-block|}
-return|return
-name|Hash
-return|;
-block|}
-comment|// Case iterators definition.
-name|template
-operator|<
-name|class
-name|SwitchInstTy
-block|,
-name|class
-name|ConstantIntTy
-block|,
-name|class
-name|SubsetsItTy
-block|,
-name|class
-name|BasicBlockTy
-operator|>
-name|class
-name|CaseIteratorT
-block|{
-name|protected
-operator|:
-name|SwitchInstTy
-operator|*
-name|SI
-block|;
-name|unsigned
-name|Index
-block|;
-name|SubsetsItTy
-name|SubsetIt
-block|;
-comment|/// Initializes case iterator for given SwitchInst and for given
-comment|/// case number.
-name|friend
-name|class
-name|SwitchInst
-block|;
-name|CaseIteratorT
-argument_list|(
-argument|SwitchInstTy *SI
-argument_list|,
-argument|unsigned SuccessorIndex
-argument_list|,
-argument|SubsetsItTy CaseValueIt
-argument_list|)
-block|{
-name|this
-operator|->
-name|SI
-operator|=
-name|SI
-block|;
-name|Index
-operator|=
-name|SuccessorIndex
-block|;
-name|this
-operator|->
-name|SubsetIt
-operator|=
-name|CaseValueIt
-block|;     }
-name|public
-operator|:
-typedef|typedef
-name|typename
-name|SubsetsItTy
-operator|::
-name|reference
-name|IntegersSubsetRef
-expr_stmt|;
-typedef|typedef
-name|CaseIteratorT
-operator|<
-name|SwitchInstTy
-operator|,
-name|ConstantIntTy
-operator|,
-name|SubsetsItTy
-operator|,
-name|BasicBlockTy
-operator|>
-name|Self
-expr_stmt|;
-name|CaseIteratorT
-argument_list|(
-argument|SwitchInstTy *SI
-argument_list|,
-argument|unsigned CaseNum
-argument_list|)
-block|{
-name|this
-operator|->
-name|SI
-operator|=
-name|SI
-block|;
-name|Index
-operator|=
-name|CaseNum
-block|;
-name|SubsetIt
-operator|=
-name|SI
-operator|->
-name|TheSubsets
-operator|.
-name|begin
-argument_list|()
-block|;
-name|std
-operator|::
-name|advance
-argument_list|(
-name|SubsetIt
-argument_list|,
-name|CaseNum
-argument_list|)
-block|;         }
-comment|/// Initializes case iterator for given SwitchInst and for given
-comment|/// TerminatorInst's successor index.
-specifier|static
-name|Self
-name|fromSuccessorIndex
-argument_list|(
-argument|SwitchInstTy *SI
-argument_list|,
-argument|unsigned SuccessorIndex
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|SuccessorIndex
-operator|<
-name|SI
-operator|->
-name|getNumSuccessors
-argument_list|()
-operator|&&
-literal|"Successor index # out of range!"
-argument_list|)
-block|;
-return|return
-name|SuccessorIndex
-operator|!=
-literal|0
-condition|?
-name|Self
-argument_list|(
-name|SI
-argument_list|,
-name|SuccessorIndex
-operator|-
-literal|1
-argument_list|)
-else|:
-name|Self
-argument_list|(
-name|SI
-argument_list|,
-name|DefaultPseudoIndex
-argument_list|)
-return|;
-block|}
-comment|/// Resolves case value for current case.
-comment|/// @deprecated
-name|ConstantIntTy
-operator|*
-name|getCaseValue
-argument_list|()
-block|{
-name|assert
-argument_list|(
-name|Index
-operator|<
-name|SI
-operator|->
-name|getNumCases
-argument_list|()
-operator|&&
-literal|"Index out the number of cases."
-argument_list|)
-block|;
-name|IntegersSubsetRef
-name|CaseRanges
-operator|=
-operator|*
-name|SubsetIt
-block|;
-comment|// FIXME: Currently we work with ConstantInt based cases.
-comment|// So return CaseValue as ConstantInt.
-return|return
-name|CaseRanges
-operator|.
-name|getSingleNumber
-argument_list|(
-literal|0
-argument_list|)
-operator|.
-name|toConstantInt
-argument_list|()
-return|;
-block|}
-comment|/// Resolves case value for current case.
-name|IntegersSubsetRef
-name|getCaseValueEx
-argument_list|()
-block|{
-name|assert
-argument_list|(
-name|Index
-operator|<
-name|SI
-operator|->
-name|getNumCases
-argument_list|()
-operator|&&
-literal|"Index out the number of cases."
-argument_list|)
-block|;
-return|return
-operator|*
-name|SubsetIt
-return|;
-block|}
-comment|/// Resolves successor for current case.
-name|BasicBlockTy
-operator|*
-name|getCaseSuccessor
-argument_list|()
-block|{
-name|assert
-argument_list|(
-operator|(
-name|Index
-operator|<
-name|SI
-operator|->
-name|getNumCases
-argument_list|()
-operator|||
-name|Index
-operator|==
-name|DefaultPseudoIndex
-operator|)
-operator|&&
-literal|"Index out the number of cases."
-argument_list|)
-block|;
-return|return
-name|SI
-operator|->
-name|getSuccessor
-argument_list|(
-name|getSuccessorIndex
-argument_list|()
-argument_list|)
-return|;
-block|}
-comment|/// Returns number of current case.
-name|unsigned
-name|getCaseIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Index
-return|;
-block|}
-comment|/// Returns TerminatorInst's successor index for current case successor.
-name|unsigned
-name|getSuccessorIndex
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|(
-name|Index
-operator|==
-name|DefaultPseudoIndex
-operator|||
-name|Index
-operator|<
-name|SI
-operator|->
-name|getNumCases
-argument_list|()
-operator|)
-operator|&&
-literal|"Index out the number of cases."
-argument_list|)
-block|;
-return|return
-name|Index
-operator|!=
-name|DefaultPseudoIndex
-condition|?
-name|Index
-operator|+
-literal|1
-else|:
-literal|0
-return|;
-block|}
-name|Self
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-comment|// Check index correctness after increment.
-comment|// Note: Index == getNumCases() means end().
-name|assert
-argument_list|(
-name|Index
-operator|+
-literal|1
-operator|<=
-name|SI
-operator|->
-name|getNumCases
-argument_list|()
-operator|&&
-literal|"Index out the number of cases."
-argument_list|)
-block|;
-operator|++
-name|Index
-block|;
-if|if
-condition|(
-name|Index
-operator|==
-literal|0
-condition|)
-name|SubsetIt
-operator|=
-name|SI
-operator|->
-name|TheSubsets
-operator|.
-name|begin
-argument_list|()
-expr_stmt|;
-else|else
-operator|++
-name|SubsetIt
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|Self
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-block|{
-name|Self
-name|tmp
-operator|=
-operator|*
-name|this
-block|;
-operator|++
-operator|(
-operator|*
-name|this
-operator|)
-block|;
-return|return
-name|tmp
-return|;
-block|}
-name|Self
-name|operator
-operator|--
-operator|(
-operator|)
-block|{
-comment|// Check index correctness after decrement.
-comment|// Note: Index == getNumCases() means end().
-comment|// Also allow "-1" iterator here. That will became valid after ++.
-name|unsigned
-name|NumCases
-operator|=
-name|SI
-operator|->
-name|getNumCases
-argument_list|()
-block|;
-name|assert
-argument_list|(
-operator|(
-name|Index
-operator|==
-literal|0
-operator|||
-name|Index
-operator|-
-literal|1
-operator|<=
-name|NumCases
-operator|)
-operator|&&
-literal|"Index out the number of cases."
-argument_list|)
-block|;
-operator|--
-name|Index
-block|;
-if|if
-condition|(
-name|Index
-operator|==
-name|NumCases
-condition|)
-block|{
-name|SubsetIt
-operator|=
-name|SI
-operator|->
-name|TheSubsets
-operator|.
-name|end
-argument_list|()
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-if|if
-condition|(
-name|Index
-operator|!=
-operator|-
-literal|1U
-condition|)
-operator|--
-name|SubsetIt
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|Self
-name|operator
-operator|--
-operator|(
-name|int
-operator|)
-block|{
-name|Self
-name|tmp
-operator|=
-operator|*
-name|this
-block|;
-operator|--
-operator|(
-operator|*
-name|this
-operator|)
-block|;
-return|return
-name|tmp
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|Self
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|RHS
-operator|.
-name|SI
-operator|==
-name|SI
-operator|&&
-literal|"Incompatible operators."
-argument_list|)
-block|;
-return|return
-name|RHS
-operator|.
-name|Index
-operator|==
-name|Index
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|Self
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|RHS
-operator|.
-name|SI
-operator|==
-name|SI
-operator|&&
-literal|"Incompatible operators."
-argument_list|)
-block|;
-return|return
-name|RHS
-operator|.
-name|Index
-operator|!=
-name|Index
-return|;
-block|}
-expr|}
-block|;
-name|class
-name|CaseIt
-operator|:
-name|public
-name|CaseIteratorT
-operator|<
-name|SwitchInst
-block|,
-name|ConstantInt
-block|,
-name|SubsetsIt
-block|,
-name|BasicBlock
-operator|>
-block|{
-typedef|typedef
-name|CaseIteratorT
-operator|<
-name|SwitchInst
-operator|,
-name|ConstantInt
-operator|,
-name|SubsetsIt
-operator|,
-name|BasicBlock
-operator|>
-name|ParentTy
-expr_stmt|;
-name|protected
-operator|:
-name|friend
-name|class
-name|SwitchInst
-block|;
-name|CaseIt
-argument_list|(
-argument|SwitchInst *SI
-argument_list|,
-argument|unsigned CaseNum
-argument_list|,
-argument|SubsetsIt SubsetIt
-argument_list|)
-operator|:
-name|ParentTy
-argument_list|(
-argument|SI
-argument_list|,
-argument|CaseNum
-argument_list|,
-argument|SubsetIt
-argument_list|)
-block|{}
-name|void
-name|updateCaseValueOperand
-argument_list|(
-argument|IntegersSubset& V
-argument_list|)
-block|{
-name|SI
-operator|->
-name|setOperand
-argument_list|(
-literal|2
-operator|+
-name|Index
-operator|*
-literal|2
-argument_list|,
-name|reinterpret_cast
-operator|<
-name|Value
-operator|*
-operator|>
-operator|(
-operator|(
-name|Constant
-operator|*
-operator|)
-name|V
-operator|)
-argument_list|)
-block|;     }
-name|public
-operator|:
-name|CaseIt
-argument_list|(
-argument|SwitchInst *SI
-argument_list|,
-argument|unsigned CaseNum
-argument_list|)
-operator|:
-name|ParentTy
-argument_list|(
-argument|SI
-argument_list|,
-argument|CaseNum
-argument_list|)
-block|{}
-name|CaseIt
-argument_list|(
-specifier|const
-name|ParentTy
-operator|&
-name|Src
-argument_list|)
-operator|:
-name|ParentTy
-argument_list|(
-argument|Src
-argument_list|)
-block|{}
-comment|/// Sets the new value for current case.
-comment|/// @deprecated.
-name|void
-name|setValue
-argument_list|(
-argument|ConstantInt *V
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Index
-operator|<
-name|SI
-operator|->
-name|getNumCases
-argument_list|()
-operator|&&
-literal|"Index out the number of cases."
-argument_list|)
-block|;
-name|IntegersSubsetToBB
-name|Mapping
-block|;
-comment|// FIXME: Currently we work with ConstantInt based cases.
-comment|// So inititalize IntItem container directly from ConstantInt.
-name|Mapping
-operator|.
-name|add
-argument_list|(
-name|IntItem
-operator|::
-name|fromConstantInt
-argument_list|(
-name|V
-argument_list|)
-argument_list|)
-block|;
-operator|*
-name|SubsetIt
-operator|=
-name|Mapping
-operator|.
-name|getCase
-argument_list|()
-block|;
-name|updateCaseValueOperand
-argument_list|(
-operator|*
-name|SubsetIt
-argument_list|)
-block|;     }
-comment|/// Sets the new value for current case.
-name|void
-name|setValueEx
-argument_list|(
-argument|IntegersSubset& V
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Index
-operator|<
-name|SI
-operator|->
-name|getNumCases
-argument_list|()
-operator|&&
-literal|"Index out the number of cases."
-argument_list|)
-block|;
-operator|*
-name|SubsetIt
-operator|=
-name|V
-block|;
-name|updateCaseValueOperand
-argument_list|(
-operator|*
-name|SubsetIt
-argument_list|)
-block|;     }
-comment|/// Sets the new successor for current case.
-name|void
-name|setSuccessor
-argument_list|(
-argument|BasicBlock *S
-argument_list|)
-block|{
-name|SI
-operator|->
-name|setSuccessor
-argument_list|(
-name|getSuccessorIndex
-argument_list|()
-argument_list|,
-name|S
-argument_list|)
-block|;     }
-block|}
-block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -12125,7 +11587,7 @@ argument_list|,
 argument|BasicBlock *B
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -12141,7 +11603,7 @@ operator|<
 literal|2
 operator|>
 block|{ }
-expr_stmt|;
+block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|SwitchInst
@@ -12156,7 +11618,7 @@ comment|/// IndirectBrInst - Indirect Branch Instruction.
 comment|///
 name|class
 name|IndirectBrInst
-range|:
+operator|:
 name|public
 name|TerminatorInst
 block|{
@@ -12549,7 +12011,7 @@ argument_list|,
 argument|BasicBlock *B
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -12565,7 +12027,7 @@ operator|<
 literal|1
 operator|>
 block|{ }
-expr_stmt|;
+block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|IndirectBrInst
@@ -12580,7 +12042,7 @@ comment|/// calling convention of the call.
 comment|///
 name|class
 name|InvokeInst
-range|:
+operator|:
 name|public
 name|TerminatorInst
 block|{
@@ -12920,14 +12382,32 @@ argument_list|,
 argument|Attribute attr
 argument_list|)
 block|;
-comment|/// \brief Determine whether this call has the NoAlias attribute.
+comment|/// \brief Determine whether this call has the given attribute.
 name|bool
 name|hasFnAttr
 argument_list|(
 argument|Attribute::AttrKind A
 argument_list|)
 specifier|const
+block|{
+name|assert
+argument_list|(
+name|A
+operator|!=
+name|Attribute
+operator|::
+name|NoBuiltin
+operator|&&
+literal|"Use CallInst::isNoBuiltin() to check for Attribute::NoBuiltin"
+argument_list|)
 block|;
+return|return
+name|hasFnAttrImpl
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
 comment|/// \brief Determine whether the call or the callee has the given attributes.
 name|bool
 name|paramHasAttr
@@ -12952,6 +12432,32 @@ operator|.
 name|getParamAlignment
 argument_list|(
 name|i
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return true if the call should not be treated as a call to a
+comment|/// builtin.
+name|bool
+name|isNoBuiltin
+argument_list|()
+specifier|const
+block|{
+comment|// We assert in hasFnAttr if one passes in Attribute::NoBuiltin, so we have
+comment|// to check it by hand.
+return|return
+name|hasFnAttrImpl
+argument_list|(
+name|Attribute
+operator|::
+name|NoBuiltin
+argument_list|)
+operator|&&
+operator|!
+name|hasFnAttrImpl
+argument_list|(
+name|Attribute
+operator|::
+name|Builtin
 argument_list|)
 return|;
 block|}
@@ -13474,6 +12980,13 @@ argument_list|,
 argument|BasicBlock *B
 argument_list|)
 block|;
+name|bool
+name|hasFnAttrImpl
+argument_list|(
+argument|Attribute::AttrKind A
+argument_list|)
+specifier|const
+block|;
 comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
 comment|// method so that subclasses cannot accidentally use it.
 name|void
@@ -13490,7 +13003,7 @@ name|D
 argument_list|)
 block|;   }
 block|}
-decl_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -13504,11 +13017,11 @@ name|public
 name|VariadicOperandTraits
 operator|<
 name|InvokeInst
-operator|,
+block|,
 literal|3
 operator|>
 block|{ }
-expr_stmt|;
+block|;
 name|InvokeInst
 operator|::
 name|InvokeInst
@@ -13814,7 +13327,7 @@ argument_list|,
 argument|BasicBlock *B
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -13828,11 +13341,11 @@ name|public
 name|FixedNumOperandTraits
 operator|<
 name|ResumeInst
-operator|,
+block|,
 literal|1
 operator|>
 block|{ }
-expr_stmt|;
+block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|ResumeInst
@@ -13849,7 +13362,7 @@ comment|/// end of the block cannot be reached.
 comment|///
 name|class
 name|UnreachableInst
-range|:
+operator|:
 name|public
 name|TerminatorInst
 block|{
@@ -14006,14 +13519,14 @@ argument_list|,
 argument|BasicBlock *B
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                 TruncInst Class
 comment|//===----------------------------------------------------------------------===//
 comment|/// \brief This class represents a truncation of integer types.
 name|class
 name|TruncInst
-range|:
+operator|:
 name|public
 name|CastInst
 block|{
@@ -15541,6 +15054,132 @@ name|getOpcode
 argument_list|()
 operator|==
 name|BitCast
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|isa
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|V
+operator|)
+operator|&&
+name|classof
+argument_list|(
+name|cast
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|//                          AddrSpaceCastInst Class
+comment|//===----------------------------------------------------------------------===//
+comment|/// \brief This class represents a conversion between pointers from
+comment|/// one address space to another.
+name|class
+name|AddrSpaceCastInst
+operator|:
+name|public
+name|CastInst
+block|{
+name|protected
+operator|:
+comment|/// \brief Clone an identical AddrSpaceCastInst
+name|virtual
+name|AddrSpaceCastInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
+name|public
+operator|:
+comment|/// \brief Constructor with insert-before-instruction semantics
+name|AddrSpaceCastInst
+argument_list|(
+name|Value
+operator|*
+name|S
+argument_list|,
+comment|///< The value to be casted
+name|Type
+operator|*
+name|Ty
+argument_list|,
+comment|///< The type to casted to
+specifier|const
+name|Twine
+operator|&
+name|NameStr
+operator|=
+literal|""
+argument_list|,
+comment|///< A name for the new instruction
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+literal|0
+comment|///< Where to insert the new instruction
+argument_list|)
+block|;
+comment|/// \brief Constructor with insert-at-end-of-block semantics
+name|AddrSpaceCastInst
+argument_list|(
+name|Value
+operator|*
+name|S
+argument_list|,
+comment|///< The value to be casted
+name|Type
+operator|*
+name|Ty
+argument_list|,
+comment|///< The type to casted to
+specifier|const
+name|Twine
+operator|&
+name|NameStr
+argument_list|,
+comment|///< A name for the new instruction
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+comment|///< The block to insert the instruction into
+argument_list|)
+block|;
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Instruction *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|AddrSpaceCast
 return|;
 block|}
 specifier|static

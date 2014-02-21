@@ -30,6 +30,10 @@ block|,
 name|AR8X16_SWITCH_AR8316
 block|,
 name|AR8X16_SWITCH_AR9340
+block|,
+name|AR8X16_SWITCH_AR8327
+block|,
+name|AR8X16_SWITCH_AR8337
 block|, }
 name|ar8x16_switch_type
 typedef|;
@@ -90,6 +94,15 @@ decl_stmt|;
 name|int
 name|is_internal_switch
 decl_stmt|;
+name|int
+name|chip_ver
+decl_stmt|;
+name|int
+name|chip_rev
+decl_stmt|;
+name|int
+name|mii_lo_first
+decl_stmt|;
 name|ar8x16_switch_type
 name|sc_switchtype
 decl_stmt|;
@@ -133,6 +146,7 @@ name|vlan_mode
 decl_stmt|;
 struct|struct
 block|{
+comment|/* Global setup */
 name|int
 function_decl|(
 modifier|*
@@ -152,6 +166,49 @@ function_decl|)
 parameter_list|(
 name|struct
 name|arswitch_softc
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Port functions */
+name|void
+function_decl|(
+modifier|*
+name|arswitch_port_init
+function_decl|)
+parameter_list|(
+name|struct
+name|arswitch_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* VLAN functions */
+name|int
+function_decl|(
+modifier|*
+name|arswitch_port_vlan_setup
+function_decl|)
+parameter_list|(
+name|struct
+name|arswitch_softc
+modifier|*
+parameter_list|,
+name|etherswitch_port_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|arswitch_port_vlan_get
+function_decl|)
+parameter_list|(
+name|struct
+name|arswitch_softc
+modifier|*
+parameter_list|,
+name|etherswitch_port_t
 modifier|*
 parameter_list|)
 function_decl|;

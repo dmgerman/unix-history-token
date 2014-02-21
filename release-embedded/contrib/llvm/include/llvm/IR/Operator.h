@@ -1901,8 +1901,8 @@ comment|/// This routine accepts an APInt into which it will accumulate the cons
 comment|/// offset of this GEP if the GEP is in fact constant. If the GEP is not
 comment|/// all-constant, it returns false and the value of the offset APInt is
 comment|/// undefined (it is *not* preserved!). The APInt passed into this routine
-comment|/// must be at least as wide as the IntPtr type for the address space of
-comment|/// the base GEP pointer.
+comment|/// must be at exactly as wide as the IntPtr type for the address space of the
+comment|/// base GEP pointer.
 name|bool
 name|accumulateConstantOffset
 argument_list|(

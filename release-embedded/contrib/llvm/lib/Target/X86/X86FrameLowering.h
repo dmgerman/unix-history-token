@@ -81,47 +81,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|namespace
-name|CU
-block|{
-comment|/// Compact unwind encoding values.
-enum|enum
-name|CompactUnwindEncodings
-block|{
-comment|/// [RE]BP based frame where [RE]BP is pused on the stack immediately after
-comment|/// the return address, then [RE]SP is moved to [RE]BP.
-name|UNWIND_MODE_BP_FRAME
-init|=
-literal|0x01000000
-block|,
-comment|/// A frameless function with a small constant stack size.
-name|UNWIND_MODE_STACK_IMMD
-init|=
-literal|0x02000000
-block|,
-comment|/// A frameless function with a large constant stack size.
-name|UNWIND_MODE_STACK_IND
-init|=
-literal|0x03000000
-block|,
-comment|/// No compact unwind encoding is available.
-name|UNWIND_MODE_DWARF
-init|=
-literal|0x04000000
-block|,
-comment|/// Mask for encoding the frame registers.
-name|UNWIND_BP_FRAME_REGISTERS
-init|=
-literal|0x00007FFF
-block|,
-comment|/// Mask for encoding the frameless registers.
-name|UNWIND_FRAMELESS_STACK_REG_PERMUTATION
-init|=
-literal|0x000003FF
-block|}
-enum|;
-block|}
-comment|// end CU namespace
 name|class
 name|MCSymbol
 decl_stmt|;
@@ -302,13 +261,6 @@ argument_list|,
 argument|int FI
 argument_list|,
 argument|unsigned&FrameReg
-argument_list|)
-specifier|const
-block|;
-name|uint32_t
-name|getCompactUnwindEncoding
-argument_list|(
-argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;

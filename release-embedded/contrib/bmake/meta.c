@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.32 2013/06/25 00:20:54 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.33 2013/10/01 05:37:17 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -3742,6 +3742,16 @@ parameter_list|)
 value|if (!(p&& *p)) { \     warnx("%s: %d: malformed", fname, lineno); \     oodate = TRUE; \     continue; \     }
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEQUOTE
+parameter_list|(
+name|p
+parameter_list|)
+value|if (*p == '\'') {	\     char *ep; \     p++; \     if ((ep = strchr(p, '\''))) \ 	*ep = '\0'; \     }
+end_define
+
 begin_function
 name|Boolean
 name|meta_oodate
@@ -3805,6 +3815,14 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+name|char
+modifier|*
+name|link_src
+decl_stmt|;
+name|char
+modifier|*
+name|move_target
 decl_stmt|;
 specifier|static
 name|size_t
@@ -4103,6 +4121,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 block|}
+name|link_src
+operator|=
+name|NULL
+expr_stmt|;
+name|move_target
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Find the start of the build monitor section. */
 if|if
 condition|(
@@ -4488,49 +4514,50 @@ case|case
 literal|'M'
 case|:
 comment|/* renaMe */
-if|if
-condition|(
-name|Lst_IsEmpty
-argument_list|(
-name|missingFiles
-argument_list|)
-condition|)
-break|break;
-comment|/* 'L' and 'M' put single quotes around the args */
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\''
-condition|)
-block|{
-name|char
-modifier|*
-name|ep
-decl_stmt|;
-name|p
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ep
+comment|/* 		     * For 'M'oves we want to check 		     * the src as for 'R'ead 		     * and the target as for 'W'rite. 		     */
+name|cp
 operator|=
-name|strchr
+name|p
+expr_stmt|;
+comment|/* save this for a second */
+comment|/* now get target */
+if|if
+condition|(
+name|strsep
 argument_list|(
+operator|&
 name|p
 argument_list|,
-literal|'\''
+literal|" "
 argument_list|)
-operator|)
+operator|==
+name|NULL
 condition|)
-operator|*
-name|ep
-operator|=
-literal|'\0'
+continue|continue;
+name|CHECK_VALID_META
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
-block|}
+name|move_target
+operator|=
+name|p
+expr_stmt|;
+name|p
+operator|=
+name|cp
+expr_stmt|;
+comment|/* 'L' and 'M' put single quotes around the args */
+name|DEQUOTE
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|DEQUOTE
+argument_list|(
+name|move_target
+argument_list|)
+expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 literal|'D'
@@ -4597,12 +4624,59 @@ expr_stmt|;
 comment|/* we're done with it */
 block|}
 block|}
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'M'
+condition|)
+block|{
+comment|/* the target of the mv is a file 'W'ritten */
+ifdef|#
+directive|ifdef
+name|DEBUG_META_MODE
+if|if
+condition|(
+name|DEBUG
+argument_list|(
+name|META
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|debug_file
+argument_list|,
+literal|"meta_oodate: M %s -> %s\n"
+argument_list|,
+name|p
+argument_list|,
+name|move_target
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|p
+operator|=
+name|move_target
+expr_stmt|;
+goto|goto
+name|check_write
+goto|;
+block|}
 break|break;
 case|case
 literal|'L'
 case|:
 comment|/* Link */
-comment|/* we want the target */
+comment|/* 		     * For 'L'inks check 		     * the src as for 'R'ead 		     * and the target as for 'W'rite. 		     */
+name|link_src
+operator|=
+name|p
+expr_stmt|;
+comment|/* now get target */
 if|if
 condition|(
 name|strsep
@@ -4622,45 +4696,46 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 'L' and 'M' put single quotes around the args */
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\''
-condition|)
-block|{
-name|char
-modifier|*
-name|ep
-decl_stmt|;
-name|p
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ep
-operator|=
-name|strchr
+name|DEQUOTE
 argument_list|(
 name|p
-argument_list|,
-literal|'\''
 argument_list|)
-operator|)
-condition|)
-operator|*
-name|ep
-operator|=
-literal|'\0'
 expr_stmt|;
-block|}
+name|DEQUOTE
+argument_list|(
+name|link_src
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_META_MODE
+if|if
+condition|(
+name|DEBUG
+argument_list|(
+name|META
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|debug_file
+argument_list|,
+literal|"meta_oodate: L %s -> %s\n"
+argument_list|,
+name|link_src
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* FALLTHROUGH */
 case|case
 literal|'W'
 case|:
 comment|/* Write */
+name|check_write
+label|:
 comment|/* 		     * If a file we generated within our bailiwick 		     * but outside of .OBJDIR is missing, 		     * we need to do it again.  		     */
 comment|/* ignore non-absolute paths */
 if|if
@@ -4764,6 +4839,38 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+name|check_link_src
+label|:
+name|p
+operator|=
+name|link_src
+expr_stmt|;
+name|link_src
+operator|=
+name|NULL
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_META_MODE
+if|if
+condition|(
+name|DEBUG
+argument_list|(
+name|META
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|debug_file
+argument_list|,
+literal|"meta_oodate: L src %s\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* FALLTHROUGH */
 case|case
 literal|'R'
 case|:
@@ -5190,6 +5297,25 @@ break|break;
 default|default:
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|oodate
+operator|&&
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'L'
+operator|&&
+name|link_src
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|check_link_src
+goto|;
 block|}
 elseif|else
 if|if

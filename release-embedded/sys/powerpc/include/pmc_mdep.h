@@ -18,6 +18,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PMC_MDEP_CLASS_INDEX_CPU
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|PMC_MDEP_CLASS_INDEX_PPC7450
 value|1
 end_define

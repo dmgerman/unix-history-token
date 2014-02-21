@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/Expr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Analysis/CFG.h"
 end_include
 
@@ -96,19 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/PointerUnion.h"
 end_include
 
 begin_include
@@ -121,9 +103,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|Decl
-decl_stmt|;
 name|class
 name|Stmt
 decl_stmt|;
@@ -144,9 +123,6 @@ name|ParentMap
 decl_stmt|;
 name|class
 name|PseudoConstantAnalysis
-decl_stmt|;
-name|class
-name|ImplicitParamDecl
 decl_stmt|;
 name|class
 name|LocationContextManager
@@ -906,6 +882,16 @@ name|ID
 argument_list|)
 operator|=
 literal|0
+block|;
+name|void
+name|dumpStack
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|StringRef Indent =
+literal|""
+argument_list|)
+specifier|const
 block|;
 name|LLVM_ATTRIBUTE_USED
 name|void

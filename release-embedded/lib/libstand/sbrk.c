@@ -33,6 +33,12 @@ directive|include
 file|"stand.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"zalloc_defs.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|size_t
@@ -65,7 +71,7 @@ modifier|*
 name|top
 parameter_list|)
 block|{
-comment|/* Align start address to 16 bytes for the malloc code. Sigh. */
+comment|/* Align start address for the malloc code.  Sigh. */
 name|heapbase
 operator|=
 operator|(
@@ -79,11 +85,11 @@ name|uintptr_t
 operator|)
 name|base
 operator|+
-literal|15
+name|MALLOCALIGN_MASK
 operator|)
 operator|&
 operator|~
-literal|15
+name|MALLOCALIGN_MASK
 operator|)
 expr_stmt|;
 name|maxheap

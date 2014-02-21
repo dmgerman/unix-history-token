@@ -358,7 +358,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"subversion 1.8.5"
+value|"subversion 1.8.8"
 end_define
 
 begin_comment
@@ -391,7 +391,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.8.5"
+value|"1.8.8"
 end_define
 
 begin_comment
@@ -443,7 +443,7 @@ begin_define
 define|#
 directive|define
 name|SVN_BUILD_HOST
-value|"bikeshed-red-green-blue-freebsd"
+value|"bikeshed-malachite-topaz-amber-freebsd"
 end_define
 
 begin_comment
@@ -454,7 +454,7 @@ begin_define
 define|#
 directive|define
 name|SVN_BUILD_TARGET
-value|"bikeshed-red-green-blue-freebsd"
+value|"bikeshed-malachite-topaz-amber-freebsd"
 end_define
 
 begin_comment

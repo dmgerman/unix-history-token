@@ -4216,7 +4216,7 @@ operator|<
 literal|2
 condition|)
 block|{
-comment|/* 			 * Dirty pages need to be paged out, but flushing 			 * a page is extremely expensive verses freeing 			 * a clean page.  Rather then artificially limiting 			 * the number of pages we can flush, we instead give 			 * dirty pages extra priority on the inactive queue 			 * by forcing them to be cycled through the queue 			 * twice before being flushed, after which the 			 * (now clean) page will cycle through once more 			 * before being freed.  This significantly extends 			 * the thrash point for a heavily loaded machine. 			 */
+comment|/* 			 * Dirty pages need to be paged out, but flushing 			 * a page is extremely expensive versus freeing 			 * a clean page.  Rather then artificially limiting 			 * the number of pages we can flush, we instead give 			 * dirty pages extra priority on the inactive queue 			 * by forcing them to be cycled through the queue 			 * twice before being flushed, after which the 			 * (now clean) page will cycle through once more 			 * before being freed.  This significantly extends 			 * the thrash point for a heavily loaded machine. 			 */
 name|m
 operator|->
 name|flags
@@ -4355,7 +4355,7 @@ goto|goto
 name|relock_queues
 goto|;
 block|}
-comment|/* 			 * The object is already known NOT to be dead.   It 			 * is possible for the vget() to block the whole 			 * pageout daemon, but the new low-memory handling 			 * code should prevent it. 			 * 			 * The previous code skipped locked vnodes and, worse, 			 * reordered pages in the queue.  This results in 			 * completely non-deterministic operation and, on a 			 * busy system, can lead to extremely non-optimal 			 * pageouts.  For example, it can cause clean pages 			 * to be freed and dirty pages to be moved to the end 			 * of the queue.  Since dirty pages are also moved to 			 * the end of the queue once-cleaned, this gives 			 * way too large a weighting to defering the freeing 			 * of dirty pages. 			 * 			 * We can't wait forever for the vnode lock, we might 			 * deadlock due to a vn_read() getting stuck in 			 * vm_wait while holding this vnode.  We skip the  			 * vnode if we can't get it in a reasonable amount 			 * of time. 			 */
+comment|/* 			 * The object is already known NOT to be dead.   It 			 * is possible for the vget() to block the whole 			 * pageout daemon, but the new low-memory handling 			 * code should prevent it. 			 * 			 * The previous code skipped locked vnodes and, worse, 			 * reordered pages in the queue.  This results in 			 * completely non-deterministic operation and, on a 			 * busy system, can lead to extremely non-optimal 			 * pageouts.  For example, it can cause clean pages 			 * to be freed and dirty pages to be moved to the end 			 * of the queue.  Since dirty pages are also moved to 			 * the end of the queue once-cleaned, this gives 			 * way too large a weighting to deferring the freeing 			 * of dirty pages. 			 * 			 * We can't wait forever for the vnode lock, we might 			 * deadlock due to a vn_read() getting stuck in 			 * vm_wait while holding this vnode.  We skip the  			 * vnode if we can't get it in a reasonable amount 			 * of time. 			 */
 if|if
 condition|(
 name|object

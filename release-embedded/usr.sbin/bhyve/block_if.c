@@ -124,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|BLOCKIF_MAXREQ
-value|16
+value|32
 end_define
 
 begin_enum

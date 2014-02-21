@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/CodeGenOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -145,6 +151,9 @@ decl_stmt|;
 name|class
 name|GlobalDecl
 decl_stmt|;
+name|class
+name|UsingDecl
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -163,10 +172,24 @@ comment|/// the backend.
 name|class
 name|CGDebugInfo
 block|{
+name|friend
+name|class
+name|NoLocation
+decl_stmt|;
+name|friend
+name|class
+name|ArtificialLocation
+decl_stmt|;
 name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
+specifier|const
+name|CodeGenOptions
+operator|::
+name|DebugInfoKind
+name|DebugKind
+expr_stmt|;
 name|llvm
 operator|::
 name|DIBuilder
@@ -227,6 +250,11 @@ name|llvm
 operator|::
 name|DIType
 name|OCLEventDITy
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|BlockLiteralGeneric
 expr_stmt|;
 comment|/// TypeCache - Cache of previously constructed Types.
 name|llvm
@@ -308,14 +336,6 @@ operator|>
 expr|>
 name|ReplaceMap
 expr_stmt|;
-name|bool
-name|BlockLiteralGenericSet
-decl_stmt|;
-name|llvm
-operator|::
-name|DIType
-name|BlockLiteralGeneric
-expr_stmt|;
 comment|// LexicalBlockStack - Keep track of our current nested lexical block.
 name|std
 operator|::
@@ -395,6 +415,22 @@ name|WeakVH
 operator|>
 name|SPCache
 expr_stmt|;
+comment|/// \brief Cache declarations relevant to DW_TAG_imported_declarations (C++
+comment|/// using declarations) that aren't covered by other more specific caches.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|WeakVH
+operator|>
+name|DeclCache
+expr_stmt|;
 name|llvm
 operator|::
 name|DenseMap
@@ -408,6 +444,20 @@ operator|::
 name|WeakVH
 operator|>
 name|NameSpaceCache
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|NamespaceAliasDecl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|WeakVH
+operator|>
+name|NamespaceAliasCache
 expr_stmt|;
 name|llvm
 operator|::
@@ -462,7 +512,7 @@ name|CreateQualifiedType
 argument_list|(
 argument|QualType Ty
 argument_list|,
-argument|llvm::DIFile F
+argument|llvm::DIFile Fg
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -472,7 +522,7 @@ name|CreateType
 argument_list|(
 argument|const TypedefType *Ty
 argument_list|,
-argument|llvm::DIFile F
+argument|llvm::DIFile Fg
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -523,12 +573,23 @@ argument_list|(
 specifier|const
 name|RecordType
 operator|*
-name|Ty
+name|Tyg
 argument_list|)
 expr_stmt|;
 name|llvm
 operator|::
 name|DIType
+name|CreateTypeDefinition
+argument_list|(
+specifier|const
+name|RecordType
+operator|*
+name|Ty
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DICompositeType
 name|CreateLimitedType
 argument_list|(
 specifier|const
@@ -537,6 +598,20 @@ operator|*
 name|Ty
 argument_list|)
 expr_stmt|;
+name|void
+name|CollectContainingType
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|,
+name|llvm
+operator|::
+name|DICompositeType
+name|CT
+argument_list|)
+decl_stmt|;
 name|llvm
 operator|::
 name|DIType
@@ -623,9 +698,9 @@ name|DIType
 name|CreateEnumType
 argument_list|(
 specifier|const
-name|EnumDecl
+name|EnumType
 operator|*
-name|ED
+name|Ty
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -658,7 +733,7 @@ argument_list|)
 expr_stmt|;
 name|llvm
 operator|::
-name|DIType
+name|DICompositeType
 name|getOrCreateMethodType
 argument_list|(
 argument|const CXXMethodDecl *Method
@@ -668,7 +743,7 @@ argument_list|)
 expr_stmt|;
 name|llvm
 operator|::
-name|DIType
+name|DICompositeType
 name|getOrCreateInstanceMethodType
 argument_list|(
 argument|QualType ThisPtr
@@ -680,7 +755,7 @@ argument_list|)
 expr_stmt|;
 name|llvm
 operator|::
-name|DIType
+name|DICompositeType
 name|getOrCreateFunctionType
 argument_list|(
 argument|const Decl *D
@@ -712,7 +787,7 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
-name|CreatePointeeType
+name|getOrCreateTypeDeclaration
 argument_list|(
 argument|QualType PointeeTy
 argument_list|,
@@ -794,35 +869,6 @@ name|T
 argument_list|)
 decl_stmt|;
 name|void
-name|CollectCXXFriends
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|Decl
-argument_list|,
-name|llvm
-operator|::
-name|DIFile
-name|F
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|llvm
-operator|::
-name|Value
-operator|*
-operator|>
-operator|&
-name|EltTys
-argument_list|,
-name|llvm
-operator|::
-name|DIType
-name|RecordTy
-argument_list|)
-decl_stmt|;
-name|void
 name|CollectCXXBases
 argument_list|(
 specifier|const
@@ -858,7 +904,7 @@ name|CollectTemplateParams
 argument_list|(
 argument|const TemplateParameterList *TPList
 argument_list|,
-argument|const TemplateArgumentList&TAList
+argument|ArrayRef<TemplateArgument> TAList
 argument_list|,
 argument|llvm::DIFile Unit
 argument_list|)
@@ -902,7 +948,7 @@ argument|uint64_t offsetInBits
 argument_list|,
 argument|llvm::DIFile tunit
 argument_list|,
-argument|llvm::DIDescriptor scope
+argument|llvm::DIScope scope
 argument_list|)
 expr_stmt|;
 comment|// Helpers for collecting fields of a record.
@@ -930,30 +976,16 @@ name|DIType
 name|RecordTy
 argument_list|)
 decl_stmt|;
-name|void
-name|CollectRecordStaticField
+name|llvm
+operator|::
+name|DIDerivedType
+name|CreateRecordStaticField
 argument_list|(
-specifier|const
-name|VarDecl
-operator|*
-name|Var
+argument|const VarDecl *Var
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|llvm
-operator|::
-name|Value
-operator|*
-operator|>
-operator|&
-name|E
-argument_list|,
-name|llvm
-operator|::
-name|DIType
-name|RecordTy
+argument|llvm::DIType RecordTy
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|void
 name|CollectRecordNormalField
 argument_list|(
@@ -1011,7 +1043,7 @@ name|E
 argument_list|,
 name|llvm
 operator|::
-name|DIType
+name|DICompositeType
 name|RecordTy
 argument_list|)
 decl_stmt|;
@@ -1074,6 +1106,16 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
+comment|/// getLocation - Return the current source location.
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurLoc
+return|;
+block|}
 comment|/// EmitLocation - Emit metadata to indicate a change in line/column
 comment|/// information in the source file.
 comment|/// \param ForceColumnInfo  Assume DebugColumnInfo option is true.
@@ -1306,6 +1348,28 @@ modifier|&
 name|UD
 parameter_list|)
 function_decl|;
+comment|/// \brief - Emit C++ using declaration.
+name|void
+name|EmitUsingDecl
+parameter_list|(
+specifier|const
+name|UsingDecl
+modifier|&
+name|UD
+parameter_list|)
+function_decl|;
+comment|/// \brief - Emit C++ namespace alias.
+name|llvm
+operator|::
+name|DIImportedEntity
+name|EmitNamespaceAlias
+argument_list|(
+specifier|const
+name|NamespaceAliasDecl
+operator|&
+name|NA
+argument_list|)
+expr_stmt|;
 comment|/// getOrCreateRecordType - Emit record type's standalone debug info.
 name|llvm
 operator|::
@@ -1329,6 +1393,33 @@ argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 expr_stmt|;
+name|void
+name|completeType
+parameter_list|(
+specifier|const
+name|RecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+name|void
+name|completeRequiredType
+parameter_list|(
+specifier|const
+name|RecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+name|void
+name|completeClassData
+parameter_list|(
+specifier|const
+name|RecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// EmitDeclare - Emit call to llvm.dbg.declare for a variable declaration.
@@ -1386,15 +1477,25 @@ operator|*
 name|Decl
 argument_list|)
 expr_stmt|;
-comment|/// createRecordFwdDecl - Create a forward decl for a RecordType in a given
-comment|/// context.
 name|llvm
 operator|::
-name|DIType
-name|createRecordFwdDecl
+name|DIScope
+name|getCurrentContextDescriptor
 argument_list|(
 specifier|const
-name|RecordDecl
+name|Decl
+operator|*
+name|Decl
+argument_list|)
+expr_stmt|;
+comment|/// \brief Create a forward decl for a RecordType in a given context.
+name|llvm
+operator|::
+name|DICompositeType
+name|getOrCreateRecordFwdDecl
+argument_list|(
+specifier|const
+name|RecordType
 operator|*
 argument_list|,
 name|llvm
@@ -1450,7 +1551,7 @@ name|getOrCreateType
 argument_list|(
 argument|QualType Ty
 argument_list|,
-argument|llvm::DIFile F
+argument|llvm::DIFile Fg
 argument_list|)
 expr_stmt|;
 comment|/// getOrCreateLimitedType - Get the type from the cache or create a new
@@ -1460,7 +1561,7 @@ operator|::
 name|DIType
 name|getOrCreateLimitedType
 argument_list|(
-argument|QualType Ty
+argument|const RecordType *Ty
 argument_list|,
 argument|llvm::DIFile F
 argument_list|)
@@ -1473,7 +1574,7 @@ name|CreateTypeNode
 argument_list|(
 argument|QualType Ty
 argument_list|,
-argument|llvm::DIFile F
+argument|llvm::DIFile Fg
 argument_list|)
 expr_stmt|;
 comment|/// getObjCInterfaceDecl - return the underlying ObjCInterfaceDecl
@@ -1486,18 +1587,6 @@ name|QualType
 name|Ty
 parameter_list|)
 function_decl|;
-comment|/// CreateLimitedTypeNode - Create type metadata for a source language
-comment|/// type, but only partial types for records.
-name|llvm
-operator|::
-name|DIType
-name|CreateLimitedTypeNode
-argument_list|(
-argument|QualType Ty
-argument_list|,
-argument|llvm::DIFile F
-argument_list|)
-expr_stmt|;
 comment|/// CreateMemberType - Create new member and increase Offset by FType's size.
 name|llvm
 operator|::
@@ -1513,6 +1602,19 @@ argument_list|,
 argument|uint64_t *Offset
 argument_list|)
 expr_stmt|;
+comment|/// \brief Retrieve the DIDescriptor, if any, for the canonical form of this
+comment|/// declaration.
+name|llvm
+operator|::
+name|DIDescriptor
+name|getDeclarationOrDefinition
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+expr_stmt|;
 comment|/// getFunctionDeclaration - Return debug info descriptor to describe method
 comment|/// declaration for the given method definition.
 name|llvm
@@ -1526,22 +1628,21 @@ operator|*
 name|D
 argument_list|)
 expr_stmt|;
-comment|/// getStaticDataMemberDeclaration - Return debug info descriptor to
-comment|/// describe in-class static data member declaration for the given
-comment|/// out-of-class definition.
+comment|/// Return debug info descriptor to describe in-class static data member
+comment|/// declaration for the given out-of-class definition.
 name|llvm
 operator|::
 name|DIDerivedType
-name|getStaticDataMemberDeclaration
+name|getOrCreateStaticDataMemberDeclarationOrNull
 argument_list|(
 specifier|const
-name|Decl
+name|VarDecl
 operator|*
 name|D
 argument_list|)
 expr_stmt|;
 comment|/// getFunctionName - Get function name for the given FunctionDecl. If the
-comment|/// name is constructred on demand (e.g. C++ destructor) then the name
+comment|/// name is constructed on demand (e.g. C++ destructor) then the name
 comment|/// is stored on the side.
 name|StringRef
 name|getFunctionName
@@ -1616,6 +1717,188 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// internString - Allocate a copy of \p A using the DebugInfoNames allocator
+comment|/// and return a reference to it. If multiple arguments are given the strings
+comment|/// are concatenated.
+name|StringRef
+name|internString
+parameter_list|(
+name|StringRef
+name|A
+parameter_list|,
+name|StringRef
+name|B
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|Data
+init|=
+name|DebugInfoNames
+operator|.
+name|Allocate
+operator|<
+name|char
+operator|>
+operator|(
+name|A
+operator|.
+name|size
+argument_list|()
+operator|+
+name|B
+operator|.
+name|size
+argument_list|()
+operator|)
+decl_stmt|;
+name|std
+operator|::
+name|memcpy
+argument_list|(
+name|Data
+argument_list|,
+name|A
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|A
+operator|.
+name|size
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|memcpy
+argument_list|(
+name|Data
+operator|+
+name|A
+operator|.
+name|size
+argument_list|()
+argument_list|,
+name|B
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|B
+operator|.
+name|size
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|StringRef
+argument_list|(
+name|Data
+argument_list|,
+name|A
+operator|.
+name|size
+argument_list|()
+operator|+
+name|B
+operator|.
+name|size
+argument_list|()
+argument_list|)
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// NoLocation - An RAII object that temporarily disables debug
+comment|/// locations. This is useful for emitting instructions that should be
+comment|/// counted towards the function prologue.
+name|class
+name|NoLocation
+block|{
+name|SourceLocation
+name|SavedLoc
+decl_stmt|;
+name|CGDebugInfo
+modifier|*
+name|DI
+decl_stmt|;
+name|CGBuilderTy
+modifier|&
+name|Builder
+decl_stmt|;
+name|public
+label|:
+name|NoLocation
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|CGBuilderTy
+operator|&
+name|B
+argument_list|)
+expr_stmt|;
+comment|/// ~NoLocation - Autorestore everything back to normal.
+operator|~
+name|NoLocation
+argument_list|()
+expr_stmt|;
+block|}
+empty_stmt|;
+comment|/// ArtificialLocation - An RAII object that temporarily switches to
+comment|/// an artificial debug location that has a valid scope, but no line
+comment|/// information. This is useful when emitting compiler-generated
+comment|/// helper functions that have no source location associated with
+comment|/// them. The DWARF specification allows the compiler to use the
+comment|/// special line number 0 to indicate code that can not be attributed
+comment|/// to any source location.
+comment|///
+comment|/// This is necessary because passing an empty SourceLocation to
+comment|/// CGDebugInfo::setLocation() will result in the last valid location
+comment|/// being reused.
+name|class
+name|ArtificialLocation
+block|{
+name|SourceLocation
+name|SavedLoc
+decl_stmt|;
+name|CGDebugInfo
+modifier|*
+name|DI
+decl_stmt|;
+name|CGBuilderTy
+modifier|&
+name|Builder
+decl_stmt|;
+name|public
+label|:
+name|ArtificialLocation
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|CGBuilderTy
+operator|&
+name|B
+argument_list|)
+expr_stmt|;
+comment|/// Set the current location to line 0, but within the current scope
+comment|/// (= the top of the LexicalBlockStack).
+name|void
+name|Emit
+parameter_list|()
+function_decl|;
+comment|/// ~ArtificialLocation - Autorestore everything back to normal.
+operator|~
+name|ArtificialLocation
+argument_list|()
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -2494,7 +2494,9 @@ operator|==
 name|OBJT_SWAP
 argument_list|,
 operator|(
-literal|"vm_object_terminate: non-swap obj %p has cred"
+literal|"%s: non-swap obj %p has cred"
+operator|,
+name|__func__
 operator|,
 name|object
 operator|)
@@ -5742,6 +5744,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Use the old pindex to free the right page. */
 if|if
 condition|(
 name|backing_object
@@ -5754,9 +5757,9 @@ name|swap_pager_freespace
 argument_list|(
 name|backing_object
 argument_list|,
-name|p
-operator|->
-name|pindex
+name|new_pindex
+operator|+
+name|backing_offset_index
 argument_list|,
 literal|1
 argument_list|)

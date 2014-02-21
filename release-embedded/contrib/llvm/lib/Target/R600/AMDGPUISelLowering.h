@@ -78,6 +78,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AMDGPUMachineFunction
+decl_stmt|;
+name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
@@ -88,6 +91,48 @@ name|TargetLowering
 block|{
 name|private
 operator|:
+name|void
+name|ExtractVectorElements
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&Args
+argument_list|,
+argument|unsigned Start
+argument_list|,
+argument|unsigned Count
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFrameIndex
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerEXTRACT_SUBVECTOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerCONCAT_VECTORS
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
 argument_list|(
@@ -97,8 +142,30 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Lower vector stores by merging the vector elements into an integer
+comment|/// of the same bitwidth.
+name|SDValue
+name|MergeVectorStore
+argument_list|(
+argument|const SDValue&Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Split a vector store into multiple scalar stores.
+comment|/// \returns The resulting chain.
 name|SDValue
 name|LowerUDIVREM
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerUINT_TO_FP
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -112,6 +179,7 @@ comment|/// \brief Helper function that adds Reg to the LiveIn list of the DAG's
 comment|/// MachineFunction.
 comment|///
 comment|/// \returns a RegisterSDNode representing Reg.
+name|virtual
 name|SDValue
 name|CreateLiveInRegister
 argument_list|(
@@ -122,6 +190,45 @@ argument_list|,
 argument|unsigned Reg
 argument_list|,
 argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerGlobalAddress
+argument_list|(
+argument|AMDGPUMachineFunction *MFI
+argument_list|,
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Split a vector load into multiple scalar loads.
+name|SDValue
+name|SplitVectorLoad
+argument_list|(
+argument|const SDValue&Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|SplitVectorStore
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSTORE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
@@ -136,6 +243,25 @@ name|bool
 name|isHWFalseValue
 argument_list|(
 argument|SDValue Op
+argument_list|)
+specifier|const
+block|;
+comment|/// The SelectionDAGBuilder will automatically promote function arguments
+comment|/// with illegal types.  However, this does not work for the AMDGPU targets
+comment|/// since the function arguments are stored in memory as these illegal types.
+comment|/// In order to handle this properly we need to get the origianl types sizes
+comment|/// from the LLVM IR Function and fixup the ISD:InputArg values before
+comment|/// passing them to AnalyzeFormalArguments()
+name|void
+name|getOriginalFunctionArgs
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|const Function *F
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|SmallVectorImpl<ISD::InputArg>&OrigIns
 argument_list|)
 specifier|const
 block|;
@@ -158,6 +284,39 @@ name|TM
 argument_list|)
 block|;
 name|virtual
+name|bool
+name|isFAbsFree
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isFNegFree
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MVT
+name|getVectorIdxTy
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isLoadBitCastBeneficial
+argument_list|(
+argument|EVT
+argument_list|,
+argument|EVT
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -171,7 +330,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -466,13 +625,13 @@ block|,
 name|BRANCH_COND
 block|,
 comment|// End AMDIL ISD Opcodes
-name|BITALIGN
-block|,
-name|BUFFER_STORE
-block|,
 name|DWORDADDR
 block|,
 name|FRACT
+block|,
+name|COS_HW
+block|,
+name|SIN_HW
 block|,
 name|FMAX
 block|,
@@ -488,6 +647,10 @@ name|UMIN
 block|,
 name|URECIP
 block|,
+name|DOT4
+block|,
+name|TEXTURE_FETCH
+block|,
 name|EXPORT
 block|,
 name|CONST_ADDRESS
@@ -495,6 +658,28 @@ block|,
 name|REGISTER_LOAD
 block|,
 name|REGISTER_STORE
+block|,
+name|LOAD_INPUT
+block|,
+name|SAMPLE
+block|,
+name|SAMPLEB
+block|,
+name|SAMPLED
+block|,
+name|SAMPLEL
+block|,
+name|FIRST_MEM_OPCODE_NUMBER
+init|=
+name|ISD
+operator|::
+name|FIRST_TARGET_MEMORY_OPCODE
+block|,
+name|STORE_MSKOR
+block|,
+name|LOAD_CONSTANT
+block|,
+name|TBUFFER_STORE_FORMAT
 block|,
 name|LAST_AMDGPU_ISD_NUMBER
 block|}

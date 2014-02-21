@@ -92,11 +92,6 @@ name|XCoreGenRegisterInfo
 block|{
 name|private
 operator|:
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
-block|;
 name|void
 name|loadConstant
 argument_list|(
@@ -145,12 +140,7 @@ block|;
 name|public
 operator|:
 name|XCoreRegisterInfo
-argument_list|(
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
-argument_list|)
+argument_list|()
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const

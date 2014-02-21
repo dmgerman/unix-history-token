@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/CodeGen/CGFunctionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -200,13 +206,11 @@ comment|/// while lowering AST types to LLVM types.
 name|class
 name|CodeGenTypes
 block|{
-name|public
-label|:
-comment|// Some of this stuff should probably be left on the CGM.
 name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
+comment|// Some of this stuff should probably be left on the CGM.
 name|ASTContext
 modifier|&
 name|Context
@@ -233,11 +237,6 @@ name|CGCXXABI
 modifier|&
 name|TheCXXABI
 decl_stmt|;
-specifier|const
-name|CodeGenOptions
-modifier|&
-name|CodeGenOpts
-decl_stmt|;
 comment|// This should not be moved earlier, since its initialization depends on some
 comment|// of the previous reference members being already initialized
 specifier|const
@@ -245,8 +244,6 @@ name|ABIInfo
 modifier|&
 name|TheABIInfo
 decl_stmt|;
-name|private
-label|:
 comment|/// The opaque type map for Objective-C interfaces. All direct
 comment|/// manipulation is done by the runtime interfaces, which are
 comment|/// responsible for coercing to the appropriate type; these opaque
@@ -414,17 +411,6 @@ specifier|const
 block|{
 return|return
 name|TheABIInfo
-return|;
-block|}
-specifier|const
-name|CodeGenOptions
-operator|&
-name|getCodeGenOpts
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CodeGenOpts
 return|;
 block|}
 specifier|const

@@ -65,6 +65,9 @@ end_define
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
 name|ARMBuildAttrs
 block|{
 enum|enum
@@ -211,7 +214,7 @@ name|CPU_unaligned_access
 init|=
 literal|34
 block|,
-name|VFP_HP_extension
+name|FP_HP_extension
 init|=
 literal|36
 block|,
@@ -333,7 +336,12 @@ comment|// v6_M with the System extensions
 name|v7E_M
 init|=
 literal|13
+block|,
 comment|// v7_M with DSP extensions
+name|v8
+init|=
+literal|14
+comment|// v8, AArch32
 block|}
 enum|;
 enum|enum
@@ -377,7 +385,6 @@ enum|;
 comment|// The following have a lot of common use cases
 enum|enum
 block|{
-comment|//ARMISAUse (=8), uleb128  and THUMBISAUse (=9), uleb128
 name|Not_Allowed
 init|=
 literal|0
@@ -386,7 +393,14 @@ name|Allowed
 init|=
 literal|1
 block|,
-comment|// FP_arch (=10), uleb128 (formerly Tag_VFP_arch = 10)
+comment|// Tag_ARM_ISA_use (=8), uleb128
+comment|// Tag_THUMB_ISA_use, (=9), uleb128
+name|AllowThumb32
+init|=
+literal|2
+block|,
+comment|// 32-bit Thumb (implies 16-bit instructions)
+comment|// Tag_FP_arch (=10), uleb128 (formerly Tag_VFP_arch = 10)
 name|AllowFPv2
 init|=
 literal|2
@@ -412,18 +426,43 @@ init|=
 literal|6
 block|,
 comment|// v4 FP ISA was permitted, but only D0-D15, S0-S31
-comment|// Tag_WMMX_arch, (=11), uleb128
-name|AllowThumb32
+name|AllowFPARMv8A
 init|=
-literal|2
+literal|7
 block|,
-comment|// 32-bit Thumb (implies 16-bit instructions)
+comment|// Use of the ARM v8-A FP ISA was permitted
+name|AllowFPARMv8B
+init|=
+literal|8
+block|,
+comment|// Use of the ARM v8-A FP ISA was permitted, but only D0-D15, S0-S31
 comment|// Tag_WMMX_arch, (=11), uleb128
 name|AllowWMMXv1
+init|=
+literal|1
+block|,
+comment|// The user permitted this entity to use WMMX v1
+name|AllowWMMXv2
 init|=
 literal|2
 block|,
 comment|// The user permitted this entity to use WMMX v2
+comment|// Tag_Advanced_SIMD_arch, (=12), uleb128
+name|AllowNeon
+init|=
+literal|1
+block|,
+comment|// SIMDv1 was permitted
+name|AllowNeon2
+init|=
+literal|2
+block|,
+comment|// SIMDv2 was permitted (Half-precision FP, MAC operations)
+name|AllowNeonARMv8
+init|=
+literal|3
+block|,
+comment|// ARM v8-A SIMD was permitted
 comment|// Tag_ABI_FP_denormal, (=20), uleb128
 name|PreserveFPSign
 init|=
@@ -439,11 +478,79 @@ comment|// numbers, infinities, and one quiet NaN (see [RTABI])
 name|AllowIEE754
 init|=
 literal|3
+block|,
 comment|// this code to use all the IEEE 754-defined FP encodings
+comment|// Tag_ABI_HardFP_use, (=27), uleb128
+name|HardFPImplied
+init|=
+literal|0
+block|,
+comment|// FP use should be implied by Tag_FP_arch
+name|HardFPSinglePrecision
+init|=
+literal|1
+block|,
+comment|// Single-precision only
+comment|// Tag_ABI_VFP_args, (=28), uleb128
+name|BaseAAPCS
+init|=
+literal|0
+block|,
+name|HardFPAAPCS
+init|=
+literal|1
+block|,
+comment|// Tag_FP_HP_extension, (=36), uleb128
+name|AllowHPFP
+init|=
+literal|1
+block|,
+comment|// Allow use of Half Precision FP
+comment|// Tag_MPextension_use, (=42), uleb128
+name|AllowMP
+init|=
+literal|1
+block|,
+comment|// Allow use of MP extensions
+comment|// Tag_DIV_use, (=44), uleb128
+name|AllowDIVIfExists
+init|=
+literal|0
+block|,
+comment|// Allow hardware divide if available in arch, or no info exists.
+name|DisallowDIV
+init|=
+literal|1
+block|,
+comment|// Hardware divide explicitly disallowed
+name|AllowDIVExt
+init|=
+literal|2
+block|,
+comment|// Allow hardware divide as optional architecture extension above
+comment|// the base arch specified by Tag_CPU_arch and Tag_CPU_arch_profile.
+comment|// Tag_Virtualization_use, (=68), uleb128
+name|AllowTZ
+init|=
+literal|1
+block|,
+name|AllowVirtualization
+init|=
+literal|2
+block|,
+name|AllowTZVirtualization
+init|=
+literal|3
 block|}
 enum|;
 block|}
+comment|// namespace ARMBuildAttrs
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

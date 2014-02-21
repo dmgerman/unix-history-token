@@ -719,8 +719,20 @@ argument_list|)
 block|{ }
 comment|/// \brief Evalutes true when this nested-name-specifier location is
 comment|/// non-empty.
+name|LLVM_EXPLICIT
 name|operator
 name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Qualifier
+return|;
+block|}
+comment|/// \brief Evalutes true when this nested-name-specifier location is
+comment|/// empty.
+name|bool
+name|hasQualifier
 argument_list|()
 specifier|const
 block|{

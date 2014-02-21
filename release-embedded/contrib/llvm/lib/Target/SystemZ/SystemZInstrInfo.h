@@ -141,8 +141,128 @@ literal|1
 operator|<<
 literal|4
 operator|)
+block|,
+name|AccessSizeMask
+init|=
+operator|(
+literal|31
+operator|<<
+literal|5
+operator|)
+block|,
+name|AccessSizeShift
+init|=
+literal|5
+block|,
+name|CCValuesMask
+init|=
+operator|(
+literal|15
+operator|<<
+literal|10
+operator|)
+block|,
+name|CCValuesShift
+init|=
+literal|10
+block|,
+name|CompareZeroCCMaskMask
+init|=
+operator|(
+literal|15
+operator|<<
+literal|14
+operator|)
+block|,
+name|CompareZeroCCMaskShift
+init|=
+literal|14
+block|,
+name|CCMaskFirst
+init|=
+operator|(
+literal|1
+operator|<<
+literal|18
+operator|)
+block|,
+name|CCMaskLast
+init|=
+operator|(
+literal|1
+operator|<<
+literal|19
+operator|)
+block|,
+name|IsLogical
+init|=
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
 block|}
 enum|;
+specifier|static
+specifier|inline
+name|unsigned
+name|getAccessSize
+parameter_list|(
+name|unsigned
+name|int
+name|Flags
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|AccessSizeMask
+operator|)
+operator|>>
+name|AccessSizeShift
+return|;
+block|}
+specifier|static
+specifier|inline
+name|unsigned
+name|getCCValues
+parameter_list|(
+name|unsigned
+name|int
+name|Flags
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|CCValuesMask
+operator|)
+operator|>>
+name|CCValuesShift
+return|;
+block|}
+specifier|static
+specifier|inline
+name|unsigned
+name|getCompareZeroCCMask
+parameter_list|(
+name|unsigned
+name|int
+name|Flags
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|CompareZeroCCMaskMask
+operator|)
+operator|>>
+name|CompareZeroCCMaskShift
+return|;
+block|}
 comment|// SystemZ MachineOperand target flags.
 enum|enum
 block|{
@@ -165,6 +285,93 @@ literal|0
 operator|)
 block|}
 enum|;
+comment|// Classifies a branch.
+enum|enum
+name|BranchType
+block|{
+comment|// An instruction that branches on the current value of CC.
+name|BranchNormal
+block|,
+comment|// An instruction that peforms a 32-bit signed comparison and branches
+comment|// on the result.
+name|BranchC
+block|,
+comment|// An instruction that peforms a 32-bit unsigned comparison and branches
+comment|// on the result.
+name|BranchCL
+block|,
+comment|// An instruction that peforms a 64-bit signed comparison and branches
+comment|// on the result.
+name|BranchCG
+block|,
+comment|// An instruction that peforms a 64-bit unsigned comparison and branches
+comment|// on the result.
+name|BranchCLG
+block|,
+comment|// An instruction that decrements a 32-bit register and branches if
+comment|// the result is nonzero.
+name|BranchCT
+block|,
+comment|// An instruction that decrements a 64-bit register and branches if
+comment|// the result is nonzero.
+name|BranchCTG
+block|}
+enum|;
+comment|// Information about a branch instruction.
+struct|struct
+name|Branch
+block|{
+comment|// The type of the branch.
+name|BranchType
+name|Type
+decl_stmt|;
+comment|// CCMASK_<N> is set if CC might be equal to N.
+name|unsigned
+name|CCValid
+decl_stmt|;
+comment|// CCMASK_<N> is set if the branch should be taken when CC == N.
+name|unsigned
+name|CCMask
+decl_stmt|;
+comment|// The target of the branch.
+specifier|const
+name|MachineOperand
+modifier|*
+name|Target
+decl_stmt|;
+name|Branch
+argument_list|(
+argument|BranchType type
+argument_list|,
+argument|unsigned ccValid
+argument_list|,
+argument|unsigned ccMask
+argument_list|,
+argument|const MachineOperand *target
+argument_list|)
+block|:
+name|Type
+argument_list|(
+name|type
+argument_list|)
+operator|,
+name|CCValid
+argument_list|(
+name|ccValid
+argument_list|)
+operator|,
+name|CCMask
+argument_list|(
+name|ccMask
+argument_list|)
+operator|,
+name|Target
+argument_list|(
+argument|target
+argument_list|)
+block|{}
+block|}
+struct|;
 block|}
 name|class
 name|SystemZInstrInfo
@@ -175,6 +382,10 @@ block|{
 specifier|const
 name|SystemZRegisterInfo
 name|RI
+block|;
+name|SystemZTargetMachine
+operator|&
+name|TM
 block|;
 name|void
 name|splitMove
@@ -191,6 +402,80 @@ argument_list|(
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+block|;
+name|void
+name|expandRIPseudo
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|unsigned LowOpcode
+argument_list|,
+argument|unsigned HighOpcode
+argument_list|,
+argument|bool ConvertHigh
+argument_list|)
+specifier|const
+block|;
+name|void
+name|expandRIEPseudo
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|unsigned LowOpcode
+argument_list|,
+argument|unsigned LowOpcodeK
+argument_list|,
+argument|unsigned HighOpcode
+argument_list|)
+specifier|const
+block|;
+name|void
+name|expandRXYPseudo
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|unsigned LowOpcode
+argument_list|,
+argument|unsigned HighOpcode
+argument_list|)
+specifier|const
+block|;
+name|void
+name|expandZExtPseudo
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|unsigned LowOpcode
+argument_list|,
+argument|unsigned Size
+argument_list|)
+specifier|const
+block|;
+name|void
+name|emitGRX32Move
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|unsigned LowLowOpcode
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|bool KillSrc
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
 block|;
 name|public
 operator|:
@@ -221,6 +506,19 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|int&FrameIndex
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
+name|bool
+name|isStackSlotCopy
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&DestFrameIndex
+argument_list|,
+argument|int&SrcFrameIndex
 argument_list|)
 specifier|const
 name|LLVM_OVERRIDE
@@ -264,6 +562,96 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Cond
 argument_list|,
 argument|DebugLoc DL
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|bool
+name|analyzeCompare
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned&SrcReg
+argument_list|,
+argument|unsigned&SrcReg2
+argument_list|,
+argument|int&Mask
+argument_list|,
+argument|int&Value
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|bool
+name|optimizeCompareInstr
+argument_list|(
+argument|MachineInstr *CmpInstr
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|unsigned SrcReg2
+argument_list|,
+argument|int Mask
+argument_list|,
+argument|int Value
+argument_list|,
+argument|const MachineRegisterInfo *MRI
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
+name|bool
+name|isPredicable
+argument_list|(
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned NumCycles
+argument_list|,
+argument|unsigned ExtraPredCycles
+argument_list|,
+argument|const BranchProbability&Probability
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+argument|MachineBasicBlock&TMBB
+argument_list|,
+argument|unsigned NumCyclesT
+argument_list|,
+argument|unsigned ExtraPredCyclesT
+argument_list|,
+argument|MachineBasicBlock&FMBB
+argument_list|,
+argument|unsigned NumCyclesF
+argument_list|,
+argument|unsigned ExtraPredCyclesF
+argument_list|,
+argument|const BranchProbability&Probability
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
+name|virtual
+name|bool
+name|PredicateInstruction
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Pred
 argument_list|)
 specifier|const
 name|LLVM_OVERRIDE
@@ -328,6 +716,49 @@ specifier|const
 name|LLVM_OVERRIDE
 block|;
 name|virtual
+name|MachineInstr
+operator|*
+name|convertToThreeAddress
+argument_list|(
+argument|MachineFunction::iterator&MFI
+argument_list|,
+argument|MachineBasicBlock::iterator&MBBI
+argument_list|,
+argument|LiveVariables *LV
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineInstr
+operator|*
+name|foldMemoryOperandImpl
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineInstr *MI
+argument_list|,
+argument|const SmallVectorImpl<unsigned>&Ops
+argument_list|,
+argument|int FrameIndex
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineInstr
+operator|*
+name|foldMemoryOperandImpl
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineInstr* MI
+argument_list|,
+argument|const SmallVectorImpl<unsigned>&Ops
+argument_list|,
+argument|MachineInstr* LoadMI
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|bool
 name|expandPostRAPseudo
 argument_list|(
@@ -357,19 +788,25 @@ return|return
 name|RI
 return|;
 block|}
+comment|// Return the size in bytes of MI.
+name|uint64_t
+name|getInstSizeInBytes
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
 comment|// Return true if MI is a conditional or unconditional branch.
 comment|// When returning true, set Cond to the mask of condition-code
 comment|// values on which the instruction will branch, and set Target
 comment|// to the operand that contains the branch target.  This target
 comment|// can be a register or a basic block.
-name|bool
-name|isBranch
+name|SystemZII
+operator|::
+name|Branch
+name|getBranchInfo
 argument_list|(
 argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned&Cond
-argument_list|,
-argument|const MachineOperand *&Target
 argument_list|)
 specifier|const
 block|;
@@ -396,6 +833,44 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|,
 argument|int64_t Offset
+argument_list|)
+specifier|const
+block|;
+comment|// If Opcode is a load instruction that has a LOAD AND TEST form,
+comment|// return the opcode for the testing form, otherwise return 0.
+name|unsigned
+name|getLoadAndTest
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+comment|// Return true if ROTATE AND ... SELECTED BITS can be used to select bits
+comment|// Mask of the R2 operand, given that only the low BitSize bits of Mask are
+comment|// significant.  Set Start and End to the I3 and I4 operands if so.
+name|bool
+name|isRxSBGMask
+argument_list|(
+argument|uint64_t Mask
+argument_list|,
+argument|unsigned BitSize
+argument_list|,
+argument|unsigned&Start
+argument_list|,
+argument|unsigned&End
+argument_list|)
+specifier|const
+block|;
+comment|// If Opcode is a COMPARE opcode for which an associated COMPARE AND
+comment|// BRANCH exists, return the opcode for the latter, otherwise return 0.
+comment|// MI, if nonnull, is the compare instruction.
+name|unsigned
+name|getCompareAndBranch
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|const MachineInstr *MI =
+literal|0
 argument_list|)
 specifier|const
 block|;

@@ -99,6 +99,11 @@ range|:
 name|public
 name|NVPTXGenSubtargetInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|std
 operator|::
 name|string

@@ -167,7 +167,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* char *  * inet_ntop(af, src, dst, size)  *	convert a network format address to presentation format.  * return:  *	pointer to presentation format address (`dst'), or NULL (see errno).  * author:  *	Paul Vixie, 1996.  */
+comment|/* const char *  * inet_ntop(af, src, dst, size)  *	convert a network format address to presentation format.  * return:  *	pointer to presentation format address (`dst'), or NULL (see errno).  * author:  *	Paul Vixie, 1996.  */
 end_comment
 
 begin_function
@@ -802,11 +802,17 @@ name|tmp
 operator|)
 argument_list|)
 condition|)
+block|{
+name|errno
+operator|=
+name|ENOSPC
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 name|tp
 operator|+=
 name|strlen

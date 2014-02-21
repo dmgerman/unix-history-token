@@ -143,6 +143,7 @@ comment|/// @param[out] Address   Remote address of the allocated memory.
 comment|///
 comment|/// @returns False on success. On failure, ErrorMsg is updated with
 comment|///          descriptive text of the encountered error.
+name|virtual
 name|bool
 name|allocateSpace
 parameter_list|(
@@ -165,6 +166,7 @@ comment|/// @param      Size      Number of bytes to copy.
 comment|///
 comment|/// @returns False on success. On failure, ErrorMsg is updated with
 comment|///          descriptive text of the encountered error.
+name|virtual
 name|bool
 name|loadData
 parameter_list|(
@@ -188,6 +190,7 @@ comment|/// @param      Size      Number of bytes to copy.
 comment|///
 comment|/// @returns False on success. On failure, ErrorMsg is updated with
 comment|///          descriptive text of the encountered error.
+name|virtual
 name|bool
 name|loadCode
 parameter_list|(
@@ -212,6 +215,7 @@ comment|/// @param[out] RetVal    The integer return value of the called functio
 comment|///
 comment|/// @returns False on success. On failure, ErrorMsg is updated with
 comment|///          descriptive text of the encountered error.
+name|virtual
 name|bool
 name|executeCode
 parameter_list|(
@@ -228,6 +232,7 @@ comment|/// data regions to make sure data doesn't get marked as code or vice
 comment|/// versa.
 comment|///
 comment|/// @returns Page alignment return value. Default of 4k.
+name|virtual
 name|unsigned
 name|getPageAlignment
 parameter_list|()
@@ -237,11 +242,13 @@ literal|4096
 return|;
 block|}
 comment|/// Start the remote process.
+name|virtual
 name|void
 name|create
 parameter_list|()
 function_decl|;
 comment|/// Terminate the remote process.
+name|virtual
 name|void
 name|stop
 parameter_list|()
@@ -259,6 +266,7 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
+name|virtual
 operator|~
 name|RemoteTarget
 argument_list|()
@@ -271,6 +279,30 @@ name|stop
 argument_list|()
 expr_stmt|;
 block|}
+comment|// Create an instance of the system-specific remote target class.
+specifier|static
+name|RemoteTarget
+modifier|*
+name|createRemoteTarget
+parameter_list|()
+function_decl|;
+specifier|static
+name|RemoteTarget
+modifier|*
+name|createExternalRemoteTarget
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|ChildName
+argument_list|)
+decl_stmt|;
+specifier|static
+name|bool
+name|hostSupportsExternalRemoteTarget
+parameter_list|()
+function_decl|;
 name|private
 label|:
 comment|// Main processing function for the remote target process. Command messages

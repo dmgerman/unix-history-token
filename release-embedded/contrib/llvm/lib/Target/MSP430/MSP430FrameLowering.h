@@ -118,13 +118,15 @@ literal|2
 argument_list|,
 operator|-
 literal|2
+argument_list|,
+literal|2
 argument_list|)
 block|,
 name|STI
 argument_list|(
 argument|sti
 argument_list|)
-block|{   }
+block|{}
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
 comment|/// the function.
 name|void

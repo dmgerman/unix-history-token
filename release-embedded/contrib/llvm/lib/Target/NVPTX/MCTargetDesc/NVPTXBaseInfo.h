@@ -86,11 +86,6 @@ name|ADDRESS_SPACE_GLOBAL
 init|=
 literal|1
 block|,
-name|ADDRESS_SPACE_CONST_NOT_GEN
-init|=
-literal|2
-block|,
-comment|// Not part of generic space
 name|ADDRESS_SPACE_SHARED
 init|=
 literal|3

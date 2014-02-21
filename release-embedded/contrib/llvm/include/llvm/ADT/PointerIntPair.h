@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/PointerLikeTypeTraits.h"
 end_include
 
@@ -124,6 +130,10 @@ block|{
 name|intptr_t
 name|Value
 block|;   enum
+name|LLVM_ENUM_INT_TYPE
+argument_list|(
+argument|uintptr_t
+argument_list|)
 block|{
 comment|/// PointerBitMask - The bits that come from the pointer.
 name|PointerBitMask

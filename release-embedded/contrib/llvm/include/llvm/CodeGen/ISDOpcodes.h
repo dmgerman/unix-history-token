@@ -154,18 +154,6 @@ comment|/// first (possible) on-stack argument. This is needed for correct stack
 comment|/// adjustment during unwind.
 name|FRAME_TO_ARGS_OFFSET
 block|,
-comment|/// RESULT, OUTCHAIN = EXCEPTIONADDR(INCHAIN) - This node represents the
-comment|/// address of the exception block on entry to an landing pad block.
-name|EXCEPTIONADDR
-block|,
-comment|/// RESULT, OUTCHAIN = LSDAADDR(INCHAIN) - This node represents the
-comment|/// address of the Language Specific Data Area for the enclosing function.
-name|LSDAADDR
-block|,
-comment|/// RESULT, OUTCHAIN = EHSELECTION(INCHAIN, EXCEPTION) - This node
-comment|/// represents the selection index of the exception thrown.
-name|EHSELECTION
-block|,
 comment|/// OUTCHAIN = EH_RETURN(INCHAIN, OFFSET, HANDLER) - This node represents
 comment|/// 'eh_return' gcc dwarf builtin, which is used to return from
 comment|/// exception. The general meaning is: adjust stack by OFFSET and pass
@@ -578,6 +566,10 @@ comment|/// int-to-int or fp-to-fp conversions, but that is a noop, deleted by
 comment|/// getNode().
 name|BITCAST
 block|,
+comment|/// ADDRSPACECAST - This operator converts between pointers of different
+comment|/// address spaces.
+name|ADDRSPACECAST
+block|,
 comment|/// CONVERT_RNDSAT - This operator is used to support various conversions
 comment|/// between various types (float, signed, unsigned and vectors of those
 comment|/// types) with rounding and saturation. NOTE: Avoid using this operator as
@@ -601,7 +593,7 @@ name|FP32_TO_FP16
 block|,
 comment|/// FNEG, FABS, FSQRT, FSIN, FCOS, FPOWI, FPOW,
 comment|/// FLOG, FLOG2, FLOG10, FEXP, FEXP2,
-comment|/// FCEIL, FTRUNC, FRINT, FNEARBYINT, FFLOOR - Perform various unary
+comment|/// FCEIL, FTRUNC, FRINT, FNEARBYINT, FROUND, FFLOOR - Perform various unary
 comment|/// floating point operations. These are inspired by libm.
 name|FNEG
 block|,
@@ -634,6 +626,8 @@ block|,
 name|FRINT
 block|,
 name|FNEARBYINT
+block|,
+name|FROUND
 block|,
 name|FFLOOR
 block|,
@@ -801,11 +795,17 @@ comment|/// This corresponds to "store atomic" instruction.
 name|ATOMIC_STORE
 block|,
 comment|/// Val, OUTCHAIN = ATOMIC_CMP_SWAP(INCHAIN, ptr, cmp, swap)
+comment|/// For double-word atomic operations:
+comment|/// ValLo, ValHi, OUTCHAIN = ATOMIC_CMP_SWAP(INCHAIN, ptr, cmpLo, cmpHi,
+comment|///                                          swapLo, swapHi)
 comment|/// This corresponds to the cmpxchg instruction.
 name|ATOMIC_CMP_SWAP
 block|,
 comment|/// Val, OUTCHAIN = ATOMIC_SWAP(INCHAIN, ptr, amt)
 comment|/// Val, OUTCHAIN = ATOMIC_LOAD_[OpName](INCHAIN, ptr, amt)
+comment|/// For double-word atomic operations:
+comment|/// ValLo, ValHi, OUTCHAIN = ATOMIC_SWAP(INCHAIN, ptr, amtLo, amtHi)
+comment|/// ValLo, ValHi, OUTCHAIN = ATOMIC_LOAD_[OpName](INCHAIN, ptr, amtLo, amtHi)
 comment|/// These correspond to the atomicrmw instruction.
 name|ATOMIC_SWAP
 block|,
@@ -851,7 +851,7 @@ name|FIRST_TARGET_MEMORY_OPCODE
 init|=
 name|BUILTIN_OP_END
 operator|+
-literal|150
+literal|180
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// MemIndexedMode enum - This enum defines the load / store indexed

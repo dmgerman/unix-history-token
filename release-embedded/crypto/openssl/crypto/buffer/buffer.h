@@ -152,6 +152,7 @@ name|char
 modifier|*
 name|out
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

@@ -485,6 +485,19 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
@@ -583,9 +596,9 @@ name|sc_mtx
 argument_list|,
 literal|"TI mbox"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|sc

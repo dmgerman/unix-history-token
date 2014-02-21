@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Option/Option.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -84,6 +90,9 @@ name|namespace
 name|driver
 block|{
 name|class
+name|Command
+decl_stmt|;
+name|class
 name|Driver
 decl_stmt|;
 name|namespace
@@ -96,6 +105,13 @@ block|}
 name|namespace
 name|tools
 block|{
+name|using
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+expr_stmt|;
 comment|/// \brief Clang compiler tool.
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -113,6 +129,10 @@ operator|*
 name|getBaseInputName
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -130,6 +150,10 @@ operator|*
 name|getBaseInputStem
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -147,6 +171,10 @@ operator|*
 name|getDependencyFileName
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -168,9 +196,9 @@ argument|const JobAction&JA
 argument_list|,
 argument|const Driver&D
 argument_list|,
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|,
 argument|const InputInfo&Output
 argument_list|,
@@ -179,11 +207,20 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|AddAArch64TargetArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
 name|AddARMTargetArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|,
 argument|bool KernelOrKext
 argument_list|)
@@ -192,54 +229,54 @@ block|;
 name|void
 name|AddMIPSTargetArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
-name|void
-name|AddPPCTargetArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
 name|void
 name|AddR600TargetArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
 name|void
 name|AddSparcTargetArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
+name|AddSystemZTargetArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
 name|void
 name|AddX86TargetArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
 name|void
 name|AddHexagonTargetArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;      enum
@@ -255,11 +292,20 @@ block|;
 name|ObjCRuntime
 name|AddObjCRuntimeArgs
 argument_list|(
-argument|const ArgList&args
+argument|const llvm::opt::ArgList&args
 argument_list|,
-argument|ArgStringList&cmdArgs
+argument|llvm::opt::ArgStringList&cmdArgs
 argument_list|,
 argument|RewriteKind rewrite
+argument_list|)
+specifier|const
+block|;
+name|void
+name|AddClangCLArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
@@ -324,7 +370,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -339,24 +385,6 @@ range|:
 name|public
 name|Tool
 block|{
-name|void
-name|AddARMTargetArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
-name|void
-name|AddX86TargetArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
 name|public
 operator|:
 name|ClangAs
@@ -418,7 +446,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -477,7 +505,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -491,7 +519,7 @@ name|RenderExtraToolArgs
 argument_list|(
 argument|const JobAction&JA
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 operator|=
@@ -550,7 +578,7 @@ name|RenderExtraToolArgs
 argument_list|(
 argument|const JobAction&JA
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;   }
@@ -607,7 +635,7 @@ name|RenderExtraToolArgs
 argument_list|(
 argument|const JobAction&JA
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;   }
@@ -664,7 +692,7 @@ name|RenderExtraToolArgs
 argument_list|(
 argument|const JobAction&JA
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;   }
@@ -711,7 +739,7 @@ name|RenderExtraToolArgs
 argument_list|(
 argument|const JobAction&JA
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;   }
@@ -768,7 +796,7 @@ name|RenderExtraToolArgs
 argument_list|(
 argument|const JobAction&JA
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;   }
@@ -822,7 +850,7 @@ name|RenderExtraToolArgs
 argument_list|(
 argument|const JobAction&JA
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
@@ -838,7 +866,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -897,7 +925,7 @@ name|RenderExtraToolArgs
 argument_list|(
 argument|const JobAction&JA
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
@@ -913,7 +941,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -952,9 +980,9 @@ operator|:
 name|void
 name|AddDarwinArch
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
@@ -1061,7 +1089,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1087,9 +1115,9 @@ name|AddLinkArgs
 argument_list|(
 argument|Compilation&C
 argument_list|,
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|)
@@ -1146,7 +1174,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1201,7 +1229,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1266,7 +1294,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1321,7 +1349,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1380,7 +1408,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1445,7 +1473,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1505,7 +1533,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1570,7 +1598,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1630,7 +1658,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1695,7 +1723,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1755,7 +1783,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1820,7 +1848,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1880,7 +1908,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -1945,7 +1973,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -2004,7 +2032,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -2069,7 +2097,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -2129,7 +2157,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -2194,7 +2222,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -2254,7 +2282,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -2319,7 +2347,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -2379,7 +2407,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -2444,7 +2472,7 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -2514,7 +2542,100 @@ argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
 argument_list|,
-argument|const ArgList&TCArgs
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Compile
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Compile
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"visualstudio::Compile"
+argument_list|,
+literal|"compiler"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|hasIntegratedAssembler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;
+name|Command
+operator|*
+name|GetCommand
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
 argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
@@ -2522,6 +2643,132 @@ specifier|const
 block|;   }
 block|; }
 comment|// end namespace visualstudio
+name|namespace
+name|XCore
+block|{
+comment|// For XCore, we do not need to instantiate tools for PreProcess, PreCompile and Compile.
+comment|// We simply use "clang -cc1" for those actions.
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Assemble
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Assemble
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"XCore::Assemble"
+argument_list|,
+literal|"XCore-as"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Link
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Link
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"XCore::Link"
+argument_list|,
+literal|"XCore-ld"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+block|; }
+comment|// end namespace XCore.
 block|}
 comment|// end namespace toolchains
 block|}

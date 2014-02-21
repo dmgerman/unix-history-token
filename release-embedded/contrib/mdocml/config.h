@@ -49,6 +49,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|VERSION
+value|"1.12.3"
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_FGETLN
 end_define
 
@@ -176,6 +183,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_BETOH64
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -188,21 +201,11 @@ end_if
 begin_define
 define|#
 directive|define
-name|htobe32
+name|betoh64
 parameter_list|(
 name|x
 parameter_list|)
-value|OSSwapHostToBigInt32(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|betoh32
-parameter_list|(
-name|x
-parameter_list|)
-value|OSSwapBigToHostInt32(x)
+value|OSSwapBigToHostInt64(x)
 end_define
 
 begin_define
@@ -215,6 +218,15 @@ parameter_list|)
 value|OSSwapHostToBigInt64(x)
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__sun
+argument_list|)
+end_elif
+
 begin_define
 define|#
 directive|define
@@ -222,27 +234,23 @@ name|betoh64
 parameter_list|(
 name|x
 parameter_list|)
-value|OSSwapBigToHostInt64(x)
+value|BE_64(x)
 end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-end_elif
 
 begin_define
 define|#
 directive|define
-name|betoh32
+name|htobe64
 parameter_list|(
 name|x
 parameter_list|)
-value|be32toh(x)
+value|BE_64(x)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -253,6 +261,11 @@ name|x
 parameter_list|)
 value|be64toh(x)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -908,8 +908,23 @@ block|}
 comment|/// \brief Whether this pointer is non-NULL.
 comment|///
 comment|/// This operation does not require the AST node to be deserialized.
+name|LLVM_EXPLICIT
 name|operator
 name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ptr
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// \brief Whether this pointer is non-NULL.
+comment|///
+comment|/// This operation does not require the AST node to be deserialized.
+name|bool
+name|isValid
 argument_list|()
 specifier|const
 block|{

@@ -270,6 +270,16 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
+name|bool
+name|allowTruncateForTailCall
+argument_list|(
+argument|Type *Ty1
+argument_list|,
+argument|Type *Ty2
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -345,7 +355,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -393,7 +403,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -454,7 +464,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -493,14 +503,42 @@ name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|LLVMContext&C
+argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
 block|{
+if|if
+condition|(
+operator|!
+name|VT
+operator|.
+name|isVector
+argument_list|()
+condition|)
 return|return
 name|MVT
 operator|::
 name|i1
+return|;
+else|else
+return|return
+name|EVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|C
+argument_list|,
+name|MVT
+operator|::
+name|i1
+argument_list|,
+name|VT
+operator|.
+name|getVectorNumElements
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|virtual
@@ -535,7 +573,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;

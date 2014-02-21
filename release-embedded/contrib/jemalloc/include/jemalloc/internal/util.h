@@ -38,7 +38,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|JEMALLOC_CONCAT
+name|JEMALLOC_ARG_CONCAT
 parameter_list|(
 modifier|...
 parameter_list|)
@@ -109,20 +109,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Use to assert a particular configuration, e.g., cassert(config_debug). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|cassert
-parameter_list|(
-name|c
-parameter_list|)
-value|do {							\ 	if ((c) == false)						\ 		assert(false);						\ } while (0)
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -161,6 +147,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|assert_not_implemented
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -169,6 +161,25 @@ parameter_list|(
 name|e
 parameter_list|)
 value|do {					\ 	if (config_debug&& !(e))					\ 		not_implemented();					\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Use to assert a particular configuration, e.g., cassert(config_debug). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cassert
+parameter_list|(
+name|c
+parameter_list|)
+value|do {							\ 	if ((c) == false)						\ 		not_reached();						\ } while (0)
 end_define
 
 begin_endif
@@ -213,6 +224,9 @@ begin_function_decl
 name|int
 name|buferror
 parameter_list|(
+name|int
+name|err
+parameter_list|,
 name|char
 modifier|*
 name|buf
@@ -230,11 +244,13 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+specifier|restrict
 name|nptr
 parameter_list|,
 name|char
 modifier|*
 modifier|*
+specifier|restrict
 name|endptr
 parameter_list|,
 name|int
@@ -451,18 +467,6 @@ name|pow2_ceil
 parameter_list|(
 name|size_t
 name|x
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|malloc_write
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl

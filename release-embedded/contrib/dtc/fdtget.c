@@ -1112,70 +1112,114 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Usage related data. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|usage_synopsis
+index|[]
+init|=
+literal|"read values from device tree\n"
+literal|"	fdtget<options><dt file> [<node><property>]...\n"
+literal|"	fdtget -p<options><dt file> [<node> ]...\n"
+literal|"\n"
+literal|"Each value is printed on a new line.\n"
+name|USAGE_TYPE_MSG
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|usage_short_opts
+index|[]
+init|=
+literal|"t:pld:"
+name|USAGE_COMMON_SHORT_OPTS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|option
+specifier|const
+name|usage_long_opts
+index|[]
+init|=
+block|{
+block|{
+literal|"type"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'t'
+block|}
+block|,
+block|{
+literal|"properties"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'p'
+block|}
+block|,
+block|{
+literal|"list"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'l'
+block|}
+block|,
+block|{
+literal|"default"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'d'
+block|}
+block|,
+name|USAGE_COMMON_LONG_OPTS
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
 modifier|*
-name|usage_msg
+specifier|const
+name|usage_opts_help
+index|[]
 init|=
-literal|"fdtget - read values from device tree\n"
-literal|"\n"
-literal|"Each value is printed on a new line.\n\n"
-literal|"Usage:\n"
-literal|"	fdtget<options><dt file> [<node><property>]...\n"
-literal|"	fdtget -p<options><dt file> [<node> ]...\n"
-literal|"Options:\n"
-literal|"\t-t<type>\tType of data\n"
-literal|"\t-p\t\tList properties for each node\n"
-literal|"\t-l\t\tList subnodes for each node\n"
-literal|"\t-d\t\tDefault value to display when the property is "
-literal|"missing\n"
-literal|"\t-h\t\tPrint this help\n\n"
-name|USAGE_TYPE_MSG
+block|{
+literal|"Type of data"
+block|,
+literal|"List properties for each node"
+block|,
+literal|"List subnodes for each node"
+block|,
+literal|"Default value to display when the property is missing"
+block|,
+name|USAGE_COMMON_OPTS_HELP
+block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|msg
-parameter_list|)
-block|{
-if|if
-condition|(
-name|msg
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Error: %s\n\n"
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s"
-argument_list|,
-name|usage_msg
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 name|int
@@ -1190,6 +1234,9 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|int
+name|opt
+decl_stmt|;
 name|char
 modifier|*
 name|filename
@@ -1232,48 +1279,24 @@ name|mode
 operator|=
 name|MODE_SHOW_VALUE
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|int
-name|c
-init|=
-name|getopt
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-literal|"d:hlpt:"
-argument_list|)
-decl_stmt|;
-if|if
+while|while
 condition|(
-name|c
-operator|==
-operator|-
-literal|1
+operator|(
+name|opt
+operator|=
+name|util_getopt_long
+argument_list|()
+operator|)
+operator|!=
+name|EOF
 condition|)
-break|break;
+block|{
 switch|switch
 condition|(
-name|c
+name|opt
 condition|)
 block|{
-case|case
-literal|'h'
-case|:
-case|case
-literal|'?'
-case|:
-name|usage
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
+name|case_USAGE_COMMON_FLAGS
 case|case
 literal|'t'
 case|:
@@ -1296,7 +1319,7 @@ argument_list|)
 condition|)
 name|usage
 argument_list|(
-literal|"Invalid type string"
+literal|"invalid type string"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1361,7 +1384,7 @@ name|filename
 condition|)
 name|usage
 argument_list|(
-literal|"Missing filename"
+literal|"missing filename"
 argument_list|)
 expr_stmt|;
 name|argv
@@ -1396,7 +1419,7 @@ operator|)
 condition|)
 name|usage
 argument_list|(
-literal|"Must have an even number of arguments"
+literal|"must have an even number of arguments"
 argument_list|)
 expr_stmt|;
 if|if

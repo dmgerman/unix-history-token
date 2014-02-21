@@ -226,7 +226,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apicvar.h>
+file|<x86/apicvar.h>
 end_include
 
 begin_include
@@ -3722,9 +3722,6 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|pte
-decl_stmt|,
-modifier|*
-name|unused
 decl_stmt|;
 comment|/* 	 * Create an initial set of page tables to run the kernel in. 	 */
 name|create_pagetables
@@ -3874,28 +3871,21 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* 	 * CMAP1 is only used for the memory test. 	 */
+comment|/* 	 * Crashdump maps.  The first page is reused as CMAP1 for the 	 * memory test. 	 */
 name|SYSMAP
 argument_list|(
 argument|caddr_t
 argument_list|,
 argument|CMAP1
 argument_list|,
-argument|CADDR1
-argument_list|,
-literal|1
-argument_list|)
-comment|/* 	 * Crashdump maps. 	 */
-name|SYSMAP
-argument_list|(
-argument|caddr_t
-argument_list|,
-argument|unused
-argument_list|,
 argument|crashdumpmap
 argument_list|,
 argument|MAXDUMPPGS
 argument_list|)
+name|CADDR1
+operator|=
+name|crashdumpmap
+expr_stmt|;
 name|virtual_avail
 operator|=
 name|va
@@ -25482,7 +25472,7 @@ name|pm_type
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * RWX = 010 or 110 will cause an unconditional EPT misconfiguration 	 * so we don't let the referenced (aka EPT_PG_READ) bit to be cleared 	 * if the EPT_PG_WRITE bit is set. 	 */
+comment|/* 	 * XWR = 010 or 110 will cause an unconditional EPT misconfiguration 	 * so we don't let the referenced (aka EPT_PG_READ) bit to be cleared 	 * if the EPT_PG_WRITE bit is set. 	 */
 if|if
 condition|(
 operator|(
@@ -25498,7 +25488,7 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* 	 * RWX = 100 is allowed only if the PMAP_SUPPORTS_EXEC_ONLY is set. 	 */
+comment|/* 	 * XWR = 100 is allowed only if the PMAP_SUPPORTS_EXEC_ONLY is set. 	 */
 if|if
 condition|(
 operator|(

@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/CallingConvLower.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
@@ -222,11 +228,10 @@ block|,
 comment|/// Return with a flag operand, matched by 'blr'
 name|RET_FLAG
 block|,
-comment|/// R32 = MFCR(CRREG, INFLAG) - Represents the MFCRpseud/MFOCRF
-comment|/// instructions.  This copies the bits corresponding to the specified
-comment|/// CRREG into the resultant GPR.  Bits corresponding to other CR regs
-comment|/// are undefined.
-name|MFCR
+comment|/// R32 = MFOCRF(CRREG, INFLAG) - Represents the MFOCRF instruction.
+comment|/// This copies the bits corresponding to the specified CRREG into the
+comment|/// resultant GPR.  Bits corresponding to other CR regs are undefined.
+name|MFOCRF
 block|,
 comment|// EH_SJLJ_SETJMP - SjLj exception handling setjmp.
 name|EH_SJLJ_SETJMP
@@ -252,6 +257,12 @@ comment|/// condition register to branch on, OPC is the branch opcode to use (e.
 comment|/// PPC::BLE), DESTBB is the destination block to branch to, and INFLAG is
 comment|/// an optional input flag argument.
 name|COND_BRANCH
+block|,
+comment|/// CHAIN = BDNZ CHAIN, DESTBB - These are used to create counter-based
+comment|/// loops.
+name|BDNZ
+block|,
+name|BDZ
 block|,
 comment|/// F8RC = FADDRTZ F8RC, F8RC - This is an FADD done with rounding
 comment|/// towards zero.  Used only as part of the long double-to-int
@@ -283,61 +294,61 @@ name|CR6UNSET
 block|,
 comment|/// G8RC = ADDIS_GOT_TPREL_HA %X2, Symbol - Used by the initial-exec
 comment|/// TLS model, produces an ADDIS8 instruction that adds the GOT
-comment|/// base to sym@got@tprel@ha.
+comment|/// base to sym\@got\@tprel\@ha.
 name|ADDIS_GOT_TPREL_HA
 block|,
 comment|/// G8RC = LD_GOT_TPREL_L Symbol, G8RReg - Used by the initial-exec
 comment|/// TLS model, produces a LD instruction with base register G8RReg
-comment|/// and offset sym@got@tprel@l.  This completes the addition that
+comment|/// and offset sym\@got\@tprel\@l.  This completes the addition that
 comment|/// finds the offset of "sym" relative to the thread pointer.
 name|LD_GOT_TPREL_L
 block|,
 comment|/// G8RC = ADD_TLS G8RReg, Symbol - Used by the initial-exec TLS
 comment|/// model, produces an ADD instruction that adds the contents of
 comment|/// G8RReg to the thread pointer.  Symbol contains a relocation
-comment|/// sym@tls which is to be replaced by the thread pointer and
+comment|/// sym\@tls which is to be replaced by the thread pointer and
 comment|/// identifies to the linker that the instruction is part of a
 comment|/// TLS sequence.
 name|ADD_TLS
 block|,
 comment|/// G8RC = ADDIS_TLSGD_HA %X2, Symbol - For the general-dynamic TLS
 comment|/// model, produces an ADDIS8 instruction that adds the GOT base
-comment|/// register to sym@got@tlsgd@ha.
+comment|/// register to sym\@got\@tlsgd\@ha.
 name|ADDIS_TLSGD_HA
 block|,
 comment|/// G8RC = ADDI_TLSGD_L G8RReg, Symbol - For the general-dynamic TLS
 comment|/// model, produces an ADDI8 instruction that adds G8RReg to
-comment|/// sym@got@tlsgd@l.
+comment|/// sym\@got\@tlsgd\@l.
 name|ADDI_TLSGD_L
 block|,
 comment|/// G8RC = GET_TLS_ADDR %X3, Symbol - For the general-dynamic TLS
-comment|/// model, produces a call to __tls_get_addr(sym@tlsgd).
+comment|/// model, produces a call to __tls_get_addr(sym\@tlsgd).
 name|GET_TLS_ADDR
 block|,
 comment|/// G8RC = ADDIS_TLSLD_HA %X2, Symbol - For the local-dynamic TLS
 comment|/// model, produces an ADDIS8 instruction that adds the GOT base
-comment|/// register to sym@got@tlsld@ha.
+comment|/// register to sym\@got\@tlsld\@ha.
 name|ADDIS_TLSLD_HA
 block|,
 comment|/// G8RC = ADDI_TLSLD_L G8RReg, Symbol - For the local-dynamic TLS
 comment|/// model, produces an ADDI8 instruction that adds G8RReg to
-comment|/// sym@got@tlsld@l.
+comment|/// sym\@got\@tlsld\@l.
 name|ADDI_TLSLD_L
 block|,
 comment|/// G8RC = GET_TLSLD_ADDR %X3, Symbol - For the local-dynamic TLS
-comment|/// model, produces a call to __tls_get_addr(sym@tlsld).
+comment|/// model, produces a call to __tls_get_addr(sym\@tlsld).
 name|GET_TLSLD_ADDR
 block|,
 comment|/// G8RC = ADDIS_DTPREL_HA %X3, Symbol, Chain - For the
 comment|/// local-dynamic TLS model, produces an ADDIS8 instruction
-comment|/// that adds X3 to sym@dtprel@ha.  The Chain operand is needed
+comment|/// that adds X3 to sym\@dtprel\@ha. The Chain operand is needed
 comment|/// to tie this in place following a copy to %X3 from the result
 comment|/// of a GET_TLSLD_ADDR.
 name|ADDIS_DTPREL_HA
 block|,
 comment|/// G8RC = ADDI_DTPREL_L G8RReg, Symbol - For the local-dynamic TLS
 comment|/// model, produces an ADDI8 instruction that adds G8RReg to
-comment|/// sym@got@dtprel@l.
+comment|/// sym\@got\@dtprel\@l.
 name|ADDI_DTPREL_L
 block|,
 comment|/// VRRC = VADD_SPLAT Elt, EltSize - Temporary node to be expanded
@@ -345,6 +356,10 @@ comment|/// during instruction selection to optimize a BUILD_VECTOR into
 comment|/// operations on splats.  This is necessary to avoid losing these
 comment|/// optimizations due to constant folding.
 name|VADD_SPLAT
+block|,
+comment|/// CHAIN = SC CHAIN, Imm128 - System call.  The 7-bit unsigned
+comment|/// operand identifies the operating system entry point.
+name|SC
 block|,
 comment|/// CHAIN = STBRX CHAIN, GPRC, Ptr, Type - This is a
 comment|/// byte-swapping store instruction.  It byte-swaps the low "Type" bits of
@@ -378,16 +393,16 @@ name|LFIWZX
 block|,
 comment|/// G8RC = ADDIS_TOC_HA %X2, Symbol - For medium and large code model,
 comment|/// produces an ADDIS8 instruction that adds the TOC base register to
-comment|/// sym@toc@ha.
+comment|/// sym\@toc\@ha.
 name|ADDIS_TOC_HA
 block|,
 comment|/// G8RC = LD_TOC_L Symbol, G8RReg - For medium and large code model,
 comment|/// produces a LD instruction with base register G8RReg and offset
-comment|/// sym@toc@l.  Preceded by an ADDIS_TOC_HA to form a full 32-bit offset.
+comment|/// sym\@toc\@l. Preceded by an ADDIS_TOC_HA to form a full 32-bit offset.
 name|LD_TOC_L
 block|,
 comment|/// G8RC = ADDI_TOC_L G8RReg, Symbol - For medium code model, produces
-comment|/// an ADDI8 instruction that adds G8RReg to sym@toc@l.
+comment|/// an ADDI8 instruction that adds G8RReg to sym\@toc\@l.
 comment|/// Preceded by an ADDIS_TOC_HA to form a full 32-bit offset.
 name|ADDI_TOC_L
 block|}
@@ -536,16 +551,6 @@ name|PPCSubtarget
 operator|&
 name|PPCSubTarget
 block|;
-specifier|const
-name|PPCRegisterInfo
-operator|*
-name|PPCRegInfo
-block|;
-specifier|const
-name|PPCInstrInfo
-operator|*
-name|PPCII
-block|;
 name|public
 operator|:
 name|explicit
@@ -587,6 +592,8 @@ name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
@@ -628,7 +635,8 @@ specifier|const
 block|;
 comment|/// SelectAddressRegImm - Returns true if the address N can be represented
 comment|/// by a base register plus a signed 16-bit displacement [r+imm], and if it
-comment|/// is not better represented as reg+reg.
+comment|/// is not better represented as reg+reg.  If Aligned is true, only accept
+comment|/// displacements suitable for STD and friends, i.e. multiples of 4.
 name|bool
 name|SelectAddressRegImm
 argument_list|(
@@ -639,6 +647,8 @@ argument_list|,
 argument|SDValue&Base
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|,
+argument|bool Aligned
 argument_list|)
 specifier|const
 block|;
@@ -652,22 +662,6 @@ argument_list|,
 argument|SDValue&Base
 argument_list|,
 argument|SDValue&Index
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-comment|/// SelectAddressRegImmShift - Returns true if the address N can be
-comment|/// represented by a base register plus a signed 14-bit displacement
-comment|/// [r+imm*4].  Suitable for use by STD and friends.
-name|bool
-name|SelectAddressRegImmShift
-argument_list|(
-argument|SDValue N
-argument_list|,
-argument|SDValue&Disp
-argument_list|,
-argument|SDValue&Base
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -827,7 +821,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
@@ -866,29 +860,6 @@ argument_list|(
 argument|const AddrMode&AM
 argument_list|,
 argument|Type *Ty
-argument_list|)
-specifier|const
-block|;
-comment|/// isLegalAddressImmediate - Return true if the integer value can be used
-comment|/// as the offset of the target addressing mode for load / store of the
-comment|/// given type.
-name|virtual
-name|bool
-name|isLegalAddressImmediate
-argument_list|(
-argument|int64_t V
-argument_list|,
-argument|Type *Ty
-argument_list|)
-specifier|const
-block|;
-comment|/// isLegalAddressImmediate - Return true if the GlobalValue can be used as
-comment|/// the offset of the target addressing mode.
-name|virtual
-name|bool
-name|isLegalAddressImmediate
-argument_list|(
-argument|GlobalValue *GV
 argument_list|)
 specifier|const
 block|;
@@ -944,15 +915,28 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-comment|/// isFMAFasterThanMulAndAdd - Return true if an FMA operation is faster than
-comment|/// a pair of mul and add instructions. fmuladd intrinsics will be expanded to
-comment|/// FMAs when this method returns true (and FMAs are legal), otherwise fmuladd
-comment|/// is expanded to mul + add.
+comment|/// isFMAFasterThanFMulAndFAdd - Return true if an FMA operation is faster
+comment|/// than a pair of fmul and fadd instructions. fmuladd intrinsics will be
+comment|/// expanded to FMAs when this method returns true, otherwise fmuladd is
+comment|/// expanded to fmul + fadd.
 name|virtual
 name|bool
-name|isFMAFasterThanMulAndAdd
+name|isFMAFasterThanFMulAndFAdd
 argument_list|(
 argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+comment|/// createFastISel - This method returns a target-specific FastISel object,
+comment|/// or null if the target does not support "fast" instruction selection.
+name|virtual
+name|FastISel
+operator|*
+name|createFastISel
+argument_list|(
+argument|FunctionLoweringInfo&FuncInfo
+argument_list|,
+argument|const TargetLibraryInfo *LibInfo
 argument_list|)
 specifier|const
 block|;
@@ -1002,7 +986,7 @@ argument|SDValue&FPOpOut
 argument_list|,
 argument|bool isDarwinABI
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|)
 specifier|const
 block|;
@@ -1119,6 +1103,17 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerVACOPY
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|const PPCSubtarget&Subtarget
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerSTACKRESTORE
 argument_list|(
 argument|SDValue Op
@@ -1156,7 +1151,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|)
 specifier|const
 block|;
@@ -1263,7 +1258,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1276,7 +1271,7 @@ name|FinishCall
 argument_list|(
 argument|CallingConv::ID CallConv
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|bool isTailCall
 argument_list|,
@@ -1319,7 +1314,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1367,7 +1362,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -1384,7 +1379,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SDValue ArgVal
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|)
 specifier|const
 block|;
@@ -1414,7 +1409,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1433,7 +1428,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1452,7 +1447,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1473,7 +1468,7 @@ argument|ISD::ArgFlagsTy Flags
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|)
 specifier|const
 block|;
@@ -1496,7 +1491,7 @@ argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1523,7 +1518,7 @@ argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1550,7 +1545,7 @@ argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1593,7 +1588,129 @@ argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
+block|;
+name|CCAssignFn
+operator|*
+name|useFastISelCCs
+argument_list|(
+argument|unsigned Flag
+argument_list|)
+specifier|const
 block|;   }
+decl_stmt|;
+name|namespace
+name|PPC
+block|{
+name|FastISel
+modifier|*
+name|createFastISel
+parameter_list|(
+name|FunctionLoweringInfo
+modifier|&
+name|FuncInfo
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|LibInfo
+parameter_list|)
+function_decl|;
+block|}
+name|bool
+name|CC_PPC32_SVR4_Custom_Dummy
+argument_list|(
+name|unsigned
+operator|&
+name|ValNo
+argument_list|,
+name|MVT
+operator|&
+name|ValVT
+argument_list|,
+name|MVT
+operator|&
+name|LocVT
+argument_list|,
+name|CCValAssign
+operator|::
+name|LocInfo
+operator|&
+name|LocInfo
+argument_list|,
+name|ISD
+operator|::
+name|ArgFlagsTy
+operator|&
+name|ArgFlags
+argument_list|,
+name|CCState
+operator|&
+name|State
+argument_list|)
+decl_stmt|;
+name|bool
+name|CC_PPC32_SVR4_Custom_AlignArgRegs
+argument_list|(
+name|unsigned
+operator|&
+name|ValNo
+argument_list|,
+name|MVT
+operator|&
+name|ValVT
+argument_list|,
+name|MVT
+operator|&
+name|LocVT
+argument_list|,
+name|CCValAssign
+operator|::
+name|LocInfo
+operator|&
+name|LocInfo
+argument_list|,
+name|ISD
+operator|::
+name|ArgFlagsTy
+operator|&
+name|ArgFlags
+argument_list|,
+name|CCState
+operator|&
+name|State
+argument_list|)
+decl_stmt|;
+name|bool
+name|CC_PPC32_SVR4_Custom_AlignFPArgRegs
+argument_list|(
+name|unsigned
+operator|&
+name|ValNo
+argument_list|,
+name|MVT
+operator|&
+name|ValVT
+argument_list|,
+name|MVT
+operator|&
+name|LocVT
+argument_list|,
+name|CCValAssign
+operator|::
+name|LocInfo
+operator|&
+name|LocInfo
+argument_list|,
+name|ISD
+operator|::
+name|ArgFlagsTy
+operator|&
+name|ArgFlags
+argument_list|,
+name|CCState
+operator|&
+name|State
+argument_list|)
 decl_stmt|;
 block|}
 end_decl_stmt

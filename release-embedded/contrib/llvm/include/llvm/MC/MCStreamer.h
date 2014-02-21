@@ -133,6 +133,9 @@ name|class
 name|MCSection
 decl_stmt|;
 name|class
+name|MCStreamer
+decl_stmt|;
+name|class
 name|MCSymbol
 decl_stmt|;
 name|class
@@ -162,6 +165,198 @@ operator|*
 operator|>
 name|MCSectionSubPair
 expr_stmt|;
+comment|/// Target specific streamer interface. This is used so that targets can
+comment|/// implement support for target specific assembly directives.
+comment|///
+comment|/// If target foo wants to use this, it should implement 3 classes:
+comment|/// * FooTargetStreamer : public MCTargetStreamer
+comment|/// * FooTargetAsmSreamer : public FooTargetStreamer
+comment|/// * FooTargetELFStreamer : public FooTargetStreamer
+comment|///
+comment|/// FooTargetStreamer should have a pure virtual method for each directive. For
+comment|/// example, for a ".bar symbol_name" directive, it should have
+comment|/// virtual emitBar(const MCSymbol&Symbol) = 0;
+comment|///
+comment|/// The FooTargetAsmSreamer and FooTargetELFStreamer classes implement the
+comment|/// method. The assembly streamer just prints ".bar symbol_name". The object
+comment|/// streamer does whatever is needed to implement .bar in the object file.
+comment|///
+comment|/// In the assembly printer and parser the target streamer can be used by
+comment|/// calling getTargetStreamer and casting it to FooTargetStreamer:
+comment|///
+comment|/// MCTargetStreamer&TS = OutStreamer.getTargetStreamer();
+comment|/// FooTargetStreamer&ATS = static_cast<FooTargetStreamer&>(TS);
+comment|///
+comment|/// The base classes FooTargetAsmSreamer and FooTargetELFStreamer should *never*
+comment|/// be treated differently. Callers should always talk to a FooTargetStreamer.
+name|class
+name|MCTargetStreamer
+block|{
+name|protected
+label|:
+name|MCStreamer
+modifier|*
+name|Streamer
+decl_stmt|;
+name|public
+label|:
+name|virtual
+operator|~
+name|MCTargetStreamer
+argument_list|()
+expr_stmt|;
+name|void
+name|setStreamer
+parameter_list|(
+name|MCStreamer
+modifier|*
+name|S
+parameter_list|)
+block|{
+name|Streamer
+operator|=
+name|S
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
+comment|// FIXME: declared here because it is used from
+comment|// lib/CodeGen/AsmPrinter/ARMException.cpp.
+name|class
+name|ARMTargetStreamer
+range|:
+name|public
+name|MCTargetStreamer
+block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
+name|virtual
+name|void
+name|emitFnStart
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|emitFnEnd
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|emitCantUnwind
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|emitPersonality
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Personality
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|emitHandlerData
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|emitSetFP
+argument_list|(
+argument|unsigned FpReg
+argument_list|,
+argument|unsigned SpReg
+argument_list|,
+argument|int64_t Offset =
+literal|0
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|emitPad
+argument_list|(
+argument|int64_t Offset
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|emitRegSave
+argument_list|(
+argument|const SmallVectorImpl<unsigned>&RegList
+argument_list|,
+argument|bool isVector
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|switchVendor
+argument_list|(
+argument|StringRef Vendor
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|emitAttribute
+argument_list|(
+argument|unsigned Attribute
+argument_list|,
+argument|unsigned Value
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|emitTextAttribute
+argument_list|(
+argument|unsigned Attribute
+argument_list|,
+argument|StringRef String
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|emitFPU
+argument_list|(
+argument|unsigned FPU
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|finishAttributeSection
+argument_list|()
+operator|=
+literal|0
+block|; }
+decl_stmt|;
 comment|/// MCStreamer - Streaming machine code generation interface.  This interface
 comment|/// is intended to provide a programatic interface that is very similar to the
 comment|/// level that an assembler .s file provides.  It has callbacks to emit bytes,
@@ -174,41 +369,16 @@ comment|///
 name|class
 name|MCStreamer
 block|{
-name|public
-label|:
-enum|enum
-name|StreamerKind
-block|{
-name|SK_AsmStreamer
-block|,
-name|SK_NullStreamer
-block|,
-name|SK_RecordStreamer
-block|,
-comment|// MCObjectStreamer subclasses.
-name|SK_ELFStreamer
-block|,
-name|SK_ARMELFStreamer
-block|,
-name|SK_MachOStreamer
-block|,
-name|SK_PureStreamer
-block|,
-name|SK_MipsELFStreamer
-block|,
-name|SK_WinCOFFStreamer
-block|}
-enum|;
-name|private
-label|:
-specifier|const
-name|StreamerKind
-name|Kind
-decl_stmt|;
 name|MCContext
 modifier|&
 name|Context
 decl_stmt|;
+name|OwningPtr
+operator|<
+name|MCTargetStreamer
+operator|>
+name|TargetStreamer
+expr_stmt|;
 name|MCStreamer
 argument_list|(
 argument|const MCStreamer&
@@ -283,6 +453,18 @@ name|MCSymbol
 modifier|*
 name|LastSymbol
 decl_stmt|;
+comment|// SymbolOrdering - Tracks an index to represent the order
+comment|// a symbol was emitted in. Zero means we did not emit that symbol.
+name|DenseMap
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|SymbolOrdering
+expr_stmt|;
 comment|/// SectionStack - This is stack of current and previous section
 comment|/// values saved by PushSection.
 name|SmallVector
@@ -307,11 +489,15 @@ name|protected
 label|:
 name|MCStreamer
 argument_list|(
-argument|StreamerKind Kind
+name|MCContext
+operator|&
+name|Ctx
 argument_list|,
-argument|MCContext&Ctx
+name|MCTargetStreamer
+operator|*
+name|TargetStreamer
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 specifier|const
 name|MCExpr
 modifier|*
@@ -380,6 +566,10 @@ function_decl|;
 name|void
 name|EmitFrames
 parameter_list|(
+name|MCAsmBackend
+modifier|*
+name|MAB
+parameter_list|,
 name|bool
 name|usingCFI
 parameter_list|)
@@ -397,6 +587,14 @@ name|void
 name|EmitW64Tables
 parameter_list|()
 function_decl|;
+name|virtual
+name|void
+name|EmitRawTextImpl
+parameter_list|(
+name|StringRef
+name|String
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|virtual
@@ -404,15 +602,6 @@ operator|~
 name|MCStreamer
 argument_list|()
 expr_stmt|;
-name|StreamerKind
-name|getKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
-return|;
-block|}
 comment|/// State management
 comment|///
 name|virtual
@@ -428,6 +617,21 @@ specifier|const
 block|{
 return|return
 name|Context
+return|;
+block|}
+name|MCTargetStreamer
+modifier|&
+name|getTargetStreamer
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|TargetStreamer
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|TargetStreamer
 return|;
 block|}
 name|unsigned
@@ -463,6 +667,7 @@ name|MCDwarfFrameInfo
 operator|>
 name|getFrameInfos
 argument_list|()
+specifier|const
 block|{
 return|return
 name|FrameInfos
@@ -495,6 +700,14 @@ name|i
 index|]
 return|;
 block|}
+name|void
+name|generateCompactUnwindEncodings
+parameter_list|(
+name|MCAsmBackend
+modifier|*
+name|MAB
+parameter_list|)
+function_decl|;
 comment|/// @name Assembly File Formatting.
 comment|/// @{
 comment|/// isVerboseAsm - Return true if this streamer supports verbose assembly
@@ -610,6 +823,36 @@ return|;
 return|return
 name|MCSectionSubPair
 argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// GetSymbolOrder - Returns an index to represent the order
+end_comment
+
+begin_comment
+comment|/// a symbol was emitted in. (zero if we did not emit that symbol)
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|GetSymbolOrder
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Sym
+argument_list|)
+decl|const
+block|{
+return|return
+name|SymbolOrdering
+operator|.
+name|lookup
+argument_list|(
+name|Sym
+argument_list|)
 return|;
 block|}
 end_decl_stmt
@@ -1044,6 +1287,38 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// AssignSection - Sets the symbol's section.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Each emitted symbol will be tracked in the ordering table,
+end_comment
+
+begin_comment
+comment|/// so we can sort on them later.
+end_comment
+
+begin_function_decl
+name|void
+name|AssignSection
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|,
+specifier|const
+name|MCSection
+modifier|*
+name|Section
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitLabel - Emit a label for @p Symbol into the current section.
 end_comment
 
@@ -1327,7 +1602,7 @@ end_comment
 
 begin_function_decl
 name|virtual
-name|void
+name|bool
 name|EmitSymbolAttribute
 parameter_list|(
 name|MCSymbol
@@ -1763,11 +2038,6 @@ name|EmitBytes
 parameter_list|(
 name|StringRef
 name|Data
-parameter_list|,
-name|unsigned
-name|AddrSpace
-init|=
-literal|0
 parameter_list|)
 init|=
 literal|0
@@ -1822,9 +2092,6 @@ name|Value
 parameter_list|,
 name|unsigned
 name|Size
-parameter_list|,
-name|unsigned
-name|AddrSpace
 parameter_list|)
 init|=
 literal|0
@@ -1842,11 +2109,6 @@ name|Value
 parameter_list|,
 name|unsigned
 name|Size
-parameter_list|,
-name|unsigned
-name|AddrSpace
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1869,11 +2131,6 @@ name|Value
 parameter_list|,
 name|unsigned
 name|Size
-parameter_list|,
-name|unsigned
-name|AddrSpace
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1905,11 +2162,6 @@ name|Value
 parameter_list|,
 name|unsigned
 name|Size
-parameter_list|,
-name|unsigned
-name|AddrSpace
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1963,11 +2215,6 @@ name|unsigned
 name|Padding
 init|=
 literal|0
-parameter_list|,
-name|unsigned
-name|AddrSpace
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1986,11 +2233,6 @@ name|EmitSLEB128IntValue
 parameter_list|(
 name|int64_t
 name|Value
-parameter_list|,
-name|unsigned
-name|AddrSpace
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2014,11 +2256,6 @@ name|Sym
 parameter_list|,
 name|unsigned
 name|Size
-parameter_list|,
-name|unsigned
-name|AddrSpace
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2107,47 +2344,28 @@ name|NumBytes
 parameter_list|,
 name|uint8_t
 name|FillValue
-parameter_list|,
-name|unsigned
-name|AddrSpace
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitZeros - Emit NumBytes worth of zeros.  This is a convenience
+comment|/// \brief Emit NumBytes worth of zeros.
 end_comment
 
 begin_comment
-comment|/// function that just wraps EmitFill.
+comment|/// This function properly handles data in virtual sections.
 end_comment
 
-begin_function
+begin_function_decl
+name|virtual
 name|void
 name|EmitZeros
 parameter_list|(
 name|uint64_t
 name|NumBytes
-parameter_list|,
-name|unsigned
-name|AddrSpace
-init|=
-literal|0
 parameter_list|)
-block|{
-name|EmitFill
-argument_list|(
-name|NumBytes
-argument_list|,
-literal|0
-argument_list|,
-name|AddrSpace
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// EmitValueToAlignment - Emit some number of copies of @p Value until
@@ -2390,6 +2608,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Emit the "identifiers" directive.  This implements the
+end_comment
+
+begin_comment
+comment|/// '.ident "version foo"' assembler directive.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|EmitIdent
+parameter_list|(
+name|StringRef
+name|IdentString
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
 comment|/// EmitDwarfFileDirective - Associate a filename with a specified logical
 end_comment
 
@@ -2501,7 +2738,7 @@ name|MCSymbol
 modifier|*
 name|Label
 parameter_list|)
-block|{     }
+block|{}
 end_function
 
 begin_function_decl
@@ -2747,6 +2984,14 @@ parameter_list|,
 name|int64_t
 name|Register2
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitCFIWindowSave
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -3001,17 +3246,6 @@ comment|/// indicated by the hasRawTextSupport() predicate.  By default this abo
 end_comment
 
 begin_function_decl
-name|virtual
-name|void
-name|EmitRawText
-parameter_list|(
-name|StringRef
-name|String
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|EmitRawText
 parameter_list|(
@@ -3024,135 +3258,16 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ARM-related methods.
+comment|/// Flush - Causes any cached state to be written out.
 end_comment
 
-begin_comment
-comment|/// FIXME: Eventually we should have some "target MC streamer" and move
-end_comment
-
-begin_comment
-comment|/// these methods there.
-end_comment
-
-begin_function_decl
+begin_function
 name|virtual
 name|void
-name|EmitFnStart
+name|Flush
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitFnEnd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitCantUnwind
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitPersonality
-parameter_list|(
-specifier|const
-name|MCSymbol
-modifier|*
-name|Personality
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitHandlerData
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitSetFP
-parameter_list|(
-name|unsigned
-name|FpReg
-parameter_list|,
-name|unsigned
-name|SpReg
-parameter_list|,
-name|int64_t
-name|Offset
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitPad
-parameter_list|(
-name|int64_t
-name|Offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|virtual
-name|void
-name|EmitRegSave
-argument_list|(
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|RegList
-argument_list|,
-name|bool
-name|isVector
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// PPC-related methods.
-end_comment
-
-begin_comment
-comment|/// FIXME: Eventually replace it with some "target MC streamer" and move
-end_comment
-
-begin_comment
-comment|/// these methods there.
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitTCEntry
-parameter_list|(
-specifier|const
-name|MCSymbol
-modifier|&
-name|S
-parameter_list|)
-function_decl|;
-end_function_decl
+block|{}
+end_function
 
 begin_comment
 comment|/// FinishImpl - Streamer specific finalization.
@@ -3276,6 +3391,10 @@ parameter_list|(
 name|MCContext
 modifier|&
 name|Ctx
+parameter_list|,
+name|MCTargetStreamer
+modifier|*
+name|TargetStreamer
 parameter_list|,
 name|formatted_raw_ostream
 modifier|&
@@ -3425,6 +3544,10 @@ parameter_list|(
 name|MCContext
 modifier|&
 name|Ctx
+parameter_list|,
+name|MCTargetStreamer
+modifier|*
+name|TargetStreamer
 parameter_list|,
 name|MCAsmBackend
 modifier|&

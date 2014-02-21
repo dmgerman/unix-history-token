@@ -408,6 +408,15 @@ operator|>
 expr|>
 name|ForwardRefInstMetadata
 expr_stmt|;
+name|SmallVector
+operator|<
+name|Instruction
+operator|*
+operator|,
+literal|64
+operator|>
+name|InstsWithTBAATag
+expr_stmt|;
 comment|// Type resolution handling data structures.  The location is set when we
 comment|// have processed a use of the type but not a definition yet.
 name|StringMap
@@ -1326,7 +1335,7 @@ name|inAttrGrp
 argument_list|,
 name|LocTy
 operator|&
-name|NoBuiltinLoc
+name|BuiltinLoc
 argument_list|)
 decl_stmt|;
 comment|// Type Parsing.

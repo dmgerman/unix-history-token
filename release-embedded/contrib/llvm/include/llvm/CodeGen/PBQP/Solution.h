@@ -96,11 +96,9 @@ name|map
 operator|<
 name|Graph
 operator|::
-name|ConstNodeItr
+name|NodeId
 operator|,
 name|unsigned
-operator|,
-name|NodeItrComparator
 operator|>
 name|SelectionsMap
 expr_stmt|;
@@ -237,15 +235,15 @@ name|rNReductions
 return|;
 block|}
 comment|/// \brief Set the selection for a given node.
-comment|/// @param nItr Node iterator.
-comment|/// @param selection Selection for nItr.
+comment|/// @param nodeId Node id.
+comment|/// @param selection Selection for nodeId.
 name|void
 name|setSelection
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nodeId
 argument_list|,
 name|unsigned
 name|selection
@@ -253,22 +251,22 @@ argument_list|)
 block|{
 name|selections
 index|[
-name|nItr
+name|nodeId
 index|]
 operator|=
 name|selection
 expr_stmt|;
 block|}
 comment|/// \brief Get a node's selection.
-comment|/// @param nItr Node iterator.
-comment|/// @return The selection for nItr;
+comment|/// @param nodeId Node id.
+comment|/// @return The selection for nodeId;
 name|unsigned
 name|getSelection
 argument_list|(
 name|Graph
 operator|::
-name|ConstNodeItr
-name|nItr
+name|NodeId
+name|nodeId
 argument_list|)
 decl|const
 block|{
@@ -281,7 +279,7 @@ name|selections
 operator|.
 name|find
 argument_list|(
-name|nItr
+name|nodeId
 argument_list|)
 expr_stmt|;
 name|assert

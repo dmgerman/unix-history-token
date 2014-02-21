@@ -60,6 +60,12 @@ end_comment
 begin_undef
 undef|#
 directive|undef
+name|NetBSD
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|mips
 end_undef
 
@@ -73,25 +79,27 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// Triple - Helper class for working with target triples.
+comment|/// Triple - Helper class for working with autoconf configuration names. For
+comment|/// historical reasons, we also call these 'triples' (they used to contain
+comment|/// exactly three fields).
 comment|///
-comment|/// Target triples are strings in the canonical form:
+comment|/// Configuration names are strings in the canonical form:
 comment|///   ARCHITECTURE-VENDOR-OPERATING_SYSTEM
 comment|/// or
 comment|///   ARCHITECTURE-VENDOR-OPERATING_SYSTEM-ENVIRONMENT
 comment|///
 comment|/// This class is used for clients which want to support arbitrary
-comment|/// target triples, but also want to implement certain special
-comment|/// behavior for particular targets. This class isolates the mapping
-comment|/// from the components of the target triple to well known IDs.
+comment|/// configuration names, but also want to implement certain special
+comment|/// behavior for particular configurations. This class isolates the mapping
+comment|/// from the components of the configuration name to well known IDs.
 comment|///
 comment|/// At its core the Triple class is designed to be a wrapper for a triple
 comment|/// string; the constructor does not change or normalize the triple string.
 comment|/// Clients that need to handle the non-canonical triples that users often
 comment|/// specify should use the normalize method.
 comment|///
-comment|/// See autoconf/config.guess for a glimpse into what triples look like in
-comment|/// practice.
+comment|/// See autoconf/config.guess for a glimpse into what configuration names
+comment|/// look like in practice.
 name|class
 name|Triple
 block|{
@@ -132,6 +140,9 @@ comment|// PPC: powerpc
 name|ppc64
 block|,
 comment|// PPC64: powerpc64, ppu
+name|ppc64le
+block|,
+comment|// PPC64LE: powerpc64le
 name|r600
 block|,
 comment|// R600: AMD GPUs HD2XXX - HD6XXX
@@ -159,9 +170,6 @@ comment|// X86-64: amd64, x86_64
 name|xcore
 block|,
 comment|// XCore: xcore
-name|mblaze
-block|,
-comment|// MBlaze: mblaze
 name|nvptx
 block|,
 comment|// NVPTX: 32-bit
@@ -199,6 +207,8 @@ block|,
 name|Freescale
 block|,
 name|IBM
+block|,
+name|NVIDIA
 block|}
 enum|;
 enum|enum
@@ -253,6 +263,12 @@ comment|// BG/P Compute-Node Kernel
 name|Bitrig
 block|,
 name|AIX
+block|,
+name|CUDA
+block|,
+comment|// NVIDIA CUDA
+name|NVCL
+comment|// NVIDIA OpenCL
 block|}
 enum|;
 enum|enum
@@ -877,7 +893,29 @@ operator|::
 name|MinGW32
 return|;
 block|}
-comment|/// isOSWindows - Is this a "Windows" OS.
+comment|/// \brief Is this a "Windows" OS targeting a "MSVCRT.dll" environment.
+name|bool
+name|isOSMSVCRT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Win32
+operator|||
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MinGW32
+return|;
+block|}
+comment|/// \brief Tests whether the OS is Windows.
 name|bool
 name|isOSWindows
 argument_list|()
@@ -908,6 +946,21 @@ operator|==
 name|Triple
 operator|::
 name|NaCl
+return|;
+block|}
+comment|/// \brief Tests whether the OS is Linux.
+name|bool
+name|isOSLinux
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Linux
 return|;
 block|}
 comment|/// \brief Tests whether the OS uses the ELF binary format.

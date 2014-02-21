@@ -409,6 +409,9 @@ name|ArrayToPointer
 parameter_list|(
 name|Loc
 name|Array
+parameter_list|,
+name|QualType
+name|ElementTy
 parameter_list|)
 init|=
 literal|0
@@ -580,8 +583,6 @@ comment|///  invalidate additional regions that may have changed based on access
 comment|///  the given regions. Optionally, invalidates non-static globals as well.
 comment|/// \param[in] store The initial store
 comment|/// \param[in] Values The values to invalidate.
-comment|/// \param[in] ConstValues The values to invalidate; these are known to be
-comment|///   const, so only regions accesible from them should be invalidated.
 comment|/// \param[in] E The current statement being evaluated. Used to conjure
 comment|///   symbols to mark the values of invalidated regions.
 comment|/// \param[in] Count The current block count. Used to conjure
@@ -590,13 +591,10 @@ comment|/// \param[in] Call The call expression which will be used to determine 
 comment|///   globals should get invalidated.
 comment|/// \param[in,out] IS A set to fill with any symbols that are no longer
 comment|///   accessible. Pass \c NULL if this information will not be used.
-comment|/// \param[in,out] ConstIS A set to fill with any symbols corresponding to
-comment|///   the ConstValues.
+comment|/// \param[in] ITraits Information about invalidation for a particular
+comment|///   region/symbol.
 comment|/// \param[in,out] InvalidatedTopLevel A vector to fill with regions
-comment|////  explicitely being invalidated. Pass \c NULL if this
-comment|///   information will not be used.
-comment|/// \param[in,out] InvalidatedTopLevelConst A vector to fill with const
-comment|////  regions explicitely being invalidated. Pass \c NULL if this
+comment|////  explicitly being invalidated. Pass \c NULL if this
 comment|///   information will not be used.
 comment|/// \param[in,out] Invalidated A vector to fill with any regions being
 comment|///   invalidated. This should include any regions explicitly invalidated
@@ -614,12 +612,6 @@ operator|<
 name|SVal
 operator|>
 name|Values
-argument_list|,
-name|ArrayRef
-operator|<
-name|SVal
-operator|>
-name|ConstValues
 argument_list|,
 specifier|const
 name|Expr
@@ -643,17 +635,13 @@ name|InvalidatedSymbols
 operator|&
 name|IS
 argument_list|,
-name|InvalidatedSymbols
+name|RegionAndSymbolInvalidationTraits
 operator|&
-name|ConstIS
+name|ITraits
 argument_list|,
 name|InvalidatedRegions
 operator|*
 name|InvalidatedTopLevel
-argument_list|,
-name|InvalidatedRegions
-operator|*
-name|InvalidatedTopLevelConst
 argument_list|,
 name|InvalidatedRegions
 operator|*
@@ -812,6 +800,7 @@ argument_list|,
 argument|SVal val
 argument_list|)
 block|;
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()

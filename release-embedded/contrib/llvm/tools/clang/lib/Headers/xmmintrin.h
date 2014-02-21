@@ -1139,6 +1139,10 @@ return|return
 operator|(
 name|__m128
 operator|)
+name|__builtin_shufflevector
+argument_list|(
+name|__a
+argument_list|,
 name|__builtin_ia32_cmpss
 argument_list|(
 name|__b
@@ -1146,6 +1150,15 @@ argument_list|,
 name|__a
 argument_list|,
 literal|1
+argument_list|)
+argument_list|,
+literal|4
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
 argument_list|)
 return|;
 block|}
@@ -1213,6 +1226,10 @@ return|return
 operator|(
 name|__m128
 operator|)
+name|__builtin_shufflevector
+argument_list|(
+name|__a
+argument_list|,
 name|__builtin_ia32_cmpss
 argument_list|(
 name|__b
@@ -1220,6 +1237,15 @@ argument_list|,
 name|__a
 argument_list|,
 literal|2
+argument_list|)
+argument_list|,
+literal|4
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
 argument_list|)
 return|;
 block|}
@@ -1509,6 +1535,10 @@ return|return
 operator|(
 name|__m128
 operator|)
+name|__builtin_shufflevector
+argument_list|(
+name|__a
+argument_list|,
 name|__builtin_ia32_cmpss
 argument_list|(
 name|__b
@@ -1516,6 +1546,15 @@ argument_list|,
 name|__a
 argument_list|,
 literal|5
+argument_list|)
+argument_list|,
+literal|4
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
 argument_list|)
 return|;
 block|}
@@ -1583,6 +1622,10 @@ return|return
 operator|(
 name|__m128
 operator|)
+name|__builtin_shufflevector
+argument_list|(
+name|__a
+argument_list|,
 name|__builtin_ia32_cmpss
 argument_list|(
 name|__b
@@ -1590,6 +1633,15 @@ argument_list|,
 name|__a
 argument_list|,
 literal|6
+argument_list|)
+argument_list|,
+literal|4
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
 argument_list|)
 return|;
 block|}
@@ -5407,16 +5459,6 @@ name|_m_
 value|_mm_
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|__has_feature
-argument_list|(
-name|modules
-argument_list|)
-end_if
-
 begin_comment
 comment|/* Ugly hack for backwards-compatibility (compatible with gcc) */
 end_comment
@@ -5432,11 +5474,6 @@ include|#
 directive|include
 file|<emmintrin.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

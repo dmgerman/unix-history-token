@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.106 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.108 2013/12/19 00:10:30 djm Exp $ */
 end_comment
 
 begin_comment
@@ -180,6 +180,8 @@ name|_PATH_SSH_CLIENT_ID_ECDSA
 block|,
 endif|#
 directive|endif
+name|_PATH_SSH_CLIENT_ID_ED25519
+block|,
 name|_PATH_SSH_CLIENT_IDENTITY
 block|,
 name|NULL
@@ -1237,6 +1239,8 @@ block|{
 name|char
 modifier|*
 name|pin
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|ret
@@ -1244,6 +1248,14 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|add
+condition|)
+block|{
+if|if
+condition|(
+operator|(
 name|pin
 operator|=
 name|read_passphrase
@@ -1252,10 +1264,7 @@ literal|"Enter passphrase for PKCS#11: "
 argument_list|,
 name|RP_ALLOW_STDIN
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pin
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -1263,6 +1272,7 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
 if|if
 condition|(
 name|ssh_update_card
@@ -1273,6 +1283,12 @@ name|add
 argument_list|,
 name|id
 argument_list|,
+name|pin
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
 name|pin
 argument_list|,
 name|lifetime

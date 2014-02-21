@@ -121,6 +121,14 @@ name|Expr
 modifier|*
 name|User
 decl_stmt|;
+comment|/// Is this use uninitialized whenever the function is called?
+name|bool
+name|UninitAfterCall
+decl_stmt|;
+comment|/// Is this use uninitialized whenever the variable declaration is reached?
+name|bool
+name|UninitAfterDecl
+decl_stmt|;
 comment|/// Does this use always see an uninitialized value?
 name|bool
 name|AlwaysUninit
@@ -149,6 +157,16 @@ argument_list|(
 name|User
 argument_list|)
 operator|,
+name|UninitAfterCall
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|UninitAfterDecl
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|AlwaysUninit
 argument_list|(
 argument|AlwaysUninit
@@ -167,6 +185,22 @@ argument_list|(
 name|B
 argument_list|)
 block|;   }
+name|void
+name|setUninitAfterCall
+argument_list|()
+block|{
+name|UninitAfterCall
+operator|=
+name|true
+block|; }
+name|void
+name|setUninitAfterDecl
+argument_list|()
+block|{
+name|UninitAfterDecl
+operator|=
+name|true
+block|; }
 comment|/// Get the expression containing the uninitialized use.
 specifier|const
 name|Expr
@@ -189,6 +223,14 @@ block|,
 comment|/// The use is uninitialized whenever a certain branch is taken.
 name|Sometimes
 block|,
+comment|/// The use is uninitialized the first time it is reached after we reach
+comment|/// the variable's declaration.
+name|AfterDecl
+block|,
+comment|/// The use is uninitialized the first time it is reached after the function
+comment|/// is called.
+name|AfterCall
+block|,
 comment|/// The use is always uninitialized.
 name|Always
 block|}
@@ -203,6 +245,14 @@ return|return
 name|AlwaysUninit
 operator|?
 name|Always
+operator|:
+name|UninitAfterCall
+operator|?
+name|AfterCall
+operator|:
+name|UninitAfterDecl
+operator|?
+name|AfterDecl
 operator|:
 operator|!
 name|branch_empty

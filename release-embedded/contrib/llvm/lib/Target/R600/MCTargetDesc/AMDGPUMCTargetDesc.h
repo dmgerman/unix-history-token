@@ -161,6 +161,11 @@ name|Target
 modifier|&
 name|T
 parameter_list|,
+specifier|const
+name|MCRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
 name|StringRef
 name|TT
 parameter_list|,

@@ -169,9 +169,9 @@ name|public
 name|ScheduleHazardRecognizer
 block|{
 specifier|const
-name|TargetInstrInfo
+name|TargetMachine
 operator|&
-name|TII
+name|TM
 block|;
 name|unsigned
 name|NumIssued
@@ -216,9 +216,9 @@ operator|:
 name|PPCHazardRecognizer970
 argument_list|(
 specifier|const
-name|TargetInstrInfo
+name|TargetMachine
 operator|&
-name|TII
+name|TM
 argument_list|)
 block|;
 name|virtual

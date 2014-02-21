@@ -132,11 +132,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|NoFramePointerElimNonLeaf
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|LessPreciseFPMADOption
 argument_list|(
 name|false
@@ -172,11 +167,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|JITExceptionHandling
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|JITEmitDebugInfo
 argument_list|(
 name|false
@@ -198,16 +188,6 @@ name|false
 argument_list|)
 operator|,
 name|StackAlignmentOverride
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|RealignStack
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|SSPBufferSize
 argument_list|(
 literal|0
 argument_list|)
@@ -262,15 +242,6 @@ comment|/// specified on the command line.  If the target supports the frame poi
 comment|/// elimination optimization, this option should disable it.
 name|unsigned
 name|NoFramePointerElim
-range|:
-literal|1
-decl_stmt|;
-comment|/// NoFramePointerElimNonLeaf - This flag is enabled when the
-comment|/// -disable-non-leaf-fp-elim is specified on the command line. If the
-comment|/// target supports the frame pointer elimination optimization, this option
-comment|/// should disable it for non-leaf functions.
-name|unsigned
-name|NoFramePointerElimNonLeaf
 range|:
 literal|1
 decl_stmt|;
@@ -364,13 +335,6 @@ name|NoZerosInBSS
 range|:
 literal|1
 decl_stmt|;
-comment|/// JITExceptionHandling - This flag indicates that the JIT should emit
-comment|/// exception handling information.
-name|unsigned
-name|JITExceptionHandling
-range|:
-literal|1
-decl_stmt|;
 comment|/// JITEmitDebugInfo - This flag indicates that the JIT should try to emit
 comment|/// debug information and notify a debugger about it.
 name|unsigned
@@ -407,18 +371,6 @@ decl_stmt|;
 comment|/// StackAlignmentOverride - Override default stack alignment for target.
 name|unsigned
 name|StackAlignmentOverride
-decl_stmt|;
-comment|/// RealignStack - This flag indicates whether the stack should be
-comment|/// automatically realigned, if needed.
-name|unsigned
-name|RealignStack
-range|:
-literal|1
-decl_stmt|;
-comment|/// SSPBufferSize - The minimum size of buffers that will receive stack
-comment|/// smashing protection when -fstack-protection is used.
-name|unsigned
-name|SSPBufferSize
 decl_stmt|;
 comment|/// EnableFastISel - This flag enables fast-path instruction selection
 comment|/// which trades away generated code quality in favor of reducing
@@ -494,6 +446,10 @@ operator|::
 name|FPOpFusionMode
 name|AllowFPOpFusion
 expr_stmt|;
+block|}
+empty_stmt|;
+comment|// Comparison operators:
+specifier|inline
 name|bool
 name|operator
 operator|==
@@ -501,10 +457,141 @@ operator|(
 specifier|const
 name|TargetOptions
 operator|&
+name|LHS
+operator|,
+specifier|const
+name|TargetOptions
+operator|&
+name|RHS
 operator|)
-expr_stmt|;
+block|{
+define|#
+directive|define
+name|ARE_EQUAL
+parameter_list|(
+name|X
+parameter_list|)
+value|LHS.X == RHS.X
+return|return
+name|ARE_EQUAL
+argument_list|(
+name|UnsafeFPMath
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|NoInfsFPMath
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|NoNaNsFPMath
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|HonorSignDependentRoundingFPMathOption
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|UseSoftFloat
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|NoZerosInBSS
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|JITEmitDebugInfo
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|JITEmitDebugInfoToDisk
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|GuaranteedTailCallOpt
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|DisableTailCalls
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|StackAlignmentOverride
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|EnableFastISel
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|PositionIndependentExecutable
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|EnableSegmentedStacks
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|UseInitArray
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|TrapFuncName
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|FloatABIType
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|AllowFPOpFusion
+argument_list|)
+return|;
+undef|#
+directive|undef
+name|ARE_EQUAL
 block|}
-empty_stmt|;
+specifier|inline
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|TargetOptions
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|TargetOptions
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+operator|!
+operator|(
+name|LHS
+operator|==
+name|RHS
+operator|)
+return|;
+block|}
 block|}
 end_decl_stmt
 

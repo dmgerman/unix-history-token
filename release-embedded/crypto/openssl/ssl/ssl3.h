@@ -1203,6 +1203,22 @@ name|next_proto_neg_seen
 decl_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_TLSEXT
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC
+comment|/* This is set to true if we believe that this is a version of Safari 	 * running on OS X 10.6 or newer. We wish to know this because Safari 	 * on 10.8 .. 10.8.3 has broken ECDHE-ECDSA support. */
+name|char
+name|is_probably_safari
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* !OPENSSL_NO_EC */
+endif|#
+directive|endif
+comment|/* !OPENSSL_NO_TLSEXT */
 block|}
 name|SSL3_STATE
 typedef|;

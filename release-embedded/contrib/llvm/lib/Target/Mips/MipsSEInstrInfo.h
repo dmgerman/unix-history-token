@@ -206,7 +206,7 @@ specifier|const
 block|;
 name|virtual
 name|unsigned
-name|GetOppositeBranchOpc
+name|getOppositeBranchOpc
 argument_list|(
 argument|unsigned Opc
 argument_list|)
@@ -248,14 +248,14 @@ name|private
 operator|:
 name|virtual
 name|unsigned
-name|GetAnalyzableBrOpc
+name|getAnalyzableBrOpc
 argument_list|(
 argument|unsigned Opc
 argument_list|)
 specifier|const
 block|;
 name|void
-name|ExpandRetRA
+name|expandRetRA
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -265,26 +265,97 @@ argument|unsigned Opc
 argument_list|)
 specifier|const
 block|;
-name|void
-name|ExpandExtractElementF64
+name|std
+operator|::
+name|pair
+operator|<
+name|bool
+block|,
+name|bool
+operator|>
+name|compareOpndSize
 argument_list|(
-argument|MachineBasicBlock&MBB
+argument|unsigned Opc
 argument_list|,
-argument|MachineBasicBlock::iterator I
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
 name|void
-name|ExpandBuildPairF64
+name|expandPseudoMFHiLo
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned NewOpc
 argument_list|)
 specifier|const
 block|;
 name|void
-name|ExpandEhReturn
+name|expandPseudoMTLoHi
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned LoOpc
+argument_list|,
+argument|unsigned HiOpc
+argument_list|,
+argument|bool HasExplicitDef
+argument_list|)
+specifier|const
+block|;
+comment|/// Expand pseudo Int-to-FP conversion instructions.
+comment|///
+comment|/// For example, the following pseudo instruction
+comment|///  PseudoCVT_D32_W D2, A5
+comment|/// gets expanded into these two instructions:
+comment|///  MTC1 F4, A5
+comment|///  CVT_D32_W D2, F4
+comment|///
+comment|/// We do this expansion post-RA to avoid inserting a floating point copy
+comment|/// instruction between MTC1 and CVT_D32_W.
+name|void
+name|expandCvtFPInt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned CvtOpc
+argument_list|,
+argument|unsigned MovOpc
+argument_list|,
+argument|bool IsI64
+argument_list|)
+specifier|const
+block|;
+name|void
+name|expandExtractElementF64
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|bool FP64
+argument_list|)
+specifier|const
+block|;
+name|void
+name|expandBuildPairF64
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|bool FP64
+argument_list|)
+specifier|const
+block|;
+name|void
+name|expandEhReturn
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,

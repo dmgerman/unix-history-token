@@ -217,6 +217,16 @@ argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
+name|printMemOffset
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&OS
+argument_list|)
+block|;
+name|void
 name|printopaquemem
 argument_list|(
 argument|const MCInst *MI
@@ -350,6 +360,25 @@ name|O
 argument_list|)
 block|;   }
 name|void
+name|printi512mem
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
 name|printf32mem
 argument_list|(
 argument|const MCInst *MI
@@ -436,6 +465,101 @@ argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printf512mem
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printMemOffs8
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|printMemOffset
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printMemOffs16
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|printMemOffset
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printMemOffs32
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|printMemOffset
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printMemOffs64
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|printMemOffset
 argument_list|(
 name|MI
 argument_list|,

@@ -194,7 +194,7 @@ begin_define
 define|#
 directive|define
 name|USB_DEV_QUIRKS_MAX
-value|256
+value|320
 end_define
 
 begin_define
@@ -1193,6 +1193,19 @@ argument_list|)
 block|,
 name|USB_QUIRK
 argument_list|(
+name|ATP
+argument_list|,
+name|EUSB
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_MSC_NO_SYNC_CACHE
+argument_list|)
+block|,
+name|USB_QUIRK
+argument_list|(
 name|BELKIN
 argument_list|,
 name|USB2SCSI
@@ -2136,6 +2149,19 @@ argument_list|,
 name|UQ_MSC_FORCE_PROTO_ATAPI
 argument_list|,
 name|UQ_MSC_NO_INQUIRY
+argument_list|)
+block|,
+name|USB_QUIRK
+argument_list|(
+name|NETCHIP
+argument_list|,
+name|POCKETBOOK
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_MSC_NO_SYNC_CACHE
 argument_list|)
 block|,
 name|USB_QUIRK
@@ -3496,6 +3522,8 @@ argument_list|,
 literal|0xffff
 argument_list|,
 name|UQ_MSC_NO_SYNC_CACHE
+argument_list|,
+name|UQ_MSC_NO_PREVENT_ALLOW
 argument_list|)
 block|,
 name|USB_QUIRK

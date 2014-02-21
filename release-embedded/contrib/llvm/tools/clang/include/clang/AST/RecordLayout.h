@@ -224,8 +224,24 @@ comment|/// (vtable in Itanium, vftbl in Microsoft) that is independent from
 comment|/// its base classes?
 name|bool
 name|HasOwnVFPtr
+range|:
+literal|1
 decl_stmt|;
-comment|// TODO: stash this somewhere more efficient
+comment|/// HasVFPtr - Does this class have a vftable that could be extended by
+comment|/// a derived class.  The class may have inherited this pointer from
+comment|/// a primary base class.
+name|bool
+name|HasExtendableVFPtr
+range|:
+literal|1
+decl_stmt|;
+comment|/// AlignAfterVBases - Force appropriate alignment after virtual bases are
+comment|/// laid out in MS-C++-ABI.
+name|bool
+name|AlignAfterVBases
+range|:
+literal|1
+decl_stmt|;
 comment|/// PrimaryBase - The primary base info for this record.
 name|llvm
 operator|::
@@ -241,6 +257,12 @@ name|bool
 operator|>
 name|PrimaryBase
 expr_stmt|;
+comment|/// BaseSharingVBPtr - The base we share vbptr with.
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|BaseSharingVBPtr
+decl_stmt|;
 comment|/// FIXME: This should really use a SmallPtrMap, once we have one in LLVM :)
 typedef|typedef
 name|llvm
@@ -307,6 +329,8 @@ argument|CharUnits alignment
 argument_list|,
 argument|bool hasOwnVFPtr
 argument_list|,
+argument|bool hasExtendableVFPtr
+argument_list|,
 argument|CharUnits vbptroffset
 argument_list|,
 argument|CharUnits datasize
@@ -324,6 +348,10 @@ argument_list|,
 argument|const CXXRecordDecl *PrimaryBase
 argument_list|,
 argument|bool IsPrimaryBaseVirtual
+argument_list|,
+argument|const CXXRecordDecl *BaseSharingVBPtr
+argument_list|,
+argument|bool ForceAlign
 argument_list|,
 argument|const BaseOffsetsMapTy& BaseOffsets
 argument_list|,
@@ -641,6 +669,97 @@ operator|->
 name|HasOwnVFPtr
 return|;
 block|}
+comment|/// hasVFPtr - Does this class have a virtual function table pointer
+comment|/// that can be extended by a derived class?  This is synonymous with
+comment|/// this class having a VFPtr at offset zero.
+name|bool
+name|hasExtendableVFPtr
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+block|;
+return|return
+name|CXXInfo
+operator|->
+name|HasExtendableVFPtr
+return|;
+block|}
+comment|/// hasOwnVBPtr - Does this class provide its own virtual-base
+comment|/// table pointer, rather than inheriting one from a primary base
+comment|/// class?
+comment|///
+comment|/// This implies that the ABI has no primary base class, meaning
+comment|/// that it has no base classes that are suitable under the conditions
+comment|/// of the ABI.
+name|bool
+name|hasOwnVBPtr
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+block|;
+return|return
+name|hasVBPtr
+argument_list|()
+operator|&&
+operator|!
+name|CXXInfo
+operator|->
+name|BaseSharingVBPtr
+return|;
+block|}
+comment|/// hasVBPtr - Does this class have a virtual function table pointer.
+name|bool
+name|hasVBPtr
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+block|;
+return|return
+operator|!
+name|CXXInfo
+operator|->
+name|VBPtrOffset
+operator|.
+name|isNegative
+argument_list|()
+return|;
+block|}
+name|bool
+name|getAlignAfterVBases
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+block|;
+return|return
+name|CXXInfo
+operator|->
+name|AlignAfterVBases
+return|;
+block|}
 comment|/// getVBPtrOffset - Get the offset for virtual base table pointer.
 comment|/// This is only meaningful with the Microsoft ABI.
 name|CharUnits
@@ -659,6 +778,26 @@ return|return
 name|CXXInfo
 operator|->
 name|VBPtrOffset
+return|;
+block|}
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|getBaseSharingVBPtr
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+block|;
+return|return
+name|CXXInfo
+operator|->
+name|BaseSharingVBPtr
 return|;
 block|}
 specifier|const

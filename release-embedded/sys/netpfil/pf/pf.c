@@ -2094,7 +2094,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do {						\ 		s->rule.ptr->states_cur++;		\ 		s->rule.ptr->states_tot++;		\ 		if (s->anchor.ptr != NULL) {		\ 			s->anchor.ptr->states_cur++;	\ 			s->anchor.ptr->states_tot++;	\ 		}					\ 		if (s->nat_rule.ptr != NULL) {		\ 			s->nat_rule.ptr->states_cur++;	\ 			s->nat_rule.ptr->states_tot++;	\ 		}					\ 	} while (0)
+value|do {								\ 		counter_u64_add(s->rule.ptr->states_cur, 1);		\ 		counter_u64_add(s->rule.ptr->states_tot, 1);		\ 		if (s->anchor.ptr != NULL) {				\ 			counter_u64_add(s->anchor.ptr->states_cur, 1);	\ 			counter_u64_add(s->anchor.ptr->states_tot, 1);	\ 		}							\ 		if (s->nat_rule.ptr != NULL) {				\ 			counter_u64_add(s->nat_rule.ptr->states_cur, 1);\ 			counter_u64_add(s->nat_rule.ptr->states_tot, 1);\ 		}							\ 	} while (0)
 end_define
 
 begin_define
@@ -2105,7 +2105,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do {						\ 		if (s->nat_rule.ptr != NULL)		\ 			s->nat_rule.ptr->states_cur--;	\ 		if (s->anchor.ptr != NULL)		\ 			s->anchor.ptr->states_cur--;	\ 		s->rule.ptr->states_cur--;		\ 	} while (0)
+value|do {								\ 		if (s->nat_rule.ptr != NULL)				\ 			counter_u64_add(s->nat_rule.ptr->states_cur, -1);\ 		if (s->anchor.ptr != NULL)				\ 			counter_u64_add(s->anchor.ptr->states_cur, -1);	\ 		counter_u64_add(s->rule.ptr->states_cur, -1);		\ 	} while (0)
 end_define
 
 begin_expr_stmt
@@ -3825,9 +3825,12 @@ name|rule
 operator|->
 name|max_src_nodes
 operator|||
+name|counter_u64_fetch
+argument_list|(
 name|rule
 operator|->
 name|src_nodes
+argument_list|)
 operator|<
 name|rule
 operator|->
@@ -3982,6 +3985,8 @@ name|ptr
 operator|!=
 name|NULL
 condition|)
+name|counter_u64_add
+argument_list|(
 operator|(
 operator|*
 name|sn
@@ -3992,7 +3997,9 @@ operator|.
 name|ptr
 operator|->
 name|src_nodes
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|PF_HASHROW_UNLOCK
 argument_list|(
@@ -4115,6 +4122,8 @@ name|rule
 operator|.
 name|ptr
 condition|)
+name|counter_u64_add
+argument_list|(
 name|src
 operator|->
 name|rule
@@ -4122,7 +4131,10 @@ operator|.
 name|ptr
 operator|->
 name|src_nodes
-operator|--
+argument_list|,
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 name|V_pf_status
 operator|.
@@ -8022,6 +8034,8 @@ index|]
 expr_stmt|;
 name|states
 operator|=
+name|counter_u64_fetch
+argument_list|(
 name|state
 operator|->
 name|rule
@@ -8029,8 +8043,8 @@ operator|.
 name|ptr
 operator|->
 name|states_cur
+argument_list|)
 expr_stmt|;
-comment|/* XXXGL */
 block|}
 else|else
 block|{
@@ -8634,52 +8648,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-operator|--
+name|STATE_DEC_COUNTERS
+argument_list|(
 name|s
-operator|->
-name|rule
-operator|.
-name|ptr
-operator|->
-name|states_cur
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|->
-name|nat_rule
-operator|.
-name|ptr
-operator|!=
-name|NULL
-condition|)
-operator|--
-name|s
-operator|->
-name|nat_rule
-operator|.
-name|ptr
-operator|->
-name|states_cur
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|->
-name|anchor
-operator|.
-name|ptr
-operator|!=
-name|NULL
-condition|)
-operator|--
-name|s
-operator|->
-name|anchor
-operator|.
-name|ptr
-operator|->
-name|states_cur
+argument_list|)
 expr_stmt|;
 name|s
 operator|->
@@ -21109,9 +21081,12 @@ operator|->
 name|max_states
 operator|&&
 operator|(
+name|counter_u64_fetch
+argument_list|(
 name|r
 operator|->
 name|states_cur
+argument_list|)
 operator|>=
 name|r
 operator|->
@@ -33927,11 +33902,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|RTFREE_LOCKED
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
 name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_noroute

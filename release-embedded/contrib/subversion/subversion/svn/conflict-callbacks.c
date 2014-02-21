@@ -2112,7 +2112,7 @@ argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"accept my version of entire file (even "
+literal|"accept my version of entire property (even "
 literal|"non-conflicts)  [mine-full]"
 argument_list|)
 block|,
@@ -2129,7 +2129,7 @@ argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"accept their version of entire file "
+literal|"accept their version of entire property "
 literal|"(same)  [theirs-full]"
 argument_list|)
 block|,

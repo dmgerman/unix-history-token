@@ -83,8 +83,58 @@ value|(BLKEXTEND - 1)
 end_define
 
 begin_comment
-comment|/*  * required malloc alignment.  Just hardwire to 16.  *  * Note: if we implement a more sophisticated realloc, we should ensure that  * MALLOCALIGN is at least as large as MemNode.  */
+comment|/*  * Required malloc alignment.  *  * Embedded platforms using the u-boot API drivers require that all I/O buffers  * be on a cache line sized boundary.  The worst case size for that is 64 bytes.  * For other platforms, 16 bytes works fine.  The alignment also must be at  * least sizeof(struct MemNode); this is asserted in zalloc.c.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MALLOCALIGN
+value|64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MALLOCALIGN
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MALLOCALIGN_MASK
+value|(MALLOCALIGN - 1)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -102,13 +152,6 @@ block|}
 name|Guard
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|MALLOCALIGN
-value|16
-end_define
 
 begin_define
 define|#

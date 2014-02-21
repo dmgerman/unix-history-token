@@ -1145,12 +1145,45 @@ name|lpc_bridge
 operator|!=
 name|NULL
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Only one LPC bridge is allowed.\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
+comment|/* 	 * Enforce that the LPC can only be configured on bus 0. This 	 * simplifies the ACPI DSDT because it can provide a decode for 	 * all legacy i/o ports behind bus 0. 	 */
+if|if
+condition|(
+name|pi
+operator|->
+name|pi_bus
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"LPC bridge can be present only on bus 0.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|lpc_init

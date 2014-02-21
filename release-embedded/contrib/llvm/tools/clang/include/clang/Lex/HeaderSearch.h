@@ -173,6 +173,19 @@ name|isModuleHeader
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether this header is part of the module that we are building.
+name|unsigned
+name|isCompilingModuleHeader
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this header is part of the module that we are building.
+comment|/// This is an instance of ModuleMap::ModuleHeaderRole.
+name|unsigned
+name|HeaderRole
+range|:
+literal|2
+decl_stmt|;
 comment|/// \brief Whether this structure is considered to already have been
 comment|/// "resolved", meaning that it was loaded from the external source.
 name|unsigned
@@ -253,6 +266,18 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|isCompilingModuleHeader
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|HeaderRole
+argument_list|(
+name|ModuleMap
+operator|::
+name|NormalHeader
+argument_list|)
+operator|,
 name|Resolved
 argument_list|(
 name|false
@@ -308,6 +333,41 @@ name|ControllingMacro
 operator|||
 name|ControllingMacroID
 return|;
+block|}
+comment|/// \brief Get the HeaderRole properly typed.
+name|ModuleMap
+operator|::
+name|ModuleHeaderRole
+name|getHeaderRole
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ModuleMap
+operator|::
+name|ModuleHeaderRole
+operator|>
+operator|(
+name|HeaderRole
+operator|)
+return|;
+block|}
+comment|/// \brief Set the HeaderRole properly typed.
+name|void
+name|setHeaderRole
+argument_list|(
+name|ModuleMap
+operator|::
+name|ModuleHeaderRole
+name|Role
+argument_list|)
+block|{
+name|HeaderRole
+operator|=
+name|Role
+expr_stmt|;
 block|}
 block|}
 struct|;
@@ -607,9 +667,9 @@ name|HeaderSearchOptions
 operator|>
 name|HSOpts
 argument_list|,
-name|FileManager
+name|SourceManager
 operator|&
-name|FM
+name|SourceMgr
 argument_list|,
 name|DiagnosticsEngine
 operator|&
@@ -803,6 +863,9 @@ specifier|const
 block|{
 return|return
 name|IncludeAliases
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 comment|/// \brief Map the source include name to the dest include name.
@@ -1058,8 +1121,9 @@ operator|>
 operator|*
 name|RelativePath
 argument_list|,
-name|Module
-operator|*
+name|ModuleMap
+operator|::
+name|KnownHeader
 operator|*
 name|SuggestedModule
 argument_list|,
@@ -1102,8 +1166,9 @@ operator|>
 operator|*
 name|RelativePath
 argument_list|,
-name|Module
-operator|*
+name|ModuleMap
+operator|::
+name|KnownHeader
 operator|*
 name|SuggestedModule
 argument_list|)
@@ -1230,13 +1295,21 @@ block|}
 comment|/// \brief Mark the specified file as part of a module.
 name|void
 name|MarkFileModuleHeader
-parameter_list|(
+argument_list|(
 specifier|const
 name|FileEntry
-modifier|*
+operator|*
 name|File
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ModuleMap
+operator|::
+name|ModuleHeaderRole
+name|Role
+argument_list|,
+name|bool
+name|IsCompiledModuleHeader
+argument_list|)
+decl_stmt|;
 comment|/// \brief Increment the count for the number of times the specified
 comment|/// FileEntry has been entered.
 name|void
@@ -1284,6 +1357,27 @@ name|ControllingMacro
 operator|=
 name|ControllingMacro
 expr_stmt|;
+block|}
+comment|/// \brief Return true if this is the first time encountering this header.
+name|bool
+name|FirstTimeLexingFile
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+block|{
+return|return
+name|getFileInfo
+argument_list|(
+name|File
+argument_list|)
+operator|.
+name|NumIncludes
+operator|==
+literal|1
+return|;
 block|}
 comment|/// \brief Determine whether this file is intended to be safe from
 comment|/// multiple inclusions, e.g., it has \#pragma once or a controlling
@@ -1381,6 +1475,9 @@ comment|/// \param Filename The name of the file.
 comment|///
 comment|/// \param Root The "root" directory, at which we should stop looking for
 comment|/// module maps.
+comment|///
+comment|/// \param IsSystem Whether the directories we're looking at are system
+comment|/// header directories.
 name|bool
 name|hasModuleMap
 parameter_list|(
@@ -1391,25 +1488,27 @@ specifier|const
 name|DirectoryEntry
 modifier|*
 name|Root
+parameter_list|,
+name|bool
+name|IsSystem
 parameter_list|)
 function_decl|;
 comment|/// \brief Retrieve the module that corresponds to the given file, if any.
 comment|///
 comment|/// \param File The header that we wish to map to a module.
-name|Module
-modifier|*
+name|ModuleMap
+operator|::
+name|KnownHeader
 name|findModuleForHeader
 argument_list|(
-specifier|const
-name|FileEntry
-operator|*
-name|File
+argument|const FileEntry *File
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 comment|/// \brief Read the contents of the given module map file.
 comment|///
 comment|/// \param File The module map file.
+comment|/// \param IsSystem Whether this file is in a system header directory.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 name|bool
@@ -1419,6 +1518,9 @@ specifier|const
 name|FileEntry
 modifier|*
 name|File
+parameter_list|,
+name|bool
+name|IsSystem
 parameter_list|)
 function_decl|;
 comment|/// \brief Collect the set of all known, top-level modules.
@@ -1436,6 +1538,11 @@ operator|&
 name|Modules
 argument_list|)
 decl_stmt|;
+comment|/// \brief Load all known, top-level system modules.
+name|void
+name|loadTopLevelSystemModules
+parameter_list|()
+function_decl|;
 name|private
 label|:
 comment|/// \brief Retrieve a module with the given name, which may be part of the
@@ -1499,17 +1606,6 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|// Used by ASTReader.
-name|void
-name|setHeaderFileInfoForUID
-parameter_list|(
-name|HeaderFileInfo
-name|HFI
-parameter_list|,
-name|unsigned
-name|UID
-parameter_list|)
-function_decl|;
 comment|/// \brief Return the HeaderFileInfo structure for the specified FileEntry.
 specifier|const
 name|HeaderFileInfo
@@ -1719,6 +1815,7 @@ comment|/// \brief Try to load the module map file in the given directory.
 comment|///
 comment|/// \param DirName The name of the directory where we will look for a module
 comment|/// map file.
+comment|/// \param IsSystem Whether this is a system header directory.
 comment|///
 comment|/// \returns The result of attempting to load the module map file from the
 comment|/// named directory.
@@ -1727,11 +1824,15 @@ name|loadModuleMapFile
 parameter_list|(
 name|StringRef
 name|DirName
+parameter_list|,
+name|bool
+name|IsSystem
 parameter_list|)
 function_decl|;
 comment|/// \brief Try to load the module map file in the given directory.
 comment|///
 comment|/// \param Dir The directory where we will look for a module map file.
+comment|/// \param IsSystem Whether this is a system header directory.
 comment|///
 comment|/// \returns The result of attempting to load the module map file from the
 comment|/// named directory.
@@ -1742,6 +1843,9 @@ specifier|const
 name|DirectoryEntry
 modifier|*
 name|Dir
+parameter_list|,
+name|bool
+name|IsSystem
 parameter_list|)
 function_decl|;
 comment|/// \brief Return the HeaderFileInfo structure for the specified FileEntry.

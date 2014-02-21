@@ -77,6 +77,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FileSystem.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -1336,28 +1342,6 @@ name|true
 block|; }
 name|public
 operator|:
-expr|enum
-block|{
-comment|/// F_Excl - When opening a file, this flag makes raw_fd_ostream
-comment|/// report an error if the file already exists.
-name|F_Excl
-operator|=
-literal|1
-block|,
-comment|/// F_Append - When opening a file, if it already exists append to the
-comment|/// existing file instead of returning an error.  This may not be specified
-comment|/// with F_Excl.
-name|F_Append
-operator|=
-literal|2
-block|,
-comment|/// F_Binary - The file should be opened in binary mode on platforms that
-comment|/// make this distinction.
-name|F_Binary
-operator|=
-literal|4
-block|}
-block|;
 comment|/// raw_fd_ostream - Open the specified file for writing. If an error occurs,
 comment|/// information about the error is put into ErrorInfo, and the stream should
 comment|/// be immediately destroyed; the string will be empty if no error occurred.
@@ -1374,8 +1358,7 @@ argument|const char *Filename
 argument_list|,
 argument|std::string&ErrorInfo
 argument_list|,
-argument|unsigned Flags =
-literal|0
+argument|sys::fs::OpenFlags Flags = sys::fs::F_None
 argument_list|)
 block|;
 comment|/// raw_fd_ostream ctor - FD is the file descriptor that this writes to.  If

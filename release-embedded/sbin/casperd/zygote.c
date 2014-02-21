@@ -517,7 +517,23 @@ name|nvlin
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOTCONN
+condition|)
+block|{
+comment|/* Casperd exited. */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 continue|continue;
+block|}
 name|func
 operator|=
 operator|(

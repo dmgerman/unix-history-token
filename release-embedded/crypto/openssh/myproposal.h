@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: myproposal.h,v 1.32 2013/01/08 18:49:04 markus Exp $ */
+comment|/* $OpenBSD: myproposal.h,v 1.35 2013/12/06 13:39:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -27,6 +27,12 @@ directive|ifdef
 name|OPENSSL_HAS_ECC
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_HAS_NISTP521
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -50,6 +56,40 @@ name|HOSTKEY_ECDSA_METHODS
 define|\
 value|"ecdsa-sha2-nistp256," \ 	"ecdsa-sha2-nistp384," \ 	"ecdsa-sha2-nistp521,"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KEX_ECDH_METHODS
+define|\
+value|"ecdh-sha2-nistp256," \ 	"ecdh-sha2-nistp384,"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTKEY_ECDSA_CERT_METHODS
+define|\
+value|"ecdsa-sha2-nistp256-cert-v01@openssh.com," \ 	"ecdsa-sha2-nistp384-cert-v01@openssh.com,"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTKEY_ECDSA_METHODS
+define|\
+value|"ecdsa-sha2-nistp256," \ 	"ecdsa-sha2-nistp384,"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -126,6 +166,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|KEX_CURVE25519_METHODS
+define|\
+value|"curve25519-sha256@libssh.org,"
+end_define
+
+begin_define
+define|#
+directive|define
 name|SHA2_HMAC_MODES
 define|\
 value|"hmac-sha2-256," \ 	"hmac-sha2-512,"
@@ -145,6 +193,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|KEX_CURVE25519_METHODS
+end_define
+
+begin_define
+define|#
+directive|define
 name|SHA2_HMAC_MODES
 end_define
 
@@ -158,7 +212,7 @@ define|#
 directive|define
 name|KEX_DEFAULT_KEX
 define|\
-value|KEX_ECDH_METHODS \ 	KEX_SHA256_METHODS \ 	"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group14-sha1," \ 	"diffie-hellman-group1-sha1"
+value|KEX_CURVE25519_METHODS \ 	KEX_ECDH_METHODS \ 	KEX_SHA256_METHODS \ 	"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group14-sha1," \ 	"diffie-hellman-group1-sha1"
 end_define
 
 begin_define
@@ -166,7 +220,7 @@ define|#
 directive|define
 name|KEX_DEFAULT_PK_ALG
 define|\
-value|HOSTKEY_ECDSA_CERT_METHODS \ 	"ssh-rsa-cert-v01@openssh.com," \ 	"ssh-dss-cert-v01@openssh.com," \ 	"ssh-rsa-cert-v00@openssh.com," \ 	"ssh-dss-cert-v00@openssh.com," \ 	HOSTKEY_ECDSA_METHODS \ 	"ssh-rsa," \ 	"ssh-dss"
+value|HOSTKEY_ECDSA_CERT_METHODS \ 	"ssh-ed25519-cert-v01@openssh.com," \ 	"ssh-rsa-cert-v01@openssh.com," \ 	"ssh-dss-cert-v01@openssh.com," \ 	"ssh-rsa-cert-v00@openssh.com," \ 	"ssh-dss-cert-v00@openssh.com," \ 	HOSTKEY_ECDSA_METHODS \ 	"ssh-ed25519," \ 	"ssh-rsa," \ 	"ssh-dss"
 end_define
 
 begin_comment
@@ -178,7 +232,7 @@ define|#
 directive|define
 name|KEX_DEFAULT_ENCRYPT
 define|\
-value|"aes128-ctr,aes192-ctr,aes256-ctr," \ 	"arcfour256,arcfour128," \ 	AESGCM_CIPHER_MODES \ 	"aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc," \ 	"aes192-cbc,aes256-cbc,arcfour,rijndael-cbc@lysator.liu.se"
+value|"aes128-ctr,aes192-ctr,aes256-ctr," \ 	"arcfour256,arcfour128," \ 	AESGCM_CIPHER_MODES \ 	"chacha20-poly1305@openssh.com," \ 	"aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc," \ 	"aes192-cbc,aes256-cbc,arcfour,rijndael-cbc@lysator.liu.se"
 end_define
 
 begin_ifdef

@@ -65,6 +65,91 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
+
+begin_function
+specifier|inline
+name|void
+modifier|*
+name|getDFSanArgTLSPtrForJIT
+parameter_list|()
+block|{
+specifier|extern
+name|__thread
+name|__attribute__
+argument_list|(
+operator|(
+name|tls_model
+argument_list|(
+literal|"initial-exec"
+argument_list|)
+operator|)
+argument_list|)
+name|void
+modifier|*
+name|__dfsan_arg_tls
+decl_stmt|;
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|__dfsan_arg_tls
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|void
+modifier|*
+name|getDFSanRetValTLSPtrForJIT
+parameter_list|()
+block|{
+specifier|extern
+name|__thread
+name|__attribute__
+argument_list|(
+operator|(
+name|tls_model
+argument_list|(
+literal|"initial-exec"
+argument_list|)
+operator|)
+argument_list|)
+name|void
+modifier|*
+name|__dfsan_retval_tls
+decl_stmt|;
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|__dfsan_retval_tls
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -75,24 +160,6 @@ decl_stmt|;
 name|class
 name|FunctionPass
 decl_stmt|;
-comment|// Insert edge profiling instrumentation
-name|ModulePass
-modifier|*
-name|createEdgeProfilerPass
-parameter_list|()
-function_decl|;
-comment|// Insert optimal edge profiling instrumentation
-name|ModulePass
-modifier|*
-name|createOptimalEdgeProfilerPass
-parameter_list|()
-function_decl|;
-comment|// Insert path profiling instrumentation
-name|ModulePass
-modifier|*
-name|createPathProfilerPass
-parameter_list|()
-function_decl|;
 comment|// Insert GCOV profiling instrumentation
 struct|struct
 name|GCOVOptions
@@ -231,11 +298,131 @@ name|StringRef
 argument_list|()
 parameter_list|)
 function_decl|;
+comment|// Insert DataFlowSanitizer (dynamic data flow analysis) instrumentation
+name|ModulePass
+modifier|*
+name|createDataFlowSanitizerPass
+parameter_list|(
+name|StringRef
+name|ABIListFile
+init|=
+name|StringRef
+argument_list|()
+parameter_list|,
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|getArgTLS
+function_decl|)
+parameter_list|()
+init|=
+literal|0
+parameter_list|,
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|getRetValTLS
+function_decl|)
+parameter_list|()
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+specifier|inline
+name|ModulePass
+modifier|*
+name|createDataFlowSanitizerPassForJIT
+parameter_list|(
+name|StringRef
+name|ABIListFile
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+block|{
+return|return
+name|createDataFlowSanitizerPass
+argument_list|(
+name|ABIListFile
+argument_list|,
+name|getDFSanArgTLSPtrForJIT
+argument_list|,
+name|getDFSanRetValTLSPtrForJIT
+argument_list|)
+return|;
+block|}
+endif|#
+directive|endif
 comment|// BoundsChecking - This pass instruments the code to perform run-time bounds
 comment|// checking on loads, stores, and other memory intrinsics.
 name|FunctionPass
 modifier|*
 name|createBoundsCheckingPass
+parameter_list|()
+function_decl|;
+comment|/// createDebugIRPass - Enable interactive stepping through LLVM IR in LLDB (or
+comment|///                     GDB) and generate a file with the LLVM IR to be
+comment|///                     displayed in the debugger.
+comment|///
+comment|/// Existing debug metadata is preserved (but may be modified) in order to allow
+comment|/// accessing variables in the original source. The line table and file
+comment|/// information is modified to correspond to the lines in the LLVM IR. If
+comment|/// Filename and Directory are empty, a file name is generated based on existing
+comment|/// debug information. If no debug information is available, a temporary file
+comment|/// name is generated.
+comment|///
+comment|/// @param HideDebugIntrinsics  Omit debug intrinsics in emitted IR source file.
+comment|/// @param HideDebugMetadata    Omit debug metadata in emitted IR source file.
+comment|/// @param Directory            Embed this directory in the debug information.
+comment|/// @param Filename             Embed this file name in the debug information.
+name|ModulePass
+modifier|*
+name|createDebugIRPass
+parameter_list|(
+name|bool
+name|HideDebugIntrinsics
+parameter_list|,
+name|bool
+name|HideDebugMetadata
+parameter_list|,
+name|StringRef
+name|Directory
+init|=
+name|StringRef
+argument_list|()
+parameter_list|,
+name|StringRef
+name|Filename
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+function_decl|;
+comment|/// createDebugIRPass - Enable interactive stepping through LLVM IR in LLDB
+comment|///                     (or GDB) with an existing IR file on disk. When creating
+comment|///                     a DebugIR pass with this function, no source file is
+comment|///                     output to disk and the existing one is unmodified. Debug
+comment|///                     metadata in the Module is created/updated to point to
+comment|///                     the existing textual IR file on disk.
+comment|/// NOTE: If the IR file to be debugged is not on disk, use the version of this
+comment|///       function with parameters in order to generate the file that will be
+comment|///       seen by the debugger.
+name|ModulePass
+modifier|*
+name|createDebugIRPass
 parameter_list|()
 function_decl|;
 block|}

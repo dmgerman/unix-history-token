@@ -2210,6 +2210,22 @@ name|DestTy
 comment|///< The Type to which the value should be cast.
 argument_list|)
 block|;
+comment|/// @brief Check whether a bitcast between these types is valid
+specifier|static
+name|bool
+name|isBitCastable
+argument_list|(
+name|Type
+operator|*
+name|SrcTy
+argument_list|,
+comment|///< The Type from which the value should be cast.
+name|Type
+operator|*
+name|DestTy
+comment|///< The Type to which the value should be cast.
+argument_list|)
+block|;
 comment|/// Returns the opcode necessary to cast Val into Ty using usual casting
 comment|/// rules.
 comment|/// @brief Infer the opcode for cast operand and type
@@ -2275,7 +2291,7 @@ argument|Type *DstTy
 argument_list|,
 comment|///< DstTy of cast
 argument|Type *IntPtrTy
-comment|///< Integer type corresponding to Ptr types, or null
+comment|///< Integer type corresponding to Ptr types
 argument_list|)
 block|;
 comment|/// @brief Determine if this cast is a no-op cast.

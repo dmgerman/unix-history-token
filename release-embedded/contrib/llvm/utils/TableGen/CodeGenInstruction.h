@@ -936,6 +936,14 @@ decl_stmt|;
 name|bool
 name|isPseudo
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|DeprecatedReason
+expr_stmt|;
+name|bool
+name|HasComplexDeprecationPredicate
+decl_stmt|;
 comment|/// Are there any undefined flags?
 name|bool
 name|hasUndefFlags

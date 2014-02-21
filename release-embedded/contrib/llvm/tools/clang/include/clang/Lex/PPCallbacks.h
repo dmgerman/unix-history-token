@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/Pragma.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -356,6 +362,18 @@ operator|&
 name|str
 argument_list|)
 block|{   }
+comment|/// \brief Callback invoked when start reading any pragma directive.
+name|virtual
+name|void
+name|PragmaDirective
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|PragmaIntroducerKind
+name|Introducer
+parameter_list|)
+block|{   }
 comment|/// \brief Callback invoked when a \#pragma comment directive is read.
 name|virtual
 name|void
@@ -375,6 +393,30 @@ operator|::
 name|string
 operator|&
 name|Str
+argument_list|)
+block|{   }
+comment|/// \brief Callback invoked when a \#pragma detect_mismatch directive is
+comment|/// read.
+name|virtual
+name|void
+name|PragmaDetectMismatch
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Value
 argument_list|)
 block|{   }
 comment|/// \brief Callback invoked when a \#pragma clang __debug directive is read.
@@ -473,6 +515,66 @@ name|StringRef
 name|Str
 argument_list|)
 block|{   }
+comment|/// \brief Called when an OpenCL extension is either disabled or
+comment|/// enabled with a pragma.
+name|virtual
+name|void
+name|PragmaOpenCLExtension
+parameter_list|(
+name|SourceLocation
+name|NameLoc
+parameter_list|,
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|Name
+parameter_list|,
+name|SourceLocation
+name|StateLoc
+parameter_list|,
+name|unsigned
+name|State
+parameter_list|)
+block|{   }
+comment|/// \brief Callback invoked when a \#pragma warning directive is read.
+name|virtual
+name|void
+name|PragmaWarning
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|StringRef
+name|WarningSpec
+argument_list|,
+name|ArrayRef
+operator|<
+name|int
+operator|>
+name|Ids
+argument_list|)
+block|{   }
+comment|/// \brief Callback invoked when a \#pragma warning(push) directive is read.
+name|virtual
+name|void
+name|PragmaWarningPush
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|int
+name|Level
+parameter_list|)
+block|{   }
+comment|/// \brief Callback invoked when a \#pragma warning(pop) directive is read.
+name|virtual
+name|void
+name|PragmaWarningPop
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{   }
 comment|/// \brief Called by Preprocessor::HandleMacroExpandedIdentifier when a
 comment|/// macro invocation is found.
 name|virtual
@@ -547,6 +649,9 @@ specifier|const
 name|MacroDirective
 modifier|*
 name|MD
+parameter_list|,
+name|SourceRange
+name|Range
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called when a source range is skipped.
@@ -563,6 +668,7 @@ block|{   }
 comment|/// \brief Hook called whenever an \#if is seen.
 comment|/// \param Loc the source location of the directive.
 comment|/// \param ConditionRange The SourceRange of the expression being tested.
+comment|/// \param ConditionValue The evaluated value of the condition.
 comment|///
 comment|// FIXME: better to pass in a list (or tree!) of Tokens.
 name|virtual
@@ -574,11 +680,15 @@ name|Loc
 parameter_list|,
 name|SourceRange
 name|ConditionRange
+parameter_list|,
+name|bool
+name|ConditionValue
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever an \#elif is seen.
 comment|/// \param Loc the source location of the directive.
 comment|/// \param ConditionRange The SourceRange of the expression being tested.
+comment|/// \param ConditionValue The evaluated value of the condition.
 comment|/// \param IfLoc the source location of the \#if/\#ifdef/\#ifndef directive.
 comment|// FIXME: better to pass in a list (or tree!) of Tokens.
 name|virtual
@@ -590,6 +700,9 @@ name|Loc
 parameter_list|,
 name|SourceRange
 name|ConditionRange
+parameter_list|,
+name|bool
+name|ConditionValue
 parameter_list|,
 name|SourceLocation
 name|IfLoc
@@ -1001,6 +1114,39 @@ argument_list|)
 block|;   }
 name|virtual
 name|void
+name|PragmaDetectMismatch
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|const std::string&Name
+argument_list|,
+argument|const std::string&Value
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaDetectMismatch
+argument_list|(
+name|Loc
+argument_list|,
+name|Name
+argument_list|,
+name|Value
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaDetectMismatch
+argument_list|(
+name|Loc
+argument_list|,
+name|Name
+argument_list|,
+name|Value
+argument_list|)
+block|;   }
+name|virtual
+name|void
 name|PragmaMessage
 argument_list|(
 argument|SourceLocation Loc
@@ -1133,6 +1279,126 @@ argument_list|)
 block|;   }
 name|virtual
 name|void
+name|PragmaOpenCLExtension
+argument_list|(
+argument|SourceLocation NameLoc
+argument_list|,
+argument|const IdentifierInfo *Name
+argument_list|,
+argument|SourceLocation StateLoc
+argument_list|,
+argument|unsigned State
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaOpenCLExtension
+argument_list|(
+name|NameLoc
+argument_list|,
+name|Name
+argument_list|,
+name|StateLoc
+argument_list|,
+name|State
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaOpenCLExtension
+argument_list|(
+name|NameLoc
+argument_list|,
+name|Name
+argument_list|,
+name|StateLoc
+argument_list|,
+name|State
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|PragmaWarning
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|StringRef WarningSpec
+argument_list|,
+argument|ArrayRef<int> Ids
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaWarning
+argument_list|(
+name|Loc
+argument_list|,
+name|WarningSpec
+argument_list|,
+name|Ids
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaWarning
+argument_list|(
+name|Loc
+argument_list|,
+name|WarningSpec
+argument_list|,
+name|Ids
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|PragmaWarningPush
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|int Level
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaWarningPush
+argument_list|(
+name|Loc
+argument_list|,
+name|Level
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaWarningPush
+argument_list|(
+name|Loc
+argument_list|,
+name|Level
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|PragmaWarningPop
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaWarningPop
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaWarningPop
+argument_list|(
+name|Loc
+argument_list|)
+block|;   }
+name|virtual
+name|void
 name|MacroExpands
 argument_list|(
 argument|const Token&MacroNameTok
@@ -1231,6 +1497,8 @@ argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroDirective *MD
+argument_list|,
+argument|SourceRange Range
 argument_list|)
 block|{
 name|First
@@ -1240,6 +1508,8 @@ argument_list|(
 name|MacroNameTok
 argument_list|,
 name|MD
+argument_list|,
+name|Range
 argument_list|)
 block|;
 name|Second
@@ -1249,6 +1519,8 @@ argument_list|(
 name|MacroNameTok
 argument_list|,
 name|MD
+argument_list|,
+name|Range
 argument_list|)
 block|;   }
 name|virtual
@@ -1280,6 +1552,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|SourceRange ConditionRange
+argument_list|,
+argument|bool ConditionValue
 argument_list|)
 block|{
 name|First
@@ -1289,6 +1563,8 @@ argument_list|(
 name|Loc
 argument_list|,
 name|ConditionRange
+argument_list|,
+name|ConditionValue
 argument_list|)
 block|;
 name|Second
@@ -1298,9 +1574,11 @@ argument_list|(
 name|Loc
 argument_list|,
 name|ConditionRange
+argument_list|,
+name|ConditionValue
 argument_list|)
 block|;   }
-comment|/// \brief Hook called whenever an \#if is seen.
+comment|/// \brief Hook called whenever an \#elif is seen.
 name|virtual
 name|void
 name|Elif
@@ -1308,6 +1586,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|SourceRange ConditionRange
+argument_list|,
+argument|bool ConditionValue
 argument_list|,
 argument|SourceLocation IfLoc
 argument_list|)
@@ -1320,6 +1600,8 @@ name|Loc
 argument_list|,
 name|ConditionRange
 argument_list|,
+name|ConditionValue
+argument_list|,
 name|IfLoc
 argument_list|)
 block|;
@@ -1330,6 +1612,8 @@ argument_list|(
 name|Loc
 argument_list|,
 name|ConditionRange
+argument_list|,
+name|ConditionValue
 argument_list|,
 name|IfLoc
 argument_list|)

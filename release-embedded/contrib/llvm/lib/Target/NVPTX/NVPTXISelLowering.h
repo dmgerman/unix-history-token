@@ -112,8 +112,6 @@ name|RET_FLAG
 block|,
 name|LOAD_PARAM
 block|,
-name|NVBuiltin
-block|,
 name|DeclareParam
 block|,
 name|DeclareScalarParam
@@ -123,18 +121,6 @@ block|,
 name|DeclareRet
 block|,
 name|DeclareScalarRet
-block|,
-name|LoadParam
-block|,
-name|StoreParam
-block|,
-name|StoreParamS32
-block|,
-comment|// to sext and store a<32bit value, not used currently
-name|StoreParamU32
-block|,
-comment|// to zext and store a<32bit value, not used currently
-name|MoveToParam
 block|,
 name|PrintCall
 block|,
@@ -158,12 +144,6 @@ name|Prototype
 block|,
 name|MoveParam
 block|,
-name|MoveRetval
-block|,
-name|MoveToRetval
-block|,
-name|StoreRetval
-block|,
 name|PseudoUseParam
 block|,
 name|RETURN
@@ -171,6 +151,8 @@ block|,
 name|CallSeqBegin
 block|,
 name|CallSeqEnd
+block|,
+name|CallPrototype
 block|,
 name|Dummy
 block|,
@@ -197,6 +179,30 @@ comment|// LDU.v4
 name|StoreV2
 block|,
 name|StoreV4
+block|,
+name|LoadParam
+block|,
+name|LoadParamV2
+block|,
+name|LoadParamV4
+block|,
+name|StoreParam
+block|,
+name|StoreParamV2
+block|,
+name|StoreParamV4
+block|,
+name|StoreParamS32
+block|,
+comment|// to sext and store a<32bit value, not used currently
+name|StoreParamU32
+block|,
+comment|// to zext and store a<32bit value, not used currently
+name|StoreRetval
+block|,
+name|StoreRetvalV2
+block|,
+name|StoreRetvalV4
 block|}
 enum|;
 block|}
@@ -305,6 +311,8 @@ name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|LLVMContext&
+argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
@@ -363,7 +371,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -392,7 +400,7 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -437,6 +445,8 @@ argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&
 argument_list|,
 argument|unsigned retAlignment
+argument_list|,
+argument|const ImmutableCallSite *CS
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -473,7 +483,7 @@ operator|>
 operator|&
 name|OutVals
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -581,10 +591,6 @@ name|int
 name|idx
 argument_list|,
 name|EVT
-operator|=
-name|MVT
-operator|::
-name|i32
 argument_list|)
 decl|const
 decl_stmt|;
@@ -689,6 +695,26 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getArgumentAlignment
+argument_list|(
+name|SDValue
+name|Callee
+argument_list|,
+specifier|const
+name|ImmutableCallSite
+operator|*
+name|CS
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|unsigned
+name|Idx
 argument_list|)
 decl|const
 decl_stmt|;

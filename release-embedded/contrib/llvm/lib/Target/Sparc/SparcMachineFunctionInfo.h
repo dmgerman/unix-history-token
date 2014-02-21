@@ -94,6 +94,10 @@ comment|/// argument is passed.
 name|unsigned
 name|SRetReturnReg
 block|;
+comment|/// IsLeafProc - True if the function is a leaf procedure.
+name|bool
+name|IsLeafProc
+block|;
 name|public
 operator|:
 name|SparcMachineFunctionInfo
@@ -112,6 +116,11 @@ block|,
 name|SRetReturnReg
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|IsLeafProc
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|explicit
@@ -135,6 +144,11 @@ block|,
 name|SRetReturnReg
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|IsLeafProc
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|unsigned
@@ -194,6 +208,25 @@ name|SRetReturnReg
 operator|=
 name|Reg
 block|; }
+name|void
+name|setLeafProc
+argument_list|(
+argument|bool rhs
+argument_list|)
+block|{
+name|IsLeafProc
+operator|=
+name|rhs
+block|; }
+name|bool
+name|isLeafProc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsLeafProc
+return|;
+block|}
 expr|}
 block|; }
 end_decl_stmt

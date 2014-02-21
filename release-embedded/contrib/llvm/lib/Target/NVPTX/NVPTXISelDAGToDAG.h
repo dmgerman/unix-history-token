@@ -119,9 +119,6 @@ block|{
 comment|// If true, generate corresponding FPCONTRACT. This is
 comment|// language dependent (i.e. CUDA and OpenCL works differently).
 name|bool
-name|doFMADF32
-block|;
-name|bool
 name|doFMAF64
 block|;
 name|bool
@@ -136,31 +133,24 @@ block|;
 name|bool
 name|allowFMA
 block|;
-comment|// 0: use div.approx
-comment|// 1: use div.full
-comment|// 2: For sm_20 and later, ieee-compliant div.rnd.f32 can be generated;
-comment|//    Otherwise, use div.full
-name|int
-name|do_DIVF32_PREC
-block|;
-comment|// If true, generate sqrt.rn, else generate sqrt.approx. If FTZ
-comment|// is true, then generate the corresponding FTZ version.
-name|bool
-name|do_SQRTF32_PREC
-block|;
-comment|// If true, add .ftz to f32 instructions.
-comment|// This is only meaningful for sm_20 and later, as the default
-comment|// is not ftz.
-comment|// For sm earlier than sm_20, f32 denorms are always ftz by the
-comment|// hardware.
-comment|// We always add the .ftz modifier regardless of the sm value
-comment|// when Use32FTZ is true.
-name|bool
-name|UseF32FTZ
-block|;
 comment|// If true, generate mul.wide from sext and mul
 name|bool
 name|doMulWide
+block|;
+name|int
+name|getDivF32Level
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|usePrecSqrtF32
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|useF32FTZ
+argument_list|()
+specifier|const
 block|;
 name|public
 operator|:
@@ -169,7 +159,7 @@ name|NVPTXDAGToDAGISel
 argument_list|(
 argument|NVPTXTargetMachine&tm
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
+argument|CodeGenOpt::Level   OptLevel
 argument_list|)
 block|;
 comment|// Pass Name
@@ -255,6 +245,33 @@ block|;
 name|SDNode
 operator|*
 name|SelectStoreVector
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectLoadParam
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectStoreRetval
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectStoreParam
 argument_list|(
 name|SDNode
 operator|*

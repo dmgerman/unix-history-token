@@ -54,6 +54,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MII_ATH_MMD_ADDR
+value|0x0d
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_ATH_MMD_DATA
+value|0x0e
+end_define
+
+begin_define
+define|#
+directive|define
 name|MII_ATH_DBG_ADDR
 value|0x1d
 end_define
@@ -2178,6 +2192,13 @@ define|#
 directive|define
 name|AR8327_MIB_CPU_KEEP
 value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8327_REG_MDIO_CTRL
+value|0x03c
 end_define
 
 begin_define

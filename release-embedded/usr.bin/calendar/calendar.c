@@ -338,6 +338,19 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|f_dayAfter
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"number of days must be positive"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'B'
@@ -348,6 +361,19 @@ operator|=
 name|atoi
 argument_list|(
 name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f_dayBefore
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"number of days must be positive"
 argument_list|)
 expr_stmt|;
 break|break;

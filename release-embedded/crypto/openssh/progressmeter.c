@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: progressmeter.c,v 1.39 2013/06/02 13:33:05 dtucker Exp $ */
+comment|/* $OpenBSD: progressmeter.c,v 1.40 2013/09/19 00:24:52 djm Exp $ */
 end_comment
 
 begin_comment
@@ -263,6 +263,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of the file being transferred */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|off_t
+name|start_pos
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* initial position of transfer */
 end_comment
 
 begin_decl_stmt
@@ -638,7 +649,13 @@ operator|=
 operator|*
 name|counter
 operator|-
+operator|(
 name|cur_pos
+condition|?
+name|cur_pos
+else|:
+name|start_pos
+operator|)
 expr_stmt|;
 name|cur_pos
 operator|=
@@ -680,6 +697,8 @@ comment|/* Calculate true total speed when done */
 name|transferred
 operator|=
 name|end_pos
+operator|-
+name|start_pos
 expr_stmt|;
 name|bytes_per_second
 operator|=
@@ -1212,6 +1231,11 @@ expr_stmt|;
 name|file
 operator|=
 name|f
+expr_stmt|;
+name|start_pos
+operator|=
+operator|*
+name|ctr
 expr_stmt|;
 name|end_pos
 operator|=

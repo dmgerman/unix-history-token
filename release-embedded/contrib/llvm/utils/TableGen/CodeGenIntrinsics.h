@@ -220,6 +220,10 @@ enum|enum
 name|ArgAttribute
 block|{
 name|NoCapture
+block|,
+name|ReadOnly
+block|,
+name|ReadNone
 block|}
 enum|;
 name|std

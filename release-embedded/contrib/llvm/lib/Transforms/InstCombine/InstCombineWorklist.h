@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- InstCombineWorklist.h - Worklist for the InstCombine pass ----------===//
+comment|//===- InstCombineWorklist.h - Worklist for InstCombine pass ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -182,7 +182,7 @@ condition|)
 block|{
 name|DEBUG
 argument_list|(
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"IC: ADD: "
@@ -274,7 +274,7 @@ argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"IC: ADDING: "
@@ -399,14 +399,9 @@ name|I
 init|=
 name|Worklist
 operator|.
-name|back
+name|pop_back_val
 argument_list|()
 decl_stmt|;
-name|Worklist
-operator|.
-name|pop_back
-argument_list|()
-expr_stmt|;
 name|WorklistMap
 operator|.
 name|erase

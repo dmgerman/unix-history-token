@@ -74,8 +74,6 @@ name|GROUP
 parameter_list|,\
 name|SFINAE
 parameter_list|,
-name|ACCESS
-parameter_list|,
 name|NOWERROR
 parameter_list|,
 name|SHOWINSYSHEADER

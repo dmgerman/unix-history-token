@@ -1564,7 +1564,7 @@ name|mtx_initialized
 parameter_list|(
 name|m
 parameter_list|)
-value|lock_initalized(&(m)->lock_object)
+value|lock_initialized(&(m)->lock_object)
 end_define
 
 begin_define

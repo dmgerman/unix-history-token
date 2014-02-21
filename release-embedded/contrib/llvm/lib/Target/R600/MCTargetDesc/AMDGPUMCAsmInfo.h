@@ -70,9 +70,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Target
-decl_stmt|;
-name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -86,26 +83,10 @@ operator|:
 name|explicit
 name|AMDGPUMCAsmInfo
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
-argument_list|,
 name|StringRef
 operator|&
 name|TT
 argument_list|)
-block|;
-specifier|const
-name|char
-operator|*
-name|getDataASDirective
-argument_list|(
-argument|unsigned int Size
-argument_list|,
-argument|unsigned int AS
-argument_list|)
-specifier|const
 block|;
 specifier|const
 name|MCSection

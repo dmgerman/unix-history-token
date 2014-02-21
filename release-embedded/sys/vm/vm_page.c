@@ -7492,11 +7492,9 @@ name|vm_pagequeue
 modifier|*
 name|pq
 decl_stmt|;
-name|vm_page_lock_assert
+name|vm_page_assert_locked
 argument_list|(
 name|m
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7504,8 +7502,14 @@ argument_list|(
 name|m
 operator|->
 name|queue
-operator|!=
-name|PQ_NONE
+operator|==
+name|PQ_ACTIVE
+operator|||
+name|m
+operator|->
+name|queue
+operator|==
+name|PQ_INACTIVE
 argument_list|,
 operator|(
 literal|"vm_page_dequeue: page %p is not queued"

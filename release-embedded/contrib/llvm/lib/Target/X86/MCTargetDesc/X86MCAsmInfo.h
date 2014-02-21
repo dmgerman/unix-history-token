@@ -77,6 +77,12 @@ directive|include
 file|"llvm/MC/MCAsmInfoDarwin.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCAsmInfoELF.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -141,7 +147,7 @@ name|class
 name|X86ELFMCAsmInfo
 range|:
 name|public
-name|MCAsmInfo
+name|MCAsmInfoELF
 block|{
 name|virtual
 name|void

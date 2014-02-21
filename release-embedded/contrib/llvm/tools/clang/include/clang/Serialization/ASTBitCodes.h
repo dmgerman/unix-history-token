@@ -1095,6 +1095,11 @@ comment|/// need a definition in this TU.
 name|UNDEFINED_BUT_USED
 init|=
 literal|49
+block|,
+comment|/// \brief Record code for late parsed template functions.
+name|LATE_PARSED_TEMPLATE
+init|=
+literal|50
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -1253,6 +1258,11 @@ comment|/// \brief Specifies a conflict with another module.
 name|SUBMODULE_CONFLICT
 init|=
 literal|12
+block|,
+comment|/// \brief Specifies a header that is private to this submodule.
+name|SUBMODULE_PRIVATE_HEADER
+init|=
+literal|13
 block|}
 enum|;
 comment|/// \brief Record types used within a comments block.
@@ -1732,6 +1742,11 @@ comment|/// \brief An AtomicType record.
 name|TYPE_ATOMIC
 init|=
 literal|40
+block|,
+comment|/// \brief A DecayedType record.
+name|TYPE_DECAYED
+init|=
+literal|41
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -2026,6 +2041,15 @@ block|,
 comment|/// \brief A ClassTemplatePartialSpecializationDecl record.
 name|DECL_CLASS_TEMPLATE_PARTIAL_SPECIALIZATION
 block|,
+comment|/// \brief A VarTemplateDecl record.
+name|DECL_VAR_TEMPLATE
+block|,
+comment|/// \brief A VarTemplateSpecializationDecl record.
+name|DECL_VAR_TEMPLATE_SPECIALIZATION
+block|,
+comment|/// \brief A VarTemplatePartialSpecializationDecl record.
+name|DECL_VAR_TEMPLATE_PARTIAL_SPECIALIZATION
+block|,
 comment|/// \brief A FunctionTemplateDecl record.
 name|DECL_FUNCTION_TEMPLATE
 block|,
@@ -2065,7 +2089,7 @@ block|,
 comment|/// \brief An ImportDecl recording a module import.
 name|DECL_IMPORT
 block|,
-comment|/// \brief A OMPThreadPrivateDecl record.
+comment|/// \brief An OMPThreadPrivateDecl record.
 name|DECL_OMP_THREADPRIVATE
 block|,
 comment|/// \brief An EmptyDecl record.
@@ -2247,6 +2271,9 @@ block|,
 comment|/// \brief A ShuffleVectorExpr record.
 name|EXPR_SHUFFLE_VECTOR
 block|,
+comment|/// \brief A ConvertVectorExpr record.
+name|EXPR_CONVERT_VECTOR
+block|,
 comment|/// \brief BlockExpr
 name|EXPR_BLOCK
 block|,
@@ -2362,6 +2389,9 @@ name|EXPR_CXX_FUNCTIONAL_CAST
 block|,
 comment|/// \brief A UserDefinedLiteral record.
 name|EXPR_USER_DEFINED_LITERAL
+block|,
+comment|/// \brief A CXXStdInitializerListExpr record.
+name|EXPR_CXX_STD_INITIALIZER_LIST
 block|,
 comment|/// \brief A CXXBoolLiteralExpr record.
 name|EXPR_CXX_BOOL_LITERAL
@@ -2489,6 +2519,9 @@ comment|// SEHFinallyStmt
 name|STMT_SEH_TRY
 block|,
 comment|// SEHTryStmt
+comment|// OpenMP drectives
+name|STMT_OMP_PARALLEL_DIRECTIVE
+block|,
 comment|// ARC
 name|EXPR_OBJC_BRIDGED_CAST
 block|,

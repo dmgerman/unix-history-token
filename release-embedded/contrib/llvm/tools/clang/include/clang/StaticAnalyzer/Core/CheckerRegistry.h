@@ -217,6 +217,46 @@ begin_comment
 comment|// For a complete working example, see examples/analyzer-plugin.
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CLANG_ANALYZER_API_VERSION_STRING
+end_ifndef
+
+begin_comment
+comment|// FIXME: The Clang version string is not particularly granular;
+end_comment
+
+begin_comment
+comment|// the analyzer infrastructure can change a lot between releases.
+end_comment
+
+begin_comment
+comment|// Unfortunately, this string has to be statically embedded in each plugin,
+end_comment
+
+begin_comment
+comment|// so we can't just use the functions defined in Version.h.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/Version.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|CLANG_ANALYZER_API_VERSION_STRING
+value|CLANG_VERSION_STRING
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -224,22 +264,6 @@ block|{
 name|namespace
 name|ento
 block|{
-ifndef|#
-directive|ifndef
-name|CLANG_ANALYZER_API_VERSION_STRING
-comment|// FIXME: The Clang version string is not particularly granular;
-comment|// the analyzer infrastructure can change a lot between releases.
-comment|// Unfortunately, this string has to be statically embedded in each plugin,
-comment|// so we can't just use the functions defined in Version.h.
-include|#
-directive|include
-file|"clang/Basic/Version.h"
-define|#
-directive|define
-name|CLANG_ANALYZER_API_VERSION_STRING
-value|CLANG_VERSION_STRING
-endif|#
-directive|endif
 name|class
 name|CheckerOptInfo
 decl_stmt|;

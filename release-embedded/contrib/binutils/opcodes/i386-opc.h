@@ -210,6 +210,11 @@ directive|define
 name|CpuRdRnd
 value|0x20000000
 comment|/* Intel Random Number Generator extensions */
+define|#
+directive|define
+name|CpuSMAP
+value|0x40000000
+comment|/* Intel Supervisor Mode Access Prevention */
 comment|/* SSE4.1/4.2 Instructions required */
 define|#
 directive|define
@@ -219,7 +224,7 @@ comment|/* The default value for unknown CPUs - enable all features to avoid pro
 define|#
 directive|define
 name|CpuUnknownFlags
-value|(Cpu186|Cpu286|Cpu386|Cpu486|Cpu586|Cpu686 \ 	|CpuP4|CpuSledgehammer|CpuMMX|CpuMMX2|CpuSSE|CpuSSE2|CpuSSE3|CpuVMX \ 	|Cpu3dnow|Cpu3dnowA|CpuK6|CpuPadLock|CpuSVME|CpuSSSE3|CpuSSE4_1 \ 	|CpuSSE4_2|CpuABM|CpuSSE4a|CpuXSAVE|CpuAES|CpuPCLMUL|CpuRdRnd)
+value|(Cpu186|Cpu286|Cpu386|Cpu486|Cpu586|Cpu686 \ 	|CpuP4|CpuSledgehammer|CpuMMX|CpuMMX2|CpuSSE|CpuSSE2|CpuSSE3|CpuVMX \ 	|Cpu3dnow|Cpu3dnowA|CpuK6|CpuPadLock|CpuSVME|CpuSSSE3|CpuSSE4_1 \ 	|CpuSSE4_2|CpuABM|CpuSSE4a|CpuXSAVE|CpuAES|CpuPCLMUL|CpuRdRnd|CpuSMAP)
 comment|/* the bits in opcode_modifier are used to generate the final opcode from      the base_opcode.  These bits also are used to detect alternate forms of      the same instruction */
 name|unsigned
 name|int

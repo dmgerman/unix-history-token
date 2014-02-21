@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_macro.c,v 1.115 2012/01/05 00:43:51 schwarze Exp $ */
+comment|/*	$Id: mdoc_macro.c,v 1.125 2013/12/24 20:45:27 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008-2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -223,6 +223,8 @@ modifier|*
 parameter_list|,
 name|enum
 name|mdelim
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -420,6 +422,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ap */
@@ -448,6 +452,8 @@ block|{
 name|blk_full
 block|,
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Sh */
@@ -455,6 +461,8 @@ block|{
 name|blk_full
 block|,
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ss */
@@ -469,6 +477,8 @@ block|{
 name|blk_part_imp
 block|,
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* D1 */
@@ -476,6 +486,8 @@ block|{
 name|blk_part_imp
 block|,
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Dl */
@@ -490,6 +502,8 @@ block|{
 name|blk_exp_close
 block|,
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ed */
@@ -504,6 +518,8 @@ block|{
 name|blk_exp_close
 block|,
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* El */
@@ -511,6 +527,8 @@ block|{
 name|blk_full
 block|,
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* It */
@@ -529,6 +547,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* An */
@@ -660,13 +680,15 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Li */
 block|{
 name|blk_full
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Nd */
@@ -750,35 +772,35 @@ comment|/* Xr */
 block|{
 name|in_line_eoln
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* %A */
 block|{
 name|in_line_eoln
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* %B */
 block|{
 name|in_line_eoln
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* %D */
 block|{
 name|in_line_eoln
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* %I */
 block|{
 name|in_line_eoln
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* %J */
@@ -792,7 +814,7 @@ comment|/* %N */
 block|{
 name|in_line_eoln
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* %O */
@@ -806,14 +828,14 @@ comment|/* %P */
 block|{
 name|in_line_eoln
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* %R */
 block|{
 name|in_line_eoln
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* %T */
@@ -827,11 +849,13 @@ comment|/* %V */
 block|{
 name|blk_exp_close
 block|,
-name|MDOC_EXPLICIT
-operator||
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ac */
@@ -843,6 +867,8 @@ operator||
 name|MDOC_PARSED
 operator||
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ao */
@@ -852,6 +878,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Aq */
@@ -867,11 +895,13 @@ comment|/* At */
 block|{
 name|blk_exp_close
 block|,
-name|MDOC_EXPLICIT
-operator||
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Bc */
@@ -890,6 +920,8 @@ operator||
 name|MDOC_PARSED
 operator||
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Bo */
@@ -899,6 +931,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Bq */
@@ -930,11 +964,13 @@ comment|/* Db */
 block|{
 name|blk_exp_close
 block|,
-name|MDOC_EXPLICIT
-operator||
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Dc */
@@ -946,6 +982,8 @@ operator||
 name|MDOC_PARSED
 operator||
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Do */
@@ -955,17 +993,19 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Dq */
 block|{
 name|blk_exp_close
 block|,
-name|MDOC_EXPLICIT
-operator||
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_EXPLICIT
 block|}
 block|,
 comment|/* Ec */
@@ -973,6 +1013,8 @@ block|{
 name|blk_exp_close
 block|,
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ef */
@@ -982,6 +1024,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Em */
@@ -1022,6 +1066,8 @@ operator||
 name|MDOC_PARSED
 operator||
 name|MDOC_IGNDELIM
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* No */
@@ -1033,6 +1079,8 @@ operator||
 name|MDOC_PARSED
 operator||
 name|MDOC_IGNDELIM
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ns */
@@ -1057,11 +1105,13 @@ comment|/* Ox */
 block|{
 name|blk_exp_close
 block|,
-name|MDOC_EXPLICIT
-operator||
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Pc */
@@ -1084,6 +1134,8 @@ operator||
 name|MDOC_PARSED
 operator||
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Po */
@@ -1093,17 +1145,21 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Pq */
 block|{
 name|blk_exp_close
 block|,
-name|MDOC_EXPLICIT
-operator||
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Qc */
@@ -1113,6 +1169,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ql */
@@ -1124,6 +1182,8 @@ operator||
 name|MDOC_PARSED
 operator||
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Qo */
@@ -1133,6 +1193,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Qq */
@@ -1140,6 +1202,8 @@ block|{
 name|blk_exp_close
 block|,
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Re */
@@ -1153,11 +1217,13 @@ comment|/* Rs */
 block|{
 name|blk_exp_close
 block|,
-name|MDOC_EXPLICIT
-operator||
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Sc */
@@ -1169,6 +1235,8 @@ operator||
 name|MDOC_PARSED
 operator||
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* So */
@@ -1178,6 +1246,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Sq */
@@ -1194,6 +1264,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Sx */
@@ -1203,6 +1275,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Sy */
@@ -1221,6 +1295,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ux */
@@ -1258,11 +1334,13 @@ comment|/* Fo */
 block|{
 name|blk_exp_close
 block|,
-name|MDOC_EXPLICIT
-operator||
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Fc */
@@ -1274,17 +1352,21 @@ operator||
 name|MDOC_PARSED
 operator||
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Oo */
 block|{
 name|blk_exp_close
 block|,
-name|MDOC_EXPLICIT
-operator||
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Oc */
@@ -1299,6 +1381,8 @@ block|{
 name|blk_exp_close
 block|,
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ek */
@@ -1368,6 +1452,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Brq */
@@ -1379,24 +1465,28 @@ operator||
 name|MDOC_PARSED
 operator||
 name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Bro */
 block|{
 name|blk_exp_close
 block|,
-name|MDOC_EXPLICIT
-operator||
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_EXPLICIT
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Brc */
 block|{
 name|in_line_eoln
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* %C */
@@ -1426,7 +1516,7 @@ comment|/* Dx */
 block|{
 name|in_line_eoln
 block|,
-literal|0
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* %Q */
@@ -1457,6 +1547,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ta */
@@ -1487,7 +1579,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|)
 block|{
 name|struct
@@ -1500,19 +1592,19 @@ name|n
 operator|=
 name|MDOC_VALID
 operator|&
-name|m
+name|mdoc
 operator|->
 name|last
 operator|->
 name|flags
 condition|?
-name|m
+name|mdoc
 operator|->
 name|last
 operator|->
 name|parent
 else|:
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -1548,7 +1640,7 @@ name|flags
 condition|)
 name|mdoc_nmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|n
 argument_list|,
@@ -1560,9 +1652,9 @@ return|return
 operator|(
 name|rew_last
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
-name|m
+name|mdoc
 operator|->
 name|first
 argument_list|)
@@ -1729,7 +1821,7 @@ operator|!=
 name|to
 condition|)
 block|{
-comment|/* 		 * Save the parent here, because we may delete the 		 * m->last node in the post-validation phase and reset 		 * it to m->last->parent, causing a step in the closing 		 * out to be lost. 		 */
+comment|/* 		 * Save the parent here, because we may delete the 		 * mdoc->last node in the post-validation phase and reset 		 * it to mdoc->last->parent, causing a step in the closing 		 * out to be lost. 		 */
 name|np
 operator|=
 name|mdoc
@@ -2402,7 +2494,7 @@ parameter_list|,
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -2527,7 +2619,7 @@ name|mandoc_vmsg
 argument_list|(
 name|MANDOCERR_SCOPENEST
 argument_list|,
-name|m
+name|mdoc
 operator|->
 name|parse
 argument_list|,
@@ -2577,7 +2669,7 @@ parameter_list|,
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|enum
 name|mdoct
@@ -2597,7 +2689,7 @@ name|n
 decl_stmt|;
 name|n
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -2633,6 +2725,32 @@ operator|(
 name|REWIND_THIS
 operator|)
 case|:
+name|n
+operator|->
+name|lastline
+operator|=
+name|line
+operator|-
+operator|(
+name|MDOC_NEWLINE
+operator|&
+name|mdoc
+operator|->
+name|flags
+operator|&&
+operator|!
+operator|(
+name|MDOC_EXPLICIT
+operator|&
+name|mdoc_macros
+index|[
+name|tok
+index|]
+operator|.
+name|flags
+operator|)
+operator|)
+expr_stmt|;
 break|break;
 case|case
 operator|(
@@ -2643,7 +2761,7 @@ name|mandoc_vmsg
 argument_list|(
 name|MANDOCERR_SCOPEBROKEN
 argument_list|,
-name|m
+name|mdoc
 operator|->
 name|parse
 argument_list|,
@@ -2673,6 +2791,24 @@ name|REWIND_MORE
 operator|)
 case|:
 name|n
+operator|->
+name|lastline
+operator|=
+name|line
+operator|-
+operator|(
+name|MDOC_NEWLINE
+operator|&
+name|mdoc
+operator|->
+name|flags
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+expr_stmt|;
+name|n
 operator|=
 name|n
 operator|->
@@ -2692,7 +2828,7 @@ name|n
 argument_list|,
 name|tok
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -2716,7 +2852,7 @@ operator|)
 case|:
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -2743,7 +2879,7 @@ condition|(
 operator|!
 name|rew_last
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|n
 argument_list|)
@@ -2772,7 +2908,7 @@ condition|(
 operator|!
 name|rew_last
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|n
 argument_list|)
@@ -2793,7 +2929,7 @@ operator|&&
 operator|!
 name|mdoc_body_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|n
 operator|->
@@ -2834,7 +2970,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -2850,6 +2986,9 @@ parameter_list|,
 name|enum
 name|mdelim
 name|d
+parameter_list|,
+name|int
+name|may_append
 parameter_list|)
 block|{
 if|if
@@ -2867,10 +3006,66 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|may_append
+operator|&&
+operator|!
+operator|(
+operator|(
+name|MDOC_SYNOPSIS
+operator||
+name|MDOC_KEEP
+operator||
+name|MDOC_SMOFF
+operator|)
+operator|&
+name|mdoc
+operator|->
+name|flags
+operator|)
+operator|&&
+name|DELIM_NONE
+operator|==
+name|d
+operator|&&
+name|MDOC_TEXT
+operator|==
+name|mdoc
+operator|->
+name|last
+operator|->
+name|type
+operator|&&
+name|DELIM_NONE
+operator|==
+name|mdoc_isdelim
+argument_list|(
+name|mdoc
+operator|->
+name|last
+operator|->
+name|string
+argument_list|)
+condition|)
+block|{
+name|mdoc_word_append
+argument_list|(
+name|mdoc
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|!
 name|mdoc_word_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -2890,7 +3085,7 @@ name|DELIM_OPEN
 operator|==
 name|d
 condition|)
-name|m
+name|mdoc
 operator|->
 name|last
 operator|->
@@ -2906,13 +3101,13 @@ name|DELIM_CLOSE
 operator|==
 name|d
 operator|&&
-name|m
+name|mdoc
 operator|->
 name|last
 operator|->
 name|prev
 operator|&&
-name|m
+name|mdoc
 operator|->
 name|last
 operator|->
@@ -2921,8 +3116,18 @@ operator|->
 name|tok
 operator|!=
 name|MDOC_No
+operator|&&
+name|mdoc
+operator|->
+name|last
+operator|->
+name|parent
+operator|->
+name|tok
+operator|!=
+name|MDOC_Fd
 condition|)
-name|m
+name|mdoc
 operator|->
 name|last
 operator|->
@@ -2946,7 +3151,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -3001,7 +3206,7 @@ name|ac
 operator|=
 name|mdoc_zargs
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3034,7 +3239,7 @@ condition|)
 break|break;
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3043,6 +3248,8 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_MAX
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If we encounter end-of-sentence symbols, then trigger 		 * the double-space. 		 * 		 * XXX: it's easy to allow this to propagate outward to 		 * the last symbol, such that `. )' will cause the 		 * correct double-spacing.  However, (1) groff isn't 		 * smart enough to do this and (2) it would require 		 * knowing which symbols break this behaviour, for 		 * example, `.  ;' shouldn't propagate the double-space. 		 */
@@ -3060,7 +3267,7 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|m
+name|mdoc
 operator|->
 name|last
 operator|->
@@ -3136,7 +3343,7 @@ name|nl
 operator|=
 name|MDOC_NEWLINE
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 expr_stmt|;
@@ -3155,6 +3362,18 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+operator|(
+name|MDOC_Ek
+operator|)
+case|:
+name|mdoc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|MDOC_KEEP
+expr_stmt|;
 default|default:
 name|maxargs
 operator|=
@@ -3180,7 +3399,7 @@ for|for
 control|(
 name|n
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 init|;
@@ -3276,7 +3495,7 @@ name|later
 argument_list|,
 name|tok
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3289,7 +3508,7 @@ condition|(
 operator|!
 name|mdoc_endbody_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3328,16 +3547,11 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|MDOC_CALLABLE
-operator|&
-name|mdoc_macros
-index|[
+name|MDOC_It
+operator|!=
 name|n
 operator|->
 name|tok
-index|]
-operator|.
-name|flags
 condition|)
 name|later
 operator|=
@@ -3370,7 +3584,7 @@ index|]
 condition|)
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3386,7 +3600,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BODY
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -3406,7 +3620,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BLOCK
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -3424,7 +3638,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BODY
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -3453,7 +3667,7 @@ condition|(
 operator|!
 name|mdoc_tail_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3505,7 +3719,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BLOCK
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -3528,7 +3742,7 @@ name|ac
 operator|=
 name|mdoc_args
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3594,7 +3808,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3603,6 +3817,15 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_MAX
+argument_list|,
+name|MDOC_JOIN
+operator|&
+name|mdoc_macros
+index|[
+name|tok
+index|]
+operator|.
+name|flags
 argument_list|)
 condition|)
 return|return
@@ -3625,7 +3848,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BLOCK
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -3644,12 +3867,19 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|mdoc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|MDOC_NEWLINE
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ntok
 argument_list|,
@@ -3679,7 +3909,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BLOCK
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -3707,7 +3937,7 @@ return|return
 operator|(
 name|append_delims
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3768,7 +3998,7 @@ name|nl
 operator|=
 name|MDOC_NEWLINE
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 expr_stmt|;
@@ -3843,7 +4073,7 @@ name|av
 operator|=
 name|mdoc_argv
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3916,7 +4146,7 @@ name|ac
 operator|=
 name|mdoc_args
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -3985,7 +4215,7 @@ operator|&&
 operator|!
 name|rew_elem
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|)
@@ -4009,7 +4239,7 @@ condition|(
 operator|!
 name|mdoc_elem_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4030,9 +4260,9 @@ condition|(
 operator|!
 name|rew_last
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
-name|m
+name|mdoc
 operator|->
 name|last
 argument_list|)
@@ -4061,7 +4291,7 @@ argument_list|)
 expr_stmt|;
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4076,7 +4306,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ntok
 argument_list|,
@@ -4108,7 +4338,7 @@ return|return
 operator|(
 name|append_delims
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4168,7 +4398,7 @@ condition|(
 operator|!
 name|mdoc_elem_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4214,7 +4444,7 @@ operator|&&
 operator|!
 name|rew_elem
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|)
@@ -4241,7 +4471,7 @@ condition|(
 operator|!
 name|mdoc_elem_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4276,7 +4506,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4285,6 +4515,15 @@ argument_list|,
 name|p
 argument_list|,
 name|d
+argument_list|,
+name|MDOC_JOIN
+operator|&
+name|mdoc_macros
+index|[
+name|tok
+index|]
+operator|.
+name|flags
 argument_list|)
 condition|)
 return|return
@@ -4307,7 +4546,7 @@ condition|(
 operator|!
 name|rew_elem
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|)
@@ -4330,7 +4569,7 @@ operator|&&
 operator|!
 name|rew_elem
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|)
@@ -4355,7 +4594,7 @@ condition|(
 operator|!
 name|mdoc_elem_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4376,9 +4615,9 @@ condition|(
 operator|!
 name|rew_last
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
-name|m
+name|mdoc
 operator|->
 name|last
 argument_list|)
@@ -4407,7 +4646,7 @@ argument_list|)
 expr_stmt|;
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4431,7 +4670,7 @@ return|return
 operator|(
 name|append_delims
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4507,7 +4746,7 @@ name|nl
 operator|=
 name|MDOC_NEWLINE
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 expr_stmt|;
@@ -4534,7 +4773,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BODY
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -4555,7 +4794,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BLOCK
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -4589,7 +4828,7 @@ name|av
 operator|=
 name|mdoc_argv
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4647,7 +4886,7 @@ condition|(
 operator|!
 name|mdoc_block_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4678,7 +4917,7 @@ name|tok
 operator|&&
 name|MDOC_Bl
 operator|==
-name|m
+name|mdoc
 operator|->
 name|last
 operator|->
@@ -4688,7 +4927,7 @@ name|tok
 operator|&&
 name|LIST_diag
 operator|==
-name|m
+name|mdoc
 operator|->
 name|last
 operator|->
@@ -4713,7 +4952,7 @@ condition|(
 operator|!
 name|mdoc_head_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4729,7 +4968,7 @@ operator|)
 return|;
 name|head
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -4740,7 +4979,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_HEAD
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -4759,7 +4998,7 @@ condition|(
 operator|!
 name|mdoc_body_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4775,11 +5014,23 @@ operator|)
 return|;
 name|body
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|MDOC_Bk
+operator|==
+name|tok
+condition|)
+name|mdoc
+operator|->
+name|flags
+operator||=
+name|MDOC_KEEP
+expr_stmt|;
 name|ac
 operator|=
 name|ARGS_ERROR
@@ -4810,7 +5061,7 @@ name|ac
 operator|=
 name|mdoc_args
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4868,7 +5119,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BODY
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -4887,7 +5138,7 @@ condition|(
 operator|!
 name|mdoc_body_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4903,7 +5154,7 @@ operator|)
 return|;
 name|body
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -4945,7 +5196,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4954,6 +5205,8 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_OPEN
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -4976,7 +5229,7 @@ condition|(
 operator|!
 name|mdoc_head_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -4992,7 +5245,7 @@ operator|)
 return|;
 name|head
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -5028,7 +5281,7 @@ name|rew_sub
 argument_list|(
 name|mtt
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -5048,7 +5301,7 @@ condition|(
 operator|!
 name|mdoc_body_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5064,7 +5317,7 @@ operator|)
 return|;
 name|body
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -5075,7 +5328,7 @@ name|ARGS_PPHRASE
 operator|==
 name|ac
 condition|)
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
@@ -5091,7 +5344,7 @@ name|ARGS_PPHRASE
 operator|==
 name|lac
 condition|)
-name|m
+name|mdoc
 operator|->
 name|flags
 operator||=
@@ -5102,7 +5355,7 @@ condition|(
 operator|!
 name|phrase
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5116,7 +5369,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|&=
@@ -5154,7 +5407,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5163,6 +5416,15 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_MAX
+argument_list|,
+name|MDOC_JOIN
+operator|&
+name|mdoc_macros
+index|[
+name|tok
+index|]
+operator|.
+name|flags
 argument_list|)
 condition|)
 return|return
@@ -5177,7 +5439,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ntok
 argument_list|,
@@ -5209,7 +5471,7 @@ condition|(
 operator|!
 name|mdoc_head_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5225,7 +5487,7 @@ operator|)
 return|;
 name|head
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -5237,7 +5499,7 @@ operator|&&
 operator|!
 name|append_delims
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5266,7 +5528,7 @@ for|for
 control|(
 name|n
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 init|;
@@ -5333,7 +5595,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_HEAD
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -5352,7 +5614,7 @@ condition|(
 operator|!
 name|mdoc_body_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5374,7 +5636,7 @@ operator|!
 operator|(
 name|MDOC_FREECOL
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|)
@@ -5391,7 +5653,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BODY
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -5412,7 +5674,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BLOCK
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -5426,7 +5688,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|&=
@@ -5487,7 +5749,7 @@ name|nl
 operator|=
 name|MDOC_NEWLINE
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 expr_stmt|;
@@ -5497,7 +5759,7 @@ condition|(
 operator|!
 name|mdoc_block_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5515,7 +5777,7 @@ operator|)
 return|;
 name|blk
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -5524,7 +5786,7 @@ condition|(
 operator|!
 name|mdoc_head_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5545,7 +5807,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_HEAD
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -5578,7 +5840,7 @@ name|ac
 operator|=
 name|mdoc_args
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5640,7 +5902,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5649,6 +5911,8 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_OPEN
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -5670,7 +5934,7 @@ condition|(
 operator|!
 name|mdoc_body_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5686,7 +5950,7 @@ operator|)
 return|;
 name|body
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -5718,7 +5982,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5727,6 +5991,15 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_MAX
+argument_list|,
+name|MDOC_JOIN
+operator|&
+name|mdoc_macros
+index|[
+name|tok
+index|]
+operator|.
+name|flags
 argument_list|)
 condition|)
 return|return
@@ -5741,7 +6014,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ntok
 argument_list|,
@@ -5774,7 +6047,7 @@ condition|(
 operator|!
 name|mdoc_body_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5790,7 +6063,7 @@ operator|)
 return|;
 name|body
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -5890,7 +6163,7 @@ for|for
 control|(
 name|n
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 init|;
@@ -5948,7 +6221,7 @@ name|n
 argument_list|,
 name|tok
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5960,7 +6233,7 @@ condition|(
 operator|!
 name|mdoc_endbody_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -5996,7 +6269,7 @@ name|mandoc_vmsg
 argument_list|(
 name|MANDOCERR_SCOPENEST
 argument_list|,
-name|m
+name|mdoc
 operator|->
 name|parse
 argument_list|,
@@ -6021,7 +6294,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BODY
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -6043,7 +6316,7 @@ operator|&&
 operator|!
 name|append_delims
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6067,7 +6340,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BLOCK
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -6081,6 +6354,46 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* Move trailing .Ns out of scope. */
+for|for
+control|(
+name|n
+operator|=
+name|body
+operator|->
+name|child
+init|;
+name|n
+operator|&&
+name|n
+operator|->
+name|next
+condition|;
+name|n
+operator|=
+name|n
+operator|->
+name|next
+control|)
+comment|/* Do nothing. */
+empty_stmt|;
+if|if
+condition|(
+name|n
+operator|&&
+name|MDOC_Ns
+operator|==
+name|n
+operator|->
+name|tok
+condition|)
+name|mdoc_node_relink
+argument_list|(
+name|mdoc
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -6130,7 +6443,7 @@ name|nl
 operator|=
 name|MDOC_NEWLINE
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 expr_stmt|;
@@ -6140,7 +6453,7 @@ condition|(
 operator|!
 name|mdoc_block_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6176,7 +6489,7 @@ name|ac
 operator|=
 name|mdoc_args
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6246,7 +6559,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6255,6 +6568,8 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_OPEN
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -6283,7 +6598,7 @@ condition|(
 operator|!
 name|mdoc_head_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6299,7 +6614,7 @@ operator|)
 return|;
 name|head
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -6329,7 +6644,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6338,6 +6653,8 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_MAX
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -6352,7 +6669,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_HEAD
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -6371,7 +6688,7 @@ condition|(
 operator|!
 name|mdoc_body_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6387,7 +6704,7 @@ operator|)
 return|;
 name|body
 operator|=
-name|m
+name|mdoc
 operator|->
 name|last
 expr_stmt|;
@@ -6437,7 +6754,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6446,6 +6763,15 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_MAX
+argument_list|,
+name|MDOC_JOIN
+operator|&
+name|mdoc_macros
+index|[
+name|tok
+index|]
+operator|.
+name|flags
 argument_list|)
 condition|)
 return|return
@@ -6460,7 +6786,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ntok
 argument_list|,
@@ -6492,7 +6818,7 @@ condition|(
 operator|!
 name|mdoc_head_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6520,7 +6846,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_HEAD
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -6539,7 +6865,7 @@ condition|(
 operator|!
 name|mdoc_body_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6569,7 +6895,7 @@ return|return
 operator|(
 name|append_delims
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6630,7 +6956,7 @@ name|nl
 operator|=
 name|MDOC_NEWLINE
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 expr_stmt|;
@@ -6709,7 +7035,7 @@ name|av
 operator|=
 name|mdoc_argv
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6782,7 +7108,7 @@ name|ac
 operator|=
 name|mdoc_args
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6856,7 +7182,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6865,6 +7191,8 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_OPEN
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -6886,7 +7214,7 @@ condition|(
 operator|!
 name|mdoc_elem_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -6917,7 +7245,7 @@ condition|(
 operator|!
 name|rew_elem
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|)
@@ -6962,7 +7290,7 @@ operator|&&
 operator|!
 name|rew_elem
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|)
@@ -6981,7 +7309,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ntok
 argument_list|,
@@ -7038,7 +7366,7 @@ condition|(
 operator|!
 name|rew_elem
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|)
@@ -7058,7 +7386,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7067,6 +7395,15 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_MAX
+argument_list|,
+name|MDOC_JOIN
+operator|&
+name|mdoc_macros
+index|[
+name|tok
+index|]
+operator|.
+name|flags
 argument_list|)
 condition|)
 return|return
@@ -7087,7 +7424,7 @@ operator|&&
 operator|!
 name|mdoc_elem_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7112,7 +7449,7 @@ operator|&&
 operator|!
 name|rew_elem
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|)
@@ -7136,7 +7473,7 @@ return|return
 operator|(
 name|append_delims
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7206,7 +7543,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BLOCK
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|MDOC_Nm
 argument_list|,
@@ -7234,7 +7571,7 @@ name|av
 operator|=
 name|mdoc_argv
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7293,7 +7630,7 @@ condition|(
 operator|!
 name|mdoc_elem_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7325,7 +7662,7 @@ name|ac
 operator|=
 name|mdoc_args
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7384,7 +7721,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7393,6 +7730,15 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_MAX
+argument_list|,
+name|MDOC_JOIN
+operator|&
+name|mdoc_macros
+index|[
+name|tok
+index|]
+operator|.
+name|flags
 argument_list|)
 condition|)
 return|return
@@ -7407,7 +7753,7 @@ condition|(
 operator|!
 name|rew_elem
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|)
@@ -7421,7 +7767,7 @@ return|return
 operator|(
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ntok
 argument_list|,
@@ -7441,7 +7787,7 @@ return|return
 operator|(
 name|rew_elem
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|)
@@ -7469,7 +7815,7 @@ name|nl
 operator|=
 name|MDOC_NEWLINE
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 expr_stmt|;
@@ -7480,7 +7826,7 @@ operator|!
 operator|(
 name|MDOC_SYNOPSIS
 operator|&
-name|m
+name|mdoc
 operator|->
 name|flags
 operator|)
@@ -7489,7 +7835,7 @@ return|return
 operator|(
 name|in_line
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -7513,7 +7859,7 @@ return|return
 operator|(
 name|in_line
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -7538,7 +7884,7 @@ return|return
 operator|(
 name|blk_full
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -7563,7 +7909,7 @@ return|return
 operator|(
 name|blk_part_imp
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|tok
 argument_list|,
@@ -7594,7 +7940,7 @@ parameter_list|)
 block|{
 name|mdoc_pmsg
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7623,7 +7969,7 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|,
 name|int
 name|line
@@ -7670,7 +8016,7 @@ name|ac
 operator|=
 name|mdoc_zargs
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7726,7 +8072,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7735,6 +8081,8 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_MAX
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -7749,7 +8097,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ntok
 argument_list|,
@@ -7772,7 +8120,7 @@ return|return
 operator|(
 name|append_delims
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7804,6 +8152,11 @@ parameter_list|(
 name|MACRO_PROT_ARGS
 parameter_list|)
 block|{
+name|struct
+name|mdoc_node
+modifier|*
+name|n
+decl_stmt|;
 name|int
 name|la
 decl_stmt|;
@@ -7819,7 +8172,66 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-comment|/* 	 * FIXME: this is overly restrictive: if the `Ta' is unexpected, 	 * it should simply error out with ARGSLOST. 	 */
+comment|/* Make sure we are in a column list or ignore this macro. */
+name|n
+operator|=
+name|mdoc
+operator|->
+name|last
+expr_stmt|;
+while|while
+condition|(
+name|NULL
+operator|!=
+name|n
+operator|&&
+name|MDOC_Bl
+operator|!=
+name|n
+operator|->
+name|tok
+condition|)
+name|n
+operator|=
+name|n
+operator|->
+name|parent
+expr_stmt|;
+if|if
+condition|(
+name|NULL
+operator|==
+name|n
+operator|||
+name|LIST_column
+operator|!=
+name|n
+operator|->
+name|norm
+operator|->
+name|Bl
+operator|.
+name|type
+condition|)
+block|{
+name|mdoc_pmsg
+argument_list|(
+name|mdoc
+argument_list|,
+name|line
+argument_list|,
+name|ppos
+argument_list|,
+name|MANDOCERR_STRAYTA
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+comment|/* Advance to the next column. */
 if|if
 condition|(
 operator|!
@@ -7827,7 +8239,7 @@ name|rew_sub
 argument_list|(
 name|MDOC_BODY
 argument_list|,
-name|m
+name|mdoc
 argument_list|,
 name|MDOC_It
 argument_list|,
@@ -7846,7 +8258,7 @@ condition|(
 operator|!
 name|mdoc_body_alloc
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7875,7 +8287,7 @@ name|ac
 operator|=
 name|mdoc_zargs
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7930,7 +8342,7 @@ condition|(
 operator|!
 name|dword
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,
@@ -7939,6 +8351,15 @@ argument_list|,
 name|p
 argument_list|,
 name|DELIM_MAX
+argument_list|,
+name|MDOC_JOIN
+operator|&
+name|mdoc_macros
+index|[
+name|tok
+index|]
+operator|.
+name|flags
 argument_list|)
 condition|)
 return|return
@@ -7953,7 +8374,7 @@ condition|(
 operator|!
 name|mdoc_macro
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|ntok
 argument_list|,
@@ -7975,7 +8396,7 @@ return|return
 operator|(
 name|append_delims
 argument_list|(
-name|m
+name|mdoc
 argument_list|,
 name|line
 argument_list|,

@@ -245,7 +245,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|rtasdev
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|rtasdev_driver
 argument_list|,

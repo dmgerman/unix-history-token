@@ -271,7 +271,16 @@ argument_list|)
 operator|,
 name|AllowHidden
 argument_list|(
-argument|Redecl == Sema::ForRedeclaration
+name|Redecl
+operator|==
+name|Sema
+operator|::
+name|ForRedeclaration
+argument_list|)
+operator|,
+name|Shadowed
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|configure
@@ -355,7 +364,16 @@ argument_list|)
 operator|,
 name|AllowHidden
 argument_list|(
-argument|Redecl == Sema::ForRedeclaration
+name|Redecl
+operator|==
+name|Sema
+operator|::
+name|ForRedeclaration
+argument_list|)
+operator|,
+name|Shadowed
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|configure
@@ -435,7 +453,14 @@ argument_list|)
 operator|,
 name|AllowHidden
 argument_list|(
-argument|Other.AllowHidden
+name|Other
+operator|.
+name|AllowHidden
+argument_list|)
+operator|,
+name|Shadowed
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 operator|~
@@ -735,6 +760,10 @@ specifier|static
 name|bool
 name|isVisible
 parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|,
 name|NamedDecl
 modifier|*
 name|D
@@ -752,11 +781,27 @@ condition|)
 return|return
 name|true
 return|;
-comment|// FIXME: We should be allowed to refer to a module-private name from
-comment|// within the same module, e.g., during template instantiation.
-comment|// This requires us know which module a particular declaration came from.
+if|if
+condition|(
+name|SemaRef
+operator|.
+name|ActiveTemplateInstantiations
+operator|.
+name|empty
+argument_list|()
+condition|)
 return|return
 name|false
+return|;
+comment|// During template instantiation, we can refer to hidden declarations, if
+comment|// they were visible in any module along the path of instantiation.
+return|return
+name|isVisibleSlow
+argument_list|(
+name|SemaRef
+argument_list|,
+name|D
+argument_list|)
 return|;
 block|}
 comment|/// \brief Retrieve the accepted (re)declaration of the given declaration,
@@ -791,6 +836,8 @@ argument_list|()
 operator|||
 name|isVisible
 argument_list|(
+name|SemaRef
+argument_list|,
 name|D
 argument_list|)
 condition|)
@@ -806,6 +853,19 @@ return|;
 block|}
 name|private
 label|:
+specifier|static
+name|bool
+name|isVisibleSlow
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 name|NamedDecl
 modifier|*
 name|getAcceptableDeclSlow
@@ -1023,6 +1083,28 @@ expr_stmt|;
 name|ResultKind
 operator|=
 name|NotFoundInCurrentInstantiation
+expr_stmt|;
+block|}
+comment|/// \brief Determine whether the lookup result was shadowed by some other
+comment|/// declaration that lookup ignored.
+name|bool
+name|isShadowed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Shadowed
+return|;
+block|}
+comment|/// \brief Note that we found and ignored a declaration while performing
+comment|/// lookup.
+name|void
+name|setShadowed
+parameter_list|()
+block|{
+name|Shadowed
+operator|=
+name|true
 expr_stmt|;
 block|}
 comment|/// \brief Resolves the result kind of the lookup, possibly hiding
@@ -1375,6 +1457,10 @@ expr_stmt|;
 name|NamingClass
 operator|=
 literal|0
+expr_stmt|;
+name|Shadowed
+operator|=
+name|false
 expr_stmt|;
 block|}
 end_function
@@ -1838,6 +1924,35 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|setFindLocalExtern
+parameter_list|(
+name|bool
+name|FindLocalExtern
+parameter_list|)
+block|{
+if|if
+condition|(
+name|FindLocalExtern
+condition|)
+name|IDNS
+operator||=
+name|Decl
+operator|::
+name|IDNS_LocalExtern
+expr_stmt|;
+else|else
+name|IDNS
+operator|&=
+operator|~
+name|Decl
+operator|::
+name|IDNS_LocalExtern
+expr_stmt|;
+block|}
+end_function
+
 begin_label
 name|private
 label|:
@@ -2140,6 +2255,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief True if the found declarations were shadowed by some other
+end_comment
+
+begin_comment
+comment|/// declaration that we skipped. This only happens when \c LookupKind
+end_comment
+
+begin_comment
+comment|/// is \c LookupRedeclarationWithLinkage.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|Shadowed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 unit|};
 comment|/// \brief Consumes visible declarations found when searching for
 end_comment
@@ -2175,6 +2308,15 @@ name|virtual
 operator|~
 name|VisibleDeclConsumer
 argument_list|()
+expr_stmt|;
+comment|/// \brief Determine whether hidden declarations (from unimported
+comment|/// modules) should be given to this consumer. By default, they
+comment|/// are not included.
+name|virtual
+name|bool
+name|includeHiddenDecls
+argument_list|()
+specifier|const
 expr_stmt|;
 comment|/// \brief Invoked each time \p Sema::LookupVisibleDecls() finds a
 comment|/// declaration visible from the current scope or context.
@@ -2279,6 +2421,19 @@ expr_stmt|;
 block|}
 name|class
 name|iterator
+range|:
+name|public
+name|std
+operator|::
+name|iterator
+operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+decl_stmt|,
+name|NamedDecl
+modifier|*
+decl|>
 block|{
 typedef|typedef
 name|llvm
@@ -2350,8 +2505,7 @@ operator|++
 argument_list|)
 return|;
 block|}
-name|NamedDecl
-operator|*
+name|value_type
 name|operator
 operator|*
 operator|(
