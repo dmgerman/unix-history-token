@@ -1892,6 +1892,9 @@ name|st_mtim
 operator|.
 name|tv_sec
 operator|+
+operator|(
+name|int
+operator|)
 name|period
 operator|>=
 name|now
