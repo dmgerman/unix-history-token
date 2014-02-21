@@ -2023,6 +2023,48 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|ppc
+operator|||
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|ppc64
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|Generic_ELF
+operator|::
+name|IsIntegratedAssemblerDefault
+argument_list|()
+return|;
+block|}
+name|virtual
+name|bool
 name|UseSjLjExceptions
 argument_list|()
 specifier|const
@@ -2171,11 +2213,11 @@ name|buildLinker
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Minix
-operator|:
+range|:
 name|public
 name|Generic_ELF
 block|{
@@ -2221,11 +2263,11 @@ name|buildLinker
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|DragonFly
-operator|:
+range|:
 name|public
 name|Generic_ELF
 block|{
@@ -2281,11 +2323,11 @@ name|buildLinker
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Linux
-operator|:
+range|:
 name|public
 name|Generic_ELF
 block|{
@@ -2429,11 +2471,11 @@ name|computeSysRoot
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Hexagon_TC
-operator|:
+range|:
 name|public
 name|Linux
 block|{
@@ -2553,13 +2595,13 @@ operator|&
 name|Args
 argument_list|)
 block|; }
-block|;
+decl_stmt|;
 comment|/// TCEToolChain - A tool chain using the llvm bitcode tools to perform
 comment|/// all subcommands. See http://tce.cs.tut.fi for our peculiar target.
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|TCEToolChain
-operator|:
+range|:
 name|public
 name|ToolChain
 block|{
@@ -2613,11 +2655,11 @@ name|isPICDefaultForced
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Windows
-operator|:
+range|:
 name|public
 name|ToolChain
 block|{
@@ -2713,11 +2755,11 @@ name|buildAssembler
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|XCore
-operator|:
+range|:
 name|public
 name|ToolChain
 block|{
@@ -2835,7 +2877,8 @@ argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|; }
-block|;  }
+decl_stmt|;
+block|}
 comment|// end namespace toolchains
 block|}
 comment|// end namespace driver
