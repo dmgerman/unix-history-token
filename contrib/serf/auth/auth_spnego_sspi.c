@@ -677,6 +677,10 @@ begin_function
 name|apr_status_t
 name|serf__spnego_init_sec_context
 parameter_list|(
+name|serf_connection_t
+modifier|*
+name|conn
+parameter_list|,
 name|serf__spnego_context_t
 modifier|*
 name|ctx
@@ -786,11 +790,15 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|serf__log
+name|serf__log_skt
 argument_list|(
 name|AUTH_VERBOSE
 argument_list|,
 name|__FILE__
+argument_list|,
+name|conn
+operator|->
+name|skt
 argument_list|,
 literal|"Using SPN '%s' for '%s'\n"
 argument_list|,

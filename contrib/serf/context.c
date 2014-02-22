@@ -1049,6 +1049,18 @@ return|return
 name|APR_SUCCESS
 return|;
 comment|/* ### do we still need to dispatch stuff here?            ### look at the potential return codes. map to our defined            ### return values? ...         */
+comment|/* Use the strict documented error for poll timeouts, to allow proper            handling of the other timeout types when returned from            serf_event_trigger */
+if|if
+condition|(
+name|APR_STATUS_IS_TIMEUP
+argument_list|(
+name|status
+argument_list|)
+condition|)
+return|return
+name|APR_TIMEUP
+return|;
+comment|/* Return the documented error */
 return|return
 name|status
 return|;
