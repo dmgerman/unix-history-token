@@ -9,11 +9,11 @@ directive|include
 file|"int_lib.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|__x86_64
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRT_HAS_128BIT
+end_ifdef
 
 begin_comment
 comment|/* Returns: the index of the least significant 1-bit in a, or  * the value zero if a is zero. The least significant bit is index one.  */
@@ -103,7 +103,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __x86_64 */
+comment|/* CRT_HAS_128BIT */
 end_comment
 
 end_unit
