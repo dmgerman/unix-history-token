@@ -7160,7 +7160,7 @@ name|fd_ofiles
 operator|=
 name|ntable
 expr_stmt|;
-comment|/* Allocate a new map only if the old is not large enough.  It will 	 * grow at a slower rate than the table as it can map more 	 * entries than the table can hold. */
+comment|/* 	 * Allocate a new map only if the old is not large enough.  It will 	 * grow at a slower rate than the table as it can map more 	 * entries than the table can hold. 	 */
 if|if
 condition|(
 name|NDSLOTS
@@ -7278,7 +7278,7 @@ name|ft_next
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* The map does not have the same possibility of threads still 	 * holding references to it.  So always free it as long as it 	 * does not reference the original static allocation. */
+comment|/* 	 * The map does not have the same possibility of threads still 	 * holding references to it.  So always free it as long as it 	 * does not reference the original static allocation. 	 */
 if|if
 condition|(
 name|NDSLOTS
