@@ -1074,6 +1074,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|preloaded_file
+modifier|*
+name|file_loadraw
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|file_discard
 parameter_list|(
