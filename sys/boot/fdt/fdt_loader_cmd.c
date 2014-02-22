@@ -656,6 +656,11 @@ name|i
 decl_stmt|,
 name|sym_count
 decl_stmt|;
+name|debugf
+argument_list|(
+literal|"fdt_find_static_dtb()\n"
+argument_list|)
+expr_stmt|;
 name|sym_count
 operator|=
 name|symtab
@@ -967,6 +972,16 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|debugf
+argument_list|(
+literal|"fdt_load_dtb(0x%08jx)\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|va
+argument_list|)
+expr_stmt|;
 name|COPYOUT
 argument_list|(
 name|va
@@ -1127,6 +1142,13 @@ block|{
 name|int
 name|err
 decl_stmt|;
+name|debugf
+argument_list|(
+literal|"fdt_load_dtb_addr(0x%p)\n"
+argument_list|,
+name|header
+argument_list|)
+expr_stmt|;
 name|fdtp_size
 operator|=
 name|fdt_totalsize
@@ -1233,6 +1255,9 @@ name|fdt_header
 modifier|*
 name|hdr
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1245,6 +1270,12 @@ decl_stmt|;
 name|vm_offset_t
 name|va
 decl_stmt|;
+name|debugf
+argument_list|(
+literal|"fdt_setup_fdtp()\n"
+argument_list|)
+expr_stmt|;
+comment|/* If we already loaded a file, use it. */
 if|if
 condition|(
 operator|(
@@ -1261,25 +1292,46 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Using DTB from loaded file.\n"
-argument_list|)
-expr_stmt|;
-return|return
+if|if
+condition|(
 name|fdt_load_dtb
 argument_list|(
 name|bfp
 operator|->
 name|f_addr
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Using DTB from loaded file.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
+block|}
+comment|/* If we were given the address of a valid blob in memory, use it. */
 if|if
 condition|(
 name|fdt_to_load
 operator|!=
 name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|fdt_load_dtb_addr
+argument_list|(
+name|fdt_to_load
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|printf
@@ -1294,13 +1346,13 @@ name|fdt_to_load
 argument_list|)
 expr_stmt|;
 return|return
-name|fdt_load_dtb_addr
-argument_list|(
-name|fdt_to_load
-argument_list|)
+operator|(
+literal|0
+operator|)
 return|;
 block|}
-comment|/* Board vendors use both fdtaddr and fdt_addr names.  Grrrr. */
+block|}
+comment|/* 	 * If the U-boot environment contains a variable giving the address of a 	 * valid blob in memory, use it.  Board vendors use both fdtaddr and 	 * fdt_addr names. 	 */
 name|s
 operator|=
 name|ub_env_get
@@ -1358,19 +1410,33 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Using DTB provided by U-Boot.\n"
-argument_list|)
-expr_stmt|;
-return|return
+if|if
+condition|(
 name|fdt_load_dtb_addr
 argument_list|(
 name|hdr
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Using DTB provided by U-Boot at "
+literal|"address 0x%08X.\n"
+argument_list|,
+name|hdr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 block|}
+block|}
+comment|/* If there is a dtb compiled into the kernel, use it. */
 if|if
 condition|(
 operator|(
@@ -1383,6 +1449,16 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|fdt_load_dtb
+argument_list|(
+name|va
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Using DTB compiled into kernel.\n"
@@ -1390,16 +1466,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|fdt_load_dtb
-argument_list|(
-name|va
-argument_list|)
+literal|0
 operator|)
 return|;
 block|}
+block|}
 name|command_errmsg
 operator|=
-literal|"no device tree blob found!"
+literal|"No device tree blob found!\n"
 expr_stmt|;
 return|return
 operator|(
@@ -3379,6 +3453,11 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
+name|debugf
+argument_list|(
+literal|"fdt_fixup()\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fdtp
@@ -3644,6 +3723,13 @@ block|{
 name|int
 name|err
 decl_stmt|;
+name|debugf
+argument_list|(
+literal|"fdt_copy va 0x%08x\n"
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fdtp
