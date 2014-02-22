@@ -1300,7 +1300,7 @@ name|fdt_to_load
 argument_list|)
 return|;
 block|}
-comment|/* Board vendors use both fdtaddr and fdt_addr.  Grrrr. */
+comment|/* Board vendors use both fdtaddr and fdt_addr names.  Grrrr. */
 name|s
 operator|=
 name|ub_env_get
