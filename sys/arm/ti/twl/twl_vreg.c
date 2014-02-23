@@ -653,52 +653,21 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uint16_t
-name|twl4030_vdd1_voltages
-index|[]
-init|=
-block|{
-literal|800
-block|,
-literal|1450
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uint16_t
-name|twl4030_vdd2_voltages
-index|[]
-init|=
-block|{
-literal|800
-block|,
-literal|1450
-block|,
-literal|1500
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* vdd1, vdd2, vdio, not currently used. */
+end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uint16_t
-name|twl4030_vio_voltages
-index|[]
-init|=
-block|{
-literal|1800
-block|,
-literal|1850
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static const uint16_t twl4030_vdd1_voltages[] = { 	800, 1450 }; static const uint16_t twl4030_vdd2_voltages[] = { 	800, 1450, 1500 }; static const uint16_t twl4030_vio_voltages[] = { 	1800, 1850 };
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static

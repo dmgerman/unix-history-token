@@ -5777,7 +5777,7 @@ name|uint32_t
 name|msdu
 decl_stmt|;
 name|uint32_t
-name|busrt_err1
+name|burst_err1
 decl_stmt|;
 name|uint32_t
 name|burst_err2

@@ -150,6 +150,10 @@ comment|/* Initialize outbound security context.  *  * The function is used to b
 name|apr_status_t
 name|serf__spnego_init_sec_context
 parameter_list|(
+name|serf_connection_t
+modifier|*
+name|conn
+parameter_list|,
 name|serf__spnego_context_t
 modifier|*
 name|ctx

@@ -9407,7 +9407,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", process holds "
+literal|", descriptor holds "
 argument_list|)
 expr_stmt|;
 name|capname

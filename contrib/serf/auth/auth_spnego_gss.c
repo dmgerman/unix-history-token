@@ -98,10 +98,9 @@ parameter_list|(
 name|int
 name|verbose_flag
 parameter_list|,
-specifier|const
-name|char
+name|apr_socket_t
 modifier|*
-name|filename
+name|skt
 parameter_list|,
 name|serf__spnego_context_t
 modifier|*
@@ -193,11 +192,13 @@ name|stat_buff
 argument_list|)
 expr_stmt|;
 block|}
-name|serf__log
+name|serf__log_skt
 argument_list|(
 name|verbose_flag
 argument_list|,
-name|filename
+name|__FILE__
+argument_list|,
+name|skt
 argument_list|,
 literal|"%s (%x,%d): %s\n"
 argument_list|,
@@ -277,7 +278,7 @@ name|log_error
 argument_list|(
 name|AUTH_VERBOSE
 argument_list|,
-name|__FILE__
+name|NULL
 argument_list|,
 name|ctx
 argument_list|,
@@ -456,6 +457,10 @@ begin_function
 name|apr_status_t
 name|serf__spnego_init_sec_context
 parameter_list|(
+name|serf_connection_t
+modifier|*
+name|conn
+parameter_list|,
 name|serf__spnego_context_t
 modifier|*
 name|ctx
@@ -541,11 +546,15 @@ operator|.
 name|value
 argument_list|)
 expr_stmt|;
-name|serf__log
+name|serf__log_skt
 argument_list|(
 name|AUTH_VERBOSE
 argument_list|,
 name|__FILE__
+argument_list|,
+name|conn
+operator|->
+name|skt
 argument_list|,
 literal|"Get principal for %s\n"
 argument_list|,
@@ -582,7 +591,9 @@ name|log_error
 argument_list|(
 name|AUTH_VERBOSE
 argument_list|,
-name|__FILE__
+name|conn
+operator|->
+name|skt
 argument_list|,
 name|ctx
 argument_list|,
@@ -729,7 +740,9 @@ name|log_error
 argument_list|(
 name|AUTH_VERBOSE
 argument_list|,
-name|__FILE__
+name|conn
+operator|->
+name|skt
 argument_list|,
 name|ctx
 argument_list|,

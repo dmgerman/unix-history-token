@@ -157,6 +157,8 @@ name|eq
 decl_stmt|,
 modifier|*
 name|realm
+init|=
+name|NULL
 decl_stmt|;
 comment|/* Can't do Basic authentication if there's no callback to get        username& password. */
 if|if

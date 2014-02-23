@@ -1009,10 +1009,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|nextpr
-operator|=
-name|NULL
-expr_stmt|;
 name|prec
 operator|=
 literal|0
@@ -1035,6 +1031,13 @@ name|nextfu
 control|)
 block|{
 comment|/* 		 * Break each format unit into print units; each conversion 		 * character gets its own. 		 */
+name|nextpr
+operator|=
+operator|&
+name|fu
+operator|->
+name|nextpr
+expr_stmt|;
 for|for
 control|(
 name|nconv
@@ -1083,20 +1086,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|fu
-operator|->
-name|nextpr
-condition|)
-name|fu
-operator|->
-name|nextpr
-operator|=
-name|pr
-expr_stmt|;
-else|else
 operator|*
 name|nextpr
 operator|=
