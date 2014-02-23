@@ -80,6 +80,11 @@ name|FCC2_ETSIC
 init|=
 literal|0x22
 block|,
+name|FCC_UBNT
+init|=
+literal|0x2A
+block|,
+comment|/* Ubiquity PicoStation M2HP */
 name|FRANCE_RES
 init|=
 literal|0x31
