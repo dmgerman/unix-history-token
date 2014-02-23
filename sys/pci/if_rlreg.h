@@ -2010,7 +2010,7 @@ begin_define
 define|#
 directive|define
 name|RL_RXSTAT_UNFINISHED
-value|0xFFF0
+value|0x0000FFF0
 end_define
 
 begin_comment
@@ -3554,7 +3554,7 @@ comment|/*  * The 8139C+ and 8160 gigE chips support descriptor-based TX  * and 
 end_comment
 
 begin_comment
-comment|/*  * RX/TX descriptor definition. When large send mode is enabled, the  * lower 11 bits of the TX rl_cmd word are used to hold the MSS, and  * the checksum offload bits are disabled. The structure layout is  * the same for RX and TX descriptors  */
+comment|/*  * RX/TX descriptor definition. When large send mode is enabled, the  * lower 11 bits of the TX rl_cmdstat word are used to hold the MSS, and  * the checksum offload bits are disabled. The structure layout is  * the same for RX and TX descriptors  */
 end_comment
 
 begin_struct
