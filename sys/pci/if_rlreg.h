@@ -928,6 +928,13 @@ begin_comment
 comment|/* 16 bits */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RL_MISC
+value|0x00F0
+end_define
+
 begin_comment
 comment|/*  * TX config register bits  */
 end_comment
@@ -1767,6 +1774,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_RXCFG_EARLYOFFV2
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_RXCFG_MAXDMA
 value|0x00000700
 end_define
@@ -1776,6 +1790,13 @@ define|#
 directive|define
 name|RL_RXCFG_BUFSZ
 value|0x00001800
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_RXCFG_EARLYOFF
+value|0x00003800
 end_define
 
 begin_define
@@ -4931,6 +4952,18 @@ define|#
 directive|define
 name|RL_FLAG_WOL_MANLINK
 value|0x00010000
+define|#
+directive|define
+name|RL_FLAG_EARLYOFF
+value|0x00020000
+define|#
+directive|define
+name|RL_FLAG_EARLYOFFV2
+value|0x00040000
+define|#
+directive|define
+name|RL_FLAG_RXDV_GATED
+value|0x00080000
 define|#
 directive|define
 name|RL_FLAG_PCIE
