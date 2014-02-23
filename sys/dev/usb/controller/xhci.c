@@ -7915,7 +7915,7 @@ name|qwTrb0
 operator|&
 name|htole64
 argument_list|(
-literal|1
+name|XHCI_TRB_0_DIR_IN_MASK
 argument_list|)
 condition|)
 name|dword
