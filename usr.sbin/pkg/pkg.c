@@ -1297,7 +1297,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Unsupported hashing function: %s\n"
+literal|"Unsupported hashing function: %s"
 argument_list|,
 name|function
 argument_list|)
