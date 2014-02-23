@@ -2867,6 +2867,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__sparc64__
+end_ifndef
+
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
@@ -2876,6 +2882,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialize the kernel memory (kmem) arena.  */
