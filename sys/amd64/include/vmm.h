@@ -1210,7 +1210,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_interrupt_hostcpu
+name|vcpu_notify_event
 parameter_list|(
 name|struct
 name|vm
@@ -1218,7 +1218,7 @@ modifier|*
 name|vm
 parameter_list|,
 name|int
-name|vcpu
+name|vcpuid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1496,6 +1496,8 @@ name|VM_EXITCODE_INST_EMUL
 block|,
 name|VM_EXITCODE_SPINUP_AP
 block|,
+name|VM_EXITCODE_SPINDOWN_CPU
+block|,
 name|VM_EXITCODE_MAX
 block|}
 enum|;
@@ -1622,6 +1624,14 @@ name|rip
 decl_stmt|;
 block|}
 name|spinup_ap
+struct|;
+struct|struct
+block|{
+name|uint64_t
+name|rflags
+decl_stmt|;
+block|}
+name|hlt
 struct|;
 block|}
 name|u

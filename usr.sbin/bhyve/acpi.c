@@ -1165,6 +1165,63 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+comment|/* Local APIC NMI is connected to LINT 1 on all CPUs */
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tSubtable Type : 04\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tLength : 06\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tProcessorId : FF\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0002]\t\tFlags (decoded below) : 0005\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t\t\tPolarity : 1\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t\t\tTrigger Mode : 1\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tInterrupt : 01\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|EFFLUSH
 argument_list|(
 name|fp

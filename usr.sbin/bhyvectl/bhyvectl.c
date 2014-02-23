@@ -304,6 +304,8 @@ literal|"       [--set-mem=<memory in units of MB>]\n"
 literal|"       [--get-lowmem]\n"
 literal|"       [--get-highmem]\n"
 literal|"       [--get-gpa-pmap]\n"
+literal|"       [--assert-lapic-lvt=<pin>]\n"
+literal|"       [--inject-nmi]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -328,6 +330,15 @@ decl_stmt|,
 name|capval
 decl_stmt|,
 name|get_gpa_pmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|inject_nmi
+decl_stmt|,
+name|assert_lapic_lvt
 decl_stmt|;
 end_decl_stmt
 
@@ -1501,6 +1512,8 @@ block|,
 name|UNASSIGN_PPTDEV
 block|,
 name|GET_GPA_PMAP
+block|,
+name|ASSERT_LAPIC_LVT
 block|, }
 enum|;
 end_enum
@@ -1942,6 +1955,16 @@ block|,
 literal|0
 block|,
 name|GET_GPA_PMAP
+block|}
+block|,
+block|{
+literal|"assert-lapic-lvt"
+block|,
+name|REQ_ARG
+block|,
+literal|0
+block|,
+name|ASSERT_LAPIC_LVT
 block|}
 block|,
 block|{
@@ -3045,6 +3068,17 @@ literal|1
 block|}
 block|,
 block|{
+literal|"inject-nmi"
+block|,
+name|NO_ARG
+block|,
+operator|&
+name|inject_nmi
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
@@ -3058,6 +3092,11 @@ decl_stmt|;
 name|vcpu
 operator|=
 literal|0
+expr_stmt|;
+name|assert_lapic_lvt
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|progname
 operator|=
@@ -3644,6 +3683,17 @@ literal|3
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|ASSERT_LAPIC_LVT
+case|:
+name|assert_lapic_lvt
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -4411,6 +4461,47 @@ argument_list|,
 name|VMCS_ENTRY_INTR_INFO
 argument_list|,
 name|vmcs_entry_interruption_info
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|inject_nmi
+condition|)
+block|{
+name|error
+operator|=
+name|vm_inject_nmi
+argument_list|(
+name|ctx
+argument_list|,
+name|vcpu
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|assert_lapic_lvt
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|error
+operator|=
+name|vm_lapic_local_irq
+argument_list|(
+name|ctx
+argument_list|,
+name|vcpu
+argument_list|,
+name|assert_lapic_lvt
 argument_list|)
 expr_stmt|;
 block|}

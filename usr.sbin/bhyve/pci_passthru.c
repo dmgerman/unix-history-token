@@ -1549,7 +1549,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|vm_setup_msix
+name|vm_setup_pptdev_msix
 argument_list|(
 name|ctx
 argument_list|,
@@ -1577,15 +1577,15 @@ name|index
 argument_list|,
 name|entry
 operator|->
+name|addr
+argument_list|,
+name|entry
+operator|->
 name|msg_data
 argument_list|,
 name|entry
 operator|->
 name|vector_control
-argument_list|,
-name|entry
-operator|->
-name|addr
 argument_list|)
 expr_stmt|;
 block|}
@@ -3013,7 +3013,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|vm_setup_msi
+name|vm_setup_pptdev_msi
 argument_list|(
 name|ctx
 argument_list|,
@@ -3041,19 +3041,19 @@ name|pi
 operator|->
 name|pi_msi
 operator|.
-name|cpu
+name|addr
 argument_list|,
 name|pi
 operator|->
 name|pi_msi
 operator|.
-name|vector
+name|msg_data
 argument_list|,
 name|pi
 operator|->
 name|pi_msi
 operator|.
-name|msgnum
+name|maxmsgnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -3065,7 +3065,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vm_setup_msi returned error %d\r\n"
+literal|"vm_setup_pptdev_msi error %d\r\n"
 argument_list|,
 name|errno
 argument_list|)
@@ -3142,7 +3142,7 @@ control|)
 block|{
 name|error
 operator|=
-name|vm_setup_msix
+name|vm_setup_pptdev_msix
 argument_list|(
 name|ctx
 argument_list|,
@@ -3177,6 +3177,17 @@ index|[
 name|i
 index|]
 operator|.
+name|addr
+argument_list|,
+name|pi
+operator|->
+name|pi_msix
+operator|.
+name|table
+index|[
+name|i
+index|]
+operator|.
 name|msg_data
 argument_list|,
 name|pi
@@ -3189,17 +3200,6 @@ name|i
 index|]
 operator|.
 name|vector_control
-argument_list|,
-name|pi
-operator|->
-name|pi_msix
-operator|.
-name|table
-index|[
-name|i
-index|]
-operator|.
-name|addr
 argument_list|)
 expr_stmt|;
 if|if
@@ -3209,7 +3209,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vm_setup_msix returned error %d\r\n"
+literal|"vm_setup_pptdev_msix error "
+literal|"%d\r\n"
 argument_list|,
 name|errno
 argument_list|)
