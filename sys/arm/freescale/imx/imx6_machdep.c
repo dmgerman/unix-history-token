@@ -111,19 +111,7 @@ name|initarm_early_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-comment|/* XXX - Get rid of this stuff soon. */
-name|boothowto
-operator||=
-name|RB_VERBOSE
-operator||
-name|RB_MULTIPLE
-expr_stmt|;
-name|bootverbose
-operator|=
-literal|1
-expr_stmt|;
-block|}
+block|{  }
 end_function
 
 begin_function
