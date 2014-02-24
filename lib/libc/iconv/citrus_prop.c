@@ -1235,7 +1235,6 @@ name|hints
 parameter_list|,
 name|void
 modifier|*
-modifier|*
 name|__restrict
 name|context
 parameter_list|)
@@ -1707,12 +1706,6 @@ name|ms
 argument_list|,
 name|hints
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-name|__restrict
-operator|)
 name|context
 argument_list|)
 expr_stmt|;
