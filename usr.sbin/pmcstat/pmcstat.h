@@ -428,6 +428,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PMCSTAT_PL_ANNOTATE_CG
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|PMCSTAT_TOP_DELTA
 value|0
 end_define
