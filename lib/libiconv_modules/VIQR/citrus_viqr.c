@@ -2489,6 +2489,9 @@ name|i
 operator|=
 literal|0
 init|;
+name|i
+operator|<
+name|mnemonic_ext_size
 condition|;
 operator|++
 name|i
