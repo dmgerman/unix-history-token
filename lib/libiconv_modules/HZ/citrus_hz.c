@@ -163,10 +163,10 @@ typedef|typedef
 struct|struct
 block|{
 name|int
-name|end
+name|start
 decl_stmt|;
 name|int
-name|start
+name|end
 decl_stmt|;
 name|int
 name|width
