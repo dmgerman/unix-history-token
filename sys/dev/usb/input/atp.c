@@ -3399,31 +3399,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|sensor_data_interpreter_t
-name|atp_sensor_data_interpreters
-index|[
-name|TRACKPAD_FAMILY_MAX
-index|]
-init|=
-block|{
-index|[
-name|TRACKPAD_FAMILY_FOUNTAIN_GEYSER
-index|]
-operator|=
-name|fg_interpret_sensor_data
-block|,
-index|[
-name|TRACKPAD_FAMILY_WELLSPRING
-index|]
-operator|=
-name|wsp_interpret_sensor_data
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Device methods. */
 end_comment
