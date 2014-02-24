@@ -210,6 +210,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/etherswitch/arswitch/arswitch_8327.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/etherswitch/arswitch/arswitch_9340.h>
 end_include
 
@@ -1406,6 +1412,21 @@ name|AR8316
 argument_list|)
 condition|)
 name|ar8316_attach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|AR8X16_IS_SWITCH
+argument_list|(
+name|sc
+argument_list|,
+name|AR8327
+argument_list|)
+condition|)
+name|ar8327_attach
 argument_list|(
 name|sc
 argument_list|)
