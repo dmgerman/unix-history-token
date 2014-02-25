@@ -2483,13 +2483,6 @@ operator|)
 return|;
 block|}
 block|}
-if|if
-condition|(
-name|mnemonic_ext
-operator|>
-literal|0
-condition|)
-block|{
 for|for
 control|(
 name|i
@@ -2573,7 +2566,6 @@ operator|(
 name|errnum
 operator|)
 return|;
-block|}
 block|}
 block|}
 return|return
