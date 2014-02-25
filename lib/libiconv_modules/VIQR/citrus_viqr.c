@@ -2324,11 +2324,6 @@ name|__unused
 parameter_list|)
 block|{
 specifier|const
-name|mnemonic_def_t
-modifier|*
-name|p
-decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|s
@@ -2483,6 +2478,11 @@ operator|)
 return|;
 block|}
 block|}
+if|#
+directive|if
+name|mnemonic_ext_size
+operator|>
+literal|0
 for|for
 control|(
 name|i
@@ -2497,6 +2497,11 @@ operator|++
 name|i
 control|)
 block|{
+specifier|const
+name|mnemonic_def_t
+modifier|*
+name|p
+decl_stmt|;
 name|p
 operator|=
 operator|&
@@ -2568,6 +2573,8 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
