@@ -176,7 +176,17 @@ literal|1u
 operator|<<
 literal|7
 operator|)
+block|,
 comment|///< Launch the process in a separate process group
+name|eLaunchFlagsDontMonitorProcess
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|8
+operator|)
+comment|///< If you are going to hand the process off (e.g. to debugserver)
+comment|///< set this flag so lldb& the handee don't race to reap it.
 block|}
 name|LaunchFlags
 typedef|;

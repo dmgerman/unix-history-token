@@ -278,6 +278,11 @@ operator|!=
 name|NULL
 return|;
 block|}
+name|bool
+name|IsNULLOrNone
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|PyObject

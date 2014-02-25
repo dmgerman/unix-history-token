@@ -432,8 +432,20 @@ operator|&
 name|value
 argument_list|)
 decl_stmt|;
-name|void
-name|InvalidateFullUnwindPlan
+comment|//------------------------------------------------------------------
+comment|/// If the unwind has to the caller frame has failed, try something else
+comment|///
+comment|/// If lldb is using an assembly language based UnwindPlan for a frame and
+comment|/// the unwind to the caller frame fails, try falling back to a generic
+comment|/// UnwindPlan (architecture default unwindplan) to see if that might work
+comment|/// better.  This is mostly helping to work around problems where the
+comment|/// assembly language inspection fails on hand-written assembly code.
+comment|///
+comment|/// @return
+comment|///     Returns true if a fallback unwindplan was found& was installed.
+comment|//------------------------------------------------------------------
+name|bool
+name|TryFallbackUnwindPlan
 parameter_list|()
 function_decl|;
 comment|// Get the contents of a general purpose (address-size) register for this frame
@@ -581,6 +593,18 @@ name|UnwindPlanSP
 name|m_full_unwind_plan_sp
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|UnwindPlanSP
+name|m_fallback_unwind_plan_sp
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// may be NULL
+end_comment
 
 begin_decl_stmt
 name|bool

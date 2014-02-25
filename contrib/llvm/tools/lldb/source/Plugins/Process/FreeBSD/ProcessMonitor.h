@@ -384,6 +384,64 @@ operator|&
 name|value
 argument_list|)
 decl_stmt|;
+comment|/// Reads the contents from the debug register identified by the given
+comment|/// (architecture dependent) offset.
+comment|///
+comment|/// This method is provided for use by RegisterContextFreeBSD derivatives.
+name|bool
+name|ReadDebugRegisterValue
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|,
+name|unsigned
+name|offset
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|reg_name
+argument_list|,
+name|unsigned
+name|size
+argument_list|,
+name|lldb_private
+operator|::
+name|RegisterValue
+operator|&
+name|value
+argument_list|)
+decl_stmt|;
+comment|/// Writes the given value to the debug register identified by the given
+comment|/// (architecture dependent) offset.
+comment|///
+comment|/// This method is provided for use by RegisterContextFreeBSD derivatives.
+name|bool
+name|WriteDebugRegisterValue
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|,
+name|unsigned
+name|offset
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|reg_name
+argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|RegisterValue
+operator|&
+name|value
+argument_list|)
+decl_stmt|;
 comment|/// Reads all general purpose registers into the specified buffer.
 name|bool
 name|ReadGPR
