@@ -2412,12 +2412,42 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|// If the LaunchInfo has a monitor callback, then arrange to monitor the process.
+end_comment
+
+begin_comment
+comment|// Return true if the LaunchInfo has taken care of monitoring the process, and false if the
+end_comment
+
+begin_comment
+comment|// caller might want to monitor the process themselves.
+end_comment
+
 begin_expr_stmt
 name|bool
 name|MonitorProcess
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|GetFlags
+argument_list|()
+operator|.
+name|Test
+argument_list|(
+name|lldb
+operator|::
+name|eLaunchFlagsDontMonitorProcess
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|m_monitor_callback
@@ -2444,7 +2474,7 @@ return|return
 name|true
 return|;
 block|}
-end_expr_stmt
+end_if
 
 begin_return
 return|return

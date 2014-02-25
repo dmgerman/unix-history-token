@@ -186,6 +186,18 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+comment|// Called when an input reader should relinquish its control so another
+comment|// can be pushed onto the IO handler stack, or so the current IO
+comment|// handler can pop itself off the stack
+name|virtual
+name|void
+name|Cancel
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|// Called when CTRL+C is pressed which usually causes
+comment|// Debugger::DispatchInputInterrupt to be called.
 name|virtual
 name|void
 name|Interrupt
@@ -848,6 +860,11 @@ argument_list|()
 block|;
 name|virtual
 name|void
+name|Cancel
+argument_list|()
+block|;
+name|virtual
+name|void
 name|Interrupt
 argument_list|()
 block|;
@@ -1120,6 +1137,11 @@ block|;
 name|virtual
 name|void
 name|Refresh
+argument_list|()
+block|;
+name|virtual
+name|void
+name|Cancel
 argument_list|()
 block|;
 name|virtual

@@ -201,6 +201,12 @@ block|,
 name|eCore_x86_64_x86_64h
 block|,
 comment|// Haswell enabled x86_64
+name|eCore_hexagon_generic
+block|,
+name|eCore_hexagon_hexagonv4
+block|,
+name|eCore_hexagon_hexagonv5
+block|,
 name|eCore_uknownMach32
 block|,
 name|eCore_uknownMach64
@@ -219,6 +225,8 @@ block|,
 name|kCore_ppc64_any
 block|,
 name|kCore_x86_32_any
+block|,
+name|kCore_hexagon_any
 block|,
 name|kCore_arm_first
 init|=
@@ -259,6 +267,14 @@ block|,
 name|kCore_x86_32_last
 init|=
 name|eCore_x86_32_i486sx
+block|,
+name|kCore_hexagon_first
+init|=
+name|eCore_hexagon_generic
+block|,
+name|kCore_hexagon_last
+init|=
+name|eCore_hexagon_hexagonv5
 block|}
 enum|;
 comment|//------------------------------------------------------------------
