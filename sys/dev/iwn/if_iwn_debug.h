@@ -104,6 +104,11 @@ init|=
 literal|0x00008000
 block|,
 comment|/* Scan related operations */
+name|IWN_DEBUG_STATS
+init|=
+literal|0x00010000
+block|,
+comment|/* Statistics updates */
 name|IWN_DEBUG_REGISTER
 init|=
 literal|0x20000000

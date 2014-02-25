@@ -413,7 +413,11 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|{ USB_VPI(USB_VENDOR_##v, USB_PRODUCT_##v##_##p, 0) }
+value|{ USB_VPI(USB_VENDOR_##v, USB_PRODUCT_##v##_##p, RUN_EJECT) }
+define|#
+directive|define
+name|RUN_EJECT
+value|1
 name|RUN_DEV
 argument_list|(
 name|ABOCOM
@@ -1912,7 +1916,7 @@ argument_list|,
 name|RT2870_2
 argument_list|)
 block|,
-name|RUN_DEV
+name|RUN_DEV_EJECT
 argument_list|(
 name|ZYXEL
 argument_list|,
@@ -4918,6 +4922,21 @@ name|sc_dev
 operator|=
 name|self
 expr_stmt|;
+if|if
+condition|(
+name|USB_GET_DRIVER_INFO
+argument_list|(
+name|uaa
+argument_list|)
+operator|!=
+name|RUN_EJECT
+condition|)
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|RUN_FLAG_FWLOAD_NEEDED
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -7018,9 +7037,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|mac_ver
-operator|!=
-literal|0x3593
+name|sc_flags
+operator|&
+name|RUN_FLAG_FWLOAD_NEEDED
 condition|)
 block|{
 name|run_write_region_1

@@ -163,10 +163,10 @@ typedef|typedef
 struct|struct
 block|{
 name|int
-name|end
+name|start
 decl_stmt|;
 name|int
-name|start
+name|end
 decl_stmt|;
 name|int
 name|width
@@ -2594,7 +2594,6 @@ name|_citrus_HZ_parse_char
 parameter_list|(
 name|void
 modifier|*
-modifier|*
 name|context
 parameter_list|,
 specifier|const
@@ -2625,7 +2624,6 @@ name|void
 operator|*
 operator|*
 operator|)
-operator|*
 name|context
 expr_stmt|;
 name|escape
@@ -2693,7 +2691,6 @@ name|_citrus_HZ_parse_graphic
 parameter_list|(
 name|void
 modifier|*
-modifier|*
 name|context
 parameter_list|,
 specifier|const
@@ -2731,7 +2728,6 @@ name|void
 operator|*
 operator|*
 operator|)
-operator|*
 name|context
 expr_stmt|;
 name|escape
@@ -3130,7 +3126,6 @@ name|_citrus_HZ_parse_escape
 parameter_list|(
 name|void
 modifier|*
-modifier|*
 name|context
 parameter_list|,
 specifier|const
@@ -3165,7 +3160,6 @@ operator|(
 name|_HZEncodingInfo
 operator|*
 operator|)
-operator|*
 name|context
 expr_stmt|;
 name|escape
