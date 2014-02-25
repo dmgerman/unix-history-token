@@ -38508,6 +38508,13 @@ name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 case|case
+name|CHANGE_DYNAMIC_TYPE_EXPR
+case|:
+comment|/* This is ignored at the RTL level.  The tree level set 	 DECL_POINTER_ALIAS_SET of any variable to be 0, which is 	 overkill for the RTL layer but is all that we can 	 represent.  */
+return|return
+name|const0_rtx
+return|;
+case|case
 name|EXC_PTR_EXPR
 case|:
 return|return

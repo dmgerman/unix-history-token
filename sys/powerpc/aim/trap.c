@@ -1170,7 +1170,7 @@ if|if
 condition|(
 operator|*
 operator|(
-name|uintptr_t
+name|uint32_t
 operator|*
 operator|)
 name|frame

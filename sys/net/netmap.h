@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011-2013 Matteo Landi, Luigi Rizzo. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *   *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the  *      distribution.  *   *   3. Neither the name of the authors nor the names of their contributors  *      may be used to endorse or promote products derived from this  *      software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY MATTEO LANDI AND CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL MATTEO LANDI OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011-2013 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``S IS''AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  *  * Definitions of constants and the structures used by the netmap  * framework, for the part visible to both kernel and userspace.  * Detailed info on netmap is available with "man netmap" or at  *   *	http://info.iet.unipi.it/~luigi/netmap/  *  * This API is also used to communicate with the VALE software switch  */
+comment|/*  * $FreeBSD$  *  * Definitions of constants and the structures used by the netmap  * framework, for the part visible to both kernel and userspace.  * Detailed info on netmap is available with "man netmap" or at  *  *	http://info.iet.unipi.it/~luigi/netmap/  *  * This API is also used to communicate with the VALE software switch  */
 end_comment
 
 begin_ifndef
@@ -223,7 +223,7 @@ name|NIOCREGIF
 end_ifndef
 
 begin_comment
-comment|/*  * ioctl names and related fields  *  * NIOCGINFO takes a struct ifreq, the interface name is the input,  *	the outputs are number of queues and number of descriptor  *	for each queue (useful to set number of threads etc.).  *	The info returned is only advisory and may change before  *	the interface is bound to a file descriptor.  *  * NIOCREGIF takes an interface name within a struct ifreq,  *	and activates netmap mode on the interface (if possible).  *  *   nr_name	is the name of the interface  *  *   nr_tx_slots, nr_tx_slots, nr_tx_rings, nr_rx_rings  *	indicate the configuration of the port on return.  *  *	On input, non-zero values for nr_tx_rings, nr_tx_slots and the  *	rx counterparts may be used to reconfigure the port according  *	to the requested values, but this is not guaranteed.  *	The actual values are returned on completion of the ioctl().  *  *   nr_ringid  *	indicates how rings should be bound to the file descriptors.  *	The default (0) means all physical rings of a NIC are bound.  *	NETMAP_HW_RING plus a ring number lets you bind just  *	a single ring pair.  *	NETMAP_SW_RING binds only the host tx/rx rings  *	NETMAP_NO_TX_POLL prevents select()/poll() from pushing  *	out packets on the tx ring unless POLLOUT is specified.  *  *	NETMAP_PRIV_MEM is a return value used to indicate that  *	this ring is in a private memory region hence buffer  *	swapping cannot be used  *	  *   nr_cmd	is used to configure NICs attached to a VALE switch,  *	or to dump the configuration of a VALE switch.  *	  *	nr_cmd = NETMAP_BDG_ATTACH and nr_name = vale*:ifname  *	attaches the NIC to the switch, with nr_ringid specifying  *	which rings to use  *  *	nr_cmd = NETMAP_BDG_DETACH and nr_name = vale*:ifname  *	disconnects a previously attached NIC  *  *	nr_cmd = NETMAP_BDG_LIST is used to list the configuration  *	of VALE switches, with additional arguments.  *  * NIOCTXSYNC, NIOCRXSYNC synchronize tx or rx queues,  *	whose identity is set in NIOCREGIF through nr_ringid  *  * NETMAP_API is the API version.  */
+comment|/*  * ioctl names and related fields  *  * NIOCGINFO takes a struct ifreq, the interface name is the input,  *	the outputs are number of queues and number of descriptor  *	for each queue (useful to set number of threads etc.).  *	The info returned is only advisory and may change before  *	the interface is bound to a file descriptor.  *  * NIOCREGIF takes an interface name within a struct ifreq,  *	and activates netmap mode on the interface (if possible).  *  *   nr_name	is the name of the interface  *  *   nr_tx_slots, nr_tx_slots, nr_tx_rings, nr_rx_rings  *	indicate the configuration of the port on return.  *  *	On input, non-zero values for nr_tx_rings, nr_tx_slots and the  *	rx counterparts may be used to reconfigure the port according  *	to the requested values, but this is not guaranteed.  *	The actual values are returned on completion of the ioctl().  *  *   nr_ringid  *	indicates how rings should be bound to the file descriptors.  *	The default (0) means all physical rings of a NIC are bound.  *	NETMAP_HW_RING plus a ring number lets you bind just  *	a single ring pair.  *	NETMAP_SW_RING binds only the host tx/rx rings  *	NETMAP_NO_TX_POLL prevents select()/poll() from pushing  *	out packets on the tx ring unless POLLOUT is specified.  *  *	NETMAP_PRIV_MEM is a return value used to indicate that  *	this ring is in a private memory region hence buffer  *	swapping cannot be used  *  *   nr_cmd	is used to configure NICs attached to a VALE switch,  *	or to dump the configuration of a VALE switch.  *  *	nr_cmd = NETMAP_BDG_ATTACH and nr_name = vale*:ifname  *	attaches the NIC to the switch, with nr_ringid specifying  *	which rings to use  *  *	nr_cmd = NETMAP_BDG_DETACH and nr_name = vale*:ifname  *	disconnects a previously attached NIC  *  *	nr_cmd = NETMAP_BDG_LIST is used to list the configuration  *	of VALE switches, with additional arguments.  *  * NIOCTXSYNC, NIOCRXSYNC synchronize tx or rx queues,  *	whose identity is set in NIOCREGIF through nr_ringid  *  * NETMAP_API is the API version.  */
 end_comment
 
 begin_comment
@@ -325,6 +325,11 @@ directive|define
 name|NETMAP_BDG_LIST
 value|4
 comment|/* get bridge's info */
+define|#
+directive|define
+name|NETMAP_BDG_OFFSET
+value|5
+comment|/* set the port offset */
 name|uint16_t
 name|nr_arg1
 decl_stmt|;
@@ -333,6 +338,10 @@ directive|define
 name|NETMAP_BDG_HOST
 value|1
 comment|/* attach the host stack on ATTACH */
+define|#
+directive|define
+name|NETMAP_BDG_MAX_OFFSET
+value|12
 name|uint16_t
 name|nr_arg2
 decl_stmt|;

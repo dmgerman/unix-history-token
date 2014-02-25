@@ -393,6 +393,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|bit_FXSAVE
+value|bit_FXSR
+end_define
+
+begin_comment
+comment|/* for gcc compat */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|bit_SSE
 value|0x02000000
 end_define

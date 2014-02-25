@@ -385,6 +385,8 @@ comment|/* prototypes */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|dwc_otg_bus_methods
@@ -392,6 +394,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|dwc_otg_device_non_isoc_methods
@@ -399,6 +403,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|dwc_otg_device_isoc_methods
@@ -13489,6 +13495,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|dwc_otg_device_non_isoc_methods
@@ -13861,6 +13869,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|dwc_otg_device_isoc_methods
@@ -16652,6 +16662,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|dwc_otg_bus_methods

@@ -613,6 +613,7 @@ modifier|*
 name|udev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|usb_bus_methods
 modifier|*

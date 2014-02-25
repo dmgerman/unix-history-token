@@ -816,6 +816,12 @@ decl_stmt|;
 name|int
 name|lid_closed
 decl_stmt|;
+name|uint8_t
+name|saved_regs
+index|[
+literal|9
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -842,6 +848,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|int
+name|pmu_set_speed
+parameter_list|(
+name|int
+name|low_speed
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

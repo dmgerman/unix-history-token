@@ -311,6 +311,32 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/* descriptions of MP table entries */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|BASETABLE_ENTRY
+block|{
+name|uint8_t
+name|type
+decl_stmt|;
+name|uint8_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|name
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|basetable_entry
+typedef|;
+end_typedef
+
 begin_decl_stmt
 specifier|static
 name|basetable_entry

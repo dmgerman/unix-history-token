@@ -792,7 +792,8 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|extern
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|xhci_bus_methods
@@ -8644,6 +8645,9 @@ operator||
 name|XHCI_TRB_3_CYCLE_BIT
 operator||
 name|XHCI_TRB_3_IOC_BIT
+operator||
+comment|/* 		     * CHAIN-BIT: Ensure that a multi-TRB IN-endpoint 		     * frame only receives a single short packet event 		     * by setting the CHAIN bit in the LINK field. In 		     * addition some XHCI controllers have problems 		     * sending a ZLP unless the CHAIN-BIT is set in 		     * the LINK TRB. 		     */
+name|XHCI_TRB_3_CHAIN_BIT
 expr_stmt|;
 name|td
 operator|->
@@ -8770,7 +8774,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* clear TD SIZE to zero, hence this is the last TRB */
-comment|/* remove chain bit because this is the last TRB in the chain */
+comment|/* remove chain bit because this is the last data TRB in the chain */
 name|td
 operator|->
 name|td_trb
@@ -8802,6 +8806,24 @@ operator|->
 name|ntrb
 operator|-
 literal|1
+index|]
+operator|.
+name|dwTrb3
+operator|&=
+operator|~
+name|htole32
+argument_list|(
+name|XHCI_TRB_3_CHAIN_BIT
+argument_list|)
+expr_stmt|;
+comment|/* remove CHAIN-BIT from last LINK TRB */
+name|td
+operator|->
+name|td_trb
+index|[
+name|td
+operator|->
+name|ntrb
 index|]
 operator|.
 name|dwTrb3
@@ -13835,6 +13857,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|xhci_device_generic_methods
@@ -18758,6 +18782,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|xhci_bus_methods

@@ -505,12 +505,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|an_dev
-operator|=
-name|dev
-expr_stmt|;
 name|error
 operator|=
 name|an_attach

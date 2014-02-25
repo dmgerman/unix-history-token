@@ -1141,12 +1141,16 @@ parameter_list|,
 name|phandle_t
 modifier|*
 name|iparent
-parameter_list|,
-name|void
-modifier|*
-name|maskbuf
 parameter_list|)
 block|{
+name|uint8_t
+name|maskbuf
+index|[
+name|regsz
+operator|+
+name|pintrsz
+index|]
+decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
@@ -1255,7 +1259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map an interrupt using the firmware reg, interrupt-map and  * interrupt-map-mask properties.  * The interrupt property to be mapped must be of size intrsz, and pointed to  * by intr.  The regs property of the node for which the mapping is done must  * be passed as regs. This property is an array of register specifications;  * the size of the address part of such a specification must be passed as  * physsz.  Only the first element of the property is used.  * imap and imapsz hold the interrupt mask and it's size.  * imapmsk is a pointer to the interrupt-map-mask property, which must have  * a size of physsz + intrsz; it may be NULL, in which case a full mask is  * assumed.  * maskbuf must point to a buffer of length physsz + intrsz.  * The interrupt is returned in result, which must point to a buffer of length  * rintrsz (which gives the expected size of the mapped interrupt).  * Returns 1 if a mapping was found, 0 otherwise.  */
+comment|/*  * Map an interrupt using the firmware reg, interrupt-map and  * interrupt-map-mask properties.  * The interrupt property to be mapped must be of size intrsz, and pointed to  * by intr.  The regs property of the node for which the mapping is done must  * be passed as regs. This property is an array of register specifications;  * the size of the address part of such a specification must be passed as  * physsz.  Only the first element of the property is used.  * imap and imapsz hold the interrupt mask and it's size.  * imapmsk is a pointer to the interrupt-map-mask property, which must have  * a size of physsz + intrsz; it may be NULL, in which case a full mask is  * assumed.  * maskbuf must point to a buffer of length physsz + intrsz.  * The interrupt is returned in result, which must point to a buffer of length  * rintrsz (which gives the expected size of the mapped interrupt).  * Returns number of cells in the interrupt if a mapping was found, 0 otherwise.  */
 end_comment
 
 begin_function
@@ -1532,7 +1536,6 @@ literal|"ofw_bus_search_intrmap: truncated map"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Apple hardware uses a second cell to set information 		 * on the interrupt trigger type.  This information should 		 * be used somewhere to program the PIC. 		 */
 if|if
 condition|(
 name|bcmp
@@ -1564,7 +1567,12 @@ argument_list|)
 argument_list|,
 name|result
 argument_list|,
+name|MIN
+argument_list|(
 name|rintrsz
+argument_list|,
+name|pintrsz
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1580,7 +1588,12 @@ name|parent
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|pintrsz
+operator|/
+sizeof|sizeof
+argument_list|(
+name|pcell_t
+argument_list|)
 operator|)
 return|;
 block|}

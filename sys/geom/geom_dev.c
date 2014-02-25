@@ -2556,9 +2556,13 @@ name|bp
 operator|->
 name|bio_resid
 operator|=
+name|bp
+operator|->
+name|bio_length
+operator|-
 name|bp2
 operator|->
-name|bio_resid
+name|bio_completed
 expr_stmt|;
 if|if
 condition|(

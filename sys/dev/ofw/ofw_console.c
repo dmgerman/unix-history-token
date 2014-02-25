@@ -398,6 +398,8 @@ name|tty_makealias
 argument_list|(
 name|tp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|output
 argument_list|)
 expr_stmt|;

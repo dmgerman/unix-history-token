@@ -653,6 +653,18 @@ argument_list|,
 name|lang
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin -Wnewline-eof 2001-08-23 --sts */
+comment|/* Suppress warnings about missing newlines at ends of files.  */
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|warn_newline_at_eof
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/* APPLE LOCAL end -Wnewline-eof 2001-08-23 --sts */
 name|CPP_OPTION
 argument_list|(
 name|pfile

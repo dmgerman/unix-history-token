@@ -3861,6 +3861,43 @@ name|buffer
 operator|->
 name|rlimit
 expr_stmt|;
+comment|/* APPLE LOCAL begin suppress no newline warning.  */
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|warn_newline_at_eof
+argument_list|)
+condition|)
+block|{
+name|cpp_error_with_line
+argument_list|(
+name|pfile
+argument_list|,
+name|CPP_DL_PEDWARN
+argument_list|,
+name|pfile
+operator|->
+name|line_table
+operator|->
+name|highest_line
+argument_list|,
+name|CPP_BUF_COLUMN
+argument_list|(
+name|buffer
+argument_list|,
+name|buffer
+operator|->
+name|cur
+argument_list|)
+argument_list|,
+literal|"no newline at end of file"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* APPLE LOCAL end suppress no newline warning.  */
 block|}
 name|return_at_eof
 operator|=

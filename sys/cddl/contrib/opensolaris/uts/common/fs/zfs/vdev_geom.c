@@ -3584,7 +3584,7 @@ name|zio
 operator|->
 name|io_error
 operator|==
-name|EIO
+name|ENXIO
 operator|&&
 operator|!
 name|vd
@@ -3604,17 +3604,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * We post the resource as soon as possible, instead of 			 * when the async removal actually happens, because the 			 * DE is using this information to discard previous I/O 			 * errors. 			 */
-comment|/* XXX: zfs_post_remove() can sleep. */
-name|zfs_post_remove
-argument_list|(
-name|zio
-operator|->
-name|io_spa
-argument_list|,
-name|vd
-argument_list|)
-expr_stmt|;
 name|vd
 operator|->
 name|vdev_remove_wanted

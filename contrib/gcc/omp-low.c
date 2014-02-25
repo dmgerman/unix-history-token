@@ -1866,6 +1866,16 @@ argument_list|(
 name|var
 argument_list|)
 expr_stmt|;
+name|DECL_NO_TBAA_P
+argument_list|(
+name|copy
+argument_list|)
+operator|=
+name|DECL_NO_TBAA_P
+argument_list|(
+name|var
+argument_list|)
+expr_stmt|;
 name|DECL_ARTIFICIAL
 argument_list|(
 name|copy

@@ -1918,6 +1918,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Mflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* read statistics from core */
+end_comment
+
+begin_decl_stmt
+name|int
 name|mflag
 decl_stmt|;
 end_decl_stmt
@@ -2480,6 +2490,10 @@ break|break;
 case|case
 literal|'M'
 case|:
+name|Mflag
+operator|=
+literal|1
+expr_stmt|;
 name|memf
 operator|=
 name|optarg

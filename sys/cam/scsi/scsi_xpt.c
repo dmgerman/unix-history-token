@@ -355,20 +355,7 @@ parameter_list|,
 name|lval
 parameter_list|)
 define|\
-value|(lval) = scsi_4btoul((lp)->luns[(i)].lundata);			\ 	(lval) = ((lval)>> 16) | ((lval)<< 16);
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAM_LUN_ONLY_32BITS
-parameter_list|(
-name|lp
-parameter_list|,
-name|i
-parameter_list|)
-define|\
-value|(scsi_4btoul(&((lp)->luns[(i)].lundata[4])) == 0)
+value|(lval) = scsi_8btou64((lp)->luns[(i)].lundata);			\ 	(lval) = CAM_EXTLUN_BYTE_SWIZZLE(lval);
 end_define
 
 begin_comment
@@ -7250,17 +7237,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|CAM_LUN_ONLY_32BITS
-argument_list|(
-name|old
-argument_list|,
-name|idx1
-argument_list|)
-condition|)
-continue|continue;
-if|if
-condition|(
 name|xpt_create_path
 argument_list|(
 operator|&
@@ -8591,25 +8567,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* XXX print warning? */
-if|if
-condition|(
-operator|!
-name|CAM_LUN_ONLY_32BITS
-argument_list|(
-name|target
-operator|->
-name|luns
-argument_list|,
-name|scan_info
-operator|->
-name|lunindex
-index|[
-name|target_id
-index|]
-argument_list|)
-condition|)
-continue|continue;
 if|if
 condition|(
 name|CAM_CAN_GET_SIMPLE_LUN

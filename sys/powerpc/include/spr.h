@@ -4507,6 +4507,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSSCR0_L2PFE
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* 30-31: L2 prefetch enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_LDSTCR
+value|0x3f8
+end_define
+
+begin_comment
+comment|/* .6. Load/Store Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_L2PM
 value|0x3f8
 end_define
@@ -4721,6 +4743,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|L2CR_L2IO_7450
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* 11: L2 instruction-only (MPC745x). */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|L2CR_L2CTL
 value|0x00100000
 end_define
@@ -4760,6 +4793,17 @@ end_define
 
 begin_comment
 comment|/* 14-15: L2 output hold. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CR_L2DO_7450
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* 15: L2 data-only (MPC745x). */
 end_comment
 
 begin_define

@@ -417,6 +417,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vm_lapic_msi
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|uint64_t
+name|addr
+parameter_list|,
+name|uint64_t
+name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vm_ioapic_assert_irq
 parameter_list|(
 name|struct
@@ -618,7 +636,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vm_setup_msi
+name|vm_setup_pptdev_msi
 parameter_list|(
 name|struct
 name|vmctx
@@ -637,11 +655,11 @@ parameter_list|,
 name|int
 name|func
 parameter_list|,
-name|int
-name|dest
+name|uint64_t
+name|addr
 parameter_list|,
-name|int
-name|vector
+name|uint64_t
+name|msg
 parameter_list|,
 name|int
 name|numvec
@@ -651,7 +669,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vm_setup_msix
+name|vm_setup_pptdev_msix
 parameter_list|(
 name|struct
 name|vmctx
@@ -673,14 +691,14 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
-name|uint32_t
+name|uint64_t
+name|addr
+parameter_list|,
+name|uint64_t
 name|msg
 parameter_list|,
 name|uint32_t
 name|vector_control
-parameter_list|,
-name|uint64_t
-name|addr
 parameter_list|)
 function_decl|;
 end_function_decl

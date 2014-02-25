@@ -651,8 +651,8 @@ comment|/* Device node creation. */
 end_comment
 
 begin_function_decl
-name|void
-name|tty_makedev
+name|int
+name|tty_makedevf
 parameter_list|(
 name|struct
 name|tty
@@ -664,6 +664,9 @@ name|ucred
 modifier|*
 name|cred
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -673,15 +676,39 @@ modifier|...
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
-function_decl|3
-operator|,
 function_decl|4
+operator|,
+function_decl|5
 end_function_decl
 
 begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|TTYMK_CLONING
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|tty_makedev
+parameter_list|(
+name|tp
+parameter_list|,
+name|cred
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|(void )tty_makedevf((tp), (cred), 0, (fmt), ## __VA_ARGS__)
+end_define
 
 begin_define
 define|#
