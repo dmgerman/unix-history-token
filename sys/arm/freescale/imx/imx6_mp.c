@@ -420,7 +420,7 @@ argument_list|(
 literal|"Couldn't map the system reset controller (SRC)\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Invalidate SCU cache tags.  The 0x0000fff0 constant invalidates all 	 * ways on all cores 1-3 (leaving core 0 alone).  Per the ARM docs, it's 	 * harmless to write to the bits for cores that are not present. 	 */
+comment|/* 	 * Invalidate SCU cache tags.  The 0x0000ffff constant invalidates all 	 * ways on all cores 0-3.  Per the ARM docs, it's harmless to write to 	 * the bits for cores that are not present. 	 */
 name|bus_space_write_4
 argument_list|(
 name|fdtbus_bs_tag
@@ -429,7 +429,7 @@ name|scu
 argument_list|,
 name|SCU_INV_TAGS_REG
 argument_list|,
-literal|0x0000fff0
+literal|0x0000ffff
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Erratum ARM/MP: 764369 (problems with cache maintenance). 	 * Setting the "disable-migratory bit" in the undocumented SCU 	 * Diagnostic Control Register helps work around the problem. 	 */
@@ -457,7 +457,7 @@ operator||
 name|SCU_DIAG_DISABLE_MIGBIT
 argument_list|)
 expr_stmt|;
-comment|/* Enable the SCU. */
+comment|/* 	 * Enable the SCU, then clean the cache on this core.  After these two 	 * operations the cache tag ram in the SCU is coherent with the contents 	 * of the cache on this core.  The other cores aren't running yet so 	 * their caches can't contain valid data yet, but we've initialized 	 * their SCU tag ram above, so they will be coherent from startup. 	 */
 name|val
 operator|=
 name|bus_space_read_4
@@ -483,9 +483,6 @@ name|SCU_CONTROL_ENABLE
 argument_list|)
 expr_stmt|;
 name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
 argument_list|()
 expr_stmt|;
 comment|/* 	 * For each AP core, set the entry point address and argument registers, 	 * and set the core-enable and core-reset bits in the control register. 	 */
