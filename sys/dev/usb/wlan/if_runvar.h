@@ -463,6 +463,16 @@ name|ifnet
 modifier|*
 name|sc_ifp
 decl_stmt|;
+name|int
+name|sc_need_fwload
+decl_stmt|;
+name|int
+name|sc_flags
+decl_stmt|;
+define|#
+directive|define
+name|RUN_FLAG_FWLOAD_NEEDED
+value|0x01
 name|uint16_t
 name|wcid_stats
 index|[
