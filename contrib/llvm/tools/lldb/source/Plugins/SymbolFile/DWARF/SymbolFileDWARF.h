@@ -1995,6 +1995,10 @@ name|bool
 operator|&
 name|is_static
 argument_list|,
+name|bool
+operator|&
+name|is_variadic
+argument_list|,
 name|lldb_private
 operator|::
 name|TypeList

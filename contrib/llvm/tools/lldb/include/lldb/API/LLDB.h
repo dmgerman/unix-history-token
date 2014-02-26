@@ -176,12 +176,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBInputReader.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/API/SBInstruction.h"
 end_include
 
@@ -213,6 +207,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/API/SBProcess.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBQueue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBQueueItem.h"
 end_include
 
 begin_include

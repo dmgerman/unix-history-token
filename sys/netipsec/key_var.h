@@ -111,13 +111,6 @@ name|KEYCTL_PREFERED_OLDSA
 value|12
 end_define
 
-begin_define
-define|#
-directive|define
-name|KEYCTL_MAXID
-value|13
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -2093,17 +2093,6 @@ begin_comment
 comment|/* POSIX 1003.1B */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CTL_MAXID
-value|10
-end_define
-
-begin_comment
-comment|/* number of valid top-level ids */
-end_comment
-
 begin_comment
 comment|/*  * CTL_KERN identifiers  */
 end_comment
@@ -2513,17 +2502,6 @@ end_define
 
 begin_comment
 comment|/* int: from arc4rand() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_MAXID
-value|38
-end_define
-
-begin_comment
-comment|/* number of valid kern ids */
 end_comment
 
 begin_comment
@@ -3044,17 +3022,6 @@ begin_comment
 comment|/* int: 'real' memory */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HW_MAXID
-value|13
-end_define
-
-begin_comment
-comment|/* number of valid hw ids */
-end_comment
-
 begin_comment
 comment|/*  * CTL_USER definitions  */
 end_comment
@@ -3277,17 +3244,6 @@ end_define
 
 begin_comment
 comment|/* int: POSIX2_TZNAME_MAX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USER_MAXID
-value|21
-end_define
-
-begin_comment
-comment|/* number of valid user ids */
 end_comment
 
 begin_define

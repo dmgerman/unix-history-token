@@ -985,27 +985,6 @@ name|t_protocol
 operator|=
 name|PROTOCOL_ISCSI
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ICL_KERNEL_PROXY
-if|if
-condition|(
-name|targ
-operator|->
-name|t_protocol
-operator|==
-name|PROTOCOL_ISER
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"iSER support requires ICL_KERNEL_PROXY; "
-literal|"see iscsi(4) for details"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|targ

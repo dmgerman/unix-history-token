@@ -1147,6 +1147,23 @@ name|virtual
 name|bool
 name|GetValueAsCString
 argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|TypeFormatImpl
+operator|&
+name|format
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|destination
+argument_list|)
+block|;
+name|bool
+name|GetValueAsCString
+argument_list|(
 argument|lldb::Format format
 argument_list|,
 argument|std::string& destination
@@ -1554,6 +1571,8 @@ argument_list|,
 argument|lldb::Format custom_format = lldb::eFormatInvalid
 argument_list|,
 argument|PrintableRepresentationSpecialCases special = ePrintableRepresentationSpecialCasesAllow
+argument_list|,
+argument|bool do_dump_error = true
 argument_list|)
 block|;
 name|bool

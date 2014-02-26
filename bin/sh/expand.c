@@ -362,6 +362,16 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|expari
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|expbackq
 parameter_list|(
 name|union
@@ -1833,6 +1843,7 @@ comment|/*  * Expand arithmetic expression.  Backup to start of expression,  * e
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|expari
 parameter_list|(

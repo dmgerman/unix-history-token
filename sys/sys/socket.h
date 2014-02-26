@@ -2122,15 +2122,8 @@ value|AF_MAX
 end_define
 
 begin_comment
-comment|/*  * Definitions for network related sysctl, CTL_NET.  *  * Second level is protocol family.  * Third level is protocol number.  *  * Further levels are defined by the individual families below.  */
+comment|/*  * Definitions for network related sysctl, CTL_NET.  *  * Second level is protocol family.  * Third level is protocol number.  *  * Further levels are defined by the individual families.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NET_MAXID
-value|AF_MAX
-end_define
 
 begin_comment
 comment|/*  * PF_ROUTE - Routing table  *  * Three additional levels are defined:  *	Fourth: address family, 0 is wildcard  *	Fifth: type of info, defined below  *	Sixth: flag(s) to mask with for NET_RT_FLAGS  */
@@ -2190,13 +2183,6 @@ end_define
 begin_comment
 comment|/* Survey interface list, using 'l'en 					 * versions of msghdr structs. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NET_RT_MAXID
-value|6
-end_define
 
 begin_endif
 endif|#

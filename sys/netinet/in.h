@@ -3399,11 +3399,7 @@ comment|/* "low" - vouchsafe security */
 end_comment
 
 begin_comment
-comment|/*  * Definitions for inet sysctl operations.  *  * Third level is protocol number.  * Fourth level is desired variable within that protocol.  */
-end_comment
-
-begin_comment
-comment|/*  * Names for IP sysctl objects  */
+comment|/*  * Identifiers for IP sysctl nodes  */
 end_comment
 
 begin_define
@@ -3592,13 +3588,6 @@ end_define
 begin_comment
 comment|/* default TTL for gif encap packet */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IPCTL_MAXID
-value|17
-end_define
 
 begin_endif
 endif|#

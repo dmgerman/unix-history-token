@@ -193,7 +193,6 @@ name|Module
 operator|*
 name|exe_module
 argument_list|,
-specifier|const
 name|lldb_private
 operator|::
 name|ProcessLaunchInfo
@@ -212,8 +211,6 @@ operator|::
 name|Error
 name|DoResume
 argument_list|()
-operator|=
-literal|0
 block|;
 name|virtual
 name|lldb_private
@@ -314,26 +311,6 @@ name|Error
 name|DoDeallocateMemory
 argument_list|(
 argument|lldb::addr_t ptr
-argument_list|)
-block|;
-name|virtual
-name|lldb
-operator|::
-name|addr_t
-name|ResolveIndirectFunction
-argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|Address
-operator|*
-name|address
-argument_list|,
-name|lldb_private
-operator|::
-name|Error
-operator|&
-name|error
 argument_list|)
 block|;
 name|virtual
@@ -483,8 +460,6 @@ name|ProcessMessage
 operator|&
 name|message
 argument_list|)
-operator|=
-literal|0
 block|;
 name|ProcessMonitor
 operator|&

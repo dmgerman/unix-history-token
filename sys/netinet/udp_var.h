@@ -358,7 +358,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Names for UDP sysctl objects.  */
+comment|/*  * Identifiers for UDP sysctl nodes.  */
 end_comment
 
 begin_define
@@ -415,13 +415,6 @@ end_define
 begin_comment
 comment|/* list of PCBs for UDP sockets */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|UDPCTL_MAXID
-value|6
-end_define
 
 begin_ifdef
 ifdef|#

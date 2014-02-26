@@ -814,10 +814,6 @@ begin_comment
 comment|/*  * Definitions for IPsec& Key sysctl operations.  */
 end_comment
 
-begin_comment
-comment|/*  * Names for IPsec& Key sysctl objects  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -942,13 +938,6 @@ define|#
 directive|define
 name|IPSECCTL_ESP_RANDPAD
 value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPSECCTL_MAXID
-value|14
 end_define
 
 begin_ifdef

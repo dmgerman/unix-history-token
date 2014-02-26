@@ -821,7 +821,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Names for IGMP sysctl objects  */
+comment|/*  * Identifiers for IGMP sysctl nodes  */
 end_comment
 
 begin_define
@@ -834,13 +834,6 @@ end_define
 begin_comment
 comment|/* statistics (read-only) */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMPCTL_MAXID
-value|2
-end_define
 
 begin_endif
 endif|#

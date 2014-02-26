@@ -1325,19 +1325,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|cpu_initclocks
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|cpu_initclocks_bsp
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|a10_timer_hardclock

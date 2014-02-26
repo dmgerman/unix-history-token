@@ -288,7 +288,7 @@ block|{
 operator|.
 name|tc_name
 operator|=
-literal|"i.MX GPT Timecounter"
+literal|"iMXGPT"
 block|,
 operator|.
 name|tc_get_timecount
@@ -937,7 +937,7 @@ name|et
 operator|.
 name|et_name
 operator|=
-literal|"i.MXxxx GPT Eventtimer"
+literal|"iMXGPT"
 expr_stmt|;
 name|sc
 operator|->
@@ -955,7 +955,7 @@ name|et
 operator|.
 name|et_quality
 operator|=
-literal|1000
+literal|800
 expr_stmt|;
 name|sc
 operator|->
@@ -1199,7 +1199,7 @@ name|WRITE4
 argument_list|(
 name|sc
 argument_list|,
-name|IMX_GPT_OCR1
+name|IMX_GPT_OCR3
 argument_list|,
 name|READ4
 argument_list|(
@@ -1218,7 +1218,7 @@ name|sc
 argument_list|,
 name|IMX_GPT_IR
 argument_list|,
-name|GPT_IR_OF1
+name|GPT_IR_OF3
 argument_list|)
 expr_stmt|;
 comment|/* Now everybody can relax */
@@ -1320,34 +1320,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|cpu_initclocks
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|imx_gpt_sc
-operator|==
-name|NULL
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"%s: i.MX GPT driver has not been initialized!"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
-name|cpu_initclocks_bsp
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|imx_gpt_intr
@@ -1398,7 +1370,7 @@ if|if
 condition|(
 name|status
 operator|&
-name|GPT_IR_OF1
+name|GPT_IR_OF3
 condition|)
 block|{
 if|if

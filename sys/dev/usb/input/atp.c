@@ -1927,10 +1927,15 @@ parameter_list|)
 value|{ USB_VPI(USB_VENDOR_##v, USB_PRODUCT_##v##_##p, i) }
 end_define
 
+begin_comment
+comment|/* TODO: STRUCT_USB_HOST_ID */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
-name|STRUCT_USB_HOST_ID
+name|struct
+name|usb_device_id
 name|wsp_devs
 index|[]
 init|=

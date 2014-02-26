@@ -136,6 +136,39 @@ name|eBroadcastBitRunPacketSent
 operator|=
 name|kLoUserBroadcastBit
 block|}
+block|;          enum
+name|class
+name|PacketResult
+block|{
+name|Success
+operator|=
+literal|0
+block|,
+comment|// Success
+name|ErrorSendFailed
+block|,
+comment|// Error sending the packet
+name|ErrorSendAck
+block|,
+comment|// Didn't get an ack back after sending a packet
+name|ErrorReplyFailed
+block|,
+comment|// Error getting the reply
+name|ErrorReplyTimeout
+block|,
+comment|// Timed out waiting for reply
+name|ErrorReplyInvalid
+block|,
+comment|// Got a reply but it wasn't valid for the packet that was sent
+name|ErrorReplyAck
+block|,
+comment|// Sending reply ack failed
+name|ErrorDisconnected
+block|,
+comment|// We were disconnected
+name|ErrorNoSequenceLock
+comment|// We couldn't get the sequence lock for a multi-packet request
+block|}
 block|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
@@ -154,7 +187,7 @@ operator|~
 name|GDBRemoteCommunication
 argument_list|()
 block|;
-name|char
+name|PacketResult
 name|GetAck
 argument_list|()
 block|;
@@ -285,21 +318,14 @@ operator|::
 name|Error
 name|StartDebugserverProcess
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|connect_url
+argument|const char *hostname
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|unix_socket_name
+argument|uint16_t in_port
 argument_list|,
-name|lldb_private
-operator|::
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+comment|// If set to zero, then out_port will contain the bound port on exit
+argument|lldb_private::ProcessLaunchInfo&launch_info
+argument_list|,
+argument|uint16_t&out_port
 argument_list|)
 block|;
 name|void
@@ -574,7 +600,7 @@ name|bool
 name|m_dumped_to_log
 block|;     }
 block|;
-name|size_t
+name|PacketResult
 name|SendPacket
 argument_list|(
 argument|const char *payload
@@ -582,7 +608,7 @@ argument_list|,
 argument|size_t payload_length
 argument_list|)
 block|;
-name|size_t
+name|PacketResult
 name|SendPacketNoLock
 argument_list|(
 argument|const char *payload
@@ -590,7 +616,7 @@ argument_list|,
 argument|size_t payload_length
 argument_list|)
 block|;
-name|size_t
+name|PacketResult
 name|WaitForPacketWithTimeoutMicroSecondsNoLock
 argument_list|(
 argument|StringExtractorGDBRemote&response
@@ -617,7 +643,7 @@ name|m_packet_timeout
 block|;
 ifdef|#
 directive|ifdef
-name|LLDB_CONFIGURATION_DEBUG
+name|ENABLE_MUTEX_ERROR_CHECKING
 name|lldb_private
 operator|::
 name|TrackingMutex
@@ -661,8 +687,43 @@ block|;
 comment|// Set to true if this class represents a platform,
 comment|// false if this class represents a debug session for
 comment|// a single process
+name|lldb_private
+operator|::
+name|Error
+name|StartListenThread
+argument_list|(
+argument|const char *hostname =
+literal|"localhost"
+argument_list|,
+argument|uint16_t port =
+literal|0
+argument_list|)
+block|;
+name|bool
+name|JoinListenThread
+argument_list|()
+block|;
+specifier|static
+name|lldb
+operator|::
+name|thread_result_t
+name|ListenThread
+argument_list|(
+argument|lldb::thread_arg_t arg
+argument_list|)
+block|;
 name|private
 operator|:
+name|lldb
+operator|::
+name|thread_t
+name|m_listen_thread
+block|;
+name|std
+operator|::
+name|string
+name|m_listen_url
+block|;
 comment|//------------------------------------------------------------------
 comment|// For GDBRemoteCommunication only
 comment|//------------------------------------------------------------------

@@ -121,14 +121,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|vm_event
+name|vm_exception
 block|{
 name|int
 name|cpuid
-decl_stmt|;
-name|enum
-name|vm_event_type
-name|type
 decl_stmt|;
 name|int
 name|vector
@@ -471,7 +467,7 @@ init|=
 literal|23
 block|,
 comment|/* interrupt injection */
-name|IOCNUM_INJECT_EVENT
+name|IOCNUM_INJECT_EXCEPTION
 init|=
 literal|30
 block|,
@@ -612,9 +608,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_INJECT_EVENT
+name|VM_INJECT_EXCEPTION
 define|\
-value|_IOW('v', IOCNUM_INJECT_EVENT, struct vm_event)
+value|_IOW('v', IOCNUM_INJECT_EXCEPTION, struct vm_exception)
 end_define
 
 begin_define
