@@ -66,7 +66,7 @@ name|FuncUnwinders
 argument_list|(
 argument|lldb_private::UnwindTable& unwind_table
 argument_list|,
-argument|lldb_private::UnwindAssembly *assembly_profiler
+argument|const lldb::UnwindAssemblySP& assembly_profiler
 argument_list|,
 argument|AddressRange range
 argument_list|)
@@ -192,10 +192,11 @@ name|UnwindTable
 modifier|&
 name|m_unwind_table
 decl_stmt|;
-name|UnwindAssembly
-modifier|*
+name|lldb
+operator|::
+name|UnwindAssemblySP
 name|m_assembly_profiler
-decl_stmt|;
+expr_stmt|;
 name|AddressRange
 name|m_range
 decl_stmt|;

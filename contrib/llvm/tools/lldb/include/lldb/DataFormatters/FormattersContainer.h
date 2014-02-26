@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- FormatNavigator.h ----------------------------------------*- C++ -*-===//
+comment|//===-- FormattersContainer.h ----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|lldb_FormatNavigator_h_
+name|lldb_FormattersContainer_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|lldb_FormatNavigator_h_
+name|lldb_FormattersContainer_h_
 end_define
 
 begin_comment
@@ -400,7 +400,7 @@ name|typename
 name|ValueType
 operator|>
 name|class
-name|FormatNavigator
+name|FormattersContainer
 expr_stmt|;
 name|template
 operator|<
@@ -952,7 +952,7 @@ end_function
 begin_expr_stmt
 name|friend
 name|class
-name|FormatNavigator
+name|FormattersContainer
 operator|<
 name|KeyType
 operator|,
@@ -979,7 +979,7 @@ name|typename
 name|ValueType
 operator|>
 name|class
-name|FormatNavigator
+name|FormattersContainer
 block|{
 name|protected
 operator|:
@@ -1053,7 +1053,7 @@ name|std
 operator|::
 name|shared_ptr
 operator|<
-name|FormatNavigator
+name|FormattersContainer
 operator|<
 name|KeyType
 operator|,
@@ -1072,7 +1072,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|FormatNavigator
+name|FormattersContainer
 argument_list|(
 argument|std::string name
 argument_list|,
@@ -1403,7 +1403,7 @@ end_expr_stmt
 begin_expr_stmt
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
-name|FormatNavigator
+name|FormattersContainer
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2050,6 +2050,7 @@ range|:
 name|candidates
 control|)
 block|{
+comment|// FIXME: could we do the IsMatch() check first?
 if|if
 condition|(
 name|Get
@@ -2119,7 +2120,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// lldb_FormatNavigator_h_
+comment|// lldb_FormattersContainer_h_
 end_comment
 
 end_unit

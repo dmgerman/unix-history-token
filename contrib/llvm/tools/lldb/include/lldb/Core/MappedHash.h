@@ -1675,6 +1675,7 @@ block|{
 name|m_hash_indexes
 operator|=
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -1698,6 +1699,7 @@ expr_stmt|;
 name|m_hash_values
 operator|=
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -1721,6 +1723,7 @@ expr_stmt|;
 name|m_hash_offsets
 operator|=
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -2345,6 +2348,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|uint32_t
 modifier|*
 name|m_hash_indexes
@@ -2352,6 +2356,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|uint32_t
 modifier|*
 name|m_hash_values
@@ -2359,6 +2364,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|uint32_t
 modifier|*
 name|m_hash_offsets

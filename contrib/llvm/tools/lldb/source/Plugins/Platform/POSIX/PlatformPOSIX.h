@@ -369,11 +369,16 @@ operator|&
 name|high
 argument_list|)
 block|;
+name|virtual
+name|void
+name|CalculateTrapHandlerSymbolNames
+argument_list|()
+block|;
 name|protected
 operator|:
 name|std
 operator|::
-name|auto_ptr
+name|unique_ptr
 operator|<
 name|lldb_private
 operator|::

@@ -83,19 +83,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ELWrapper.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/windows/Windows.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"GetOptWrapper.h"
+file|"lldb/Host/HostGetOpt.h"
 end_include
 
 begin_struct

@@ -314,6 +314,10 @@ name|friend
 name|class
 name|SBValue
 decl_stmt|;
+name|friend
+name|class
+name|SBQueueItem
+decl_stmt|;
 name|lldb_private
 operator|::
 name|Address
