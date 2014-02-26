@@ -229,5 +229,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|JEMALLOC_HAS_RESTRICT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|restrict
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

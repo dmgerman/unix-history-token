@@ -53,12 +53,35 @@ begin_comment
 comment|/* Option defaults. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JEMALLOC_PROF
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|PROF_PREFIX_DEFAULT
 value|"jeprof"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PROF_PREFIX_DEFAULT
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

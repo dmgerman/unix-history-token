@@ -12796,10 +12796,6 @@ name|try_run_size
 operator|<=
 name|arena_maxclass
 operator|&&
-name|try_run_size
-operator|<=
-name|arena_maxclass
-operator|&&
 name|RUN_MAX_OVRHD
 operator|*
 operator|(

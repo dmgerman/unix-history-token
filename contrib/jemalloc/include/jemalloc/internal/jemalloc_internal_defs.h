@@ -360,6 +360,17 @@ comment|/* #undef JEMALLOC_HAS_ALLOCA_H */
 end_comment
 
 begin_comment
+comment|/* C99 restrict keyword supported. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAS_RESTRICT
+value|1
+end_define
+
+begin_comment
 comment|/* sizeof(int) == 2^LG_SIZEOF_INT. */
 end_comment
 
