@@ -288,7 +288,7 @@ block|{
 operator|.
 name|tc_name
 operator|=
-literal|"i.MX GPT Timecounter"
+literal|"iMXGPT"
 block|,
 operator|.
 name|tc_get_timecount
@@ -937,7 +937,7 @@ name|et
 operator|.
 name|et_name
 operator|=
-literal|"i.MXxxx GPT Eventtimer"
+literal|"iMXGPT"
 expr_stmt|;
 name|sc
 operator|->
@@ -955,7 +955,7 @@ name|et
 operator|.
 name|et_quality
 operator|=
-literal|1000
+literal|800
 expr_stmt|;
 name|sc
 operator|->
@@ -1199,7 +1199,7 @@ name|WRITE4
 argument_list|(
 name|sc
 argument_list|,
-name|IMX_GPT_OCR1
+name|IMX_GPT_OCR3
 argument_list|,
 name|READ4
 argument_list|(
@@ -1218,7 +1218,7 @@ name|sc
 argument_list|,
 name|IMX_GPT_IR
 argument_list|,
-name|GPT_IR_OF1
+name|GPT_IR_OF3
 argument_list|)
 expr_stmt|;
 comment|/* Now everybody can relax */
@@ -1398,7 +1398,7 @@ if|if
 condition|(
 name|status
 operator|&
-name|GPT_IR_OF1
+name|GPT_IR_OF3
 condition|)
 block|{
 if|if
