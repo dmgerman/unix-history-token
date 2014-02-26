@@ -1264,36 +1264,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  *	cpu_initclocks - called by system to initialise the cpu clocks  *  *	This is a boilerplat function, most of the setup has already been done  *	when the driver was attached.  Therefore this function must only be called  *	after the driver is attached.  *  *	RETURNS  *	nothing  */
-end_comment
-
-begin_function
-name|void
-name|cpu_initclocks
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|cpu_initclocks_bsp
-argument_list|()
-expr_stmt|;
-else|else
-name|cpu_initclocks_ap
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/**  *	DELAY - Delay for at least usec microseconds.  *	@usec: number of microseconds to delay by  *  *	This function is called all over the kernel and is suppose to provide a  *	consistent delay.  This function may also be called before the console   *	is setup so no printf's can be called here.  *  *	RETURNS:  *	nothing  */
 end_comment
 
