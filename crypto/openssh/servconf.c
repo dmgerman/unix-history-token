@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.c,v 1.240 2013/07/19 07:37:48 markus Exp $ */
+comment|/* $OpenBSD: servconf.c,v 1.248 2013/12/06 13:39:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -464,6 +464,13 @@ expr_stmt|;
 name|options
 operator|->
 name|x11_use_localhost
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|options
+operator|->
+name|permit_tty
 operator|=
 operator|-
 literal|1
@@ -1028,6 +1035,18 @@ name|_PATH_HOST_ECDSA_KEY_FILE
 expr_stmt|;
 endif|#
 directive|endif
+name|options
+operator|->
+name|host_key_files
+index|[
+name|options
+operator|->
+name|num_host_key_files
+operator|++
+index|]
+operator|=
+name|_PATH_HOST_ED25519_KEY_FILE
+expr_stmt|;
 block|}
 block|}
 comment|/* No certificates by default */
@@ -1259,6 +1278,21 @@ operator|->
 name|xauth_location
 operator|=
 name|_PATH_XAUTH
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|->
+name|permit_tty
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|->
+name|permit_tty
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1911,7 +1945,7 @@ literal|1
 condition|)
 name|use_privsep
 operator|=
-name|PRIVSEP_NOSANDBOX
+name|PRIVSEP_ON
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -2146,6 +2180,8 @@ block|,
 name|sX11DisplayOffset
 block|,
 name|sX11UseLocalhost
+block|,
+name|sPermitTTY
 block|,
 name|sStrictModes
 block|,
@@ -3057,6 +3093,14 @@ name|SSHCFG_ALL
 block|}
 block|,
 block|{
+literal|"permittty"
+block|,
+name|sPermitTTY
+block|,
+name|SSHCFG_ALL
+block|}
+block|,
+block|{
 literal|"match"
 block|,
 name|sMatch
@@ -3935,7 +3979,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * All of the attributes on a single Match line are ANDed together, so we need  * to check every * attribute and set the result to zero if any attribute does  * not match.  */
+comment|/*  * All of the attributes on a single Match line are ANDed together, so we need  * to check every attribute and set the result to zero if any attribute does  * not match.  */
 end_comment
 
 begin_function
@@ -3961,6 +4005,10 @@ name|int
 name|result
 init|=
 literal|1
+decl_stmt|,
+name|attributes
+init|=
+literal|0
 decl_stmt|,
 name|port
 decl_stmt|;
@@ -4064,6 +4112,67 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+name|attributes
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|attrib
+argument_list|,
+literal|"all"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|attributes
+operator|!=
+literal|1
+operator|||
+operator|(
+operator|(
+name|arg
+operator|=
+name|strdelim
+argument_list|(
+operator|&
+name|cp
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|arg
+operator|!=
+literal|'\0'
+operator|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"'all' cannot be combined with other "
+literal|"Match attributes"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+operator|*
+name|condition
+operator|=
+name|cp
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -4571,6 +4680,23 @@ operator|-
 literal|1
 return|;
 block|}
+block|}
+if|if
+condition|(
+name|attributes
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"One or more attributes required for Match"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 if|if
 condition|(
@@ -6365,6 +6491,19 @@ name|xauth_location
 expr_stmt|;
 goto|goto
 name|parse_filename
+goto|;
+case|case
+name|sPermitTTY
+case|:
+name|intptr
+operator|=
+operator|&
+name|options
+operator|->
+name|permit_tty
+expr_stmt|;
+goto|goto
+name|parse_flag
 goto|;
 case|case
 name|sStrictModes
@@ -9657,42 +9796,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Helper macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_CP_INTOPT
-parameter_list|(
-name|n
-parameter_list|)
-value|do {\ 	if (src->n != -1) \ 		dst->n = src->n; \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_CP_STROPT
-parameter_list|(
-name|n
-parameter_list|)
-value|do {\ 	if (src->n != NULL) { \ 		free(dst->n); \ 		dst->n = src->n; \ 	} \ } while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_CP_STRARRAYOPT
-parameter_list|(
-name|n
-parameter_list|,
-name|num_n
-parameter_list|)
-value|do {\ 	if (src->num_n != 0) { \ 		for (dst->num_n = 0; dst->num_n< src->num_n; dst->num_n++) \ 			dst->n[dst->num_n] = xstrdup(src->n[dst->num_n]); \ 	} \ } while(0)
-end_define
-
-begin_comment
 comment|/*  * Copy any supported values that are set.  *  * If the preauth flag is set, we do not bother copying the string or  * array values that are not used pre-authentication, because any that we  * do use must be explictly sent in mm_getpwnamallow().  */
 end_comment
 
@@ -9712,6 +9815,13 @@ name|int
 name|preauth
 parameter_list|)
 block|{
+define|#
+directive|define
+name|M_CP_INTOPT
+parameter_list|(
+name|n
+parameter_list|)
+value|do {\ 	if (src->n != -1) \ 		dst->n = src->n; \ } while (0)
 name|M_CP_INTOPT
 argument_list|(
 name|password_authentication
@@ -9755,16 +9865,6 @@ expr_stmt|;
 name|M_CP_INTOPT
 argument_list|(
 name|zero_knowledge_password_authentication
-argument_list|)
-expr_stmt|;
-name|M_CP_STROPT
-argument_list|(
-name|authorized_keys_command
-argument_list|)
-expr_stmt|;
-name|M_CP_STROPT
-argument_list|(
-name|authorized_keys_command_user
 argument_list|)
 expr_stmt|;
 name|M_CP_INTOPT
@@ -9814,6 +9914,11 @@ argument_list|)
 expr_stmt|;
 name|M_CP_INTOPT
 argument_list|(
+name|permit_tty
+argument_list|)
+expr_stmt|;
+name|M_CP_INTOPT
+argument_list|(
 name|max_sessions
 argument_list|)
 expr_stmt|;
@@ -9842,6 +9947,23 @@ argument_list|(
 name|rekey_interval
 argument_list|)
 expr_stmt|;
+comment|/* M_CP_STROPT and M_CP_STRARRAYOPT should not appear before here */
+define|#
+directive|define
+name|M_CP_STROPT
+parameter_list|(
+name|n
+parameter_list|)
+value|do {\ 	if (src->n != NULL&& dst->n != src->n) { \ 		free(dst->n); \ 		dst->n = src->n; \ 	} \ } while(0)
+define|#
+directive|define
+name|M_CP_STRARRAYOPT
+parameter_list|(
+name|n
+parameter_list|,
+name|num_n
+parameter_list|)
+value|do {\ 	if (src->num_n != 0) { \ 		for (dst->num_n = 0; dst->num_n< src->num_n; dst->num_n++) \ 			dst->n[dst->num_n] = xstrdup(src->n[dst->num_n]); \ 	} \ } while(0)
 comment|/* See comment in servconf.h */
 name|COPY_MATCH_STRING_OPTS
 argument_list|()
@@ -11015,6 +11137,15 @@ argument_list|)
 expr_stmt|;
 name|dump_cfg_fmtint
 argument_list|(
+name|sPermitTTY
+argument_list|,
+name|o
+operator|->
+name|permit_tty
+argument_list|)
+expr_stmt|;
+name|dump_cfg_fmtint
+argument_list|(
 name|sStrictModes
 argument_list|,
 name|o
@@ -11127,6 +11258,17 @@ argument_list|,
 name|o
 operator|->
 name|ciphers
+condition|?
+name|o
+operator|->
+name|ciphers
+else|:
+name|cipher_alg_list
+argument_list|(
+literal|','
+argument_list|,
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dump_cfg_string
@@ -11136,6 +11278,15 @@ argument_list|,
 name|o
 operator|->
 name|macs
+condition|?
+name|o
+operator|->
+name|macs
+else|:
+name|mac_alg_list
+argument_list|(
+literal|','
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dump_cfg_string
@@ -11226,6 +11377,24 @@ argument_list|,
 name|o
 operator|->
 name|host_key_agent
+argument_list|)
+expr_stmt|;
+name|dump_cfg_string
+argument_list|(
+name|sKexAlgorithms
+argument_list|,
+name|o
+operator|->
+name|kex_algorithms
+condition|?
+name|o
+operator|->
+name|kex_algorithms
+else|:
+name|kex_alg_list
+argument_list|(
+literal|','
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* string arguments requiring a lookup */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexdhc.c,v 1.13 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: kexdhc.c,v 1.14 2014/01/12 08:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -683,7 +683,7 @@ name|session_id_len
 argument_list|)
 expr_stmt|;
 block|}
-name|kex_derive_keys
+name|kex_derive_keys_bn
 argument_list|(
 name|kex
 argument_list|,

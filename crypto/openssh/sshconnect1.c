@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect1.c,v 1.71 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: sshconnect1.c,v 1.72 2013/09/02 22:00:34 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -2216,10 +2216,6 @@ name|cookie
 argument_list|,
 name|session_id
 argument_list|)
-expr_stmt|;
-comment|/* Generate a session key. */
-name|arc4random_stir
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Generate an encryption key for the session.   The key is a 256 bit 	 * random number, interpreted as a 32-byte key, with the least 	 * significant 8 bits being the first byte of the key. 	 */
 for|for
