@@ -1433,7 +1433,11 @@ operator|->
 name|e2fs_features_incompat
 operator|&
 operator|~
+operator|(
 name|EXT2F_INCOMPAT_SUPP
+operator||
+name|EXT4F_RO_INCOMPAT_SUPP
+operator|)
 condition|)
 block|{
 name|printf
