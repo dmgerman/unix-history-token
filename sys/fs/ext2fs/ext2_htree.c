@@ -247,7 +247,7 @@ name|hash
 parameter_list|,
 name|uint8_t
 modifier|*
-name|hash_verion
+name|hash_version
 parameter_list|,
 name|struct
 name|ext2fs_htree_lookup_info
