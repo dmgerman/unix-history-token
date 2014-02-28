@@ -842,6 +842,7 @@ comment|/// \brief Get the compilation directory for DW_AT_comp_dir
 comment|/// This can be overridden by clients which want to control the reported
 comment|/// compilation directory and have it be something other than the current
 comment|/// working directory.
+comment|/// Returns an empty string if the current directory cannot be determined.
 name|StringRef
 name|getCompilationDir
 argument_list|()
