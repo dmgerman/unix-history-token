@@ -544,6 +544,9 @@ condition|)
 continue|continue;
 name|tag
 operator|&=
+operator|(
+name|u_long
+operator|)
 name|IC_TAG_MASK
 operator|<<
 name|IC_TAG_SHIFT
