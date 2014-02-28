@@ -89,7 +89,7 @@ begin_line
 line|#
 directive|line
 number|39
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 end_line
 
 begin_include
@@ -223,7 +223,7 @@ begin_line
 line|#
 directive|line
 number|64
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 end_line
 
 begin_ifdef
@@ -289,7 +289,7 @@ begin_line
 line|#
 directive|line
 number|54
-file|"y.tab.c"
+file|"util/configparser.c"
 end_line
 
 begin_comment
@@ -8393,7 +8393,7 @@ begin_line
 line|#
 directive|line
 number|1277
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 end_line
 
 begin_comment
@@ -8404,7 +8404,7 @@ begin_line
 line|#
 directive|line
 number|845
-file|"y.tab.c"
+file|"util/configparser.c"
 end_line
 
 begin_if
@@ -9475,7 +9475,7 @@ case|:
 line|#
 directive|line
 number|118
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -9492,7 +9492,7 @@ case|:
 line|#
 directive|line
 number|167
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|struct
 name|config_stub
@@ -9562,7 +9562,7 @@ case|:
 line|#
 directive|line
 number|183
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|struct
 name|config_stub
@@ -9632,7 +9632,7 @@ case|:
 line|#
 directive|line
 number|199
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -9726,7 +9726,7 @@ case|:
 line|#
 directive|line
 number|208
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -9820,7 +9820,7 @@ case|:
 line|#
 directive|line
 number|217
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -9941,7 +9941,7 @@ case|:
 line|#
 directive|line
 number|228
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10043,7 +10043,7 @@ case|:
 line|#
 directive|line
 number|237
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10145,7 +10145,7 @@ case|:
 line|#
 directive|line
 number|246
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10223,7 +10223,7 @@ case|:
 line|#
 directive|line
 number|255
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10346,7 +10346,7 @@ case|:
 line|#
 directive|line
 number|268
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10469,7 +10469,7 @@ case|:
 line|#
 directive|line
 number|283
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10547,7 +10547,7 @@ case|:
 line|#
 directive|line
 number|292
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10615,7 +10615,7 @@ case|:
 line|#
 directive|line
 number|301
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10683,7 +10683,7 @@ case|:
 line|#
 directive|line
 number|310
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10777,7 +10777,7 @@ case|:
 line|#
 directive|line
 number|319
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10871,7 +10871,7 @@ case|:
 line|#
 directive|line
 number|328
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10973,7 +10973,7 @@ case|:
 line|#
 directive|line
 number|337
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11075,7 +11075,7 @@ case|:
 line|#
 directive|line
 number|346
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11177,7 +11177,7 @@ case|:
 line|#
 directive|line
 number|355
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11279,7 +11279,7 @@ case|:
 line|#
 directive|line
 number|364
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11381,7 +11381,7 @@ case|:
 line|#
 directive|line
 number|373
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11483,7 +11483,7 @@ case|:
 line|#
 directive|line
 number|382
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11585,7 +11585,7 @@ case|:
 line|#
 directive|line
 number|391
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11635,7 +11635,7 @@ case|:
 line|#
 directive|line
 number|398
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11685,7 +11685,7 @@ case|:
 line|#
 directive|line
 number|405
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11763,7 +11763,7 @@ case|:
 line|#
 directive|line
 number|414
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11865,7 +11865,7 @@ case|:
 line|#
 directive|line
 number|423
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12006,7 +12006,7 @@ case|:
 line|#
 directive|line
 number|437
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12108,7 +12108,7 @@ case|:
 line|#
 directive|line
 number|446
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12210,7 +12210,7 @@ case|:
 line|#
 directive|line
 number|455
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12260,7 +12260,7 @@ case|:
 line|#
 directive|line
 number|462
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12310,7 +12310,7 @@ case|:
 line|#
 directive|line
 number|469
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12360,7 +12360,7 @@ case|:
 line|#
 directive|line
 number|476
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12418,7 +12418,7 @@ case|:
 line|#
 directive|line
 number|484
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12468,7 +12468,7 @@ case|:
 line|#
 directive|line
 number|491
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12521,7 +12521,7 @@ case|:
 line|#
 directive|line
 number|498
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12571,7 +12571,7 @@ case|:
 line|#
 directive|line
 number|505
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12624,7 +12624,7 @@ case|:
 line|#
 directive|line
 number|512
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12677,7 +12677,7 @@ case|:
 line|#
 directive|line
 number|520
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12730,7 +12730,7 @@ case|:
 line|#
 directive|line
 number|528
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12783,7 +12783,7 @@ case|:
 line|#
 directive|line
 number|536
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12836,7 +12836,7 @@ case|:
 line|#
 directive|line
 number|543
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12889,7 +12889,7 @@ case|:
 line|#
 directive|line
 number|550
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12991,7 +12991,7 @@ case|:
 line|#
 directive|line
 number|559
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13093,7 +13093,7 @@ case|:
 line|#
 directive|line
 number|568
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13143,7 +13143,7 @@ case|:
 line|#
 directive|line
 number|575
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13193,7 +13193,7 @@ case|:
 line|#
 directive|line
 number|582
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13258,7 +13258,7 @@ case|:
 line|#
 directive|line
 number|590
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13323,7 +13323,7 @@ case|:
 line|#
 directive|line
 number|598
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13448,7 +13448,7 @@ case|:
 line|#
 directive|line
 number|611
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13548,7 +13548,7 @@ case|:
 line|#
 directive|line
 number|622
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13613,7 +13613,7 @@ case|:
 line|#
 directive|line
 number|630
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13710,7 +13710,7 @@ case|:
 line|#
 directive|line
 number|643
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13788,7 +13788,7 @@ case|:
 line|#
 directive|line
 number|652
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13882,7 +13882,7 @@ case|:
 line|#
 directive|line
 number|661
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13947,7 +13947,7 @@ case|:
 line|#
 directive|line
 number|669
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14044,7 +14044,7 @@ case|:
 line|#
 directive|line
 number|682
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14138,7 +14138,7 @@ case|:
 line|#
 directive|line
 number|691
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14193,7 +14193,7 @@ case|:
 line|#
 directive|line
 number|699
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14271,7 +14271,7 @@ case|:
 line|#
 directive|line
 number|708
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14326,7 +14326,7 @@ case|:
 line|#
 directive|line
 number|716
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14423,7 +14423,7 @@ case|:
 line|#
 directive|line
 number|729
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14473,7 +14473,7 @@ case|:
 line|#
 directive|line
 number|736
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14575,7 +14575,7 @@ case|:
 line|#
 directive|line
 number|746
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14677,7 +14677,7 @@ case|:
 line|#
 directive|line
 number|756
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14779,7 +14779,7 @@ case|:
 line|#
 directive|line
 number|766
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14881,7 +14881,7 @@ case|:
 line|#
 directive|line
 number|776
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14983,7 +14983,7 @@ case|:
 line|#
 directive|line
 number|786
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15085,7 +15085,7 @@ case|:
 line|#
 directive|line
 number|796
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15187,7 +15187,7 @@ case|:
 line|#
 directive|line
 number|806
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15240,7 +15240,7 @@ case|:
 line|#
 directive|line
 number|813
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15293,7 +15293,7 @@ case|:
 line|#
 directive|line
 number|820
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15395,7 +15395,7 @@ case|:
 line|#
 directive|line
 number|829
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15497,7 +15497,7 @@ case|:
 line|#
 directive|line
 number|838
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15591,7 +15591,7 @@ case|:
 line|#
 directive|line
 number|847
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15644,7 +15644,7 @@ case|:
 line|#
 directive|line
 number|854
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15746,7 +15746,7 @@ case|:
 line|#
 directive|line
 number|864
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15896,7 +15896,7 @@ case|:
 line|#
 directive|line
 number|878
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15946,7 +15946,7 @@ case|:
 line|#
 directive|line
 number|885
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16119,7 +16119,7 @@ case|:
 line|#
 directive|line
 number|903
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16234,7 +16234,7 @@ case|:
 line|#
 directive|line
 number|916
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16349,7 +16349,7 @@ case|:
 line|#
 directive|line
 number|929
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16443,7 +16443,7 @@ case|:
 line|#
 directive|line
 number|938
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16537,7 +16537,7 @@ case|:
 line|#
 directive|line
 number|947
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16631,7 +16631,7 @@ case|:
 line|#
 directive|line
 number|956
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16733,7 +16733,7 @@ case|:
 line|#
 directive|line
 number|966
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16835,7 +16835,7 @@ case|:
 line|#
 directive|line
 number|976
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16937,7 +16937,7 @@ case|:
 line|#
 directive|line
 number|985
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17031,7 +17031,7 @@ case|:
 line|#
 directive|line
 number|994
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17081,7 +17081,7 @@ case|:
 line|#
 directive|line
 number|1001
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17175,7 +17175,7 @@ case|:
 line|#
 directive|line
 number|1010
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17269,7 +17269,7 @@ case|:
 line|#
 directive|line
 number|1019
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17363,7 +17363,7 @@ case|:
 line|#
 directive|line
 number|1028
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17428,7 +17428,7 @@ case|:
 line|#
 directive|line
 number|1036
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17525,7 +17525,7 @@ case|:
 line|#
 directive|line
 number|1049
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17590,7 +17590,7 @@ case|:
 line|#
 directive|line
 number|1057
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17848,7 +17848,7 @@ case|:
 line|#
 directive|line
 number|1079
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17901,7 +17901,7 @@ case|:
 line|#
 directive|line
 number|1086
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|char
 modifier|*
@@ -17991,7 +17991,7 @@ case|:
 line|#
 directive|line
 number|1101
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18093,7 +18093,7 @@ case|:
 line|#
 directive|line
 number|1111
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18195,7 +18195,7 @@ case|:
 line|#
 directive|line
 number|1121
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18265,7 +18265,7 @@ case|:
 line|#
 directive|line
 number|1131
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18320,7 +18320,7 @@ case|:
 line|#
 directive|line
 number|1138
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18375,7 +18375,7 @@ case|:
 line|#
 directive|line
 number|1145
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18479,7 +18479,7 @@ case|:
 line|#
 directive|line
 number|1154
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18583,7 +18583,7 @@ case|:
 line|#
 directive|line
 number|1164
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18653,7 +18653,7 @@ case|:
 line|#
 directive|line
 number|1174
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18708,7 +18708,7 @@ case|:
 line|#
 directive|line
 number|1181
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18763,7 +18763,7 @@ case|:
 line|#
 directive|line
 number|1188
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18867,7 +18867,7 @@ case|:
 line|#
 directive|line
 number|1197
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18884,7 +18884,7 @@ case|:
 line|#
 directive|line
 number|1208
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18986,7 +18986,7 @@ case|:
 line|#
 directive|line
 number|1218
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19064,7 +19064,7 @@ case|:
 line|#
 directive|line
 number|1227
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19117,7 +19117,7 @@ case|:
 line|#
 directive|line
 number|1234
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19167,7 +19167,7 @@ case|:
 line|#
 directive|line
 number|1241
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19217,7 +19217,7 @@ case|:
 line|#
 directive|line
 number|1248
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19267,7 +19267,7 @@ case|:
 line|#
 directive|line
 number|1255
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19317,7 +19317,7 @@ case|:
 line|#
 directive|line
 number|1262
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19334,7 +19334,7 @@ case|:
 line|#
 directive|line
 number|1271
-file|"/usr/home/grehan/freebsd/amd_svm_anishg/lib/libunbound/../../contrib/unbound/util/configparser.y"
+file|"util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19381,7 +19381,7 @@ break|break;
 line|#
 directive|line
 number|2269
-file|"y.tab.c"
+file|"util/configparser.c"
 block|}
 name|yystack
 operator|.
