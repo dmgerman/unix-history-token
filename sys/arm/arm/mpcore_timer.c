@@ -449,7 +449,7 @@ block|{
 operator|.
 name|tc_name
 operator|=
-literal|"ARM MPCore Timecounter"
+literal|"MPCore"
 block|,
 operator|.
 name|tc_get_timecount
@@ -475,7 +475,7 @@ block|,
 operator|.
 name|tc_quality
 operator|=
-literal|1000
+literal|800
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -770,7 +770,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"ARM Generic MPCore Timers"
+literal|"ARM MPCore Timers"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1081,7 +1081,7 @@ name|et
 operator|.
 name|et_name
 operator|=
-literal|"ARM MPCore Eventtimer"
+literal|"MPCore"
 expr_stmt|;
 name|sc
 operator|->
@@ -1268,8 +1268,9 @@ comment|/**  *	DELAY - Delay for at least usec microseconds.  *	@usec: number of
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|DELAY
+name|arm_tmr_DELAY
 parameter_list|(
 name|int
 name|usec
@@ -1405,6 +1406,20 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Supply a DELAY() implementation via weak linkage.  A platform may want to use  * the mpcore per-cpu eventtimers but provide its own DELAY() routine,  * especially when the core frequency can change on the fly.  */
+end_comment
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|arm_tmr_DELAY
+argument_list|,
+name|DELAY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
