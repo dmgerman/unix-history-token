@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: p_new.c,v 1.10 2008/08/04 18:25:48 tom Exp $"
+literal|"$Id: p_new.c,v 1.16 2010/01/23 21:22:16 tom Exp $"
 argument_list|)
 end_macro
 
@@ -61,9 +61,38 @@ name|PANEL
 modifier|*
 name|root_panel
 parameter_list|(
-name|void
+name|NCURSES_SP_DCL0
 parameter_list|)
 block|{
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+name|struct
+name|panelhook
+modifier|*
+name|ph
+init|=
+name|NCURSES_SP_NAME
+argument_list|(
+name|_nc_panelhook
+argument_list|)
+argument_list|(
+name|sp
+argument_list|)
+decl_stmt|;
+elif|#
+directive|elif
+name|NO_LEAKS
+name|struct
+name|panelhook
+modifier|*
+name|ph
+init|=
+name|_nc_panelhook
+argument_list|()
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|_nc_stdscr_pseudo_panel
@@ -77,7 +106,11 @@ condition|)
 block|{
 name|assert
 argument_list|(
-name|stdscr
+name|SP_PARM
+operator|&&
+name|SP_PARM
+operator|->
+name|_stdscr
 operator|&&
 operator|!
 name|_nc_bottom_panel
@@ -89,8 +122,7 @@ expr_stmt|;
 if|#
 directive|if
 name|NO_LEAKS
-name|_nc_panelhook
-argument_list|()
+name|ph
 operator|->
 name|destroy
 operator|=
@@ -100,16 +132,11 @@ endif|#
 directive|endif
 name|_nc_stdscr_pseudo_panel
 operator|=
-operator|(
-name|PANEL
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
+name|typeMalloc
 argument_list|(
 name|PANEL
-argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -129,7 +156,9 @@ name|WINDOW
 modifier|*
 name|win
 init|=
-name|stdscr
+name|SP_PARM
+operator|->
+name|_stdscr
 decl_stmt|;
 name|pan
 operator|->
@@ -232,6 +261,11 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
+name|GetWindowHook
+argument_list|(
+name|win
+argument_list|)
+expr_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -240,6 +274,10 @@ argument_list|(
 literal|"new_panel(%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|win
 operator|)
 argument_list|)
@@ -263,7 +301,9 @@ operator|(
 name|void
 operator|)
 name|root_panel
-argument_list|()
+argument_list|(
+name|NCURSES_SP_ARG
+argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
@@ -284,16 +324,11 @@ operator|&&
 operator|(
 name|pan
 operator|=
-operator|(
-name|PANEL
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
+name|typeMalloc
 argument_list|(
 name|PANEL
-argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 condition|)

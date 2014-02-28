@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2005-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2005-2007,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -25,16 +25,10 @@ directive|include
 file|<tic.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<term_entry.h>
-end_include
-
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: trim_sgr0.c,v 1.8 2007/04/07 17:14:11 tom Exp $"
+literal|"$Id: trim_sgr0.c,v 1.12 2010/12/25 23:03:57 tom Exp $"
 argument_list|)
 end_macro
 
@@ -354,7 +348,7 @@ name|attr
 argument_list|)
 condition|)
 block|{
-name|unsigned
+name|size_t
 name|len_s
 init|=
 name|strlen
@@ -362,7 +356,7 @@ argument_list|(
 name|s
 argument_list|)
 decl_stmt|;
-name|unsigned
+name|size_t
 name|len_a
 init|=
 name|strlen
@@ -498,10 +492,10 @@ argument_list|(
 name|b
 argument_list|)
 decl_stmt|;
-name|unsigned
+name|size_t
 name|len_a
 decl_stmt|;
-name|unsigned
+name|size_t
 name|len_b
 decl_stmt|;
 name|TR
@@ -741,7 +735,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|unsigned
 name|compare_part
 parameter_list|(
 specifier|const
@@ -765,12 +759,12 @@ name|char
 modifier|*
 name|next_full
 decl_stmt|;
-name|int
+name|unsigned
 name|used_full
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|unsigned
 name|used_delay
 init|=
 literal|0
@@ -855,11 +849,14 @@ condition|)
 block|{
 name|used_delay
 operator|+=
-operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|next_full
 operator|-
 name|full
-operator|)
+argument_list|)
 expr_stmt|;
 name|full
 operator|=
@@ -1166,7 +1163,7 @@ operator|++
 name|i
 control|)
 block|{
-name|int
+name|unsigned
 name|k2
 init|=
 name|compare_part
@@ -1193,11 +1190,19 @@ name|chop_out
 argument_list|(
 name|off
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|i
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|i
 operator|+
 name|k2
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1217,6 +1222,9 @@ condition|(
 operator|(
 name|i
 operator|=
+operator|(
+name|size_t
+operator|)
 name|is_csi
 argument_list|(
 name|off
@@ -1284,9 +1292,14 @@ condition|)
 block|{
 name|i
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|tmp
 operator|-
 name|off
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1304,6 +1317,10 @@ operator|--
 expr_stmt|;
 name|j
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|skip_zero
 argument_list|(
 name|tmp
@@ -1312,15 +1329,23 @@ literal|1
 argument_list|)
 operator|-
 name|off
+argument_list|)
 expr_stmt|;
-name|i
-operator|=
+operator|(
+name|void
+operator|)
 name|chop_out
 argument_list|(
 name|off
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|i
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|j
 argument_list|)
 expr_stmt|;
@@ -1361,9 +1386,14 @@ condition|)
 block|{
 name|i
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|tmp
 operator|-
 name|end
+argument_list|)
 expr_stmt|;
 name|j
 operator|=
@@ -1383,8 +1413,14 @@ name|chop_out
 argument_list|(
 name|tmp
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|i
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|j
 argument_list|)
 expr_stmt|;
