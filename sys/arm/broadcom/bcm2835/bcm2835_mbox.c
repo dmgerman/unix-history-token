@@ -751,9 +751,9 @@ name|lock
 argument_list|,
 literal|"vcio mbox"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 for|for
