@@ -301,7 +301,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|creator_cmap
 index|[]
 init|=
@@ -491,7 +490,6 @@ name|vm_size_t
 name|size
 decl_stmt|;
 block|}
-decl|const
 name|creator_fb_map
 index|[]
 init|=
@@ -1409,7 +1407,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|u_char
-specifier|const
 name|creator_mouse_pointer
 index|[
 literal|64

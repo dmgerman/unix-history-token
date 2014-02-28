@@ -791,6 +791,7 @@ name|Streamer
 argument_list|)
 decl|const
 decl_stmt|;
+name|virtual
 specifier|const
 name|MCExpr
 modifier|*

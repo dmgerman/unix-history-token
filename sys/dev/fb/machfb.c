@@ -366,7 +366,6 @@ name|uint32_t
 name|ramdac_freq
 decl_stmt|;
 block|}
-decl|const
 name|machfb_info
 index|[]
 init|=
@@ -638,7 +637,6 @@ name|uint8_t
 name|blue
 decl_stmt|;
 block|}
-decl|const
 name|machfb_default_cmap
 index|[
 literal|16
@@ -803,7 +801,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|u_char
-specifier|const
 name|machfb_mouse_pointer_bits
 index|[
 literal|64
@@ -979,7 +976,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|u_char
-specifier|const
 name|machfb_mouse_pointer_lut
 index|[]
 init|=
@@ -7737,7 +7733,6 @@ name|memsize
 decl_stmt|;
 specifier|const
 name|int
-specifier|const
 name|mem_tab
 index|[]
 init|=

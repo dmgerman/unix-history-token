@@ -2732,7 +2732,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("addcc %r4,%5,%1\n\t"					\    	   "add %r2,%3,%0\n\t"						\    	   "bcs,a,pn %%xcc, 1f\n\t"					\    	   "add %0, 1, %0\n"						\ 	   "1:"								\ 	   : "=r" ((UDItype)(sh)),				      	\ 	     "=&r" ((UDItype)(sl))				      	\ 	   : "%rJ" ((UDItype)(ah)),				     	\ 	     "rI" ((UDItype)(bh)),				      	\ 	     "%rJ" ((UDItype)(al)),				     	\ 	     "rI" ((UDItype)(bl))				       	\ 	   __CLOBBER_CC)
+value|__asm__ ("addcc %r4,%5,%1\n\t"					\    	   "add %r2,%3,%0\n\t"						\    	   "bcs,a,pn %%xcc, 1f\n\t"					\    	   "add %0, 1, %0\n"						\ 	   "1:"								\ 	   : "=r" (sh),						      	\ 	     "=&r" (sl)						      	\ 	   : "%rJ" ((UDItype)(ah)),				     	\ 	     "rI" ((UDItype)(bh)),				      	\ 	     "%rJ" ((UDItype)(al)),				     	\ 	     "rI" ((UDItype)(bl))				       	\ 	   __CLOBBER_CC)
 end_define
 
 begin_define
@@ -2753,7 +2753,7 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("subcc %r4,%5,%1\n\t"					\    	   "sub %r2,%3,%0\n\t"						\    	   "bcs,a,pn %%xcc, 1f\n\t"					\    	   "sub %0, 1, %0\n\t"						\ 	   "1:"								\ 	   : "=r" ((UDItype)(sh)),				      	\ 	     "=&r" ((UDItype)(sl))				      	\ 	   : "rJ" ((UDItype)(ah)),				     	\ 	     "rI" ((UDItype)(bh)),				      	\ 	     "rJ" ((UDItype)(al)),				     	\ 	     "rI" ((UDItype)(bl))				       	\ 	   __CLOBBER_CC)
+value|__asm__ ("subcc %r4,%5,%1\n\t"					\    	   "sub %r2,%3,%0\n\t"						\    	   "bcs,a,pn %%xcc, 1f\n\t"					\    	   "sub %0, 1, %0\n\t"						\ 	   "1:"								\ 	   : "=r" (sh),						      	\ 	     "=&r" (sl)						      	\ 	   : "rJ" ((UDItype)(ah)),				     	\ 	     "rI" ((UDItype)(bh)),				      	\ 	     "rJ" ((UDItype)(al)),				     	\ 	     "rI" ((UDItype)(bl))				       	\ 	   __CLOBBER_CC)
 end_define
 
 begin_define
@@ -2770,7 +2770,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do {									\ 	  UDItype tmp1, tmp2, tmp3, tmp4;				\ 	  __asm__ __volatile__ (					\ 		   "srl %7,0,%3\n\t"					\ 		   "mulx %3,%6,%1\n\t"					\ 		   "srlx %6,32,%2\n\t"					\ 		   "mulx %2,%3,%4\n\t"					\ 		   "sllx %4,32,%5\n\t"					\ 		   "srl %6,0,%3\n\t"					\ 		   "sub %1,%5,%5\n\t"					\ 		   "srlx %5,32,%5\n\t"					\ 		   "addcc %4,%5,%4\n\t"					\ 		   "srlx %7,32,%5\n\t"					\ 		   "mulx %3,%5,%3\n\t"					\ 		   "mulx %2,%5,%5\n\t"					\ 		   "sethi %%hi(0x80000000),%2\n\t"			\ 		   "addcc %4,%3,%4\n\t"					\ 		   "srlx %4,32,%4\n\t"					\ 		   "add %2,%2,%2\n\t"					\ 		   "movcc %%xcc,%%g0,%2\n\t"				\ 		   "addcc %5,%4,%5\n\t"					\ 		   "sllx %3,32,%3\n\t"					\ 		   "add %1,%3,%1\n\t"					\ 		   "add %5,%2,%0"					\ 	   : "=r" ((UDItype)(wh)),					\ 	     "=&r" ((UDItype)(wl)),					\ 	     "=&r" (tmp1), "=&r" (tmp2), "=&r" (tmp3), "=&r" (tmp4)	\ 	   : "r" ((UDItype)(u)),					\ 	     "r" ((UDItype)(v))						\ 	   __CLOBBER_CC);						\   } while (0)
+value|do {									\ 	  UDItype tmp1, tmp2, tmp3, tmp4;				\ 	  __asm__ __volatile__ (					\ 		   "srl %7,0,%3\n\t"					\ 		   "mulx %3,%6,%1\n\t"					\ 		   "srlx %6,32,%2\n\t"					\ 		   "mulx %2,%3,%4\n\t"					\ 		   "sllx %4,32,%5\n\t"					\ 		   "srl %6,0,%3\n\t"					\ 		   "sub %1,%5,%5\n\t"					\ 		   "srlx %5,32,%5\n\t"					\ 		   "addcc %4,%5,%4\n\t"					\ 		   "srlx %7,32,%5\n\t"					\ 		   "mulx %3,%5,%3\n\t"					\ 		   "mulx %2,%5,%5\n\t"					\ 		   "sethi %%hi(0x80000000),%2\n\t"			\ 		   "addcc %4,%3,%4\n\t"					\ 		   "srlx %4,32,%4\n\t"					\ 		   "add %2,%2,%2\n\t"					\ 		   "movcc %%xcc,%%g0,%2\n\t"				\ 		   "addcc %5,%4,%5\n\t"					\ 		   "sllx %3,32,%3\n\t"					\ 		   "add %1,%3,%1\n\t"					\ 		   "add %5,%2,%0"					\ 	   : "=r" (wh),							\ 	     "=&r" (wl),						\ 	     "=&r" (tmp1), "=&r" (tmp2), "=&r" (tmp3), "=&r" (tmp4)	\ 	   : "r" ((UDItype)(u)),					\ 	     "r" ((UDItype)(v))						\ 	   __CLOBBER_CC);						\   } while (0)
 end_define
 
 begin_define

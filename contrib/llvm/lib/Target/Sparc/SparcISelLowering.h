@@ -233,6 +233,28 @@ argument|const std::string&Constraint
 argument_list|)
 specifier|const
 block|;
+name|ConstraintWeight
+name|getSingleConstraintMatchWeight
+argument_list|(
+argument|AsmOperandInfo&info
+argument_list|,
+argument|const char *constraint
+argument_list|)
+specifier|const
+block|;
+name|void
+name|LowerAsmOperandForConstraint
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|std::string&Constraint
+argument_list|,
+argument|std::vector<SDValue>&Ops
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|std
 operator|::
 name|pair
@@ -575,6 +597,33 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>& Results
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|expandSelectCC
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned BROpcode
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|expandAtomicRMW
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned CondCode =
+literal|0
 argument_list|)
 specifier|const
 block|;   }

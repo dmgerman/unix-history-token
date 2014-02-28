@@ -377,7 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Domain [-0.1659, 0.03125], range ~[2.9134e-44, 1.8404e-37]:  * |(exp(x)-1-x-x**2/2)/x - p(x)|< 2**-122.03 /*  * XXX none of the long double C or D coeffs except C10 is correctly printed.  * If you re-print their values in %.35Le format, the result is always  * different.  For example, the last 2 digits in C3 should be 59, not 67.  * 67 is apparently from rounding an extra-precision value to 36 decimal  * places.  */
+comment|/*  * Domain [-0.1659, 0.03125], range ~[2.9134e-44, 1.8404e-37]:  * |(exp(x)-1-x-x**2/2)/x - p(x)|< 2**-122.03  *  * XXX none of the long double C or D coeffs except C10 is correctly printed.  * If you re-print their values in %.35Le format, the result is always  * different.  For example, the last 2 digits in C3 should be 59, not 67.  * 67 is apparently from rounding an extra-precision value to 36 decimal  * places.  */
 end_comment
 
 begin_decl_stmt
