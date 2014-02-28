@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: frm_def.c,v 1.23 2008/08/04 00:07:55 tom Exp $"
+literal|"$Id: frm_def.c,v 1.25 2010/01/23 21:14:36 tom Exp $"
 argument_list|)
 end_macro
 
@@ -487,8 +487,16 @@ argument_list|(
 literal|"Connect_Fields(%p,%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|form
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|fields
 operator|)
 argument_list|)
@@ -637,6 +645,10 @@ argument_list|(
 literal|"_PAGE %p"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pg
 operator|)
 argument_list|)
@@ -1039,24 +1051,26 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FORM *new_form( FIELD **fields ) |    |   Description   :  Create new form with given array of fields. | |   Return Values :  Pointer to form. NULL if error occurred. !                    Set errno: |                    E_OK            - success |                    E_BAD_ARGUMENT  - Invalid form pointer or field array |                    E_CONNECTED     - a field is already connected |                    E_SYSTEM_ERROR  - not enough memory +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FORM *new_form_sp(SCREEN* sp, FIELD** fields ) |    |   Description   :  Create new form with given array of fields. | |   Return Values :  Pointer to form. NULL if error occurred. !                    Set errno: |                    E_OK            - success |                    E_BAD_ARGUMENT  - Invalid form pointer or field array |                    E_CONNECTED     - a field is already connected |                    E_SYSTEM_ERROR  - not enough memory +--------------------------------------------------------------------------*/
 end_comment
 
-begin_macro
+begin_function
 name|NCURSES_EXPORT
+function|(
+name|FORM
+modifier|*
+function|)
+name|NCURSES_SP_NAME
 argument_list|(
-argument|FORM *
+argument|new_form
 argument_list|)
-end_macro
-
-begin_macro
-name|new_form
-argument_list|(
-argument|FIELD **fields
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|FIELD
+modifier|*
+modifier|*
+name|fields
+parameter_list|)
 block|{
 name|int
 name|err
@@ -1067,23 +1081,49 @@ name|FORM
 modifier|*
 name|form
 init|=
-name|typeMalloc
-argument_list|(
+operator|(
 name|FORM
-argument_list|,
-literal|1
-argument_list|)
+operator|*
+operator|)
+literal|0
 decl_stmt|;
 name|T
 argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"new_form(%p)"
+literal|"new_form(%p,%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
+name|SP_PARM
+operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|fields
 operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|IsValidScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
+condition|)
+block|{
+name|form
+operator|=
+name|typeMalloc
+argument_list|(
+name|FORM
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1099,6 +1139,10 @@ argument_list|(
 literal|"form %p"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|form
 operator|)
 argument_list|)
@@ -1108,6 +1152,25 @@ name|form
 operator|=
 operator|*
 name|_nc_Default_Form
+expr_stmt|;
+comment|/* This ensures win and sub are always non-null, 	     so we can derive always the SCREEN that this form is 	     running on. */
+name|form
+operator|->
+name|win
+operator|=
+name|StdScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
+expr_stmt|;
+name|form
+operator|->
+name|sub
+operator|=
+name|StdScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1140,6 +1203,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+block|}
 if|if
 condition|(
 operator|!
@@ -1156,7 +1220,52 @@ name|form
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FORM* new_form(FIELD** fields ) |    |   Description   :  Create new form with given array of fields. | |   Return Values :  Pointer to form. NULL if error occurred. !                    Set errno: |                    E_OK            - success |                    E_BAD_ARGUMENT  - Invalid form pointer or field array |                    E_CONNECTED     - a field is already connected |                    E_SYSTEM_ERROR  - not enough memory +--------------------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|FORM *
+argument_list|)
+end_macro
+
+begin_macro
+name|new_form
+argument_list|(
+argument|FIELD **fields
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|NCURSES_SP_NAME
+argument_list|(
+name|new_form
+argument_list|)
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|,
+name|fields
+argument_list|)
+return|;
+block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int free_form( FORM *form ) |    |   Description   :  Release internal memory associated with form. | |   Return Values :  E_OK           - no error |                    E_BAD_ARGUMENT - invalid form pointer |                    E_POSTED       - form is posted +--------------------------------------------------------------------------*/
@@ -1186,6 +1295,10 @@ argument_list|(
 literal|"free_form(%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|form
 operator|)
 argument_list|)
@@ -1282,8 +1395,16 @@ argument_list|(
 literal|"set_form_fields(%p,%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|form
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|fields
 operator|)
 argument_list|)
@@ -1380,6 +1501,11 @@ argument_list|(
 literal|"form_field(%p)"
 argument_list|)
 operator|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
 name|form
 operator|)
 argument_list|)
@@ -1425,6 +1551,11 @@ argument_list|(
 literal|"field_count(%p)"
 argument_list|)
 operator|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
 name|form
 operator|)
 argument_list|)

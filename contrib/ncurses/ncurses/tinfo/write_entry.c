@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -33,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|<tic.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<term_entry.h>
 end_include
 
 begin_ifndef
@@ -104,7 +98,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: write_entry.c,v 1.72 2008/08/03 19:24:00 tom Exp $"
+literal|"$Id: write_entry.c,v 1.78 2010/12/25 23:23:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -576,6 +570,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+specifier|static
+specifier|const
+name|char
+name|suffix
+index|[]
+init|=
+name|DBM_SUFFIX
+decl_stmt|;
 name|unsigned
 name|have
 init|=
@@ -584,11 +586,19 @@ argument_list|(
 name|dst
 argument_list|)
 decl_stmt|;
+name|unsigned
+name|need
+init|=
+name|strlen
+argument_list|(
+name|suffix
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|have
 operator|>
-literal|3
+name|need
 operator|&&
 name|strcmp
 argument_list|(
@@ -596,9 +606,9 @@ name|dst
 operator|+
 name|have
 operator|-
-literal|3
+name|need
 argument_list|,
-name|DBM_SUFFIX
+name|suffix
 argument_list|)
 condition|)
 block|{
@@ -606,7 +616,7 @@ if|if
 condition|(
 name|have
 operator|+
-literal|3
+name|need
 operator|<=
 name|limit
 condition|)
@@ -614,7 +624,7 @@ name|strcat
 argument_list|(
 name|dst
 argument_list|,
-name|DBM_SUFFIX
+name|suffix
 argument_list|)
 expr_stmt|;
 else|else
@@ -749,8 +759,17 @@ operator|=
 name|mkdir
 argument_list|(
 name|path
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
 argument_list|,
 literal|0777
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 block|}
@@ -1472,6 +1491,20 @@ operator|=
 name|other_names
 operator|++
 expr_stmt|;
+name|assert
+argument_list|(
+name|ptr
+operator|<
+name|buffer
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -1564,7 +1597,11 @@ argument_list|(
 name|filename
 argument_list|)
 operator|-
-literal|3
+operator|(
+literal|2
+operator|+
+name|LEAF_LEN
+operator|)
 condition|)
 name|_nc_warning
 argument_list|(
@@ -1688,20 +1725,6 @@ operator|=
 name|other_names
 operator|++
 expr_stmt|;
-name|assert
-argument_list|(
-name|ptr
-operator|<
-name|buffer
-operator|+
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -1744,7 +1767,11 @@ argument_list|(
 name|linkname
 argument_list|)
 operator|-
-literal|3
+operator|(
+literal|2
+operator|+
+name|LEAF_LEN
+operator|)
 condition|)
 block|{
 name|_nc_warning
@@ -1868,6 +1895,34 @@ decl_stmt|;
 if|#
 directive|if
 name|USE_SYMLINKS
+if|if
+condition|(
+name|first_name
+index|[
+literal|0
+index|]
+operator|==
+name|linkname
+index|[
+literal|0
+index|]
+condition|)
+name|strncpy
+argument_list|(
+name|symlinkname
+argument_list|,
+name|first_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|symlinkname
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|strcpy
 argument_list|(
 name|symlinkname
@@ -1889,6 +1944,7 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
 name|symlinkname
 index|[
 sizeof|sizeof
@@ -2082,7 +2138,7 @@ end_block
 
 begin_function
 specifier|static
-name|unsigned
+name|size_t
 name|fake_write
 parameter_list|(
 name|char
@@ -2093,21 +2149,21 @@ name|unsigned
 modifier|*
 name|offset
 parameter_list|,
-name|unsigned
+name|size_t
 name|limit
 parameter_list|,
 name|char
 modifier|*
 name|src
 parameter_list|,
-name|unsigned
+name|size_t
 name|want
 parameter_list|,
-name|unsigned
+name|size_t
 name|size
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|have
 init|=
 operator|(
@@ -2130,9 +2186,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|want
 operator|>
 name|have
@@ -2156,6 +2209,9 @@ expr_stmt|;
 operator|*
 name|offset
 operator|+=
+operator|(
+name|unsigned
+operator|)
 name|want
 expr_stmt|;
 block|}
@@ -2167,14 +2223,11 @@ literal|0
 expr_stmt|;
 block|}
 return|return
-call|(
-name|int
-call|)
-argument_list|(
+operator|(
 name|want
 operator|/
 name|size
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2232,7 +2285,7 @@ name|p
 parameter_list|,
 name|x
 parameter_list|)
-value|(p)[0] = LO(x), (p)[1] = HI(x)
+value|(p)[0] = (unsigned char)LO(x),  \                                 (p)[1] = (unsigned char)HI(x)
 end_define
 
 begin_define
@@ -2255,7 +2308,7 @@ modifier|*
 modifier|*
 name|Strings
 parameter_list|,
-name|unsigned
+name|size_t
 name|strmax
 parameter_list|,
 name|short
@@ -2263,12 +2316,12 @@ modifier|*
 name|offsets
 parameter_list|)
 block|{
-name|size_t
+name|int
 name|nextfree
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -2331,10 +2384,16 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|short
+operator|)
 name|nextfree
 expr_stmt|;
 name|nextfree
 operator|+=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|Strings
@@ -2392,11 +2451,11 @@ name|short
 modifier|*
 name|Numbers
 parameter_list|,
-name|unsigned
+name|size_t
 name|count
 parameter_list|)
 block|{
-name|unsigned
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -2495,8 +2554,11 @@ expr_stmt|;
 name|TRACE_OUT
 argument_list|(
 operator|(
-literal|"put Numbers[%d]=%d"
+literal|"put Numbers[%u]=%d"
 operator|,
+operator|(
+name|unsigned
+operator|)
 name|i
 operator|,
 name|Numbers
@@ -2539,13 +2601,11 @@ name|tp
 parameter_list|)
 block|{
 name|unsigned
-name|short
 name|result
 init|=
 literal|0
 decl_stmt|;
 name|unsigned
-name|short
 name|i
 decl_stmt|;
 for|for
@@ -2603,13 +2663,11 @@ name|tp
 parameter_list|)
 block|{
 name|unsigned
-name|short
 name|result
 init|=
 literal|0
 decl_stmt|;
 name|unsigned
-name|short
 name|i
 decl_stmt|;
 for|for
@@ -2707,11 +2765,15 @@ name|ABSENT_STRING
 condition|)
 name|result
 operator|=
-operator|(
+call|(
+name|unsigned
+name|short
+call|)
+argument_list|(
 name|i
 operator|+
 literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -2821,7 +2883,7 @@ decl_stmt|;
 name|size_t
 name|i
 decl_stmt|;
-name|short
+name|int
 name|nextfree
 decl_stmt|;
 name|short
@@ -3339,6 +3401,9 @@ block|{
 name|unsigned
 name|extcnt
 init|=
+operator|(
+name|unsigned
+operator|)
 name|NUM_EXT_NAMES
 argument_list|(
 name|tp

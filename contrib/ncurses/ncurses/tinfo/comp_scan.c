@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -30,19 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<term_entry.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<tic.h>
 end_include
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: comp_scan.c,v 1.83 2008/08/16 19:22:55 tom Exp $"
+literal|"$Id: comp_scan.c,v 1.89 2010/12/25 23:06:37 tom Exp $"
 argument_list|)
 end_macro
 
@@ -657,6 +651,24 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|_nc_curr_line
+operator|==
+literal|0
+operator|&&
+name|IS_TIC_MAGIC
+argument_list|(
+name|result
+argument_list|)
+condition|)
+block|{
+name|_nc_err_abort
+argument_list|(
+literal|"This is a compiled terminal description, not a source"
+argument_list|)
+expr_stmt|;
+block|}
 name|_nc_curr_line
 operator|++
 expr_stmt|;
@@ -1450,10 +1462,10 @@ name|terminfo_punct
 argument_list|,
 name|unctrl
 argument_list|(
-operator|(
-name|chtype
-operator|)
+name|UChar
+argument_list|(
 name|ch
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1651,10 +1663,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ch
-operator|=
-name|EOF
-expr_stmt|;
 break|break;
 block|}
 block|}
@@ -2077,10 +2085,10 @@ name|tok_buf
 argument_list|,
 name|unctrl
 argument_list|(
-operator|(
-name|chtype
-operator|)
+name|UChar
+argument_list|(
 name|ch
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2206,6 +2214,9 @@ name|_nc_curr_token
 operator|.
 name|tk_valnumber
 operator|=
+operator|(
+name|int
+operator|)
 name|number
 expr_stmt|;
 name|type
@@ -2283,10 +2294,10 @@ literal|"Illegal character - '%s'"
 argument_list|,
 name|unctrl
 argument_list|(
-operator|(
-name|chtype
-operator|)
+name|UChar
+argument_list|(
 name|ch
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2535,9 +2546,7 @@ name|i
 decl_stmt|,
 name|c
 decl_stmt|;
-name|chtype
-name|ch
-decl_stmt|,
+name|int
 name|last_ch
 init|=
 literal|'\0'
@@ -2555,17 +2564,12 @@ decl_stmt|;
 while|while
 condition|(
 operator|(
-name|ch
-operator|=
 name|c
 operator|=
 name|next_char
 argument_list|()
 operator|)
 operator|!=
-operator|(
-name|chtype
-operator|)
 name|separator
 operator|&&
 name|c
@@ -2609,10 +2613,6 @@ condition|)
 block|{
 empty_stmt|;
 block|}
-name|ch
-operator|=
-name|c
-expr_stmt|;
 block|}
 break|break;
 block|}
@@ -2631,7 +2631,7 @@ condition|)
 break|break;
 if|if
 condition|(
-name|ch
+name|c
 operator|==
 literal|'^'
 operator|&&
@@ -2640,8 +2640,6 @@ operator|!=
 literal|'%'
 condition|)
 block|{
-name|ch
-operator|=
 name|c
 operator|=
 name|next_char
@@ -2664,12 +2662,12 @@ operator|!
 operator|(
 name|is7bits
 argument_list|(
-name|ch
+name|c
 argument_list|)
 operator|&&
 name|isprint
 argument_list|(
-name|ch
+name|c
 argument_list|)
 operator|)
 condition|)
@@ -2680,14 +2678,17 @@ literal|"Illegal ^ character - '%s'"
 argument_list|,
 name|unctrl
 argument_list|(
-name|ch
+name|UChar
+argument_list|(
+name|c
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|ch
+name|c
 operator|==
 literal|'?'
 condition|)
@@ -2715,14 +2716,14 @@ block|{
 if|if
 condition|(
 operator|(
-name|ch
+name|c
 operator|&=
 literal|037
 operator|)
 operator|==
 literal|0
 condition|)
-name|ch
+name|c
 operator|=
 literal|128
 expr_stmt|;
@@ -2736,7 +2737,7 @@ call|(
 name|char
 call|)
 argument_list|(
-name|ch
+name|c
 argument_list|)
 expr_stmt|;
 block|}
@@ -2744,13 +2745,11 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ch
+name|c
 operator|==
 literal|'\\'
 condition|)
 block|{
-name|ch
-operator|=
 name|c
 operator|=
 name|next_char
@@ -2769,18 +2768,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ch
+name|c
 operator|>=
 literal|'0'
 operator|&&
-name|ch
+name|c
 operator|<=
 literal|'7'
 condition|)
 block|{
 name|number
 operator|=
-name|ch
+name|c
 operator|-
 literal|'0'
 expr_stmt|;
@@ -2798,8 +2797,6 @@ name|i
 operator|++
 control|)
 block|{
-name|ch
-operator|=
 name|c
 operator|=
 name|next_char
@@ -3058,7 +3055,10 @@ literal|"Illegal character '%s' in \\ sequence"
 argument_list|,
 name|unctrl
 argument_list|(
-name|ch
+name|UChar
+argument_list|(
+name|c
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3075,18 +3075,18 @@ operator|=
 operator|(
 name|char
 operator|)
-name|ch
+name|c
 expr_stmt|;
 block|}
-comment|/* endswitch (ch) */
+comment|/* endswitch (c) */
 block|}
-comment|/* endelse (ch< '0' ||  ch> '7') */
+comment|/* endelse (c< '0' ||  c> '7') */
 block|}
-comment|/* end else if (ch == '\\') */
+comment|/* end else if (c == '\\') */
 elseif|else
 if|if
 condition|(
-name|ch
+name|c
 operator|==
 literal|'\n'
 operator|&&
@@ -3114,7 +3114,7 @@ operator|=
 operator|(
 name|char
 operator|)
-name|ch
+name|c
 expr_stmt|;
 block|}
 if|if
@@ -3135,10 +3135,10 @@ argument_list|(
 operator|(
 name|char
 operator|)
-name|ch
+name|c
 argument_list|)
 expr_stmt|;
-name|ch
+name|c
 operator|=
 literal|'\n'
 expr_stmt|;
@@ -3146,7 +3146,7 @@ break|break;
 block|}
 name|last_ch
 operator|=
-name|ch
+name|c
 expr_stmt|;
 name|count
 operator|++
@@ -3185,7 +3185,7 @@ literal|'\0'
 expr_stmt|;
 return|return
 operator|(
-name|ch
+name|c
 operator|)
 return|;
 block|}
