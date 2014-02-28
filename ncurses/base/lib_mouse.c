@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                         2008                    *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -74,30 +74,18 @@ directive|include
 file|<curses.priv.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CUR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CUR
-value|SP_TERMTYPE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_mouse.c,v 1.121 2011/01/22 19:47:47 tom Exp $"
+literal|"$Id: lib_mouse.c,v 1.102 2008/10/18 21:48:55 tom Exp $"
 argument_list|)
 end_macro
+
+begin_include
+include|#
+directive|include
+file|<term.h>
+end_include
 
 begin_include
 include|#
@@ -235,42 +223,42 @@ name|MASK_RELEASE
 parameter_list|(
 name|x
 parameter_list|)
-value|(mmask_t) NCURSES_MOUSE_MASK(x, 001)
+value|NCURSES_MOUSE_MASK(x, 001)
 define|#
 directive|define
 name|MASK_PRESS
 parameter_list|(
 name|x
 parameter_list|)
-value|(mmask_t) NCURSES_MOUSE_MASK(x, 002)
+value|NCURSES_MOUSE_MASK(x, 002)
 define|#
 directive|define
 name|MASK_CLICK
 parameter_list|(
 name|x
 parameter_list|)
-value|(mmask_t) NCURSES_MOUSE_MASK(x, 004)
+value|NCURSES_MOUSE_MASK(x, 004)
 define|#
 directive|define
 name|MASK_DOUBLE_CLICK
 parameter_list|(
 name|x
 parameter_list|)
-value|(mmask_t) NCURSES_MOUSE_MASK(x, 010)
+value|NCURSES_MOUSE_MASK(x, 010)
 define|#
 directive|define
 name|MASK_TRIPLE_CLICK
 parameter_list|(
 name|x
 parameter_list|)
-value|(mmask_t) NCURSES_MOUSE_MASK(x, 020)
+value|NCURSES_MOUSE_MASK(x, 020)
 define|#
 directive|define
 name|MASK_RESERVED_EVENT
 parameter_list|(
 name|x
 parameter_list|)
-value|(mmask_t) NCURSES_MOUSE_MASK(x, 040)
+value|NCURSES_MOUSE_MASK(x, 040)
 if|#
 directive|if
 name|NCURSES_MOUSE_VERSION
@@ -354,7 +342,7 @@ name|GET_DLSYM
 parameter_list|(
 name|name
 parameter_list|)
-value|(my_##name = (TYPE_##name) dlsym(sp->_dlopen_gpm, #name))
+value|(my_##name = (TYPE_##name) dlsym(SP->_dlopen_gpm, #name))
 endif|#
 directive|endif
 comment|/* USE_GPM_SUPPORT */
@@ -429,7 +417,7 @@ name|NEXT
 parameter_list|(
 name|ep
 parameter_list|)
-value|((ep>= LastEV(SP_PARM)) \ 			 ? FirstEV(SP_PARM) \ 			 : ep + 1)
+value|((ep>= LastEV(sp)) \ 			 ? FirstEV(sp) \ 			 : ep + 1)
 end_define
 
 begin_undef
@@ -445,7 +433,7 @@ name|PREV
 parameter_list|(
 name|ep
 parameter_list|)
-value|((ep<= FirstEV(SP_PARM)) \ 			 ? LastEV(SP_PARM) \ 			 : ep - 1)
+value|((ep<= FirstEV(sp)) \ 			 ? LastEV(sp) \ 			 : ep - 1)
 end_define
 
 begin_define
@@ -502,8 +490,6 @@ name|ep
 decl_stmt|;
 name|_tracef
 argument_list|(
-literal|"%s"
-argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
@@ -1386,7 +1372,7 @@ parameter_list|)
 block|{
 name|sysmouse_server
 argument_list|(
-name|CURRENT_SCREEN
+name|SP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1400,19 +1386,6 @@ end_endif
 begin_comment
 comment|/* USE_SYSMOUSE */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USE_TERM_DRIVER
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|xterm_kmous
-value|"\033[M"
-end_define
 
 begin_function
 specifier|static
@@ -1458,11 +1431,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -1487,14 +1455,8 @@ name|enable
 expr_stmt|;
 else|#
 directive|else
-name|NCURSES_SP_NAME
+name|putp
 argument_list|(
-name|_nc_putp
-argument_list|)
-argument_list|(
-name|NCURSES_SP_ARGx
-literal|"xterm-mouse"
-argument_list|,
 name|TPARM_1
 argument_list|(
 name|sp
@@ -1642,7 +1604,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|sp
+name|SP
 operator|->
 name|_dlopen_gpm
 operator|!=
@@ -1859,9 +1821,6 @@ operator|->
 name|_mouse_gpm_loaded
 condition|)
 block|{
-name|int
-name|code
-decl_stmt|;
 comment|/* GPM: initialize connection to gpm server */
 name|sp
 operator|->
@@ -1938,8 +1897,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	     * Note: GPM hardcodes \E[?1001s and \E[?1000h during its open. 	     * The former is recognized by wscons (SunOS), and the latter by 	     * xterm.  Those will not show up in ncurses' traces. 	     */
-name|code
+name|result
 operator|=
+operator|(
 name|my_Gpm_Open
 argument_list|(
 operator|&
@@ -1949,28 +1909,10 @@ name|_mouse_gpm_connect
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|result
-operator|=
-operator|(
-name|code
 operator|>=
 literal|0
 operator|)
 expr_stmt|;
-comment|/* 	     * GPM can return a -2 if it is trying to do something with xterm. 	     * Ignore that, since it conflicts with our use of stdin. 	     */
-if|if
-condition|(
-name|code
-operator|==
-operator|-
-literal|2
-condition|)
-block|{
-name|my_Gpm_Close
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -2067,6 +2009,13 @@ end_endif
 begin_comment
 comment|/* USE_GPM_SUPPORT */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|xterm_kmous
+value|"\033[M"
+end_define
 
 begin_function
 specifier|static
@@ -2193,10 +2142,7 @@ name|_emxmouse_thread
 operator|&&
 name|strstr
 argument_list|(
-name|TerminalOf
-argument_list|(
-name|sp
-argument_list|)
+name|cur_term
 operator|->
 name|type
 operator|.
@@ -2720,18 +2666,6 @@ block|}
 endif|#
 directive|endif
 comment|/* USE_SYSMOUSE */
-ifdef|#
-directive|ifdef
-name|USE_TERM_DRIVER
-name|CallDriver
-argument_list|(
-name|sp
-argument_list|,
-name|initmouse
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 comment|/* we know how to recognize mouse events under "xterm" */
 if|if
 condition|(
@@ -2752,10 +2686,7 @@ argument_list|)
 operator|||
 name|strstr
 argument_list|(
-name|TerminalOf
-argument_list|(
-name|sp
-argument_list|)
+name|cur_term
 operator|->
 name|type
 operator|.
@@ -2779,10 +2710,7 @@ if|if
 condition|(
 name|strstr
 argument_list|(
-name|TerminalOf
-argument_list|(
-name|sp
-argument_list|)
+name|cur_term
 operator|->
 name|type
 operator|.
@@ -2818,8 +2746,6 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|returnVoid
 expr_stmt|;
 block|}
@@ -2949,6 +2875,7 @@ parameter_list|(
 name|SCREEN
 modifier|*
 name|sp
+name|GCC_UNUSED
 parameter_list|)
 block|{
 name|MEVENT
@@ -3085,43 +3012,22 @@ name|USE_GPM_SUPPORT
 case|case
 name|M_GPM
 case|:
-if|if
-condition|(
-name|sp
-operator|->
-name|_mouse_fd
-operator|>=
-literal|0
-condition|)
 block|{
 comment|/* query server for event, return TRUE if we find one */
 name|Gpm_Event
 name|ev
 decl_stmt|;
-switch|switch
+if|if
 condition|(
 name|my_Gpm_GetEvent
 argument_list|(
 operator|&
 name|ev
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
-case|case
-literal|0
-case|:
-comment|/* Connection closed, drop the mouse. */
-name|sp
-operator|->
-name|_mouse_fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
 comment|/* there's only one mouse... */
 name|eventp
 operator|->
@@ -3274,6 +3180,8 @@ name|sp
 operator|->
 name|_mouse_eventp
 operator|=
+name|eventp
+operator|=
 name|NEXT
 argument_list|(
 name|eventp
@@ -3283,7 +3191,6 @@ name|result
 operator|=
 name|TRUE
 expr_stmt|;
-break|break;
 block|}
 block|}
 break|break;
@@ -3370,86 +3277,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* USE_SYSMOUSE */
-ifdef|#
-directive|ifdef
-name|USE_TERM_DRIVER
-case|case
-name|M_TERM_DRIVER
-case|:
-while|while
-condition|(
-name|sp
-operator|->
-name|_drv_mouse_head
-operator|<
-name|sp
-operator|->
-name|_drv_mouse_tail
-condition|)
-block|{
-operator|*
-name|eventp
-operator|=
-name|sp
-operator|->
-name|_drv_mouse_fifo
-index|[
-name|sp
-operator|->
-name|_drv_mouse_head
-index|]
-expr_stmt|;
-comment|/* 	     * Point the fifo-head to the next possible location.  If there 	     * are none, reset the indices. 	     */
-name|sp
-operator|->
-name|_drv_mouse_head
-operator|+=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|->
-name|_drv_mouse_head
-operator|==
-name|sp
-operator|->
-name|_drv_mouse_tail
-condition|)
-block|{
-name|sp
-operator|->
-name|_drv_mouse_tail
-operator|=
-literal|0
-expr_stmt|;
-name|sp
-operator|->
-name|_drv_mouse_head
-operator|=
-literal|0
-expr_stmt|;
-block|}
-comment|/* bump the next-free pointer into the circular list */
-name|sp
-operator|->
-name|_mouse_eventp
-operator|=
-name|eventp
-operator|=
-name|NEXT
-argument_list|(
-name|eventp
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-break|break;
-endif|#
-directive|endif
 case|case
 name|M_NONE
 case|:
@@ -3524,37 +3351,6 @@ name|int
 name|res
 decl_stmt|;
 comment|/* This code requires that your xterm entry contain the kmous 	 * capability and that it be set to the \E[M documented in the 	 * Xterm Control Sequences reference.  This is how we 	 * arrange for mouse events to be reported via a KEY_MOUSE 	 * return value from wgetch().  After this value is received, 	 * _nc_mouse_inline() gets called and is immediately 	 * responsible for parsing the mouse status information 	 * following the prefix. 	 * 	 * The following quotes from the ctrlseqs.ms document in the 	 * X distribution, describing the X mouse tracking feature: 	 * 	 * Parameters for all mouse tracking escape sequences 	 * generated by xterm encode numeric parameters in a single 	 * character as value+040.  For example, !  is 1. 	 * 	 * On button press or release, xterm sends ESC [ M CbCxCy. 	 * The low two bits of Cb encode button information: 0=MB1 	 * pressed, 1=MB2 pressed, 2=MB3 pressed, 3=release.  The 	 * upper bits encode what modifiers were down when the 	 * button was pressed and are added together.  4=Shift, 	 * 8=Meta, 16=Control.  Cx and Cy are the x and y coordinates 	 * of the mouse event.  The upper left corner is (1,1). 	 * 	 * (End quote)  By the time we get here, we've eaten the 	 * key prefix.  FYI, the loop below is necessary because 	 * mouse click info isn't guaranteed to present as a 	 * single clist item. 	 * 	 * Wheel mice may return buttons 4 and 5 when the wheel is turned. 	 * We encode those as button presses. 	 */
-if|#
-directive|if
-name|USE_PTHREADS_EINTR
-if|#
-directive|if
-name|USE_WEAK_SYMBOLS
-if|if
-condition|(
-operator|(
-name|pthread_self
-operator|)
-operator|&&
-operator|(
-name|pthread_kill
-operator|)
-operator|&&
-operator|(
-name|pthread_equal
-operator|)
-condition|)
-endif|#
-directive|endif
-name|_nc_globals
-operator|.
-name|read_thread
-operator|=
-name|pthread_self
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|grabbed
@@ -3579,9 +3375,6 @@ directive|if
 name|USE_EMX_MOUSE
 name|res
 operator|=
-operator|(
-name|int
-operator|)
 name|read
 argument_list|(
 name|M_FD
@@ -3610,9 +3403,6 @@ else|#
 directive|else
 name|res
 operator|=
-operator|(
-name|int
-operator|)
 name|read
 argument_list|(
 name|sp
@@ -3639,17 +3429,6 @@ literal|1
 condition|)
 break|break;
 block|}
-if|#
-directive|if
-name|USE_PTHREADS_EINTR
-name|_nc_globals
-operator|.
-name|read_thread
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|kbuf
 index|[
 literal|3
@@ -4065,17 +3844,13 @@ case|:
 if|#
 directive|if
 name|NCURSES_EXT_FUNCS
-name|NCURSES_SP_NAME
-function_decl|(
 name|keyok
-function_decl|)
-parameter_list|(
-name|NCURSES_SP_ARGx
+argument_list|(
 name|KEY_MOUSE
-parameter_list|,
+argument_list|,
 name|on
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|TPUTS_TRACE
@@ -4144,21 +3919,6 @@ argument_list|,
 name|handle_sysmouse
 argument_list|)
 expr_stmt|;
-name|sp
-operator|->
-name|_mouse_active
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|USE_TERM_DRIVER
-case|case
-name|M_TERM_DRIVER
-case|:
 name|sp
 operator|->
 name|_mouse_active
@@ -4268,35 +4028,15 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|USE_TERM_DRIVER
-case|case
-name|M_TERM_DRIVER
-case|:
-name|sp
-operator|->
-name|_mouse_active
-operator|=
-name|FALSE
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 case|case
 name|M_NONE
 case|:
 return|return;
 block|}
 block|}
-name|NCURSES_SP_NAME
-function_decl|(
 name|_nc_flush
-function_decl|)
-parameter_list|(
-name|NCURSES_SP_ARG
-parameter_list|)
-function_decl|;
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -5260,22 +5000,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|USE_TERM_DRIVER
-case|case
-name|M_TERM_DRIVER
-case|:
-name|mouse_activate
-argument_list|(
-name|sp
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 case|case
 name|M_NONE
 case|:
@@ -5368,22 +5092,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|USE_TERM_DRIVER
-case|case
-name|M_TERM_DRIVER
-case|:
-name|mouse_activate
-argument_list|(
-name|sp
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 case|case
 name|M_NONE
 case|:
@@ -5397,44 +5105,27 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|NCURSES_EXPORT
-function|(
+specifier|static
 name|int
-function|)
-name|NCURSES_SP_NAME
-argument_list|(
-argument|getmouse
-argument_list|)
+name|_nc_getmouse
 parameter_list|(
-name|NCURSES_SP_DCLx
+name|SCREEN
+modifier|*
+name|sp
+parameter_list|,
 name|MEVENT
 modifier|*
 name|aevent
 parameter_list|)
 block|{
-name|int
-name|result
-init|=
-name|ERR
-decl_stmt|;
 name|T
 argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"getmouse(%p,%p)"
+literal|"getmouse(%p)"
 argument_list|)
 operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|SP_PARM
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
 name|aevent
 operator|)
 argument_list|)
@@ -5448,13 +5139,13 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|SP_PARM
+name|sp
 operator|!=
 literal|0
 operator|)
 operator|&&
 operator|(
-name|SP_PARM
+name|sp
 operator|->
 name|_mouse_type
 operator|!=
@@ -5466,7 +5157,7 @@ name|MEVENT
 modifier|*
 name|eventp
 init|=
-name|SP_PARM
+name|sp
 operator|->
 name|_mouse_eventp
 decl_stmt|;
@@ -5480,15 +5171,6 @@ argument_list|(
 name|eventp
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|prev
-operator|->
-name|id
-operator|!=
-name|INVALID_EVENT
-condition|)
-block|{
 comment|/* copy the event we find there */
 operator|*
 name|aevent
@@ -5505,7 +5187,7 @@ literal|"getmouse: returning event %s from slot %ld"
 operator|,
 name|_nc_tracemouse
 argument_list|(
-name|SP_PARM
+name|sp
 argument_list|,
 name|prev
 argument_list|)
@@ -5515,7 +5197,7 @@ name|long
 operator|)
 name|IndexEV
 argument_list|(
-name|SP_PARM
+name|sp
 argument_list|,
 name|prev
 argument_list|)
@@ -5529,34 +5211,19 @@ operator|=
 name|INVALID_EVENT
 expr_stmt|;
 comment|/* so the queue slot becomes free */
-name|SP_PARM
-operator|->
-name|_mouse_eventp
-operator|=
-name|PREV
+name|returnCode
 argument_list|(
-name|prev
+name|OK
 argument_list|)
 expr_stmt|;
-name|result
-operator|=
-name|OK
-expr_stmt|;
-block|}
 block|}
 name|returnCode
 argument_list|(
-name|result
+name|ERR
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-end_if
 
 begin_comment
 comment|/* grab a copy of the current mouse event */
@@ -5579,12 +5246,9 @@ end_macro
 begin_block
 block|{
 return|return
-name|NCURSES_SP_NAME
+name|_nc_getmouse
 argument_list|(
-name|getmouse
-argument_list|)
-argument_list|(
-name|CURRENT_SCREEN
+name|SP
 argument_list|,
 name|aevent
 argument_list|)
@@ -5592,22 +5256,15 @@ return|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|NCURSES_EXPORT
-function|(
+specifier|static
 name|int
-function|)
-name|NCURSES_SP_NAME
-argument_list|(
-argument|ungetmouse
-argument_list|)
+name|_nc_ungetmouse
 parameter_list|(
-name|NCURSES_SP_DCLx
+name|SCREEN
+modifier|*
+name|sp
+parameter_list|,
 name|MEVENT
 modifier|*
 name|aevent
@@ -5623,19 +5280,9 @@ argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"ungetmouse(%p,%p)"
+literal|"ungetmouse(%p)"
 argument_list|)
 operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|SP_PARM
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
 name|aevent
 operator|)
 argument_list|)
@@ -5646,7 +5293,7 @@ name|aevent
 operator|!=
 literal|0
 operator|&&
-name|SP_PARM
+name|sp
 operator|!=
 literal|0
 condition|)
@@ -5655,7 +5302,7 @@ name|MEVENT
 modifier|*
 name|eventp
 init|=
-name|SP_PARM
+name|sp
 operator|->
 name|_mouse_eventp
 decl_stmt|;
@@ -5667,7 +5314,7 @@ operator|*
 name|aevent
 expr_stmt|;
 comment|/* bump the next-free pointer into the circular list */
-name|SP_PARM
+name|sp
 operator|->
 name|_mouse_eventp
 operator|=
@@ -5679,14 +5326,12 @@ expr_stmt|;
 comment|/* push back the notification event on the keyboard queue */
 name|result
 operator|=
-name|NCURSES_SP_NAME
+name|_nc_ungetch
 argument_list|(
-argument|ungetch
-argument_list|)
-operator|(
-name|NCURSES_SP_ARGx
+name|sp
+argument_list|,
 name|KEY_MOUSE
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 name|returnCode
@@ -5696,12 +5341,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-end_if
 
 begin_comment
 comment|/* enqueue a synthesized mouse event to be seen by the next wgetch() */
@@ -5724,12 +5363,9 @@ end_macro
 begin_block
 block|{
 return|return
-name|NCURSES_SP_NAME
+name|_nc_ungetmouse
 argument_list|(
-name|ungetmouse
-argument_list|)
-argument_list|(
-name|CURRENT_SCREEN
+name|SP
 argument_list|,
 name|aevent
 argument_list|)
@@ -5737,30 +5373,27 @@ return|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
+begin_macro
 name|NCURSES_EXPORT
-function|(
-name|mmask_t
-function|)
-name|NCURSES_SP_NAME
 argument_list|(
-argument|mousemask
+argument|mmask_t
 argument_list|)
-parameter_list|(
-name|NCURSES_SP_DCLx
-name|mmask_t
-name|newmask
-parameter_list|,
-name|mmask_t
-modifier|*
-name|oldmask
-parameter_list|)
+end_macro
+
+begin_macro
+name|mousemask
+argument_list|(
+argument|mmask_t newmask
+argument_list|,
+argument|mmask_t * oldmask
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* set the mouse event mask */
+end_comment
+
+begin_block
 block|{
 name|mmask_t
 name|result
@@ -5772,14 +5405,8 @@ argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"mousemask(%p,%#lx,%p)"
+literal|"mousemask(%#lx,%p)"
 argument_list|)
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|SP_PARM
 operator|,
 operator|(
 name|unsigned
@@ -5787,17 +5414,13 @@ name|long
 operator|)
 name|newmask
 operator|,
-operator|(
-name|void
-operator|*
-operator|)
 name|oldmask
 operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SP_PARM
+name|SP
 operator|!=
 literal|0
 condition|)
@@ -5809,7 +5432,7 @@ condition|)
 operator|*
 name|oldmask
 operator|=
-name|SP_PARM
+name|SP
 operator|->
 name|_mouse_mask
 expr_stmt|;
@@ -5817,19 +5440,19 @@ if|if
 condition|(
 name|newmask
 operator|||
-name|SP_PARM
+name|SP
 operator|->
 name|_mouse_initialized
 condition|)
 block|{
 name|_nc_mouse_init
 argument_list|(
-name|SP_PARM
+name|SP
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SP_PARM
+name|SP
 operator|->
 name|_mouse_type
 operator|!=
@@ -5862,7 +5485,7 @@ operator|)
 expr_stmt|;
 name|mouse_activate
 argument_list|(
-name|SP_PARM
+name|SP
 argument_list|,
 call|(
 name|bool
@@ -5874,7 +5497,7 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SP_PARM
+name|SP
 operator|->
 name|_mouse_mask
 operator|=
@@ -5883,58 +5506,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|returnMMask
+name|returnBits
 argument_list|(
 name|result
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-end_if
-
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|mmask_t
-argument_list|)
-end_macro
-
-begin_macro
-name|mousemask
-argument_list|(
-argument|mmask_t newmask
-argument_list|,
-argument|mmask_t * oldmask
-argument_list|)
-end_macro
-
-begin_block
-block|{
-return|return
-name|NCURSES_SP_NAME
-argument_list|(
-name|mousemask
-argument_list|)
-argument_list|(
-name|CURRENT_SCREEN
-argument_list|,
-name|newmask
-argument_list|,
-name|oldmask
-argument_list|)
-return|;
-block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|NCURSES_EXPORT
@@ -5973,11 +5551,6 @@ argument_list|(
 literal|"wenclose(%p,%d,%d)"
 argument_list|)
 operator|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|)
 name|win
 operator|,
 name|y
@@ -6054,21 +5627,25 @@ expr_stmt|;
 block|}
 end_block
 
-begin_function
+begin_macro
 name|NCURSES_EXPORT
-function|(
-name|int
-function|)
-name|NCURSES_SP_NAME
 argument_list|(
-argument|mouseinterval
+argument|int
 argument_list|)
-parameter_list|(
-name|NCURSES_SP_DCLx
-name|int
-name|maxclick
-parameter_list|)
+end_macro
+
+begin_macro
+name|mouseinterval
+argument_list|(
+argument|int maxclick
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* set the maximum mouse interval within which to recognize a click */
+end_comment
+
+begin_block
 block|{
 name|int
 name|oldval
@@ -6078,14 +5655,8 @@ argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"mouseinterval(%p,%d)"
+literal|"mouseinterval(%d)"
 argument_list|)
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|SP_PARM
 operator|,
 name|maxclick
 operator|)
@@ -6093,14 +5664,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SP_PARM
+name|SP
 operator|!=
 literal|0
 condition|)
 block|{
 name|oldval
 operator|=
-name|SP_PARM
+name|SP
 operator|->
 name|_maxclick
 expr_stmt|;
@@ -6110,7 +5681,7 @@ name|maxclick
 operator|>=
 literal|0
 condition|)
-name|SP_PARM
+name|SP
 operator|->
 name|_maxclick
 operator|=
@@ -6130,13 +5701,11 @@ name|oldval
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_if
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-end_if
+begin_comment
+comment|/* This may be used by other routines to ask for the existence of mouse    support */
+end_comment
 
 begin_macro
 name|NCURSES_EXPORT
@@ -6146,116 +5715,7 @@ argument_list|)
 end_macro
 
 begin_macro
-name|mouseinterval
-argument_list|(
-argument|int maxclick
-argument_list|)
-end_macro
-
-begin_block
-block|{
-return|return
-name|NCURSES_SP_NAME
-argument_list|(
-name|mouseinterval
-argument_list|)
-argument_list|(
-name|CURRENT_SCREEN
-argument_list|,
-name|maxclick
-argument_list|)
-return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* This may be used by other routines to ask for the existence of mouse    support */
-end_comment
-
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|bool
-argument_list|)
-end_macro
-
-begin_macro
 name|_nc_has_mouse
-argument_list|(
-argument|SCREEN *sp
-argument_list|)
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-operator|(
-operator|(
-literal|0
-operator|==
-name|sp
-operator|)
-operator|||
-operator|(
-name|sp
-operator|->
-name|_mouse_type
-operator|==
-name|M_NONE
-operator|)
-operator|)
-condition|?
-name|FALSE
-else|:
-name|TRUE
-operator|)
-return|;
-block|}
-end_block
-
-begin_function
-name|NCURSES_EXPORT
-function|(
-name|bool
-function|)
-name|NCURSES_SP_NAME
-argument_list|(
-argument|has_mouse
-argument_list|)
-parameter_list|(
-name|NCURSES_SP_DCL0
-parameter_list|)
-block|{
-return|return
-name|_nc_has_mouse
-argument_list|(
-name|SP_PARM
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-end_if
-
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|bool
-argument_list|)
-end_macro
-
-begin_macro
-name|has_mouse
 argument_list|(
 argument|void
 argument_list|)
@@ -6264,18 +5724,20 @@ end_macro
 begin_block
 block|{
 return|return
-name|_nc_has_mouse
-argument_list|(
-name|CURRENT_SCREEN
-argument_list|)
+operator|(
+name|SP
+operator|->
+name|_mouse_type
+operator|==
+name|M_NONE
+condition|?
+literal|0
+else|:
+literal|1
+operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|NCURSES_EXPORT
@@ -6312,23 +5774,10 @@ argument_list|(
 literal|"wmouse_trafo(%p,%p,%p,%d)"
 argument_list|)
 operator|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|)
 name|win
 operator|,
-operator|(
-name|void
-operator|*
-operator|)
 name|pY
 operator|,
-operator|(
-name|void
-operator|*
-operator|)
 name|pX
 operator|,
 name|to_screen

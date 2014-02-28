@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                         2009                    *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996 on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,28 +17,16 @@ directive|include
 file|<curses.priv.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CUR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CUR
-value|SP_TERMTYPE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<term.h>
+end_include
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_vidattr.c,v 1.61 2010/06/05 22:22:04 tom Exp $"
+literal|"$Id: lib_vidattr.c,v 1.49 2007/06/30 21:58:04 tom Exp $"
 argument_list|)
 end_macro
 
@@ -49,8 +37,7 @@ name|doPut
 parameter_list|(
 name|mode
 parameter_list|)
-define|\
-value|TPUTS_TRACE(#mode); \ 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx mode, 1, outc)
+value|TPUTS_TRACE(#mode); tputs(mode, 1, outc)
 end_define
 
 begin_define
@@ -93,7 +80,7 @@ parameter_list|,
 name|old_attr
 parameter_list|)
 define|\
-value|if (can_color&& (why)) { \ 		int old_pair = PairNumber(old_attr); \ 		TR(TRACE_ATTRS, ("old pair = %d -- new pair = %d", old_pair, pair)); \ 		if ((pair != old_pair) \ 		 || (fix_pair0&& (pair == 0)) \ 		 || (reverse ^ ((old_attr& A_REVERSE) != 0))) { \ 		     NCURSES_SP_NAME(_nc_do_color)(NCURSES_SP_ARGx \ 				     (short) old_pair, \ 				     (short) pair, \ 				     reverse, outc); \ 		} \ 	}
+value|if (can_color&& (why)) { \ 		int old_pair = PAIR_NUMBER(old_attr); \ 		TR(TRACE_ATTRS, ("old pair = %d -- new pair = %d", old_pair, pair)); \ 		if ((pair != old_pair) \ 		 || (fix_pair0&& (pair == 0)) \ 		 || (reverse ^ ((old_attr& A_REVERSE) != 0))) { \ 			_nc_do_color(old_pair, pair, reverse, outc); \ 		} \ 	}
 end_define
 
 begin_define
@@ -103,23 +90,23 @@ name|PreviousAttr
 value|_nc_prescreen.previous_attr
 end_define
 
-begin_function
+begin_macro
 name|NCURSES_EXPORT
-function|(
-name|int
-function|)
-name|NCURSES_SP_NAME
 argument_list|(
-argument|vidputs
+argument|int
 argument_list|)
-parameter_list|(
-name|NCURSES_SP_DCLx
-name|chtype
-name|newmode
-parameter_list|,
-name|NCURSES_SP_OUTC
-name|outc
-parameter_list|)
+end_macro
+
+begin_macro
+name|vidputs
+argument_list|(
+argument|chtype newmode
+argument_list|,
+argument|int (*outc) (int)
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|attr_t
 name|turn_on
@@ -138,11 +125,11 @@ name|bool
 name|can_color
 init|=
 operator|(
-name|SP_PARM
+name|SP
 operator|==
 literal|0
 operator|||
-name|SP_PARM
+name|SP
 operator|->
 name|_coloron
 operator|)
@@ -154,16 +141,16 @@ name|bool
 name|fix_pair0
 init|=
 operator|(
-name|SP_PARM
+name|SP
 operator|!=
 literal|0
 operator|&&
-name|SP_PARM
+name|SP
 operator|->
 name|_coloron
 operator|&&
 operator|!
-name|SP_PARM
+name|SP
 operator|->
 name|_default_color
 operator|)
@@ -185,14 +172,8 @@ argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"vidputs(%p,%s)"
+literal|"vidputs(%s)"
 argument_list|)
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|SP_PARM
 operator|,
 name|_traceattr
 argument_list|(
@@ -201,23 +182,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|IsTermInfo
-argument_list|(
-name|SP_PARM
-argument_list|)
-condition|)
-name|returnCode
-argument_list|(
-name|ERR
-argument_list|)
-expr_stmt|;
 comment|/* this allows us to go on whether or not newterm() has been called */
 if|if
 condition|(
-name|SP_PARM
+name|SP
 condition|)
 name|PreviousAttr
 operator|=
@@ -225,7 +193,7 @@ name|AttrOf
 argument_list|(
 name|SCREEN_ATTRS
 argument_list|(
-name|SP_PARM
+name|SP
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -246,7 +214,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|SP_PARM
+name|SP
 operator|!=
 literal|0
 operator|)
@@ -337,7 +305,7 @@ index|[
 name|n
 index|]
 operator|&
-name|SP_PARM
+name|SP
 operator|->
 name|_ok_attributes
 operator|)
@@ -408,7 +376,7 @@ name|newmode
 operator|&=
 operator|~
 operator|(
-name|SP_PARM
+name|SP
 operator|->
 name|_xmc_suppress
 operator|)
@@ -456,9 +424,6 @@ comment|/* 	 * If we had chosen the A_xxx definitions to correspond to the 	 * n
 name|unsigned
 name|value
 init|=
-operator|(
-name|unsigned
-operator|)
 name|no_color_video
 decl_stmt|;
 name|attr_t
@@ -543,7 +508,7 @@ argument_list|)
 expr_stmt|;
 name|pair
 operator|=
-name|PairNumber
+name|PAIR_NUMBER
 argument_list|(
 name|newmode
 argument_list|)
@@ -647,9 +612,9 @@ block|{
 if|if
 condition|(
 operator|!
-name|SP_PARM
+name|SP
 operator|||
-name|SP_PARM
+name|SP
 operator|->
 name|_use_rmul
 condition|)
@@ -665,9 +630,9 @@ block|}
 if|if
 condition|(
 operator|!
-name|SP_PARM
+name|SP
 operator|||
-name|SP_PARM
+name|SP
 operator|->
 name|_use_rmso
 condition|)
@@ -718,12 +683,8 @@ argument_list|(
 literal|"set_attributes"
 argument_list|)
 expr_stmt|;
-name|NCURSES_SP_NAME
+name|tputs
 argument_list|(
-argument|tputs
-argument_list|)
-operator|(
-name|NCURSES_SP_ARGx
 name|tparm
 argument_list|(
 name|set_attributes
@@ -800,11 +761,11 @@ operator|)
 operator|!=
 literal|0
 argument_list|)
-operator|,
+argument_list|,
 literal|1
-operator|,
+argument_list|,
 name|outc
-operator|)
+argument_list|)
 expr_stmt|;
 name|PreviousAttr
 operator|&=
@@ -851,9 +812,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SP_PARM
+name|SP
 operator|||
-name|SP_PARM
+name|SP
 operator|->
 name|_use_rmul
 condition|)
@@ -869,9 +830,9 @@ block|}
 if|if
 condition|(
 operator|!
-name|SP_PARM
+name|SP
 operator|||
-name|SP_PARM
+name|SP
 operator|->
 name|_use_rmso
 condition|)
@@ -1059,13 +1020,13 @@ name|A_REVERSE
 expr_stmt|;
 if|if
 condition|(
-name|SP_PARM
+name|SP
 condition|)
 name|SetAttr
 argument_list|(
 name|SCREEN_ATTRS
 argument_list|(
-name|SP_PARM
+name|SP
 argument_list|)
 argument_list|,
 name|newmode
@@ -1082,13 +1043,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-end_if
+end_block
 
 begin_macro
 name|NCURSES_EXPORT
@@ -1098,70 +1053,21 @@ argument_list|)
 end_macro
 
 begin_macro
-name|vidputs
+name|vidattr
 argument_list|(
 argument|chtype newmode
-argument_list|,
-argument|NCURSES_OUTC outc
 argument_list|)
 end_macro
 
 begin_block
-block|{
-name|SetSafeOutcWrapper
-argument_list|(
-name|outc
-argument_list|)
-expr_stmt|;
-return|return
-name|NCURSES_SP_NAME
-argument_list|(
-name|vidputs
-argument_list|)
-argument_list|(
-name|CURRENT_SCREEN
-argument_list|,
-name|newmode
-argument_list|,
-name|_nc_outc_wrapper
-argument_list|)
-return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|NCURSES_EXPORT
-function|(
-name|int
-function|)
-name|NCURSES_SP_NAME
-argument_list|(
-argument|vidattr
-argument_list|)
-parameter_list|(
-name|NCURSES_SP_DCLx
-name|chtype
-name|newmode
-parameter_list|)
 block|{
 name|T
 argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"vidattr(%p,%s)"
+literal|"vidattr(%s)"
 argument_list|)
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|SP_PARM
 operator|,
 name|_traceattr
 argument_list|(
@@ -1172,77 +1078,32 @@ argument_list|)
 expr_stmt|;
 name|returnCode
 argument_list|(
-name|NCURSES_SP_NAME
+name|vidputs
 argument_list|(
-argument|vidputs
-argument_list|)
-operator|(
-name|NCURSES_SP_ARGx
 name|newmode
-operator|,
-name|NCURSES_SP_NAME
-argument_list|(
+argument_list|,
 name|_nc_outch
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-end_if
+end_block
 
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
-argument|int
+argument|chtype
 argument_list|)
 end_macro
 
 begin_macro
-name|vidattr
+name|termattrs
 argument_list|(
-argument|chtype newmode
+argument|void
 argument_list|)
 end_macro
 
 begin_block
-block|{
-return|return
-name|NCURSES_SP_NAME
-argument_list|(
-name|vidattr
-argument_list|)
-argument_list|(
-name|CURRENT_SCREEN
-argument_list|,
-name|newmode
-argument_list|)
-return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|NCURSES_EXPORT
-function|(
-name|chtype
-function|)
-name|NCURSES_SP_NAME
-argument_list|(
-argument|termattrs
-argument_list|)
-parameter_list|(
-name|NCURSES_SP_DCL0
-parameter_list|)
 block|{
 name|chtype
 name|attrs
@@ -1254,38 +1115,11 @@ argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"termattrs(%p)"
+literal|"termattrs()"
 argument_list|)
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|SP_PARM
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_TERM_DRIVER
-if|if
-condition|(
-name|HasTerminal
-argument_list|(
-name|SP_PARM
-argument_list|)
-condition|)
-name|attrs
-operator|=
-name|CallDriver
-argument_list|(
-name|SP_PARM
-argument_list|,
-name|conattr
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|enter_alt_charset_mode
@@ -1360,7 +1194,7 @@ name|A_UNDERLINE
 expr_stmt|;
 if|if
 condition|(
-name|SP_PARM
+name|SP
 operator|->
 name|_coloron
 condition|)
@@ -1368,54 +1202,13 @@ name|attrs
 operator||=
 name|A_COLOR
 expr_stmt|;
-endif|#
-directive|endif
-name|returnChtype
+name|returnChar
 argument_list|(
 name|attrs
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-end_if
-
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|chtype
-argument_list|)
-end_macro
-
-begin_macro
-name|termattrs
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
-block|{
-return|return
-name|NCURSES_SP_NAME
-argument_list|(
-name|termattrs
-argument_list|)
-argument_list|(
-name|CURRENT_SCREEN
-argument_list|)
-return|;
-block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

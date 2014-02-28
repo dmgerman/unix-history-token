@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_post.c,v 1.29 2010/05/01 19:18:27 tom Exp $"
+literal|"$Id: m_post.c,v 1.26 2004/12/25 23:57:04 tom Exp $"
 argument_list|)
 end_macro
 
@@ -746,9 +746,6 @@ operator|->
 name|win
 argument_list|)
 condition|)
-operator|(
-name|void
-operator|)
 name|mvwaddch
 argument_list|(
 name|menu
@@ -1180,7 +1177,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu |   Function      :  int post_menu(MENU* menu) | |   Description   :  Post a menu to the screen. This makes it visible. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - not a valid menu pointer |                    E_SYSTEM_ERROR      - error in lower layers |                    E_NOT_CONNECTED     - No items connected to menu |                    E_BAD_STATE         - Menu in userexit routine |                    E_POSTED            - Menu already posted +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu |   Function      :  int post_menu(MENU *) | |   Description   :  Post a menu to the screen. This makes it visible. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - not a valid menu pointer |                    E_SYSTEM_ERROR      - error in lower layers |                    E_NOT_CONNECTED     - No items connected to menu |                    E_BAD_STATE         - Menu in userexit routine |                    E_POSTED            - Menu already posted +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1207,10 +1204,6 @@ argument_list|(
 literal|"post_menu(%p)"
 argument_list|)
 operator|,
-operator|(
-name|void
-operator|*
-operator|)
 name|menu
 operator|)
 argument_list|)
@@ -1486,7 +1479,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu |   Function      :  int unpost_menu(MENU*) | |   Description   :  Detach menu from screen | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - not a valid menu pointer |                    E_BAD_STATE       - menu in userexit routine |                    E_NOT_POSTED      - menu is not posted +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu |   Function      :  int unpost_menu(MENU *) | |   Description   :  Detach menu from screen | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - not a valid menu pointer |                    E_BAD_STATE       - menu in userexit routine |                    E_NOT_POSTED      - menu is not posted +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1517,10 +1510,6 @@ argument_list|(
 literal|"unpost_menu(%p)"
 argument_list|)
 operator|,
-operator|(
-name|void
-operator|*
-operator|)
 name|menu
 operator|)
 argument_list|)

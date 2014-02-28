@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2003,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                         2008                    *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: setbuf.c,v 1.16 2010/08/28 21:08:31 tom Exp $"
+literal|"$Id: setbuf.c,v 1.13 2007/05/12 19:04:02 tom Exp $"
 argument_list|)
 end_macro
 
@@ -28,58 +28,24 @@ begin_comment
 comment|/*  * If the output file descriptor is connected to a tty (the typical case) it  * will probably be line-buffered.  Keith Bostic pointed out that we don't want  * this; it hoses people running over networks by forcing out a bunch of small  * packets instead of one big one, so screen updates on ptys look jerky.  * Restore block buffering to prevent this minor lossage.  *  * The buffer size is a compromise.  Ideally we'd like a buffer that can hold  * the maximum possible update size (the whole screen plus cup commands to  * change lines as it's painted).  On a 66-line xterm this can become  * excessive.  So we min it with the amount of data we think we can get through  * two Ethernet packets (maximum packet size - 100 for TCP/IP overhead).  *  * Why two ethernet packets?  It used to be one, on the theory that said  * packets define the maximum size of atomic update.  But that's less than the  * 2000 chars on a 25 x 80 screen, and we don't want local updates to flicker  * either.  Two packet lengths will handle up to a 35 x 80 screen.  *  * The magic '6' is the estimated length of the end-of-line cup sequence to go  * to the next line.  It's generous.  We used to mess with the buffering in  * init_mvcur() after cost computation, but that lost the sequences emitted by  * init_acs() in setupscreen().  *  * "The setvbuf function may be used only after the stream pointed to by stream  * has been associated with an open file and before any other operation is  * performed on the stream." (ISO 7.9.5.6.)  *  * Grrrr...  *  * On a lighter note, many implementations do in fact allow an application to  * reset the buffering after it has been written to.  We try to do this because  * otherwise we leave stdout in buffered mode after endwin() is called.  (This  * also happens with SVr4 curses).  *  * There are pros/cons:  *  * con:  *	There is no guarantee that we can reestablish buffering once we've  *	dropped it.  *  *	We _may_ lose data if the implementation does not coordinate this with  *	fflush.  *  * pro:  *	An implementation is more likely to refuse to change the buffering than  *	to do it in one of the ways mentioned above.  *  *	The alternative is to have the application try to change buffering  *	itself, which is certainly no improvement.  *  * Just in case it does not work well on a particular system, the calls to  * change buffering are all via the macro NC_BUFFERED.  Some implementations  * do indeed get confused by changing setbuf on/off, and will overrun the  * buffer.  So we disable this by default (there may yet be a workaround).  */
 end_comment
 
-begin_function
+begin_macro
 name|NCURSES_EXPORT
-function|(
-name|void
-function|)
-name|NCURSES_SP_NAME
 argument_list|(
-argument|_nc_set_buffer
+argument|void
 argument_list|)
-parameter_list|(
-name|NCURSES_SP_DCLx
-name|FILE
-modifier|*
-name|ofp
-parameter_list|,
-name|bool
-name|buffered
-parameter_list|)
+end_macro
+
+begin_macro
+name|_nc_set_buffer
+argument_list|(
+argument|FILE *ofp
+argument_list|,
+argument|bool buffered
+argument_list|)
+end_macro
+
+begin_block
 block|{
-name|int
-name|Cols
-decl_stmt|;
-name|int
-name|Lines
-decl_stmt|;
-if|if
-condition|(
-literal|0
-operator|==
-name|SP_PARM
-condition|)
-return|return;
-name|Cols
-operator|=
-operator|*
-operator|(
-name|ptrCols
-argument_list|(
-name|SP_PARM
-argument_list|)
-operator|)
-expr_stmt|;
-name|Lines
-operator|=
-operator|*
-operator|(
-name|ptrLines
-argument_list|(
-name|SP_PARM
-argument_list|)
-operator|)
-expr_stmt|;
 comment|/* optional optimization hack -- do before any output to ofp */
 if|#
 directive|if
@@ -88,7 +54,7 @@ operator|||
 name|HAVE_SETBUFFER
 if|if
 condition|(
-name|SP_PARM
+name|SP
 operator|->
 name|_buffered
 operator|!=
@@ -138,15 +104,12 @@ condition|)
 block|{
 name|buf_len
 operator|=
-operator|(
-name|unsigned
-operator|)
 name|min
 argument_list|(
-name|Lines
+name|LINES
 operator|*
 operator|(
-name|Cols
+name|COLS
 operator|+
 literal|6
 operator|)
@@ -159,7 +122,7 @@ condition|(
 operator|(
 name|buf_ptr
 operator|=
-name|SP_PARM
+name|SP
 operator|->
 name|_setbuf
 operator|)
@@ -183,7 +146,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|SP_PARM
+name|SP
 operator|->
 name|_setbuf
 operator|=
@@ -287,7 +250,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|SP_PARM
+name|SP
 operator|->
 name|_buffered
 operator|=
@@ -298,51 +261,7 @@ endif|#
 directive|endif
 comment|/* HAVE_SETVBUF || HAVE_SETBUFFER */
 block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-end_if
-
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_macro
-name|_nc_set_buffer
-argument_list|(
-argument|FILE *ofp
-argument_list|,
-argument|bool buffered
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|NCURSES_SP_NAME
-function_decl|(
-name|_nc_set_buffer
-function_decl|)
-parameter_list|(
-name|CURRENT_SCREEN
-parameter_list|,
-name|ofp
-parameter_list|,
-name|buffered
-parameter_list|)
-function_decl|;
-block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1999-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1999-2006,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -23,10 +23,16 @@ directive|include
 file|<tic.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<term_entry.h>
+end_include
+
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: alloc_ttype.c,v 1.22 2010/12/19 00:24:09 tom Exp $"
+literal|"$Id: alloc_ttype.c,v 1.17 2008/10/12 16:12:00 tom Exp $"
 argument_list|)
 end_macro
 
@@ -296,19 +302,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|EXTEND_NUM
-parameter_list|(
-name|num
-parameter_list|,
-name|ext
-parameter_list|)
-define|\
-value|to->num = (unsigned short) (to->num + (ext - to->ext))
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -366,12 +359,17 @@ operator|!=
 name|ext_Booleans
 condition|)
 block|{
-name|EXTEND_NUM
-argument_list|(
+name|to
+operator|->
 name|num_Booleans
-argument_list|,
+operator|+=
+operator|(
 name|ext_Booleans
-argument_list|)
+operator|-
+name|to
+operator|->
+name|ext_Booleans
+operator|)
 expr_stmt|;
 name|to
 operator|->
@@ -482,10 +480,7 @@ name|to
 operator|->
 name|ext_Booleans
 operator|=
-name|UShort
-argument_list|(
 name|ext_Booleans
-argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -497,12 +492,17 @@ operator|!=
 name|ext_Numbers
 condition|)
 block|{
-name|EXTEND_NUM
-argument_list|(
+name|to
+operator|->
 name|num_Numbers
-argument_list|,
+operator|+=
+operator|(
 name|ext_Numbers
-argument_list|)
+operator|-
+name|to
+operator|->
+name|ext_Numbers
+operator|)
 expr_stmt|;
 name|to
 operator|->
@@ -615,10 +615,7 @@ name|to
 operator|->
 name|ext_Numbers
 operator|=
-name|UShort
-argument_list|(
 name|ext_Numbers
-argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -630,12 +627,17 @@ operator|!=
 name|ext_Strings
 condition|)
 block|{
-name|EXTEND_NUM
-argument_list|(
+name|to
+operator|->
 name|num_Strings
-argument_list|,
+operator|+=
+operator|(
 name|ext_Strings
-argument_list|)
+operator|-
+name|to
+operator|->
+name|ext_Strings
+operator|)
 expr_stmt|;
 name|to
 operator|->
@@ -751,10 +753,7 @@ name|to
 operator|->
 name|ext_Strings
 operator|=
-name|UShort
-argument_list|(
 name|ext_Strings
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -766,7 +765,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
+name|int
 name|_nc_first_ext_name
 parameter_list|(
 name|TERMTYPE
@@ -777,7 +776,7 @@ name|int
 name|token_type
 parameter_list|)
 block|{
-name|unsigned
+name|int
 name|first
 decl_stmt|;
 switch|switch
@@ -808,10 +807,6 @@ name|STRING
 case|:
 name|first
 operator|=
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|tp
 operator|->
 name|ext_Booleans
@@ -819,7 +814,6 @@ operator|+
 name|tp
 operator|->
 name|ext_Numbers
-argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -841,7 +835,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
+name|int
 name|_nc_last_ext_name
 parameter_list|(
 name|TERMTYPE
@@ -852,7 +846,7 @@ name|int
 name|token_type
 parameter_list|)
 block|{
-name|unsigned
+name|int
 name|last
 decl_stmt|;
 switch|switch
@@ -875,10 +869,6 @@ name|NUMBER
 case|:
 name|last
 operator|=
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|tp
 operator|->
 name|ext_Booleans
@@ -886,7 +876,6 @@ operator|+
 name|tp
 operator|->
 name|ext_Numbers
-argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -983,9 +972,6 @@ argument_list|)
 condition|)
 block|{
 return|return
-operator|(
-name|int
-operator|)
 name|j
 return|;
 block|}
@@ -1142,9 +1128,6 @@ condition|)
 block|{
 name|last
 operator|=
-operator|(
-name|int
-operator|)
 name|NUM_EXT_NAMES
 argument_list|(
 name|tp
@@ -1242,12 +1225,14 @@ expr_stmt|;
 name|tp
 operator|->
 name|ext_Booleans
-operator|--
+operator|-=
+literal|1
 expr_stmt|;
 name|tp
 operator|->
 name|num_Booleans
-operator|--
+operator|-=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1293,12 +1278,14 @@ expr_stmt|;
 name|tp
 operator|->
 name|ext_Numbers
-operator|--
+operator|-=
+literal|1
 expr_stmt|;
 name|tp
 operator|->
 name|num_Numbers
-operator|--
+operator|-=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1344,12 +1331,14 @@ expr_stmt|;
 name|tp
 operator|->
 name|ext_Strings
-operator|--
+operator|-=
+literal|1
 expr_stmt|;
 name|tp
 operator|->
 name|num_Strings
-operator|--
+operator|-=
+literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -1536,9 +1525,6 @@ name|name
 expr_stmt|;
 name|j
 operator|=
-operator|(
-name|unsigned
-operator|)
 name|_nc_ext_data_index
 argument_list|(
 name|tp
@@ -1562,12 +1548,14 @@ case|:
 name|tp
 operator|->
 name|ext_Booleans
-operator|++
+operator|+=
+literal|1
 expr_stmt|;
 name|tp
 operator|->
 name|num_Booleans
-operator|++
+operator|+=
+literal|1
 expr_stmt|;
 name|tp
 operator|->
@@ -1590,16 +1578,11 @@ for|for
 control|(
 name|k
 operator|=
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|tp
 operator|->
 name|num_Booleans
 operator|-
 literal|1
-argument_list|)
 init|;
 name|k
 operator|>
@@ -1631,12 +1614,14 @@ case|:
 name|tp
 operator|->
 name|ext_Numbers
-operator|++
+operator|+=
+literal|1
 expr_stmt|;
 name|tp
 operator|->
 name|num_Numbers
-operator|++
+operator|+=
+literal|1
 expr_stmt|;
 name|tp
 operator|->
@@ -1659,16 +1644,11 @@ for|for
 control|(
 name|k
 operator|=
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|tp
 operator|->
 name|num_Numbers
 operator|-
 literal|1
-argument_list|)
 init|;
 name|k
 operator|>
@@ -1700,12 +1680,14 @@ case|:
 name|tp
 operator|->
 name|ext_Strings
-operator|++
+operator|+=
+literal|1
 expr_stmt|;
 name|tp
 operator|->
 name|num_Strings
-operator|++
+operator|+=
+literal|1
 expr_stmt|;
 name|tp
 operator|->
@@ -1729,16 +1711,11 @@ for|for
 control|(
 name|k
 operator|=
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|tp
 operator|->
 name|num_Strings
 operator|-
 literal|1
-argument_list|)
 init|;
 name|k
 operator|>
@@ -1766,9 +1743,6 @@ expr_stmt|;
 break|break;
 block|}
 return|return
-operator|(
-name|int
-operator|)
 name|j
 return|;
 block|}
@@ -1840,7 +1814,7 @@ index|[
 name|j
 index|]
 decl_stmt|;
-name|int
+name|unsigned
 name|j_str
 init|=
 name|to
@@ -1869,6 +1843,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|k
+operator|=
 name|_nc_find_ext_name
 argument_list|(
 name|from
@@ -1882,6 +1859,7 @@ index|]
 argument_list|,
 name|BOOLEAN
 argument_list|)
+operator|)
 operator|>=
 literal|0
 condition|)
@@ -1938,6 +1916,9 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|k
+operator|=
 name|_nc_find_ext_name
 argument_list|(
 name|from
@@ -1951,6 +1932,7 @@ index|]
 argument_list|,
 name|NUMBER
 argument_list|)
+operator|)
 operator|>=
 literal|0
 condition|)
@@ -2007,6 +1989,9 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|k
+operator|=
 name|_nc_find_ext_name
 argument_list|(
 name|from
@@ -2020,6 +2005,7 @@ index|]
 argument_list|,
 name|STRING
 argument_list|)
+operator|)
 operator|>=
 literal|0
 condition|)
@@ -2111,9 +2097,6 @@ block|{
 name|int
 name|na
 init|=
-operator|(
-name|int
-operator|)
 name|NUM_EXT_NAMES
 argument_list|(
 name|to
@@ -2122,9 +2105,6 @@ decl_stmt|;
 name|int
 name|nb
 init|=
-operator|(
-name|int
-operator|)
 name|NUM_EXT_NAMES
 argument_list|(
 name|from
@@ -2284,14 +2264,9 @@ argument_list|(
 name|char
 operator|*
 argument_list|,
-call|(
-name|size_t
-call|)
-argument_list|(
 name|na
 operator|+
 name|nb
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2547,9 +2522,6 @@ argument_list|(
 name|char
 operator|*
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|nb
 argument_list|,
 name|from
@@ -2571,9 +2543,6 @@ name|char
 operator|*
 argument_list|)
 operator|*
-operator|(
-name|size_t
-operator|)
 name|nb
 argument_list|)
 expr_stmt|;

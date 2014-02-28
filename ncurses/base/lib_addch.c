@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_addch.c,v 1.124 2010/04/24 22:41:05 tom Exp $"
+literal|"$Id: lib_addch.c,v 1.113 2008/08/16 19:20:04 tom Exp $"
 argument_list|)
 end_macro
 
@@ -206,6 +206,12 @@ name|_nc_bkgd
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+block|if (pair> 255) { 	    NCURSES_CH_T fixme = ch; 	    SetPair(fixme, pair); 	}
+endif|#
+directive|endif
 name|AddAttr
 argument_list|(
 name|ch
@@ -436,16 +442,8 @@ else|else
 block|{
 operator|*
 name|ypos
-operator|=
-call|(
-name|NCURSES_SIZE_T
-call|)
-argument_list|(
-operator|*
-name|ypos
-operator|+
+operator|+=
 literal|1
-argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -609,18 +607,12 @@ name|win
 operator|->
 name|_curx
 operator|=
-operator|(
-name|NCURSES_SIZE_T
-operator|)
 name|save_x
 expr_stmt|;
 name|win
 operator|->
 name|_cury
 operator|=
-operator|(
-name|NCURSES_SIZE_T
-operator|)
 name|save_y
 expr_stmt|;
 block|}
@@ -835,9 +827,6 @@ condition|(
 operator|(
 name|len
 operator|=
-operator|(
-name|int
-operator|)
 name|mbrtowc
 argument_list|(
 operator|&
@@ -1034,44 +1023,23 @@ name|x
 argument_list|)
 expr_stmt|;
 comment|/*      * Build up multibyte characters until we have a wide-character.      */
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-define|#
-directive|define
-name|DeriveSP
-parameter_list|()
-value|SCREEN *sp = _nc_screen_of(win);
-else|#
-directive|else
-define|#
-directive|define
-name|DeriveSP
-parameter_list|()
-comment|/*nothing */
-endif|#
-directive|endif
 name|if_WIDEC
 argument_list|(
-argument|{ 	DeriveSP(); 	if (WINDOW_EXT(win, addch_used) !=
+argument|{ 	if (WINDOW_EXT(win, addch_used) !=
 literal|0
 argument||| !Charable(ch)) { 	    int len = _nc_build_wch(win, CHREF(ch));  	    if (len>= -
 literal|1
-argument|) { 		attr_t attr = AttrOf(ch);
-comment|/* handle EILSEQ (i.e., when len>= -1) */
-argument|if (len == -
-literal|1
-argument|&& is8bits(CharOf(ch))) { 		    int rc = OK; 		    const char *s = NCURSES_SP_NAME(unctrl) 		      (NCURSES_SP_ARGx (chtype) CharOf(ch));  		    if (s[
+argument|) {
+comment|/* handle EILSEQ */
+argument|if (is8bits(CharOf(ch))) { 		    const char *s = unctrl((chtype) CharOf(ch)); 		    if (s[
 literal|1
 argument|] !=
-literal|'\0'
-argument|) { 			while (*s !=
-literal|'\0'
-argument|) { 			    rc = waddch(win, UChar(*s) | attr); 			    if (rc != OK) 				break; 			    ++s; 			} 			return rc; 		    } 		} 		if (len == -
+literal|0
+argument|) { 			return waddstr(win, s); 		    } 		} 		if (len == -
 literal|1
 argument|) 		    return waddch(win,
 literal|' '
-argument|| attr); 	    } else { 		return OK; 	    } 	}     }
+argument|); 	    } else { 		return OK; 	    } 	}     }
 argument_list|)
 empty_stmt|;
 comment|/*      * Non-spacing characters are added to the current cell.      *      * Spacing characters that are wider than one column require some display      * adjustments.      */
@@ -1118,7 +1086,7 @@ argument|) { 		int count = win->_maxx +
 literal|1
 argument|- x; 		TR(TRACE_VIRTPUT, (
 literal|"fill %d remaining cells"
-argument|, count)); 		fill_cells(win, count); 		if (wrap_to_next_line(win) == ERR) 		    return ERR; 		x = win->_curx; 		y = win->_cury; 		line = win->_line + y; 	    }
+argument|, count)); 		fill_cells(win, count); 		if (wrap_to_next_line(win) == ERR) 		    return ERR; 		x = win->_curx; 		y = win->_cury; 	    }
 comment|/* 	     * Check for cells which are orphaned by adding this character, set 	     * those to blanks. 	     * 	     * FIXME: this actually could fill j-i cells, more complicated to 	     * setup though. 	     */
 argument|for (i =
 literal|0
@@ -1208,9 +1176,6 @@ name|win
 operator|->
 name|_curx
 operator|=
-operator|(
-name|NCURSES_SIZE_T
-operator|)
 name|x
 expr_stmt|;
 return|return
@@ -1243,50 +1208,20 @@ decl_stmt|;
 name|chtype
 name|t
 init|=
-operator|(
-name|chtype
-operator|)
 name|CharOf
 argument_list|(
 name|ch
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-name|USE_WIDEC_SUPPORT
-operator|||
-name|NCURSES_SP_FUNCS
-operator|||
-name|USE_REENTRANT
-name|SCREEN
-modifier|*
-name|sp
-init|=
-name|_nc_screen_of
-argument_list|(
-name|win
-argument_list|)
-decl_stmt|;
-endif|#
-directive|endif
 specifier|const
 name|char
 modifier|*
 name|s
 init|=
-name|NCURSES_SP_NAME
+name|unctrl
 argument_list|(
-argument|unctrl
-argument_list|)
-operator|(
-name|NCURSES_SP_ARGx
 name|t
-operator|)
-decl_stmt|;
-name|int
-name|tabsize
-init|=
-literal|8
+argument_list|)
 decl_stmt|;
 comment|/*      * If we are using the alternate character set, forget about locale.      * Otherwise, if unctrl() returns a single-character or the locale      * claims the code is printable, treat it that way.      */
 if|if
@@ -1305,11 +1240,11 @@ if|#
 directive|if
 name|USE_WIDEC_SUPPORT
 operator|(
-name|sp
+name|SP
 operator|!=
 literal|0
 operator|&&
-name|sp
+name|SP
 operator|->
 name|_legacy_coding
 operator|)
@@ -1335,12 +1270,12 @@ name|USE_WIDEC_SUPPORT
 operator|||
 operator|(
 operator|(
-name|sp
+name|SP
 operator|==
 literal|0
 operator|||
 operator|!
-name|sp
+name|SP
 operator|->
 name|_legacy_coding
 operator|)
@@ -1396,43 +1331,17 @@ block|{
 case|case
 literal|'\t'
 case|:
-if|#
-directive|if
-name|USE_REENTRANT
-name|tabsize
-operator|=
-operator|*
-name|ptrTabsize
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|tabsize
-operator|=
-name|TABSIZE
-expr_stmt|;
-endif|#
-directive|endif
 name|x
-operator|=
-call|(
-name|NCURSES_SIZE_T
-call|)
-argument_list|(
-name|x
-operator|+
+operator|+=
 operator|(
-name|tabsize
+name|TABSIZE
 operator|-
 operator|(
 name|x
 operator|%
-name|tabsize
+name|TABSIZE
 operator|)
 operator|)
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Space-fill the tab on the bottom line so that we'll get the 	 * "correct" cursor position. 	 */
 if|if
@@ -1805,10 +1714,6 @@ argument_list|(
 literal|"waddch(%p, %s)"
 argument_list|)
 operator|,
-operator|(
-name|void
-operator|*
-operator|)
 name|win
 operator|,
 name|_tracechtype
@@ -1913,10 +1818,6 @@ argument_list|(
 literal|"wechochar(%p, %s)"
 argument_list|)
 operator|,
-operator|(
-name|void
-operator|*
-operator|)
 name|win
 operator|,
 name|_tracechtype

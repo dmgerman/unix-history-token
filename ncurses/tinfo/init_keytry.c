@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1999-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1999-2006,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -12,6 +12,20 @@ end_include
 begin_include
 include|#
 directive|include
+file|<term.h>
+end_include
+
+begin_comment
+comment|/* keypad_xmit, keypad_local, meta_on, meta_off */
+end_comment
+
+begin_comment
+comment|/* cursor_visible,cursor_normal,cursor_invisible */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<tic.h>
 end_include
 
@@ -19,10 +33,16 @@ begin_comment
 comment|/* struct tinfo_fkeys */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<term_entry.h>
+end_include
+
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: init_keytry.c,v 1.17 2010/04/24 22:29:56 tom Exp $"
+literal|"$Id: init_keytry.c,v 1.12 2008/05/24 21:44:51 tom Exp $"
 argument_list|)
 end_macro
 
@@ -44,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|CUR
-value|SP_TERMTYPE
+value|(sp->_term)->type.
 end_define
 
 begin_if
@@ -121,7 +141,7 @@ end_macro
 
 begin_block
 block|{
-name|unsigned
+name|size_t
 name|n
 decl_stmt|;
 comment|/* The sp->_keytry value is initialized in newterm(), where the sp      * structure is created, because we can not tell where keypad() or      * mouse_activate() (which will call keyok()) are first called.      */
@@ -219,9 +239,6 @@ name|ExtStrname
 argument_list|(
 name|tp
 argument_list|,
-operator|(
-name|int
-operator|)
 name|n
 argument_list|,
 name|strnames
@@ -253,14 +270,10 @@ name|value
 operator|!=
 literal|0
 operator|&&
-name|NCURSES_SP_NAME
+name|key_defined
 argument_list|(
-argument|key_defined
-argument_list|)
-operator|(
-name|NCURSES_SP_ARGx
 name|value
-operator|)
+argument_list|)
 operator|==
 literal|0
 condition|)

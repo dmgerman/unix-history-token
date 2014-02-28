@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2006,2008 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2006 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey                        2006-on                 *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey                        2006                    *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -34,7 +34,7 @@ end_if
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: hashed_db.c,v 1.14 2008/12/13 20:59:02 tom Exp $"
+literal|"$Id: hashed_db.c,v 1.13 2006/08/19 19:48:38 tom Exp $"
 argument_list|)
 end_macro
 
@@ -87,9 +87,6 @@ name|result
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|code
-decl_stmt|;
 if|#
 directive|if
 name|HASHED_DB_API
@@ -105,11 +102,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|code
-operator|=
 name|result
 operator|->
 name|open
@@ -132,16 +124,7 @@ name|DB_RDONLY
 argument_list|,
 literal|0644
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|result
-operator|=
-literal|0
 expr_stmt|;
-block|}
 elif|#
 directive|elif
 name|HASHED_DB_API
@@ -157,11 +140,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|code
-operator|=
 name|result
 operator|->
 name|open
@@ -182,21 +160,15 @@ name|DB_RDONLY
 argument_list|,
 literal|0644
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|result
-operator|=
-literal|0
 expr_stmt|;
-block|}
 elif|#
 directive|elif
 name|HASHED_DB_API
 operator|>=
 literal|2
+name|int
+name|code
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -236,16 +208,39 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|T
+argument_list|(
+operator|(
+literal|"cannot open %s: %s"
+operator|,
+name|path
+operator|,
+name|strerror
+argument_list|(
+name|code
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+block|{
+name|T
+argument_list|(
+operator|(
+literal|"opened %s"
+operator|,
+name|path
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 else|#
 directive|else
-if|if
-condition|(
-operator|(
 name|result
 operator|=
 name|dbopen
@@ -268,18 +263,7 @@ name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|code
-operator|=
-name|errno
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|result
@@ -297,23 +281,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|T
-argument_list|(
-operator|(
-literal|"cannot open %s: %s"
-operator|,
-name|path
-operator|,
-name|strerror
-argument_list|(
-name|code
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
+endif|#
+directive|endif
 return|return
 name|result
 return|;

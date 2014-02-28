@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,13 +26,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<term.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<tic.h>
 end_include
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tparm.c,v 1.82 2011/01/15 22:19:12 tom Exp $"
+literal|"$Id: lib_tparm.c,v 1.76 2008/08/16 19:22:55 tom Exp $"
 argument_list|)
 end_macro
 
@@ -255,9 +261,6 @@ name|s_len
 condition|)
 name|s_len
 operator|=
-operator|(
-name|size_t
-operator|)
 name|len
 expr_stmt|;
 name|get_space
@@ -1666,9 +1669,6 @@ name|char
 modifier|*
 name|tparam_internal
 parameter_list|(
-name|bool
-name|use_TPARM_ARG
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1693,14 +1693,9 @@ index|]
 decl_stmt|;
 name|int
 name|popcount
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|number
-decl_stmt|;
-name|int
-name|num_args
 decl_stmt|;
 name|int
 name|len
@@ -1774,35 +1769,6 @@ condition|)
 return|return
 name|NULL
 return|;
-if|if
-condition|(
-name|number
-operator|>
-name|NUM_PARM
-condition|)
-name|number
-operator|=
-name|NUM_PARM
-expr_stmt|;
-if|if
-condition|(
-name|popcount
-operator|>
-name|NUM_PARM
-condition|)
-name|popcount
-operator|=
-name|NUM_PARM
-expr_stmt|;
-name|num_args
-operator|=
-name|max
-argument_list|(
-name|popcount
-argument_list|,
-name|number
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1811,7 +1777,12 @@ literal|0
 init|;
 name|i
 operator|<
-name|num_args
+name|max
+argument_list|(
+name|popcount
+argument_list|,
+name|number
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -1841,32 +1812,6 @@ name|char
 operator|*
 argument_list|)
 expr_stmt|;
-name|param
-index|[
-name|i
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|use_TPARM_ARG
-condition|)
-block|{
-name|param
-index|[
-name|i
-index|]
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-name|TPARM_ARG
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1875,14 +1820,11 @@ index|[
 name|i
 index|]
 operator|=
-operator|(
-name|TPARM_ARG
-operator|)
 name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|int
+name|TPARM_ARG
 argument_list|)
 expr_stmt|;
 block|}
@@ -1940,9 +1882,6 @@ expr_stmt|;
 else|else
 name|npush
 argument_list|(
-operator|(
-name|int
-operator|)
 name|param
 index|[
 name|i
@@ -2005,9 +1944,6 @@ name|save_number
 argument_list|(
 literal|", %d"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|param
 index|[
 name|i
@@ -2255,9 +2191,6 @@ expr_stmt|;
 else|else
 name|npush
 argument_list|(
-operator|(
-name|int
-operator|)
 name|param
 index|[
 name|i
@@ -3088,8 +3021,6 @@ name|result
 operator|=
 name|tparam_internal
 argument_list|(
-name|TRUE
-argument_list|,
 name|string
 argument_list|,
 name|ap
@@ -3182,77 +3113,6 @@ end_endif
 begin_comment
 comment|/* NCURSES_TPARM_VARARGS */
 end_comment
-
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|char *
-argument_list|)
-end_macro
-
-begin_macro
-name|tiparm
-argument_list|(
-argument|const char *string
-argument_list|,
-argument|...
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|char
-modifier|*
-name|result
-decl_stmt|;
-name|_nc_tparm_err
-operator|=
-literal|0
-expr_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|string
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-name|TPS
-argument_list|(
-name|tname
-argument_list|)
-operator|=
-literal|"tiparm"
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TRACE */
-name|result
-operator|=
-name|tparam_internal
-argument_list|(
-name|FALSE
-argument_list|,
-name|string
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-return|return
-name|result
-return|;
-block|}
-end_block
 
 end_unit
 

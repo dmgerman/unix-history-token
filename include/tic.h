@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: tic.h,v 1.65 2009/08/08 17:52:46 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
+comment|/*  * $Id: tic.h,v 1.62 2007/08/11 16:12:43 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
 end_comment
 
 begin_ifndef
@@ -409,13 +409,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
-name|short
-name|HashValue
-typedef|;
-end_typedef
-
 begin_comment
 comment|/* 	 * The file comp_captab.c contains an array of these structures, one 	 * per possible capability.  These are indexed by a hash table array of 	 * pointers to the same structures for use by the parser. 	 */
 end_comment
@@ -434,64 +427,17 @@ name|int
 name|nte_type
 decl_stmt|;
 comment|/* BOOLEAN, NUMBER or STRING */
-name|HashValue
+name|short
 name|nte_index
 decl_stmt|;
 comment|/* index of associated variable in its array */
-name|HashValue
+name|short
 name|nte_link
 decl_stmt|;
 comment|/* index in table of next hash, or -1 */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* 	 * Use this structure to hide differences between terminfo and termcap 	 * tables. 	 */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|unsigned
-name|table_size
-decl_stmt|;
-specifier|const
-name|HashValue
-modifier|*
-name|table_data
-decl_stmt|;
-name|HashValue
-function_decl|(
-modifier|*
-name|hash_of
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|compare_names
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-block|}
-name|HashData
-typedef|;
-end_typedef
 
 begin_struct
 struct|struct
@@ -530,20 +476,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_extern
-extern|extern NCURSES_EXPORT(const HashData *
-end_extern
-
-begin_expr_stmt
-unit|)
-name|_nc_get_hash_info
-argument_list|(
-name|bool
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern NCURSES_EXPORT(const HashValue *
+extern|extern NCURSES_EXPORT(const short *
 end_extern
 
 begin_expr_stmt
@@ -816,7 +749,7 @@ name|char
 operator|*
 argument_list|,
 specifier|const
-name|HashValue
+name|short
 operator|*
 argument_list|)
 expr_stmt|;
@@ -836,7 +769,10 @@ operator|*
 argument_list|,
 name|int
 argument_list|,
-name|bool
+specifier|const
+expr|struct
+name|name_table_entry
+operator|*
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2001-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2001-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,16 +38,9 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: visbuf.c,v 1.37 2010/05/29 18:51:41 tom Exp $"
+literal|"$Id: visbuf.c,v 1.32 2008/08/04 23:07:39 tom Exp $"
 argument_list|)
 end_macro
-
-begin_define
-define|#
-directive|define
-name|NUM_VISBUFS
-value|4
-end_define
 
 begin_define
 define|#
@@ -410,8 +403,6 @@ specifier|const
 name|char
 modifier|*
 name|vbuf
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -483,46 +474,9 @@ name|char
 modifier|*
 name|mybuf
 index|[
-name|NUM_VISBUFS
+literal|4
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|bufnum
-operator|<
-literal|0
-condition|)
-block|{
-for|for
-control|(
-name|c
-operator|=
-literal|0
-init|;
-name|c
-operator|<
-name|NUM_VISBUFS
-condition|;
-operator|++
-name|c
-control|)
-block|{
-name|FreeAndNull
-argument_list|(
-name|mybuf
-index|[
-name|c
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-name|tp
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
 name|mybuf
 index|[
 name|bufnum
@@ -552,7 +506,6 @@ index|[
 name|bufnum
 index|]
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -610,6 +563,7 @@ name|D_QUOTE
 expr_stmt|;
 operator|*
 name|tp
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -877,7 +831,7 @@ name|char
 modifier|*
 name|mybuf
 index|[
-name|NUM_VISBUFS
+literal|2
 index|]
 decl_stmt|;
 name|mybuf
@@ -1034,6 +988,7 @@ name|D_QUOTE
 expr_stmt|;
 operator|*
 name|tp
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1193,10 +1148,7 @@ condition|;
 operator|++
 name|n
 control|)
-block|{
 empty_stmt|;
-comment|/* empty */
-block|}
 if|if
 condition|(
 name|mylen
@@ -1255,7 +1207,6 @@ condition|;
 operator|++
 name|n
 control|)
-block|{
 name|mybuf
 index|[
 name|n
@@ -1268,15 +1219,6 @@ name|buf
 index|[
 name|n
 index|]
-expr_stmt|;
-block|}
-name|mybuf
-index|[
-name|n
-index|]
-operator|=
-literal|L'
-expr|\0'
 expr_stmt|;
 return|return
 name|_nc_viswbuf2
@@ -1442,9 +1384,8 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|_nc_trace_bufcat
 argument_list|(
 name|bufnum
@@ -1452,9 +1393,8 @@ argument_list|,
 name|l_brace
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|_nc_trace_bufcat
 argument_list|(
 name|bufnum
@@ -1501,9 +1441,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|_nc_trace_bufcat
 argument_list|(
 name|bufnum
@@ -1573,25 +1512,7 @@ operator|==
 literal|L'
 expr|\0'
 condition|)
-block|{
-if|if
-condition|(
-name|PUTC_i
-operator|==
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|_nc_trace_bufcat
-argument_list|(
-name|bufnum
-argument_list|,
-literal|"\\000"
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 name|PUTC_n
 operator|=
 operator|(
@@ -1655,9 +1576,8 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|_nc_trace_bufcat
 argument_list|(
 name|bufnum
@@ -1704,9 +1624,8 @@ endif|#
 directive|endif
 comment|/* USE_WIDEC_SUPPORT */
 block|}
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|_nc_trace_bufcat
 argument_list|(
 name|bufnum
@@ -1721,9 +1640,8 @@ operator|!=
 name|A_NORMAL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|_nc_trace_bufcat
 argument_list|(
 name|bufnum
@@ -1731,9 +1649,8 @@ argument_list|,
 literal|" | "
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|_nc_trace_bufcat
 argument_list|(
 name|bufnum

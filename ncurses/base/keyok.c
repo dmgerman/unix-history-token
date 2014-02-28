@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2000,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey                        1997-on                 *  *     and: Juergen Pfeifer                         2009                    *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey            1997-on                             *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: keyok.c,v 1.10 2009/10/24 22:15:47 tom Exp $"
+literal|"$Id: keyok.c,v 1.7 2006/12/30 16:22:33 tom Exp $"
 argument_list|)
 end_macro
 
@@ -24,67 +24,38 @@ begin_comment
 comment|/*  * Enable (or disable) ncurses' interpretation of a keycode by adding (or  * removing) the corresponding 'tries' entry.  *  * Do this by storing a second tree of tries, which records the disabled keys.   * The simplest way to copy is to make a function that returns the string (with  * nulls set to 0200), then use that to reinsert the string into the  * corresponding tree.  */
 end_comment
 
-begin_function
+begin_macro
 name|NCURSES_EXPORT
-function|(
-name|int
-function|)
-name|NCURSES_SP_NAME
 argument_list|(
-argument|keyok
+argument|int
 argument_list|)
-parameter_list|(
-name|NCURSES_SP_DCLx
-name|int
-name|c
-parameter_list|,
-name|bool
-name|flag
-parameter_list|)
+end_macro
+
+begin_macro
+name|keyok
+argument_list|(
+argument|int c
+argument_list|,
+argument|bool flag
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|code
 init|=
 name|ERR
 decl_stmt|;
-name|T
-argument_list|(
-operator|(
-name|T_CALLED
-argument_list|(
-literal|"keyok(%p, %d,%d)"
-argument_list|)
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|SP_PARM
-operator|,
-name|c
-operator|,
-name|flag
-operator|)
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_TERM_DRIVER
-name|code
-operator|=
-name|CallDriver_2
-argument_list|(
-name|sp
-argument_list|,
-name|kyOk
-argument_list|,
-name|c
-argument_list|,
-name|flag
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+name|int
+name|count
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -106,15 +77,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|int
-name|count
-init|=
-literal|0
-decl_stmt|;
-name|char
-modifier|*
-name|s
-decl_stmt|;
 name|unsigned
 name|ch
 init|=
@@ -135,7 +97,7 @@ name|s
 operator|=
 name|_nc_expand_try
 argument_list|(
-name|SP_PARM
+name|SP
 operator|->
 name|_key_ok
 argument_list|,
@@ -154,7 +116,7 @@ name|_nc_remove_key
 argument_list|(
 operator|&
 operator|(
-name|SP_PARM
+name|SP
 operator|->
 name|_key_ok
 operator|)
@@ -169,7 +131,7 @@ name|_nc_add_to_try
 argument_list|(
 operator|&
 operator|(
-name|SP_PARM
+name|SP
 operator|->
 name|_keytry
 operator|)
@@ -206,7 +168,7 @@ name|s
 operator|=
 name|_nc_expand_try
 argument_list|(
-name|SP_PARM
+name|SP
 operator|->
 name|_keytry
 argument_list|,
@@ -225,7 +187,7 @@ name|_nc_remove_key
 argument_list|(
 operator|&
 operator|(
-name|SP_PARM
+name|SP
 operator|->
 name|_keytry
 operator|)
@@ -240,7 +202,7 @@ name|_nc_add_to_try
 argument_list|(
 operator|&
 operator|(
-name|SP_PARM
+name|SP
 operator|->
 name|_key_ok
 operator|)
@@ -269,60 +231,13 @@ break|break;
 block|}
 block|}
 block|}
-endif|#
-directive|endif
 name|returnCode
 argument_list|(
 name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|NCURSES_SP_FUNCS
-end_if
-
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|keyok
-argument_list|(
-argument|int c
-argument_list|,
-argument|bool flag
-argument_list|)
-end_macro
-
-begin_block
-block|{
-return|return
-name|NCURSES_SP_NAME
-argument_list|(
-name|keyok
-argument_list|)
-argument_list|(
-name|CURRENT_SCREEN
-argument_list|,
-name|c
-argument_list|,
-name|flag
-argument_list|)
-return|;
-block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

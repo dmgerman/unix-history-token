@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -49,7 +49,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tstp.c,v 1.41 2010/05/15 21:31:12 tom Exp $"
+literal|"$Id: lib_tstp.c,v 1.37 2008/05/03 16:24:56 tom Exp $"
 argument_list|)
 end_macro
 
@@ -114,17 +114,12 @@ condition|(
 name|sig
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SIGALRM
 case|case
 name|SIGALRM
 case|:
 return|return
 literal|"SIGALRM"
 return|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|SIGCONT
@@ -142,17 +137,12 @@ case|:
 return|return
 literal|"SIGINT"
 return|;
-ifdef|#
-directive|ifdef
-name|SIGQUIT
 case|case
 name|SIGQUIT
 case|:
 return|return
 literal|"SIGQUIT"
 return|;
-endif|#
-directive|endif
 case|case
 name|SIGTERM
 case|:
@@ -225,12 +215,6 @@ name|dummy
 name|GCC_UNUSED
 parameter_list|)
 block|{
-name|SCREEN
-modifier|*
-name|sp
-init|=
-name|CURRENT_SCREEN
-decl_stmt|;
 name|sigset_t
 name|mask
 decl_stmt|,
@@ -259,12 +243,12 @@ expr_stmt|;
 comment|/*      * The user may have changed the prog_mode tty bits, so save them.      *      * But first try to detect whether we still are in the foreground      * process group - if not, an interactive shell may already have      * taken ownership of the tty and modified the settings when our      * parent was stopped before us, and we would likely pick up the      * settings already modified by the shell.      */
 if|if
 condition|(
-name|sp
+name|SP
 operator|!=
 literal|0
 operator|&&
 operator|!
-name|sp
+name|SP
 operator|->
 name|_endwin
 condition|)
@@ -284,14 +268,9 @@ argument_list|()
 condition|)
 endif|#
 directive|endif
-name|NCURSES_SP_NAME
-function_decl|(
 name|def_prog_mode
-function_decl|)
-parameter_list|(
-name|NCURSES_SP_ARG
-parameter_list|)
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|/*      * Block window change and timer signals.  The latter      * is because applications use timers to decide when      * to repaint the screen.      */
 operator|(
 name|void
@@ -302,9 +281,6 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGALRM
 operator|(
 name|void
 operator|)
@@ -316,8 +292,6 @@ argument_list|,
 name|SIGALRM
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|USE_SIGWINCH
@@ -404,14 +378,9 @@ block|}
 endif|#
 directive|endif
 comment|/*      * End window mode, which also resets the terminal state to the      * original (pre-curses) modes.      */
-name|NCURSES_SP_NAME
-function_decl|(
 name|endwin
-function_decl|)
-parameter_list|(
-name|NCURSES_SP_ARG
-parameter_list|)
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|/* Unblock SIGTSTP. */
 operator|(
 name|void
@@ -540,32 +509,17 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|NCURSES_SP_NAME
-function_decl|(
 name|flushinp
-function_decl|)
-parameter_list|(
-name|NCURSES_SP_ARG
-parameter_list|)
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|/*      * If the user modified the tty state while suspended, he wants      * those changes to stick.  So save the new "default" terminal state.      */
-name|NCURSES_SP_NAME
-function_decl|(
 name|def_shell_mode
-function_decl|)
-parameter_list|(
-name|NCURSES_SP_ARG
-parameter_list|)
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|/*      * This relies on the fact that doupdate() will restore the      * program-mode tty state, and issue enter_ca_mode if need be.      */
-name|NCURSES_SP_NAME
-function_decl|(
 name|doupdate
-function_decl|)
-parameter_list|(
-name|NCURSES_SP_ARG
-parameter_list|)
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|/* Reset the signals. */
 operator|(
 name|void
@@ -601,12 +555,6 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|SCREEN
-modifier|*
-name|sp
-init|=
-name|CURRENT_SCREEN
-decl_stmt|;
 comment|/*      * Actually, doing any sort of I/O from within an signal handler is      * "unsafe".  But we'll _try_ to clean up the screen and terminal      * settings on the way out.      */
 if|if
 condition|(
@@ -620,15 +568,10 @@ operator|(
 name|sig
 operator|==
 name|SIGINT
-ifdef|#
-directive|ifdef
-name|SIGQUIT
 operator|||
 name|sig
 operator|==
 name|SIGQUIT
-endif|#
-directive|endif
 operator|)
 condition|)
 block|{
@@ -731,10 +674,7 @@ name|scan
 operator|->
 name|_outch
 operator|=
-name|NCURSES_SP_NAME
-argument_list|(
 name|_nc_outch
-argument_list|)
 expr_stmt|;
 block|}
 name|set_term
@@ -742,19 +682,14 @@ argument_list|(
 name|scan
 argument_list|)
 expr_stmt|;
-name|NCURSES_SP_NAME
-function_decl|(
 name|endwin
-function_decl|)
-parameter_list|(
-name|NCURSES_SP_ARG
-parameter_list|)
-function_decl|;
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|sp
+name|SP
 condition|)
-name|sp
+name|SP
 operator|->
 name|_endwin
 operator|=
@@ -794,47 +729,6 @@ name|have_sigwinch
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|USE_PTHREADS_EINTR
-if|if
-condition|(
-name|_nc_globals
-operator|.
-name|read_thread
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|pthread_equal
-argument_list|(
-name|pthread_self
-argument_list|()
-argument_list|,
-name|_nc_globals
-operator|.
-name|read_thread
-argument_list|)
-condition|)
-name|pthread_kill
-argument_list|(
-name|_nc_globals
-operator|.
-name|read_thread
-argument_list|,
-name|SIGWINCH
-argument_list|)
-expr_stmt|;
-name|_nc_globals
-operator|.
-name|read_thread
-operator|=
-literal|0
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 end_function
 
