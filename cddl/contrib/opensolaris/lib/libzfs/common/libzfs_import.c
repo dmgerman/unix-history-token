@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -7210,7 +7210,10 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|zpool_get_prop_int
 argument_list|(
 name|zhp
@@ -7224,6 +7227,13 @@ name|stateval
 operator|=
 name|POOL_STATE_ACTIVE
 expr_stmt|;
+comment|/* 			 * All we needed the zpool handle for is the 			 * readonly prop check. 			 */
+name|zpool_close
+argument_list|(
+name|zhp
+argument_list|)
+expr_stmt|;
+block|}
 name|ret
 operator|=
 name|B_TRUE

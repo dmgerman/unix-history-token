@@ -449,7 +449,9 @@ name|dtrace_optval_t
 name|dtrace_dof_maxsize
 init|=
 operator|(
-literal|256
+literal|8
+operator|*
+literal|1024
 operator|*
 literal|1024
 operator|)
