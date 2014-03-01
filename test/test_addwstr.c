@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2009,2010 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2009-2010,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * $Id: test_addwstr.c,v 1.6 2010/12/12 00:18:00 tom Exp $  *  * Demonstrate the waddwstr() and wadd_wch functions.  * Thomas Dickey - 2009/9/12  *  * Note: to provide inputs for *add_wch(), we use setcchar().  A quirk of the  * X/Open definition for that function is that the string contains no  * characters with negative width.  Any control character (such as tab) falls  * into that category.  So it follows that *add_wch() cannot render a tab  * character because there is no legal way to construct a cchar_t containing  * one.  X/Open does not document this, and it would be logical to assume that  * *addwstr() has the same limitation, but it uses a wchar_t string directly,  * and does not document how tabs are handled.  */
+comment|/*  * $Id: test_addwstr.c,v 1.11 2012/12/16 00:11:18 tom Exp $  *  * Demonstrate the waddwstr() and wadd_wch functions.  * Thomas Dickey - 2009/9/12  *  * Note: to provide inputs for *add_wch(), we use setcchar().  A quirk of the  * X/Open definition for that function is that the string contains no  * characters with negative width.  Any control character (such as tab) falls  * into that category.  So it follows that *add_wch() cannot render a tab  * character because there is no legal way to construct a cchar_t containing  * one.  X/Open does not document this, and it would be logical to assume that  * *addwstr() has the same limitation, but it uses a wchar_t string directly,  * and does not document how tabs are handled.  */
 end_comment
 
 begin_include
@@ -833,16 +833,25 @@ decl_stmt|;
 name|Options
 name|option
 init|=
-operator|(
-operator|(
+call|(
+name|Options
+call|)
+argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 name|m_opt
 condition|?
 name|oMove
 else|:
 name|oDefault
-operator|)
+argument_list|)
 operator||
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|w_opt
 operator|||
@@ -856,8 +865,8 @@ condition|?
 name|oWindow
 else|:
 name|oDefault
-operator|)
-operator|)
+argument_list|)
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -912,6 +921,26 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Show the characters inserted in color, to distinguish from those that 	 * are shifted. 	 */
+if|if
+condition|(
+name|has_colors
+argument_list|()
+condition|)
+block|{
+name|start_color
+argument_list|()
+expr_stmt|;
+name|init_pair
+argument_list|(
+literal|1
+argument_list|,
+name|COLOR_WHITE
+argument_list|,
+name|COLOR_BLUE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|limit
 operator|=
@@ -1169,35 +1198,27 @@ expr_stmt|;
 name|doupdate
 argument_list|()
 expr_stmt|;
-comment|/*      * Show the characters inserted in color, to distinguish from those that      * are shifted.      */
 if|if
 condition|(
 name|has_colors
 argument_list|()
 condition|)
 block|{
-name|start_color
-argument_list|()
-expr_stmt|;
-name|init_pair
-argument_list|(
-literal|1
-argument_list|,
-name|COLOR_WHITE
-argument_list|,
-name|COLOR_BLUE
-argument_list|)
-expr_stmt|;
 name|wbkgdset
 argument_list|(
 name|work
 argument_list|,
+call|(
+name|chtype
+call|)
+argument_list|(
 name|COLOR_PAIR
 argument_list|(
 literal|1
 argument_list|)
 operator||
 literal|' '
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1247,6 +1268,10 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|look
+condition|)
 name|touchwin
 argument_list|(
 name|look
@@ -1262,6 +1287,10 @@ argument_list|(
 name|show
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|look
+condition|)
 name|wnoutrefresh
 argument_list|(
 name|look
@@ -2038,6 +2067,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|delwin
+argument_list|(
+name|show
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|level
@@ -2045,11 +2079,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|delwin
-argument_list|(
-name|show
-argument_list|)
-expr_stmt|;
 name|delwin
 argument_list|(
 name|work

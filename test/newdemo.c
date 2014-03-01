@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  newdemo.c	-	A demo program using PDCurses. The program illustrate  *  	 		the use of colours for text output.  *  * $Id: newdemo.c,v 1.35 2010/12/12 00:19:15 tom Exp $  */
+comment|/*  *  newdemo.c	-	A demo program using PDCurses. The program illustrate  *  	 		the use of colours for text output.  *  * $Id: newdemo.c,v 1.40 2013/04/27 19:46:53 tom Exp $  */
 end_comment
 
 begin_include
@@ -100,7 +100,7 @@ end_comment
 
 begin_function
 specifier|static
-name|RETSIGTYPE
+name|void
 name|trap
 parameter_list|(
 name|int
@@ -283,7 +283,7 @@ argument_list|(
 name|win
 argument_list|,
 operator|(
-name|attr_t
+name|int
 operator|)
 name|COLOR_PAIR
 argument_list|(
@@ -345,6 +345,9 @@ name|wattrset
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|int
+operator|)
 name|attrs
 argument_list|)
 expr_stmt|;
@@ -446,9 +449,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 return|return
 literal|1
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -474,9 +479,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|delwin
+argument_list|(
+name|swin1
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -502,9 +514,21 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|delwin
+argument_list|(
+name|swin1
+argument_list|)
+expr_stmt|;
+name|delwin
+argument_list|(
+name|swin2
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 name|set_colors
 argument_list|(
 name|swin1
@@ -1062,7 +1086,12 @@ decl_stmt|;
 name|char
 name|buffer
 index|[
-literal|200
+name|SIZEOF
+argument_list|(
+name|messages
+argument_list|)
+operator|*
+literal|80
 index|]
 decl_stmt|;
 specifier|const

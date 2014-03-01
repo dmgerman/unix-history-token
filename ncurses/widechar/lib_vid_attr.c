@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2002-2013,2014 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_vid_attr.c,v 1.14 2010/12/19 01:44:24 tom Exp $"
+literal|"$Id: lib_vid_attr.c,v 1.22 2014/02/01 22:09:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -45,7 +45,8 @@ name|doPut
 parameter_list|(
 name|mode
 parameter_list|)
-value|TPUTS_TRACE(#mode); NCURSES_SP_NAME(tputs)(NCURSES_SP_ARGx mode, 1, outc)
+define|\
+value|TPUTS_TRACE(#mode); \ 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx mode, 1, outc)
 end_define
 
 begin_define
@@ -120,7 +121,7 @@ name|NCURSES_SP_DCLx
 name|attr_t
 name|newmode
 parameter_list|,
-name|short
+name|NCURSES_PAIRS_T
 name|pair
 parameter_list|,
 name|void
@@ -314,6 +315,9 @@ comment|/* 	 * If we had chosen the A_xxx definitions to correspond to the 	 * n
 name|unsigned
 name|value
 init|=
+operator|(
+name|unsigned
+operator|)
 name|no_color_video
 decl_stmt|;
 name|attr_t
@@ -534,6 +538,29 @@ name|exit_standout_mode
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|USE_ITALIC
+if|if
+condition|(
+operator|!
+name|SP_PARM
+operator|||
+name|SP_PARM
+operator|->
+name|_use_ritm
+condition|)
+block|{
+name|TurnOff
+argument_list|(
+name|A_ITALIC
+argument_list|,
+name|exit_italics_mode
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 name|previous_attr
 operator|&=
@@ -675,6 +702,53 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|USE_ITALIC
+if|if
+condition|(
+operator|!
+name|SP_PARM
+operator|||
+name|SP_PARM
+operator|->
+name|_use_ritm
+condition|)
+block|{
+if|if
+condition|(
+name|turn_on
+operator|&
+name|A_ITALIC
+condition|)
+block|{
+name|TurnOn
+argument_list|(
+name|A_ITALIC
+argument_list|,
+name|enter_italics_mode
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|turn_off
+operator|&
+name|A_ITALIC
+condition|)
+block|{
+name|TurnOff
+argument_list|(
+name|A_ITALIC
+argument_list|,
+name|exit_italics_mode
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 name|SetColorsIf
 argument_list|(
 operator|(
@@ -750,6 +824,29 @@ name|exit_standout_mode
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|USE_ITALIC
+if|if
+condition|(
+operator|!
+name|SP_PARM
+operator|||
+name|SP_PARM
+operator|->
+name|_use_ritm
+condition|)
+block|{
+name|TurnOff
+argument_list|(
+name|A_ITALIC
+argument_list|,
+name|exit_italics_mode
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|turn_off
@@ -874,6 +971,18 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|USE_ITALIC
+name|TurnOn
+argument_list|(
+name|A_ITALIC
+argument_list|,
+name|enter_italics_mode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
 name|USE_WIDEC_SUPPORT
 name|TurnOn
 argument_list|(
@@ -986,6 +1095,9 @@ argument_list|(
 name|newmode
 argument_list|)
 operator|,
+operator|(
+name|int
+operator|)
 name|pair
 operator|)
 argument_list|)
@@ -1034,7 +1146,7 @@ name|vid_puts
 argument_list|(
 argument|attr_t newmode
 argument_list|,
-argument|short pair
+argument|NCURSES_PAIRS_T pair
 argument_list|,
 argument|void *opts GCC_UNUSED
 argument_list|,
@@ -1094,7 +1206,7 @@ name|NCURSES_SP_DCLx
 name|attr_t
 name|newmode
 parameter_list|,
-name|short
+name|NCURSES_PAIRS_T
 name|pair
 parameter_list|,
 name|void
@@ -1115,6 +1227,9 @@ argument_list|(
 name|newmode
 argument_list|)
 operator|,
+operator|(
+name|int
+operator|)
 name|pair
 operator|)
 argument_list|)
@@ -1135,7 +1250,7 @@ name|opts
 operator|,
 name|NCURSES_SP_NAME
 argument_list|(
-name|_nc_outch
+name|_nc_putchar
 argument_list|)
 operator|)
 argument_list|)
@@ -1161,7 +1276,7 @@ name|vid_attr
 argument_list|(
 argument|attr_t newmode
 argument_list|,
-argument|short pair
+argument|NCURSES_PAIRS_T pair
 argument_list|,
 argument|void *opts
 argument_list|)
@@ -1211,6 +1326,8 @@ parameter_list|)
 block|{
 name|attr_t
 name|attrs
+init|=
+literal|0
 decl_stmt|;
 name|T
 argument_list|(
@@ -1222,10 +1339,13 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SP_PARM
+condition|)
+block|{
 name|attrs
 operator|=
-name|SP_PARM
-condition|?
 name|NCURSES_SP_NAME
 argument_list|(
 name|termattrs
@@ -1233,8 +1353,6 @@ argument_list|)
 argument_list|(
 name|NCURSES_SP_ARG
 argument_list|)
-else|:
-literal|0
 expr_stmt|;
 comment|/* these are only supported for wide-character mode */
 if|if
@@ -1285,6 +1403,7 @@ name|attrs
 operator||=
 name|WA_VERTICAL
 expr_stmt|;
+block|}
 name|returnAttr
 argument_list|(
 name|attrs

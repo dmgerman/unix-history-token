@@ -4,7 +4,7 @@ comment|// * This makes emacs happy -*-Mode: C++;-*-
 end_comment
 
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2011 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|// $Id: cursesapp.h,v 1.11 2005/05/28 21:57:44 tom Exp $
+comment|// $Id: cursesapp.h,v 1.12 2011/09/17 22:12:10 tom Exp $
 end_comment
 
 begin_ifndef
@@ -154,7 +154,13 @@ operator|&
 name|S
 argument_list|)
 decl|const
-block|{   }
+block|{
+operator|(
+name|void
+operator|)
+name|S
+expr_stmt|;
+block|}
 comment|// Your derived class must implement this method. The return value must
 comment|// be the exit value of your application.
 name|virtual
@@ -261,7 +267,18 @@ modifier|*
 name|argv
 index|[]
 parameter_list|)
-block|{   }
+block|{
+operator|(
+name|void
+operator|)
+name|argc
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|argv
+expr_stmt|;
+block|}
 comment|// Does this application use colors?
 specifier|inline
 name|bool
@@ -306,10 +323,16 @@ block|{
 return|return
 name|b_Colors
 operator|?
+name|static_cast
+operator|<
+name|chtype
+operator|>
+operator|(
 name|COLOR_PAIR
 argument_list|(
 literal|1
 argument_list|)
+operator|)
 operator|:
 name|A_BOLD
 return|;
@@ -324,10 +347,16 @@ block|{
 return|return
 name|b_Colors
 operator|?
+name|static_cast
+operator|<
+name|chtype
+operator|>
+operator|(
 name|COLOR_PAIR
 argument_list|(
 literal|2
 argument_list|)
+operator|)
 operator|:
 name|A_NORMAL
 return|;
@@ -342,6 +371,10 @@ block|{
 return|return
 name|b_Colors
 operator|?
+name|static_cast
+operator|<
+name|chtype
+operator|>
 operator|(
 name|COLOR_PAIR
 argument_list|(
@@ -364,10 +397,16 @@ block|{
 return|return
 name|b_Colors
 operator|?
+name|static_cast
+operator|<
+name|chtype
+operator|>
+operator|(
 name|COLOR_PAIR
 argument_list|(
 literal|4
 argument_list|)
+operator|)
 operator|:
 name|A_NORMAL
 return|;
@@ -382,10 +421,16 @@ block|{
 return|return
 name|b_Colors
 operator|?
+name|static_cast
+operator|<
+name|chtype
+operator|>
+operator|(
 name|COLOR_PAIR
 argument_list|(
 literal|4
 argument_list|)
+operator|)
 operator|:
 name|A_NORMAL
 return|;
@@ -400,10 +445,16 @@ block|{
 return|return
 name|b_Colors
 operator|?
+name|static_cast
+operator|<
+name|chtype
+operator|>
+operator|(
 name|COLOR_PAIR
 argument_list|(
 literal|5
 argument_list|)
+operator|)
 operator|:
 name|A_NORMAL
 return|;
@@ -418,10 +469,16 @@ block|{
 return|return
 name|b_Colors
 operator|?
+name|static_cast
+operator|<
+name|chtype
+operator|>
+operator|(
 name|COLOR_PAIR
 argument_list|(
 literal|6
 argument_list|)
+operator|)
 operator|:
 name|A_BOLD
 return|;

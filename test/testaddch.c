@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * This is an example written by Alexander V. Lukyanov<lav@yars.free.net>,  * to demonstrate an inconsistency between ncurses and SVr4 curses.  *  * $Id: testaddch.c,v 1.7 2009/08/29 19:02:25 tom Exp $  */
+comment|/*  * This is an example written by Alexander V. Lukyanov<lav@yars.free.net>,  * to demonstrate an inconsistency between ncurses and SVr4 curses.  *  * $Id: testaddch.c,v 1.9 2013/01/13 01:02:41 tom Exp $  */
 end_comment
 
 begin_include
@@ -195,6 +195,10 @@ literal|0
 expr_stmt|;
 name|attr
 operator|=
+call|(
+name|chtype
+call|)
+argument_list|(
 operator|(
 name|i
 operator|&
@@ -207,6 +211,7 @@ literal|4
 argument_list|)
 else|:
 literal|0
+argument_list|)
 expr_stmt|;
 name|bkgdset
 argument_list|(
@@ -256,6 +261,7 @@ operator|&
 literal|1
 operator|)
 condition|?
+operator|(
 name|A_BOLD
 operator||
 literal|'B'
@@ -264,6 +270,7 @@ name|COLOR_PAIR
 argument_list|(
 literal|1
 argument_list|)
+operator|)
 else|:
 literal|' '
 expr_stmt|;
@@ -275,17 +282,23 @@ operator|&
 literal|2
 operator|)
 condition|?
+operator|(
 name|A_REVERSE
 operator||
 name|COLOR_PAIR
 argument_list|(
 literal|2
 argument_list|)
+operator|)
 else|:
 literal|0
 expr_stmt|;
 name|attr
 operator|=
+call|(
+name|chtype
+call|)
+argument_list|(
 operator|(
 name|i
 operator|&
@@ -298,6 +311,7 @@ literal|4
 argument_list|)
 else|:
 literal|0
+argument_list|)
 expr_stmt|;
 name|bkgdset
 argument_list|(

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Author: Thomas E. Dickey (1998-on)  *  * $Id: ditto.c,v 1.40 2010/11/14 01:06:47 tom Exp $  *  * The program illustrates how to set up multiple screens from a single  * program.  *  * If openpty() is supported, the command line parameters are titles for  * the windows showing each screen's data.  *  * If openpty() is not supported, you must invoke the program by specifying  * another terminal on the same machine by specifying its device, e.g.,  *	ditto /dev/ttyp1  */
+comment|/*  * Author: Thomas E. Dickey (1998-on)  *  * $Id: ditto.c,v 1.42 2012/11/24 20:16:18 tom Exp $  *  * The program illustrates how to set up multiple screens from a single  * program.  *  * If openpty() is supported, the command line parameters are titles for  * the windows showing each screen's data.  *  * If openpty() is not supported, you must invoke the program by specifying  * another terminal on the same machine by specifying its device, e.g.,  *	ditto /dev/ttyp1  */
 end_comment
 
 begin_include
@@ -156,6 +156,12 @@ comment|/* per-window titles */
 name|WINDOW
 modifier|*
 modifier|*
+name|parents
+decl_stmt|;
+comment|/* display boxes around each screen's data */
+name|WINDOW
+modifier|*
+modifier|*
 name|windows
 decl_stmt|;
 comment|/* display data from each screen */
@@ -206,6 +212,30 @@ block|}
 name|DDATA
 typedef|;
 end_typedef
+
+begin_decl_stmt
+specifier|static
+name|void
+name|failed
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|GCC_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+argument_list|(
+name|void
+argument_list|)
+name|GCC_NORETURN
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -697,6 +727,23 @@ argument_list|)
 expr_stmt|;
 name|target
 operator|->
+name|parents
+operator|=
+name|typeCalloc
+argument_list|(
+name|WINDOW
+operator|*
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|target
+operator|->
+name|length
+argument_list|)
+expr_stmt|;
+name|target
+operator|->
 name|windows
 operator|=
 name|typeCalloc
@@ -862,6 +909,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|target
+operator|->
+name|parents
+index|[
+name|k
+index|]
+operator|=
+name|outer
+expr_stmt|;
 name|target
 operator|->
 name|windows

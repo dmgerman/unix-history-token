@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2008-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2008-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tabs.c,v 1.19 2010/10/23 22:26:01 tom Exp $"
+literal|"$Id: tabs.c,v 1.34 2013/06/11 08:18:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -43,10 +43,42 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|prg_name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|max_cols
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|failed
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|perror
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|ExitProgram
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -222,10 +254,14 @@ decl_stmt|;
 if|if
 condition|(
 name|result
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
+name|failed
+argument_list|(
+literal|"decode_tabs"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -303,7 +339,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tab-stops are not in increasing order: %d %d\n"
+literal|"%s: tab-stops are not in increasing order: %d %d\n"
+argument_list|,
+name|prg_name
 argument_list|,
 name|value
 argument_list|,
@@ -361,7 +399,6 @@ index|]
 expr_stmt|;
 block|}
 block|}
-block|}
 if|if
 condition|(
 name|result
@@ -390,6 +427,10 @@ name|step
 init|=
 name|value
 decl_stmt|;
+name|value
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 name|n
@@ -492,10 +533,17 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|buffer
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|)
 literal|"----+----%c"
 argument_list|,
 operator|(
@@ -921,7 +969,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|unsigned
+name|size_t
 name|len
 init|=
 name|strlen
@@ -1019,7 +1067,7 @@ name|comma
 init|=
 literal|","
 decl_stmt|;
-name|unsigned
+name|size_t
 name|need
 init|=
 literal|1
@@ -1086,10 +1134,14 @@ expr_stmt|;
 if|if
 condition|(
 name|result
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
+name|failed
+argument_list|(
+literal|"add_to_tab_list"
+argument_list|)
+expr_stmt|;
 operator|*
 name|result
 operator|=
@@ -1103,12 +1155,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|result
 argument_list|,
 operator|*
 name|append
+argument_list|,
+name|need
 argument_list|)
 expr_stmt|;
 name|free
@@ -1118,21 +1172,24 @@ name|append
 argument_list|)
 expr_stmt|;
 block|}
-name|strcat
+name|_nc_STRCAT
 argument_list|(
 name|result
 argument_list|,
 name|comma
+argument_list|,
+name|need
 argument_list|)
 expr_stmt|;
-name|strcat
+name|_nc_STRCAT
 argument_list|(
 name|result
 argument_list|,
 name|copied
+argument_list|,
+name|need
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|append
 operator|=
@@ -1154,11 +1211,6 @@ specifier|static
 name|bool
 name|legal_tab_list
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|program
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1247,7 +1299,7 @@ name|stderr
 argument_list|,
 literal|"%s: unexpected character found '%c'\n"
 argument_list|,
-name|program
+name|prg_name
 argument_list|,
 name|ch
 argument_list|)
@@ -1268,7 +1320,7 @@ name|stderr
 argument_list|,
 literal|"%s: trailing comma found '%s'\n"
 argument_list|,
-name|program
+name|prg_name
 argument_list|,
 name|tab_list
 argument_list|)
@@ -1287,7 +1339,7 @@ name|stderr
 argument_list|,
 literal|"%s: no tab-list given\n"
 argument_list|,
-name|program
+name|prg_name
 argument_list|)
 expr_stmt|;
 name|result
@@ -1297,6 +1349,68 @@ expr_stmt|;
 block|}
 return|return
 name|result
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|skip_list
+parameter_list|(
+name|char
+modifier|*
+name|value
+parameter_list|)
+block|{
+while|while
+condition|(
+operator|*
+name|value
+operator|!=
+literal|'\0'
+operator|&&
+operator|(
+name|isdigit
+argument_list|(
+name|UChar
+argument_list|(
+operator|*
+name|value
+argument_list|)
+argument_list|)
+operator|||
+name|isspace
+argument_list|(
+name|UChar
+argument_list|(
+operator|*
+name|value
+argument_list|)
+argument_list|)
+operator|||
+name|strchr
+argument_list|(
+literal|"+,"
+argument_list|,
+name|UChar
+argument_list|(
+operator|*
+name|value
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+operator|++
+name|value
+expr_stmt|;
+block|}
+return|return
+name|value
 return|;
 block|}
 end_function
@@ -1350,6 +1464,8 @@ block|,
 literal|"  -u       UNIVAC 1100 Assembler"
 block|,
 literal|"  -T name  use terminal type 'name'"
+block|,
+literal|"  -V       print version"
 block|,
 literal|""
 block|,
@@ -1444,14 +1560,6 @@ name|term_name
 init|=
 literal|0
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|mar_list
-init|=
-literal|0
-decl_stmt|;
-comment|/* ignored */
 name|char
 modifier|*
 name|append
@@ -1465,6 +1573,16 @@ name|tab_list
 init|=
 literal|0
 decl_stmt|;
+name|prg_name
+operator|=
+name|_nc_rootname
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1541,15 +1659,20 @@ case|:
 switch|switch
 condition|(
 operator|*
+operator|++
 name|option
 condition|)
 block|{
+default|default:
 case|case
 literal|'\0'
 case|:
 name|tab_list
 operator|=
 literal|"1,10,16,36,72"
+expr_stmt|;
+name|option
+operator|--
 expr_stmt|;
 comment|/* Assembler, IBM S/370, first format */
 break|break;
@@ -1562,10 +1685,6 @@ literal|"1,10,16,40,72"
 expr_stmt|;
 comment|/* Assembler, IBM S/370, second format */
 break|break;
-default|default:
-name|usage
-argument_list|()
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -1574,15 +1693,20 @@ case|:
 switch|switch
 condition|(
 operator|*
+operator|++
 name|option
 condition|)
 block|{
+default|default:
 case|case
 literal|'\0'
 case|:
 name|tab_list
 operator|=
 literal|"1,8,12,16,20,55"
+expr_stmt|;
+name|option
+operator|--
 expr_stmt|;
 comment|/* COBOL, normal format */
 break|break;
@@ -1604,10 +1728,6 @@ literal|"1,6,10,14,18,22,26,30,34,38,42,46,50,54,58,62,67"
 expr_stmt|;
 comment|/* COBOL compact format extended */
 break|break;
-default|default:
-name|usage
-argument_list|()
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -1694,6 +1814,9 @@ name|n
 operator|++
 index|]
 expr_stmt|;
+name|option
+operator|--
+expr_stmt|;
 block|}
 name|option
 operator|+=
@@ -1710,6 +1833,20 @@ operator|-
 literal|1
 expr_stmt|;
 continue|continue;
+case|case
+literal|'V'
+case|:
+name|puts
+argument_list|(
+name|curses_version
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|ExitProgram
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
 default|default:
 if|if
 condition|(
@@ -1723,12 +1860,35 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|char
+modifier|*
+name|copy
+init|=
+name|strdup
+argument_list|(
+name|option
+argument_list|)
+decl_stmt|;
+operator|*
+name|skip_list
+argument_list|(
+name|copy
+argument_list|)
+operator|=
+literal|'\0'
+expr_stmt|;
 name|tab_list
 operator|=
-name|option
+name|copy
 expr_stmt|;
-operator|++
-name|n
+name|option
+operator|=
+name|skip_list
+argument_list|(
+name|option
+argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -1737,20 +1897,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|option
-operator|+=
-operator|(
-operator|(
-name|int
-operator|)
-name|strlen
-argument_list|(
-name|option
-argument_list|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 break|break;
 block|}
 block|}
@@ -1779,10 +1925,7 @@ block|{
 case|case
 literal|'m'
 case|:
-name|mar_list
-operator|=
-name|option
-expr_stmt|;
+comment|/* 		     * The "+mXXX" option is unimplemented because only the long-obsolete 		     * att510d implements smgl, which is needed to support 		     * this option. 		     */
 break|break;
 default|default:
 comment|/* special case of relative stops separated by spaces? */
@@ -1901,10 +2044,7 @@ name|stderr
 argument_list|,
 literal|"%s: terminal type '%s' cannot reset tabs\n"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|prg_name
 argument_list|,
 name|term_name
 argument_list|)
@@ -1926,10 +2066,7 @@ name|stderr
 argument_list|,
 literal|"%s: terminal type '%s' cannot set tabs\n"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|prg_name
 argument_list|,
 name|term_name
 argument_list|)
@@ -1940,11 +2077,6 @@ if|if
 condition|(
 name|legal_tab_list
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
 name|tab_list
 argument_list|)
 condition|)

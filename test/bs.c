@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*   * bs.c - original author: Bruce Holloway  *		salvo option by: Chuck A DeGaul  * with improved user interface, autoconfiguration and code cleanup  *		by Eric S. Raymond<esr@snark.thyrsus.com>  * v1.2 with color support and minor portability fixes, November 1990  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.  * v2.1 with ncurses mouse support, September 1995  *  * $Id: bs.c,v 1.52 2010/11/13 20:07:52 tom Exp $  */
+comment|/*   * bs.c - original author: Bruce Holloway  *		salvo option by: Chuck A DeGaul  * with improved user interface, autoconfiguration and code cleanup  *		by Eric S. Raymond<esr@snark.thyrsus.com>  * v1.2 with color support and minor portability fixes, November 1990  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.  * v2.1 with ncurses mouse support, September 1995  *  * $Id: bs.c,v 1.62 2013/11/16 19:57:56 tom Exp $  */
 end_comment
 
 begin_include
@@ -451,10 +451,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|name
-index|[
-literal|40
-index|]
+modifier|*
+name|your_name
 decl_stmt|;
 end_decl_stmt
 
@@ -890,7 +888,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|RETSIGTYPE
+name|void
 name|uninitgame
 argument_list|(
 name|int
@@ -902,7 +900,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|RETSIGTYPE
+name|void
 name|uninitgame
 parameter_list|(
 name|int
@@ -1096,19 +1094,20 @@ argument_list|()
 operator|)
 operator|!=
 literal|0
-condition|)
-block|{
+operator|&&
 operator|(
-name|void
-operator|)
-name|strcpy
+name|your_name
+operator|=
+name|strdup
 argument_list|(
-name|name
-argument_list|,
 name|tmpname
 argument_list|)
-expr_stmt|;
-name|name
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|your_name
 index|[
 literal|0
 index|]
@@ -1120,7 +1119,7 @@ name|toupper
 argument_list|(
 name|UChar
 argument_list|(
-name|name
+name|your_name
 index|[
 literal|0
 index|]
@@ -1129,16 +1128,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|name
-argument_list|,
+block|{
+name|your_name
+operator|=
 name|dftname
-argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1962,6 +1957,9 @@ argument_list|()
 condition|)
 name|attron
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|COLOR_BLUE
@@ -2121,6 +2119,9 @@ argument_list|()
 condition|)
 name|attron
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|COLOR_BLUE
@@ -2370,14 +2371,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-name|ss
-operator|=
-operator|(
-name|ship_t
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
 do|do
 block|{
 name|char
@@ -2395,6 +2388,14 @@ name|cp
 init|=
 name|docked
 decl_stmt|;
+name|ss
+operator|=
+operator|(
+name|ship_t
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
 comment|/* figure which ships still wait to be placed */
 operator|*
 name|cp
@@ -2469,7 +2470,9 @@ block|}
 do|while
 condition|(
 operator|!
+call|(
 name|strchr
+call|)
 argument_list|(
 name|docked
 argument_list|,
@@ -2554,7 +2557,7 @@ operator|!
 operator|(
 name|strchr
 argument_list|(
-literal|"hjklrR"
+literal|"hjkl8462rR"
 argument_list|,
 name|c
 argument_list|)
@@ -2592,18 +2595,24 @@ block|}
 elseif|else
 if|if
 condition|(
+name|ss
+operator|==
+literal|0
+condition|)
+block|{
+name|beep
+argument_list|()
+expr_stmt|;
+comment|/* simple to verify, unlikely to happen */
+block|}
+elseif|else
+if|if
+condition|(
 name|c
 operator|==
 literal|'r'
 condition|)
 block|{
-name|assert
-argument_list|(
-name|ss
-operator|!=
-literal|0
-argument_list|)
-expr_stmt|;
 name|prompt
 argument_list|(
 literal|1
@@ -2731,13 +2740,6 @@ name|c
 argument_list|)
 condition|)
 block|{
-name|assert
-argument_list|(
-name|ss
-operator|!=
-literal|0
-argument_list|)
-expr_stmt|;
 name|ss
 operator|->
 name|x
@@ -4189,6 +4191,9 @@ argument_list|()
 condition|)
 name|attron
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|COLOR_GREEN
@@ -4356,6 +4361,9 @@ argument_list|()
 condition|)
 name|attron
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|COLOR_RED
@@ -4563,6 +4571,9 @@ name|hit
 condition|)
 name|attron
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|COLOR_RED
@@ -4572,6 +4583,9 @@ expr_stmt|;
 else|else
 name|attron
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|COLOR_GREEN
@@ -4694,6 +4708,13 @@ literal|" You'll pick up survivors from my %s, I hope...!"
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|m
+operator|!=
+literal|0
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -4706,6 +4727,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -5155,6 +5177,9 @@ name|NULL
 decl_stmt|;
 name|hit
 operator|=
+operator|(
+name|bool
+operator|)
 name|board
 index|[
 name|PLAYER
@@ -5165,10 +5190,6 @@ index|]
 index|[
 name|y
 index|]
-condition|?
-name|MARK_HIT
-else|:
-name|MARK_MISS
 expr_stmt|;
 name|hits
 index|[
@@ -5182,9 +5203,12 @@ name|y
 index|]
 operator|=
 operator|(
-name|char
-operator|)
 name|hit
+condition|?
+name|MARK_HIT
+else|:
+name|MARK_MISS
+operator|)
 expr_stmt|;
 name|MvPrintw
 argument_list|(
@@ -5270,6 +5294,9 @@ name|hit
 condition|)
 name|attron
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|COLOR_RED
@@ -5279,6 +5306,9 @@ expr_stmt|;
 else|else
 name|attron
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|COLOR_GREEN
@@ -6227,7 +6257,7 @@ name|int
 operator|)
 name|strlen
 argument_list|(
-name|name
+name|your_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -6262,7 +6292,7 @@ literal|2
 argument_list|,
 literal|"%s: %d     Computer: %d"
 argument_list|,
-name|name
+name|your_name
 argument_list|,
 name|plywon
 argument_list|,
@@ -6282,7 +6312,7 @@ literal|"Want to be humiliated again, %s [yn]? "
 else|:
 literal|"Going to give me a chance for revenge, %s [yn]? "
 argument_list|,
-name|name
+name|your_name
 argument_list|)
 expr_stmt|;
 return|return

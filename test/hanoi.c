@@ -1,16 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  *	Name: Towers of Hanoi.  *  *	Desc:  *		This is a playable copy of towers of hanoi.  *		Its sole purpose is to demonstrate my Amiga Curses package.  *		This program should compile on any system that has Curses.  *		'hanoi'		will give a manual game with 7 playing pieces.  *		'hanoi n'	will give a manual game with n playing pieces.  *		'hanoi n a' will give an auto solved game with n playing pieces.  *  *	Author: Simon J Raybould	(sie@fulcrum.bt.co.uk).  * 	(This version has been slightly modified by the ncurses maintainers.)  *  *	Date: 05.Nov.90  *  * $Id: hanoi.c,v 1.31 2010/11/14 01:01:07 tom Exp $  */
+comment|/*  *	Name: Towers of Hanoi.  *  *	Desc:  *		This is a playable copy of towers of hanoi.  *		Its sole purpose is to demonstrate my Amiga Curses package.  *		This program should compile on any system that has Curses.  *		'hanoi'		will give a manual game with 7 playing pieces.  *		'hanoi n'	will give a manual game with n playing pieces.  *		'hanoi n a' will give an auto solved game with n playing pieces.  *  *	Author: Simon J Raybould	(sie@fulcrum.bt.co.uk).  * 	(This version has been slightly modified by the ncurses maintainers.)  *  *	Date: 05.Nov.90  *  * $Id: hanoi.c,v 1.35 2013/09/28 22:02:17 tom Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<test.priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
 end_include
 
 begin_define
@@ -94,7 +100,7 @@ name|LENTOIND
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)-1)/2)
+value|(((int)(x)-1)/2)
 end_define
 
 begin_define
@@ -194,6 +200,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|NTiles
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|NMoves
 init|=
 literal|0
@@ -214,8 +229,7 @@ specifier|static
 name|void
 name|InitTiles
 parameter_list|(
-name|int
-name|NTiles
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -326,8 +340,6 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|NTiles
-decl_stmt|,
 name|FromCol
 decl_stmt|,
 name|ToCol
@@ -472,16 +484,6 @@ name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|TRACE
-name|trace
-argument_list|(
-name|TRACE_MAXIMUM
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|initscr
 argument_list|()
 expr_stmt|;
@@ -598,9 +600,7 @@ expr_stmt|;
 comment|/* Attempt to remove cursor */
 block|}
 name|InitTiles
-argument_list|(
-name|NTiles
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|DisplayTiles
 argument_list|()
@@ -866,8 +866,7 @@ specifier|static
 name|void
 name|InitTiles
 parameter_list|(
-name|int
-name|NTiles
+name|void
 parameter_list|)
 block|{
 name|int
@@ -991,9 +990,21 @@ literal|19
 argument_list|,
 literal|5
 argument_list|,
-literal|"Moves : %d"
+literal|"Moves : %d of %.0f"
 argument_list|,
 name|NMoves
+argument_list|,
+name|pow
+argument_list|(
+literal|2.0
+argument_list|,
+operator|(
+name|float
+operator|)
+name|NTiles
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1185,6 +1196,9 @@ name|void
 operator|)
 name|attrset
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|LENTOIND
@@ -1468,8 +1482,9 @@ argument_list|(
 literal|500
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+else|else
+block|{
 name|AutoMove
 argument_list|(
 name|From
@@ -1514,6 +1529,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

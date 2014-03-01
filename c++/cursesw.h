@@ -8,7 +8,7 @@ comment|// vile:cppmode
 end_comment
 
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ value|1
 end_define
 
 begin_comment
-comment|// $Id: cursesw.h,v 1.48 2008/01/19 21:09:10 tom Exp $
+comment|// $Id: cursesw.h,v 1.50 2014/02/01 22:17:37 tom Exp $
 end_comment
 
 begin_include
@@ -644,7 +644,7 @@ parameter_list|,
 name|attr_t
 name|attr
 parameter_list|,
-name|short
+name|NCURSES_PAIRS_T
 name|color
 parameter_list|,
 specifier|const
@@ -892,7 +892,7 @@ function|(
 name|color_set
 function|)
 parameter_list|(
-name|short
+name|NCURSES_PAIRS_T
 name|p
 parameter_list|,
 name|void
@@ -2531,7 +2531,7 @@ parameter_list|,
 name|attr_t
 name|attr
 parameter_list|,
-name|short
+name|NCURSES_PAIRS_T
 name|color
 parameter_list|,
 specifier|const
@@ -3433,7 +3433,7 @@ parameter_list|,
 name|attr_t
 name|attr
 parameter_list|,
-name|short
+name|NCURSES_PAIRS_T
 name|color
 parameter_list|,
 specifier|const
@@ -5832,7 +5832,7 @@ name|void
 name|set_keyboard
 parameter_list|()
 function_decl|;
-name|short
+name|NCURSES_COLOR_T
 name|getcolor
 argument_list|(
 name|int
@@ -5840,7 +5840,7 @@ name|getback
 argument_list|)
 decl|const
 decl_stmt|;
-name|short
+name|NCURSES_PAIRS_T
 name|getPair
 parameter_list|()
 function_decl|const;
@@ -5848,13 +5848,13 @@ specifier|static
 name|int
 name|setpalette
 parameter_list|(
-name|short
+name|NCURSES_COLOR_T
 name|fore
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 name|back
 parameter_list|,
-name|short
+name|NCURSES_PAIRS_T
 name|pair
 parameter_list|)
 function_decl|;
@@ -6436,7 +6436,7 @@ comment|// Largest y coord in window
 end_comment
 
 begin_expr_stmt
-name|short
+name|NCURSES_PAIRS_T
 name|getcolor
 argument_list|()
 specifier|const
@@ -6448,7 +6448,7 @@ comment|// Actual color pair
 end_comment
 
 begin_expr_stmt
-name|short
+name|NCURSES_COLOR_T
 name|foreground
 argument_list|()
 specifier|const
@@ -6467,7 +6467,7 @@ comment|// Actual foreground color
 end_comment
 
 begin_expr_stmt
-name|short
+name|NCURSES_COLOR_T
 name|background
 argument_list|()
 specifier|const
@@ -6489,10 +6489,10 @@ begin_function_decl
 name|int
 name|setpalette
 parameter_list|(
-name|short
+name|NCURSES_COLOR_T
 name|fore
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 name|back
 parameter_list|)
 function_decl|;
@@ -6506,7 +6506,7 @@ begin_function_decl
 name|int
 name|setcolor
 parameter_list|(
-name|short
+name|NCURSES_PAIRS_T
 name|pair
 parameter_list|)
 function_decl|;
@@ -8031,7 +8031,7 @@ begin_function
 name|int
 name|color_set
 parameter_list|(
-name|short
+name|NCURSES_PAIRS_T
 name|color_pair_number
 parameter_list|,
 name|void
@@ -8069,7 +8069,7 @@ parameter_list|,
 name|attr_t
 name|attr
 parameter_list|,
-name|short
+name|NCURSES_PAIRS_T
 name|color
 parameter_list|,
 specifier|const
@@ -8126,7 +8126,7 @@ parameter_list|,
 name|attr_t
 name|attr
 parameter_list|,
-name|short
+name|NCURSES_PAIRS_T
 name|color
 parameter_list|,
 specifier|const
@@ -10115,6 +10115,11 @@ argument_list|(
 argument|int pad_req
 argument_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|pad_req
+block|;
 operator|::
 name|beep
 argument_list|()
@@ -10127,6 +10132,11 @@ argument_list|(
 argument|int pad_req
 argument_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|pad_req
+block|;
 operator|::
 name|beep
 argument_list|()
@@ -10138,7 +10148,12 @@ name|OnOperation
 argument_list|(
 argument|int pad_req
 argument_list|)
-block|{   }
+block|{
+operator|(
+name|void
+operator|)
+name|pad_req
+block|;   }
 block|;
 comment|// OnOperation is called if a Pad_Operation was executed and just before
 comment|// the refresh() operation is done.
@@ -10493,6 +10508,21 @@ argument|int h_grid =
 literal|1
 argument_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|view
+block|;
+operator|(
+name|void
+operator|)
+name|v_grid
+block|;
+operator|(
+name|void
+operator|)
+name|h_grid
+block|;
 name|err_handler
 argument_list|(
 literal|"Operation not allowed"
@@ -10505,6 +10535,11 @@ argument_list|(
 argument|NCursesWindow& sub
 argument_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|sub
+block|;
 name|err_handler
 argument_list|(
 literal|"Operation not allowed"

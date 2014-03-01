@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_mvcur.c,v 1.126 2011/01/22 19:48:21 tom Exp $"
+literal|"$Id: lib_mvcur.c,v 1.133 2013/05/25 23:59:41 tom Exp $"
 argument_list|)
 end_macro
 
@@ -214,6 +214,19 @@ end_endif
 begin_comment
 comment|/* MAIN */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NCURSES_OUTC_FUNC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NCURSES_OUTC_FUNC
+value|myOutCh
+end_define
 
 begin_define
 define|#
@@ -778,12 +791,8 @@ condition|(
 name|change_scroll_region
 condition|)
 block|{
-name|NCURSES_SP_NAME
+name|NCURSES_PUTP2
 argument_list|(
-name|_nc_putp
-argument_list|)
-argument_list|(
-name|NCURSES_SP_ARGx
 literal|"change_scroll_region"
 argument_list|,
 name|TPARM_2
@@ -821,8 +830,9 @@ comment|/* what to do at initialization time and after each shellout */
 block|{
 if|if
 condition|(
+operator|!
 name|SP_PARM
-operator|&&
+operator|||
 operator|!
 name|IsTermInfo
 argument_list|(
@@ -836,12 +846,8 @@ condition|(
 name|enter_ca_mode
 condition|)
 block|{
-name|NCURSES_SP_NAME
+name|NCURSES_PUTP2
 argument_list|(
-name|_nc_putp
-argument_list|)
-argument_list|(
-name|NCURSES_SP_ARGx
 literal|"enter_ca_mode"
 argument_list|,
 name|enter_ca_mode
@@ -971,6 +977,7 @@ name|_ofp
 argument_list|)
 argument_list|)
 condition|)
+block|{
 name|SP_PARM
 operator|->
 name|_char_padding
@@ -1001,7 +1008,9 @@ literal|9600
 operator|)
 operator|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|SP_PARM
 operator|->
 name|_char_padding
@@ -1009,6 +1018,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* must be nonzero */
+block|}
 if|if
 condition|(
 name|SP_PARM
@@ -1724,12 +1734,8 @@ condition|(
 name|exit_ca_mode
 condition|)
 block|{
-name|NCURSES_SP_NAME
+name|NCURSES_PUTP2
 argument_list|(
-name|_nc_putp
-argument_list|)
-argument_list|(
-name|NCURSES_SP_ARGx
 literal|"exit_ca_mode"
 argument_list|,
 name|exit_ca_mode
@@ -1940,7 +1946,7 @@ parameter_list|,
 name|int
 name|to_x
 parameter_list|,
-name|bool
+name|int
 name|ovw
 parameter_list|)
 comment|/* move via local motions (cuu/cuu1/cud/cud1/cub1/cub/cuf1/cuf/vpa/hpa) */
@@ -2936,8 +2942,11 @@ parameter_list|,
 name|int
 name|xnew
 parameter_list|,
-name|bool
+name|int
 name|ovw
+parameter_list|,
+name|NCURSES_SP_OUTC
+name|myOutCh
 parameter_list|)
 comment|/* onscreen move from (yold, xold) to (ynew, xnew) */
 block|{
@@ -3714,10 +3723,7 @@ name|buffer
 operator|,
 literal|1
 operator|,
-name|NCURSES_SP_NAME
-argument_list|(
-name|_nc_outch
-argument_list|)
+name|myOutCh
 operator|)
 expr_stmt|;
 name|SP_PARM
@@ -3747,31 +3753,34 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|TINFO_MVCUR
-argument_list|(
-argument|NCURSES_SP_DCLx int yold
-argument_list|,
-argument|int xold
-argument_list|,
-argument|int ynew
-argument_list|,
-argument|int xnew
-argument_list|)
-end_macro
-
 begin_comment
-comment|/* optimized cursor move from (yold, xold) to (ynew, xnew) */
+comment|/*  * optimized cursor move from (yold, xold) to (ynew, xnew)  */
 end_comment
 
-begin_block
+begin_function
+specifier|static
+name|int
+name|_nc_real_mvcur
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|int
+name|yold
+parameter_list|,
+name|int
+name|xold
+parameter_list|,
+name|int
+name|ynew
+parameter_list|,
+name|int
+name|xnew
+parameter_list|,
+name|NCURSES_SP_OUTC
+name|myOutCh
+parameter_list|,
+name|int
+name|ovw
+parameter_list|)
 block|{
 name|NCURSES_CH_T
 name|oldattr
@@ -4006,12 +4015,8 @@ condition|(
 name|carriage_return
 condition|)
 block|{
-name|NCURSES_SP_NAME
+name|NCURSES_PUTP2
 argument_list|(
-name|_nc_putp
-argument_list|)
-argument_list|(
-name|NCURSES_SP_ARGx
 literal|"carriage_return"
 argument_list|,
 name|carriage_return
@@ -4019,15 +4024,14 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|NCURSES_SP_NAME
-argument_list|(
-name|_nc_outch
-argument_list|)
+block|{
+name|myOutCh
 argument_list|(
 name|NCURSES_SP_ARGx
 literal|'\r'
 argument_list|)
 expr_stmt|;
+block|}
 name|xold
 operator|=
 literal|0
@@ -4044,12 +4048,8 @@ condition|(
 name|newline
 condition|)
 block|{
-name|NCURSES_SP_NAME
+name|NCURSES_PUTP2
 argument_list|(
-name|_nc_putp
-argument_list|)
-argument_list|(
-name|NCURSES_SP_ARGx
 literal|"newline"
 argument_list|,
 name|newline
@@ -4057,15 +4057,14 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|NCURSES_SP_NAME
-argument_list|(
-name|_nc_outch
-argument_list|)
+block|{
+name|myOutCh
 argument_list|(
 name|NCURSES_SP_ARGx
 literal|'\n'
 argument_list|)
 expr_stmt|;
+block|}
 name|l
 operator|--
 expr_stmt|;
@@ -4140,7 +4139,9 @@ argument|ynew
 argument_list|,
 argument|xnew
 argument_list|,
-argument|TRUE
+argument|ovw
+argument_list|,
+argument|myOutCh
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Restore attributes if we disabled them before moving. 	 */
@@ -4210,18 +4211,222 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
+
+begin_comment
+comment|/*  * These entrypoints are used within the library.  */
+end_comment
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|int
+function|)
+name|NCURSES_SP_NAME
+argument_list|(
+argument|_nc_mvcur
+argument_list|)
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|int
+name|yold
+parameter_list|,
+name|int
+name|xold
+parameter_list|,
+name|int
+name|ynew
+parameter_list|,
+name|int
+name|xnew
+parameter_list|)
+block|{
+return|return
+name|_nc_real_mvcur
+argument_list|(
+argument|NCURSES_SP_ARGx yold
+argument_list|,
+argument|xold
+argument_list|,
+argument|ynew
+argument_list|,
+argument|xnew
+argument_list|,
+argument|NCURSES_SP_NAME(_nc_outch)
+argument_list|,
+argument|TRUE
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_if
 if|#
 directive|if
 name|NCURSES_SP_FUNCS
-operator|&&
-operator|!
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_mvcur
+argument_list|(
+argument|int yold
+argument_list|,
+argument|int xold
+argument_list|,
+argument|int ynew
+argument_list|,
+argument|int xnew
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|NCURSES_SP_NAME
+argument_list|(
+name|_nc_mvcur
+argument_list|)
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|,
+name|yold
+argument_list|,
+name|xold
+argument_list|,
+name|ynew
+argument_list|,
+name|xnew
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|USE_TERM_DRIVER
 argument_list|)
+end_if
+
+begin_comment
+comment|/*  * The terminal driver does not support the external "mvcur()".  */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|TINFO_MVCUR
+argument_list|(
+argument|NCURSES_SP_DCLx int yold
+argument_list|,
+argument|int xold
+argument_list|,
+argument|int ynew
+argument_list|,
+argument|int xnew
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|_nc_real_mvcur
+argument_list|(
+argument|NCURSES_SP_ARGx 			  yold
+argument_list|,
+argument|xold
+argument_list|,
+argument|ynew
+argument_list|,
+argument|xnew
+argument_list|,
+argument|NCURSES_SP_NAME(_nc_outch)
+argument_list|,
+argument|TRUE
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !USE_TERM_DRIVER */
+end_comment
+
+begin_comment
+comment|/*  * These entrypoints support users of the library.  */
+end_comment
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|int
+function|)
+name|NCURSES_SP_NAME
+argument_list|(
+argument|mvcur
+argument_list|)
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|int
+name|yold
+parameter_list|,
+name|int
+name|xold
+parameter_list|,
+name|int
+name|ynew
+parameter_list|,
+name|int
+name|xnew
+parameter_list|)
+block|{
+return|return
+name|_nc_real_mvcur
+argument_list|(
+argument|NCURSES_SP_ARGx 			  yold
+argument_list|,
+argument|xold
+argument_list|,
+argument|ynew
+argument_list|,
+argument|xnew
+argument_list|,
+argument|NCURSES_SP_NAME(_nc_putchar)
+argument_list|,
+argument|FALSE
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
 end_if
 
 begin_macro
@@ -4270,6 +4475,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_TERM_DRIVER */
+end_comment
 
 begin_if
 if|#

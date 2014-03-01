@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2007-2008,2009 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2007-2009,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * $Id: test_getstr.c,v 1.9 2009/08/29 19:02:25 tom Exp $  *  * Author: Thomas E Dickey  *  * Demonstrate the getstr functions from the curses library.         int getstr(char *str);        int getnstr(char *str, int n);        int wgetstr(WINDOW *win, char *str);        int wgetnstr(WINDOW *win, char *str, int n);        int mvgetstr(int y, int x, char *str);        int mvwgetstr(WINDOW *win, int y, int x, char *str);        int mvgetnstr(int y, int x, char *str, int n);        int mvwgetnstr(WINDOW *, int y, int x, char *str, int n);  */
+comment|/*  * $Id: test_getstr.c,v 1.10 2012/07/07 18:22:49 tom Exp $  *  * Author: Thomas E Dickey  *  * Demonstrate the getstr functions from the curses library.         int getstr(char *str);        int getnstr(char *str, int n);        int wgetstr(WINDOW *win, char *str);        int wgetnstr(WINDOW *win, char *str, int n);        int mvgetstr(int y, int x, char *str);        int mvwgetstr(WINDOW *win, int y, int x, char *str);        int mvgetnstr(int y, int x, char *str, int n);        int mvwgetnstr(WINDOW *, int y, int x, char *str, int n);  */
 end_comment
 
 begin_include
@@ -56,6 +56,50 @@ block|}
 name|Flavors
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * Return-code is OK/ERR or a keyname.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ok_keyname
+parameter_list|(
+name|int
+name|code
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|code
+operator|==
+name|OK
+operator|)
+condition|?
+literal|"OK"
+else|:
+operator|(
+operator|(
+name|code
+operator|==
+name|ERR
+operator|)
+condition|?
+literal|"ERR"
+else|:
+name|keyname
+argument_list|(
+name|code
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -1320,9 +1364,12 @@ name|wprintw
 argument_list|(
 name|strwin
 argument_list|,
-literal|"%d:%s"
+literal|"%s:%s"
 argument_list|,
+name|ok_keyname
+argument_list|(
 name|rc
+argument_list|)
 argument_list|,
 name|buffer
 argument_list|)

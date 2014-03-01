@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tclock.c,v 1.30 2011/03/22 09:16:00 tom Exp $ */
+comment|/* $Id: tclock.c,v 1.33 2013/09/28 21:52:34 tom Exp $ */
 end_comment
 
 begin_include
@@ -169,7 +169,7 @@ parameter_list|,
 name|int
 name|y
 parameter_list|,
-name|char
+name|int
 name|col
 parameter_list|)
 block|{
@@ -212,7 +212,7 @@ parameter_list|,
 name|int
 name|y2
 parameter_list|,
-name|char
+name|int
 name|ch
 parameter_list|)
 block|{
@@ -535,13 +535,13 @@ name|struct
 name|timeval
 name|current
 decl_stmt|;
+endif|#
+directive|endif
 name|double
 name|fraction
 init|=
 literal|0.0
 decl_stmt|;
-endif|#
-directive|endif
 name|setlocale
 argument_list|(
 name|LC_ALL
@@ -1060,6 +1060,9 @@ name|void
 operator|)
 name|attrset
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 literal|1
@@ -1095,6 +1098,9 @@ name|void
 operator|)
 name|attrset
 argument_list|(
+operator|(
+name|attr_t
+operator|)
 name|COLOR_PAIR
 argument_list|(
 literal|0

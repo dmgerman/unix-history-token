@@ -368,7 +368,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: xmas.c,v 1.27 2010/11/13 20:24:10 tom Exp $  */
+comment|/*  * $Id: xmas.c,v 1.28 2013/04/27 19:46:53 tom Exp $  */
 end_comment
 
 begin_include
@@ -792,7 +792,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|RETSIGTYPE
+name|void
 name|done
 argument_list|(
 name|int
@@ -7759,7 +7759,7 @@ end_function
 
 begin_function
 specifier|static
-name|RETSIGTYPE
+name|void
 name|done
 parameter_list|(
 name|int

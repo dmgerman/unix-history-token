@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2007-2008,2009 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2007-2009,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Author: Thomas E. Dickey - 2007  *  * $Id: dots_mvcur.c,v 1.6 2010/11/14 01:00:44 tom Exp $  *  * A simple demo of the terminfo interface, and mvcur.  */
+comment|/*  * Author: Thomas E. Dickey - 2007  *  * $Id: dots_mvcur.c,v 1.10 2013/09/28 22:44:18 tom Exp $  *  * A simple demo of the terminfo interface, and mvcur.  */
 end_comment
 
 begin_define
@@ -66,20 +66,20 @@ name|started
 decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|int
-name|outc
-parameter_list|(
-name|TPUTS_ARG
-name|c
-parameter_list|)
+name|TPUTS_PROTO
+argument_list|(
+argument|outc
+argument_list|,
+argument|c
+argument_list|)
 block|{
 name|int
 name|rc
-init|=
+operator|=
 name|c
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|interrupted
@@ -102,6 +102,9 @@ argument_list|,
 operator|&
 name|tmp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|1
 argument_list|)
 operator|==
@@ -113,6 +116,9 @@ operator|=
 name|EOF
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_else
 else|else
 block|{
 if|if
@@ -131,17 +137,22 @@ operator|=
 name|EOF
 expr_stmt|;
 block|}
-return|return
+end_else
+
+begin_expr_stmt
+name|TPUTS_RETURN
+argument_list|(
 name|rc
-return|;
-block|}
-end_function
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
-specifier|static
+unit|}  static
 name|bool
 name|outs
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -336,6 +347,9 @@ name|SCREEN
 modifier|*
 name|sp
 decl_stmt|;
+name|int
+name|my_colors
+decl_stmt|;
 name|CATCHALL
 argument_list|(
 name|onsig
@@ -382,9 +396,13 @@ argument_list|(
 name|cursor_invisible
 argument_list|)
 expr_stmt|;
+name|my_colors
+operator|=
+name|max_colors
+expr_stmt|;
 if|if
 condition|(
-name|max_colors
+name|my_colors
 operator|>
 literal|1
 condition|)
@@ -417,7 +435,7 @@ name|orig_pair
 argument_list|)
 operator|)
 condition|)
-name|max_colors
+name|my_colors
 operator|=
 operator|-
 literal|1
@@ -530,7 +548,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|max_colors
+name|my_colors
 operator|>
 literal|0
 condition|)
@@ -544,7 +562,7 @@ argument_list|(
 name|ranf
 argument_list|()
 operator|*
-name|max_colors
+name|my_colors
 argument_list|)
 expr_stmt|;
 if|if
@@ -640,6 +658,9 @@ name|outc
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+operator|++
+name|x0
 expr_stmt|;
 name|fflush
 argument_list|(

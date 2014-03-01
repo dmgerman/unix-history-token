@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1999-2008,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1999-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Author: Thomas E. Dickey  *  * $Id: cardfile.c,v 1.38 2010/11/14 00:58:45 tom Exp $  *  * File format: text beginning in column 1 is a title; other text is content.  */
+comment|/*  * Author: Thomas E. Dickey  *  * $Id: cardfile.c,v 1.42 2013/09/28 22:02:17 tom Exp $  *  * File format: text beginning in column 1 is a title; other text is content.  */
 end_comment
 
 begin_include
@@ -147,25 +147,10 @@ literal|"cardfile.dat"
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|!
-name|HAVE_STRDUP
-end_if
-
-begin_define
-define|#
-directive|define
-name|strdup
-value|my_strdup
-end_define
-
 begin_function
 specifier|static
-name|char
-modifier|*
-name|strdup
+name|void
+name|failed
 parameter_list|(
 specifier|const
 name|char
@@ -173,49 +158,21 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|p
-init|=
-name|typeMalloc
+name|perror
 argument_list|(
-name|char
-argument_list|,
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|p
-condition|)
-name|strcpy
-argument_list|(
-name|p
-argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|p
-operator|)
-return|;
+name|endwin
+argument_list|()
+expr_stmt|;
+name|ExitProgram
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not HAVE_STRDUP */
-end_comment
 
 begin_function
 specifier|static
@@ -380,6 +337,9 @@ name|typeCalloc
 argument_list|(
 name|CARD
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|1
 argument_list|)
 expr_stmt|;
@@ -597,6 +557,12 @@ operator|+
 name|offset
 argument_list|,
 name|content
+argument_list|)
+expr_stmt|;
+else|else
+name|failed
+argument_list|(
+literal|"add_content"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1423,6 +1389,9 @@ argument_list|(
 name|FIELD
 operator|*
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|3
 argument_list|)
 decl_stmt|;
@@ -1826,6 +1795,9 @@ name|wbkgd
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|chtype
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|pair_2
@@ -2567,6 +2539,9 @@ argument_list|)
 expr_stmt|;
 name|bkgd
 argument_list|(
+operator|(
+name|chtype
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|pair_1

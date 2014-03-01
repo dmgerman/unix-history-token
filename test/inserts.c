@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2002-2010,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * $Id: inserts.c,v 1.23 2010/12/12 00:19:55 tom Exp $  *  * Demonstrate the winsstr() and winsch functions.  * Thomas Dickey - 2002/10/19  */
+comment|/*  * $Id: inserts.c,v 1.27 2012/12/16 00:35:27 tom Exp $  *  * Demonstrate the winsstr() and winsch functions.  * Thomas Dickey - 2002/10/19  */
 end_comment
 
 begin_include
@@ -583,6 +583,26 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Show the characters inserted in color, to distinguish from those 	 * that are shifted. 	 */
+if|if
+condition|(
+name|has_colors
+argument_list|()
+condition|)
+block|{
+name|start_color
+argument_list|()
+expr_stmt|;
+name|init_pair
+argument_list|(
+literal|1
+argument_list|,
+name|COLOR_WHITE
+argument_list|,
+name|COLOR_BLUE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|limit
 operator|=
@@ -834,35 +854,27 @@ expr_stmt|;
 name|doupdate
 argument_list|()
 expr_stmt|;
-comment|/*      * Show the characters inserted in color, to distinguish from those that      * are shifted.      */
 if|if
 condition|(
 name|has_colors
 argument_list|()
 condition|)
 block|{
-name|start_color
-argument_list|()
-expr_stmt|;
-name|init_pair
-argument_list|(
-literal|1
-argument_list|,
-name|COLOR_WHITE
-argument_list|,
-name|COLOR_BLUE
-argument_list|)
-expr_stmt|;
 name|wbkgdset
 argument_list|(
 name|work
 argument_list|,
+call|(
+name|chtype
+call|)
+argument_list|(
 name|COLOR_PAIR
 argument_list|(
 literal|1
 argument_list|)
 operator||
 literal|' '
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -912,6 +924,10 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|look
+condition|)
 name|touchwin
 argument_list|(
 name|look
@@ -927,6 +943,10 @@ argument_list|(
 name|show
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|look
+condition|)
 name|wnoutrefresh
 argument_list|(
 name|look
@@ -1723,11 +1743,6 @@ condition|)
 block|{
 name|delwin
 argument_list|(
-name|show
-argument_list|)
-expr_stmt|;
-name|delwin
-argument_list|(
 name|work
 argument_list|)
 expr_stmt|;
@@ -1737,6 +1752,11 @@ name|look
 argument_list|)
 expr_stmt|;
 block|}
+name|delwin
+argument_list|(
+name|show
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
