@@ -2478,11 +2478,7 @@ operator|)
 return|;
 block|}
 block|}
-if|#
-directive|if
-name|mnemonic_ext_size
-operator|>
-literal|0
+comment|/* a + 1< b + 1 here to silence gcc warning about unsigned< 0. */
 for|for
 control|(
 name|i
@@ -2490,8 +2486,12 @@ operator|=
 literal|0
 init|;
 name|i
+operator|+
+literal|1
 operator|<
 name|mnemonic_ext_size
+operator|+
+literal|1
 condition|;
 operator|++
 name|i
@@ -2573,8 +2573,6 @@ operator|)
 return|;
 block|}
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
