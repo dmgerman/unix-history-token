@@ -2594,13 +2594,6 @@ operator|.
 name|port6_status
 expr_stmt|;
 else|else
-if|#
-directive|if
-literal|0
-comment|/* XXX DB120 - hard-code port0 to 1000/full */
-else|if (port == 0) { 		t = AR8X16_PORT_STS_SPEED_1000; 		t |= AR8X16_PORT_STS_TXMAC | AR8X16_PORT_STS_RXMAC; 		t |= AR8X16_PORT_STS_DUPLEX; 		t |= AR8X16_PORT_STS_RXFLOW; 		t |= AR8X16_PORT_STS_TXFLOW; 	} else
-endif|#
-directive|endif
 name|t
 operator|=
 name|AR8X16_PORT_STS_LINK_AUTO
