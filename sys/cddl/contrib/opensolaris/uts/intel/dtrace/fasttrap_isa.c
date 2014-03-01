@@ -6070,15 +6070,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|__amd64
 name|uintptr_t
 name|value
-decl_stmt|;
-endif|#
-directive|endif
-name|uintptr_t
+decl_stmt|,
 name|addr
 init|=
 name|tp
@@ -6185,6 +6179,8 @@ operator|==
 name|DATAMODEL_NATIVE
 condition|)
 block|{
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -6223,14 +6219,12 @@ name|new_pc
 operator|=
 name|value
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__amd64
 block|}
 else|else
 block|{
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__i386__
 name|uint32_t
 name|value32
 decl_stmt|;
@@ -6282,12 +6276,9 @@ name|new_pc
 operator|=
 name|value32
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-block|}
-ifdef|#
-directive|ifdef
-name|__amd64
 block|}
 else|else
 block|{
@@ -6296,8 +6287,6 @@ operator|=
 name|addr
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 comment|/* 		 * If this is a call instruction, we need to push the return 		 * address onto the stack. If this fails, we send the process 		 * a SIGSEGV and reset the pc to emulate what would happen if 		 * this instruction weren't traced. 		 */
 if|if
@@ -6370,9 +6359,6 @@ else|else
 block|{
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__i386__
 name|addr
 operator|=
 name|rp
@@ -6410,8 +6396,6 @@ argument_list|,
 name|pcps
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__amd64
