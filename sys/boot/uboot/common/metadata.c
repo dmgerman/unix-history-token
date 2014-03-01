@@ -71,30 +71,6 @@ directive|include
 file|"glue.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOADER_FDT_SUPPORT
-argument_list|)
-end_if
-
-begin_function_decl
-specifier|extern
-name|int
-name|fdt_copy
-parameter_list|(
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Return a 'boothowto' value corresponding to the kernel arguments in  * (kargs) and any relevant environment variables.  */
 end_comment

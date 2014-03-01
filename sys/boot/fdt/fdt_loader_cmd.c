@@ -1355,7 +1355,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|fdt_setup_fdtp
 parameter_list|()
