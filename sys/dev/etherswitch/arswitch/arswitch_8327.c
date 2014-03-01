@@ -2672,6 +2672,7 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This doesn't configure any ports which this port can "see". 	 * bits 0-6 control which ports a frame coming into this port 	 * can be sent out to. 	 * 	 * So by doing this, we're making it impossible to send frames out 	 * to that port. 	 */
 name|t
 operator|=
 name|AR8327_PORT_LOOKUP_LEARN
@@ -2681,6 +2682,20 @@ operator||=
 name|AR8X16_PORT_CTRL_STATE_FORWARD
 operator|<<
 name|AR8327_PORT_LOOKUP_STATE_S
+expr_stmt|;
+comment|/* So this allows traffic to any port except ourselves */
+name|t
+operator||=
+operator|(
+literal|0x3f
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+name|port
+operator|)
+operator|)
 expr_stmt|;
 name|arswitch_writereg
 argument_list|(
@@ -2788,6 +2803,24 @@ name|mode
 decl_stmt|,
 name|t
 decl_stmt|;
+comment|/* 	 * Disable mirroring. 	 */
+name|arswitch_modifyreg
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|AR8327_REG_FWD_CTRL0
+argument_list|,
+name|AR8327_FWD_CTRL0_MIRROR_PORT
+argument_list|,
+operator|(
+literal|0xF
+operator|<<
+name|AR8327_FWD_CTRL0_MIRROR_PORT_S
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * For now, let's default to one portgroup, just so traffic 	 * flows.  All ports can see other ports. 	 */
 for|for
 control|(
@@ -2862,9 +2895,18 @@ expr_stmt|;
 comment|/* Set ingress = out_keep; members = 0x3f for all ports */
 name|t
 operator|=
+operator|(
 literal|0x3f
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+operator|)
 expr_stmt|;
-comment|/* all ports */
+comment|/* all ports besides us */
 name|t
 operator||=
 name|AR8327_PORT_LOOKUP_LEARN
@@ -2894,6 +2936,39 @@ name|i
 argument_list|)
 argument_list|,
 name|t
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Disable port mirroring entirely. 		 */
+name|arswitch_modifyreg
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|AR8327_REG_PORT_LOOKUP
+argument_list|(
+name|i
+argument_list|)
+argument_list|,
+name|AR8327_PORT_LOOKUP_ING_MIRROR_EN
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|arswitch_modifyreg
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|AR8327_REG_PORT_HOL_CTRL1
+argument_list|(
+name|i
+argument_list|)
+argument_list|,
+name|AR8327_PORT_HOL_CTRL1_EG_MIRROR_EN
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
