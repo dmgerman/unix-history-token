@@ -1628,7 +1628,7 @@ name|BITM
 parameter_list|(
 name|_count
 parameter_list|)
-value|((1<< _count) - 1)
+value|((1UL<< _count) - 1)
 end_define
 
 begin_define
