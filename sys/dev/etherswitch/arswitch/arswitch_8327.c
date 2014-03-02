@@ -2845,16 +2845,16 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* set pvid = i */
+comment|/* set pvid = 1; there's only one vlangroup */
 name|t
 operator|=
-name|i
+literal|1
 operator|<<
 name|AR8327_PORT_VLAN0_DEF_SVID_S
 expr_stmt|;
 name|t
 operator||=
-name|i
+literal|1
 operator|<<
 name|AR8327_PORT_VLAN0_DEF_CVID_S
 expr_stmt|;
@@ -2901,7 +2901,7 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-comment|/* Set ingress = out_keep; members = 0x3f for all ports */
+comment|/* Ports can see other ports */
 name|t
 operator|=
 operator|(
