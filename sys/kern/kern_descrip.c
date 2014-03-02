@@ -7197,23 +7197,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* update the pointers and counters */
-name|memcpy
-argument_list|(
-name|ntable
-argument_list|,
-name|otable
-argument_list|,
-name|onfiles
-operator|*
-sizeof|sizeof
-argument_list|(
-name|ntable
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|fdp
 operator|->
 name|fd_ofiles
