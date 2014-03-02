@@ -14653,7 +14653,7 @@ name|snapdata
 modifier|*
 name|sn
 decl_stmt|;
-comment|/*  	 * Allocate a free snapdata.  This is done before acquiring the 	 * devvp lock to avoid allocation while the devvp interlock is 	 * held. 	 */
+comment|/* 	 * Allocate a free snapdata.  This is done before acquiring the 	 * devvp lock to avoid allocation while the devvp interlock is 	 * held. 	 */
 name|nsn
 operator|=
 name|ffs_snapdata_alloc
