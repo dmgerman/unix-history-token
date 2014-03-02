@@ -38,7 +38,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: resizeterm.c,v 1.43 2011/01/10 01:34:49 tom Exp $"
+literal|"$Id: resizeterm.c,v 1.45 2012/07/07 17:07:23 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1552,15 +1552,17 @@ name|SP_PARM
 argument_list|)
 condition|)
 block|{
+name|result
+operator|=
 name|increase_size
 argument_list|(
-argument|NCURSES_SP_ARGx 			  myLines = ToLines
+argument|NCURSES_SP_ARGx 				   myLines = ToLines
 argument_list|,
 argument|myCols
 argument_list|,
 argument|was_stolen EXTRA_ARGS
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|CurLines
 operator|=
 name|myLines
@@ -1572,23 +1574,33 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|result
+operator|==
+name|OK
+operator|)
+operator|&&
+operator|(
 name|ToCols
 operator|>
 name|screen_columns
 argument_list|(
 name|SP_PARM
 argument_list|)
+operator|)
 condition|)
 block|{
+name|result
+operator|=
 name|increase_size
 argument_list|(
-argument|NCURSES_SP_ARGx 			  myLines
+argument|NCURSES_SP_ARGx 				   myLines
 argument_list|,
 argument|myCols = ToCols
 argument_list|,
 argument|was_stolen EXTRA_ARGS
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|CurLines
 operator|=
 name|myLines
@@ -1600,6 +1612,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|result
+operator|==
+name|OK
+operator|)
+operator|&&
+operator|(
 name|ToLines
 operator|<
 name|myLines
@@ -1607,18 +1626,28 @@ operator|||
 name|ToCols
 operator|<
 name|myCols
+operator|)
 condition|)
 block|{
+name|result
+operator|=
 name|decrease_size
 argument_list|(
-argument|NCURSES_SP_ARGx ToLines
+argument|NCURSES_SP_ARGx 				   ToLines
 argument_list|,
 argument|ToCols
 argument_list|,
 argument|was_stolen EXTRA_ARGS
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|result
+operator|==
+name|OK
+condition|)
+block|{
 name|screen_lines
 argument_list|(
 name|SP_PARM
@@ -1751,7 +1780,15 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/*      * Always update LINES, to allow for call from lib_doupdate.c which      * needs to have the count adjusted by the stolen (ripped off) lines.      */
+block|}
+if|if
+condition|(
+name|result
+operator|==
+name|OK
+condition|)
+block|{
+comment|/* 	 * Always update LINES, to allow for call from lib_doupdate.c which 	 * needs to have the count adjusted by the stolen (ripped off) lines. 	 */
 name|SET_LINES
 argument_list|(
 name|ToLines
@@ -1764,6 +1801,7 @@ argument_list|(
 name|ToCols
 argument_list|)
 expr_stmt|;
+block|}
 name|_nc_nonsp_unlock_global
 argument_list|(
 name|curses
@@ -2007,14 +2045,6 @@ expr_stmt|;
 if|#
 directive|if
 name|USE_SIGWINCH
-name|safe_ungetch
-argument_list|(
-name|SP_PARM
-argument_list|,
-name|KEY_RESIZE
-argument_list|)
-expr_stmt|;
-comment|/* so application can know this */
 name|clearok
 argument_list|(
 name|CurScreen
@@ -2119,6 +2149,19 @@ block|}
 endif|#
 directive|endif
 block|}
+if|#
+directive|if
+name|USE_SIGWINCH
+name|safe_ungetch
+argument_list|(
+name|SP_PARM
+argument_list|,
+name|KEY_RESIZE
+argument_list|)
+expr_stmt|;
+comment|/* so application can know this */
+endif|#
+directive|endif
 block|}
 name|returnCode
 argument_list|(

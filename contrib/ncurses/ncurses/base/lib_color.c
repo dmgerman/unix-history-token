@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_color.c,v 1.98 2010/04/24 22:57:53 tom Exp $"
+literal|"$Id: lib_color.c,v 1.109 2014/02/01 22:22:30 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1164,13 +1164,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|TPUTS_TRACE
+operator|(
+name|void
+operator|)
+name|NCURSES_PUTP2
 argument_list|(
 literal|"orig_pair"
-argument_list|)
-expr_stmt|;
-name|putp
-argument_list|(
+argument_list|,
 name|orig_pair
 argument_list|)
 expr_stmt|;
@@ -1276,13 +1276,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|TPUTS_TRACE
+name|NCURSES_PUTP2
 argument_list|(
 literal|"orig_colors"
-argument_list|)
-expr_stmt|;
-name|putp
-argument_list|(
+argument_list|,
 name|orig_colors
 argument_list|)
 expr_stmt|;
@@ -1443,6 +1440,23 @@ argument|NCURSES_SP_NAME(_nc_outch)
 argument_list|)
 empty_stmt|;
 block|}
+if|#
+directive|if
+operator|!
+name|NCURSES_EXT_COLORS
+comment|/* 	 * Without ext-colors, we cannot represent more than 256 color pairs. 	 */
+if|if
+condition|(
+name|maxpairs
+operator|>
+literal|256
+condition|)
+name|maxpairs
+operator|=
+literal|256
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|maxpairs
@@ -1679,30 +1693,30 @@ specifier|static
 name|void
 name|rgb2hls
 parameter_list|(
-name|short
+name|int
 name|r
 parameter_list|,
-name|short
+name|int
 name|g
 parameter_list|,
-name|short
+name|int
 name|b
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 modifier|*
 name|h
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 modifier|*
 name|l
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 modifier|*
 name|s
 parameter_list|)
 comment|/* convert RGB to HLS system */
 block|{
-name|short
+name|int
 name|min
 decl_stmt|,
 name|max
@@ -1754,7 +1768,7 @@ operator|*
 name|l
 operator|=
 call|(
-name|short
+name|NCURSES_COLOR_T
 call|)
 argument_list|(
 operator|(
@@ -1798,7 +1812,7 @@ operator|*
 name|s
 operator|=
 call|(
-name|short
+name|NCURSES_COLOR_T
 call|)
 argument_list|(
 operator|(
@@ -1823,7 +1837,7 @@ operator|*
 name|s
 operator|=
 call|(
-name|short
+name|NCURSES_COLOR_T
 call|)
 argument_list|(
 operator|(
@@ -1855,7 +1869,7 @@ condition|)
 name|t
 operator|=
 call|(
-name|short
+name|NCURSES_COLOR_T
 call|)
 argument_list|(
 literal|120
@@ -1887,7 +1901,7 @@ condition|)
 name|t
 operator|=
 call|(
-name|short
+name|NCURSES_COLOR_T
 call|)
 argument_list|(
 literal|240
@@ -1913,7 +1927,7 @@ else|else
 name|t
 operator|=
 call|(
-name|short
+name|NCURSES_COLOR_T
 call|)
 argument_list|(
 literal|360
@@ -1938,9 +1952,14 @@ expr_stmt|;
 operator|*
 name|h
 operator|=
+call|(
+name|NCURSES_COLOR_T
+call|)
+argument_list|(
 name|t
 operator|%
 literal|360
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1960,13 +1979,13 @@ argument|init_pair
 argument_list|)
 parameter_list|(
 name|NCURSES_SP_DCLx
-name|short
+name|NCURSES_PAIRS_T
 name|pair
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 name|f
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 name|b
 parameter_list|)
 block|{
@@ -1993,10 +2012,19 @@ operator|*
 operator|)
 name|SP_PARM
 operator|,
+operator|(
+name|int
+operator|)
 name|pair
 operator|,
+operator|(
+name|int
+operator|)
 name|f
 operator|,
+operator|(
+name|int
+operator|)
 name|b
 operator|)
 argument_list|)
@@ -2035,6 +2063,10 @@ condition|(
 name|SP_PARM
 operator|->
 name|_default_color
+operator|||
+name|SP_PARM
+operator|->
+name|_assumed_color
 condition|)
 block|{
 name|bool
@@ -2235,11 +2267,13 @@ operator|<
 literal|1
 operator|)
 condition|)
+block|{
 name|returnCode
 argument_list|(
 name|ERR
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/*      * When a pair's content is changed, replace its colors (if pair was      * initialized before a screen update is performed replacing original      * pair colors with the new ones).      */
 name|result
@@ -2465,8 +2499,14 @@ argument_list|,
 operator|(
 literal|"initializing pair: pair = %d, fg=(%d,%d,%d), bg=(%d,%d,%d)"
 operator|,
+operator|(
+name|int
+operator|)
 name|pair
 operator|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|f
@@ -2474,6 +2514,9 @@ index|]
 operator|.
 name|red
 operator|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|f
@@ -2481,6 +2524,9 @@ index|]
 operator|.
 name|green
 operator|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|f
@@ -2488,6 +2534,9 @@ index|]
 operator|.
 name|blue
 operator|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|b
@@ -2495,6 +2544,9 @@ index|]
 operator|.
 name|red
 operator|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|b
@@ -2502,6 +2554,9 @@ index|]
 operator|.
 name|green
 operator|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|b
@@ -2511,19 +2566,19 @@ name|blue
 operator|)
 argument_list|)
 expr_stmt|;
-name|TPUTS_TRACE
+name|NCURSES_PUTP2
 argument_list|(
 literal|"initialize_pair"
-argument_list|)
-expr_stmt|;
-name|putp
-argument_list|(
+argument_list|,
 name|TPARM_7
 argument_list|(
 name|initialize_pair
 argument_list|,
 name|pair
 argument_list|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|f
@@ -2531,6 +2586,9 @@ index|]
 operator|.
 name|red
 argument_list|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|f
@@ -2538,6 +2596,9 @@ index|]
 operator|.
 name|green
 argument_list|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|f
@@ -2545,6 +2606,9 @@ index|]
 operator|.
 name|blue
 argument_list|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|b
@@ -2552,6 +2616,9 @@ index|]
 operator|.
 name|red
 argument_list|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|b
@@ -2559,6 +2626,9 @@ index|]
 operator|.
 name|green
 argument_list|,
+operator|(
+name|int
+operator|)
 name|tp
 index|[
 name|b
@@ -2595,11 +2665,11 @@ end_macro
 begin_macro
 name|init_pair
 argument_list|(
-argument|short pair
+argument|NCURSES_COLOR_T pair
 argument_list|,
-argument|short f
+argument|NCURSES_COLOR_T f
 argument_list|,
-argument|short b
+argument|NCURSES_COLOR_T b
 argument_list|)
 end_macro
 
@@ -2649,16 +2719,16 @@ argument|init_color
 argument_list|)
 parameter_list|(
 name|NCURSES_SP_DCLx
-name|short
+name|NCURSES_COLOR_T
 name|color
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 name|r
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 name|g
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 name|b
 parameter_list|)
 block|{
@@ -2891,13 +2961,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|TPUTS_TRACE
+name|NCURSES_PUTP2
 argument_list|(
 literal|"initialize_color"
-argument_list|)
-expr_stmt|;
-name|putp
-argument_list|(
+argument_list|,
 name|TPARM_4
 argument_list|(
 name|initialize_color
@@ -2958,13 +3025,13 @@ end_macro
 begin_macro
 name|init_color
 argument_list|(
-argument|short color
+argument|NCURSES_COLOR_T color
 argument_list|,
-argument|short r
+argument|NCURSES_COLOR_T r
 argument_list|,
-argument|short g
+argument|NCURSES_COLOR_T g
 argument_list|,
-argument|short b
+argument|NCURSES_COLOR_T b
 argument_list|)
 end_macro
 
@@ -3008,6 +3075,11 @@ parameter_list|(
 name|NCURSES_SP_DCL
 parameter_list|)
 block|{
+name|int
+name|result
+init|=
+name|FALSE
+decl_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -3024,17 +3096,28 @@ name|SP_PARM
 operator|)
 argument_list|)
 expr_stmt|;
-name|returnCode
+if|if
+condition|(
+name|HasTerminal
 argument_list|(
+name|SP_PARM
+argument_list|)
+operator|&&
 operator|(
 name|CanChange
 operator|!=
 literal|0
 operator|)
-condition|?
+condition|)
+block|{
+name|result
+operator|=
 name|TRUE
-else|:
-name|FALSE
+expr_stmt|;
+block|}
+name|returnCode
+argument_list|(
+name|result
 argument_list|)
 expr_stmt|;
 block|}
@@ -3094,6 +3177,8 @@ parameter_list|)
 block|{
 name|int
 name|code
+init|=
+name|FALSE
 decl_stmt|;
 operator|(
 name|void
@@ -3110,6 +3195,14 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|HasTerminal
+argument_list|(
+name|SP_PARM
+argument_list|)
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|USE_TERM_DRIVER
@@ -3173,6 +3266,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 name|returnCode
 argument_list|(
 name|code
@@ -3231,18 +3325,18 @@ argument|color_content
 argument_list|)
 parameter_list|(
 name|NCURSES_SP_DCLx
-name|short
+name|NCURSES_COLOR_T
 name|color
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 modifier|*
 name|r
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 modifier|*
 name|g
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 modifier|*
 name|b
 parameter_list|)
@@ -3440,13 +3534,13 @@ end_macro
 begin_macro
 name|color_content
 argument_list|(
-argument|short color
+argument|NCURSES_COLOR_T color
 argument_list|,
-argument|short *r
+argument|NCURSES_COLOR_T *r
 argument_list|,
-argument|short *g
+argument|NCURSES_COLOR_T *g
 argument_list|,
-argument|short *b
+argument|NCURSES_COLOR_T *b
 argument_list|)
 end_macro
 
@@ -3488,14 +3582,14 @@ argument|pair_content
 argument_list|)
 parameter_list|(
 name|NCURSES_SP_DCLx
-name|short
+name|NCURSES_PAIRS_T
 name|pair
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 modifier|*
 name|f
 parameter_list|,
-name|short
+name|NCURSES_COLOR_T
 modifier|*
 name|b
 parameter_list|)
@@ -3517,6 +3611,9 @@ operator|*
 operator|)
 name|SP_PARM
 operator|,
+operator|(
+name|int
+operator|)
 name|pair
 operator|,
 operator|(
@@ -3552,6 +3649,9 @@ block|{
 name|NCURSES_COLOR_T
 name|fg
 init|=
+operator|(
+name|NCURSES_COLOR_T
+operator|)
 name|FORE_OF
 argument_list|(
 name|SP_PARM
@@ -3565,6 +3665,9 @@ decl_stmt|;
 name|NCURSES_COLOR_T
 name|bg
 init|=
+operator|(
+name|NCURSES_COLOR_T
+operator|)
 name|BACK_OF
 argument_list|(
 name|SP_PARM
@@ -3633,10 +3736,19 @@ operator|*
 operator|)
 name|SP_PARM
 operator|,
+operator|(
+name|int
+operator|)
 name|pair
 operator|,
+operator|(
+name|int
+operator|)
 name|fg
 operator|,
+operator|(
+name|int
+operator|)
 name|bg
 operator|)
 argument_list|)
@@ -3670,11 +3782,11 @@ end_macro
 begin_macro
 name|pair_content
 argument_list|(
-argument|short pair
+argument|NCURSES_COLOR_T pair
 argument_list|,
-argument|short *f
+argument|NCURSES_COLOR_T *f
 argument_list|,
-argument|short *b
+argument|NCURSES_COLOR_T *b
 argument_list|)
 end_macro
 
@@ -3714,13 +3826,13 @@ argument|_nc_do_color
 argument_list|)
 parameter_list|(
 name|NCURSES_SP_DCLx
-name|short
+name|int
 name|old_pair
 parameter_list|,
-name|short
+name|int
 name|pair
 parameter_list|,
-name|bool
+name|int
 name|reverse
 parameter_list|,
 name|NCURSES_SP_OUTC
@@ -3759,8 +3871,15 @@ name|COLOR_DEFAULT
 decl_stmt|;
 name|NCURSES_COLOR_T
 name|old_fg
-decl_stmt|,
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|NCURSES_COLOR_T
 name|old_bg
+init|=
+operator|-
+literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -3819,10 +3938,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|pair_content
 argument_list|(
 operator|(
-name|short
+name|NCURSES_COLOR_T
 operator|)
 name|pair
 argument_list|,
@@ -3832,7 +3953,10 @@ argument_list|,
 operator|&
 name|bg
 argument_list|)
-expr_stmt|;
+operator|==
+name|ERR
+condition|)
+return|return;
 block|}
 block|}
 if|if
@@ -3847,6 +3971,9 @@ literal|0
 operator|&&
 name|pair_content
 argument_list|(
+operator|(
+name|NCURSES_COLOR_T
+operator|)
 name|old_pair
 argument_list|,
 operator|&
@@ -3995,7 +4122,7 @@ condition|)
 name|fg
 operator|=
 operator|(
-name|short
+name|NCURSES_COLOR_T
 operator|)
 name|default_fg
 argument_list|(
@@ -4012,7 +4139,7 @@ condition|)
 name|bg
 operator|=
 operator|(
-name|short
+name|NCURSES_COLOR_T
 operator|)
 name|default_bg
 argument_list|(
@@ -4110,11 +4237,11 @@ end_macro
 begin_macro
 name|_nc_do_color
 argument_list|(
-argument|short old_pair
+argument|int old_pair
 argument_list|,
-argument|short pair
+argument|int pair
 argument_list|,
-argument|bool reverse
+argument|int reverse
 argument_list|,
 argument|NCURSES_OUTC outc
 argument_list|)

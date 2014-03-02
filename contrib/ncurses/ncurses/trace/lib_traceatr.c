@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_traceatr.c,v 1.74 2011/01/22 19:48:01 tom Exp $"
+literal|"$Id: lib_traceatr.c,v 1.81 2014/02/01 22:09:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -50,6 +50,26 @@ parameter_list|(
 name|c
 parameter_list|)
 value|((c< 0) ? "default" : (c> 7 ? color_of(c) : colors[c].name))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACE_BUF_SIZE
+parameter_list|(
+name|num
+parameter_list|)
+value|(_nc_globals.tracebuf_ptr[num].size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COLOR_BUF_SIZE
+parameter_list|(
+name|num
+parameter_list|)
+value|(sizeof(my_buffer[num]))
 end_define
 
 begin_ifdef
@@ -145,7 +165,7 @@ name|c
 operator|==
 name|COLOR_DEFAULT
 condition|)
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|my_buffer
 index|[
@@ -153,16 +173,28 @@ name|my_select
 index|]
 argument_list|,
 literal|"default"
+argument_list|,
+name|COLOR_BUF_SIZE
+argument_list|(
+name|my_select
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|my_buffer
 index|[
 name|my_select
 index|]
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+name|COLOR_BUF_SIZE
+argument_list|(
+name|my_select
+argument_list|)
+argument_list|)
 literal|"color%d"
 argument_list|,
 name|c
@@ -308,6 +340,17 @@ block|,
 literal|"A_COLOR"
 block|}
 block|,
+if|#
+directive|if
+name|USE_ITALIC
+block|{
+name|A_ITALIC
+block|,
+literal|"A_ITALIC"
+block|}
+block|,
+endif|#
+directive|endif
 comment|/* *INDENT-ON* */
 block|}
 ifndef|#
@@ -390,6 +433,9 @@ name|_nc_trace_buf
 argument_list|(
 name|bufnum
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|BUFSIZ
 argument_list|)
 decl_stmt|;
@@ -409,11 +455,16 @@ name|_nc_tracing
 operator|=
 literal|0
 expr_stmt|;
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|result
 argument_list|,
 name|l_brace
+argument_list|,
+name|TRACE_BUF_SIZE
+argument_list|(
+name|bufnum
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -509,13 +560,17 @@ ifdef|#
 directive|ifdef
 name|USE_TERMLIB
 comment|/* pair_content lives in libncurses */
-operator|(
-name|void
-operator|)
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|temp
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+argument_list|)
 literal|"{%d}"
 argument_list|,
 name|pairnum
@@ -523,7 +578,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|short
+name|NCURSES_COLOR_T
 name|fg
 decl_stmt|,
 name|bg
@@ -544,13 +599,17 @@ operator|==
 name|OK
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|temp
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+argument_list|)
 literal|"{%d = {%s, %s}}"
 argument_list|,
 name|pairnum
@@ -569,13 +628,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|temp
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+argument_list|)
 literal|"{%d}"
 argument_list|,
 name|pairnum
@@ -1072,6 +1135,10 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|SP_PARM
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|attr
 operator|&
@@ -1234,6 +1301,9 @@ name|_nc_trace_buf
 argument_list|(
 name|bufnum
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|BUFSIZ
 argument_list|)
 decl_stmt|;
@@ -1244,11 +1314,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|result
 argument_list|,
 name|l_brace
+argument_list|,
+name|TRACE_BUF_SIZE
+argument_list|(
+name|bufnum
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1460,6 +1535,9 @@ name|_nc_trace_buf
 argument_list|(
 name|bufnum
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|BUFSIZ
 argument_list|)
 decl_stmt|;
@@ -1478,11 +1556,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|result
 argument_list|,
 name|l_brace
+argument_list|,
+name|TRACE_BUF_SIZE
+argument_list|(
+name|bufnum
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

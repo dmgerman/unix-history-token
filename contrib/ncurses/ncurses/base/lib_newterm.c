@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,29 +16,6 @@ include|#
 directive|include
 file|<curses.priv.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|SVR4_TERMIO
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|_POSIX_SOURCE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -67,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newterm.c,v 1.86 2010/05/20 23:25:18 tom Exp $"
+literal|"$Id: lib_newterm.c,v 1.90 2013/09/28 21:02:56 tom Exp $"
 argument_list|)
 end_macro
 
@@ -634,7 +611,13 @@ operator|*
 operator|)
 name|SP_PARM
 operator|,
+operator|(
 name|name
+condition|?
+name|name
+else|:
+literal|""
+operator|)
 operator|,
 operator|(
 name|void
@@ -1025,6 +1008,8 @@ operator|&
 name|ISTRIP
 operator|)
 operator|)
+operator|||
+name|USE_KLIBC_KBD
 expr_stmt|;
 else|#
 directive|else
@@ -1111,6 +1096,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* ! USE_TERM_DRIVER */
 comment|/* 	     * Check for mismatched graphic-rendition capabilities.  Most SVr4 	     * terminfo trees contain entries that have rmul or rmso equated to 	     * sgr0 (Solaris curses copes with those entries).  We do this only 	     * for curses, since many termcap applications assume that 	     * smso/rmso and smul/rmul are paired, and will not function 	     * properly if we remove rmso or rmul.  Curses applications 	     * shouldn't be looking at this detail. 	     */
 define|#
 directive|define
@@ -1137,6 +1123,20 @@ argument_list|(
 name|exit_underline_mode
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USE_ITALIC
+name|SP_PARM
+operator|->
+name|_use_ritm
+operator|=
+name|SGR0_TEST
+argument_list|(
+name|exit_italics_mode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* compute movement costs so we can do better move optimization */
 name|_nc_mvcur_init
 argument_list|()
@@ -1147,6 +1147,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* USE_TERM_DRIVER */
 comment|/* Initialize the terminal line settings. */
 name|_nc_initscr
 argument_list|(

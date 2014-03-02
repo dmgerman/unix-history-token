@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -23,33 +23,10 @@ directive|include
 file|<SigAction.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|SVR4_ACTION
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|_POSIX_SOURCE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tstp.c,v 1.41 2010/05/15 21:31:12 tom Exp $"
+literal|"$Id: lib_tstp.c,v 1.47 2013/04/27 19:50:17 tom Exp $"
 argument_list|)
 end_macro
 
@@ -218,7 +195,7 @@ end_if
 begin_function
 specifier|static
 name|void
-name|tstp
+name|handle_SIGTSTP
 parameter_list|(
 name|int
 name|dummy
@@ -249,10 +226,16 @@ name|sigttou_blocked
 decl_stmt|;
 endif|#
 directive|endif
+name|_nc_globals
+operator|.
+name|have_sigtstp
+operator|=
+literal|1
+expr_stmt|;
 name|T
 argument_list|(
 operator|(
-literal|"tstp() called"
+literal|"handle_SIGTSTP() called"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -595,7 +578,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|cleanup
+name|handle_SIGINT
 parameter_list|(
 name|int
 name|sig
@@ -607,7 +590,7 @@ name|sp
 init|=
 name|CURRENT_SCREEN
 decl_stmt|;
-comment|/*      * Actually, doing any sort of I/O from within an signal handler is      * "unsafe".  But we'll _try_ to clean up the screen and terminal      * settings on the way out.      */
+comment|/*      * Much of this is unsafe from a signal handler.  But we'll _try_ to clean      * up the screen and terminal settings on the way out.      *      * There are at least the following problems:      * 1) Walking the SCREEN list is unsafe, since all list management      *    is done without any signal blocking.      * 2) On systems which have REENTRANT turned on, set_term() uses      *    _nc_lock_global() which could deadlock or misbehave in other ways.      * 3) endwin() calls all sorts of stuff, many of which use stdio or      *    other library functions which are clearly unsafe.      */
 if|if
 condition|(
 operator|!
@@ -620,15 +603,10 @@ operator|(
 name|sig
 operator|==
 name|SIGINT
-ifdef|#
-directive|ifdef
-name|SIGQUIT
 operator|||
 name|sig
 operator|==
-name|SIGQUIT
-endif|#
-directive|endif
+name|SIGTERM
 operator|)
 condition|)
 block|{
@@ -723,12 +701,6 @@ condition|)
 block|{
 name|scan
 operator|->
-name|_cleanup
-operator|=
-name|TRUE
-expr_stmt|;
-name|scan
-operator|->
 name|_outch
 operator|=
 name|NCURSES_SP_NAME
@@ -760,11 +732,11 @@ name|_endwin
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* in case we have an atexit! */
+comment|/* in case of reuse */
 block|}
 block|}
 block|}
-name|exit
+name|_exit
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -781,7 +753,7 @@ end_if
 begin_function
 specifier|static
 name|void
-name|sigwinch
+name|handle_SIGWINCH
 parameter_list|(
 name|int
 name|sig
@@ -859,7 +831,7 @@ parameter_list|(
 name|int
 name|sig
 parameter_list|,
-name|RETSIGTYPE
+name|void
 function_decl|(
 modifier|*
 name|handler
@@ -1007,7 +979,7 @@ block|}
 else|#
 directive|else
 comment|/* !HAVE_SIGACTION */
-name|RETSIGTYPE
+name|void
 function_decl|(
 modifier|*
 name|ohandler
@@ -1117,7 +1089,7 @@ end_macro
 begin_macro
 name|_nc_signal_handler
 argument_list|(
-argument|bool enable
+argument|int enable
 argument_list|)
 end_macro
 
@@ -1251,7 +1223,7 @@ name|new_sigaction
 operator|.
 name|sa_handler
 operator|=
-name|tstp
+name|handle_SIGTSTP
 expr_stmt|;
 operator|(
 name|void
@@ -1296,14 +1268,14 @@ name|CatchIfDefault
 argument_list|(
 name|SIGINT
 argument_list|,
-name|cleanup
+name|handle_SIGINT
 argument_list|)
 expr_stmt|;
 name|CatchIfDefault
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|cleanup
+name|handle_SIGINT
 argument_list|)
 expr_stmt|;
 if|#
@@ -1313,7 +1285,7 @@ name|CatchIfDefault
 argument_list|(
 name|SIGWINCH
 argument_list|,
-name|sigwinch
+name|handle_SIGWINCH
 argument_list|)
 expr_stmt|;
 endif|#

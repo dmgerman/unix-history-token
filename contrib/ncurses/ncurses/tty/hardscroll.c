@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: hardscroll.c,v 1.47 2010/04/24 23:46:47 tom Exp $"
+literal|"$Id: hardscroll.c,v 1.51 2012/10/17 09:01:10 tom Exp $"
 argument_list|)
 end_macro
 
@@ -283,8 +283,38 @@ if|#
 directive|if
 name|USE_HASHMAP
 comment|/* get enough storage */
+name|assert
+argument_list|(
+name|OLDNUM_SIZE
+argument_list|(
+name|SP_PARM
+argument_list|)
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|(
+name|oldnums
+argument_list|(
+name|SP_PARM
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|OLDNUM_SIZE
 argument_list|(
 name|SP_PARM
@@ -294,8 +324,36 @@ name|screen_lines
 argument_list|(
 name|SP_PARM
 argument_list|)
+operator|)
 condition|)
 block|{
+name|int
+name|need_lines
+init|=
+operator|(
+operator|(
+name|OLDNUM_SIZE
+argument_list|(
+name|SP_PARM
+argument_list|)
+operator|<
+name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
+operator|)
+condition|?
+name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
+else|:
+name|OLDNUM_SIZE
+argument_list|(
+name|SP_PARM
+argument_list|)
+operator|)
+decl_stmt|;
 name|int
 modifier|*
 name|new_oldnums
@@ -307,10 +365,7 @@ argument_list|,
 operator|(
 name|size_t
 operator|)
-name|screen_lines
-argument_list|(
-name|SP_PARM
-argument_list|)
+name|need_lines
 argument_list|,
 name|oldnums
 argument_list|(
@@ -336,10 +391,7 @@ argument_list|(
 name|SP_PARM
 argument_list|)
 operator|=
-name|screen_lines
-argument_list|(
-name|SP_PARM
-argument_list|)
+name|need_lines
 expr_stmt|;
 block|}
 comment|/* calculate the indices */
@@ -913,10 +965,7 @@ condition|;
 name|n
 operator|++
 control|)
-operator|(
-name|void
-operator|)
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|buf
 operator|+
@@ -925,6 +974,15 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+name|want
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
 literal|" %02d"
 argument_list|,
 name|OLDNUM

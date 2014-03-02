@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newwin.c,v 1.69 2011/03/07 21:58:17 tom Exp $"
+literal|"$Id: lib_newwin.c,v 1.71 2011/05/28 21:32:51 tom Exp $"
 argument_list|)
 end_macro
 
@@ -518,6 +518,10 @@ literal|0
 operator|||
 name|num_columns
 operator|<
+literal|0
+operator|||
+name|SP_PARM
+operator|==
 literal|0
 condition|)
 name|returnWin
@@ -1081,6 +1085,12 @@ end_macro
 
 begin_block
 block|{
+name|WINDOW
+modifier|*
+name|result
+init|=
+literal|0
+decl_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -1105,6 +1115,13 @@ name|x
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+literal|0
+condition|)
+block|{
 name|T
 argument_list|(
 operator|(
@@ -1126,8 +1143,8 @@ name|_begx
 operator|)
 argument_list|)
 expr_stmt|;
-name|returnWin
-argument_list|(
+name|result
+operator|=
 name|derwin
 argument_list|(
 name|w
@@ -1148,6 +1165,11 @@ name|w
 operator|->
 name|_begx
 argument_list|)
+expr_stmt|;
+block|}
+name|returnWin
+argument_list|(
+name|result
 argument_list|)
 expr_stmt|;
 block|}

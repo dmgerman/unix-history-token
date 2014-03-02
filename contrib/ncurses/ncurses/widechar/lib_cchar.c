@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2001-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2001-2012,2014 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_cchar.c,v 1.20 2010/12/25 23:46:26 tom Exp $"
+literal|"$Id: lib_cchar.c,v 1.27 2014/02/01 22:10:42 tom Exp $"
 argument_list|)
 end_macro
 
@@ -40,7 +40,7 @@ argument|const wchar_t *wch
 argument_list|,
 argument|const attr_t attrs
 argument_list|,
-argument|short color_pair
+argument|NCURSES_PAIRS_T color_pair
 argument_list|,
 argument|const void *opts
 argument_list|)
@@ -86,12 +86,27 @@ name|long
 operator|)
 name|attrs
 operator|,
+operator|(
+name|int
+operator|)
 name|color_pair
 operator|,
 name|opts
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|!=
+name|NULL
+operator|||
+name|wch
+operator|==
+name|NULL
+operator|||
+operator|(
+operator|(
 name|len
 operator|=
 operator|(
@@ -101,15 +116,7 @@ name|wcslen
 argument_list|(
 name|wch
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|opts
-operator|!=
-name|NULL
-operator|||
-operator|(
-name|len
+operator|)
 operator|>
 literal|1
 operator|&&
@@ -203,14 +210,6 @@ operator|*
 name|wcval
 argument_list|,
 name|attrs
-operator||
-operator|(
-name|attr_t
-operator|)
-name|ColorPair
-argument_list|(
-name|color_pair
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|SetPair
@@ -296,7 +295,7 @@ argument|wchar_t *wch
 argument_list|,
 argument|attr_t *attrs
 argument_list|,
-argument|short *color_pair
+argument|NCURSES_PAIRS_T *color_pair
 argument_list|,
 argument|void *opts
 argument_list|)
@@ -360,6 +359,10 @@ condition|(
 name|opts
 operator|==
 name|NULL
+operator|&&
+name|wcval
+operator|!=
+name|NULL
 condition|)
 block|{
 name|len
@@ -377,6 +380,9 @@ argument_list|,
 literal|L'
 expr|\0'
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|CCHARW_MAX
 argument_list|)
 operator|)
@@ -460,7 +466,7 @@ operator|*
 name|color_pair
 operator|=
 operator|(
-name|short
+name|NCURSES_PAIRS_T
 operator|)
 name|GetPair
 argument_list|(
@@ -477,7 +483,7 @@ operator|->
 name|chars
 argument_list|,
 operator|(
-name|unsigned
+name|size_t
 operator|)
 name|len
 argument_list|)

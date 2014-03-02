@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: tic.h,v 1.65 2009/08/08 17:52:46 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
+comment|/*  * $Id: tic.h,v 1.69 2012/03/17 18:22:10 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
 end_comment
 
 begin_ifndef
@@ -22,6 +22,10 @@ define|#
 directive|define
 name|__TIC_H
 end_define
+
+begin_comment
+comment|/* *INDENT-OFF* */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -576,6 +580,10 @@ value|((struct name_table_entry *) 0)
 end_define
 
 begin_comment
+comment|/*  * The casts are required for correct sign-propagation with systems such as  * AIX, IRIX64, Solaris which default to unsigned characters.  The C standard  * leaves this detail unspecified.  */
+end_comment
+
+begin_comment
 comment|/* out-of-band values for representing absent capabilities */
 end_comment
 
@@ -706,6 +714,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NCURSES_TERM_ENTRY_H_incl
+end_ifdef
 
 begin_comment
 comment|/* access.c */
@@ -928,6 +942,16 @@ end_extern
 begin_expr_stmt
 unit|)
 name|_nc_syntax
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(int
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_strict_bsd
 expr_stmt|;
 end_expr_stmt
 
@@ -1326,46 +1350,6 @@ begin_comment
 comment|/* db_iterator.c */
 end_comment
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|dbdTIC
-init|=
-literal|0
-block|,
-if|#
-directive|if
-name|USE_DATABASE
-name|dbdEnvOnce
-block|,
-name|dbdHome
-block|,
-name|dbdEnvList
-block|,
-name|dbdCfgList
-block|,
-name|dbdCfgOnce
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|USE_TERMCAP
-name|dbdEnvOnce2
-block|,
-name|dbdEnvList2
-block|,
-name|dbdCfgList2
-block|,
-endif|#
-directive|endif
-name|dbdLAST
-block|}
-name|DBDIRS
-typedef|;
-end_typedef
-
 begin_extern
 extern|extern NCURSES_EXPORT(const char *
 end_extern
@@ -1445,6 +1429,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NCURSES_TERM_ENTRY_H_incl */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1456,6 +1449,10 @@ unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* *INDENT-ON* */
+end_comment
 
 begin_endif
 endif|#

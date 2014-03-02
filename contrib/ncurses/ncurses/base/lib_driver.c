@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2008-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2008-2010,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_driver.c,v 1.3 2010/12/20 00:29:17 tom Exp $"
+literal|"$Id: lib_driver.c,v 1.4 2012/09/22 19:32:46 tom Exp $"
 argument_list|)
 end_macro
 
@@ -50,7 +50,7 @@ ifdef|#
 directive|ifdef
 name|__MINGW32__
 block|{
-literal|"win"
+literal|"win32con"
 block|,
 operator|&
 name|_nc_WIN_DRIVER
@@ -64,6 +64,7 @@ block|,
 operator|&
 name|_nc_TINFO_DRIVER
 block|}
+comment|/* must be last */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -172,6 +173,55 @@ index|]
 operator|.
 name|driver
 expr_stmt|;
+comment|/* 	 * Use "#" (a character which cannot begin a terminal's name) to 	 * select specific driver from the table. 	 * 	 * In principle, we could have more than one non-terminfo driver, 	 * e.g., "win32gui". 	 */
+if|if
+condition|(
+name|name
+operator|!=
+literal|0
+operator|&&
+operator|*
+name|name
+operator|==
+literal|'#'
+condition|)
+block|{
+name|size_t
+name|n
+init|=
+name|strlen
+argument_list|(
+name|name
+operator|+
+literal|1
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|n
+operator|!=
+literal|0
+operator|&&
+name|strncmp
+argument_list|(
+name|name
+operator|+
+literal|1
+argument_list|,
+name|DriverTable
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|n
+argument_list|)
+condition|)
+block|{
+continue|continue;
+block|}
+block|}
 if|if
 condition|(
 name|res

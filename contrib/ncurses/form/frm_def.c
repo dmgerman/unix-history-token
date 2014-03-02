@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: frm_def.c,v 1.25 2010/01/23 21:14:36 tom Exp $"
+literal|"$Id: frm_def.c,v 1.26 2012/03/11 00:37:16 tom Exp $"
 argument_list|)
 end_macro
 
@@ -691,6 +691,9 @@ name|pg
 operator|->
 name|pmin
 operator|=
+operator|(
+name|short
+operator|)
 name|j
 expr_stmt|;
 else|else
@@ -711,9 +714,14 @@ name|pg
 operator|->
 name|pmax
 operator|=
+call|(
+name|short
+call|)
+argument_list|(
 name|j
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 name|pg
 operator|++
@@ -722,6 +730,9 @@ name|pg
 operator|->
 name|pmin
 operator|=
+operator|(
+name|short
+operator|)
 name|j
 expr_stmt|;
 block|}
@@ -770,6 +781,9 @@ name|form
 operator|->
 name|rows
 operator|=
+operator|(
+name|short
+operator|)
 name|maximum_row_in_field
 expr_stmt|;
 if|if
@@ -784,6 +798,9 @@ name|form
 operator|->
 name|cols
 operator|=
+operator|(
+name|short
+operator|)
 name|maximum_col_in_field
 expr_stmt|;
 block|}
@@ -791,20 +808,31 @@ name|pg
 operator|->
 name|pmax
 operator|=
+call|(
+name|short
+call|)
+argument_list|(
 name|field_cnt
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 name|form
 operator|->
 name|maxfield
 operator|=
+operator|(
+name|short
+operator|)
 name|field_cnt
 expr_stmt|;
 name|form
 operator|->
 name|maxpage
 operator|=
+operator|(
+name|short
+operator|)
 name|page_nr
 expr_stmt|;
 comment|/* Sort fields on form pages */
@@ -869,6 +897,9 @@ index|]
 operator|->
 name|index
 operator|=
+operator|(
+name|short
+operator|)
 name|j
 expr_stmt|;
 name|fields
@@ -878,6 +909,9 @@ index|]
 operator|->
 name|page
 operator|=
+operator|(
+name|short
+operator|)
 name|page_nr
 expr_stmt|;
 name|fld

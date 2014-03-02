@@ -1106,8 +1106,8 @@ name|ucs
 operator|!=
 literal|0x303f
 operator|)
-operator|||
 comment|/* CJK ... Yi */
+operator|||
 operator|(
 name|ucs
 operator|>=
@@ -1117,8 +1117,8 @@ name|ucs
 operator|<=
 literal|0xd7a3
 operator|)
-operator|||
 comment|/* Hangul Syllables */
+operator|||
 operator|(
 name|ucs
 operator|>=
@@ -1128,8 +1128,8 @@ name|ucs
 operator|<=
 literal|0xfaff
 operator|)
-operator|||
 comment|/* CJK Compatibility Ideographs */
+operator|||
 operator|(
 name|ucs
 operator|>=
@@ -1139,8 +1139,8 @@ name|ucs
 operator|<=
 literal|0xfe19
 operator|)
-operator|||
 comment|/* Vertical forms */
+operator|||
 operator|(
 name|ucs
 operator|>=
@@ -1150,8 +1150,8 @@ name|ucs
 operator|<=
 literal|0xfe6f
 operator|)
-operator|||
 comment|/* CJK Compatibility Forms */
+operator|||
 operator|(
 name|ucs
 operator|>=
@@ -1161,8 +1161,8 @@ name|ucs
 operator|<=
 literal|0xff60
 operator|)
-operator|||
 comment|/* Fullwidth Forms */
+operator|||
 operator|(
 name|ucs
 operator|>=
@@ -1171,6 +1171,19 @@ operator|&&
 name|ucs
 operator|<=
 literal|0xffe6
+operator|)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SIZEOF_WCHAR_T
+argument_list|)
+operator|||
+operator|(
+name|SIZEOF_WCHAR_T
+operator|>=
+literal|4
 operator|)
 operator|||
 operator|(
@@ -1192,6 +1205,8 @@ name|ucs
 operator|<=
 literal|0x3fffd
 operator|)
+endif|#
+directive|endif
 operator|)
 operator|)
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_termcap.c,v 1.73 2010/12/25 19:27:12 tom Exp $"
+literal|"$Id: lib_termcap.c,v 1.80 2013/06/08 16:48:47 tom Exp $"
 argument_list|)
 end_macro
 
@@ -174,6 +174,42 @@ value|MyCache[CacheInx].sequence
 end_define
 
 begin_comment
+comment|/*  * Termcap names are matched only using the first two bytes.  * Ignore any extended names longer than two bytes, to avoid problems  * with legacy code which passes in parameters whose use is long forgotten.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ValidCap
+parameter_list|(
+name|cap
+parameter_list|)
+value|(((cap)[0] != '\0')&& ((cap)[1] != '\0'))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SameCap
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)[0] == (b)[0])&& ((a)[1] == (b)[1]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ValidExt
+parameter_list|(
+name|ext
+parameter_list|)
+value|(ValidCap(ext)&& (ext)[2] == '\0')
+end_define
+
+begin_comment
 comment|/***************************************************************************  *  * tgetent(bufp, term)  *  * In termcap, this function reads in the entry for terminal `term' into the  * buffer pointed to by bufp. It must be called before any of the functions  * below are called.  * In this terminfo emulation, tgetent() simply calls setupterm() (which  * does a bit more than tgetent() in termcap does), and returns its return  * value (1 if successful, 0 if no terminal with the given name could be  * found, or -1 if no terminal descriptions have been installed on the  * system).  The bufp argument is ignored.  *  ***************************************************************************/
 end_comment
 
@@ -277,11 +313,11 @@ name|drv
 operator|->
 name|isTerminfo
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|rc
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/*      * In general we cannot tell if the fixed sgr0 is still used by the      * caller, but if tgetent() is called with the same buffer, that is      * good enough, since the previous data would be invalidated by the      * current call.      *      * bufp may be a null pointer, e.g., GNU termcap.  That allocates data,      * which is good until the next tgetent() call.  The conventional termcap      * is inconvenient because of the fixed buffer size, but because it uses      * caller-supplied buffers, can have multiple terminal descriptions in      * use at a given time.      */
@@ -719,7 +755,7 @@ literal|0
 end_if
 
 begin_else
-unit|static bool same_tcname(const char *a, const char *b) {     fprintf(stderr, "compare(%s,%s)\n", a, b);     return !strncmp(a, b, 2); }
+unit|static bool same_tcname(const char *a, const char *b) {     bool code = SameCap(a, b);     fprintf(stderr, "compare(%s,%s) %s\n", a, b, code ? "same" : "diff");     return code; }
 else|#
 directive|else
 end_else
@@ -733,7 +769,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|!strncmp(a,b,2)
+value|SameCap(a,b)
 end_define
 
 begin_endif
@@ -769,9 +805,10 @@ literal|0
 decl_stmt|;
 comment|/* Solaris returns zero for missing flag */
 name|int
-name|i
-decl_stmt|,
 name|j
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|T
 argument_list|(
@@ -796,6 +833,11 @@ condition|(
 name|HasTInfoTerminal
 argument_list|(
 name|SP_PARM
+argument_list|)
+operator|&&
+name|ValidCap
+argument_list|(
+name|id
 argument_list|)
 condition|)
 block|{
@@ -849,11 +891,9 @@ directive|if
 name|NCURSES_XNAMES
 else|else
 block|{
-name|j
-operator|=
-operator|-
-literal|1
-expr_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|for_each_ext_boolean
 argument_list|(
 argument|i
@@ -881,6 +921,11 @@ name|same_tcname
 argument_list|(
 name|id
 argument_list|,
+name|capname
+argument_list|)
+operator|&&
+name|ValidExt
+argument_list|(
 name|capname
 argument_list|)
 condition|)
@@ -990,9 +1035,10 @@ init|=
 name|ABSENT_NUMERIC
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|j
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|T
 argument_list|(
@@ -1017,6 +1063,11 @@ condition|(
 name|HasTInfoTerminal
 argument_list|(
 name|SP_PARM
+argument_list|)
+operator|&&
+name|ValidCap
+argument_list|(
+name|id
 argument_list|)
 condition|)
 block|{
@@ -1070,11 +1121,9 @@ directive|if
 name|NCURSES_XNAMES
 else|else
 block|{
-name|j
-operator|=
-operator|-
-literal|1
-expr_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|for_each_ext_number
 argument_list|(
 argument|i
@@ -1102,6 +1151,11 @@ name|same_tcname
 argument_list|(
 name|id
 argument_list|,
+name|capname
+argument_list|)
+operator|&&
+name|ValidExt
+argument_list|(
 name|capname
 argument_list|)
 condition|)
@@ -1229,9 +1283,10 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|j
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|T
 argument_list|(
@@ -1256,6 +1311,11 @@ condition|(
 name|HasTInfoTerminal
 argument_list|(
 name|SP_PARM
+argument_list|)
+operator|&&
+name|ValidCap
+argument_list|(
+name|id
 argument_list|)
 condition|)
 block|{
@@ -1309,11 +1369,9 @@ directive|if
 name|NCURSES_XNAMES
 else|else
 block|{
-name|j
-operator|=
-operator|-
-literal|1
-expr_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|for_each_ext_string
 argument_list|(
 argument|i
@@ -1341,6 +1399,11 @@ name|same_tcname
 argument_list|(
 name|id
 argument_list|,
+name|capname
+argument_list|)
+operator|&&
+name|ValidExt
+argument_list|(
 name|capname
 argument_list|)
 condition|)
@@ -1376,7 +1439,9 @@ argument_list|(
 name|TRACE_DATABASE
 argument_list|,
 operator|(
-literal|"found match : %s"
+literal|"found match %d: %s"
+operator|,
+name|j
 operator|,
 name|_nc_visbuf
 argument_list|(
@@ -1436,15 +1501,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 operator|*
 name|area
 argument_list|,
 name|result
+argument_list|,
+literal|1024
 argument_list|)
 expr_stmt|;
 name|result

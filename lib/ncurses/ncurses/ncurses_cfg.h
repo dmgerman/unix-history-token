@@ -38,13 +38,6 @@ name|SYSTEM_NAME
 value|"FreeBSD"
 end_define
 
-begin_define
-define|#
-directive|define
-name|CC_HAS_PROTOS
-value|1
-end_define
-
 begin_if
 if|#
 directive|if
@@ -87,13 +80,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_BIG_CORE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|USE_TERMCAP
 value|1
 end_define
 
@@ -170,6 +156,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_ASSUME_DEFAULT_COLORS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_CURSES_VERSION
 value|1
 end_define
@@ -206,6 +199,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_USE_DEFAULT_COLORS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_USE_SCREEN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_USE_WINDOW
 value|1
 end_define
 
@@ -397,13 +404,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NDEBUG
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_NC_ALLOC_H
 value|1
 end_define
@@ -551,6 +551,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_UNISTD_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETOPT_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETOPT_HEADER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SYS_TIME_SELECT
 value|1
 end_define
@@ -621,6 +642,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_PUTENV
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_REMOVE
 value|1
 end_define
@@ -643,6 +671,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_SETBUFFER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETENV
 value|1
 end_define
 
@@ -712,6 +747,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CGETENT_CONST
+value|const
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_ISASCII
 value|1
 end_define
@@ -756,13 +798,6 @@ define|#
 directive|define
 name|HAVE_MKSTEMP
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|RETSIGTYPE
-value|void
 end_define
 
 begin_define
@@ -845,14 +880,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_IOSTREAM
+name|HAVE_TYPEINFO
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|HAVE_TYPEINFO
+name|HAVE_IOSTREAM
 value|1
 end_define
 
@@ -866,7 +901,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ETIP_NEEDS_MATH_H
+name|CPP_HAS_STATIC_CAST
 value|1
 end_define
 
@@ -930,7 +965,14 @@ begin_define
 define|#
 directive|define
 name|NCURSES_VERSION_STRING
-value|"5.9.20110404"
+value|"5.9.20140222"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCURSES_OSPEED_COMPAT
+value|1
 end_define
 
 begin_comment
@@ -951,6 +993,13 @@ begin_define
 define|#
 directive|define
 name|USE_WIDEC_SUPPORT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCURSES_WIDECHAR
 value|1
 end_define
 
@@ -1043,6 +1092,13 @@ define|#
 directive|define
 name|NEED_WCHAR_H
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_WCHAR_T
+value|4
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Terminal setup routines common to termcap and terminfo:  *  *		use_env(bool)  *		setupterm(char *, int, int *)  */
+comment|/*  * Terminal setup routines common to termcap and terminfo:  *  *		use_env(bool)  *		use_tioctl(bool)  *		setupterm(char *, int, int *)  */
 end_comment
 
 begin_include
@@ -30,29 +30,6 @@ end_comment
 begin_if
 if|#
 directive|if
-name|SVR4_TERMIO
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|_POSIX_SOURCE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|HAVE_LOCALE_H
 end_if
 
@@ -70,7 +47,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_setup.c,v 1.135 2011/02/06 01:04:21 tom Exp $"
+literal|"$Id: lib_setup.c,v 1.158 2013/06/22 19:59:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -828,6 +805,9 @@ expr_stmt|;
 if|#
 directive|if
 name|NCURSES_SP_FUNCS
+name|START_TRACE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|IsPreScreen
@@ -848,6 +828,78 @@ directive|else
 name|_nc_prescreen
 operator|.
 name|use_env
+operator|=
+name|f
+expr_stmt|;
+endif|#
+directive|endif
+name|returnVoid
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|void
+function|)
+name|NCURSES_SP_NAME
+argument_list|(
+argument|use_tioctl
+argument_list|)
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|bool
+name|f
+parameter_list|)
+block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"use_tioctl(%p,%d)"
+argument_list|)
+operator|,
+operator|(
+name|void
+operator|*
+operator|)
+name|SP_PARM
+operator|,
+operator|(
+name|int
+operator|)
+name|f
+operator|)
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+name|START_TRACE
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|IsPreScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
+condition|)
+block|{
+name|SP_PARM
+operator|->
+name|_use_tioctl
+operator|=
+name|f
+expr_stmt|;
+block|}
+else|#
+directive|else
+name|_nc_prescreen
+operator|.
+name|use_tioctl
 operator|=
 name|f
 expr_stmt|;
@@ -895,9 +947,57 @@ name|f
 operator|)
 argument_list|)
 expr_stmt|;
+name|START_TRACE
+argument_list|()
+expr_stmt|;
 name|_nc_prescreen
 operator|.
 name|use_env
+operator|=
+name|f
+expr_stmt|;
+name|returnVoid
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|use_tioctl
+argument_list|(
+argument|bool f
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"use_tioctl(%d)"
+argument_list|)
+operator|,
+operator|(
+name|int
+operator|)
+name|f
+operator|)
+argument_list|)
+expr_stmt|;
+name|START_TRACE
+argument_list|()
+expr_stmt|;
+name|_nc_prescreen
+operator|.
+name|use_tioctl
 operator|=
 name|f
 expr_stmt|;
@@ -1080,6 +1180,10 @@ condition|(
 name|_nc_prescreen
 operator|.
 name|use_env
+operator|||
+name|_nc_prescreen
+operator|.
+name|use_tioctl
 condition|)
 block|{
 name|int
@@ -1111,10 +1215,24 @@ expr_stmt|;
 operator|*
 name|linep
 operator|=
+operator|(
+operator|(
+name|sp
+operator|!=
+literal|0
+operator|&&
+name|sp
+operator|->
+name|_filtered
+operator|)
+condition|?
+literal|1
+else|:
 name|screendata
 index|[
 literal|1
 index|]
+operator|)
 expr_stmt|;
 name|T
 argument_list|(
@@ -1229,7 +1347,72 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_SIZECHANGE */
-comment|/* 	 * Finally, look for environment variables. 	 * 	 * Solaris lets users override either dimension with an environment 	 * variable. 	 */
+if|if
+condition|(
+name|_nc_prescreen
+operator|.
+name|use_env
+condition|)
+block|{
+if|if
+condition|(
+name|_nc_prescreen
+operator|.
+name|use_tioctl
+condition|)
+block|{
+comment|/* 		 * If environment variables are used, update them. 		 */
+if|if
+condition|(
+operator|(
+name|sp
+operator|==
+literal|0
+operator|||
+operator|!
+name|sp
+operator|->
+name|_filtered
+operator|)
+operator|&&
+name|_nc_getenv_num
+argument_list|(
+literal|"LINES"
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|_nc_setenv_num
+argument_list|(
+literal|"LINES"
+argument_list|,
+operator|*
+name|linep
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|_nc_getenv_num
+argument_list|(
+literal|"COLUMNS"
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|_nc_setenv_num
+argument_list|(
+literal|"COLUMNS"
+argument_list|,
+operator|*
+name|colp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* 	     * Finally, look for environment variables. 	     * 	     * Solaris lets users override either dimension with an environment 	     * variable. 	     */
 if|if
 condition|(
 operator|(
@@ -1289,6 +1472,7 @@ name|colp
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* if we can't get dynamic info about the size, use static */
 if|if
@@ -1566,6 +1750,7 @@ operator|!=
 name|old_cols
 operator|)
 condition|)
+block|{
 name|sp
 operator|->
 name|_resize
@@ -1575,6 +1760,34 @@ argument_list|,
 argument|new_cols
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sp
+operator|->
+name|_sig_winch
+operator|&&
+operator|(
+name|sp
+operator|->
+name|_ungetch
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|sp
+operator|->
+name|_ungetch
+argument_list|(
+name|SP_PARM
+argument_list|,
+name|KEY_RESIZE
+argument_list|)
+expr_stmt|;
+comment|/* so application can know this */
+block|}
 name|sp
 operator|->
 name|_sig_winch
@@ -1594,38 +1807,12 @@ begin_comment
 comment|/****************************************************************************  *  * Terminal setup  *  ****************************************************************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ret_error
-parameter_list|(
-name|code
-parameter_list|,
-name|fmt
-parameter_list|,
-name|arg
-parameter_list|)
-value|if (errret) {\ 					    *errret = code;\ 					    returnCode(ERR);\ 					} else {\ 					    fprintf(stderr, fmt, arg);\ 					    exit(EXIT_FAILURE);\ 					}
-end_define
-
-begin_define
-define|#
-directive|define
-name|ret_error0
-parameter_list|(
-name|code
-parameter_list|,
-name|msg
-parameter_list|)
-value|if (errret) {\ 					    *errret = code;\ 					    returnCode(ERR);\ 					} else {\ 					    fprintf(stderr, msg);\ 					    exit(EXIT_FAILURE);\ 					}
-end_define
-
 begin_if
 if|#
 directive|if
-name|USE_DATABASE
+name|NCURSES_USE_DATABASE
 operator|||
-name|USE_TERMCAP
+name|NCURSES_USE_TERMCAP
 end_if
 
 begin_comment
@@ -1761,7 +1948,7 @@ name|TERMINAL
 modifier|*
 name|termp
 parameter_list|,
-name|char
+name|int
 name|proto
 parameter_list|)
 block|{
@@ -1822,6 +2009,8 @@ index|[
 name|i
 index|]
 init|;
+name|tmp
+operator|&&
 operator|*
 name|tmp
 condition|;
@@ -1831,8 +2020,11 @@ control|)
 block|{
 if|if
 condition|(
+name|UChar
+argument_list|(
 operator|*
 name|tmp
+argument_list|)
 operator|==
 name|proto
 condition|)
@@ -1992,6 +2184,18 @@ literal|0
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+operator|&&
+name|USE_WIDEC_SUPPORT
+name|result
+operator|=
+literal|1
+expr_stmt|;
+elif|#
+directive|elif
 name|HAVE_LANGINFO_CODESET
 name|char
 modifier|*
@@ -2137,14 +2341,10 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|env
-operator|=
 name|getenv
 argument_list|(
 name|env_name
 argument_list|)
-operator|)
 operator|!=
 literal|0
 condition|)
@@ -2307,7 +2507,7 @@ argument|int Filedes
 argument_list|,
 argument|int *errret
 argument_list|,
-argument|bool reuse
+argument|int reuse
 argument_list|)
 end_macro
 
@@ -2457,6 +2657,15 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_TERM_DRIVER
+name|tname
+operator|=
+literal|"unknown"
+expr_stmt|;
+else|#
+directive|else
 name|ret_error0
 argument_list|(
 name|TGETENT_ERR
@@ -2464,6 +2673,8 @@ argument_list|,
 literal|"TERM environment variable not set.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 if|if
@@ -2570,24 +2781,46 @@ name|code
 operator|=
 name|OK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_TERM_DRIVER
+name|TCB
+operator|=
+operator|(
+name|TERMINAL_CONTROL_BLOCK
+operator|*
+operator|)
+name|termp
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
 ifdef|#
 directive|ifdef
 name|USE_TERM_DRIVER
-name|termp
+name|TERMINAL_CONTROL_BLOCK
+modifier|*
+name|my_tcb
+decl_stmt|;
+name|my_tcb
 operator|=
-operator|(
-name|TERMINAL
-operator|*
-operator|)
 name|typeCalloc
 argument_list|(
 name|TERMINAL_CONTROL_BLOCK
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|termp
+operator|=
+operator|&
+operator|(
+name|my_tcb
+operator|->
+name|term
+operator|)
 expr_stmt|;
 else|#
 directive|else
@@ -2684,9 +2917,9 @@ else|#
 directive|else
 if|#
 directive|if
-name|USE_DATABASE
+name|NCURSES_USE_DATABASE
 operator|||
-name|USE_TERMCAP
+name|NCURSES_USE_TERMCAP
 name|status
 operator|=
 name|_nc_setup_tinfo
@@ -2730,12 +2963,17 @@ condition|(
 name|fallback
 condition|)
 block|{
+name|_nc_copy_termtype
+argument_list|(
+operator|&
+operator|(
 name|termp
 operator|->
 name|type
-operator|=
-operator|*
+operator|)
+argument_list|,
 name|fallback
+argument_list|)
 expr_stmt|;
 name|status
 operator|=
@@ -2778,11 +3016,11 @@ operator|==
 name|TGETENT_NO
 condition|)
 block|{
-name|ret_error
+name|ret_error1
 argument_list|(
 name|status
 argument_list|,
-literal|"'%s': unknown terminal type.\n"
+literal|"unknown terminal type.\n"
 argument_list|,
 name|tname
 argument_list|)
@@ -2803,9 +3041,14 @@ name|type
 operator|.
 name|term_names
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|NAMESIZE
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ttytype
@@ -2850,8 +3093,11 @@ name|_nc_tinfo_cmdch
 argument_list|(
 name|termp
 argument_list|,
+name|UChar
+argument_list|(
 operator|*
 name|command_character
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If an application calls setupterm() rather than initscr() or 	 * newterm(), we will not have the def_prog_mode() call in 	 * _nc_setupscreen().  Do it now anyway, so we can initialize the 	 * baudrate. 	 */
@@ -2947,26 +3193,73 @@ condition|(
 name|generic_type
 condition|)
 block|{
-name|ret_error
+comment|/* 	 * BSD 4.3's termcap contains mis-typed "gn" for wy99.  Do a sanity 	 * check before giving up. 	 */
+if|if
+condition|(
+operator|(
+name|VALID_STRING
 argument_list|(
-name|TGETENT_NO
+name|cursor_address
+argument_list|)
+operator|||
+operator|(
+name|VALID_STRING
+argument_list|(
+name|cursor_down
+argument_list|)
+operator|&&
+name|VALID_STRING
+argument_list|(
+name|cursor_home
+argument_list|)
+operator|)
+operator|)
+operator|&&
+name|VALID_STRING
+argument_list|(
+name|clear_screen
+argument_list|)
+condition|)
+block|{
+name|ret_error1
+argument_list|(
+name|TGETENT_YES
 argument_list|,
-literal|"'%s': I need something more specific.\n"
+literal|"terminal is not really generic.\n"
 argument_list|,
 name|tname
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|del_curterm
+argument_list|(
+name|termp
+argument_list|)
+expr_stmt|;
+name|ret_error1
+argument_list|(
+name|TGETENT_NO
+argument_list|,
+literal|"I need something more specific.\n"
+argument_list|,
+name|tname
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
 if|if
 condition|(
 name|hard_copy
 condition|)
 block|{
-name|ret_error
+name|ret_error1
 argument_list|(
 name|TGETENT_YES
 argument_list|,
-literal|"'%s': I can't handle hardcopy terminals.\n"
+literal|"I can't handle hardcopy terminals.\n"
 argument_list|,
 name|tname
 argument_list|)
@@ -3167,7 +3460,7 @@ argument|int Filedes
 argument_list|,
 argument|int *errret
 argument_list|,
-argument|bool reuse
+argument|int reuse
 argument_list|)
 end_macro
 
@@ -3179,6 +3472,8 @@ decl_stmt|;
 name|TERMINAL
 modifier|*
 name|termp
+init|=
+literal|0
 decl_stmt|;
 name|res
 operator|=

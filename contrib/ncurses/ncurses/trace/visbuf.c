@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2001-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2001-2012,2014 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: visbuf.c,v 1.37 2010/05/29 18:51:41 tom Exp $"
+literal|"$Id: visbuf.c,v 1.43 2014/02/23 01:21:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -122,6 +122,69 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|USE_STRING_HACKS
+operator|&&
+name|HAVE_SNPRINTF
+end_if
+
+begin_define
+define|#
+directive|define
+name|VisChar
+parameter_list|(
+name|tp
+parameter_list|,
+name|chr
+parameter_list|,
+name|limit
+parameter_list|)
+value|_nc_vischar(tp, chr, limit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIMIT_ARG
+value|,size_t limit
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VisChar
+parameter_list|(
+name|tp
+parameter_list|,
+name|chr
+parameter_list|,
+name|limit
+parameter_list|)
+value|_nc_vischar(tp, chr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIMIT_ARG
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|char
@@ -134,6 +197,7 @@ name|tp
 parameter_list|,
 name|unsigned
 name|c
+name|LIMIT_ARG
 parameter_list|)
 block|{
 if|if
@@ -168,12 +232,18 @@ if|if
 condition|(
 name|is7bits
 argument_list|(
+operator|(
+name|int
+operator|)
 name|c
 argument_list|)
 operator|&&
 operator|(
 name|isgraph
 argument_list|(
+operator|(
+name|int
+operator|)
 name|c
 argument_list|)
 operator|||
@@ -352,10 +422,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|tp
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+name|limit
+argument_list|)
 literal|"\\%03lo"
 argument_list|,
 operator|(
@@ -420,6 +494,9 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 if|if
 condition|(
 name|buf
@@ -457,6 +534,10 @@ name|strlen
 argument_list|(
 name|buf
 argument_list|)
+expr_stmt|;
+name|count
+operator|=
+name|len
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -573,7 +654,7 @@ while|while
 condition|(
 operator|(
 operator|--
-name|len
+name|count
 operator|>=
 literal|0
 operator|)
@@ -591,13 +672,18 @@ condition|)
 block|{
 name|tp
 operator|=
-name|_nc_vischar
+name|VisChar
 argument_list|(
 name|tp
 argument_list|,
 name|UChar
 argument_list|(
 name|c
+argument_list|)
+argument_list|,
+name|NormalLen
+argument_list|(
+name|len
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -825,6 +911,9 @@ decl_stmt|;
 name|wchar_t
 name|c
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 if|if
 condition|(
 name|buf
@@ -851,6 +940,10 @@ name|wcslen
 argument_list|(
 name|buf
 argument_list|)
+expr_stmt|;
+name|count
+operator|=
+name|len
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -929,7 +1022,7 @@ while|while
 condition|(
 operator|(
 operator|--
-name|len
+name|count
 operator|>=
 literal|0
 operator|)
@@ -972,10 +1065,17 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|temp
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+argument_list|)
 literal|"\\u%08X"
 argument_list|,
 operator|(
@@ -1011,7 +1111,7 @@ control|)
 block|{
 name|tp
 operator|=
-name|_nc_vischar
+name|VisChar
 argument_list|(
 name|tp
 argument_list|,
@@ -1021,6 +1121,11 @@ name|temp
 index|[
 name|k
 index|]
+argument_list|)
+argument_list|,
+name|WideLen
+argument_list|(
+name|len
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1239,6 +1344,13 @@ name|mylen
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mybuf
+operator|!=
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|n
@@ -1278,6 +1390,7 @@ operator|=
 literal|L'
 expr|\0'
 expr_stmt|;
+block|}
 return|return
 name|_nc_viswbuf2
 argument_list|(
@@ -1330,6 +1443,9 @@ name|_nc_trace_buf
 argument_list|(
 name|bufnum
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|BUFSIZ
 argument_list|)
 decl_stmt|;
@@ -1642,7 +1758,7 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|_nc_vischar
+name|VisChar
 argument_list|(
 name|temp
 argument_list|,
@@ -1652,6 +1768,11 @@ name|PUTC_buf
 index|[
 name|k
 index|]
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1677,7 +1798,7 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|_nc_vischar
+name|VisChar
 argument_list|(
 name|temp
 argument_list|,
@@ -1688,10 +1809,16 @@ index|[
 name|j
 index|]
 argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|result
-operator|=
+operator|(
+name|void
+operator|)
 name|_nc_trace_bufcat
 argument_list|(
 name|bufnum
