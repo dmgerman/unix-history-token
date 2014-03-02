@@ -2635,6 +2635,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Default to 1 port group. 	 */
 name|t
 operator|=
 literal|1
