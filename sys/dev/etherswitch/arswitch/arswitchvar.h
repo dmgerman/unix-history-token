@@ -198,6 +198,18 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+comment|/* ATU functions */
+name|int
+function_decl|(
+modifier|*
+name|arswitch_atu_flush
+function_decl|)
+parameter_list|(
+name|struct
+name|arswitch_softc
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* VLAN functions */
 name|int
 function_decl|(
