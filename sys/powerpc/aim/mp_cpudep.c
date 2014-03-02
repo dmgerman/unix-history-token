@@ -1141,6 +1141,32 @@ argument_list|()
 operator|>>
 literal|16
 expr_stmt|;
+comment|/* The following is needed for restoring from sleep. */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+comment|/* Writing to the time base register is hypervisor-privileged */
+if|if
+condition|(
+name|mfmsr
+argument_list|()
+operator|&
+name|PSL_HV
+condition|)
+name|mttb
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|mttb
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|vers

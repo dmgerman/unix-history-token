@@ -444,6 +444,23 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Put the current CPU, as last step in suspend, to sleep  */
+end_comment
+
+begin_function
+name|void
+name|platform_sleep
+parameter_list|()
+block|{
+name|PLATFORM_SLEEP
+argument_list|(
+name|plat_obj
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|int
 name|platform_smp_first_cpu
