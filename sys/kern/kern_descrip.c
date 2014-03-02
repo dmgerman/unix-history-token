@@ -7116,7 +7116,7 @@ name|onfiles
 condition|)
 comment|/* the table is already large enough */
 return|return;
-comment|/* 	 * Allocate a new table and map.  We need enough space for the 	 * file entries themselves and the struct freetable we will use 	 * when we decommission the table and place it on the freelist. 	 * We place the struct freetable in the middle so we don't have 	 * to worry about padding. 	 */
+comment|/* 	 * Allocate a new table.  We need enough space for the 	 * file entries themselves and the struct freetable we will use 	 * when we decommission the table and place it on the freelist. 	 * We place the struct freetable in the middle so we don't have 	 * to worry about padding. 	 */
 name|ntable
 operator|=
 name|malloc
@@ -7144,6 +7144,42 @@ operator||
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+comment|/* copy the old data over and point at the new tables */
+name|memcpy
+argument_list|(
+name|ntable
+argument_list|,
+name|otable
+argument_list|,
+name|onfiles
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|otable
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_ofiles
+operator|=
+name|ntable
+expr_stmt|;
+comment|/* 	 * Allocate a new map only if the old is not large enough.  It will 	 * grow at a slower rate than the table as it can map more 	 * entries than the table can hold. 	 */
+if|if
+condition|(
+name|NDSLOTS
+argument_list|(
+name|nnfiles
+argument_list|)
+operator|>
+name|NDSLOTS
+argument_list|(
+name|onfiles
+argument_list|)
+condition|)
+block|{
 name|nmap
 operator|=
 name|malloc
@@ -7162,22 +7198,7 @@ operator||
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* copy the old data over and point at the new tables */
-name|memcpy
-argument_list|(
-name|ntable
-argument_list|,
-name|otable
-argument_list|,
-name|onfiles
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|otable
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* copy over the old data and update the pointer */
 name|memcpy
 argument_list|(
 name|nmap
@@ -7196,19 +7217,13 @@ name|omap
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* update the pointers and counters */
-name|fdp
-operator|->
-name|fd_ofiles
-operator|=
-name|ntable
-expr_stmt|;
 name|fdp
 operator|->
 name|fd_map
 operator|=
 name|nmap
 expr_stmt|;
+block|}
 comment|/* 	 * In order to have a valid pattern for fget_unlocked() 	 * fdp->fd_nfiles must be the last member to be updated, otherwise 	 * fget_unlocked() consumers may reference a new, higher value for 	 * fdp->fd_nfiles before to access the fdp->fd_ofiles array, 	 * resulting in OOB accesses. 	 */
 name|atomic_store_rel_int
 argument_list|(
@@ -7220,7 +7235,7 @@ argument_list|,
 name|nnfiles
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do not free the old file table, as some threads may still 	 * reference entries within it.  Instead, place it on a freelist 	 * which will be processed when the struct filedesc is released. 	 * 	 * Do, however, free the old map. 	 * 	 * Note that if onfiles == NDFILE, we're dealing with the original 	 * static allocation contained within (struct filedesc0 *)fdp, 	 * which must not be freed. 	 */
+comment|/* 	 * Do not free the old file table, as some threads may still 	 * reference entries within it.  Instead, place it on a freelist 	 * which will be processed when the struct filedesc is released. 	 * 	 * Note that if onfiles == NDFILE, we're dealing with the original 	 * static allocation contained within (struct filedesc0 *)fdp, 	 * which must not be freed. 	 */
 if|if
 condition|(
 name|onfiles
@@ -7268,6 +7283,20 @@ argument_list|,
 name|ft_next
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * The map does not have the same possibility of threads still 	 * holding references to it.  So always free it as long as it 	 * does not reference the original static allocation. 	 */
+if|if
+condition|(
+name|NDSLOTS
+argument_list|(
+name|onfiles
+argument_list|)
+operator|>
+name|NDSLOTS
+argument_list|(
+name|NDFILE
+argument_list|)
+condition|)
 name|free
 argument_list|(
 name|omap
@@ -7275,7 +7304,6 @@ argument_list|,
 name|M_FILEDESC
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
