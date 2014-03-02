@@ -579,6 +579,15 @@ case|:
 case|case
 name|AR71XX_SOC_AR9331
 case|:
+case|case
+name|AR71XX_SOC_AR9341
+case|:
+case|case
+name|AR71XX_SOC_AR9342
+case|:
+case|case
+name|AR71XX_SOC_AR9344
+case|:
 name|sc
 operator|->
 name|sc_flags
