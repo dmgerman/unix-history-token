@@ -383,6 +383,10 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
 condition|)
 name|fatal
 argument_list|(
@@ -415,6 +419,10 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
 condition|)
 name|fatal
 argument_list|(
