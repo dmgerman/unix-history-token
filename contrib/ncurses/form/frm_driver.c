@@ -16315,6 +16315,9 @@ if|if
 condition|(
 name|c
 operator|==
+operator|(
+name|wchar_t
+operator|)
 name|FIRST_ACTIVE_MAGIC
 condition|)
 block|{
