@@ -493,9 +493,29 @@ name|dns_nsstatscounter_rpz_rewrites
 init|=
 literal|36
 block|,
-name|dns_nsstatscounter_max
+ifdef|#
+directive|ifdef
+name|USE_RRL
+name|dns_nsstatscounter_ratedropped
 init|=
 literal|37
+block|,
+name|dns_nsstatscounter_rateslipped
+init|=
+literal|38
+block|,
+name|dns_nsstatscounter_max
+init|=
+literal|39
+else|#
+directive|else
+comment|/* USE_RRL */
+name|dns_nsstatscounter_max
+operator|=
+literal|37
+endif|#
+directive|endif
+comment|/* USE_RRL */
 block|}
 enum|;
 end_enum
@@ -668,6 +688,10 @@ parameter_list|,
 name|char
 modifier|*
 name|args
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|text
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -933,6 +957,10 @@ parameter_list|,
 name|char
 modifier|*
 name|args
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|text
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1025,6 +1053,10 @@ parameter_list|,
 name|char
 modifier|*
 name|args
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|text
 parameter_list|)
 function_decl|;
 end_function_decl

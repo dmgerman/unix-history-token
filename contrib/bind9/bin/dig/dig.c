@@ -660,6 +660,7 @@ directive|endif
 literal|"                 +[no]split=##       (Split hex/base64 fields into chunks)\n"
 literal|"                 +[no]multiline      (Print records in an expanded format)\n"
 literal|"                 +[no]onesoa         (AXFR prints only one soa record)\n"
+literal|"                 +[no]keepopen       (Keep the TCP socket open between queries)\n"
 literal|"        global d-opts and servers (before host name) affect all queries.\n"
 literal|"        local d-opts and servers (after host name) affect only that lookup.\n"
 literal|"        -h                           (print help and exit)\n"
@@ -2425,7 +2426,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"\n;; WARNING: EDNS query returned status "
-literal|"%s - retry with '+noedns'\n"
+literal|"%s - retry with '%s+noedns'\n"
 argument_list|,
 name|rcode_totext
 argument_list|(
@@ -2433,6 +2434,16 @@ name|msg
 operator|->
 name|rcode
 argument_list|)
+argument_list|,
+name|query
+operator|->
+name|lookup
+operator|->
+name|dnssec
+condition|?
+literal|"+nodnssec "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -2451,7 +2462,7 @@ literal|0U
 condition|)
 name|printf
 argument_list|(
-literal|";; WARNING: Messages has %u extra byte%s at "
+literal|";; WARNING: Message has %u extra byte%s at "
 literal|"end\n"
 argument_list|,
 name|extrabytes
@@ -4012,6 +4023,19 @@ operator|=
 name|ISC_TRUE
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'k'
+case|:
+name|FULLCHECK
+argument_list|(
+literal|"keepopen"
+argument_list|)
+expr_stmt|;
+name|keep_open
+operator|=
+name|state
+expr_stmt|;
 break|break;
 case|case
 literal|'m'

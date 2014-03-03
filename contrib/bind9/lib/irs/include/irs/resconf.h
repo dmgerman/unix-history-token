@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009, 2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Load the resolver configuration file 'filename' in the "resolv.conf" format,  * and create a new irs_resconf_t object from the configuration.  *  * Notes:  *  *\li	Currently, only the following options are supported:  *	nameserver, domain, search, sortlist, ndots, and options.  *	In addition, 'sortlist' is not actually effective; it's parsed, but  *	the application cannot use the configuration.  *  * Requires:  *  *\li	'mctx' is a valid memory context.  *  *\li	'filename' != NULL  *  *\li	'confp' != NULL&& '*confp' == NULL  */
+comment|/*%<  * Load the resolver configuration file 'filename' in the "resolv.conf" format,  * and create a new irs_resconf_t object from the configuration.  If the file  * is not found ISC_R_FILENOTFOUND is returned with the structure initialized  * as if file contained only:  *  *	nameserver ::1  *	nameserver 127.0.0.1  *  * Notes:  *  *\li	Currently, only the following options are supported:  *	nameserver, domain, search, sortlist, ndots, and options.  *	In addition, 'sortlist' is not actually effective; it's parsed, but  *	the application cannot use the configuration.  *  * Returns:  * \li	ISC_R_SUCCESS on success  * \li  ISC_R_FILENOTFOUND if the file was not found. *confp will be valid.  * \li  other on error.  *  * Requires:  *  *\li	'mctx' is a valid memory context.  *  *\li	'filename' != NULL  *  *\li	'confp' != NULL&& '*confp' == NULL  */
 end_comment
 
 begin_function_decl

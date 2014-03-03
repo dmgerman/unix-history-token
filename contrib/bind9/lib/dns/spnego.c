@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2006-2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2006-2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1573,7 +1573,7 @@ name|GSS_S_FAILURE
 operator|)
 return|;
 block|}
-name|memcpy
+name|memmove
 argument_list|(
 operator|*
 name|outbuf
@@ -3373,7 +3373,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|memcpy
+name|memmove
 argument_list|(
 name|data
 operator|->
@@ -4680,6 +4680,10 @@ return|return
 operator|(
 name|len_unsigned
 argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|len
 argument_list|)
 operator|+
@@ -5049,6 +5053,10 @@ block|{
 operator|*
 name|p
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|val
 expr_stmt|;
 operator|*
@@ -5080,6 +5088,10 @@ name|len
 operator|-
 literal|1
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|val
 argument_list|,
 operator|&
@@ -5104,6 +5116,10 @@ name|p
 operator|=
 literal|0x80
 operator||
+operator|(
+name|unsigned
+name|char
+operator|)
 name|l
 expr_stmt|;
 operator|*
@@ -5175,7 +5191,7 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|p
 operator|+
@@ -5235,7 +5251,7 @@ name|base
 init|=
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|n
 decl_stmt|;
 for|for
@@ -5245,12 +5261,10 @@ operator|=
 name|data
 operator|->
 name|length
-operator|-
-literal|1
 init|;
 name|n
 operator|>=
-literal|2
+literal|3u
 condition|;
 operator|--
 name|n
@@ -5264,6 +5278,8 @@ operator|->
 name|components
 index|[
 name|n
+operator|-
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -6142,7 +6158,7 @@ name|mech
 operator|->
 name|length
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|p
 argument_list|,
@@ -6296,7 +6312,7 @@ name|GSS_S_FAILURE
 operator|)
 return|;
 block|}
-name|memcpy
+name|memmove
 argument_list|(
 name|p
 argument_list|,

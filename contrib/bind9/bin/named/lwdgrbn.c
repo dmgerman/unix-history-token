@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009, 2013, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -583,7 +583,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|memcpy
+name|memmove
 argument_list|(
 name|rdatas
 argument_list|,
@@ -598,7 +598,7 @@ name|rdatas
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|lens
 argument_list|,
@@ -799,7 +799,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|memcpy
+name|memmove
 argument_list|(
 name|newrdatas
 argument_list|,
@@ -814,7 +814,7 @@ name|rdatas
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|newlens
 argument_list|,
@@ -1091,6 +1091,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|event
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|UNUSED
 argument_list|(
 name|task
@@ -1761,20 +1768,6 @@ literal|"s"
 argument_list|)
 expr_stmt|;
 block|}
-name|dns_lookup_destroy
-argument_list|(
-operator|&
-name|client
-operator|->
-name|lookup
-argument_list|)
-expr_stmt|;
-name|isc_event_free
-argument_list|(
-operator|&
-name|event
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Render the packet. 	 */
 name|client
 operator|->
@@ -1993,6 +1986,20 @@ argument_list|(
 name|client
 argument_list|)
 expr_stmt|;
+name|dns_lookup_destroy
+argument_list|(
+operator|&
+name|client
+operator|->
+name|lookup
+argument_list|)
+expr_stmt|;
+name|isc_event_free
+argument_list|(
+operator|&
+name|event
+argument_list|)
+expr_stmt|;
 return|return;
 name|out
 label|:
@@ -2153,12 +2160,6 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|event
-operator|!=
-name|NULL
-condition|)
 name|isc_event_free
 argument_list|(
 operator|&

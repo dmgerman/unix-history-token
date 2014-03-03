@@ -871,7 +871,7 @@ operator|--
 name|i
 control|)
 block|{
-name|int
+name|size_t
 name|oldret
 init|=
 name|ret
@@ -1037,7 +1037,7 @@ name|origlen
 init|=
 name|len
 decl_stmt|;
-name|int
+name|size_t
 name|oldret
 init|=
 name|ret
@@ -1835,7 +1835,7 @@ operator|->
 name|mechListMIC
 condition|)
 block|{
-name|int
+name|size_t
 name|oldret
 init|=
 name|ret
@@ -1900,7 +1900,7 @@ operator|->
 name|mechToken
 condition|)
 block|{
-name|int
+name|size_t
 name|oldret
 init|=
 name|ret
@@ -1965,7 +1965,7 @@ operator|->
 name|reqFlags
 condition|)
 block|{
-name|int
+name|size_t
 name|oldret
 init|=
 name|ret
@@ -2022,7 +2022,7 @@ name|oldret
 expr_stmt|;
 block|}
 block|{
-name|int
+name|size_t
 name|oldret
 init|=
 name|ret
@@ -3190,7 +3190,7 @@ operator|->
 name|mechListMIC
 condition|)
 block|{
-name|int
+name|size_t
 name|oldret
 init|=
 name|ret
@@ -3255,7 +3255,7 @@ operator|->
 name|responseToken
 condition|)
 block|{
-name|int
+name|size_t
 name|oldret
 init|=
 name|ret
@@ -3320,7 +3320,7 @@ operator|->
 name|supportedMech
 condition|)
 block|{
-name|int
+name|size_t
 name|oldret
 init|=
 name|ret
@@ -3385,7 +3385,7 @@ operator|->
 name|negState
 condition|)
 block|{
-name|int
+name|size_t
 name|oldret
 init|=
 name|ret

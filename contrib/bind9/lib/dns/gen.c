@@ -1491,9 +1491,10 @@ name|ttn
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|size_t
 name|c
-decl_stmt|,
+decl_stmt|;
+name|int
 name|i
 decl_stmt|,
 name|n
@@ -2609,8 +2610,7 @@ modifier|*
 name|string
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|size_t
 name|n
 decl_stmt|;
 name|unsigned
@@ -4160,6 +4160,14 @@ condition|(
 name|ttn
 operator|==
 name|NULL
+condition|)
+continue|continue;
+comment|/* 			 * Remove KEYDATA (65533) from the type to memonic 			 * translation as it is internal use only.  This 			 * stops the tools from displaying KEYDATA instead 			 * of TYPE65533. 			 */
+if|if
+condition|(
+name|i
+operator|==
+literal|65533U
 condition|)
 continue|continue;
 name|fprintf

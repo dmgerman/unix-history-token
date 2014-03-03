@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009, 2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -205,6 +205,32 @@ modifier|*
 name|timermgr
 parameter_list|)
 function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|ctxonrun
+function_decl|)
+parameter_list|(
+name|isc_appctx_t
+modifier|*
+name|ctx
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|,
+name|isc_taskaction_t
+name|action
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
 block|}
 name|isc_appmethods_t
 typedef|;
@@ -273,8 +299,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Start an ISC library application.  *  * Notes:  *	This call should be made before any other ISC library call, and as  *	close to the beginning of the application as possible.  *  * Requires:  *	'ctx' is a valid application context (for app_ctxstart()).  */
+comment|/*!<  * \brief Start an ISC library application.  *  * Notes:  *	This call should be made before any other ISC library call, and as  *	close to the beginning of the application as possible.  *  * Requires:  *\li	'ctx' is a valid application context (for app_ctxstart()).  */
 end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_app_ctxonrun
+parameter_list|(
+name|isc_appctx_t
+modifier|*
+name|ctx
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|,
+name|isc_taskaction_t
+name|action
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|isc_result_t
@@ -299,7 +351,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Request delivery of an event when the application is run.  *  * Requires:  *\li	isc_app_start() has been called.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  */
+comment|/*!<  * \brief Request delivery of an event when the application is run.  *  * Requires:  *\li	isc_app_start() has been called.  *\li	'ctx' is a valid application context (for app_ctxonrun()).  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl

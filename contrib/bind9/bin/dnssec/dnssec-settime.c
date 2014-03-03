@@ -1598,6 +1598,12 @@ name|dst_key_isprivate
 argument_list|(
 name|prevkey
 argument_list|)
+operator|&&
+operator|!
+name|dst_key_isexternal
+argument_list|(
+name|prevkey
+argument_list|)
 condition|)
 name|fatal
 argument_list|(
@@ -2010,6 +2016,12 @@ if|if
 condition|(
 operator|!
 name|dst_key_isprivate
+argument_list|(
+name|key
+argument_list|)
+operator|&&
+operator|!
+name|dst_key_isexternal
 argument_list|(
 name|key
 argument_list|)

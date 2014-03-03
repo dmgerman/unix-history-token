@@ -142,6 +142,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DNS_OPT_CLIENT_SUBNET
+value|0x0008
+end_define
+
+begin_comment
+comment|/*%< client subnet opt code */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DNS_MESSAGE_REPLYPRESERVE
 value|(DNS_MESSAGEFLAG_RD|DNS_MESSAGEFLAG_CD)
 end_define

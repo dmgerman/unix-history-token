@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2011-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -49,6 +49,9 @@ parameter_list|(
 name|ARGS_FROMTEXT
 parameter_list|)
 block|{
+name|isc_result_t
+name|result
+decl_stmt|;
 name|isc_token_t
 name|token
 decl_stmt|;
@@ -241,8 +244,8 @@ operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
-return|return
-operator|(
+name|result
+operator|=
 name|isc_base64_tobuffer
 argument_list|(
 name|lexer
@@ -252,6 +255,40 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
+comment|/* Ensure there's at least enough data to compute a key ID for MD5 */
+if|if
+condition|(
+name|alg
+operator|==
+name|DST_ALG_RSAMD5
+operator|&&
+name|isc_buffer_usedlength
+argument_list|(
+name|target
+argument_list|)
+operator|<
+literal|7
+condition|)
+return|return
+operator|(
+name|ISC_R_UNEXPECTEDEND
+operator|)
+return|;
+return|return
+operator|(
+name|ISC_R_SUCCESS
 operator|)
 return|;
 block|}
@@ -922,6 +959,24 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * RSAMD5 computes key ID differently from other 	 * algorithms: we need to ensure there's enough data 	 * present for the computation 	 */
+if|if
+condition|(
+name|algorithm
+operator|==
+name|DST_ALG_RSAMD5
+operator|&&
+name|sr
+operator|.
+name|length
+operator|<
+literal|3
+condition|)
+return|return
+operator|(
+name|ISC_R_UNEXPECTEDEND
+operator|)
+return|;
 name|isc_buffer_activeregion
 argument_list|(
 name|source

@@ -351,6 +351,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|EXTERN
+specifier|const
+name|char
+modifier|*
+name|ns_g_builder
+name|INIT
+parameter_list|(
+name|BUILDER
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|EXTERN
 name|in_port_t

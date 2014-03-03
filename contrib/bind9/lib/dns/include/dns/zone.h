@@ -4162,6 +4162,25 @@ comment|/*%  * Set the response policy associated with a zone.  */
 end_comment
 
 begin_function_decl
+name|isc_result_t
+name|dns_zone_rpz_enable_db
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * If a zone is a response policy zone, mark its new database.  */
+end_comment
+
+begin_function_decl
 name|isc_boolean_t
 name|dns_zone_get_rpz
 parameter_list|(

@@ -3018,7 +3018,7 @@ name|fatal
 argument_list|(
 literal|"Invalid keyfile %s: %s"
 argument_list|,
-name|filename
+name|predecessor
 argument_list|,
 name|isc_result_totext
 argument_list|(
@@ -3038,7 +3038,7 @@ name|fatal
 argument_list|(
 literal|"%s is not a private key"
 argument_list|,
-name|filename
+name|predecessor
 argument_list|)
 expr_stmt|;
 name|name

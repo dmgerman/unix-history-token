@@ -97,6 +97,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/rrl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/rdatastruct.h>
 end_include
 
@@ -320,6 +326,10 @@ decl_stmt|;
 name|dns_rbt_t
 modifier|*
 name|answernames_exclude
+decl_stmt|;
+name|dns_rrl_t
+modifier|*
+name|rrl
 decl_stmt|;
 name|isc_boolean_t
 name|provideixfr

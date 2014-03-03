@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007-2009, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007-2009, 2012-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -349,6 +349,9 @@ name|timeout
 operator|=
 name|LWRES_DEFAULT_TIMEOUT
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|WIN32
 name|ctx
 operator|->
 name|serial
@@ -359,6 +362,19 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* XXXMLG or BEW */
+else|#
+directive|else
+name|ctx
+operator|->
+name|serial
+operator|=
+name|_time32
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ctx
 operator|->
 name|use_ipv4
@@ -772,9 +788,19 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|WIN32
 name|int
 name|s
 decl_stmt|;
+else|#
+directive|else
+name|SOCKET
+name|s
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ret
 decl_stmt|;
@@ -808,7 +834,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|ctx
@@ -934,7 +960,7 @@ operator|==
 name|LWRES_ADDRTYPE_V4
 condition|)
 block|{
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|sin
@@ -1004,7 +1030,7 @@ operator|==
 name|LWRES_ADDRTYPE_V6
 condition|)
 block|{
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|sin6
@@ -1087,6 +1113,9 @@ argument_list|,
 name|IPPROTO_UDP
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|WIN32
 if|if
 condition|(
 name|s
@@ -1094,20 +1123,32 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|WIN32
-name|DestroySockets
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|LWRES_R_IOERROR
 operator|)
 return|;
 block|}
+else|#
+directive|else
+if|if
+condition|(
+name|s
+operator|==
+name|INVALID_SOCKET
+condition|)
+block|{
+name|DestroySockets
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|LWRES_R_IOERROR
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 name|ret
 operator|=
 name|connect
@@ -1188,6 +1229,9 @@ name|ctx
 operator|->
 name|sock
 operator|=
+operator|(
+name|int
+operator|)
 name|s
 expr_stmt|;
 return|return

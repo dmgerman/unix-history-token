@@ -792,7 +792,8 @@ decl_stmt|;
 name|isc_buffer_t
 name|source
 decl_stmt|;
-name|size_t
+name|unsigned
+name|int
 name|len
 decl_stmt|;
 name|dns_rdatacallbacks_t

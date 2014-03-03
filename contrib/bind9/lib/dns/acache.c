@@ -7563,17 +7563,6 @@ name|entry
 operator|->
 name|acache
 expr_stmt|;
-name|callback_active
-operator|=
-name|ISC_TF
-argument_list|(
-name|entry
-operator|->
-name|cbarg
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 name|INSIST
 argument_list|(
 name|DNS_ACACHE_VALID
@@ -7605,6 +7594,17 @@ name|locknum
 index|]
 argument_list|,
 name|isc_rwlocktype_write
+argument_list|)
+expr_stmt|;
+name|callback_active
+operator|=
+name|ISC_TF
+argument_list|(
+name|entry
+operator|->
+name|cbarg
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Release dependencies stored in this entry as much as possible. 	 * The main link cannot be released, since the acache object has 	 * a reference to this entry; the empty entry will be released in 	 * the next cleaning action. 	 */

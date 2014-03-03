@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -3349,6 +3349,24 @@ name|DNS_NAMEATTR_ABSOLUTE
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|name1
+operator|==
+name|name2
+condition|)
+block|{
+operator|*
+name|orderp
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|dns_namereln_equal
+operator|)
+return|;
+block|}
 name|SETUP_OFFSETS
 argument_list|(
 name|name1
@@ -3761,6 +3779,17 @@ name|DNS_NAMEATTR_ABSOLUTE
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|name1
+operator|==
+name|name2
+condition|)
+return|return
+operator|(
+name|ISC_TRUE
+operator|)
+return|;
 if|if
 condition|(
 name|name1
@@ -4993,7 +5022,7 @@ name|offsets
 operator|!=
 name|NULL
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|target
 operator|->
@@ -5142,7 +5171,7 @@ name|len
 operator|=
 name|DNS_NAME_MAXWIRE
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|r2
 operator|.
@@ -9227,7 +9256,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|unsigned
@@ -9336,7 +9365,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|unsigned
@@ -9782,35 +9811,7 @@ name|absolute
 operator|=
 name|ISC_TRUE
 expr_stmt|;
-if|if
-condition|(
-name|suffix
-operator|==
-name|name
-operator|&&
-name|suffix
-operator|->
-name|buffer
-operator|==
-name|target
-condition|)
 name|memmove
-argument_list|(
-name|ndata
-operator|+
-name|prefix_length
-argument_list|,
-name|suffix
-operator|->
-name|ndata
-argument_list|,
-name|suffix
-operator|->
-name|length
-argument_list|)
-expr_stmt|;
-else|else
-name|memcpy
 argument_list|(
 name|ndata
 operator|+
@@ -9843,7 +9844,7 @@ operator|!=
 name|target
 operator|)
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|ndata
 argument_list|,
@@ -10180,7 +10181,7 @@ operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
-name|memcpy
+name|memmove
 argument_list|(
 name|target
 operator|->
@@ -10252,7 +10253,7 @@ name|offsets
 operator|!=
 name|NULL
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|target
 operator|->
@@ -10384,7 +10385,7 @@ operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
-name|memcpy
+name|memmove
 argument_list|(
 name|target
 operator|->
@@ -10463,7 +10464,7 @@ name|offsets
 operator|!=
 name|NULL
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|target
 operator|->
@@ -11304,7 +11305,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|p
 argument_list|,
@@ -11672,7 +11673,7 @@ name|target
 operator|->
 name|base
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|ndata
 argument_list|,
@@ -11755,7 +11756,7 @@ name|offsets
 operator|!=
 name|NULL
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|dest
 operator|->

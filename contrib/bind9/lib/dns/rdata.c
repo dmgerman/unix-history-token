@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1211,7 +1211,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|memcpy
+name|memmove
 argument_list|(
 name|dst
 argument_list|,
@@ -1445,7 +1445,7 @@ name|new
 operator|!=
 name|NULL
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|new
 argument_list|,
@@ -2304,7 +2304,8 @@ decl_stmt|;
 name|isc_uint32_t
 name|activelength
 decl_stmt|;
-name|size_t
+name|unsigned
+name|int
 name|length
 decl_stmt|;
 name|REQUIRE
@@ -2655,7 +2656,7 @@ operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
-name|memcpy
+name|memmove
 argument_list|(
 name|tr
 operator|.
@@ -3145,7 +3146,8 @@ function_decl|;
 name|isc_result_t
 name|tresult
 decl_stmt|;
-name|size_t
+name|unsigned
+name|int
 name|length
 decl_stmt|;
 name|isc_boolean_t
@@ -4262,7 +4264,8 @@ name|use_default
 init|=
 name|ISC_FALSE
 decl_stmt|;
-name|size_t
+name|unsigned
+name|int
 name|length
 decl_stmt|;
 name|REQUIRE
@@ -5423,6 +5426,11 @@ name|isc_buffer_add
 argument_list|(
 name|target
 argument_list|,
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 name|tp
 operator|-
 operator|(
@@ -5432,6 +5440,7 @@ operator|)
 name|region
 operator|.
 name|base
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|isc_region_consume
@@ -5768,6 +5777,11 @@ name|tregion
 operator|.
 name|base
 operator|=
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|t
 operator|-
 name|tregion
@@ -5775,6 +5789,7 @@ operator|.
 name|base
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 name|isc_buffer_add
 argument_list|(
@@ -5894,7 +5909,7 @@ name|sregion
 operator|.
 name|base
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|tregion
 operator|.
@@ -6234,6 +6249,11 @@ name|isc_buffer_add
 argument_list|(
 name|target
 argument_list|,
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 name|tp
 operator|-
 operator|(
@@ -6243,6 +6263,7 @@ operator|)
 name|region
 operator|.
 name|base
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6562,11 +6583,17 @@ return|;
 operator|*
 name|t0
 operator|=
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|t
 operator|-
 name|t0
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 name|isc_buffer_add
 argument_list|(
@@ -6709,7 +6736,7 @@ name|sregion
 operator|.
 name|base
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|tregion
 operator|.
@@ -6955,7 +6982,7 @@ operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
-name|memcpy
+name|memmove
 argument_list|(
 name|region
 operator|.
@@ -7622,7 +7649,7 @@ name|base
 operator|!=
 name|base
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|tr
 operator|.
@@ -7723,11 +7750,14 @@ literal|1
 operator|)
 return|;
 return|return
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|s
 operator|-
 name|hexdigits
-operator|)
+argument_list|)
 return|;
 block|}
 end_function
@@ -7782,11 +7812,14 @@ literal|1
 operator|)
 return|;
 return|return
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|s
 operator|-
 name|decdigits
-operator|)
+argument_list|)
 return|;
 block|}
 end_function
@@ -8058,9 +8091,14 @@ condition|)
 block|{
 name|word
 operator|=
+call|(
+name|isc_int32_t
+call|)
+argument_list|(
 name|s
 operator|-
 name|atob_digits
+argument_list|)
 expr_stmt|;
 operator|++
 name|bcount
@@ -8083,9 +8121,14 @@ argument_list|)
 expr_stmt|;
 name|word
 operator|+=
+call|(
+name|isc_int32_t
+call|)
+argument_list|(
 name|s
 operator|-
 name|atob_digits
+argument_list|)
 expr_stmt|;
 operator|++
 name|bcount
@@ -8102,9 +8145,14 @@ argument_list|)
 expr_stmt|;
 name|word
 operator|+=
+call|(
+name|isc_int32_t
+call|)
+argument_list|(
 name|s
 operator|-
 name|atob_digits
+argument_list|)
 expr_stmt|;
 name|RETERR
 argument_list|(

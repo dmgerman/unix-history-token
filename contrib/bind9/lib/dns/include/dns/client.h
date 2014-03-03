@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009, 2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -321,8 +321,52 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_client_createx2
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|isc_appctx_t
+modifier|*
+name|actx
+parameter_list|,
+name|isc_taskmgr_t
+modifier|*
+name|taskmgr
+parameter_list|,
+name|isc_socketmgr_t
+modifier|*
+name|socketmgr
+parameter_list|,
+name|isc_timermgr_t
+modifier|*
+name|timermgr
+parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
+name|dns_client_t
+modifier|*
+modifier|*
+name|clientp
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|localaddr4
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|localaddr6
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Create a DNS client.  These functions create a new client object with  * minimal internal resources such as the default 'view' for the IN class and  * IPv4/IPv6 dispatches for the view.  *  * dns_client_createx() takes 'manager' arguments so that the caller can  * control the behavior of the client through the underlying event framework.  * On the other hand, dns_client_create() simplifies the interface and creates  * the managers internally.  A DNS client object created via  * dns_client_create() is expected to be used by an application that only needs  * simple synchronous services or by a thread-based application.  *  * If the DNS_CLIENTCREATEOPT_USECACHE flag is set in 'options',  * dns_client_create(x) will create a cache database with the view.  *  * Requires:  *  *\li	'mctx' is a valid memory context.  *  *\li	'actx' is a valid application context.  *  *\li	'taskmgr' is a valid task manager.  *  *\li	'socketmgr' is a valid socket manager.  *  *\li	'timermgr' is a valid timer manager.  *  *\li	clientp != NULL&& *clientp == NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS				On success.  *  *\li	Anything else				Failure.  */
+comment|/*%<  * Create a DNS client.  These functions create a new client object with  * minimal internal resources such as the default 'view' for the IN class and  * IPv4/IPv6 dispatches for the view.  *  * dns_client_createx() takes 'manager' arguments so that the caller can  * control the behavior of the client through the underlying event framework.  * On the other hand, dns_client_create() simplifies the interface and creates  * the managers internally.  A DNS client object created via  * dns_client_create() is expected to be used by an application that only needs  * simple synchronous services or by a thread-based application.  *  * dns_client_createx2 takes two additional parameters, 'localaddr4' and  * 'localaddr6', to specify the local address to use for each family. If  * both are set to NULL, then wildcard addresses will be used for both  * families. If only one is NULL, then the other address will be used  * as the local address, and the other protocol family will not be used.  *  * If the DNS_CLIENTCREATEOPT_USECACHE flag is set in 'options',  * dns_client_create(x) will create a cache database with the view.  *  * Requires:  *  *\li	'mctx' is a valid memory context.  *  *\li	'actx' is a valid application context.  *  *\li	'taskmgr' is a valid task manager.  *  *\li	'socketmgr' is a valid socket manager.  *  *\li	'timermgr' is a valid timer manager.  *  *\li	clientp != NULL&& *clientp == NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS				On success.  *  *\li	Anything else				Failure.  */
 end_comment
 
 begin_function_decl

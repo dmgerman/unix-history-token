@@ -1665,9 +1665,14 @@ argument_list|)
 expr_stmt|;
 name|arglen
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|end
 operator|-
 name|arg
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1791,6 +1796,7 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+comment|/* PLEASE keep options synchronized when main is hooked! */
 name|isc_commandline_errprint
 operator|=
 name|ISC_FALSE
@@ -2335,13 +2341,87 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"<id:%s> built with %s\n"
+literal|"<id:%s> built by %s with %s\n"
 argument_list|,
 name|ns_g_srcid
+argument_list|,
+name|ns_g_builder
 argument_list|,
 name|ns_g_configargs
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__clang__
+name|printf
+argument_list|(
+literal|"compiled by CLANG %s\n"
+argument_list|,
+name|__VERSION__
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ICC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+name|printf
+argument_list|(
+literal|"compiled by ICC %s\n"
+argument_list|,
+name|__VERSION__
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|__GNUC__
+name|printf
+argument_list|(
+literal|"compiled by GCC %s\n"
+argument_list|,
+name|__VERSION__
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+name|printf
+argument_list|(
+literal|"compiled by MSVC %d\n"
+argument_list|,
+name|_MSC_VER
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__SUNPRO_C
+name|printf
+argument_list|(
+literal|"compiled by Solaris Studio %x\n"
+argument_list|,
+name|__SUNPRO_C
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|OPENSSL
@@ -4045,6 +4125,10 @@ end_endif
 
 begin_comment
 comment|/* HAVE_LIBSCF */
+end_comment
+
+begin_comment
+comment|/* main entry point, possibly hooked */
 end_comment
 
 begin_function

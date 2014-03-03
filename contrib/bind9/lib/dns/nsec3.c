@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2006, 2008-2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2006, 2008-2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -389,9 +389,13 @@ operator|*
 name|p
 operator|++
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|salt_length
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|p
 argument_list|,
@@ -408,9 +412,13 @@ operator|*
 name|p
 operator|++
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|hash_length
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|p
 argument_list|,
@@ -427,9 +435,15 @@ name|r
 operator|.
 name|length
 operator|=
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 name|p
 operator|-
 name|buffer
+argument_list|)
 expr_stmt|;
 name|r
 operator|.
@@ -766,11 +780,17 @@ name|r
 operator|.
 name|length
 operator|=
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 name|nsec_bits
 operator|-
 name|r
 operator|.
 name|base
+argument_list|)
 expr_stmt|;
 name|INSIST
 argument_list|(
@@ -1148,6 +1168,9 @@ name|iterations
 argument_list|,
 name|salt
 argument_list|,
+operator|(
+name|int
+operator|)
 name|saltlength
 argument_list|,
 name|downcased
@@ -1192,6 +1215,10 @@ name|region
 operator|.
 name|length
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|len
 expr_stmt|;
 name|isc_buffer_init
@@ -1351,14 +1378,6 @@ argument_list|,
 operator|&
 name|temp_diff
 argument_list|)
-expr_stmt|;
-name|temp_diff
-operator|.
-name|resign
-operator|=
-name|diff
-operator|->
-name|resign
 expr_stmt|;
 name|ISC_LIST_APPEND
 argument_list|(
@@ -2775,7 +2794,7 @@ name|nexthash
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|nexthash
 argument_list|,
@@ -3103,6 +3122,10 @@ name|nsec3
 operator|.
 name|next_length
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|next_length
 expr_stmt|;
 name|isc_buffer_init
@@ -3188,7 +3211,7 @@ name|nexthash
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|nexthash
 argument_list|,
@@ -3742,6 +3765,10 @@ name|nsec3
 operator|.
 name|next_length
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|next_length
 expr_stmt|;
 name|isc_buffer_init
@@ -3827,7 +3854,7 @@ name|nexthash
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|nexthash
 argument_list|,
@@ -4431,6 +4458,10 @@ name|buf2
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|buflen
 argument_list|)
 expr_stmt|;
@@ -4531,7 +4562,7 @@ name|target
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|buf
 operator|+
@@ -5332,7 +5363,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|buf
 argument_list|,
@@ -6560,7 +6591,7 @@ name|nexthash
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|nexthash
 argument_list|,
@@ -6755,6 +6786,10 @@ name|nsec3
 operator|.
 name|next_length
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|next_length
 expr_stmt|;
 if|if
@@ -7123,7 +7158,7 @@ name|nexthash
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|nexthash
 argument_list|,
@@ -7317,6 +7352,10 @@ name|nsec3
 operator|.
 name|next_length
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|next_length
 expr_stmt|;
 name|isc_buffer_init

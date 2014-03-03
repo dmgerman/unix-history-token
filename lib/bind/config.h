@@ -763,6 +763,14 @@ comment|/* #undef HAVE_LIBPTHREAD */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `rt' library (-lrt). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBRT */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `scf' library (-lscf). */
 end_comment
 
@@ -800,6 +808,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LINUX_CAPABILITY_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<linux/types.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_TYPES_H */
 end_comment
 
 begin_comment
@@ -863,6 +879,25 @@ comment|/* #undef HAVE_OPENSSL_GOST */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `pthread_yield' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_YIELD
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `pthread_yield_np' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PTHREAD_YIELD_NP */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `readline' function. */
 end_comment
 
@@ -881,6 +916,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_REGEX_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sched.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SCHED_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `sched_yield' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SCHED_YIELD
 value|1
 end_define
 
@@ -1328,6 +1385,14 @@ end_comment
 
 begin_comment
 comment|/* #undef USE_FIONBIO_IOCTL */
+end_comment
+
+begin_comment
+comment|/* Enable DNS Response Rate Limiting */
+end_comment
+
+begin_comment
+comment|/* #undef USE_RRL */
 end_comment
 
 begin_comment

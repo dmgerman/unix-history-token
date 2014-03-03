@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -365,6 +365,17 @@ directive|define
 name|FCTXTRACE
 parameter_list|(
 name|m
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCTXTRACE2
+parameter_list|(
+name|m1
+parameter_list|,
+name|m2
 parameter_list|)
 end_define
 
@@ -4765,6 +4776,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* 	 * We do not know if fctx->domain is the actual domain the record 	 * lives in or a parent domain so we have a '?' after it. 	 */
 name|dns_name_format
 argument_list|(
 operator|&
@@ -15651,7 +15663,7 @@ name|res
 operator|->
 name|view
 argument_list|,
-name|name
+name|fwdname
 argument_list|,
 name|domain
 argument_list|,
@@ -23958,7 +23970,7 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|ina
@@ -24003,7 +24015,7 @@ name|s6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|in6a
 operator|.
@@ -28581,6 +28593,9 @@ decl_stmt|;
 comment|/* Allocate buffer for storing hex version of the NSID */
 name|buflen
 operator|=
+operator|(
+name|isc_uint16_t
+operator|)
 name|nsid_len
 operator|*
 literal|2
@@ -31061,21 +31076,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|result
-operator|==
-name|DNS_R_CHASEDSSERVERS
-condition|)
-block|{ 		}
-elseif|else
-if|if
-condition|(
-name|result
-operator|==
-name|DNS_R_DELEGATION
 condition|)
 block|{
+case|case
+name|ISC_R_SUCCESS
+case|:
+case|case
+name|DNS_R_CHASEDSSERVERS
+case|:
+break|break;
+case|case
+name|DNS_R_DELEGATION
+case|:
 name|force_referral
 label|:
 comment|/* 			 * We don't have the answer, but we know a better 			 * place to look. 			 */
@@ -31134,15 +31149,8 @@ name|result
 operator|=
 name|ISC_R_SUCCESS
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|result
-operator|!=
-name|ISC_R_SUCCESS
-condition|)
-block|{
+break|break;
+default|default:
 comment|/* 			 * Something has gone wrong. 			 */
 if|if
 condition|(
@@ -39136,7 +39144,7 @@ name|algorithms
 operator|!=
 name|NULL
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|new
 argument_list|,

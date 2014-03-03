@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1009,7 +1009,16 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|isc_boolean_t
-name|remove_orphans
+name|remove_orphansigs
+init|=
+name|ISC_FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|isc_boolean_t
+name|remove_inactkeysigs
 init|=
 name|ISC_FALSE
 decl_stmt|;
@@ -2924,7 +2933,7 @@ operator|!
 name|expired
 operator|&&
 operator|!
-name|remove_orphans
+name|remove_orphansigs
 operator|)
 expr_stmt|;
 name|vbprintf
@@ -2938,6 +2947,36 @@ condition|?
 literal|"retained"
 else|:
 literal|"dropped"
+argument_list|,
+name|sigstr
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|dns_dnssec_keyactive
+argument_list|(
+name|key
+operator|->
+name|key
+argument_list|,
+name|now
+argument_list|)
+operator|&&
+name|remove_inactkeysigs
+condition|)
+block|{
+name|keep
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+name|vbprintf
+argument_list|(
+literal|2
+argument_list|,
+literal|"\trrsig by %s dropped - key inactive\n"
 argument_list|,
 name|sigstr
 argument_list|)
@@ -3045,7 +3084,7 @@ argument_list|(
 name|key
 argument_list|)
 operator|&&
-name|remove_orphans
+name|remove_orphansigs
 condition|)
 block|{
 name|vbprintf
@@ -3897,7 +3936,7 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|l
 operator|->
@@ -3993,6 +4032,9 @@ name|iterations
 argument_list|,
 name|salt
 argument_list|,
+operator|(
+name|int
+operator|)
 name|salt_length
 argument_list|,
 name|name
@@ -4290,8 +4332,7 @@ name|NSEC3_MAX_HASH_LENGTH
 index|]
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|size_t
 name|entries
 init|=
 name|l
@@ -4385,14 +4426,14 @@ condition|(
 name|entries
 operator|--
 operator|>
-literal|1
+literal|1U
 condition|)
 do|;
 name|INSIST
 argument_list|(
 name|entries
 operator|!=
-literal|0
+literal|0U
 argument_list|)
 expr_stmt|;
 return|return
@@ -9347,8 +9388,7 @@ parameter_list|,
 name|size_t
 name|salt_length
 parameter_list|,
-name|unsigned
-name|int
+name|dns_iterations_t
 name|iterations
 parameter_list|)
 block|{
@@ -9451,6 +9491,10 @@ name|nsec3param
 operator|.
 name|salt_length
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|salt_length
 expr_stmt|;
 name|DE_CONST
@@ -10981,8 +11025,7 @@ name|unsigned
 name|int
 name|hashalg
 parameter_list|,
-name|unsigned
-name|int
+name|dns_iterations_t
 name|iterations
 parameter_list|,
 specifier|const
@@ -13600,7 +13643,7 @@ name|salt_length
 operator|=
 name|orig_saltlen
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|saltbuf
 argument_list|,
@@ -15197,6 +15240,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t-Q:\t"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"remove signatures from keys that are no "
+literal|"longer active\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t-R:\t"
 argument_list|)
 expr_stmt|;
@@ -15779,11 +15837,12 @@ name|nonsecify
 init|=
 name|ISC_FALSE
 decl_stmt|;
+comment|/* Unused letters: Bb G J M q Yy (and F is reserved). */
 define|#
 directive|define
 name|CMDLINE_FLAGS
 define|\
-value|"3:AaCc:Dd:E:e:f:FghH:i:I:j:K:k:L:l:m:n:N:o:O:PpRr:s:ST:tuUv:X:xzZ:"
+value|"3:AaCc:Dd:E:e:f:FghH:i:I:j:K:k:L:l:m:n:N:o:O:PpQRr:s:ST:tuUv:X:xzZ:"
 comment|/* 	 * Process memory debugging argument first. 	 */
 while|while
 condition|(
@@ -16543,9 +16602,17 @@ name|ISC_TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'Q'
+case|:
+name|remove_inactkeysigs
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'R'
 case|:
-name|remove_orphans
+name|remove_orphansigs
 operator|=
 name|ISC_TRUE
 expr_stmt|;

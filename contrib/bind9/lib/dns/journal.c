@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007-2011, 2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007-2011, 2013, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -914,7 +914,6 @@ comment|/*%< Memory context */
 name|journal_state_t
 name|state
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|filename
@@ -1152,7 +1151,7 @@ name|format
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|cooked
 operator|->
@@ -1301,7 +1300,7 @@ name|pad
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|raw
 operator|->
@@ -1564,6 +1563,9 @@ name|j
 operator|->
 name|offset
 operator|+=
+operator|(
+name|isc_offset_t
+operator|)
 name|nbytes
 expr_stmt|;
 return|return
@@ -1646,6 +1648,9 @@ name|j
 operator|->
 name|offset
 operator|+=
+operator|(
+name|isc_offset_t
+operator|)
 name|nbytes
 expr_stmt|;
 return|return
@@ -2160,7 +2165,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|mem
 argument_list|,
@@ -2416,7 +2421,12 @@ name|j
 operator|->
 name|filename
 operator|=
+name|isc_mem_strdup
+argument_list|(
+name|mctx
+argument_list|,
 name|filename
+argument_list|)
 expr_stmt|;
 name|j
 operator|->
@@ -2429,6 +2439,19 @@ operator|->
 name|rawindex
 operator|=
 name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|->
+name|filename
+operator|==
+name|NULL
+condition|)
+name|FAIL
+argument_list|(
+name|ISC_R_NOMEMORY
+argument_list|)
 expr_stmt|;
 name|result
 operator|=
@@ -2964,6 +2987,25 @@ if|if
 condition|(
 name|j
 operator|->
+name|filename
+operator|!=
+name|NULL
+condition|)
+name|isc_mem_free
+argument_list|(
+name|j
+operator|->
+name|mctx
+argument_list|,
+name|j
+operator|->
+name|filename
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|->
 name|fp
 operator|!=
 name|NULL
@@ -3028,7 +3070,7 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
-name|int
+name|size_t
 name|namelen
 decl_stmt|;
 name|char
@@ -3097,7 +3139,7 @@ if|if
 condition|(
 name|namelen
 operator|>
-literal|4
+literal|4U
 operator|&&
 name|strcmp
 argument_list|(
@@ -3129,6 +3171,9 @@ argument_list|)
 argument_list|,
 literal|"%.*s.jbk"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|namelen
 argument_list|,
 name|filename
@@ -5693,6 +5738,25 @@ if|if
 condition|(
 name|j
 operator|->
+name|filename
+operator|!=
+name|NULL
+condition|)
+name|isc_mem_free
+argument_list|(
+name|j
+operator|->
+name|mctx
+argument_list|,
+name|j
+operator|->
+name|filename
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|->
 name|fp
 operator|!=
 name|NULL
@@ -5761,9 +5825,6 @@ parameter_list|,
 name|unsigned
 name|int
 name|options
-parameter_list|,
-name|isc_uint32_t
-name|resign
 parameter_list|)
 block|{
 name|isc_buffer_t
@@ -5837,12 +5898,6 @@ argument_list|,
 operator|&
 name|diff
 argument_list|)
-expr_stmt|;
-name|diff
-operator|.
-name|resign
-operator|=
-name|resign
 expr_stmt|;
 comment|/* 	 * Set up empty initial buffers for unchecked and checked 	 * wire format transaction data.  They will be reallocated 	 * later. 	 */
 name|isc_buffer_init
@@ -6438,6 +6493,11 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|UNUSED
+argument_list|(
+name|resign
+argument_list|)
+expr_stmt|;
 name|j
 operator|=
 name|NULL
@@ -6514,8 +6574,6 @@ argument_list|,
 name|db
 argument_list|,
 name|options
-argument_list|,
-name|resign
 argument_list|)
 expr_stmt|;
 name|dns_journal_destroy
@@ -10038,7 +10096,7 @@ name|unsigned
 name|int
 name|copy_length
 decl_stmt|;
-name|int
+name|size_t
 name|namelen
 decl_stmt|;
 name|char
@@ -10088,7 +10146,7 @@ if|if
 condition|(
 name|namelen
 operator|>
-literal|4
+literal|4U
 operator|&&
 name|strcmp
 argument_list|(
@@ -10120,6 +10178,9 @@ argument_list|)
 argument_list|,
 literal|"%.*s.jnw"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|namelen
 argument_list|,
 name|filename
@@ -10149,6 +10210,9 @@ argument_list|)
 argument_list|,
 literal|"%.*s.jbk"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|namelen
 argument_list|,
 name|filename

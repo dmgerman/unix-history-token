@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2007, 2008, 2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2007, 2008, 2013, 2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -71,7 +71,7 @@ parameter_list|,
 name|bits
 parameter_list|)
 define|\
-value|do { \ 		memset(&(pt), 0, sizeof(pt)); \ 		if((na) != NULL) { \ 			(pt).family = (na)->family; \ 			(pt).bitlen = (bits); \ 			if ((pt).family == AF_INET6) { \ 				memcpy(&(pt).add.sin6,&(na)->type.in6, \ 				       ((bits)+7)/8); \ 			} else \ 				memcpy(&(pt).add.sin,&(na)->type.in, \ 				       ((bits)+7)/8); \ 		} else { \ 			(pt).family = AF_UNSPEC; \ 			(pt).bitlen = 0; \ 		} \ 		isc_refcount_init(&(pt).refcount, 0); \ 	} while(0)
+value|do { \ 		memset(&(pt), 0, sizeof(pt)); \ 		if((na) != NULL) { \ 			(pt).family = (na)->family; \ 			(pt).bitlen = (bits); \ 			if ((pt).family == AF_INET6) { \ 				memmove(&(pt).add.sin6,&(na)->type.in6, \ 				       ((bits)+7)/8); \ 			} else \ 				memmove(&(pt).add.sin,&(na)->type.in, \ 				       ((bits)+7)/8); \ 		} else { \ 			(pt).family = AF_UNSPEC; \ 			(pt).bitlen = 0; \ 		} \ 		isc_refcount_init(&(pt).refcount, 0); \ 	} while(0)
 end_define
 
 begin_typedef
