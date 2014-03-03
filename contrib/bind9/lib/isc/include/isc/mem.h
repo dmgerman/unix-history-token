@@ -129,28 +129,6 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*%  * Define ISC_MEM_DEBUG=1 to make all functions that free memory  * set the pointer being freed to NULL after being freed.  * This is the default; set ISC_MEM_DEBUG=0 to disable it.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ISC_MEM_DEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ISC_MEM_DEBUG
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*%  * Define ISC_MEM_TRACKLINES=1 to turn on detailed tracing of memory  * allocation and freeing by file and line number.  */
 end_comment
 
@@ -1038,12 +1016,6 @@ parameter_list|)
 value|((mp) != NULL&& \ 				 (mp)->magic == ISCAPI_MPOOL_MAGIC)
 end_define
 
-begin_if
-if|#
-directive|if
-name|ISC_MEM_DEBUG
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1099,69 +1071,6 @@ parameter_list|)
 define|\
 value|do { \ 		ISCMEMPOOLFUNC(put)((c), (p) _ISC_MEM_FILELINE);	\ 		(p) = NULL; \ 	} while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|isc_mem_put
-parameter_list|(
-name|c
-parameter_list|,
-name|p
-parameter_list|,
-name|s
-parameter_list|)
-value|ISCMEMFUNC(put)((c), (p), (s) _ISC_MEM_FILELINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isc_mem_putanddetach
-parameter_list|(
-name|c
-parameter_list|,
-name|p
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|ISCMEMFUNC(putanddetach)((c), (p), (s) _ISC_MEM_FILELINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isc_mem_free
-parameter_list|(
-name|c
-parameter_list|,
-name|p
-parameter_list|)
-value|ISCMEMFUNC(free)((c), (p) _ISC_MEM_FILELINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isc_mempool_put
-parameter_list|(
-name|c
-parameter_list|,
-name|p
-parameter_list|)
-value|ISCMEMPOOLFUNC(put)((c), (p) _ISC_MEM_FILELINE)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*@{*/
@@ -1627,7 +1536,7 @@ name|HAVE_LIBXML2
 end_ifdef
 
 begin_function_decl
-name|void
+name|int
 name|isc_mem_renderxml
 parameter_list|(
 name|xmlTextWriterPtr

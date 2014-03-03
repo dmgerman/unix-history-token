@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 2001  Nominum, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2007, 2014  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 2001  Nominum, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|do { \ 		v = (unsigned int)w[0]<< 8; \  		v |= (unsigned int)w[1]; \ 		w += 2; \ 	} while (0)
+value|do { \ 		v = (unsigned int)w[0]<< 8; \ 		v |= (unsigned int)w[1]; \ 		w += 2; \ 	} while (0)
 end_define
 
 begin_define
@@ -66,7 +66,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|do { \  		v = (unsigned int)w[0]<< 16; \  		v |= (unsigned int)w[1]<< 8; \  		v |= (unsigned int)w[2]; \ 		w += 3; \ 	} while (0)
+value|do { \ 		v = (unsigned int)w[0]<< 16; \ 		v |= (unsigned int)w[1]<< 8; \ 		v |= (unsigned int)w[2]; \ 		w += 3; \ 	} while (0)
 end_define
 
 begin_define
@@ -79,7 +79,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|do { \ 		v = (unsigned int)w[0]<< 24; \  		v |= (unsigned int)w[1]<< 16; \  		v |= (unsigned int)w[2]<< 8; \  		v |= (unsigned int)w[3]; \ 		w += 4; \ 	} while (0)
+value|do { \ 		v = (unsigned int)w[0]<< 24; \ 		v |= (unsigned int)w[1]<< 16; \ 		v |= (unsigned int)w[2]<< 8; \ 		v |= (unsigned int)w[3]; \ 		w += 4; \ 	} while (0)
 end_define
 
 begin_define
@@ -92,7 +92,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|do { \ 		v = (isc_uint64_t)w[0]<< 56; \  		v |= (isc_uint64_t)w[1]<< 48; \  		v |= (isc_uint64_t)w[2]<< 40; \  		v |= (isc_uint64_t)w[3]<< 32; \  		v |= (isc_uint64_t)w[4]<< 24; \  		v |= (isc_uint64_t)w[5]<< 16; \  		v |= (isc_uint64_t)w[6]<< 8; \  		v |= (isc_uint64_t)w[7]; \ 		w += 8; \ 	} while (0)
+value|do { \ 		v = (isc_uint64_t)w[0]<< 56; \ 		v |= (isc_uint64_t)w[1]<< 48; \ 		v |= (isc_uint64_t)w[2]<< 40; \ 		v |= (isc_uint64_t)w[3]<< 32; \ 		v |= (isc_uint64_t)w[4]<< 24; \ 		v |= (isc_uint64_t)w[5]<< 16; \ 		v |= (isc_uint64_t)w[6]<< 8; \ 		v |= (isc_uint64_t)w[7]; \ 		w += 8; \ 	} while (0)
 end_define
 
 begin_define
@@ -107,7 +107,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|do { \ 		GET8(v, w); \ 		if (v == 0) \ 			d = ISCCC_TRUE; \  		else { \ 			d = ISCCC_FALSE; \ 			if (v == 255) \ 				GET16(v, w); \ 		} \ 	} while (0)
+value|do { \ 		GET8(v, w); \ 		if (v == 0) \ 			d = ISCCC_TRUE; \ 		else { \ 			d = ISCCC_FALSE; \ 			if (v == 255) \ 				GET16(v, w); \ 		} \ 	} while (0)
 end_define
 
 begin_define
@@ -120,7 +120,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|do { \ 		GET24(v, w); \  		if (v == 0xffffffu) \ 			GET32(v, w); \ 	} while (0)
+value|do { \ 		GET24(v, w); \ 		if (v == 0xffffffu) \ 			GET32(v, w); \ 	} while (0)
 end_define
 
 begin_define
@@ -147,7 +147,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|do { \ 		memcpy(v, w, c); \ 		w += c; \ 	} while (0)
+value|do { \ 		memmove(v, w, c); \ 		w += c; \ 	} while (0)
 end_define
 
 begin_define
@@ -284,7 +284,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|do { \ 		memcpy(w, s, c); \ 		w += c; \ 	} while (0)
+value|do { \ 		memmove(w, s, c); \ 		w += c; \ 	} while (0)
 end_define
 
 begin_comment

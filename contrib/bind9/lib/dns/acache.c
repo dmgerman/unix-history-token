@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2012, 2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<isc/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/serial.h>
 end_include
 
 begin_include
@@ -246,7 +252,7 @@ begin_define
 define|#
 directive|define
 name|DNS_ACACHE_MINSIZE
-value|2097152
+value|2097152U
 end_define
 
 begin_comment
@@ -3386,17 +3392,35 @@ block|{
 name|unsigned
 name|int
 name|passed
-init|=
+decl_stmt|;
+name|isc_uint32_t
+name|val
+decl_stmt|;
+if|if
+condition|(
+name|isc_serial_ge
+argument_list|(
+name|now32
+argument_list|,
+name|entry
+operator|->
+name|lastused
+argument_list|)
+condition|)
+name|passed
+operator|=
 name|now32
 operator|-
 name|entry
 operator|->
 name|lastused
-decl_stmt|;
+expr_stmt|;
 comment|/*<= interval */
-name|isc_uint32_t
-name|val
-decl_stmt|;
+else|else
+name|passed
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|passed
@@ -3617,18 +3641,25 @@ operator|&
 name|last32
 argument_list|)
 expr_stmt|;
-name|INSIST
+if|if
+condition|(
+name|isc_serial_ge
 argument_list|(
 name|now32
-operator|>
+argument_list|,
 name|last32
 argument_list|)
-expr_stmt|;
+condition|)
 name|interval
 operator|=
 name|now32
 operator|-
 name|last32
+expr_stmt|;
+else|else
+name|interval
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -3799,7 +3830,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 					 * If we are still in the overmem 					 * state, keep cleaning. 					 */
+comment|/* 					 * If we are still in the overmem 					 * state, keep cleaning.  In case we 					 * exit from the loop immediately after 					 * this, reset next to the head entry 					 * as we'll expect it will be never 					 * NULL. 					 */
 name|isc_log_write
 argument_list|(
 name|dns_lctx
@@ -3817,6 +3848,10 @@ literal|"acache cleaner: "
 literal|"still overmem, "
 literal|"reset and try again"
 argument_list|)
+expr_stmt|;
+name|next
+operator|=
+name|entry
 expr_stmt|;
 continue|continue;
 block|}
@@ -3849,12 +3884,6 @@ argument_list|(
 name|next
 operator|!=
 name|NULL
-operator|&&
-name|next
-operator|!=
-name|cleaner
-operator|->
-name|current_entry
 argument_list|)
 expr_stmt|;
 name|dns_acache_detachentry
@@ -7505,7 +7534,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|isc_boolean_t
 name|dns_acache_cancelentry
 parameter_list|(
 name|dns_acacheentry_t
@@ -7516,10 +7545,9 @@ block|{
 name|dns_acache_t
 modifier|*
 name|acache
-init|=
-name|entry
-operator|->
-name|acache
+decl_stmt|;
+name|isc_boolean_t
+name|callback_active
 decl_stmt|;
 name|REQUIRE
 argument_list|(
@@ -7529,10 +7557,18 @@ name|entry
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|acache
+operator|=
+name|entry
+operator|->
+name|acache
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|DNS_ACACHE_VALID
 argument_list|(
+name|entry
+operator|->
 name|acache
 argument_list|)
 argument_list|)
@@ -7558,6 +7594,17 @@ name|locknum
 index|]
 argument_list|,
 name|isc_rwlocktype_write
+argument_list|)
+expr_stmt|;
+name|callback_active
+operator|=
+name|ISC_TF
+argument_list|(
+name|entry
+operator|->
+name|cbarg
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Release dependencies stored in this entry as much as possible. 	 * The main link cannot be released, since the acache object has 	 * a reference to this entry; the empty entry will be released in 	 * the next cleaning action. 	 */
@@ -7612,6 +7659,11 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|callback_active
+operator|)
+return|;
 block|}
 end_function
 
@@ -7974,7 +8026,7 @@ if|if
 condition|(
 name|size
 operator|!=
-literal|0
+literal|0U
 operator|&&
 name|size
 operator|<
@@ -8008,15 +8060,15 @@ if|if
 condition|(
 name|size
 operator|==
-literal|0
+literal|0U
 operator|||
 name|hiwater
 operator|==
-literal|0
+literal|0U
 operator|||
 name|lowater
 operator|==
-literal|0
+literal|0U
 condition|)
 name|isc_mem_setwater
 argument_list|(

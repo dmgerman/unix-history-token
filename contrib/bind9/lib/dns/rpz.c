@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2011-2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -301,15 +301,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-name|isc_boolean_t
-name|have_rpz_zones
-init|=
-name|ISC_FALSE
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|const
 name|char
@@ -583,6 +574,11 @@ default|default:
 name|str
 operator|=
 literal|""
+expr_stmt|;
+name|POST
+argument_list|(
+name|str
+argument_list|)
 expr_stmt|;
 name|INSIST
 argument_list|(
@@ -981,40 +977,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note that we have at least one response policy zone.  * It would be better for something to tell the rbtdb code that the  * zone is in at least one view's list of policy zones.  */
-end_comment
-
-begin_function
-name|void
-name|dns_rpz_set_need
-parameter_list|(
-name|isc_boolean_t
-name|need
-parameter_list|)
-block|{
-name|have_rpz_zones
-operator|=
-name|need
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|isc_boolean_t
-name|dns_rpz_needed
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|have_rpz_zones
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Start a new radix tree for a response policy zone.  */
 end_comment
 
@@ -1055,17 +1017,6 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Only if there is at least one response policy zone. 	 */
-if|if
-condition|(
-operator|!
-name|have_rpz_zones
-condition|)
-return|return
-operator|(
-name|ISC_R_SUCCESS
-operator|)
-return|;
 name|cidr
 operator|=
 name|isc_mem_get
@@ -1320,7 +1271,7 @@ end_comment
 
 begin_function
 name|void
-name|dns_rpz_enabled
+name|dns_rpz_enabled_get
 parameter_list|(
 name|dns_rpz_cidr_t
 modifier|*
@@ -1823,6 +1774,7 @@ index|[
 name|DNS_NAME_FORMATSIZE
 index|]
 decl_stmt|;
+comment|/* 	 * bin/tests/system/rpz/tests.sh looks for "invalid rpz". 	 */
 if|if
 condition|(
 name|level
@@ -2353,7 +2305,7 @@ block|}
 if|if
 condition|(
 name|len
-operator|>
+operator|>=
 operator|(
 name|int
 operator|)
@@ -4396,13 +4348,13 @@ decl_stmt|;
 name|dns_rpz_type_t
 name|type
 decl_stmt|;
-if|if
-condition|(
+name|REQUIRE
+argument_list|(
 name|cidr
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return;
+argument_list|)
+expr_stmt|;
 comment|/* 	 * No worries if the new name is not an IP address. 	 */
 name|type
 operator|=
@@ -4507,6 +4459,7 @@ index|[
 name|DNS_NAME_FORMATSIZE
 index|]
 decl_stmt|;
+comment|/* 		 * bin/tests/system/rpz/tests.sh looks for "rpz.*failed". 		 */
 name|dns_name_format
 argument_list|(
 name|name
@@ -5073,7 +5026,7 @@ name|dns_rpz_cidr_key_t
 name|src_ip6
 decl_stmt|;
 comment|/* 		 * Given the int aligned struct in_addr member of netaddr->type 		 * one could cast netaddr->type.in6 to dns_rpz_cidr_key_t *, 		 * but there are objections. 		 */
-name|memcpy
+name|memmove
 argument_list|(
 name|src_ip6
 operator|.

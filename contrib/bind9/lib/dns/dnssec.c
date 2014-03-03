@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1321,11 +1321,13 @@ name|cleanup_databuf
 goto|;
 name|ret
 operator|=
-name|dst_context_create
+name|dst_context_create2
 argument_list|(
 name|key
 argument_list|,
 name|mctx
+argument_list|,
+name|DNS_LOGCATEGORY_DNSSEC
 argument_list|,
 operator|&
 name|ctx
@@ -1415,7 +1417,7 @@ name|data
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|data
 argument_list|,
@@ -1729,21 +1731,6 @@ goto|goto
 name|cleanup_array
 goto|;
 block|}
-name|memcpy
-argument_list|(
-name|sig
-operator|.
-name|signature
-argument_list|,
-name|r
-operator|.
-name|base
-argument_list|,
-name|sig
-operator|.
-name|siglen
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|dns_rdata_fromstruct
@@ -2230,11 +2217,13 @@ name|again
 label|:
 name|ret
 operator|=
-name|dst_context_create
+name|dst_context_create2
 argument_list|(
 name|key
 argument_list|,
 name|mctx
+argument_list|,
+name|DNS_LOGCATEGORY_DNSSEC
 argument_list|,
 operator|&
 name|ctx
@@ -2393,7 +2382,7 @@ argument_list|,
 literal|'*'
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|data
 operator|+
@@ -2410,7 +2399,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|memcpy
+name|memmove
 argument_list|(
 name|data
 argument_list|,
@@ -2723,13 +2712,16 @@ name|isc_log_write
 argument_list|(
 name|dns_lctx
 argument_list|,
-name|DNS_LOGCATEGORY_GENERAL
+name|DNS_LOGCATEGORY_DNSSEC
 argument_list|,
 name|DNS_LOGMODULE_DNSSEC
 argument_list|,
-name|ISC_LOG_INFO
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
-literal|"sucessfully validated after lower casing "
+literal|"successfully validated after lower casing "
 literal|"signer '%s'"
 argument_list|,
 name|namebuf
@@ -3722,6 +3714,13 @@ name|now
 argument_list|)
 condition|)
 block|{
+name|dst_key_setinactive
+argument_list|(
+name|pubkey
+argument_list|,
+name|ISC_TRUE
+argument_list|)
+expr_stmt|;
 name|dst_key_free
 argument_list|(
 operator|&
@@ -4242,11 +4241,13 @@ argument_list|)
 expr_stmt|;
 name|RETERR
 argument_list|(
-name|dst_context_create
+name|dst_context_create2
 argument_list|(
 name|key
 argument_list|,
 name|mctx
+argument_list|,
+name|DNS_LOGCATEGORY_DNSSEC
 argument_list|,
 operator|&
 name|ctx
@@ -5006,11 +5007,13 @@ goto|;
 block|}
 name|RETERR
 argument_list|(
-name|dst_context_create
+name|dst_context_create2
 argument_list|(
 name|key
 argument_list|,
 name|mctx
+argument_list|,
+name|DNS_LOGCATEGORY_DNSSEC
 argument_list|,
 operator|&
 name|ctx
@@ -5068,7 +5071,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Extract the header. 	 */
-name|memcpy
+name|memmove
 argument_list|(
 name|header
 argument_list|,
@@ -5080,7 +5083,7 @@ name|DNS_MESSAGE_HEADERLEN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Decrement the additional field counter. 	 */
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|addcount
@@ -5113,7 +5116,7 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|header

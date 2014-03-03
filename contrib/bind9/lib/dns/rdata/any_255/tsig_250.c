@@ -587,7 +587,7 @@ name|buf
 index|[
 sizeof|sizeof
 argument_list|(
-literal|"281474976710655 "
+literal|" 281474976710655 "
 argument_list|)
 index|]
 decl_stmt|;
@@ -1117,8 +1117,8 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|RETERR
+argument_list|(
 name|dns_tsigrcode_totext
 argument_list|(
 operator|(
@@ -1128,41 +1128,8 @@ name|n
 argument_list|,
 name|target
 argument_list|)
-operator|==
-name|ISC_R_SUCCESS
-condition|)
-name|RETERR
-argument_list|(
-name|str_totext
-argument_list|(
-literal|" "
-argument_list|,
-name|target
-argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%u "
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-name|RETERR
-argument_list|(
-name|str_totext
-argument_list|(
-name|buf
-argument_list|,
-name|target
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Other Size. 	 */
 name|n
 operator|=
@@ -1184,7 +1151,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%u "
+literal|" %u "
 argument_list|,
 name|n
 argument_list|)

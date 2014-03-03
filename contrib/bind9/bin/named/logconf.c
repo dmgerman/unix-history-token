@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2011, 2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -89,7 +89,7 @@ value|do { result = (op); 				  	 \ 	       if (result != ISC_R_SUCCESS) goto cl
 end_define
 
 begin_comment
-comment|/*%  * Set up a logging category according to the named.conf data  * in 'ccat' and add it to 'lctx'.  */
+comment|/*%  * Set up a logging category according to the named.conf data  * in 'ccat' and add it to 'logconfig'.  */
 end_comment
 
 begin_function
@@ -104,7 +104,7 @@ name|ccat
 parameter_list|,
 name|isc_logconfig_t
 modifier|*
-name|lctx
+name|logconfig
 parameter_list|)
 block|{
 name|isc_result_t
@@ -185,6 +185,17 @@ name|ISC_R_SUCCESS
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|logconfig
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ISC_R_SUCCESS
+operator|)
+return|;
 name|module
 operator|=
 name|NULL
@@ -243,7 +254,7 @@ name|result
 operator|=
 name|isc_log_usechannel
 argument_list|(
-name|lctx
+name|logconfig
 argument_list|,
 name|channelname
 argument_list|,
@@ -295,7 +306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*%  * Set up a logging channel according to the named.conf data  * in 'cchan' and add it to 'lctx'.  */
+comment|/*%  * Set up a logging channel according to the named.conf data  * in 'cchan' and add it to 'logconfig'.  */
 end_comment
 
 begin_function
@@ -310,7 +321,7 @@ name|channel
 parameter_list|,
 name|isc_logconfig_t
 modifier|*
-name|lctx
+name|logconfig
 parameter_list|)
 block|{
 name|isc_result_t
@@ -1024,11 +1035,22 @@ name|severity
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|logconfig
+operator|==
+name|NULL
+condition|)
+name|result
+operator|=
+name|ISC_R_SUCCESS
+expr_stmt|;
+else|else
 name|result
 operator|=
 name|isc_log_createchannel
 argument_list|(
-name|lctx
+name|logconfig
 argument_list|,
 name|channelname
 argument_list|,
@@ -1080,7 +1102,7 @@ operator|==
 name|ISC_R_FILENOTFOUND
 condition|)
 block|{
-comment|/* 			 * Test that the file can be opened, since 			 * isc_log_open() can't effectively report 			 * failures when called in 			 * isc_log_doit(). 			 */
+comment|/* 			 * Test that the file can be opened, since 			 * isc_log_open() can't effectively report 			 * failures when called in isc_log_doit(). 			 */
 name|result
 operator|=
 name|isc_stdio_open
@@ -1104,11 +1126,21 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
+if|if
+condition|(
+name|logconfig
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|ns_g_nosyslog
+condition|)
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"isc_stdio_open '%s' failed: %s"
+literal|"isc_stdio_open '%s' failed: "
+literal|"%s"
 argument_list|,
 name|dest
 operator|.
@@ -1126,7 +1158,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"isc_stdio_open '%s' failed: %s"
+literal|"isc_stdio_open '%s' failed: %s\n"
 argument_list|,
 name|dest
 operator|.
@@ -1150,9 +1182,19 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
-else|else
-block|{
+if|if
+condition|(
+name|logconfig
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|ns_g_nosyslog
+condition|)
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1175,7 +1217,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"isc_file_isplainfile '%s' failed: %s"
+literal|"isc_file_isplainfile '%s' failed: %s\n"
 argument_list|,
 name|dest
 operator|.
@@ -1190,7 +1232,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+name|done
+label|:
 return|return
 operator|(
 name|result
@@ -1205,7 +1248,7 @@ name|ns_log_configure
 parameter_list|(
 name|isc_logconfig_t
 modifier|*
-name|logconf
+name|logconfig
 parameter_list|,
 specifier|const
 name|cfg_obj_t
@@ -1250,11 +1293,17 @@ name|cfg_obj_t
 modifier|*
 name|catname
 decl_stmt|;
+if|if
+condition|(
+name|logconfig
+operator|!=
+name|NULL
+condition|)
 name|CHECK
 argument_list|(
 name|ns_log_setdefaultchannels
 argument_list|(
-name|logconf
+name|logconfig
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1308,7 +1357,7 @@ name|channel_fromconf
 argument_list|(
 name|channel
 argument_list|,
-name|logconf
+name|logconfig
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1363,7 +1412,7 @@ name|category_fromconf
 argument_list|(
 name|category
 argument_list|,
-name|logconf
+name|logconfig
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1438,6 +1487,10 @@ block|}
 block|}
 if|if
 condition|(
+name|logconfig
+operator|!=
+name|NULL
+operator|&&
 operator|!
 name|default_set
 condition|)
@@ -1445,12 +1498,16 @@ name|CHECK
 argument_list|(
 name|ns_log_setdefaultcategory
 argument_list|(
-name|logconf
+name|logconfig
 argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|logconfig
+operator|!=
+name|NULL
+operator|&&
 operator|!
 name|unmatched_set
 condition|)
@@ -1458,7 +1515,7 @@ name|CHECK
 argument_list|(
 name|ns_log_setunmatchedcategory
 argument_list|(
-name|logconf
+name|logconfig
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1469,18 +1526,6 @@ operator|)
 return|;
 name|cleanup
 label|:
-if|if
-condition|(
-name|logconf
-operator|!=
-name|NULL
-condition|)
-name|isc_logconfig_destroy
-argument_list|(
-operator|&
-name|logconf
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|result

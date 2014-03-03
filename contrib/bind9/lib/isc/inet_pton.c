@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1996-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2013, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1996-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -139,7 +139,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%   *	convert from presentation format (which usually means ASCII printable)  *	to network format (which is usually some kind of binary format).  * \return  *	1 if the address was valid for the specified address family  *	0 if the address wasn't valid (`dst' is untouched in this case)  *	-1 if some other error occurred (`dst' is untouched in this case, too)  * \author  *	Paul Vixie, 1996.  */
+comment|/*%  *	convert from presentation format (which usually means ASCII printable)  *	to network format (which is usually some kind of binary format).  * \return  *	1 if the address was valid for the specified address family  *	0 if the address wasn't valid (`dst' is untouched in this case)  *	-1 if some other error occurred (`dst' is untouched in this case, too)  * \author  *	Paul Vixie, 1996.  */
 end_comment
 
 begin_function
@@ -310,13 +310,18 @@ operator|*
 name|tp
 operator|*
 literal|10
-operator|+
-operator|(
+decl_stmt|;
+name|new
+operator|+=
+call|(
+name|int
+call|)
+argument_list|(
 name|pch
 operator|-
 name|digits
-operator|)
-decl_stmt|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|saw_digit
@@ -421,7 +426,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|memcpy
+name|memmove
 argument_list|(
 name|dst
 argument_list|,
@@ -828,9 +833,14 @@ specifier|const
 name|int
 name|n
 init|=
+call|(
+name|int
+call|)
+argument_list|(
 name|tp
 operator|-
 name|colonp
+argument_list|)
 decl_stmt|;
 name|int
 name|i
@@ -899,7 +909,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|memcpy
+name|memmove
 argument_list|(
 name|dst
 argument_list|,

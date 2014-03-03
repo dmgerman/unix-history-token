@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -2954,7 +2954,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called when refcount reaches 0 (and safe to destroy).  *  * The dispatcher must not be locked.  * The manager must be locked.  */
+comment|/*  * Called when refcount reaches 0 (and safe to destroy).  *  * The dispatcher must be locked.  * The manager must not be locked.  */
 end_comment
 
 begin_function
@@ -3504,6 +3504,14 @@ name|dispsocket_t
 modifier|*
 name|dispsock
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|VALID_QID
+argument_list|(
+name|qid
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|REQUIRE
 argument_list|(
 name|bucket
@@ -4611,6 +4619,14 @@ name|dns_dispentry_t
 modifier|*
 name|res
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|VALID_QID
+argument_list|(
+name|qid
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|REQUIRE
 argument_list|(
 name|bucket
@@ -12677,10 +12693,7 @@ if|if
 condition|(
 name|isc_sockaddr_pf
 argument_list|(
-operator|&
-name|disp
-operator|->
-name|local
+name|localaddr
 argument_list|)
 operator|==
 name|AF_INET
@@ -12788,17 +12801,18 @@ operator|&
 name|sock
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Continue if the port choosen is already in use 			 * or the OS has reserved it. 			 */
 if|if
 condition|(
 name|result
 operator|==
-name|ISC_R_SUCCESS
+name|ISC_R_NOPERM
 operator|||
 name|result
-operator|!=
+operator|==
 name|ISC_R_ADDRINUSE
 condition|)
-block|{
+continue|continue;
 name|disp
 operator|->
 name|localport
@@ -12815,7 +12829,6 @@ operator|(
 name|result
 operator|)
 return|;
-block|}
 block|}
 comment|/* 		 * If this fails 1024 times, we then ask the kernel for 		 * choosing one. 		 */
 block|}
@@ -12906,13 +12919,6 @@ condition|)
 goto|goto
 name|end
 goto|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|anyport
-condition|)
-break|break;
 elseif|else
 if|if
 condition|(
@@ -14422,6 +14428,16 @@ name|disp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ok
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
+do|do
+block|{
 name|bucket
 operator|=
 name|dns_hash
@@ -14435,24 +14451,6 @@ argument_list|,
 name|localport
 argument_list|)
 expr_stmt|;
-name|ok
-operator|=
-name|ISC_FALSE
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|64
-condition|;
-name|i
-operator|++
-control|)
-block|{
 if|if
 condition|(
 name|entry_search
@@ -14487,20 +14485,15 @@ name|id
 operator|&=
 literal|0x0000ffff
 expr_stmt|;
-name|bucket
-operator|=
-name|dns_hash
-argument_list|(
-name|qid
-argument_list|,
-name|dest
-argument_list|,
-name|id
-argument_list|,
-name|localport
-argument_list|)
-expr_stmt|;
 block|}
+do|while
+condition|(
+name|i
+operator|++
+operator|<
+literal|64
+condition|)
+do|;
 if|if
 condition|(
 operator|!
@@ -14555,14 +14548,6 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|UNLOCK
-argument_list|(
-operator|&
-name|disp
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dispsocket
@@ -14575,6 +14560,14 @@ name|disp
 argument_list|,
 operator|&
 name|dispsocket
+argument_list|)
+expr_stmt|;
+name|UNLOCK
+argument_list|(
+operator|&
+name|disp
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -16472,7 +16465,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|memcpy
+name|memmove
 argument_list|(
 name|buf
 argument_list|,

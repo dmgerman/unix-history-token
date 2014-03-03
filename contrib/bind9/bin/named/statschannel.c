@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2008-2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2008-2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -973,6 +973,15 @@ argument_list|,
 literal|"updates rejected due to prerequisite failure"
 argument_list|,
 literal|"UpdateBadPrereq"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|rpz_rewrites
+argument_list|,
+literal|"response policy zone rewrites"
+argument_list|,
+literal|"RPZRewrites"
 argument_list|)
 expr_stmt|;
 name|INSIST
@@ -4423,11 +4432,14 @@ literal|"socketmgr"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|isc_socketmgr_renderxml
 argument_list|(
 name|ns_g_socketmgr
 argument_list|,
 name|writer
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|TRY0
@@ -4450,11 +4462,14 @@ literal|"taskmgr"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|isc_taskmgr_renderxml
 argument_list|(
 name|ns_g_taskmgr
 argument_list|,
 name|writer
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|TRY0
@@ -4794,9 +4809,12 @@ literal|"memory"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|isc_mem_renderxml
 argument_list|(
 name|writer
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|TRY0
@@ -4861,6 +4879,16 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|buf
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|error
+goto|;
 name|xmlFreeDoc
 argument_list|(
 name|doc
@@ -4988,6 +5016,8 @@ name|unsigned
 name|char
 modifier|*
 name|msg
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|msglen

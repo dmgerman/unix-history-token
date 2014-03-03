@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2011-2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -51,29 +51,36 @@ end_macro
 begin_define
 define|#
 directive|define
+name|DNS_RPZ_PREFIX
+value|"rpz-"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DNS_RPZ_IP_ZONE
-value|"rpz-ip"
+value|DNS_RPZ_PREFIX"ip"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_RPZ_NSIP_ZONE
-value|"rpz-nsip"
+value|DNS_RPZ_PREFIX"nsip"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_RPZ_NSDNAME_ZONE
-value|"rpz-nsdname"
+value|DNS_RPZ_PREFIX"nsdname"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_RPZ_PASSTHRU_ZONE
-value|"rpz-passthru"
+value|DNS_RPZ_PREFIX"passthru"
 end_define
 
 begin_typedef
@@ -202,6 +209,9 @@ decl_stmt|;
 comment|/* DNS_RPZ_POLICY_GIVEN or override */
 name|isc_boolean_t
 name|recursive_only
+decl_stmt|;
+name|isc_boolean_t
+name|defined
 decl_stmt|;
 block|}
 struct|;
@@ -513,25 +523,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dns_rpz_set_need
-parameter_list|(
-name|isc_boolean_t
-name|need
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|isc_boolean_t
-name|dns_rpz_needed
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|dns_rpz_cidr_free
 parameter_list|(
 name|dns_rpz_cidr_t
@@ -575,7 +566,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dns_rpz_enabled
+name|dns_rpz_enabled_get
 parameter_list|(
 name|dns_rpz_cidr_t
 modifier|*

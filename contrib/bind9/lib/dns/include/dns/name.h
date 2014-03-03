@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1521,7 +1521,9 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|do { \ 	(n)->magic = DNS_NAME_MAGIC; \ 	(n)->ndata = NULL; \ 	(n)->length = 0; \ 	(n)->labels = 0; \ 	(n)->attributes = 0; \ 	(n)->offsets = (o); \ 	(n)->buffer = NULL; \ 	ISC_LINK_INIT((n), link); \ 	ISC_LIST_INIT((n)->list); \ } while (0)
+value|do { \ 	dns_name_t *_n = (n); \
+comment|/* memset(_n, 0, sizeof(*_n)); */
+value|\ 	_n->magic = DNS_NAME_MAGIC; \ 	_n->ndata = NULL; \ 	_n->length = 0; \ 	_n->labels = 0; \ 	_n->attributes = 0; \ 	_n->offsets = (o); \ 	_n->buffer = NULL; \ 	ISC_LINK_INIT(_n, link); \ 	ISC_LIST_INIT(_n->list); \ } while (0)
 end_define
 
 begin_define

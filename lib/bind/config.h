@@ -803,6 +803,14 @@ comment|/* #undef HAVE_LINUX_CAPABILITY_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<linux/types.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_TYPES_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<locale.h> header file. */
 end_comment
 
@@ -844,12 +852,34 @@ comment|/* #undef HAVE_NET_IF6_H */
 end_comment
 
 begin_comment
+comment|/* Define if your OpenSSL version supports ECDSA. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENSSL_ECDSA
+value|1
+end_define
+
+begin_comment
 comment|/* Define if your OpenSSL version supports GOST. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_OPENSSL_GOST */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<regex.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_REGEX_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `setegid' function. */

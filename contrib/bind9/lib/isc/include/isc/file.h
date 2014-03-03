@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009, 2011-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -227,7 +227,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Create and open a file with a unique name based on 'templet'.  *	isc_file_bopen*() open the file in binary mode in Windows.   *	isc_file_open*() open the file in text mode in Windows.   *  * Notes:  *\li	'template' is a reserved work in C++.  If you want to complain  *	about the spelling of 'templet', first look it up in the  *	Merriam-Webster English dictionary. (http://www.m-w.com/)  *  *\li	This function works by using the template to generate file names.  *	The template must be a writable string, as it is modified in place.  *	Trailing X characters in the file name (full file name on Unix,  *	basename on Win32 -- eg, tmp-XXXXXX vs XXXXXX.tmp, respectively)  *	are replaced with ASCII characters until a non-existent filename  *	is found.  If the template does not include pathname information,  *	the files in the working directory of the program are searched.  *  *\li	isc_file_mktemplate is a good, portable way to get a template.  *  * Requires:  *\li	'fp' is non-NULL and '*fp' is NULL.  *  *\li	'template' is non-NULL, and of a form suitable for use by  *	the system as described above.  *  * Ensures:  *\li	If result is #ISC_R_SUCCESS:  *		*fp points to an stream opening in stdio's "w+" mode.  *  *\li	If result is not #ISC_R_SUCCESS:  *		*fp is NULL.  *  *		No file is open.  Even if one was created (but unable  *		to be reopened as a stdio FILE pointer) then it has been  *		removed.  *  *\li	This function does *not* ensure that the template string has not been  *	modified, even if the operation was unsuccessful.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success.  *\li	#ISC_R_EXISTS  *		No file with a unique name could be created based on the  *		template.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_NOPERM  *		The file could not be created because permission was denied  *		to some part of the file's path.  *\li	#ISC_R_IOERROR  *		Hardware error interacting with the filesystem.  *\li	#ISC_R_UNEXPECTED  *		Something totally unexpected happened.  */
+comment|/*!<  * \brief Create and open a file with a unique name based on 'templet'.  *	isc_file_bopen*() open the file in binary mode in Windows.  *	isc_file_open*() open the file in text mode in Windows.  *  * Notes:  *\li	'template' is a reserved work in C++.  If you want to complain  *	about the spelling of 'templet', first look it up in the  *	Merriam-Webster English dictionary. (http://www.m-w.com/)  *  *\li	This function works by using the template to generate file names.  *	The template must be a writable string, as it is modified in place.  *	Trailing X characters in the file name (full file name on Unix,  *	basename on Win32 -- eg, tmp-XXXXXX vs XXXXXX.tmp, respectively)  *	are replaced with ASCII characters until a non-existent filename  *	is found.  If the template does not include pathname information,  *	the files in the working directory of the program are searched.  *  *\li	isc_file_mktemplate is a good, portable way to get a template.  *  * Requires:  *\li	'fp' is non-NULL and '*fp' is NULL.  *  *\li	'template' is non-NULL, and of a form suitable for use by  *	the system as described above.  *  * Ensures:  *\li	If result is #ISC_R_SUCCESS:  *		*fp points to an stream opening in stdio's "w+" mode.  *  *\li	If result is not #ISC_R_SUCCESS:  *		*fp is NULL.  *  *		No file is open.  Even if one was created (but unable  *		to be reopened as a stdio FILE pointer) then it has been  *		removed.  *  *\li	This function does *not* ensure that the template string has not been  *	modified, even if the operation was unsuccessful.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success.  *\li	#ISC_R_EXISTS  *		No file with a unique name could be created based on the  *		template.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_NOPERM  *		The file could not be created because permission was denied  *		to some part of the file's path.  *\li	#ISC_R_IOERROR  *		Hardware error interacting with the filesystem.  *\li	#ISC_R_UNEXPECTED  *		Something totally unexpected happened.  */
 end_comment
 
 begin_function_decl
@@ -313,6 +313,22 @@ end_function_decl
 
 begin_comment
 comment|/*!<  * \brief Check that the file is a plain file  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success. The file is a plain file.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_FILENOTFOUND  *		The file does not exist. This return code comes from  *		errno=ENOENT when stat returns -1. This code is mentioned  *		here, because in logconf.c, it is the one rcode that is  *		permitted in addition to ISC_R_SUCCESS. This is done since  *		the next call in logconf.c is to isc_stdio_open(), which  *		will create the file if it can.  *\li	#other ISC_R_* errors translated from errno  *		These occur when stat returns -1 and an errno.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_file_isdirectory
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!<  * \brief Check that 'name' exists and is a directory.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success, file is a directory.  *\li	#ISC_R_INVALIDFILE  *		File is not a directory.  *\li	#ISC_R_FILENOTFOUND  *		File does not exist.  *\li	#other ISC_R_* errors translated from errno  *		These occur when stat returns -1 and an errno.  */
 end_comment
 
 begin_function_decl
@@ -530,6 +546,24 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Split a path into dirname and basename.  If 'path' contains no slash  * (or, on windows, backslash), then '*dirname' is set to ".".  *  * Allocates memory for '*dirname', which can be freed with isc_mem_free().  *  * Returns:  * - ISC_R_SUCCESS on success  * - ISC_R_INVALIDFILE if 'path' is empty or ends with '/'  * - ISC_R_NOMEMORY if unable to allocate memory  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_file_getsizefd
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|off_t
+modifier|*
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Return the size of the file (stored in the parameter pointed  * to by 'size') in bytes.  *  * Returns:  * - ISC_R_SUCCESS on success  */
 end_comment
 
 begin_macro

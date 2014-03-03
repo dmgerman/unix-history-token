@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2005, 2007, 2009-2012  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2005, 2007, 2009-2013  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -407,6 +407,12 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
+name|dns_dlzdb_t
+modifier|*
+name|db
+init|=
+name|NULL
+decl_stmt|;
 comment|/* 	 * initialize the dlz_implementations list, this is guaranteed 	 * to only really happen once. 	 */
 name|RUNTIME_CHECK
 argument_list|(
@@ -530,10 +536,7 @@ operator|)
 return|;
 block|}
 comment|/* Allocate memory to hold the DLZ database driver */
-operator|(
-operator|*
-name|dbp
-operator|)
+name|db
 operator|=
 name|isc_mem_get
 argument_list|(
@@ -547,10 +550,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|*
-name|dbp
-operator|)
+name|db
 operator|==
 name|NULL
 condition|)
@@ -572,10 +572,7 @@ block|}
 comment|/* Make sure memory region is set to all 0's */
 name|memset
 argument_list|(
-operator|(
-operator|*
-name|dbp
-operator|)
+name|db
 argument_list|,
 literal|0
 argument_list|,
@@ -585,10 +582,7 @@ name|dns_dlzdb_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|dbp
-operator|)
+name|db
 operator|->
 name|implementation
 operator|=
@@ -619,10 +613,7 @@ operator|->
 name|driverarg
 argument_list|,
 operator|&
-operator|(
-operator|*
-name|dbp
-operator|)
+name|db
 operator|->
 name|dbdata
 argument_list|)
@@ -644,10 +635,7 @@ argument_list|,
 name|isc_rwlocktype_read
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|dbp
-operator|)
+name|db
 operator|->
 name|magic
 operator|=
@@ -658,10 +646,7 @@ argument_list|(
 name|mctx
 argument_list|,
 operator|&
-operator|(
-operator|*
-name|dbp
-operator|)
+name|db
 operator|->
 name|mctx
 argument_list|)
@@ -681,6 +666,11 @@ argument_list|)
 argument_list|,
 literal|"DLZ driver loaded successfully."
 argument_list|)
+expr_stmt|;
+operator|*
+name|dbp
+operator|=
+name|db
 expr_stmt|;
 return|return
 operator|(
@@ -717,10 +707,7 @@ name|isc_mem_put
 argument_list|(
 name|mctx
 argument_list|,
-operator|(
-operator|*
-name|dbp
-operator|)
+name|db
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1973,7 +1960,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|buffer

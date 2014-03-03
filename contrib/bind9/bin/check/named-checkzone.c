@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -567,6 +567,8 @@ name|DNS_ZONEOPT_CHECKNS
 operator||
 name|DNS_ZONEOPT_FATALNS
 operator||
+name|DNS_ZONEOPT_CHECKSPF
+operator||
 name|DNS_ZONEOPT_CHECKDUPRR
 operator||
 name|DNS_ZONEOPT_CHECKNAMES
@@ -580,7 +582,11 @@ block|}
 else|else
 name|zone_options
 operator||=
+operator|(
 name|DNS_ZONEOPT_CHECKDUPRR
+operator||
+name|DNS_ZONEOPT_CHECKSPF
+operator|)
 expr_stmt|;
 define|#
 directive|define
@@ -604,7 +610,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:df:hi:jk:m:n:qr:s:t:o:vw:DF:M:S:W:"
+literal|"c:df:hi:jk:m:n:qr:s:t:o:vw:DF:M:S:T:W:"
 argument_list|)
 operator|)
 operator|!=
@@ -1408,6 +1414,55 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'T'
+case|:
+if|if
+condition|(
+name|ARGCMP
+argument_list|(
+literal|"warn"
+argument_list|)
+condition|)
+block|{
+name|zone_options
+operator||=
+name|DNS_ZONEOPT_CHECKSPF
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ARGCMP
+argument_list|(
+literal|"ignore"
+argument_list|)
+condition|)
+block|{
+name|zone_options
+operator|&=
+operator|~
+name|DNS_ZONEOPT_CHECKSPF
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"invalid argument to -T: %s\n"
+argument_list|,
+name|isc_commandline_argument
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|'W'
 case|:
 if|if
@@ -1455,6 +1510,7 @@ argument_list|,
 name|isc_commandline_option
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'h'
 case|:

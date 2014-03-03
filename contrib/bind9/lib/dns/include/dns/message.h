@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010, 2012, 2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -137,6 +137,17 @@ end_define
 
 begin_comment
 comment|/*%< NSID opt code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_OPT_CLIENT_SUBNET
+value|0x0008
+end_define
+
+begin_comment
+comment|/*%< client subnet opt code */
 end_comment
 
 begin_define
@@ -744,6 +755,25 @@ specifier|const
 name|void
 modifier|*
 name|order_arg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|dns_ednsopt
+block|{
+name|isc_uint16_t
+name|code
+decl_stmt|;
+name|isc_uint16_t
+name|length
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|value
 decl_stmt|;
 block|}
 struct|;
@@ -1869,6 +1899,44 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Return the current time adjustment.  *  * Requires:  *\li	msg be a valid message.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_message_buildopt
+parameter_list|(
+name|dns_message_t
+modifier|*
+name|msg
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+modifier|*
+name|opt
+parameter_list|,
+name|unsigned
+name|int
+name|version
+parameter_list|,
+name|isc_uint16_t
+name|udpsize
+parameter_list|,
+name|unsigned
+name|int
+name|flags
+parameter_list|,
+name|dns_ednsopt_t
+modifier|*
+name|ednsopts
+parameter_list|,
+name|size_t
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Built a opt record.  *  * Requires:  * \li   msg be a valid message.  * \li   opt to be a non NULL and *opt to be NULL.  *  * Returns:  * \li	 ISC_R_SUCCESS on success.  * \li	 ISC_R_NOMEMORY  * \li	 ISC_R_NOSPACE  * \li	 other.  */
 end_comment
 
 begin_macro

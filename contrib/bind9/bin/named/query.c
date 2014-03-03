@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -357,6 +357,20 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(((c)->attributes& \ 				  NS_CLIENTATTR_WANTDNSSEC) != 0)
+end_define
+
+begin_comment
+comment|/*% Want WANTAD? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WANTAD
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)->attributes& \ 				  NS_CLIENTATTR_WANTAD) != 0)
 end_define
 
 begin_comment
@@ -3050,6 +3064,9 @@ decl_stmt|;
 name|dns_acl_t
 modifier|*
 name|queryacl
+decl_stmt|,
+modifier|*
+name|queryonacl
 decl_stmt|;
 name|ns_dbversion_t
 modifier|*
@@ -3435,6 +3452,79 @@ operator||=
 name|NS_QUERYATTR_QUERYOKVALID
 expr_stmt|;
 block|}
+comment|/* If and only if we've gotten this far, check allow-query-on too */
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|queryonacl
+operator|=
+name|dns_zone_getqueryonacl
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|queryonacl
+operator|==
+name|NULL
+condition|)
+name|queryonacl
+operator|=
+name|client
+operator|->
+name|view
+operator|->
+name|queryonacl
+expr_stmt|;
+name|result
+operator|=
+name|ns_client_checkaclsilent
+argument_list|(
+name|client
+argument_list|,
+operator|&
+name|client
+operator|->
+name|destaddr
+argument_list|,
+name|queryonacl
+argument_list|,
+name|ISC_TRUE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|DNS_GETDB_NOLOG
+operator|)
+operator|==
+literal|0
+operator|&&
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|ns_client_log
+argument_list|(
+name|client
+argument_list|,
+name|DNS_LOGCATEGORY_SECURITY
+argument_list|,
+name|NS_LOGMODULE_QUERY
+argument_list|,
+name|ISC_LOG_INFO
+argument_list|,
+literal|"query-on denied"
+argument_list|)
+expr_stmt|;
+block|}
 name|dbversion
 operator|->
 name|acl_checked
@@ -3755,9 +3845,7 @@ name|ns_client_t
 modifier|*
 name|client
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|isc_boolean_t
 name|disabled
 parameter_list|,
 name|dns_rpz_policy_t
@@ -3766,11 +3854,19 @@ parameter_list|,
 name|dns_rpz_type_t
 name|type
 parameter_list|,
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
 name|dns_name_t
 modifier|*
 name|rpz_qname
 parameter_list|)
 block|{
+name|isc_stats_t
+modifier|*
+name|zonestats
+decl_stmt|;
 name|char
 name|qname_buf
 index|[
@@ -3783,6 +3879,55 @@ index|[
 name|DNS_NAME_FORMATSIZE
 index|]
 decl_stmt|;
+comment|/* 	 * Count enabled rewrites in the global counter. 	 * Count both enabled and disabled rewrites for each zone. 	 */
+if|if
+condition|(
+operator|!
+name|disabled
+operator|&&
+name|policy
+operator|!=
+name|DNS_RPZ_POLICY_PASSTHRU
+condition|)
+block|{
+name|isc_stats_increment
+argument_list|(
+name|ns_g_server
+operator|->
+name|nsstats
+argument_list|,
+name|dns_nsstatscounter_rpz_rewrites
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|zone
+operator|!=
+name|NULL
+condition|)
+block|{
+name|zonestats
+operator|=
+name|dns_zone_getrequeststats
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zonestats
+operator|!=
+name|NULL
+condition|)
+name|isc_stats_increment
+argument_list|(
+name|zonestats
+argument_list|,
+name|dns_nsstatscounter_rpz_rewrites
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -3835,6 +3980,10 @@ argument_list|,
 literal|"%srpz %s %s rewrite %s via %s"
 argument_list|,
 name|disabled
+condition|?
+literal|"disabled "
+else|:
+literal|""
 argument_list|,
 name|dns_rpz_type2str
 argument_list|(
@@ -3905,6 +4054,7 @@ name|level
 argument_list|)
 condition|)
 return|return;
+comment|/* 	 * bin/tests/system/rpz/tests.sh looks for "rpz.*failed". 	 */
 name|dns_name_format
 argument_list|(
 name|client
@@ -13637,6 +13787,51 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
+comment|/* 	 * If the answer is secure only add NS records if they are secure		 * when the client may be looking for AD in the response. 	 */
+if|if
+condition|(
+name|SECURE
+argument_list|(
+name|client
+argument_list|)
+operator|&&
+operator|(
+name|WANTDNSSEC
+argument_list|(
+name|client
+argument_list|)
+operator|||
+name|WANTAD
+argument_list|(
+name|client
+argument_list|)
+operator|)
+operator|&&
+operator|(
+operator|(
+name|rdataset
+operator|->
+name|trust
+operator|!=
+name|dns_trust_secure
+operator|)
+operator|||
+operator|(
+name|sigrdataset
+operator|!=
+name|NULL
+operator|&&
+name|sigrdataset
+operator|->
+name|trust
+operator|!=
+name|dns_trust_secure
+operator|)
+operator|)
+condition|)
+goto|goto
+name|cleanup
+goto|;
 comment|/* 	 * If the client doesn't want DNSSEC we can discard the sigrdataset 	 * now. 	 */
 if|if
 condition|(
@@ -18251,6 +18446,12 @@ block|{
 case|case
 name|ISC_R_SUCCESS
 case|:
+case|case
+name|DNS_R_GLUE
+case|:
+case|case
+name|DNS_R_ZONECUT
+case|:
 name|result
 operator|=
 name|rpz_rewrite_ip
@@ -18694,6 +18895,13 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|nodep
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|rpz_ready
@@ -19126,10 +19334,6 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|DNS_R_DNAME
-case|:
-comment|/* 		 * DNAME policy RRs have very few if any uses that are not 		 * better served with simple wildcards.  Making the work would 		 * require complications to get the number of labels matched 		 * in the name or the found name to the main DNS_R_DNAME case 		 * in query_find(). So fall through to treat them as NODATA. 		 */
-case|case
 name|DNS_R_NXRRSET
 case|:
 name|policy
@@ -19138,12 +19342,34 @@ name|DNS_RPZ_POLICY_NODATA
 expr_stmt|;
 break|break;
 case|case
+name|DNS_R_DNAME
+case|:
+comment|/* 		 * DNAME policy RRs have very few if any uses that are not 		 * better served with simple wildcards.  Making the work would 		 * require complications to get the number of labels matched 		 * in the name or the found name to the main DNS_R_DNAME case 		 * in query_find(). 		 */
+name|dns_rdataset_disassociate
+argument_list|(
+operator|*
+name|rdatasetp
+argument_list|)
+expr_stmt|;
+name|dns_db_detachnode
+argument_list|(
+operator|*
+name|dbp
+argument_list|,
+name|nodep
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Fall through to treat it as a miss. 		 */
+case|case
 name|DNS_R_NXDOMAIN
 case|:
 case|case
 name|DNS_R_EMPTYNAME
 case|:
 comment|/* 		 * If we don't get a qname hit, 		 * see if it is worth looking for other types. 		 */
+operator|(
+name|void
+operator|)
 name|dns_db_rpz_enabled
 argument_list|(
 operator|*
@@ -19165,6 +19391,10 @@ name|dns_zone_detach
 argument_list|(
 name|zonep
 argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|DNS_R_NXDOMAIN
 expr_stmt|;
 name|policy
 operator|=
@@ -19197,15 +19427,11 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
-name|policy
-operator|=
-name|DNS_RPZ_POLICY_ERROR
-expr_stmt|;
-name|result
-operator|=
+return|return
+operator|(
 name|DNS_R_SERVFAIL
-expr_stmt|;
-break|break;
+operator|)
+return|;
 block|}
 operator|*
 name|policyp
@@ -19503,6 +19729,7 @@ operator|==
 name|DNS_R_NAMETOOLONG
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Trim the name until it is not too long. 			 */
 name|labels
 operator|=
 name|dns_name_countlabels
@@ -19623,9 +19850,6 @@ block|{
 case|case
 name|DNS_R_NXDOMAIN
 case|:
-case|case
-name|DNS_R_EMPTYNAME
-case|:
 break|break;
 case|case
 name|DNS_R_SERVFAIL
@@ -19713,6 +19937,13 @@ operator|)
 operator|)
 condition|)
 continue|continue;
+if|#
+directive|if
+literal|0
+comment|/* 			 * This code would block a customer reported information 			 * leak of rpz rules by rewriting requests in the 			 * rpz-ip, rpz-nsip, rpz-nsdname,and rpz-passthru TLDs. 			 * Without this code, a bad guy could request 			 * 24.0.3.2.10.rpz-ip. to find the policy rule for 			 * 10.2.3.0/14.  It is an insignificant leak and this 			 * code is not worth its cost, because the bad guy 			 * could publish "evil.com A 10.2.3.4" and request 			 * evil.com to get the same information. 			 * Keep code with "#if 0" in case customer demand 			 * is irresistible. 			 * 			 * We have the less frequent case of a triggered 			 * policy.  Check that we have not trigger on one 			 * of the pretend RPZ TLDs. 			 * This test would make it impossible to rewrite 			 * names in TLDs that start with "rpz-" should 			 * ICANN ever allow such TLDs. 			 */
+block|labels = dns_name_countlabels(qname); 			if (labels>= 2) { 				dns_label_t label;  				dns_name_getlabel(qname, labels-2,&label); 				if (label.length>= sizeof(DNS_RPZ_PREFIX)-1&& 				    strncasecmp((const char *)label.base+1, 						DNS_RPZ_PREFIX, 						sizeof(DNS_RPZ_PREFIX)-1) == 0) 					continue; 			}
+endif|#
+directive|endif
 comment|/* 			 * Merely log DNS_RPZ_POLICY_DISABLED hits. 			 */
 if|if
 condition|(
@@ -19727,11 +19958,13 @@ name|rpz_log_rewrite
 argument_list|(
 name|client
 argument_list|,
-literal|"disabled "
+name|ISC_TRUE
 argument_list|,
 name|policy
 argument_list|,
 name|rpz_type
+argument_list|,
+name|zone
 argument_list|,
 name|rpz_qname
 argument_list|)
@@ -20401,7 +20634,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Check rules for the query name if this it the first time 		 * for the current qname, i.e. we've not been recursing. 		 * There is a first time for each name in a CNAME chain. 		 */
+comment|/* 		 * Check rules for the query name if this is the first time 		 * for the current qname, i.e. we've not been recursing. 		 * There is a first time for each name in a CNAME chain. 		 */
 name|result
 operator|=
 name|rpz_rewrite_name
@@ -20592,7 +20825,11 @@ name|r
 operator|.
 name|label
 operator|>
-literal|1
+name|client
+operator|->
+name|view
+operator|->
+name|rpz_min_ns_labels
 condition|)
 block|{
 comment|/* 		 * Get NS rrset for each domain in the current qname. 		 */
@@ -21213,7 +21450,7 @@ name|rpz_log_rewrite
 argument_list|(
 name|client
 argument_list|,
-literal|""
+name|ISC_FALSE
 argument_list|,
 name|st
 operator|->
@@ -21226,6 +21463,12 @@ operator|->
 name|m
 operator|.
 name|type
+argument_list|,
+name|st
+operator|->
+name|m
+operator|.
+name|zone
 argument_list|,
 name|st
 operator|->
@@ -21312,7 +21555,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * See if response policy zone rewriting is allowed a lack of interest  * by the client in DNSSEC or a lack of signatures.  */
+comment|/*  * See if response policy zone rewriting is allowed by a lack of interest  * by the client in DNSSEC or a lack of signatures.  */
 end_comment
 
 begin_function
@@ -21763,7 +22006,7 @@ name|rpz_log_rewrite
 argument_list|(
 name|client
 argument_list|,
-literal|""
+name|ISC_FALSE
 argument_list|,
 name|st
 operator|->
@@ -21776,6 +22019,12 @@ operator|->
 name|m
 operator|.
 name|type
+argument_list|,
+name|st
+operator|->
+name|m
+operator|.
+name|zone
 argument_list|,
 name|st
 operator|->
@@ -21884,7 +22133,7 @@ operator|==
 literal|4
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|ina
@@ -21923,7 +22172,7 @@ operator|==
 literal|16
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|in6a
 operator|.
@@ -26617,6 +26866,14 @@ operator|&
 name|sigrdataset
 argument_list|)
 expr_stmt|;
+name|rpz_st
+operator|->
+name|q
+operator|.
+name|is_zone
+operator|=
+name|is_zone
+expr_stmt|;
 name|is_zone
 operator|=
 name|ISC_TRUE
@@ -26625,7 +26882,7 @@ name|rpz_log_rewrite
 argument_list|(
 name|client
 argument_list|,
-literal|""
+name|ISC_FALSE
 argument_list|,
 name|rpz_st
 operator|->
@@ -26638,6 +26895,8 @@ operator|->
 name|m
 operator|.
 name|type
+argument_list|,
+name|zone
 argument_list|,
 name|rpz_st
 operator|->
@@ -28000,6 +28259,48 @@ name|qtype
 operator|=
 name|dns_rdatatype_a
 expr_stmt|;
+name|rpz_st
+operator|=
+name|client
+operator|->
+name|query
+operator|.
+name|rpz_st
+expr_stmt|;
+if|if
+condition|(
+name|rpz_st
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 				 * Arrange for RPZ rewriting of any A records. 				 */
+if|if
+condition|(
+operator|(
+name|rpz_st
+operator|->
+name|state
+operator|&
+name|DNS_RPZ_REWRITTEN
+operator|)
+operator|!=
+literal|0
+condition|)
+name|is_zone
+operator|=
+name|rpz_st
+operator|->
+name|q
+operator|.
+name|is_zone
+expr_stmt|;
+name|rpz_st_clear
+argument_list|(
+name|client
+argument_list|)
+expr_stmt|;
+block|}
 name|dns64
 operator|=
 name|ISC_TRUE
@@ -28104,6 +28405,15 @@ name|qname
 argument_list|,
 name|found
 argument_list|)
+operator|&&
+operator|!
+operator|(
+name|ns_g_nonearest
+operator|&&
+name|qtype
+operator|!=
+name|dns_rdatatype_ds
+operator|)
 condition|)
 block|{
 name|unsigned
@@ -28957,6 +29267,48 @@ name|qtype
 operator|=
 name|dns_rdatatype_a
 expr_stmt|;
+name|rpz_st
+operator|=
+name|client
+operator|->
+name|query
+operator|.
+name|rpz_st
+expr_stmt|;
+if|if
+condition|(
+name|rpz_st
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 				 * Arrange for RPZ rewriting of any A records. 				 */
+if|if
+condition|(
+operator|(
+name|rpz_st
+operator|->
+name|state
+operator|&
+name|DNS_RPZ_REWRITTEN
+operator|)
+operator|!=
+literal|0
+condition|)
+name|is_zone
+operator|=
+name|rpz_st
+operator|->
+name|q
+operator|.
+name|is_zone
+expr_stmt|;
+name|rpz_st_clear
+argument_list|(
+name|client
+argument_list|)
+expr_stmt|;
+block|}
 name|dns64
 operator|=
 name|ISC_TRUE
@@ -30367,6 +30719,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|qtype
+operator|==
+name|dns_rdatatype_rrsig
+operator|&&
 name|dns_db_issecure
 argument_list|(
 name|db
@@ -30821,6 +31177,48 @@ name|qtype
 operator|=
 name|dns_rdatatype_a
 expr_stmt|;
+name|rpz_st
+operator|=
+name|client
+operator|->
+name|query
+operator|.
+name|rpz_st
+expr_stmt|;
+if|if
+condition|(
+name|rpz_st
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 				 * Arrange for RPZ rewriting of any A records. 				 */
+if|if
+condition|(
+operator|(
+name|rpz_st
+operator|->
+name|state
+operator|&
+name|DNS_RPZ_REWRITTEN
+operator|)
+operator|!=
+literal|0
+condition|)
+name|is_zone
+operator|=
+name|rpz_st
+operator|->
+name|q
+operator|.
+name|is_zone
+expr_stmt|;
+name|rpz_st_clear
+argument_list|(
+name|client
+argument_list|)
+expr_stmt|;
+block|}
 name|dns64_exclude
 operator|=
 name|dns64
@@ -32172,9 +32570,6 @@ name|message
 operator|->
 name|flags
 decl_stmt|;
-name|isc_boolean_t
-name|want_ad
-decl_stmt|;
 name|CTRACE
 argument_list|(
 literal|"ns_query_start"
@@ -32795,7 +33190,7 @@ operator|&=
 operator|~
 name|NS_QUERYATTR_SECURE
 expr_stmt|;
-comment|/* 	 * Set 'want_ad' if the client has set AD in the query. 	 * This allows AD to be returned on queries without DO set. 	 */
+comment|/* 	 * Set NS_CLIENTATTR_WANTDNSSEC if the client has set AD in the query. 	 * This allows AD to be returned on queries without DO set. 	 */
 if|if
 condition|(
 operator|(
@@ -32808,14 +33203,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|want_ad
-operator|=
-name|ISC_TRUE
-expr_stmt|;
-else|else
-name|want_ad
-operator|=
-name|ISC_FALSE
+name|client
+operator|->
+name|attributes
+operator||=
+name|NS_CLIENTATTR_WANTAD
 expr_stmt|;
 comment|/* 	 * This is an ordinary query. 	 */
 name|result
@@ -32863,7 +33255,10 @@ argument_list|(
 name|client
 argument_list|)
 operator|||
-name|want_ad
+name|WANTAD
+argument_list|(
+name|client
+argument_list|)
 condition|)
 name|message
 operator|->

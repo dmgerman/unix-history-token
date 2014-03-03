@@ -6031,8 +6031,18 @@ name|BIND9
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|TRY0
+parameter_list|(
+name|a
+parameter_list|)
+value|do { xmlrc = (a); if (xmlrc< 0) goto error; } while(0)
+end_define
+
 begin_function
-name|void
+name|int
 name|isc_taskmgr_renderxml
 parameter_list|(
 name|isc_taskmgr_t
@@ -6056,6 +6066,11 @@ decl_stmt|;
 name|isc__task_t
 modifier|*
 name|task
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|xmlrc
 decl_stmt|;
 name|LOCK
 argument_list|(
@@ -6066,6 +6081,8 @@ name|lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Write out the thread-model, and some details about each depending 	 * on which type is enabled. 	 */
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6073,10 +6090,13 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"thread-model"
 argument_list|)
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISC_PLATFORM_USETHREADS
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6084,7 +6104,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"type"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteString
 argument_list|(
 name|writer
@@ -6092,13 +6115,19 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"threaded"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* type */
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6106,7 +6135,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"worker-threads"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteFormatString
 argument_list|(
 name|writer
@@ -6117,16 +6149,22 @@ name|mgr
 operator|->
 name|workers
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* worker-threads */
 else|#
 directive|else
 comment|/* ISC_PLATFORM_USETHREADS */
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6134,7 +6172,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"type"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteString
 argument_list|(
 name|writer
@@ -6142,13 +6183,19 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"non-threaded"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* type */
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6156,7 +6203,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"references"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteFormatString
 argument_list|(
 name|writer
@@ -6167,16 +6217,22 @@ name|mgr
 operator|->
 name|refs
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* references */
 endif|#
 directive|endif
 comment|/* ISC_PLATFORM_USETHREADS */
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6184,7 +6240,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"default-quantum"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteFormatString
 argument_list|(
 name|writer
@@ -6195,13 +6254,19 @@ name|mgr
 operator|->
 name|default_quantum
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* default-quantum */
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6209,7 +6274,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"tasks-running"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteFormatString
 argument_list|(
 name|writer
@@ -6220,25 +6288,35 @@ name|mgr
 operator|->
 name|tasks_running
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* tasks-running */
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* thread-model */
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
 argument_list|,
 name|ISC_XMLCHAR
 literal|"tasks"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|task
@@ -6265,12 +6343,15 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
 argument_list|,
 name|ISC_XMLCHAR
 literal|"task"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6285,6 +6366,8 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6292,7 +6375,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"name"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteFormatString
 argument_list|(
 name|writer
@@ -6303,14 +6389,20 @@ name|task
 operator|->
 name|name
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* name */
 block|}
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6318,7 +6410,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"references"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteFormatString
 argument_list|(
 name|writer
@@ -6329,13 +6424,19 @@ name|task
 operator|->
 name|references
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* references */
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6343,7 +6444,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"id"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteFormatString
 argument_list|(
 name|writer
@@ -6352,13 +6456,19 @@ literal|"%p"
 argument_list|,
 name|task
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* id */
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6366,7 +6476,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"state"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteFormatString
 argument_list|(
 name|writer
@@ -6380,13 +6493,19 @@ operator|->
 name|state
 index|]
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* state */
+name|TRY0
+argument_list|(
 name|xmlTextWriterStartElement
 argument_list|(
 name|writer
@@ -6394,7 +6513,10 @@ argument_list|,
 name|ISC_XMLCHAR
 literal|"quantum"
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterWriteFormatString
 argument_list|(
 name|writer
@@ -6405,16 +6527,23 @@ name|task
 operator|->
 name|quantum
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* quantum */
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|UNLOCK
@@ -6435,12 +6564,31 @@ name|link
 argument_list|)
 expr_stmt|;
 block|}
+name|TRY0
+argument_list|(
 name|xmlTextWriterEndElement
 argument_list|(
 name|writer
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* tasks */
+name|error
+label|:
+if|if
+condition|(
+name|task
+operator|!=
+name|NULL
+condition|)
+name|UNLOCK
+argument_list|(
+operator|&
+name|task
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|UNLOCK
 argument_list|(
 operator|&
@@ -6449,6 +6597,11 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|xmlrc
+operator|)
+return|;
 block|}
 end_function
 

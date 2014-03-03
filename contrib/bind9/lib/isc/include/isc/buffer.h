@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2010, 2012, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -369,7 +369,6 @@ name|isc_buffer_t
 modifier|*
 name|b
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 name|base
@@ -931,7 +930,7 @@ parameter_list|,
 name|_length
 parameter_list|)
 define|\
-value|do { \ 		union { \ 			const void *	konst; \ 			void *		var; \ 		} _u; \ 		_u.konst = (_base); \ 		(_b)->base = _u.var; \ 		(_b)->length = (_length); \ 		(_b)->used = 0; \ 		(_b)->current = 0; \ 		(_b)->active = 0; \ 		(_b)->mctx = NULL; \ 		ISC_LINK_INIT(_b, link); \ 		(_b)->magic = ISC_BUFFER_MAGIC; \ 	} while (0)
+value|do { \ 		(_b)->base = _base; \ 		(_b)->length = (_length); \ 		(_b)->used = 0; \ 		(_b)->current = 0; \ 		(_b)->active = 0; \ 		(_b)->mctx = NULL; \ 		ISC_LINK_INIT(_b, link); \ 		(_b)->magic = ISC_BUFFER_MAGIC; \ 	} while (0)
 end_define
 
 begin_define
@@ -1132,7 +1131,7 @@ parameter_list|,
 name|_length
 parameter_list|)
 define|\
-value|do { \ 		memcpy(isc_buffer_used(_b), (_base), (_length)); \ 		(_b)->used += (_length); \ 	} while (0)
+value|do { \ 		memmove(isc_buffer_used(_b), (_base), (_length)); \ 		(_b)->used += (_length); \ 	} while (0)
 end_define
 
 begin_define
@@ -1145,7 +1144,7 @@ parameter_list|,
 name|_source
 parameter_list|)
 define|\
-value|do { \ 		unsigned int _length; \ 		unsigned char *_cp; \ 		_length = strlen(_source); \ 		_cp = isc_buffer_used(_b); \ 		memcpy(_cp, (_source), _length); \ 		(_b)->used += (_length); \ 	} while (0)
+value|do { \ 		unsigned int _length; \ 		unsigned char *_cp; \ 		_length = strlen(_source); \ 		_cp = isc_buffer_used(_b); \ 		memmove(_cp, (_source), _length); \ 		(_b)->used += (_length); \ 	} while (0)
 end_define
 
 begin_define
@@ -1526,6 +1525,21 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|isc_buffer_constinit
+parameter_list|(
+name|_b
+parameter_list|,
+name|_d
+parameter_list|,
+name|_l
+parameter_list|)
+define|\
+value|do { \ 		union { void *_var; const void *_const; } _deconst; \ 		_deconst._const = (_d); \ 		isc_buffer_init((_b), _deconst._var, (_l)); \ 	} while (0)
+end_define
 
 begin_comment
 comment|/*  * No inline method for this one (yet).  */

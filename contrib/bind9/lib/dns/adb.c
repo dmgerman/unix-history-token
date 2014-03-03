@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -350,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|DNS_ADB_MINADBSIZE
-value|(1024*1024)
+value|(1024U*1024U)
 end_define
 
 begin_comment
@@ -2440,11 +2440,22 @@ operator|&
 name|ev
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
 name|isc_task_beginexclusive
 argument_list|(
 name|task
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+goto|goto
+name|check_exit
+goto|;
 name|i
 operator|=
 literal|0
@@ -3248,6 +3259,8 @@ argument_list|(
 name|task
 argument_list|)
 expr_stmt|;
+name|check_exit
+label|:
 name|LOCK
 argument_list|(
 operator|&
@@ -3370,11 +3383,22 @@ operator|&
 name|ev
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
 name|isc_task_beginexclusive
 argument_list|(
 name|task
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+goto|goto
+name|check_exit
+goto|;
 name|i
 operator|=
 literal|0
@@ -4178,6 +4202,8 @@ argument_list|(
 name|task
 argument_list|)
 expr_stmt|;
+name|check_exit
+label|:
 name|LOCK
 argument_list|(
 operator|&
@@ -4404,7 +4430,7 @@ operator|==
 literal|4
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|ina
@@ -4448,7 +4474,7 @@ operator|==
 literal|16
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|in6a
 operator|.
@@ -6487,6 +6513,13 @@ operator|=
 name|entry
 operator|->
 name|lock_bucket
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|addr_bucket
+operator|!=
+name|DNS_ADB_INVALIDBUCKET
+argument_list|)
 expr_stmt|;
 name|LOCK
 argument_list|(
@@ -10384,6 +10417,13 @@ name|entry
 operator|->
 name|lock_bucket
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|bucket
+operator|!=
+name|DNS_ADB_INVALIDBUCKET
+argument_list|)
+expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&
@@ -10546,6 +10586,13 @@ operator|=
 name|entry
 operator|->
 name|lock_bucket
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|bucket
+operator|!=
+name|DNS_ADB_INVALIDBUCKET
+argument_list|)
 expr_stmt|;
 name|LOCK
 argument_list|(
@@ -11557,6 +11604,14 @@ operator|->
 name|task
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|adb
+operator|->
+name|excl
+operator|!=
+name|NULL
+condition|)
 name|isc_task_detach
 argument_list|(
 operator|&
@@ -20194,7 +20249,7 @@ if|if
 condition|(
 name|size
 operator|!=
-literal|0
+literal|0U
 operator|&&
 name|size
 operator|<
@@ -20230,15 +20285,15 @@ if|if
 condition|(
 name|size
 operator|==
-literal|0
+literal|0U
 operator|||
 name|hiwater
 operator|==
-literal|0
+literal|0U
 operator|||
 name|lowater
 operator|==
-literal|0
+literal|0U
 condition|)
 name|isc_mem_setwater
 argument_list|(

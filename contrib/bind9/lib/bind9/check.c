@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<isc/buffer.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/file.h>
 end_include
 
 begin_include
@@ -426,7 +432,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -970,7 +976,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|buffer
@@ -1335,7 +1341,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -1800,7 +1806,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -4303,7 +4309,7 @@ argument_list|(
 name|exclude
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -4607,7 +4613,7 @@ argument_list|)
 condition|)
 continue|continue;
 block|}
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -4769,7 +4775,7 @@ argument_list|(
 name|anchor
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -5126,7 +5132,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -5255,7 +5261,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -5933,7 +5939,7 @@ argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|new
 argument_list|,
@@ -6212,7 +6218,7 @@ argument_list|(
 name|identity
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -6313,7 +6319,7 @@ argument_list|(
 name|dname
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -7674,7 +7680,7 @@ operator|&
 name|fixedname
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -8942,7 +8948,7 @@ operator|&
 name|fixed_sname
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b2
@@ -9048,6 +9054,115 @@ operator|=
 name|ISC_R_FAILURE
 expr_stmt|;
 block|}
+block|}
+block|}
+comment|/* 	 * Warn if key-directory doesn't exist 	 */
+name|obj
+operator|=
+name|NULL
+expr_stmt|;
+name|tresult
+operator|=
+name|cfg_map_get
+argument_list|(
+name|zoptions
+argument_list|,
+literal|"key-directory"
+argument_list|,
+operator|&
+name|obj
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tresult
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|dir
+init|=
+name|cfg_obj_asstring
+argument_list|(
+name|obj
+argument_list|)
+decl_stmt|;
+name|tresult
+operator|=
+name|isc_file_isdirectory
+argument_list|(
+name|dir
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|tresult
+condition|)
+block|{
+case|case
+name|ISC_R_SUCCESS
+case|:
+break|break;
+case|case
+name|ISC_R_FILENOTFOUND
+case|:
+name|cfg_obj_log
+argument_list|(
+name|obj
+argument_list|,
+name|logctx
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"key-directory: '%s' does not exist"
+argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ISC_R_INVALIDFILE
+case|:
+name|cfg_obj_log
+argument_list|(
+name|obj
+argument_list|,
+name|logctx
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"key-directory: '%s' is not a directory"
+argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|cfg_obj_log
+argument_list|(
+name|obj
+argument_list|,
+name|logctx
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"key-directory: '%s' %s"
+argument_list|,
+name|dir
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|tresult
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|tresult
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Check various options. 	 */
@@ -9890,7 +10005,7 @@ name|char
 modifier|*
 name|keyname
 decl_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -10829,7 +10944,7 @@ operator|&
 name|fname
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -11086,7 +11201,7 @@ literal|"name"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b

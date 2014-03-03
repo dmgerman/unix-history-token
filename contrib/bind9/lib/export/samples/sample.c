@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009, 2012-2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -814,6 +814,11 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|port
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|namespace
 parameter_list|)
 block|{
@@ -894,7 +899,7 @@ name|getaddrinfo
 argument_list|(
 name|addrstr
 argument_list|,
-literal|"53"
+name|port
 argument_list|,
 operator|&
 name|hints
@@ -942,7 +947,7 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|sa
@@ -958,11 +963,6 @@ operator|->
 name|ai_addrlen
 argument_list|)
 expr_stmt|;
-name|freeaddrinfo
-argument_list|(
-name|res
-argument_list|)
-expr_stmt|;
 name|sa
 operator|.
 name|length
@@ -970,6 +970,11 @@ operator|=
 name|res
 operator|->
 name|ai_addrlen
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
 expr_stmt|;
 name|ISC_LINK_INIT
 argument_list|(
@@ -1008,7 +1013,7 @@ argument_list|(
 name|namespace
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -1221,6 +1226,13 @@ name|is_sep
 init|=
 name|ISC_FALSE
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|port
+init|=
+literal|"53"
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -1232,7 +1244,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:es:t:k:K:"
+literal|"a:es:t:k:K:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -1356,6 +1368,14 @@ case|case
 literal|'K'
 case|:
 name|keystr
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|port
 operator|=
 name|optarg
 expr_stmt|;
@@ -1517,6 +1537,8 @@ index|[
 literal|0
 index|]
 argument_list|,
+name|port
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1532,6 +1554,8 @@ argument_list|(
 name|client
 argument_list|,
 name|altserveraddr
+argument_list|,
+name|port
 argument_list|,
 name|altservername
 argument_list|)
@@ -1813,11 +1837,11 @@ expr_stmt|;
 name|dns_lib_shutdown
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
