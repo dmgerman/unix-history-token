@@ -1267,21 +1267,16 @@ begin_comment
 comment|/**  *	DELAY - Delay for at least usec microseconds.  *	@usec: number of microseconds to delay by  *  *	This function is called all over the kernel and is suppose to provide a  *	consistent delay.  This function may also be called before the console   *	is setup so no printf's can be called here.  *  *	RETURNS:  *	nothing  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|used
-operator|)
-argument_list|)
+name|__used
 comment|/* Must emit function code for the weak ref below. */
 name|arm_tmr_DELAY
-argument_list|(
+parameter_list|(
 name|int
 name|usec
-argument_list|)
+parameter_list|)
 block|{
 name|int32_t
 name|counts_per_usec
@@ -1412,7 +1407,7 @@ name|last
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Supply a DELAY() implementation via weak linkage.  A platform may want to use  * the mpcore per-cpu eventtimers but provide its own DELAY() routine,  * especially when the core frequency can change on the fly.  */
