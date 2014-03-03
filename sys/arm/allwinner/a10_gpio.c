@@ -131,6 +131,12 @@ directive|include
 file|"gpio_if.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"a10_gpio.h"
+end_include
+
 begin_comment
 comment|/*  * A10 have 9 banks of gpio.  * 32 pins per bank:  * PA0 - PA17 | PB0 - PB23 | PC0 - PC24  * PD0 - PD27 | PE0 - PE31 | PF0 - PF5  * PG0 - PG9 | PH0 - PH27 | PI0 - PI12  */
 end_comment
@@ -353,6 +359,15 @@ directive|define
 name|A10_GPIO_GP_INT_DEB
 value|0x218
 end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|a10_gpio_softc
+modifier|*
+name|a10_gpio_sc
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -2256,6 +2271,10 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|a10_gpio_sc
+operator|=
+name|sc
+expr_stmt|;
 return|return
 operator|(
 name|bus_generic_attach
@@ -2463,6 +2482,60 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|int
+name|a10_emac_gpio_config
+parameter_list|(
+name|uint32_t
+name|pin
+parameter_list|)
+block|{
+name|struct
+name|a10_gpio_softc
+modifier|*
+name|sc
+init|=
+name|a10_gpio_sc
+decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Configure pin mux settings for MII. */
+name|A10_GPIO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|a10_gpio_set_function
+argument_list|(
+name|sc
+argument_list|,
+name|pin
+argument_list|,
+name|A10_GPIO_PULLDOWN
+argument_list|)
+expr_stmt|;
+name|A10_GPIO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
