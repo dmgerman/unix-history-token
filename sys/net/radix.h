@@ -673,17 +673,7 @@ name|RADIX_NODE_HEAD_LOCK_ASSERT
 parameter_list|(
 name|rnh
 parameter_list|)
-value|rw_assert(&(rnh)->rnh_lock, RA_WLOCKED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RADIX_NODE_HEAD_RLOCK_ASSERT
-parameter_list|(
-name|rnh
-parameter_list|)
-value|rw_assert(&(rnh)->rnh_lock, RA_RLOCKED)
+value|rw_assert(&(rnh)->rnh_lock, RA_LOCKED)
 end_define
 
 begin_define
