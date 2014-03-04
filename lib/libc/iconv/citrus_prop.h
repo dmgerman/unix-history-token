@@ -65,7 +65,7 @@ parameter_list|,
 name|_type_
 parameter_list|)
 define|\
-value|typedef int (*_citrus_prop_##_func_##_cb_func_t) \     (void ** __restrict, const char *, _type_); \ typedef struct { \ 	_citrus_prop_##_func_##_cb_func_t func; \ } _citrus_prop_##_func_##_cb_t;
+value|typedef int (*_citrus_prop_##_func_##_cb_func_t) \     (void * __restrict, const char *, _type_); \ typedef struct { \ 	_citrus_prop_##_func_##_cb_func_t func; \ } _citrus_prop_##_func_##_cb_t;
 end_define
 
 begin_macro
@@ -102,7 +102,7 @@ parameter_list|,
 name|_type_
 parameter_list|)
 define|\
-value|typedef int (*_citrus_prop_##_func_##_cb_func_t) \     (void ** __restrict, const char *, _type_, _type_); \ typedef struct { \ 	_citrus_prop_##_func_##_cb_func_t func; \ } _citrus_prop_##_func_##_cb_t;
+value|typedef int (*_citrus_prop_##_func_##_cb_func_t) \     (void * __restrict, const char *, _type_, _type_); \ typedef struct { \ 	_citrus_prop_##_func_##_cb_func_t func; \ } _citrus_prop_##_func_##_cb_t;
 end_define
 
 begin_macro
