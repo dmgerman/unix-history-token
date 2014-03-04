@@ -3924,7 +3924,7 @@ argument_list|)
 expr_stmt|;
 name|ghash
 operator||=
-literal|1
+literal|1LLU
 operator|<<
 operator|(
 name|crc
