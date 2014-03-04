@@ -823,42 +823,6 @@ directive|ifdef
 name|SYSCTL_OID
 end_ifdef
 
-begin_function_decl
-name|int
-name|vnet_sysctl_handle_int
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vnet_sysctl_handle_opaque
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vnet_sysctl_handle_string
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vnet_sysctl_handle_uint
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -879,7 +843,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_INT|CTLFLAG_MPSAFE|CTLFLAG_VNET|(access),		\ 	    ptr, val, vnet_sysctl_handle_int, "I", descr)
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_INT|CTLFLAG_MPSAFE|CTLFLAG_VNET|(access),		\ 	    ptr, val, sysctl_handle_int, "I", descr)
 end_define
 
 begin_define
@@ -954,7 +918,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_STRING|CTLFLAG_VNET|(access),			\ 	    arg, len, vnet_sysctl_handle_string, "A", descr)
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_STRING|CTLFLAG_VNET|(access),			\ 	    arg, len, sysctl_handle_string, "A", descr)
 end_define
 
 begin_define
@@ -977,7 +941,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_OPAQUE|CTLFLAG_VNET|(access), ptr,			\ 	    sizeof(struct type), vnet_sysctl_handle_opaque, "S," #type,	\ 	    descr)
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_OPAQUE|CTLFLAG_VNET|(access), ptr,			\ 	    sizeof(struct type), sysctl_handle_opaque, "S," #type,	\ 	    descr)
 end_define
 
 begin_define
@@ -1000,7 +964,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_UINT|CTLFLAG_MPSAFE|CTLFLAG_VNET|(access),		\ 	    ptr, val, vnet_sysctl_handle_uint, "IU", descr)
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_UINT|CTLFLAG_MPSAFE|CTLFLAG_VNET|(access),		\ 	    ptr, val, sysctl_handle_int, "IU", descr)
 end_define
 
 begin_define
