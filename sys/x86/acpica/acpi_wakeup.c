@@ -868,7 +868,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|__amd64__
-name|ctx_fpusave
+name|fpususpend
 argument_list|(
 name|susppcbs
 index|[
