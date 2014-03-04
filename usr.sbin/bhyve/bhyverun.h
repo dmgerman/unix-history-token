@@ -81,6 +81,14 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+name|guest_uuid_str
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
 name|vmname
 decl_stmt|;
 end_decl_stmt
