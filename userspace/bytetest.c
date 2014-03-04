@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Simple XZ decoder command line tool  *  * Author: Lasse Collin<lasse.collin@tukaani.org>  *  * This file has been put into the public domain.  * You can do whatever you want with this file.  */
-end_comment
-
-begin_comment
-comment|/*  * This is really limited: Not all filters from .xz format are supported,  * only CRC32 is supported as the integrity check, and decoding of  * concatenated .xz streams is not supported. Thus, you may want to look  * at xzdec from XZ Utils if a few KiB bigger tool is not a problem.  */
+comment|/*  * Lazy test for the case when the output size is known  *  * Author: Lasse Collin<lasse.collin@tukaani.org>  *  * This file has been put into the public domain.  * You can do whatever you want with this file.  */
 end_comment
 
 begin_include
@@ -28,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xz.h"
 end_include
 
@@ -36,7 +38,7 @@ specifier|static
 name|uint8_t
 name|in
 index|[
-name|BUFSIZ
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -82,48 +84,40 @@ name|char
 modifier|*
 name|msg
 decl_stmt|;
+name|size_t
+name|uncomp_size
+decl_stmt|;
 if|if
 condition|(
 name|argc
-operator|>=
+operator|!=
 literal|2
-operator|&&
-name|strcmp
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"Give uncompressed size as the argument"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+name|uncomp_size
+operator|=
+name|atoi
 argument_list|(
 name|argv
 index|[
 literal|1
 index|]
-argument_list|,
-literal|"--help"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"Uncompress a .xz file from stdin to stdout.\n"
-literal|"Arguments other than `--help' are ignored.\n"
-argument_list|,
-name|stdout
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 name|xz_crc32_init
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XZ_USE_CRC64
-name|xz_crc64_init
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Support up to 64 MiB dictionary. The actually needed memory 	 * is allocated once the headers have been parsed. 	 */
 name|s
 operator|=
@@ -185,6 +179,12 @@ name|b
 operator|.
 name|out_size
 operator|=
+name|uncomp_size
+operator|<
+name|BUFSIZ
+condition|?
+name|uncomp_size
+else|:
 name|BUFSIZ
 expr_stmt|;
 while|while
@@ -278,11 +278,29 @@ goto|goto
 name|error
 goto|;
 block|}
+name|uncomp_size
+operator|-=
+name|b
+operator|.
+name|out_pos
+expr_stmt|;
 name|b
 operator|.
 name|out_pos
 operator|=
 literal|0
+expr_stmt|;
+name|b
+operator|.
+name|out_size
+operator|=
+name|uncomp_size
+operator|<
+name|BUFSIZ
+condition|?
+name|uncomp_size
+else|:
+name|BUFSIZ
 expr_stmt|;
 block|}
 if|if
@@ -331,6 +349,23 @@ continue|continue;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|uncomp_size
+operator|!=
+name|b
+operator|.
+name|out_pos
+condition|)
+block|{
+name|msg
+operator|=
+literal|"Uncompressed size doesn't match\n"
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 if|if
 condition|(
 name|fwrite
