@@ -1626,7 +1626,7 @@ ifdef|#
 directive|ifdef
 name|INVARIANTS
 else|else
-name|RADIX_NODE_HEAD_LOCK_ASSERT
+name|RADIX_NODE_HEAD_RLOCK_ASSERT
 argument_list|(
 name|rnh
 argument_list|)
@@ -4032,7 +4032,6 @@ name|rto
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -4043,6 +4042,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|RADIX_NODE_HEAD_LOCK_ASSERT
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|rn
 operator|=
 name|rnh
