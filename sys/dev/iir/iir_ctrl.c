@@ -1035,7 +1035,7 @@ name|gdt
 operator|->
 name|sc_vendor
 operator|==
-name|INTEL_VENDOR_ID
+name|INTEL_VENDOR_ID_IIR
 condition|)
 block|{
 name|p

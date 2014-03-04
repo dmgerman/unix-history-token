@@ -825,7 +825,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|INTEL_VENDOR_ID
+name|INTEL_VENDOR_ID_IIR
 operator|&&
 name|pci_get_device
 argument_list|(
