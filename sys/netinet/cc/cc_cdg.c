@@ -170,34 +170,6 @@ parameter_list|)
 value|(*((int*)(X)))
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|vnet_sysctl_handle_uint
-parameter_list|(
-name|oidp
-parameter_list|,
-name|arg1
-parameter_list|,
-name|arg2
-parameter_list|,
-name|req
-parameter_list|)
-define|\
-value|sysctl_handle_int(oidp, arg1, arg2, req)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Private delay-gradient induced congestion control signal. */
 end_comment
@@ -2461,7 +2433,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|vnet_sysctl_handle_uint
+name|sysctl_handle_int
 argument_list|(
 name|oidp
 argument_list|,
@@ -2508,7 +2480,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|vnet_sysctl_handle_uint
+name|sysctl_handle_int
 argument_list|(
 name|oidp
 argument_list|,
