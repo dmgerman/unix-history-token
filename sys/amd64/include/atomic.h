@@ -57,7 +57,7 @@ value|__asm __volatile("lfence;" : : : "memory")
 end_define
 
 begin_comment
-comment|/*  * Various simple operations on memory, each of which is atomic in the  * presence of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char *)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char *)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char *)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char *)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short *)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short *)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short *)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short *)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int *)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int *)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int *)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int *)(P) -= (V))  * atomic_readandclear_int(P)	(return (*(u_int *)(P)); *(u_int *)(P) = 0;)  *  * atomic_set_long(P, V)	(*(u_long *)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long *)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long *)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long *)(P) -= (V))  * atomic_readandclear_long(P)	(return (*(u_long *)(P)); *(u_long *)(P) = 0;)  */
+comment|/*  * Various simple operations on memory, each of which is atomic in the  * presence of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char *)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char *)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char *)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char *)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short *)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short *)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short *)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short *)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int *)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int *)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int *)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int *)(P) -= (V))  * atomic_swap_int(P, V)	(return (*(u_int *)(P)); *(u_int *)(P) = (V);)  * atomic_readandclear_int(P)	(return (*(u_int *)(P)); *(u_int *)(P) = 0;)  *  * atomic_set_long(P, V)	(*(u_long *)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long *)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long *)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long *)(P) -= (V))  * atomic_swap_long(P, V)	(return (*(u_long *)(P)); *(u_long *)(P) = (V);)  * atomic_readandclear_long(P)	(return (*(u_long *)(P)); *(u_long *)(P) = 0;)  */
 end_comment
 
 begin_comment
@@ -159,6 +159,36 @@ modifier|*
 name|p
 parameter_list|,
 name|u_long
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|atomic_testandset_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|atomic_testandset_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_int
 name|v
 parameter_list|)
 function_decl|;
@@ -536,6 +566,131 @@ begin_return
 return|return
 operator|(
 name|v
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|int
+name|atomic_testandset_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+block|{
+name|u_char
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	btsl	%2,%1 ;		"
+literal|"	setc	%0 ;		"
+literal|"# atomic_testandset_int"
+operator|:
+literal|"=q"
+operator|(
+name|res
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+m"
+operator|(
+operator|*
+name|p
+operator|)
+comment|/* 1 */
+operator|:
+literal|"Ir"
+operator|(
+name|v
+operator|&
+literal|0x1f
+operator|)
+comment|/* 2 */
+operator|:
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|int
+name|atomic_testandset_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+block|{
+name|u_char
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	btsq	%2,%1 ;		"
+literal|"	setc	%0 ;		"
+literal|"# atomic_testandset_long"
+operator|:
+literal|"=q"
+operator|(
+name|res
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+m"
+operator|(
+operator|*
+name|p
+operator|)
+comment|/* 1 */
+operator|:
+literal|"Jr"
+operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
+name|v
+operator|&
+literal|0x3f
+argument_list|)
+operator|)
+comment|/* 2 */
+operator|:
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|res
 operator|)
 return|;
 end_return
@@ -1102,6 +1257,98 @@ operator|)
 return|;
 end_return
 
+begin_function
+unit|}  static
+name|__inline
+name|u_int
+name|atomic_swap_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile(
+literal|"	xchgl	%1,%0 ;		"
+literal|"# atomic_swap_int"
+operator|:
+literal|"+r"
+operator|(
+name|v
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+m"
+operator|(
+operator|*
+name|p
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|/* 1 */
+end_comment
+
+begin_return
+return|return
+operator|(
+name|v
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|u_long
+name|atomic_swap_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile(
+literal|"	xchgq	%1,%0 ;		"
+literal|"# atomic_swap_long"
+operator|:
+literal|"+r"
+operator|(
+name|v
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+m"
+operator|(
+operator|*
+name|p
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|/* 1 */
+end_comment
+
+begin_return
+return|return
+operator|(
+name|v
+operator|)
+return|;
+end_return
+
 begin_else
 unit|}
 else|#
@@ -1132,6 +1379,36 @@ specifier|volatile
 name|u_long
 modifier|*
 name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|atomic_swap_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_long
+name|atomic_swap_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1727,6 +2004,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_swap_32
+value|atomic_swap_int
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_readandclear_32
 value|atomic_readandclear_int
 end_define
@@ -1736,6 +2020,13 @@ define|#
 directive|define
 name|atomic_fetchadd_32
 value|atomic_fetchadd_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_testandset_32
+value|atomic_testandset_int
 end_define
 
 begin_comment
@@ -1864,8 +2155,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_swap_64
+value|atomic_swap_long
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_readandclear_64
 value|atomic_readandclear_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_testandset_64
+value|atomic_testandset_long
 end_define
 
 begin_comment
@@ -1989,6 +2294,13 @@ define|#
 directive|define
 name|atomic_cmpset_rel_ptr
 value|atomic_cmpset_rel_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_swap_ptr
+value|atomic_swap_long
 end_define
 
 begin_define
