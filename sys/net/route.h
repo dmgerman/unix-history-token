@@ -257,6 +257,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_RTENTRY
+argument_list|)
+end_if
+
 begin_struct
 struct|struct
 name|rtentry
@@ -342,6 +356,15 @@ comment|/* mutex for routing entry */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL || _WANT_RTENTRY */
+end_comment
 
 begin_comment
 comment|/*  * Following structure necessary for 4.3 compatibility;  * We should eventually move it to a compat file.  */

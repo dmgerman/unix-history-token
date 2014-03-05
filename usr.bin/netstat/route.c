@@ -110,6 +110,12 @@ directive|include
 file|<net/radix.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_RTENTRY
+end_define
+
 begin_include
 include|#
 directive|include
