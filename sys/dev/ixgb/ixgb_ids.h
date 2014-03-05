@@ -20,22 +20,8 @@ name|_IXGB_IDS_H_
 end_define
 
 begin_comment
-comment|/********************************************************************** ** The Device and Vendor IDs for 10 Gigabit MACs **********************************************************************/
+comment|/********************************************************************** ** The Device IDs for 10 Gigabit MACs **********************************************************************/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|INTEL_VENDOR_ID
-value|0x8086
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTEL_SUBVENDOR_ID
-value|0x8086
-end_define
 
 begin_define
 define|#

@@ -91,7 +91,7 @@ init|=
 block|{
 comment|/* Intel(R) PRO/10000 Network Connection */
 block|{
-name|INTEL_VENDOR_ID
+name|IXGB_VENDOR_ID
 block|,
 name|IXGB_DEVICE_ID_82597EX
 block|,
@@ -103,7 +103,7 @@ literal|0
 block|}
 block|,
 block|{
-name|INTEL_VENDOR_ID
+name|IXGB_VENDOR_ID
 block|,
 name|IXGB_DEVICE_ID_82597EX_SR
 block|,
