@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1217,6 +1223,9 @@ name|char
 modifier|*
 name|ifname
 decl_stmt|;
+name|bool
+name|first
+decl_stmt|;
 name|ifname
 operator|=
 name|strdup
@@ -1319,6 +1328,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* begin fetching data */
+name|first
+operator|=
+name|true
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -1346,6 +1359,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|first
+condition|)
+return|return
+literal|1
+return|;
 goto|goto
 name|next
 goto|;
@@ -1363,6 +1383,10 @@ literal|100
 operator|*
 literal|1000
 argument_list|)
+expr_stmt|;
+name|first
+operator|=
+name|false
 expr_stmt|;
 block|}
 name|exit
