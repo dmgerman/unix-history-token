@@ -2951,7 +2951,7 @@ operator|+
 name|xfersize
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer.                  */
+comment|/* 		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer. 		 */
 if|if
 condition|(
 name|fs
@@ -4503,7 +4503,7 @@ name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
-comment|/* 		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer.                  */
+comment|/* 		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer. 		 */
 if|if
 condition|(
 name|fs

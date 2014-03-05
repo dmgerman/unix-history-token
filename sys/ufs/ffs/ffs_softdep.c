@@ -16712,7 +16712,7 @@ break|break;
 name|cnt
 operator|++
 expr_stmt|;
-comment|/* 		 * Verify some free journal space.  softdep_prealloc() should 	 	 * guarantee that we don't run out so this is indicative of 		 * a problem with the flow control.  Try to recover 		 * gracefully in any event. 		 */
+comment|/* 		 * Verify some free journal space.  softdep_prealloc() should 		 * guarantee that we don't run out so this is indicative of 		 * a problem with the flow control.  Try to recover 		 * gracefully in any event. 		 */
 while|while
 condition|(
 name|jblocks
@@ -49920,7 +49920,7 @@ argument_list|(
 name|wk
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We can free immediately even if the jaddref 			 * isn't attached in a background write as now 			 * the bitmaps are reconciled. 		 	 */
+comment|/* 			 * We can free immediately even if the jaddref 			 * isn't attached in a background write as now 			 * the bitmaps are reconciled. 			 */
 name|wk
 operator|->
 name|wk_state
