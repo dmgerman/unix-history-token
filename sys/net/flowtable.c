@@ -3782,6 +3782,11 @@ name|curbit
 operator|=
 literal|0
 expr_stmt|;
+name|fleprev
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* pacify gcc */
 comment|/* 	 * XXX Note to self, bit_ffs operates at the byte level 	 * and thus adds gratuitous overhead 	 */
 name|bit_ffs
 argument_list|(
