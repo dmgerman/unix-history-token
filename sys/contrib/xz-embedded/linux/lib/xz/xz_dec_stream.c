@@ -15,6 +15,42 @@ directive|include
 file|"xz_stream.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XZ_USE_CRC64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IS_CRC64
+parameter_list|(
+name|check_type
+parameter_list|)
+value|((check_type) == XZ_CHECK_CRC64)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IS_CRC64
+parameter_list|(
+name|check_type
+parameter_list|)
+value|false
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Hash used to validate the Index field */
 end_comment
@@ -80,10 +116,21 @@ decl_stmt|;
 name|size_t
 name|out_start
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|XZ_USE_CRC64
+comment|/* CRC32 or CRC64 value in Block or CRC32 value in Index */
+name|uint64_t
+name|crc
+decl_stmt|;
+else|#
+directive|else
 comment|/* CRC32 value in Block or Index */
 name|uint32_t
-name|crc32
+name|crc
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* Type of the integrity check calculated from uncompressed data */
 name|enum
 name|xz_check
@@ -535,7 +582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Decode the Compressed Data field from a Block. Update and validate  * the observed compressed and uncompressed sizes of the Block so that  * they don't exceed the values possibly stored in the Block Header  * (validation assumes that no integer overflow occurs, since vli_type  * is normally uint64_t). Update the CRC32 if presence of the CRC32  * field was indicated in Stream Header.  *  * Once the decoding is finished, validate that the observed sizes match  * the sizes possibly stored in the Block Header. Update the hash and  * Block count, which are later used to validate the Index field.  */
+comment|/*  * Decode the Compressed Data field from a Block. Update and validate  * the observed compressed and uncompressed sizes of the Block so that  * they don't exceed the values possibly stored in the Block Header  * (validation assumes that no integer overflow occurs, since vli_type  * is normally uint64_t). Update the CRC32 or CRC64 value if presence of  * the CRC32 or CRC64 field was indicated in Stream Header.  *  * Once the decoding is finished, validate that the observed sizes match  * the sizes possibly stored in the Block Header. Update the hash and  * Block count, which are later used to validate the Index field.  */
 end_comment
 
 begin_function
@@ -681,7 +728,7 @@ name|XZ_CHECK_CRC32
 condition|)
 name|s
 operator|->
-name|crc32
+name|crc
 operator|=
 name|xz_crc32
 argument_list|(
@@ -703,9 +750,50 @@ name|out_start
 argument_list|,
 name|s
 operator|->
-name|crc32
+name|crc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XZ_USE_CRC64
+elseif|else
+if|if
+condition|(
+name|s
+operator|->
+name|check_type
+operator|==
+name|XZ_CHECK_CRC64
+condition|)
+name|s
+operator|->
+name|crc
+operator|=
+name|xz_crc64
+argument_list|(
+name|b
+operator|->
+name|out
+operator|+
+name|s
+operator|->
+name|out_start
+argument_list|,
+name|b
+operator|->
+name|out_pos
+operator|-
+name|s
+operator|->
+name|out_start
+argument_list|,
+name|s
+operator|->
+name|crc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ret
@@ -821,6 +909,26 @@ name|unpadded
 operator|+=
 literal|4
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IS_CRC64
+argument_list|(
+name|s
+operator|->
+name|check_type
+argument_list|)
+condition|)
+name|s
+operator|->
+name|block
+operator|.
+name|hash
+operator|.
+name|unpadded
+operator|+=
+literal|8
+expr_stmt|;
 endif|#
 directive|endif
 name|s
@@ -933,7 +1041,7 @@ name|in_used
 expr_stmt|;
 name|s
 operator|->
-name|crc32
+name|crc
 operator|=
 name|xz_crc32
 argument_list|(
@@ -949,7 +1057,7 @@ name|in_used
 argument_list|,
 name|s
 operator|->
-name|crc32
+name|crc
 argument_list|)
 expr_stmt|;
 block|}
@@ -1184,14 +1292,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Validate that the next four input bytes match the value of s->crc32.  * s->pos must be zero when starting to validate the first byte.  */
+comment|/*  * Validate that the next four or eight input bytes match the value  * of s->crc. s->pos must be zero when starting to validate the first byte.  * The "bits" argument allows using the same code for both CRC32 and CRC64.  */
 end_comment
 
 begin_function
 specifier|static
 name|enum
 name|xz_ret
-name|crc32_validate
+name|crc_validate
 parameter_list|(
 name|struct
 name|xz_dec
@@ -1202,6 +1310,9 @@ name|struct
 name|xz_buf
 modifier|*
 name|b
+parameter_list|,
+name|uint32_t
+name|bits
 parameter_list|)
 block|{
 do|do
@@ -1225,7 +1336,7 @@ operator|(
 operator|(
 name|s
 operator|->
-name|crc32
+name|crc
 operator|>>
 name|s
 operator|->
@@ -1261,12 +1372,12 @@ name|s
 operator|->
 name|pos
 operator|<
-literal|32
+name|bits
 condition|)
 do|;
 name|s
 operator|->
-name|crc32
+name|crc
 operator|=
 literal|0
 expr_stmt|;
@@ -1447,7 +1558,7 @@ condition|)
 return|return
 name|XZ_OPTIONS_ERROR
 return|;
-comment|/* 	 * Of integrity checks, we support only none (Check ID = 0) and 	 * CRC32 (Check ID = 1). However, if XZ_DEC_ANY_CHECK is defined, 	 * we will accept other check types too, but then the check won't 	 * be verified and a warning (XZ_UNSUPPORTED_CHECK) will be given. 	 */
+comment|/* 	 * Of integrity checks, we support none (Check ID = 0), 	 * CRC32 (Check ID = 1), and optionally CRC64 (Check ID = 4). 	 * However, if XZ_DEC_ANY_CHECK is defined, we will accept other 	 * check types too, but then the check won't be verified and 	 * a warning (XZ_UNSUPPORTED_CHECK) will be given. 	 */
 name|s
 operator|->
 name|check_type
@@ -1484,6 +1595,14 @@ operator|->
 name|check_type
 operator|>
 name|XZ_CHECK_CRC32
+operator|&&
+operator|!
+name|IS_CRC64
+argument_list|(
+name|s
+operator|->
+name|check_type
+argument_list|)
 condition|)
 return|return
 name|XZ_UNSUPPORTED_CHECK
@@ -1497,6 +1616,14 @@ operator|->
 name|check_type
 operator|>
 name|XZ_CHECK_CRC32
+operator|&&
+operator|!
+name|IS_CRC64
+argument_list|(
+name|s
+operator|->
+name|check_type
+argument_list|)
 condition|)
 return|return
 name|XZ_OPTIONS_ERROR
@@ -2489,11 +2616,45 @@ condition|)
 block|{
 name|ret
 operator|=
-name|crc32_validate
+name|crc_validate
 argument_list|(
 name|s
 argument_list|,
 name|b
+argument_list|,
+literal|32
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|XZ_STREAM_END
+condition|)
+return|return
+name|ret
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|IS_CRC64
+argument_list|(
+name|s
+operator|->
+name|check_type
+argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+name|crc_validate
+argument_list|(
+name|s
+argument_list|,
+name|b
+argument_list|,
+literal|64
 argument_list|)
 expr_stmt|;
 if|if
@@ -2679,11 +2840,13 @@ name|SEQ_INDEX_CRC32
 case|:
 name|ret
 operator|=
-name|crc32_validate
+name|crc_validate
 argument_list|(
 name|s
 argument_list|,
 name|b
+argument_list|,
+literal|32
 argument_list|)
 expr_stmt|;
 if|if
@@ -3068,7 +3231,7 @@ literal|0
 expr_stmt|;
 name|s
 operator|->
-name|crc32
+name|crc
 operator|=
 literal|0
 expr_stmt|;
