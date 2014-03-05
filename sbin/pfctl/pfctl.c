@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<limits.h>
 end_include
 
@@ -5180,9 +5174,7 @@ block|{
 name|printf
 argument_list|(
 literal|"  [ Evaluations: %-8llu  Packets: %-8llu  "
-literal|"Bytes: %-10llu  States: %-6"
-name|PRIuPTR
-literal|"]\n"
+literal|"Bytes: %-10llu  States: %-6lu]\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -5235,12 +5227,9 @@ literal|1
 index|]
 argument_list|)
 argument_list|,
-operator|(
-name|uintptr_t
-operator|)
 name|rule
 operator|->
-name|states_cur
+name|u_states_cur
 argument_list|)
 expr_stmt|;
 if|if
@@ -5255,9 +5244,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"  [ Inserted: uid %u pid %u "
-literal|"State Creations: %-6"
-name|PRIuPTR
-literal|"]\n"
+literal|"State Creations: %-6lu]\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -5273,12 +5260,9 @@ name|rule
 operator|->
 name|cpid
 argument_list|,
-operator|(
-name|uintptr_t
-operator|)
 name|rule
 operator|->
-name|states_tot
+name|u_states_tot
 argument_list|)
 expr_stmt|;
 block|}
@@ -5875,9 +5859,7 @@ block|{
 name|printf
 argument_list|(
 literal|"%s %llu %llu %llu %llu"
-literal|" %llu %llu %llu %"
-name|PRIuPTR
-literal|"\n"
+literal|" %llu %llu %llu %llu\n"
 argument_list|,
 name|pr
 operator|.
@@ -6003,13 +5985,15 @@ literal|1
 index|]
 argument_list|,
 operator|(
-name|uintptr_t
+name|unsigned
+name|long
+name|long
 operator|)
 name|pr
 operator|.
 name|rule
 operator|.
-name|states_tot
+name|u_states_tot
 argument_list|)
 expr_stmt|;
 block|}

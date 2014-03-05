@@ -2016,6 +2016,15 @@ decl_stmt|;
 block|}
 name|divert
 struct|;
+name|uint64_t
+name|u_states_cur
+decl_stmt|;
+name|uint64_t
+name|u_states_tot
+decl_stmt|;
+name|uint64_t
+name|u_src_nodes
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -7248,16 +7248,12 @@ name|pf_rule
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXXGL: this is what happens when internal kernel 		 * structures are used as ioctl API structures. 		 */
 name|pr
 operator|->
 name|rule
 operator|.
-name|states_cur
+name|u_states_cur
 operator|=
-operator|(
-name|counter_u64_t
-operator|)
 name|counter_u64_fetch
 argument_list|(
 name|rule
@@ -7269,11 +7265,8 @@ name|pr
 operator|->
 name|rule
 operator|.
-name|states_tot
+name|u_states_tot
 operator|=
-operator|(
-name|counter_u64_t
-operator|)
 name|counter_u64_fetch
 argument_list|(
 name|rule
@@ -7285,11 +7278,8 @@ name|pr
 operator|->
 name|rule
 operator|.
-name|src_nodes
+name|u_src_nodes
 operator|=
-operator|(
-name|counter_u64_t
-operator|)
 name|counter_u64_fetch
 argument_list|(
 name|rule
