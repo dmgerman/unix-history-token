@@ -8353,7 +8353,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * We must promote to an exclusive lock for vnode creation.  This 	 * can happen if lookup is passed LOCKSHARED.  	 */
+comment|/* 	 * We must promote to an exclusive lock for vnode creation.  This 	 * can happen if lookup is passed LOCKSHARED. 	 */
 if|if
 condition|(
 operator|(
