@@ -221,9 +221,7 @@ name|i
 operator|+=
 name|rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_weight
+name|rt_weight
 expr_stmt|;
 name|rn
 operator|=
@@ -908,9 +906,7 @@ name|weight
 operator|>=
 name|rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_weight
+name|rt_weight
 operator|&&
 name|rn
 condition|;
@@ -918,9 +914,7 @@ name|weight
 operator|-=
 name|rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_weight
+name|rt_weight
 control|)
 block|{
 comment|/* stay within the multipath routes */

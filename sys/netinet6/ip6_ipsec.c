@@ -1264,7 +1264,7 @@ comment|/* 		 * find the correct route for outer IPv4 		 * header, compute tunne
 end_comment
 
 begin_endif
-unit|if (sp->req != NULL&& 		    sp->req->sav != NULL&& 		    sp->req->sav->sah != NULL) { 			ro =&sp->req->sav->sah->route_cache.sa_route; 			if (ro->ro_rt&& ro->ro_rt->rt_ifp) { 				mtu = 				    ro->ro_rt->rt_rmx.rmx_mtu ? 				    ro->ro_rt->rt_rmx.rmx_mtu : 				    ro->ro_rt->rt_ifp->if_mtu; 				mtu -= ipsechdr; 			} 		} 		KEY_FREESP(&sp); 	}
+unit|if (sp->req != NULL&& 		    sp->req->sav != NULL&& 		    sp->req->sav->sah != NULL) { 			ro =&sp->req->sav->sah->route_cache.sa_route; 			if (ro->ro_rt&& ro->ro_rt->rt_ifp) { 				mtu = ro->ro_rt->rt_mtu ? ro->ro_rt->rt_mtu : 				    ro->ro_rt->rt_ifp->if_mtu; 				mtu -= ipsechdr; 			} 		} 		KEY_FREESP(&sp); 	}
 endif|#
 directive|endif
 end_endif

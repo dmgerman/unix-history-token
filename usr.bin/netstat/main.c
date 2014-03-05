@@ -3938,6 +3938,44 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Read single counter(9).  */
+end_comment
+
+begin_function
+name|uint64_t
+name|kread_counter
+parameter_list|(
+name|u_long
+name|addr
+parameter_list|)
+block|{
+if|if
+condition|(
+name|kvmd_init
+argument_list|()
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+name|kvm_counter_u64_fetch
+argument_list|(
+name|kvmd
+argument_list|,
+name|addr
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Read an array of N counters in kernel memory into array of N uint64_t's.  */
 end_comment
 

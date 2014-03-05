@@ -4281,12 +4281,16 @@ name|ro
 operator|->
 name|ro_rt
 condition|)
+name|counter_u64_add
+argument_list|(
 name|ro
 operator|->
 name|ro_rt
 operator|->
-name|rt_use
-operator|++
+name|rt_pksent
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 	 * For input packets which are being "fastrouted", they won't 	 * go back through output filtering and miss their chance to get 	 * NAT'd and counted.  Duplicated packets aren't considered to be 	 * part of the normal packet stream, so do not NAT them or pass 	 * them through stateful checking, etc. 	 */
 if|if

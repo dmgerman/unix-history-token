@@ -1616,9 +1616,7 @@ name|int
 operator|)
 name|rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_expire
+name|rt_expire
 argument_list|)
 expr_stmt|;
 name|printf
