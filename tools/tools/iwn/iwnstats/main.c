@@ -101,6 +101,7 @@ value|"iwn0"
 end_define
 
 begin_function
+specifier|static
 name|struct
 name|iwnstats
 modifier|*
