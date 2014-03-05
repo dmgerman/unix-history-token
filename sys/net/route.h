@@ -1431,6 +1431,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|RT_UNLOCK_COND
+parameter_list|(
+name|_rt
+parameter_list|)
+value|do {				\ 	if (mtx_owned(&(_rt)->rt_mtx))				\ 		mtx_unlock(&(_rt)->rt_mtx);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT_ADDREF
 parameter_list|(
 name|_rt
