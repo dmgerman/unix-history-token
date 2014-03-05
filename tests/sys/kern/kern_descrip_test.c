@@ -74,7 +74,7 @@ end_include
 begin_expr_stmt
 name|ATF_TC_WITHOUT_HEAD
 argument_list|(
-name|dup2_simple
+name|dup2__simple
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -82,7 +82,7 @@ end_expr_stmt
 begin_macro
 name|ATF_TC_BODY
 argument_list|(
-argument|dup2_simple
+argument|dup2__simple
 argument_list|,
 argument|tc
 argument_list|)
@@ -286,7 +286,7 @@ name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
 argument_list|,
-name|dup2_simple
+name|dup2__simple
 argument_list|)
 expr_stmt|;
 name|ATF_TP_ADD_TC
