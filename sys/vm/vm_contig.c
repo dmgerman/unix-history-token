@@ -1487,12 +1487,10 @@ parameter_list|,
 name|vm_paddr_t
 name|high
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|alignment
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|boundary
 parameter_list|,
 name|vm_memattr_t
@@ -1505,8 +1503,7 @@ decl_stmt|;
 name|vm_page_t
 name|pages
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|npgs
 decl_stmt|;
 name|int
