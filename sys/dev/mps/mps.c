@@ -2660,7 +2660,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|post_queue
+name|free_queue
 operator|!=
 name|NULL
 condition|)
@@ -2672,7 +2672,7 @@ name|queues_dmat
 argument_list|,
 name|sc
 operator|->
-name|post_queue
+name|free_queue
 argument_list|,
 name|sc
 operator|->
