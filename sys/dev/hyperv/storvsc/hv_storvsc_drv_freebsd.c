@@ -4073,9 +4073,7 @@ name|initiator_id
 operator|=
 name|cpi
 operator|->
-name|max_lun
-operator|+
-literal|1
+name|max_target
 expr_stmt|;
 name|cpi
 operator|->
