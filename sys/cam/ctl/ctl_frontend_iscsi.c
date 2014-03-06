@@ -2981,12 +2981,12 @@ name|CTL_TASK_LUN_RESET
 expr_stmt|;
 break|break;
 case|case
-name|BHSTMR_FUNCTION_TARGET_COLD_RESET
+name|BHSTMR_FUNCTION_TARGET_WARM_RESET
 case|:
 if|#
 directive|if
 literal|0
-block|CFISCSI_SESSION_DEBUG(cs, "BHSTMR_FUNCTION_TARGET_COLD_RESET");
+block|CFISCSI_SESSION_DEBUG(cs, "BHSTMR_FUNCTION_TARGET_WARM_RESET");
 endif|#
 directive|endif
 name|io
@@ -2995,7 +2995,7 @@ name|taskio
 operator|.
 name|task_action
 operator|=
-name|CTL_TASK_BUS_RESET
+name|CTL_TASK_TARGET_RESET
 expr_stmt|;
 break|break;
 default|default:
