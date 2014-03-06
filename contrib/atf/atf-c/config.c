@@ -83,16 +83,6 @@ index|[]
 init|=
 block|{
 block|{
-literal|"atf_arch"
-block|,
-name|ATF_ARCH
-block|,
-name|NULL
-block|,
-name|false
-block|, }
-block|,
-block|{
 literal|"atf_build_cc"
 block|,
 name|ATF_BUILD_CC
@@ -153,16 +143,6 @@ name|true
 block|,  }
 block|,
 block|{
-literal|"atf_confdir"
-block|,
-name|ATF_CONFDIR
-block|,
-name|NULL
-block|,
-name|false
-block|, }
-block|,
-block|{
 literal|"atf_includedir"
 block|,
 name|ATF_INCLUDEDIR
@@ -173,29 +153,9 @@ name|false
 block|, }
 block|,
 block|{
-literal|"atf_libdir"
-block|,
-name|ATF_LIBDIR
-block|,
-name|NULL
-block|,
-name|false
-block|, }
-block|,
-block|{
 literal|"atf_libexecdir"
 block|,
 name|ATF_LIBEXECDIR
-block|,
-name|NULL
-block|,
-name|false
-block|, }
-block|,
-block|{
-literal|"atf_machine"
-block|,
-name|ATF_MACHINE
 block|,
 name|NULL
 block|,
