@@ -1369,6 +1369,10 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s: ioctl: %s"
+argument_list|,
+name|__func__
+argument_list|,
 name|wf
 operator|->
 name|ifr
