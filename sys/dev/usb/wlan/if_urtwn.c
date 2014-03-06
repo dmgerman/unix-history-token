@@ -10563,6 +10563,8 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+operator|(
 name|urtwn_read_2
 argument_list|(
 name|sc
@@ -10571,6 +10573,7 @@ name|R92C_APS_FSMCO
 argument_list|)
 operator|&
 name|R92C_APS_FSMCO_APFM_ONMAC
+operator|)
 condition|)
 break|break;
 name|DELAY
