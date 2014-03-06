@@ -1611,8 +1611,11 @@ argument_list|(
 name|buffer
 argument_list|)
 argument_list|,
-literal|"%lu"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|kread_counter
 argument_list|(
 operator|(
@@ -4516,10 +4519,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%*lu "
+literal|"%*ju "
 argument_list|,
 name|wid_pksent
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|kread_counter
 argument_list|(
 operator|(
