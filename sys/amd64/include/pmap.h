@@ -736,118 +736,39 @@ parameter_list|)
 value|pmap_kextract(((vm_offset_t) (va)))
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|pt_entry_t
-name|pte_load
-parameter_list|(
-name|pt_entry_t
-modifier|*
-name|ptep
-parameter_list|)
-block|{
-name|pt_entry_t
-name|r
-decl_stmt|;
-name|r
-operator|=
-operator|*
-name|ptep
-expr_stmt|;
-return|return
-operator|(
-name|r
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|pt_entry_t
+begin_define
+define|#
+directive|define
 name|pte_load_store
 parameter_list|(
-name|pt_entry_t
-modifier|*
 name|ptep
 parameter_list|,
-name|pt_entry_t
 name|pte
 parameter_list|)
-block|{
-name|pt_entry_t
-name|r
-decl_stmt|;
-asm|__asm __volatile(
-literal|"xchgq %0,%1"
-operator|:
-literal|"=m"
-operator|(
-operator|*
-name|ptep
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|r
-operator|)
-operator|:
-literal|"1"
-operator|(
-name|pte
-operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|ptep
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|r
-operator|)
-return|;
-end_return
+value|atomic_swap_long(ptep, pte)
+end_define
 
 begin_define
-unit|}
 define|#
 directive|define
 name|pte_load_clear
 parameter_list|(
-name|pte
+name|ptep
 parameter_list|)
-value|atomic_readandclear_long(pte)
+value|atomic_swap_long(ptep, 0)
 end_define
 
-begin_function
-unit|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|pte_store
 parameter_list|(
-name|pt_entry_t
-modifier|*
 name|ptep
 parameter_list|,
-name|pt_entry_t
 name|pte
 parameter_list|)
-block|{
-operator|*
-name|ptep
-operator|=
-name|pte
-expr_stmt|;
-block|}
-end_function
+value|do { \ 	*(u_long *)(ptep) = (u_long)(pte); \ } while (0)
+end_define
 
 begin_define
 define|#
@@ -856,7 +777,7 @@ name|pte_clear
 parameter_list|(
 name|ptep
 parameter_list|)
-value|pte_store((ptep), (pt_entry_t)0ULL)
+value|pte_store(ptep, 0)
 end_define
 
 begin_define
@@ -868,7 +789,7 @@ name|pdep
 parameter_list|,
 name|pde
 parameter_list|)
-value|pte_store((pdep), (pde))
+value|pte_store(pdep, pde)
 end_define
 
 begin_decl_stmt

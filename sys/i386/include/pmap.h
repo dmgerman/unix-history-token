@@ -1293,233 +1293,29 @@ name|old
 parameter_list|,
 name|new
 parameter_list|)
-define|\
-value|atomic_cmpset_64((pdep), (old), (new))
+value|atomic_cmpset_64_i586(pdep, old, new)
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|pt_entry_t
-name|pte_load
-parameter_list|(
-name|pt_entry_t
-modifier|*
-name|ptep
-parameter_list|)
-block|{
-name|pt_entry_t
-name|r
-decl_stmt|;
-asm|__asm __volatile(
-literal|"lock; cmpxchg8b %1"
-operator|:
-literal|"=A"
-operator|(
-name|r
-operator|)
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|ptep
-operator|)
-operator|,
-literal|"a"
-operator|(
-literal|0
-operator|)
-operator|,
-literal|"d"
-operator|(
-literal|0
-operator|)
-operator|,
-literal|"b"
-operator|(
-literal|0
-operator|)
-operator|,
-literal|"c"
-operator|(
-literal|0
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|r
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|pt_entry_t
+begin_define
+define|#
+directive|define
 name|pte_load_store
 parameter_list|(
-name|pt_entry_t
-modifier|*
 name|ptep
 parameter_list|,
-name|pt_entry_t
-name|v
+name|pte
 parameter_list|)
-block|{
-name|pt_entry_t
-name|r
-decl_stmt|;
-name|r
-operator|=
-operator|*
-name|ptep
-expr_stmt|;
-asm|__asm __volatile(
-literal|"1:\n"
-literal|"\tlock; cmpxchg8b %1\n"
-literal|"\tjnz 1b"
-operator|:
-literal|"+A"
-operator|(
-name|r
-operator|)
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|ptep
-operator|)
-operator|,
-literal|"b"
-operator|(
-operator|(
-name|uint32_t
-operator|)
-name|v
-operator|)
-operator|,
-literal|"c"
-operator|(
-call|(
-name|uint32_t
-call|)
-argument_list|(
-name|v
-operator|>>
-literal|32
-argument_list|)
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|r
-operator|)
-return|;
-end_return
-
-begin_comment
-unit|}
-comment|/* XXXRU move to atomic.h? */
-end_comment
-
-begin_function
-unit|static
-name|__inline
-name|int
-name|atomic_cmpset_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|dst
-parameter_list|,
-name|uint64_t
-name|exp
-parameter_list|,
-name|uint64_t
-name|src
-parameter_list|)
-block|{
-name|int64_t
-name|res
-init|=
-name|exp
-decl_stmt|;
-asm|__asm __volatile (
-literal|"	lock ;			"
-literal|"	cmpxchg8b %2 ;		"
-literal|"	setz	%%al ;		"
-literal|"	movzbl	%%al,%0 ;	"
-literal|"# atomic_cmpset_64"
-operator|:
-literal|"+A"
-operator|(
-name|res
-operator|)
-operator|,
-comment|/* 0 (result) */
-literal|"=m"
-operator|(
-operator|*
-name|dst
-operator|)
-comment|/* 1 */
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|dst
-operator|)
-operator|,
-comment|/* 2 */
-literal|"b"
-operator|(
-operator|(
-name|uint32_t
-operator|)
-name|src
-operator|)
-operator|,
-literal|"c"
-operator|(
-call|(
-name|uint32_t
-call|)
-argument_list|(
-name|src
-operator|>>
-literal|32
-argument_list|)
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
+value|atomic_swap_64_i586(ptep, pte)
+end_define
 
 begin_define
-unit|}
 define|#
 directive|define
 name|pte_load_clear
 parameter_list|(
 name|ptep
 parameter_list|)
-value|pte_load_store((ptep), (pt_entry_t)0ULL)
+value|atomic_swap_64_i586(ptep, 0)
 end_define
 
 begin_define
@@ -1531,11 +1327,11 @@ name|ptep
 parameter_list|,
 name|pte
 parameter_list|)
-value|pte_load_store((ptep), (pt_entry_t)pte)
+value|atomic_store_rel_64_i586(ptep, pte)
 end_define
 
 begin_decl_stmt
-unit|extern
+specifier|extern
 name|pt_entry_t
 name|pg_nx
 decl_stmt|;
@@ -1568,91 +1364,42 @@ name|old
 parameter_list|,
 name|new
 parameter_list|)
-define|\
-value|atomic_cmpset_int((pdep), (old), (new))
+value|atomic_cmpset_int(pdep, old, new)
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|pt_entry_t
-name|pte_load
-parameter_list|(
-name|pt_entry_t
-modifier|*
-name|ptep
-parameter_list|)
-block|{
-name|pt_entry_t
-name|r
-decl_stmt|;
-name|r
-operator|=
-operator|*
-name|ptep
-expr_stmt|;
-return|return
-operator|(
-name|r
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|pt_entry_t
+begin_define
+define|#
+directive|define
 name|pte_load_store
 parameter_list|(
-name|pt_entry_t
-modifier|*
 name|ptep
 parameter_list|,
-name|pt_entry_t
 name|pte
 parameter_list|)
-block|{
-asm|__asm volatile("xchgl %0, %1" : "+m" (*ptep), "+r" (pte));
-return|return
-operator|(
-name|pte
-operator|)
-return|;
-block|}
-end_function
+value|atomic_swap_int(ptep, pte)
+end_define
 
 begin_define
 define|#
 directive|define
 name|pte_load_clear
 parameter_list|(
-name|pte
+name|ptep
 parameter_list|)
-value|atomic_readandclear_int(pte)
+value|atomic_swap_int(ptep, 0)
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|pte_store
 parameter_list|(
-name|pt_entry_t
-modifier|*
 name|ptep
 parameter_list|,
-name|pt_entry_t
 name|pte
 parameter_list|)
-block|{
-operator|*
-name|ptep
-operator|=
-name|pte
-expr_stmt|;
-block|}
-end_function
+value|do { \ 	*(u_int *)(ptep) = (u_int)(pte); \ } while (0)
+end_define
 
 begin_endif
 endif|#
@@ -1670,7 +1417,7 @@ name|pte_clear
 parameter_list|(
 name|ptep
 parameter_list|)
-value|pte_store((ptep), (pt_entry_t)0ULL)
+value|pte_store(ptep, 0)
 end_define
 
 begin_define
@@ -1682,7 +1429,7 @@ name|pdep
 parameter_list|,
 name|pde
 parameter_list|)
-value|pte_store((pdep), (pde))
+value|pte_store(pdep, pde)
 end_define
 
 begin_endif
