@@ -1805,6 +1805,12 @@ name|writer_data
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/*  	 * Give the writer time to start writing, and hopefully block, before 	 * starting the reader.  This increases the likelihood of the test case 	 * failing due to PR kern/185812 	 */
+name|usleep
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|ATF_REQUIRE_EQ
 argument_list|(
 literal|0
@@ -5137,11 +5143,6 @@ end_macro
 
 begin_block
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR kern/185812 SOCK_SEQPACKET AF_UNIX sockets with asymmetrical buffers drop packets"
-argument_list|)
-expr_stmt|;
 name|test_pipe_simulator
 argument_list|(
 literal|131072
