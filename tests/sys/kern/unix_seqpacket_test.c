@@ -608,7 +608,7 @@ decl_stmt|,
 name|rsize
 decl_stmt|;
 comment|/* setup the socket pair */
-name|do_socketpair
+name|do_socketpair_nonblocking
 argument_list|(
 name|sv
 argument_list|)
