@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"statfoo.h"
+file|<bsdstat.h>
 end_include
 
 begin_comment
@@ -30,10 +30,10 @@ struct|struct
 name|athstatfoo
 block|{
 name|struct
-name|statfoo
+name|bsdstat
 name|base
 decl_stmt|;
-name|STATFOO_DECL_METHODS
+name|BSDSTAT_DECL_METHODS
 argument_list|(
 expr|struct
 name|athstatfoo

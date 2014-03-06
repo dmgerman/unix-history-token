@@ -3130,7 +3130,7 @@ name|void
 name|ath_collect_cur
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|)
@@ -3166,7 +3166,7 @@ name|void
 name|ath_collect_tot
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|)
@@ -3202,7 +3202,7 @@ name|void
 name|ath_update_tot
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|)
@@ -3309,7 +3309,7 @@ name|int
 name|ath_get_curstat
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|,
@@ -5058,7 +5058,7 @@ name|int
 name|ath_get_totstat
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|,
@@ -6767,7 +6767,7 @@ name|void
 name|ath_print_verbose
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|,
@@ -7024,7 +7024,7 @@ block|}
 end_function
 
 begin_macro
-name|STATFOO_DEFINE_BOUNCE
+name|BSDSTAT_DEFINE_BOUNCE
 argument_list|(
 argument|athstatfoo
 argument_list|)
@@ -7079,7 +7079,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|statfoo_init
+name|bsdstat_init
 argument_list|(
 operator|&
 name|wf
@@ -7160,7 +7160,7 @@ operator|=
 name|ath_print_verbose
 expr_stmt|;
 comment|/* setup bounce functions for public methods */
-name|STATFOO_BOUNCE
+name|BSDSTAT_BOUNCE
 argument_list|(
 name|wf
 argument_list|,
