@@ -2300,6 +2300,8 @@ argument_list|(
 name|opts
 argument_list|,
 name|O_RDWR
+operator||
+name|O_NONBLOCK
 argument_list|)
 expr_stmt|;
 if|if
