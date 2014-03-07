@@ -106,11 +106,13 @@ name|unp_addr
 decl_stmt|;
 comment|/* bound address of socket */
 name|int
-name|reserved1
+name|unp_cc
 decl_stmt|;
+comment|/* copy of rcv.sb_cc */
 name|int
-name|reserved2
+name|unp_mbcnt
 decl_stmt|;
+comment|/* copy of rcv.sb_mbcnt */
 name|unp_gen_t
 name|unp_gencnt
 decl_stmt|;
