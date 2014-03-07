@@ -5188,18 +5188,10 @@ argument_list|,
 operator|&
 name|chip_params
 argument_list|)
-operator|==
+operator|!=
 operator|-
 literal|1
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Cannot ioctl(NAND_IO_GET_CHIP_PARAM)"
-argument_list|)
-expr_stmt|;
-else|else
 name|erasesize
 operator|=
 name|chip_params
@@ -5209,6 +5201,14 @@ operator|*
 name|chip_params
 operator|.
 name|pages_per_block
+expr_stmt|;
+else|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot ioctl(NAND_IO_GET_CHIP_PARAM)"
+argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
