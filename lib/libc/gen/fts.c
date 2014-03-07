@@ -1731,11 +1731,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * If reached the top, return to the original directory (or 		 * the root of the tree), and load the paths for the next root. 		 */
 if|if
 condition|(
@@ -1769,6 +1764,11 @@ name|NULL
 operator|)
 return|;
 block|}
+name|free
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
 name|fts_load
 argument_list|(
 name|sp
@@ -1795,9 +1795,16 @@ name|fts_instr
 operator|==
 name|FTS_SKIP
 condition|)
+block|{
+name|free
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|next
 goto|;
+block|}
 if|if
 condition|(
 name|p
@@ -1885,6 +1892,11 @@ operator|=
 name|FTS_NOINSTR
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
 name|name
 label|:
 name|t
@@ -1938,11 +1950,6 @@ name|tmp
 operator|->
 name|fts_parent
 expr_stmt|;
-name|free
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1953,6 +1960,11 @@ name|FTS_ROOTPARENTLEVEL
 condition|)
 block|{
 comment|/* 		 * Done; free everything up and set errno to 0 so the user 		 * can distinguish between error and EOF. 		 */
+name|free
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|p
@@ -2118,6 +2130,11 @@ name|NULL
 operator|)
 return|;
 block|}
+name|free
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|fts_info
