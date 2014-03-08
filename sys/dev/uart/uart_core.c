@@ -1942,7 +1942,7 @@ operator|->
 name|sc_sysdev
 operator|->
 name|baudrate
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
