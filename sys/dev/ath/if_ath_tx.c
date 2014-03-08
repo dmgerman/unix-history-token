@@ -13821,6 +13821,15 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* XXX Dump the frame, see what it is? */
+if|if
+condition|(
+name|IFF_DUMPPKTS
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_XMIT
+argument_list|)
+condition|)
 name|ieee80211_dump_pkt
 argument_list|(
 name|ni
