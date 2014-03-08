@@ -3285,6 +3285,17 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|jp
+operator|->
+name|state
+operator|==
+name|JOBDONE
+condition|)
+return|return
+literal|0
+return|;
 return|return
 operator|-
 name|jp

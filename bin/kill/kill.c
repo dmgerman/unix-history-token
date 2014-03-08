@@ -620,6 +620,7 @@ name|argv
 operator|==
 literal|'%'
 condition|)
+block|{
 name|pid
 operator|=
 name|getjobpgrp
@@ -628,6 +629,15 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Silently ignore terminated jobs, like the kernel 			 * silently ignores zombies. 			 */
+if|if
+condition|(
+name|pid
+operator|==
+literal|0
+condition|)
+continue|continue;
+block|}
 else|else
 endif|#
 directive|endif
