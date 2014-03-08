@@ -1578,7 +1578,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|at91_soc_id
 parameter_list|(
