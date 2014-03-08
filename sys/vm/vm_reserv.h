@@ -108,12 +108,10 @@ parameter_list|,
 name|vm_paddr_t
 name|high
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|alignment
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|boundary
 parameter_list|)
 function_decl|;

@@ -55,6 +55,10 @@ name|mem_affinity
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The following functions are only to be used by the virtual memory system.  */
+end_comment
+
 begin_function_decl
 name|void
 name|vm_phys_add_page
@@ -69,8 +73,7 @@ begin_function_decl
 name|vm_page_t
 name|vm_phys_alloc_contig
 parameter_list|(
-name|unsigned
-name|long
+name|u_long
 name|npages
 parameter_list|,
 name|vm_paddr_t
@@ -79,12 +82,10 @@ parameter_list|,
 name|vm_paddr_t
 name|high
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|alignment
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|boundary
 parameter_list|)
 function_decl|;
@@ -120,15 +121,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_paddr_t
-name|vm_phys_bootstrap_alloc
+name|void
+name|vm_phys_free_contig
 parameter_list|(
-name|vm_size_t
-name|size
+name|vm_page_t
+name|m
 parameter_list|,
-name|unsigned
-name|long
-name|alignment
+name|u_long
+name|npages
 parameter_list|)
 function_decl|;
 end_function_decl
