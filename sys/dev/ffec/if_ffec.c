@@ -3903,9 +3903,10 @@ operator|!=
 name|AF_LINK
 condition|)
 continue|continue;
+comment|/* 6 bits from MSB in LE CRC32 are used for hash. */
 name|crc
 operator|=
-name|ether_crc32_be
+name|ether_crc32_le
 argument_list|(
 name|LLADDR
 argument_list|(
@@ -3927,9 +3928,19 @@ operator||=
 literal|1LLU
 operator|<<
 operator|(
-name|crc
+operator|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
 operator|&
-literal|0x3f
+name|crc
+operator|)
+index|[
+literal|3
+index|]
+operator|>>
+literal|2
 operator|)
 expr_stmt|;
 block|}
