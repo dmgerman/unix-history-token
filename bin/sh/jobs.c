@@ -4959,12 +4959,6 @@ block|{
 if|#
 directive|if
 name|JOBS
-name|pid_t
-name|mypgrp
-init|=
-name|getpgrp
-argument_list|()
-decl_stmt|;
 name|int
 name|propagate_int
 init|=
@@ -5048,7 +5042,7 @@ name|tcsetpgrp
 argument_list|(
 name|ttyfd
 argument_list|,
-name|mypgrp
+name|rootpid
 argument_list|)
 operator|<
 literal|0

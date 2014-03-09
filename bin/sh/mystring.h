@@ -58,17 +58,5 @@ parameter_list|)
 value|(strcmp(s1, s2) == 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|scopy
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-value|((void)strcpy(s2, s1))
-end_define
-
 end_unit
 
