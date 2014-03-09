@@ -167,13 +167,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|MID_MACHINE
-value|MID_ARM6
-end_define
-
 begin_if
 if|#
 directive|if
