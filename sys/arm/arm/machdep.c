@@ -4636,6 +4636,15 @@ literal|0
 expr_stmt|;
 name|thread0
 operator|.
+name|td_pcb
+operator|->
+name|pcb_vfpcpu
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|thread0
+operator|.
 name|td_frame
 operator|=
 operator|&
