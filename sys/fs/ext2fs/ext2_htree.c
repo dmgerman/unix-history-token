@@ -2523,7 +2523,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|entry2
+name|entry1
 operator|->
 name|h_hash
 operator|>
