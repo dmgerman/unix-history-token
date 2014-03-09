@@ -892,13 +892,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91SAM9X25_IRQ_AIC
-value|(-1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|AT91SAM9X25_AIC_BASE
 value|0xffff000
 end_define
