@@ -372,27 +372,6 @@ value|(KERNEL_PT_AFKERNEL + KERNEL_PT_AFKERNEL_NUM)
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|u_int
-name|data_abort_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|prefetch_abort_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|undefined_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pv_addr
 name|kernel_pt_table
@@ -2428,28 +2407,6 @@ expr_stmt|;
 comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
 name|cpu_idcache_wbinv_all
 argument_list|()
-expr_stmt|;
-comment|/* Set stack for exception handlers */
-name|data_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|data_abort_handler
-expr_stmt|;
-name|prefetch_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|prefetch_abort_handler
-expr_stmt|;
-name|undefined_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|undefinedinstruction_bounce
 expr_stmt|;
 name|undefined_init
 argument_list|()

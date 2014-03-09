@@ -328,27 +328,6 @@ value|(KERNEL_PT_AFKERNEL + KERNEL_PT_AFKERNEL_NUM)
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|u_int
-name|data_abort_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|prefetch_abort_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|undefined_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pv_addr
 name|kernel_pt_table
@@ -1146,28 +1125,6 @@ expr_stmt|;
 comment|/* Fire up consoles. */
 name|cninit
 argument_list|()
-expr_stmt|;
-comment|/* Set stack for exception handlers */
-name|data_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|data_abort_handler
-expr_stmt|;
-name|prefetch_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|prefetch_abort_handler
-expr_stmt|;
-name|undefined_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|undefinedinstruction_bounce
 expr_stmt|;
 name|undefined_init
 argument_list|()

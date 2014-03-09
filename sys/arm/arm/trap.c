@@ -250,17 +250,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|undefinedinstruction
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_include
 include|#
 directive|include
