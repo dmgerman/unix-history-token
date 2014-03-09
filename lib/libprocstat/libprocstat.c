@@ -11391,6 +11391,10 @@ operator|&&
 name|errno
 operator|!=
 name|ESRCH
+operator|&&
+name|errno
+operator|!=
+name|EPERM
 condition|)
 name|warn
 argument_list|(
