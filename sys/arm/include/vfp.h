@@ -816,7 +816,9 @@ begin_function_decl
 name|void
 name|vfp_discard
 parameter_list|(
-name|void
+name|struct
+name|thread
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -772,13 +772,15 @@ end_block
 
 begin_comment
 unit|}
-comment|/*  * If the VFP hardware is on, the current thread was using it but now that  * thread is dying.  Turn off the VFP and set pcpu fpcurthread to 0, to indicate  * that the VFP hardware state does not belong to any thread.   Called only from  * cpu_throw(), so we don't have to worry about a context switch here.  */
+comment|/*  * The current thread is dying.  If the state currently in the hardware belongs  * to the current thread, set fpcurthread to NULL to indicate that the VFP  * hardware state does not belong to any thread.  If the VFP is on, turn it off.  * Called only from cpu_throw(), so we don't have to worry about a context  * switch here.  */
 end_comment
 
 begin_macro
 unit|void
 name|vfp_discard
-argument_list|()
+argument_list|(
+argument|struct thread *td
+argument_list|)
 end_macro
 
 begin_block
@@ -786,6 +788,22 @@ block|{
 name|u_int
 name|tmp
 decl_stmt|;
+if|if
+condition|(
+name|PCPU_GET
+argument_list|(
+name|fpcurthread
+argument_list|)
+operator|==
+name|td
+condition|)
+name|PCPU_SET
+argument_list|(
+name|fpcurthread
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|tmp
 operator|=
 name|fmrx
@@ -799,7 +817,6 @@ name|tmp
 operator|&
 name|VFPEXC_EN
 condition|)
-block|{
 name|fmxr
 argument_list|(
 name|VFPEXC
@@ -810,14 +827,6 @@ operator|~
 name|VFPEXC_EN
 argument_list|)
 expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|fpcurthread
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_block
 
