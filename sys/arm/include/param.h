@@ -437,28 +437,7 @@ begin_define
 define|#
 directive|define
 name|USPACE_SVC_STACK_TOP
-value|KSTACK_PAGES * PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|USPACE_SVC_STACK_BOTTOM
-value|(USPACE_SVC_STACK_TOP - 0x1000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USPACE_UNDEF_STACK_TOP
-value|(USPACE_SVC_STACK_BOTTOM - 0x10)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USPACE_UNDEF_STACK_BOTTOM
-value|(FPCONTEXTSIZE + 10)
+value|(KSTACK_PAGES * PAGE_SIZE)
 end_define
 
 begin_comment
