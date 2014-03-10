@@ -475,7 +475,6 @@ begin_define
 define|#
 directive|define
 name|AST_LOCALS
-value|;\ .Lcurthread:								;\ 	.word	_C_LABEL(__pcpu) + PC_CURTHREAD
 end_define
 
 begin_define
@@ -486,7 +485,7 @@ parameter_list|(
 name|tmp
 parameter_list|)
 define|\
-value|ldr	tmp, .Lcurthread;     \ 	ldr	tmp, [tmp]
+value|ldr	tmp, =_C_LABEL(__pcpu);\ 	ldr	tmp, [tmp, #PC_CURTHREAD]
 end_define
 
 begin_endif
