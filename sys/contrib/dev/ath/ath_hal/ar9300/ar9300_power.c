@@ -3446,6 +3446,12 @@ return|return
 name|AH_FALSE
 return|;
 block|}
+name|ah
+operator|->
+name|ah_powerMode
+operator|=
+name|status
+expr_stmt|;
 return|return
 name|status
 return|;
