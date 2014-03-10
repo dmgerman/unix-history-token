@@ -57,6 +57,35 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UCL_EXTERN
+value|__declspec(dllexport)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UCL_EXTERN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/**  * @mainpage  * This is a reference manual for UCL API. You may find the description of UCL format by following this  * [github repository](https://github.com/vstakhov/libucl).  *  * This manual has several main sections:  *  - @ref structures  *  - @ref utils  *  - @ref parser  *  - @ref emitter  */
 end_comment
@@ -407,6 +436,7 @@ typedef|;
 comment|/** @} */
 comment|/**  * @defgroup utils Utility functions  * A number of utility functions simplify handling of UCL objects  *  * @{  */
 comment|/**  * Copy and return a key of an object, returned key is zero-terminated  * @param obj CL object  * @return zero terminated key  */
+name|UCL_EXTERN
 name|char
 modifier|*
 name|ucl_copy_key_trash
@@ -417,6 +447,7 @@ name|obj
 parameter_list|)
 function_decl|;
 comment|/**  * Copy and return a string value of an object, returned key is zero-terminated  * @param obj CL object  * @return zero terminated string representation of object value  */
+name|UCL_EXTERN
 name|char
 modifier|*
 name|ucl_copy_value_trash
@@ -579,6 +610,7 @@ name|new
 return|;
 block|}
 comment|/**  * Convert any string to an ucl object making the specified transformations  * @param str fixed size or NULL terminated string  * @param len length (if len is zero, than str is treated as NULL terminated)  * @param flags conversion flags  * @return new object  */
+name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
 name|ucl_object_fromstring_common
@@ -787,6 +819,7 @@ name|obj
 return|;
 block|}
 comment|/**  * Insert a object 'elt' to the hash 'top' and associate it with key 'key'  * @param top destination object (will be created automatically if top is NULL)  * @param elt element to insert (must NOT be NULL)  * @param key key to associate with this object (either const or preallocated)  * @param keylen length of the key (or 0 for NULL terminated keys)  * @param copy_key make an internal copy of key  * @return new value of top object  */
+name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
 name|ucl_object_insert_key
@@ -813,6 +846,7 @@ argument_list|)
 name|UCL_WARN_UNUSED_RESULT
 decl_stmt|;
 comment|/**  * Replace a object 'elt' to the hash 'top' and associate it with key 'key', old object will be unrefed,  * if no object has been found this function works like ucl_object_insert_key()  * @param top destination object (will be created automatically if top is NULL)  * @param elt element to insert (must NOT be NULL)  * @param key key to associate with this object (either const or preallocated)  * @param keylen length of the key (or 0 for NULL terminated keys)  * @param copy_key make an internal copy of key  * @return new value of top object  */
+name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
 name|ucl_object_replace_key
@@ -838,7 +872,41 @@ name|copy_key
 argument_list|)
 name|UCL_WARN_UNUSED_RESULT
 decl_stmt|;
+comment|/**  * Delete a object associated with key 'key', old object will be unrefered,  * @param top object  * @param key key associated to the object to remove  * @param keylen length of the key (or 0 for NULL terminated keys)  */
+name|UCL_EXTERN
+name|bool
+name|ucl_object_delete_keyl
+parameter_list|(
+name|ucl_object_t
+modifier|*
+name|top
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|key
+parameter_list|,
+name|size_t
+name|keylen
+parameter_list|)
+function_decl|;
+comment|/**  * Delete a object associated with key 'key', old object will be unrefered,  * @param top object  * @param key key associated to the object to remove  */
+name|UCL_EXTERN
+name|bool
+name|ucl_object_delete_key
+parameter_list|(
+name|ucl_object_t
+modifier|*
+name|top
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
 comment|/**  * Insert a object 'elt' to the hash 'top' and associate it with key 'key', if the specified key exist,  * try to merge its content  * @param top destination object (will be created automatically if top is NULL)  * @param elt element to insert (must NOT be NULL)  * @param key key to associate with this object (either const or preallocated)  * @param keylen length of the key (or 0 for NULL terminated keys)  * @param copy_key make an internal copy of key  * @return new value of top object  */
+name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
 name|ucl_object_insert_key_merged
@@ -2082,6 +2150,7 @@ name|result
 return|;
 block|}
 comment|/**  * Return object identified by a key in the specified object  * @param obj object to get a key from (must be of type UCL_OBJECT)  * @param key key to search  * @return object matched the specified key or NULL if key is not found  */
+name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
 name|ucl_object_find_key
@@ -2097,6 +2166,7 @@ name|key
 parameter_list|)
 function_decl|;
 comment|/**  * Return object identified by a fixed size key in the specified object  * @param obj object to get a key from (must be of type UCL_OBJECT)  * @param key key to search  * @param klen length of a key  * @return object matched the specified key or NULL if key is not found  */
+name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
 name|ucl_object_find_keyl
@@ -2165,6 +2235,7 @@ name|key
 return|;
 block|}
 comment|/**  * Free ucl object  * @param obj ucl object to free  */
+name|UCL_EXTERN
 name|void
 name|ucl_object_free
 parameter_list|(
@@ -2233,6 +2304,7 @@ modifier|*
 name|ucl_object_iter_t
 typedef|;
 comment|/**  * Get next key from an object  * @param obj object to iterate  * @param iter opaque iterator, must be set to NULL on the first call:  * ucl_object_iter_t it = NULL;  * while ((cur = ucl_iterate_object (obj,&it)) != NULL) ...  * @return the next object or NULL  */
+name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
 name|ucl_iterate_object
@@ -2278,6 +2350,7 @@ struct_decl|struct
 name|ucl_parser
 struct_decl|;
 comment|/**  * Creates new parser object  * @param pool pool to allocate memory from  * @return new parser object  */
+name|UCL_EXTERN
 name|struct
 name|ucl_parser
 modifier|*
@@ -2288,6 +2361,7 @@ name|flags
 parameter_list|)
 function_decl|;
 comment|/**  * Register new handler for a macro  * @param parser parser object  * @param macro macro name (without leading dot)  * @param handler handler (it is called immediately after macro is parsed)  * @param ud opaque user data for a handler  */
+name|UCL_EXTERN
 name|void
 name|ucl_parser_register_macro
 parameter_list|(
@@ -2310,6 +2384,7 @@ name|ud
 parameter_list|)
 function_decl|;
 comment|/**  * Register new parser variable  * @param parser parser object  * @param var variable name  * @param value variable value  */
+name|UCL_EXTERN
 name|void
 name|ucl_parser_register_variable
 parameter_list|(
@@ -2330,6 +2405,7 @@ name|value
 parameter_list|)
 function_decl|;
 comment|/**  * Load new chunk to a parser  * @param parser parser structure  * @param data the pointer to the beginning of a chunk  * @param len the length of a chunk  * @param err if *err is NULL it is set to parser error  * @return true if chunk has been added and false in case of error  */
+name|UCL_EXTERN
 name|bool
 name|ucl_parser_add_chunk
 parameter_list|(
@@ -2349,6 +2425,7 @@ name|len
 parameter_list|)
 function_decl|;
 comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @return true if chunk has been added and false in case of error  */
+name|UCL_EXTERN
 name|bool
 name|ucl_parser_add_file
 parameter_list|(
@@ -2364,6 +2441,7 @@ name|filename
 parameter_list|)
 function_decl|;
 comment|/**  * Get a top object for a parser  * @param parser parser structure  * @param err if *err is NULL it is set to parser error  * @return top parser object or NULL  */
+name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
 name|ucl_parser_get_object
@@ -2375,6 +2453,7 @@ name|parser
 parameter_list|)
 function_decl|;
 comment|/**  * Get the error string if failing  * @param parser parser object  */
+name|UCL_EXTERN
 specifier|const
 name|char
 modifier|*
@@ -2387,6 +2466,7 @@ name|parser
 parameter_list|)
 function_decl|;
 comment|/**  * Free ucl parser object  * @param parser parser object  */
+name|UCL_EXTERN
 name|void
 name|ucl_parser_free
 parameter_list|(
@@ -2397,6 +2477,7 @@ name|parser
 parameter_list|)
 function_decl|;
 comment|/**  * Add new public key to parser for signatures check  * @param parser parser object  * @param key PEM representation of a key  * @param len length of the key  * @param err if *err is NULL it is set to parser error  * @return true if a key has been successfully added  */
+name|UCL_EXTERN
 name|bool
 name|ucl_pubkey_add
 parameter_list|(
@@ -2416,6 +2497,7 @@ name|len
 parameter_list|)
 function_decl|;
 comment|/**  * Set FILENAME and CURDIR variables in parser  * @param parser parser object  * @param filename filename to set or NULL to set FILENAME to "undef" and CURDIR to getcwd()  * @param need_expand perform realpath() if this variable is true and filename is not NULL  * @return true if variables has been set  */
+name|UCL_EXTERN
 name|bool
 name|ucl_parser_set_filevars
 parameter_list|(
@@ -2517,6 +2599,7 @@ decl_stmt|;
 block|}
 struct|;
 comment|/**  * Emit object to a string  * @param obj object  * @param emit_type if type is #UCL_EMIT_JSON then emit json, if type is  * #UCL_EMIT_CONFIG then emit config like object  * @return dump of an object (must be freed after using) or NULL in case of error  */
+name|UCL_EXTERN
 name|unsigned
 name|char
 modifier|*
@@ -2532,6 +2615,7 @@ name|emit_type
 parameter_list|)
 function_decl|;
 comment|/**  * Emit object to a string  * @param obj object  * @param emit_type if type is #UCL_EMIT_JSON then emit json, if type is  * #UCL_EMIT_CONFIG then emit config like object  * @return dump of an object (must be freed after using) or NULL in case of error  */
+name|UCL_EXTERN
 name|bool
 name|ucl_object_emit_full
 parameter_list|(
