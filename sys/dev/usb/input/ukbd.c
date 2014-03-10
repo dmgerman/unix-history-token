@@ -9234,6 +9234,20 @@ block|{
 name|int
 name|result
 decl_stmt|;
+comment|/* 	 * XXX Check of someone is calling us from a critical section: 	 */
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_critnest
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EDEADLK
+operator|)
+return|;
 comment|/* 	 * XXX KDGKBSTATE, KDSKBSTATE and KDSETLED can be called from any 	 * context where printf(9) can be called, which among other things 	 * includes interrupt filters and threads with any kinds of locks 	 * already held.  For this reason it would be dangerous to acquire 	 * the Giant here unconditionally.  On the other hand we have to 	 * have it to handle the ioctl. 	 * So we make our best effort to auto-detect whether we can grab 	 * the Giant or not.  Blame syscons(4) for this. 	 */
 switch|switch
 condition|(
