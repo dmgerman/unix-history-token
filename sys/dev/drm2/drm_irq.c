@@ -2762,8 +2762,10 @@ expr_stmt|;
 comment|/* Going from 0->1 means we have to enable interrupts again */
 if|if
 condition|(
-name|atomic_fetchadd_int
+name|atomic_add_return
 argument_list|(
+literal|1
+argument_list|,
 operator|&
 name|dev
 operator|->
@@ -2771,11 +2773,9 @@ name|vblank_refcount
 index|[
 name|crtc
 index|]
-argument_list|,
-literal|1
 argument_list|)
 operator|==
-literal|0
+literal|1
 condition|)
 block|{
 name|mtx_lock
@@ -2951,7 +2951,7 @@ expr_stmt|;
 comment|/* Last user schedules interrupt disable */
 if|if
 condition|(
-name|atomic_fetchadd_int
+name|atomic_dec_and_test
 argument_list|(
 operator|&
 name|dev
@@ -2960,12 +2960,7 @@ name|vblank_refcount
 index|[
 name|crtc
 index|]
-argument_list|,
-operator|-
-literal|1
 argument_list|)
-operator|==
-literal|1
 operator|&&
 operator|(
 name|drm_vblank_offdelay

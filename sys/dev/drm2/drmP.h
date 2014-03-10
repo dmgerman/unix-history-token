@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* drmP.h -- Private header for Direct Rendering Manager -*- linux-c -*-  * Created: Mon Jan  4 10:05:05 1999 by faith@precisioninsight.com  */
+comment|/**  * \file drmP.h  * Private header for Direct Rendering Manager  *  * \author Rickard E. (Rik) Faith<faith@valinux.com>  * \author Gareth Hughes<gareth@valinux.com>  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  */
+comment|/*  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * Copyright (c) 2009-2010, Code Aurora Forum.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  */
 end_comment
 
 begin_include
@@ -46,18 +46,6 @@ argument_list|(
 name|__KERNEL__
 argument_list|)
 end_if
-
-begin_struct_decl
-struct_decl|struct
-name|drm_device
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|drm_file
-struct_decl|;
-end_struct_decl
 
 begin_include
 include|#
@@ -399,6 +387,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/drm2/drm_sarea.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/drm2/drm_atomic.h>
 end_include
 
@@ -420,16 +414,34 @@ directive|include
 file|<dev/drm2/drm_gem_names.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|drm_file
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|drm_device
+struct_decl|;
+end_struct_decl
+
 begin_include
 include|#
 directive|include
-file|<dev/drm2/drm_mm.h>
+file|<dev/drm2/drm_os_freebsd.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<dev/drm2/drm_hashtab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/drm2/drm_mm.h>
 end_include
 
 begin_include
@@ -505,6 +517,18 @@ directive|define
 name|DRM_LINUX
 value|0
 end_define
+
+begin_comment
+comment|/***********************************************************************/
+end_comment
+
+begin_comment
+comment|/** \name DRM template customization defaults */
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
 
 begin_comment
 comment|/* driver capabilities and requirements mask */
@@ -611,7 +635,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRIVER_USE_PLATFORM_DEVICE
+name|DRIVER_PRIME
 value|0x4000
 end_define
 
@@ -895,7 +919,15 @@ value|(PAGE_SIZE * 8)
 end_define
 
 begin_comment
-comment|/* Internal types and structures */
+comment|/***********************************************************************/
+end_comment
+
+begin_comment
+comment|/** \name Internal types and structures */
+end_comment
+
+begin_comment
+comment|/*@{*/
 end_comment
 
 begin_define
@@ -1250,40 +1282,6 @@ begin_comment
 comment|/* nothing */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|unlikely
-parameter_list|(
-name|x
-parameter_list|)
-value|__builtin_expect(!!(x), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|likely
-parameter_list|(
-name|x
-parameter_list|)
-value|__builtin_expect(!!(x), 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|container_of
-parameter_list|(
-name|ptr
-parameter_list|,
-name|type
-parameter_list|,
-name|member
-parameter_list|)
-value|({			\ 	__typeof( ((type *)0)->member ) *__mptr = (ptr);	\ 	(type *)( (char *)__mptr - offsetof(type,member) );})
-end_define
-
 begin_enum
 enum|enum
 block|{
@@ -1414,69 +1412,6 @@ name|msg
 parameter_list|)
 value|pause((msg), ((int64_t)(x)) * hz / 1000)
 end_define
-
-begin_typedef
-typedef|typedef
-name|vm_paddr_t
-name|dma_addr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint64_t
-name|u64
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|u32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint16_t
-name|u16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint8_t
-name|u8
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int64_t
-name|s64
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int32_t
-name|s32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int16_t
-name|s16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int8_t
-name|s8
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* DRM_READMEMORYBARRIER() prevents reordering of reads.  * DRM_WRITEMEMORYBARRIER() prevents reordering of writes.  * DRM_MEMORYBARRIER() prevents reordering of reads and writes.  */
@@ -1707,64 +1642,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|cpu_to_le32
-parameter_list|(
-name|x
-parameter_list|)
-value|htole32(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|le32_to_cpu
-parameter_list|(
-name|x
-parameter_list|)
-value|le32toh(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_HZ
-value|hz
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_UDELAY
-parameter_list|(
-name|udelay
-parameter_list|)
-value|DELAY(udelay)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_MDELAY
-parameter_list|(
-name|msecs
-parameter_list|)
-value|do { int loops = (msecs);		\ 	                          while (loops--) DELAY(1000);		\ 				} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_TIME_SLICE
-value|(hz/20)
-end_define
-
-begin_comment
-comment|/* Time slice for GLXContexts	  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DRM_GET_PRIV_SAREA
 parameter_list|(
 name|_dev
@@ -1869,6 +1746,65 @@ parameter_list|,
 modifier|...
 parameter_list|)
 value|do {					\ 	if ((drm_debug_flag& DRM_DEBUGBITS_KMS) != 0)			\ 		printf("[" DRM_NAME ":KMS:pid%d:%s] " fmt, DRM_CURRENTPID,\ 			__func__ , ##__VA_ARGS__);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dev_err
+parameter_list|(
+name|dev
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|device_printf((dev), "error: " fmt, ## __VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dev_warn
+parameter_list|(
+name|dev
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|device_printf((dev), "warning: " fmt, ## __VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dev_info
+parameter_list|(
+name|dev
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|device_printf((dev), "info: " fmt, ## __VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dev_dbg
+parameter_list|(
+name|dev
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {					\ 	if ((drm_debug_flag& DRM_DEBUGBITS_KMS) != 0) {			\ 		device_printf((dev), "debug: " fmt, ## __VA_ARGS__);	\ 	}								\ } while (0)
 end_define
 
 begin_typedef
@@ -1976,6 +1912,10 @@ function_decl|;
 name|int
 name|flags
 decl_stmt|;
+name|unsigned
+name|int
+name|cmd_drv
+decl_stmt|;
 block|}
 name|drm_ioctl_desc_t
 typedef|;
@@ -1998,6 +1938,21 @@ name|flags
 parameter_list|)
 define|\
 value|[DRM_IOCTL_NR(ioctl)] = {ioctl, func, flags}
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_DEF_DRV
+parameter_list|(
+name|ioctl
+parameter_list|,
+name|_func
+parameter_list|,
+name|_flags
+parameter_list|)
+define|\
+value|[DRM_IOCTL_NR(DRM_##ioctl)] = {.cmd = DRM_##ioctl, .func = _func, .flags = _flags, .cmd_drv = DRM_IOCTL_##ioctl}
 end_define
 
 begin_typedef
@@ -2051,55 +2006,64 @@ block|{
 name|int
 name|idx
 decl_stmt|;
-comment|/* Index into master buflist	     */
+comment|/**< Index into master buflist */
 name|int
 name|total
 decl_stmt|;
-comment|/* Buffer size			     */
+comment|/**< Buffer size */
 name|int
 name|order
 decl_stmt|;
-comment|/* log-base-2(total)		     */
+comment|/**< log-base-2(total) */
 name|int
 name|used
 decl_stmt|;
-comment|/* Amount of buffer in use (for DMA)  */
+comment|/**< Amount of buffer in use (for DMA) */
 name|unsigned
 name|long
 name|offset
 decl_stmt|;
-comment|/* Byte offset (used internally)	     */
+comment|/**< Byte offset (used internally) */
 name|void
 modifier|*
 name|address
 decl_stmt|;
-comment|/* Address of buffer		     */
+comment|/**< Address of buffer */
 name|unsigned
 name|long
 name|bus_address
 decl_stmt|;
-comment|/* Bus address of buffer		     */
+comment|/**< Bus address of buffer */
 name|struct
 name|drm_buf
 modifier|*
 name|next
 decl_stmt|;
-comment|/* Kernel-only: used for free list    */
+comment|/**< Kernel-only: used for free list */
+specifier|__volatile__
+name|int
+name|waiting
+decl_stmt|;
+comment|/**< On kernel DMA queue */
 specifier|__volatile__
 name|int
 name|pending
 decl_stmt|;
-comment|/* On hardware DMA queue		     */
+comment|/**< On hardware DMA queue */
 name|struct
 name|drm_file
 modifier|*
 name|file_priv
 decl_stmt|;
-comment|/* Unique identifier of holding process */
+comment|/**< Private of holding file descr */
 name|int
 name|context
 decl_stmt|;
-comment|/* Kernel queue for this buffer	     */
+comment|/**< Kernel queue for this buffer */
+name|int
+name|while_locked
+decl_stmt|;
+comment|/**< Dispatch this buffer while locked */
 enum|enum
 block|{
 name|DRM_LIST_NONE
@@ -2128,16 +2092,16 @@ literal|5
 block|}
 name|list
 enum|;
-comment|/* Which list we're on		     */
+comment|/**< Which list we're on */
 name|int
 name|dev_priv_size
 decl_stmt|;
-comment|/* Size of buffer private stoarge   */
+comment|/**< Size of buffer private storage */
 name|void
 modifier|*
 name|dev_private
 decl_stmt|;
-comment|/* Per-buffer private storage       */
+comment|/**< Per-buffer private storage */
 block|}
 name|drm_buf_t
 typedef|;
@@ -2273,6 +2237,32 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* initial implementaton using a linked list - todo hashtab */
+end_comment
+
+begin_struct
+struct|struct
+name|drm_prime_file_private
+block|{
+name|struct
+name|list_head
+name|head
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DUMBBELL_WIP
+name|struct
+name|mutex
+name|lock
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DUMBBELL_WIP */
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 name|TAILQ_HEAD
@@ -2350,6 +2340,10 @@ name|struct
 name|selinfo
 name|event_poll
 decl_stmt|;
+name|struct
+name|drm_prime_file_private
+name|prime
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2394,7 +2388,8 @@ typedef|typedef
 struct|struct
 name|drm_device_dma
 block|{
-name|drm_buf_entry_t
+name|struct
+name|drm_buf_entry
 name|bufs
 index|[
 name|DRM_MAX_ORDER
@@ -2402,26 +2397,31 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+comment|/**< buffers, grouped by their size order */
 name|int
 name|buf_count
 decl_stmt|;
-name|drm_buf_t
+comment|/**< total number of buffers */
+name|struct
+name|drm_buf
 modifier|*
 modifier|*
 name|buflist
 decl_stmt|;
-comment|/* Vector of pointers info bufs	   */
+comment|/**< Vector of pointers into drm_device_dma::bufs */
 name|int
 name|seg_count
 decl_stmt|;
 name|int
 name|page_count
 decl_stmt|;
+comment|/**< number of pages */
 name|unsigned
 name|long
 modifier|*
 name|pagelist
 decl_stmt|;
+comment|/**< page list */
 name|unsigned
 name|long
 name|byte_count
@@ -2435,6 +2435,14 @@ block|,
 name|_DRM_DMA_USE_SG
 init|=
 literal|0x02
+block|,
+name|_DRM_DMA_USE_FB
+init|=
+literal|0x04
+block|,
+name|_DRM_DMA_USE_PCI_RO
+init|=
+literal|0x08
 block|}
 name|flags
 enum|;
@@ -2678,67 +2686,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Size of ringbuffer for vblank timestamps. Just double-buffer  * in initial implementation.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_VBLANKTIME_RBSIZE
-value|2
-end_define
-
-begin_comment
-comment|/* Flags and return codes for get_vblank_timestamp() driver function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_CALLED_FROM_VBLIRQ
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_VBLANKTIME_SCANOUTPOS_METHOD
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_VBLANKTIME_INVBL
-value|(1<< 1)
-end_define
-
-begin_comment
-comment|/* get_scanout_position() return flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_SCANOUTPOS_VALID
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_SCANOUTPOS_INVBL
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_SCANOUTPOS_ACCURATE
-value|(1<< 2)
-end_define
-
-begin_comment
 comment|/* location of GART table */
 end_comment
 
@@ -2906,6 +2853,24 @@ name|void
 modifier|*
 name|driver_private
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DUMBBELL_WIP
+comment|/* dma buf exported from this GEM object */
+name|struct
+name|dma_buf
+modifier|*
+name|export_dma_buf
+decl_stmt|;
+comment|/* dma buf attachment backing this object */
+name|struct
+name|dma_buf_attachment
+modifier|*
+name|import_attach
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DUMBBELL_WIP */
 block|}
 struct|;
 end_struct
@@ -2915,6 +2880,132 @@ include|#
 directive|include
 file|"drm_crtc.h"
 end_include
+
+begin_comment
+comment|/* per-master structure */
+end_comment
+
+begin_struct
+struct|struct
+name|drm_master
+block|{
+name|u_int
+name|refcount
+decl_stmt|;
+comment|/* refcount for this master */
+name|struct
+name|list_head
+name|head
+decl_stmt|;
+comment|/**< each minor contains a list of masters */
+name|struct
+name|drm_minor
+modifier|*
+name|minor
+decl_stmt|;
+comment|/**< link back to minor we are a master for */
+name|char
+modifier|*
+name|unique
+decl_stmt|;
+comment|/**< Unique identifier: e.g., busid */
+name|int
+name|unique_len
+decl_stmt|;
+comment|/**< Length of unique field */
+name|int
+name|unique_size
+decl_stmt|;
+comment|/**< amount allocated */
+name|int
+name|blocked
+decl_stmt|;
+comment|/**< Blocked due to VC switch? */
+comment|/** \name Authentication */
+comment|/*@{ */
+name|struct
+name|drm_open_hash
+name|magiclist
+decl_stmt|;
+name|struct
+name|list_head
+name|magicfree
+decl_stmt|;
+comment|/*@} */
+name|struct
+name|drm_lock_data
+name|lock
+decl_stmt|;
+comment|/**< Information on hardware lock */
+name|void
+modifier|*
+name|driver_priv
+decl_stmt|;
+comment|/**< Private structure for driver to use */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Size of ringbuffer for vblank timestamps. Just double-buffer  * in initial implementation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRM_VBLANKTIME_RBSIZE
+value|2
+end_define
+
+begin_comment
+comment|/* Flags and return codes for get_vblank_timestamp() driver function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRM_CALLED_FROM_VBLIRQ
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_VBLANKTIME_SCANOUTPOS_METHOD
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_VBLANKTIME_INVBL
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* get_scanout_position() return flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRM_SCANOUTPOS_VALID
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SCANOUTPOS_INVBL
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SCANOUTPOS_ACCURATE
+value|(1<< 2)
+end_define
 
 begin_ifndef
 ifndef|#
@@ -3519,7 +3610,7 @@ modifier|*
 name|id_entry
 decl_stmt|;
 comment|/* PCI ID, name, and chipset private */
-comment|/** 	 * Called by \c drm_device_is_agp.  Typically used to determine if a 	 * card is really attached to AGP or not. 	 * 	 * \param dev  DRM device handle 	 * 	 * \returns  	 * One of three values is returned depending on whether or not the 	 * card is absolutely \b not AGP (return of 0), absolutely \b is AGP 	 * (return of 1), or may or may not be AGP (return of 2). 	 */
+comment|/** 	 * Called by \c drm_device_is_agp.  Typically used to determine if a 	 * card is really attached to AGP or not. 	 * 	 * \param dev  DRM device handle 	 * 	 * \returns 	 * One of three values is returned depending on whether or not the 	 * card is absolutely \b not AGP (return of 0), absolutely \b is AGP 	 * (return of 1), or may or may not be AGP (return of 2). 	 */
 name|int
 function_decl|(
 modifier|*
@@ -3711,7 +3802,7 @@ value|6
 end_define
 
 begin_comment
-comment|/**   * DRM device functions structure  */
+comment|/**  * DRM device structure. This structure represent a complete card that  * may contain multiple heads.  */
 end_comment
 
 begin_struct
@@ -3976,6 +4067,10 @@ modifier|*
 name|primary
 decl_stmt|;
 comment|/**< render type primary screen head */
+name|void
+modifier|*
+name|drm_ttm_bdev
+decl_stmt|;
 name|struct
 name|unrhdr
 modifier|*
@@ -4086,9 +4181,33 @@ decl_stmt|;
 name|int
 name|modesetting
 decl_stmt|;
+name|int
+name|switch_power_state
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|DRM_SWITCH_POWER_ON
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SWITCH_POWER_OFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SWITCH_POWER_CHANGING
+value|2
+end_define
 
 begin_function
 specifier|static
@@ -4505,6 +4624,318 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DUMBBELL_WIP
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|int
+name|drm_gem_prime_handle_to_fd
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
+parameter_list|,
+name|uint32_t
+name|handle
+parameter_list|,
+name|uint32_t
+name|flags
+parameter_list|,
+name|int
+modifier|*
+name|prime_fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|drm_gem_prime_fd_to_handle
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
+parameter_list|,
+name|int
+name|prime_fd
+parameter_list|,
+name|uint32_t
+modifier|*
+name|handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|drm_prime_handle_to_fd_ioctl
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|drm_prime_fd_to_handle_ioctl
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DUMBBELL_WIP
+end_ifdef
+
+begin_comment
+comment|/*  * See drm_prime.c  *   -- dumbbell@  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|drm_prime_sg_to_page_addr_arrays
+parameter_list|(
+name|struct
+name|sg_table
+modifier|*
+name|sgt
+parameter_list|,
+name|vm_page_t
+modifier|*
+name|pages
+parameter_list|,
+name|dma_addr_t
+modifier|*
+name|addrs
+parameter_list|,
+name|int
+name|max_pages
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DUMBBELL_WIP */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|sg_table
+modifier|*
+name|drm_prime_pages_to_sg
+parameter_list|(
+name|vm_page_t
+modifier|*
+name|pages
+parameter_list|,
+name|int
+name|nr_pages
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|drm_prime_gem_destroy
+parameter_list|(
+name|struct
+name|drm_gem_object
+modifier|*
+name|obj
+parameter_list|,
+name|struct
+name|sg_table
+modifier|*
+name|sg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|drm_prime_init_file_private
+parameter_list|(
+name|struct
+name|drm_prime_file_private
+modifier|*
+name|prime_fpriv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|drm_prime_destroy_file_private
+parameter_list|(
+name|struct
+name|drm_prime_file_private
+modifier|*
+name|prime_fpriv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|drm_prime_add_imported_buf_handle
+parameter_list|(
+name|struct
+name|drm_prime_file_private
+modifier|*
+name|prime_fpriv
+parameter_list|,
+name|struct
+name|dma_buf
+modifier|*
+name|dma_buf
+parameter_list|,
+name|uint32_t
+name|handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|drm_prime_lookup_imported_buf_handle
+parameter_list|(
+name|struct
+name|drm_prime_file_private
+modifier|*
+name|prime_fpriv
+parameter_list|,
+name|struct
+name|dma_buf
+modifier|*
+name|dma_buf
+parameter_list|,
+name|uint32_t
+modifier|*
+name|handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|drm_prime_remove_imported_buf_handle
+parameter_list|(
+name|struct
+name|drm_prime_file_private
+modifier|*
+name|prime_fpriv
+parameter_list|,
+name|struct
+name|dma_buf
+modifier|*
+name|dma_buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|drm_prime_add_dma_buf
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|struct
+name|drm_gem_object
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|drm_prime_lookup_obj
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|struct
+name|dma_buf
+modifier|*
+name|buf
+parameter_list|,
+name|struct
+name|drm_gem_object
+modifier|*
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DUMBBELL_WIP */
+end_comment
 
 begin_comment
 comment|/* Memory management support (drm_memory.c) */
@@ -7184,9 +7615,9 @@ name|int
 name|drm_gem_mmap_single
 parameter_list|(
 name|struct
-name|cdev
+name|drm_device
 modifier|*
-name|kdev
+name|dev
 parameter_list|,
 name|vm_ooffset_t
 modifier|*
@@ -7214,6 +7645,58 @@ parameter_list|(
 name|void
 modifier|*
 name|obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ttm_bo_device
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|ttm_bo_mmap_single
+parameter_list|(
+name|struct
+name|ttm_bo_device
+modifier|*
+name|bdev
+parameter_list|,
+name|vm_ooffset_t
+modifier|*
+name|offset
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|,
+name|struct
+name|vm_object
+modifier|*
+modifier|*
+name|obj_res
+parameter_list|,
+name|int
+name|nprot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ttm_buffer_object
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|ttm_bo_release_mmap
+parameter_list|(
+name|struct
+name|ttm_buffer_object
+modifier|*
+name|bo
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7763,121 +8246,6 @@ end_function
 begin_define
 define|#
 directive|define
-name|KIB_NOTYET
-parameter_list|()
-define|\
-value|do {									\ 	if (drm_debug_flag&& drm_notyet_flag)				\ 		printf("NOTYET: %s at %s:%d\n", __func__, __FILE__, __LINE__); \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KTR_DRM
-value|KTR_DEV
-end_define
-
-begin_define
-define|#
-directive|define
-name|KTR_DRM_REG
-value|KTR_SPARE3
-end_define
-
-begin_comment
-comment|/* Error codes conversion from Linux to FreeBSD. */
-end_comment
-
-begin_comment
-comment|/* XXXKIB what is the right code for EREMOTEIO on FreeBSD? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EREMOTEIO
-value|ENXIO
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERESTARTSYS
-value|ERESTART
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_APPLE
-value|0x106b
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_ASUSTEK
-value|0x1043
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_ATI
-value|0x1002
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_DELL
-value|0x1028
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_HP
-value|0x103c
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_IBM
-value|0x1014
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_INTEL
-value|0x8086
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_SERVERWORKS
-value|0x1166
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_SONY
-value|0x104d
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_VENDOR_ID_VIA
-value|0x1106
-end_define
-
-begin_define
-define|#
-directive|define
 name|DRM_PCIE_SPEED_25
 value|1
 end_define
@@ -7912,6 +8280,14 @@ name|speed_mask
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|drm_can_sleep
+parameter_list|()
+value|(DRM_HZ& 1)
+end_define
 
 begin_endif
 endif|#

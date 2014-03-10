@@ -415,6 +415,15 @@ argument_list|(
 name|ref
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|item
+operator|->
+name|object
+argument_list|,
+name|M_DRM_GLOBAL
+argument_list|)
+expr_stmt|;
 name|item
 operator|->
 name|object
