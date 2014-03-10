@@ -1825,6 +1825,7 @@ name|paddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|mpfps
 argument_list|)
 argument_list|)
