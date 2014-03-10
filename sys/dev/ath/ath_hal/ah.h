@@ -3851,6 +3851,10 @@ name|uint32_t
 name|ah_syncstate
 decl_stmt|;
 comment|/* last sync intr state */
+comment|/* Current powerstate from HAL calls */
+name|HAL_POWER_MODE
+name|ah_powerMode
+decl_stmt|;
 name|HAL_OPS_CONFIG
 name|ah_config
 decl_stmt|;

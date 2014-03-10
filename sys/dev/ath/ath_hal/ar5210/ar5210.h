@@ -428,9 +428,6 @@ decl_stmt|;
 name|uint32_t
 name|ah_txUrnInterruptMask
 decl_stmt|;
-name|HAL_POWER_MODE
-name|ah_powerMode
-decl_stmt|;
 name|uint8_t
 name|ah_bssid
 index|[

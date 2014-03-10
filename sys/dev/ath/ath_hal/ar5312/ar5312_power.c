@@ -134,16 +134,6 @@ name|int
 name|setChip
 parameter_list|)
 block|{
-name|struct
-name|ath_hal_5212
-modifier|*
-name|ahp
-init|=
-name|AH5212
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|AH_DEBUG
@@ -183,7 +173,7 @@ name|__func__
 argument_list|,
 name|modes
 index|[
-name|ahp
+name|ah
 operator|->
 name|ah_powerMode
 index|]
@@ -258,7 +248,7 @@ return|return
 name|AH_FALSE
 return|;
 block|}
-name|ahp
+name|ah
 operator|->
 name|ah_powerMode
 operator|=
