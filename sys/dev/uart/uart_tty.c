@@ -1718,7 +1718,11 @@ name|tty_init_console
 argument_list|(
 name|tp
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|sc_sysdev
+operator|->
+name|baudrate
 argument_list|)
 expr_stmt|;
 block|}
