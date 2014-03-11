@@ -328,9 +328,11 @@ parameter_list|,
 name|char
 name|b
 index|[]
+name|__unused
 parameter_list|,
 name|size_t
 name|bs
+name|__unused
 parameter_list|)
 block|{
 name|fprintf
