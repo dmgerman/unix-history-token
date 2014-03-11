@@ -6,61 +6,32 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__X86_INIT_H__
+name|_XEN_TIMER_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__X86_INIT_H__
+name|_XEN_TIMER_H_
 end_define
 
-begin_comment
-comment|/*  * Struct containing pointers to init functions whose  * implementation is run time selectable.  Selection can be made,  * for example, based on detection of a BIOS variant or  * hypervisor environment.  */
-end_comment
+begin_function_decl
+name|void
+name|xen_clock_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_struct
-struct|struct
-name|init_ops
-block|{
-name|caddr_t
-function_decl|(
-modifier|*
-name|parse_preload_data
-function_decl|)
-parameter_list|(
-name|u_int64_t
-parameter_list|)
-function_decl|;
+begin_function_decl
 name|void
-function_decl|(
-modifier|*
-name|early_clock_source_init
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|early_delay
-function_decl|)
+name|xen_delay
 parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|init_ops
-name|init_ops
-decl_stmt|;
-end_decl_stmt
+end_function_decl
 
 begin_endif
 endif|#
@@ -68,7 +39,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __X86_INIT_H__ */
+comment|/* _XEN_TIMER_H_ */
 end_comment
 
 end_unit

@@ -512,6 +512,12 @@ directive|include
 file|<machine/vm86.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<x86/init.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1078,6 +1084,29 @@ begin_decl_stmt
 name|struct
 name|mem_range_softc
 name|mem_range_softc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Default init_ops implementation. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|init_ops
+name|init_ops
+init|=
+block|{
+operator|.
+name|early_clock_source_init
+operator|=
+name|i8254_init
+block|,
+operator|.
+name|early_delay
+operator|=
+name|i8254_delay
+block|,  }
 decl_stmt|;
 end_decl_stmt
 
@@ -11351,7 +11380,7 @@ name|r_idt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the i8254 before the console so that console 	 * initialization can use DELAY(). 	 */
-name|i8254_init
+name|clock_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */

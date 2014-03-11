@@ -576,7 +576,7 @@ end_comment
 
 begin_function
 name|void
-name|DELAY
+name|i8254_delay
 parameter_list|(
 name|int
 name|n

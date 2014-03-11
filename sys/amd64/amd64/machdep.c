@@ -789,6 +789,16 @@ operator|.
 name|parse_preload_data
 operator|=
 name|native_parse_preload_data
+block|,
+operator|.
+name|early_clock_source_init
+operator|=
+name|i8254_init
+block|,
+operator|.
+name|early_delay
+operator|=
+name|i8254_delay
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -8618,8 +8628,8 @@ operator|&
 name|r_idt
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the i8254 before the console so that console 	 * initialization can use DELAY(). 	 */
-name|i8254_init
+comment|/* 	 * Initialize the clock before the console so that console 	 * initialization can use DELAY(). 	 */
+name|clock_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */

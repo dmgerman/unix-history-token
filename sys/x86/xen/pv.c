@@ -137,6 +137,12 @@ directive|include
 file|<xen/hypervisor.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/xen/timer/timer.h>
+end_include
+
 begin_comment
 comment|/* Native initial function */
 end_comment
@@ -201,6 +207,16 @@ operator|.
 name|parse_preload_data
 operator|=
 name|xen_pv_parse_preload_data
+block|,
+operator|.
+name|early_clock_source_init
+operator|=
+name|xen_clock_init
+block|,
+operator|.
+name|early_delay
+operator|=
+name|xen_delay
 block|, }
 decl_stmt|;
 end_decl_stmt
