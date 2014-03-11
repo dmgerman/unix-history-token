@@ -67,15 +67,6 @@ name|CONFIG_XEN_COMPAT
 value|0x030002
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|XEN
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -86,27 +77,6 @@ parameter_list|)
 define|\
 value|"call hypercall_page + ("STR(__HYPERVISOR_##name)" * 32)"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|HYPERCALL_STR
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|"mov hypercall_stubs,%%eax; "                           \         "add $("STR(__HYPERVISOR_##name)" * 32),%%eax; "        \         "call *%%eax"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
