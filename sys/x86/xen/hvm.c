@@ -1385,10 +1385,6 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|xen_hvm_domain
-argument_list|()
-operator|||
-operator|!
 name|xen_vector_callback_enabled
 condition|)
 return|return;
@@ -1692,6 +1688,15 @@ name|xatp
 decl_stmt|;
 if|if
 condition|(
+name|xen_pv_domain
+argument_list|()
+condition|)
+block|{
+comment|/* 		 * Already setup in the PV case, shared_info is passed inside 		 * of the start_info struct at start of day. 		 */
+return|return;
+block|}
+if|if
+condition|(
 name|HYPERVISOR_shared_info
 operator|==
 name|NULL
@@ -1990,6 +1995,15 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|xen_pv_domain
+argument_list|()
+condition|)
+block|{
+comment|/* 		 * No emulated devices in the PV case, so no need to unplug 		 * anything. 		 */
+return|return;
+block|}
+if|if
+condition|(
 name|inw
 argument_list|(
 name|XEN_MAGIC_IOPORT
@@ -2064,16 +2078,29 @@ operator|!=
 literal|0
 condition|)
 return|return;
+comment|/* 		 * If xen_domain_type is not set at this point 		 * it means we are inside a (PV)HVM guest, because 		 * for PVH the guest type is set much earlier 		 * (see hammer_time_xen). 		 */
+if|if
+condition|(
+operator|!
+name|xen_domain
+argument_list|()
+condition|)
+block|{
+name|xen_domain_type
+operator|=
+name|XEN_HVM_DOMAIN
+expr_stmt|;
+name|vm_guest
+operator|=
+name|VM_GUEST_XEN
+expr_stmt|;
+block|}
 name|setup_xen_features
 argument_list|()
 expr_stmt|;
 name|cpu_ops
 operator|=
 name|xen_hvm_cpu_ops
-expr_stmt|;
-name|vm_guest
-operator|=
-name|VM_GUEST_XEN
 expr_stmt|;
 break|break;
 case|case
@@ -2116,17 +2143,14 @@ name|xen_vector_callback_enabled
 operator|=
 literal|0
 expr_stmt|;
-name|xen_domain_type
-operator|=
-name|XEN_HVM_DOMAIN
-expr_stmt|;
-name|xen_hvm_init_shared_info_page
-argument_list|()
-expr_stmt|;
 name|xen_hvm_set_callback
 argument_list|(
 name|NULL
 argument_list|)
+expr_stmt|;
+comment|/* 	 * On (PV)HVM domains we need to request the hypervisor to 	 * fill the shared info page, for PVH guest the shared_info page 	 * is passed inside the start_info struct and is already set, so this 	 * functions are no-ops. 	 */
+name|xen_hvm_init_shared_info_page
+argument_list|()
 expr_stmt|;
 name|xen_hvm_disable_emulated_devices
 argument_list|()
@@ -2202,6 +2226,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|xen_hvm_domain
+argument_list|()
+condition|)
+return|return;
 comment|/* Set vcpu_id to acpi_id */
 name|CPU_FOREACH
 argument_list|(
@@ -2390,12 +2421,18 @@ directive|ifdef
 name|SMP
 end_ifdef
 
+begin_comment
+comment|/* We need to setup IPIs before APs are started */
+end_comment
+
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
 name|xen_setup_cpus
 argument_list|,
 name|SI_SUB_SMP
+operator|-
+literal|1
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
