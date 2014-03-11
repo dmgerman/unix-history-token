@@ -833,6 +833,11 @@ name|mp_bootaddress
 operator|=
 name|mp_bootaddress
 block|,
+operator|.
+name|start_all_aps
+operator|=
+name|native_start_all_aps
+block|,
 endif|#
 directive|endif
 block|}

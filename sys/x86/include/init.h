@@ -74,6 +74,15 @@ parameter_list|(
 name|u_int
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|start_all_aps
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

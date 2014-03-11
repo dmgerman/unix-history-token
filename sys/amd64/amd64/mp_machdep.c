@@ -256,6 +256,12 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<x86/init.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -359,7 +365,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|bootAP
 decl_stmt|;
@@ -621,7 +626,6 @@ comment|/* used to hold the AP's until we are ready to release them */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|mtx
 name|ap_boot_mtx
@@ -758,16 +762,6 @@ begin_function_decl
 specifier|static
 name|void
 name|set_interrupt_apic_ids
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|start_all_aps
 parameter_list|(
 name|void
 parameter_list|)
@@ -2283,6 +2277,8 @@ name|assign_cpu_ids
 argument_list|()
 expr_stmt|;
 comment|/* Start each Application Processor */
+name|init_ops
+operator|.
 name|start_all_aps
 argument_list|()
 expr_stmt|;
@@ -3718,9 +3714,8 @@ comment|/*  * start each AP in our list  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|start_all_aps
+name|native_start_all_aps
 parameter_list|(
 name|void
 parameter_list|)
