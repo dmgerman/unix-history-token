@@ -11091,6 +11091,9 @@ name|adapter
 operator|->
 name|queues
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|IGB_LEGACY_TX
 name|struct
 name|tx_ring
 modifier|*
@@ -11100,6 +11103,8 @@ name|adapter
 operator|->
 name|tx_rings
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|error
 decl_stmt|,
