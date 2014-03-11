@@ -224,6 +224,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vatpic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vhpet.h"
 end_include
 
@@ -442,6 +448,12 @@ modifier|*
 name|vioapic
 decl_stmt|;
 comment|/* virtual ioapic */
+name|struct
+name|vatpic
+modifier|*
+name|vatpic
+decl_stmt|;
+comment|/* virtual atpic */
 name|struct
 name|vmspace
 modifier|*
@@ -1491,6 +1503,15 @@ argument_list|(
 name|vm
 argument_list|)
 expr_stmt|;
+name|vm
+operator|->
+name|vatpic
+operator|=
+name|vatpic_init
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1631,6 +1652,13 @@ argument_list|(
 name|vm
 operator|->
 name|vhpet
+argument_list|)
+expr_stmt|;
+name|vatpic_cleanup
+argument_list|(
+name|vm
+operator|->
+name|vatpic
 argument_list|)
 expr_stmt|;
 name|vioapic_cleanup
@@ -7278,6 +7306,28 @@ argument_list|,
 name|vcpuid
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|struct
+name|vatpic
+modifier|*
+name|vm_atpic
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vm
+operator|->
+name|vatpic
+operator|)
+return|;
 block|}
 end_function
 

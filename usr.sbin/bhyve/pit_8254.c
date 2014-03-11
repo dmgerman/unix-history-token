@@ -350,11 +350,13 @@ expr_stmt|;
 name|pit_mev_count
 operator|++
 expr_stmt|;
-name|vm_ioapic_pulse_irq
+name|vm_isa_pulse_irq
 argument_list|(
 name|c
 operator|->
 name|ctx
+argument_list|,
+literal|0
 argument_list|,
 literal|2
 argument_list|)

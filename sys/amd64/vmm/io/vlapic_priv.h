@@ -725,6 +725,9 @@ decl_stmt|;
 name|int
 name|esr_firing
 decl_stmt|;
+name|bool
+name|extint_pending
+decl_stmt|;
 name|struct
 name|callout
 name|callout
