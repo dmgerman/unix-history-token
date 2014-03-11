@@ -944,6 +944,16 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|envmode
+operator|==
+literal|1
+condition|)
+name|kern_envp
+operator|=
+name|static_env
+expr_stmt|;
 comment|/* Do basic tuning, hz etc */
 name|init_param1
 argument_list|()
