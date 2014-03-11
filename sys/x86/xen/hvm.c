@@ -678,6 +678,13 @@ name|HYPERVISOR_shared_info
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|start_info_t
+modifier|*
+name|HYPERVISOR_start_info
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef

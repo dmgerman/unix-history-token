@@ -360,6 +360,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|start_info_t
+modifier|*
+name|HYPERVISOR_start_info
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|shared_info_t
 modifier|*
 name|HYPERVISOR_shared_info
@@ -3609,6 +3616,10 @@ expr_stmt|;
 endif|#
 directive|endif
 name|xen_start_info
+operator|=
+name|startinfo
+expr_stmt|;
+name|HYPERVISOR_start_info
 operator|=
 name|startinfo
 expr_stmt|;
