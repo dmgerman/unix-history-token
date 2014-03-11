@@ -4560,11 +4560,12 @@ goto|;
 block|}
 name|lid
 operator|=
+name|CRYPTO_SESID2LID
+argument_list|(
 name|crp
 operator|->
 name|crp_sid
-operator|&
-literal|0xffffffff
+argument_list|)
 expr_stmt|;
 name|rw_rlock
 argument_list|(
