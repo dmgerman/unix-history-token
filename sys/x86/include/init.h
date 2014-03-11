@@ -65,6 +65,15 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
+name|u_int
+function_decl|(
+modifier|*
+name|mp_bootaddress
+function_decl|)
+parameter_list|(
+name|u_int
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

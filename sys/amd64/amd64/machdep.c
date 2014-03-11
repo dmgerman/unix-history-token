@@ -824,7 +824,18 @@ operator|.
 name|parse_memmap
 operator|=
 name|native_parse_memmap
-block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|SMP
+operator|.
+name|mp_bootaddress
+operator|=
+name|mp_bootaddress
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -6912,15 +6923,20 @@ argument_list|(
 literal|"BIOS smap did not include a basemem segment!"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* make hole for AP bootstrap code */
+comment|/* 	 * Make hole for "AP -> long mode" bootstrap code.  The 	 * mp_bootaddress vector is only available when the kernel 	 * is configured to support APs and APs for the system start 	 * in 32bit mode (e.g. SMP bare metal). 	 */
+if|if
+condition|(
+name|init_ops
+operator|.
+name|mp_bootaddress
+condition|)
 name|physmap
 index|[
 literal|1
 index|]
 operator|=
+name|init_ops
+operator|.
 name|mp_bootaddress
 argument_list|(
 name|physmap
@@ -6931,8 +6947,6 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Maxmem isn't the "maximum memory", it's one larger than the 	 * highest page of the physical address space.  It should be 	 * called something like "Maxphyspage".  We may adjust this 	 * based on ``hw.physmem'' and the results of the memory test. 	 */
 name|Maxmem
 operator|=
