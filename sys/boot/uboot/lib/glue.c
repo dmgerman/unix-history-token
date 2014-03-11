@@ -1430,11 +1430,11 @@ if|if
 condition|(
 name|type
 operator|&
-name|DT_STOR_NAND
+name|DT_STOR_SATA
 condition|)
 return|return
 operator|(
-literal|"NAND"
+literal|"SATA"
 operator|)
 return|;
 return|return
