@@ -312,7 +312,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|const
 name|HASHINFO
 name|hinfo
 init|=
@@ -399,6 +398,11 @@ name|otherflag
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|byteorder
+init|=
+literal|0
+decl_stmt|;
 name|size_t
 name|cnt
 init|=
@@ -437,7 +441,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"qo:u"
+literal|"blo:qu"
 argument_list|)
 operator|)
 operator|!=
@@ -449,6 +453,32 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'b'
+case|:
+case|case
+literal|'l'
+case|:
+if|if
+condition|(
+name|byteorder
+operator|!=
+literal|0
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|byteorder
+operator|=
+name|ch
+operator|==
+literal|'b'
+condition|?
+literal|4321
+else|:
+literal|1234
+expr_stmt|;
+break|break;
 case|case
 literal|'q'
 case|:
@@ -523,6 +553,13 @@ name|argv
 index|[
 literal|0
 index|]
+expr_stmt|;
+comment|/* Set byte order. */
+name|hinfo
+operator|.
+name|lorder
+operator|=
+name|byteorder
 expr_stmt|;
 if|if
 condition|(
@@ -2369,7 +2406,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\t%s [-q] [-o<db>] [<servicefile>]\n"
+literal|"Usage:\t%s [-b | -l] [-q] [-o<db>] [<servicefile>]\n"
 literal|"\t%s -u [<servicefile>]\n"
 argument_list|,
 name|getprogname
