@@ -499,7 +499,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* only use hardware crypto for asym */
+comment|/* only use hardware crypto */
 end_comment
 
 begin_expr_stmt
@@ -518,7 +518,7 @@ name|crypto_devallowsoft
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable/disable use of software asym crypto support"
+literal|"Enable/disable use of software crypto by /dev/crypto"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

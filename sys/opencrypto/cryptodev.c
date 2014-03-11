@@ -1764,6 +1764,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
+name|crypto_devallowsoft
+condition|)
+block|{
+if|if
+condition|(
 name|crid
 operator|&
 name|CRYPTOCAP_F_SOFTWARE
@@ -1797,6 +1803,7 @@ return|return
 name|EINVAL
 return|;
 comment|/* XXX */
+block|}
 return|return
 literal|0
 return|;
