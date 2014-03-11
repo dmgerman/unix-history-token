@@ -1930,12 +1930,6 @@ begin_comment
 comment|/* Given a libmap translation list and a library name, return the    replacement library, or NULL */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_32BIT
-end_ifdef
-
 begin_function
 name|char
 modifier|*
@@ -2036,11 +2030,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

@@ -13348,6 +13348,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Iterate over a search path, translate each element, and invoke the  * callback on the result.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -13367,16 +13371,11 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|COMPAT_32BIT
 specifier|const
 name|char
 modifier|*
 name|trans
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|path
@@ -13421,9 +13420,6 @@ argument_list|,
 literal|":;"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT_32BIT
 name|trans
 operator|=
 name|lm_findn
@@ -13454,8 +13450,6 @@ name|arg
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|res
 operator|=
 name|callback
