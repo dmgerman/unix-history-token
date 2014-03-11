@@ -32817,11 +32817,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|RTFREE_LOCKED
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
 name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_noroute
