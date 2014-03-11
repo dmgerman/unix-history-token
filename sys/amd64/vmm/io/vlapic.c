@@ -4391,6 +4391,19 @@ name|vlapic
 operator|->
 name|extint_pending
 condition|)
+block|{
+if|if
+condition|(
+name|vecptr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+else|else
 return|return
 operator|(
 name|vatpic_pending_intr
@@ -4403,6 +4416,7 @@ name|vecptr
 argument_list|)
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|vlapic
