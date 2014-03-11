@@ -236,12 +236,26 @@ literal|0
 operator|)
 condition|)
 block|{
+name|xc_printf
+argument_list|(
+literal|"ERROR: invalid start_info or xen stack, halting\n"
+argument_list|)
+expr_stmt|;
 name|HYPERVISOR_shutdown
 argument_list|(
 name|SHUTDOWN_crash
 argument_list|)
 expr_stmt|;
 block|}
+name|xc_printf
+argument_list|(
+literal|"FreeBSD PVH running on %s\n"
+argument_list|,
+name|si
+operator|->
+name|magic
+argument_list|)
+expr_stmt|;
 comment|/* We use 3 pages of xen stack for the boot pagetables */
 name|physfree
 operator|=
@@ -286,6 +300,27 @@ argument_list|(
 name|si
 operator|->
 name|store_mfn
+argument_list|)
+operator|+
+name|KERNBASE
+operator|)
+expr_stmt|;
+name|console_page
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|ptoa
+argument_list|(
+name|si
+operator|->
+name|console
+operator|.
+name|domU
+operator|.
+name|mfn
 argument_list|)
 operator|+
 name|KERNBASE
