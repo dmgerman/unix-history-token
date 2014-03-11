@@ -5217,6 +5217,46 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Handlers for TLB related IPIs  *  * On i386 Xen PV this are no-ops since this port doesn't support SMP.  */
+end_comment
+
+begin_function
+name|void
+name|invltlb_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|invlpg_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|invlrng_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|invlcache_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/*  * This is called once the rest of the system is up and running and we're  * ready to let the AP's out of the pen.  */
 end_comment
 
