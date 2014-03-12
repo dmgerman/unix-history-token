@@ -3144,8 +3144,8 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|linker_file_t
 operator|*
+name|newdeps
 argument_list|)
 argument_list|,
 name|M_LINKER
@@ -3155,17 +3155,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|newdeps
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 if|if
 condition|(
 name|file
@@ -3187,8 +3176,8 @@ name|ndeps
 operator|*
 sizeof|sizeof
 argument_list|(
-name|linker_file_t
 operator|*
+name|newdeps
 argument_list|)
 argument_list|)
 expr_stmt|;
