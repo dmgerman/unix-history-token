@@ -2306,6 +2306,13 @@ operator|-
 name|cnt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cgbufs
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|cnt
@@ -2365,6 +2372,7 @@ argument_list|(
 name|cgbufs
 argument_list|)
 expr_stmt|;
+block|}
 name|pbp
 operator|=
 name|pdirbp
