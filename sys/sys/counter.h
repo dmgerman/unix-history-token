@@ -23,6 +23,12 @@ name|counter_u64_t
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -116,6 +122,15 @@ name|n
 parameter_list|)
 value|do {			\ 	for (int i = 0; i< (n); i++)				\ 		counter_u64_zero((a)[i]);			\ } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
