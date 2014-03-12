@@ -39,11 +39,34 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<tap.h>
-end_include
+begin_decl_stmt
+specifier|static
+name|int
+name|test_count
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|exit_status
+init|=
+name|EXIT_SUCCESS
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CHECK
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|do { \ 		if (x) { \ 			printf("ok %d\n", test_count); \ 		} else { \ 			printf("not ok %d # %s\n", test_count, #x); \ 			exit_status = EXIT_FAILURE; \ 		} \ 		++test_count; \ 	} while (0)
+end_define
 
 begin_function
 name|int
@@ -65,9 +88,9 @@ decl_stmt|;
 name|int
 name|iret
 decl_stmt|;
-name|plan_tests
+name|printf
 argument_list|(
-literal|27
+literal|"1..27\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * strerror() failure tests. 	 */
@@ -96,7 +119,7 @@ argument_list|,
 name|INT_MAX
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -108,7 +131,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|errno
 operator|==
@@ -127,7 +150,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -139,7 +162,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|errno
 operator|==
@@ -157,7 +180,7 @@ argument_list|(
 name|EPERM
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -169,7 +192,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|errno
 operator|==
@@ -187,7 +210,7 @@ argument_list|(
 name|EPFNOSUPPORT
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -199,7 +222,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|errno
 operator|==
@@ -217,7 +240,7 @@ argument_list|(
 name|ELAST
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|errno
 operator|==
@@ -252,7 +275,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -264,7 +287,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|iret
 operator|==
@@ -298,7 +321,7 @@ literal|"Operation not permitted"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -310,7 +333,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|iret
 operator|==
@@ -345,7 +368,7 @@ literal|"Unknown error: -1"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -357,7 +380,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|iret
 operator|==
@@ -394,7 +417,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -406,7 +429,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|iret
 operator|==
@@ -443,7 +466,7 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -455,7 +478,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|iret
 operator|==
@@ -489,7 +512,7 @@ literal|"Unknown error: 12345"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -501,7 +524,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|iret
 operator|==
@@ -535,7 +558,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -547,7 +570,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|iret
 operator|==
@@ -580,7 +603,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -592,7 +615,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|iret
 operator|==
@@ -625,7 +648,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|strcmp
 argument_list|(
@@ -637,7 +660,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ok1
+name|CHECK
 argument_list|(
 name|iret
 operator|==
@@ -646,7 +669,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|exit_status
-argument_list|()
 return|;
 block|}
 end_function
