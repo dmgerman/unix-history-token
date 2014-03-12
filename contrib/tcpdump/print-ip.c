@@ -2160,6 +2160,12 @@ name|ip
 argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_NET_PFVAR_H
+argument_list|)
 case|case
 name|IPPROTO_PFSYNC
 case|:
@@ -2175,6 +2181,8 @@ name|len
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 if|if
 condition|(

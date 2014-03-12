@@ -71,12 +71,6 @@ directive|include
 file|<net/if_pflog.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/pf_mtag.h>
-end_include
-
 begin_define
 define|#
 directive|define
