@@ -12496,12 +12496,6 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-block|}
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_retval
@@ -12514,6 +12508,12 @@ operator|-
 name|auio
 operator|.
 name|uio_resid
+expr_stmt|;
+block|}
+name|vput
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
