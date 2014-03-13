@@ -4039,7 +4039,8 @@ modifier|*
 name|sg
 decl_stmt|;
 comment|/* Scatter gather memory */
-name|atomic_t
+name|unsigned
+name|long
 modifier|*
 name|ctx_bitmap
 decl_stmt|;

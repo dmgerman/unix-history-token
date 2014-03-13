@@ -550,23 +550,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|atomic_load_acq_long
+name|test_bit
 argument_list|(
+name|TTM_BO_PRIV_FLAG_MOVING
+argument_list|,
 operator|&
 name|bo
 operator|->
 name|priv_flags
 argument_list|)
-operator|&
-operator|(
-literal|1UL
-operator|<<
-name|TTM_BO_PRIV_FLAG_MOVING
-operator|)
-operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 comment|/* 		 * Here, the behavior differs between Linux and FreeBSD. 		 * 		 * On Linux, the wait is interruptible (3rd argument to 		 * ttm_bo_wait). There must be some mechanism to resume 		 * page fault handling, once the signal is processed. 		 * 		 * On FreeBSD, the wait is uninteruptible. This is not a 		 * problem as we can't end up with an unkillable process 		 * here, because the wait will eventually time out. 		 * 		 * An example of this situation is the Xorg process 		 * which uses SIGALRM internally. The signal could 		 * interrupt the wait, causing the page fault to fail 		 * and the process to receive SIGSEGV. 		 */

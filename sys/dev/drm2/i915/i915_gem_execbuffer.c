@@ -248,7 +248,7 @@ name|cd
 operator|->
 name|flips
 operator||=
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|obj

@@ -3123,16 +3123,14 @@ block|}
 else|else
 block|{
 comment|/** 		 * This should help pipeline ordinary buffer moves. 		 * 		 * Hang old buffer memory on a new buffer object, 		 * and leave it to be released when the GPU 		 * operation has completed. 		 */
-name|atomic_set_long
+name|set_bit
 argument_list|(
+name|TTM_BO_PRIV_FLAG_MOVING
+argument_list|,
 operator|&
 name|bo
 operator|->
 name|priv_flags
-argument_list|,
-literal|1UL
-operator|<<
-name|TTM_BO_PRIV_FLAG_MOVING
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

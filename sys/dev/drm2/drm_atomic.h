@@ -4,7 +4,7 @@ comment|/**  * \file drm_atomic.h  * Atomic operations used in the DRM which may
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 2004 Eric Anholt  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  */
+comment|/*-  * Copyright 2004 Eric Anholt  * Copyright 2013 Jung-uk Kim<jkim@FreeBSD.org>  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|uint32_t
+name|u_int
 name|atomic_t
 typedef|;
 end_typedef
@@ -38,11 +38,28 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|BITS_PER_LONG
+value|(sizeof(long) * NBBY)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BITS_TO_LONGS
 parameter_list|(
 name|x
 parameter_list|)
-value|howmany(x, sizeof(long) * NBBY)
+value|howmany(x, BITS_PER_LONG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_read
+parameter_list|(
+name|p
+parameter_list|)
+value|(*(volatile u_int *)(p))
 end_define
 
 begin_define
@@ -54,17 +71,7 @@ name|p
 parameter_list|,
 name|v
 parameter_list|)
-value|atomic_store_rel_int(p, v)
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_read
-parameter_list|(
-name|p
-parameter_list|)
-value|atomic_load_acq_int(p)
+value|do { *(u_int *)(p) = (v); } while (0)
 end_define
 
 begin_define
@@ -226,6 +233,38 @@ end_define
 begin_define
 define|#
 directive|define
+name|__bit_word
+parameter_list|(
+name|b
+parameter_list|)
+value|((b) / BITS_PER_LONG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__bit_mask
+parameter_list|(
+name|b
+parameter_list|)
+value|(1UL<< (b) % BITS_PER_LONG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__bit_addr
+parameter_list|(
+name|p
+parameter_list|,
+name|b
+parameter_list|)
+value|((volatile u_long *)(p) + __bit_word(b))
+end_define
+
+begin_define
+define|#
+directive|define
 name|clear_bit
 parameter_list|(
 name|b
@@ -233,7 +272,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|atomic_clear_int((volatile u_int *)(p) + (b) / 32, 1<< (b) % 32)
+value|atomic_clear_long(__bit_addr(p, b), __bit_mask(b))
 end_define
 
 begin_define
@@ -246,7 +285,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|atomic_set_int((volatile u_int *)(p) + (b) / 32, 1<< (b) % 32)
+value|atomic_set_long(__bit_addr(p, b), __bit_mask(b))
 end_define
 
 begin_define
@@ -259,49 +298,44 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|(atomic_load_acq_int((volatile u_int *)(p) + (b) / 32)& (1<< (b) % 32))
-end_define
-
-begin_define
-define|#
-directive|define
-name|test_and_set_bit
-parameter_list|(
-name|b
-parameter_list|,
-name|p
-parameter_list|)
-define|\
-value|atomic_testandset_int((volatile u_int *)(p) + (b) / 32, b)
+value|((*__bit_addr(p, b)& __bit_mask(b)) != 0)
 end_define
 
 begin_function
 specifier|static
 name|__inline
-name|int
+name|u_long
 name|find_first_zero_bit
 parameter_list|(
-specifier|volatile
-name|void
+specifier|const
+name|u_long
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|u_long
 name|max
 parameter_list|)
 block|{
-specifier|volatile
-name|int
-modifier|*
-name|np
-init|=
-name|p
-decl_stmt|;
-name|int
+name|u_long
 name|i
 decl_stmt|,
 name|n
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|max
+operator|%
+name|BITS_PER_LONG
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"invalid bitmap size %lu"
+operator|,
+name|max
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -312,14 +346,7 @@ name|i
 operator|<
 name|max
 operator|/
-operator|(
-name|NBBY
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|)
+name|BITS_PER_LONG
 condition|;
 name|i
 operator|++
@@ -328,7 +355,7 @@ block|{
 name|n
 operator|=
 operator|~
-name|np
+name|p
 index|[
 name|i
 index|]
@@ -343,14 +370,9 @@ return|return
 operator|(
 name|i
 operator|*
-name|NBBY
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|BITS_PER_LONG
 operator|+
-name|ffs
+name|ffsl
 argument_list|(
 name|n
 argument_list|)
