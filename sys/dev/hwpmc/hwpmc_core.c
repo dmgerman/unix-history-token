@@ -18895,10 +18895,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|core_cpu
 operator|*
-operator|*
+name|core_pcpu
 argument_list|)
 operator|*
 name|maxcpu
