@@ -2996,7 +2996,6 @@ argument_list|(
 expr|struct
 name|cmc_state
 operator|*
-operator|*
 argument_list|)
 argument_list|,
 name|M_MCA
