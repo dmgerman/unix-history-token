@@ -2161,8 +2161,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %8lu"
+literal|" %8ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|IFA_STAT
 argument_list|(
 name|imcasts
@@ -2184,8 +2187,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %8lu"
+literal|" %8ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|IFA_STAT
 argument_list|(
 name|omcasts

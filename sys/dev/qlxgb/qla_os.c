@@ -3201,14 +3201,13 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|if_initbaudrate
-argument_list|(
 name|ifp
-argument_list|,
+operator|->
+name|if_baudrate
+operator|=
 name|IF_Gbps
 argument_list|(
 literal|10
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp

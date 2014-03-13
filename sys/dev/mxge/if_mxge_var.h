@@ -196,30 +196,6 @@ begin_comment
 comment|/* gigabits/sec. */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|if_initbaudrate
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|uintmax_t
-name|baud
-parameter_list|)
-block|{
-name|ifp
-operator|->
-name|if_baudrate
-operator|=
-name|baud
-expr_stmt|;
-block|}
-end_function
-
 begin_endif
 endif|#
 directive|endif

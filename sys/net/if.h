@@ -139,92 +139,92 @@ struct|struct
 name|if_data
 block|{
 comment|/* generic interface information */
-name|u_char
+name|uint8_t
 name|ifi_type
 decl_stmt|;
 comment|/* ethernet, tokenring, etc */
-name|u_char
+name|uint8_t
 name|ifi_physical
 decl_stmt|;
 comment|/* e.g., AUI, Thinnet, 10base-T, etc */
-name|u_char
+name|uint8_t
 name|ifi_addrlen
 decl_stmt|;
 comment|/* media address length */
-name|u_char
+name|uint8_t
 name|ifi_hdrlen
 decl_stmt|;
 comment|/* media header length */
-name|u_char
+name|uint8_t
 name|ifi_link_state
 decl_stmt|;
 comment|/* current link state */
-name|u_char
+name|uint8_t
 name|ifi_vhid
 decl_stmt|;
 comment|/* carp vhid */
-name|u_char
-name|ifi_baudrate_pf
-decl_stmt|;
-comment|/* baudrate power factor */
-name|u_char
+name|uint16_t
 name|ifi_datalen
 decl_stmt|;
 comment|/* length of this data struct */
-name|u_long
+name|uint32_t
 name|ifi_mtu
 decl_stmt|;
 comment|/* maximum transmission unit */
-name|u_long
+name|uint32_t
 name|ifi_metric
 decl_stmt|;
 comment|/* routing metric (external only) */
-name|u_long
+name|uint64_t
 name|ifi_baudrate
 decl_stmt|;
 comment|/* linespeed */
 comment|/* volatile statistics */
-name|u_long
+name|uint64_t
 name|ifi_ipackets
 decl_stmt|;
 comment|/* packets received on interface */
-name|u_long
+name|uint64_t
 name|ifi_ierrors
 decl_stmt|;
 comment|/* input errors on interface */
-name|u_long
+name|uint64_t
 name|ifi_opackets
 decl_stmt|;
 comment|/* packets sent on interface */
-name|u_long
+name|uint64_t
 name|ifi_oerrors
 decl_stmt|;
 comment|/* output errors on interface */
-name|u_long
+name|uint64_t
 name|ifi_collisions
 decl_stmt|;
 comment|/* collisions on csma interfaces */
-name|u_long
+name|uint64_t
 name|ifi_ibytes
 decl_stmt|;
 comment|/* total number of octets received */
-name|u_long
+name|uint64_t
 name|ifi_obytes
 decl_stmt|;
 comment|/* total number of octets sent */
-name|u_long
+name|uint64_t
 name|ifi_imcasts
 decl_stmt|;
 comment|/* packets received via multicast */
-name|u_long
+name|uint64_t
 name|ifi_omcasts
 decl_stmt|;
 comment|/* packets sent via multicast */
-name|u_long
+name|uint64_t
 name|ifi_iqdrops
 decl_stmt|;
-comment|/* dropped on input, this interface */
-name|u_long
+comment|/* dropped on input */
+name|uint64_t
+name|ifi_oqdrops
+decl_stmt|;
+comment|/* dropped on output */
+name|uint64_t
 name|ifi_noproto
 decl_stmt|;
 comment|/* destined for unsupported protocol */
@@ -232,15 +232,48 @@ name|uint64_t
 name|ifi_hwassist
 decl_stmt|;
 comment|/* HW offload capabilities, see IFCAP */
-name|time_t
-name|ifi_epoch
-decl_stmt|;
+comment|/* Unions are here to make sizes MI. */
+union|union
+block|{
 comment|/* uptime at attach or stat reset */
+name|time_t
+name|tt
+decl_stmt|;
+name|uint64_t
+name|ph
+decl_stmt|;
+block|}
+name|__ifi_epoch
+union|;
+define|#
+directive|define
+name|ifi_epoch
+value|__ifi_epoch.tt
+union|union
+block|{
+comment|/* time of last administrative change */
 name|struct
 name|timeval
-name|ifi_lastchange
+name|tv
 decl_stmt|;
-comment|/* time of last administrative change */
+struct|struct
+block|{
+name|uint64_t
+name|ph1
+decl_stmt|;
+name|uint64_t
+name|ph2
+decl_stmt|;
+block|}
+name|ph
+struct|;
+block|}
+name|__ifi_lastchange
+union|;
+define|#
+directive|define
+name|ifi_lastchange
+value|__ifi_lastchange.tv
 block|}
 struct|;
 end_struct

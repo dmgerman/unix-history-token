@@ -1111,8 +1111,11 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"speed %ld, rxl "
+literal|"speed %ju, rxl "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_baudrate

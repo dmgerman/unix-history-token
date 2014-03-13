@@ -1518,7 +1518,7 @@ name|INTR
 argument_list|,
 name|priv
 argument_list|,
-literal|"Default coalesing params for mtu:%ld - "
+literal|"Default coalesing params for mtu:%u - "
 literal|"rx_frames:%d rx_usecs:%d\n"
 argument_list|,
 name|priv
@@ -5126,7 +5126,7 @@ name|DRV
 argument_list|,
 name|priv
 argument_list|,
-literal|"Change MTU called - current:%ld new:%d\n"
+literal|"Change MTU called - current:%u new:%d\n"
 argument_list|,
 name|dev
 operator|->

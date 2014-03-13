@@ -4371,7 +4371,7 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"%s: invalid MTU: %lu(%s)"
+literal|"%s: invalid MTU: %u(%s)"
 literal|" != %d\n"
 argument_list|,
 name|sc
@@ -5465,7 +5465,7 @@ name|sc
 operator|->
 name|sc_ifp
 argument_list|,
-literal|"invalid MTU: %lu(%s) != %lu\n"
+literal|"invalid MTU: %u(%s) != %u\n"
 argument_list|,
 name|ifs
 operator|->

@@ -5165,59 +5165,83 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%7lu %7lu %4lu %4lu %4lu %5lu %10lu %9lu "
+literal|"%7ju %7ju %4ju %4ju %4lu %5lu %10lu %9ju "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_ibytes
 argument_list|,
 comment|/* rx_bytes */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_ipackets
 argument_list|,
 comment|/* rx_packets */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_ierrors
 argument_list|,
 comment|/* rx_errors */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_iqdrops
 argument_list|,
-comment|/* rx_dropped + 					 * rx_missed_errors */
+comment|/* rx_dropped + 							 * rx_missed_errors */
 literal|0UL
 argument_list|,
 comment|/* rx_fifo_errors */
 literal|0UL
 argument_list|,
-comment|/* rx_length_errors + 					 * rx_over_errors + 		    			 * rx_crc_errors + 					 * rx_frame_errors */
+comment|/* rx_length_errors + 							 * rx_over_errors + 							 * rx_crc_errors + 							 * rx_frame_errors */
 literal|0UL
 argument_list|,
 comment|/* rx_compressed */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_imcasts
 argument_list|)
 expr_stmt|;
-comment|/* multicast, XXX-BZ rx only? */
+comment|/* multicast, 							 * XXX-BZ rx only? */
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%8lu %7lu %4lu %4lu %4lu %5lu %7lu %10lu\n"
+literal|"%8ju %7ju %4ju %4lu %4lu %5ju %7lu %10lu\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_obytes
 argument_list|,
 comment|/* tx_bytes */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_opackets
 argument_list|,
 comment|/* tx_packets */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_oerrors
@@ -5229,6 +5253,9 @@ comment|/* tx_dropped */
 literal|0UL
 argument_list|,
 comment|/* tx_fifo_errors */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_collisions
@@ -5236,7 +5263,7 @@ argument_list|,
 comment|/* collisions */
 literal|0UL
 argument_list|,
-comment|/* tx_carrier_errors + 					 * tx_aborted_errors + 					 * tx_window_errors + 					 * tx_heartbeat_errors */
+comment|/* tx_carrier_errors + 							 * tx_aborted_errors + 							 * tx_window_errors + 							 * tx_heartbeat_errors*/
 literal|0UL
 argument_list|)
 expr_stmt|;
