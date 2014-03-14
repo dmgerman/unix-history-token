@@ -208,6 +208,10 @@ expr_stmt|;
 name|bool
 name|envset
 decl_stmt|;
+name|bool
+name|main_only
+decl_stmt|;
+comment|/* Only set in pkg.conf. */
 block|}
 struct|;
 end_struct
@@ -237,6 +241,8 @@ block|,
 name|NULL
 block|,
 name|false
+block|,
+name|false
 block|, 	}
 block|,
 index|[
@@ -255,6 +261,8 @@ block|,
 name|NULL
 block|,
 name|false
+block|,
+name|true
 block|, 	}
 block|,
 index|[
@@ -271,6 +279,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+name|false
 block|,
 name|false
 block|, 	}
@@ -291,6 +301,8 @@ block|,
 name|NULL
 block|,
 name|false
+block|,
+name|true
 block|, 	}
 block|,
 index|[
@@ -307,6 +319,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+name|false
 block|,
 name|false
 block|, 	}
@@ -327,6 +341,8 @@ block|,
 name|NULL
 block|,
 name|false
+block|,
+name|false
 block|, 	}
 block|,
 index|[
@@ -345,6 +361,8 @@ block|,
 name|NULL
 block|,
 name|false
+block|,
+name|true
 block|, 	}
 block|, }
 decl_stmt|;
@@ -2553,6 +2571,23 @@ name|i
 index|]
 operator|.
 name|envset
+condition|)
+continue|continue;
+comment|/* Prevent overriding ABI, ASSUME_ALWAYS_YES, etc. */
+if|if
+condition|(
+name|conftype
+operator|!=
+name|CONFFILE_PKG
+operator|&&
+name|c
+index|[
+name|i
+index|]
+operator|.
+name|main_only
+operator|==
+name|true
 condition|)
 continue|continue;
 switch|switch
