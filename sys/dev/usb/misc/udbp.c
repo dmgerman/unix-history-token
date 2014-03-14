@@ -1133,6 +1133,17 @@ block|,
 block|{
 name|USB_VPI
 argument_list|(
+argument|USB_VENDOR_NETCHIP
+argument_list|,
+argument|USB_PRODUCT_NETCHIP_GADGETZERO
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
 argument|USB_VENDOR_PROLIFIC
 argument_list|,
 argument|USB_PRODUCT_PROLIFIC_PL2301
