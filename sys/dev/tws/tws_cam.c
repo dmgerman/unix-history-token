@@ -7511,8 +7511,6 @@ expr_stmt|;
 name|wakeup_one
 argument_list|(
 name|sc
-operator|->
-name|chan
 argument_list|)
 expr_stmt|;
 block|}
