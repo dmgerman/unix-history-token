@@ -554,6 +554,24 @@ literal|2
 block|, }
 enum|;
 enum|enum
+name|libusb_log_level
+block|{
+name|LIBUSB_LOG_LEVEL_NONE
+init|=
+literal|0
+block|,
+name|LIBUSB_LOG_LEVEL_ERROR
+block|,
+name|LIBUSB_LOG_LEVEL_WARNING
+block|,
+name|LIBUSB_LOG_LEVEL_INFO
+block|,
+name|LIBUSB_LOG_LEVEL_DEBUG
+block|}
+enum|;
+comment|/* XXX */
+comment|/* libusb_set_debug should take parameters from libusb_log_level  * above according to  *   http://libusb.sourceforge.net/api-1.0/group__lib.html  */
+enum|enum
 name|libusb_debug_level
 block|{
 name|LIBUSB_DEBUG_NO
