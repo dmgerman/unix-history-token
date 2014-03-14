@@ -1165,6 +1165,9 @@ name|int
 name|probe_disks
 parameter_list|(
 name|int
+name|devidx
+parameter_list|,
+name|int
 name|load_type
 parameter_list|,
 name|int
@@ -1178,8 +1181,6 @@ name|load_partition
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|open_result
 decl_stmt|,
 name|unit
@@ -1275,7 +1276,7 @@ name|open_result
 operator|=
 name|devsw
 index|[
-name|i
+name|devidx
 index|]
 operator|->
 name|dv_open
@@ -1397,7 +1398,7 @@ name|open_result
 operator|=
 name|devsw
 index|[
-name|i
+name|devidx
 index|]
 operator|->
 name|dv_open
@@ -1484,7 +1485,7 @@ name|open_result
 operator|=
 name|devsw
 index|[
-name|i
+name|devidx
 index|]
 operator|->
 name|dv_open
@@ -1855,6 +1856,8 @@ if|if
 condition|(
 name|probe_disks
 argument_list|(
+name|i
+argument_list|,
 name|load_type
 argument_list|,
 name|load_unit
