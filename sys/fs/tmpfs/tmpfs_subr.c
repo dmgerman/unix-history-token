@@ -5184,6 +5184,7 @@ name|uio
 operator|->
 name|uio_offset
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|TMPFS_DIRCOOKIE_DOTDOT
 case|:
