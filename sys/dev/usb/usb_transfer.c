@@ -1307,6 +1307,9 @@ decl_stmt|;
 name|usb_frcount_t
 name|x
 decl_stmt|;
+name|uint16_t
+name|maxp_old
+decl_stmt|;
 name|uint8_t
 name|type
 decl_stmt|;
@@ -1672,6 +1675,13 @@ operator|->
 name|hc_max_packet_count
 expr_stmt|;
 block|}
+comment|/* store max packet size value before filtering */
+name|maxp_old
+operator|=
+name|xfer
+operator|->
+name|max_packet_size
+expr_stmt|;
 comment|/* filter "wMaxPacketSize" according to HC capabilities */
 if|if
 condition|(
@@ -1878,6 +1888,23 @@ index|]
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Check if the max packet size was outside its allowed range 	 * and clamped to a valid value: 	 */
+if|if
+condition|(
+name|maxp_old
+operator|!=
+name|xfer
+operator|->
+name|max_packet_size
+condition|)
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|maxp_was_clamped
+operator|=
+literal|1
+expr_stmt|;
 comment|/* compute "max_frame_size" */
 name|usbd_update_max_frame_size
 argument_list|(
@@ -12156,6 +12183,32 @@ operator|(
 name|xfer
 operator|->
 name|isoc_time_complete
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The following function returns non-zero if the max packet size  * field was clamped to a valid value. Else it returns zero.  */
+end_comment
+
+begin_function
+name|uint8_t
+name|usbd_xfer_maxp_was_clamped
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|maxp_was_clamped
 operator|)
 return|;
 block|}

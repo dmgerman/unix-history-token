@@ -2734,6 +2734,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint8_t
+name|usbd_xfer_maxp_was_clamped
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|usbd_copy_in
 parameter_list|(
