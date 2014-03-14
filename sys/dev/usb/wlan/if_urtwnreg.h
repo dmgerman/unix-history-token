@@ -5832,6 +5832,10 @@ define|#
 directive|define
 name|URTWN_FLAG_CCK_HIPWR
 value|0x01
+define|#
+directive|define
+name|URTWN_DETACHED
+value|0x02
 name|u_int
 name|chip
 decl_stmt|;
