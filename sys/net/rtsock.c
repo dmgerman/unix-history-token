@@ -445,10 +445,6 @@ name|ip6_count
 decl_stmt|;
 comment|/* attached w/ AF_INET6 */
 name|int
-name|ipx_count
-decl_stmt|;
-comment|/* attached w/ AF_IPX */
-name|int
 name|any_count
 decl_stmt|;
 comment|/* total attached */
@@ -1372,15 +1368,6 @@ name|ip6_count
 operator|++
 expr_stmt|;
 break|break;
-case|case
-name|AF_IPX
-case|:
-name|V_route_cb
-operator|.
-name|ipx_count
-operator|++
-expr_stmt|;
-break|break;
 block|}
 name|V_route_cb
 operator|.
@@ -1552,15 +1539,6 @@ case|:
 name|V_route_cb
 operator|.
 name|ip6_count
-operator|--
-expr_stmt|;
-break|break;
-case|case
-name|AF_IPX
-case|:
-name|V_route_cb
-operator|.
-name|ipx_count
 operator|--
 expr_stmt|;
 break|break;

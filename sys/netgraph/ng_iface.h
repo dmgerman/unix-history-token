@@ -80,13 +80,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NG_IFACE_HOOK_IPX
-value|"ipx"
-end_define
-
-begin_define
-define|#
-directive|define
 name|NG_IFACE_HOOK_ATM
 value|"atm"
 end_define

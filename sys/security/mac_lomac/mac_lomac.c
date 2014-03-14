@@ -7816,12 +7816,6 @@ case|:
 case|case
 name|PRIV_NETINET_REUSEPORT
 case|:
-case|case
-name|PRIV_NETIPX_RESERVEDPORT
-case|:
-case|case
-name|PRIV_NETIPX_RAW
-case|:
 break|break;
 comment|/* 	 * All remaining system privileges are allow only if the process 	 * holds privilege with respect to the LOMAC policy. 	 */
 default|default:

@@ -64,16 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_var.h>
-end_include
-
-begin_comment
-comment|/* XXXGL: ipx? */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -87,18 +77,6 @@ begin_include
 include|#
 directive|include
 file|<netatalk/at.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipx/ipx.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipx/ipx_if.h>
 end_include
 
 begin_include

@@ -419,12 +419,6 @@ name|PF_APPLETALK
 block|}
 block|,
 block|{
-literal|"ipx"
-block|,
-name|PF_IPX
-block|}
-block|,
-block|{
 literal|"atm"
 block|,
 name|PF_ATM
@@ -1533,7 +1527,7 @@ directive|if
 literal|0
 block|case PF_APPLETALK:
 comment|/* XXX implement these someday */
-block|case PF_INET6: 	case PF_IPX:
+block|case PF_INET6:
 endif|#
 directive|endif
 default|default:
@@ -1911,7 +1905,7 @@ directive|if
 literal|0
 block|case PF_APPLETALK:
 comment|/* XXX implement these someday */
-block|case PF_INET6: 	case PF_IPX:
+block|case PF_INET6:
 endif|#
 directive|endif
 default|default:

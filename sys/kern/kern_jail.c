@@ -18380,13 +18380,6 @@ case|:
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 		 * IPX/SPX privileges. 		 */
-case|case
-name|PRIV_NETIPX_RESERVEDPORT
-case|:
-case|case
-name|PRIV_NETIPX_RAW
-case|:
 comment|/* 		 * NCP privileges. 		 */
 case|case
 name|PRIV_NETNCP

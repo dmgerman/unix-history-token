@@ -96,15 +96,8 @@ begin_comment
 comment|/* same as AF_LINK */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETISR_IPX
-value|8
-end_define
-
 begin_comment
-comment|/* same as AF_IPX */
+comment|/*			8		   was IPX */
 end_comment
 
 begin_define
