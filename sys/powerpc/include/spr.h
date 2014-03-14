@@ -2136,6 +2136,239 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_970MMCR0
+value|0x31b
+end_define
+
+begin_comment
+comment|/* ... Monitor Mode Control Register 0 (PPC 970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR0_PMC1SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 8)
+end_define
+
+begin_comment
+comment|/* PMC1 selector (970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR0_PMC2SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 1)
+end_define
+
+begin_comment
+comment|/* PMC2 selector (970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR1
+value|0x31e
+end_define
+
+begin_comment
+comment|/* ... Monitor Mode Control Register 1 (PPC 970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR1_PMC3SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x1f)<< 27)
+end_define
+
+begin_comment
+comment|/* PMC 3 selector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR1_PMC4SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x1f)<< 22)
+end_define
+
+begin_comment
+comment|/* PMC 4 selector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR1_PMC5SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x1f)<< 17)
+end_define
+
+begin_comment
+comment|/* PMC 5 selector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR1_PMC6SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x1f)<< 12)
+end_define
+
+begin_comment
+comment|/* PMC 6 selector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR1_PMC7SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x1f)<< 7)
+end_define
+
+begin_comment
+comment|/* PMC 7 selector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR1_PMC8SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x1f)<< 2)
+end_define
+
+begin_comment
+comment|/* PMC 8 selector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCRA
+value|0x312
+end_define
+
+begin_comment
+comment|/* ... Monitor Mode Control Register 2 (PPC 970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC1
+value|0x313
+end_define
+
+begin_comment
+comment|/* ... PMC 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC2
+value|0x314
+end_define
+
+begin_comment
+comment|/* ... PMC 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC3
+value|0x315
+end_define
+
+begin_comment
+comment|/* ... PMC 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC4
+value|0x316
+end_define
+
+begin_comment
+comment|/* ... PMC 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC5
+value|0x317
+end_define
+
+begin_comment
+comment|/* ... PMC 5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC6
+value|0x318
+end_define
+
+begin_comment
+comment|/* ... PMC 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC7
+value|0x319
+end_define
+
+begin_comment
+comment|/* ... PMC 7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC8
+value|0x31a
+end_define
+
+begin_comment
+comment|/* ... PMC 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_M_TWB
 value|0x31c
 end_define
@@ -2455,127 +2688,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPR_970MMCR0
-value|0x31b
-end_define
-
-begin_comment
-comment|/* ... Monitor Mode Control Register 0 (PPC 970) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970MMCR1
-value|0x31e
-end_define
-
-begin_comment
-comment|/* ... Monitor Mode Control Register 1 (PPC 970) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970MMCRA
-value|0x312
-end_define
-
-begin_comment
-comment|/* ... Monitor Mode Control Register 2 (PPC 970) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970PMC1
-value|0x313
-end_define
-
-begin_comment
-comment|/* ... PMC 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970PMC2
-value|0x314
-end_define
-
-begin_comment
-comment|/* ... PMC 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970PMC3
-value|0x315
-end_define
-
-begin_comment
-comment|/* ... PMC 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970PMC4
-value|0x316
-end_define
-
-begin_comment
-comment|/* ... PMC 4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970PMC5
-value|0x317
-end_define
-
-begin_comment
-comment|/* ... PMC 5 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970PMC6
-value|0x318
-end_define
-
-begin_comment
-comment|/* ... PMC 6 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970PMC7
-value|0x319
-end_define
-
-begin_comment
-comment|/* ... PMC 7 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970PMC8
-value|0x31a
-end_define
-
-begin_comment
-comment|/* ... PMC 8 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SPR_MMCR0_FC
 value|0x80000000
 end_define
@@ -2778,34 +2890,6 @@ end_define
 
 begin_comment
 comment|/* PMC2 selector */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970MMCR0_PMC1SEL
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< 8)
-end_define
-
-begin_comment
-comment|/* PMC1 selector (970) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_970MMCR0_PMC2SEL
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< 1)
-end_define
-
-begin_comment
-comment|/* PMC2 selector (970) */
 end_comment
 
 begin_define
