@@ -1984,6 +1984,21 @@ comment|/* Administer 802.11. */
 end_comment
 
 begin_comment
+comment|/*  * Placeholder for AppleTalk privileges, not supported anymore.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PRIV_NETATALK_RESERVEDPORT
+value|450
+end_define
+
+begin_comment
+comment|/* Bind low port number. */
+end_comment
+
+begin_comment
 comment|/*  * ATM privileges.  */
 end_comment
 
@@ -2245,6 +2260,32 @@ end_define
 
 begin_comment
 comment|/* Allow bind to any address. */
+end_comment
+
+begin_comment
+comment|/*  * Placeholders for IPX/SPX privileges, not supported any more.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PRIV_NETIPX_RESERVEDPORT
+value|520
+end_define
+
+begin_comment
+comment|/* Bind low port number. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PRIV_NETIPX_RAW
+value|521
+end_define
+
+begin_comment
+comment|/* Open netipx raw socket. */
 end_comment
 
 begin_comment
