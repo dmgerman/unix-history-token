@@ -732,6 +732,14 @@ define|#
 directive|define
 name|ATA_PSS_MULTLS
 value|0x2000
+define|#
+directive|define
+name|ATA_PSS_VALID_MASK
+value|0xC000
+define|#
+directive|define
+name|ATA_PSS_VALID_VALUE
+value|0x4000
 comment|/*107*/
 name|u_int16_t
 name|isd
