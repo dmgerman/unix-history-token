@@ -5091,7 +5091,7 @@ modifier|*
 name|uio
 parameter_list|,
 name|int
-name|cnt
+name|maxcookies
 parameter_list|,
 name|u_long
 modifier|*
@@ -5165,9 +5165,9 @@ name|TMPFS_DIRCOOKIE_DOTDOT
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|cookies
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cookies
 index|[
@@ -5228,9 +5228,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|cookies
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cookies
 index|[
@@ -5296,9 +5296,9 @@ operator|)
 return|;
 if|if
 condition|(
-name|cnt
+name|cookies
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|off
 operator|=
@@ -5565,9 +5565,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|cookies
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|off
@@ -5582,7 +5582,7 @@ argument_list|(
 operator|*
 name|ncookies
 operator|<
-name|cnt
+name|maxcookies
 argument_list|)
 expr_stmt|;
 name|cookies
@@ -5616,12 +5616,12 @@ operator|!=
 name|NULL
 condition|)
 do|;
-comment|/* Update the offset and cache. */
+comment|/* Skip setting off when using cookies as it is already done above. */
 if|if
 condition|(
-name|cnt
+name|cookies
 operator|==
-literal|0
+name|NULL
 condition|)
 name|off
 operator|=
@@ -5630,6 +5630,7 @@ argument_list|(
 name|de
 argument_list|)
 expr_stmt|;
+comment|/* Update the offset and cache. */
 name|uio
 operator|->
 name|uio_offset
