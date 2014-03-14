@@ -55,56 +55,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NETISR_AARP
-value|4
-end_define
-
-begin_comment
-comment|/* Appletalk ARP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETISR_ATALK2
-value|5
-end_define
-
-begin_comment
-comment|/* Appletalk phase 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETISR_ATALK1
-value|6
-end_define
-
-begin_comment
-comment|/* Appletalk phase 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NETISR_ARP
-value|7
+value|4
 end_define
 
 begin_comment
 comment|/* same as AF_LINK */
 end_comment
 
-begin_comment
-comment|/*			8		   was IPX */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|NETISR_ETHER
-value|9
+value|5
 end_define
 
 begin_comment
@@ -115,21 +78,21 @@ begin_define
 define|#
 directive|define
 name|NETISR_IPV6
-value|10
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|NETISR_NATM
-value|11
+value|7
 end_define
 
 begin_define
 define|#
 directive|define
 name|NETISR_EPAIR
-value|12
+value|8
 end_define
 
 begin_comment

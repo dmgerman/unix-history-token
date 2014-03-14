@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_atalk.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -4723,19 +4717,6 @@ case|:
 name|isr
 operator|=
 name|NETISR_IPV6
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|NETATALK
-case|case
-name|AF_APPLETALK
-case|:
-name|isr
-operator|=
-name|NETISR_ATALK2
 expr_stmt|;
 break|break;
 endif|#

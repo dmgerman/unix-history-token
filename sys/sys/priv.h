@@ -1984,21 +1984,6 @@ comment|/* Administer 802.11. */
 end_comment
 
 begin_comment
-comment|/*  * AppleTalk privileges.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRIV_NETATALK_RESERVEDPORT
-value|450
-end_define
-
-begin_comment
-comment|/* Bind low port number. */
-end_comment
-
-begin_comment
 comment|/*  * ATM privileges.  */
 end_comment
 

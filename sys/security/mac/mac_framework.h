@@ -1412,23 +1412,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_netatalk_aarp_send
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|mac_netinet_arp_send
 parameter_list|(
 name|struct

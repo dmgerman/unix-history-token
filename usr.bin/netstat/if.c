@@ -1523,38 +1523,6 @@ endif|#
 directive|endif
 comment|/* INET6 */
 case|case
-name|AF_APPLETALK
-case|:
-name|printf
-argument_list|(
-literal|"atalk:%-12.12s "
-argument_list|,
-name|atalk_print
-argument_list|(
-name|ifa
-operator|->
-name|ifa_addr
-argument_list|,
-literal|0x10
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%-11.11s  "
-argument_list|,
-name|atalk_print
-argument_list|(
-name|ifa
-operator|->
-name|ifa_addr
-argument_list|,
-literal|0x0b
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|AF_LINK
 case|:
 block|{

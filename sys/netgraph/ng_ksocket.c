@@ -125,12 +125,6 @@ directive|include
 file|<netinet/ip.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netatalk/at.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -413,12 +407,6 @@ name|PF_INET6
 block|}
 block|,
 block|{
-literal|"atalk"
-block|,
-name|PF_APPLETALK
-block|}
-block|,
-block|{
 literal|"atm"
 block|,
 name|PF_ATM
@@ -602,22 +590,6 @@ block|,
 name|IPPROTO_PIM
 block|,
 name|PF_INET
-block|}
-block|,
-block|{
-literal|"ddp"
-block|,
-name|ATPROTO_DDP
-block|,
-name|PF_APPLETALK
-block|}
-block|,
-block|{
-literal|"aarp"
-block|,
-name|ATPROTO_AARP
-block|,
-name|PF_APPLETALK
 block|}
 block|,
 block|{
@@ -1525,9 +1497,8 @@ block|}
 if|#
 directive|if
 literal|0
-block|case PF_APPLETALK:
-comment|/* XXX implement these someday */
 block|case PF_INET6:
+comment|/* XXX implement this someday */
 endif|#
 directive|endif
 default|default:
@@ -1903,9 +1874,8 @@ block|}
 if|#
 directive|if
 literal|0
-block|case PF_APPLETALK:
-comment|/* XXX implement these someday */
 block|case PF_INET6:
+comment|/* XXX implement this someday */
 endif|#
 directive|endif
 default|default:

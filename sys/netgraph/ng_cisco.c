@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatalk/at.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netgraph/ng_message.h>
 end_include
 

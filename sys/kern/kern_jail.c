@@ -18302,10 +18302,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 		 * AppleTalk privileges. 		 */
-case|case
-name|PRIV_NETATALK_RESERVEDPORT
-case|:
 comment|/* 		 * ATM privileges. 		 */
 case|case
 name|PRIV_NETATM_CFG

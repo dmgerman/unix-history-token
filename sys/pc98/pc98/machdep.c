@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_atalk.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_atpic.h"
 end_include
 
