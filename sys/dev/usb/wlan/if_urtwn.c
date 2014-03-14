@@ -11589,6 +11589,23 @@ operator|~
 literal|0x08
 argument_list|)
 expr_stmt|;
+comment|/* Reset the FWDL checksum. */
+name|urtwn_write_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92C_MCUFWDL
+argument_list|,
+name|urtwn_read_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92C_MCUFWDL
+argument_list|)
+operator||
+name|R92C_MCUFWDL_CHKSUM_RPT
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|page
