@@ -294,10 +294,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|efifb
-operator|->
-name|fb_present
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
