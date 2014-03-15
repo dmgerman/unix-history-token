@@ -247,6 +247,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|bool
+name|intr_raised
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -588,6 +591,15 @@ literal|"vatpic_notify_intr not locked"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vatpic
+operator|->
+name|intr_raised
+operator|==
+name|true
+condition|)
+return|return;
 comment|/* XXX master only */
 name|atpic
 operator|=
@@ -636,6 +648,7 @@ operator|->
 name|service
 argument_list|)
 expr_stmt|;
+comment|/* 		 * PIC interrupts are routed to both the Local APIC 		 * and the I/O APIC to support operation in 1 of 3 		 * modes. 		 * 		 * 1. Legacy PIC Mode: the PIC effectively bypasses 		 * all APIC components.  In mode '1' the local APIC is 		 * disabled and LINT0 is reconfigured as INTR to 		 * deliver the PIC interrupt directly to the CPU. 		 * 		 * 2. Virtual Wire Mode: the APIC is treated as a 		 * virtual wire which delivers interrupts from the PIC 		 * to the CPU.  In mode '2' LINT0 is programmed as 		 * ExtINT to indicate that the PIC is the source of 		 * the interrupt. 		 * 		 * 3. Symmetric I/O Mode: PIC interrupts are fielded 		 * by the I/O APIC and delivered to the appropriate 		 * CPU.  In mode '3' the I/O APIC input 0 is 		 * programmed as ExtINT to indicate that the PIC is 		 * the source of the interrupt. 		 */
 name|lapic_set_local_intr
 argument_list|(
 name|vatpic
@@ -656,6 +669,12 @@ name|vm
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|vatpic
+operator|->
+name|intr_raised
+operator|=
+name|true
 expr_stmt|;
 block|}
 else|else
@@ -1753,7 +1772,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|vatpic_pending_intr
 parameter_list|(
 name|struct
@@ -1834,11 +1853,6 @@ argument_list|(
 name|vatpic
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
@@ -1890,6 +1904,12 @@ name|VATPIC_LOCK
 argument_list|(
 name|vatpic
 argument_list|)
+expr_stmt|;
+name|vatpic
+operator|->
+name|intr_raised
+operator|=
+name|false
 expr_stmt|;
 name|pin
 operator|=
