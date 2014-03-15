@@ -600,6 +600,12 @@ name|ISO88025_BPF_SUPPORTED
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
 name|void
 name|iso88025_ifattach
@@ -688,6 +694,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_NET_ISO88025_H_ */
+end_comment
 
 end_unit
 
