@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -214,6 +220,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_rss.h>
 end_include
 
 begin_include
@@ -8131,6 +8143,12 @@ name|defined
 argument_list|(
 name|PCBGROUP
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|RSS
+argument_list|)
 name|struct
 name|inpcbgroup
 modifier|*
@@ -8179,11 +8197,18 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * When not using RSS, use connection groups in preference to the 	 * reservation table when looking up 4-tuples.  When using RSS, just 	 * use the reservation table, due to the cost of the Toeplitz hash 	 * in software. 	 * 	 * XXXRW: This policy belongs in the pcbgroup code, as in principle 	 * we could be doing RSS with a non-Toeplitz hash that is affordable 	 * in software. 	 */
 if|#
 directive|if
 name|defined
 argument_list|(
 name|PCBGROUP
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|RSS
 argument_list|)
 if|if
 condition|(
@@ -8349,12 +8374,23 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PCBGROUP
+comment|/* 	 * If we can use a hardware-generated hash to look up the connection 	 * group, use that connection group to find the inpcb.  Otherwise 	 * fall back on a software hash -- or the reservation table if we're 	 * using RSS. 	 * 	 * XXXRW: As above, that policy belongs in the pcbgroup code. 	 */
 if|if
 condition|(
 name|in_pcbgroup_enabled
 argument_list|(
 name|pcbinfo
 argument_list|)
+operator|&&
+operator|!
+operator|(
+name|M_HASHTYPE_TEST
+argument_list|(
+name|m
+argument_list|,
+name|M_HASHTYPE_NONE
+argument_list|)
+operator|)
 condition|)
 block|{
 name|pcbgroup
@@ -8403,6 +8439,9 @@ name|ifp
 argument_list|)
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|RSS
 name|pcbgroup
 operator|=
 name|in_pcbgroup_bytuple
@@ -8440,6 +8479,8 @@ name|ifp
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif

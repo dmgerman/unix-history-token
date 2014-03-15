@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -225,6 +231,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/if_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_rss.h>
 end_include
 
 begin_include
@@ -2738,7 +2750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Ethernet input dispatch; by default, direct dispatch here regardless of  * global configuration.  */
+comment|/*  * Ethernet input dispatch; by default, direct dispatch here regardless of  * global configuration.  However, if RSS is enabled, hook up RSS affinity  * so that when deferred or hybrid dispatch is enabled, we can redistribute  * load based on RSS.  *  * XXXRW: Would be nice if the ifnet passed up a flag indicating whether or  * not it had already done work distribution via multi-queue.  Then we could  * direct dispatch in the event load balancing was already complete and  * handle the case of interfaces with different capabilities better.  *  * XXXRW: Sort of want an M_DISTRIBUTED flag to avoid multiple distributions  * at multiple layers?  *  * XXXRW: For now, enable all this only if RSS is compiled in, although it  * works fine without RSS.  Need to characterise the performance overhead  * of the detour through the netisr code in the event the result is always  * direct dispatch.  */
 end_comment
 
 begin_function
@@ -2788,6 +2800,26 @@ name|nh_proto
 operator|=
 name|NETISR_ETHER
 block|,
+ifdef|#
+directive|ifdef
+name|RSS
+operator|.
+name|nh_policy
+operator|=
+name|NETISR_POLICY_CPU
+block|,
+operator|.
+name|nh_dispatch
+operator|=
+name|NETISR_DISPATCH_DIRECT
+block|,
+operator|.
+name|nh_m2cpuid
+operator|=
+name|rss_m2cpuid
+block|,
+else|#
+directive|else
 operator|.
 name|nh_policy
 operator|=
@@ -2797,7 +2829,10 @@ operator|.
 name|nh_dispatch
 operator|=
 name|NETISR_DISPATCH_DIRECT
-block|, }
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 

@@ -2262,6 +2262,17 @@ begin_comment
 comment|/* Allow bind to any address. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_NETINET_HASHKEY
+value|507
+end_define
+
+begin_comment
+comment|/* Get and set hash keys for IPv4/6. */
+end_comment
+
 begin_comment
 comment|/*  * Placeholders for IPX/SPX privileges, not supported any more.  */
 end_comment
