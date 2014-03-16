@@ -1773,14 +1773,11 @@ case|:
 case|case
 name|AR71XX_SOC_AR9344
 case|:
-comment|/* Ack/clear the irq on status register for AR724x */
+comment|/* ACK/clear the given interrupt */
 name|ATH_WRITE_REG
 argument_list|(
 name|AR71XX_MISC_INTR_STATUS
 argument_list|,
-name|reg
-operator|&
-operator|~
 operator|(
 literal|1
 operator|<<
@@ -1871,6 +1868,18 @@ condition|(
 name|irq
 operator|!=
 literal|0
+operator|&&
+name|irq
+operator|!=
+literal|8
+operator|&&
+name|irq
+operator|!=
+literal|9
+operator|&&
+name|irq
+operator|!=
+literal|10
 condition|)
 name|printf
 argument_list|(
