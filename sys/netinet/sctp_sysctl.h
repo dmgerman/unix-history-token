@@ -231,6 +231,9 @@ decl_stmt|;
 name|uint32_t
 name|sctp_use_dccc_ecn
 decl_stmt|;
+name|uint32_t
+name|sctp_diag_info_code
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -2470,6 +2473,34 @@ define|#
 directive|define
 name|SCTPCTL_BLACKHOLE_DEFAULT
 value|SCTPCTL_BLACKHOLE_MIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DIAG_INFO_CODE_DESC
+value|"Diagnostic information error cause code"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DIAG_INFO_CODE_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DIAG_INFO_CODE_MAX
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DIAG_INFO_CODE_DEFAULT
+value|0
 end_define
 
 begin_if
