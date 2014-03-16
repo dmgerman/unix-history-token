@@ -72,67 +72,24 @@ define|#
 directive|define
 name|SHA512_DIGEST_STRING_LENGTH
 value|(SHA512_DIGEST_LENGTH * 2 + 1)
-comment|/*** SHA-256/384/512 Context Structures *******************************/
-comment|/* NOTE: If your architecture does not define either u_intXX_t types or  * uintXX_t (from inttypes.h), you may need to define things by hand  * for your system:  */
-if|#
-directive|if
-literal|0
-block|typedef unsigned char u_int8_t;
-comment|/* 1-byte  (8-bits)  */
-block|typedef unsigned int u_int32_t;
-comment|/* 4-bytes (32-bits) */
-block|typedef unsigned long long u_int64_t;
-comment|/* 8-bytes (64-bits) */
-endif|#
-directive|endif
-comment|/*  * Most BSD systems already define u_intXX_t types, as does Linux.  * Some systems, however, like Compaq's Tru64 Unix instead can use  * uintXX_t types defined by very recent ANSI C standards and included  * in the file:  *  *   #include<inttypes.h>  *  * If you choose to use<inttypes.h> then please define:   *  *   #define SHA2_USE_INTTYPES_H  *  * Or on the command line during compile:  *  *   cc -DSHA2_USE_INTTYPES_H ...  */
-if|#
-directive|if
-literal|0
-comment|/*def SHA2_USE_INTTYPES_H*/
-block|typedef struct _SHA256_CTX { 	uint32_t	state[8]; 	uint64_t	bitcount; 	uint8_t	buffer[SHA256_BLOCK_LENGTH]; } SHA256_CTX; typedef struct _SHA512_CTX { 	uint64_t	state[8]; 	uint64_t	bitcount[2]; 	uint8_t	buffer[SHA512_BLOCK_LENGTH]; } SHA512_CTX;
-else|#
-directive|else
-comment|/* SHA2_USE_INTTYPES_H */
-typedef|typedef
-struct|struct
-name|_SHA256_CTX
-block|{
-name|u_int32_t
-name|state
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|u_int64_t
-name|bitcount
-decl_stmt|;
-name|u_int8_t
-name|buffer
-index|[
-name|SHA256_BLOCK_LENGTH
-index|]
-decl_stmt|;
-block|}
-name|SHA256_CTX
-typedef|;
+comment|/*** SHA-384/512 Context Structures *******************************/
 typedef|typedef
 struct|struct
 name|_SHA512_CTX
 block|{
-name|u_int64_t
+name|uint64_t
 name|state
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|bitcount
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|buffer
 index|[
 name|SHA512_BLOCK_LENGTH
@@ -141,75 +98,11 @@ decl_stmt|;
 block|}
 name|SHA512_CTX
 typedef|;
-endif|#
-directive|endif
-comment|/* SHA2_USE_INTTYPES_H */
 typedef|typedef
 name|SHA512_CTX
 name|SHA384_CTX
 typedef|;
-comment|/*** SHA-256/384/512 Function Prototypes ******************************/
-name|void
-name|SHA256_Init
-parameter_list|(
-name|SHA256_CTX
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-name|SHA256_Update
-parameter_list|(
-name|SHA256_CTX
-modifier|*
-parameter_list|,
-specifier|const
-name|u_int8_t
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-name|void
-name|SHA256_Final
-parameter_list|(
-name|u_int8_t
-index|[
-name|SHA256_DIGEST_LENGTH
-index|]
-parameter_list|,
-name|SHA256_CTX
-modifier|*
-parameter_list|)
-function_decl|;
-name|char
-modifier|*
-name|SHA256_End
-parameter_list|(
-name|SHA256_CTX
-modifier|*
-parameter_list|,
-name|char
-index|[
-name|SHA256_DIGEST_STRING_LENGTH
-index|]
-parameter_list|)
-function_decl|;
-name|char
-modifier|*
-name|SHA256_Data
-parameter_list|(
-specifier|const
-name|u_int8_t
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-name|char
-index|[
-name|SHA256_DIGEST_STRING_LENGTH
-index|]
-parameter_list|)
-function_decl|;
+comment|/*** SHA-384/512 Function Prototypes ******************************/
 name|void
 name|SHA384_Init
 parameter_list|(
@@ -346,6 +239,12 @@ end_endif
 begin_comment
 comment|/* __cplusplus */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sha256.h"
+end_include
 
 begin_endif
 endif|#
