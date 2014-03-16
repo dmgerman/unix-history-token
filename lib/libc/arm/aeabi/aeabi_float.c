@@ -201,7 +201,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Depending on the target these will:  *  On armv6 with a vfp call the above function, or  *  Call the softfloat cunstion in the 3rd argument.  */
+comment|/*  * Depending on the target these will:  *  On armv6 with a vfp call the above function, or  *  Call the softfloat function in the 3rd argument.  */
 end_comment
 
 begin_decl_stmt
