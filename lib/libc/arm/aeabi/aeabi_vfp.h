@@ -202,8 +202,6 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|1
-operator|&&
 name|defined
 argument_list|(
 name|__FreeBSD_ARCH_armv6__
