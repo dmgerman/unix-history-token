@@ -1910,23 +1910,23 @@ comment|/* Faultstatus          */
 name|cpufunc_faultaddress
 block|,
 comment|/* Faultaddress         */
-comment|/* TLB functions */
+comment|/*  	 * TLB functions.  ARMv7 does all TLB ops based on a unified TLB model 	 * whether the hardware implements separate I+D or not, so we use the 	 * same 'ID' functions for all 3 variations. 	 */
 name|armv7_tlb_flushID
 block|,
 comment|/* tlb_flushID          */
 name|armv7_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE       */
-name|arm11_tlb_flushI
+name|armv7_tlb_flushID
 block|,
 comment|/* tlb_flushI           */
-name|arm11_tlb_flushI_SE
+name|armv7_tlb_flushID_SE
 block|,
 comment|/* tlb_flushI_SE        */
-name|arm11_tlb_flushD
+name|armv7_tlb_flushID
 block|,
 comment|/* tlb_flushD           */
-name|arm11_tlb_flushD_SE
+name|armv7_tlb_flushID_SE
 block|,
 comment|/* tlb_flushD_SE        */
 comment|/* Cache operations */
