@@ -1416,22 +1416,22 @@ argument_list|()
 expr_stmt|;
 do|do
 block|{
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_INTR
 argument_list|,
-literal|"INTR: ITC=%u, XIV=%u"
-argument_list|,
-operator|(
-name|u_int
-operator|)
-name|tf
-operator|->
-name|tf_special
-operator|.
-name|ifa
+literal|"INTR: XIV=%u, #%u: frame=%p"
 argument_list|,
 name|xiv
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cnt
+operator|.
+name|v_intr
+argument_list|)
+argument_list|,
+name|tf
 argument_list|)
 expr_stmt|;
 if|if
