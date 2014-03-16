@@ -15,6 +15,37 @@ directive|include
 file|"fenv.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_ARCH_armv6__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__ARM_ARCH
+argument_list|)
+operator|&&
+name|__ARM_ARCH
+operator|>=
+literal|6
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FENV_ARMv6
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* When SOFTFP_ABI is defined we are using the softfp ABI. */
 end_comment
@@ -85,6 +116,12 @@ operator|!
 name|defined
 argument_list|(
 name|SOFTFP_ABI
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|FENV_ARMv6
 argument_list|)
 end_if
 
