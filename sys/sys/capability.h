@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2014 Robert N. M. Watson  * All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*  * Historically, the key userspace and kernel Capsicum definitions were found  * in this file.  However, it conflicted with POSIX.1e's capability.h, so has  * been renamed capability.h.  The file remains for backwards compatibility  * reasons as a nested include.  */
+comment|/*  * Historically, the key userspace and kernel Capsicum definitions were found  * in this file.  However, it conflicted with POSIX.1e's capability.h, so has  * been renamed capsicum.h.  The file remains for backwards compatibility  * reasons as a nested include.  */
 end_comment
 
 begin_ifndef
