@@ -8769,16 +8769,11 @@ expr_stmt|;
 comment|/* Expand the quad return into two parts for eax and edx */
 name|pos
 operator|=
-operator|*
-operator|(
-name|off_t
-operator|*
-operator|)
-operator|(
 name|td
 operator|->
-name|td_retval
-operator|)
+name|td_uretoff
+operator|.
+name|tdu_off
 expr_stmt|;
 name|td
 operator|->
