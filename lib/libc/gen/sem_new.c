@@ -1758,6 +1758,9 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
+name|_pthread_testcancel
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
