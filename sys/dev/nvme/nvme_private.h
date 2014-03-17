@@ -1498,6 +1498,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|nvme_ctrlr_shutdown
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|nvme_ctrlr_hw_reset
 parameter_list|(
