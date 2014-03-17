@@ -9234,7 +9234,7 @@ block|{
 name|int
 name|result
 decl_stmt|;
-comment|/* 	 * XXX Check of someone is calling us from a critical section: 	 */
+comment|/* 	 * XXX Check if someone is calling us from a critical section: 	 */
 if|if
 condition|(
 name|curthread
