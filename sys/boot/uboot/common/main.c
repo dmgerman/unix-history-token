@@ -592,7 +592,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%s:\t %lldMB\n"
+literal|"%s: %lldMB\n"
 argument_list|,
 name|ub_mem_type
 argument_list|(
@@ -832,39 +832,11 @@ name|char
 modifier|*
 name|endp
 decl_stmt|;
-name|devstr
-operator|=
-name|ub_env_get
-argument_list|(
-literal|"loaderdev"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|devstr
-operator|==
-name|NULL
-condition|)
-name|devstr
-operator|=
-literal|""
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"U-Boot setting: loaderdev=%s\n"
-argument_list|,
-name|devstr
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|get_device_type
-argument_list|(
-name|devstr
-argument_list|,
+operator|*
 name|type
-argument_list|)
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 operator|*
 name|unit
@@ -882,6 +854,43 @@ name|partition
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|devstr
+operator|=
+name|ub_env_get
+argument_list|(
+literal|"loaderdev"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|devstr
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"U-Boot env: loaderdev not set, will probe all devices.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|printf
+argument_list|(
+literal|"U-Boot env: loaderdev='%s'\n"
+argument_list|,
+name|devstr
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|get_device_type
+argument_list|(
+name|devstr
+argument_list|,
+name|type
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Empty device string, or unknown device name, or a bare, known  	 * device name.  	 */
 if|if
@@ -1161,6 +1170,102 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|print_disk_probe_info
+parameter_list|()
+block|{
+name|char
+name|slice
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|char
+name|partition
+index|[
+literal|32
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|currdev
+operator|.
+name|d_disk
+operator|.
+name|slice
+operator|>
+literal|0
+condition|)
+name|sprintf
+argument_list|(
+name|slice
+argument_list|,
+literal|"%d"
+argument_list|,
+name|currdev
+operator|.
+name|d_disk
+operator|.
+name|slice
+argument_list|)
+expr_stmt|;
+else|else
+name|strcpy
+argument_list|(
+name|slice
+argument_list|,
+literal|"<auto>"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|currdev
+operator|.
+name|d_disk
+operator|.
+name|partition
+operator|>
+literal|0
+condition|)
+name|sprintf
+argument_list|(
+name|partition
+argument_list|,
+literal|"%d"
+argument_list|,
+name|currdev
+operator|.
+name|d_disk
+operator|.
+name|partition
+argument_list|)
+expr_stmt|;
+else|else
+name|strcpy
+argument_list|(
+name|partition
+argument_list|,
+literal|"<auto>"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  Checking unit=%d slice=%s partition=%s..."
+argument_list|,
+name|currdev
+operator|.
+name|d_unit
+argument_list|,
+name|slice
+argument_list|,
+name|partition
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|probe_disks
 parameter_list|(
@@ -1227,7 +1332,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Probing all storage devices...\n"
+literal|"  Probing all disk devices...\n"
 argument_list|)
 expr_stmt|;
 comment|/* Try each disk in succession until one works.  */
@@ -1251,26 +1356,8 @@ name|d_unit
 operator|++
 control|)
 block|{
-name|printf
-argument_list|(
-literal|"Checking unit=%d slice=%d partition=%d..."
-argument_list|,
-name|currdev
-operator|.
-name|d_unit
-argument_list|,
-name|currdev
-operator|.
-name|d_disk
-operator|.
-name|slice
-argument_list|,
-name|currdev
-operator|.
-name|d_disk
-operator|.
-name|partition
-argument_list|)
+name|print_disk_probe_info
+argument_list|()
 expr_stmt|;
 name|open_result
 operator|=
@@ -1329,7 +1416,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Probing all %s devices...\n"
+literal|"  Probing all %s devices...\n"
 argument_list|,
 name|device_typename
 argument_list|(
@@ -1373,26 +1460,8 @@ operator|-
 literal|1
 condition|)
 break|break;
-name|printf
-argument_list|(
-literal|"Checking unit=%d slice=%d partition=%d..."
-argument_list|,
-name|currdev
-operator|.
-name|d_unit
-argument_list|,
-name|currdev
-operator|.
-name|d_disk
-operator|.
-name|slice
-argument_list|,
-name|currdev
-operator|.
-name|d_disk
-operator|.
-name|partition
-argument_list|)
+name|print_disk_probe_info
+argument_list|()
 expr_stmt|;
 name|open_result
 operator|=
@@ -1460,26 +1529,8 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Checking unit=%d slice=%d partition=%d..."
-argument_list|,
-name|currdev
-operator|.
-name|d_unit
-argument_list|,
-name|currdev
-operator|.
-name|d_disk
-operator|.
-name|slice
-argument_list|,
-name|currdev
-operator|.
-name|d_disk
-operator|.
-name|partition
-argument_list|)
+name|print_disk_probe_info
+argument_list|()
 expr_stmt|;
 name|open_result
 operator|=
@@ -1506,7 +1557,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"good.\n"
+literal|" good.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1523,7 +1574,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Requested disk type/unit not found\n"
+literal|"  Requested disk type/unit not found\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1630,29 +1681,7 @@ operator|-
 name|__bss_start
 argument_list|)
 expr_stmt|;
-comment|/*          * Set up console.          */
-name|cons_probe
-argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Compatible API signature found @%x\n"
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
-name|sig
-argument_list|)
-expr_stmt|;
-name|dump_sig
-argument_list|(
-name|sig
-argument_list|)
-expr_stmt|;
-name|dump_addr_info
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Initialise the heap as early as possible.  Once this is done, 	 * alloc() is usable. The stack is buried inside us, so this is 	 * safe. 	 */
+comment|/* 	 * Initialise the heap as early as possible.  Once this is done, 	 * alloc() is usable. The stack is buried inside us, so this is safe. 	 */
 name|setheap
 argument_list|(
 operator|(
@@ -1674,28 +1703,18 @@ literal|1024
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enumerate U-Boot devices 	 */
-if|if
-condition|(
-operator|(
-name|devs_no
-operator|=
-name|ub_dev_enum
+comment|/* 	 * Set up console. 	 */
+name|cons_probe
 argument_list|()
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"no U-Boot devices found"
-argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Number of U-Boot devices: %d\n"
+literal|"Compatible U-Boot API signature found @%x\n"
 argument_list|,
-name|devs_no
+operator|(
+name|uint32_t
+operator|)
+name|sig
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1721,8 +1740,45 @@ argument_list|,
 name|bootprog_date
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|dump_sig
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
+name|dump_addr_info
+argument_list|()
+expr_stmt|;
 name|meminfo
 argument_list|()
+expr_stmt|;
+comment|/* 	 * Enumerate U-Boot devices 	 */
+if|if
+condition|(
+operator|(
+name|devs_no
+operator|=
+name|ub_dev_enum
+argument_list|()
+operator|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"no U-Boot devices found"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Number of U-Boot devices: %d\n"
+argument_list|,
+name|devs_no
+argument_list|)
 expr_stmt|;
 name|get_load_device
 argument_list|(
