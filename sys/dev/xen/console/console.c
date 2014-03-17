@@ -1159,13 +1159,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|db_active
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|boolean_t
@@ -1183,7 +1176,7 @@ operator|||
 ifdef|#
 directive|ifdef
 name|DDB
-name|db_active
+name|kdb_active
 operator|||
 endif|#
 directive|endif
