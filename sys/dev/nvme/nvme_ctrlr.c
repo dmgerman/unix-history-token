@@ -3662,35 +3662,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clear software progress marker to 0, to indicate to pre-boot 	 *  software that OS driver load was successful. 	 * 	 * Chatham does not support this feature. 	 */
-if|if
-condition|(
-name|pci_get_devid
-argument_list|(
-name|ctrlr
-operator|->
-name|dev
-argument_list|)
-operator|!=
-name|CHATHAM_PCI_ID
-condition|)
-name|nvme_ctrlr_cmd_set_feature
-argument_list|(
-name|ctrlr
-argument_list|,
-name|NVME_FEAT_SOFTWARE_PROGRESS_MARKER
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
