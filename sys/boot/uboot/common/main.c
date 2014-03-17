@@ -1873,16 +1873,17 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
 name|load_type
 operator|==
 operator|-
 literal|1
 operator|||
 operator|(
-operator|(
 name|load_type
 operator|&
 name|DEV_TYP_NET
+operator|)
 operator|)
 operator|&&
 name|strcmp
@@ -1898,7 +1899,6 @@ literal|"net"
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
 break|break;
 block|}
