@@ -3022,6 +3022,7 @@ name|IP_OFFMASK
 argument_list|)
 condition|)
 block|{
+comment|/* XXXGL: shouldn't we save& set m_flags? */
 name|m
 operator|=
 name|ip_reass
@@ -3304,6 +3305,13 @@ literal|"Maximum number of IPv4 fragment reassembly queue entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|M_IP_FRAG
+value|M_PROTO9
+end_define
 
 begin_comment
 comment|/*  * Take incoming datagram fragment and try to reassemble it into  * whole datagram.  If the argument is the first fragment or one  * in between the function will return NULL and store the mbuf  * in the fragment chain.  If the argument is the last fragment  * the packet will be reassembled and the pointer to the new  * mbuf returned for further processing.  Only m_tags attached  * to the first packet/fragment are preserved.  * The IP header is *NOT* adjusted out of iplen.  */

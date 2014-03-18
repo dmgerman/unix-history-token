@@ -537,54 +537,6 @@ begin_comment
 comment|/* 0x20 can send broadcast packets */
 end_comment
 
-begin_comment
-comment|/*  * IPv4 protocol layer specific mbuf flags.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_FASTFWD_OURS
-value|M_PROTO1
-end_define
-
-begin_comment
-comment|/* changed dst to local */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_IP_NEXTHOP
-value|M_PROTO2
-end_define
-
-begin_comment
-comment|/* explicit ip nexthop */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_SKIP_FIREWALL
-value|M_PROTO3
-end_define
-
-begin_comment
-comment|/* skip firewall processing, 						   keep in sync with IP6 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_IP_FRAG
-value|M_PROTO4
-end_define
-
-begin_comment
-comment|/* fragment reassembly */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
