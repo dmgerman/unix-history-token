@@ -3601,6 +3601,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|MFC_UNLOCK
+argument_list|()
+expr_stmt|;
 operator|*
 name|apival
 operator|=
