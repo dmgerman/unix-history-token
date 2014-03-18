@@ -125,6 +125,10 @@ name|pcpu
 modifier|*
 name|as_pcpu
 decl_stmt|;
+name|void
+modifier|*
+name|as_xtrace_buffer
+decl_stmt|;
 specifier|volatile
 name|int
 name|as_delay

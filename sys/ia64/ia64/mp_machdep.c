@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_xtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -980,6 +986,18 @@ argument_list|(
 name|IA64_FPSR_DEFAULT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XTRACE
+name|ia64_xtrace_init_ap
+argument_list|(
+name|ia64_ap_state
+operator|.
+name|as_xtrace_buffer
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Wait until it's time for us to be unleashed */
 while|while
 condition|(
@@ -1695,6 +1713,18 @@ name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XTRACE
+name|ia64_ap_state
+operator|.
+name|as_xtrace_buffer
+operator|=
+name|ia64_xtrace_alloc
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|ia64_ap_state
 operator|.
 name|as_trace

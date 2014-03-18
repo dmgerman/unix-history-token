@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_xtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -1376,6 +1382,14 @@ argument_list|(
 name|IA64_FPSR_DEFAULT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XTRACE
+name|ia64_xtrace_save
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|PCPU_INC
 argument_list|(
 name|cnt

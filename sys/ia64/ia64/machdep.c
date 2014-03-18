@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_xtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -804,20 +810,6 @@ name|kva_md_info
 name|kmi
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|Mhz
-value|1000000L
-end_define
-
-begin_define
-define|#
-directive|define
-name|Ghz
-value|(1000L*Mhz)
-end_define
 
 begin_function
 specifier|static
@@ -2455,6 +2447,14 @@ name|code
 name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|XTRACE
+name|ia64_xtrace_stop
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 asm|__asm __volatile("flushrs;;");
 comment|/* Restart after the break instruction. */
 if|if
@@ -3731,6 +3731,14 @@ comment|/* 	 * Initialize the virtual memory system. 	 */
 name|pmap_bootstrap
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XTRACE
+name|ia64_xtrace_init_bsp
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize debuggers, and break into them if appropriate. 	 */
 ifdef|#
 directive|ifdef
