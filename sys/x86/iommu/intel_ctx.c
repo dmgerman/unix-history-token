@@ -1318,6 +1318,15 @@ parameter_list|,
 name|device_t
 name|dev
 parameter_list|,
+name|int
+name|bus
+parameter_list|,
+name|int
+name|slot
+parameter_list|,
+name|int
+name|func
+parameter_list|,
 name|bool
 name|id_mapped
 parameter_list|,
@@ -1343,12 +1352,6 @@ modifier|*
 name|sf
 decl_stmt|;
 name|int
-name|bus
-decl_stmt|,
-name|slot
-decl_stmt|,
-name|func
-decl_stmt|,
 name|error
 decl_stmt|,
 name|mgaw
@@ -1356,27 +1359,6 @@ decl_stmt|;
 name|bool
 name|enable
 decl_stmt|;
-name|bus
-operator|=
-name|pci_get_bus
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|slot
-operator|=
-name|pci_get_slot
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|func
-operator|=
-name|pci_get_function
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|enable
 operator|=
 name|false
@@ -1761,6 +1743,14 @@ name|ctx1
 expr_stmt|;
 name|ctx
 operator|->
+name|ctx_tag
+operator|.
+name|owner
+operator|=
+name|dev
+expr_stmt|;
+name|ctx
+operator|->
 name|domain
 operator|=
 name|alloc_unrl
@@ -1852,7 +1842,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"dmar%d pci%d:%d:%d:%d domain %d mgaw %d agaw %d\n"
+literal|"dmar%d pci%d:%d:%d:%d domain %d mgaw %d "
+literal|"agaw %d %s-mapped\n"
 argument_list|,
 name|dmar
 operator|->
@@ -1879,6 +1870,12 @@ argument_list|,
 name|ctx
 operator|->
 name|agaw
+argument_list|,
+name|id_mapped
+condition|?
+literal|"id"
+else|:
+literal|"re"
 argument_list|)
 expr_stmt|;
 block|}
