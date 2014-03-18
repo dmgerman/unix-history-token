@@ -7138,6 +7138,9 @@ case|:
 case|case
 name|CAM_TID_INVALID
 case|:
+case|case
+name|CAM_FUNC_NOTAVAIL
+case|:
 name|error
 operator|=
 name|EINVAL
