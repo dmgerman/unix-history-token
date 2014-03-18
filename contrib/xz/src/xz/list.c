@@ -677,6 +677,41 @@ goto|goto
 name|error
 goto|;
 block|}
+comment|// Check that the Stream Footer doesn't specify something
+comment|// that we don't support. This can only happen if the xz
+comment|// version is older than liblzma and liblzma supports
+comment|// something new.
+comment|//
+comment|// It is enough to check Stream Footer. Stream Header must
+comment|// match when it is compared against Stream Footer with
+comment|// lzma_stream_flags_compare().
+if|if
+condition|(
+name|footer_flags
+operator|.
+name|version
+operator|!=
+literal|0
+condition|)
+block|{
+name|message_error
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|pair
+operator|->
+name|src_name
+argument_list|,
+name|message_strm
+argument_list|(
+name|LZMA_OPTIONS_ERROR
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 comment|// Check that the size of the Index field looks sane.
 name|lzma_vli
 name|index_size
@@ -1594,7 +1629,33 @@ block|{
 case|case
 name|LZMA_OK
 case|:
+comment|// Validate also block.uncompressed_size if it is present.
+comment|// If it isn't present, there's no need to set it since
+comment|// we aren't going to actually decompress the Block; if
+comment|// we were decompressing, then we should set it so that
+comment|// the Block decoder could validate the Uncompressed Size
+comment|// that was stored in the Index.
+if|if
+condition|(
+name|block
+operator|.
+name|uncompressed_size
+operator|==
+name|LZMA_VLI_UNKNOWN
+operator|||
+name|block
+operator|.
+name|uncompressed_size
+operator|==
+name|iter
+operator|->
+name|block
+operator|.
+name|uncompressed_size
+condition|)
 break|break;
+comment|// If the above fails, the file is corrupt so
+comment|// LZMA_DATA_ERROR is a good error code.
 case|case
 name|LZMA_DATA_ERROR
 case|:
