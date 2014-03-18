@@ -12100,7 +12100,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ip_mroute: unable to ifnet_deperture_even handler\n"
+literal|"ip_mroute: unable to register "
+literal|"ifnet_departure_event handler\n"
 argument_list|)
 expr_stmt|;
 name|MROUTER_LOCK_DESTROY
