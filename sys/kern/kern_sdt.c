@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sdt.h>
 end_include
 
@@ -76,8 +82,11 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"sdt_probe_stub: Why did this get called?\n"
+literal|"sdt_probe_stub: unexpectedly called\n"
 argument_list|)
+expr_stmt|;
+name|kdb_backtrace
+argument_list|()
 expr_stmt|;
 block|}
 end_function
