@@ -2086,6 +2086,11 @@ operator|)
 return|;
 name|fail
 label|:
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rc
