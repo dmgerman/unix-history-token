@@ -2883,9 +2883,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
-comment|/* 	 * Tell the DTrace fasttrap provider about the new process 	 * if it has registered an interest. We have to do this only after 	 * p_state is PRS_NORMAL since the fasttrap module will use pfind() 	 * later on. 	 */
+comment|/* 	 * Tell the DTrace fasttrap provider about the new process so that any 	 * tracepoints inherited from the parent can be removed. We have to do 	 * this only after p_state is PRS_NORMAL since the fasttrap module will 	 * use pfind() later on. 	 */
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|RFMEM
+operator|)
+operator|==
+literal|0
+operator|&&
 name|dtrace_fasttrap_fork
 condition|)
 name|dtrace_fasttrap_fork
