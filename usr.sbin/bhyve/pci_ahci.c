@@ -520,6 +520,9 @@ name|uint8_t
 name|asc
 decl_stmt|;
 name|uint32_t
+name|pending
+decl_stmt|;
+name|uint32_t
 name|clb
 decl_stmt|;
 name|uint32_t
@@ -2360,6 +2363,15 @@ name|iovcnt
 operator|=
 name|BLOCKIF_IOV_MAX
 expr_stmt|;
+comment|/* 		 * Mark this command in-flight. 		 */
+name|p
+operator|->
+name|pending
+operator||=
+literal|1
+operator|<<
+name|slot
+expr_stmt|;
 block|}
 else|else
 name|aior
@@ -2484,11 +2496,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|aior
-operator|->
-name|prdtl
-operator|&&
 name|ncq
 condition|)
 name|p
@@ -7638,6 +7645,7 @@ name|AHCI_P_CMD_ST
 operator|)
 condition|)
 return|return;
+comment|/* 	 * Search for any new commands to issue ignoring those that 	 * are already in-flight. 	 */
 for|for
 control|(
 name|i
@@ -7660,6 +7668,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|p
 operator|->
 name|ci
@@ -7668,6 +7677,20 @@ operator|(
 literal|1
 operator|<<
 name|i
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|p
+operator|->
+name|pending
+operator|&
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
 operator|)
 condition|)
 name|ahci_handle_slot
@@ -7946,6 +7969,18 @@ name|slot
 operator|)
 expr_stmt|;
 block|}
+comment|/* 	 * This command is now complete. 	 */
+name|p
+operator|->
+name|pending
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+name|slot
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|ncq
