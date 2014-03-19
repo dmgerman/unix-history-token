@@ -768,11 +768,7 @@ name|dp
 operator|->
 name|dp_spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_ASYNC_DESTROY
-index|]
 argument_list|)
 expr_stmt|;
 name|err
@@ -7570,11 +7566,7 @@ name|spa_feature_is_active
 argument_list|(
 name|spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_ASYNC_DESTROY
-index|]
 argument_list|)
 condition|)
 block|{
@@ -7646,22 +7638,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|zfeature_info_t
-modifier|*
-name|feat
-init|=
-operator|&
-name|spa_feature_table
-index|[
-name|SPA_FEATURE_ASYNC_DESTROY
-index|]
-decl_stmt|;
 comment|/* finished; deactivate async destroy feature */
 name|spa_feature_decr
 argument_list|(
 name|spa
 argument_list|,
-name|feat
+name|SPA_FEATURE_ASYNC_DESTROY
 argument_list|,
 name|tx
 argument_list|)
@@ -7673,7 +7655,7 @@ name|spa_feature_is_active
 argument_list|(
 name|spa
 argument_list|,
-name|feat
+name|SPA_FEATURE_ASYNC_DESTROY
 argument_list|)
 argument_list|)
 expr_stmt|;
