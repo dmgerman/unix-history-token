@@ -197,17 +197,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sc4
-index|[]
-init|=
-literal|"NVRAM"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
 name|bun
 index|[]
 init|=
