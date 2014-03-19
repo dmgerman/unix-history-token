@@ -1926,11 +1926,6 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|vdrop
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
@@ -1963,6 +1958,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|vdrop
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -1987,6 +1987,11 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|vdrop
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 block|}
