@@ -6329,10 +6329,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|p4_cpu
 operator|*
-operator|*
+name|p4_pcpu
 argument_list|)
 operator|*
 name|ncpus
