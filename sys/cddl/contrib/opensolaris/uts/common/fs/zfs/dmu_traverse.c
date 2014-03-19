@@ -3329,7 +3329,7 @@ if|if
 condition|(
 name|doi
 operator|.
-name|doi_type
+name|doi_bonus_type
 operator|==
 name|DMU_OT_DSL_DATASET
 condition|)

@@ -3093,7 +3093,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|mzap_create_impl
 parameter_list|(
@@ -4643,7 +4642,6 @@ block|{
 name|int
 name|err
 init|=
-operator|(
 name|zap_lookup_norm
 argument_list|(
 name|os
@@ -4666,7 +4664,6 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
 decl_stmt|;
 if|if
 condition|(
