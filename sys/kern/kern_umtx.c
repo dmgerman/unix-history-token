@@ -15460,10 +15460,10 @@ block|,
 comment|/* UMTX_OP_WAKE_PRIVATE */
 name|__umtx_op_wait_umutex
 block|,
-comment|/* UMTX_OP_UMUTEX_WAIT */
+comment|/* UMTX_OP_MUTEX_WAIT */
 name|__umtx_op_wake_umutex
 block|,
-comment|/* UMTX_OP_UMUTEX_WAKE */
+comment|/* UMTX_OP_MUTEX_WAKE */
 name|__umtx_op_sem_wait
 block|,
 comment|/* UMTX_OP_SEM_WAIT */
@@ -15474,7 +15474,7 @@ name|__umtx_op_nwake_private
 block|,
 comment|/* UMTX_OP_NWAKE_PRIVATE */
 name|__umtx_op_wake2_umutex
-comment|/* UMTX_OP_UMUTEX_WAKE2 */
+comment|/* UMTX_OP_MUTEX_WAKE2 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -16841,10 +16841,10 @@ block|,
 comment|/* UMTX_OP_WAKE_PRIVATE */
 name|__umtx_op_wait_umutex_compat32
 block|,
-comment|/* UMTX_OP_UMUTEX_WAIT */
+comment|/* UMTX_OP_MUTEX_WAIT */
 name|__umtx_op_wake_umutex
 block|,
-comment|/* UMTX_OP_UMUTEX_WAKE */
+comment|/* UMTX_OP_MUTEX_WAKE */
 name|__umtx_op_sem_wait_compat32
 block|,
 comment|/* UMTX_OP_SEM_WAIT */
@@ -16855,7 +16855,7 @@ name|__umtx_op_nwake_private32
 block|,
 comment|/* UMTX_OP_NWAKE_PRIVATE */
 name|__umtx_op_wake2_umutex
-comment|/* UMTX_OP_UMUTEX_WAKE2 */
+comment|/* UMTX_OP_MUTEX_WAKE2 */
 block|}
 decl_stmt|;
 end_decl_stmt
