@@ -1000,19 +1000,6 @@ operator|->
 name|efi_gpt_AlternateLBA
 argument_list|)
 decl_stmt|;
-name|zfs_dbgmsg
-argument_list|(
-literal|"vdev %s, capacity %llu, altern lba %llu"
-argument_list|,
-name|vd
-operator|->
-name|vdev_path
-argument_list|,
-name|capacity
-argument_list|,
-name|efi_altern_lba
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|capacity
