@@ -1176,9 +1176,10 @@ name|zv_volblocksize
 decl_stmt|;
 if|if
 condition|(
+name|BP_IS_HOLE
+argument_list|(
 name|bp
-operator|==
-name|NULL
+argument_list|)
 operator|||
 name|zb
 operator|->

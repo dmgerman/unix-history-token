@@ -85,6 +85,12 @@ directive|include
 file|<sys/bpobj.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<zfeature_common.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -784,6 +790,17 @@ name|uint64_t
 name|spa_feat_desc_obj
 decl_stmt|;
 comment|/* Feature descriptions */
+name|uint64_t
+name|spa_feat_enabled_txg_obj
+decl_stmt|;
+comment|/* Feature enabled txg */
+comment|/* cache feature refcounts */
+name|uint64_t
+name|spa_feat_refcount_cache
+index|[
+name|SPA_FEATURES
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|illumos

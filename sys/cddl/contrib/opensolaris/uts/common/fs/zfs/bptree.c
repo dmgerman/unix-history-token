@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -563,9 +563,10 @@ name|arg
 decl_stmt|;
 if|if
 condition|(
+name|BP_IS_HOLE
+argument_list|(
 name|bp
-operator|==
-name|NULL
+argument_list|)
 condition|)
 return|return
 operator|(
