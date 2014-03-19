@@ -115,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|ISARAM_END
-value|RAM_END
+value|0x1000000
 end_define
 
 begin_function_decl

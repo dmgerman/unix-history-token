@@ -204,7 +204,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<x86/isa/isa.h>
+file|<isa/isareg.h>
 end_include
 
 begin_include
