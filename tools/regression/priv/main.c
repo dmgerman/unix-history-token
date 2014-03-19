@@ -1962,7 +1962,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"priv: must be run as root"
+literal|"must be run as root"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Run each test four times, varying whether the process is running 	 * as root and in jail in order to test all possible combinations. 	 */
