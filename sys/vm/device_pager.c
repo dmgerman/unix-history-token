@@ -1851,6 +1851,11 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+name|paddr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Make paddr initialized for the case of size == 0. */
 for|for
 control|(
 name|off
