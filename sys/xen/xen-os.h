@@ -118,6 +118,15 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|xenstore_domain_interface
+modifier|*
+name|xen_store
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|console_page
