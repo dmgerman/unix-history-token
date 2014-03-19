@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  * Copyright 2012 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -88,6 +88,12 @@ name|vd_minor
 decl_stmt|;
 name|ldi_handle_t
 name|vd_lh
+decl_stmt|;
+name|list_t
+name|vd_ldi_cbs
+decl_stmt|;
+name|boolean_t
+name|vd_ldi_offline
 decl_stmt|;
 block|}
 name|vdev_disk_t
