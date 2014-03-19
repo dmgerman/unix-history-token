@@ -9394,6 +9394,10 @@ name|void
 modifier|*
 name|ddra_owner
 decl_stmt|;
+name|nvlist_t
+modifier|*
+name|ddra_result
+decl_stmt|;
 block|}
 name|dsl_dataset_rollback_arg_t
 typedef|;
@@ -9700,6 +9704,12 @@ decl_stmt|;
 name|uint64_t
 name|cloneobj
 decl_stmt|;
+name|char
+name|namebuf
+index|[
+name|ZFS_MAXNAMELEN
+index|]
+decl_stmt|;
 name|VERIFY0
 argument_list|(
 name|dsl_dataset_hold
@@ -9715,6 +9725,26 @@ argument_list|,
 operator|&
 name|ds
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|dsl_dataset_name
+argument_list|(
+name|ds
+operator|->
+name|ds_prev
+argument_list|,
+name|namebuf
+argument_list|)
+expr_stmt|;
+name|fnvlist_add_string
+argument_list|(
+name|ddra
+operator|->
+name|ddra_result
+argument_list|,
+literal|"target"
+argument_list|,
+name|namebuf
 argument_list|)
 expr_stmt|;
 name|cloneobj
@@ -9794,7 +9824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If owner != NULL:  *  * - The existing dataset MUST be owned by the specified owner at entry  * - Upon return, dataset will still be held by the same owner, whether we  *   succeed or not.  *  * This mode is required any time the existing filesystem is mounted.  See  * notes above zfs_suspend_fs() for further details.  */
+comment|/*  * Rolls back the given filesystem or volume to the most recent snapshot.  * The name of the most recent snapshot will be returned under key "target"  * in the result nvlist.  *  * If owner != NULL:  * - The existing dataset MUST be owned by the specified owner at entry  * - Upon return, dataset will still be held by the same owner, whether we  *   succeed or not.  *  * This mode is required any time the existing filesystem is mounted.  See  * notes above zfs_suspend_fs() for further details.  */
 end_comment
 
 begin_function
@@ -9809,6 +9839,10 @@ parameter_list|,
 name|void
 modifier|*
 name|owner
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|result
 parameter_list|)
 block|{
 name|dsl_dataset_rollback_arg_t
@@ -9826,6 +9860,12 @@ name|ddra_owner
 operator|=
 name|owner
 expr_stmt|;
+name|ddra
+operator|.
+name|ddra_result
+operator|=
+name|result
+expr_stmt|;
 return|return
 operator|(
 name|dsl_sync_task
@@ -9836,10 +9876,6 @@ name|dsl_dataset_rollback_check
 argument_list|,
 name|dsl_dataset_rollback_sync
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|ddra
 argument_list|,
