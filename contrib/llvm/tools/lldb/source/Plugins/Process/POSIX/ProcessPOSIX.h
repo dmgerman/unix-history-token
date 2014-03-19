@@ -212,6 +212,8 @@ operator|::
 name|Error
 name|DoResume
 argument_list|()
+operator|=
+literal|0
 block|;
 name|virtual
 name|lldb_private
@@ -472,6 +474,7 @@ block|;
 comment|//--------------------------------------------------------------------------
 comment|// ProcessPOSIX internal API.
 comment|/// Registers the given message with this process.
+name|virtual
 name|void
 name|SendMessage
 argument_list|(
@@ -480,6 +483,8 @@ name|ProcessMessage
 operator|&
 name|message
 argument_list|)
+operator|=
+literal|0
 block|;
 name|ProcessMonitor
 operator|&

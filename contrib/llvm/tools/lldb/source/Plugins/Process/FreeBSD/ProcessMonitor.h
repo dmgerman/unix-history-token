@@ -530,6 +530,22 @@ operator|&
 name|value
 argument_list|)
 decl_stmt|;
+comment|/// Returns current thread IDs in process
+name|size_t
+name|GetCurrentThreadIDs
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|tid_t
+operator|>
+operator|&
+name|thread_ids
+argument_list|)
+decl_stmt|;
 comment|/// Writes a ptrace_lwpinfo structure corresponding to the given thread ID
 comment|/// to the memory region pointed to by @p lwpinfo.
 name|bool
@@ -547,6 +563,19 @@ argument_list|,
 name|int
 operator|&
 name|error_no
+argument_list|)
+decl_stmt|;
+comment|/// Suspends or unsuspends a thread prior to process resume or step.
+name|bool
+name|ThreadSuspend
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|,
+name|bool
+name|suspend
 argument_list|)
 decl_stmt|;
 comment|/// Writes the raw event message code (vis-a-vis PTRACE_GETEVENTMSG)
