@@ -3768,6 +3768,25 @@ operator|&
 name|tm
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Some proxies use UTC in response, but it should still be 	 * parsed. RFC2616 states GMT and UTC are exactly equal for HTTP. 	 */
+if|if
+condition|(
+name|r
+operator|==
+name|NULL
+condition|)
+name|r
+operator|=
+name|strptime
+argument_list|(
+name|p
+argument_list|,
+literal|"%a, %d %b %Y %H:%M:%S UTC"
+argument_list|,
+operator|&
+name|tm
+argument_list|)
+expr_stmt|;
 comment|/* XXX should add support for date-2 and date-3 */
 name|setlocale
 argument_list|(
