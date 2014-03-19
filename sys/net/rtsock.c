@@ -8051,26 +8051,16 @@ name|ifp
 operator|->
 name|if_data
 expr_stmt|;
-comment|/* Fixup if_data carp(4) vhid. */
-if|if
-condition|(
-name|carp_get_vhid_p
-operator|!=
-name|NULL
-condition|)
+comment|/* Some drivers still use ifqueue(9), add its stats. */
 name|ifd
 operator|->
-name|ifi_vhid
-operator|=
-call|(
-modifier|*
-name|carp_get_vhid_p
-call|)
-argument_list|(
+name|ifi_oqdrops
+operator|+=
 name|ifp
 operator|->
-name|if_addr
-argument_list|)
+name|if_snd
+operator|.
+name|ifq_drops
 expr_stmt|;
 return|return
 operator|(
@@ -8248,26 +8238,16 @@ name|ifp
 operator|->
 name|if_data
 expr_stmt|;
-comment|/* Fixup if_data carp(4) vhid. */
-if|if
-condition|(
-name|carp_get_vhid_p
-operator|!=
-name|NULL
-condition|)
+comment|/* Some drivers still use ifqueue(9), add its stats. */
 name|ifd
 operator|->
-name|ifi_vhid
-operator|=
-call|(
-modifier|*
-name|carp_get_vhid_p
-call|)
-argument_list|(
+name|ifi_oqdrops
+operator|+=
 name|ifp
 operator|->
-name|if_addr
-argument_list|)
+name|if_snd
+operator|.
+name|ifq_drops
 expr_stmt|;
 return|return
 operator|(
