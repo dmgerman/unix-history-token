@@ -7097,24 +7097,6 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note:  This code will probably work even if there are concurrent 	 * holders, but it is untested in that scenerio, as the ZPL and 	 * ztest have additional locking (the range locks) that prevents 	 * that type of concurrent access. 	 */
-name|ASSERT3U
-argument_list|(
-name|refcount_count
-argument_list|(
-operator|&
-name|db
-operator|->
-name|db_holds
-argument_list|)
-argument_list|,
-operator|==
-argument_list|,
-name|db
-operator|->
-name|db_dirtycnt
-argument_list|)
-expr_stmt|;
 name|dprintf_dbuf
 argument_list|(
 name|db

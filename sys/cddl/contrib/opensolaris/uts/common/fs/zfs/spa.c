@@ -18589,13 +18589,6 @@ operator|&
 name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
-name|spa_history_log_version
-argument_list|(
-name|spa
-argument_list|,
-literal|"import"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
