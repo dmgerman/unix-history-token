@@ -644,6 +644,23 @@ name|GetFileType
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Return the current permissions of the path.
+comment|///
+comment|/// Returns a bitmask for the current permissions of the file
+comment|/// ( zero or more of the permission bits defined in
+comment|/// File::Permissions).
+comment|///
+comment|/// @return
+comment|///     Zero if the file doesn't exist or we are unable to get
+comment|///     information for the file, otherwise one or more permission
+comment|///     bits from the File::Permissions enumeration.
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetPermissions
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|IsDirectory
 argument_list|()
@@ -1001,9 +1018,7 @@ name|void
 name|RemoveLastPathComponent
 parameter_list|()
 function_decl|;
-specifier|const
-name|char
-operator|*
+name|ConstString
 name|GetLastPathComponent
 argument_list|()
 specifier|const

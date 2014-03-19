@@ -444,6 +444,15 @@ operator|&
 name|bp_loc_sp
 argument_list|)
 decl_stmt|;
+name|void
+name|RemoveInvalidLocations
+parameter_list|(
+specifier|const
+name|ArchSpec
+modifier|&
+name|arch
+parameter_list|)
+function_decl|;
 typedef|typedef
 name|std
 operator|::
@@ -481,6 +490,7 @@ decl_stmt|;
 name|collection
 name|m_locations
 decl_stmt|;
+comment|// Vector of locations, sorted by ID
 name|addr_map
 name|m_address_to_location
 decl_stmt|;

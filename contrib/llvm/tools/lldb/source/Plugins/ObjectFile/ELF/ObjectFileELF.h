@@ -85,6 +85,81 @@ directive|include
 file|"ELFHeader.h"
 end_include
 
+begin_struct
+struct|struct
+name|ELFNote
+block|{
+name|elf
+operator|::
+name|elf_word
+name|n_namesz
+expr_stmt|;
+name|elf
+operator|::
+name|elf_word
+name|n_descsz
+expr_stmt|;
+name|elf
+operator|::
+name|elf_word
+name|n_type
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|n_name
+expr_stmt|;
+name|ELFNote
+argument_list|()
+operator|:
+name|n_namesz
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|n_descsz
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|n_type
+argument_list|(
+literal|0
+argument_list|)
+block|{     }
+comment|/// Parse an ELFNote entry from the given DataExtractor starting at position
+comment|/// \p offset.
+comment|///
+comment|/// @param[in] data
+comment|///    The DataExtractor to read from.
+comment|///
+comment|/// @param[in,out] offset
+comment|///    Pointer to an offset in the data.  On return the offset will be
+comment|///    advanced by the number of bytes read.
+comment|///
+comment|/// @return
+comment|///    True if the ELFRel entry was successfully read and false otherwise.
+name|bool
+name|Parse
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|data
+argument_list|,
+name|lldb
+operator|::
+name|offset_t
+operator|*
+name|offset
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|//------------------------------------------------------------------------------
 end_comment

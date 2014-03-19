@@ -83,36 +83,11 @@ directive|include
 file|"lldb/Interpreter/OptionValue.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
-file|<Python/Python.h>
+file|"lldb/lldb-python.h"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<Python.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|namespace

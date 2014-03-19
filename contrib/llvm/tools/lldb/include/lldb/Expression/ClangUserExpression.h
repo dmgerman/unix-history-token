@@ -329,19 +329,6 @@ operator|&
 name|result
 argument_list|)
 decl_stmt|;
-name|ThreadPlan
-modifier|*
-name|GetThreadPlanToExecuteJITExpression
-parameter_list|(
-name|Stream
-modifier|&
-name|error_stream
-parameter_list|,
-name|ExecutionContext
-modifier|&
-name|exe_ctx
-parameter_list|)
-function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Apply the side effects of the function to program state.
 comment|///

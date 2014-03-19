@@ -140,7 +140,7 @@ argument|const lldb_private::FileSpec& file_spec
 argument_list|,
 argument|uint32_t flags
 argument_list|,
-argument|mode_t mode
+argument|uint32_t mode
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
@@ -202,6 +202,23 @@ name|virtual
 name|lldb_private
 operator|::
 name|Error
+name|CreateSymlink
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|src
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|dst
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
 name|GetFile
 argument_list|(
 specifier|const
@@ -217,6 +234,25 @@ operator|::
 name|FileSpec
 operator|&
 name|destination
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|ConstString
+name|GetRemoteWorkingDirectory
+argument_list|()
+block|;
+name|virtual
+name|bool
+name|SetRemoteWorkingDirectory
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|ConstString
+operator|&
+name|path
 argument_list|)
 block|;
 name|virtual
@@ -245,12 +281,41 @@ argument_list|)
 block|;
 comment|// Timeout in seconds to wait for shell program to finish
 name|virtual
-name|uint32_t
+name|lldb_private
+operator|::
+name|Error
 name|MakeDirectory
 argument_list|(
-argument|const std::string&path
+argument|const char *path
 argument_list|,
-argument|mode_t mode
+argument|uint32_t mode
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|GetFilePermissions
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|path
+argument_list|,
+name|uint32_t
+operator|&
+name|file_permissions
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|SetFilePermissions
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|uint32_t file_permissions
 argument_list|)
 block|;
 name|virtual
@@ -266,21 +331,15 @@ name|file_spec
 argument_list|)
 block|;
 name|virtual
-name|uint32_t
-name|GetFilePermissions
-argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|file_spec
-argument_list|,
 name|lldb_private
 operator|::
 name|Error
-operator|&
-name|error
+name|Unlink
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|path
 argument_list|)
 block|;
 name|virtual

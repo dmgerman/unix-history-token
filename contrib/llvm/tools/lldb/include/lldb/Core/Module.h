@@ -974,6 +974,31 @@ block|}
 specifier|const
 name|FileSpec
 operator|&
+name|GetRemoteInstallFileSpec
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_remote_install_file
+return|;
+block|}
+name|void
+name|SetRemoteInstallFileSpec
+parameter_list|(
+specifier|const
+name|FileSpec
+modifier|&
+name|file
+parameter_list|)
+block|{
+name|m_remote_install_file
+operator|=
+name|file
+expr_stmt|;
+block|}
+specifier|const
+name|FileSpec
+operator|&
 name|GetSymbolFileFileSpec
 argument_list|()
 specifier|const
@@ -2207,6 +2232,16 @@ end_decl_stmt
 
 begin_comment
 comment|///< The path to the module on the platform on which it is being debugged
+end_comment
+
+begin_decl_stmt
+name|FileSpec
+name|m_remote_install_file
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|///< If set when debugging on remote platforms, this module will be installed at this location
 end_comment
 
 begin_decl_stmt

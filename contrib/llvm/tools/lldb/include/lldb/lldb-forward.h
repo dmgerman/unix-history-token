@@ -309,6 +309,9 @@ name|class
 name|FormatManager
 decl_stmt|;
 name|class
+name|FormattersMatchCandidate
+decl_stmt|;
+name|class
 name|FuncUnwinders
 decl_stmt|;
 name|class
@@ -502,6 +505,9 @@ name|PythonObject
 decl_stmt|;
 name|class
 name|PythonString
+decl_stmt|;
+name|class
+name|RegisterCheckpoint
 decl_stmt|;
 name|class
 name|RegisterContext
@@ -1509,6 +1515,17 @@ operator|::
 name|Property
 operator|>
 name|PropertySP
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|lldb_private
+operator|::
+name|RegisterCheckpoint
+operator|>
+name|RegisterCheckpointSP
 expr_stmt|;
 typedef|typedef
 name|std

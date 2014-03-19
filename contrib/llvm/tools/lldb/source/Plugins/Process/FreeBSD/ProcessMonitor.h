@@ -566,29 +566,29 @@ operator|*
 name|message
 argument_list|)
 decl_stmt|;
-comment|/// Resumes the given thread.  If @p signo is anything but
-comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
+comment|/// Resumes the process.  If @p signo is anything but
+comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the process.
 name|bool
 name|Resume
 argument_list|(
 name|lldb
 operator|::
 name|tid_t
-name|tid
+name|unused
 argument_list|,
 name|uint32_t
 name|signo
 argument_list|)
 decl_stmt|;
-comment|/// Single steps the given thread.  If @p signo is anything but
-comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
+comment|/// Single steps the process.  If @p signo is anything but
+comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the process.
 name|bool
 name|SingleStep
 argument_list|(
 name|lldb
 operator|::
 name|tid_t
-name|tid
+name|unused
 argument_list|,
 name|uint32_t
 name|signo

@@ -4843,7 +4843,6 @@ name|virtual
 name|Error
 name|Launch
 parameter_list|(
-specifier|const
 name|ProcessLaunchInfo
 modifier|&
 name|launch_info
@@ -6024,20 +6023,10 @@ name|ThreadPlanSP
 operator|&
 name|thread_plan_sp
 argument_list|,
-name|bool
-name|stop_others
-argument_list|,
-name|bool
-name|run_others
-argument_list|,
-name|bool
-name|unwind_on_error
-argument_list|,
-name|bool
-name|ignore_breakpoints
-argument_list|,
-name|uint32_t
-name|timeout_usec
+specifier|const
+name|EvaluateExpressionOptions
+operator|&
+name|options
 argument_list|,
 name|Stream
 operator|&
@@ -7586,6 +7575,33 @@ return|return
 name|m_thread_list
 return|;
 block|}
+comment|// When ExtendedBacktraces are requested, the HistoryThreads that are
+comment|// created need an owner -- they're saved here in the Process.  The
+comment|// threads in this list are not iterated over - driver programs need to
+comment|// request the extended backtrace calls starting from a root concrete
+comment|// thread one by one.
+name|ThreadList
+modifier|&
+name|GetExtendedThreadList
+parameter_list|()
+block|{
+return|return
+name|m_extended_thread_list
+return|;
+block|}
+name|ThreadList
+operator|::
+name|ThreadIterable
+name|Threads
+argument_list|()
+block|{
+return|return
+name|m_thread_list
+operator|.
+name|Threads
+argument_list|()
+return|;
+block|}
 name|uint32_t
 name|GetNextThreadIndexID
 parameter_list|(
@@ -8442,6 +8458,14 @@ name|m_thread_list
 decl_stmt|;
 comment|///< The threads for this process as the user will see them. This is usually the same as
 comment|///< m_thread_list_real, but might be different if there is an OS plug-in creating memory threads
+name|ThreadList
+name|m_extended_thread_list
+decl_stmt|;
+comment|///< Owner for extended threads that may be generated, cleared on natural stops
+name|uint32_t
+name|m_extended_thread_stop_id
+decl_stmt|;
+comment|///< The natural stop id when extended_thread_list was last updated
 name|std
 operator|::
 name|vector

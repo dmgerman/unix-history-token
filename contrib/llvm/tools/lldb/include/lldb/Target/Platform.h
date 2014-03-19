@@ -464,8 +464,7 @@ operator|&
 name|s
 argument_list|)
 block|;
-comment|// Returns the the hostname if we are connected, else the short plugin
-comment|// name.
+comment|// Returns the the name of the platform
 name|ConstString
 name|GetName
 argument_list|()
@@ -563,6 +562,25 @@ argument_list|()
 return|;
 comment|// Return an invalid architecture
 block|}
+name|virtual
+name|ConstString
+name|GetRemoteWorkingDirectory
+argument_list|()
+block|{
+return|return
+name|m_working_dir
+return|;
+block|}
+name|virtual
+name|bool
+name|SetRemoteWorkingDirectory
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|path
+argument_list|)
+block|;
 name|virtual
 specifier|const
 name|char
@@ -778,9 +796,13 @@ name|true
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Subclasses should NOT need to implement this function as it uses
-comment|/// the Platform::LaunchProcess() followed by Platform::Attach ()
+comment|/// Subclasses do not need to implement this function as it uses
+comment|/// the Platform::LaunchProcess() followed by Platform::Attach ().
+comment|/// Remote platforms will want to subclass this function in order
+comment|/// to be able to intercept STDIO and possibly launch a separate
+comment|/// process that will debug the debuggee.
 comment|//------------------------------------------------------------------
+name|virtual
 name|lldb
 operator|::
 name|ProcessSP
@@ -1076,6 +1098,19 @@ name|m_sdk_build
 operator|=
 name|sdk_build
 block|;         }
+name|ConstString
+name|GetWorkingDirectory
+argument_list|()
+block|;
+name|bool
+name|SetWorkingDirectory
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|path
+argument_list|)
+block|;
 comment|// There may be modules that we don't want to find by default for operations like "setting breakpoint by name".
 comment|// The platform will return "true" from this call if the passed in module happens to be one of these.
 name|virtual
@@ -1092,26 +1127,35 @@ name|false
 return|;
 block|}
 name|virtual
-name|uint32_t
+name|Error
 name|MakeDirectory
 argument_list|(
-argument|const std::string&path
+argument|const char *path
 argument_list|,
-argument|mode_t mode
+argument|uint32_t permissions
 argument_list|)
-block|{
-return|return
-name|UINT32_MAX
-return|;
-block|}
-comment|// this need not be virtual: the core behavior is in
-comment|// MakeDirectory(std::string,mode_t)
-name|uint32_t
-name|MakeDirectory
+block|;
+name|virtual
+name|Error
+name|GetFilePermissions
 argument_list|(
-argument|const FileSpec&spec
+specifier|const
+name|char
+operator|*
+name|path
 argument_list|,
-argument|mode_t mode
+name|uint32_t
+operator|&
+name|file_permissions
+argument_list|)
+block|;
+name|virtual
+name|Error
+name|SetFilePermissions
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|uint32_t file_permissions
 argument_list|)
 block|;
 name|virtual
@@ -1124,7 +1168,7 @@ argument|const FileSpec& file_spec
 argument_list|,
 argument|uint32_t flags
 argument_list|,
-argument|mode_t mode
+argument|uint32_t mode
 argument_list|,
 argument|Error&error
 argument_list|)
@@ -1227,6 +1271,21 @@ return|;
 block|}
 name|virtual
 name|Error
+name|GetFile
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|source
+argument_list|,
+specifier|const
+name|FileSpec
+operator|&
+name|destination
+argument_list|)
+block|;
+name|virtual
+name|Error
 name|PutFile
 argument_list|(
 argument|const FileSpec& source
@@ -1239,27 +1298,68 @@ argument|uint32_t gid = UINT32_MAX
 argument_list|)
 block|;
 name|virtual
+name|Error
+name|CreateSymlink
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|src
+argument_list|,
+comment|// The name of the link is in src
+specifier|const
+name|char
+operator|*
+name|dst
+argument_list|)
+block|;
+comment|// The symlink points to dst
+comment|//----------------------------------------------------------------------
+comment|/// Install a file or directory to the remote system.
+comment|///
+comment|/// Install is similar to Platform::PutFile(), but it differs in that if
+comment|/// an application/framework/shared library is installed on a remote
+comment|/// platform and the remote platform requires something to be done to
+comment|/// register the application/framework/shared library, then this extra
+comment|/// registration can be done.
+comment|///
+comment|/// @param[in] src
+comment|///     The source file/directory to install on the remote system.
+comment|///
+comment|/// @param[in] dst
+comment|///     The destination file/directory where \a src will be installed.
+comment|///     If \a dst has no filename specified, then its filename will
+comment|///     be set from \a src. It \a dst has no directory specified, it
+comment|///     will use the platform working directory. If \a dst has a
+comment|///     directory specified, but the directory path is relative, the
+comment|///     platform working directory will be prepended to the relative
+comment|///     directory.
+comment|///
+comment|/// @return
+comment|///     An error object that describes anything that went wrong.
+comment|//----------------------------------------------------------------------
+name|virtual
+name|Error
+name|Install
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|src
+argument_list|,
+specifier|const
+name|FileSpec
+operator|&
+name|dst
+argument_list|)
+block|;
+name|virtual
 name|size_t
 name|GetEnvironment
 argument_list|(
 name|StringList
 operator|&
 name|environment
-argument_list|)
-block|;
-name|virtual
-name|Error
-name|GetFile
-argument_list|(
-specifier|const
-name|FileSpec
-operator|&
-name|source
-argument_list|,
-specifier|const
-name|FileSpec
-operator|&
-name|destination
 argument_list|)
 block|;
 name|virtual
@@ -1275,31 +1375,15 @@ name|file_spec
 argument_list|)
 block|;
 name|virtual
-name|uint32_t
-name|GetFilePermissions
+name|Error
+name|Unlink
 argument_list|(
-argument|const lldb_private::FileSpec&file_spec
-argument_list|,
-argument|Error&error
-argument_list|)
-block|{
-name|error
-operator|.
-name|SetErrorStringWithFormat
-argument_list|(
-literal|"Platform::GetFilePermissions() is not supported in the %s platform"
-argument_list|,
-name|GetName
-argument_list|()
-operator|.
-name|GetCString
-argument_list|()
+specifier|const
+name|char
+operator|*
+name|path
 argument_list|)
 block|;
-return|return
-literal|0
-return|;
-block|}
 name|virtual
 name|bool
 name|GetSupportsRSync
@@ -1634,6 +1718,10 @@ comment|// the root location of where the SDK files are all located
 name|ConstString
 name|m_sdk_build
 block|;
+name|ConstString
+name|m_working_dir
+block|;
+comment|// The working directory which is used when installing modules that have no install path set
 name|std
 operator|::
 name|string

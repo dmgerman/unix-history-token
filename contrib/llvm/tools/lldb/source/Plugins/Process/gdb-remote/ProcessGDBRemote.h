@@ -664,6 +664,18 @@ return|return
 name|m_gdb_comm
 return|;
 block|}
+comment|//----------------------------------------------------------------------
+comment|// Override SetExitStatus so we can disconnect from the remote GDB server
+comment|//----------------------------------------------------------------------
+name|virtual
+name|bool
+name|SetExitStatus
+argument_list|(
+argument|int exit_status
+argument_list|,
+argument|const char *cstr
+argument_list|)
+block|;
 name|protected
 operator|:
 name|friend

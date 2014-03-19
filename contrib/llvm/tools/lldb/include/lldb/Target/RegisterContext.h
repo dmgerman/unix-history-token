@@ -194,12 +194,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|// These two functions are used to implement "push" and "pop" of register states.  They are used primarily
-comment|// for expression evaluation, where we need to push a new state (storing the old one in data_sp) and then
-comment|// restoring the original state by passing the data_sp we got from ReadAllRegisters to WriteAllRegisterValues.
-comment|// ReadAllRegisters will do what is necessary to return a coherent set of register values for this thread, which
-comment|// may mean e.g. interrupting a thread that is sitting in a kernel trap.  That is a somewhat disruptive operation,
-comment|// so these API's should only be used when this behavior is needed.
 name|virtual
 name|bool
 name|ReadAllRegisterValues
@@ -210,9 +204,11 @@ name|DataBufferSP
 operator|&
 name|data_sp
 argument_list|)
-init|=
-literal|0
-decl_stmt|;
+block|{
+return|return
+name|false
+return|;
+block|}
 name|virtual
 name|bool
 name|WriteAllRegisterValues
@@ -224,8 +220,39 @@ name|DataBufferSP
 operator|&
 name|data_sp
 argument_list|)
-init|=
-literal|0
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// These two functions are used to implement "push" and "pop" of register states.  They are used primarily
+comment|// for expression evaluation, where we need to push a new state (storing the old one in data_sp) and then
+comment|// restoring the original state by passing the data_sp we got from ReadAllRegisters to WriteAllRegisterValues.
+comment|// ReadAllRegisters will do what is necessary to return a coherent set of register values for this thread, which
+comment|// may mean e.g. interrupting a thread that is sitting in a kernel trap.  That is a somewhat disruptive operation,
+comment|// so these API's should only be used when this behavior is needed.
+name|virtual
+name|bool
+name|ReadAllRegisterValues
+argument_list|(
+name|lldb_private
+operator|::
+name|RegisterCheckpoint
+operator|&
+name|reg_checkpoint
+argument_list|)
+decl_stmt|;
+name|virtual
+name|bool
+name|WriteAllRegisterValues
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|RegisterCheckpoint
+operator|&
+name|reg_checkpoint
+argument_list|)
 decl_stmt|;
 name|bool
 name|CopyFromRegisterContext
