@@ -80,6 +80,19 @@ file|"main.h"
 end_include
 
 begin_comment
+comment|/*  * If true, some test or preparatory step failed along the execution of this  * program.  *  * Intuitively, we would define a counter instead of a boolean.  However,  * we fork to run the subtests and keeping proper track of the number of  * failed tests would be tricky and not provide any real value.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|something_failed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Registration table of privilege tests.  Each test registers a name, a test  * function, and a cleanup function to run after the test has completed,  * regardless of success/failure.  */
 end_comment
 
@@ -1064,6 +1077,11 @@ name|expected_error
 operator|!=
 literal|0
 condition|)
+block|{
+name|something_failed
+operator|=
+literal|1
+expr_stmt|;
 name|warnx
 argument_list|(
 literal|"%s: returned 0"
@@ -1071,6 +1089,7 @@ argument_list|,
 name|test
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1080,6 +1099,11 @@ name|expected_error
 operator|==
 literal|0
 condition|)
+block|{
+name|something_failed
+operator|=
+literal|1
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"%s: returned (%d, %d)"
@@ -1091,6 +1115,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1098,6 +1123,11 @@ name|expected_errno
 operator|!=
 name|errno
 condition|)
+block|{
+name|something_failed
+operator|=
+literal|1
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"%s: returned (%d, %d)"
@@ -1109,6 +1139,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -1776,7 +1807,11 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|something_failed
+condition|?
+name|EXIT_FAILURE
+else|:
+name|EXIT_SUCCESS
 argument_list|)
 expr_stmt|;
 block|}
@@ -1787,13 +1822,17 @@ condition|(
 literal|1
 condition|)
 block|{
+name|int
+name|status
+decl_stmt|;
 name|pid
 operator|=
 name|waitpid
 argument_list|(
 name|childpid
 argument_list|,
-name|NULL
+operator|&
+name|status
 argument_list|,
 literal|0
 argument_list|)
@@ -1805,6 +1844,11 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|something_failed
+operator|=
+literal|1
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"test: waitpid %s"
@@ -1814,13 +1858,40 @@ operator|->
 name|t_name
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|pid
 operator|==
 name|childpid
 condition|)
+block|{
+if|if
+condition|(
+name|WIFEXITED
+argument_list|(
+name|status
+argument_list|)
+operator|&&
+name|WEXITSTATUS
+argument_list|(
+name|status
+argument_list|)
+operator|==
+name|EXIT_SUCCESS
+condition|)
+block|{
+comment|/* All good in the subprocess! */
+block|}
+else|else
+block|{
+name|something_failed
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
+block|}
 block|}
 block|}
 name|fflush
@@ -1964,7 +2035,11 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|something_failed
+condition|?
+name|EXIT_FAILURE
+else|:
+name|EXIT_SUCCESS
 operator|)
 return|;
 block|}
