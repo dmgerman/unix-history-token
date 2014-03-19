@@ -5089,7 +5089,7 @@ name|log_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"auth-group type is \"deny\""
+literal|"auth-type is \"deny\""
 argument_list|)
 expr_stmt|;
 block|}
@@ -5116,7 +5116,7 @@ name|log_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"auth-group type not set, denying access"
+literal|"auth-type not set, denying access"
 argument_list|)
 expr_stmt|;
 block|}
