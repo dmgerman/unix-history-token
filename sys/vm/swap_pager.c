@@ -5721,11 +5721,9 @@ operator|==
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
-name|vm_object_pip_subtract
+name|vm_object_pip_wakeup
 argument_list|(
 name|object
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|vm_page_dirty
@@ -5782,11 +5780,9 @@ literal|"swap_pager_force_pagein: read from swap failed"
 argument_list|)
 expr_stmt|;
 comment|/*XXX*/
-name|vm_object_pip_subtract
+name|vm_object_pip_wakeup
 argument_list|(
 name|object
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|vm_page_dirty
