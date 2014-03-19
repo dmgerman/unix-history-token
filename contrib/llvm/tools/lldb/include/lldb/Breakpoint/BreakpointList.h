@@ -282,8 +282,12 @@ comment|///
 comment|/// @param[in] module_list
 comment|///   The module list that has changed.
 comment|///
-comment|/// @param[in] added
+comment|/// @param[in] load
 comment|///   \b true if the modules are loaded, \b false if unloaded.
+comment|///
+comment|/// @param[in] delete_locations
+comment|///   If \a load is \b false, then delete breakpoint locations when
+comment|///   when updating breakpoints.
 comment|//------------------------------------------------------------------
 name|void
 name|UpdateBreakpoints
@@ -293,7 +297,10 @@ modifier|&
 name|module_list
 parameter_list|,
 name|bool
-name|added
+name|load
+parameter_list|,
+name|bool
+name|delete_locations
 parameter_list|)
 function_decl|;
 name|void

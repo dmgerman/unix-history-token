@@ -61,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stack>
 end_include
 
@@ -820,6 +814,11 @@ specifier|const
 expr_stmt|;
 name|uint32_t
 name|GetDisassemblyLineCount
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|GetAutoOneLineSummaries
 argument_list|()
 specifier|const
 expr_stmt|;

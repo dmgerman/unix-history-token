@@ -514,6 +514,22 @@ name|int
 name|regset
 argument_list|)
 decl_stmt|;
+comment|/// Reads the value of the thread-specific pointer for a given thread ID.
+name|bool
+name|ReadThreadPointer
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|value
+argument_list|)
+decl_stmt|;
 comment|/// Writes a ptrace_lwpinfo structure corresponding to the given thread ID
 comment|/// to the memory region pointed to by @p lwpinfo.
 name|bool
@@ -597,6 +613,16 @@ name|void
 name|StopMonitor
 parameter_list|()
 function_decl|;
+comment|// Waits for the initial stop message from a new thread.
+name|bool
+name|WaitForInitialTIDStop
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 name|ProcessFreeBSD
@@ -618,19 +644,26 @@ operator|::
 name|pid_t
 name|m_pid
 expr_stmt|;
-name|lldb_private
-operator|::
-name|Mutex
-name|m_server_mutex
-expr_stmt|;
 name|int
 name|m_terminal_fd
 decl_stmt|;
-name|int
-name|m_client_fd
+comment|// current operation which must be executed on the privileged thread
+name|Operation
+modifier|*
+name|m_operation
 decl_stmt|;
-name|int
-name|m_server_fd
+name|lldb_private
+operator|::
+name|Mutex
+name|m_operation_mutex
+expr_stmt|;
+comment|// semaphores notified when Operation is ready to be processed and when
+comment|// the operation is complete.
+name|sem_t
+name|m_operation_pending
+decl_stmt|;
+name|sem_t
+name|m_operation_done
 decl_stmt|;
 struct|struct
 name|OperationArgs
@@ -800,10 +833,6 @@ name|LaunchArgs
 modifier|*
 name|args
 parameter_list|)
-function_decl|;
-name|bool
-name|EnableIPC
-parameter_list|()
 function_decl|;
 name|struct
 name|AttachArgs
@@ -1013,14 +1042,6 @@ comment|/// Stops the operation thread used to attach/launch a process.
 name|void
 name|StopOpThread
 parameter_list|()
-function_decl|;
-name|void
-name|CloseFD
-parameter_list|(
-name|int
-modifier|&
-name|fd
-parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

@@ -148,6 +148,8 @@ name|eServerPacketType_qHostInfo
 block|,
 name|eServerPacketType_qLaunchGDBServer
 block|,
+name|eServerPacketType_qKillSpawnedProcess
+block|,
 name|eServerPacketType_qLaunchSuccess
 block|,
 name|eServerPacketType_qProcessInfoPID
@@ -157,6 +159,8 @@ block|,
 name|eServerPacketType_qUserName
 block|,
 name|eServerPacketType_QEnvironment
+block|,
+name|eServerPacketType_QLaunchArch
 block|,
 name|eServerPacketType_QSetDisableASLR
 block|,
@@ -169,6 +173,28 @@ block|,
 name|eServerPacketType_QSetWorkingDir
 block|,
 name|eServerPacketType_QStartNoAckMode
+block|,
+name|eServerPacketType_qPlatform_RunCommand
+block|,
+name|eServerPacketType_qPlatform_IO_MkDir
+block|,
+name|eServerPacketType_vFile_Open
+block|,
+name|eServerPacketType_vFile_Close
+block|,
+name|eServerPacketType_vFile_pRead
+block|,
+name|eServerPacketType_vFile_pWrite
+block|,
+name|eServerPacketType_vFile_Size
+block|,
+name|eServerPacketType_vFile_Mode
+block|,
+name|eServerPacketType_vFile_Exists
+block|,
+name|eServerPacketType_vFile_MD5
+block|,
+name|eServerPacketType_vFile_Stat
 block|}
 block|;
 name|ServerPacketType
@@ -223,7 +249,17 @@ comment|// digits. Otherwise the error encoded in XX is returned.
 name|uint8_t
 name|GetError
 argument_list|()
-block|; }
+block|;
+name|size_t
+name|GetEscapedBinaryData
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|str
+argument_list|)
+block|;  }
 decl_stmt|;
 end_decl_stmt
 

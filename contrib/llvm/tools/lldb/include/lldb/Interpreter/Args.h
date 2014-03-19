@@ -47,12 +47,6 @@ begin_comment
 comment|// C Includes
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<getopt.h>
-end_include
-
 begin_comment
 comment|// C++ Includes
 end_comment
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/OptionParser.h"
 end_include
 
 begin_decl_stmt
@@ -673,8 +673,7 @@ function_decl|;
 name|size_t
 name|FindArgumentIndexForOption
 parameter_list|(
-name|struct
-name|option
+name|Option
 modifier|*
 name|long_options
 parameter_list|,

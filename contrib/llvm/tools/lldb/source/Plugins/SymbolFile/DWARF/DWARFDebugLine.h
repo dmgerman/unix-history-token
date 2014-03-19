@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"DWARFDataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"DWARFDefines.h"
 end_include
 
@@ -271,49 +277,6 @@ name|FileNameEntry
 operator|>
 name|file_names
 expr_stmt|;
-comment|// Length of the prologue in bytes
-name|uint32_t
-name|Length
-argument_list|()
-specifier|const
-block|{
-return|return
-name|prologue_length
-operator|+
-sizeof|sizeof
-argument_list|(
-name|total_length
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|version
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|prologue_length
-argument_list|)
-return|;
-block|}
-comment|// Length of the line table data in bytes (not including the prologue)
-name|uint32_t
-name|StatementTableLength
-argument_list|()
-specifier|const
-block|{
-return|return
-name|total_length
-operator|+
-sizeof|sizeof
-argument_list|(
-name|total_length
-argument_list|)
-operator|-
-name|Length
-argument_list|()
-return|;
-block|}
 name|int32_t
 name|MaxLineIncrementForSpecialOpcode
 argument_list|()
@@ -813,7 +776,7 @@ argument_list|,
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_line_data
 argument_list|,
@@ -842,7 +805,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_line_data
 argument_list|,
@@ -867,7 +830,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_line_data
 argument_list|,
@@ -903,7 +866,7 @@ argument_list|,
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_line_data
 argument_list|,
@@ -928,7 +891,7 @@ argument_list|,
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_line_data
 argument_list|,
@@ -950,7 +913,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_line_data
 argument_list|,
@@ -975,7 +938,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_line_data
 argument_list|,
@@ -1010,7 +973,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_line_data
 argument_list|)
@@ -1024,7 +987,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_line_data
 argument_list|)

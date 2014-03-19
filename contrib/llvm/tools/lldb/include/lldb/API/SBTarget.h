@@ -1629,6 +1629,18 @@ argument_list|(
 argument|lldb::BasicType type
 argument_list|)
 expr_stmt|;
+name|lldb
+operator|::
+name|SBValue
+name|CreateValueFromAddress
+argument_list|(
+argument|const char *name
+argument_list|,
+argument|lldb::SBAddress addr
+argument_list|,
+argument|lldb::SBType type
+argument_list|)
+expr_stmt|;
 name|SBSourceManager
 name|GetSourceManager
 parameter_list|()

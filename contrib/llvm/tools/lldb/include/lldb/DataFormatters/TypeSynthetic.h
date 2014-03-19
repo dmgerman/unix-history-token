@@ -53,12 +53,6 @@ directive|include
 file|<stdint.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
 begin_comment
 comment|// C++ Includes
 end_comment
@@ -1714,6 +1708,29 @@ argument_list|,
 argument|ValueObject&backend
 argument_list|)
 block|;
+name|bool
+name|IsValid
+argument_list|()
+block|{
+return|return
+name|m_wrapper_sp
+operator|.
+name|get
+argument_list|()
+operator|!=
+name|nullptr
+operator|&&
+name|m_wrapper_sp
+operator|->
+name|operator
+name|bool
+argument_list|()
+operator|&&
+name|m_interpreter
+operator|!=
+name|nullptr
+return|;
+block|}
 name|virtual
 operator|~
 name|FrontEnd
@@ -1892,23 +1909,47 @@ argument_list|(
 argument|ValueObject&backend
 argument_list|)
 block|{
-return|return
+name|auto
+name|synth_ptr
+operator|=
 name|SyntheticChildrenFrontEnd
 operator|::
 name|AutoPointer
 argument_list|(
 argument|new FrontEnd(m_python_class, backend)
 argument_list|)
+block|;
+if|if
+condition|(
+name|synth_ptr
+operator|&&
+operator|(
+operator|(
+name|FrontEnd
+operator|*
+operator|)
+name|synth_ptr
+operator|.
+name|get
+argument_list|()
+operator|)
+operator|->
+name|IsValid
+argument_list|()
+condition|)
+return|return
+name|synth_ptr
 return|;
-block|}
 end_expr_stmt
 
-begin_label
-name|private
-label|:
-end_label
+begin_return
+return|return
+name|NULL
+return|;
+end_return
 
 begin_expr_stmt
+unit|}              private:
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ScriptedSyntheticChildren

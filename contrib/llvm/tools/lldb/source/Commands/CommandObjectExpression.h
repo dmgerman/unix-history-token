@@ -161,11 +161,17 @@ block|;
 name|bool
 name|show_summary
 block|;
+name|bool
+name|debug
+block|;
 name|uint32_t
 name|timeout
 block|;
 name|bool
 name|try_all_threads
+block|;
+name|LanguageRuntimeDescriptionDisplayVerbosity
+name|m_verbosity
 block|;     }
 block|;
 name|CommandObjectExpression

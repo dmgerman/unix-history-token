@@ -47,12 +47,6 @@ begin_comment
 comment|// C Includes
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<getopt.h>
-end_include
-
 begin_comment
 comment|// C++ Includes
 end_comment
@@ -242,8 +236,7 @@ comment|///
 comment|/// @see Args::ParseOptions (Options&)
 comment|/// @see man getopt_long_only
 comment|//------------------------------------------------------------------
-name|struct
-name|option
+name|Option
 modifier|*
 name|GetLongOptions
 parameter_list|()
@@ -544,8 +537,7 @@ name|std
 operator|::
 name|vector
 operator|<
-expr|struct
-name|option
+name|Option
 operator|>
 name|m_getopt_table
 expr_stmt|;
@@ -827,6 +819,14 @@ name|void
 name|Finalize
 argument_list|()
 block|;
+name|bool
+name|DidFinalize
+argument_list|()
+block|{
+return|return
+name|m_did_finalize
+return|;
+block|}
 name|virtual
 name|Error
 name|SetOptionValue
@@ -865,7 +865,14 @@ literal|0
 index|]
 return|;
 block|}
-expr|struct
+specifier|const
+name|OptionGroup
+operator|*
+name|GetGroupWithOption
+argument_list|(
+argument|char short_opt
+argument_list|)
+block|;                  struct
 name|OptionInfo
 block|{
 name|OptionInfo

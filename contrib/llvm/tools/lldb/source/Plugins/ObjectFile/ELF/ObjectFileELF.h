@@ -268,6 +268,18 @@ name|GetSymtab
 argument_list|()
 block|;
 name|virtual
+name|lldb_private
+operator|::
+name|Symbol
+operator|*
+name|ResolveSymbolForAddress
+argument_list|(
+argument|const lldb_private::Address& so_addr
+argument_list|,
+argument|bool verify_unique
+argument_list|)
+block|;
+name|virtual
 name|bool
 name|IsStripped
 argument_list|()
@@ -339,7 +351,13 @@ name|lldb_private
 operator|::
 name|Address
 name|GetImageInfoAddress
-argument_list|()
+argument_list|(
+name|lldb_private
+operator|::
+name|Target
+operator|*
+name|target
+argument_list|)
 block|;
 name|virtual
 name|lldb_private

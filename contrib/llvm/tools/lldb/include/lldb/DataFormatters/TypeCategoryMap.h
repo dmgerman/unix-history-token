@@ -341,6 +341,16 @@ return|;
 block|}
 name|lldb
 operator|::
+name|TypeFormatImplSP
+name|GetFormat
+argument_list|(
+argument|ValueObject& valobj
+argument_list|,
+argument|lldb::DynamicValueType use_dynamic
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
 name|TypeSummaryImplSP
 name|GetSummaryFormat
 argument_list|(

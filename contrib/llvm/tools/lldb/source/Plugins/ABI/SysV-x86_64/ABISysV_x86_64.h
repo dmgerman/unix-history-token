@@ -224,13 +224,13 @@ argument_list|(
 argument|lldb::addr_t cfa
 argument_list|)
 block|{
-comment|// Make sure the stack call frame addresses are are 8 byte aligned
+comment|// Make sure the stack call frame addresses are 16 byte aligned
 if|if
 condition|(
 name|cfa
 operator|&
 operator|(
-literal|8ull
+literal|16ull
 operator|-
 literal|1ull
 operator|)
@@ -238,7 +238,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|// Not 8 byte aligned
+comment|// Not 16 byte aligned
 if|if
 condition|(
 name|cfa

@@ -1111,6 +1111,8 @@ name|eArgTypeCommandName
 block|,
 name|eArgTypeCount
 block|,
+name|eArgTypeDescriptionVerbosity
+block|,
 name|eArgTypeDirectoryName
 block|,
 name|eArgTypeDisassemblyFlavor
@@ -1162,6 +1164,12 @@ block|,
 name|eArgTypeOldPathPrefix
 block|,
 name|eArgTypeOneLiner
+block|,
+name|eArgTypePath
+block|,
+name|eArgTypePermissionsNumber
+block|,
+name|eArgTypePermissionsString
 block|,
 name|eArgTypePid
 block|,
@@ -1313,6 +1321,8 @@ block|,
 name|eSymbolTypeObjCMetaClass
 block|,
 name|eSymbolTypeObjCIVar
+block|,
+name|eSymbolTypeReExported
 block|}
 name|SymbolType
 typedef|;

@@ -125,6 +125,13 @@ block|;
 name|virtual
 name|lldb
 operator|::
+name|queue_id_t
+name|GetQueueID
+argument_list|()
+block|;
+name|virtual
+name|lldb
+operator|::
 name|RegisterContextSP
 name|GetRegisterContext
 argument_list|()

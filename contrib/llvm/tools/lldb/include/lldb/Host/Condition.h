@@ -55,7 +55,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"lldb/lldb-types.h"
 end_include
 
 begin_include
@@ -182,9 +182,11 @@ label|:
 comment|//------------------------------------------------------------------
 comment|// Member variables
 comment|//------------------------------------------------------------------
-name|pthread_cond_t
+name|lldb
+operator|::
+name|condition_t
 name|m_condition
-decl_stmt|;
+expr_stmt|;
 comment|///< The condition variable.
 comment|//------------------------------------------------------------------
 comment|/// Get accessor to the pthread condition object.
@@ -192,11 +194,13 @@ comment|///
 comment|/// @return
 comment|///     A pointer to the condition variable owned by this object.
 comment|//------------------------------------------------------------------
-name|pthread_cond_t
-modifier|*
+name|lldb
+operator|::
+name|condition_t
+operator|*
 name|GetCondition
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

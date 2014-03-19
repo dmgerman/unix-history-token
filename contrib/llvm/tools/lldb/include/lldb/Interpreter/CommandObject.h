@@ -154,6 +154,7 @@ call|)
 argument_list|()
 return|;
 block|}
+name|explicit
 name|operator
 name|bool
 argument_list|()

@@ -169,16 +169,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|m_hw_index
+name|m_hardware_index
 return|;
 block|}
 name|bool
-name|HardwarePreferred
+name|HardwareRequired
 argument_list|()
 specifier|const
 block|{
 return|return
-name|m_hw_preferred
+name|m_hardware
 return|;
 block|}
 name|virtual
@@ -188,7 +188,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|m_hw_index
+name|m_hardware_index
 operator|!=
 name|LLDB_INVALID_INDEX32
 return|;
@@ -223,7 +223,7 @@ name|uint32_t
 name|index
 parameter_list|)
 block|{
-name|m_hw_index
+name|m_hardware_index
 operator|=
 name|index
 expr_stmt|;
@@ -258,11 +258,11 @@ expr_stmt|;
 comment|// The load address of this stop point. The base Stoppoint doesn't
 comment|// store a full Address since that's not needed for the breakpoint sites.
 name|bool
-name|m_hw_preferred
+name|m_hardware
 decl_stmt|;
-comment|// 1 if this point has been requested to be set using hardware (which may fail due to lack of resources)
+comment|// True if this point has been is required to use hardware (which may fail due to lack of resources)
 name|uint32_t
-name|m_hw_index
+name|m_hardware_index
 decl_stmt|;
 comment|// The hardware resource index for this breakpoint/watchpoint
 name|uint32_t

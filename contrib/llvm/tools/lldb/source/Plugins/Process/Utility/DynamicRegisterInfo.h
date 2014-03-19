@@ -57,6 +57,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -88,14 +94,11 @@ argument_list|()
 expr_stmt|;
 name|DynamicRegisterInfo
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|PythonDictionary
-operator|&
-name|dict
+argument|const lldb_private::PythonDictionary&dict
+argument_list|,
+argument|lldb::ByteOrder byte_order
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|virtual
 operator|~
 name|DynamicRegisterInfo
@@ -110,6 +113,11 @@ operator|::
 name|PythonDictionary
 operator|&
 name|dict
+argument_list|,
+name|lldb
+operator|::
+name|ByteOrder
+name|byte_order
 argument_list|)
 decl_stmt|;
 name|void
@@ -206,6 +214,11 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
+name|Dump
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
 name|Clear
 parameter_list|()
 function_decl|;
@@ -265,6 +278,31 @@ name|ConstString
 operator|>
 name|name_collection
 expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|uint32_t
+operator|,
+name|reg_num_collection
+operator|>
+name|reg_to_regs_map
+expr_stmt|;
+name|lldb_private
+operator|::
+name|RegisterInfo
+operator|*
+name|GetRegisterInfo
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|ConstString
+operator|&
+name|reg_name
+argument_list|)
+expr_stmt|;
 name|reg_collection
 name|m_regs
 decl_stmt|;
@@ -277,10 +315,19 @@ decl_stmt|;
 name|name_collection
 name|m_set_names
 decl_stmt|;
+name|reg_to_regs_map
+name|m_value_regs_map
+decl_stmt|;
+name|reg_to_regs_map
+name|m_invalidate_regs_map
+decl_stmt|;
 name|size_t
 name|m_reg_data_byte_size
 decl_stmt|;
 comment|// The number of bytes required to store all registers
+name|bool
+name|m_finalized
+decl_stmt|;
 block|}
 end_decl_stmt
 

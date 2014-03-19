@@ -75,7 +75,7 @@ argument_list|,
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|macinfo_data
 argument_list|,

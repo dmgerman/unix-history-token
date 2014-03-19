@@ -57,6 +57,12 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment

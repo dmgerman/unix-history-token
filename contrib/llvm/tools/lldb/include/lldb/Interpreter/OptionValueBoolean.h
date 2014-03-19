@@ -207,6 +207,7 @@ comment|/// @return
 comment|///     /b True this object contains a valid namespace decl, \b
 comment|///     false otherwise.
 comment|//------------------------------------------------------------------
+name|explicit
 name|operator
 name|bool
 argument_list|()

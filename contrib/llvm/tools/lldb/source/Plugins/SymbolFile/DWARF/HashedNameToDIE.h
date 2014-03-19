@@ -1475,7 +1475,7 @@ block|}
 name|bool
 name|Read
 argument_list|(
-argument|const lldb_private::DataExtractor&data
+argument|const lldb_private::DWARFDataExtractor&data
 argument_list|,
 argument|lldb::offset_t *offset_ptr
 argument_list|,
@@ -2129,14 +2129,14 @@ name|MemoryTable
 argument_list|(
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|table_data
 argument_list|,
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|string_table
 argument_list|,
@@ -3403,14 +3403,14 @@ label|:
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|m_data
 expr_stmt|;
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|m_string_table
 expr_stmt|;

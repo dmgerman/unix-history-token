@@ -309,6 +309,20 @@ operator|=
 name|pc
 expr_stmt|;
 block|}
+name|void
+name|SetCFA
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|cfa
+argument_list|)
+block|{
+name|m_cfa
+operator|=
+name|cfa
+expr_stmt|;
+block|}
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from StackID can see and modify these
 comment|//------------------------------------------------------------------

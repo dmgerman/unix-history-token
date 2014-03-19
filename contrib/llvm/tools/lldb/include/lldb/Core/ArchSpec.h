@@ -108,6 +108,8 @@ name|eCore_arm_armv5t
 block|,
 name|eCore_arm_armv6
 block|,
+name|eCore_arm_armv6m
+block|,
 name|eCore_arm_armv7
 block|,
 name|eCore_arm_armv7f
@@ -132,6 +134,8 @@ name|eCore_thumbv5e
 block|,
 name|eCore_thumbv6
 block|,
+name|eCore_thumbv6m
+block|,
 name|eCore_thumbv7
 block|,
 name|eCore_thumbv7f
@@ -143,6 +147,8 @@ block|,
 name|eCore_thumbv7m
 block|,
 name|eCore_thumbv7em
+block|,
+name|eCore_mips64
 block|,
 name|eCore_ppc_generic
 block|,

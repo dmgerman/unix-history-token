@@ -285,13 +285,8 @@ comment|/// @param[in] exe_ctx
 comment|///     The execution context to use when looking up entities that
 comment|///     are needed for parsing (locations of variables, etc.)
 comment|///
-comment|/// @param[in] unwind_on_error
-comment|///     If true, and the execution stops before completion, we unwind the
-comment|///     function call, and return the program state to what it was before the
-comment|///     execution.  If false, we leave the program in the stopped state.
-comment|///
-comment|/// @param[in] ignore_breakpoints
-comment|///     If true, ignore breakpoints while executing the expression.
+comment|/// @param[in] options
+comment|///     Expression evaluation options.
 comment|///
 comment|/// @param[in] shared_ptr_to_me
 comment|///     This is a shared pointer to this ClangUserExpression.  This is
@@ -303,17 +298,6 @@ comment|///
 comment|/// @param[in] result
 comment|///     A pointer to direct at the persistent variable in which the
 comment|///     expression's result is stored.
-comment|///
-comment|/// @param[in] try_all_threads
-comment|///     If true, then we will try to run all threads if the function doesn't complete on
-comment|///     one thread.  See timeout_usec for the interaction of this variable and
-comment|///     the timeout.
-comment|///
-comment|/// @param[in] timeout_usec
-comment|///     Timeout value (0 for no timeout). If try_all_threads is true, then we
-comment|///     will try on one thread for the lesser of .25 sec and half the total timeout.
-comment|///     then switch to running all threads, otherwise this will be the total timeout.
-comment|///
 comment|///
 comment|/// @return
 comment|///     A Process::Execution results value.
@@ -329,11 +313,10 @@ name|ExecutionContext
 operator|&
 name|exe_ctx
 argument_list|,
-name|bool
-name|unwind_on_error
-argument_list|,
-name|bool
-name|ignore_breakpoints
+specifier|const
+name|EvaluateExpressionOptions
+operator|&
+name|options
 argument_list|,
 name|ClangUserExpressionSP
 operator|&
@@ -344,12 +327,6 @@ operator|::
 name|ClangExpressionVariableSP
 operator|&
 name|result
-argument_list|,
-name|bool
-name|try_all_threads
-argument_list|,
-name|uint32_t
-name|timeout_usec
 argument_list|)
 decl_stmt|;
 name|ThreadPlan
@@ -563,25 +540,8 @@ comment|///
 comment|/// @param[in] exe_ctx
 comment|///     The execution context to use when evaluating the expression.
 comment|///
-comment|/// @param[in] execution_policy
-comment|///     Determines whether or not to try using the IR interpreter to
-comment|///     avoid running the expression on the parser.
-comment|///
-comment|/// @param[in] language
-comment|///     If not eLanguageTypeUnknown, a language to use when parsing
-comment|///     the expression.  Currently restricted to those languages
-comment|///     supported by Clang.
-comment|///
-comment|/// @param[in] unwind_on_error
-comment|///     True if the thread's state should be restored in the case
-comment|///     of an error.
-comment|///
-comment|/// @param[in] ignore_breakpoints
-comment|///     If true, ignore breakpoints while executing the expression.
-comment|///
-comment|/// @param[in] result_type
-comment|///     If not eResultTypeAny, the type of the desired result.  Will
-comment|///     result in parse errors if impossible.
+comment|/// @param[in] options
+comment|///     Expression evaluation options.
 comment|///
 comment|/// @param[in] expr_cstr
 comment|///     A C string containing the expression to be evaluated.
@@ -593,15 +553,9 @@ comment|///
 comment|/// @param[in/out] result_valobj_sp
 comment|///      If execution is successful, the result valobj is placed here.
 comment|///
-comment|/// @param[in] try_all_threads
-comment|///     If true, then we will try to run all threads if the function doesn't complete on
-comment|///     one thread.  See timeout_usec for the interaction of this variable and
-comment|///     the timeout.
-comment|///
-comment|/// @param[in] timeout_usec
-comment|///     Timeout value (0 for no timeout). If try_all_threads is true, then we
-comment|///     will try on one thread for the lesser of .25 sec and half the total timeout.
-comment|///     then switch to running all threads, otherwise this will be the total timeout.
+comment|/// @param[out]
+comment|///     Filled in with an error in case the expression evaluation
+comment|///     fails to parse, run, or evaluated.
 comment|///
 comment|/// @result
 comment|///      A Process::ExecutionResults value.  eExecutionCompleted for success.
@@ -614,74 +568,10 @@ name|ExecutionContext
 operator|&
 name|exe_ctx
 argument_list|,
-name|lldb_private
-operator|::
-name|ExecutionPolicy
-name|execution_policy
-argument_list|,
-name|lldb
-operator|::
-name|LanguageType
-name|language
-argument_list|,
-name|ResultType
-name|desired_type
-argument_list|,
-name|bool
-name|unwind_on_error
-argument_list|,
-name|bool
-name|ignore_breakpoints
-argument_list|,
 specifier|const
-name|char
-operator|*
-name|expr_cstr
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|expr_prefix
-argument_list|,
-name|lldb
-operator|::
-name|ValueObjectSP
+name|EvaluateExpressionOptions
 operator|&
-name|result_valobj_sp
-argument_list|,
-name|bool
-name|try_all_threads
-argument_list|,
-name|uint32_t
-name|timeout_usec
-argument_list|)
-decl_stmt|;
-specifier|static
-name|ExecutionResults
-name|EvaluateWithError
-argument_list|(
-name|ExecutionContext
-operator|&
-name|exe_ctx
-argument_list|,
-name|lldb_private
-operator|::
-name|ExecutionPolicy
-name|execution_policy
-argument_list|,
-name|lldb
-operator|::
-name|LanguageType
-name|language
-argument_list|,
-name|ResultType
-name|desired_type
-argument_list|,
-name|bool
-name|unwind_on_error
-argument_list|,
-name|bool
-name|ignore_breakpoints
+name|options
 argument_list|,
 specifier|const
 name|char
@@ -702,12 +592,6 @@ argument_list|,
 name|Error
 operator|&
 name|error
-argument_list|,
-name|bool
-name|try_all_threads
-argument_list|,
-name|uint32_t
-name|timeout_usec
 argument_list|)
 decl_stmt|;
 specifier|static

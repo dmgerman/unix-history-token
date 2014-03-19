@@ -131,6 +131,8 @@ comment|///     The byte length of the location expression.
 comment|//------------------------------------------------------------------
 name|DWARFExpression
 argument_list|(
+argument|lldb::ModuleSP module
+argument_list|,
 argument|const DataExtractor& data
 argument_list|,
 argument|lldb::offset_t data_offset
@@ -309,6 +311,9 @@ comment|//------------------------------------------------------------------
 comment|/// Make the expression parser read its location information from a
 comment|/// given data source
 comment|///
+comment|/// @param[in] module_sp
+comment|///     The module that defines the DWARF expression.
+comment|///
 comment|/// @param[in] data
 comment|///     A data extractor configured to read the DWARF location expression's
 comment|///     bytecode.
@@ -322,6 +327,11 @@ comment|//------------------------------------------------------------------
 name|void
 name|SetOpcodeData
 argument_list|(
+name|lldb
+operator|::
+name|ModuleSP
+name|module_sp
+argument_list|,
 specifier|const
 name|DataExtractor
 operator|&
@@ -352,6 +362,9 @@ comment|/// Location lists are typically small so even though we are copying
 comment|/// the data, it shouldn't amount to that much for the variables we
 comment|/// end up parsing.
 comment|///
+comment|/// @param[in] module_sp
+comment|///     The module that defines the DWARF expression.
+comment|///
 comment|/// @param[in] data
 comment|///     A data extractor configured to read and copy the DWARF
 comment|///     location expression's bytecode.
@@ -365,6 +378,11 @@ comment|//------------------------------------------------------------------
 name|void
 name|CopyOpcodeData
 argument_list|(
+name|lldb
+operator|::
+name|ModuleSP
+name|module_sp
+argument_list|,
 specifier|const
 name|DataExtractor
 operator|&
@@ -513,6 +531,9 @@ comment|///     The execution context in which to evaluate the location
 comment|///     expression.  The location expression may access the target's
 comment|///     memory, especially if it comes from the expression parser.
 comment|///
+comment|/// @param[in] opcode_ctx
+comment|///     The module which defined the expression.
+comment|///
 comment|/// @param[in] opcodes
 comment|///     This is a static method so the opcodes need to be provided
 comment|///     explicitly.
@@ -580,6 +601,11 @@ argument_list|,
 name|RegisterContext
 operator|*
 name|reg_ctx
+argument_list|,
+name|lldb
+operator|::
+name|ModuleSP
+name|opcode_ctx
 argument_list|,
 specifier|const
 name|DataExtractor
@@ -773,6 +799,12 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Classes that inherit from DWARFExpression can see and modify these
 comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|ModuleWP
+name|m_module_wp
+expr_stmt|;
+comment|///< Module which defined this expression.
 name|DataExtractor
 name|m_data
 decl_stmt|;

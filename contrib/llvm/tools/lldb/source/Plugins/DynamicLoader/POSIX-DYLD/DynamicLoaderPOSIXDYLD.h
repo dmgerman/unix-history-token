@@ -171,6 +171,17 @@ name|Error
 name|CanLoadImage
 argument_list|()
 block|;
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetThreadLocalData
+argument_list|(
+argument|const lldb::ModuleSP module
+argument_list|,
+argument|const lldb::ThreadSP thread
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
@@ -274,6 +285,29 @@ operator|::
 name|break_id_t
 name|m_dyld_bid
 block|;
+comment|/// Loaded module list. (link map for each module)
+name|std
+operator|::
+name|map
+operator|<
+name|lldb
+operator|::
+name|ModuleWP
+block|,
+name|lldb
+operator|::
+name|addr_t
+block|,
+name|std
+operator|::
+name|owner_less
+operator|<
+name|lldb
+operator|::
+name|ModuleWP
+operator|>>
+name|m_loaded_modules
+block|;
 comment|/// Enables a breakpoint on a function called by the runtime
 comment|/// linker each time a module is loaded or unloaded.
 name|void
@@ -305,14 +339,26 @@ comment|/// Updates the load address of every allocatable section in @p module.
 comment|///
 comment|/// @param module The module to traverse.
 comment|///
+comment|/// @param link_map_addr The virtual address of the link map for the @p module.
+comment|///
 comment|/// @param base_addr The virtual base address @p module is loaded at.
 name|void
 name|UpdateLoadedSections
 argument_list|(
 argument|lldb::ModuleSP module
 argument_list|,
-argument|lldb::addr_t base_addr =
-literal|0
+argument|lldb::addr_t link_map_addr
+argument_list|,
+argument|lldb::addr_t base_addr
+argument_list|)
+block|;
+comment|/// Removes the loaded sections from the target in @p module.
+comment|///
+comment|/// @param module The module to traverse.
+name|void
+name|UnloadSections
+argument_list|(
+argument|const lldb::ModuleSP module
 argument_list|)
 block|;
 comment|/// Locates or creates a module given by @p file and updates/loads the
@@ -323,6 +369,8 @@ name|ModuleSP
 name|LoadModuleAtAddress
 argument_list|(
 argument|const lldb_private::FileSpec&file
+argument_list|,
+argument|lldb::addr_t link_map_addr
 argument_list|,
 argument|lldb::addr_t base_addr
 argument_list|)
@@ -387,6 +435,17 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|DynamicLoaderPOSIXDYLD
 argument_list|)
+block|;
+specifier|const
+name|lldb_private
+operator|::
+name|SectionList
+operator|*
+name|GetSectionListFromModule
+argument_list|(
+argument|const lldb::ModuleSP module
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 end_decl_stmt

@@ -286,7 +286,7 @@ comment|/// hitting software breakpoints we must disable the breakpoint by
 end_comment
 
 begin_comment
-comment|/// restoring the original breakpoint opcde, single stepping and
+comment|/// restoring the original breakpoint opcode, single stepping and
 end_comment
 
 begin_comment
@@ -314,7 +314,7 @@ comment|/// restore locations of registers for unwinding stack frame variables)
 end_comment
 
 begin_comment
-comment|/// and emulating the intruction is just a bonus.
+comment|/// and emulating the instruction is just a bonus.
 end_comment
 
 begin_comment
@@ -1062,7 +1062,7 @@ comment|// Mandatory overrides
 comment|//----------------------------------------------------------------------
 name|virtual
 name|bool
-name|SupportsEmulatingIntructionsOfType
+name|SupportsEmulatingInstructionsOfType
 argument_list|(
 argument|InstructionType inst_type
 argument_list|)

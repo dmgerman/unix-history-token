@@ -73,6 +73,8 @@ name|Kind
 block|{
 name|eInvalidMessage
 block|,
+name|eAttachMessage
+block|,
 name|eExitMessage
 block|,
 name|eLimboMessage
@@ -90,6 +92,8 @@ block|,
 name|eCrashMessage
 block|,
 name|eNewThreadMessage
+block|,
+name|eExecMessage
 block|}
 enum|;
 enum|enum
@@ -190,6 +194,26 @@ specifier|const
 block|{
 return|return
 name|m_tid
+return|;
+block|}
+comment|/// Indicates that the process @p pid has successfully attached.
+specifier|static
+name|ProcessMessage
+name|Attach
+argument_list|(
+name|lldb
+operator|::
+name|pid_t
+name|pid
+argument_list|)
+block|{
+return|return
+name|ProcessMessage
+argument_list|(
+name|pid
+argument_list|,
+name|eAttachMessage
+argument_list|)
 return|;
 block|}
 comment|/// Indicates that the thread @p tid is about to exit with status @p status.
@@ -429,6 +453,26 @@ argument_list|,
 name|eExitMessage
 argument_list|,
 name|status
+argument_list|)
+return|;
+block|}
+comment|/// Indicates that the thread @p pid has exec'd.
+specifier|static
+name|ProcessMessage
+name|Exec
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+name|tid
+argument_list|)
+block|{
+return|return
+name|ProcessMessage
+argument_list|(
+name|tid
+argument_list|,
+name|eExecMessage
 argument_list|)
 return|;
 block|}

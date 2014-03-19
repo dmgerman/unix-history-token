@@ -298,6 +298,15 @@ name|bool
 name|RestoreThreadState
 argument_list|()
 block|;
+name|virtual
+name|void
+name|ThreadDestroyed
+argument_list|()
+block|{
+name|m_takedown_done
+operator|=
+name|true
+block|;     }
 name|protected
 operator|:
 name|void

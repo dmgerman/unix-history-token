@@ -277,7 +277,6 @@ operator|::
 name|eTypeBytes
 case|:
 break|break;
-break|break;
 block|}
 return|return
 name|invalid_opcode

@@ -483,6 +483,9 @@ comment|///
 comment|/// @param[in] name
 comment|///     The name of the symbol.
 comment|///
+comment|/// @param[in] module
+comment|///     The module to limit the search to. This can be NULL
+comment|///
 comment|/// @return
 comment|///     Valid load address for the symbol
 comment|//------------------------------------------------------------------
@@ -498,6 +501,8 @@ argument_list|,
 argument|const ConstString&name
 argument_list|,
 argument|lldb::SymbolType symbol_type
+argument_list|,
+argument|Module *module = NULL
 argument_list|)
 block|;
 name|lldb
@@ -927,9 +932,12 @@ comment|///
 comment|/// @param[in] name
 comment|///     The name as a plain C string.
 comment|///
+comment|/// @param[in] module
+comment|///     The module to limit the search to. This can be NULL
+comment|///
 comment|/// @return
 comment|///     The LLDB Symbol found, or NULL if none was found.
-comment|//---------------------------------------------------------
+comment|//------------------------------------------------------------------
 specifier|const
 name|Symbol
 operator|*
@@ -943,6 +951,12 @@ specifier|const
 name|ConstString
 operator|&
 name|name
+argument_list|,
+name|Module
+operator|*
+name|module
+operator|=
+name|NULL
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------

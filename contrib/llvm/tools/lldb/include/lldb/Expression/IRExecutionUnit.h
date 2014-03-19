@@ -82,6 +82,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Module.h"
 end_include
 
@@ -903,6 +909,38 @@ name|m_default_mm_ap
 operator|->
 name|GetNumStubSlabs
 argument_list|()
+return|;
+block|}
+name|virtual
+name|void
+name|registerEHFrames
+argument_list|(
+argument|uint8_t *Addr
+argument_list|,
+argument|uint64_t LoadAddr
+argument_list|,
+argument|size_t Size
+argument_list|)
+block|{
+return|return
+name|m_default_mm_ap
+operator|->
+name|registerEHFrames
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|Addr
+argument_list|,
+name|Size
+argument_list|)
+argument_list|)
 return|;
 block|}
 comment|//------------------------------------------------------------------
