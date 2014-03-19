@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1943,10 +1943,6 @@ block|{
 name|int
 name|err
 decl_stmt|;
-name|zfeature_info_t
-modifier|*
-name|feature
-decl_stmt|;
 name|char
 modifier|*
 name|fname
@@ -1966,8 +1962,7 @@ name|zfeature_lookup_name
 argument_list|(
 name|fname
 argument_list|,
-operator|&
-name|feature
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3875,9 +3870,8 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-name|zfeature_info_t
-modifier|*
-name|fi
+name|spa_feature_t
+name|fid
 decl_stmt|;
 name|ret
 operator|=
@@ -3886,7 +3880,7 @@ argument_list|(
 name|feature
 argument_list|,
 operator|&
-name|fi
+name|fid
 argument_list|)
 expr_stmt|;
 if|if
@@ -3916,8 +3910,11 @@ return|;
 block|}
 name|feature
 operator|=
-name|fi
-operator|->
+name|spa_feature_table
+index|[
+name|fid
+index|]
+operator|.
 name|fi_guid
 expr_stmt|;
 block|}

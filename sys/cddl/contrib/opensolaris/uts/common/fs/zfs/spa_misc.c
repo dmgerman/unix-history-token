@@ -4448,10 +4448,20 @@ modifier|*
 name|feature
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|nvlist_add_boolean
+if|if
+condition|(
+operator|!
+name|nvlist_exists
+argument_list|(
+name|spa
+operator|->
+name|spa_label_features
+argument_list|,
+name|feature
+argument_list|)
+condition|)
+block|{
+name|fnvlist_add_boolean
 argument_list|(
 name|spa
 operator|->
@@ -4467,6 +4477,7 @@ operator|->
 name|spa_root_vdev
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4484,9 +4495,8 @@ modifier|*
 name|feature
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|nvlist_remove_all
 argument_list|(
 name|spa
@@ -4495,7 +4505,9 @@ name|spa_label_features
 argument_list|,
 name|feature
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|vdev_config_dirty
 argument_list|(
 name|spa

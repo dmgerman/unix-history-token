@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -3337,10 +3337,42 @@ if|if
 condition|(
 name|dn
 operator|->
+name|dn_next_type
+index|[
+name|txgoff
+index|]
+operator|!=
+literal|0
+condition|)
+block|{
+name|dnp
+operator|->
+name|dn_type
+operator|=
+name|dn
+operator|->
+name|dn_type
+expr_stmt|;
+name|dn
+operator|->
+name|dn_next_type
+index|[
+name|txgoff
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dn
+operator|->
 name|dn_next_blksz
 index|[
 name|txgoff
 index|]
+operator|!=
+literal|0
 condition|)
 block|{
 name|ASSERT
@@ -3442,6 +3474,8 @@ name|dn_next_bonuslen
 index|[
 name|txgoff
 index|]
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -3500,6 +3534,8 @@ name|dn_next_bonustype
 index|[
 name|txgoff
 index|]
+operator|!=
+literal|0
 condition|)
 block|{
 name|ASSERT
@@ -3603,6 +3639,8 @@ name|dn_next_indblkshift
 index|[
 name|txgoff
 index|]
+operator|!=
+literal|0
 condition|)
 block|{
 name|ASSERT
