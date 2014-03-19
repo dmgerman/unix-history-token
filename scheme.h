@@ -93,17 +93,11 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|scheme_add_part
+name|scheme_check_part
 parameter_list|(
-name|u_int
-parameter_list|,
-specifier|const
-name|char
+name|struct
+name|part
 modifier|*
-parameter_list|,
-name|off_t
-parameter_list|,
-name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl

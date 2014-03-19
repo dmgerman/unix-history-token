@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mkimg.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"scheme.h"
 end_include
 
@@ -102,80 +108,19 @@ name|BUFFER_SIZE
 value|(1024*1024)
 end_define
 
-begin_struct
-struct|struct
-name|part
-block|{
-name|STAILQ_ENTRY
-argument_list|(
-argument|part
-argument_list|)
-name|link
-expr_stmt|;
-name|char
-modifier|*
-name|type
-decl_stmt|;
-comment|/* Partition type. */
-name|char
-modifier|*
-name|contents
-decl_stmt|;
-comment|/* Contents/size specification. */
-name|u_int
-name|kind
-decl_stmt|;
-comment|/* Content kind. */
-define|#
-directive|define
-name|PART_UNDEF
-value|0
-define|#
-directive|define
-name|PART_KIND_FILE
-value|1
-define|#
-directive|define
-name|PART_KIND_PIPE
-value|2
-define|#
-directive|define
-name|PART_KIND_SIZE
-value|3
-name|u_int
-name|index
-decl_stmt|;
-comment|/* Partition index (0-based). */
-name|off_t
-name|offset
-decl_stmt|;
-comment|/* Byte-offset of partition in image. */
-name|off_t
-name|size
-decl_stmt|;
-comment|/* Size in bytes of partition. */
-block|}
-struct|;
-end_struct
-
-begin_expr_stmt
-specifier|static
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|part
-argument_list|)
-name|parts
-operator|=
+begin_decl_stmt
+name|struct
+name|partlisthead
+name|partlist
+init|=
 name|STAILQ_HEAD_INITIALIZER
 argument_list|(
-name|parts
+name|partlist
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_int
 name|nparts
 init|=
@@ -554,7 +499,7 @@ expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|parts
+name|partlist
 argument_list|,
 name|part
 argument_list|,
@@ -796,7 +741,7 @@ name|STAILQ_FOREACH
 argument_list|(
 argument|part
 argument_list|,
-argument|&parts
+argument|&partlist
 argument_list|,
 argument|link
 argument_list|)
@@ -954,23 +899,9 @@ name|size
 operator|=
 name|size
 expr_stmt|;
-name|scheme_add_part
+name|scheme_check_part
 argument_list|(
 name|part
-operator|->
-name|index
-argument_list|,
-name|part
-operator|->
-name|type
-argument_list|,
-name|part
-operator|->
-name|offset
-argument_list|,
-name|part
-operator|->
-name|size
 argument_list|)
 expr_stmt|;
 name|offset
