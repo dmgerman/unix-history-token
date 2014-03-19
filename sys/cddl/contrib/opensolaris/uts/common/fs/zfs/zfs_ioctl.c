@@ -15248,7 +15248,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inputs:  * zc_name	name of dataset to rollback (to most recent snapshot)  *  * outputs:	none  */
+comment|/*  * fsname is name of dataset to rollback (to most recent snapshot)  *  * innvl is not used.  *  * outnvl: "target" -> name of most recent snapshot  * }  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -15256,9 +15260,18 @@ specifier|static
 name|int
 name|zfs_ioc_rollback
 parameter_list|(
-name|zfs_cmd_t
+specifier|const
+name|char
 modifier|*
-name|zc
+name|fsname
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|args
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|outnvl
 parameter_list|)
 block|{
 name|zfsvfs_t
@@ -15272,9 +15285,7 @@ if|if
 condition|(
 name|getzfsvfs
 argument_list|(
-name|zc
-operator|->
-name|zc_name
+name|fsname
 argument_list|,
 operator|&
 name|zfsvfs
@@ -15304,11 +15315,11 @@ name|error
 operator|=
 name|dsl_dataset_rollback
 argument_list|(
-name|zc
-operator|->
-name|zc_name
+name|fsname
 argument_list|,
 name|zfsvfs
+argument_list|,
+name|outnvl
 argument_list|)
 expr_stmt|;
 name|resume_err
@@ -15317,9 +15328,7 @@ name|zfs_resume_fs
 argument_list|(
 name|zfsvfs
 argument_list|,
-name|zc
-operator|->
-name|zc_name
+name|fsname
 argument_list|)
 expr_stmt|;
 name|error
@@ -15345,11 +15354,11 @@ name|error
 operator|=
 name|dsl_dataset_rollback
 argument_list|(
-name|zc
-operator|->
-name|zc_name
+name|fsname
 argument_list|,
 name|NULL
+argument_list|,
+name|outnvl
 argument_list|)
 expr_stmt|;
 block|}
@@ -23533,6 +23542,27 @@ argument_list|,
 name|B_FALSE
 argument_list|)
 expr_stmt|;
+name|zfs_ioctl_register
+argument_list|(
+literal|"rollback"
+argument_list|,
+name|ZFS_IOC_ROLLBACK
+argument_list|,
+name|zfs_ioc_rollback
+argument_list|,
+name|zfs_secpolicy_rollback
+argument_list|,
+name|DATASET_NAME
+argument_list|,
+name|POOL_CHECK_SUSPENDED
+operator||
+name|POOL_CHECK_READONLY
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|B_TRUE
+argument_list|)
+expr_stmt|;
 comment|/* IOCTLS that use the legacy function signature */
 name|zfs_ioctl_register_legacy
 argument_list|(
@@ -23955,15 +23985,6 @@ argument_list|,
 name|zfs_ioc_destroy
 argument_list|,
 name|zfs_secpolicy_destroy
-argument_list|)
-expr_stmt|;
-name|zfs_ioctl_register_dataset_modify
-argument_list|(
-name|ZFS_IOC_ROLLBACK
-argument_list|,
-name|zfs_ioc_rollback
-argument_list|,
-name|zfs_secpolicy_rollback
 argument_list|)
 expr_stmt|;
 name|zfs_ioctl_register_dataset_modify
