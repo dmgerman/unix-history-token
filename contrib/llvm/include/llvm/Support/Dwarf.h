@@ -1808,6 +1808,11 @@ name|DW_OP_hi_user
 init|=
 literal|0xff
 block|,
+comment|// Extensions for GNU-style thread-local storage.
+name|DW_OP_GNU_push_tls_address
+init|=
+literal|0xe0
+block|,
 comment|// Extensions for Fission proposal.
 name|DW_OP_GNU_addr_index
 init|=
