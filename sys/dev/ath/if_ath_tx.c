@@ -13639,6 +13639,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
+operator||
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: %s: %6D: bf=%p: addbaw=%d, dobaw=%d, "
 literal|"seqno=%d, retry=%d\n"
@@ -13688,6 +13690,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
+operator||
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: %s: %6D: bf=%p: txq[%d] axq_depth=%d, axq_aggr_depth=%d\n"
 argument_list|,
@@ -13721,6 +13725,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
+operator||
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: %s: %6D: bf=%p: tid txq_depth=%d hwq_depth=%d, bar_wait=%d, "
 literal|"isfiltered=%d\n"
@@ -13759,6 +13765,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
+operator||
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: %s: %6D: tid %d: "
 literal|"sched=%d, paused=%d, "
@@ -13977,10 +13985,7 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
-name|t
-operator|=
-literal|1
-expr_stmt|;
+comment|//			t = 1;
 block|}
 name|ATH_TID_REMOVE
 argument_list|(
@@ -14050,10 +14055,7 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
-name|t
-operator|=
-literal|1
-expr_stmt|;
+comment|//			t = 1;
 block|}
 name|ATH_TID_FILT_REMOVE
 argument_list|(
