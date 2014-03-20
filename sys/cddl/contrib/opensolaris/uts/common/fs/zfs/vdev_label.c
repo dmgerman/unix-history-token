@@ -2382,6 +2382,12 @@ operator|->
 name|vdev_ops
 operator|->
 name|vdev_op_leaf
+operator|||
+operator|!
+name|spa_writeable
+argument_list|(
+name|spa
+argument_list|)
 condition|)
 return|return
 operator|(
