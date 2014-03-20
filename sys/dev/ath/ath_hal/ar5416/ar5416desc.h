@@ -12,18 +12,12 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_ATH_AR5416_DESC_H
+name|_ATH_AR5416_DESC_H_
 end_define
 
 begin_comment
 comment|/*  * Hardware-specific descriptor structures.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"ah_desc.h"
-end_include
 
 begin_comment
 comment|/* XXX Need to replace this with a dynamic   * method of determining Owl2 if possible   */
