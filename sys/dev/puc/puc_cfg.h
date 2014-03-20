@@ -12,7 +12,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_DEV_PUC_CFG_H
+name|_DEV_PUC_CFG_H_
 end_define
 
 begin_define
