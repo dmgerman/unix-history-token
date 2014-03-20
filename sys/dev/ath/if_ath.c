@@ -24516,11 +24516,6 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
-name|ATH_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|IS_RUNNING
@@ -24530,7 +24525,17 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * To avoid rescanning another access point, 			 * do not call ath_init() here.  Instead, 			 * only reflect promisc mode settings. 			 */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_mode_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -24563,6 +24568,11 @@ comment|/* XXX lose error */
 block|}
 else|else
 block|{
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_stop_locked
 argument_list|(
 name|ifp
@@ -24590,12 +24600,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 name|ATH_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SIOCGIFMEDIA
