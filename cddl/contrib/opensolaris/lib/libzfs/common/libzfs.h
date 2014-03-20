@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -522,6 +522,20 @@ modifier|*
 name|libzfs_error_description
 parameter_list|(
 name|libzfs_handle_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_standard_error
+parameter_list|(
+name|libzfs_handle_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2329,6 +2343,19 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
+name|int
+name|zfs_iter_bookmarks
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+parameter_list|,
+name|zfs_iter_f
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 typedef|typedef
 struct|struct
 name|get_all_cb
@@ -2645,6 +2672,20 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|zfs_send_one
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|zfs_promote
 parameter_list|(
 name|zfs_handle_t
@@ -2950,6 +2991,16 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
+name|zfs_bookmark_exists
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
 parameter_list|)
 function_decl|;
 comment|/*  * Mount support functions.  */
