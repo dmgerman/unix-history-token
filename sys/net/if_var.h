@@ -840,6 +840,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|if_oqdrops
+value|if_data.ifi_oqdrops
+end_define
+
+begin_define
+define|#
+directive|define
 name|if_noproto
 value|if_data.ifi_noproto
 end_define
