@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: openpam_attr.h 405 2007-12-19 11:38:27Z des $  */
+comment|/*  * $Id: openpam_attr.h 656 2013-03-06 22:58:45Z des $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SECURITY_PAM_ATTRIBUTES_H_INCLUDED
+name|SECURITY_OPENPAM_ATTR_H_INCLUDED
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SECURITY_PAM_ATTRIBUTES_H_INCLUDED
+name|SECURITY_OPENPAM_ATTR_H_INCLUDED
 end_define
 
 begin_comment
@@ -154,13 +154,54 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|OPENPAM_GNUC_PREREQ
+argument_list|(
+literal|2
+operator|,
+literal|7
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|OPENPAM_UNUSED
+parameter_list|(
+name|var
+parameter_list|)
+value|var __attribute__((__unused__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OPENPAM_UNUSED
+parameter_list|(
+name|var
+parameter_list|)
+value|var
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !SECURITY_PAM_ATTRIBUTES_H_INCLUDED */
+comment|/* !SECURITY_OPENPAM_ATTR_H_INCLUDED */
 end_comment
 
 end_unit
