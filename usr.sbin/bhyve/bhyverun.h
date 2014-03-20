@@ -137,7 +137,10 @@ modifier|*
 name|ctx
 parameter_list|,
 name|int
-name|cpu
+name|fromcpu
+parameter_list|,
+name|int
+name|newcpu
 parameter_list|,
 name|uint64_t
 name|rip
