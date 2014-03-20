@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -366,6 +366,14 @@ operator|->
 name|cb_flags
 operator|&
 name|ZFS_ITER_RECVD_PROPS
+operator|)
+argument_list|,
+operator|(
+name|cb
+operator|->
+name|cb_flags
+operator|&
+name|ZFS_ITER_LITERAL_PROPS
 operator|)
 argument_list|)
 operator|!=

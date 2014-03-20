@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2012 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -1259,9 +1259,8 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tlist [-rH][-d max] "
-literal|"[-o property[,...]] [-t type[,...]] [-s property] ...\n"
-literal|"\t    [-S property] ... "
+literal|"\tlist [-Hp] [-r|-d max] [-o property[,...]] "
+literal|"[-s property]...\n\t    [-S property]... [-t type[,...]] "
 literal|"[filesystem|volume|snapshot] ...\n"
 argument_list|)
 operator|)
@@ -1446,8 +1445,8 @@ operator|(
 name|gettext
 argument_list|(
 literal|"\tuserspace [-Hinp] [-o field[,...]] "
-literal|"[-s field] ...\n\t[-S field] ... "
-literal|"[-t type[,...]]<filesystem|snapshot>\n"
+literal|"[-s field]...\n\t    [-S field]... [-t type[,...]] "
+literal|"<filesystem|snapshot>\n"
 argument_list|)
 operator|)
 return|;
@@ -1459,8 +1458,8 @@ operator|(
 name|gettext
 argument_list|(
 literal|"\tgroupspace [-Hinp] [-o field[,...]] "
-literal|"[-s field] ...\n\t[-S field] ... "
-literal|"[-t type[,...]]<filesystem|snapshot>\n"
+literal|"[-s field]...\n\t    [-S field]... [-t type[,...]] "
+literal|"<filesystem|snapshot>\n"
 argument_list|)
 operator|)
 return|;
@@ -9592,7 +9591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs userspace [-Hinp] [-o field[,...]] [-s field [-s field]...]  *               [-S field [-S field]...] [-t type[,...]] filesystem | snapshot  * zfs groupspace [-Hinp] [-o field[,...]] [-s field [-s field]...]  *                [-S field [-S field]...] [-t type[,...]] filesystem | snapshot  *  *	-H      Scripted mode; elide headers and separate columns by tabs.  *	-i	Translate SID to POSIX ID.  *	-n	Print numeric ID instead of user/group name.  *	-o      Control which fields to display.  *	-p	Use exact (parseable) numeric output.  *	-s      Specify sort columns, descending order.  *	-S      Specify sort columns, ascending order.  *	-t      Control which object types to display.  *  *	Displays space consumed by, and quotas on, each user in the specified  *	filesystem or snapshot.  */
+comment|/*  * zfs userspace [-Hinp] [-o field[,...]] [-s field [-s field]...]  *               [-S field [-S field]...] [-t type[,...]] filesystem | snapshot  * zfs groupspace [-Hinp] [-o field[,...]] [-s field [-s field]...]  *                [-S field [-S field]...] [-t type[,...]] filesystem | snapshot  *  *	-H      Scripted mode; elide headers and separate columns by tabs.  *	-i	Translate SID to POSIX ID.  *	-n	Print numeric ID instead of user/group name.  *	-o      Control which fields to display.  *	-p	Use exact (parsable) numeric output.  *	-s      Specify sort columns, descending order.  *	-S      Specify sort columns, ascending order.  *	-t      Control which object types to display.  *  *	Displays space consumed by, and quotas on, each user in the specified  *	filesystem or snapshot.  */
 end_comment
 
 begin_comment
@@ -13132,7 +13131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * list [-r][-d max] [-H] [-o property[,property]...] [-t type[,type]...]  *      [-s property [-s property]...] [-S property [-S property]...]  *<dataset> ...  *  *	-r	Recurse over all children  *	-d	Limit recursion by depth.  *	-H	Scripted mode; elide headers and separate columns by tabs  *	-o	Control which fields to display.  *	-t	Control which object types to display.  *	-s	Specify sort columns, descending order.  *	-S	Specify sort columns, ascending order.  *  * When given no arguments, lists all filesystems in the system.  * Otherwise, list the specified datasets, optionally recursing down them if  * '-r' is specified.  */
+comment|/*  * list [-Hp][-r|-d max] [-o property[,...]] [-s property] ... [-S property] ...  *      [-t type[,...]] [filesystem|volume|snapshot] ...  *  *	-H	Scripted mode; elide headers and separate columns by tabs.  *	-p	Display values in parsable (literal) format.  *	-r	Recurse over all children.  *	-d	Limit recursion by depth.  *	-o	Control which fields to display.  *	-s	Specify sort columns, descending order.  *	-S	Specify sort columns, ascending order.  *	-t	Control which object types to display.  *  * When given no arguments, list all filesystems in the system.  * Otherwise, list the specified datasets, optionally recursing down them if  * '-r' is specified.  */
 end_comment
 
 begin_typedef
@@ -13142,6 +13141,9 @@ name|list_cbdata
 block|{
 name|boolean_t
 name|cb_first
+decl_stmt|;
+name|boolean_t
+name|cb_literal
 decl_stmt|;
 name|boolean_t
 name|cb_scripted
@@ -13164,11 +13166,19 @@ specifier|static
 name|void
 name|print_header
 parameter_list|(
+name|list_cbdata_t
+modifier|*
+name|cb
+parameter_list|)
+block|{
 name|zprop_list_t
 modifier|*
 name|pl
-parameter_list|)
-block|{
+init|=
+name|cb
+operator|->
+name|cb_proplist
+decl_stmt|;
 name|char
 name|headerbuf
 index|[
@@ -13386,14 +13396,19 @@ name|zfs_handle_t
 modifier|*
 name|zhp
 parameter_list|,
+name|list_cbdata_t
+modifier|*
+name|cb
+parameter_list|)
+block|{
 name|zprop_list_t
 modifier|*
 name|pl
-parameter_list|,
-name|boolean_t
-name|scripted
-parameter_list|)
-block|{
+init|=
+name|cb
+operator|->
+name|cb_proplist
+decl_stmt|;
 name|boolean_t
 name|first
 init|=
@@ -13425,9 +13440,6 @@ decl_stmt|;
 name|boolean_t
 name|right_justify
 decl_stmt|;
-name|int
-name|width
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -13450,7 +13462,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|scripted
+name|cb
+operator|->
+name|cb_scripted
 condition|)
 operator|(
 name|void
@@ -13551,7 +13565,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|B_FALSE
+name|cb
+operator|->
+name|cb_literal
 argument_list|)
 operator|!=
 literal|0
@@ -13603,7 +13619,9 @@ argument_list|(
 name|property
 argument_list|)
 argument_list|,
-name|B_FALSE
+name|cb
+operator|->
+name|cb_literal
 argument_list|)
 operator|!=
 literal|0
@@ -13650,7 +13668,9 @@ argument_list|(
 name|property
 argument_list|)
 argument_list|,
-name|B_FALSE
+name|cb
+operator|->
+name|cb_literal
 argument_list|)
 operator|!=
 literal|0
@@ -13712,16 +13732,12 @@ operator|=
 name|B_FALSE
 expr_stmt|;
 block|}
-name|width
-operator|=
-name|pl
-operator|->
-name|pl_width
-expr_stmt|;
 comment|/* 		 * If this is being called in scripted mode, or if this is the 		 * last column and it is left-justified, don't include a width 		 * format specifier. 		 */
 if|if
 condition|(
-name|scripted
+name|cb
+operator|->
+name|cb_scripted
 operator|||
 operator|(
 name|pl
@@ -13756,7 +13772,9 @@ name|printf
 argument_list|(
 literal|"%*s"
 argument_list|,
-name|width
+name|pl
+operator|->
+name|pl_width
 argument_list|,
 name|propstr
 argument_list|)
@@ -13769,7 +13787,9 @@ name|printf
 argument_list|(
 literal|"%-*s"
 argument_list|,
-name|width
+name|pl
+operator|->
+name|pl_width
 argument_list|,
 name|propstr
 argument_list|)
@@ -13827,8 +13847,6 @@ condition|)
 name|print_header
 argument_list|(
 name|cbp
-operator|->
-name|cb_proplist
 argument_list|)
 expr_stmt|;
 name|cbp
@@ -13843,12 +13861,6 @@ argument_list|(
 name|zhp
 argument_list|,
 name|cbp
-operator|->
-name|cb_proplist
-argument_list|,
-name|cbp
-operator|->
-name|cb_scripted
 argument_list|)
 expr_stmt|;
 return|return
@@ -13875,11 +13887,6 @@ parameter_list|)
 block|{
 name|int
 name|c
-decl_stmt|;
-name|boolean_t
-name|scripted
-init|=
-name|B_FALSE
 decl_stmt|;
 specifier|static
 name|char
@@ -13950,7 +13957,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":d:o:rt:Hs:S:"
+literal|"HS:d:o:prs:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -13969,6 +13976,20 @@ case|:
 name|fields
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|cb
+operator|.
+name|cb_literal
+operator|=
+name|B_TRUE
+expr_stmt|;
+name|flags
+operator||=
+name|ZFS_ITER_LITERAL_PROPS
 expr_stmt|;
 break|break;
 case|case
@@ -13996,7 +14017,9 @@ break|break;
 case|case
 literal|'H'
 case|:
-name|scripted
+name|cb
+operator|.
+name|cb_scripted
 operator|=
 name|B_TRUE
 expr_stmt|;
@@ -14331,12 +14354,6 @@ name|usage
 argument_list|(
 name|B_FALSE
 argument_list|)
-expr_stmt|;
-name|cb
-operator|.
-name|cb_scripted
-operator|=
-name|scripted
 expr_stmt|;
 name|cb
 operator|.
