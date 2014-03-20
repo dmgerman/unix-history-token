@@ -15,6 +15,12 @@ directive|define
 name|_MKIMG_SCHEME_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
 begin_struct
 struct|struct
 name|mkimg_alias
@@ -94,6 +100,21 @@ directive|define
 name|SCHEME_META_PART_AFTER
 value|4
 name|int
+function_decl|(
+modifier|*
+name|write
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|off_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+name|int
 name|nparts
 decl_stmt|;
 block|}
@@ -164,6 +185,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+name|scheme_round
+parameter_list|(
+name|uint64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|off_t
 name|scheme_first_offset
 parameter_list|(
@@ -184,7 +214,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|scheme_write
 parameter_list|(
 name|int

@@ -15,6 +15,12 @@ directive|define
 name|_MKIMG_MKIMG_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_struct
 struct|struct
 name|part
