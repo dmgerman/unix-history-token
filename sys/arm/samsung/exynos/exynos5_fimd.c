@@ -1195,11 +1195,6 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"print to VIDCON0\n"
-argument_list|)
-expr_stmt|;
 name|reg
 operator|=
 operator|(
@@ -1225,11 +1220,6 @@ argument_list|,
 name|VIDCON0
 argument_list|,
 name|reg
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"print to VIDCON0 2nd\n"
 argument_list|)
 expr_stmt|;
 name|reg
@@ -1345,33 +1335,6 @@ argument_list|,
 name|VIDTCON2
 argument_list|,
 name|reg
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"set pbase\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"vbase is 0x%08x\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_info
-operator|.
-name|fb_vbase
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"pbase is 0x%08x\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_info
-operator|.
-name|fb_pbase
 argument_list|)
 expr_stmt|;
 name|WRITE4
