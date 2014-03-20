@@ -491,7 +491,7 @@ name|driver_t
 name|arm_tmr_driver
 init|=
 block|{
-literal|"arch_timer"
+literal|"mct"
 block|,
 name|arm_tmr_methods
 block|,
@@ -514,7 +514,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|arch_timer
+name|mct
 argument_list|,
 name|simplebus
 argument_list|,
