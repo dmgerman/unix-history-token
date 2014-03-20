@@ -483,7 +483,7 @@ goto|;
 block|}
 name|part
 operator|->
-name|type
+name|alias
 operator|=
 name|malloc
 argument_list|(
@@ -494,7 +494,7 @@ if|if
 condition|(
 name|part
 operator|->
-name|type
+name|alias
 operator|==
 name|NULL
 condition|)
@@ -511,7 +511,7 @@ name|strlcpy
 argument_list|(
 name|part
 operator|->
-name|type
+name|alias
 argument_list|,
 name|spec
 argument_list|,
@@ -628,7 +628,7 @@ if|if
 condition|(
 name|part
 operator|->
-name|type
+name|alias
 operator|!=
 name|NULL
 condition|)
@@ -636,7 +636,7 @@ name|free
 argument_list|(
 name|part
 operator|->
-name|type
+name|alias
 argument_list|)
 expr_stmt|;
 name|free
@@ -1007,9 +1007,30 @@ name|size
 operator|=
 name|size
 expr_stmt|;
+name|error
+operator|=
 name|scheme_check_part
 argument_list|(
 name|part
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|errc
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+name|error
+argument_list|,
+literal|"partition %d"
+argument_list|,
+name|part
+operator|->
+name|index
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|offset

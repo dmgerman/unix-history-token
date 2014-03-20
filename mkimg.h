@@ -27,9 +27,9 @@ name|link
 expr_stmt|;
 name|char
 modifier|*
-name|type
+name|alias
 decl_stmt|;
-comment|/* Partition type. */
+comment|/* Partition type alias. */
 name|char
 modifier|*
 name|contents
