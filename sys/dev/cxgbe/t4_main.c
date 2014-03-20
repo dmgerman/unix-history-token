@@ -21596,9 +21596,7 @@ name|br_drops
 expr_stmt|;
 name|ifp
 operator|->
-name|if_snd
-operator|.
-name|ifq_drops
+name|if_oqdrops
 operator|=
 name|drops
 expr_stmt|;
