@@ -20,7 +20,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_IMX51_TZICRREG_H_
+name|_IMX51_TZICREG_H_
 end_define
 
 begin_include
