@@ -276,6 +276,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+name|kread_counter
+parameter_list|(
+name|u_long
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|kread_counters
 parameter_list|(

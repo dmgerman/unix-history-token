@@ -15,6 +15,12 @@ directive|define
 name|_NET_ROUTE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel resident routing tables.  *  * The routing tables are initialized when interface addresses  * are set by making entries for all directly connected interfaces.  */
 end_comment
@@ -74,34 +80,6 @@ end_define
 begin_comment
 comment|/* doesn't hold reference on ro_rt */
 end_comment
-
-begin_comment
-comment|/*  * These numbers are used by reliable protocols for determining  * retransmission behavior and are included in the routing structure.  */
-end_comment
-
-begin_struct
-struct|struct
-name|rt_metrics_lite
-block|{
-name|u_long
-name|rmx_mtu
-decl_stmt|;
-comment|/* MTU for this path */
-name|u_long
-name|rmx_expire
-decl_stmt|;
-comment|/* lifetime for route, e.g. redirect */
-name|u_long
-name|rmx_pksent
-decl_stmt|;
-comment|/* packets sent using this route */
-name|u_long
-name|rmx_weight
-decl_stmt|;
-comment|/* absolute weight */
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -257,6 +235,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_RTENTRY
+argument_list|)
+end_if
+
 begin_struct
 struct|struct
 name|rtentry
@@ -290,14 +282,6 @@ modifier|*
 name|rt_gateway
 decl_stmt|;
 comment|/* value */
-name|int
-name|rt_flags
-decl_stmt|;
-comment|/* up/down?, host/net */
-name|int
-name|rt_refcnt
-decl_stmt|;
-comment|/* # held references */
 name|struct
 name|ifnet
 modifier|*
@@ -310,29 +294,55 @@ modifier|*
 name|rt_ifa
 decl_stmt|;
 comment|/* the answer: interface address to use */
-name|struct
-name|rt_metrics_lite
-name|rt_rmx
+name|int
+name|rt_flags
 decl_stmt|;
-comment|/* metrics used by rx'ing protocols */
+comment|/* up/down?, host/net */
+name|int
+name|rt_refcnt
+decl_stmt|;
+comment|/* # held references */
 name|u_int
 name|rt_fibnum
 decl_stmt|;
 comment|/* which FIB */
-ifdef|#
-directive|ifdef
-name|_KERNEL
-comment|/* XXX ugly, user apps use this definition but don't have a mtx def */
+name|u_long
+name|rt_mtu
+decl_stmt|;
+comment|/* MTU for this path */
+name|u_long
+name|rt_weight
+decl_stmt|;
+comment|/* absolute weight */
+name|u_long
+name|rt_expire
+decl_stmt|;
+comment|/* lifetime for route, e.g. redirect */
+define|#
+directive|define
+name|rt_endzero
+value|rt_pksent
+name|counter_u64_t
+name|rt_pksent
+decl_stmt|;
+comment|/* packets sent using this route */
 name|struct
 name|mtx
 name|rt_mtx
 decl_stmt|;
 comment|/* mutex for routing entry */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL || _WANT_RTENTRY */
+end_comment
 
 begin_comment
 comment|/*  * Following structure necessary for 4.3 compatibility;  * We should eventually move it to a compat file.  */
@@ -377,13 +387,6 @@ comment|/* the answer: interface to use */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|rt_use
-value|rt_rmx.rmx_pksent
-end_define
 
 begin_define
 define|#
@@ -1401,6 +1404,16 @@ parameter_list|(
 name|_rt
 parameter_list|)
 value|mtx_assert(&(_rt)->rt_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_UNLOCK_COND
+parameter_list|(
+name|_rt
+parameter_list|)
+value|do {				\ 	if (mtx_owned(&(_rt)->rt_mtx))				\ 		mtx_unlock(&(_rt)->rt_mtx);			\ } while (0)
 end_define
 
 begin_define

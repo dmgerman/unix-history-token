@@ -343,9 +343,7 @@ condition|(
 operator|!
 name|rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 operator|&&
 name|rt
 operator|->
@@ -353,9 +351,7 @@ name|rt_ifp
 condition|)
 name|rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 operator|=
 name|IN6_LINKMTU
 argument_list|(
@@ -651,9 +647,7 @@ if|if
 condition|(
 name|rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_expire
+name|rt_expire
 operator|&&
 operator|!
 operator|(
@@ -669,9 +663,7 @@ if|if
 condition|(
 name|rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_expire
+name|rt_expire
 operator|<=
 name|time_uptime
 condition|)
@@ -697,9 +689,7 @@ name|nextstop
 argument_list|,
 name|rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_expire
+name|rt_expire
 argument_list|)
 expr_stmt|;
 block|}

@@ -8431,9 +8431,7 @@ name|sro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 operator|==
 literal|0
 condition|)
@@ -8452,9 +8450,7 @@ name|sro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 argument_list|,
 name|ifp
 operator|->
@@ -8658,9 +8654,7 @@ name|sro6
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 operator|==
 literal|0
 condition|)
@@ -8684,9 +8678,7 @@ name|sro6
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 argument_list|,
 name|IN6_LINKMTU
 argument_list|(
