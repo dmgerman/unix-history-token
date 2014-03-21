@@ -1323,6 +1323,11 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
+name|FS_forceinline_specified
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
 name|FS_virtual_specified
 range|:
 literal|1
@@ -1439,6 +1444,9 @@ decl_stmt|,
 name|FS_explicitLoc
 decl_stmt|,
 name|FS_noreturnLoc
+decl_stmt|;
+name|SourceLocation
+name|FS_forceinlineLoc
 decl_stmt|;
 name|SourceLocation
 name|FriendLoc
@@ -1628,6 +1636,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|FS_forceinline_specified
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|FS_virtual_specified
 argument_list|(
 name|false
@@ -1783,6 +1796,26 @@ name|SourceLocation
 argument_list|()
 expr_stmt|;
 name|ThreadStorageClassSpecLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+block|}
+name|void
+name|ClearTypeSpecType
+parameter_list|()
+block|{
+name|TypeSpecType
+operator|=
+name|DeclSpec
+operator|::
+name|TST_unspecified
+expr_stmt|;
+name|TypeSpecOwned
+operator|=
+name|false
+expr_stmt|;
+name|TSTLoc
 operator|=
 name|SourceLocation
 argument_list|()
@@ -2104,6 +2137,11 @@ operator|==
 name|TST_decltype_auto
 return|;
 block|}
+name|bool
+name|hasTagDefinition
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Turn a type-specifier-type into a string like "_Bool" or "union".
 specifier|static
 specifier|const
@@ -2274,6 +2312,8 @@ specifier|const
 block|{
 return|return
 name|FS_inline_specified
+operator||
+name|FS_forceinline_specified
 return|;
 block|}
 name|SourceLocation
@@ -2282,7 +2322,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|FS_inline_specified
+operator|?
 name|FS_inlineLoc
+operator|:
+name|FS_forceinlineLoc
 return|;
 block|}
 name|bool
@@ -2348,6 +2392,15 @@ operator|=
 name|false
 expr_stmt|;
 name|FS_inlineLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+name|FS_forceinline_specified
+operator|=
+name|false
+expr_stmt|;
+name|FS_forceinlineLoc
 operator|=
 name|SourceLocation
 argument_list|()
@@ -2774,6 +2827,26 @@ name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
+name|SetTypeAltiVecBool
+parameter_list|(
+name|bool
+name|isAltiVecBool
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
+parameter_list|)
+function_decl|;
+name|bool
 name|SetTypeSpecError
 parameter_list|()
 function_decl|;
@@ -2878,6 +2951,33 @@ name|setFunctionSpecInline
 parameter_list|(
 name|SourceLocation
 name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
+parameter_list|)
+function_decl|;
+name|bool
+name|setFunctionSpecForceInline
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -2885,6 +2985,16 @@ name|setFunctionSpecVirtual
 parameter_list|(
 name|SourceLocation
 name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -2892,6 +3002,16 @@ name|setFunctionSpecExplicit
 parameter_list|(
 name|SourceLocation
 name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -2899,6 +3019,16 @@ name|setFunctionSpecNoreturn
 parameter_list|(
 name|SourceLocation
 name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -5413,6 +5543,9 @@ comment|// Block literal declarator.
 name|LambdaExprContext
 block|,
 comment|// Lambda-expression declarator.
+name|LambdaExprParameterContext
+block|,
+comment|// Lambda-expression parameter declarator.
 name|ConversionIdContext
 block|,
 comment|// C++ conversion-type-id.
@@ -5724,6 +5857,10 @@ operator|||
 name|Context
 operator|==
 name|ObjCResultContext
+operator|||
+name|Context
+operator|==
+name|LambdaExprParameterContext
 operator|)
 return|;
 block|}
@@ -6010,6 +6147,9 @@ case|case
 name|PrototypeContext
 case|:
 case|case
+name|LambdaExprParameterContext
+case|:
+case|case
 name|ObjCParameterContext
 case|:
 case|case
@@ -6087,6 +6227,9 @@ case|case
 name|PrototypeContext
 case|:
 case|case
+name|LambdaExprParameterContext
+case|:
+case|case
 name|TemplateParamContext
 case|:
 case|case
@@ -6133,6 +6276,97 @@ name|TrailingReturnContext
 case|:
 return|return
 name|false
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"unknown context kind!"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// diagnoseIdentifier - Return true if the identifier is prohibited and
+comment|/// should be diagnosed (because it cannot be anything else).
+name|bool
+name|diagnoseIdentifier
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|Context
+condition|)
+block|{
+case|case
+name|FileContext
+case|:
+case|case
+name|KNRTypeListContext
+case|:
+case|case
+name|MemberContext
+case|:
+case|case
+name|BlockContext
+case|:
+case|case
+name|ForContext
+case|:
+case|case
+name|ConditionContext
+case|:
+case|case
+name|PrototypeContext
+case|:
+case|case
+name|LambdaExprParameterContext
+case|:
+case|case
+name|TemplateParamContext
+case|:
+case|case
+name|CXXCatchContext
+case|:
+case|case
+name|ObjCCatchContext
+case|:
+case|case
+name|TypeNameContext
+case|:
+case|case
+name|ConversionIdContext
+case|:
+case|case
+name|ObjCParameterContext
+case|:
+case|case
+name|ObjCResultContext
+case|:
+case|case
+name|BlockLiteralContext
+case|:
+case|case
+name|CXXNewContext
+case|:
+case|case
+name|LambdaExprContext
+case|:
+return|return
+name|false
+return|;
+case|case
+name|AliasDeclContext
+case|:
+case|case
+name|AliasTemplateContext
+case|:
+case|case
+name|TemplateTypeArgContext
+case|:
+case|case
+name|TrailingReturnContext
+case|:
+return|return
+name|true
 return|;
 block|}
 name|llvm_unreachable
@@ -6239,6 +6473,9 @@ name|MemberContext
 case|:
 case|case
 name|PrototypeContext
+case|:
+case|case
+name|LambdaExprParameterContext
 case|:
 case|case
 name|ObjCParameterContext
@@ -7180,6 +7417,9 @@ case|case
 name|PrototypeContext
 case|:
 case|case
+name|LambdaExprParameterContext
+case|:
+case|case
 name|ObjCParameterContext
 case|:
 case|case
@@ -7499,10 +7739,7 @@ begin_macro
 unit|void
 name|getCXX11AttributeRanges
 argument_list|(
-argument|SmallVector<SourceRange
-argument_list|,
-literal|4
-argument|>&Ranges
+argument|SmallVectorImpl<SourceRange>&Ranges
 argument_list|)
 end_macro
 
@@ -7803,6 +8040,50 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Returns true if this declares a real member and not a friend.
+end_comment
+
+begin_function
+name|bool
+name|isFirstDeclarationOfMember
+parameter_list|()
+block|{
+return|return
+name|getContext
+argument_list|()
+operator|==
+name|MemberContext
+operator|&&
+operator|!
+name|getDeclSpec
+argument_list|()
+operator|.
+name|isFriendSpecified
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Returns true if this declares a static member.  This cannot be called on a
+end_comment
+
+begin_comment
+comment|/// declarator outside of a MemberContext because we won't know until
+end_comment
+
+begin_comment
+comment|/// redeclaration time if the decl is static.
+end_comment
+
+begin_function_decl
+name|bool
+name|isStaticMember
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|setRedeclaration
@@ -7901,6 +8182,10 @@ block|,
 name|VS_Final
 init|=
 literal|2
+block|,
+name|VS_Sealed
+init|=
+literal|4
 block|}
 enum|;
 name|VirtSpecifiers
@@ -7949,7 +8234,22 @@ block|{
 return|return
 name|Specifiers
 operator|&
+operator|(
 name|VS_Final
+operator||
+name|VS_Sealed
+operator|)
+return|;
+block|}
+name|bool
+name|isFinalSpelledSealed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Specifiers
+operator|&
+name|VS_Sealed
 return|;
 block|}
 name|SourceLocation
@@ -8030,16 +8330,25 @@ decl_stmt|;
 name|SourceLocation
 name|EllipsisLoc
 decl_stmt|;
+name|ExprResult
+name|Init
+decl_stmt|;
+name|ParsedType
+name|InitCaptureType
+decl_stmt|;
 name|LambdaCapture
 argument_list|(
 argument|LambdaCaptureKind Kind
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|IdentifierInfo* Id =
-literal|0
+argument|IdentifierInfo* Id
 argument_list|,
-argument|SourceLocation EllipsisLoc = SourceLocation()
+argument|SourceLocation EllipsisLoc
+argument_list|,
+argument|ExprResult Init
+argument_list|,
+argument|ParsedType InitCaptureType
 argument_list|)
 block|:
 name|Kind
@@ -8059,7 +8368,17 @@ argument_list|)
 operator|,
 name|EllipsisLoc
 argument_list|(
-argument|EllipsisLoc
+name|EllipsisLoc
+argument_list|)
+operator|,
+name|Init
+argument_list|(
+name|Init
+argument_list|)
+operator|,
+name|InitCaptureType
+argument_list|(
+argument|InitCaptureType
 argument_list|)
 block|{}
 block|}
@@ -8107,10 +8426,13 @@ argument|LambdaCaptureKind Kind
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|IdentifierInfo* Id =
-literal|0
+argument|IdentifierInfo* Id
 argument_list|,
-argument|SourceLocation EllipsisLoc = SourceLocation()
+argument|SourceLocation EllipsisLoc
+argument_list|,
+argument|ExprResult Init
+argument_list|,
+argument|ParsedType InitCaptureType
 argument_list|)
 block|{
 name|Captures
@@ -8126,6 +8448,10 @@ argument_list|,
 name|Id
 argument_list|,
 name|EllipsisLoc
+argument_list|,
+name|Init
+argument_list|,
+name|InitCaptureType
 argument_list|)
 argument_list|)
 block|;   }

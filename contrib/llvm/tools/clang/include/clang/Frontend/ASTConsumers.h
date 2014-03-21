@@ -67,20 +67,6 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-name|namespace
-name|sys
-block|{
-name|class
-name|Path
-decl_stmt|;
-block|}
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
 name|clang
 block|{
 name|class
@@ -128,6 +114,11 @@ name|CreateASTDumper
 parameter_list|(
 name|StringRef
 name|FilterString
+parameter_list|,
+name|bool
+name|DumpLookups
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|// AST Decl node lister: prints qualified names of all filterable AST Decl
@@ -136,17 +127,6 @@ name|ASTConsumer
 modifier|*
 name|CreateASTDeclNodeLister
 parameter_list|()
-function_decl|;
-comment|// AST XML-dumper: dumps out the AST to stderr in a very detailed XML
-comment|// format; this is intended for particularly intense debugging.
-name|ASTConsumer
-modifier|*
-name|CreateASTDumperXML
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|)
 function_decl|;
 comment|// Graphical AST viewer: for each function definition, creates a graph of
 comment|// the AST and displays it with the graph viewer "dotty".  Also outputs

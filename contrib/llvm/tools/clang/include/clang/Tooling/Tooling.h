@@ -126,6 +126,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Diagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/FileManager.h"
 end_include
 
@@ -207,17 +213,82 @@ decl_stmt|;
 name|namespace
 name|tooling
 block|{
-comment|/// \brief Interface to generate clang::FrontendActions.
+comment|/// \brief Interface to process a clang::CompilerInvocation.
+comment|///
+comment|/// If your tool is based on FrontendAction, you should be deriving from
+comment|/// FrontendActionFactory instead.
 name|class
-name|FrontendActionFactory
+name|ToolAction
 block|{
 name|public
 label|:
 name|virtual
 operator|~
-name|FrontendActionFactory
+name|ToolAction
 argument_list|()
 expr_stmt|;
+comment|/// \brief Perform an action for an invocation.
+name|virtual
+name|bool
+name|runInvocation
+argument_list|(
+name|clang
+operator|::
+name|CompilerInvocation
+operator|*
+name|Invocation
+argument_list|,
+name|FileManager
+operator|*
+name|Files
+argument_list|,
+name|DiagnosticConsumer
+operator|*
+name|DiagConsumer
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// \brief Interface to generate clang::FrontendActions.
+comment|///
+comment|/// Having a factory interface allows, for example, a new FrontendAction to be
+comment|/// created for each translation unit processed by ClangTool.  This class is
+comment|/// also a ToolAction which uses the FrontendActions created by create() to
+comment|/// process each translation unit.
+name|class
+name|FrontendActionFactory
+range|:
+name|public
+name|ToolAction
+block|{
+name|public
+operator|:
+name|virtual
+operator|~
+name|FrontendActionFactory
+argument_list|()
+block|;
+comment|/// \brief Invokes the compiler with a FrontendAction created by create().
+name|bool
+name|runInvocation
+argument_list|(
+name|clang
+operator|::
+name|CompilerInvocation
+operator|*
+name|Invocation
+argument_list|,
+name|FileManager
+operator|*
+name|Files
+argument_list|,
+name|DiagnosticConsumer
+operator|*
+name|DiagConsumer
+argument_list|)
+block|;
 comment|/// \brief Returns a new clang::FrontendAction.
 comment|///
 comment|/// The caller takes ownership of the returned action.
@@ -230,12 +301,11 @@ name|create
 argument_list|()
 operator|=
 literal|0
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 comment|/// \brief Returns a new FrontendActionFactory for a given type.
 comment|///
-comment|/// T must extend clang::FrontendAction.
+comment|/// T must derive from clang::FrontendAction.
 comment|///
 comment|/// Example:
 comment|/// FrontendActionFactory *Factory =
@@ -250,25 +320,41 @@ operator|*
 name|newFrontendActionFactory
 argument_list|()
 expr_stmt|;
-comment|/// \brief Called at the end of each source file when used with
-comment|/// \c newFrontendActionFactory.
+comment|/// \brief Callbacks called before and after each source file processed by a
+comment|/// FrontendAction created by the FrontedActionFactory returned by \c
+comment|/// newFrontendActionFactory.
 name|class
-name|EndOfSourceFileCallback
+name|SourceFileCallbacks
 block|{
 name|public
 label|:
 name|virtual
 operator|~
-name|EndOfSourceFileCallback
+name|SourceFileCallbacks
 argument_list|()
 block|{}
+comment|/// \brief Called before a source file is processed by a FrontEndAction.
+comment|/// \see clang::FrontendAction::BeginSourceFileAction
+name|virtual
+name|bool
+name|handleBeginSource
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef Filename
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// \brief Called after a source file is processed by a FrontendAction.
+comment|/// \see clang::FrontendAction::EndSourceFileAction
 name|virtual
 name|void
-name|run
-argument_list|()
-operator|=
-literal|0
-expr_stmt|;
+name|handleEndSource
+parameter_list|()
+block|{}
 block|}
 empty_stmt|;
 comment|/// \brief Returns a new FrontendActionFactory for any type that provides an
@@ -296,9 +382,9 @@ name|FactoryT
 operator|*
 name|ConsumerFactory
 argument_list|,
-name|EndOfSourceFileCallback
+name|SourceFileCallbacks
 operator|*
-name|EndCallback
+name|Callbacks
 operator|=
 name|NULL
 argument_list|)
@@ -375,6 +461,65 @@ operator|=
 literal|"input.cc"
 argument_list|)
 decl_stmt|;
+comment|/// \brief Builds an AST for 'Code'.
+comment|///
+comment|/// \param Code C++ code.
+comment|/// \param FileName The file name which 'Code' will be mapped as.
+comment|///
+comment|/// \return The resulting AST or null if an error occurred.
+name|ASTUnit
+modifier|*
+name|buildASTFromCode
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Code
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|FileName
+init|=
+literal|"input.cc"
+parameter_list|)
+function_decl|;
+comment|/// \brief Builds an AST for 'Code' with additional flags.
+comment|///
+comment|/// \param Code C++ code.
+comment|/// \param Args Additional flags to pass on.
+comment|/// \param FileName The file name which 'Code' will be mapped as.
+comment|///
+comment|/// \return The resulting AST or null if an error occurred.
+name|ASTUnit
+modifier|*
+name|buildASTFromCodeWithArgs
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|Code
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|FileName
+operator|=
+literal|"input.cc"
+argument_list|)
+decl_stmt|;
 comment|/// \brief Utility to run a FrontendAction in a single clang invocation.
 name|class
 name|ToolInvocation
@@ -387,7 +532,7 @@ comment|/// \param CommandLine The command line arguments to clang. Note that cl
 comment|/// uses its binary name (CommandLine[0]) to locate its builtin headers.
 comment|/// Callers have to ensure that they are installed in a compatible location
 comment|/// (see clang driver implementation) or mapped in via mapVirtualFile.
-comment|/// \param ToolAction The action to be executed. Class takes ownership.
+comment|/// \param FAction The action to be executed. Class takes ownership.
 comment|/// \param Files The FileManager used for the execution. Class does not take
 comment|/// ownership.
 name|ToolInvocation
@@ -402,13 +547,50 @@ name|CommandLine
 argument_list|,
 name|FrontendAction
 operator|*
-name|ToolAction
+name|FAction
 argument_list|,
 name|FileManager
 operator|*
 name|Files
 argument_list|)
 expr_stmt|;
+comment|/// \brief Create a tool invocation.
+comment|///
+comment|/// \param CommandLine The command line arguments to clang.
+comment|/// \param Action The action to be executed.
+comment|/// \param Files The FileManager used for the execution.
+name|ToolInvocation
+argument_list|(
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|CommandLine
+argument_list|,
+name|ToolAction
+operator|*
+name|Action
+argument_list|,
+name|FileManager
+operator|*
+name|Files
+argument_list|)
+expr_stmt|;
+operator|~
+name|ToolInvocation
+argument_list|()
+expr_stmt|;
+comment|/// \brief Set a \c DiagnosticConsumer to use during parsing.
+name|void
+name|setDiagnosticConsumer
+parameter_list|(
+name|DiagnosticConsumer
+modifier|*
+name|DiagConsumer
+parameter_list|)
+function_decl|;
 comment|/// \brief Map a virtual file to be used while running the tool.
 comment|///
 comment|/// \param FilePath The path at which the content will be mapped.
@@ -473,12 +655,13 @@ name|string
 operator|>
 name|CommandLine
 expr_stmt|;
-name|OwningPtr
-operator|<
-name|FrontendAction
-operator|>
 name|ToolAction
-expr_stmt|;
+modifier|*
+name|Action
+decl_stmt|;
+name|bool
+name|OwnsAction
+decl_stmt|;
 name|FileManager
 modifier|*
 name|Files
@@ -492,6 +675,10 @@ name|StringRef
 operator|>
 name|MappedFileContents
 expr_stmt|;
+name|DiagnosticConsumer
+modifier|*
+name|DiagConsumer
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Utility to run a FrontendAction over a set of files.
@@ -499,8 +686,8 @@ comment|///
 comment|/// This class is written to be usable for command line utilities.
 comment|/// By default the class uses ClangSyntaxOnlyAdjuster to modify
 comment|/// command line arguments before the arguments are used to run
-comment|/// a frontend action. One could install another command line
-comment|/// arguments adjuster by call setArgumentsAdjuster() method.
+comment|/// a frontend action. One could install an additional command line
+comment|/// arguments adjuster by calling the appendArgumentsAdjuster() method.
 name|class
 name|ClangTool
 block|{
@@ -532,22 +719,39 @@ name|virtual
 operator|~
 name|ClangTool
 argument_list|()
-block|{}
+block|{
+name|clearArgumentsAdjusters
+argument_list|()
+block|; }
+comment|/// \brief Set a \c DiagnosticConsumer to use during parsing.
+name|void
+name|setDiagnosticConsumer
+argument_list|(
+name|DiagnosticConsumer
+operator|*
+name|DiagConsumer
+argument_list|)
+expr_stmt|;
 comment|/// \brief Map a virtual file to be used while running the tool.
 comment|///
 comment|/// \param FilePath The path at which the content will be mapped.
 comment|/// \param Content A null terminated buffer of the file's content.
 name|void
 name|mapVirtualFile
-argument_list|(
-argument|StringRef FilePath
-argument_list|,
-argument|StringRef Content
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|StringRef
+name|FilePath
+parameter_list|,
+name|StringRef
+name|Content
+parameter_list|)
+function_decl|;
 comment|/// \brief Install command line arguments adjuster.
 comment|///
 comment|/// \param Adjuster Command line arguments adjuster.
+comment|//
+comment|/// FIXME: Function is deprecated. Use (clear/append)ArgumentsAdjuster instead.
+comment|/// Remove it once all callers are gone.
 name|void
 name|setArgumentsAdjuster
 parameter_list|(
@@ -556,20 +760,50 @@ modifier|*
 name|Adjuster
 parameter_list|)
 function_decl|;
-comment|/// Runs a frontend action over all files specified in the command line.
+comment|/// \brief Append a command line arguments adjuster to the adjuster chain.
 comment|///
-comment|/// \param ActionFactory Factory generating the frontend actions. The function
-comment|/// takes ownership of this parameter. A new action is generated for every
-comment|/// processed translation unit.
-name|virtual
+comment|/// \param Adjuster An argument adjuster, which will be run on the output of
+comment|///        previous argument adjusters.
+name|void
+name|appendArgumentsAdjuster
+parameter_list|(
+name|ArgumentsAdjuster
+modifier|*
+name|Adjuster
+parameter_list|)
+function_decl|;
+comment|/// \brief Clear the command line arguments adjuster chain.
+name|void
+name|clearArgumentsAdjusters
+parameter_list|()
+function_decl|;
+comment|/// Runs an action over all files specified in the command line.
+comment|///
+comment|/// \param Action Tool action.
 name|int
 name|run
 parameter_list|(
-name|FrontendActionFactory
+name|ToolAction
 modifier|*
-name|ActionFactory
+name|Action
 parameter_list|)
 function_decl|;
+comment|/// \brief Create an AST for each file specified in the command line and
+comment|/// append them to ASTs.
+name|int
+name|buildASTs
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|ASTUnit
+operator|*
+operator|>
+operator|&
+name|ASTs
+argument_list|)
+decl_stmt|;
 comment|/// \brief Returns the file manager used in the tool.
 comment|///
 comment|/// The file manager is shared between all translation units.
@@ -579,6 +813,7 @@ name|getFiles
 parameter_list|()
 block|{
 return|return
+operator|*
 name|Files
 return|;
 block|}
@@ -602,9 +837,14 @@ operator|>
 expr|>
 name|CompileCommands
 expr_stmt|;
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
 name|FileManager
+operator|>
 name|Files
-decl_stmt|;
+expr_stmt|;
 comment|// Contains a list of pairs (<file name>,<file content>).
 name|std
 operator|::
@@ -621,12 +861,19 @@ operator|>
 expr|>
 name|MappedFileContents
 expr_stmt|;
-name|OwningPtr
+name|SmallVector
 operator|<
 name|ArgumentsAdjuster
+operator|*
+operator|,
+literal|2
 operator|>
-name|ArgsAdjuster
+name|ArgsAdjusters
 expr_stmt|;
+name|DiagnosticConsumer
+modifier|*
+name|DiagConsumer
+decl_stmt|;
 block|}
 empty_stmt|;
 name|template
@@ -679,7 +926,7 @@ name|newFrontendActionFactory
 argument_list|(
 argument|FactoryT *ConsumerFactory
 argument_list|,
-argument|EndOfSourceFileCallback *EndCallback
+argument|SourceFileCallbacks *Callbacks
 argument_list|)
 block|{
 name|class
@@ -697,9 +944,9 @@ name|FactoryT
 operator|*
 name|ConsumerFactory
 argument_list|,
-name|EndOfSourceFileCallback
+name|SourceFileCallbacks
 operator|*
-name|EndCallback
+name|Callbacks
 argument_list|)
 operator|:
 name|ConsumerFactory
@@ -707,9 +954,9 @@ argument_list|(
 name|ConsumerFactory
 argument_list|)
 block|,
-name|EndCallback
+name|Callbacks
 argument_list|(
-argument|EndCallback
+argument|Callbacks
 argument_list|)
 block|{}
 name|virtual
@@ -726,7 +973,7 @@ name|ConsumerFactoryAdaptor
 argument_list|(
 name|ConsumerFactory
 argument_list|,
-name|EndCallback
+name|Callbacks
 argument_list|)
 return|;
 block|}
@@ -748,9 +995,9 @@ name|FactoryT
 operator|*
 name|ConsumerFactory
 argument_list|,
-name|EndOfSourceFileCallback
+name|SourceFileCallbacks
 operator|*
-name|EndCallback
+name|Callbacks
 argument_list|)
 operator|:
 name|ConsumerFactory
@@ -758,9 +1005,9 @@ argument_list|(
 name|ConsumerFactory
 argument_list|)
 block|,
-name|EndCallback
+name|Callbacks
 argument_list|(
-argument|EndCallback
+argument|Callbacks
 argument_list|)
 block|{}
 name|clang
@@ -784,19 +1031,67 @@ block|}
 name|protected
 operator|:
 name|virtual
-name|void
-name|EndSourceFileAction
-argument_list|()
+name|bool
+name|BeginSourceFileAction
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef Filename
+argument_list|)
+name|LLVM_OVERRIDE
 block|{
 if|if
 condition|(
-name|EndCallback
+operator|!
+name|clang
+operator|::
+name|ASTFrontendAction
+operator|::
+name|BeginSourceFileAction
+argument_list|(
+name|CI
+argument_list|,
+name|Filename
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|Callbacks
 operator|!=
 name|NULL
 condition|)
-name|EndCallback
+return|return
+name|Callbacks
 operator|->
-name|run
+name|handleBeginSource
+argument_list|(
+name|CI
+argument_list|,
+name|Filename
+argument_list|)
+return|;
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|void
+name|EndSourceFileAction
+argument_list|()
+name|LLVM_OVERRIDE
+block|{
+if|if
+condition|(
+name|Callbacks
+operator|!=
+name|NULL
+condition|)
+name|Callbacks
+operator|->
+name|handleEndSource
 argument_list|()
 expr_stmt|;
 name|clang
@@ -812,44 +1107,82 @@ name|FactoryT
 operator|*
 name|ConsumerFactory
 block|;
-name|EndOfSourceFileCallback
+name|SourceFileCallbacks
 operator|*
-name|EndCallback
+name|Callbacks
 block|;     }
-block|;
+expr_stmt|;
 name|FactoryT
-operator|*
+modifier|*
 name|ConsumerFactory
-block|;
-name|EndOfSourceFileCallback
-operator|*
-name|EndCallback
-block|;   }
-block|;
+decl_stmt|;
+name|SourceFileCallbacks
+modifier|*
+name|Callbacks
+decl_stmt|;
+block|}
+empty_stmt|;
 return|return
 name|new
 name|FrontendActionFactoryAdapter
 argument_list|(
 name|ConsumerFactory
 argument_list|,
-name|EndCallback
+name|Callbacks
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Returns the absolute path of \c File, by prepending it with
+end_comment
+
+begin_comment
 comment|/// the current directory if \c File is not absolute.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Otherwise returns \c File.
+end_comment
+
+begin_comment
 comment|/// If 'File' starts with "./", the returned path will not contain the "./".
+end_comment
+
+begin_comment
 comment|/// Otherwise, the returned path will contain the literal path-concatenation of
+end_comment
+
+begin_comment
 comment|/// the current directory and \c File.
+end_comment
+
+begin_comment
 comment|///
-comment|/// The difference to llvm::sys::fs::make_absolute is that we prefer
-comment|/// ::getenv("PWD") if available.
-comment|/// FIXME: Make this functionality available from llvm::sys::fs and delete
-comment|///        this function.
+end_comment
+
+begin_comment
+comment|/// The difference to llvm::sys::fs::make_absolute is the canonicalization this
+end_comment
+
+begin_comment
+comment|/// does by removing "./" and computing native paths.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param File Either an absolute or relative path.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -858,12 +1191,15 @@ argument_list|(
 argument|StringRef File
 argument_list|)
 expr_stmt|;
-block|}
-comment|// end namespace tooling
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
+unit|}
+comment|// end namespace tooling
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

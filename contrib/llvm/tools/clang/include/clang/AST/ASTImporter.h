@@ -658,6 +658,26 @@ modifier|*
 name|To
 parameter_list|)
 function_decl|;
+comment|/// \brief Called by StructuralEquivalenceContext.  If a RecordDecl is
+comment|/// being compared to another RecordDecl as part of import, completing the
+comment|/// other RecordDecl may trigger importation of the first RecordDecl. This
+comment|/// happens especially for anonymous structs.  If the original of the second
+comment|/// RecordDecl can be found, we can complete it without the need for
+comment|/// importation, eliminating this loop.
+name|virtual
+name|Decl
+modifier|*
+name|GetOriginalDecl
+parameter_list|(
+name|Decl
+modifier|*
+name|To
+parameter_list|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
 comment|/// \brief Determine whether the given types are structurally
 comment|/// equivalent.
 name|bool

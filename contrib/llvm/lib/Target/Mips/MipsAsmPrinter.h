@@ -109,6 +109,9 @@ name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
+name|MipsTargetStreamer
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 name|class
@@ -121,6 +124,11 @@ range|:
 name|public
 name|AsmPrinter
 block|{
+name|MipsTargetStreamer
+operator|&
+name|getTargetStreamer
+argument_list|()
+block|;
 name|void
 name|EmitInstrWithMacroNoAT
 argument_list|(
@@ -160,6 +168,21 @@ operator|&
 name|MCOp
 argument_list|)
 block|;
+comment|/// MCP - Keep a pointer to constantpool entries of the current
+comment|/// MachineFunction.
+specifier|const
+name|MachineConstantPool
+operator|*
+name|MCP
+block|;
+comment|/// InConstantPool - Maintain state when emitting a sequence of constant
+comment|/// pool entries so we can properly mark them as data regions.
+name|bool
+name|InConstantPool
+block|;
+name|bool
+name|UsingConstantPools
+block|;
 name|public
 operator|:
 specifier|const
@@ -194,6 +217,16 @@ argument_list|,
 name|Streamer
 argument_list|)
 block|,
+name|MCP
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|InConstantPool
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|MCInstLowering
 argument_list|(
 argument|*this
@@ -209,6 +242,20 @@ operator|<
 name|MipsSubtarget
 operator|>
 operator|(
+operator|)
+block|;
+name|UsingConstantPools
+operator|=
+operator|(
+name|Subtarget
+operator|->
+name|inMips16Mode
+argument_list|()
+operator|&&
+name|Subtarget
+operator|->
+name|useConstantIslands
+argument_list|()
 operator|)
 block|;   }
 name|virtual
@@ -232,6 +279,24 @@ operator|&
 name|MF
 argument_list|)
 block|;
+name|virtual
+name|void
+name|EmitConstantPool
+argument_list|()
+name|LLVM_OVERRIDE
+block|{
+if|if
+condition|(
+operator|!
+name|UsingConstantPools
+condition|)
+name|AsmPrinter
+operator|::
+name|EmitConstantPool
+argument_list|()
+expr_stmt|;
+comment|// we emit constant pools customly!
+block|}
 name|void
 name|EmitInstruction
 argument_list|(
@@ -340,6 +405,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printUnsignedImm8
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int opNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printMemOperand
 argument_list|(
 argument|const MachineInstr *MI
@@ -387,14 +462,6 @@ name|Module
 operator|&
 name|M
 argument_list|)
-block|;
-name|virtual
-name|MachineLocation
-name|getDebugValueLocation
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|)
-specifier|const
 block|;
 name|void
 name|PrintDebugValueComment

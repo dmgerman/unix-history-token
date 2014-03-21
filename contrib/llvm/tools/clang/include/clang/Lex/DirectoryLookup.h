@@ -71,6 +71,12 @@ directive|include
 file|"clang/Basic/SourceManager.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/Lex/ModuleMap.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -404,6 +410,21 @@ operator|)
 name|DirCharacteristic
 return|;
 block|}
+comment|/// \brief Whether this describes a system header directory.
+name|bool
+name|isSystemHeaderDirectory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getDirCharacteristic
+argument_list|()
+operator|!=
+name|SrcMgr
+operator|::
+name|C_User
+return|;
+block|}
 comment|/// \brief Whether this header map is building a framework or not.
 name|bool
 name|isIndexHeaderMap
@@ -464,8 +485,9 @@ operator|>
 operator|*
 name|RelativePath
 argument_list|,
-name|Module
-operator|*
+name|ModuleMap
+operator|::
+name|KnownHeader
 operator|*
 name|SuggestedModule
 argument_list|,
@@ -503,8 +525,9 @@ operator|>
 operator|*
 name|RelativePath
 argument_list|,
-name|Module
-operator|*
+name|ModuleMap
+operator|::
+name|KnownHeader
 operator|*
 name|SuggestedModule
 argument_list|,

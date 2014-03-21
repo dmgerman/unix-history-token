@@ -153,6 +153,20 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
+name|opt
+block|{
+name|class
+name|ArgList
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|class
@@ -161,13 +175,6 @@ decl_stmt|;
 name|class
 name|DiagnosticsEngine
 decl_stmt|;
-name|namespace
-name|driver
-block|{
-name|class
-name|ArgList
-decl_stmt|;
-block|}
 comment|/// \brief Fill out Opts based on the options given in Args.
 comment|///
 comment|/// Args must have been created from the OptTable returned by
@@ -182,7 +189,9 @@ name|DiagnosticOptions
 operator|&
 name|Opts
 argument_list|,
-name|driver
+name|llvm
+operator|::
+name|opt
 operator|::
 name|ArgList
 operator|&

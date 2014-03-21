@@ -259,6 +259,16 @@ name|SOB_Trapping
 comment|// -ftrapv
 block|}
 enum|;
+enum|enum
+name|AddrSpaceMapMangling
+block|{
+name|ASMM_Target
+block|,
+name|ASMM_On
+block|,
+name|ASMM_Off
+block|}
+enum|;
 name|public
 label|:
 name|clang
@@ -335,6 +345,21 @@ name|getSignedOverflowBehavior
 argument_list|()
 operator|==
 name|SOB_Defined
+return|;
+block|}
+name|bool
+name|isSubscriptPointerArithmetic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCRuntime
+operator|.
+name|isSubscriptPointerArithmetic
+argument_list|()
+operator|&&
+operator|!
+name|ObjCSubscriptingLegacyRuntime
 return|;
 block|}
 comment|/// \brief Reset all of the options that are not considered when building a

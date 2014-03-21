@@ -91,6 +91,11 @@ range|:
 name|public
 name|MCSection
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|NVPTXSection
@@ -107,6 +112,7 @@ argument_list|,
 argument|K
 argument_list|)
 block|{}
+name|virtual
 operator|~
 name|NVPTXSection
 argument_list|()

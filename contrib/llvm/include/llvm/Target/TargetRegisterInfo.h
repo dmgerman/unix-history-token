@@ -832,6 +832,12 @@ begin_comment
 comment|// List of regclasses
 end_comment
 
+begin_decl_stmt
+name|unsigned
+name|CoveringLanes
+decl_stmt|;
+end_decl_stmt
+
 begin_label
 name|protected
 label|:
@@ -849,6 +855,8 @@ argument_list|,
 argument|const char *const *SRINames
 argument_list|,
 argument|const unsigned *SRILaneMasks
+argument_list|,
+argument|unsigned CoveringLanes
 argument_list|)
 end_macro
 
@@ -1481,6 +1489,110 @@ index|]
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// The lane masks returned by getSubRegIndexLaneMask() above can only be
+end_comment
+
+begin_comment
+comment|/// used to determine if sub-registers overlap - they can't be used to
+end_comment
+
+begin_comment
+comment|/// determine if a set of sub-registers completely cover another
+end_comment
+
+begin_comment
+comment|/// sub-register.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The X86 general purpose registers have two lanes corresponding to the
+end_comment
+
+begin_comment
+comment|/// sub_8bit and sub_8bit_hi sub-registers. Both sub_32bit and sub_16bit have
+end_comment
+
+begin_comment
+comment|/// lane masks '3', but the sub_16bit sub-register doesn't fully cover the
+end_comment
+
+begin_comment
+comment|/// sub_32bit sub-register.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// On the other hand, the ARM NEON lanes fully cover their registers: The
+end_comment
+
+begin_comment
+comment|/// dsub_0 sub-register is completely covered by the ssub_0 and ssub_1 lanes.
+end_comment
+
+begin_comment
+comment|/// This is related to the CoveredBySubRegs property on register definitions.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This function returns a bit mask of lanes that completely cover their
+end_comment
+
+begin_comment
+comment|/// sub-registers. More precisely, given:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   Covering = getCoveringLanes();
+end_comment
+
+begin_comment
+comment|///   MaskA = getSubRegIndexLaneMask(SubA);
+end_comment
+
+begin_comment
+comment|///   MaskB = getSubRegIndexLaneMask(SubB);
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If (MaskA& ~(MaskB& Covering)) == 0, then SubA is completely covered by
+end_comment
+
+begin_comment
+comment|/// SubB.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getCoveringLanes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CoveringLanes
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// regsOverlap - Returns true if the two registers are equal or alias each
@@ -3828,6 +3940,8 @@ begin_decl_stmt
 name|class
 name|PrintRegUnit
 block|{
+name|protected
+label|:
 specifier|const
 name|TargetRegisterInfo
 modifier|*
@@ -3883,6 +3997,78 @@ name|OS
 operator|,
 specifier|const
 name|PrintRegUnit
+operator|&
+name|PR
+operator|)
+block|{
+name|PR
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// PrintVRegOrUnit - It is often convenient to track virtual registers and
+end_comment
+
+begin_comment
+comment|/// physical register units in the same list.
+end_comment
+
+begin_decl_stmt
+name|class
+name|PrintVRegOrUnit
+range|:
+name|protected
+name|PrintRegUnit
+block|{
+name|public
+operator|:
+name|PrintVRegOrUnit
+argument_list|(
+argument|unsigned VRegOrUnit
+argument_list|,
+argument|const TargetRegisterInfo *tri
+argument_list|)
+operator|:
+name|PrintRegUnit
+argument_list|(
+argument|VRegOrUnit
+argument_list|,
+argument|tri
+argument_list|)
+block|{}
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&
+argument_list|)
+specifier|const
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|PrintVRegOrUnit
 operator|&
 name|PR
 operator|)

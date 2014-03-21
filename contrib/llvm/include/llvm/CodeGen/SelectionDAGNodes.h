@@ -1367,6 +1367,14 @@ comment|/// debugLoc - source line information.
 name|DebugLoc
 name|debugLoc
 decl_stmt|;
+comment|// The ordering of the SDNodes. It roughly corresponds to the ordering of the
+comment|// original LLVM instructions.
+comment|// This is used for turning off scheduling, because we'll forgo
+comment|// the normal scheduling algorithms and output the instructions according to
+comment|// this ordering.
+name|unsigned
+name|IROrder
+decl_stmt|;
 comment|/// getValueTypeList - Return a pointer to the specified value type.
 specifier|static
 specifier|const
@@ -1579,6 +1587,31 @@ block|{
 name|NodeId
 operator|=
 name|Id
+expr_stmt|;
+block|}
+comment|/// getIROrder - Return the node ordering.
+comment|///
+name|unsigned
+name|getIROrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IROrder
+return|;
+block|}
+comment|/// setIROrder - Set the node ordering.
+comment|///
+name|void
+name|setIROrder
+parameter_list|(
+name|unsigned
+name|Order
+parameter_list|)
+block|{
+name|IROrder
+operator|=
+name|Order
 expr_stmt|;
 block|}
 comment|/// getDebugLoc - Return the source location info.
@@ -2133,13 +2166,11 @@ operator|>
 operator|&
 name|Visited
 argument_list|,
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 specifier|const
 name|SDNode
 operator|*
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|Worklist
@@ -3046,6 +3077,8 @@ name|SDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|const DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
@@ -3116,7 +3149,12 @@ argument_list|)
 operator|,
 name|debugLoc
 argument_list|(
-argument|dl
+name|dl
+argument_list|)
+operator|,
+name|IROrder
+argument_list|(
+argument|Order
 argument_list|)
 block|{
 for|for
@@ -3179,6 +3217,9 @@ unit|SDNode
 operator|(
 name|unsigned
 name|Opc
+operator|,
+name|unsigned
+name|Order
 operator|,
 specifier|const
 name|DebugLoc
@@ -3245,7 +3286,12 @@ argument_list|)
 operator|,
 name|debugLoc
 argument_list|(
-argument|dl
+name|dl
+argument_list|)
+operator|,
+name|IROrder
+argument_list|(
+argument|Order
 argument_list|)
 block|{}
 comment|/// InitOperands - Initialize the operands list of this with 1 operand.
@@ -3634,6 +3680,265 @@ name|DropOperands
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+unit|};
+comment|/// Wrapper class for IR location info (IR ordering and DebugLoc) to be passed
+end_comment
+
+begin_comment
+comment|/// into SDNode creation functions.
+end_comment
+
+begin_comment
+comment|/// When an SDNode is created from the DAGBuilder, the DebugLoc is extracted
+end_comment
+
+begin_comment
+comment|/// from the original Instruction, and IROrder is the ordinal position of
+end_comment
+
+begin_comment
+comment|/// the instruction.
+end_comment
+
+begin_comment
+comment|/// When an SDNode is created after the DAG is being built, both DebugLoc and
+end_comment
+
+begin_comment
+comment|/// the IROrder are propagated from the original SDNode.
+end_comment
+
+begin_comment
+comment|/// So SDLoc class provides two constructors besides the default one, one to
+end_comment
+
+begin_comment
+comment|/// be used by the DAGBuilder, the other to be used by others.
+end_comment
+
+begin_decl_stmt
+name|class
+name|SDLoc
+block|{
+name|private
+label|:
+comment|// Ptr could be used for either Instruction* or SDNode*. It is used for
+comment|// Instruction* if IROrder is not -1.
+specifier|const
+name|void
+modifier|*
+name|Ptr
+decl_stmt|;
+name|int
+name|IROrder
+decl_stmt|;
+name|public
+label|:
+name|SDLoc
+argument_list|()
+operator|:
+name|Ptr
+argument_list|(
+name|NULL
+argument_list|)
+operator|,
+name|IROrder
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|SDLoc
+argument_list|(
+specifier|const
+name|SDNode
+operator|*
+name|N
+argument_list|)
+operator|:
+name|Ptr
+argument_list|(
+name|N
+argument_list|)
+operator|,
+name|IROrder
+argument_list|(
+argument|-
+literal|1
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|N
+operator|&&
+literal|"null SDNode"
+argument_list|)
+block|;   }
+name|SDLoc
+argument_list|(
+argument|const SDValue V
+argument_list|)
+operator|:
+name|Ptr
+argument_list|(
+name|V
+operator|.
+name|getNode
+argument_list|()
+argument_list|)
+operator|,
+name|IROrder
+argument_list|(
+argument|-
+literal|1
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Ptr
+operator|&&
+literal|"null SDNode"
+argument_list|)
+block|;   }
+name|SDLoc
+argument_list|(
+argument|const Instruction *I
+argument_list|,
+argument|int Order
+argument_list|)
+operator|:
+name|Ptr
+argument_list|(
+name|I
+argument_list|)
+operator|,
+name|IROrder
+argument_list|(
+argument|Order
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Order
+operator|>=
+literal|0
+operator|&&
+literal|"bad IROrder"
+argument_list|)
+block|;   }
+name|unsigned
+name|getIROrder
+argument_list|()
+block|{
+if|if
+condition|(
+name|IROrder
+operator|>=
+literal|0
+operator|||
+name|Ptr
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+operator|(
+name|unsigned
+operator|)
+name|IROrder
+return|;
+block|}
+specifier|const
+name|SDNode
+modifier|*
+name|N
+init|=
+operator|(
+specifier|const
+name|SDNode
+operator|*
+operator|)
+operator|(
+name|Ptr
+operator|)
+decl_stmt|;
+return|return
+name|N
+operator|->
+name|getIROrder
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_function
+name|DebugLoc
+name|getDebugLoc
+parameter_list|()
+block|{
+if|if
+condition|(
+name|Ptr
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|DebugLoc
+argument_list|()
+return|;
+block|}
+if|if
+condition|(
+name|IROrder
+operator|>=
+literal|0
+condition|)
+block|{
+specifier|const
+name|Instruction
+modifier|*
+name|I
+init|=
+operator|(
+specifier|const
+name|Instruction
+operator|*
+operator|)
+operator|(
+name|Ptr
+operator|)
+decl_stmt|;
+return|return
+name|I
+operator|->
+name|getDebugLoc
+argument_list|()
+return|;
+block|}
+specifier|const
+name|SDNode
+modifier|*
+name|N
+init|=
+operator|(
+specifier|const
+name|SDNode
+operator|*
+operator|)
+operator|(
+name|Ptr
+operator|)
+decl_stmt|;
+return|return
+name|N
+operator|->
+name|getDebugLoc
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_comment
 unit|};
@@ -4059,6 +4364,8 @@ name|UnarySDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
@@ -4069,6 +4376,8 @@ block|:
 name|SDNode
 argument_list|(
 argument|Opc
+argument_list|,
+argument|Order
 argument_list|,
 argument|dl
 argument_list|,
@@ -4118,6 +4427,8 @@ name|BinarySDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
@@ -4130,6 +4441,8 @@ operator|:
 name|SDNode
 argument_list|(
 argument|Opc
+argument_list|,
+argument|Order
 argument_list|,
 argument|dl
 argument_list|,
@@ -4176,6 +4489,8 @@ name|TernarySDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
@@ -4190,6 +4505,8 @@ operator|:
 name|SDNode
 argument_list|(
 argument|Opc
+argument_list|,
+argument|Order
 argument_list|,
 argument|dl
 argument_list|,
@@ -4239,50 +4556,17 @@ name|Op
 block|;
 name|public
 operator|:
-comment|// FIXME: Remove the "noinline" attribute once<rdar://problem/5852746> is
-comment|// fixed.
-if|#
-directive|if
-name|__GNUC__
-operator|==
-literal|4
-operator|&&
-name|__GNUC_MINOR__
-operator|==
-literal|2
-operator|&&
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__llvm__
-argument_list|)
-name|explicit
-name|__attribute__
-argument_list|(
-argument|(__noinline__)
-argument_list|)
-name|HandleSDNode
-argument_list|(
-argument|SDValue X
-argument_list|)
-else|#
-directive|else
 name|explicit
 name|HandleSDNode
 argument_list|(
 argument|SDValue X
 argument_list|)
-endif|#
-directive|endif
 operator|:
 name|SDNode
 argument_list|(
 argument|ISD::HANDLENODE
+argument_list|,
+literal|0
 argument_list|,
 argument|DebugLoc()
 argument_list|,
@@ -4314,6 +4598,75 @@ return|;
 block|}
 expr|}
 block|;
+name|class
+name|AddrSpaceCastSDNode
+operator|:
+name|public
+name|UnarySDNode
+block|{
+name|private
+operator|:
+name|unsigned
+name|SrcAddrSpace
+block|;
+name|unsigned
+name|DestAddrSpace
+block|;
+name|public
+operator|:
+name|AddrSpaceCastSDNode
+argument_list|(
+argument|unsigned Order
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|SDValue X
+argument_list|,
+argument|unsigned SrcAS
+argument_list|,
+argument|unsigned DestAS
+argument_list|)
+block|;
+name|unsigned
+name|getSrcAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SrcAddrSpace
+return|;
+block|}
+name|unsigned
+name|getDestAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DestAddrSpace
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|ADDRSPACECAST
+return|;
+block|}
+expr|}
+block|;
 comment|/// Abstact virtual class for operations for memory operations
 name|class
 name|MemSDNode
@@ -4340,6 +4693,8 @@ name|MemSDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
@@ -4352,6 +4707,8 @@ block|;
 name|MemSDNode
 argument_list|(
 argument|unsigned Opc
+argument_list|,
+argument|unsigned Order
 argument_list|,
 argument|DebugLoc dl
 argument_list|,
@@ -4938,6 +5295,8 @@ name|AtomicSDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTL
@@ -4962,6 +5321,8 @@ operator|:
 name|MemSDNode
 argument_list|(
 argument|Opc
+argument_list|,
+argument|Order
 argument_list|,
 argument|dl
 argument_list|,
@@ -4996,6 +5357,8 @@ name|AtomicSDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTL
@@ -5018,6 +5381,8 @@ operator|:
 name|MemSDNode
 argument_list|(
 argument|Opc
+argument_list|,
+argument|Order
 argument_list|,
 argument|dl
 argument_list|,
@@ -5050,6 +5415,8 @@ name|AtomicSDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTL
@@ -5070,6 +5437,8 @@ operator|:
 name|MemSDNode
 argument_list|(
 argument|Opc
+argument_list|,
+argument|Order
 argument_list|,
 argument|dl
 argument_list|,
@@ -5094,6 +5463,82 @@ argument_list|,
 name|Chain
 argument_list|,
 name|Ptr
+argument_list|)
+block|;   }
+name|AtomicSDNode
+argument_list|(
+argument|unsigned Opc
+argument_list|,
+argument|unsigned Order
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SDVTList VTL
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|SDValue* AllOps
+argument_list|,
+argument|SDUse *DynOps
+argument_list|,
+argument|unsigned NumOps
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|,
+argument|AtomicOrdering Ordering
+argument_list|,
+argument|SynchronizationScope SynchScope
+argument_list|)
+operator|:
+name|MemSDNode
+argument_list|(
+argument|Opc
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTL
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{
+name|InitAtomic
+argument_list|(
+name|Ordering
+argument_list|,
+name|SynchScope
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|DynOps
+operator|||
+name|NumOps
+operator|<=
+name|array_lengthof
+argument_list|(
+name|Ops
+argument_list|)
+operator|)
+operator|&&
+literal|"Too many ops for internal storage!"
+argument_list|)
+block|;
+name|InitOperands
+argument_list|(
+name|DynOps
+condition|?
+name|DynOps
+else|:
+name|Ops
+argument_list|,
+name|AllOps
+argument_list|,
+name|NumOps
 argument_list|)
 block|;   }
 specifier|const
@@ -5297,6 +5742,8 @@ name|MemIntrinsicSDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
@@ -5313,6 +5760,8 @@ operator|:
 name|MemSDNode
 argument_list|(
 argument|Opc
+argument_list|,
+argument|Order
 argument_list|,
 argument|dl
 argument_list|,
@@ -5410,6 +5859,8 @@ name|ShuffleVectorSDNode
 argument_list|(
 argument|EVT VT
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDValue N1
@@ -5424,6 +5875,8 @@ argument_list|(
 name|ISD
 operator|::
 name|VECTOR_SHUFFLE
+argument_list|,
+name|Order
 argument_list|,
 name|dl
 argument_list|,
@@ -5572,9 +6025,8 @@ name|Mask
 index|[
 name|i
 index|]
-operator|!=
-operator|-
-literal|1
+operator|>=
+literal|0
 condition|)
 return|return
 name|Mask
@@ -5583,10 +6035,11 @@ name|i
 index|]
 return|;
 block|}
-return|return
-operator|-
-literal|1
-return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Splat with all undef indices?"
+argument_list|)
+expr_stmt|;
 block|}
 specifier|static
 name|bool
@@ -5652,6 +6105,8 @@ else|:
 name|ISD
 operator|::
 name|Constant
+argument_list|,
+literal|0
 argument_list|,
 name|DebugLoc
 argument_list|()
@@ -5818,6 +6273,8 @@ else|:
 name|ISD
 operator|::
 name|ConstantFP
+argument_list|,
+literal|0
 argument_list|,
 name|DebugLoc
 argument_list|()
@@ -6007,6 +6464,8 @@ name|GlobalAddressSDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc DL
 argument_list|,
 argument|const GlobalValue *GA
@@ -6137,6 +6596,8 @@ name|ISD
 operator|::
 name|FrameIndex
 argument_list|,
+literal|0
+argument_list|,
 name|DebugLoc
 argument_list|()
 argument_list|,
@@ -6230,6 +6691,8 @@ else|:
 name|ISD
 operator|::
 name|JumpTable
+argument_list|,
+literal|0
 argument_list|,
 name|DebugLoc
 argument_list|()
@@ -6362,6 +6825,8 @@ name|ISD
 operator|::
 name|ConstantPool
 argument_list|,
+literal|0
+argument_list|,
 name|DebugLoc
 argument_list|()
 argument_list|,
@@ -6427,6 +6892,8 @@ else|:
 name|ISD
 operator|::
 name|ConstantPool
+argument_list|,
+literal|0
 argument_list|,
 name|DebugLoc
 argument_list|()
@@ -6658,6 +7125,8 @@ name|ISD
 operator|::
 name|TargetIndex
 argument_list|,
+literal|0
+argument_list|,
 name|DebugLoc
 argument_list|()
 argument_list|,
@@ -6763,6 +7232,8 @@ name|ISD
 operator|::
 name|BasicBlock
 argument_list|,
+literal|0
+argument_list|,
 name|DebugLoc
 argument_list|()
 argument_list|,
@@ -6778,7 +7249,7 @@ name|MBB
 argument_list|(
 argument|mbb
 argument_list|)
-block|{   }
+block|{}
 name|public
 operator|:
 name|MachineBasicBlock
@@ -6909,6 +7380,8 @@ name|ISD
 operator|::
 name|SRCVALUE
 argument_list|,
+literal|0
+argument_list|,
 name|DebugLoc
 argument_list|()
 argument_list|,
@@ -6989,6 +7462,8 @@ name|ISD
 operator|::
 name|MDNODE_SDNODE
 argument_list|,
+literal|0
+argument_list|,
 name|DebugLoc
 argument_list|()
 argument_list|,
@@ -7064,6 +7539,8 @@ name|ISD
 operator|::
 name|Register
 argument_list|,
+literal|0
+argument_list|,
 name|DebugLoc
 argument_list|()
 argument_list|,
@@ -7138,6 +7615,8 @@ argument_list|(
 name|ISD
 operator|::
 name|RegisterMask
+argument_list|,
+literal|0
 argument_list|,
 name|DebugLoc
 argument_list|()
@@ -7226,6 +7705,8 @@ operator|:
 name|SDNode
 argument_list|(
 name|NodeTy
+argument_list|,
+literal|0
 argument_list|,
 name|DebugLoc
 argument_list|()
@@ -7331,6 +7812,8 @@ name|SelectionDAG
 block|;
 name|EHLabelSDNode
 argument_list|(
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDValue ch
@@ -7343,6 +7826,8 @@ argument_list|(
 name|ISD
 operator|::
 name|EH_LABEL
+argument_list|,
+name|Order
 argument_list|,
 name|dl
 argument_list|,
@@ -7440,6 +7925,8 @@ else|:
 name|ISD
 operator|::
 name|ExternalSymbol
+argument_list|,
+literal|0
 argument_list|,
 name|DebugLoc
 argument_list|()
@@ -7539,6 +8026,8 @@ name|ISD
 operator|::
 name|CONDCODE
 argument_list|,
+literal|0
+argument_list|,
 name|DebugLoc
 argument_list|()
 argument_list|,
@@ -7610,6 +8099,8 @@ name|CvtRndSatSDNode
 argument_list|(
 argument|EVT VT
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|const SDValue *Ops
@@ -7624,6 +8115,8 @@ argument_list|(
 name|ISD
 operator|::
 name|CONVERT_RNDSAT
+argument_list|,
+name|Order
 argument_list|,
 name|dl
 argument_list|,
@@ -7711,6 +8204,8 @@ name|ISD
 operator|::
 name|VALUETYPE
 argument_list|,
+literal|0
+argument_list|,
 name|DebugLoc
 argument_list|()
 argument_list|,
@@ -7780,6 +8275,8 @@ name|LSBaseSDNode
 argument_list|(
 argument|ISD::NodeType NodeTy
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDValue *Operands
@@ -7798,6 +8295,8 @@ operator|:
 name|MemSDNode
 argument_list|(
 argument|NodeTy
+argument_list|,
+argument|Order
 argument_list|,
 argument|dl
 argument_list|,
@@ -7975,6 +8474,8 @@ name|LoadSDNode
 argument_list|(
 argument|SDValue *ChainPtrOff
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
@@ -7991,6 +8492,8 @@ operator|:
 name|LSBaseSDNode
 argument_list|(
 argument|ISD::LOAD
+argument_list|,
+argument|Order
 argument_list|,
 argument|dl
 argument_list|,
@@ -8128,6 +8631,8 @@ name|StoreSDNode
 argument_list|(
 argument|SDValue *ChainValuePtrOff
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
@@ -8144,6 +8649,8 @@ operator|:
 name|LSBaseSDNode
 argument_list|(
 argument|ISD::STORE
+argument_list|,
+argument|Order
 argument_list|,
 argument|dl
 argument_list|,
@@ -8301,6 +8808,8 @@ name|MachineSDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
+argument|unsigned Order
+argument_list|,
 argument|const DebugLoc DL
 argument_list|,
 argument|SDVTList VTs
@@ -8309,6 +8818,8 @@ operator|:
 name|SDNode
 argument_list|(
 name|Opc
+argument_list|,
+name|Order
 argument_list|,
 name|DL
 argument_list|,
@@ -8774,7 +9285,7 @@ block|;
 comment|/// LargestSDNode - The largest SDNode class.
 comment|///
 typedef|typedef
-name|LoadSDNode
+name|AtomicSDNode
 name|LargestSDNode
 typedef|;
 comment|/// MostAlignedSDNode - The SDNode class with the greatest alignment

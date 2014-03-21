@@ -1099,6 +1099,11 @@ name|T
 operator|->
 name|isReferenceType
 argument_list|()
+operator|||
+name|T
+operator|->
+name|isNullPtrType
+argument_list|()
 return|;
 block|}
 name|private

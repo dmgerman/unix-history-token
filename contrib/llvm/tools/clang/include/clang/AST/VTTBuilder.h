@@ -261,7 +261,7 @@ argument_list|)
 block|{}
 block|}
 struct|;
-comment|/// VTT builder - Class for building VTT layout information.
+comment|/// \brief Class for building VTT layout information.
 name|class
 name|VTTBuilder
 block|{
@@ -269,8 +269,7 @@ name|ASTContext
 modifier|&
 name|Ctx
 decl_stmt|;
-comment|/// MostDerivedClass - The most derived class for which we're building this
-comment|/// vtable.
+comment|/// \brief The most derived class for which we're building this vtable.
 specifier|const
 name|CXXRecordDecl
 modifier|*
@@ -285,7 +284,7 @@ literal|64
 operator|>
 name|VTTVTablesVectorTy
 expr_stmt|;
-comment|/// VTTVTables - The VTT vtables.
+comment|/// \brief The VTT vtables.
 name|VTTVTablesVectorTy
 name|VTTVTables
 decl_stmt|;
@@ -298,11 +297,11 @@ literal|64
 operator|>
 name|VTTComponentsVectorTy
 expr_stmt|;
-comment|/// VTTComponents - The VTT components.
+comment|/// \brief The VTT components.
 name|VTTComponentsVectorTy
 name|VTTComponents
 decl_stmt|;
-comment|/// MostDerivedClassLayout - the AST record layout of the most derived class.
+comment|/// \brief The AST record layout of the most derived class.
 specifier|const
 name|ASTRecordLayout
 modifier|&
@@ -332,8 +331,7 @@ name|uint64_t
 operator|>
 name|AddressPointsMapTy
 expr_stmt|;
-comment|/// SubVTTIndicies - The sub-VTT indices for the bases of the most derived
-comment|/// class.
+comment|/// \brief The sub-VTT indices for the bases of the most derived class.
 name|llvm
 operator|::
 name|DenseMap
@@ -344,8 +342,8 @@ name|uint64_t
 operator|>
 name|SubVTTIndicies
 expr_stmt|;
-comment|/// SecondaryVirtualPointerIndices - The secondary virtual pointer indices of
-comment|/// all subobjects of the most derived class.
+comment|/// \brief The secondary virtual pointer indices of all subobjects of
+comment|/// the most derived class.
 name|llvm
 operator|::
 name|DenseMap
@@ -356,12 +354,11 @@ name|uint64_t
 operator|>
 name|SecondaryVirtualPointerIndices
 expr_stmt|;
-comment|/// GenerateDefinition - Whether the VTT builder should generate LLVM IR for
-comment|/// the VTT.
+comment|/// \brief Whether the VTT builder should generate LLVM IR for the VTT.
 name|bool
 name|GenerateDefinition
 decl_stmt|;
-comment|/// AddVTablePointer - Add a vtable pointer to the VTT currently being built.
+comment|/// \brief Add a vtable pointer to the VTT currently being built.
 name|void
 name|AddVTablePointer
 parameter_list|(
@@ -377,8 +374,7 @@ modifier|*
 name|VTableClass
 parameter_list|)
 function_decl|;
-comment|/// LayoutSecondaryVTTs - Lay out the secondary VTTs of the given base
-comment|/// subobject.
+comment|/// \brief Lay out the secondary VTTs of the given base subobject.
 name|void
 name|LayoutSecondaryVTTs
 parameter_list|(
@@ -386,8 +382,8 @@ name|BaseSubobject
 name|Base
 parameter_list|)
 function_decl|;
-comment|/// LayoutSecondaryVirtualPointers - Lay out the secondary virtual pointers
-comment|/// for the given base subobject.
+comment|/// \brief Lay out the secondary virtual pointers for the given base
+comment|/// subobject.
 comment|///
 comment|/// \param BaseIsMorallyVirtual whether the base subobject is a virtual base
 comment|/// or a direct or indirect base of a virtual base.
@@ -413,8 +409,8 @@ modifier|&
 name|VBases
 parameter_list|)
 function_decl|;
-comment|/// LayoutSecondaryVirtualPointers - Lay out the secondary virtual pointers
-comment|/// for the given base subobject.
+comment|/// \brief Lay out the secondary virtual pointers for the given base
+comment|/// subobject.
 name|void
 name|LayoutSecondaryVirtualPointers
 parameter_list|(
@@ -425,8 +421,8 @@ name|uint64_t
 name|VTableIndex
 parameter_list|)
 function_decl|;
-comment|/// LayoutVirtualVTTs - Lay out the VTTs for the virtual base classes of the
-comment|/// given record decl.
+comment|/// \brief Lay out the VTTs for the virtual base classes of the given
+comment|/// record declaration.
 name|void
 name|LayoutVirtualVTTs
 parameter_list|(
@@ -440,7 +436,7 @@ modifier|&
 name|VBases
 parameter_list|)
 function_decl|;
-comment|/// LayoutVTT - Will lay out the VTT for the given subobject, including any
+comment|/// \brief Lay out the VTT for the given subobject, including any
 comment|/// secondary VTTs, secondary virtual pointers and virtual VTTs.
 name|void
 name|LayoutVTT
@@ -463,7 +459,7 @@ argument_list|,
 argument|bool GenerateDefinition
 argument_list|)
 empty_stmt|;
-comment|// getVTTComponents - Returns a reference to the VTT components.
+comment|// \brief Returns a reference to the VTT components.
 specifier|const
 name|VTTComponentsVectorTy
 operator|&
@@ -475,7 +471,7 @@ return|return
 name|VTTComponents
 return|;
 block|}
-comment|// getVTTVTables - Returns a reference to the VTT vtables.
+comment|// \brief Returns a reference to the VTT vtables.
 specifier|const
 name|VTTVTablesVectorTy
 operator|&
@@ -487,7 +483,7 @@ return|return
 name|VTTVTables
 return|;
 block|}
-comment|/// getSubVTTIndicies - Returns a reference to the sub-VTT indices.
+comment|/// \brief Returns a reference to the sub-VTT indices.
 specifier|const
 name|llvm
 operator|::
@@ -506,8 +502,7 @@ return|return
 name|SubVTTIndicies
 return|;
 block|}
-comment|/// getSecondaryVirtualPointerIndices - Returns a reference to the secondary
-comment|/// virtual pointer indices.
+comment|/// \brief Returns a reference to the secondary virtual pointer indices.
 specifier|const
 name|llvm
 operator|::

@@ -52,6 +52,8 @@ enum|enum
 name|CapturedRegionKind
 block|{
 name|CR_Default
+block|,
+name|CR_OpenMP
 block|}
 enum|;
 block|}

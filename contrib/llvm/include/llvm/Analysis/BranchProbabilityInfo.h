@@ -336,6 +336,16 @@ literal|16
 operator|>
 name|PostDominatedByUnreachable
 expr_stmt|;
+comment|/// \brief Track the set of blocks that always lead to a cold call.
+name|SmallPtrSet
+operator|<
+name|BasicBlock
+operator|*
+operator|,
+literal|16
+operator|>
+name|PostDominatedByColdCall
+expr_stmt|;
 comment|/// \brief Get sum of the block successors' weights.
 name|uint32_t
 name|getSumForBlock
@@ -357,6 +367,14 @@ parameter_list|)
 function_decl|;
 name|bool
 name|calcMetadataWeights
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
+name|bool
+name|calcColdCallHeuristics
 parameter_list|(
 name|BasicBlock
 modifier|*

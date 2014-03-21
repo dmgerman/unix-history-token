@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSubtargetInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -356,6 +362,30 @@ modifier|*
 name|OpInfo
 decl_stmt|;
 comment|// 'NumOperands' entries about operands
+name|uint64_t
+name|DeprecatedFeatureMask
+decl_stmt|;
+comment|// Feature bits that this is deprecated on, if any
+comment|// A complex method to determine is a certain is deprecated or not, and return
+comment|// the reason for deprecation.
+name|bool
+argument_list|(
+operator|*
+name|ComplexDeprecationInfo
+argument_list|)
+argument_list|(
+name|MCInst
+operator|&
+argument_list|,
+name|MCSubtargetInfo
+operator|&
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+argument_list|)
+expr_stmt|;
 comment|/// \brief Returns the value of the specific constraint if
 comment|/// it is set. Returns -1 if it is not set.
 name|int
@@ -423,6 +453,68 @@ block|}
 return|return
 operator|-
 literal|1
+return|;
+block|}
+comment|/// \brief Returns true if a certain instruction is deprecated and if so
+comment|/// returns the reason in \p Info.
+name|bool
+name|getDeprecatedInfo
+argument_list|(
+name|MCInst
+operator|&
+name|MI
+argument_list|,
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Info
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|ComplexDeprecationInfo
+condition|)
+return|return
+name|ComplexDeprecationInfo
+argument_list|(
+name|MI
+argument_list|,
+name|STI
+argument_list|,
+name|Info
+argument_list|)
+return|;
+if|if
+condition|(
+operator|(
+name|DeprecatedFeatureMask
+operator|&
+name|STI
+operator|.
+name|getFeatureBits
+argument_list|()
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|// FIXME: it would be nice to include the subtarget feature here.
+name|Info
+operator|=
+literal|"deprecated"
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
 return|;
 block|}
 comment|/// \brief Return the opcode number for this descriptor.
@@ -746,7 +838,8 @@ condition|)
 return|return
 name|false
 return|;
-return|return
+if|if
+condition|(
 name|hasDefOfPhysReg
 argument_list|(
 name|MI
@@ -755,6 +848,71 @@ name|PC
 argument_list|,
 name|RI
 argument_list|)
+condition|)
+return|return
+name|true
+return|;
+comment|// A variadic instruction may define PC in the variable operand list.
+comment|// There's currently no indication of which entries in a variable
+comment|// list are defs and which are uses. While that's the case, this function
+comment|// needs to assume they're defs in order to be conservatively correct.
+for|for
+control|(
+name|int
+name|i
+init|=
+name|NumOperands
+init|,
+name|e
+init|=
+name|MI
+operator|.
+name|getNumOperands
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+name|i
+argument_list|)
+operator|.
+name|isReg
+argument_list|()
+operator|&&
+name|RI
+operator|.
+name|isSubRegisterEq
+argument_list|(
+name|PC
+argument_list|,
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+name|i
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
 return|;
 block|}
 comment|/// \brief Return true if this instruction has a predicate operand

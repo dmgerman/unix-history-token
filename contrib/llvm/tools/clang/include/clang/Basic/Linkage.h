@@ -92,6 +92,10 @@ comment|/// equivalent to having internal linkage from the code-generation
 comment|/// point of view.
 name|UniqueExternalLinkage
 block|,
+comment|/// \brief No linkage according to the standard, but is visible from other
+comment|/// translation units because of types defined in a inline function.
+name|VisibleNoLinkage
+block|,
 comment|/// \brief External linkage, which indicates that the entity can
 comment|/// be referred to from other translation units.
 name|ExternalLinkage
@@ -128,10 +132,9 @@ block|,
 name|GVA_ExplicitTemplateInstantiation
 block|}
 enum|;
-comment|/// \brief Determine whether the given linkage is semantically external.
 specifier|inline
 name|bool
-name|isExternalLinkage
+name|isExternallyVisible
 parameter_list|(
 name|Linkage
 name|L
@@ -140,14 +143,68 @@ block|{
 return|return
 name|L
 operator|==
-name|UniqueExternalLinkage
+name|ExternalLinkage
 operator|||
 name|L
+operator|==
+name|VisibleNoLinkage
+return|;
+block|}
+specifier|inline
+name|Linkage
+name|getFormalLinkage
+parameter_list|(
+name|Linkage
+name|L
+parameter_list|)
+block|{
+if|if
+condition|(
+name|L
+operator|==
+name|UniqueExternalLinkage
+condition|)
+return|return
+name|ExternalLinkage
+return|;
+if|if
+condition|(
+name|L
+operator|==
+name|VisibleNoLinkage
+condition|)
+return|return
+name|NoLinkage
+return|;
+return|return
+name|L
+return|;
+block|}
+specifier|inline
+name|bool
+name|isExternalFormalLinkage
+parameter_list|(
+name|Linkage
+name|L
+parameter_list|)
+block|{
+return|return
+name|getFormalLinkage
+argument_list|(
+name|L
+argument_list|)
 operator|==
 name|ExternalLinkage
 return|;
 block|}
-comment|/// \brief Compute the minimum linkage given two linages.
+comment|/// \brief Compute the minimum linkage given two linkages.
+comment|///
+comment|/// The linkage can be interpreted as a pair formed by the formal linkage and
+comment|/// a boolean for external visibility. This is just what getFormalLinkage and
+comment|/// isExternallyVisible return. We want the minimum of both components. The
+comment|/// Linkage enum is defined in an order that makes this simple, we just need
+comment|/// special cases for when VisibleNoLinkage would lose the visible bit and
+comment|/// become NoLinkage.
 specifier|inline
 name|Linkage
 name|minLinkage
@@ -159,6 +216,47 @@ name|Linkage
 name|L2
 parameter_list|)
 block|{
+if|if
+condition|(
+name|L2
+operator|==
+name|VisibleNoLinkage
+condition|)
+name|std
+operator|::
+name|swap
+argument_list|(
+name|L1
+argument_list|,
+name|L2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|L1
+operator|==
+name|VisibleNoLinkage
+condition|)
+block|{
+if|if
+condition|(
+name|L2
+operator|==
+name|InternalLinkage
+condition|)
+return|return
+name|NoLinkage
+return|;
+if|if
+condition|(
+name|L2
+operator|==
+name|UniqueExternalLinkage
+condition|)
+return|return
+name|NoLinkage
+return|;
+block|}
 return|return
 name|L1
 operator|<

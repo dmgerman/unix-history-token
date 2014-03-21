@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- BranchFolding.h - Fold machine code branch instructions --*- C++ -*===//
+comment|//===-- BranchFolding.h - Fold machine code branch instructions -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -447,6 +447,11 @@ name|MachineBasicBlock
 operator|::
 name|iterator
 name|BBI1
+argument_list|,
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
 argument_list|)
 decl_stmt|;
 name|unsigned
@@ -489,6 +494,10 @@ name|MachineBasicBlock
 modifier|*
 modifier|&
 name|PredBB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SuccBB
 parameter_list|,
 name|unsigned
 name|maxCommonTailLength

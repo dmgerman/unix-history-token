@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -155,6 +161,9 @@ name|LangOptions
 decl_stmt|;
 name|class
 name|TargetInfo
+decl_stmt|;
+name|class
+name|IdentifierInfo
 decl_stmt|;
 comment|/// \brief Describes the name of a module.
 typedef|typedef
@@ -265,6 +274,18 @@ name|string
 operator|>
 name|TopHeaderNames
 expr_stmt|;
+comment|/// \brief Cache of modules visible to lookup in this module.
+name|mutable
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+specifier|const
+name|Module
+operator|*
+operator|>
+name|VisibleModulesCache
+expr_stmt|;
 name|public
 label|:
 comment|/// \brief The headers that are part of this module.
@@ -276,7 +297,7 @@ operator|*
 operator|,
 literal|2
 operator|>
-name|Headers
+name|NormalHeaders
 expr_stmt|;
 comment|/// \brief The headers that are explicitly excluded from this module.
 name|SmallVector
@@ -289,20 +310,45 @@ literal|2
 operator|>
 name|ExcludedHeaders
 expr_stmt|;
-comment|/// \brief The set of language features required to use this module.
-comment|///
-comment|/// If any of these features is not present, the \c IsAvailable bit
-comment|/// will be false to indicate that this (sub)module is not
-comment|/// available.
+comment|/// \brief The headers that are private to this module.
+name|llvm
+operator|::
 name|SmallVector
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|2
+operator|>
+name|PrivateHeaders
+expr_stmt|;
+comment|/// \brief An individual requirement: a feature name and a flag indicating
+comment|/// the required state of that feature.
+typedef|typedef
+name|std
+operator|::
+name|pair
 operator|<
 name|std
 operator|::
 name|string
 operator|,
+name|bool
+operator|>
+name|Requirement
+expr_stmt|;
+comment|/// \brief The set of language features required to use this module.
+comment|///
+comment|/// If any of these requirements are not available, the \c IsAvailable bit
+comment|/// will be false to indicate that this (sub)module is not available.
+name|SmallVector
+operator|<
+name|Requirement
+operator|,
 literal|2
 operator|>
-name|Requires
+name|Requirements
 expr_stmt|;
 comment|/// \brief Whether this module is available in the current
 comment|/// translation unit.
@@ -460,6 +506,25 @@ operator|,
 literal|2
 operator|>
 name|UnresolvedExports
+expr_stmt|;
+comment|/// \brief The directly used modules.
+name|SmallVector
+operator|<
+name|Module
+operator|*
+operator|,
+literal|2
+operator|>
+name|DirectUses
+expr_stmt|;
+comment|/// \brief The set of use declarations that have yet to be resolved.
+name|SmallVector
+operator|<
+name|ModuleId
+operator|,
+literal|2
+operator|>
+name|UnresolvedDirectUses
 expr_stmt|;
 comment|/// \brief A library or framework to link against when an entity from this
 comment|/// module is used.
@@ -703,9 +768,9 @@ comment|/// translation unit.
 comment|///
 comment|/// \param Target The target options used for the current translation unit.
 comment|///
-comment|/// \param Feature If this module is unavailable, this parameter
-comment|/// will be set to one of the features that is required for use of
-comment|/// this module (but is not available).
+comment|/// \param Req If this module is unavailable, this parameter
+comment|/// will be set to one of the requirements that is not met for use of
+comment|/// this module.
 name|bool
 name|isAvailable
 argument_list|(
@@ -719,9 +784,9 @@ name|TargetInfo
 operator|&
 name|Target
 argument_list|,
-name|StringRef
+name|Requirement
 operator|&
-name|Feature
+name|Req
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1027,6 +1092,9 @@ comment|///
 comment|/// \param Feature The feature that is required by this module (and
 comment|/// its submodules).
 comment|///
+comment|/// \param RequiredState The required state of this feature: \c true
+comment|/// if it must be present, \c false if it must be absent.
+comment|///
 comment|/// \param LangOpts The set of language options that will be used to
 comment|/// evaluate the availability of this feature.
 comment|///
@@ -1037,6 +1105,9 @@ name|addRequirement
 parameter_list|(
 name|StringRef
 name|Feature
+parameter_list|,
+name|bool
+name|RequiredState
 parameter_list|,
 specifier|const
 name|LangOptions
@@ -1061,6 +1132,37 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Determine whether the specified module would be visible to
+comment|/// a lookup at the end of this module.
+name|bool
+name|isModuleVisible
+argument_list|(
+specifier|const
+name|Module
+operator|*
+name|M
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|VisibleModulesCache
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|buildVisibleModulesCache
+argument_list|()
+expr_stmt|;
+return|return
+name|VisibleModulesCache
+operator|.
+name|count
+argument_list|(
+name|M
+argument_list|)
+return|;
+block|}
 typedef|typedef
 name|std
 operator|::
@@ -1131,7 +1233,10 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// \brief Returns the exported modules based on the wildcard restrictions.
+comment|/// \brief Appends this module's list of exported modules to \p Exported.
+comment|///
+comment|/// This provides a subset of immediately imported modules (the ones that are
+comment|/// directly exported), not the complete set of exported modules.
 name|void
 name|getExportedModules
 argument_list|(
@@ -1173,6 +1278,13 @@ decl_stmt|;
 comment|/// \brief Dump the contents of this module to the given output stream.
 name|void
 name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+name|private
+label|:
+name|void
+name|buildVisibleModulesCache
 argument_list|()
 specifier|const
 expr_stmt|;

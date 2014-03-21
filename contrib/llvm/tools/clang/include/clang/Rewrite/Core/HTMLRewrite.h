@@ -228,7 +228,7 @@ operator|::
 name|string
 name|EscapeText
 argument_list|(
-argument|const std::string& s
+argument|StringRef s
 argument_list|,
 argument|bool EscapeSpaces = false
 argument_list|,

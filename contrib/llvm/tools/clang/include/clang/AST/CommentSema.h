@@ -189,12 +189,6 @@ name|BlockCommandComment
 modifier|*
 name|BriefCommand
 decl_stmt|;
-comment|/// AST node for the \\returns command and its aliases.
-specifier|const
-name|BlockCommandComment
-modifier|*
-name|ReturnsCommand
-decl_stmt|;
 comment|/// AST node for the \\headerfile command.
 specifier|const
 name|BlockCommandComment
@@ -809,8 +803,14 @@ name|bool
 name|isAnyFunctionDecl
 parameter_list|()
 function_decl|;
+comment|/// \returns \c true if declaration that this comment is attached to declares
+comment|/// a function pointer.
 name|bool
 name|isFunctionPointerVarDecl
+parameter_list|()
+function_decl|;
+name|bool
+name|isFunctionOrMethodVariadic
 parameter_list|()
 function_decl|;
 name|bool
@@ -843,6 +843,14 @@ parameter_list|()
 function_decl|;
 name|bool
 name|isObjCProtocolDecl
+parameter_list|()
+function_decl|;
+name|bool
+name|isClassTemplateDecl
+parameter_list|()
+function_decl|;
+name|bool
+name|isFunctionTemplateDecl
 parameter_list|()
 function_decl|;
 name|ArrayRef

@@ -280,6 +280,12 @@ name|DisableModuleHash
 operator|:
 literal|1
 block|;
+comment|/// \brief Interpret module maps.  This option is implied by full modules.
+name|unsigned
+name|ModuleMaps
+operator|:
+literal|1
+block|;
 comment|/// \brief The interval (in seconds) between pruning operations.
 comment|///
 comment|/// This operation is expensive, because it requires Clang to walk through
@@ -311,6 +317,17 @@ operator|::
 name|string
 operator|>
 name|ModulesIgnoreMacros
+block|;
+comment|/// \brief The set of user-provided module-map-files.
+name|llvm
+operator|::
+name|SetVector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ModuleMapFiles
 block|;
 comment|/// Include the compiler builtin includes.
 name|unsigned
@@ -356,6 +373,11 @@ name|_Sysroot
 argument_list|)
 block|,
 name|DisableModuleHash
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ModuleMaps
 argument_list|(
 literal|0
 argument_list|)

@@ -61,6 +61,12 @@ directive|include
 file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -71,13 +77,10 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
-name|private
-operator|:
-specifier|static
-specifier|const
-name|char
-operator|*
-name|ShaderTypeAttribute
+name|virtual
+name|void
+name|anchor
+argument_list|()
 block|;
 name|public
 operator|:
@@ -91,6 +94,24 @@ argument_list|)
 block|;
 name|unsigned
 name|ShaderType
+block|;
+comment|/// A map to keep track of local memory objects and their offsets within
+comment|/// the local memory space.
+name|std
+operator|::
+name|map
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+block|,
+name|unsigned
+operator|>
+name|LocalMemoryObjects
+block|;
+comment|/// Number of bytes in the LDS that are being used.
+name|unsigned
+name|LDSSize
 block|; }
 decl_stmt|;
 block|}

@@ -106,7 +106,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Config/llvm-config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/system_error.h"
 end_include
 
 begin_include
@@ -125,6 +149,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|namespace
 name|sys
 block|{
@@ -154,8 +181,8 @@ name|public
 label|:
 comment|/// \brief Operating system specific type to identify a process.
 comment|///
-comment|/// Note that the windows one is defined to 'void *' as this is the
-comment|/// documented type for HANDLE on windows, and we don't want to pull in the
+comment|/// Note that the windows one is defined to 'unsigned long' as this is the
+comment|/// documented type for DWORD on windows, and we don't want to pull in the
 comment|/// Windows headers here.
 if|#
 directive|if
@@ -174,11 +201,11 @@ argument_list|(
 name|LLVM_ON_WIN32
 argument_list|)
 typedef|typedef
-name|void
-modifier|*
+name|unsigned
+name|long
 name|id_type
 typedef|;
-comment|// Must match the type of HANDLE.
+comment|// Must match the type of DWORD.
 else|#
 directive|else
 error|#
@@ -360,22 +387,6 @@ modifier|&
 name|sys_time
 parameter_list|)
 function_decl|;
-comment|/// This static function will return the process' current user id number.
-comment|/// Not all operating systems support this feature. Where it is not
-comment|/// supported, the function should return 65536 as the value.
-specifier|static
-name|int
-name|GetCurrentUserId
-parameter_list|()
-function_decl|;
-comment|/// This static function will return the process' current group id number.
-comment|/// Not all operating systems support this feature. Where it is not
-comment|/// supported, the function should return 65536 as the value.
-specifier|static
-name|int
-name|GetCurrentGroupId
-parameter_list|()
-function_decl|;
 comment|/// This function makes the necessary calls to the operating system to
 comment|/// prevent core files or any other kind of large memory dumps that can
 comment|/// occur when a program fails.
@@ -385,6 +396,52 @@ name|void
 name|PreventCoreFiles
 parameter_list|()
 function_decl|;
+comment|// This function returns the environment variable \arg name's value as a UTF-8
+comment|// string. \arg Name is assumed to be in UTF-8 encoding too.
+specifier|static
+name|Optional
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|GetEnv
+argument_list|(
+argument|StringRef name
+argument_list|)
+expr_stmt|;
+comment|/// This function returns a SmallVector containing the arguments passed from
+comment|/// the operating system to the program.  This function expects to be handed
+comment|/// the vector passed in from main.
+specifier|static
+name|error_code
+name|GetArgumentVector
+argument_list|(
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+operator|&
+name|Args
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|ArgsFromMain
+argument_list|,
+name|SpecificBumpPtrAllocator
+operator|<
+name|char
+operator|>
+operator|&
+name|ArgAllocator
+argument_list|)
+decl_stmt|;
 comment|/// This function determines if the standard input is connected directly
 comment|/// to a user's input (keyboard probably), rather than coming from a file
 comment|/// or pipe.
@@ -465,6 +522,18 @@ specifier|static
 name|bool
 name|StandardErrHasColors
 parameter_list|()
+function_decl|;
+comment|/// Enables or disables whether ANSI escape sequences are used to output
+comment|/// colors. This only has an effect on Windows.
+comment|/// Note: Setting this option is not thread-safe and should only be done
+comment|/// during initialization.
+specifier|static
+name|void
+name|UseANSIEscapeCodes
+parameter_list|(
+name|bool
+name|enable
+parameter_list|)
 function_decl|;
 comment|/// Whether changing colors requires the output to be flushed.
 comment|/// This is needed on systems that don't support escape sequences for

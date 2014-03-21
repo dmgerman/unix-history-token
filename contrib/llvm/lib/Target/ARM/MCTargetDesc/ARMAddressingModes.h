@@ -568,7 +568,7 @@ comment|// Use CTZ to compute the rotate amount.
 name|unsigned
 name|TZ
 init|=
-name|CountTrailingZeros_32
+name|countTrailingZeros
 argument_list|(
 name|Imm
 argument_list|)
@@ -622,7 +622,7 @@ block|{
 name|unsigned
 name|TZ2
 init|=
-name|CountTrailingZeros_32
+name|countTrailingZeros
 argument_list|(
 name|Imm
 operator|&
@@ -915,7 +915,7 @@ literal|0
 return|;
 comment|// Use CTZ to compute the shift amount.
 return|return
-name|CountTrailingZeros_32
+name|countTrailingZeros
 argument_list|(
 name|Imm
 argument_list|)
@@ -982,7 +982,7 @@ literal|0
 return|;
 comment|// Use CTZ to compute the shift amount.
 return|return
-name|CountTrailingZeros_32
+name|countTrailingZeros
 argument_list|(
 name|Imm
 argument_list|)
@@ -1187,7 +1187,7 @@ block|{
 name|unsigned
 name|RotAmt
 init|=
-name|CountLeadingZeros_32
+name|countLeadingZeros
 argument_list|(
 name|V
 argument_list|)
@@ -1330,7 +1330,7 @@ comment|// Use CTZ to compute the rotate amount.
 name|unsigned
 name|RotAmt
 init|=
-name|CountTrailingZeros_32
+name|countTrailingZeros
 argument_list|(
 name|V
 argument_list|)

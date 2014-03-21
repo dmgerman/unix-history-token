@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCExpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -60,16 +66,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCContext
-decl_stmt|;
-name|class
 name|MCInst
 decl_stmt|;
 name|class
 name|MCOperand
-decl_stmt|;
-name|class
-name|MCSymbol
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -87,10 +87,6 @@ name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|SystemZMCInstLower
 block|{
-name|Mangler
-modifier|*
-name|Mang
-decl_stmt|;
 name|MCContext
 modifier|&
 name|Ctx
@@ -103,10 +99,6 @@ name|public
 label|:
 name|SystemZMCInstLower
 argument_list|(
-name|Mangler
-operator|*
-name|mang
-argument_list|,
 name|MCContext
 operator|&
 name|ctx
@@ -131,7 +123,7 @@ name|OutMI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Return an MCOperand for MO.  Return an empty operand if MO is implicit.
+comment|// Return an MCOperand for MO.
 name|MCOperand
 name|lowerOperand
 argument_list|(
@@ -142,22 +134,21 @@ name|MO
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Return an MCOperand for MO, given that it equals Symbol + Offset.
-name|MCOperand
-name|lowerSymbolOperand
+comment|// Return an MCExpr for symbolic operand MO with variant kind Kind.
+specifier|const
+name|MCExpr
+modifier|*
+name|getExpr
 argument_list|(
 specifier|const
 name|MachineOperand
 operator|&
 name|MO
 argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Symbol
-argument_list|,
-name|int64_t
-name|Offset
+name|MCSymbolRefExpr
+operator|::
+name|VariantKind
+name|Kind
 argument_list|)
 decl|const
 decl_stmt|;

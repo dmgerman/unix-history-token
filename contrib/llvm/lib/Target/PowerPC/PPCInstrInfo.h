@@ -255,6 +255,11 @@ argument|bool&SpillsVRS
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -490,23 +495,6 @@ argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
 argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|MachineInstr
-operator|*
-name|emitFrameIndexDebugValue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|int FrameIx
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|const MDNode *MDPtr
-argument_list|,
-argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;

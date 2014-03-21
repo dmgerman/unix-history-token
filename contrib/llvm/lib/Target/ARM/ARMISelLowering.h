@@ -174,6 +174,9 @@ comment|// Jumptable branch (2 level - jumptable entry is a jump).
 name|RET_FLAG
 block|,
 comment|// Return with a flag operand.
+name|INTRET_FLAG
+block|,
+comment|// Interrupt return with an LR-offset and a flag operand.
 name|PIC_ADD
 block|,
 comment|// Add with a PC operand and a PIC label.
@@ -256,9 +259,6 @@ block|,
 name|DYN_ALLOC
 block|,
 comment|// Dynamic allocation on the stack.
-name|MEMBARRIER
-block|,
-comment|// Memory barrier (DMB)
 name|MEMBARRIER_MCR
 block|,
 comment|// Memory barrier (MCR)
@@ -440,6 +440,10 @@ name|FMAX
 block|,
 name|FMIN
 block|,
+name|VMAXNM
+block|,
+name|VMINNM
+block|,
 comment|// Bit-field insert
 name|BFI
 block|,
@@ -498,31 +502,6 @@ block|,
 name|VST3LN_UPD
 block|,
 name|VST4LN_UPD
-block|,
-comment|// 64-bit atomic ops (value split into two registers)
-name|ATOMADD64_DAG
-block|,
-name|ATOMSUB64_DAG
-block|,
-name|ATOMOR64_DAG
-block|,
-name|ATOMXOR64_DAG
-block|,
-name|ATOMAND64_DAG
-block|,
-name|ATOMNAND64_DAG
-block|,
-name|ATOMSWAP64_DAG
-block|,
-name|ATOMCMPXCHG64_DAG
-block|,
-name|ATOMMIN64_DAG
-block|,
-name|ATOMUMIN64_DAG
-block|,
-name|ATOMMAX64_DAG
-block|,
-name|ATOMUMAX64_DAG
 block|}
 enum|;
 block|}
@@ -619,6 +598,8 @@ name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
@@ -717,6 +698,16 @@ argument_list|(
 argument|SDValue Val
 argument_list|,
 argument|EVT VT2
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|allowTruncateForTailCall
+argument_list|(
+argument|Type *Ty1
+argument_list|,
+argument|Type *Ty2
 argument_list|)
 specifier|const
 block|;
@@ -861,7 +852,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
@@ -914,6 +905,22 @@ name|getMaximalGlobalOffset
 argument_list|()
 specifier|const
 block|;
+comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
+name|virtual
+name|bool
+name|isNoopAddrSpaceCast
+argument_list|(
+argument|unsigned SrcAS
+argument_list|,
+argument|unsigned DestAS
+argument_list|)
+specifier|const
+block|{
+comment|// Addrspacecasts are always noops.
+return|return
+name|true
+return|;
+block|}
 comment|/// createFastISel - This method returns a target specific FastISel object,
 comment|/// or null if the target does not support "fast" ISel.
 name|virtual
@@ -1060,7 +1067,7 @@ expr_stmt|;
 name|void
 name|PassF64ArgInRegs
 argument_list|(
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1076,10 +1083,7 @@ argument|CCValAssign&NextVA
 argument_list|,
 argument|SDValue&StackPtr
 argument_list|,
-argument|SmallVector<SDValue
-argument_list|,
-literal|8
-argument|>&MemOpChains
+argument|SmallVectorImpl<SDValue>&MemOpChains
 argument_list|,
 argument|ISD::ArgFlagsTy Flags
 argument_list|)
@@ -1104,7 +1108,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|)
 decl|const
@@ -1138,7 +1142,7 @@ argument_list|,
 name|SDValue
 name|Arg
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -1444,6 +1448,52 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|LowerFSINCOS
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerDivRem
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isFMAFasterThanFMulAndFAdd - Return true if an FMA operation is faster
+comment|/// than a pair of fmul and fadd instructions. fmuladd intrinsics will be
+comment|/// expanded to FMAs when this method returns true, otherwise fmuladd is
+comment|/// expanded to fmul + fadd.
+comment|///
+comment|/// ARM supports both fused and unfused multiply-add operations; we already
+comment|/// lower a pair of fmul and fadd to the latter so it's not clear that there
+comment|/// would be a gain or that the gain would be worthwhile enough to risk
+comment|/// correctness bugs.
+name|virtual
+name|bool
+name|isFMAFasterThanFMulAndFAdd
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|SDValue
 name|ReconstructShuffle
 argument_list|(
 name|SDValue
@@ -1482,7 +1532,7 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -1529,7 +1579,7 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -1556,7 +1606,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDValue
@@ -1577,6 +1627,9 @@ argument_list|,
 name|unsigned
 name|ArgOffset
 argument_list|,
+name|unsigned
+name|ArgSize
+argument_list|,
 name|bool
 name|ForceMutable
 argument_list|)
@@ -1593,7 +1646,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDValue
@@ -1623,6 +1676,9 @@ name|MF
 argument_list|,
 name|unsigned
 name|InRegsParamRecordIdx
+argument_list|,
+name|unsigned
+name|ArgSize
 argument_list|,
 name|unsigned
 operator|&
@@ -1790,7 +1846,7 @@ operator|>
 operator|&
 name|OutVals
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -1845,7 +1901,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|)
 decl|const
@@ -1863,7 +1919,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|)
 decl|const
@@ -1995,6 +2051,20 @@ name|ARMCC
 operator|::
 name|CondCodes
 name|Cond
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitAtomicLoad64
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|BB
 argument_list|)
 decl|const
 decl_stmt|;

@@ -82,12 +82,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Module.h"
 end_include
 
@@ -663,6 +657,8 @@ argument_list|,
 argument|unsigned Alignment
 argument_list|,
 argument|unsigned SectionID
+argument_list|,
+argument|llvm::StringRef SectionName
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -693,6 +689,8 @@ argument_list|,
 argument|unsigned Alignment
 argument_list|,
 argument|unsigned SectionID
+argument_list|,
+argument|llvm::StringRef SectionName
 argument_list|,
 argument|bool IsReadOnly
 argument_list|)
@@ -730,12 +728,17 @@ comment|///
 comment|/// @return
 comment|///     True in case of failure, false in case of success.
 comment|//------------------------------------------------------------------
+name|virtual
 name|bool
-name|applyPermissions
+name|finalizeMemory
 argument_list|(
 argument|std::string *ErrMsg
 argument_list|)
 block|{
+comment|// TODO: Ensure that the instruction cache is flushed because
+comment|// relocations are updated by dy-load.  See:
+comment|//   sys::Memory::InvalidateInstructionCache
+comment|//   llvm::SectionMemoryManager
 return|return
 name|false
 return|;
@@ -750,78 +753,6 @@ argument_list|(
 name|void
 operator|*
 name|Body
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|uint8_t
-operator|*
-name|startExceptionTable
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Function
-operator|*
-name|F
-argument_list|,
-name|uintptr_t
-operator|&
-name|ActualSize
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Complete the exception table for a function, and add it to the
-comment|/// m_exception_tables map
-comment|///
-comment|/// @param[in] F
-comment|///     The function whose exception table is being written.
-comment|///
-comment|/// @param[in] TableStart
-comment|///     The first byte of the exception table.
-comment|///
-comment|/// @param[in] TableEnd
-comment|///     The last byte of the exception table.
-comment|///
-comment|/// @param[in] FrameRegister
-comment|///     I don't know what this does, but it's passed through.
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|endExceptionTable
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Function
-operator|*
-name|F
-argument_list|,
-name|uint8_t
-operator|*
-name|TableStart
-argument_list|,
-name|uint8_t
-operator|*
-name|TableEnd
-argument_list|,
-name|uint8_t
-operator|*
-name|FrameRegister
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|deallocateExceptionTable
-argument_list|(
-name|void
-operator|*
-name|ET
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -927,19 +858,11 @@ name|m_default_mm_ap
 operator|->
 name|registerEHFrames
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|Addr
 argument_list|,
+name|LoadAddr
+argument_list|,
 name|Size
-argument_list|)
 argument_list|)
 return|;
 block|}

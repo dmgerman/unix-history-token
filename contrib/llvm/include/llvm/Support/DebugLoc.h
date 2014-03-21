@@ -63,6 +63,12 @@ directive|define
 name|LLVM_SUPPORT_DEBUGLOC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -137,7 +143,7 @@ block|}
 comment|/// LineCol - This 32-bit value encodes the line and column number for the
 comment|/// location, encoded as 24-bits for line and 8 bits for col.  A value of 0
 comment|/// for either means unknown.
-name|unsigned
+name|uint32_t
 name|LineCol
 decl_stmt|;
 comment|/// ScopeIdx - This is an opaque ID# for Scope/InlinedAt information,

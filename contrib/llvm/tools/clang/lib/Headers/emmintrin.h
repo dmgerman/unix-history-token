@@ -1308,10 +1308,9 @@ name|__m128d
 name|__b
 argument_list|)
 block|{
-return|return
-operator|(
 name|__m128d
-operator|)
+name|__c
+init|=
 name|__builtin_ia32_cmpsd
 argument_list|(
 name|__b
@@ -1320,6 +1319,22 @@ name|__a
 argument_list|,
 literal|1
 argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|__m128d
+operator|)
+block|{
+name|__c
+index|[
+literal|0
+index|]
+block|,
+name|__a
+index|[
+literal|1
+index|]
+block|}
 return|;
 block|}
 end_decl_stmt
@@ -1345,10 +1360,9 @@ name|__m128d
 name|__b
 argument_list|)
 block|{
-return|return
-operator|(
 name|__m128d
-operator|)
+name|__c
+init|=
 name|__builtin_ia32_cmpsd
 argument_list|(
 name|__b
@@ -1357,6 +1371,22 @@ name|__a
 argument_list|,
 literal|2
 argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|__m128d
+operator|)
+block|{
+name|__c
+index|[
+literal|0
+index|]
+block|,
+name|__a
+index|[
+literal|1
+index|]
+block|}
 return|;
 block|}
 end_decl_stmt
@@ -1567,10 +1597,9 @@ name|__m128d
 name|__b
 argument_list|)
 block|{
-return|return
-operator|(
 name|__m128d
-operator|)
+name|__c
+init|=
 name|__builtin_ia32_cmpsd
 argument_list|(
 name|__b
@@ -1579,6 +1608,22 @@ name|__a
 argument_list|,
 literal|5
 argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|__m128d
+operator|)
+block|{
+name|__c
+index|[
+literal|0
+index|]
+block|,
+name|__a
+index|[
+literal|1
+index|]
+block|}
 return|;
 block|}
 end_decl_stmt
@@ -1604,10 +1649,9 @@ name|__m128d
 name|__b
 argument_list|)
 block|{
-return|return
-operator|(
 name|__m128d
-operator|)
+name|__c
+init|=
 name|__builtin_ia32_cmpsd
 argument_list|(
 name|__b
@@ -1616,6 +1660,22 @@ name|__a
 argument_list|,
 literal|6
 argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|__m128d
+operator|)
+block|{
+name|__c
+index|[
+literal|0
+index|]
+block|,
+name|__a
+index|[
+literal|1
+index|]
+block|}
 return|;
 block|}
 end_decl_stmt
@@ -4724,7 +4784,7 @@ name|a
 parameter_list|,
 name|count
 parameter_list|)
-value|__extension__ ({ \   __m128i __a = (a); \   (__m128i)__builtin_ia32_pslldqi128(__a, (count)*8); })
+value|__extension__ ({ \   _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wshadow\""); \   __m128i __a = (a); \    _Pragma("clang diagnostic pop"); \   (__m128i)__builtin_ia32_pslldqi128(__a, (count)*8); })
 end_define
 
 begin_decl_stmt
@@ -5116,7 +5176,7 @@ name|a
 parameter_list|,
 name|count
 parameter_list|)
-value|__extension__ ({ \   __m128i __a = (a); \   (__m128i)__builtin_ia32_psrldqi128(__a, (count)*8); })
+value|__extension__ ({ \   _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wshadow\""); \   __m128i __a = (a); \   _Pragma("clang diagnostic pop"); \   (__m128i)__builtin_ia32_psrldqi128(__a, (count)*8); })
 end_define
 
 begin_decl_stmt
@@ -7245,6 +7305,51 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|__inline__
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|__always_inline__
+operator|,
+name|__nodebug__
+operator|)
+argument_list|)
+name|_mm_stream_si64
+argument_list|(
+name|long
+name|long
+operator|*
+name|__p
+argument_list|,
+name|long
+name|long
+name|__a
+argument_list|)
+block|{
+name|__builtin_ia32_movnti64
+argument_list|(
+name|__p
+argument_list|,
+name|__a
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|__inline__
@@ -7479,6 +7584,8 @@ operator|)
 name|__b
 index|[
 name|__imm
+operator|&
+literal|7
 index|]
 return|;
 block|}
@@ -7573,7 +7680,7 @@ name|a
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   __m128i __a = (a); \   (__m128i)__builtin_shufflevector((__v4si)__a, (__v4si) _mm_set1_epi32(0), \                                    (imm)& 0x3, ((imm)& 0xc)>> 2, \                                    ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6); })
+value|__extension__ ({ \   _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wshadow\""); \   __m128i __a = (a); \   _Pragma("clang diagnostic pop"); \   (__m128i)__builtin_shufflevector((__v4si)__a, (__v4si) _mm_set1_epi32(0), \                                    (imm)& 0x3, ((imm)& 0xc)>> 2, \                                    ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6); })
 end_define
 
 begin_define
@@ -7585,7 +7692,7 @@ name|a
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   __m128i __a = (a); \   (__m128i)__builtin_shufflevector((__v8hi)__a, (__v8hi) _mm_set1_epi16(0), \                                    (imm)& 0x3, ((imm)& 0xc)>> 2, \                                    ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6, \                                    4, 5, 6, 7); })
+value|__extension__ ({ \   _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wshadow\""); \   __m128i __a = (a); \   _Pragma("clang diagnostic pop"); \   (__m128i)__builtin_shufflevector((__v8hi)__a, (__v8hi) _mm_set1_epi16(0), \                                    (imm)& 0x3, ((imm)& 0xc)>> 2, \                                    ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6, \                                    4, 5, 6, 7); })
 end_define
 
 begin_define
@@ -7597,7 +7704,7 @@ name|a
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \   __m128i __a = (a); \   (__m128i)__builtin_shufflevector((__v8hi)__a, (__v8hi) _mm_set1_epi16(0), \                                    0, 1, 2, 3, \                                    4 + (((imm)& 0x03)>> 0), \                                    4 + (((imm)& 0x0c)>> 2), \                                    4 + (((imm)& 0x30)>> 4), \                                    4 + (((imm)& 0xc0)>> 6)); })
+value|__extension__ ({ \   _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wshadow\""); \   __m128i __a = (a); \   _Pragma("clang diagnostic pop"); \   (__m128i)__builtin_shufflevector((__v8hi)__a, (__v8hi) _mm_set1_epi16(0), \                                    0, 1, 2, 3, \                                    4 + (((imm)& 0x03)>> 0), \                                    4 + (((imm)& 0x0c)>> 2), \                                    4 + (((imm)& 0x30)>> 4), \                                    4 + (((imm)& 0xc0)>> 6)); })
 end_define
 
 begin_decl_stmt
@@ -8313,7 +8420,7 @@ name|b
 parameter_list|,
 name|i
 parameter_list|)
-value|__extension__ ({ \   __m128d __a = (a); \   __m128d __b = (b); \   __builtin_shufflevector(__a, __b, (i)& 1, (((i)& 2)>> 1) + 2); })
+value|__extension__ ({ \   _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wshadow\""); \   __m128d __a = (a); \   __m128d __b = (b); \   _Pragma("clang diagnostic pop"); \   __builtin_shufflevector(__a, __b, (i)& 1, (((i)& 2)>> 1) + 2); })
 end_define
 
 begin_decl_stmt

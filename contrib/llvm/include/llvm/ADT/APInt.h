@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file implements a class to represent arbitrary precision integral
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// constant values and operations on them.
+comment|/// \brief This file implements a class to represent arbitrary precision
 end_comment
 
 begin_comment
-comment|//
+comment|/// integral constant values and operations on them.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -170,8 +174,9 @@ decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                              APInt Class
 comment|//===----------------------------------------------------------------------===//
-comment|/// APInt - This class represents arbitrary precision constant integral values.
-comment|/// It is a functional replacement for common case unsigned integer type like
+comment|/// \brief Class for arbitrary precision integers.
+comment|///
+comment|/// APInt is a functional replacement for common case unsigned integer type like
 comment|/// "unsigned", "unsigned long" or "uint64_t", but also allows non-byte-width
 comment|/// integer sizes and large integer value types such as 3-bits, 15-bits, or more
 comment|/// than 64-bits of precision. APInt provides a variety of arithmetic operators
@@ -195,7 +200,6 @@ comment|///     not.
 comment|///   * In general, the class tries to follow the style of computation that LLVM
 comment|///     uses in its IR. This simplifies its use for LLVM.
 comment|///
-comment|/// @brief Class for arbitrary precision integers.
 name|class
 name|APInt
 block|{
@@ -254,12 +258,13 @@ argument_list|)
 operator|)
 block|}
 enum|;
+comment|/// \brief Fast internal constructor
+comment|///
 comment|/// This constructor is used only internally for speed of construction of
 comment|/// temporaries. It is unsafe for general use so it is not public.
-comment|/// @brief Fast internal constructor
 name|APInt
 argument_list|(
-argument|uint64_t* val
+argument|uint64_t *val
 argument_list|,
 argument|unsigned bits
 argument_list|)
@@ -273,9 +278,10 @@ name|pVal
 argument_list|(
 argument|val
 argument_list|)
-block|{ }
-comment|/// @returns true if the number of bits<= 64, false otherwise.
-comment|/// @brief Determine if this APInt just has one word to store value.
+block|{}
+comment|/// \brief Determine if this APInt just has one word to store value.
+comment|///
+comment|/// \returns true if the number of bits<= 64, false otherwise.
 name|bool
 name|isSingleWord
 argument_list|()
@@ -287,8 +293,9 @@ operator|<=
 name|APINT_BITS_PER_WORD
 return|;
 block|}
-comment|/// @returns the word position for the specified bit position.
-comment|/// @brief Determine which word a bit is in.
+comment|/// \brief Determine which word a bit is in.
+comment|///
+comment|/// \returns the word position for the specified bit position.
 specifier|static
 name|unsigned
 name|whichWord
@@ -303,9 +310,10 @@ operator|/
 name|APINT_BITS_PER_WORD
 return|;
 block|}
-comment|/// @returns the bit position in a word for the specified bit position
+comment|/// \brief Determine which bit in a word a bit is in.
+comment|///
+comment|/// \returns the bit position in a word for the specified bit position
 comment|/// in the APInt.
-comment|/// @brief Determine which bit in a word a bit is in.
 specifier|static
 name|unsigned
 name|whichBit
@@ -320,11 +328,12 @@ operator|%
 name|APINT_BITS_PER_WORD
 return|;
 block|}
+comment|/// \brief Get a single bit mask.
+comment|///
+comment|/// \returns a uint64_t with only bit at "whichBit(bitPosition)" set
 comment|/// This method generates and returns a uint64_t (word) mask for a single
 comment|/// bit at a specific bit position. This is used to mask the bit in the
 comment|/// corresponding word.
-comment|/// @returns a uint64_t with only bit at "whichBit(bitPosition)" set
-comment|/// @brief Get a single bit mask.
 specifier|static
 name|uint64_t
 name|maskBit
@@ -342,11 +351,12 @@ name|bitPosition
 argument_list|)
 return|;
 block|}
+comment|/// \brief Clear unused high order bits
+comment|///
 comment|/// This method is used internally to clear the to "N" bits in the high order
 comment|/// word that are not used by the APInt. This is needed after the most
 comment|/// significant word is assigned a value to ensure that those bits are
 comment|/// zero'd out.
-comment|/// @brief Clear unused high order bits
 name|APInt
 modifier|&
 name|clearUnusedBits
@@ -414,8 +424,8 @@ operator|*
 name|this
 return|;
 block|}
-comment|/// @returns the corresponding word for the specified bit position.
-comment|/// @brief Get the word corresponding to a bit position
+comment|/// \brief Get the word corresponding to a bit position
+comment|/// \returns the corresponding word for the specified bit position.
 name|uint64_t
 name|getWord
 argument_list|(
@@ -439,6 +449,9 @@ argument_list|)
 index|]
 return|;
 block|}
+comment|/// \brief Convert a char array into an APInt
+comment|///
+comment|/// \param radix 2, 8, 10, 16, or 36
 comment|/// Converts a string into a number.  The string must be non-empty
 comment|/// and well-formed as a number of the given base. The bit-width
 comment|/// must be sufficient to hold the result.
@@ -448,9 +461,6 @@ comment|///
 comment|/// StringRef::getAsInteger is superficially similar but (1) does
 comment|/// not assume that the string is well-formed and (2) grows the
 comment|/// result to hold the input.
-comment|///
-comment|/// @param radix 2, 8, 10, 16, or 36
-comment|/// @brief Convert a char array into an APInt
 name|void
 name|fromString
 parameter_list|(
@@ -464,11 +474,12 @@ name|uint8_t
 name|radix
 parameter_list|)
 function_decl|;
+comment|/// \brief An internal division function for dividing APInts.
+comment|///
 comment|/// This is used by the toString method to divide by the radix. It simply
 comment|/// provides a more convenient form of divide for internal use since KnuthDiv
 comment|/// has specific constraints on its inputs. If those constraints are not met
 comment|/// then it provides a simpler form of divide.
-comment|/// @brief An internal division function for dividing APInts.
 specifier|static
 name|void
 name|divide
@@ -625,16 +636,18 @@ specifier|const
 expr_stmt|;
 name|public
 label|:
-comment|/// @name Constructors
+comment|/// \name Constructors
 comment|/// @{
+comment|/// \brief Create a new APInt of numBits width, initialized as val.
+comment|///
 comment|/// If isSigned is true then val is treated as if it were a signed value
 comment|/// (i.e. as an int64_t) and the appropriate sign extension to the bit width
 comment|/// will be done. Otherwise, no sign extension occurs (high order bits beyond
 comment|/// the range of val are zero filled).
-comment|/// @param numBits the bit width of the constructed APInt
-comment|/// @param val the initial value of the APInt
-comment|/// @param isSigned how to treat signedness of val
-comment|/// @brief Create a new APInt of numBits width, initialized as val.
+comment|///
+comment|/// \param numBits the bit width of the constructed APInt
+comment|/// \param val the initial value of the APInt
+comment|/// \param isSigned how to treat signedness of val
 name|APInt
 argument_list|(
 argument|unsigned numBits
@@ -684,11 +697,13 @@ name|clearUnusedBits
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// \brief Construct an APInt of numBits width, initialized as bigVal[].
+comment|///
 comment|/// Note that bigVal.size() can be smaller or larger than the corresponding
 comment|/// bit width but any extraneous bits will be dropped.
-comment|/// @param numBits the bit width of the constructed APInt
-comment|/// @param bigVal a sequence of words to form the initial value of the APInt
-comment|/// @brief Construct an APInt of numBits width, initialized as bigVal[].
+comment|///
+comment|/// \param numBits the bit width of the constructed APInt
+comment|/// \param bigVal a sequence of words to form the initial value of the APInt
 name|APInt
 argument_list|(
 argument|unsigned numBits
@@ -712,16 +727,17 @@ argument_list|,
 argument|const uint64_t bigVal[]
 argument_list|)
 empty_stmt|;
+comment|/// \brief Construct an APInt from a string representation.
+comment|///
 comment|/// This constructor interprets the string \p str in the given radix. The
 comment|/// interpretation stops when the first character that is not suitable for the
 comment|/// radix is encountered, or the end of the string. Acceptable radix values
 comment|/// are 2, 8, 10, 16, and 36. It is an error for the value implied by the
 comment|/// string to require more bits than numBits.
 comment|///
-comment|/// @param numBits the bit width of the constructed APInt
-comment|/// @param str the string to be interpreted
-comment|/// @param radix the radix to use for the conversion
-comment|/// @brief Construct an APInt from a string representation.
+comment|/// \param numBits the bit width of the constructed APInt
+comment|/// \param str the string to be interpreted
+comment|/// \param radix the radix to use for the conversion
 name|APInt
 argument_list|(
 argument|unsigned numBits
@@ -781,7 +797,7 @@ block|}
 if|#
 directive|if
 name|LLVM_HAS_RVALUE_REFERENCES
-comment|/// @brief Move Constructor.
+comment|/// \brief Move Constructor.
 name|APInt
 argument_list|(
 name|APInt
@@ -809,15 +825,14 @@ literal|0
 block|;   }
 endif|#
 directive|endif
-comment|/// @brief Destructor.
+comment|/// \brief Destructor.
 operator|~
 name|APInt
 argument_list|()
 block|{
 if|if
 condition|(
-operator|!
-name|isSingleWord
+name|needsCleanup
 argument_list|()
 condition|)
 name|delete
@@ -825,8 +840,10 @@ index|[]
 name|pVal
 decl_stmt|;
 block|}
-comment|/// Default constructor that creates an uninitialized APInt.  This is useful
-comment|///  for object deserialization (pair this with the static method Read).
+comment|/// \brief Default constructor that creates an uninitialized APInt.
+comment|///
+comment|/// This is useful for object deserialization (pair this with the static
+comment|///  method Read).
 name|explicit
 name|APInt
 argument_list|()
@@ -836,21 +853,37 @@ argument_list|(
 literal|1
 argument_list|)
 block|{}
-comment|/// Profile - Used to insert APInt objects, or objects that contain APInt
-comment|///  objects, into FoldingSets.
+comment|/// \brief Returns whether this instance allocated memory.
+name|bool
+name|needsCleanup
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isSingleWord
+argument_list|()
+return|;
+block|}
+comment|/// Used to insert APInt objects, or objects that contain APInt objects, into
+comment|///  FoldingSets.
 name|void
 name|Profile
 argument_list|(
-argument|FoldingSetNodeID& id
+name|FoldingSetNodeID
+operator|&
+name|id
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 comment|/// @}
-comment|/// @name Value Tests
+comment|/// \name Value Tests
 comment|/// @{
+comment|/// \brief Determine sign of this APInt.
+comment|///
 comment|/// This tests the high bit of this APInt to determine if it is set.
-comment|/// @returns true if this APInt is negative, false otherwise
-comment|/// @brief Determine sign of this APInt.
+comment|///
+comment|/// \returns true if this APInt is negative, false otherwise
 name|bool
 name|isNegative
 argument_list|()
@@ -868,8 +901,9 @@ literal|1
 index|]
 return|;
 block|}
+comment|/// \brief Determine if this APInt Value is non-negative (>= 0)
+comment|///
 comment|/// This tests the high bit of the APInt to determine if it is unset.
-comment|/// @brief Determine if this APInt Value is non-negative (>= 0)
 name|bool
 name|isNonNegative
 argument_list|()
@@ -881,10 +915,12 @@ name|isNegative
 argument_list|()
 return|;
 block|}
+comment|/// \brief Determine if this APInt Value is positive.
+comment|///
 comment|/// This tests if the value of this APInt is positive (> 0). Note
 comment|/// that 0 is not a positive value.
-comment|/// @returns true if this APInt is positive.
-comment|/// @brief Determine if this APInt Value is positive.
+comment|///
+comment|/// \returns true if this APInt is positive.
 name|bool
 name|isStrictlyPositive
 argument_list|()
@@ -900,38 +936,89 @@ operator|*
 name|this
 return|;
 block|}
+comment|/// \brief Determine if all bits are set
+comment|///
 comment|/// This checks to see if the value has all bits of the APInt are set or not.
-comment|/// @brief Determine if all bits are set
 name|bool
 name|isAllOnesValue
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
 return|return
-name|countPopulation
+name|VAL
+operator|==
+operator|~
+name|integerPart
+argument_list|(
+literal|0
+argument_list|)
+operator|>>
+operator|(
+name|APINT_BITS_PER_WORD
+operator|-
+name|BitWidth
+operator|)
+return|;
+return|return
+name|countPopulationSlowCase
 argument_list|()
 operator|==
 name|BitWidth
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Determine if this is the largest unsigned value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// This checks to see if the value of this APInt is the maximum unsigned
+end_comment
+
+begin_comment
 comment|/// value for the APInt's bit width.
-comment|/// @brief Determine if this is the largest unsigned value.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMaxValue
 argument_list|()
 specifier|const
 block|{
 return|return
-name|countPopulation
+name|isAllOnesValue
 argument_list|()
-operator|==
-name|BitWidth
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine if this is the largest signed value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// This checks to see if the value of this APInt is the maximum signed
+end_comment
+
+begin_comment
 comment|/// value for the APInt's bit width.
-comment|/// @brief Determine if this is the largest signed value.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMaxSignedValue
 argument_list|()
@@ -958,9 +1045,25 @@ operator|-
 literal|1
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine if this is the smallest unsigned value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// This checks to see if the value of this APInt is the minimum unsigned
+end_comment
+
+begin_comment
 comment|/// value for the APInt's bit width.
-comment|/// @brief Determine if this is the smallest unsigned value.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMinValue
 argument_list|()
@@ -972,9 +1075,25 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine if this is the smallest signed value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// This checks to see if the value of this APInt is the minimum signed
+end_comment
+
+begin_comment
 comment|/// value for the APInt's bit width.
-comment|/// @brief Determine if this is the smallest signed value.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMinSignedValue
 argument_list|()
@@ -996,7 +1115,13 @@ name|isPowerOf2
 argument_list|()
 return|;
 block|}
-comment|/// @brief Check if this APInt has an N-bits unsigned integer value.
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Check if this APInt has an N-bits unsigned integer value.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isIntN
 argument_list|(
@@ -1019,7 +1144,13 @@ operator|<=
 name|N
 return|;
 block|}
-comment|/// @brief Check if this APInt has an N-bits signed integer value.
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Check if this APInt has an N-bits signed integer value.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isSignedIntN
 argument_list|(
@@ -1042,7 +1173,21 @@ operator|<=
 name|N
 return|;
 block|}
-comment|/// @returns true if the argument APInt value is a power of two> 0.
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Check if this APInt's value is a power of two greater than zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if the argument APInt value is a power of two> 0.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isPowerOf2
 argument_list|()
@@ -1059,23 +1204,37 @@ argument_list|(
 name|VAL
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|countPopulationSlowCase
 argument_list|()
 operator|==
 literal|1
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
-comment|/// isSignBit - Return true if this is the value returned by getSignBit.
+unit|}
+comment|/// \brief Check if the APInt's value is returned by getSignBit.
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if this is the value returned by getSignBit.
+end_comment
+
+begin_macro
+unit|bool
 name|isSignBit
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -1086,11 +1245,15 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// This converts the APInt to a boolean value as a test against zero.
+comment|/// \brief Convert APInt to a boolean value.
 end_comment
 
 begin_comment
-comment|/// @brief Boolean conversion function.
+comment|///
+end_comment
+
+begin_comment
+comment|/// This converts the APInt to a boolean value as a test against zero.
 end_comment
 
 begin_expr_stmt
@@ -1109,15 +1272,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getLimitedValue - If this value is smaller than the specified limit,
+comment|/// If this value is smaller than the specified limit, return it, otherwise
 end_comment
 
 begin_comment
-comment|/// return it, otherwise return the limit value.  This causes the value
-end_comment
-
-begin_comment
-comment|/// to saturate to the limit.
+comment|/// return the limit value.  This causes the value to saturate to the limit.
 end_comment
 
 begin_decl_stmt
@@ -1158,7 +1317,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Value Generators
+comment|/// \name Value Generators
 end_comment
 
 begin_comment
@@ -1166,7 +1325,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// @brief Gets maximum unsigned value of APInt for specific bit width.
+comment|/// \brief Gets maximum unsigned value of APInt for specific bit width.
 end_comment
 
 begin_function
@@ -1188,7 +1347,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// @brief Gets maximum signed value of APInt for a specific bit width.
+comment|/// \brief Gets maximum signed value of APInt for a specific bit width.
 end_comment
 
 begin_function
@@ -1224,7 +1383,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// @brief Gets minimum unsigned value of APInt for a specific bit width.
+comment|/// \brief Gets minimum unsigned value of APInt for a specific bit width.
 end_comment
 
 begin_function
@@ -1248,7 +1407,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// @brief Gets minimum signed value of APInt for a specific bit width.
+comment|/// \brief Gets minimum signed value of APInt for a specific bit width.
 end_comment
 
 begin_function
@@ -1284,15 +1443,19 @@ block|}
 end_function
 
 begin_comment
-comment|/// getSignBit - This is just a wrapper function of getSignedMinValue(), and
+comment|/// \brief Get the SignBit for a specific bit width.
 end_comment
 
 begin_comment
-comment|/// it helps code readability when we want to get a SignBit.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Get the SignBit for a specific bit width.
+comment|/// This is just a wrapper function of getSignedMinValue(), and it helps code
+end_comment
+
+begin_comment
+comment|/// readability when we want to get a SignBit.
 end_comment
 
 begin_function
@@ -1314,11 +1477,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// @returns the all-ones value for an APInt of the specified bit-width.
+comment|/// \brief Get the all-ones value.
 end_comment
 
 begin_comment
-comment|/// @brief Get the all-ones value.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the all-ones value for an APInt of the specified bit-width.
 end_comment
 
 begin_function
@@ -1344,11 +1511,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// @returns the '0' value for an APInt of the specified bit-width.
+comment|/// \brief Get the '0' value.
 end_comment
 
 begin_comment
-comment|/// @brief Get the '0' value.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the '0' value for an APInt of the specified bit-width.
 end_comment
 
 begin_function
@@ -1372,6 +1543,14 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Compute an APInt containing numBits highbits from this APInt.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Get an APInt with the same BitWidth as this APInt, just zero mask
 end_comment
 
@@ -1380,7 +1559,11 @@ comment|/// the low bits and right shift to the least significant bit.
 end_comment
 
 begin_comment
-comment|/// @returns the high "numBits" bits of this APInt.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the high "numBits" bits of this APInt.
 end_comment
 
 begin_decl_stmt
@@ -1395,6 +1578,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Compute an APInt containing numBits lowbits from this APInt.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Get an APInt with the same BitWidth as this APInt, just zero mask
 end_comment
 
@@ -1403,7 +1594,11 @@ comment|/// the high bits.
 end_comment
 
 begin_comment
-comment|/// @returns the low "numBits" bits of this APInt.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the low "numBits" bits of this APInt.
 end_comment
 
 begin_decl_stmt
@@ -1418,7 +1613,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getOneBitSet - Return an APInt with exactly one bit set in the result.
+comment|/// \brief Return an APInt with exactly one bit set in the result.
 end_comment
 
 begin_function
@@ -1455,6 +1650,14 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Get a value with a block of bits set.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Constructs an APInt value that has a contiguous range of bits set. The
 end_comment
 
@@ -1475,23 +1678,27 @@ comment|/// example, with parameters (32, 28, 4), you would get 0xF000000F.
 end_comment
 
 begin_comment
-comment|/// @param numBits the intended bit width of the result
+comment|///
 end_comment
 
 begin_comment
-comment|/// @param loBit the index of the lowest bit set.
+comment|/// \param numBits the intended bit width of the result
 end_comment
 
 begin_comment
-comment|/// @param hiBit the index of the highest bit set.
+comment|/// \param loBit the index of the lowest bit set.
 end_comment
 
 begin_comment
-comment|/// @returns An APInt value with the requested bits set.
+comment|/// \param hiBit the index of the highest bit set.
 end_comment
 
 begin_comment
-comment|/// @brief Get a value with a block of bits set.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns An APInt value with the requested bits set.
 end_comment
 
 begin_function
@@ -1569,19 +1776,27 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Get a value with high bits set
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Constructs an APInt value that has the top hiBitsSet bits set.
 end_comment
 
 begin_comment
-comment|/// @param numBits the bitwidth of the result
+comment|///
 end_comment
 
 begin_comment
-comment|/// @param hiBitsSet the number of high-order bits set in the result.
+comment|/// \param numBits the bitwidth of the result
 end_comment
 
 begin_comment
-comment|/// @brief Get a value with high bits set
+comment|/// \param hiBitsSet the number of high-order bits set in the result.
 end_comment
 
 begin_function
@@ -1660,19 +1875,27 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Get a value with low bits set
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Constructs an APInt value that has the bottom loBitsSet bits set.
 end_comment
 
 begin_comment
-comment|/// @param numBits the bitwidth of the result
+comment|///
 end_comment
 
 begin_comment
-comment|/// @param loBitsSet the number of low-order bits set in the result.
+comment|/// \param numBits the bitwidth of the result
 end_comment
 
 begin_comment
-comment|/// @brief Get a value with low bits set
+comment|/// \param loBitsSet the number of low-order bits set in the result.
 end_comment
 
 begin_function
@@ -1978,7 +2201,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Unary Operators
+comment|/// \name Unary Operators
 end_comment
 
 begin_comment
@@ -1986,11 +2209,15 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// @returns a new APInt value representing *this incremented by one
+comment|/// \brief Postfix increment operator.
 end_comment
 
 begin_comment
-comment|/// @brief Postfix increment operator.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns a new APInt value representing *this incremented by one
 end_comment
 
 begin_expr_stmt
@@ -2022,11 +2249,15 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// @returns *this incremented by one
+comment|/// \brief Prefix increment operator.
 end_comment
 
 begin_comment
-comment|/// @brief Prefix increment operator.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns *this incremented by one
 end_comment
 
 begin_expr_stmt
@@ -2040,11 +2271,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// @returns a new APInt representing *this decremented by one.
+comment|/// \brief Postfix decrement operator.
 end_comment
 
 begin_comment
-comment|/// @brief Postfix decrement operator.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns a new APInt representing *this decremented by one.
 end_comment
 
 begin_expr_stmt
@@ -2076,11 +2311,15 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// @returns *this decremented by one.
+comment|/// \brief Prefix decrement operator.
 end_comment
 
 begin_comment
-comment|/// @brief Prefix decrement operator.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns *this decremented by one.
 end_comment
 
 begin_expr_stmt
@@ -2094,15 +2333,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Unary bitwise complement operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Performs a bitwise complement operation on this APInt.
 end_comment
 
 begin_comment
-comment|/// @returns an APInt that is the bitwise complement of *this
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unary bitwise complement operator.
+comment|/// \returns an APInt that is the bitwise complement of *this
 end_comment
 
 begin_expr_stmt
@@ -2132,15 +2379,23 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Unary negation operator
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Negates *this using two's complement logic.
 end_comment
 
 begin_comment
-comment|/// @returns An APInt value representing the negation of *this.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unary negation operator
+comment|/// \returns An APInt value representing the negation of *this.
 end_comment
 
 begin_expr_stmt
@@ -2168,15 +2423,23 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Logical negation operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Performs logical negation operation on this APInt.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this is zero, false otherwise.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Logical negation operator.
+comment|/// \returns true if *this is zero, false otherwise.
 end_comment
 
 begin_expr_stmt
@@ -2238,7 +2501,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Assignment Operators
+comment|/// \name Assignment Operators
 end_comment
 
 begin_comment
@@ -2246,11 +2509,15 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// @returns *this after assignment of RHS.
+comment|/// \brief Copy assignment operator.
 end_comment
 
 begin_comment
-comment|/// @brief Copy assignment operator.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns *this after assignment of RHS.
 end_comment
 
 begin_expr_stmt
@@ -2377,6 +2644,14 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/// \brief Assignment operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// The RHS value is assigned to *this. If the significant bits in RHS exceed
 end_comment
 
@@ -2389,11 +2664,11 @@ comment|/// than 64, the value is zero filled in the unspecified high order bits
 end_comment
 
 begin_comment
-comment|/// @returns *this after assignment of RHS value.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Assignment operator.
+comment|/// \returns *this after assignment of RHS value.
 end_comment
 
 begin_expr_stmt
@@ -2409,6 +2684,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Bitwise AND assignment operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Performs a bitwise AND operation on this APInt and RHS. The result is
 end_comment
 
@@ -2417,11 +2700,11 @@ comment|/// assigned to *this.
 end_comment
 
 begin_comment
-comment|/// @returns *this after ANDing with RHS.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Bitwise AND assignment operator.
+comment|/// \returns *this after ANDing with RHS.
 end_comment
 
 begin_expr_stmt
@@ -2439,6 +2722,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Bitwise OR assignment operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Performs a bitwise OR operation on this APInt and RHS. The result is
 end_comment
 
@@ -2447,11 +2738,11 @@ comment|/// assigned *this;
 end_comment
 
 begin_comment
-comment|/// @returns *this after ORing with RHS.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Bitwise OR assignment operator.
+comment|/// \returns *this after ORing with RHS.
 end_comment
 
 begin_expr_stmt
@@ -2469,6 +2760,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Bitwise OR assignment operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Performs a bitwise OR operation on this APInt and RHS. RHS is
 end_comment
 
@@ -2478,14 +2777,6 @@ end_comment
 
 begin_comment
 comment|/// the LHS.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @brief Bitwise OR assignment operator.
 end_comment
 
 begin_expr_stmt
@@ -2536,6 +2827,14 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Bitwise XOR assignment operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Performs a bitwise XOR operation on this APInt and RHS. The result is
 end_comment
 
@@ -2544,11 +2843,11 @@ comment|/// assigned to *this.
 end_comment
 
 begin_comment
-comment|/// @returns *this after XORing with RHS.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Bitwise XOR assignment operator.
+comment|/// \returns *this after XORing with RHS.
 end_comment
 
 begin_expr_stmt
@@ -2566,15 +2865,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Multiplication assignment operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Multiplies this APInt by RHS and assigns the result to *this.
 end_comment
 
 begin_comment
-comment|/// @returns *this
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Multiplication assignment operator.
+comment|/// \returns *this
 end_comment
 
 begin_expr_stmt
@@ -2592,15 +2899,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Addition assignment operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Adds RHS to *this and assigns the result to *this.
 end_comment
 
 begin_comment
-comment|/// @returns *this
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Addition assignment operator.
+comment|/// \returns *this
 end_comment
 
 begin_expr_stmt
@@ -2618,15 +2933,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Subtraction assignment operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Subtracts RHS from *this and assigns the result to *this.
 end_comment
 
 begin_comment
-comment|/// @returns *this
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Subtraction assignment operator.
+comment|/// \returns *this
 end_comment
 
 begin_expr_stmt
@@ -2644,15 +2967,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Left-shift assignment function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Shifts *this left by shiftAmt and assigns the result to *this.
 end_comment
 
 begin_comment
-comment|/// @returns *this after shifting left by shiftAmt
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Left-shift assignment function.
+comment|/// \returns *this after shifting left by shiftAmt
 end_comment
 
 begin_expr_stmt
@@ -2685,7 +3016,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Binary Operators
+comment|/// \name Binary Operators
 end_comment
 
 begin_comment
@@ -2693,15 +3024,23 @@ comment|/// @{
 end_comment
 
 begin_comment
+comment|/// \brief Bitwise AND operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Performs a bitwise AND operation on *this and RHS.
 end_comment
 
 begin_comment
-comment|/// @returns An APInt value representing the bitwise AND of *this and RHS.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Bitwise AND operator.
+comment|/// \returns An APInt value representing the bitwise AND of *this and RHS.
 end_comment
 
 begin_decl_stmt
@@ -2756,6 +3095,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|And
 argument_list|(
 specifier|const
@@ -2778,15 +3118,23 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Bitwise OR operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Performs a bitwise OR operation on *this and RHS.
 end_comment
 
 begin_comment
-comment|/// @returns An APInt value representing the bitwise OR of *this and RHS.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Bitwise OR operator.
+comment|/// \returns An APInt value representing the bitwise OR of *this and RHS.
 end_comment
 
 begin_expr_stmt
@@ -2841,16 +3189,42 @@ argument_list|)
 return|;
 end_return
 
-begin_macro
-unit|}   APInt
+begin_comment
+unit|}
+comment|/// \brief Bitwise OR function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Performs a bitwise or on *this and RHS. This is implemented bny simply
+end_comment
+
+begin_comment
+comment|/// calling operator|.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns An APInt value representing the bitwise OR of *this and RHS.
+end_comment
+
+begin_decl_stmt
+unit|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|Or
 argument_list|(
-argument|const APInt& RHS
-argument_list|)
-end_macro
-
-begin_expr_stmt
 specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|)
+decl|const
 block|{
 return|return
 name|this
@@ -2862,18 +3236,26 @@ name|RHS
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Bitwise XOR operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
 
 begin_comment
 comment|/// Performs a bitwise XOR operation on *this and RHS.
 end_comment
 
 begin_comment
-comment|/// @returns An APInt value representing the bitwise XOR of *this and RHS.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Bitwise XOR operator.
+comment|/// \returns An APInt value representing the bitwise XOR of *this and RHS.
 end_comment
 
 begin_decl_stmt
@@ -2925,8 +3307,33 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// \brief Bitwise XOR function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Performs a bitwise XOR operation on *this and RHS. This is implemented
+end_comment
+
+begin_comment
+comment|/// through the usage of operator^.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns An APInt value representing the bitwise XOR of *this and RHS.
+end_comment
+
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|Xor
 argument_list|(
 specifier|const
@@ -2949,11 +3356,15 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// Multiplies this APInt by RHS and returns the result.
+comment|/// \brief Multiplication operator.
 end_comment
 
 begin_comment
-comment|/// @brief Multiplication operator.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Multiplies this APInt by RHS and returns the result.
 end_comment
 
 begin_decl_stmt
@@ -2971,11 +3382,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Adds RHS to this APInt and returns the result.
+comment|/// \brief Addition operator.
 end_comment
 
 begin_comment
-comment|/// @brief Addition operator.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Adds RHS to this APInt and returns the result.
 end_comment
 
 begin_expr_stmt
@@ -3017,15 +3432,19 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Subtraction operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
 
 begin_comment
 comment|/// Subtracts RHS from this APInt and returns the result.
 end_comment
 
-begin_comment
-comment|/// @brief Subtraction operator.
-end_comment
-
 begin_expr_stmt
 name|APInt
 name|operator
@@ -3065,6 +3484,18 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Left logical shift operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Shifts this APInt left by \p Bits and returns the result.
+end_comment
 
 begin_expr_stmt
 name|APInt
@@ -3085,6 +3516,18 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Left logical shift operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Shifts this APInt left by \p Bits and returns the result.
+end_comment
+
 begin_expr_stmt
 name|APInt
 name|operator
@@ -3107,15 +3550,20 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Arithmetic right-shift this APInt by shiftAmt.
+comment|/// \brief Arithmetic right-shift function.
 end_comment
 
 begin_comment
-comment|/// @brief Arithmetic right-shift function.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Arithmetic right-shift this APInt by shiftAmt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|ashr
 argument_list|(
 name|unsigned
@@ -3126,15 +3574,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Logical right-shift this APInt by shiftAmt.
+comment|/// \brief Logical right-shift function.
 end_comment
 
 begin_comment
-comment|/// @brief Logical right-shift function.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Logical right-shift this APInt by shiftAmt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|lshr
 argument_list|(
 name|unsigned
@@ -3145,15 +3598,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Left-shift this APInt by shiftAmt.
+comment|/// \brief Left-shift function.
 end_comment
 
 begin_comment
-comment|/// @brief Left-shift function.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Left-shift this APInt by shiftAmt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|shl
 argument_list|(
 name|unsigned
@@ -3212,11 +3670,12 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Rotate left by rotateAmt.
+comment|/// \brief Rotate left by rotateAmt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|rotl
 argument_list|(
 name|unsigned
@@ -3227,11 +3686,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Rotate right by rotateAmt.
+comment|/// \brief Rotate right by rotateAmt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|rotr
 argument_list|(
 name|unsigned
@@ -3242,15 +3702,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Arithmetic right-shift this APInt by shiftAmt.
+comment|/// \brief Arithmetic right-shift function.
 end_comment
 
 begin_comment
-comment|/// @brief Arithmetic right-shift function.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Arithmetic right-shift this APInt by shiftAmt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|ashr
 argument_list|(
 specifier|const
@@ -3263,15 +3728,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Logical right-shift this APInt by shiftAmt.
+comment|/// \brief Logical right-shift function.
 end_comment
 
 begin_comment
-comment|/// @brief Logical right-shift function.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Logical right-shift this APInt by shiftAmt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|lshr
 argument_list|(
 specifier|const
@@ -3284,15 +3754,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Left-shift this APInt by shiftAmt.
+comment|/// \brief Left-shift function.
 end_comment
 
 begin_comment
-comment|/// @brief Left-shift function.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Left-shift this APInt by shiftAmt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|shl
 argument_list|(
 specifier|const
@@ -3305,11 +3780,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Rotate left by rotateAmt.
+comment|/// \brief Rotate left by rotateAmt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|rotl
 argument_list|(
 specifier|const
@@ -3322,11 +3798,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Rotate right by rotateAmt.
+comment|/// \brief Rotate right by rotateAmt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|rotr
 argument_list|(
 specifier|const
@@ -3339,6 +3816,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Unsigned division operation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Perform an unsigned divide operation on this APInt by RHS. Both this and
 end_comment
 
@@ -3347,15 +3832,16 @@ comment|/// RHS are treated as unsigned quantities for purposes of this division
 end_comment
 
 begin_comment
-comment|/// @returns a new APInt value containing the division result
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unsigned division operation.
+comment|/// \returns a new APInt value containing the division result
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|udiv
 argument_list|(
 specifier|const
@@ -3368,15 +3854,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Signed divide this APInt by APInt RHS.
+comment|/// \brief Signed division function for APInt.
 end_comment
 
 begin_comment
-comment|/// @brief Signed division function for APInt.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Signed divide this APInt by APInt RHS.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|sdiv
 argument_list|(
 specifier|const
@@ -3389,6 +3880,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Unsigned remainder operation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Perform an unsigned remainder operation on this APInt with RHS being the
 end_comment
 
@@ -3397,27 +3896,28 @@ comment|/// divisor. Both this and RHS are treated as unsigned quantities for pu
 end_comment
 
 begin_comment
-comment|/// of this operation. Note that this is a true remainder operation and not
+comment|/// of this operation. Note that this is a true remainder operation and not a
 end_comment
 
 begin_comment
-comment|/// a modulo operation because the sign follows the sign of the dividend
+comment|/// modulo operation because the sign follows the sign of the dividend which
 end_comment
 
 begin_comment
-comment|/// which is *this.
+comment|/// is *this.
 end_comment
 
 begin_comment
-comment|/// @returns a new APInt value containing the remainder result
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unsigned remainder operation.
+comment|/// \returns a new APInt value containing the remainder result
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|urem
 argument_list|(
 specifier|const
@@ -3430,15 +3930,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Signed remainder operation on APInt.
+comment|/// \brief Function for signed remainder operation.
 end_comment
 
 begin_comment
-comment|/// @brief Function for signed remainder operation.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Signed remainder operation on APInt.
 end_comment
 
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|srem
 argument_list|(
 specifier|const
@@ -3449,6 +3954,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Dual division/remainder interface.
+end_comment
+
+begin_comment
+comment|///
+end_comment
 
 begin_comment
 comment|/// Sometimes it is convenient to divide two APInt values and obtain both the
@@ -3468,10 +3981,6 @@ end_comment
 
 begin_comment
 comment|/// udivrem(X, Y, X, Y), for example.
-end_comment
-
-begin_comment
-comment|/// @brief Dual division/remainder interface.
 end_comment
 
 begin_function_decl
@@ -3665,11 +4174,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// @returns the bit value at bitPosition
+comment|/// \brief Array-indexing support.
 end_comment
 
 begin_comment
-comment|/// @brief Array-indexing support.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the bit value at bitPosition
 end_comment
 
 begin_decl_stmt
@@ -3725,11 +4238,19 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Comparison Operators
+comment|/// \name Comparison Operators
 end_comment
 
 begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
+comment|/// \brief Equality operator.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -3738,10 +4259,6 @@ end_comment
 
 begin_comment
 comment|/// relationship.
-end_comment
-
-begin_comment
-comment|/// @brief Equality operator.
 end_comment
 
 begin_expr_stmt
@@ -3792,6 +4309,14 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Equality operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Compares this APInt with a uint64_t for the validity of the equality
 end_comment
 
@@ -3800,11 +4325,11 @@ comment|/// relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this == Val
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Equality operator.
+comment|/// \returns true if *this == Val
 end_comment
 
 begin_expr_stmt
@@ -3840,6 +4365,14 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Equality comparison.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Compares this APInt with RHS for the validity of the equality
 end_comment
 
@@ -3848,11 +4381,11 @@ comment|/// relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this == Val
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Equality comparison.
+comment|/// \returns true if *this == Val
 end_comment
 
 begin_macro
@@ -3878,6 +4411,14 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Inequality operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Compares this APInt with RHS for the validity of the inequality
 end_comment
 
@@ -3886,11 +4427,11 @@ comment|/// relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this != Val
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Inequality operator.
+comment|/// \returns true if *this != Val
 end_comment
 
 begin_expr_stmt
@@ -3920,6 +4461,14 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Inequality operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Compares this APInt with a uint64_t for the validity of the inequality
 end_comment
 
@@ -3928,11 +4477,11 @@ comment|/// relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this != Val
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Inequality operator.
+comment|/// \returns true if *this != Val
 end_comment
 
 begin_expr_stmt
@@ -3960,6 +4509,14 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Inequality comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Compares this APInt with RHS for the validity of the inequality
 end_comment
 
@@ -3968,11 +4525,11 @@ comment|/// relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this != Val
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Inequality comparison
+comment|/// \returns true if *this != Val
 end_comment
 
 begin_decl_stmt
@@ -4001,6 +4558,14 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Unsigned less than comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this and RHS as unsigned quantities and compares them for
 end_comment
 
@@ -4009,11 +4574,11 @@ comment|/// the validity of the less-than relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this< RHS when both are considered unsigned.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unsigned less than comparison
+comment|/// \returns true if *this< RHS when both are considered unsigned.
 end_comment
 
 begin_decl_stmt
@@ -4030,6 +4595,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Unsigned less than comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this as an unsigned quantity and compares it with RHS for
 end_comment
 
@@ -4038,11 +4611,11 @@ comment|/// the validity of the less-than relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this< RHS when considered unsigned.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unsigned less than comparison
+comment|/// \returns true if *this< RHS when considered unsigned.
 end_comment
 
 begin_decl_stmt
@@ -4068,6 +4641,14 @@ argument_list|)
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Signed less than comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
 
 begin_comment
 comment|/// Regards both *this and RHS as signed quantities and compares them for
@@ -4078,11 +4659,11 @@ comment|/// validity of the less-than relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this< RHS when both are considered signed.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Signed less than comparison
+comment|/// \returns true if *this< RHS when both are considered signed.
 end_comment
 
 begin_decl_stmt
@@ -4099,6 +4680,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Signed less than comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this as a signed quantity and compares it with RHS for
 end_comment
 
@@ -4107,11 +4696,11 @@ comment|/// the validity of the less-than relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this< RHS when considered signed.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Signed less than comparison
+comment|/// \returns true if *this< RHS when considered signed.
 end_comment
 
 begin_decl_stmt
@@ -4139,6 +4728,14 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Unsigned less or equal comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this and RHS as unsigned quantities and compares them for
 end_comment
 
@@ -4147,11 +4744,11 @@ comment|/// validity of the less-or-equal relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this<= RHS when both are considered unsigned.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unsigned less or equal comparison
+comment|/// \returns true if *this<= RHS when both are considered unsigned.
 end_comment
 
 begin_decl_stmt
@@ -4180,6 +4777,14 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Unsigned less or equal comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this as an unsigned quantity and compares it with RHS for
 end_comment
 
@@ -4188,11 +4793,11 @@ comment|/// the validity of the less-or-equal relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this<= RHS when considered unsigned.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unsigned less or equal comparison
+comment|/// \returns true if *this<= RHS when considered unsigned.
 end_comment
 
 begin_decl_stmt
@@ -4220,6 +4825,14 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Signed less or equal comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this and RHS as signed quantities and compares them for
 end_comment
 
@@ -4228,11 +4841,11 @@ comment|/// validity of the less-or-equal relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this<= RHS when both are considered signed.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Signed less or equal comparison
+comment|/// \returns true if *this<= RHS when both are considered signed.
 end_comment
 
 begin_decl_stmt
@@ -4261,19 +4874,27 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// Regards both *this as a signed quantity and compares it with RHS for
+comment|/// \brief Signed less or equal comparison
 end_comment
 
 begin_comment
-comment|/// the validity of the less-or-equal relationship.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @returns true if *this<= RHS when considered signed.
+comment|/// Regards both *this as a signed quantity and compares it with RHS for the
 end_comment
 
 begin_comment
-comment|/// @brief Signed less or equal comparison
+comment|/// validity of the less-or-equal relationship.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if *this<= RHS when considered signed.
 end_comment
 
 begin_decl_stmt
@@ -4301,6 +4922,14 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Unsigned greather than comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this and RHS as unsigned quantities and compares them for
 end_comment
 
@@ -4309,11 +4938,11 @@ comment|/// the validity of the greater-than relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this> RHS when both are considered unsigned.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unsigned greather than comparison
+comment|/// \returns true if *this> RHS when both are considered unsigned.
 end_comment
 
 begin_decl_stmt
@@ -4344,6 +4973,14 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Unsigned greater than comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this as an unsigned quantity and compares it with RHS for
 end_comment
 
@@ -4352,11 +4989,11 @@ comment|/// the validity of the greater-than relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this> RHS when considered unsigned.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unsigned greater than comparison
+comment|/// \returns true if *this> RHS when considered unsigned.
 end_comment
 
 begin_decl_stmt
@@ -4384,19 +5021,27 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// Regards both *this and RHS as signed quantities and compares them for
+comment|/// \brief Signed greather than comparison
 end_comment
 
 begin_comment
-comment|/// the validity of the greater-than relationship.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @returns true if *this> RHS when both are considered signed.
+comment|/// Regards both *this and RHS as signed quantities and compares them for the
 end_comment
 
 begin_comment
-comment|/// @brief Signed greather than comparison
+comment|/// validity of the greater-than relationship.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if *this> RHS when both are considered signed.
 end_comment
 
 begin_decl_stmt
@@ -4427,6 +5072,14 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Signed greater than comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this as a signed quantity and compares it with RHS for
 end_comment
 
@@ -4435,11 +5088,11 @@ comment|/// the validity of the greater-than relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this> RHS when considered signed.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Signed greater than comparison
+comment|/// \returns true if *this> RHS when considered signed.
 end_comment
 
 begin_decl_stmt
@@ -4465,6 +5118,14 @@ argument_list|)
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Unsigned greater or equal comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
 
 begin_comment
 comment|/// Regards both *this and RHS as unsigned quantities and compares them for
@@ -4475,11 +5136,11 @@ comment|/// validity of the greater-or-equal relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this>= RHS when both are considered unsigned.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unsigned greater or equal comparison
+comment|/// \returns true if *this>= RHS when both are considered unsigned.
 end_comment
 
 begin_decl_stmt
@@ -4502,6 +5163,14 @@ argument_list|)
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Unsigned greater or equal comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
 
 begin_comment
 comment|/// Regards both *this as an unsigned quantity and compares it with RHS for
@@ -4512,11 +5181,11 @@ comment|/// the validity of the greater-or-equal relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this>= RHS when considered unsigned.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Unsigned greater or equal comparison
+comment|/// \returns true if *this>= RHS when considered unsigned.
 end_comment
 
 begin_decl_stmt
@@ -4544,6 +5213,14 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Signed greather or equal comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this and RHS as signed quantities and compares them for
 end_comment
 
@@ -4552,11 +5229,11 @@ comment|/// validity of the greater-or-equal relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this>= RHS when both are considered signed.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Signed greather or equal comparison
+comment|/// \returns true if *this>= RHS when both are considered signed.
 end_comment
 
 begin_decl_stmt
@@ -4581,6 +5258,14 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Signed greater or equal comparison
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Regards both *this as a signed quantity and compares it with RHS for
 end_comment
 
@@ -4589,11 +5274,11 @@ comment|/// the validity of the greater-or-equal relationship.
 end_comment
 
 begin_comment
-comment|/// @returns true if *this>= RHS when considered signed.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Signed greater or equal comparison
+comment|/// \returns true if *this>= RHS when considered signed.
 end_comment
 
 begin_decl_stmt
@@ -4657,11 +5342,19 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Resizing Operators
+comment|/// \name Resizing Operators
 end_comment
 
 begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
+comment|/// \brief Truncate to new width.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -4672,12 +5365,9 @@ begin_comment
 comment|/// that is greater than or equal to the current width.
 end_comment
 
-begin_comment
-comment|/// @brief Truncate to new width.
-end_comment
-
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|trunc
 argument_list|(
 name|unsigned
@@ -4686,6 +5376,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Sign extend to a new width.
+end_comment
+
+begin_comment
+comment|///
+end_comment
 
 begin_comment
 comment|/// This operation sign extends the APInt to a new width. If the high order
@@ -4703,12 +5401,9 @@ begin_comment
 comment|/// current width.
 end_comment
 
-begin_comment
-comment|/// @brief Sign extend to a new width.
-end_comment
-
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|sext
 argument_list|(
 name|unsigned
@@ -4717,6 +5412,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Zero extend to a new width.
+end_comment
+
+begin_comment
+comment|///
+end_comment
 
 begin_comment
 comment|/// This operation zero extends the APInt to a new width. The high order bits
@@ -4730,12 +5433,9 @@ begin_comment
 comment|/// than or equal to the current width.
 end_comment
 
-begin_comment
-comment|/// @brief Zero extend to a new width.
-end_comment
-
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|zext
 argument_list|(
 name|unsigned
@@ -4746,6 +5446,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Sign extend or truncate to width
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Make this APInt have the bit width given by \p width. The value is sign
 end_comment
 
@@ -4753,12 +5461,9 @@ begin_comment
 comment|/// extended, truncated, or left alone to make it that width.
 end_comment
 
-begin_comment
-comment|/// @brief Sign extend or truncate to width
-end_comment
-
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|sextOrTrunc
 argument_list|(
 name|unsigned
@@ -4769,6 +5474,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Zero extend or truncate to width
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Make this APInt have the bit width given by \p width. The value is zero
 end_comment
 
@@ -4776,12 +5489,9 @@ begin_comment
 comment|/// extended, truncated, or left alone to make it that width.
 end_comment
 
-begin_comment
-comment|/// @brief Zero extend or truncate to width
-end_comment
-
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|zextOrTrunc
 argument_list|(
 name|unsigned
@@ -4792,6 +5502,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Sign extend or truncate to width
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Make this APInt have the bit width given by \p width. The value is sign
 end_comment
 
@@ -4799,12 +5517,9 @@ begin_comment
 comment|/// extended, or left alone to make it that width.
 end_comment
 
-begin_comment
-comment|/// @brief Sign extend or truncate to width
-end_comment
-
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|sextOrSelf
 argument_list|(
 name|unsigned
@@ -4815,6 +5530,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Zero extend or truncate to width
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Make this APInt have the bit width given by \p width. The value is zero
 end_comment
 
@@ -4822,12 +5545,9 @@ begin_comment
 comment|/// extended, or left alone to make it that width.
 end_comment
 
-begin_comment
-comment|/// @brief Zero extend or truncate to width
-end_comment
-
 begin_decl_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|zextOrSelf
 argument_list|(
 name|unsigned
@@ -4842,7 +5562,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Bit Manipulation Operators
+comment|/// \name Bit Manipulation Operators
 end_comment
 
 begin_comment
@@ -4850,7 +5570,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// @brief Set every bit to 1.
+comment|/// \brief Set every bit to 1.
 end_comment
 
 begin_function
@@ -4901,11 +5621,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// Set the given bit to 1 whose position is given as "bitPosition".
+comment|/// \brief Set a given bit to 1.
 end_comment
 
 begin_comment
-comment|/// @brief Set a given bit to 1.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Set the given bit to 1 whose position is given as "bitPosition".
 end_comment
 
 begin_function_decl
@@ -4919,7 +5643,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// @brief Set every bit to 0.
+comment|/// \brief Set every bit to 0.
 end_comment
 
 begin_function
@@ -4953,11 +5677,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// Set the given bit to 0 whose position is given as "bitPosition".
+comment|/// \brief Set a given bit to 0.
 end_comment
 
 begin_comment
-comment|/// @brief Set a given bit to 0.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Set the given bit to 0 whose position is given as "bitPosition".
 end_comment
 
 begin_function_decl
@@ -4971,7 +5699,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// @brief Toggle every bit to its opposite value.
+comment|/// \brief Toggle every bit to its opposite value.
 end_comment
 
 begin_function
@@ -5020,15 +5748,19 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Toggles a given bit to its opposite value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Toggle a given bit to its opposite value whose position is given
 end_comment
 
 begin_comment
 comment|/// as "bitPosition".
-end_comment
-
-begin_comment
-comment|/// @brief Toggles a given bit to its opposite value.
 end_comment
 
 begin_function_decl
@@ -5046,7 +5778,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Value Characterization Functions
+comment|/// \name Value Characterization Functions
 end_comment
 
 begin_comment
@@ -5054,7 +5786,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// @returns the total number of bits.
+comment|/// \brief Return the number of bits in the APInt.
 end_comment
 
 begin_expr_stmt
@@ -5070,15 +5802,23 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Get the number of words.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Here one word's bitwidth equals to that of uint64_t.
 end_comment
 
 begin_comment
-comment|/// @returns the number of words to hold the integer value of this APInt.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Get the number of words.
+comment|/// \returns the number of words to hold the integer value of this APInt.
 end_comment
 
 begin_expr_stmt
@@ -5097,19 +5837,27 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Here one word's bitwidth equals to that of uint64_t.
+comment|/// \brief Get the number of words.
 end_comment
 
 begin_comment
-comment|/// @returns the number of words to hold the integer value with a
+comment|///
 end_comment
 
 begin_comment
-comment|/// given bit width.
+comment|/// *NOTE* Here one word's bitwidth equals to that of uint64_t.
 end_comment
 
 begin_comment
-comment|/// @brief Get the number of words.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the number of words to hold the integer value with a given bit
+end_comment
+
+begin_comment
+comment|/// width.
 end_comment
 
 begin_function
@@ -5136,6 +5884,14 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Compute the number of active bits in the value
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// This function returns the number of active bits which is defined as the
 end_comment
 
@@ -5145,10 +5901,6 @@ end_comment
 
 begin_comment
 comment|/// computations to see how "wide" the value is.
-end_comment
-
-begin_comment
-comment|/// @brief Compute the number of active bits in the value
 end_comment
 
 begin_expr_stmt
@@ -5167,15 +5919,19 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// This function returns the number of active words in the value of this
+comment|/// \brief Compute the number of active words in the value of this APInt.
 end_comment
 
 begin_comment
-comment|/// APInt. This is used in conjunction with getActiveData to extract the raw
+comment|///
 end_comment
 
 begin_comment
-comment|/// value of the APInt.
+comment|/// This is used in conjunction with getActiveData to extract the raw value of
+end_comment
+
+begin_comment
+comment|/// the APInt.
 end_comment
 
 begin_expr_stmt
@@ -5208,15 +5964,23 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Computes the minimum bit width for this APInt while considering it to be
+comment|/// \brief Get the minimum bit size for this signed APInt
 end_comment
 
 begin_comment
-comment|/// a signed (and probably negative) value. If the value is not negative,
+comment|///
 end_comment
 
 begin_comment
-comment|/// this function returns the same value as getActiveBits()+1. Otherwise, it
+comment|/// Computes the minimum bit width for this APInt while considering it to be a
+end_comment
+
+begin_comment
+comment|/// signed (and probably negative) value. If the value is not negative, this
+end_comment
+
+begin_comment
+comment|/// function returns the same value as getActiveBits()+1. Otherwise, it
 end_comment
 
 begin_comment
@@ -5229,10 +5993,6 @@ end_comment
 
 begin_comment
 comment|/// for -1, this function will always return 1.
-end_comment
-
-begin_comment
-comment|/// @brief Get the minimum bit size for this signed APInt
 end_comment
 
 begin_expr_stmt
@@ -5267,6 +6027,14 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Get zero extended value
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// This method attempts to return the value of this APInt as a zero extended
 end_comment
 
@@ -5276,10 +6044,6 @@ end_comment
 
 begin_comment
 comment|/// uint64_t. Otherwise an assertion will result.
-end_comment
-
-begin_comment
-comment|/// @brief Get zero extended value
 end_comment
 
 begin_macro
@@ -5322,6 +6086,14 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Get sign extended value
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// This method attempts to return the value of this APInt as a sign extended
 end_comment
 
@@ -5331,10 +6103,6 @@ end_comment
 
 begin_comment
 comment|/// int64_t. Otherwise an assertion will result.
-end_comment
-
-begin_comment
-comment|/// @brief Get sign extended value
 end_comment
 
 begin_macro
@@ -5395,15 +6163,19 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Get bits required for string value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// This method determines how many bits are required to hold the APInt
 end_comment
 
 begin_comment
 comment|/// equivalent of the string given by \p str.
-end_comment
-
-begin_comment
-comment|/// @brief Get bits required for string value.
 end_comment
 
 begin_function_decl
@@ -5421,27 +6193,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// countLeadingZeros - This function is an APInt version of the
+comment|/// \brief The APInt version of the countLeadingZeros functions in
 end_comment
 
 begin_comment
-comment|/// countLeadingZeros_{32,64} functions in MathExtras.h. It counts the number
+comment|///   MathExtras.h.
 end_comment
 
 begin_comment
-comment|/// of zeros from the most significant bit to the first one bit.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @returns BitWidth if the value is zero, otherwise
+comment|/// It counts the number of zeros from the most significant bit to the first
 end_comment
 
 begin_comment
-comment|/// returns the number of zeros from the most significant bit to the first
+comment|/// one bit.
 end_comment
 
 begin_comment
-comment|/// one bits.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns BitWidth if the value is zero, otherwise returns the number of
+end_comment
+
+begin_comment
+comment|///   zeros from the most significant bit to the first one bits.
 end_comment
 
 begin_expr_stmt
@@ -5464,7 +6244,9 @@ operator|-
 name|BitWidth
 decl_stmt|;
 return|return
-name|CountLeadingZeros_64
+name|llvm
+operator|::
+name|countLeadingZeros
 argument_list|(
 name|VAL
 argument_list|)
@@ -5483,27 +6265,35 @@ end_return
 
 begin_comment
 unit|}
-comment|/// countLeadingOnes - This function is an APInt version of the
+comment|/// \brief Count the number of leading one bits.
 end_comment
 
 begin_comment
-comment|/// countLeadingOnes_{32,64} functions in MathExtras.h. It counts the number
+comment|///
 end_comment
 
 begin_comment
-comment|/// of ones from the most significant bit to the first zero bit.
+comment|/// This function is an APInt version of the countLeadingOnes_{32,64}
 end_comment
 
 begin_comment
-comment|/// @returns 0 if the high order bit is not set, otherwise
+comment|/// functions in MathExtras.h. It counts the number of ones from the most
 end_comment
 
 begin_comment
-comment|/// returns the number of 1 bits from the most significant to the least
+comment|/// significant bit to the first zero bit.
 end_comment
 
 begin_comment
-comment|/// @brief Count the number of leading one bits.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns 0 if the high order bit is not set, otherwise returns the number
+end_comment
+
+begin_comment
+comment|/// of 1 bits from the most significant to the least
 end_comment
 
 begin_macro
@@ -5545,31 +6335,35 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// countTrailingZeros - This function is an APInt version of the
+comment|/// \brief Count the number of trailing zero bits.
 end_comment
 
 begin_comment
-comment|/// countTrailingZeros_{32,64} functions in MathExtras.h. It counts
+comment|///
 end_comment
 
 begin_comment
-comment|/// the number of zeros from the least significant bit to the first set bit.
+comment|/// This function is an APInt version of the countTrailingZeros_{32,64}
 end_comment
 
 begin_comment
-comment|/// @returns BitWidth if the value is zero, otherwise
+comment|/// functions in MathExtras.h. It counts the number of zeros from the least
 end_comment
 
 begin_comment
-comment|/// returns the number of zeros from the least significant bit to the first
+comment|/// significant bit to the first set bit.
 end_comment
 
 begin_comment
-comment|/// one bit.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Count the number of trailing zero bits.
+comment|/// \returns BitWidth if the value is zero, otherwise returns the number of
+end_comment
+
+begin_comment
+comment|/// zeros from the least significant bit to the first one bit.
 end_comment
 
 begin_expr_stmt
@@ -5581,31 +6375,35 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// countTrailingOnes - This function is an APInt version of the
+comment|/// \brief Count the number of trailing one bits.
 end_comment
 
 begin_comment
-comment|/// countTrailingOnes_{32,64} functions in MathExtras.h. It counts
+comment|///
 end_comment
 
 begin_comment
-comment|/// the number of ones from the least significant bit to the first zero bit.
+comment|/// This function is an APInt version of the countTrailingOnes_{32,64}
 end_comment
 
 begin_comment
-comment|/// @returns BitWidth if the value is all ones, otherwise
+comment|/// functions in MathExtras.h. It counts the number of ones from the least
 end_comment
 
 begin_comment
-comment|/// returns the number of ones from the least significant bit to the first
+comment|/// significant bit to the first zero bit.
 end_comment
 
 begin_comment
-comment|/// zero bit.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Count the number of trailing one bits.
+comment|/// \returns BitWidth if the value is all ones, otherwise returns the number
+end_comment
+
+begin_comment
+comment|/// of ones from the least significant bit to the first zero bit.
 end_comment
 
 begin_expr_stmt
@@ -5636,27 +6434,27 @@ end_return
 
 begin_comment
 unit|}
-comment|/// countPopulation - This function is an APInt version of the
+comment|/// \brief Count the number of bits set.
 end_comment
 
 begin_comment
-comment|/// countPopulation_{32,64} functions in MathExtras.h. It counts the number
+comment|///
 end_comment
 
 begin_comment
-comment|/// of 1 bits in the APInt value.
+comment|/// This function is an APInt version of the countPopulation_{32,64} functions
 end_comment
 
 begin_comment
-comment|/// @returns 0 if the value is zero, otherwise returns the number of set
+comment|/// in MathExtras.h. It counts the number of 1 bits in the APInt value.
 end_comment
 
 begin_comment
-comment|/// bits.
+comment|///
 end_comment
 
 begin_comment
-comment|/// @brief Count the number of bits set.
+comment|/// \returns 0 if the value is zero, otherwise returns the number of set bits.
 end_comment
 
 begin_macro
@@ -5694,7 +6492,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Conversion Functions
+comment|/// \name Conversion Functions
 end_comment
 
 begin_comment
@@ -5717,11 +6515,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// toString - Converts an APInt to a string and append it to Str.  Str is
+comment|/// Converts an APInt to a string and append it to Str.  Str is commonly a
 end_comment
 
 begin_comment
-comment|/// commonly a SmallString.
+comment|/// SmallString.
 end_comment
 
 begin_decl_stmt
@@ -5831,15 +6629,23 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// toString - This returns the APInt as a std::string.  Note that this is an
+comment|/// \brief Return the APInt as a std::string.
 end_comment
 
 begin_comment
-comment|/// inefficient method.  It is better to pass in a SmallVector/SmallString
+comment|///
 end_comment
 
 begin_comment
-comment|/// to the methods above to avoid thrashing the heap for the string.
+comment|/// Note that this is an inefficient method.  It is better to pass in a
+end_comment
+
+begin_comment
+comment|/// SmallVector/SmallString to the methods above to avoid thrashing the heap
+end_comment
+
+begin_comment
+comment|/// for the string.
 end_comment
 
 begin_expr_stmt
@@ -5857,11 +6663,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// @returns a byte-swapped representation of this APInt Value.
+comment|/// \returns a byte-swapped representation of this APInt Value.
 end_comment
 
 begin_expr_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|byteSwap
 argument_list|()
 specifier|const
@@ -5869,7 +6676,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// @brief Converts this APInt to a double value.
+comment|/// \brief Converts this APInt to a double value.
 end_comment
 
 begin_decl_stmt
@@ -5884,7 +6691,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Converts this unsigned APInt to a double value.
+comment|/// \brief Converts this unsigned APInt to a double value.
 end_comment
 
 begin_expr_stmt
@@ -5903,7 +6710,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// @brief Converts this signed APInt to a double value.
+comment|/// \brief Converts this signed APInt to a double value.
 end_comment
 
 begin_expr_stmt
@@ -5922,6 +6729,14 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Converts APInt bits to a double
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// The conversion does not do a translation from integer to double, it just
 end_comment
 
@@ -5931,10 +6746,6 @@ end_comment
 
 begin_comment
 comment|/// any bit width. Exactly 64 bits will be translated.
-end_comment
-
-begin_comment
-comment|/// @brief Converts APInt bits to a double
 end_comment
 
 begin_expr_stmt
@@ -5978,6 +6789,14 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Converts APInt bits to a double
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// The conversion does not do a translation from integer to float, it just
 end_comment
 
@@ -5987,10 +6806,6 @@ end_comment
 
 begin_comment
 comment|/// any bit width. Exactly 32 bits will be translated.
-end_comment
-
-begin_comment
-comment|/// @brief Converts APInt bits to a double
 end_comment
 
 begin_expr_stmt
@@ -6037,6 +6852,14 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Converts a double to APInt bits.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// The conversion does not do a translation from double to integer, it just
 end_comment
 
@@ -6044,13 +6867,10 @@ begin_comment
 comment|/// re-interprets the bits of the double.
 end_comment
 
-begin_comment
-comment|/// @brief Converts a double to APInt bits.
-end_comment
-
 begin_function
 specifier|static
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|doubleToBits
 parameter_list|(
 name|double
@@ -6091,6 +6911,14 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Converts a float to APInt bits.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// The conversion does not do a translation from float to integer, it just
 end_comment
 
@@ -6098,13 +6926,10 @@ begin_comment
 comment|/// re-interprets the bits of the float.
 end_comment
 
-begin_comment
-comment|/// @brief Converts a float to APInt bits.
-end_comment
-
 begin_function
 specifier|static
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|floatToBits
 parameter_list|(
 name|float
@@ -6149,7 +6974,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Mathematics Operations
+comment|/// \name Mathematics Operations
 end_comment
 
 begin_comment
@@ -6157,7 +6982,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// @returns the floor log base 2 of this APInt.
+comment|/// \returns the floor log base 2 of this APInt.
 end_comment
 
 begin_expr_stmt
@@ -6178,7 +7003,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// @returns the ceil log base 2 of this APInt.
+comment|/// \returns the ceil log base 2 of this APInt.
 end_comment
 
 begin_expr_stmt
@@ -6204,7 +7029,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// @returns the log base 2 of this APInt if its an exact power of two, -1
+comment|/// \returns the log base 2 of this APInt if its an exact power of two, -1
 end_comment
 
 begin_comment
@@ -6238,30 +7063,33 @@ end_return
 
 begin_comment
 unit|}
-comment|/// @brief Compute the square root
+comment|/// \brief Compute the square root
 end_comment
 
-begin_macro
+begin_expr_stmt
 unit|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|sqrt
 argument_list|()
-end_macro
-
-begin_decl_stmt
 specifier|const
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Get the absolute value;
+end_comment
+
+begin_comment
+comment|///
+end_comment
 
 begin_comment
 comment|/// If *this is< 0 then return -(*this), otherwise *this;
 end_comment
 
-begin_comment
-comment|/// @brief Get the absolute value;
-end_comment
-
 begin_expr_stmt
 name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|abs
 argument_list|()
 specifier|const
@@ -6289,14 +7117,14 @@ end_return
 
 begin_comment
 unit|}
-comment|/// @returns the multiplicative inverse for a given modulo.
+comment|/// \returns the multiplicative inverse for a given modulo.
 end_comment
 
 begin_macro
 unit|APInt
 name|multiplicativeInverse
 argument_list|(
-argument|const APInt& modulo
+argument|const APInt&modulo
 argument_list|)
 end_macro
 
@@ -6310,7 +7138,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Support for division by constant
+comment|/// \name Support for division by constant
 end_comment
 
 begin_comment
@@ -6363,7 +7191,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Building-block Operations for APInt and APFloat
+comment|/// \name Building-block Operations for APInt and APFloat
 end_comment
 
 begin_comment
@@ -6371,35 +7199,31 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|// These building block operations operate on a representation of
+comment|// These building block operations operate on a representation of arbitrary
 end_comment
 
 begin_comment
-comment|// arbitrary precision, two's-complement, bignum integer values.
+comment|// precision, two's-complement, bignum integer values. They should be
 end_comment
 
 begin_comment
-comment|// They should be sufficient to implement APInt and APFloat bignum
+comment|// sufficient to implement APInt and APFloat bignum requirements. Inputs are
 end_comment
 
 begin_comment
-comment|// requirements.  Inputs are generally a pointer to the base of an
+comment|// generally a pointer to the base of an array of integer parts, representing
 end_comment
 
 begin_comment
-comment|// array of integer parts, representing an unsigned bignum, and a
+comment|// an unsigned bignum, and a count of how many parts there are.
 end_comment
 
 begin_comment
-comment|// count of how many parts there are.
+comment|/// Sets the least significant part of a bignum to the input value, and zeroes
 end_comment
 
 begin_comment
-comment|/// Sets the least significant part of a bignum to the input value,
-end_comment
-
-begin_comment
-comment|/// and zeroes out higher parts.  */
+comment|/// out higher parts.
 end_comment
 
 begin_function_decl
@@ -6480,19 +7304,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Copy the bit vector of width srcBITS from SRC, starting at bit
+comment|/// Copy the bit vector of width srcBITS from SRC, starting at bit srcLSB, to
 end_comment
 
 begin_comment
-comment|/// srcLSB, to DST, of dstCOUNT parts, such that the bit srcLSB
+comment|/// DST, of dstCOUNT parts, such that the bit srcLSB becomes the least
 end_comment
 
 begin_comment
-comment|/// becomes the least significant bit of DST.  All high bits above
+comment|/// significant bit of DST.  All high bits above srcBITS in DST are
 end_comment
 
 begin_comment
-comment|/// srcBITS in DST are zero-filled.
+comment|/// zero-filled.
 end_comment
 
 begin_function_decl
@@ -6561,15 +7385,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Returns the bit number of the least or most significant set bit
+comment|/// Returns the bit number of the least or most significant set bit of a
 end_comment
 
 begin_comment
-comment|/// of a number.  If the input number has no bits set -1U is
-end_comment
-
-begin_comment
-comment|/// returned.
+comment|/// number.  If the input number has no bits set -1U is returned.
 end_comment
 
 begin_function_decl
@@ -6625,11 +7445,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// DST += RHS + CARRY where CARRY is zero or one.  Returns the
-end_comment
-
-begin_comment
-comment|/// carry flag.
+comment|/// DST += RHS + CARRY where CARRY is zero or one.  Returns the carry flag.
 end_comment
 
 begin_function_decl
@@ -6653,11 +7469,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// DST -= RHS + CARRY where CARRY is zero or one.  Returns the
-end_comment
-
-begin_comment
-comment|/// carry flag.
+comment|/// DST -= RHS + CARRY where CARRY is zero or one. Returns the carry flag.
 end_comment
 
 begin_function_decl
@@ -6681,23 +7493,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|///  DST += SRC * MULTIPLIER + PART   if add is true
+comment|/// DST += SRC * MULTIPLIER + PART   if add is true
 end_comment
 
 begin_comment
-comment|///  DST  = SRC * MULTIPLIER + PART   if add is false
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|///  Requires 0<= DSTPARTS<= SRCPARTS + 1.  If DST overlaps SRC
-end_comment
-
-begin_comment
-comment|///  they must start at the same point, i.e. DST == SRC.
+comment|/// DST  = SRC * MULTIPLIER + PART   if add is false
 end_comment
 
 begin_comment
@@ -6705,23 +7505,31 @@ comment|///
 end_comment
 
 begin_comment
-comment|///  If DSTPARTS == SRC_PARTS + 1 no overflow occurs and zero is
+comment|/// Requires 0<= DSTPARTS<= SRCPARTS + 1.  If DST overlaps SRC they must
 end_comment
 
 begin_comment
-comment|///  returned.  Otherwise DST is filled with the least significant
+comment|/// start at the same point, i.e. DST == SRC.
 end_comment
 
 begin_comment
-comment|///  DSTPARTS parts of the result, and if all of the omitted higher
+comment|///
 end_comment
 
 begin_comment
-comment|///  parts were zero return zero, otherwise overflow occurred and
+comment|/// If DSTPARTS == SRC_PARTS + 1 no overflow occurs and zero is returned.
 end_comment
 
 begin_comment
-comment|///  return one.
+comment|/// Otherwise DST is filled with the least significant DSTPARTS parts of the
+end_comment
+
+begin_comment
+comment|/// result, and if all of the omitted higher parts were zero return zero,
+end_comment
+
+begin_comment
+comment|/// otherwise overflow occurred and return one.
 end_comment
 
 begin_function_decl
@@ -6759,19 +7567,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// DST = LHS * RHS, where DST has the same width as the operands
+comment|/// DST = LHS * RHS, where DST has the same width as the operands and is
 end_comment
 
 begin_comment
-comment|/// and is filled with the least significant parts of the result.
+comment|/// filled with the least significant parts of the result.  Returns one if
 end_comment
 
 begin_comment
-comment|/// Returns one if overflow occurred, otherwise zero.  DST must be
+comment|/// overflow occurred, otherwise zero.  DST must be disjoint from both
 end_comment
 
 begin_comment
-comment|/// disjoint from both operands.
+comment|/// operands.
 end_comment
 
 begin_function_decl
@@ -6796,19 +7604,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// DST = LHS * RHS, where DST has width the sum of the widths of
+comment|/// DST = LHS * RHS, where DST has width the sum of the widths of the
 end_comment
 
 begin_comment
-comment|/// the operands.  No overflow occurs.  DST must be disjoint from
+comment|/// operands.  No overflow occurs.  DST must be disjoint from both
 end_comment
 
 begin_comment
-comment|/// both operands. Returns the number of parts required to hold the
-end_comment
-
-begin_comment
-comment|/// result.
+comment|/// operands. Returns the number of parts required to hold the result.
 end_comment
 
 begin_function_decl
@@ -6840,11 +7644,11 @@ comment|/// If RHS is zero LHS and REMAINDER are left unchanged, return one.
 end_comment
 
 begin_comment
-comment|/// Otherwise set LHS to LHS / RHS with the fractional part
+comment|/// Otherwise set LHS to LHS / RHS with the fractional part discarded, set
 end_comment
 
 begin_comment
-comment|/// discarded, set REMAINDER to the remainder, return zero.  i.e.
+comment|/// REMAINDER to the remainder, return zero.  i.e.
 end_comment
 
 begin_comment
@@ -6860,19 +7664,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|///  SCRATCH is a bignum of the same size as the operands and result
+comment|/// SCRATCH is a bignum of the same size as the operands and result for use by
 end_comment
 
 begin_comment
-comment|///  for use by the routine; its contents need not be initialized
+comment|/// the routine; its contents need not be initialized and are destroyed.  LHS,
 end_comment
 
 begin_comment
-comment|///  and are destroyed.  LHS, REMAINDER and SCRATCH must be
-end_comment
-
-begin_comment
-comment|///  distinct.
+comment|/// REMAINDER and SCRATCH must be distinct.
 end_comment
 
 begin_function_decl
@@ -6905,11 +7705,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Shift a bignum left COUNT bits.  Shifted in bits are zero.
+comment|/// Shift a bignum left COUNT bits.  Shifted in bits are zero.  There are no
 end_comment
 
 begin_comment
-comment|/// There are no restrictions on COUNT.
+comment|/// restrictions on COUNT.
 end_comment
 
 begin_function_decl
@@ -6932,11 +7732,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Shift a bignum right COUNT bits.  Shifted in bits are zero.
+comment|/// Shift a bignum right COUNT bits.  Shifted in bits are zero.  There are no
 end_comment
 
 begin_comment
-comment|/// There are no restrictions on COUNT.
+comment|/// restrictions on COUNT.
 end_comment
 
 begin_function_decl
@@ -7072,6 +7872,24 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Decrement a bignum in-place.  Return the borrow flag.
+end_comment
+
+begin_function_decl
+specifier|static
+name|integerPart
+name|tcDecrement
+parameter_list|(
+name|integerPart
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Set the least significant BITS and clear the rest.
 end_comment
 
@@ -7094,7 +7912,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// @brief debug method
+comment|/// \brief debug method
 end_comment
 
 begin_expr_stmt
@@ -7240,7 +8058,7 @@ begin_decl_stmt
 name|namespace
 name|APIntOps
 block|{
-comment|/// @brief Determine the smaller of two APInts considered to be signed.
+comment|/// \brief Determine the smaller of two APInts considered to be signed.
 specifier|inline
 name|APInt
 name|smin
@@ -7269,7 +8087,7 @@ else|:
 name|B
 return|;
 block|}
-comment|/// @brief Determine the larger of two APInts considered to be signed.
+comment|/// \brief Determine the larger of two APInts considered to be signed.
 specifier|inline
 name|APInt
 name|smax
@@ -7298,7 +8116,7 @@ else|:
 name|B
 return|;
 block|}
-comment|/// @brief Determine the smaller of two APInts considered to be signed.
+comment|/// \brief Determine the smaller of two APInts considered to be signed.
 specifier|inline
 name|APInt
 name|umin
@@ -7327,7 +8145,7 @@ else|:
 name|B
 return|;
 block|}
-comment|/// @brief Determine the larger of two APInts considered to be unsigned.
+comment|/// \brief Determine the larger of two APInts considered to be unsigned.
 specifier|inline
 name|APInt
 name|umax
@@ -7356,7 +8174,7 @@ else|:
 name|B
 return|;
 block|}
-comment|/// @brief Check if the specified APInt has a N-bits unsigned integer value.
+comment|/// \brief Check if the specified APInt has a N-bits unsigned integer value.
 specifier|inline
 name|bool
 name|isIntN
@@ -7379,7 +8197,7 @@ name|N
 argument_list|)
 return|;
 block|}
-comment|/// @brief Check if the specified APInt has a N-bits signed integer value.
+comment|/// \brief Check if the specified APInt has a N-bits signed integer value.
 specifier|inline
 name|bool
 name|isSignedIntN
@@ -7402,8 +8220,8 @@ name|N
 argument_list|)
 return|;
 block|}
-comment|/// @returns true if the argument APInt value is a sequence of ones
-comment|/// starting at the least significant bit with the remainder zero.
+comment|/// \returns true if the argument APInt value is a sequence of ones starting at
+comment|/// the least significant bit with the remainder zero.
 specifier|inline
 name|bool
 name|isMask
@@ -7440,7 +8258,7 @@ name|numBits
 argument_list|)
 return|;
 block|}
-comment|/// @returns true if the argument APInt value contains a sequence of ones
+comment|/// \brief Return true if the argument APInt value contains a sequence of ones
 comment|/// with the remainder zero.
 specifier|inline
 name|bool
@@ -7475,7 +8293,7 @@ name|APIVal
 argument_list|)
 return|;
 block|}
-comment|/// @returns a byte-swapped representation of the specified APInt Value.
+comment|/// \brief Returns a byte-swapped representation of the specified APInt Value.
 specifier|inline
 name|APInt
 name|byteSwap
@@ -7493,7 +8311,7 @@ name|byteSwap
 argument_list|()
 return|;
 block|}
-comment|/// @returns the floor log base 2 of the specified APInt value.
+comment|/// \brief Returns the floor log base 2 of the specified APInt value.
 specifier|inline
 name|unsigned
 name|logBase2
@@ -7511,10 +8329,12 @@ name|logBase2
 argument_list|()
 return|;
 block|}
-comment|/// GreatestCommonDivisor - This function returns the greatest common
-comment|/// divisor of the two APInt values using Euclid's algorithm.
-comment|/// @returns the greatest common divisor of Val1 and Val2
-comment|/// @brief Compute GCD of two APInt values.
+comment|/// \brief Compute GCD of two APInt values.
+comment|///
+comment|/// This function returns the greatest common divisor of the two APInt values
+comment|/// using Euclid's algorithm.
+comment|///
+comment|/// \returns the greatest common divisor of Val1 and Val2
 name|APInt
 name|GreatestCommonDivisor
 parameter_list|(
@@ -7529,8 +8349,9 @@ modifier|&
 name|Val2
 parameter_list|)
 function_decl|;
+comment|/// \brief Converts the given APInt to a double value.
+comment|///
 comment|/// Treats the APInt as an unsigned value for conversion purposes.
-comment|/// @brief Converts the given APInt to a double value.
 specifier|inline
 name|double
 name|RoundAPIntToDouble
@@ -7548,8 +8369,9 @@ name|roundToDouble
 argument_list|()
 return|;
 block|}
+comment|/// \brief Converts the given APInt to a double value.
+comment|///
 comment|/// Treats the APInt as a signed value for conversion purposes.
-comment|/// @brief Converts the given APInt to a double value.
 specifier|inline
 name|double
 name|RoundSignedAPIntToDouble
@@ -7567,7 +8389,7 @@ name|signedRoundToDouble
 argument_list|()
 return|;
 block|}
-comment|/// @brief Converts the given APInt to a float vlalue.
+comment|/// \brief Converts the given APInt to a float vlalue.
 specifier|inline
 name|float
 name|RoundAPIntToFloat
@@ -7588,8 +8410,9 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|/// \brief Converts the given APInt to a float value.
+comment|///
 comment|/// Treast the APInt as a signed value for conversion purposes.
-comment|/// @brief Converts the given APInt to a float value.
 specifier|inline
 name|float
 name|RoundSignedAPIntToFloat
@@ -7610,8 +8433,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// RoundDoubleToAPInt - This function convert a double value to an APInt value.
-comment|/// @brief Converts the given double value into a APInt.
+comment|/// \brief Converts the given double value into a APInt.
+comment|///
+comment|/// This function convert a double value to an APInt value.
 name|APInt
 name|RoundDoubleToAPInt
 parameter_list|(
@@ -7622,8 +8446,9 @@ name|unsigned
 name|width
 parameter_list|)
 function_decl|;
-comment|/// RoundFloatToAPInt - Converts a float value into an APInt value.
-comment|/// @brief Converts a float value into a APInt.
+comment|/// \brief Converts a float value into a APInt.
+comment|///
+comment|/// Converts a float value into an APInt value.
 specifier|inline
 name|APInt
 name|RoundFloatToAPInt
@@ -7647,8 +8472,9 @@ name|width
 argument_list|)
 return|;
 block|}
+comment|/// \brief Arithmetic right-shift function.
+comment|///
 comment|/// Arithmetic right-shift the APInt by shiftAmt.
-comment|/// @brief Arithmetic right-shift function.
 specifier|inline
 name|APInt
 name|ashr
@@ -7671,8 +8497,9 @@ name|shiftAmt
 argument_list|)
 return|;
 block|}
+comment|/// \brief Logical right-shift function.
+comment|///
 comment|/// Logical right-shift the APInt by shiftAmt.
-comment|/// @brief Logical right-shift function.
 specifier|inline
 name|APInt
 name|lshr
@@ -7695,8 +8522,9 @@ name|shiftAmt
 argument_list|)
 return|;
 block|}
+comment|/// \brief Left-shift function.
+comment|///
 comment|/// Left-shift the APInt by shiftAmt.
-comment|/// @brief Left-shift function.
 specifier|inline
 name|APInt
 name|shl
@@ -7719,8 +8547,9 @@ name|shiftAmt
 argument_list|)
 return|;
 block|}
+comment|/// \brief Signed division function for APInt.
+comment|///
 comment|/// Signed divide APInt LHS by APInt RHS.
-comment|/// @brief Signed division function for APInt.
 specifier|inline
 name|APInt
 name|sdiv
@@ -7745,8 +8574,9 @@ name|RHS
 argument_list|)
 return|;
 block|}
+comment|/// \brief Unsigned division function for APInt.
+comment|///
 comment|/// Unsigned divide APInt LHS by APInt RHS.
-comment|/// @brief Unsigned division function for APInt.
 specifier|inline
 name|APInt
 name|udiv
@@ -7771,8 +8601,9 @@ name|RHS
 argument_list|)
 return|;
 block|}
+comment|/// \brief Function for signed remainder operation.
+comment|///
 comment|/// Signed remainder operation on APInt.
-comment|/// @brief Function for signed remainder operation.
 specifier|inline
 name|APInt
 name|srem
@@ -7797,8 +8628,9 @@ name|RHS
 argument_list|)
 return|;
 block|}
+comment|/// \brief Function for unsigned remainder operation.
+comment|///
 comment|/// Unsigned remainder operation on APInt.
-comment|/// @brief Function for unsigned remainder operation.
 specifier|inline
 name|APInt
 name|urem
@@ -7823,8 +8655,9 @@ name|RHS
 argument_list|)
 return|;
 block|}
+comment|/// \brief Function for multiplication operation.
+comment|///
 comment|/// Performs multiplication on APInt values.
-comment|/// @brief Function for multiplication operation.
 specifier|inline
 name|APInt
 name|mul
@@ -7846,8 +8679,9 @@ operator|*
 name|RHS
 return|;
 block|}
+comment|/// \brief Function for addition operation.
+comment|///
 comment|/// Performs addition on APInt values.
-comment|/// @brief Function for addition operation.
 specifier|inline
 name|APInt
 name|add
@@ -7869,8 +8703,9 @@ operator|+
 name|RHS
 return|;
 block|}
+comment|/// \brief Function for subtraction operation.
+comment|///
 comment|/// Performs subtraction on APInt values.
-comment|/// @brief Function for subtraction operation.
 specifier|inline
 name|APInt
 name|sub
@@ -7892,9 +8727,10 @@ operator|-
 name|RHS
 return|;
 block|}
+comment|/// \brief Bitwise AND function for APInt.
+comment|///
 comment|/// Performs bitwise AND operation on APInt LHS and
 comment|/// APInt RHS.
-comment|/// @brief Bitwise AND function for APInt.
 specifier|inline
 name|APInt
 name|And
@@ -7916,8 +8752,9 @@ operator|&
 name|RHS
 return|;
 block|}
+comment|/// \brief Bitwise OR function for APInt.
+comment|///
 comment|/// Performs bitwise OR operation on APInt LHS and APInt RHS.
-comment|/// @brief Bitwise OR function for APInt.
 specifier|inline
 name|APInt
 name|Or
@@ -7939,8 +8776,9 @@ operator||
 name|RHS
 return|;
 block|}
+comment|/// \brief Bitwise XOR function for APInt.
+comment|///
 comment|/// Performs bitwise XOR operation on APInt.
-comment|/// @brief Bitwise XOR function for APInt.
 specifier|inline
 name|APInt
 name|Xor
@@ -7962,8 +8800,9 @@ operator|^
 name|RHS
 return|;
 block|}
+comment|/// \brief Bitwise complement function.
+comment|///
 comment|/// Performs a bitwise complement operation on APInt.
-comment|/// @brief Bitwise complement function.
 specifier|inline
 name|APInt
 name|Not

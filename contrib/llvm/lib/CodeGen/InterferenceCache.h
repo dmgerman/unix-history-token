@@ -171,7 +171,7 @@ name|unsigned
 name|VirtTag
 decl_stmt|;
 comment|/// Fixed interference in RegUnit.
-name|LiveInterval
+name|LiveRange
 modifier|*
 name|Fixed
 decl_stmt|;

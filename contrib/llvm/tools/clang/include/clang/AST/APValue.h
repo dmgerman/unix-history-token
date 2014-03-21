@@ -787,15 +787,25 @@ block|{
 name|MakeUninit
 argument_list|()
 block|;   }
+comment|/// \brief Returns whether the object performed allocations.
+comment|///
+comment|/// If APValues are constructed via placement new, \c needsCleanup()
+comment|/// indicates whether the destructor must be called in order to correctly
+comment|/// free all allocated memory.
+name|bool
+name|needsCleanup
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Swaps the contents of this and the given APValue.
 name|void
 name|swap
-argument_list|(
+parameter_list|(
 name|APValue
-operator|&
+modifier|&
 name|RHS
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|ValueKind
 name|getKind
 argument_list|()

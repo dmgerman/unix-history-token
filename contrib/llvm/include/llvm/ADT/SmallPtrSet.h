@@ -232,6 +232,7 @@ expr_stmt|;
 name|public
 label|:
 name|bool
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|empty
 argument_list|()
 specifier|const

@@ -90,7 +90,7 @@ literal|7
 operator|>
 name|InstSeq
 expr_stmt|;
-comment|/// Analyze - Get an instrucion sequence to load immediate Imm. The last
+comment|/// Analyze - Get an instruction sequence to load immediate Imm. The last
 comment|/// instruction in the sequence must be an ADDiu if LastInstrIsADDiu is
 comment|/// true;
 specifier|const
@@ -133,7 +133,7 @@ modifier|&
 name|I
 parameter_list|)
 function_decl|;
-comment|/// GetInstSeqLsADDiu - Get instrucion sequences which end with an ADDiu to
+comment|/// GetInstSeqLsADDiu - Get instruction sequences which end with an ADDiu to
 comment|/// load immediate Imm
 name|void
 name|GetInstSeqLsADDiu
@@ -149,7 +149,7 @@ modifier|&
 name|SeqLs
 parameter_list|)
 function_decl|;
-comment|/// GetInstSeqLsORi - Get instrucion sequences which end with an ORi to
+comment|/// GetInstSeqLsORi - Get instrutcion sequences which end with an ORi to
 comment|/// load immediate Imm
 name|void
 name|GetInstSeqLsORi
@@ -165,7 +165,7 @@ modifier|&
 name|SeqLs
 parameter_list|)
 function_decl|;
-comment|/// GetInstSeqLsSLL - Get instrucion sequences which end with a SLL to
+comment|/// GetInstSeqLsSLL - Get instruction sequences which end with a SLL to
 comment|/// load immediate Imm
 name|void
 name|GetInstSeqLsSLL
@@ -181,7 +181,7 @@ modifier|&
 name|SeqLs
 parameter_list|)
 function_decl|;
-comment|/// GetInstSeqLs - Get instrucion sequences to load immediate Imm.
+comment|/// GetInstSeqLs - Get instruction sequences to load immediate Imm.
 name|void
 name|GetInstSeqLs
 parameter_list|(

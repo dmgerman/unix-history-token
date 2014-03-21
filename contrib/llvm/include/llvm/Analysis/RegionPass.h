@@ -82,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
+file|"llvm/IR/LegacyPassManagers.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/PassManagers.h"
+file|"llvm/Pass.h"
 end_include
 
 begin_include
@@ -163,7 +163,7 @@ literal|0
 block|;
 comment|/// @brief Get a pass to print the LLVM IR in the region.
 comment|///
-comment|/// @param O      The ouput stream to print the Region.
+comment|/// @param O      The output stream to print the Region.
 comment|/// @param Banner The banner to separate different printed passes.
 comment|///
 comment|/// @return The pass to print the LLVM IR in the region.

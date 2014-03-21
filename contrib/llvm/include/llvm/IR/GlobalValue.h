@@ -129,9 +129,6 @@ comment|///< Keep one copy of function when linking (inline)
 name|LinkOnceODRLinkage
 block|,
 comment|///< Same, but only replaced by something equivalent.
-name|LinkOnceODRAutoHideLinkage
-block|,
-comment|///< Like LinkOnceODRLinkage but addr not taken.
 name|WeakAnyLinkage
 block|,
 comment|///< Keep one copy of named function when linking (weak)
@@ -520,23 +517,6 @@ operator|||
 name|Linkage
 operator|==
 name|LinkOnceODRLinkage
-operator|||
-name|Linkage
-operator|==
-name|LinkOnceODRAutoHideLinkage
-return|;
-block|}
-specifier|static
-name|bool
-name|isLinkOnceODRAutoHideLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
-block|{
-return|return
-name|Linkage
-operator|==
-name|LinkOnceODRAutoHideLinkage
 return|;
 block|}
 specifier|static
@@ -789,10 +769,6 @@ name|LinkOnceODRLinkage
 operator|||
 name|Linkage
 operator|==
-name|LinkOnceODRAutoHideLinkage
-operator|||
-name|Linkage
-operator|==
 name|CommonLinkage
 operator|||
 name|Linkage
@@ -835,18 +811,6 @@ specifier|const
 block|{
 return|return
 name|isLinkOnceLinkage
-argument_list|(
-name|Linkage
-argument_list|)
-return|;
-block|}
-name|bool
-name|hasLinkOnceODRAutoHideLinkage
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isLinkOnceODRAutoHideLinkage
 argument_list|(
 name|Linkage
 argument_list|)
@@ -1051,6 +1015,43 @@ operator|*
 name|Src
 argument_list|)
 block|;
+comment|/// getRealLinkageName - If special LLVM prefix that is used to inform the asm
+comment|/// printer to not emit usual symbol prefix before the symbol name is used
+comment|/// then return linkage name after skipping this special LLVM prefix.
+specifier|static
+name|StringRef
+name|getRealLinkageName
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Name
+operator|.
+name|empty
+argument_list|()
+operator|&&
+name|Name
+index|[
+literal|0
+index|]
+operator|==
+literal|'\1'
+condition|)
+return|return
+name|Name
+operator|.
+name|substr
+argument_list|(
+literal|1
+argument_list|)
+return|;
+return|return
+name|Name
+return|;
+block|}
 comment|/// @name Materialization
 comment|/// Materialization is used to construct functions only as they're needed. This
 comment|/// is useful to reduce memory usage in LLVM or parsing work done by the
@@ -1063,7 +1064,7 @@ name|bool
 name|isMaterializable
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// isDematerializable - Returns true if this function was loaded from a
 comment|/// GVMaterializer that's still attached to its Module and that knows how to
 comment|/// dematerialize the function.
@@ -1071,7 +1072,7 @@ name|bool
 name|isDematerializable
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Materialize - make sure this GlobalValue is fully read.  If the module is
 comment|/// corrupt, this returns true and fills in the optional string with
 comment|/// information about the problem.  If successful, this returns false.
@@ -1086,53 +1087,53 @@ name|ErrInfo
 operator|=
 literal|0
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// Dematerialize - If this GlobalValue is read in, and if the GVMaterializer
 comment|/// supports it, release the memory for the function, and set it up to be
 comment|/// materialized lazily.  If !isDematerializable(), this method is a noop.
 name|void
 name|Dematerialize
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// @}
 comment|/// Override from Constant class.
 name|virtual
 name|void
 name|destroyConstant
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// isDeclaration - Return true if the primary definition of this global
 comment|/// value is outside of the current translation unit.
 name|bool
 name|isDeclaration
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// removeFromParent - This method unlinks 'this' from the containing module,
 comment|/// but does not delete it.
 name|virtual
 name|void
 name|removeFromParent
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-block|;
+function_decl|;
 comment|/// eraseFromParent - This method unlinks 'this' from the containing module
 comment|/// and deletes it.
 name|virtual
 name|void
 name|eraseFromParent
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-block|;
+function_decl|;
 comment|/// getParent - Get the module that this global value is contained inside
 comment|/// of...
 specifier|inline
 name|Module
-operator|*
+modifier|*
 name|getParent
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Parent
@@ -1155,9 +1156,12 @@ specifier|static
 specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 return|return
 name|V
@@ -1188,11 +1192,15 @@ operator|::
 name|GlobalAliasVal
 return|;
 block|}
-expr|}
-block|;  }
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

@@ -113,6 +113,9 @@ block|;
 name|bool
 name|Is64Bit
 block|;
+name|bool
+name|HasHardQuad
+block|;
 name|public
 operator|:
 name|SparcSubtarget
@@ -151,6 +154,15 @@ specifier|const
 block|{
 return|return
 name|V8DeprecatedInsts
+return|;
+block|}
+name|bool
+name|hasHardQuad
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasHardQuad
 return|;
 block|}
 comment|/// ParseSubtargetFeatures - Parses features string setting specified
@@ -227,8 +239,18 @@ operator|:
 literal|0
 return|;
 block|}
-expr|}
+comment|/// Given a actual stack size as determined by FrameInfo, this function
+comment|/// returns adjusted framesize which includes space for register window
+comment|/// spills and arguments.
+name|int
+name|getAdjustedFrameSize
+argument_list|(
+argument|int stackSize
+argument_list|)
+specifier|const
 block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

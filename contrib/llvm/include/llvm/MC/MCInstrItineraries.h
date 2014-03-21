@@ -464,12 +464,7 @@ comment|/// getStageLatency - Return the total stage latency of the given
 comment|/// class.  The latency is the maximum completion time for any stage
 comment|/// in the itinerary.
 comment|///
-comment|/// InstrStages override the itinerary's MinLatency property. In fact, if the
-comment|/// stage latencies, which may be zero, are less than MinLatency,
-comment|/// getStageLatency returns a value less than MinLatency.
-comment|///
-comment|/// If no stages exist, MinLatency is used. If MinLatency is invalid (<0),
-comment|/// then it defaults to one cycle.
+comment|/// If no stages exist, it defaults to one cycle.
 name|unsigned
 name|getStageLatency
 argument_list|(
@@ -486,17 +481,7 @@ name|isEmpty
 argument_list|()
 condition|)
 return|return
-name|SchedModel
-operator|->
-name|MinLatency
-operator|<
-literal|0
-condition|?
 literal|1
-else|:
-name|SchedModel
-operator|->
-name|MinLatency
 return|;
 comment|// Calculate the maximum completion time for any stage.
 name|unsigned

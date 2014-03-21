@@ -377,9 +377,9 @@ comment|// TargetInfo Constructor.  Default initializes all fields.
 name|TargetInfo
 argument_list|(
 specifier|const
-name|std
+name|llvm
 operator|::
-name|string
+name|Triple
 operator|&
 name|T
 argument_list|)
@@ -449,6 +449,10 @@ name|NoInt
 operator|=
 literal|0
 block|,
+name|SignedChar
+block|,
+name|UnsignedChar
+block|,
 name|SignedShort
 block|,
 name|UnsignedShort
@@ -468,6 +472,10 @@ block|}
 block|;    enum
 name|RealType
 block|{
+name|NoFloat
+operator|=
+literal|255
+block|,
 name|Float
 operator|=
 literal|0
@@ -583,6 +591,11 @@ comment|/// If non-zero, specifies a fixed alignment value for bitfields that fo
 comment|/// zero length bitfield, regardless of the zero length bitfield type.
 name|unsigned
 name|ZeroLengthBitfieldBoundary
+block|;
+comment|/// \brief Specify if mangling based on address space map should be used or
+comment|/// not for language specific address spaces
+name|bool
+name|UseAddrSpaceMapMangling
 block|;
 name|public
 operator|:
@@ -712,6 +725,24 @@ name|unsigned
 name|getTypeWidth
 argument_list|(
 argument|IntType T
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return integer type with specified width.
+name|IntType
+name|getIntTypeByWidth
+argument_list|(
+argument|unsigned BitWidth
+argument_list|,
+argument|bool IsSigned
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return floating point type with specified width.
+name|RealType
+name|getRealTypeByWidth
+argument_list|(
+argument|unsigned BitWidth
 argument_list|)
 specifier|const
 block|;
@@ -1238,7 +1269,7 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief Return the "preferred" register width on this target.
-name|uint64_t
+name|unsigned
 name|getRegisterWidth
 argument_list|()
 specifier|const
@@ -1247,7 +1278,7 @@ comment|// Currently we assume the register width on the target matches the poin
 comment|// width, we can introduce a new variable for this if/when some target wants
 comment|// it.
 return|return
-name|LongWidth
+name|PointerWidth
 return|;
 block|}
 comment|/// \brief Returns the default value of the __USER_LABEL_PREFIX__ macro,
@@ -1394,6 +1425,17 @@ specifier|const
 block|{
 return|return
 name|ComplexLongDoubleUsesFP2Ret
+return|;
+block|}
+comment|/// \brief Specify if mangling based on address space map should be used or
+comment|/// not for language specific address spaces
+name|bool
+name|useAddressSpaceMapMangling
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseAddrSpaceMapMangling
 return|;
 block|}
 comment|///===---- Other target property query methods --------------------------===//
@@ -2090,6 +2132,20 @@ return|return
 name|false
 return|;
 block|}
+comment|/// \brief Use the specified unit for FP math.
+comment|///
+comment|/// \return False on error (invalid unit name).
+name|virtual
+name|bool
+name|setFPMath
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Use this specified C++ ABI.
 comment|///
 comment|/// \return False on error (invalid C++ ABI name).
@@ -2143,10 +2199,8 @@ return|;
 block|}
 comment|/// \brief Enable or disable a specific target feature;
 comment|/// the feature name must be valid.
-comment|///
-comment|/// \return False on error (invalid feature name).
 name|virtual
-name|bool
+name|void
 name|setFeatureEnabled
 argument_list|(
 name|llvm
@@ -2166,9 +2220,13 @@ name|Enabled
 argument_list|)
 decl|const
 block|{
-return|return
-name|false
-return|;
+name|Features
+index|[
+name|Name
+index|]
+operator|=
+name|Enabled
+expr_stmt|;
 block|}
 comment|/// \brief Perform initialization based on the user configured
 comment|/// set of features (e.g., +sse4).
@@ -2177,9 +2235,11 @@ comment|/// The list is guaranteed to have at most one entry per feature.
 comment|///
 comment|/// The target may modify the features list, to change which options are
 comment|/// passed onwards to the backend.
+comment|///
+comment|/// \return  False on error.
 name|virtual
-name|void
-name|HandleTargetFeatures
+name|bool
+name|handleTargetFeatures
 argument_list|(
 name|std
 operator|::
@@ -2191,8 +2251,16 @@ name|string
 operator|>
 operator|&
 name|Features
+argument_list|,
+name|DiagnosticsEngine
+operator|&
+name|Diags
 argument_list|)
-block|{   }
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// \brief Determine whether the given target has the given feature.
 name|virtual
 name|bool
@@ -2385,9 +2453,6 @@ name|CCCR_Warning
 return|;
 case|case
 name|CC_C
-case|:
-case|case
-name|CC_Default
 case|:
 return|return
 name|CCCR_OK

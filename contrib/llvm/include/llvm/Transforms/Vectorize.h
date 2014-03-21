@@ -208,7 +208,12 @@ comment|//
 name|Pass
 modifier|*
 name|createLoopVectorizePass
-parameter_list|()
+parameter_list|(
+name|bool
+name|NoUnrolling
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//

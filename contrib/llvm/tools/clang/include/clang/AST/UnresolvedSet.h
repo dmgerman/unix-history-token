@@ -224,6 +224,24 @@ name|getDecl
 argument_list|()
 return|;
 block|}
+name|void
+name|setDecl
+argument_list|(
+name|NamedDecl
+operator|*
+name|ND
+argument_list|)
+decl|const
+block|{
+return|return
+name|ir
+operator|->
+name|setDecl
+argument_list|(
+name|ND
+argument_list|)
+return|;
+block|}
 name|AccessSpecifier
 name|getAccess
 argument_list|()
@@ -560,7 +578,7 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// UnresolvedSet - A set of unresolved declarations.
+comment|/// \brief A set of unresolved declarations.
 name|class
 name|UnresolvedSetImpl
 block|{
@@ -844,13 +862,7 @@ operator|=
 name|decls
 argument_list|()
 operator|.
-name|back
-argument_list|()
-expr_stmt|;
-name|decls
-argument_list|()
-operator|.
-name|pop_back
+name|pop_back_val
 argument_list|()
 expr_stmt|;
 block|}
@@ -869,13 +881,7 @@ operator|=
 name|decls
 argument_list|()
 operator|.
-name|back
-argument_list|()
-expr_stmt|;
-name|decls
-argument_list|()
-operator|.
-name|pop_back
+name|pop_back_val
 argument_list|()
 expr_stmt|;
 block|}
@@ -1055,7 +1061,7 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// A set of unresolved declarations
+comment|/// \brief A set of unresolved declarations.
 name|template
 operator|<
 name|unsigned

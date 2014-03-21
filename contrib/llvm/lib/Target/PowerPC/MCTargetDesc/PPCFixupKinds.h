@@ -75,23 +75,25 @@ comment|/// fixup_ppc_brcond14 - 14-bit PC relative relocation for conditional
 comment|/// branches.
 name|fixup_ppc_brcond14
 block|,
-comment|/// fixup_ppc_lo16 - A 16-bit fixup corresponding to lo16(_foo) for instrs
-comment|/// like 'li'.
-name|fixup_ppc_lo16
+comment|/// fixup_ppc_br24abs - 24-bit absolute relocation for direct branches
+comment|/// like 'ba' and 'bla'.
+name|fixup_ppc_br24abs
 block|,
-comment|/// fixup_ppc_ha16 - A 16-bit fixup corresponding to ha16(_foo) for instrs
-comment|/// like 'lis'.
-name|fixup_ppc_ha16
+comment|/// fixup_ppc_brcond14abs - 14-bit absolute relocation for conditional
+comment|/// branches.
+name|fixup_ppc_brcond14abs
 block|,
-comment|/// fixup_ppc_lo16_ds - A 14-bit fixup corresponding to lo16(_foo) with
+comment|/// fixup_ppc_half16 - A 16-bit fixup corresponding to lo16(_foo)
+comment|/// or ha16(_foo) for instrs like 'li' or 'addis'.
+name|fixup_ppc_half16
+block|,
+comment|/// fixup_ppc_half16ds - A 14-bit fixup corresponding to lo16(_foo) with
 comment|/// implied 2 zero bits for instrs like 'std'.
-name|fixup_ppc_lo16_ds
-block|,
-comment|/// fixup_ppc_tlsreg - Insert thread-pointer register number.
-name|fixup_ppc_tlsreg
+name|fixup_ppc_half16ds
 block|,
 comment|/// fixup_ppc_nofixup - Not a true fixup, but ties a symbol to a call
-comment|/// to __tls_get_addr for the TLS general and local dynamic models.
+comment|/// to __tls_get_addr for the TLS general and local dynamic models,
+comment|/// or inserts the thread-pointer register number.
 name|fixup_ppc_nofixup
 block|,
 comment|// Marker

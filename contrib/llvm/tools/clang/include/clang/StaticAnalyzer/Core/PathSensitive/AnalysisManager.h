@@ -199,6 +199,15 @@ return|return
 name|CreateStoreMgr
 return|;
 block|}
+name|AnalyzerOptions
+operator|&
+name|getAnalyzerOptions
+argument_list|()
+block|{
+return|return
+name|options
+return|;
+block|}
 name|ConstraintManagerCreator
 name|getConstraintManagerCreator
 argument_list|()

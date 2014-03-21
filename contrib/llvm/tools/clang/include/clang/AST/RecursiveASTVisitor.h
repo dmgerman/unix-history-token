@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/StmtOpenMP.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/TemplateBase.h"
 end_include
 
@@ -262,7 +268,7 @@ comment|///
 comment|/// Note that since WalkUpFromFoo() calls WalkUpFromBar() (where Bar
 comment|/// is Foo's super class) before calling VisitFoo(), the result is
 comment|/// that the Visit*() methods for a given node are called in the
-comment|/// top-down order (e.g. for a node of type NamedDecl, the order will
+comment|/// top-down order (e.g. for a node of type NamespaceDecl, the order will
 comment|/// be VisitDecl(), VisitNamedDecl(), and then VisitNamespaceDecl()).
 comment|///
 comment|/// This scheme guarantees that all Visit*() calls for the same AST
@@ -542,7 +548,30 @@ comment|/// \returns false if the visitation was terminated early, true otherwis
 name|bool
 name|TraverseLambdaCapture
 argument_list|(
-argument|LambdaExpr::Capture C
+name|LambdaExpr
+operator|*
+name|LE
+argument_list|,
+specifier|const
+name|LambdaExpr
+operator|::
+name|Capture
+operator|*
+name|C
+argument_list|)
+block|;
+comment|/// \brief Recursively visit the body of a lambda expression.
+comment|///
+comment|/// This provides a hook for visitors that need more context when visiting
+comment|/// \c LE->getBody().
+comment|///
+comment|/// \returns false if the visitation was terminated early, true otherwise.
+name|bool
+name|TraverseLambdaBody
+argument_list|(
+name|LambdaExpr
+operator|*
+name|LE
 argument_list|)
 block|;
 comment|// ---- Methods on Stmts ----
@@ -735,7 +764,7 @@ directive|include
 file|"clang/AST/TypeNodes.def"
 comment|// ---- Methods on TypeLocs ----
 comment|// FIXME: this currently just calls the matching Type methods
-comment|// Declare Traverse*() for all concrete Type classes.
+comment|// Declare Traverse*() for all concrete TypeLoc classes.
 define|#
 directive|define
 name|ABSTRACT_TYPELOC
@@ -932,22 +961,29 @@ operator|*
 name|TPL
 argument_list|)
 block|;
-name|bool
-name|TraverseClassInstantiations
+define|#
+directive|define
+name|DEF_TRAVERSE_TMPL_INST
+parameter_list|(
+name|TMPLDECLKIND
+parameter_list|)
+define|\
+value|bool TraverseTemplateInstantiations(TMPLDECLKIND##TemplateDecl *D);
+name|DEF_TRAVERSE_TMPL_INST
 argument_list|(
-name|ClassTemplateDecl
-operator|*
-name|D
+argument|Class
 argument_list|)
-block|;
-name|bool
-name|TraverseFunctionInstantiations
+name|DEF_TRAVERSE_TMPL_INST
 argument_list|(
-name|FunctionTemplateDecl
-operator|*
-name|D
+argument|Var
 argument_list|)
-block|;
+name|DEF_TRAVERSE_TMPL_INST
+argument_list|(
+argument|Function
+argument_list|)
+undef|#
+directive|undef
+name|DEF_TRAVERSE_TMPL_INST
 name|bool
 name|TraverseTemplateArgumentLocsHelper
 argument_list|(
@@ -1008,6 +1044,41 @@ argument_list|(
 name|VarDecl
 operator|*
 name|D
+argument_list|)
+block|;
+name|bool
+name|TraverseOMPClause
+argument_list|(
+name|OMPClause
+operator|*
+name|C
+argument_list|)
+block|;
+define|#
+directive|define
+name|OPENMP_CLAUSE
+parameter_list|(
+name|Name
+parameter_list|,
+name|Class
+parameter_list|)
+define|\
+value|bool Visit##Class(Class *C);
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+comment|/// \brief Process clauses with list of variables.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|void
+name|VisitOMPClauseList
+argument_list|(
+name|T
+operator|*
+name|Node
 argument_list|)
 block|;    struct
 name|EnqueueJob
@@ -2754,9 +2825,65 @@ operator|>
 operator|::
 name|TraverseLambdaCapture
 argument_list|(
-argument|LambdaExpr::Capture C
+argument|LambdaExpr *LE
+argument_list|,
+argument|const LambdaExpr::Capture *C
 argument_list|)
 block|{
+if|if
+condition|(
+name|C
+operator|->
+name|isInitCapture
+argument_list|()
+condition|)
+name|TRY_TO
+argument_list|(
+name|TraverseDecl
+argument_list|(
+name|C
+operator|->
+name|getCapturedVar
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|true
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TraverseLambdaBody
+argument_list|(
+argument|LambdaExpr *LE
+argument_list|)
+block|{
+name|TRY_TO
+argument_list|(
+name|TraverseStmt
+argument_list|(
+name|LE
+operator|->
+name|getBody
+argument_list|()
+argument_list|)
+argument_list|)
+block|;
 return|return
 name|true
 return|;
@@ -2846,6 +2973,15 @@ argument_list|,
 argument|{     TRY_TO(TraverseType(QualType(T->getClass(),
 literal|0
 argument|)));     TRY_TO(TraverseType(T->getPointeeType()));   }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_TYPE
+argument_list|(
+argument|DecayedType
+argument_list|,
+argument|{     TRY_TO(TraverseType(T->getOriginalType()));   }
 argument_list|)
 end_macro
 
@@ -3314,6 +3450,15 @@ argument_list|,
 argument|{     TRY_TO(TraverseType(QualType(TL.getTypePtr()->getClass(),
 literal|0
 argument|)));     TRY_TO(TraverseTypeLoc(TL.getPointeeLoc()));   }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_TYPELOC
+argument_list|(
+argument|DecayedType
+argument_list|,
+argument|{     TRY_TO(TraverseTypeLoc(TL.getOriginalLoc()));   }
 argument_list|)
 end_macro
 
@@ -4116,194 +4261,35 @@ name|true
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
+begin_define
 unit|}
-comment|// A helper method for traversing the implicit instantiations of a
-end_comment
-
-begin_comment
-comment|// class template.
-end_comment
-
-begin_expr_stmt
-unit|template
-operator|<
-name|typename
-name|Derived
-operator|>
-name|bool
-name|RecursiveASTVisitor
-operator|<
-name|Derived
-operator|>
-operator|::
-name|TraverseClassInstantiations
-argument_list|(
-argument|ClassTemplateDecl *D
-argument_list|)
-block|{
-name|ClassTemplateDecl
-operator|::
-name|spec_iterator
-name|end
-operator|=
-name|D
-operator|->
-name|spec_end
-argument_list|()
-block|;
-for|for
-control|(
-name|ClassTemplateDecl
-operator|::
-name|spec_iterator
-name|it
-operator|=
-name|D
-operator|->
-name|spec_begin
-argument_list|()
-init|;
-name|it
-operator|!=
-name|end
-condition|;
-operator|++
-name|it
-control|)
-block|{
-name|ClassTemplateSpecializationDecl
-modifier|*
-name|SD
-init|=
-operator|*
-name|it
-decl_stmt|;
-switch|switch
-condition|(
-name|SD
-operator|->
-name|getSpecializationKind
-argument_list|()
-condition|)
-block|{
-comment|// Visit the implicit instantiations with the requested pattern.
-case|case
-name|TSK_Undeclared
-case|:
-case|case
-name|TSK_ImplicitInstantiation
-case|:
-name|TRY_TO
-argument_list|(
-name|TraverseDecl
-argument_list|(
-name|SD
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-comment|// We don't need to do anything on an explicit instantiation
-comment|// or explicit specialization because there will be an explicit
-comment|// node for it elsewhere.
-case|case
-name|TSK_ExplicitInstantiationDeclaration
-case|:
-case|case
-name|TSK_ExplicitInstantiationDefinition
-case|:
-case|case
-name|TSK_ExplicitSpecialization
-case|:
-break|break;
-block|}
-end_expr_stmt
+define|#
+directive|define
+name|DEF_TRAVERSE_TMPL_INST
+parameter_list|(
+name|TMPLDECLKIND
+parameter_list|)
+define|\
+comment|/* A helper method for traversing the implicit instantiations of a    class or variable template. */
+define|\
+value|template<typename Derived>                                                   \ bool RecursiveASTVisitor<Derived>::TraverseTemplateInstantiations(           \     TMPLDECLKIND##TemplateDecl *D) {                                         \   TMPLDECLKIND##TemplateDecl::spec_iterator end = D->spec_end();             \   for (TMPLDECLKIND##TemplateDecl::spec_iterator it = D->spec_begin();       \        it != end; ++it) {                                                    \     TMPLDECLKIND##TemplateSpecializationDecl* SD = *it;                      \                                                                              \     switch (SD->getSpecializationKind()) {                                   \
+comment|/* Visit the implicit instantiations with the requested pattern. */
+value|\     case TSK_Undeclared:                                                     \     case TSK_ImplicitInstantiation:                                          \       TRY_TO(TraverseDecl(SD));                                              \       break;                                                                 \                                                                              \
+comment|/* We don't need to do anything on an explicit instantiation                     or explicit specialization because there will be an explicit        node for it elsewhere. */
+value|\     case TSK_ExplicitInstantiationDeclaration:                               \     case TSK_ExplicitInstantiationDefinition:                                \     case TSK_ExplicitSpecialization:                                         \       break;                                                                 \     }                                                                        \   }                                                                          \                                                                              \   return true;                                                               \ }
+end_define
 
 begin_expr_stmt
-unit|}    return
-name|true
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}  DEF_TRAVERSE_DECL
+unit|DEF_TRAVERSE_TMPL_INST
 operator|(
-name|ClassTemplateDecl
-operator|,
-block|{
-name|CXXRecordDecl
-operator|*
-name|TempDecl
-operator|=
-name|D
-operator|->
-name|getTemplatedDecl
-argument_list|()
-block|;
-name|TRY_TO
+name|Class
+operator|)
+name|DEF_TRAVERSE_TMPL_INST
 argument_list|(
-name|TraverseDecl
-argument_list|(
-name|TempDecl
+argument|Var
 argument_list|)
-argument_list|)
-block|;
-name|TRY_TO
-argument_list|(
-name|TraverseTemplateParameterListHelper
-argument_list|(
-name|D
-operator|->
-name|getTemplateParameters
-argument_list|()
-argument_list|)
-argument_list|)
-block|;
-comment|// By default, we do not traverse the instantiations of
-comment|// class templates since they do not appear in the user code. The
-comment|// following code optionally traverses them.
-comment|//
-comment|// We only traverse the class instantiations when we see the canonical
-comment|// declaration of the template, to ensure we only visit them once.
-if|if
-condition|(
-name|getDerived
-argument_list|()
-operator|.
-name|shouldVisitTemplateInstantiations
-argument_list|()
-operator|&&
-name|D
-operator|==
-name|D
-operator|->
-name|getCanonicalDecl
-argument_list|()
-condition|)
-name|TRY_TO
-argument_list|(
-name|TraverseClassInstantiations
-argument_list|(
-name|D
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|// Note that getInstantiatedFromMemberTemplate() is just a link
-comment|// from a template instantiation back to the template from which
-comment|// it was instantiated, and thus should not be traversed.
-block|}
-end_expr_stmt
-
-begin_comment
-unit|)
 comment|// A helper method for traversing the instantiations of a
-end_comment
-
-begin_comment
 comment|// function while skipping its specializations.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4315,7 +4301,7 @@ operator|<
 name|Derived
 operator|>
 operator|::
-name|TraverseFunctionInstantiations
+name|TraverseTemplateInstantiations
 argument_list|(
 argument|FunctionTemplateDecl *D
 argument_list|)
@@ -4411,68 +4397,43 @@ name|true
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-unit|}  DEF_TRAVERSE_DECL
-operator|(
-name|FunctionTemplateDecl
-operator|,
-block|{
-name|TRY_TO
-argument_list|(
-name|TraverseDecl
-argument_list|(
-name|D
-operator|->
-name|getTemplatedDecl
-argument_list|()
-argument_list|)
-argument_list|)
-block|;
-name|TRY_TO
-argument_list|(
-name|TraverseTemplateParameterListHelper
-argument_list|(
-name|D
-operator|->
-name|getTemplateParameters
-argument_list|()
-argument_list|)
-argument_list|)
-block|;
-comment|// By default, we do not traverse the instantiations of
-comment|// function templates since they do not appear in the user code. The
-comment|// following code optionally traverses them.
-comment|//
-comment|// We only traverse the function instantiations when we see the canonical
-comment|// declaration of the template, to ensure we only visit them once.
-if|if
-condition|(
-name|getDerived
-argument_list|()
-operator|.
-name|shouldVisitTemplateInstantiations
-argument_list|()
-operator|&&
-name|D
-operator|==
-name|D
-operator|->
-name|getCanonicalDecl
-argument_list|()
-condition|)
-name|TRY_TO
-argument_list|(
-name|TraverseFunctionInstantiations
-argument_list|(
-name|D
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
+begin_comment
+unit|}
+comment|// This macro unifies the traversal of class, variable and function
+end_comment
 
-begin_macro
-unit|)
+begin_comment
+comment|// template declarations.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEF_TRAVERSE_TMPL_DECL
+parameter_list|(
+name|TMPLDECLKIND
+parameter_list|)
+define|\
+value|DEF_TRAVERSE_DECL(TMPLDECLKIND##TemplateDecl, {                              \     TRY_TO(TraverseDecl(D->getTemplatedDecl()));                             \     TRY_TO(TraverseTemplateParameterListHelper(D->getTemplateParameters())); \                                                                              \
+comment|/* By default, we do not traverse the instantiations of        class templates since they do not appear in the user code. The        following code optionally traverses them.                We only traverse the class instantiations when we see the canonical        declaration of the template, to ensure we only visit them once. */
+value|\     if (getDerived().shouldVisitTemplateInstantiations()&&                  \         D == D->getCanonicalDecl())                                          \       TRY_TO(TraverseTemplateInstantiations(D));                             \                                                                              \
+comment|/* Note that getInstantiatedFromMemberTemplate() is just a link        from a template instantiation back to the template from which        it was instantiated, and thus should not be traversed. */
+value|\   })
+end_define
+
+begin_expr_stmt
+unit|DEF_TRAVERSE_TMPL_DECL
+operator|(
+name|Class
+operator|)
+name|DEF_TRAVERSE_TMPL_DECL
+argument_list|(
+argument|Var
+argument_list|)
+name|DEF_TRAVERSE_TMPL_DECL
+argument_list|(
+argument|Function
+argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|TemplateTemplateParmDecl
@@ -4482,9 +4443,6 @@ comment|// D is the "T" in something like
 comment|//   template<template<typename> class T> class container { };
 argument|TRY_TO(TraverseDecl(D->getTemplatedDecl()));     if (D->hasDefaultArgument()&& !D->defaultArgumentWasInherited()) {       TRY_TO(TraverseTemplateArgumentLoc(D->getDefaultArgument()));     }     TRY_TO(TraverseTemplateParameterListHelper(D->getTemplateParameters()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|TemplateTypeParmDecl
@@ -4495,9 +4453,6 @@ argument|if (D->getTypeForDecl())       TRY_TO(TraverseType(QualType(D->getTypeF
 literal|0
 argument|)));     if (D->hasDefaultArgument()&& !D->defaultArgumentWasInherited())       TRY_TO(TraverseTypeLoc(D->getDefaultArgumentInfo()->getTypeLoc()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|TypedefDecl
@@ -4508,9 +4463,6 @@ comment|// declaring the typedef, not something that was written in the
 comment|// source.
 argument|}
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|TypeAliasDecl
@@ -4521,18 +4473,12 @@ comment|// declaring the type alias, not something that was written in the
 comment|// source.
 argument|}
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|TypeAliasTemplateDecl
 argument_list|,
 argument|{     TRY_TO(TraverseDecl(D->getTemplatedDecl()));     TRY_TO(TraverseTemplateParameterListHelper(D->getTemplateParameters()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|UnresolvedUsingTypenameDecl
@@ -4546,9 +4492,6 @@ comment|// declaring the type, not something that was written in the
 comment|// source.
 argument|}
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|EnumDecl
@@ -4560,13 +4503,7 @@ comment|// The enumerators are already traversed by
 comment|// decls_begin()/decls_end().
 argument|}
 argument_list|)
-end_macro
-
-begin_comment
 comment|// Helper methods for RecordDecl and its children.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4715,25 +4652,25 @@ argument|CXXRecordDecl
 argument_list|,
 argument|{     TRY_TO(TraverseCXXRecordHelper(D));   }
 argument_list|)
-name|DEF_TRAVERSE_DECL
+define|#
+directive|define
+name|DEF_TRAVERSE_TMPL_SPEC_DECL
+parameter_list|(
+name|TMPLDECLKIND
+parameter_list|)
+define|\
+value|DEF_TRAVERSE_DECL(TMPLDECLKIND##TemplateSpecializationDecl, {                \
+comment|/* For implicit instantiations ("set<int> x;"), we don't want to        recurse at all, since the instatiated template isn't written in        the source code anywhere.  (Note the instatiated *type* --        set<int> -- is written, and will still get a callback of        TemplateSpecializationType).  For explicit instantiations        ("template set<int>;"), we do need a callback, since this        is the only callback that's made for this instantiation.        We use getTypeAsWritten() to distinguish. */
+value|\     if (TypeSourceInfo *TSI = D->getTypeAsWritten())                         \       TRY_TO(TraverseTypeLoc(TSI->getTypeLoc()));                            \                                                                              \     if (!getDerived().shouldVisitTemplateInstantiations()&&                 \         D->getTemplateSpecializationKind() != TSK_ExplicitSpecialization)    \
+comment|/* Returning from here skips traversing the          declaration context of the *TemplateSpecializationDecl          (embedded in the DEF_TRAVERSE_DECL() macro)          which contains the instantiated members of the template. */
+value|\       return true;                                                           \   })
+name|DEF_TRAVERSE_TMPL_SPEC_DECL
 argument_list|(
-argument|ClassTemplateSpecializationDecl
-argument_list|,
-argument|{
-comment|// For implicit instantiations ("set<int> x;"), we don't want to
-comment|// recurse at all, since the instatiated class isn't written in
-comment|// the source code anywhere.  (Note the instatiated *type* --
-comment|// set<int> -- is written, and will still get a callback of
-comment|// TemplateSpecializationType).  For explicit instantiations
-comment|// ("template set<int>;"), we do need a callback, since this
-comment|// is the only callback that's made for this instantiation.
-comment|// We use getTypeAsWritten() to distinguish.
-argument|if (TypeSourceInfo *TSI = D->getTypeAsWritten())       TRY_TO(TraverseTypeLoc(TSI->getTypeLoc()));      if (!getDerived().shouldVisitTemplateInstantiations()&&         D->getTemplateSpecializationKind() != TSK_ExplicitSpecialization)
-comment|// Returning from here skips traversing the
-comment|// declaration context of the ClassTemplateSpecializationDecl
-comment|// (embedded in the DEF_TRAVERSE_DECL() macro)
-comment|// which contains the instantiated members of the class.
-argument|return true;   }
+argument|Class
+argument_list|)
+name|DEF_TRAVERSE_TMPL_SPEC_DECL
+argument_list|(
+argument|Var
 argument_list|)
 name|template
 operator|<
@@ -4788,126 +4725,47 @@ name|true
 return|;
 end_return
 
-begin_expr_stmt
-unit|}  DEF_TRAVERSE_DECL
-operator|(
-name|ClassTemplatePartialSpecializationDecl
-operator|,
-block|{
-comment|// The partial specialization.
-if|if
-condition|(
-name|TemplateParameterList
-modifier|*
-name|TPL
-init|=
-name|D
-operator|->
-name|getTemplateParameters
-argument_list|()
-condition|)
-block|{
-for|for
-control|(
-name|TemplateParameterList
-operator|::
-name|iterator
-name|I
-operator|=
-name|TPL
-operator|->
-name|begin
-argument_list|()
-operator|,
-name|E
-operator|=
-name|TPL
-operator|->
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-control|)
-block|{
-name|TRY_TO
-argument_list|(
-name|TraverseDecl
-argument_list|(
-operator|*
-name|I
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_comment
+begin_define
 unit|}
-comment|// The args that remains unspecialized.
-end_comment
+define|#
+directive|define
+name|DEF_TRAVERSE_TMPL_PART_SPEC_DECL
+parameter_list|(
+name|TMPLDECLKIND
+parameter_list|,
+name|DECLKIND
+parameter_list|)
+define|\
+value|DEF_TRAVERSE_DECL(TMPLDECLKIND##TemplatePartialSpecializationDecl, {         \
+comment|/* The partial specialization. */
+value|\     if (TemplateParameterList *TPL = D->getTemplateParameters()) {           \       for (TemplateParameterList::iterator I = TPL->begin(), E = TPL->end(); \            I != E; ++I) {                                                    \         TRY_TO(TraverseDecl(*I));                                            \       }                                                                      \     }                                                                        \
+comment|/* The args that remains unspecialized. */
+value|\     TRY_TO(TraverseTemplateArgumentLocsHelper(                               \                       D->getTemplateArgsAsWritten()->getTemplateArgs(),      \                       D->getTemplateArgsAsWritten()->NumTemplateArgs));      \                                                                              \
+comment|/* Don't need the *TemplatePartialSpecializationHelper, even        though that's our parent class -- we already visit all the        template args here. */
+value|\     TRY_TO(Traverse##DECLKIND##Helper(D));                                   \                                                                              \
+comment|/* Instantiations will have been visited with the primary template. */
+value|\   })
+end_define
 
 begin_expr_stmt
-unit|TRY_TO
+unit|DEF_TRAVERSE_TMPL_PART_SPEC_DECL
 operator|(
-name|TraverseTemplateArgumentLocsHelper
-argument_list|(
-name|D
-operator|->
-name|getTemplateArgsAsWritten
-argument_list|()
-argument_list|,
-name|D
-operator|->
-name|getNumTemplateArgsAsWritten
-argument_list|()
-argument_list|)
+name|Class
+operator|,
+name|CXXRecord
 operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Don't need the ClassTemplatePartialSpecializationHelper, even
-end_comment
-
-begin_comment
-comment|// though that's our parent class -- we already visit all the
-end_comment
-
-begin_comment
-comment|// template args here.
-end_comment
-
-begin_expr_stmt
-name|TRY_TO
+name|DEF_TRAVERSE_TMPL_PART_SPEC_DECL
 argument_list|(
-name|TraverseCXXRecordHelper
-argument_list|(
-name|D
+argument|Var
+argument_list|,
+argument|Var
 argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Instantiations will have been visited with the primary template.
-end_comment
-
-begin_macro
-unit|})
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|EnumConstantDecl
 argument_list|,
 argument|{     TRY_TO(TraverseStmt(D->getInitExpr()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|UnresolvedUsingValueDecl
@@ -4917,18 +4775,12 @@ comment|// Like UnresolvedUsingTypenameDecl, but without the 'typename':
 comment|//    template<class T> Class A : public Base<T> { using Base<T>::foo; };
 argument|TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));     TRY_TO(TraverseDeclarationNameInfo(D->getNameInfo()));   }
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|IndirectFieldDecl
 argument_list|,
 argument|{}
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -5177,6 +5029,56 @@ name|TSI
 operator|->
 name|getTypeLoc
 argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|getDerived
+argument_list|()
+operator|.
+name|shouldVisitImplicitCode
+argument_list|()
+condition|)
+block|{
+comment|// Visit parameter variable declarations of the implicit function
+comment|// if the traverser is visiting implicit code. Parameter variable
+comment|// declarations do not have valid TypeSourceInfo, so to visit them
+comment|// we need to traverse the declarations explicitly.
+for|for
+control|(
+name|FunctionDecl
+operator|::
+name|param_const_iterator
+name|I
+operator|=
+name|D
+operator|->
+name|param_begin
+argument_list|()
+operator|,
+name|E
+operator|=
+name|D
+operator|->
+name|param_end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+name|TRY_TO
+argument_list|(
+name|TraverseDecl
+argument_list|(
+operator|*
+name|I
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6200,6 +6102,14 @@ argument_list|(
 argument|LambdaExpr *S
 argument_list|)
 block|{
+name|TRY_TO
+argument_list|(
+name|WalkUpFromLambdaExpr
+argument_list|(
+name|S
+argument_list|)
+argument_list|)
+block|;
 for|for
 control|(
 name|LambdaExpr
@@ -6231,7 +6141,8 @@ name|TRY_TO
 argument_list|(
 name|TraverseLambdaCapture
 argument_list|(
-operator|*
+name|S
+argument_list|,
 name|C
 argument_list|)
 argument_list|)
@@ -6373,12 +6284,9 @@ end_if
 begin_expr_stmt
 name|TRY_TO
 argument_list|(
-name|TraverseStmt
+name|TraverseLambdaBody
 argument_list|(
 name|S
-operator|->
-name|getBody
-argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6505,6 +6413,12 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXNullPtrLiteralExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|CXXStdInitializerListExpr
 argument_list|,
 argument|{ }
 argument_list|)
@@ -6643,6 +6557,12 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ShuffleVectorExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|ConvertVectorExpr
 argument_list|,
 argument|{ }
 argument_list|)
@@ -6848,6 +6768,236 @@ argument|AsTypeExpr
 argument_list|,
 argument|{ }
 argument_list|)
+comment|// OpenMP directives.
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPParallelDirective
+argument_list|,
+argument|{   ArrayRef<OMPClause *> Clauses = S->clauses();   for (ArrayRef<OMPClause *>::iterator I = Clauses.begin(), E = Clauses.end();        I != E; ++I)     if (!TraverseOMPClause(*I)) return false; }
+argument_list|)
+comment|// OpenMP clauses.
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TraverseOMPClause
+argument_list|(
+argument|OMPClause *C
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|C
+condition|)
+return|return
+name|true
+return|;
+end_expr_stmt
+
+begin_switch
+switch|switch
+condition|(
+name|C
+operator|->
+name|getClauseKind
+argument_list|()
+condition|)
+block|{
+define|#
+directive|define
+name|OPENMP_CLAUSE
+parameter_list|(
+name|Name
+parameter_list|,
+name|Class
+parameter_list|)
+define|\
+value|case OMPC_##Name:                                                     \     return getDerived().Visit##Class(static_cast<Class*>(C));
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+default|default:
+break|break;
+block|}
+end_switch
+
+begin_return
+return|return
+name|true
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|VisitOMPDefaultClause
+argument_list|(
+argument|OMPDefaultClause *C
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|void
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|VisitOMPClauseList
+argument_list|(
+argument|T *Node
+argument_list|)
+block|{
+for|for
+control|(
+name|typename
+name|T
+operator|::
+name|varlist_iterator
+name|I
+operator|=
+name|Node
+operator|->
+name|varlist_begin
+argument_list|()
+operator|,
+name|E
+operator|=
+name|Node
+operator|->
+name|varlist_end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+name|TraverseStmt
+argument_list|(
+operator|*
+name|I
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|VisitOMPPrivateClause
+argument_list|(
+argument|OMPPrivateClause *C
+argument_list|)
+block|{
+name|VisitOMPClauseList
+argument_list|(
+name|C
+argument_list|)
+block|;
+return|return
+name|true
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|VisitOMPFirstprivateClause
+argument_list|(
+argument|OMPFirstprivateClause *C
+argument_list|)
+block|{
+name|VisitOMPClauseList
+argument_list|(
+name|C
+argument_list|)
+block|;
+return|return
+name|true
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|VisitOMPSharedClause
+argument_list|(
+argument|OMPSharedClause *C
+argument_list|)
+block|{
+name|VisitOMPClauseList
+argument_list|(
+name|C
+argument_list|)
+block|;
+return|return
+name|true
+return|;
+block|}
 end_expr_stmt
 
 begin_comment

@@ -102,11 +102,6 @@ name|X86TargetMachine
 operator|&
 name|TM
 block|;
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
-block|;
 name|private
 operator|:
 comment|/// Is64Bit - Is the target 64-bits.
@@ -147,11 +142,6 @@ argument_list|(
 name|X86TargetMachine
 operator|&
 name|tm
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 comment|// FIXME: This should be tablegen'd like getDwarfRegNum is
@@ -376,37 +366,28 @@ return|return
 name|SlotSize
 return|;
 block|}
-comment|// Exception handling queries.
-name|unsigned
-name|getEHExceptionRegister
-argument_list|()
-specifier|const
+expr|}
 block|;
-name|unsigned
-name|getEHHandlerRegister
-argument_list|()
-specifier|const
-block|; }
-decl_stmt|;
 comment|// getX86SubSuperRegister - X86 utility function. It returns the sub or super
 comment|// register of a specific X86 register.
 comment|// e.g. getX86SubSuperRegister(X86::EAX, MVT::i16) return X86:AX
 name|unsigned
 name|getX86SubSuperRegister
 argument_list|(
-name|unsigned
+argument|unsigned
 argument_list|,
-name|MVT
-operator|::
-name|SimpleValueType
+argument|MVT::SimpleValueType
 argument_list|,
-name|bool
-name|High
-operator|=
-name|false
+argument|bool High=false
 argument_list|)
-decl_stmt|;
-block|}
+block|;
+comment|//get512BitRegister - X86 utility - returns 512-bit super register
+name|unsigned
+name|get512BitSuperRegister
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|;  }
 end_decl_stmt
 
 begin_comment

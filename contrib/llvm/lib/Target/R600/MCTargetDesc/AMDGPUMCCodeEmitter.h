@@ -91,6 +91,11 @@ range|:
 name|public
 name|MCCodeEmitter
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|uint64_t

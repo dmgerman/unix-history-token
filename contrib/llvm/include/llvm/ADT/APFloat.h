@@ -32,27 +32,31 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file declares a class to represent arbitrary precision floating
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// point values and provide a variety of arithmetic operations on them.
+comment|/// \brief
 end_comment
 
 begin_comment
-comment|//
+comment|/// This file declares a class to represent arbitrary precision floating point
+end_comment
+
+begin_comment
+comment|/// values and provide a variety of arithmetic operations on them.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|/*  A self-contained host- and target-independent arbitrary-precision     floating-point software implementation.  It uses bignum integer     arithmetic as provided by static functions in the APInt class.     The library will work with bignum integers whose parts are any     unsigned type at least 16 bits wide, but 64 bits is recommended.      Written for clarity rather than speed, in particular with a view     to use in the front-end of a cross compiler so that target     arithmetic can be correctly performed on the host.  Performance     should nonetheless be reasonable, particularly for its intended     use.  It may be useful as a base implementation for a run-time     library during development of a faster target-specific one.      All 5 rounding modes in the IEEE-754R draft are handled correctly     for all implemented operations.  Currently implemented operations     are add, subtract, multiply, divide, fused-multiply-add,     conversion-to-float, conversion-to-integer and     conversion-from-integer.  New rounding modes (e.g. away from zero)     can be added with three or four lines of code.      Four formats are built-in: IEEE single precision, double     precision, quadruple precision, and x87 80-bit extended double     (when operating with full extended precision).  Adding a new     format that obeys IEEE semantics only requires adding two lines of     code: a declaration and definition of the format.      All operations return the status of that operation as an exception     bit-mask, so multiple operations can be done consecutively with     their results or-ed together.  The returned status can be useful     for compiler diagnostics; e.g., inexact, underflow and overflow     can be easily diagnosed on constant folding, and compiler     optimizers can determine what exceptions would be raised by     folding operations and optimize, or perhaps not optimize,     accordingly.      At present, underflow tininess is detected after rounding; it     should be straight forward to add support for the before-rounding     case too.      The library reads hexadecimal floating point numbers as per C99,     and correctly rounds if necessary according to the specified     rounding mode.  Syntax is required to have been validated by the     caller.  It also converts floating point numbers to hexadecimal     text as per the C99 %a and %A conversions.  The output precision     (or alternatively the natural minimal precision) can be specified;     if the requested precision is less than the natural precision the     output is correctly rounded for the specified rounding mode.      It also reads decimal floating point numbers and correctly rounds     according to the specified rounding mode.      Conversion to decimal text is not currently implemented.      Non-zero finite numbers are represented internally as a sign bit,     a 16-bit signed exponent, and the significand as an array of     integer parts.  After normalization of a number of precision P the     exponent is within the range of the format, and if the number is     not denormal the P-th bit of the significand is set as an explicit     integer bit.  For denormals the most significant bit is shifted     right so that the exponent is maintained at the format's minimum,     so that the smallest denormal has just the least significant bit     of the significand set.  The sign of zeroes and infinities is     significant; the exponent and significand of such numbers is not     stored, but has a known implicit (deterministic) value: 0 for the     significands, 0 for zero exponent, all 1 bits for infinity     exponent.  For NaNs the sign and significand are deterministic,     although not really meaningful, and preserved in non-conversion     operations.  The exponent is implicitly all 1 bits.      TODO     ====      Some features that may or may not be worth adding:      Binary to decimal conversion (hard).      Optional ability to detect underflow tininess before rounding.      New formats: x87 in single and double precision mode (IEEE apart     from extended exponent range) (hard).      New operations: sqrt, IEEE remainder, C90 fmod, nextafter,     nexttoward. */
 end_comment
 
 begin_ifndef
@@ -67,10 +71,6 @@ directive|define
 name|LLVM_ADT_APFLOAT_H
 end_define
 
-begin_comment
-comment|// APInt contains static functions implementing bignum arithmetic.
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -81,12 +81,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/* Exponents are stored as signed numbers.  */
-typedef|typedef
-name|signed
-name|short
-name|exponent_t
-typedef|;
 struct_decl|struct
 name|fltSemantics
 struct_decl|;
@@ -96,7 +90,10 @@ decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
-comment|/* When bits of a floating point number are truncated, this enum is      used to indicate what fraction of the LSB those bits represented.      It essentially combines the roles of guard and sticky bits.  */
+comment|/// Enum that represents what fraction of the LSB truncated bits of an fp number
+comment|/// represent.
+comment|///
+comment|/// This essentially combines the roles of guard and sticky bits.
 enum|enum
 name|lostFraction
 block|{
@@ -114,12 +111,102 @@ name|lfMoreThanHalf
 comment|// 1xxxxx  x's not all zero
 block|}
 enum|;
+comment|/// \brief A self-contained host- and target-independent arbitrary-precision
+comment|/// floating-point software implementation.
+comment|///
+comment|/// APFloat uses bignum integer arithmetic as provided by static functions in
+comment|/// the APInt class.  The library will work with bignum integers whose parts are
+comment|/// any unsigned type at least 16 bits wide, but 64 bits is recommended.
+comment|///
+comment|/// Written for clarity rather than speed, in particular with a view to use in
+comment|/// the front-end of a cross compiler so that target arithmetic can be correctly
+comment|/// performed on the host.  Performance should nonetheless be reasonable,
+comment|/// particularly for its intended use.  It may be useful as a base
+comment|/// implementation for a run-time library during development of a faster
+comment|/// target-specific one.
+comment|///
+comment|/// All 5 rounding modes in the IEEE-754R draft are handled correctly for all
+comment|/// implemented operations.  Currently implemented operations are add, subtract,
+comment|/// multiply, divide, fused-multiply-add, conversion-to-float,
+comment|/// conversion-to-integer and conversion-from-integer.  New rounding modes
+comment|/// (e.g. away from zero) can be added with three or four lines of code.
+comment|///
+comment|/// Four formats are built-in: IEEE single precision, double precision,
+comment|/// quadruple precision, and x87 80-bit extended double (when operating with
+comment|/// full extended precision).  Adding a new format that obeys IEEE semantics
+comment|/// only requires adding two lines of code: a declaration and definition of the
+comment|/// format.
+comment|///
+comment|/// All operations return the status of that operation as an exception bit-mask,
+comment|/// so multiple operations can be done consecutively with their results or-ed
+comment|/// together.  The returned status can be useful for compiler diagnostics; e.g.,
+comment|/// inexact, underflow and overflow can be easily diagnosed on constant folding,
+comment|/// and compiler optimizers can determine what exceptions would be raised by
+comment|/// folding operations and optimize, or perhaps not optimize, accordingly.
+comment|///
+comment|/// At present, underflow tininess is detected after rounding; it should be
+comment|/// straight forward to add support for the before-rounding case too.
+comment|///
+comment|/// The library reads hexadecimal floating point numbers as per C99, and
+comment|/// correctly rounds if necessary according to the specified rounding mode.
+comment|/// Syntax is required to have been validated by the caller.  It also converts
+comment|/// floating point numbers to hexadecimal text as per the C99 %a and %A
+comment|/// conversions.  The output precision (or alternatively the natural minimal
+comment|/// precision) can be specified; if the requested precision is less than the
+comment|/// natural precision the output is correctly rounded for the specified rounding
+comment|/// mode.
+comment|///
+comment|/// It also reads decimal floating point numbers and correctly rounds according
+comment|/// to the specified rounding mode.
+comment|///
+comment|/// Conversion to decimal text is not currently implemented.
+comment|///
+comment|/// Non-zero finite numbers are represented internally as a sign bit, a 16-bit
+comment|/// signed exponent, and the significand as an array of integer parts.  After
+comment|/// normalization of a number of precision P the exponent is within the range of
+comment|/// the format, and if the number is not denormal the P-th bit of the
+comment|/// significand is set as an explicit integer bit.  For denormals the most
+comment|/// significant bit is shifted right so that the exponent is maintained at the
+comment|/// format's minimum, so that the smallest denormal has just the least
+comment|/// significant bit of the significand set.  The sign of zeroes and infinities
+comment|/// is significant; the exponent and significand of such numbers is not stored,
+comment|/// but has a known implicit (deterministic) value: 0 for the significands, 0
+comment|/// for zero exponent, all 1 bits for infinity exponent.  For NaNs the sign and
+comment|/// significand are deterministic, although not really meaningful, and preserved
+comment|/// in non-conversion operations.  The exponent is implicitly all 1 bits.
+comment|///
+comment|/// APFloat does not provide any exception handling beyond default exception
+comment|/// handling. We represent Signaling NaNs via IEEE-754R 2008 6.2.1 should clause
+comment|/// by encoding Signaling NaNs with the first bit of its trailing significand as
+comment|/// 0.
+comment|///
+comment|/// TODO
+comment|/// ====
+comment|///
+comment|/// Some features that may or may not be worth adding:
+comment|///
+comment|/// Binary to decimal conversion (hard).
+comment|///
+comment|/// Optional ability to detect underflow tininess before rounding.
+comment|///
+comment|/// New formats: x87 in single and double precision mode (IEEE apart from
+comment|/// extended exponent range) (hard).
+comment|///
+comment|/// New operations: sqrt, IEEE remainder, C90 fmod, nexttoward.
+comment|///
 name|class
 name|APFloat
 block|{
 name|public
 label|:
-comment|/* We support the following floating point semantics.  */
+comment|/// A signed type to represent a floating point numbers unbiased exponent.
+typedef|typedef
+name|signed
+name|short
+name|ExponentType
+typedef|;
+comment|/// \name Floating Point Semantics.
+comment|/// @{
 specifier|static
 specifier|const
 name|fltSemantics
@@ -150,12 +237,14 @@ specifier|const
 name|fltSemantics
 name|x87DoubleExtended
 decl_stmt|;
-comment|/* And this pseudo, used to construct APFloats that cannot        conflict with anything real. */
+comment|/// A Pseudo fltsemantic used to construct APFloats that cannot conflict with
+comment|/// anything real.
 specifier|static
 specifier|const
 name|fltSemantics
 name|Bogus
 decl_stmt|;
+comment|/// @}
 specifier|static
 name|unsigned
 name|int
@@ -166,7 +255,7 @@ name|fltSemantics
 modifier|&
 parameter_list|)
 function_decl|;
-comment|/* Floating point numbers have a four-state comparison relation.  */
+comment|/// IEEE-754R 5.11: Floating Point Comparison Relations.
 enum|enum
 name|cmpResult
 block|{
@@ -179,7 +268,7 @@ block|,
 name|cmpUnordered
 block|}
 enum|;
-comment|/* IEEE-754R gives five rounding modes.  */
+comment|/// IEEE-754R 4.3: Rounding-direction attributes.
 enum|enum
 name|roundingMode
 block|{
@@ -194,8 +283,9 @@ block|,
 name|rmNearestTiesToAway
 block|}
 enum|;
-comment|// Operation status.  opUnderflow or opOverflow are always returned
-comment|// or-ed with opInexact.
+comment|/// IEEE-754R 7: Default exception handling.
+comment|///
+comment|/// opUnderflow or opOverflow are always returned or-ed with opInexact.
 enum|enum
 name|opStatus
 block|{
@@ -224,7 +314,7 @@ init|=
 literal|0x10
 block|}
 enum|;
-comment|// Category of internally-represented number.
+comment|/// Category of internally-represented number.
 enum|enum
 name|fltCategory
 block|{
@@ -237,13 +327,15 @@ block|,
 name|fcZero
 block|}
 enum|;
+comment|/// Convenience enum used to construct an uninitialized APFloat.
 enum|enum
 name|uninitializedTag
 block|{
 name|uninitialized
 block|}
 enum|;
-comment|// Constructors.
+comment|/// \name Constructors
+comment|/// @{
 name|APFloat
 argument_list|(
 specifier|const
@@ -270,15 +362,6 @@ argument_list|,
 name|integerPart
 argument_list|)
 expr_stmt|;
-name|APFloat
-argument_list|(
-argument|const fltSemantics&
-argument_list|,
-argument|fltCategory
-argument_list|,
-argument|bool negative
-argument_list|)
-empty_stmt|;
 name|APFloat
 argument_list|(
 specifier|const
@@ -324,7 +407,25 @@ operator|~
 name|APFloat
 argument_list|()
 expr_stmt|;
-comment|// Convenience "constructors"
+comment|/// @}
+comment|/// \brief Returns whether this instance allocated memory.
+name|bool
+name|needsCleanup
+argument_list|()
+specifier|const
+block|{
+return|return
+name|partCount
+argument_list|()
+operator|>
+literal|1
+return|;
+block|}
+comment|/// \name Convenience "constructors"
+comment|/// @{
+comment|/// Factory for Positive and Negative Zero.
+comment|///
+comment|/// \param Negative True iff the number should be negative.
 specifier|static
 name|APFloat
 name|getZero
@@ -340,17 +441,28 @@ init|=
 name|false
 parameter_list|)
 block|{
-return|return
 name|APFloat
+name|Val
 argument_list|(
 name|Sem
 argument_list|,
-name|fcZero
-argument_list|,
+name|uninitialized
+argument_list|)
+decl_stmt|;
+name|Val
+operator|.
+name|makeZero
+argument_list|(
 name|Negative
 argument_list|)
+expr_stmt|;
+return|return
+name|Val
 return|;
 block|}
+comment|/// Factory for Positive and Negative Infinity.
+comment|///
+comment|/// \param Negative True iff the number should be negative.
 specifier|static
 name|APFloat
 name|getInf
@@ -366,18 +478,26 @@ init|=
 name|false
 parameter_list|)
 block|{
-return|return
 name|APFloat
+name|Val
 argument_list|(
 name|Sem
 argument_list|,
-name|fcInfinity
-argument_list|,
+name|uninitialized
+argument_list|)
+decl_stmt|;
+name|Val
+operator|.
+name|makeInf
+argument_list|(
 name|Negative
 argument_list|)
+expr_stmt|;
+return|return
+name|Val
 return|;
 block|}
-comment|/// getNaN - Factory for QNaN values.
+comment|/// Factory for QNaN values.
 comment|///
 comment|/// \param Negative - True iff the NaN generated should be negative.
 comment|/// \param type - The unspecified fill bits for creating the NaN, 0 by
@@ -441,7 +561,7 @@ argument_list|)
 return|;
 block|}
 block|}
-comment|/// getQNan - Factory for QNaN values.
+comment|/// Factory for QNaN values.
 specifier|static
 name|APFloat
 name|getQNaN
@@ -477,7 +597,7 @@ name|payload
 argument_list|)
 return|;
 block|}
-comment|/// getSNan - Factory for SNaN values.
+comment|/// Factory for SNaN values.
 specifier|static
 name|APFloat
 name|getSNaN
@@ -513,8 +633,7 @@ name|payload
 argument_list|)
 return|;
 block|}
-comment|/// getLargest - Returns the largest finite number in the given
-comment|/// semantics.
+comment|/// Returns the largest finite number in the given semantics.
 comment|///
 comment|/// \param Negative - True iff the number should be negative
 specifier|static
@@ -532,9 +651,8 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// getSmallest - Returns the smallest (by magnitude) finite number
-comment|/// in the given semantics.  Might be denormalized, which implies a
-comment|/// relative loss of precision.
+comment|/// Returns the smallest (by magnitude) finite number in the given semantics.
+comment|/// Might be denormalized, which implies a relative loss of precision.
 comment|///
 comment|/// \param Negative - True iff the number should be negative
 specifier|static
@@ -552,8 +670,8 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// getSmallestNormalized - Returns the smallest (by magnitude)
-comment|/// normalized finite number in the given semantics.
+comment|/// Returns the smallest (by magnitude) normalized finite number in the given
+comment|/// semantics.
 comment|///
 comment|/// \param Negative - True iff the number should be negative
 specifier|static
@@ -571,8 +689,7 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// getAllOnesValue - Returns a float which is bitcasted from
-comment|/// an all one value int.
+comment|/// Returns a float which is bitcasted from an all one value int.
 comment|///
 comment|/// \param BitWidth - Select float type
 comment|/// \param isIEEE   - If 128 bit number, select between PPC and IEEE
@@ -589,8 +706,9 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// Profile - Used to insert APFloat objects, or objects that contain
-comment|///  APFloat objects, into FoldingSets.
+comment|/// @}
+comment|/// Used to insert APFloat objects, or objects that contain APFloat objects,
+comment|/// into FoldingSets.
 name|void
 name|Profile
 argument_list|(
@@ -600,7 +718,7 @@ name|NID
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// @brief Used by the Bitcode serializer to emit APInts to Bitcode.
+comment|/// \brief Used by the Bitcode serializer to emit APInts to Bitcode.
 name|void
 name|Emit
 argument_list|(
@@ -610,7 +728,7 @@ name|S
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// @brief Used by the Bitcode deserializer to deserialize APInts.
+comment|/// \brief Used by the Bitcode deserializer to deserialize APInts.
 specifier|static
 name|APFloat
 name|ReadVal
@@ -620,7 +738,8 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
-comment|/* Arithmetic.  */
+comment|/// \name Arithmetic
+comment|/// @{
 name|opStatus
 name|add
 parameter_list|(
@@ -661,7 +780,7 @@ parameter_list|,
 name|roundingMode
 parameter_list|)
 function_decl|;
-comment|/* IEEE remainder. */
+comment|/// IEEE remainder.
 name|opStatus
 name|remainder
 parameter_list|(
@@ -670,7 +789,7 @@ name|APFloat
 modifier|&
 parameter_list|)
 function_decl|;
-comment|/* C fmod, or llvm frem. */
+comment|/// C fmod, or llvm frem.
 name|opStatus
 name|mod
 parameter_list|(
@@ -701,7 +820,17 @@ parameter_list|(
 name|roundingMode
 parameter_list|)
 function_decl|;
-comment|/* Sign operations.  */
+comment|/// IEEE-754R 5.3.1: nextUp/nextDown.
+name|opStatus
+name|next
+parameter_list|(
+name|bool
+name|nextDown
+parameter_list|)
+function_decl|;
+comment|/// @}
+comment|/// \name Sign operations.
+comment|/// @{
 name|void
 name|changeSign
 parameter_list|()
@@ -718,7 +847,9 @@ name|APFloat
 modifier|&
 parameter_list|)
 function_decl|;
-comment|/* Conversions.  */
+comment|/// @}
+comment|/// \name Conversions
+comment|/// @{
 name|opStatus
 name|convert
 parameter_list|(
@@ -828,7 +959,10 @@ name|convertToFloat
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/* The definition of equality is not straightforward for floating point,        so we won't use operator==.  Use one of the following, or write        whatever it is you really mean. */
+comment|/// @}
+comment|/// The definition of equality is not straightforward for floating point, so
+comment|/// we won't use operator==.  Use one of the following, or write whatever it
+comment|/// is you really mean.
 name|bool
 name|operator
 operator|==
@@ -840,7 +974,8 @@ operator|)
 specifier|const
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|/* IEEE comparison with another floating point number (NaNs        compare unordered, 0==-0). */
+comment|/// IEEE comparison with another floating point number (NaNs compare
+comment|/// unordered, 0==-0).
 name|cmpResult
 name|compare
 argument_list|(
@@ -850,7 +985,7 @@ operator|&
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/* Bitwise comparison for equality (QNaNs compare equal, 0!=-0). */
+comment|/// Bitwise comparison for equality (QNaNs compare equal, 0!=-0).
 name|bool
 name|bitwiseIsEqual
 argument_list|(
@@ -860,7 +995,9 @@ operator|&
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/* Write out a hexadecimal representation of the floating point        value to DST, which must be of sufficient size, in the C99 form        [-]0xh.hhhhp[+-]d.  Return the number of characters written,        excluding the terminating NUL.  */
+comment|/// Write out a hexadecimal representation of the floating point value to DST,
+comment|/// which must be of sufficient size, in the C99 form [-]0xh.hhhhp[+-]d.
+comment|/// Return the number of characters written, excluding the terminating NUL.
 name|unsigned
 name|int
 name|convertToHexString
@@ -880,7 +1017,110 @@ name|roundingMode
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/* Simple queries.  */
+comment|/// \name IEEE-754R 5.7.2 General operations.
+comment|/// @{
+comment|/// IEEE-754R isSignMinus: Returns true if and only if the current value is
+comment|/// negative.
+comment|///
+comment|/// This applies to zeros and NaNs as well.
+name|bool
+name|isNegative
+argument_list|()
+specifier|const
+block|{
+return|return
+name|sign
+return|;
+block|}
+comment|/// IEEE-754R isNormal: Returns true if and only if the current value is normal.
+comment|///
+comment|/// This implies that the current value of the float is not zero, subnormal,
+comment|/// infinite, or NaN following the definition of normality from IEEE-754R.
+name|bool
+name|isNormal
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isDenormal
+argument_list|()
+operator|&&
+name|isFiniteNonZero
+argument_list|()
+return|;
+block|}
+comment|/// Returns true if and only if the current value is zero, subnormal, or
+comment|/// normal.
+comment|///
+comment|/// This means that the value is not infinite or NaN.
+name|bool
+name|isFinite
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isNaN
+argument_list|()
+operator|&&
+operator|!
+name|isInfinity
+argument_list|()
+return|;
+block|}
+comment|/// Returns true if and only if the float is plus or minus zero.
+name|bool
+name|isZero
+argument_list|()
+specifier|const
+block|{
+return|return
+name|category
+operator|==
+name|fcZero
+return|;
+block|}
+comment|/// IEEE-754R isSubnormal(): Returns true if and only if the float is a
+comment|/// denormal.
+name|bool
+name|isDenormal
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// IEEE-754R isInfinite(): Returns true if and only if the float is infinity.
+name|bool
+name|isInfinity
+argument_list|()
+specifier|const
+block|{
+return|return
+name|category
+operator|==
+name|fcInfinity
+return|;
+block|}
+comment|/// Returns true if and only if the float is a quiet or signaling NaN.
+name|bool
+name|isNaN
+argument_list|()
+specifier|const
+block|{
+return|return
+name|category
+operator|==
+name|fcNaN
+return|;
+block|}
+comment|/// Returns true if and only if the float is a signaling NaN.
+name|bool
+name|isSignaling
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @}
+comment|/// \name Simple Queries
+comment|/// @{
 name|fltCategory
 name|getCategory
 argument_list|()
@@ -903,17 +1143,6 @@ name|semantics
 return|;
 block|}
 name|bool
-name|isZero
-argument_list|()
-specifier|const
-block|{
-return|return
-name|category
-operator|==
-name|fcZero
-return|;
-block|}
-name|bool
 name|isNonZero
 argument_list|()
 specifier|const
@@ -925,45 +1154,17 @@ name|fcZero
 return|;
 block|}
 name|bool
-name|isNormal
+name|isFiniteNonZero
 argument_list|()
 specifier|const
 block|{
 return|return
-name|category
-operator|==
-name|fcNormal
-return|;
-block|}
-name|bool
-name|isNaN
+name|isFinite
 argument_list|()
-specifier|const
-block|{
-return|return
-name|category
-operator|==
-name|fcNaN
-return|;
-block|}
-name|bool
-name|isInfinity
+operator|&&
+operator|!
+name|isZero
 argument_list|()
-specifier|const
-block|{
-return|return
-name|category
-operator|==
-name|fcInfinity
-return|;
-block|}
-name|bool
-name|isNegative
-argument_list|()
-specifier|const
-block|{
-return|return
-name|sign
 return|;
 block|}
 name|bool
@@ -993,11 +1194,21 @@ name|isNegative
 argument_list|()
 return|;
 block|}
+comment|/// Returns true if and only if the number has the smallest possible non-zero
+comment|/// magnitude in the current semantics.
 name|bool
-name|isDenormal
+name|isSmallest
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Returns true if and only if the number has the largest possible finite
+comment|/// magnitude in the current semantics.
+name|bool
+name|isLargest
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @}
 name|APFloat
 modifier|&
 name|operator
@@ -1069,8 +1280,8 @@ literal|3
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getExactInverse - If this value has an exact multiplicative inverse,
-comment|/// store it in inv and return true.
+comment|/// If this value has an exact multiplicative inverse, store it in inv and
+comment|/// return true.
 name|bool
 name|getExactInverse
 argument_list|(
@@ -1082,7 +1293,8 @@ decl|const
 decl_stmt|;
 name|private
 label|:
-comment|/* Trivial queries.  */
+comment|/// \name Simple Queries
+comment|/// @{
 name|integerPart
 modifier|*
 name|significandParts
@@ -1101,7 +1313,9 @@ name|partCount
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/* Significand operations.  */
+comment|/// @}
+comment|/// \name Significand operations.
+comment|/// @{
 name|integerPart
 name|addSignificand
 parameter_list|(
@@ -1193,7 +1407,21 @@ name|void
 name|zeroSignificand
 parameter_list|()
 function_decl|;
-comment|/* Arithmetic on special values.  */
+comment|/// Return true if the significand excluding the integral bit is all ones.
+name|bool
+name|isSignificandAllOnes
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Return true if the significand excluding the integral bit is all zeros.
+name|bool
+name|isSignificandAllZeros
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @}
+comment|/// \name Arithmetic on special values.
+comment|/// @{
 name|opStatus
 name|addOrSubtractSpecials
 parameter_list|(
@@ -1229,7 +1457,48 @@ name|APFloat
 modifier|&
 parameter_list|)
 function_decl|;
-comment|/* Miscellany.  */
+comment|/// @}
+comment|/// \name Special value setters.
+comment|/// @{
+name|void
+name|makeLargest
+parameter_list|(
+name|bool
+name|Neg
+init|=
+name|false
+parameter_list|)
+function_decl|;
+name|void
+name|makeSmallest
+parameter_list|(
+name|bool
+name|Neg
+init|=
+name|false
+parameter_list|)
+function_decl|;
+name|void
+name|makeNaN
+parameter_list|(
+name|bool
+name|SNaN
+init|=
+name|false
+parameter_list|,
+name|bool
+name|Neg
+init|=
+name|false
+parameter_list|,
+specifier|const
+name|APInt
+modifier|*
+name|fill
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 specifier|static
 name|APFloat
 name|makeNaN
@@ -1252,24 +1521,31 @@ name|fill
 parameter_list|)
 function_decl|;
 name|void
-name|makeNaN
+name|makeInf
 parameter_list|(
-name|bool
-name|SNaN
-init|=
-name|false
-parameter_list|,
 name|bool
 name|Neg
 init|=
 name|false
-parameter_list|,
-specifier|const
-name|APInt
-modifier|*
-name|fill
+parameter_list|)
+function_decl|;
+name|void
+name|makeZero
+parameter_list|(
+name|bool
+name|Neg
 init|=
-literal|0
+name|false
+parameter_list|)
+function_decl|;
+comment|/// @}
+comment|/// \name Miscellany
+comment|/// @{
+name|bool
+name|convertFromStringSpecials
+parameter_list|(
+name|StringRef
+name|str
 parameter_list|)
 function_decl|;
 name|opStatus
@@ -1398,6 +1674,7 @@ parameter_list|,
 name|roundingMode
 parameter_list|)
 function_decl|;
+comment|/// @}
 name|APInt
 name|convertHalfAPFloatToAPInt
 argument_list|()
@@ -1516,13 +1793,15 @@ name|void
 name|freeSignificand
 parameter_list|()
 function_decl|;
-comment|/* What kind of semantics does this value obey?  */
+comment|/// The semantics that this value obeys.
 specifier|const
 name|fltSemantics
 modifier|*
 name|semantics
 decl_stmt|;
-comment|/* Significand - the fraction with an explicit integer bit.  Must be        at least one bit wider than the target precision.  */
+comment|/// A binary fraction with an explicit integer bit.
+comment|///
+comment|/// The significand must be at least one bit wider than the target precision.
 union|union
 name|Significand
 block|{
@@ -1536,18 +1815,20 @@ decl_stmt|;
 block|}
 name|significand
 union|;
-comment|/* The exponent - a signed number.  */
-name|exponent_t
+comment|/// The signed unbiased exponent of the value.
+name|ExponentType
 name|exponent
 decl_stmt|;
-comment|/* What kind of floating point number this is.  */
-comment|/* Only 2 bits are required, but VisualStudio incorrectly sign extends        it.  Using the extra bit keeps it from failing under VisualStudio */
+comment|/// What kind of floating point number this is.
+comment|///
+comment|/// Only 2 bits are required, but VisualStudio incorrectly sign extends it.
+comment|/// Using the extra bit keeps it from failing under VisualStudio.
 name|fltCategory
 name|category
 range|:
 literal|3
 decl_stmt|;
-comment|/* The sign bit of this number.  */
+comment|/// Sign bit of the number.
 name|unsigned
 name|int
 name|sign
@@ -1556,8 +1837,10 @@ literal|1
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|// See friend declaration above. This additional declaration is required in
-comment|// order to compile LLVM with IBM xlC compiler.
+comment|/// See friend declaration above.
+comment|///
+comment|/// This additional declaration is required in order to compile LLVM with IBM
+comment|/// xlC compiler.
 name|hash_code
 name|hash_value
 parameter_list|(
@@ -1571,7 +1854,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* namespace llvm */
+comment|// namespace llvm
 end_comment
 
 begin_endif
@@ -1580,7 +1863,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LLVM_ADT_APFLOAT_H */
+comment|// LLVM_ADT_APFLOAT_H
 end_comment
 
 end_unit

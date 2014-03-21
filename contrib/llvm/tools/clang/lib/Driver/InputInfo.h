@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Driver/Arg.h"
+file|"clang/Driver/Types.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Driver/Types.h"
+file|"llvm/Option/Arg.h"
 end_include
 
 begin_include
@@ -104,10 +104,14 @@ modifier|*
 name|Filename
 decl_stmt|;
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|Arg
-modifier|*
+operator|*
 name|InputArg
-decl_stmt|;
+expr_stmt|;
 block|}
 name|Data
 union|;
@@ -183,7 +187,7 @@ name|_Filename
 block|;   }
 name|InputInfo
 argument_list|(
-argument|const Arg *_InputArg
+argument|const llvm::opt::Arg *_InputArg
 argument_list|,
 argument|types::ID _Type
 argument_list|,
@@ -288,6 +292,10 @@ name|Filename
 return|;
 block|}
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|Arg
 operator|&
 name|getInputArg

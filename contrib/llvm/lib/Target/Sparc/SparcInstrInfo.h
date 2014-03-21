@@ -144,6 +144,11 @@ name|SparcSubtarget
 operator|&
 name|Subtarget
 block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit
@@ -197,25 +202,6 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|int&FrameIndex
-argument_list|)
-specifier|const
-block|;
-comment|/// emitFrameIndexDebugValue - Emit a target-dependent form of
-comment|/// DBG_VALUE encoding the address of a frame index.
-name|virtual
-name|MachineInstr
-operator|*
-name|emitFrameIndexDebugValue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|int FrameIx
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|const MDNode *MDPtr
-argument_list|,
-argument|DebugLoc dl
 argument_list|)
 specifier|const
 block|;

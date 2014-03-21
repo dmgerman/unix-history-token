@@ -2075,6 +2075,7 @@ operator|.
 name|Mask
 return|;
 block|}
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -3843,6 +3844,7 @@ begin_decl_stmt
 name|QualType
 name|getNonLValueExprType
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -5478,7 +5480,7 @@ name|mutable
 name|unsigned
 name|CachedLinkage
 operator|:
-literal|2
+literal|3
 block|;
 comment|/// \brief Whether this type involves and local or unnamed types.
 name|mutable
@@ -5548,7 +5550,7 @@ block|;   enum
 block|{
 name|NumTypeBits
 operator|=
-literal|19
+literal|18
 block|}
 block|;
 name|protected
@@ -5729,6 +5731,22 @@ operator|:
 literal|29
 operator|-
 name|NumTypeBits
+block|;      enum
+block|{
+name|MaxNumElements
+operator|=
+operator|(
+literal|1
+operator|<<
+operator|(
+literal|29
+operator|-
+name|NumTypeBits
+operator|)
+operator|)
+operator|-
+literal|1
+block|}
 block|;   }
 block|;
 name|class
@@ -6124,7 +6142,7 @@ comment|/// (C++11 [basic.types]p10)
 name|bool
 name|isLiteralType
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -6296,12 +6314,6 @@ argument_list|()
 specifier|const
 block|;
 comment|// C99 6.2.5p19
-name|bool
-name|isDerivedType
-argument_list|()
-specifier|const
-block|;
-comment|// C99 6.2.5p20
 name|bool
 name|isScalarType
 argument_list|()
@@ -7166,6 +7178,20 @@ name|getAs
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief This will check for an AttributedType by removing any existing sugar
+comment|/// until it reaches an AttributedType or a non-sugared type.
+name|template
+operator|<
+operator|>
+specifier|const
+name|AttributedType
+operator|*
+name|Type
+operator|::
+name|getAs
+argument_list|()
+specifier|const
+block|;
 comment|// We can do canonical leaf types faster, because we don't have to
 comment|// worry about preserving child type decoration.
 define|#
@@ -7909,6 +7935,192 @@ name|getTypeClass
 argument_list|()
 operator|==
 name|Pointer
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Represents a pointer type decayed from an array or function type.
+name|class
+name|DecayedType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|QualType
+name|OriginalType
+block|;
+name|QualType
+name|DecayedPointer
+block|;
+name|DecayedType
+argument_list|(
+argument|QualType OriginalType
+argument_list|,
+argument|QualType DecayedPointer
+argument_list|,
+argument|QualType CanonicalPtr
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|Decayed
+argument_list|,
+name|CanonicalPtr
+argument_list|,
+name|OriginalType
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|OriginalType
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|OriginalType
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|OriginalType
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|OriginalType
+argument_list|(
+name|OriginalType
+argument_list|)
+block|,
+name|DecayedPointer
+argument_list|(
+argument|DecayedPointer
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|DecayedPointer
+operator|)
+argument_list|)
+block|;   }
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these.
+name|public
+operator|:
+name|QualType
+name|getDecayedType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DecayedPointer
+return|;
+block|}
+name|QualType
+name|getOriginalType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OriginalType
+return|;
+block|}
+name|QualType
+name|getPointeeType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|DecayedPointer
+operator|)
+operator|->
+name|getPointeeType
+argument_list|()
+return|;
+block|}
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DecayedPointer
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|OriginalType
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|QualType OriginalType
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|OriginalType
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|Decayed
 return|;
 block|}
 expr|}
@@ -9896,6 +10108,21 @@ operator|.
 name|NumElements
 return|;
 block|}
+specifier|static
+name|bool
+name|isVectorSizeTooLarge
+argument_list|(
+argument|unsigned NumElements
+argument_list|)
+block|{
+return|return
+name|NumElements
+operator|>
+name|VectorTypeBitfields
+operator|::
+name|MaxNumElements
+return|;
+block|}
 name|bool
 name|isSugared
 argument_list|()
@@ -10527,9 +10754,21 @@ argument_list|()
 operator|:
 name|Bits
 argument_list|(
-literal|0
+argument|CC_C
 argument_list|)
-block|{}
+block|{ }
+comment|// Constructor with just the calling convention, which is an important part
+comment|// of the canonical type.
+name|ExtInfo
+argument_list|(
+argument|CallingConv CC
+argument_list|)
+operator|:
+name|Bits
+argument_list|(
+argument|CC
+argument_list|)
+block|{ }
 name|bool
 name|getNoReturn
 argument_list|()
@@ -11241,6 +11480,71 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+name|ExtProtoInfo
+argument_list|(
+argument|CallingConv CC
+argument_list|)
+operator|:
+name|ExtInfo
+argument_list|(
+name|CC
+argument_list|)
+block|,
+name|Variadic
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|HasTrailingReturn
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|TypeQuals
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ExceptionSpecType
+argument_list|(
+name|EST_None
+argument_list|)
+block|,
+name|RefQualifier
+argument_list|(
+name|RQ_None
+argument_list|)
+block|,
+name|NumExceptions
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Exceptions
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NoexceptExpr
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ExceptionSpecDecl
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ExceptionSpecTemplate
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ConsumedArguments
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 name|FunctionType
 operator|::
 name|ExtInfo
@@ -11765,7 +12069,7 @@ comment|/// \brief Get the meaning of the noexcept spec on this function, if any
 name|NoexceptResult
 name|getNoexceptSpec
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -11916,7 +12220,7 @@ block|}
 name|bool
 name|isNothrow
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|{
@@ -13348,13 +13652,15 @@ name|attr_objc_ownership
 block|,
 name|attr_pcs
 block|,
+name|attr_pcs_vfp
+block|,
 name|FirstEnumOperandKind
 operator|=
 name|attr_objc_gc
 block|,
 name|LastEnumOperandKind
 operator|=
-name|attr_pcs
+name|attr_pcs_vfp
 block|,
 comment|// No operand.
 name|attr_noreturn
@@ -13376,6 +13682,14 @@ block|,
 name|attr_ms_abi
 block|,
 name|attr_sysv_abi
+block|,
+name|attr_ptr32
+block|,
+name|attr_ptr64
+block|,
+name|attr_sptr
+block|,
+name|attr_uptr
 block|}
 block|;
 name|private
@@ -13501,6 +13815,16 @@ name|getEquivalentType
 argument_list|()
 return|;
 block|}
+name|bool
+name|isMSTypeSpec
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isCallingConv
+argument_list|()
+specifier|const
+block|;
 name|void
 name|Profile
 argument_list|(
@@ -14275,7 +14599,7 @@ comment|/*VariablyModified=*/
 argument|false
 argument_list|,
 comment|/*ContainsParameterPack=*/
-argument|false
+argument|DeducedType.isNull()                 ? false : DeducedType->containsUnexpandedParameterPack()
 argument_list|)
 block|{
 name|assert
@@ -14523,17 +14847,6 @@ name|public
 operator|:
 comment|/// \brief Determine whether any of the given template arguments are
 comment|/// dependent.
-specifier|static
-name|bool
-name|anyDependentTemplateArguments
-argument_list|(
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|bool&InstantiationDependent
-argument_list|)
-block|;
 specifier|static
 name|bool
 name|anyDependentTemplateArguments
@@ -16073,7 +16386,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|false
+operator|!
+name|Pattern
+operator|->
+name|isDependentType
+argument_list|()
 return|;
 block|}
 name|QualType
@@ -16082,6 +16399,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|isSugared
+argument_list|()
+operator|?
+name|Pattern
+operator|:
 name|QualType
 argument_list|(
 name|this
@@ -16184,11 +16506,11 @@ comment|/// with base C and no protocols.
 comment|///
 comment|/// 'C<P>' is an ObjCObjectType with base C and protocol list [P].
 comment|///
-comment|/// 'id' is a TypedefType which is sugar for an ObjCPointerType whose
+comment|/// 'id' is a TypedefType which is sugar for an ObjCObjectPointerType whose
 comment|/// pointee is an ObjCObjectType with base BuiltinType::ObjCIdType
 comment|/// and no protocols.
 comment|///
-comment|/// 'id<P>' is an ObjCPointerType whose pointee is an ObjCObjecType
+comment|/// 'id<P>' is an ObjCObjectPointerType whose pointee is an ObjCObjectType
 comment|/// with base BuiltinType::ObjCIdType and protocol list [P].  Eventually
 comment|/// this should get its own sugar class to better represent the source.
 name|class
@@ -16296,7 +16618,7 @@ operator|:
 comment|/// getBaseType - Gets the base type of this object type.  This is
 comment|/// always (possibly sugar for) one of:
 comment|///  - the 'id' builtin type (as opposed to the 'id' type visible to the
-comment|///    user, which is a typedef for an ObjCPointerType)
+comment|///    user, which is a typedef for an ObjCObjectPointerType)
 comment|///  - the 'Class' builtin type (same caveat)
 comment|///  - an ObjCObjectType (currently always an ObjCInterfaceType)
 name|QualType
@@ -19441,9 +19763,6 @@ return|return
 literal|0
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -19499,16 +19818,14 @@ operator|)
 name|K
 operator|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_block
 
 begin_expr_stmt
-unit|}  inline
+specifier|inline
 name|bool
 name|Type
 operator|::

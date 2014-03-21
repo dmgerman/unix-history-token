@@ -145,7 +145,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -157,16 +157,16 @@ name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|LLVMContext&
+argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
 block|;
 name|private
 operator|:
-specifier|const
-name|R600InstrInfo
-operator|*
-name|TII
+name|unsigned
+name|Gen
 block|;
 comment|/// Each OpenCL kernel has nine implicit parameters that are stored in the
 comment|/// first nine dwords of a Vertex Buffer.  These implicit parameters are
@@ -179,7 +179,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|EVT VT
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|unsigned DwordOffset
 argument_list|)
@@ -198,6 +198,17 @@ argument|unsigned dword_offset
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|OptimizeSwizzle
+argument_list|(
+argument|SDValue BuildVector
+argument_list|,
+argument|SDValue Swz[]
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Lower ROTL opcode to BITALIGN
 name|SDValue
 name|LowerROTL
@@ -210,15 +221,6 @@ specifier|const
 block|;
 name|SDValue
 name|LowerSELECT_CC
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSELECT
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -254,7 +256,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFrameIndex
+name|LowerTrig
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -290,6 +292,17 @@ name|bool
 name|isZero
 argument_list|(
 argument|SDValue Op
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|SDNode
+operator|*
+name|PostISelFolding
+argument_list|(
+argument|MachineSDNode *N
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|; }

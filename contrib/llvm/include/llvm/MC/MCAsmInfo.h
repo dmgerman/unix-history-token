@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCDwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MachineLocation.h"
 end_include
 
@@ -212,14 +218,18 @@ name|unsigned
 name|MaxInstLength
 decl_stmt|;
 comment|// Defaults to 4.
-comment|/// PCSymbol - The symbol used to represent the current PC.  Used in PC
-comment|/// relative expressions.
-specifier|const
-name|char
-modifier|*
-name|PCSymbol
+comment|/// MinInstAlignment - Every possible instruction length is a multiple of
+comment|/// this value.  Factored out in .debug_frame and .debug_line.
+name|unsigned
+name|MinInstAlignment
 decl_stmt|;
-comment|// Defaults to "$".
+comment|// Defaults to 1.
+comment|/// DollarIsPC - The '$' token, when not referencing an identifier or
+comment|/// constant, refers to the current PC.
+name|bool
+name|DollarIsPC
+decl_stmt|;
+comment|// Defaults to false.
 comment|/// SeparatorString - This string, if specified, is used to separate
 comment|/// instructions from each other when on the same line.
 specifier|const
@@ -322,25 +332,10 @@ name|unsigned
 name|AssemblerDialect
 decl_stmt|;
 comment|// Defaults to 0
-comment|/// AllowQuotesInName - This is true if the assembler allows for complex
-comment|/// symbol names to be surrounded in quotes.  This defaults to false.
+comment|/// \brief This is true if the assembler allows @ characters in symbol
+comment|/// names. Defaults to false.
 name|bool
-name|AllowQuotesInName
-decl_stmt|;
-comment|/// AllowNameToStartWithDigit - This is true if the assembler allows symbol
-comment|/// names to start with a digit (e.g., "0x0021").  This defaults to false.
-name|bool
-name|AllowNameToStartWithDigit
-decl_stmt|;
-comment|/// AllowPeriodsInName - This is true if the assembler allows periods in
-comment|/// symbol names.  This defaults to true.
-name|bool
-name|AllowPeriodsInName
-decl_stmt|;
-comment|/// AllowUTF8 - This is true if the assembler accepts UTF-8 input.
-comment|// FIXME: Make this a more general encoding setting?
-name|bool
-name|AllowUTF8
+name|AllowAtInName
 decl_stmt|;
 comment|/// UseDataRegionDirectives - This is true if data region markers should
 comment|/// be printed as ".data_region/.end_data_region" directives. If false,
@@ -421,35 +416,6 @@ modifier|*
 name|GPRel32Directive
 decl_stmt|;
 comment|// Defaults to NULL.
-comment|/// getDataASDirective - Return the directive that should be used to emit
-comment|/// data of the specified size to the specified numeric address space.
-name|virtual
-specifier|const
-name|char
-modifier|*
-name|getDataASDirective
-argument_list|(
-name|unsigned
-name|Size
-argument_list|,
-name|unsigned
-name|AS
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|AS
-operator|!=
-literal|0
-operator|&&
-literal|"Don't know the directives for default addr space"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 comment|/// SunStyleELFSectionSwitchSyntax - This is true if this target uses "Sun
 comment|/// Style" syntax for section switching ("#alloc,#write" etc) instead of the
 comment|/// normal ELF syntax (,"a,w") in .section directives.
@@ -507,15 +473,6 @@ modifier|*
 name|GlobalDirective
 decl_stmt|;
 comment|// Defaults to NULL.
-comment|/// ExternDirective - This is the directive used to declare external
-comment|/// globals.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|ExternDirective
-decl_stmt|;
-comment|// Defaults to NULL.
 comment|/// HasSetDirective - True if the assembler supports the .set directive.
 name|bool
 name|HasSetDirective
@@ -556,16 +513,16 @@ name|bool
 name|HasSingleParameterDotFile
 decl_stmt|;
 comment|// Defaults to true.
+comment|/// hasIdentDirective - True if the target has a .ident directive, this is
+comment|/// true for ELF targets.
+name|bool
+name|HasIdentDirective
+decl_stmt|;
+comment|// Defaults to false.
 comment|/// HasNoDeadStrip - True if this target supports the MachO .no_dead_strip
 comment|/// directive.
 name|bool
 name|HasNoDeadStrip
-decl_stmt|;
-comment|// Defaults to false.
-comment|/// HasSymbolResolver - True if this target supports the MachO
-comment|/// .symbol_resolver directive.
-name|bool
-name|HasSymbolResolver
 decl_stmt|;
 comment|// Defaults to false.
 comment|/// WeakRefDirective - This directive, if non-null, is used to declare a
@@ -629,12 +586,6 @@ name|ExceptionsType
 name|ExceptionsType
 expr_stmt|;
 comment|// Defaults to None
-comment|/// DwarfUsesInlineInfoSection - True if DwarfDebugInlineSection is used to
-comment|/// encode inline subroutine information.
-name|bool
-name|DwarfUsesInlineInfoSection
-decl_stmt|;
-comment|// Defaults to false.
 comment|/// DwarfUsesRelocationsAcrossSections - True if Dwarf2 output generally
 comment|/// uses relocations for references to other .debug_* sections.
 name|bool
@@ -651,7 +602,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|MachineMove
+name|MCCFIInstruction
 operator|>
 name|InitialFrameState
 expr_stmt|;
@@ -671,7 +622,7 @@ specifier|static
 name|unsigned
 name|getSLEB128Size
 parameter_list|(
-name|int
+name|int64_t
 name|Value
 parameter_list|)
 function_decl|;
@@ -679,7 +630,7 @@ specifier|static
 name|unsigned
 name|getULEB128Size
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|Value
 parameter_list|)
 function_decl|;
@@ -737,110 +688,46 @@ comment|// Data directive accessors.
 comment|//
 specifier|const
 name|char
-modifier|*
+operator|*
 name|getData8bitsDirective
-argument_list|(
-name|unsigned
-name|AS
-operator|=
-literal|0
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
-name|AS
-operator|==
-literal|0
-condition|?
 name|Data8bitsDirective
-else|:
-name|getDataASDirective
-argument_list|(
-literal|8
-argument_list|,
-name|AS
-argument_list|)
 return|;
 block|}
 specifier|const
 name|char
-modifier|*
+operator|*
 name|getData16bitsDirective
-argument_list|(
-name|unsigned
-name|AS
-operator|=
-literal|0
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
-name|AS
-operator|==
-literal|0
-condition|?
 name|Data16bitsDirective
-else|:
-name|getDataASDirective
-argument_list|(
-literal|16
-argument_list|,
-name|AS
-argument_list|)
 return|;
 block|}
 specifier|const
 name|char
-modifier|*
+operator|*
 name|getData32bitsDirective
-argument_list|(
-name|unsigned
-name|AS
-operator|=
-literal|0
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
-name|AS
-operator|==
-literal|0
-condition|?
 name|Data32bitsDirective
-else|:
-name|getDataASDirective
-argument_list|(
-literal|32
-argument_list|,
-name|AS
-argument_list|)
 return|;
 block|}
 specifier|const
 name|char
-modifier|*
+operator|*
 name|getData64bitsDirective
-argument_list|(
-name|unsigned
-name|AS
-operator|=
-literal|0
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
-name|AS
-operator|==
-literal|0
-condition|?
 name|Data64bitsDirective
-else|:
-name|getDataASDirective
-argument_list|(
-literal|64
-argument_list|,
-name|AS
-argument_list|)
 return|;
 block|}
 specifier|const
@@ -1006,15 +893,22 @@ return|return
 name|MaxInstLength
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getPCSymbol
+name|unsigned
+name|getMinInstAlignment
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PCSymbol
+name|MinInstAlignment
+return|;
+block|}
+name|bool
+name|getDollarIsPC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DollarIsPC
 return|;
 block|}
 specifier|const
@@ -1168,39 +1062,12 @@ name|AssemblerDialect
 return|;
 block|}
 name|bool
-name|doesAllowQuotesInName
+name|doesAllowAtInName
 argument_list|()
 specifier|const
 block|{
 return|return
-name|AllowQuotesInName
-return|;
-block|}
-name|bool
-name|doesAllowNameToStartWithDigit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AllowNameToStartWithDigit
-return|;
-block|}
-name|bool
-name|doesAllowPeriodsInName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AllowPeriodsInName
-return|;
-block|}
-name|bool
-name|doesAllowUTF8
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AllowUTF8
+name|AllowAtInName
 return|;
 block|}
 name|bool
@@ -1285,17 +1152,6 @@ return|return
 name|GlobalDirective
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getExternDirective
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ExternDirective
-return|;
-block|}
 name|bool
 name|hasSetDirective
 argument_list|()
@@ -1353,21 +1209,21 @@ name|HasSingleParameterDotFile
 return|;
 block|}
 name|bool
+name|hasIdentDirective
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasIdentDirective
+return|;
+block|}
+name|bool
 name|hasNoDeadStrip
 argument_list|()
 specifier|const
 block|{
 return|return
 name|HasNoDeadStrip
-return|;
-block|}
-name|bool
-name|hasSymbolResolver
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasSymbolResolver
 return|;
 block|}
 specifier|const
@@ -1500,15 +1356,6 @@ operator|)
 return|;
 block|}
 name|bool
-name|doesDwarfUseInlineInfoSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfUsesInlineInfoSection
-return|;
-block|}
-name|bool
 name|doesDwarfUseRelocationsAcrossSections
 argument_list|()
 specifier|const
@@ -1529,33 +1376,17 @@ block|}
 name|void
 name|addInitialFrameState
 parameter_list|(
-name|MCSymbol
-modifier|*
-name|label
-parameter_list|,
 specifier|const
-name|MachineLocation
+name|MCCFIInstruction
 modifier|&
-name|D
-parameter_list|,
-specifier|const
-name|MachineLocation
-modifier|&
-name|S
+name|Inst
 parameter_list|)
 block|{
 name|InitialFrameState
 operator|.
 name|push_back
 argument_list|(
-name|MachineMove
-argument_list|(
-name|label
-argument_list|,
-name|D
-argument_list|,
-name|S
-argument_list|)
+name|Inst
 argument_list|)
 expr_stmt|;
 block|}
@@ -1564,7 +1395,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|MachineMove
+name|MCCFIInstruction
 operator|>
 operator|&
 name|getInitialFrameState

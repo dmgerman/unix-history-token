@@ -585,7 +585,8 @@ operator|*
 operator|>
 name|gep_type_end
 argument_list|(
-argument|Type *Op0
+argument|Type *
+comment|/*Op0*/
 argument_list|,
 argument|ArrayRef<T> A
 argument_list|)

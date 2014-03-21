@@ -66,9 +66,14 @@ name|class
 name|LiveIntervals
 decl_stmt|;
 name|class
+name|MachineBlockFrequencyInfo
+decl_stmt|;
+name|class
 name|MachineLoopInfo
 decl_stmt|;
-comment|/// normalizeSpillWeight - The spill weight of a live interval is computed as:
+comment|/// \brief Normalize the spill weight of a live interval
+comment|///
+comment|/// The spill weight of a live interval is computed as:
 comment|///
 comment|///   (sum(use freq) + sum(def freq)) / (K + size)
 comment|///
@@ -107,11 +112,27 @@ name|InstrDist
 operator|)
 return|;
 block|}
-comment|/// VirtRegAuxInfo - Calculate auxiliary information for a virtual
-comment|/// register such as its spill weight and allocation hint.
+comment|/// \brief Calculate auxiliary information for a virtual register such as its
+comment|/// spill weight and allocation hint.
 name|class
 name|VirtRegAuxInfo
 block|{
+name|public
+label|:
+typedef|typedef
+name|float
+function_decl|(
+modifier|*
+name|NormalizingFn
+function_decl|)
+parameter_list|(
+name|float
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|;
+name|private
+label|:
 name|MachineFunction
 modifier|&
 name|MF
@@ -124,6 +145,11 @@ specifier|const
 name|MachineLoopInfo
 modifier|&
 name|Loops
+decl_stmt|;
+specifier|const
+name|MachineBlockFrequencyInfo
+modifier|&
+name|MBFI
 decl_stmt|;
 name|DenseMap
 operator|<
@@ -133,24 +159,24 @@ name|float
 operator|>
 name|Hint
 expr_stmt|;
+name|NormalizingFn
+name|normalize
+decl_stmt|;
 name|public
 label|:
 name|VirtRegAuxInfo
 argument_list|(
-name|MachineFunction
-operator|&
-name|mf
+argument|MachineFunction&mf
 argument_list|,
-name|LiveIntervals
-operator|&
-name|lis
+argument|LiveIntervals&lis
 argument_list|,
-specifier|const
-name|MachineLoopInfo
-operator|&
-name|loops
+argument|const MachineLoopInfo&loops
+argument_list|,
+argument|const MachineBlockFrequencyInfo&mbfi
+argument_list|,
+argument|NormalizingFn norm = normalizeSpillWeight
 argument_list|)
-operator|:
+block|:
 name|MF
 argument_list|(
 name|mf
@@ -163,13 +189,22 @@ argument_list|)
 operator|,
 name|Loops
 argument_list|(
-argument|loops
+name|loops
+argument_list|)
+operator|,
+name|MBFI
+argument_list|(
+name|mbfi
+argument_list|)
+operator|,
+name|normalize
+argument_list|(
+argument|norm
 argument_list|)
 block|{}
-comment|/// CalculateWeightAndHint - (re)compute li's spill weight and allocation
-comment|/// hint.
+comment|/// \brief (re)compute li's spill weight and allocation hint.
 name|void
-name|CalculateWeightAndHint
+name|calculateSpillWeightAndHint
 argument_list|(
 name|LiveInterval
 operator|&
@@ -178,64 +213,36 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/// CalculateSpillWeights - Compute spill weights for all virtual register
+comment|/// \brief Compute spill weights and allocation hints for all virtual register
 comment|/// live intervals.
-name|class
-name|CalculateSpillWeights
-range|:
-name|public
-name|MachineFunctionPass
-block|{
-name|public
-operator|:
-specifier|static
-name|char
-name|ID
-block|;
-name|CalculateSpillWeights
-argument_list|()
-operator|:
-name|MachineFunctionPass
-argument_list|(
-argument|ID
-argument_list|)
-block|{
-name|initializeCalculateSpillWeightsPass
-argument_list|(
-operator|*
-name|PassRegistry
-operator|::
-name|getPassRegistry
-argument_list|()
-argument_list|)
-block|;     }
-name|virtual
 name|void
-name|getAnalysisUsage
+name|calculateSpillWeightsAndHints
 argument_list|(
-argument|AnalysisUsage&au
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|runOnMachineFunction
-argument_list|(
+name|LiveIntervals
+operator|&
+name|LIS
+argument_list|,
 name|MachineFunction
 operator|&
-name|fn
-argument_list|)
-block|;
-name|private
-operator|:
-comment|/// Returns true if the given live interval is zero length.
-name|bool
-name|isZeroLengthInterval
-argument_list|(
-argument|LiveInterval *li
-argument_list|)
+name|MF
+argument_list|,
 specifier|const
-block|;   }
+name|MachineLoopInfo
+operator|&
+name|MLI
+argument_list|,
+specifier|const
+name|MachineBlockFrequencyInfo
+operator|&
+name|MBFI
+argument_list|,
+name|VirtRegAuxInfo
+operator|::
+name|NormalizingFn
+name|norm
+operator|=
+name|normalizeSpillWeight
+argument_list|)
 decl_stmt|;
 block|}
 end_decl_stmt

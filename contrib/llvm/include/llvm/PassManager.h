@@ -36,19 +36,47 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines the PassManager class.  This class is used to hold,
+comment|// This is a legacy redirect header for the old PassManager. It is intended to
 end_comment
 
 begin_comment
-comment|// maintain, and optimize execution of Passes.  The PassManager class ensures
+comment|// be used by clients that have not been converted to be aware of the new pass
 end_comment
 
 begin_comment
-comment|// that analysis results are available before a pass runs, and that Pass's are
+comment|// management infrastructure being built for LLVM, which is every client
 end_comment
 
 begin_comment
-comment|// destroyed when the PassManager is destroyed.
+comment|// initially. Eventually this header (and the legacy management layer) will go
+end_comment
+
+begin_comment
+comment|// away, but we want to minimize changes to out-of-tree users of LLVM in the
+end_comment
+
+begin_comment
+comment|// interim.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Note that this header *must not* be included into the same file as the new
+end_comment
+
+begin_comment
+comment|// pass management infrastructure is included. Things will break spectacularly.
+end_comment
+
+begin_comment
+comment|// If you are starting that conversion, you should switch to explicitly
+end_comment
+
+begin_comment
+comment|// including LegacyPassManager.h and using the legacy namespace.
 end_comment
 
 begin_comment
@@ -74,192 +102,32 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/CBindingWrapping.h"
+file|"llvm/IR/LegacyPassManager.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Pass
-decl_stmt|;
-name|class
-name|Module
-decl_stmt|;
-name|class
-name|PassManagerImpl
-decl_stmt|;
-name|class
-name|FunctionPassManagerImpl
-decl_stmt|;
-comment|/// PassManagerBase - An abstract interface to allow code to add passes to
-comment|/// a pass manager without having to hard-code what kind of pass manager
-comment|/// it is.
-name|class
+comment|// Pull these into the llvm namespace so that existing code that expects it
+comment|// there can find it.
+name|using
+name|legacy
+operator|::
 name|PassManagerBase
-block|{
-name|public
-label|:
-name|virtual
-operator|~
-name|PassManagerBase
-argument_list|()
 expr_stmt|;
-comment|/// add - Add a pass to the queue of passes to run.  This passes ownership of
-comment|/// the Pass to the PassManager.  When the PassManager is destroyed, the pass
-comment|/// will be destroyed as well, so there is no need to delete the pass.  This
-comment|/// implies that all passes MUST be allocated with 'new'.
-name|virtual
-name|void
-name|add
-parameter_list|(
-name|Pass
-modifier|*
-name|P
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-block|}
-empty_stmt|;
-comment|/// PassManager manages ModulePassManagers
-name|class
+name|using
+name|legacy
+operator|::
 name|PassManager
-range|:
-name|public
-name|PassManagerBase
-block|{
-name|public
-operator|:
-name|PassManager
-argument_list|()
-block|;
-operator|~
-name|PassManager
-argument_list|()
-block|;
-comment|/// add - Add a pass to the queue of passes to run.  This passes ownership of
-comment|/// the Pass to the PassManager.  When the PassManager is destroyed, the pass
-comment|/// will be destroyed as well, so there is no need to delete the pass.  This
-comment|/// implies that all passes MUST be allocated with 'new'.
-name|void
-name|add
-argument_list|(
-name|Pass
-operator|*
-name|P
-argument_list|)
-block|;
-comment|/// run - Execute all of the passes scheduled for execution.  Keep track of
-comment|/// whether any of the passes modifies the module, and if so, return true.
-name|bool
-name|run
-argument_list|(
-name|Module
-operator|&
-name|M
-argument_list|)
-block|;
-name|private
-operator|:
-comment|/// PassManagerImpl_New is the actual class. PassManager is just the
-comment|/// wraper to publish simple pass manager interface
-name|PassManagerImpl
-operator|*
-name|PM
-block|; }
-decl_stmt|;
-comment|/// FunctionPassManager manages FunctionPasses and BasicBlockPassManagers.
-name|class
+expr_stmt|;
+name|using
+name|legacy
+operator|::
 name|FunctionPassManager
-range|:
-name|public
-name|PassManagerBase
-block|{
-name|public
-operator|:
-comment|/// FunctionPassManager ctor - This initializes the pass manager.  It needs,
-comment|/// but does not take ownership of, the specified Module.
-name|explicit
-name|FunctionPassManager
-argument_list|(
-name|Module
-operator|*
-name|M
-argument_list|)
-block|;
-operator|~
-name|FunctionPassManager
-argument_list|()
-block|;
-comment|/// add - Add a pass to the queue of passes to run.  This passes
-comment|/// ownership of the Pass to the PassManager.  When the
-comment|/// PassManager_X is destroyed, the pass will be destroyed as well, so
-comment|/// there is no need to delete the pass.
-comment|/// This implies that all passes MUST be allocated with 'new'.
-name|void
-name|add
-argument_list|(
-name|Pass
-operator|*
-name|P
-argument_list|)
-block|;
-comment|/// run - Execute all of the passes scheduled for execution.  Keep
-comment|/// track of whether any of the passes modifies the function, and if
-comment|/// so, return true.
-comment|///
-name|bool
-name|run
-argument_list|(
-name|Function
-operator|&
-name|F
-argument_list|)
-block|;
-comment|/// doInitialization - Run all of the initializers for the function passes.
-comment|///
-name|bool
-name|doInitialization
-argument_list|()
-block|;
-comment|/// doFinalization - Run all of the finalizers for the function passes.
-comment|///
-name|bool
-name|doFinalization
-argument_list|()
-block|;
-name|private
-operator|:
-name|FunctionPassManagerImpl
-operator|*
-name|FPM
-block|;
-name|Module
-operator|*
-name|M
-block|; }
-decl_stmt|;
-comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
-name|DEFINE_STDCXX_CONVERSION_FUNCTIONS
-argument_list|(
-argument|PassManagerBase
-argument_list|,
-argument|LLVMPassManagerRef
-argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// End llvm namespace
-end_comment
 
 begin_endif
 endif|#

@@ -417,11 +417,9 @@ decl|const
 block|{
 for|for
 control|(
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|ScavengedInfo
-operator|,
-literal|2
 operator|>
 operator|::
 name|const_iterator
@@ -476,11 +474,9 @@ decl|const
 block|{
 for|for
 control|(
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|ScavengedInfo
-operator|,
-literal|2
 operator|>
 operator|::
 name|const_iterator

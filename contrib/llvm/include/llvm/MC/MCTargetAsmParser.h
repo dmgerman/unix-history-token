@@ -49,6 +49,12 @@ directive|include
 file|"llvm/MC/MCParser/MCAsmParserExtension.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCExpr.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -432,6 +438,8 @@ name|bool
 name|mnemonicIsValid
 argument_list|(
 argument|StringRef Mnemonic
+argument_list|,
+argument|unsigned VariantID
 argument_list|)
 operator|=
 literal|0
@@ -501,6 +509,31 @@ argument|const SmallVectorImpl<MCParsedAsmOperand*>&Operands
 argument_list|)
 operator|=
 literal|0
+block|;
+name|virtual
+specifier|const
+name|MCExpr
+operator|*
+name|applyModifierToExpr
+argument_list|(
+argument|const MCExpr *E
+argument_list|,
+argument|MCSymbolRefExpr::VariantKind
+argument_list|,
+argument|MCContext&Ctx
+argument_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+name|void
+name|onLabelParsed
+argument_list|(
+argument|MCSymbol *Symbol
+argument_list|)
+block|{ }
 block|; }
 decl_stmt|;
 block|}

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -118,12 +124,36 @@ comment|/// [2] three-byte opcodes of the form 0f 38 __
 comment|/// [3] three-byte opcodes of the form 0f 3a __
 comment|/// [4] three-byte opcodes of the form 0f a6 __
 comment|/// [5] three-byte opcodes of the form 0f a7 __
+comment|/// [6] XOP8 map opcode
+comment|/// [7] XOP9 map opcode
+comment|/// [8] XOPA map opcode
 name|ContextDecision
 modifier|*
 name|Tables
 index|[
-literal|6
+literal|9
 index|]
+decl_stmt|;
+comment|// Table of ModRM encodings.
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+operator|,
+name|unsigned
+operator|>
+name|ModRMMapTy
+expr_stmt|;
+name|mutable
+name|ModRMMapTy
+name|ModRMTable
 decl_stmt|;
 comment|/// The instruction information table
 name|std
@@ -137,36 +167,6 @@ expr_stmt|;
 comment|/// True if there are primary decode conflicts in the instruction set
 name|bool
 name|HasConflicts
-decl_stmt|;
-comment|/// emitOneID - Emits a table entry for a single instruction entry, at the
-comment|///   innermost level of the structure hierarchy.  The entry is printed out
-comment|///   in the format "nnnn, /* MNEMONIC */" where nnnn is the ID in decimal,
-comment|///   the comma is printed if addComma is true, and the menonic is the name
-comment|///   of the instruction as listed in the LLVM tables.
-comment|///
-comment|/// @param o        - The output stream to print the entry on.
-comment|/// @param i        - The indentation level for o.
-comment|/// @param id       - The unique ID of the instruction to print.
-comment|/// @param addComma - Whether or not to print a comma after the ID.  True if
-comment|///                    additional items will follow.
-name|void
-name|emitOneID
-argument_list|(
-name|raw_ostream
-operator|&
-name|o
-argument_list|,
-name|uint32_t
-operator|&
-name|i
-argument_list|,
-name|InstrUID
-name|id
-argument_list|,
-name|bool
-name|addComma
-argument_list|)
-decl|const
 decl_stmt|;
 comment|/// emitModRMDecision - Emits a table of entries corresponding to a single
 comment|///   ModR/M decision.  Compacts the ModR/M decision if possible.  ModR/M
@@ -196,6 +196,7 @@ comment|/// @param o1       - The output stream to print the ID table to.
 comment|/// @param o2       - The output stream to print the decision structure to.
 comment|/// @param i1       - The indentation level to use with stream o1.
 comment|/// @param i2       - The indentation level to use with stream o2.
+comment|/// @param ModRMTableNum - next table number for adding to ModRMTable.
 comment|/// @param decision - The ModR/M decision to emit.  This decision has 256
 comment|///                   entries - emitModRMDecision decides how to compact it.
 name|void
@@ -209,13 +210,17 @@ name|raw_ostream
 operator|&
 name|o2
 argument_list|,
-name|uint32_t
+name|unsigned
 operator|&
 name|i1
 argument_list|,
-name|uint32_t
+name|unsigned
 operator|&
 name|i2
+argument_list|,
+name|unsigned
+operator|&
+name|ModRMTableNum
 argument_list|,
 name|ModRMDecision
 operator|&
@@ -244,6 +249,7 @@ comment|///                   emitModRMDecision() to.
 comment|/// @param o2       - The output stream for the decision structure itself.
 comment|/// @param i1       - The indent level to use with stream o1.
 comment|/// @param i2       - The indent level to use with stream o2.
+comment|/// @param ModRMTableNum - next table number for adding to ModRMTable.
 comment|/// @param decision - The OpcodeDecision to emit along with its subsidiary
 comment|///                    structures.
 name|void
@@ -257,13 +263,17 @@ name|raw_ostream
 operator|&
 name|o2
 argument_list|,
-name|uint32_t
+name|unsigned
 operator|&
 name|i1
 argument_list|,
-name|uint32_t
+name|unsigned
 operator|&
 name|i2
+argument_list|,
+name|unsigned
+operator|&
+name|ModRMTableNum
 argument_list|,
 name|OpcodeDecision
 operator|&
@@ -298,6 +308,7 @@ comment|///                   emitModRMDecision() to.
 comment|/// @param o2       - The output stream to print the decision structure to.
 comment|/// @param i1       - The indent level to use with stream o1.
 comment|/// @param i2       - The indent level to use with stream o2.
+comment|/// @param ModRMTableNum - next table number for adding to ModRMTable.
 comment|/// @param decision - The ContextDecision to emit along with its subsidiary
 comment|///                   structures.
 comment|/// @param name     - The name for the ContextDecision.
@@ -312,13 +323,17 @@ name|raw_ostream
 operator|&
 name|o2
 argument_list|,
-name|uint32_t
+name|unsigned
 operator|&
 name|i1
 argument_list|,
-name|uint32_t
+name|unsigned
 operator|&
 name|i2
+argument_list|,
+name|unsigned
+operator|&
+name|ModRMTableNum
 argument_list|,
 name|ContextDecision
 operator|&
@@ -367,7 +382,7 @@ name|raw_ostream
 operator|&
 name|o
 argument_list|,
-name|uint32_t
+name|unsigned
 operator|&
 name|i
 argument_list|)
@@ -408,6 +423,7 @@ comment|///             emitModRMDecision() to.
 comment|/// @param o2 - The output stream to print the decision structures to.
 comment|/// @param i1 - The indent level to use with stream o1.
 comment|/// @param i2 - The indent level to use with stream o2.
+comment|/// @param ModRMTableNum - next table number for adding to ModRMTable.
 name|void
 name|emitContextDecisions
 argument_list|(
@@ -419,13 +435,17 @@ name|raw_ostream
 operator|&
 name|o2
 argument_list|,
-name|uint32_t
+name|unsigned
 operator|&
 name|i1
 argument_list|,
-name|uint32_t
+name|unsigned
 operator|&
 name|i2
+argument_list|,
+name|unsigned
+operator|&
+name|ModRMTableNum
 argument_list|)
 decl|const
 decl_stmt|;

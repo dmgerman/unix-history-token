@@ -74,6 +74,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"Encoding.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"TokenAnnotator.h"
 end_include
 
@@ -96,76 +102,19 @@ block|{
 name|namespace
 name|format
 block|{
+struct_decl|struct
+name|FormatStyle
+struct_decl|;
+comment|/// \brief Base class for strategies on how to break tokens.
+comment|///
+comment|/// FIXME: The interface seems set in stone, so we might want to just pull the
+comment|/// strategy into the class, instead of controlling it from the outside.
 name|class
 name|BreakableToken
 block|{
 name|public
 label|:
-name|BreakableToken
-argument_list|(
-argument|const SourceManager&SourceMgr
-argument_list|,
-argument|const FormatToken&Tok
-argument_list|,
-argument|unsigned StartColumn
-argument_list|)
-block|:
-name|Tok
-argument_list|(
-name|Tok
-argument_list|)
-operator|,
-name|StartColumn
-argument_list|(
-name|StartColumn
-argument_list|)
-operator|,
-name|TokenText
-argument_list|(
-argument|SourceMgr.getCharacterData(Tok.getStartOfNonWhitespace())
-argument_list|,
-argument|Tok.TokenLength
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|BreakableToken
-argument_list|()
-block|{}
-name|virtual
-name|unsigned
-name|getLineCount
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
-name|unsigned
-name|getLineSize
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-name|unsigned
-name|getLineLengthAfterSplit
-argument_list|(
-name|unsigned
-name|LineIndex
-argument_list|,
-name|unsigned
-name|TailOffset
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-comment|// Contains starting character index and length of split.
+comment|/// \brief Contains starting character index and length of split.
 typedef|typedef
 name|std
 operator|::
@@ -180,6 +129,48 @@ operator|>
 name|Split
 expr_stmt|;
 name|virtual
+operator|~
+name|BreakableToken
+argument_list|()
+block|{}
+comment|/// \brief Returns the number of lines in this token in the original code.
+name|virtual
+name|unsigned
+name|getLineCount
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// \brief Returns the number of columns required to format the piece of line
+comment|/// at \p LineIndex, from byte offset \p Offset with length \p Length.
+comment|///
+comment|/// Note that previous breaks are not taken into account. \p Offset is always
+comment|/// specified from the start of the (original) line.
+comment|/// \p Length can be set to StringRef::npos, which means "to the end of line".
+name|virtual
+name|unsigned
+name|getLineLengthAfterSplit
+argument_list|(
+name|unsigned
+name|LineIndex
+argument_list|,
+name|unsigned
+name|Offset
+argument_list|,
+name|StringRef
+operator|::
+name|size_type
+name|Length
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief Returns a range (offset, length) at which to break the line at
+comment|/// \p LineIndex, if previously broken at \p TailOffset. If possible, do not
+comment|/// violate \p ColumnLimit.
+name|virtual
 name|Split
 name|getSplit
 argument_list|(
@@ -196,6 +187,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// \brief Emits the previously retrieved \p Split via \p Whitespaces.
 name|virtual
 name|void
 name|insertBreak
@@ -208,9 +200,6 @@ name|TailOffset
 parameter_list|,
 name|Split
 name|Split
-parameter_list|,
-name|bool
-name|InPPDirective
 parameter_list|,
 name|WhitespaceManager
 modifier|&
@@ -219,9 +208,11 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Replaces the whitespace range described by \p Split with a single
+comment|/// space.
 name|virtual
 name|void
-name|trimLine
+name|replaceWhitespace
 parameter_list|(
 name|unsigned
 name|LineIndex
@@ -229,8 +220,23 @@ parameter_list|,
 name|unsigned
 name|TailOffset
 parameter_list|,
+name|Split
+name|Split
+parameter_list|,
+name|WhitespaceManager
+modifier|&
+name|Whitespaces
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Replaces the whitespace between \p LineIndex-1 and \p LineIndex.
+name|virtual
+name|void
+name|replaceWhitespaceBefore
+parameter_list|(
 name|unsigned
-name|InPPDirective
+name|LineIndex
 parameter_list|,
 name|WhitespaceManager
 modifier|&
@@ -239,694 +245,75 @@ parameter_list|)
 block|{}
 name|protected
 label|:
-specifier|const
-name|FormatToken
-modifier|&
-name|Tok
-decl_stmt|;
-name|unsigned
-name|StartColumn
-decl_stmt|;
-name|StringRef
-name|TokenText
-decl_stmt|;
-block|}
-empty_stmt|;
-name|class
-name|BreakableStringLiteral
-range|:
-name|public
 name|BreakableToken
-block|{
-name|public
-operator|:
-name|BreakableStringLiteral
 argument_list|(
-argument|const SourceManager&SourceMgr
-argument_list|,
 argument|const FormatToken&Tok
 argument_list|,
-argument|unsigned StartColumn
-argument_list|)
-operator|:
-name|BreakableToken
-argument_list|(
-argument|SourceMgr
+argument|unsigned IndentLevel
 argument_list|,
-argument|Tok
+argument|bool InPPDirective
 argument_list|,
-argument|StartColumn
+argument|encoding::Encoding Encoding
+argument_list|,
+argument|const FormatStyle&Style
 argument_list|)
-block|{
-name|assert
-argument_list|(
-name|TokenText
-operator|.
-name|startswith
-argument_list|(
-literal|"\""
-argument_list|)
-operator|&&
-name|TokenText
-operator|.
-name|endswith
-argument_list|(
-literal|"\""
-argument_list|)
-argument_list|)
-block|;   }
-name|virtual
-name|unsigned
-name|getLineCount
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|1
-return|;
-block|}
-name|virtual
-name|unsigned
-name|getLineSize
-argument_list|(
-argument|unsigned Index
-argument_list|)
-specifier|const
-block|{
-return|return
+block|:
 name|Tok
-operator|.
-name|TokenLength
-operator|-
-literal|2
-return|;
-comment|// Should be in sync with getLine
-block|}
-name|virtual
-name|unsigned
-name|getLineLengthAfterSplit
 argument_list|(
-argument|unsigned LineIndex
-argument_list|,
-argument|unsigned TailOffset
+name|Tok
 argument_list|)
+operator|,
+name|IndentLevel
+argument_list|(
+name|IndentLevel
+argument_list|)
+operator|,
+name|InPPDirective
+argument_list|(
+name|InPPDirective
+argument_list|)
+operator|,
+name|Encoding
+argument_list|(
+name|Encoding
+argument_list|)
+operator|,
+name|Style
+argument_list|(
+argument|Style
+argument_list|)
+block|{}
 specifier|const
-block|{
-return|return
-name|getDecorationLength
-argument_list|()
-operator|+
-name|getLine
-argument_list|()
-operator|.
-name|size
-argument_list|()
-operator|-
-name|TailOffset
-return|;
-block|}
-name|virtual
-name|Split
-name|getSplit
-argument_list|(
-argument|unsigned LineIndex
-argument_list|,
-argument|unsigned TailOffset
-argument_list|,
-argument|unsigned ColumnLimit
-argument_list|)
-specifier|const
-block|{
-name|StringRef
-name|Text
-operator|=
-name|getLine
-argument_list|()
-operator|.
-name|substr
-argument_list|(
-name|TailOffset
-argument_list|)
-block|;
-if|if
-condition|(
-name|ColumnLimit
-operator|<=
-name|getDecorationLength
-argument_list|()
-condition|)
-return|return
-name|Split
-argument_list|(
-name|StringRef
-operator|::
-name|npos
-argument_list|,
-literal|0
-argument_list|)
-return|;
-name|unsigned
-name|MaxSplit
-operator|=
-name|ColumnLimit
-operator|-
-name|getDecorationLength
-argument_list|()
-block|;
-name|assert
-argument_list|(
-name|MaxSplit
-operator|<
-name|Text
-operator|.
-name|size
-argument_list|()
-argument_list|)
-block|;
-name|StringRef
-operator|::
-name|size_type
-name|SpaceOffset
-operator|=
-name|Text
-operator|.
-name|rfind
-argument_list|(
-literal|' '
-argument_list|,
-name|MaxSplit
-argument_list|)
-block|;
-if|if
-condition|(
-name|SpaceOffset
-operator|!=
-name|StringRef
-operator|::
-name|npos
-operator|&&
-name|SpaceOffset
-operator|!=
-literal|0
-condition|)
-return|return
-name|Split
-argument_list|(
-name|SpaceOffset
-operator|+
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-return|;
-name|StringRef
-operator|::
-name|size_type
-name|SlashOffset
-operator|=
-name|Text
-operator|.
-name|rfind
-argument_list|(
-literal|'/'
-argument_list|,
-name|MaxSplit
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|SlashOffset
-operator|!=
-name|StringRef
-operator|::
-name|npos
-operator|&&
-name|SlashOffset
-operator|!=
-literal|0
-condition|)
-return|return
-name|Split
-argument_list|(
-name|SlashOffset
-operator|+
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-return|;
-name|StringRef
-operator|::
-name|size_type
-name|SplitPoint
-operator|=
-name|getStartOfCharacter
-argument_list|(
-name|Text
-argument_list|,
-name|MaxSplit
-argument_list|)
+name|FormatToken
+operator|&
+name|Tok
 expr_stmt|;
-if|if
-condition|(
-name|SplitPoint
-operator|!=
-name|StringRef
-operator|::
-name|npos
-operator|&&
-name|SplitPoint
-operator|>
-literal|1
-condition|)
-comment|// Do not split at 0.
-return|return
-name|Split
-argument_list|(
-name|SplitPoint
-argument_list|,
-literal|0
-argument_list|)
-return|;
-return|return
-name|Split
-argument_list|(
-name|StringRef
-operator|::
-name|npos
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-name|virtual
-name|void
-name|insertBreak
-parameter_list|(
+specifier|const
 name|unsigned
-name|LineIndex
-parameter_list|,
-name|unsigned
-name|TailOffset
-parameter_list|,
-name|Split
-name|Split
-parameter_list|,
+name|IndentLevel
+decl_stmt|;
+specifier|const
 name|bool
 name|InPPDirective
-parameter_list|,
-name|WhitespaceManager
+decl_stmt|;
+specifier|const
+name|encoding
+operator|::
+name|Encoding
+name|Encoding
+expr_stmt|;
+specifier|const
+name|FormatStyle
 modifier|&
-name|Whitespaces
-parameter_list|)
-block|{
-name|unsigned
-name|WhitespaceStartColumn
-init|=
-name|StartColumn
-operator|+
-name|Split
-operator|.
-name|first
-operator|+
-literal|2
+name|Style
 decl_stmt|;
-name|Whitespaces
-operator|.
-name|breakToken
-argument_list|(
-name|Tok
-argument_list|,
-literal|1
-operator|+
-name|TailOffset
-operator|+
-name|Split
-operator|.
-name|first
-argument_list|,
-name|Split
-operator|.
-name|second
-argument_list|,
-literal|"\""
-argument_list|,
-literal|"\""
-argument_list|,
-name|InPPDirective
-argument_list|,
-name|StartColumn
-argument_list|,
-name|WhitespaceStartColumn
-argument_list|)
-expr_stmt|;
 block|}
-name|private
-label|:
-name|StringRef
-name|getLine
-argument_list|()
-specifier|const
-block|{
-comment|// Get string without quotes.
-comment|// FIXME: Handle string prefixes.
-return|return
-name|TokenText
-operator|.
-name|substr
-argument_list|(
-literal|1
-argument_list|,
-name|TokenText
-operator|.
-name|size
-argument_list|()
-operator|-
-literal|2
-argument_list|)
-return|;
-block|}
-name|unsigned
-name|getDecorationLength
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StartColumn
-operator|+
-literal|2
-return|;
-block|}
-specifier|static
-name|StringRef
-operator|::
-name|size_type
-name|getStartOfCharacter
-argument_list|(
-argument|StringRef Text
-argument_list|,
-argument|StringRef::size_type Offset
-argument_list|)
-block|{
-name|StringRef
-operator|::
-name|size_type
-name|NextEscape
-operator|=
-name|Text
-operator|.
-name|find
-argument_list|(
-literal|'\\'
-argument_list|)
-block|;
-while|while
-condition|(
-name|NextEscape
-operator|!=
-name|StringRef
-operator|::
-name|npos
-operator|&&
-name|NextEscape
-operator|<
-name|Offset
-condition|)
-block|{
-name|StringRef
-operator|::
-name|size_type
-name|SequenceLength
-operator|=
-name|getEscapeSequenceLength
-argument_list|(
-name|Text
-operator|.
-name|substr
-argument_list|(
-name|NextEscape
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Offset
-operator|<
-name|NextEscape
-operator|+
-name|SequenceLength
-condition|)
-return|return
-name|NextEscape
-return|;
-name|NextEscape
-operator|=
-name|Text
-operator|.
-name|find
-argument_list|(
-literal|'\\'
-argument_list|,
-name|NextEscape
-operator|+
-name|SequenceLength
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|Offset
-return|;
-block|}
-specifier|static
-name|unsigned
-name|getEscapeSequenceLength
-parameter_list|(
-name|StringRef
-name|Text
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|Text
-index|[
-literal|0
-index|]
-operator|==
-literal|'\\'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Text
-operator|.
-name|size
-argument_list|()
-operator|<
-literal|2
-condition|)
-return|return
-literal|1
-return|;
-switch|switch
-condition|(
-name|Text
-index|[
-literal|1
-index|]
-condition|)
-block|{
-case|case
-literal|'u'
-case|:
-return|return
-literal|6
-return|;
-case|case
-literal|'U'
-case|:
-return|return
-literal|10
-return|;
-case|case
-literal|'x'
-case|:
-return|return
-name|getHexLength
-argument_list|(
-name|Text
-argument_list|)
-return|;
-default|default:
-if|if
-condition|(
-name|Text
-index|[
-literal|1
-index|]
-operator|>=
-literal|'0'
-operator|&&
-name|Text
-index|[
-literal|1
-index|]
-operator|<=
-literal|'7'
-condition|)
-return|return
-name|getOctalLength
-argument_list|(
-name|Text
-argument_list|)
-return|;
-return|return
-literal|2
-return|;
-block|}
-block|}
-specifier|static
-name|unsigned
-name|getHexLength
-parameter_list|(
-name|StringRef
-name|Text
-parameter_list|)
-block|{
-name|unsigned
-name|I
-init|=
-literal|2
-decl_stmt|;
-comment|// Point after '\x'.
-while|while
-condition|(
-name|I
-operator|<
-name|Text
-operator|.
-name|size
-argument_list|()
-operator|&&
-operator|(
-operator|(
-name|Text
-index|[
-name|I
-index|]
-operator|>=
-literal|'0'
-operator|&&
-name|Text
-index|[
-name|I
-index|]
-operator|<=
-literal|'9'
-operator|)
-operator|||
-operator|(
-name|Text
-index|[
-name|I
-index|]
-operator|>=
-literal|'a'
-operator|&&
-name|Text
-index|[
-name|I
-index|]
-operator|<=
-literal|'f'
-operator|)
-operator|||
-operator|(
-name|Text
-index|[
-name|I
-index|]
-operator|>=
-literal|'A'
-operator|&&
-name|Text
-index|[
-name|I
-index|]
-operator|<=
-literal|'F'
-operator|)
-operator|)
-condition|)
-block|{
-operator|++
-name|I
-expr_stmt|;
-block|}
-return|return
-name|I
-return|;
-block|}
-specifier|static
-name|unsigned
-name|getOctalLength
-parameter_list|(
-name|StringRef
-name|Text
-parameter_list|)
-block|{
-name|unsigned
-name|I
-init|=
-literal|1
-decl_stmt|;
-while|while
-condition|(
-name|I
-operator|<
-name|Text
-operator|.
-name|size
-argument_list|()
-operator|&&
-name|I
-operator|<
-literal|4
-operator|&&
-operator|(
-name|Text
-index|[
-name|I
-index|]
-operator|>=
-literal|'0'
-operator|&&
-name|Text
-index|[
-name|I
-index|]
-operator|<=
-literal|'7'
-operator|)
-condition|)
-block|{
-operator|++
-name|I
-expr_stmt|;
-block|}
-return|return
-name|I
-return|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
+comment|/// \brief Base class for single line tokens that can be broken.
+comment|///
+comment|/// \c getSplit() needs to be implemented by child classes.
 name|class
-name|BreakableComment
+name|BreakableSingleLineToken
 range|:
 name|public
 name|BreakableToken
@@ -935,35 +322,10 @@ name|public
 operator|:
 name|virtual
 name|unsigned
-name|getLineSize
-argument_list|(
-argument|unsigned Index
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getLine
-argument_list|(
-name|Index
-argument_list|)
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-name|virtual
-name|unsigned
 name|getLineCount
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Lines
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
+block|;
 name|virtual
 name|unsigned
 name|getLineLengthAfterSplit
@@ -971,28 +333,80 @@ argument_list|(
 argument|unsigned LineIndex
 argument_list|,
 argument|unsigned TailOffset
+argument_list|,
+argument|StringRef::size_type Length
 argument_list|)
 specifier|const
-block|{
-return|return
-name|getContentStartColumn
+block|;
+name|protected
+operator|:
+name|BreakableSingleLineToken
 argument_list|(
-name|LineIndex
+argument|const FormatToken&Tok
 argument_list|,
-name|TailOffset
+argument|unsigned IndentLevel
+argument_list|,
+argument|unsigned StartColumn
+argument_list|,
+argument|StringRef Prefix
+argument_list|,
+argument|StringRef Postfix
+argument_list|,
+argument|bool InPPDirective
+argument_list|,
+argument|encoding::Encoding Encoding
+argument_list|,
+argument|const FormatStyle&Style
 argument_list|)
-operator|+
-name|getLine
+block|;
+comment|// The column in which the token starts.
+name|unsigned
+name|StartColumn
+block|;
+comment|// The prefix a line needs after a break in the token.
+name|StringRef
+name|Prefix
+block|;
+comment|// The postfix a line needs before introducing a break.
+name|StringRef
+name|Postfix
+block|;
+comment|// The token text excluding the prefix and postfix.
+name|StringRef
+name|Line
+block|; }
+decl_stmt|;
+name|class
+name|BreakableStringLiteral
+range|:
+name|public
+name|BreakableSingleLineToken
+block|{
+name|public
+operator|:
+comment|/// \brief Creates a breakable token for a single line string literal.
+comment|///
+comment|/// \p StartColumn specifies the column in which the token will start
+comment|/// after formatting.
+name|BreakableStringLiteral
 argument_list|(
-name|LineIndex
+argument|const FormatToken&Tok
+argument_list|,
+argument|unsigned IndentLevel
+argument_list|,
+argument|unsigned StartColumn
+argument_list|,
+argument|StringRef Prefix
+argument_list|,
+argument|StringRef Postfix
+argument_list|,
+argument|bool InPPDirective
+argument_list|,
+argument|encoding::Encoding Encoding
+argument_list|,
+argument|const FormatStyle&Style
 argument_list|)
-operator|.
-name|size
-argument_list|()
-operator|-
-name|TailOffset
-return|;
-block|}
+block|;
 name|virtual
 name|Split
 name|getSplit
@@ -1015,65 +429,227 @@ argument|unsigned TailOffset
 argument_list|,
 argument|Split Split
 argument_list|,
+argument|WhitespaceManager&Whitespaces
+argument_list|)
+block|;
+name|virtual
+name|void
+name|replaceWhitespace
+argument_list|(
+argument|unsigned LineIndex
+argument_list|,
+argument|unsigned TailOffset
+argument_list|,
+argument|Split Split
+argument_list|,
+argument|WhitespaceManager&Whitespaces
+argument_list|)
+block|{}
+block|}
+decl_stmt|;
+name|class
+name|BreakableLineComment
+range|:
+name|public
+name|BreakableSingleLineToken
+block|{
+name|public
+operator|:
+comment|/// \brief Creates a breakable token for a line comment.
+comment|///
+comment|/// \p StartColumn specifies the column in which the comment will start
+comment|/// after formatting.
+name|BreakableLineComment
+argument_list|(
+argument|const FormatToken&Token
+argument_list|,
+argument|unsigned IndentLevel
+argument_list|,
+argument|unsigned StartColumn
+argument_list|,
 argument|bool InPPDirective
+argument_list|,
+argument|encoding::Encoding Encoding
+argument_list|,
+argument|const FormatStyle&Style
+argument_list|)
+block|;
+name|virtual
+name|Split
+name|getSplit
+argument_list|(
+argument|unsigned LineIndex
+argument_list|,
+argument|unsigned TailOffset
+argument_list|,
+argument|unsigned ColumnLimit
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|insertBreak
+argument_list|(
+argument|unsigned LineIndex
+argument_list|,
+argument|unsigned TailOffset
+argument_list|,
+argument|Split Split
 argument_list|,
 argument|WhitespaceManager&Whitespaces
 argument_list|)
 block|;
-name|protected
-operator|:
-name|BreakableComment
+name|virtual
+name|void
+name|replaceWhitespace
 argument_list|(
-argument|const SourceManager&SourceMgr
+argument|unsigned LineIndex
 argument_list|,
-argument|const FormatToken&Tok
+argument|unsigned TailOffset
+argument_list|,
+argument|Split Split
+argument_list|,
+argument|WhitespaceManager&Whitespaces
+argument_list|)
+block|;
+name|virtual
+name|void
+name|replaceWhitespaceBefore
+argument_list|(
+argument|unsigned LineIndex
+argument_list|,
+argument|WhitespaceManager&Whitespaces
+argument_list|)
+block|;
+name|private
+operator|:
+comment|// The prefix without an additional space if one was added.
+name|StringRef
+name|OriginalPrefix
+block|; }
+decl_stmt|;
+name|class
+name|BreakableBlockComment
+range|:
+name|public
+name|BreakableToken
+block|{
+name|public
+operator|:
+comment|/// \brief Creates a breakable token for a block comment.
+comment|///
+comment|/// \p StartColumn specifies the column in which the comment will start
+comment|/// after formatting, while \p OriginalStartColumn specifies in which
+comment|/// column the comment started before formatting.
+comment|/// If the comment starts a line after formatting, set \p FirstInLine to true.
+name|BreakableBlockComment
+argument_list|(
+argument|const FormatToken&Token
+argument_list|,
+argument|unsigned IndentLevel
 argument_list|,
 argument|unsigned StartColumn
-argument_list|)
-operator|:
-name|BreakableToken
-argument_list|(
-argument|SourceMgr
 argument_list|,
-argument|Tok
+argument|unsigned OriginaStartColumn
 argument_list|,
-argument|StartColumn
+argument|bool FirstInLine
+argument_list|,
+argument|bool InPPDirective
+argument_list|,
+argument|encoding::Encoding Encoding
+argument_list|,
+argument|const FormatStyle&Style
 argument_list|)
-block|{}
-comment|// Get comment lines without /* */, common prefix and trailing whitespace.
-comment|// Last line is not trimmed, as it is terminated by */, so its trailing
-comment|// whitespace is not really trailing.
-name|StringRef
-name|getLine
+block|;
+name|virtual
+name|unsigned
+name|getLineCount
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getLineLengthAfterSplit
 argument_list|(
-argument|unsigned Index
+argument|unsigned LineIndex
+argument_list|,
+argument|unsigned TailOffset
+argument_list|,
+argument|StringRef::size_type Length
 argument_list|)
 specifier|const
-block|{
-return|return
-name|Index
-operator|<
-name|Lines
-operator|.
-name|size
-argument_list|()
-operator|-
-literal|1
-operator|?
-name|Lines
-index|[
-name|Index
-index|]
-operator|.
-name|rtrim
-argument_list|()
+block|;
+name|virtual
+name|Split
+name|getSplit
+argument_list|(
+argument|unsigned LineIndex
+argument_list|,
+argument|unsigned TailOffset
+argument_list|,
+argument|unsigned ColumnLimit
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|insertBreak
+argument_list|(
+argument|unsigned LineIndex
+argument_list|,
+argument|unsigned TailOffset
+argument_list|,
+argument|Split Split
+argument_list|,
+argument|WhitespaceManager&Whitespaces
+argument_list|)
+block|;
+name|virtual
+name|void
+name|replaceWhitespace
+argument_list|(
+argument|unsigned LineIndex
+argument_list|,
+argument|unsigned TailOffset
+argument_list|,
+argument|Split Split
+argument_list|,
+argument|WhitespaceManager&Whitespaces
+argument_list|)
+block|;
+name|virtual
+name|void
+name|replaceWhitespaceBefore
+argument_list|(
+argument|unsigned LineIndex
+argument_list|,
+argument|WhitespaceManager&Whitespaces
+argument_list|)
+block|;
+name|private
 operator|:
-name|Lines
-index|[
-name|Index
-index|]
-return|;
-block|}
+comment|// Rearranges the whitespace between Lines[LineIndex-1] and Lines[LineIndex],
+comment|// so that all whitespace between the lines is accounted to Lines[LineIndex]
+comment|// as leading whitespace:
+comment|// - Lines[LineIndex] points to the text after that whitespace
+comment|// - Lines[LineIndex-1] shrinks by its trailing whitespace
+comment|// - LeadingWhitespace[LineIndex] is updated with the complete whitespace
+comment|//   between the end of the text of Lines[LineIndex-1] and Lines[LineIndex]
+comment|//
+comment|// Sets StartOfLineColumn to the intended column in which the text at
+comment|// Lines[LineIndex] starts (note that the decoration, if present, is not
+comment|// considered part of the text).
+name|void
+name|adjustWhitespace
+argument_list|(
+argument|unsigned LineIndex
+argument_list|,
+argument|int IndentDelta
+argument_list|)
+block|;
+comment|// Returns the column at which the text in line LineIndex starts, when broken
+comment|// at TailOffset. Note that the decoration (if present) is not considered part
+comment|// of the text.
 name|unsigned
 name|getContentStartColumn
 argument_list|(
@@ -1082,34 +658,11 @@ argument_list|,
 argument|unsigned TailOffset
 argument_list|)
 specifier|const
-block|{
-return|return
-operator|(
-name|TailOffset
-operator|==
-literal|0
-operator|&&
-name|LineIndex
-operator|==
-literal|0
-operator|)
-condition|?
-name|StartColumn
-else|:
-name|IndentAtLineBreak
-operator|+
-name|Decoration
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-name|unsigned
-name|IndentAtLineBreak
 block|;
-name|StringRef
-name|Decoration
-block|;
+comment|// Contains the text of the lines of the block comment, excluding the leading
+comment|// /* in the first line and trailing */ in the last line, and excluding all
+comment|// trailing whitespace between the lines. Note that the decoration (if
+comment|// present) is also not considered part of the text.
 name|SmallVector
 operator|<
 name|StringRef
@@ -1117,133 +670,58 @@ block|,
 literal|16
 operator|>
 name|Lines
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|class
-name|BreakableBlockComment
-range|:
-name|public
-name|BreakableComment
-block|{
-name|public
-operator|:
-name|BreakableBlockComment
-argument_list|(
-argument|const SourceManager&SourceMgr
-argument_list|,
-argument|const AnnotatedToken&Token
-argument_list|,
-argument|unsigned StartColumn
-argument_list|)
 block|;
-name|void
-name|alignLines
-argument_list|(
-name|WhitespaceManager
-operator|&
-name|Whitespaces
-argument_list|)
-block|;
-name|virtual
-name|unsigned
-name|getLineLengthAfterSplit
-argument_list|(
-argument|unsigned LineIndex
-argument_list|,
-argument|unsigned TailOffset
-argument_list|)
-specifier|const
-block|{
-return|return
-name|BreakableComment
-operator|::
-name|getLineLengthAfterSplit
-argument_list|(
-name|LineIndex
-argument_list|,
-name|TailOffset
-argument_list|)
-operator|+
-operator|(
-name|LineIndex
-operator|+
-literal|1
+comment|// LeadingWhitespace[i] is the number of characters regarded as whitespace in
+comment|// front of Lines[i]. Note that this can include "* " sequences, which we
+comment|// regard as whitespace when all lines have a "*" prefix.
+name|SmallVector
 operator|<
-name|Lines
-operator|.
-name|size
-argument_list|()
-operator|?
-literal|0
-operator|:
-literal|2
-operator|)
-return|;
-block|}
-name|virtual
-name|void
-name|trimLine
-argument_list|(
-argument|unsigned LineIndex
-argument_list|,
-argument|unsigned TailOffset
-argument_list|,
-argument|unsigned InPPDirective
-argument_list|,
-argument|WhitespaceManager&Whitespaces
-argument_list|)
-block|;
-name|private
-operator|:
 name|unsigned
-name|OriginalStartColumn
+block|,
+literal|16
+operator|>
+name|LeadingWhitespace
 block|;
+comment|// StartOfLineColumn[i] is the target column at which Line[i] should be.
+comment|// Note that this excludes a leading "* " or "*" in case all lines have
+comment|// a "*" prefix.
+name|SmallVector
+operator|<
 name|unsigned
-name|CommonPrefixLength
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|class
-name|BreakableLineComment
-range|:
-name|public
-name|BreakableComment
-block|{
-name|public
-operator|:
-name|BreakableLineComment
-argument_list|(
-argument|const SourceManager&SourceMgr
-argument_list|,
-argument|const AnnotatedToken&Token
-argument_list|,
-argument|unsigned StartColumn
-argument_list|)
+block|,
+literal|16
+operator|>
+name|StartOfLineColumn
 block|;
-name|private
-operator|:
-specifier|static
+comment|// The column at which the text of a broken line should start.
+comment|// Note that an optional decoration would go before that column.
+comment|// IndentAtLineBreak is a uniform position for all lines in a block comment,
+comment|// regardless of their relative position.
+comment|// FIXME: Revisit the decision to do this; the main reason was to support
+comment|// patterns like
+comment|// /**************//**
+comment|//  * Comment
+comment|// We could also support such patterns by special casing the first line
+comment|// instead.
+name|unsigned
+name|IndentAtLineBreak
+block|;
+comment|// This is to distinguish between the case when the last line was empty and
+comment|// the case when it started with a decoration ("*" or "* ").
+name|bool
+name|LastLineNeedsDecoration
+block|;
+comment|// Either "* " if all lines begin with a "*", or empty.
 name|StringRef
-name|getLineCommentPrefix
-argument_list|(
-argument|StringRef Comment
-argument_list|)
+name|Decoration
 block|; }
 decl_stmt|;
+block|}
+comment|// namespace format
+block|}
 end_decl_stmt
 
 begin_comment
-unit|}
-comment|// namespace format
-end_comment
-
-begin_comment
-unit|}
 comment|// namespace clang
 end_comment
 

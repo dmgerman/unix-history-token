@@ -355,7 +355,7 @@ name|CXXTryStmt
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation tryLoc
 argument_list|,
@@ -369,7 +369,7 @@ name|CXXTryStmt
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|,
 argument|EmptyShell Empty
 argument_list|,

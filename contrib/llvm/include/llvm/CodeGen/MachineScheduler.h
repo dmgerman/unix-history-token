@@ -36,11 +36,171 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file provides a MachineSchedRegistry for registering alternative machine
+comment|// This file provides an interface for customizing the standard MachineScheduler
 end_comment
 
 begin_comment
-comment|// schedulers. A Target may provide an alternative scheduler implementation by
+comment|// pass. Note that the entire pass may be replaced as follows:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//<Target>TargetMachine::createPassConfig(PassManagerBase&PM) {
+end_comment
+
+begin_comment
+comment|//   PM.substitutePass(&MachineSchedulerID,&CustomSchedulerPassID);
+end_comment
+
+begin_comment
+comment|//   ...}
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// The MachineScheduler pass is only responsible for choosing the regions to be
+end_comment
+
+begin_comment
+comment|// scheduled. Targets can override the DAG builder and scheduler without
+end_comment
+
+begin_comment
+comment|// replacing the pass as follows:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ScheduleDAGInstrs *<Target>PassConfig::
+end_comment
+
+begin_comment
+comment|// createMachineScheduler(MachineSchedContext *C) {
+end_comment
+
+begin_comment
+comment|//   return new CustomMachineScheduler(C);
+end_comment
+
+begin_comment
+comment|// }
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// The default scheduler, ScheduleDAGMI, builds the DAG and drives list
+end_comment
+
+begin_comment
+comment|// scheduling while updating the instruction stream, register pressure, and live
+end_comment
+
+begin_comment
+comment|// intervals. Most targets don't need to override the DAG builder and list
+end_comment
+
+begin_comment
+comment|// schedulier, but subtargets that require custom scheduling heuristics may
+end_comment
+
+begin_comment
+comment|// plugin an alternate MachineSchedStrategy. The strategy is responsible for
+end_comment
+
+begin_comment
+comment|// selecting the highest priority node from the list:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ScheduleDAGInstrs *<Target>PassConfig::
+end_comment
+
+begin_comment
+comment|// createMachineScheduler(MachineSchedContext *C) {
+end_comment
+
+begin_comment
+comment|//   return new ScheduleDAGMI(C, CustomStrategy(C));
+end_comment
+
+begin_comment
+comment|// }
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// The DAG builder can also be customized in a sense by adding DAG mutations
+end_comment
+
+begin_comment
+comment|// that will run after DAG building and before list scheduling. DAG mutations
+end_comment
+
+begin_comment
+comment|// can adjust dependencies based on target-specific knowledge or add weak edges
+end_comment
+
+begin_comment
+comment|// to aid heuristics:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ScheduleDAGInstrs *<Target>PassConfig::
+end_comment
+
+begin_comment
+comment|// createMachineScheduler(MachineSchedContext *C) {
+end_comment
+
+begin_comment
+comment|//   ScheduleDAGMI *DAG = new ScheduleDAGMI(C, CustomStrategy(C));
+end_comment
+
+begin_comment
+comment|//   DAG->addMutation(new CustomDependencies(DAG->TII, DAG->TRI));
+end_comment
+
+begin_comment
+comment|//   return DAG;
+end_comment
+
+begin_comment
+comment|// }
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// A target that supports alternative schedulers can use the
+end_comment
+
+begin_comment
+comment|// MachineSchedRegistry to allow command line selection. This can be done by
 end_comment
 
 begin_comment
@@ -80,15 +240,55 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Inside<Target>PassConfig:
+comment|//
 end_comment
 
 begin_comment
-comment|//   enablePass(&MachineSchedulerID);
+comment|// Finally, subtargets that don't need to implement custom heuristics but would
 end_comment
 
 begin_comment
-comment|//   MachineSchedRegistry::setDefault(createCustomMachineSched);
+comment|// like to configure the GenericScheduler's policy for a given scheduler region,
+end_comment
+
+begin_comment
+comment|// including scheduling direction and register pressure tracking policy, can do
+end_comment
+
+begin_comment
+comment|// this:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// void<SubTarget>Subtarget::
+end_comment
+
+begin_comment
+comment|// overrideSchedPolicy(MachineSchedPolicy&Policy,
+end_comment
+
+begin_comment
+comment|//                     MachineInstr *begin,
+end_comment
+
+begin_comment
+comment|//                     MachineInstr *end,
+end_comment
+
+begin_comment
+comment|//                     unsigned NumRegionInstrs) const {
+end_comment
+
+begin_comment
+comment|//   Policy.<Flag> = true;
+end_comment
+
+begin_comment
+comment|// }
 end_comment
 
 begin_comment
@@ -127,12 +327,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/ScheduleDAGInstrs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
 begin_decl_stmt
@@ -313,56 +507,6 @@ argument_list|()
 return|;
 block|}
 specifier|static
-name|ScheduleDAGCtor
-name|getDefault
-parameter_list|()
-block|{
-return|return
-operator|(
-name|ScheduleDAGCtor
-operator|)
-name|Registry
-operator|.
-name|getDefault
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|setDefault
-parameter_list|(
-name|ScheduleDAGCtor
-name|C
-parameter_list|)
-block|{
-name|Registry
-operator|.
-name|setDefault
-argument_list|(
-operator|(
-name|MachinePassCtor
-operator|)
-name|C
-argument_list|)
-expr_stmt|;
-block|}
-specifier|static
-name|void
-name|setDefault
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|)
-block|{
-name|Registry
-operator|.
-name|setDefault
-argument_list|(
-name|Name
-argument_list|)
-expr_stmt|;
-block|}
-specifier|static
 name|void
 name|setListener
 parameter_list|(
@@ -393,6 +537,56 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Define a generic scheduling policy for targets that don't provide their own
+end_comment
+
+begin_comment
+comment|/// MachineSchedStrategy. This can be overriden for each scheduling region
+end_comment
+
+begin_comment
+comment|/// before building the DAG.
+end_comment
+
+begin_struct
+struct|struct
+name|MachineSchedPolicy
+block|{
+comment|// Allow the scheduler to disable register pressure tracking.
+name|bool
+name|ShouldTrackPressure
+decl_stmt|;
+comment|// Allow the scheduler to force top-down or bottom-up scheduling. If neither
+comment|// is true, the scheduler runs in both directions and converges.
+name|bool
+name|OnlyTopDown
+decl_stmt|;
+name|bool
+name|OnlyBottomUp
+decl_stmt|;
+name|MachineSchedPolicy
+argument_list|()
+operator|:
+name|ShouldTrackPressure
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|OnlyTopDown
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|OnlyBottomUp
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/// MachineSchedStrategy - Interface to the scheduling algorithm used by
 end_comment
 
@@ -400,10 +594,27 @@ begin_comment
 comment|/// ScheduleDAGMI.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Initialization sequence:
+end_comment
+
+begin_comment
+comment|///   initPolicy -> shouldTrackPressure -> initialize(DAG) -> registerRoots
+end_comment
+
 begin_decl_stmt
 name|class
 name|MachineSchedStrategy
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|virtual
@@ -411,18 +622,42 @@ operator|~
 name|MachineSchedStrategy
 argument_list|()
 block|{}
+comment|/// Optionally override the per-region scheduling policy.
+name|virtual
+name|void
+name|initPolicy
+argument_list|(
+argument|MachineBasicBlock::iterator Begin
+argument_list|,
+argument|MachineBasicBlock::iterator End
+argument_list|,
+argument|unsigned NumRegionInstrs
+argument_list|)
+block|{}
+comment|/// Check if pressure tracking is needed before building the DAG and
+comment|/// initializing this strategy. Called after initPolicy.
+name|virtual
+name|bool
+name|shouldTrackPressure
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// Initialize the strategy after building the DAG for a new region.
 name|virtual
 name|void
 name|initialize
-argument_list|(
+parameter_list|(
 name|ScheduleDAGMI
-operator|*
+modifier|*
 name|DAG
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|/// Notify this strategy that all roots have been released (including those
 comment|/// that depend on EntrySU or ExitSU).
 name|virtual
@@ -816,6 +1051,11 @@ begin_decl_stmt
 name|class
 name|ScheduleDAGMutation
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|virtual
@@ -899,7 +1139,16 @@ operator|::
 name|iterator
 name|LiveRegionEnd
 block|;
-comment|/// Register pressure in this region computed by buildSchedGraph.
+comment|// Map each SU to its summary of pressure changes. This array is updated for
+comment|// liveness during bottom-up scheduling. Top-down scheduling may proceed but
+comment|// has no affect on the pressure diffs.
+name|PressureDiffs
+name|SUPressureDiffs
+block|;
+comment|/// Register pressure in this region computed by initRegPressure.
+name|bool
+name|ShouldTrackPressure
+block|;
 name|IntervalPressure
 name|RegPressure
 block|;
@@ -913,7 +1162,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|PressureElement
+name|PressureChange
 operator|>
 name|RegionCriticalPSets
 block|;
@@ -1032,6 +1281,11 @@ operator|&
 name|ExitSU
 argument_list|)
 block|,
+name|ShouldTrackPressure
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|RPTracker
 argument_list|(
 name|RegPressure
@@ -1078,6 +1332,16 @@ operator|~
 name|ScheduleDAGMI
 argument_list|()
 block|;
+comment|/// \brief Return true if register pressure tracking is enabled.
+name|bool
+name|isTrackingPressure
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ShouldTrackPressure
+return|;
+block|}
 comment|/// Add a postprocessing step to the DAG builder.
 comment|/// Mutations are applied in the order that they are added after normal DAG
 comment|/// building and before MachineSchedStrategy initialization.
@@ -1162,8 +1426,9 @@ argument|MachineBasicBlock::iterator begin
 argument_list|,
 argument|MachineBasicBlock::iterator end
 argument_list|,
-argument|unsigned endcount
+argument|unsigned regioninstrs
 argument_list|)
+name|LLVM_OVERRIDE
 block|;
 comment|/// Implement ScheduleDAGInstrs interface for scheduling a sequence of
 comment|/// reorderable instructions.
@@ -1245,7 +1510,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|PressureElement
+name|PressureChange
 operator|>
 operator|&
 name|getRegionCriticalPSets
@@ -1254,6 +1519,22 @@ specifier|const
 block|{
 return|return
 name|RegionCriticalPSets
+return|;
+block|}
+name|PressureDiff
+operator|&
+name|getPressureDiff
+argument_list|(
+argument|const SUnit *SU
+argument_list|)
+block|{
+return|return
+name|SUPressureDiffs
+index|[
+name|SU
+operator|->
+name|NodeNum
+index|]
 return|;
 block|}
 specifier|const
@@ -1305,6 +1586,11 @@ return|return
 name|ScheduledTrees
 return|;
 block|}
+comment|/// Compute the cyclic critical path through the DAG.
+name|unsigned
+name|computeCyclicCriticalPath
+argument_list|()
+block|;
 name|void
 name|viewGraph
 argument_list|(
@@ -1390,8 +1676,23 @@ name|initRegPressure
 argument_list|()
 block|;
 name|void
+name|updatePressureDiffs
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|LiveUses
+argument_list|)
+block|;
+name|void
 name|updateScheduledPressure
 argument_list|(
+specifier|const
+name|SUnit
+operator|*
+name|SU
+argument_list|,
 specifier|const
 name|std
 operator|::

@@ -1248,8 +1248,8 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|// isPredicable - Return true if this instruction has a predicate operand that
-comment|// controls execution.  It may be set to 'always', or may be set to other
+comment|/// Return true if this instruction has a predicate operand that
+comment|/// controls execution.  It may be set to 'always', or may be set to other
 comment|/// values.   There are various methods in TargetInstrInfo that can be used to
 comment|/// control and modify the predicate in this instruction.
 name|bool
@@ -1943,6 +1943,34 @@ operator|==
 name|TargetOpcode
 operator|::
 name|DBG_VALUE
+return|;
+block|}
+comment|/// A DBG_VALUE is indirect iff the first operand is a register and
+comment|/// the second operand is an immediate.
+name|bool
+name|isIndirectDebugValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isDebugValue
+argument_list|()
+operator|&&
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|isReg
+argument_list|()
+operator|&&
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|isImm
+argument_list|()
 return|;
 block|}
 name|bool
@@ -2931,7 +2959,7 @@ name|bool
 name|addRegisterDead
 parameter_list|(
 name|unsigned
-name|IncomingReg
+name|Reg
 parameter_list|,
 specifier|const
 name|TargetRegisterInfo
@@ -2950,7 +2978,7 @@ name|void
 name|addRegisterDefined
 parameter_list|(
 name|unsigned
-name|IncomingReg
+name|Reg
 parameter_list|,
 specifier|const
 name|TargetRegisterInfo
@@ -2998,25 +3026,6 @@ argument_list|,
 name|bool
 operator|&
 name|SawStore
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// isSafeToReMat - Return true if it's safe to rematerialize the specified
-comment|/// instruction which defined the specified register instead of copying it.
-name|bool
-name|isSafeToReMat
-argument_list|(
-specifier|const
-name|TargetInstrInfo
-operator|*
-name|TII
-argument_list|,
-name|AliasAnalysis
-operator|*
-name|AA
-argument_list|,
-name|unsigned
-name|DstReg
 argument_list|)
 decl|const
 decl_stmt|;

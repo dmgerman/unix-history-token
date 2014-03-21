@@ -118,9 +118,6 @@ name|class
 name|MCContext
 decl_stmt|;
 name|class
-name|PassManagerBase
-decl_stmt|;
-name|class
 name|Target
 decl_stmt|;
 name|class
@@ -168,6 +165,19 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+comment|// The old pass manager infrastructure is hidden in a legacy namespace now.
+name|namespace
+name|legacy
+block|{
+name|class
+name|PassManagerBase
+decl_stmt|;
+block|}
+name|using
+name|legacy
+operator|::
+name|PassManagerBase
+expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetMachine - Primary interface to the complete machine description for
@@ -233,7 +243,7 @@ name|string
 name|TargetFS
 expr_stmt|;
 comment|/// CodeGenInfo - Low level target information such as relocation model.
-specifier|const
+comment|/// Non-const to allow resetting optimization level per-function.
 name|MCCodeGenInfo
 modifier|*
 name|CodeGenInfo
@@ -353,11 +363,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|// Interfaces to the major aspects of target machine information:
+comment|//
 comment|// -- Instruction opcode and operand information
 comment|// -- Pipelines and scheduling information
 comment|// -- Stack frame information
 comment|// -- Selection DAG lowering information
 comment|//
+comment|// N.B. These objects may change during compilation. It's not safe to cache
+comment|// them between functions.
 name|virtual
 specifier|const
 name|TargetInstrInfo
@@ -701,6 +714,17 @@ name|getOptLevel
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Overrides the optimization level.
+name|void
+name|setOptLevel
+argument_list|(
+name|CodeGenOpt
+operator|::
+name|Level
+name|Level
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|setFastISel
 parameter_list|(
@@ -818,12 +842,12 @@ init|=
 name|true
 parameter_list|,
 name|AnalysisID
-name|StartAfter
+comment|/*StartAfter*/
 init|=
 literal|0
 parameter_list|,
 name|AnalysisID
-name|StopAfter
+comment|/*StopAfter*/
 init|=
 literal|0
 parameter_list|)
@@ -919,6 +943,10 @@ argument|CodeModel::Model CM
 argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
+block|;
+name|void
+name|initAsmInfo
+argument_list|()
 block|;
 name|public
 operator|:

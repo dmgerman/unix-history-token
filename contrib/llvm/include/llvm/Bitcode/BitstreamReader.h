@@ -961,8 +961,6 @@ name|buf
 argument_list|)
 argument_list|,
 name|buf
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1427,8 +1425,6 @@ name|Array
 argument_list|)
 argument_list|,
 name|Array
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|// Handle big-endian byte-swapping if necessary.

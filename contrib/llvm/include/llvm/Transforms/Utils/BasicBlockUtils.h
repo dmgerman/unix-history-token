@@ -230,75 +230,6 @@ modifier|*
 name|To
 parameter_list|)
 function_decl|;
-comment|/// FindFunctionBackedges - Analyze the specified function to find all of the
-comment|/// loop backedges in the function and return them.  This is a relatively cheap
-comment|/// (compared to computing dominators and loop info) analysis.
-comment|///
-comment|/// The output is added to Result, as pairs of<from,to> edge info.
-name|void
-name|FindFunctionBackedges
-argument_list|(
-specifier|const
-name|Function
-operator|&
-name|F
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|BasicBlock
-operator|*
-argument_list|,
-specifier|const
-name|BasicBlock
-operator|*
-operator|>
-expr|>
-operator|&
-name|Result
-argument_list|)
-decl_stmt|;
-comment|/// GetSuccessorNumber - Search for the specified successor of basic block BB
-comment|/// and return its position in the terminator instruction's list of
-comment|/// successors.  It is an error to call this with a block that is not a
-comment|/// successor.
-name|unsigned
-name|GetSuccessorNumber
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|BB
-parameter_list|,
-name|BasicBlock
-modifier|*
-name|Succ
-parameter_list|)
-function_decl|;
-comment|/// isCriticalEdge - Return true if the specified edge is a critical edge.
-comment|/// Critical edges are edges from a block with multiple successors to a block
-comment|/// with multiple predecessors.
-comment|///
-name|bool
-name|isCriticalEdge
-parameter_list|(
-specifier|const
-name|TerminatorInst
-modifier|*
-name|TI
-parameter_list|,
-name|unsigned
-name|SuccNum
-parameter_list|,
-name|bool
-name|AllowIdenticalEdges
-init|=
-name|false
-parameter_list|)
-function_decl|;
 comment|/// SplitCriticalEdge - If this edge is a critical edge, insert a new node to
 comment|/// split the critical edge.  This will update DominatorTree and
 comment|/// DominatorFrontier information if it is available, thus calling this pass
@@ -757,6 +688,31 @@ modifier|*
 name|BranchWeights
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+comment|///
+comment|/// GetIfCondition - Check whether BB is the merge point of a if-region.
+comment|/// If so, return the boolean condition that determines which entry into
+comment|/// BB will be taken.  Also, return by references the block that will be
+comment|/// entered from if the condition is true, and the block that will be
+comment|/// entered if the condition is false.
+name|Value
+modifier|*
+name|GetIfCondition
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|BasicBlock
+modifier|*
+modifier|&
+name|IfTrue
+parameter_list|,
+name|BasicBlock
+modifier|*
+modifier|&
+name|IfFalse
 parameter_list|)
 function_decl|;
 block|}

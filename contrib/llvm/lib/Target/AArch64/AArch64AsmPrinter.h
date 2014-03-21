@@ -220,19 +220,6 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-name|void
-name|PrintDebugValueComment
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|raw_ostream
-operator|&
-name|OS
-argument_list|)
-block|;
 comment|/// printSymbolicAddress - Given some kind of reasonably bare symbolic
 comment|/// reference, print out the appropriate asm string to represent it. If
 comment|/// appropriate, a relocation-specifier will be produced, composed of a
@@ -250,13 +237,6 @@ argument|StringRef Suffix
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
-block|;
-name|MachineLocation
-name|getDebugValueLocation
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|)
-specifier|const
 block|;
 name|virtual
 specifier|const

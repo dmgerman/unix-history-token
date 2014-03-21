@@ -57,6 +57,11 @@ comment|/// Global access point for the JIT debugging interface.
 name|class
 name|JITRegistrar
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 comment|/// Instantiates the JIT service.

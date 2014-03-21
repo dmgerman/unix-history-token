@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/FileSystem.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -97,6 +103,35 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+struct|struct
+name|FileData
+block|{
+name|uint64_t
+name|Size
+decl_stmt|;
+name|time_t
+name|ModTime
+decl_stmt|;
+name|llvm
+operator|::
+name|sys
+operator|::
+name|fs
+operator|::
+name|UniqueID
+name|UniqueID
+expr_stmt|;
+name|bool
+name|IsDirectory
+decl_stmt|;
+name|bool
+name|IsNamedPipe
+decl_stmt|;
+name|bool
+name|InPCH
+decl_stmt|;
+block|}
+struct|;
 comment|/// \brief Abstract interface for introducing a FileManager cache for 'stat'
 comment|/// system calls, which is used by precompiled and pretokenized headers to
 comment|/// improve performance.
@@ -152,10 +187,9 @@ name|char
 modifier|*
 name|Path
 parameter_list|,
-name|struct
-name|stat
+name|FileData
 modifier|&
-name|StatBuf
+name|Data
 parameter_list|,
 name|bool
 name|isFile
@@ -226,10 +260,9 @@ name|char
 modifier|*
 name|Path
 parameter_list|,
-name|struct
-name|stat
+name|FileData
 modifier|&
-name|StatBuf
+name|Data
 parameter_list|,
 name|bool
 name|isFile
@@ -249,10 +282,9 @@ name|char
 modifier|*
 name|Path
 parameter_list|,
-name|struct
-name|stat
+name|FileData
 modifier|&
-name|StatBuf
+name|Data
 parameter_list|,
 name|bool
 name|isFile
@@ -278,7 +310,7 @@ name|getStat
 argument_list|(
 name|Path
 argument_list|,
-name|StatBuf
+name|Data
 argument_list|,
 name|isFile
 argument_list|,
@@ -292,7 +324,7 @@ name|get
 argument_list|(
 name|Path
 argument_list|,
-name|StatBuf
+name|Data
 argument_list|,
 name|isFile
 argument_list|,
@@ -324,8 +356,7 @@ name|llvm
 operator|::
 name|StringMap
 operator|<
-expr|struct
-name|stat
+name|FileData
 block|,
 name|llvm
 operator|::
@@ -338,8 +369,7 @@ name|llvm
 operator|::
 name|StringMap
 operator|<
-expr|struct
-name|stat
+name|FileData
 operator|,
 name|llvm
 operator|::
@@ -379,7 +409,7 @@ name|getStat
 argument_list|(
 argument|const char *Path
 argument_list|,
-argument|struct stat&StatBuf
+argument|FileData&Data
 argument_list|,
 argument|bool isFile
 argument_list|,

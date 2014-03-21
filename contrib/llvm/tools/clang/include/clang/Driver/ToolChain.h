@@ -93,6 +93,26 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
+name|opt
+block|{
+name|class
+name|ArgList
+decl_stmt|;
+name|class
+name|DerivedArgList
+decl_stmt|;
+name|class
+name|InputArgList
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|class
@@ -102,22 +122,16 @@ name|namespace
 name|driver
 block|{
 name|class
-name|ArgList
-decl_stmt|;
-name|class
 name|Compilation
-decl_stmt|;
-name|class
-name|DerivedArgList
 decl_stmt|;
 name|class
 name|Driver
 decl_stmt|;
 name|class
-name|InputArgList
+name|JobAction
 decl_stmt|;
 name|class
-name|JobAction
+name|SanitizerArgs
 decl_stmt|;
 name|class
 name|Tool
@@ -169,10 +183,14 @@ name|Triple
 name|Triple
 expr_stmt|;
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
-modifier|&
+operator|&
 name|Args
-decl_stmt|;
+expr_stmt|;
 comment|/// The list of toolchain specific path prefixes to search for
 comment|/// files.
 name|path_list
@@ -228,6 +246,13 @@ name|getClangAs
 argument_list|()
 specifier|const
 expr_stmt|;
+name|mutable
+name|OwningPtr
+operator|<
+name|SanitizerArgs
+operator|>
+name|SanitizerArguments
+expr_stmt|;
 name|protected
 label|:
 name|ToolChain
@@ -245,6 +270,10 @@ operator|&
 name|T
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -281,69 +310,101 @@ comment|///@{
 specifier|static
 name|void
 name|addSystemInclude
-parameter_list|(
+argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
-modifier|&
+operator|&
 name|DriverArgs
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
-modifier|&
+operator|&
 name|CC1Args
-parameter_list|,
+argument_list|,
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|Path
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|void
 name|addExternCSystemInclude
-parameter_list|(
+argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
-modifier|&
+operator|&
 name|DriverArgs
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
-modifier|&
+operator|&
 name|CC1Args
-parameter_list|,
+argument_list|,
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|Path
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|void
 name|addExternCSystemIncludeIfExists
-parameter_list|(
+argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
-modifier|&
+operator|&
 name|DriverArgs
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
-modifier|&
+operator|&
 name|CC1Args
-parameter_list|,
+argument_list|,
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|Path
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|void
 name|addSystemIncludes
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|DriverArgs
 argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|CC1Args
@@ -499,6 +560,13 @@ return|return
 name|ProgramPaths
 return|;
 block|}
+specifier|const
+name|SanitizerArgs
+operator|&
+name|getSanitizerArgs
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Tool access.
 comment|/// TranslateArgs - Create a new derived argument list for any argument
 comment|/// translations this ToolChain may wish to perform, or 0 if no tool chain
@@ -506,21 +574,19 @@ comment|/// specific translations are needed.
 comment|///
 comment|/// \param BoundArch - The bound architecture name, or 0.
 name|virtual
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
-modifier|*
+operator|*
 name|TranslateArgs
 argument_list|(
-specifier|const
-name|DerivedArgList
-operator|&
-name|Args
+argument|const llvm::opt::DerivedArgList&Args
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|BoundArch
+argument|const char *BoundArch
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -557,6 +623,22 @@ argument|const char *Name
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// \brief Dispatch to the specific toolchain for verbose printing.
+comment|///
+comment|/// This is used when handling the verbose option to print detailed,
+comment|/// toolchain-specific information useful for understanding the behavior of
+comment|/// the driver on a specific platform.
+name|virtual
+name|void
+name|printVerboseInfo
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+block|{}
+empty_stmt|;
 comment|// Platform defaults information
 comment|/// HasNativeLTOLinker - Check whether the linker and related tools have
 comment|/// native LLVM support.
@@ -607,34 +689,10 @@ name|useIntegratedAs
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// IsStrictAliasingDefault - Does this tool chain use -fstrict-aliasing by
-comment|/// default.
-name|virtual
-name|bool
-name|IsStrictAliasingDefault
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|/// IsMathErrnoDefault - Does this tool chain use -fmath-errno by default.
 name|virtual
 name|bool
 name|IsMathErrnoDefault
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// IsObjCDefaultSynthPropertiesDefault - Does this tool chain enable
-comment|/// -fobjc-default-synthesize-properties by default.
-name|virtual
-name|bool
-name|IsObjCDefaultSynthPropertiesDefault
 argument_list|()
 specifier|const
 block|{
@@ -804,7 +862,7 @@ operator|::
 name|string
 name|ComputeLLVMTriple
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
 argument|types::ID InputType = types::TY_INVALID
 argument_list|)
@@ -821,7 +879,7 @@ operator|::
 name|string
 name|ComputeEffectiveClangTriple
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
 argument|types::ID InputType = types::TY_INVALID
 argument_list|)
@@ -864,10 +922,18 @@ name|void
 name|AddClangSystemIncludeArgs
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|DriverArgs
 argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|CC1Args
@@ -880,10 +946,18 @@ name|void
 name|addClangTargetOptions
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|DriverArgs
 argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|CC1Args
@@ -897,6 +971,10 @@ name|RuntimeLibType
 name|GetRuntimeLibType
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -910,6 +988,10 @@ name|CXXStdlibType
 name|GetCXXStdlibType
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -923,10 +1005,18 @@ name|void
 name|AddClangCXXStdlibIncludeArgs
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|DriverArgs
 argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|CC1Args
@@ -940,10 +1030,18 @@ name|void
 name|AddCXXStdlibLibArgs
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
 argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|CmdArgs
@@ -957,10 +1055,18 @@ name|void
 name|AddCCKextLibArgs
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
 argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|CmdArgs
@@ -976,10 +1082,18 @@ name|bool
 name|AddFastMathRuntimeIfAvailable
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
 argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|CmdArgs

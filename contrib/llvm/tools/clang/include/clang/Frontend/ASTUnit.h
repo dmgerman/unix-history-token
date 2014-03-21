@@ -128,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Sema/Sema.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
@@ -217,6 +211,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|Sema
+decl_stmt|;
 name|class
 name|ASTContext
 decl_stmt|;
@@ -335,6 +332,9 @@ block|;
 name|ASTReader
 operator|*
 name|Reader
+block|;
+name|bool
+name|HadModuleLoaderFatalFailure
 block|;    struct
 name|ASTWriterData
 block|;
@@ -1777,6 +1777,9 @@ specifier|const
 block|{
 return|return
 name|TheSema
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -1856,6 +1859,14 @@ block|}
 end_function
 
 begin_function_decl
+name|ASTMutationListener
+modifier|*
+name|getASTMutationListener
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ASTDeserializationListener
 modifier|*
 name|getDeserializationListener
@@ -1875,21 +1886,15 @@ begin_comment
 comment|/// This file will be erased when the ASTUnit is destroyed.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|addTemporaryFile
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|sys
-operator|::
-name|Path
-operator|&
+parameter_list|(
+name|StringRef
 name|TempFile
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|bool
@@ -3010,7 +3015,7 @@ comment|/// \param Action - The ASTFrontendAction to invoke. Its ownership is no
 end_comment
 
 begin_comment
-comment|/// transfered.
+comment|/// transferred.
 end_comment
 
 begin_comment
@@ -3022,7 +3027,7 @@ comment|/// \param Unit - optionally an already created ASTUnit. Its ownership i
 end_comment
 
 begin_comment
-comment|/// transfered.
+comment|/// transferred.
 end_comment
 
 begin_comment

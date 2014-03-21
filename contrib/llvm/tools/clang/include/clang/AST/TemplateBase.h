@@ -168,8 +168,8 @@ comment|/// The template argument is a pack expansion of a template name that wa
 comment|/// provided for a template template parameter.
 name|TemplateExpansion
 block|,
-comment|/// The template argument is a value- or type-dependent expression
-comment|/// stored in an Expr*.
+comment|/// The template argument is a value- or type-dependent expression or a
+comment|/// non-dependent __uuidof expression stored in an Expr*.
 name|Expression
 block|,
 comment|/// The template argument is actually a parameter pack. Arguments are stored
@@ -180,27 +180,40 @@ enum|;
 name|private
 label|:
 comment|/// \brief The kind of template argument we're storing.
-name|unsigned
-name|Kind
-decl_stmt|;
 struct|struct
 name|DA
 block|{
-name|ValueDecl
-modifier|*
-name|D
+name|unsigned
+name|Kind
 decl_stmt|;
 name|bool
 name|ForRefParam
+decl_stmt|;
+name|ValueDecl
+modifier|*
+name|D
 decl_stmt|;
 block|}
 struct|;
 struct|struct
 name|I
 block|{
+name|unsigned
+name|Kind
+decl_stmt|;
 comment|// We store a decomposed APSInt with the data allocated by ASTContext if
 comment|// BitWidth> 64. The memory may be shared between multiple
 comment|// TemplateArgument instances.
+name|unsigned
+name|BitWidth
+range|:
+literal|31
+decl_stmt|;
+name|unsigned
+name|IsUnsigned
+range|:
+literal|1
+decl_stmt|;
 union|union
 block|{
 name|uint64_t
@@ -215,16 +228,6 @@ decl_stmt|;
 comment|///< Used to store the>64 bits integer value.
 block|}
 union|;
-name|unsigned
-name|BitWidth
-range|:
-literal|31
-decl_stmt|;
-name|unsigned
-name|IsUnsigned
-range|:
-literal|1
-decl_stmt|;
 name|void
 modifier|*
 name|Type
@@ -234,25 +237,42 @@ struct|;
 struct|struct
 name|A
 block|{
+name|unsigned
+name|Kind
+decl_stmt|;
+name|unsigned
+name|NumArgs
+decl_stmt|;
 specifier|const
 name|TemplateArgument
 modifier|*
 name|Args
-decl_stmt|;
-name|unsigned
-name|NumArgs
 decl_stmt|;
 block|}
 struct|;
 struct|struct
 name|TA
 block|{
+name|unsigned
+name|Kind
+decl_stmt|;
+name|unsigned
+name|NumExpansions
+decl_stmt|;
 name|void
 modifier|*
 name|Name
 decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|TV
+block|{
 name|unsigned
-name|NumExpansions
+name|Kind
+decl_stmt|;
+name|uintptr_t
+name|V
 decl_stmt|;
 block|}
 struct|;
@@ -274,7 +294,8 @@ name|struct
 name|TA
 name|TemplateArg
 decl_stmt|;
-name|uintptr_t
+name|struct
+name|TV
 name|TypeOrValue
 decl_stmt|;
 block|}
@@ -292,17 +313,20 @@ label|:
 comment|/// \brief Construct an empty, invalid template argument.
 name|TemplateArgument
 argument_list|()
-operator|:
-name|Kind
-argument_list|(
-name|Null
-argument_list|)
-operator|,
+block|{
 name|TypeOrValue
-argument_list|(
+operator|.
+name|Kind
+operator|=
+name|Null
+expr_stmt|;
+name|TypeOrValue
+operator|.
+name|V
+operator|=
 literal|0
-argument_list|)
-block|{ }
+expr_stmt|;
+block|}
 comment|/// \brief Construct a template type argument.
 name|TemplateArgument
 argument_list|(
@@ -310,13 +334,20 @@ argument|QualType T
 argument_list|,
 argument|bool isNullPtr = false
 argument_list|)
-operator|:
-name|Kind
-argument_list|(
-argument|isNullPtr ? NullPtr : Type
-argument_list|)
 block|{
 name|TypeOrValue
+operator|.
+name|Kind
+operator|=
+name|isNullPtr
+condition|?
+name|NullPtr
+else|:
+name|Type
+expr_stmt|;
+name|TypeOrValue
+operator|.
+name|V
 operator|=
 name|reinterpret_cast
 operator|<
@@ -328,7 +359,8 @@ operator|.
 name|getAsOpaquePtr
 argument_list|()
 operator|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief Construct a template argument that refers to a
 comment|/// declaration, which is either an external declaration or a
 comment|/// template declaration.
@@ -338,11 +370,6 @@ argument|ValueDecl *D
 argument_list|,
 argument|bool ForRefParam
 argument_list|)
-operator|:
-name|Kind
-argument_list|(
-argument|Declaration
-argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -350,19 +377,26 @@ name|D
 operator|&&
 literal|"Expected decl"
 argument_list|)
-block|;
+expr_stmt|;
+name|DeclArg
+operator|.
+name|Kind
+operator|=
+name|Declaration
+expr_stmt|;
 name|DeclArg
 operator|.
 name|D
 operator|=
 name|D
-block|;
+expr_stmt|;
 name|DeclArg
 operator|.
 name|ForRefParam
 operator|=
 name|ForRefParam
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief Construct an integral constant template argument. The memory to
 comment|/// store the value is allocated with Ctx.
 name|TemplateArgument
@@ -373,7 +407,7 @@ argument|const llvm::APSInt&Value
 argument_list|,
 argument|QualType Type
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|/// \brief Construct an integral constant template argument with the same
 comment|/// value as Other but a different type.
 name|TemplateArgument
@@ -381,11 +415,6 @@ argument_list|(
 argument|const TemplateArgument&Other
 argument_list|,
 argument|QualType Type
-argument_list|)
-block|:
-name|Kind
-argument_list|(
-argument|Integral
 argument_list|)
 block|{
 name|Integer
@@ -416,12 +445,13 @@ name|TemplateArgument
 argument_list|(
 argument|TemplateName Name
 argument_list|)
-block|:
-name|Kind
-argument_list|(
-argument|Template
-argument_list|)
 block|{
+name|TemplateArg
+operator|.
+name|Kind
+operator|=
+name|Template
+expr_stmt|;
 name|TemplateArg
 operator|.
 name|Name
@@ -455,12 +485,13 @@ argument|TemplateName Name
 argument_list|,
 argument|Optional<unsigned> NumExpansions
 argument_list|)
-block|:
-name|Kind
-argument_list|(
-argument|TemplateExpansion
-argument_list|)
 block|{
+name|TemplateArg
+operator|.
+name|Kind
+operator|=
+name|TemplateExpansion
+expr_stmt|;
 name|TemplateArg
 operator|.
 name|Name
@@ -498,17 +529,18 @@ comment|/// lists used for dependent types and for expression; it will not
 comment|/// occur in a non-dependent, canonical template argument list.
 name|TemplateArgument
 argument_list|(
-name|Expr
-operator|*
-name|E
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-argument|Expression
+argument|Expr *E
 argument_list|)
 block|{
 name|TypeOrValue
+operator|.
+name|Kind
+operator|=
+name|Expression
+expr_stmt|;
+name|TypeOrValue
+operator|.
+name|V
 operator|=
 name|reinterpret_cast
 operator|<
@@ -517,7 +549,8 @@ operator|>
 operator|(
 name|E
 operator|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief Construct a template argument that is a template argument pack.
 comment|///
 comment|/// We assume that storage for the template arguments provided
@@ -528,20 +561,23 @@ argument|const TemplateArgument *Args
 argument_list|,
 argument|unsigned NumArgs
 argument_list|)
-operator|:
-name|Kind
-argument_list|(
-argument|Pack
-argument_list|)
 block|{
 name|this
 operator|->
 name|Args
 operator|.
+name|Kind
+operator|=
+name|Pack
+expr_stmt|;
+name|this
+operator|->
+name|Args
+operator|.
 name|Args
 operator|=
 name|Args
-block|;
+expr_stmt|;
 name|this
 operator|->
 name|Args
@@ -549,11 +585,12 @@ operator|.
 name|NumArgs
 operator|=
 name|NumArgs
-block|;   }
+expr_stmt|;
+block|}
 specifier|static
 name|TemplateArgument
 name|getEmptyPack
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|TemplateArgument
@@ -597,6 +634,8 @@ return|return
 operator|(
 name|ArgKind
 operator|)
+name|TypeOrValue
+operator|.
 name|Kind
 return|;
 block|}
@@ -607,7 +646,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Null
 return|;
@@ -648,7 +688,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Type
 operator|&&
@@ -667,6 +708,8 @@ operator|*
 operator|>
 operator|(
 name|TypeOrValue
+operator|.
+name|V
 operator|)
 argument_list|)
 return|;
@@ -681,7 +724,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Declaration
 operator|&&
@@ -703,7 +747,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Declaration
 operator|&&
@@ -724,7 +769,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|NullPtr
 operator|&&
@@ -743,6 +789,8 @@ operator|*
 operator|>
 operator|(
 name|TypeOrValue
+operator|.
+name|V
 operator|)
 argument_list|)
 return|;
@@ -755,7 +803,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Template
 operator|&&
@@ -783,11 +832,13 @@ block|{
 name|assert
 argument_list|(
 operator|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Template
 operator|||
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|TemplateExpansion
 operator|)
@@ -827,7 +878,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Integral
 operator|&&
@@ -910,7 +962,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Integral
 operator|&&
@@ -937,7 +990,8 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Integral
 operator|&&
@@ -963,7 +1017,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Expression
 operator|&&
@@ -978,6 +1033,8 @@ operator|*
 operator|>
 operator|(
 name|TypeOrValue
+operator|.
+name|V
 operator|)
 return|;
 block|}
@@ -997,7 +1054,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Pack
 argument_list|)
@@ -1017,7 +1075,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Pack
 argument_list|)
@@ -1041,7 +1100,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Pack
 argument_list|)
@@ -1065,7 +1125,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Kind
+name|getKind
+argument_list|()
 operator|==
 name|Pack
 argument_list|)
@@ -1812,57 +1873,6 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// \brief When the template argument is a pack expansion, returns
-end_comment
-
-begin_comment
-comment|/// the pattern of the pack expansion.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param Ellipsis Will be set to the location of the ellipsis.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param NumExpansions Will be set to the number of expansions that will
-end_comment
-
-begin_comment
-comment|/// be generated from this pack expansion, if known a priori.
-end_comment
-
-begin_decl_stmt
-name|TemplateArgumentLoc
-name|getPackExpansionPattern
-argument_list|(
-name|SourceLocation
-operator|&
-name|Ellipsis
-argument_list|,
-name|Optional
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|NumExpansions
-argument_list|,
-name|ASTContext
-operator|&
-name|Context
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 unit|};

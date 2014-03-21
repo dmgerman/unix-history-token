@@ -99,8 +99,7 @@ comment|/// Can be put into unions.
 name|class
 name|DeclAccessPair
 block|{
-name|NamedDecl
-modifier|*
+name|uintptr_t
 name|Ptr
 decl_stmt|;
 comment|// we'd use llvm::PointerUnion, but it isn't trivial
@@ -148,17 +147,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
+name|reinterpret_cast
+operator|<
 name|NamedDecl
 operator|*
-operator|)
+operator|>
 operator|(
 operator|~
 name|Mask
 operator|&
-operator|(
-name|uintptr_t
-operator|)
 name|Ptr
 operator|)
 return|;
@@ -173,9 +170,6 @@ name|AccessSpecifier
 argument_list|(
 name|Mask
 operator|&
-operator|(
-name|uintptr_t
-operator|)
 name|Ptr
 argument_list|)
 return|;
@@ -226,12 +220,6 @@ parameter_list|)
 block|{
 name|Ptr
 operator|=
-name|reinterpret_cast
-operator|<
-name|NamedDecl
-operator|*
-operator|>
-operator|(
 name|uintptr_t
 argument_list|(
 name|AS
@@ -243,7 +231,6 @@ name|uintptr_t
 operator|>
 operator|(
 name|D
-operator|)
 operator|)
 expr_stmt|;
 block|}

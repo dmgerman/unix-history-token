@@ -685,6 +685,11 @@ parameter_list|,
 name|ASTContext
 modifier|&
 name|Ctx
+parameter_list|,
+name|bool
+name|IsDecl
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief 'Loc' is the end of a statement range. This returns the location
@@ -700,6 +705,11 @@ parameter_list|,
 name|ASTContext
 modifier|&
 name|Ctx
+parameter_list|,
+name|bool
+name|IsDecl
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|bool

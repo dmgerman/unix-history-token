@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- InstCombine.h - Main InstCombine pass definition -------------------===//
+comment|//===- InstCombine.h - Main InstCombine pass definition ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -900,7 +900,7 @@ name|Instruction
 modifier|*
 name|FoldICmpAddOpCst
 argument_list|(
-name|ICmpInst
+name|Instruction
 operator|&
 name|ICI
 argument_list|,
@@ -916,10 +916,6 @@ name|ICmpInst
 operator|::
 name|Predicate
 name|Pred
-argument_list|,
-name|Value
-operator|*
-name|TheAdd
 argument_list|)
 decl_stmt|;
 name|Instruction
@@ -1083,6 +1079,15 @@ modifier|*
 name|visitBitCast
 parameter_list|(
 name|BitCastInst
+modifier|&
+name|CI
+parameter_list|)
+function_decl|;
+name|Instruction
+modifier|*
+name|visitAddrSpaceCast
+parameter_list|(
+name|AddrSpaceCastInst
 modifier|&
 name|CI
 parameter_list|)
@@ -1385,7 +1390,7 @@ name|FindElementAtOffset
 argument_list|(
 name|Type
 operator|*
-name|Ty
+name|PtrTy
 argument_list|,
 name|int64_t
 name|Offset
@@ -1540,6 +1545,21 @@ modifier|*
 name|PN
 parameter_list|)
 function_decl|;
+name|Value
+modifier|*
+name|EvaluateInDifferentElementOrder
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+name|ArrayRef
+operator|<
+name|int
+operator|>
+name|Mask
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 comment|// InsertNewInstBefore - insert an instruction New before instruction Old
@@ -1691,7 +1711,7 @@ argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"IC: Replacing "
@@ -1734,7 +1754,7 @@ parameter_list|)
 block|{
 name|DEBUG
 argument_list|(
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"IC: ERASE "
