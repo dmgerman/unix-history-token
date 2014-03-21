@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -290,6 +290,35 @@ name|iter
 operator|->
 name|type
 expr_stmt|;
+comment|/* Validate the optional label. */
+if|if
+condition|(
+name|p
+operator|->
+name|label
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|p
+operator|->
+name|label
+argument_list|)
+operator|>
+name|scheme
+operator|->
+name|labellen
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0

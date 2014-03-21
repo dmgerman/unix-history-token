@@ -77,6 +77,11 @@ name|off_t
 name|size
 decl_stmt|;
 comment|/* Size in bytes of partition. */
+name|char
+modifier|*
+name|label
+decl_stmt|;
+comment|/* Partition label. */
 block|}
 struct|;
 end_struct

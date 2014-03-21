@@ -128,8 +128,11 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
-name|int
+name|u_int
 name|nparts
+decl_stmt|;
+name|u_int
+name|labellen
 decl_stmt|;
 block|}
 struct|;
