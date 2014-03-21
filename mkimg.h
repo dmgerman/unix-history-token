@@ -65,6 +65,10 @@ name|u_int
 name|index
 decl_stmt|;
 comment|/* Partition index (0-based). */
+name|uintptr_t
+name|type
+decl_stmt|;
+comment|/* Scheme-specific partition type. */
 name|off_t
 name|offset
 decl_stmt|;

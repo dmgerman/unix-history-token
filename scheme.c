@@ -282,6 +282,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|p
+operator|->
+name|type
+operator|=
+name|iter
+operator|->
+name|type
+expr_stmt|;
 return|return
 operator|(
 literal|0
