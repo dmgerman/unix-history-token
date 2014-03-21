@@ -14911,6 +14911,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|FW_PORT_TYPE_QSFP_10G
+case|:
+case|case
 name|FW_PORT_TYPE_SFP
 case|:
 case|case
