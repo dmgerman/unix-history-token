@@ -251,18 +251,47 @@ return|;
 block|}
 comment|/// getAliasedGlobal() - Aliasee can be either global or bitcast of
 comment|/// global. This method retrives the global for both aliasee flavours.
+name|GlobalValue
+modifier|*
+name|getAliasedGlobal
+parameter_list|()
+function_decl|;
 specifier|const
 name|GlobalValue
 operator|*
 name|getAliasedGlobal
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|const_cast
+operator|<
+name|GlobalAlias
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getAliasedGlobal
+argument_list|()
+return|;
+block|}
 comment|/// resolveAliasedGlobal() - This method tries to ultimately resolve the alias
 comment|/// by going through the aliasing chain and trying to find the very last
 comment|/// global. Returns NULL if a cycle was found. If stopOnWeak is false, then
 comment|/// the whole chain aliasing chain is traversed, otherwise - only strong
 comment|/// aliases.
+name|GlobalValue
+modifier|*
+name|resolveAliasedGlobal
+parameter_list|(
+name|bool
+name|stopOnWeak
+init|=
+name|true
+parameter_list|)
+function_decl|;
 specifier|const
 name|GlobalValue
 modifier|*
@@ -274,7 +303,53 @@ operator|=
 name|true
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|const_cast
+operator|<
+name|GlobalAlias
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|resolveAliasedGlobal
+argument_list|(
+name|stopOnWeak
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isValidLinkage
+parameter_list|(
+name|LinkageTypes
+name|L
+parameter_list|)
+block|{
+return|return
+name|isExternalLinkage
+argument_list|(
+name|L
+argument_list|)
+operator|||
+name|isLocalLinkage
+argument_list|(
+name|L
+argument_list|)
+operator|||
+name|isWeakLinkage
+argument_list|(
+name|L
+argument_list|)
+operator|||
+name|isLinkOnceLinkage
+argument_list|(
+name|L
+argument_list|)
+return|;
+block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

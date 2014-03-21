@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"SystemZSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -105,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetSelectionDAGInfo.h"
 end_include
 
 begin_decl_stmt
@@ -136,7 +136,7 @@ block|;
 name|SystemZTargetLowering
 name|TLInfo
 block|;
-name|TargetSelectionDAGInfo
+name|SystemZSelectionDAGInfo
 name|TSInfo
 block|;
 name|SystemZFrameLowering

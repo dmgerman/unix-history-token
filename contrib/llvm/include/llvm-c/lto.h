@@ -18,20 +18,82 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdbool.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stddef.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<sys/types.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|bool
+name|lto_bool_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* MSVC in particular does not have anything like _Bool or bool in C, but we can    at least make sure the type is the same size.  The implementation side will    use C++ bool. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|lto_bool_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|bool
+name|lto_bool_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * @defgroup LLVMCLTO LTO  * @ingroup LLVMC  *  * @{  */
@@ -41,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|LTO_API_VERSION
-value|4
+value|5
 end_define
 
 begin_typedef
@@ -217,7 +279,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * Checks if a file is a loadable object file.  */
 specifier|extern
-name|bool
+name|lto_bool_t
 name|lto_module_is_object_file
 parameter_list|(
 specifier|const
@@ -228,7 +290,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * Checks if a file is a loadable object compiled for requested target.  */
 specifier|extern
-name|bool
+name|lto_bool_t
 name|lto_module_is_object_file_for_target
 parameter_list|(
 specifier|const
@@ -244,7 +306,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * Checks if a buffer is a loadable object file.  */
 specifier|extern
-name|bool
+name|lto_bool_t
 name|lto_module_is_object_file_in_memory
 parameter_list|(
 specifier|const
@@ -258,7 +320,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * Checks if a buffer is a loadable object compiled for requested target.  */
 specifier|extern
-name|bool
+name|lto_bool_t
 name|lto_module_is_object_file_in_memory_for_target
 parameter_list|(
 specifier|const
@@ -430,7 +492,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * Add an object module to the set of modules for which code will be generated.  * Returns true on error (check lto_get_error_message() for details).  */
 specifier|extern
-name|bool
+name|lto_bool_t
 name|lto_codegen_add_module
 parameter_list|(
 name|lto_code_gen_t
@@ -442,7 +504,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * Sets if debug info should be generated.  * Returns true on error (check lto_get_error_message() for details).  */
 specifier|extern
-name|bool
+name|lto_bool_t
 name|lto_codegen_set_debug_model
 parameter_list|(
 name|lto_code_gen_t
@@ -453,7 +515,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * Sets which PIC code model to generated.  * Returns true on error (check lto_get_error_message() for details).  */
 specifier|extern
-name|bool
+name|lto_bool_t
 name|lto_codegen_set_pic_model
 parameter_list|(
 name|lto_code_gen_t
@@ -508,7 +570,7 @@ name|int
 name|nargs
 parameter_list|)
 function_decl|;
-comment|/**  * Adds to a list of all global symbols that must exist in the final  * generated code.  If a function is not listed, it might be  * inlined into every usage and optimized away.  */
+comment|/**  * Tells LTO optimization passes that this symbol must be preserved  * because it is referenced by native code or a command line option.  */
 specifier|extern
 name|void
 name|lto_codegen_add_must_preserve_symbol
@@ -524,7 +586,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * Writes a new object file at the specified path that contains the  * merged contents of all modules added so far.  * Returns true on error (check lto_get_error_message() for details).  */
 specifier|extern
-name|bool
+name|lto_bool_t
 name|lto_codegen_write_merged_modules
 parameter_list|(
 name|lto_code_gen_t
@@ -553,7 +615,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * Generates code for all added modules into one native object file.  * The name of the file is written to name. Returns true on error.  */
 specifier|extern
-name|bool
+name|lto_bool_t
 name|lto_codegen_compile_to_file
 parameter_list|(
 name|lto_code_gen_t

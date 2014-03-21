@@ -69,19 +69,30 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
+name|opt
+block|{
+name|class
+name|DerivedArgList
+decl_stmt|;
+name|class
+name|InputArgList
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|namespace
 name|driver
 block|{
 name|class
-name|DerivedArgList
-decl_stmt|;
-name|class
 name|Driver
-decl_stmt|;
-name|class
-name|InputArgList
 decl_stmt|;
 name|class
 name|JobAction
@@ -110,16 +121,24 @@ modifier|&
 name|DefaultToolChain
 decl_stmt|;
 comment|/// The original (untranslated) input argument list.
+name|llvm
+operator|::
+name|opt
+operator|::
 name|InputArgList
-modifier|*
+operator|*
 name|Args
-decl_stmt|;
+expr_stmt|;
 comment|/// The driver translated arguments. Note that toolchains may perform their
 comment|/// own argument translation.
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
-modifier|*
+operator|*
 name|TranslatedArgs
-decl_stmt|;
+expr_stmt|;
 comment|/// The list of actions.
 name|ActionList
 name|Actions
@@ -147,15 +166,23 @@ name|char
 operator|*
 operator|>
 operator|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
 operator|*
 operator|>
 name|TCArgs
 expr_stmt|;
 comment|/// Temporary files which should be removed on exit.
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 name|TempFiles
-decl_stmt|;
+expr_stmt|;
 comment|/// Result files which should be removed on failure.
 name|ArgStringMap
 name|ResultFiles
@@ -167,15 +194,11 @@ name|FailureResultFiles
 decl_stmt|;
 comment|/// Redirection for stdout, stderr, etc.
 specifier|const
-name|llvm
-operator|::
-name|sys
-operator|::
-name|Path
-operator|*
-operator|*
+name|StringRef
+modifier|*
+modifier|*
 name|Redirects
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 name|Compilation
@@ -190,10 +213,18 @@ name|ToolChain
 operator|&
 name|DefaultToolChain
 argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|InputArgList
 operator|*
 name|Args
 argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
 operator|*
 name|TranslatedArgs
@@ -226,6 +257,10 @@ name|DefaultToolChain
 return|;
 block|}
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|InputArgList
 operator|&
 name|getInputArgs
@@ -238,6 +273,10 @@ name|Args
 return|;
 block|}
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
 operator|&
 name|getArgs
@@ -249,10 +288,14 @@ operator|*
 name|TranslatedArgs
 return|;
 block|}
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
-modifier|&
+operator|&
 name|getArgs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|*
@@ -316,6 +359,10 @@ argument_list|)
 expr_stmt|;
 block|}
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|getTempFiles
@@ -359,21 +406,25 @@ comment|/// tool chain \p TC (or the default tool chain, if TC is not specified)
 comment|///
 comment|/// \param BoundArch - The bound architecture name, or 0.
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
-modifier|&
+operator|&
 name|getArgsForToolChain
-parameter_list|(
+argument_list|(
 specifier|const
 name|ToolChain
-modifier|*
+operator|*
 name|TC
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|BoundArch
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// addTempFile - Add a file to remove on exit, and returns its
 comment|/// argument.
 specifier|const
@@ -483,6 +534,10 @@ name|bool
 name|CleanupFileList
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|Files
@@ -517,54 +572,6 @@ name|bool
 name|IssueErrors
 operator|=
 name|false
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// PrintJob - Print one job in -### format.
-comment|///
-comment|/// \param OS - The stream to print on.
-comment|/// \param J - The job to print.
-comment|/// \param Terminator - A string to print at the end of the line.
-comment|/// \param Quote - Should separate arguments be quoted.
-name|void
-name|PrintJob
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|,
-specifier|const
-name|Job
-operator|&
-name|J
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|Terminator
-argument_list|,
-name|bool
-name|Quote
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// PrintDiagnosticJob - Print one job in -### format, but with the
-comment|/// superfluous options removed, which are not necessary for
-comment|/// reproducing the crash.
-comment|///
-comment|/// \param OS - The stream to print on.
-comment|/// \param J - The job to print.
-name|void
-name|PrintDiagnosticJob
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|,
-specifier|const
-name|Job
-operator|&
-name|J
 argument_list|)
 decl|const
 decl_stmt|;

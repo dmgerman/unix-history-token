@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ObjCARC.h - ObjC ARC Optimization --------------*- mode: c++ -*-----===//
+comment|//===- ObjCARC.h - ObjC ARC Optimization --------------*- C++ -*-----------===//
 end_comment
 
 begin_comment
@@ -1106,6 +1106,7 @@ block|{
 comment|// Replace the return value with the argument.
 name|assert
 argument_list|(
+operator|(
 name|IsForwarding
 argument_list|(
 name|GetBasicInstructionClass
@@ -1113,6 +1114,25 @@ argument_list|(
 name|CI
 argument_list|)
 argument_list|)
+operator|||
+operator|(
+name|IsNoopOnNull
+argument_list|(
+name|GetBasicInstructionClass
+argument_list|(
+name|CI
+argument_list|)
+argument_list|)
+operator|&&
+name|isa
+operator|<
+name|ConstantPointerNull
+operator|>
+operator|(
+name|OldArg
+operator|)
+operator|)
+operator|)
 operator|&&
 literal|"Can't delete non-forwarding instruction with users!"
 argument_list|)

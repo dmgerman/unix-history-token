@@ -1460,6 +1460,41 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|U
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|SuccIterator
+operator|<
+name|T
+operator|,
+name|U
+operator|>
+expr|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|isPodLike
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+block|; }
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
@@ -1967,7 +2002,7 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
+name|size_t
 name|size
 parameter_list|(
 name|Function
@@ -2078,7 +2113,7 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
+name|size_t
 name|size
 parameter_list|(
 specifier|const

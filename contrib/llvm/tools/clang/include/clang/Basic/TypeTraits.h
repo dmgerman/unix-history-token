@@ -147,6 +147,8 @@ name|UTT_IsRvalueReference
 block|,
 name|UTT_IsScalar
 block|,
+name|UTT_IsSealed
+block|,
 name|UTT_IsSigned
 block|,
 name|UTT_IsStandardLayout

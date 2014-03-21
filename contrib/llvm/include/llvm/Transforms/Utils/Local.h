@@ -142,6 +142,9 @@ decl_stmt|;
 name|class
 name|DIBuilder
 decl_stmt|;
+name|class
+name|AliasAnalysis
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -370,6 +373,24 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// FlatternCFG - This function is used to flatten a CFG.  For
+comment|/// example, it uses parallel-and and parallel-or mode to collapse
+comment|//  if-conditions and merge if-regions with identical statements.
+comment|///
+name|bool
+name|FlattenCFG
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|AliasAnalysis
+modifier|*
+name|AA
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// FoldBranchToCommonDest - If this basic block is ONLY a setcc and a branch,
 comment|/// and if a predecessor branches to us and one of our successors, fold the
 comment|/// setcc into the predecessor and use logical operations to pick the right
@@ -500,13 +521,17 @@ argument_list|,
 argument|bool NoAssumptions = false
 argument_list|)
 block|{
-name|gep_type_iterator
-name|GTI
+name|GEPOperator
+operator|*
+name|GEPOp
 operator|=
-name|gep_type_begin
-argument_list|(
+name|cast
+operator|<
+name|GEPOperator
+operator|>
+operator|(
 name|GEP
-argument_list|)
+operator|)
 block|;
 name|Type
 operator|*
@@ -518,7 +543,7 @@ name|getIntPtrType
 argument_list|(
 name|GEP
 operator|->
-name|getContext
+name|getType
 argument_list|()
 argument_list|)
 block|;
@@ -538,13 +563,7 @@ comment|// overflow in an unsigned sense.
 name|bool
 name|isInBounds
 operator|=
-name|cast
-operator|<
-name|GEPOperator
-operator|>
-operator|(
-name|GEP
-operator|)
+name|GEPOp
 operator|->
 name|isInBounds
 argument_list|()
@@ -556,9 +575,12 @@ comment|// Build a mask for high order bits.
 name|unsigned
 name|IntPtrWidth
 operator|=
-name|TD
-operator|.
-name|getPointerSizeInBits
+name|IntPtrTy
+operator|->
+name|getScalarType
+argument_list|()
+operator|->
+name|getIntegerBitWidth
 argument_list|()
 block|;
 name|uint64_t
@@ -572,6 +594,14 @@ literal|64
 operator|-
 name|IntPtrWidth
 operator|)
+block|;
+name|gep_type_iterator
+name|GTI
+operator|=
+name|gep_type_begin
+argument_list|(
+name|GEP
+argument_list|)
 block|;
 for|for
 control|(
@@ -629,13 +659,13 @@ name|PtrSizeMask
 decl_stmt|;
 if|if
 condition|(
-name|ConstantInt
+name|Constant
 modifier|*
 name|OpC
 init|=
 name|dyn_cast
 operator|<
-name|ConstantInt
+name|Constant
 operator|>
 operator|(
 name|Op
@@ -646,7 +676,7 @@ if|if
 condition|(
 name|OpC
 operator|->
-name|isZero
+name|isZeroValue
 argument_list|()
 condition|)
 continue|continue;
@@ -667,6 +697,37 @@ name|GTI
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|OpC
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isVectorTy
+argument_list|()
+condition|)
+name|OpC
+operator|=
+name|OpC
+operator|->
+name|getSplatValue
+argument_list|()
+expr_stmt|;
+name|uint64_t
+name|OpValue
+init|=
+name|cast
+operator|<
+name|ConstantInt
+operator|>
+operator|(
+name|OpC
+operator|)
+operator|->
+name|getZExtValue
+argument_list|()
+decl_stmt|;
 name|Size
 operator|=
 name|TD
@@ -678,10 +739,7 @@ argument_list|)
 operator|->
 name|getElementOffset
 argument_list|(
-name|OpC
-operator|->
-name|getZExtValue
-argument_list|()
+name|OpValue
 argument_list|)
 expr_stmt|;
 if|if

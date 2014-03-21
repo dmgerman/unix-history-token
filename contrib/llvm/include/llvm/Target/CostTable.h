@@ -86,11 +86,14 @@ name|unsigned
 name|Cost
 block|; }
 expr_stmt|;
-comment|/// Find in cost table, TypeTy must be comparable by ==
+comment|/// Find in cost table, TypeTy must be comparable to CompareTy by ==
 name|template
 operator|<
 name|class
 name|TypeTy
+operator|,
+name|class
+name|CompareTy
 operator|>
 name|int
 name|CostTableLookup
@@ -101,7 +104,7 @@ argument|unsigned len
 argument_list|,
 argument|int ISD
 argument_list|,
-argument|TypeTy Ty
+argument|CompareTy Ty
 argument_list|)
 block|{
 for|for
@@ -121,23 +124,23 @@ name|i
 control|)
 if|if
 condition|(
+name|ISD
+operator|==
 name|Tbl
 index|[
 name|i
 index|]
 operator|.
 name|ISD
-operator|==
-name|ISD
 operator|&&
+name|Ty
+operator|==
 name|Tbl
 index|[
 name|i
 index|]
 operator|.
 name|Type
-operator|==
-name|Ty
 condition|)
 return|return
 name|i
@@ -149,6 +152,47 @@ literal|1
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Find in cost table, TypeTy must be comparable to CompareTy by ==
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|TypeTy
+operator|,
+name|class
+name|CompareTy
+operator|,
+name|unsigned
+name|N
+operator|>
+name|int
+name|CostTableLookup
+argument_list|(
+argument|const CostTblEntry<TypeTy>(&Tbl)[N]
+argument_list|,
+argument|int ISD
+argument_list|,
+argument|CompareTy Ty
+argument_list|)
+block|{
+return|return
+name|CostTableLookup
+argument_list|(
+name|Tbl
+argument_list|,
+name|N
+argument_list|,
+name|ISD
+argument_list|,
+name|Ty
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// Type Conversion Cost Table
@@ -179,7 +223,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Find in type conversion cost table, TypeTy must be comparable by ==
+comment|/// Find in type conversion cost table, TypeTy must be comparable to CompareTy
+end_comment
+
+begin_comment
+comment|/// by ==
 end_comment
 
 begin_expr_stmt
@@ -187,6 +235,9 @@ name|template
 operator|<
 name|class
 name|TypeTy
+operator|,
+name|class
+name|CompareTy
 operator|>
 name|int
 name|ConvertCostTableLookup
@@ -197,9 +248,9 @@ argument|unsigned len
 argument_list|,
 argument|int ISD
 argument_list|,
-argument|TypeTy Dst
+argument|CompareTy Dst
 argument_list|,
-argument|TypeTy Src
+argument|CompareTy Src
 argument_list|)
 block|{
 for|for
@@ -219,31 +270,31 @@ name|i
 control|)
 if|if
 condition|(
+name|ISD
+operator|==
 name|Tbl
 index|[
 name|i
 index|]
 operator|.
 name|ISD
-operator|==
-name|ISD
 operator|&&
+name|Src
+operator|==
 name|Tbl
 index|[
 name|i
 index|]
 operator|.
 name|Src
-operator|==
-name|Src
 operator|&&
-name|Tbl
-index|[
-name|i
-index|]
-operator|.
 name|Dst
 operator|==
+name|Tbl
+index|[
+name|i
+index|]
+operator|.
 name|Dst
 condition|)
 return|return
@@ -263,7 +314,57 @@ return|;
 end_return
 
 begin_comment
-unit|}  }
+unit|}
+comment|/// Find in type conversion cost table, TypeTy must be comparable to CompareTy
+end_comment
+
+begin_comment
+comment|/// by ==
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|class
+name|TypeTy
+operator|,
+name|class
+name|CompareTy
+operator|,
+name|unsigned
+name|N
+operator|>
+name|int
+name|ConvertCostTableLookup
+argument_list|(
+argument|const TypeConversionCostTblEntry<TypeTy>(&Tbl)[N]
+argument_list|,
+argument|int ISD
+argument_list|,
+argument|CompareTy Dst
+argument_list|,
+argument|CompareTy Src
+argument_list|)
+block|{
+return|return
+name|ConvertCostTableLookup
+argument_list|(
+name|Tbl
+argument_list|,
+name|N
+argument_list|,
+name|ISD
+argument_list|,
+name|Dst
+argument_list|,
+name|Src
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|// namespace llvm
 end_comment
 

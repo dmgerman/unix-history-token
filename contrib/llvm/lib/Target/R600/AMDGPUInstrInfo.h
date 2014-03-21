@@ -103,6 +103,12 @@ directive|define
 name|GET_INSTRINFO_ENUM
 end_define
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_OPERAND_ENUM
+end_define
+
 begin_include
 include|#
 directive|include
@@ -173,6 +179,11 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
 block|;
 name|protected
 operator|:
@@ -339,6 +350,14 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|expandPostRAPseudo
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
+block|;
 name|protected
 operator|:
 name|MachineInstr
@@ -366,6 +385,26 @@ argument_list|,
 argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|,
 argument|MachineInstr *LoadMI
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns the smallest register index that will be accessed by an indirect
+comment|/// read or write or -1 if indirect addressing is not used by this program.
+name|virtual
+name|int
+name|getIndirectIndexBegin
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns the largest register index that will be accessed by an indirect
+comment|/// read or write or -1 if indirect addressing is not used by this program.
+name|virtual
+name|int
+name|getIndirectIndexEnd
+argument_list|(
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -567,21 +606,6 @@ comment|//===-------------------------------------------------------------------
 comment|// Pure virtual funtions to be implemented by sub-classes.
 comment|//===---------------------------------------------------------------------===//
 name|virtual
-name|MachineInstr
-operator|*
-name|getMovImmInstr
-argument_list|(
-argument|MachineFunction *MF
-argument_list|,
-argument|unsigned DstReg
-argument_list|,
-argument|int64_t Imm
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-name|virtual
 name|unsigned
 name|getIEQOpcode
 argument_list|()
@@ -594,30 +618,6 @@ name|bool
 name|isMov
 argument_list|(
 argument|unsigned opcode
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-comment|/// \returns the smallest register index that will be accessed by an indirect
-comment|/// read or write or -1 if indirect addressing is not used by this program.
-name|virtual
-name|int
-name|getIndirectIndexBegin
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-comment|/// \returns the largest register index that will be accessed by an indirect
-comment|/// read or write or -1 if indirect addressing is not used by this program.
-name|virtual
-name|int
-name|getIndirectIndexEnd
-argument_list|(
-argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 operator|=
@@ -642,27 +642,13 @@ specifier|const
 operator|=
 literal|0
 block|;
-comment|/// \returns The register class to be used for storing values to an
-comment|/// "Indirect Address" .
+comment|/// \returns The register class to be used for loading and storing values
+comment|/// from an "Indirect Address" .
 name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
-name|getIndirectAddrStoreRegClass
-argument_list|(
-argument|unsigned SourceReg
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-comment|/// \returns The register class to be used for loading values from
-comment|/// an "Indirect Address" .
-name|virtual
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getIndirectAddrLoadRegClass
+name|getIndirectAddrRegClass
 argument_list|()
 specifier|const
 operator|=
@@ -710,18 +696,6 @@ specifier|const
 operator|=
 literal|0
 block|;
-comment|/// \returns the register class whose sub registers are the set of all
-comment|/// possible registers that can be used for indirect addressing.
-name|virtual
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getSuperIndirectRegClass
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
 comment|/// \brief Convert the AMDIL MachineInstr to a supported ISA
 comment|/// MachineInstr
 name|virtual
@@ -735,8 +709,52 @@ argument_list|,
 argument|DebugLoc DL
 argument_list|)
 specifier|const
+block|;
+comment|/// \brief Build a MOV instruction.
+name|virtual
+name|MachineInstr
+operator|*
+name|buildMovInstr
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned DstReg
+argument_list|,
+argument|unsigned SrcReg
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// \brief Given a MIMG \p Opcode that writes all 4 channels, return the
+comment|/// equivalent opcode that writes \p Channels Channels.
+name|int
+name|getMaskedMIMGOp
+argument_list|(
+argument|uint16_t Opcode
+argument_list|,
+argument|unsigned Channels
+argument_list|)
+specifier|const
 block|;  }
 decl_stmt|;
+name|namespace
+name|AMDGPU
+block|{
+name|int16_t
+name|getNamedOperandIdx
+parameter_list|(
+name|uint16_t
+name|Opcode
+parameter_list|,
+name|uint16_t
+name|NamedIndex
+parameter_list|)
+function_decl|;
+block|}
+comment|// End namespace AMDGPU
 block|}
 end_decl_stmt
 

@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
@@ -245,7 +245,7 @@ specifier|static
 name|error_code
 name|getFile
 argument_list|(
-name|StringRef
+name|Twine
 name|Filename
 argument_list|,
 name|OwningPtr
@@ -267,10 +267,16 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
+comment|/// Given an already-open file descriptor, map some slice of it into a
+comment|/// MemoryBuffer. The slice is specified by an \p Offset and \p MapSize.
+comment|/// Since this is in the middle of a file, the buffer is not null terminated.
 specifier|static
 name|error_code
-name|getFile
+name|getOpenFileSlice
 argument_list|(
+name|int
+name|FD
+argument_list|,
 specifier|const
 name|char
 operator|*
@@ -281,22 +287,17 @@ operator|<
 name|MemoryBuffer
 operator|>
 operator|&
-name|result
+name|Result
+argument_list|,
+name|uint64_t
+name|MapSize
 argument_list|,
 name|int64_t
-name|FileSize
-operator|=
-operator|-
-literal|1
-argument_list|,
-name|bool
-name|RequiresNullTerminator
-operator|=
-name|true
+name|Offset
 argument_list|)
 decl_stmt|;
-comment|/// getOpenFile - Given an already-open file descriptor, read the file and
-comment|/// return a MemoryBuffer.
+comment|/// Given an already-open file descriptor, read the file and return a
+comment|/// MemoryBuffer.
 specifier|static
 name|error_code
 name|getOpenFile
@@ -314,24 +315,10 @@ operator|<
 name|MemoryBuffer
 operator|>
 operator|&
-name|result
+name|Result
 argument_list|,
 name|uint64_t
 name|FileSize
-operator|=
-operator|-
-literal|1
-argument_list|,
-name|uint64_t
-name|MapSize
-operator|=
-operator|-
-literal|1
-argument_list|,
-name|int64_t
-name|Offset
-operator|=
-literal|0
 argument_list|,
 name|bool
 name|RequiresNullTerminator
@@ -435,29 +422,6 @@ name|error_code
 name|getFileOrSTDIN
 argument_list|(
 name|StringRef
-name|Filename
-argument_list|,
-name|OwningPtr
-operator|<
-name|MemoryBuffer
-operator|>
-operator|&
-name|result
-argument_list|,
-name|int64_t
-name|FileSize
-operator|=
-operator|-
-literal|1
-argument_list|)
-decl_stmt|;
-specifier|static
-name|error_code
-name|getFileOrSTDIN
-argument_list|(
-specifier|const
-name|char
-operator|*
 name|Filename
 argument_list|,
 name|OwningPtr

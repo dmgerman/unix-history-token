@@ -183,6 +183,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|SuppressLifetimeQualifiers
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Bool
 argument_list|(
 name|LO
@@ -197,7 +202,12 @@ argument_list|)
 operator|,
 name|PolishForDeclaration
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|MSWChar
+argument_list|(
+argument|LO.MicrosoftExt&& !LO.WChar
 argument_list|)
 block|{ }
 comment|/// \brief What language we're printing.
@@ -320,6 +330,13 @@ name|SuppressStrongLifetime
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief When true, suppress printing of lifetime qualifier in
+comment|/// ARC.
+name|unsigned
+name|SuppressLifetimeQualifiers
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief Whether we can use 'bool' rather than '_Bool', even if the language
 comment|/// doesn't actually have 'bool' (because, e.g., it is defined as a macro).
 name|unsigned
@@ -342,6 +359,13 @@ comment|/// declaration tag; such as, do not print attributes attached to the de
 comment|///
 name|unsigned
 name|PolishForDeclaration
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief When true, print the built-in wchar_t type as __wchar_t. For use in
+comment|/// Microsoft mode when wchar_t is not available.
+name|unsigned
+name|MSWChar
 range|:
 literal|1
 decl_stmt|;

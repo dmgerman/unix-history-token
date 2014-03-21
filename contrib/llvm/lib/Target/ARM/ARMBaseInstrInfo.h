@@ -461,23 +461,6 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|MachineInstr
-operator|*
-name|emitFrameIndexDebugValue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|int FrameIx
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|const MDNode *MDPtr
-argument_list|,
-argument|DebugLoc DL
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|void
 name|reMaterialize
 argument_list|(
@@ -931,6 +914,13 @@ argument_list|)
 specifier|const
 block|;
 name|unsigned
+name|getPredicationCost
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
 name|getInstrLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
@@ -1322,6 +1312,94 @@ operator|::
 name|tBRIND
 return|;
 block|}
+specifier|static
+specifier|inline
+name|bool
+name|isPopOpcode
+parameter_list|(
+name|int
+name|Opc
+parameter_list|)
+block|{
+return|return
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|tPOP_RET
+operator|||
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|LDMIA_RET
+operator|||
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|t2LDMIA_RET
+operator|||
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|tPOP
+operator|||
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|LDMIA_UPD
+operator|||
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|t2LDMIA_UPD
+operator|||
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|VLDMDIA_UPD
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|isPushOpcode
+parameter_list|(
+name|int
+name|Opc
+parameter_list|)
+block|{
+return|return
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|tPUSH
+operator|||
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|t2STMDB_UPD
+operator|||
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|STMDB_UPD
+operator|||
+name|Opc
+operator|==
+name|ARM
+operator|::
+name|VSTMDDB_UPD
+return|;
+block|}
 comment|/// getInstrPredicate - If instruction is predicated, returns its predicate
 comment|/// condition, otherwise returns AL. It also returns the condition code
 comment|/// register by reference.
@@ -1508,6 +1586,26 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// Tries to add registers to the reglist of a given base-updating
+comment|/// push/pop instruction to adjust the stack by an additional
+comment|/// NumBytes. This can save a few bytes per function in code-size, but
+comment|/// obviously generates more memory traffic. As such, it only takes
+comment|/// effect in functions being optimised for size.
+name|bool
+name|tryFoldSPUpdateIntoPushPop
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|NumBytes
+parameter_list|)
+function_decl|;
 comment|/// rewriteARMFrameIndex / rewriteT2FrameIndex -
 comment|/// Rewrite MI to access 'Offset' bytes from the FP. Return false if the
 comment|/// offset could not be handled directly in MI, and return the left-over

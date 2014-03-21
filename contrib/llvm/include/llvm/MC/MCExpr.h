@@ -522,66 +522,156 @@ name|VK_ARM_TARGET2
 block|,
 name|VK_ARM_PREL31
 block|,
-name|VK_PPC_TOC
-block|,
-comment|// TOC base
-name|VK_PPC_TOC_ENTRY
-block|,
-comment|// TOC entry
-name|VK_PPC_DARWIN_HA16
-block|,
-comment|// ha16(symbol)
-name|VK_PPC_DARWIN_LO16
-block|,
-comment|// lo16(symbol)
-name|VK_PPC_GAS_HA16
-block|,
-comment|// symbol@ha
-name|VK_PPC_GAS_LO16
+name|VK_PPC_LO
 block|,
 comment|// symbol@l
-name|VK_PPC_TPREL16_HA
+name|VK_PPC_HI
 block|,
-comment|// symbol@tprel@ha
-name|VK_PPC_TPREL16_LO
+comment|// symbol@h
+name|VK_PPC_HA
 block|,
-comment|// symbol@tprel@l
-name|VK_PPC_DTPREL16_HA
+comment|// symbol@ha
+name|VK_PPC_HIGHER
 block|,
-comment|// symbol@dtprel@ha
-name|VK_PPC_DTPREL16_LO
+comment|// symbol@higher
+name|VK_PPC_HIGHERA
 block|,
-comment|// symbol@dtprel@l
-name|VK_PPC_TOC16_HA
+comment|// symbol@highera
+name|VK_PPC_HIGHEST
 block|,
-comment|// symbol@toc@ha
-name|VK_PPC_TOC16_LO
+comment|// symbol@highest
+name|VK_PPC_HIGHESTA
+block|,
+comment|// symbol@highesta
+name|VK_PPC_GOT_LO
+block|,
+comment|// symbol@got@l
+name|VK_PPC_GOT_HI
+block|,
+comment|// symbol@got@h
+name|VK_PPC_GOT_HA
+block|,
+comment|// symbol@got@ha
+name|VK_PPC_TOCBASE
+block|,
+comment|// symbol@tocbase
+name|VK_PPC_TOC
+block|,
+comment|// symbol@toc
+name|VK_PPC_TOC_LO
 block|,
 comment|// symbol@toc@l
-name|VK_PPC_GOT_TPREL16_HA
+name|VK_PPC_TOC_HI
 block|,
-comment|// symbol@got@tprel@ha
-name|VK_PPC_GOT_TPREL16_LO
+comment|// symbol@toc@h
+name|VK_PPC_TOC_HA
+block|,
+comment|// symbol@toc@ha
+name|VK_PPC_DTPMOD
+block|,
+comment|// symbol@dtpmod
+name|VK_PPC_TPREL
+block|,
+comment|// symbol@tprel
+name|VK_PPC_TPREL_LO
+block|,
+comment|// symbol@tprel@l
+name|VK_PPC_TPREL_HI
+block|,
+comment|// symbol@tprel@h
+name|VK_PPC_TPREL_HA
+block|,
+comment|// symbol@tprel@ha
+name|VK_PPC_TPREL_HIGHER
+block|,
+comment|// symbol@tprel@higher
+name|VK_PPC_TPREL_HIGHERA
+block|,
+comment|// symbol@tprel@highera
+name|VK_PPC_TPREL_HIGHEST
+block|,
+comment|// symbol@tprel@highest
+name|VK_PPC_TPREL_HIGHESTA
+block|,
+comment|// symbol@tprel@highesta
+name|VK_PPC_DTPREL
+block|,
+comment|// symbol@dtprel
+name|VK_PPC_DTPREL_LO
+block|,
+comment|// symbol@dtprel@l
+name|VK_PPC_DTPREL_HI
+block|,
+comment|// symbol@dtprel@h
+name|VK_PPC_DTPREL_HA
+block|,
+comment|// symbol@dtprel@ha
+name|VK_PPC_DTPREL_HIGHER
+block|,
+comment|// symbol@dtprel@higher
+name|VK_PPC_DTPREL_HIGHERA
+block|,
+comment|// symbol@dtprel@highera
+name|VK_PPC_DTPREL_HIGHEST
+block|,
+comment|// symbol@dtprel@highest
+name|VK_PPC_DTPREL_HIGHESTA
+block|,
+comment|// symbol@dtprel@highesta
+name|VK_PPC_GOT_TPREL
+block|,
+comment|// symbol@got@tprel
+name|VK_PPC_GOT_TPREL_LO
 block|,
 comment|// symbol@got@tprel@l
+name|VK_PPC_GOT_TPREL_HI
+block|,
+comment|// symbol@got@tprel@h
+name|VK_PPC_GOT_TPREL_HA
+block|,
+comment|// symbol@got@tprel@ha
+name|VK_PPC_GOT_DTPREL
+block|,
+comment|// symbol@got@dtprel
+name|VK_PPC_GOT_DTPREL_LO
+block|,
+comment|// symbol@got@dtprel@l
+name|VK_PPC_GOT_DTPREL_HI
+block|,
+comment|// symbol@got@dtprel@h
+name|VK_PPC_GOT_DTPREL_HA
+block|,
+comment|// symbol@got@dtprel@ha
 name|VK_PPC_TLS
 block|,
 comment|// symbol@tls
-name|VK_PPC_GOT_TLSGD16_HA
+name|VK_PPC_GOT_TLSGD
 block|,
-comment|// symbol@got@tlsgd@ha
-name|VK_PPC_GOT_TLSGD16_LO
+comment|// symbol@got@tlsgd
+name|VK_PPC_GOT_TLSGD_LO
 block|,
 comment|// symbol@got@tlsgd@l
+name|VK_PPC_GOT_TLSGD_HI
+block|,
+comment|// symbol@got@tlsgd@h
+name|VK_PPC_GOT_TLSGD_HA
+block|,
+comment|// symbol@got@tlsgd@ha
 name|VK_PPC_TLSGD
 block|,
 comment|// symbol@tlsgd
-name|VK_PPC_GOT_TLSLD16_HA
+name|VK_PPC_GOT_TLSLD
 block|,
-comment|// symbol@got@tlsld@ha
-name|VK_PPC_GOT_TLSLD16_LO
+comment|// symbol@got@tlsld
+name|VK_PPC_GOT_TLSLD_LO
 block|,
 comment|// symbol@got@tlsld@l
+name|VK_PPC_GOT_TLSLD_HI
+block|,
+comment|// symbol@got@tlsld@h
+name|VK_PPC_GOT_TLSLD_HA
+block|,
+comment|// symbol@got@tlsld@ha
 name|VK_PPC_TLSLD
 block|,
 comment|// symbol@tlsld

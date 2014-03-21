@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
+file|"llvm/IR/LegacyPassManagers.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/PassManagers.h"
+file|"llvm/Pass.h"
 end_include
 
 begin_include

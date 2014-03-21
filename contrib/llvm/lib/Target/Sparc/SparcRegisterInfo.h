@@ -100,21 +100,11 @@ name|SparcSubtarget
 operator|&
 name|Subtarget
 block|;
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
-block|;
 name|SparcRegisterInfo
 argument_list|(
 name|SparcSubtarget
 operator|&
 name|st
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 comment|/// Code Generation virtual methods...
@@ -125,6 +115,24 @@ name|getCalleeSavedRegs
 argument_list|(
 argument|const MachineFunction *MF =
 literal|0
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getCallPreservedMask
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getRTCallPreservedMask
+argument_list|(
+argument|CallingConv::ID CC
 argument_list|)
 specifier|const
 block|;
@@ -174,17 +182,6 @@ name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
-specifier|const
-block|;
-comment|// Exception handling queries.
-name|unsigned
-name|getEHExceptionRegister
-argument_list|()
-specifier|const
-block|;
-name|unsigned
-name|getEHHandlerRegister
-argument_list|()
 specifier|const
 block|; }
 decl_stmt|;

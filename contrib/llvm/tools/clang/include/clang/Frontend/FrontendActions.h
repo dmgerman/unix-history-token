@@ -169,25 +169,6 @@ argument_list|)
 block|; }
 block|;
 name|class
-name|ASTDumpXMLAction
-operator|:
-name|public
-name|ASTFrontendAction
-block|{
-name|protected
-operator|:
-name|virtual
-name|ASTConsumer
-operator|*
-name|CreateASTConsumer
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef InFile
-argument_list|)
-block|; }
-block|;
-name|class
 name|ASTViewAction
 operator|:
 name|public
@@ -296,6 +277,9 @@ name|Module
 operator|*
 name|Module
 block|;
+name|bool
+name|IsSystem
+block|;
 name|protected
 operator|:
 name|virtual
@@ -329,6 +313,20 @@ return|;
 block|}
 name|public
 operator|:
+name|explicit
+name|GenerateModuleAction
+argument_list|(
+argument|bool IsSystem = false
+argument_list|)
+operator|:
+name|ASTFrontendAction
+argument_list|()
+block|,
+name|IsSystem
+argument_list|(
+argument|IsSystem
+argument_list|)
+block|{ }
 name|virtual
 name|bool
 name|BeginSourceFileAction

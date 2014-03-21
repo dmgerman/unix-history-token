@@ -128,7 +128,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// mayAlias - Return true if the memory pointed to by this
-comment|/// PseudoSourceValue can ever alias a LLVM IR Value.
+comment|/// PseudoSourceValue can ever alias an LLVM IR Value.
 name|virtual
 name|bool
 name|mayAlias

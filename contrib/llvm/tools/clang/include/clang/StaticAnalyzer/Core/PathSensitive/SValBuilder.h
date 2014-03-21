@@ -891,6 +891,9 @@ specifier|const
 name|LocationContext
 modifier|*
 name|locContext
+parameter_list|,
+name|unsigned
+name|blockCount
 parameter_list|)
 function_decl|;
 comment|/// Returns the value of \p E, if it can be determined in a non-path-sensitive

@@ -159,22 +159,6 @@ argument|bool KillSrc
 argument_list|)
 specifier|const
 block|;
-name|MachineInstr
-operator|*
-name|emitFrameIndexDebugValue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|int FrameIx
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|const MDNode *MDPtr
-argument_list|,
-argument|DebugLoc DL
-argument_list|)
-specifier|const
-block|;
 name|void
 name|storeRegToStackSlot
 argument_list|(

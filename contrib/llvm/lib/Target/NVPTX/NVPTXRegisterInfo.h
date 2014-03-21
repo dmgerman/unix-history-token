@@ -126,11 +126,6 @@ operator|:
 name|NVPTXRegisterInfo
 argument_list|(
 specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
-argument_list|,
-specifier|const
 name|NVPTXSubtarget
 operator|&
 name|st

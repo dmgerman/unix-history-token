@@ -216,11 +216,11 @@ comment|/// to be live-in, but the value has not yet been determined.
 struct|struct
 name|LiveInBlock
 block|{
-comment|// LI - The live range that is live-in to this block.  The algorithms can
+comment|// The live range set that is live-in to this block.  The algorithms can
 comment|// handle multiple non-overlapping live ranges simultaneously.
-name|LiveInterval
-modifier|*
-name|LI
+name|LiveRange
+modifier|&
+name|LR
 decl_stmt|;
 comment|// DomNode - Dominator tree node for the block.
 comment|// Cleared when the final value has been determined and LI has been updated.
@@ -241,16 +241,16 @@ name|Value
 decl_stmt|;
 name|LiveInBlock
 argument_list|(
-argument|LiveInterval *li
+argument|LiveRange&LR
 argument_list|,
 argument|MachineDomTreeNode *node
 argument_list|,
 argument|SlotIndex kill
 argument_list|)
 block|:
-name|LI
+name|LR
 argument_list|(
-name|li
+name|LR
 argument_list|)
 operator|,
 name|DomNode
@@ -295,12 +295,12 @@ comment|/// PhysReg, when set, is used to verify live-in lists on basic blocks.
 name|bool
 name|findReachingDefs
 parameter_list|(
-name|LiveInterval
-modifier|*
-name|LI
+name|LiveRange
+modifier|&
+name|LR
 parameter_list|,
 name|MachineBasicBlock
-modifier|*
+modifier|&
 name|KillMBB
 parameter_list|,
 name|SlotIndex
@@ -385,16 +385,6 @@ name|Allocator
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/// calculate - Calculate the live range of a virtual register from its defs
-comment|/// and uses.  LI must be empty with no values.
-name|void
-name|calculate
-parameter_list|(
-name|LiveInterval
-modifier|*
-name|LI
-parameter_list|)
-function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Mid-level interface.
 comment|//===--------------------------------------------------------------------===//
@@ -412,9 +402,9 @@ comment|/// PhysReg, when set, is used to verify live-in lists on basic blocks.
 name|void
 name|extend
 parameter_list|(
-name|LiveInterval
-modifier|*
-name|LI
+name|LiveRange
+modifier|&
+name|LR
 parameter_list|,
 name|SlotIndex
 name|Kill
@@ -431,9 +421,9 @@ comment|/// minimal live range.
 name|void
 name|createDeadDefs
 parameter_list|(
-name|LiveInterval
-modifier|*
-name|LI
+name|LiveRange
+modifier|&
+name|LR
 parameter_list|,
 name|unsigned
 name|Reg
@@ -444,7 +434,7 @@ name|void
 name|createDeadDefs
 parameter_list|(
 name|LiveInterval
-modifier|*
+modifier|&
 name|LI
 parameter_list|)
 block|{
@@ -453,7 +443,7 @@ argument_list|(
 name|LI
 argument_list|,
 name|LI
-operator|->
+operator|.
 name|reg
 argument_list|)
 expr_stmt|;
@@ -465,9 +455,9 @@ comment|/// inserted as needed to preserve SSA form.
 name|void
 name|extendToUses
 parameter_list|(
-name|LiveInterval
-modifier|*
-name|LI
+name|LiveRange
+modifier|&
+name|LR
 parameter_list|,
 name|unsigned
 name|Reg
@@ -478,7 +468,7 @@ name|void
 name|extendToUses
 parameter_list|(
 name|LiveInterval
-modifier|*
+modifier|&
 name|LI
 parameter_list|)
 block|{
@@ -487,7 +477,7 @@ argument_list|(
 name|LI
 argument_list|,
 name|LI
-operator|->
+operator|.
 name|reg
 argument_list|)
 expr_stmt|;
@@ -553,7 +543,7 @@ comment|/// addLiveInBlock - Add a block with an unknown live-in value.  This
 comment|/// function can only be called once per basic block.  Once the live-in value
 comment|/// has been determined, calculateValues() will add liveness to LI.
 comment|///
-comment|/// @param LI      The live range that is live-in to the block.
+comment|/// @param LR      The live range that is live-in to the block.
 comment|/// @param DomNode The domtree node for the block.
 comment|/// @param Kill    Index in block where LI is killed.  If the value is
 comment|///                live-through, set Kill = SLotIndex() and also call
@@ -561,9 +551,9 @@ comment|///                setLiveOutValue(MBB, 0).
 name|void
 name|addLiveInBlock
 parameter_list|(
-name|LiveInterval
-modifier|*
-name|LI
+name|LiveRange
+modifier|&
+name|LR
 parameter_list|,
 name|MachineDomTreeNode
 modifier|*
@@ -582,7 +572,7 @@ name|push_back
 argument_list|(
 name|LiveInBlock
 argument_list|(
-name|LI
+name|LR
 argument_list|,
 name|DomNode
 argument_list|,

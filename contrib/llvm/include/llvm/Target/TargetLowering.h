@@ -32,47 +32,51 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file describes how to lower LLVM code to machine code.  This has two
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// main components:
+comment|/// This file describes how to lower LLVM code to machine code.  This has two
 end_comment
 
 begin_comment
-comment|//
+comment|/// main components:
 end_comment
 
 begin_comment
-comment|//  1. Which ValueTypes are natively supported by the target.
+comment|///
 end_comment
 
 begin_comment
-comment|//  2. Which operations are supported for supported ValueTypes.
+comment|///  1. Which ValueTypes are natively supported by the target.
 end_comment
 
 begin_comment
-comment|//  3. Cost thresholds for alternative implementations of certain operations.
+comment|///  2. Which operations are supported for supported ValueTypes.
 end_comment
 
 begin_comment
-comment|//
+comment|///  3. Cost thresholds for alternative implementations of certain operations.
 end_comment
 
 begin_comment
-comment|// In addition it has a few other components, like information about FP
+comment|///
 end_comment
 
 begin_comment
-comment|// immediates.
+comment|/// In addition it has a few other components, like information about FP
 end_comment
 
 begin_comment
-comment|//
+comment|/// immediates.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -137,12 +141,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/CallSite.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DebugLoc.h"
 end_include
 
 begin_include
@@ -264,8 +262,8 @@ comment|// Scheduling for VLIW targets.
 block|}
 enum|;
 block|}
-comment|/// TargetLoweringBase - This base class for TargetLowering contains the
-comment|/// SelectionDAG-independent parts that can be used from the rest of CodeGen.
+comment|/// This base class for TargetLowering contains the SelectionDAG-independent
+comment|/// parts that can be used from the rest of CodeGen.
 name|class
 name|TargetLoweringBase
 block|{
@@ -287,8 +285,8 @@ name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|public
 label|:
-comment|/// LegalizeAction - This enum indicates whether operations are valid for a
-comment|/// target, and if not, what action should be used to make them valid.
+comment|/// This enum indicates whether operations are valid for a target, and if not,
+comment|/// what action should be used to make them valid.
 enum|enum
 name|LegalizeAction
 block|{
@@ -305,8 +303,8 @@ name|Custom
 comment|// Use the LowerOperation hook to implement custom lowering.
 block|}
 enum|;
-comment|/// LegalizeTypeAction - This enum indicates whether a types are legal for a
-comment|/// target, and if not, what action should be used to make them valid.
+comment|/// This enum indicates whether a types are legal for a target, and if not,
+comment|/// what action should be used to make them valid.
 enum|enum
 name|LegalizeTypeAction
 block|{
@@ -348,10 +346,10 @@ name|EVT
 operator|>
 name|LegalizeKind
 expr_stmt|;
+comment|/// Enum that describes how the target represents true/false values.
 enum|enum
 name|BooleanContent
 block|{
-comment|// How the target represents true/false values.
 name|UndefinedBooleanContent
 block|,
 comment|// Only bit 0 counts, the rest can hold garbage.
@@ -362,6 +360,7 @@ name|ZeroOrNegativeOneBooleanContent
 comment|// All bits equal to bit 0.
 block|}
 enum|;
+comment|/// Enum that describes what type of support for selects the target has.
 enum|enum
 name|SelectSupportKind
 block|{
@@ -506,12 +505,22 @@ return|return
 name|IsLittleEndian
 return|;
 block|}
-comment|// Return the pointer type for the given address space, defaults to
-comment|// the pointer type from the data layout.
-comment|// FIXME: The default needs to be removed once all the code is updated.
+comment|/// Return the pointer type for the given address space, defaults to
+comment|/// the pointer type from the data layout.
+comment|/// FIXME: The default needs to be removed once all the code is updated.
 name|virtual
 name|MVT
 name|getPointerTy
+argument_list|(
+name|uint32_t
+comment|/*AS*/
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getPointerSizeInBits
 argument_list|(
 name|uint32_t
 name|AS
@@ -519,11 +528,16 @@ operator|=
 literal|0
 argument_list|)
 decl|const
-block|{
-return|return
-name|PointerTy
-return|;
-block|}
+decl_stmt|;
+name|unsigned
+name|getPointerTypeSizeInBits
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 name|MVT
 name|getScalarShiftAmountTy
@@ -541,8 +555,21 @@ name|LHSTy
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isSelectExpensive - Return true if the select operation is expensive for
-comment|/// this target.
+comment|/// Returns the type to be used for the index operand of:
+comment|/// ISD::INSERT_VECTOR_ELT, ISD::EXTRACT_VECTOR_ELT,
+comment|/// ISD::INSERT_SUBVECTOR, and ISD::EXTRACT_SUBVECTOR
+name|virtual
+name|MVT
+name|getVectorIdxTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointerTy
+argument_list|()
+return|;
+block|}
+comment|/// Return true if the select operation is expensive for this target.
 name|bool
 name|isSelectExpensive
 argument_list|()
@@ -557,7 +584,7 @@ name|bool
 name|isSelectSupported
 argument_list|(
 name|SelectSupportKind
-name|kind
+comment|/*kind*/
 argument_list|)
 decl|const
 block|{
@@ -565,15 +592,15 @@ return|return
 name|true
 return|;
 block|}
-comment|/// shouldSplitVectorElementType - Return true if a vector of the given type
-comment|/// should be split (TypeSplitVector) instead of promoted
-comment|/// (TypePromoteInteger) during type legalization.
+comment|/// Return true if a vector of the given type should be split
+comment|/// (TypeSplitVector) instead of promoted (TypePromoteInteger) during type
+comment|/// legalization.
 name|virtual
 name|bool
 name|shouldSplitVectorElementType
 argument_list|(
 name|EVT
-name|VT
+comment|/*VT*/
 argument_list|)
 decl|const
 block|{
@@ -581,8 +608,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isIntDivCheap() - Return true if integer divide is usually cheaper than
-comment|/// a sequence of several shifts, adds, and multiplies for this target.
+comment|/// Return true if integer divide is usually cheaper than a sequence of
+comment|/// several shifts, adds, and multiplies for this target.
 name|bool
 name|isIntDivCheap
 argument_list|()
@@ -592,8 +619,7 @@ return|return
 name|IntDivIsCheap
 return|;
 block|}
-comment|/// isSlowDivBypassed - Returns true if target has indicated at least one
-comment|/// type should be bypassed.
+comment|/// Returns true if target has indicated at least one type should be bypassed.
 name|bool
 name|isSlowDivBypassed
 argument_list|()
@@ -607,8 +633,8 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// getBypassSlowDivTypes - Returns map of slow types for division or
-comment|/// remainder with corresponding fast types
+comment|/// Returns map of slow types for division or remainder with corresponding
+comment|/// fast types
 specifier|const
 name|DenseMap
 operator|<
@@ -627,8 +653,7 @@ return|return
 name|BypassSlowDivWidths
 return|;
 block|}
-comment|/// isPow2DivCheap() - Return true if pow2 div is cheaper than a chain of
-comment|/// srl/add/sra.
+comment|/// Return true if pow2 div is cheaper than a chain of srl/add/sra.
 name|bool
 name|isPow2DivCheap
 argument_list|()
@@ -638,8 +663,8 @@ return|return
 name|Pow2DivIsCheap
 return|;
 block|}
-comment|/// isJumpExpensive() - Return true if Flow Control is an expensive operation
-comment|/// that should be avoided.
+comment|/// Return true if Flow Control is an expensive operation that should be
+comment|/// avoided.
 name|bool
 name|isJumpExpensive
 argument_list|()
@@ -649,8 +674,8 @@ return|return
 name|JumpIsExpensive
 return|;
 block|}
-comment|/// isPredictableSelectExpensive - Return true if selects are only cheaper
-comment|/// than branches if the branch is unlikely to be predicted right.
+comment|/// Return true if selects are only cheaper than branches if the branch is
+comment|/// unlikely to be predicted right.
 name|bool
 name|isPredictableSelectExpensive
 argument_list|()
@@ -660,23 +685,49 @@ return|return
 name|PredictableSelectIsExpensive
 return|;
 block|}
-comment|/// getSetCCResultType - Return the ValueType of the result of SETCC
-comment|/// operations.  Also used to obtain the target's preferred type for
-comment|/// the condition operand of SELECT and BRCOND nodes.  In the case of
-comment|/// BRCOND the argument passed is MVT::Other since there are no other
-comment|/// operands to get a type hint from.
+comment|/// isLoadBitCastBeneficial() - Return true if the following transform
+comment|/// is beneficial.
+comment|/// fold (conv (load x)) -> (load (conv*)x)
+comment|/// On architectures that don't natively support some vector loads efficiently,
+comment|/// casting the load to a smaller vector of larger types and loading
+comment|/// is more efficient, however, this can be undone by optimizations in
+comment|/// dag combiner.
+name|virtual
+name|bool
+name|isLoadBitCastBeneficial
+argument_list|(
+name|EVT
+comment|/* Load */
+argument_list|,
+name|EVT
+comment|/* Bitcast */
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Return the ValueType of the result of SETCC operations.  Also used to
+comment|/// obtain the target's preferred type for the condition operand of SELECT and
+comment|/// BRCOND nodes.  In the case of BRCOND the argument passed is MVT::Other
+comment|/// since there are no other operands to get a type hint from.
 name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
 name|EVT
 name|VT
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getCmpLibcallReturnType - Return the ValueType for comparison
-comment|/// libcalls. Comparions libcalls include floating point comparion calls,
-comment|/// and Ordered/Unordered check calls on floating point numbers.
+comment|/// Return the ValueType for comparison libcalls. Comparions libcalls include
+comment|/// floating point comparion calls, and Ordered/Unordered check calls on
+comment|/// floating point numbers.
 name|virtual
 name|MVT
 operator|::
@@ -685,15 +736,16 @@ name|getCmpLibcallReturnType
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getBooleanContents - For targets without i1 registers, this gives the
-comment|/// nature of the high-bits of boolean values held in types wider than i1.
+comment|/// For targets without i1 registers, this gives the nature of the high-bits
+comment|/// of boolean values held in types wider than i1.
+comment|///
 comment|/// "Boolean values" are special true/false values produced by nodes like
 comment|/// SETCC and consumed (as the condition) by nodes like SELECT and BRCOND.
-comment|/// Not to be confused with general values promoted from i1.
-comment|/// Some cpus distinguish between vectors of boolean and scalars; the isVec
-comment|/// parameter selects between the two kinds.  For example on X86 a scalar
-comment|/// boolean should be zero extended from i1, while the elements of a vector
-comment|/// of booleans should be sign extended from i1.
+comment|/// Not to be confused with general values promoted from i1.  Some cpus
+comment|/// distinguish between vectors of boolean and scalars; the isVec parameter
+comment|/// selects between the two kinds.  For example on X86 a scalar boolean should
+comment|/// be zero extended from i1, while the elements of a vector of booleans
+comment|/// should be sign extended from i1.
 name|BooleanContent
 name|getBooleanContents
 argument_list|(
@@ -710,7 +762,7 @@ else|:
 name|BooleanContents
 return|;
 block|}
-comment|/// getSchedulingPreference - Return target scheduling preference.
+comment|/// Return target scheduling preference.
 name|Sched
 operator|::
 name|Preference
@@ -722,9 +774,9 @@ return|return
 name|SchedPreferenceInfo
 return|;
 block|}
-comment|/// getSchedulingPreference - Some scheduler, e.g. hybrid, can switch to
-comment|/// different scheduling heuristics for different nodes. This function returns
-comment|/// the preference (or none) for the given node.
+comment|/// Some scheduler, e.g. hybrid, can switch to different scheduling heuristics
+comment|/// for different nodes. This function returns the preference (or none) for
+comment|/// the given node.
 name|virtual
 name|Sched
 operator|::
@@ -741,8 +793,8 @@ operator|::
 name|None
 return|;
 block|}
-comment|/// getRegClassFor - Return the register class that should be used for the
-comment|/// specified value type.
+comment|/// Return the register class that should be used for the specified value
+comment|/// type.
 name|virtual
 specifier|const
 name|TargetRegisterClass
@@ -777,11 +829,13 @@ return|return
 name|RC
 return|;
 block|}
-comment|/// getRepRegClassFor - Return the 'representative' register class for the
-comment|/// specified value type. The 'representative' register class is the largest
-comment|/// legal super-reg register class for the register class of the value type.
-comment|/// For example, on i386 the rep register class for i8, i16, and i32 are GR32;
-comment|/// while the rep register class is GR64 on x86_64.
+comment|/// Return the 'representative' register class for the specified value
+comment|/// type.
+comment|///
+comment|/// The 'representative' register class is the largest legal super-reg
+comment|/// register class for the register class of the value type.  For example, on
+comment|/// i386 the rep register class for i8, i16, and i32 are GR32; while the rep
+comment|/// register class is GR64 on x86_64.
 name|virtual
 specifier|const
 name|TargetRegisterClass
@@ -809,8 +863,8 @@ return|return
 name|RC
 return|;
 block|}
-comment|/// getRepRegClassCostFor - Return the cost of the 'representative' register
-comment|/// class for the specified value type.
+comment|/// Return the cost of the 'representative' register class for the specified
+comment|/// value type.
 name|virtual
 name|uint8_t
 name|getRepRegClassCostFor
@@ -829,9 +883,9 @@ name|SimpleTy
 index|]
 return|;
 block|}
-comment|/// isTypeLegal - Return true if the target has native support for the
-comment|/// specified value type.  This means that it has a register that directly
-comment|/// holds it without promotions or expansions.
+comment|/// Return true if the target has native support for the specified value type.
+comment|/// This means that it has a register that directly holds it without
+comment|/// promotions or expansions.
 name|bool
 name|isTypeLegal
 argument_list|(
@@ -974,10 +1028,10 @@ return|return
 name|ValueTypeActions
 return|;
 block|}
-comment|/// getTypeAction - Return how we should legalize values of this type, either
-comment|/// it is already legal (return 'Legal') or we need to promote it to a larger
-comment|/// type (return 'Promote'), or we need to expand it into multiple registers
-comment|/// of smaller integer type (return 'Expand').  'Custom' is not an option.
+comment|/// Return how we should legalize values of this type, either it is already
+comment|/// legal (return 'Legal') or we need to promote it to a larger type (return
+comment|/// 'Promote'), or we need to expand it into multiple registers of smaller
+comment|/// integer type (return 'Expand').  'Custom' is not an option.
 name|LegalizeTypeAction
 name|getTypeAction
 argument_list|(
@@ -1018,12 +1072,12 @@ name|VT
 argument_list|)
 return|;
 block|}
-comment|/// getTypeToTransformTo - For types supported by the target, this is an
-comment|/// identity function.  For types that must be promoted to larger types, this
-comment|/// returns the larger type to promote to.  For integer types that are larger
-comment|/// than the largest integer register, this contains one step in the expansion
-comment|/// to get to the smaller register. For illegal floating point types, this
-comment|/// returns the integer type to transform to.
+comment|/// For types supported by the target, this is an identity function.  For
+comment|/// types that must be promoted to larger types, this returns the larger type
+comment|/// to promote to.  For integer types that are larger than the largest integer
+comment|/// register, this contains one step in the expansion to get to the smaller
+comment|/// register. For illegal floating point types, this returns the integer type
+comment|/// to transform to.
 name|EVT
 name|getTypeToTransformTo
 argument_list|(
@@ -1047,10 +1101,10 @@ operator|.
 name|second
 return|;
 block|}
-comment|/// getTypeToExpandTo - For types supported by the target, this is an
-comment|/// identity function.  For types that must be expanded (i.e. integer types
-comment|/// that are larger than the largest integer register or illegal floating
-comment|/// point types), this returns the largest legal type it will be expanded to.
+comment|/// For types supported by the target, this is an identity function.  For
+comment|/// types that must be expanded (i.e. integer types that are larger than the
+comment|/// largest integer register or illegal floating point types), this returns
+comment|/// the largest legal type it will be expanded to.
 name|EVT
 name|getTypeToExpandTo
 argument_list|(
@@ -1115,15 +1169,14 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/// getVectorTypeBreakdown - Vector types are broken down into some number of
-comment|/// legal first class types.  For example, EVT::v8f32 maps to 2 EVT::v4f32
-comment|/// with Altivec or SSE1, or 8 promoted EVT::f64 values with the X86 FP stack.
-comment|/// Similarly, EVT::v2i64 turns into 4 EVT::i32 values with both PPC and X86.
+comment|/// Vector types are broken down into some number of legal first class types.
+comment|/// For example, EVT::v8f32 maps to 2 EVT::v4f32 with Altivec or SSE1, or 8
+comment|/// promoted EVT::f64 values with the X86 FP stack.  Similarly, EVT::v2i64
+comment|/// turns into 4 EVT::i32 values with both PPC and X86.
 comment|///
 comment|/// This method returns the number of registers needed, and the VT for each
 comment|/// register.  It also returns the VT and quantity of the intermediate values
 comment|/// before they are promoted/expanded.
-comment|///
 name|unsigned
 name|getVectorTypeBreakdown
 argument_list|(
@@ -1148,10 +1201,6 @@ name|RegisterVT
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getTgtMemIntrinsic: Given an intrinsic, checks if on the target the
-comment|/// intrinsic will need to map to a MemIntrinsicNode (touches memory). If
-comment|/// this is the case, it returns true and store the intrinsic
-comment|/// information into the IntrinsicInfo that was passed to the function.
 struct|struct
 name|IntrinsicInfo
 block|{
@@ -1191,6 +1240,10 @@ decl_stmt|;
 comment|// writes memory?
 block|}
 struct|;
+comment|/// Given an intrinsic, checks if on the target the intrinsic will need to map
+comment|/// to a MemIntrinsicNode (touches memory). If this is the case, it returns
+comment|/// true and store the intrinsic information into the IntrinsicInfo that was
+comment|/// passed to the function.
 name|virtual
 name|bool
 name|getTgtMemIntrinsic
@@ -1211,9 +1264,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isFPImmLegal - Returns true if the target can instruction select the
-comment|/// specified FP immediate natively. If false, the legalizer will materialize
-comment|/// the FP immediate as a load from a constant pool.
+comment|/// Returns true if the target can instruction select the specified FP
+comment|/// immediate natively. If false, the legalizer will materialize the FP
+comment|/// immediate as a load from a constant pool.
 name|virtual
 name|bool
 name|isFPImmLegal
@@ -1232,10 +1285,10 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isShuffleMaskLegal - Targets can use this to indicate that they only
-comment|/// support *some* VECTOR_SHUFFLE operations, those with specific masks.
-comment|/// By default, if a target supports the VECTOR_SHUFFLE node, all mask values
-comment|/// are assumed to be legal.
+comment|/// Targets can use this to indicate that they only support *some*
+comment|/// VECTOR_SHUFFLE operations, those with specific masks.  By default, if a
+comment|/// target supports the VECTOR_SHUFFLE node, all mask values are assumed to be
+comment|/// legal.
 name|virtual
 name|bool
 name|isShuffleMaskLegal
@@ -1257,7 +1310,8 @@ return|return
 name|true
 return|;
 block|}
-comment|/// canOpTrap - Returns true if the operation can trap for the value type.
+comment|/// Returns true if the operation can trap for the value type.
+comment|///
 comment|/// VT must be a legal type. By default, we optimistically assume most
 comment|/// operations don't trap except for divide and remainder.
 name|virtual
@@ -1272,10 +1326,9 @@ name|VT
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isVectorClearMaskLegal - Similar to isShuffleMaskLegal. This is
-comment|/// used by Targets can use this to indicate if there is a suitable
-comment|/// VECTOR_SHUFFLE that can be used to replace a VAND with a constant
-comment|/// pool entry.
+comment|/// Similar to isShuffleMaskLegal. This is used by Targets can use this to
+comment|/// indicate if there is a suitable VECTOR_SHUFFLE that can be used to replace
+comment|/// a VAND with a constant pool entry.
 name|virtual
 name|bool
 name|isVectorClearMaskLegal
@@ -1297,10 +1350,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getOperationAction - Return how this operation should be treated: either
-comment|/// it is legal, needs to be promoted to a larger size, needs to be
-comment|/// expanded to some other code sequence, or the target has a custom expander
-comment|/// for it.
+comment|/// Return how this operation should be treated: either it is legal, needs to
+comment|/// be promoted to a larger size, needs to be expanded to some other code
+comment|/// sequence, or the target has a custom expander for it.
 name|LegalizeAction
 name|getOperationAction
 argument_list|(
@@ -1365,9 +1417,9 @@ name|Op
 index|]
 return|;
 block|}
-comment|/// isOperationLegalOrCustom - Return true if the specified operation is
-comment|/// legal on this target or can be made legal with custom lowering. This
-comment|/// is used to help guide high-level lowering decisions.
+comment|/// Return true if the specified operation is legal on this target or can be
+comment|/// made legal with custom lowering. This is used to help guide high-level
+comment|/// lowering decisions.
 name|bool
 name|isOperationLegalOrCustom
 argument_list|(
@@ -1414,9 +1466,9 @@ name|Custom
 operator|)
 return|;
 block|}
-comment|/// isOperationLegalOrPromote - Return true if the specified operation is
-comment|/// legal on this target or can be made legal using promotion. This
-comment|/// is used to help guide high-level lowering decisions.
+comment|/// Return true if the specified operation is legal on this target or can be
+comment|/// made legal using promotion. This is used to help guide high-level lowering
+comment|/// decisions.
 name|bool
 name|isOperationLegalOrPromote
 argument_list|(
@@ -1463,9 +1515,9 @@ name|Promote
 operator|)
 return|;
 block|}
-comment|/// isOperationExpand - Return true if the specified operation is illegal on
-comment|/// this target or unlikely to be made legal with custom lowering. This is
-comment|/// used to help guide high-level lowering decisions.
+comment|/// Return true if the specified operation is illegal on this target or
+comment|/// unlikely to be made legal with custom lowering. This is used to help guide
+comment|/// high-level lowering decisions.
 name|bool
 name|isOperationExpand
 argument_list|(
@@ -1496,8 +1548,7 @@ name|Expand
 operator|)
 return|;
 block|}
-comment|/// isOperationLegal - Return true if the specified operation is legal on this
-comment|/// target.
+comment|/// Return true if the specified operation is legal on this target.
 name|bool
 name|isOperationLegal
 argument_list|(
@@ -1533,10 +1584,9 @@ operator|==
 name|Legal
 return|;
 block|}
-comment|/// getLoadExtAction - Return how this load with extension should be treated:
-comment|/// either it is legal, needs to be promoted to a larger size, needs to be
-comment|/// expanded to some other code sequence, or the target has a custom expander
-comment|/// for it.
+comment|/// Return how this load with extension should be treated: either it is legal,
+comment|/// needs to be promoted to a larger size, needs to be expanded to some other
+comment|/// code sequence, or the target has a custom expander for it.
 name|LegalizeAction
 name|getLoadExtAction
 argument_list|(
@@ -1580,8 +1630,7 @@ name|ExtType
 index|]
 return|;
 block|}
-comment|/// isLoadExtLegal - Return true if the specified load with extension is legal
-comment|/// on this target.
+comment|/// Return true if the specified load with extension is legal on this target.
 name|bool
 name|isLoadExtLegal
 argument_list|(
@@ -1612,10 +1661,9 @@ operator|==
 name|Legal
 return|;
 block|}
-comment|/// getTruncStoreAction - Return how this store with truncation should be
-comment|/// treated: either it is legal, needs to be promoted to a larger size, needs
-comment|/// to be expanded to some other code sequence, or the target has a custom
-comment|/// expander for it.
+comment|/// Return how this store with truncation should be treated: either it is
+comment|/// legal, needs to be promoted to a larger size, needs to be expanded to some
+comment|/// other code sequence, or the target has a custom expander for it.
 name|LegalizeAction
 name|getTruncStoreAction
 argument_list|(
@@ -1661,8 +1709,8 @@ name|SimpleTy
 index|]
 return|;
 block|}
-comment|/// isTruncStoreLegal - Return true if the specified store with truncation is
-comment|/// legal on this target.
+comment|/// Return true if the specified store with truncation is legal on this
+comment|/// target.
 name|bool
 name|isTruncStoreLegal
 argument_list|(
@@ -1701,10 +1749,9 @@ operator|==
 name|Legal
 return|;
 block|}
-comment|/// getIndexedLoadAction - Return how the indexed load should be treated:
-comment|/// either it is legal, needs to be promoted to a larger size, needs to be
-comment|/// expanded to some other code sequence, or the target has a custom expander
-comment|/// for it.
+comment|/// Return how the indexed load should be treated: either it is legal, needs
+comment|/// to be promoted to a larger size, needs to be expanded to some other code
+comment|/// sequence, or the target has a custom expander for it.
 name|LegalizeAction
 name|getIndexedLoadAction
 argument_list|(
@@ -1764,8 +1811,7 @@ literal|4
 argument_list|)
 return|;
 block|}
-comment|/// isIndexedLoadLegal - Return true if the specified indexed load is legal
-comment|/// on this target.
+comment|/// Return true if the specified indexed load is legal on this target.
 name|bool
 name|isIndexedLoadLegal
 argument_list|(
@@ -1810,10 +1856,9 @@ name|Custom
 operator|)
 return|;
 block|}
-comment|/// getIndexedStoreAction - Return how the indexed store should be treated:
-comment|/// either it is legal, needs to be promoted to a larger size, needs to be
-comment|/// expanded to some other code sequence, or the target has a custom expander
-comment|/// for it.
+comment|/// Return how the indexed store should be treated: either it is legal, needs
+comment|/// to be promoted to a larger size, needs to be expanded to some other code
+comment|/// sequence, or the target has a custom expander for it.
 name|LegalizeAction
 name|getIndexedStoreAction
 argument_list|(
@@ -1869,8 +1914,7 @@ literal|0x0f
 argument_list|)
 return|;
 block|}
-comment|/// isIndexedStoreLegal - Return true if the specified indexed load is legal
-comment|/// on this target.
+comment|/// Return true if the specified indexed load is legal on this target.
 name|bool
 name|isIndexedStoreLegal
 argument_list|(
@@ -1915,9 +1959,9 @@ name|Custom
 operator|)
 return|;
 block|}
-comment|/// getCondCodeAction - Return how the condition code should be treated:
-comment|/// either it is legal, needs to be expanded to some other code sequence,
-comment|/// or the target has a custom expander for it.
+comment|/// Return how the condition code should be treated: either it is legal, needs
+comment|/// to be expanded to some other code sequence, or the target has a custom
+comment|/// expander for it.
 name|LegalizeAction
 name|getCondCodeAction
 argument_list|(
@@ -1944,36 +1988,44 @@ name|CondCodeActions
 argument_list|)
 operator|&&
 operator|(
+operator|(
 name|unsigned
 operator|)
 name|VT
 operator|.
 name|SimpleTy
+operator|>>
+literal|4
+operator|)
 operator|<
-sizeof|sizeof
+name|array_lengthof
 argument_list|(
 name|CondCodeActions
 index|[
 literal|0
 index|]
 argument_list|)
-operator|*
-literal|4
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
-comment|/// The lower 5 bits of the SimpleTy index into Nth 2bit set from the 64bit
-comment|/// value and the upper 27 bits index into the second dimension of the
-comment|/// array to select what 64bit value to use.
-name|LegalizeAction
-name|Action
+comment|// See setCondCodeAction for how this is encoded.
+name|uint32_t
+name|Shift
 init|=
-call|(
-name|LegalizeAction
-call|)
-argument_list|(
+literal|2
+operator|*
 operator|(
+name|VT
+operator|.
+name|SimpleTy
+operator|&
+literal|0xF
+operator|)
+decl_stmt|;
+name|uint32_t
+name|Value
+init|=
 name|CondCodeActions
 index|[
 name|CC
@@ -1983,23 +2035,23 @@ name|VT
 operator|.
 name|SimpleTy
 operator|>>
-literal|5
+literal|4
 index|]
+decl_stmt|;
+name|LegalizeAction
+name|Action
+init|=
+call|(
+name|LegalizeAction
+call|)
+argument_list|(
+operator|(
+name|Value
 operator|>>
-operator|(
-literal|2
-operator|*
-operator|(
-name|VT
-operator|.
-name|SimpleTy
-operator|&
-literal|0x1F
-operator|)
-operator|)
+name|Shift
 operator|)
 operator|&
-literal|3
+literal|0x3
 argument_list|)
 decl_stmt|;
 name|assert
@@ -2015,8 +2067,7 @@ return|return
 name|Action
 return|;
 block|}
-comment|/// isCondCodeLegal - Return true if the specified condition code is legal
-comment|/// on this target.
+comment|/// Return true if the specified condition code is legal on this target.
 name|bool
 name|isCondCodeLegal
 argument_list|(
@@ -2050,8 +2101,8 @@ operator|==
 name|Custom
 return|;
 block|}
-comment|/// getTypeToPromoteTo - If the action for this operation is to promote, this
-comment|/// method returns the ValueType to promote to.
+comment|/// If the action for this operation is to promote, this method returns the
+comment|/// ValueType to promote to.
 name|MVT
 name|getTypeToPromoteTo
 argument_list|(
@@ -2214,10 +2265,10 @@ return|return
 name|NVT
 return|;
 block|}
-comment|/// getValueType - Return the EVT corresponding to this LLVM type.
-comment|/// This is fixed by the LLVM operations except for the pointer size.  If
-comment|/// AllowUnknown is true, this will return MVT::Other for types with no EVT
-comment|/// counterpart (e.g. structs), otherwise it will assert.
+comment|/// Return the EVT corresponding to this LLVM type.  This is fixed by the LLVM
+comment|/// operations except for the pointer size.  If AllowUnknown is true, this
+comment|/// will return MVT::Other for types with no EVT counterpart (e.g. structs),
+comment|/// otherwise it will assert.
 name|EVT
 name|getValueType
 argument_list|(
@@ -2235,13 +2286,26 @@ block|{
 comment|// Lower scalar pointers to native pointer types.
 if|if
 condition|(
+name|PointerType
+modifier|*
+name|PTy
+init|=
+name|dyn_cast
+operator|<
+name|PointerType
+operator|>
+operator|(
 name|Ty
-operator|->
-name|isPointerTy
-argument_list|()
+operator|)
 condition|)
 return|return
-name|PointerTy
+name|getPointerTy
+argument_list|(
+name|PTy
+operator|->
+name|getAddressSpace
+argument_list|()
+argument_list|)
 return|;
 if|if
 condition|(
@@ -2275,17 +2339,34 @@ decl_stmt|;
 comment|// Lower vectors of pointers to native pointer types.
 if|if
 condition|(
+name|PointerType
+modifier|*
+name|PT
+init|=
+name|dyn_cast
+operator|<
+name|PointerType
+operator|>
+operator|(
 name|Elm
-operator|->
-name|isPointerTy
-argument_list|()
+operator|)
 condition|)
+block|{
+name|EVT
+name|PointerTy
+argument_list|(
+name|getPointerTy
+argument_list|(
+name|PT
+operator|->
+name|getAddressSpace
+argument_list|()
+argument_list|)
+argument_list|)
+decl_stmt|;
 name|Elm
 operator|=
-name|EVT
-argument_list|(
 name|PointerTy
-argument_list|)
 operator|.
 name|getTypeForEVT
 argument_list|(
@@ -2295,6 +2376,7 @@ name|getContext
 argument_list|()
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|EVT
 operator|::
@@ -2359,9 +2441,8 @@ name|getSimpleVT
 argument_list|()
 return|;
 block|}
-comment|/// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
-comment|/// function arguments in the caller parameter area.  This is the actual
-comment|/// alignment, not its logarithm.
+comment|/// Return the desired alignment for ByVal aggregate function arguments in the
+comment|/// caller parameter area.  This is the actual alignment, not its logarithm.
 name|virtual
 name|unsigned
 name|getByValTypeAlignment
@@ -2372,8 +2453,7 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getRegisterType - Return the type of registers that this ValueType will
-comment|/// eventually require.
+comment|/// Return the type of registers that this ValueType will eventually require.
 name|MVT
 name|getRegisterType
 argument_list|(
@@ -2406,8 +2486,7 @@ name|SimpleTy
 index|]
 return|;
 block|}
-comment|/// getRegisterType - Return the type of registers that this ValueType will
-comment|/// eventually require.
+comment|/// Return the type of registers that this ValueType will eventually require.
 name|MVT
 name|getRegisterType
 argument_list|(
@@ -2523,12 +2602,14 @@ literal|"Unsupported extended type!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getNumRegisters - Return the number of registers that this ValueType will
-comment|/// eventually require.  This is one for any types promoted to live in larger
-comment|/// registers, but may be more than one for types (like i64) that are split
-comment|/// into pieces.  For types like i140, which are first promoted then expanded,
-comment|/// it is the number of registers needed to hold all the bits of the original
-comment|/// type.  For an i140 on a 32 bit machine this means 5 registers.
+comment|/// Return the number of registers that this ValueType will eventually
+comment|/// require.
+comment|///
+comment|/// This is one for any types promoted to live in larger registers, but may be
+comment|/// more than one for types (like i64) that are split into pieces.  For types
+comment|/// like i140, which are first promoted then expanded, it is the number of
+comment|/// registers needed to hold all the bits of the original type.  For an i140
+comment|/// on a 32 bit machine this means 5 registers.
 name|unsigned
 name|getNumRegisters
 argument_list|(
@@ -2658,9 +2739,9 @@ literal|"Unsupported extended type!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// ShouldShrinkFPConstant - If true, then instruction selection should
-comment|/// seek to shrink the FP constant of the specified type to a smaller type
-comment|/// in order to save space and / or reduce runtime.
+comment|/// If true, then instruction selection should seek to shrink the FP constant
+comment|/// of the specified type to a smaller type in order to save space and / or
+comment|/// reduce runtime.
 name|virtual
 name|bool
 name|ShouldShrinkFPConstant
@@ -2673,8 +2754,8 @@ return|return
 name|true
 return|;
 block|}
-comment|/// hasTargetDAGCombine - If true, the target has custom DAG combine
-comment|/// transformations that it can perform for the specified node.
+comment|/// If true, the target has custom DAG combine transformations that it can
+comment|/// perform for the specified node.
 name|bool
 name|hasTargetDAGCombine
 argument_list|(
@@ -2719,11 +2800,12 @@ operator|)
 operator|)
 return|;
 block|}
+comment|/// \brief Get maximum # of store operations permitted for llvm.memset
+comment|///
 comment|/// This function returns the maximum number of store operations permitted
 comment|/// to replace a call to llvm.memset. The value is set by the target at the
 comment|/// performance threshold for such a replacement. If OptSize is true,
 comment|/// return the limit for functions that have OptSize attribute.
-comment|/// @brief Get maximum # of store operations permitted for llvm.memset
 name|unsigned
 name|getMaxStoresPerMemset
 argument_list|(
@@ -2740,11 +2822,12 @@ else|:
 name|MaxStoresPerMemset
 return|;
 block|}
+comment|/// \brief Get maximum # of store operations permitted for llvm.memcpy
+comment|///
 comment|/// This function returns the maximum number of store operations permitted
 comment|/// to replace a call to llvm.memcpy. The value is set by the target at the
 comment|/// performance threshold for such a replacement. If OptSize is true,
 comment|/// return the limit for functions that have OptSize attribute.
-comment|/// @brief Get maximum # of store operations permitted for llvm.memcpy
 name|unsigned
 name|getMaxStoresPerMemcpy
 argument_list|(
@@ -2761,11 +2844,12 @@ else|:
 name|MaxStoresPerMemcpy
 return|;
 block|}
+comment|/// \brief Get maximum # of store operations permitted for llvm.memmove
+comment|///
 comment|/// This function returns the maximum number of store operations permitted
 comment|/// to replace a call to llvm.memmove. The value is set by the target at the
 comment|/// performance threshold for such a replacement. If OptSize is true,
 comment|/// return the limit for functions that have OptSize attribute.
-comment|/// @brief Get maximum # of store operations permitted for llvm.memmove
 name|unsigned
 name|getMaxStoresPerMemmove
 argument_list|(
@@ -2782,14 +2866,15 @@ else|:
 name|MaxStoresPerMemmove
 return|;
 block|}
+comment|/// \brief Determine if the target supports unaligned memory accesses.
+comment|///
 comment|/// This function returns true if the target allows unaligned memory accesses.
 comment|/// of the specified type. If true, it also returns whether the unaligned
 comment|/// memory access is "fast" in the second argument by reference. This is used,
-comment|/// for example, in situations where an array copy/move/set is  converted to a
+comment|/// for example, in situations where an array copy/move/set is converted to a
 comment|/// sequence of store operations. It's use helps to ensure that such
-comment|/// replacements don't generate code that causes an alignment error  (trap) on
+comment|/// replacements don't generate code that causes an alignment error (trap) on
 comment|/// the target machine.
-comment|/// @brief Determine if the target supports unaligned memory accesses.
 name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
@@ -2798,7 +2883,7 @@ name|EVT
 argument_list|,
 name|bool
 operator|*
-name|Fast
+comment|/*Fast*/
 operator|=
 literal|0
 argument_list|)
@@ -2808,17 +2893,17 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getOptimalMemOpType - Returns the target specific optimal type for load
-comment|/// and store operations as a result of memset, memcpy, and memmove
-comment|/// lowering. If DstAlign is zero that means it's safe to destination
-comment|/// alignment can satisfy any constraint. Similarly if SrcAlign is zero it
-comment|/// means there isn't a need to check it against alignment requirement,
-comment|/// probably because the source does not need to be loaded. If 'IsMemset' is
-comment|/// true, that means it's expanding a memset. If 'ZeroMemset' is true, that
-comment|/// means it's a memset of zero. 'MemcpyStrSrc' indicates whether the memcpy
-comment|/// source is constant so it does not need to be loaded.
-comment|/// It returns EVT::Other if the type should be determined using generic
-comment|/// target-independent logic.
+comment|/// Returns the target specific optimal type for load and store operations as
+comment|/// a result of memset, memcpy, and memmove lowering.
+comment|///
+comment|/// If DstAlign is zero that means it's safe to destination alignment can
+comment|/// satisfy any constraint. Similarly if SrcAlign is zero it means there isn't
+comment|/// a need to check it against alignment requirement, probably because the
+comment|/// source does not need to be loaded. If 'IsMemset' is true, that means it's
+comment|/// expanding a memset. If 'ZeroMemset' is true, that means it's a memset of
+comment|/// zero. 'MemcpyStrSrc' indicates whether the memcpy source is constant so it
+comment|/// does not need to be loaded.  It returns EVT::Other if the type should be
+comment|/// determined using generic target-independent logic.
 name|virtual
 name|EVT
 name|getOptimalMemOpType
@@ -2853,18 +2938,19 @@ operator|::
 name|Other
 return|;
 block|}
-comment|/// isSafeMemOpType - Returns true if it's safe to use load / store of the
-comment|/// specified type to expand memcpy / memset inline. This is mostly true
-comment|/// for all types except for some special cases. For example, on X86
-comment|/// targets without SSE2 f64 load / store are done with fldl / fstpl which
-comment|/// also does type conversion. Note the specified type doesn't have to be
-comment|/// legal as the hook is used before type legalization.
+comment|/// Returns true if it's safe to use load / store of the specified type to
+comment|/// expand memcpy / memset inline.
+comment|///
+comment|/// This is mostly true for all types except for some special cases. For
+comment|/// example, on X86 targets without SSE2 f64 load / store are done with fldl /
+comment|/// fstpl which also does type conversion. Note the specified type doesn't
+comment|/// have to be legal as the hook is used before type legalization.
 name|virtual
 name|bool
 name|isSafeMemOpType
 argument_list|(
 name|MVT
-name|VT
+comment|/*VT*/
 argument_list|)
 decl|const
 block|{
@@ -2872,8 +2958,7 @@ return|return
 name|true
 return|;
 block|}
-comment|/// usesUnderscoreSetJmp - Determine if we should use _setjmp or setjmp
-comment|/// to implement llvm.setjmp.
+comment|/// Determine if we should use _setjmp or setjmp to implement llvm.setjmp.
 name|bool
 name|usesUnderscoreSetJmp
 argument_list|()
@@ -2883,8 +2968,7 @@ return|return
 name|UseUnderscoreSetJmp
 return|;
 block|}
-comment|/// usesUnderscoreLongJmp - Determine if we should use _longjmp or longjmp
-comment|/// to implement llvm.longjmp.
+comment|/// Determine if we should use _longjmp or longjmp to implement llvm.longjmp.
 name|bool
 name|usesUnderscoreLongJmp
 argument_list|()
@@ -2894,8 +2978,7 @@ return|return
 name|UseUnderscoreLongJmp
 return|;
 block|}
-comment|/// supportJumpTables - return whether the target can generate code for
-comment|/// jump tables.
+comment|/// Return whether the target can generate code for jump tables.
 name|bool
 name|supportJumpTables
 argument_list|()
@@ -2905,8 +2988,8 @@ return|return
 name|SupportJumpTables
 return|;
 block|}
-comment|/// getMinimumJumpTableEntries - return integer threshold on number of
-comment|/// blocks to use jump tables rather than if sequence.
+comment|/// Return integer threshold on number of blocks to use jump tables rather
+comment|/// than if sequence.
 name|int
 name|getMinimumJumpTableEntries
 argument_list|()
@@ -2916,9 +2999,8 @@ return|return
 name|MinimumJumpTableEntries
 return|;
 block|}
-comment|/// getStackPointerRegisterToSaveRestore - If a physical register, this
-comment|/// specifies the register that llvm.savestack/llvm.restorestack should save
-comment|/// and restore.
+comment|/// If a physical register, this specifies the register that
+comment|/// llvm.savestack/llvm.restorestack should save and restore.
 name|unsigned
 name|getStackPointerRegisterToSaveRestore
 argument_list|()
@@ -2928,9 +3010,8 @@ return|return
 name|StackPointerRegisterToSaveRestore
 return|;
 block|}
-comment|/// getExceptionPointerRegister - If a physical register, this returns
-comment|/// the register that receives the exception address on entry to a landing
-comment|/// pad.
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception address on entry to a landing pad.
 name|unsigned
 name|getExceptionPointerRegister
 argument_list|()
@@ -2940,9 +3021,8 @@ return|return
 name|ExceptionPointerRegister
 return|;
 block|}
-comment|/// getExceptionSelectorRegister - If a physical register, this returns
-comment|/// the register that receives the exception typeid on entry to a landing
-comment|/// pad.
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception typeid on entry to a landing pad.
 name|unsigned
 name|getExceptionSelectorRegister
 argument_list|()
@@ -2952,8 +3032,8 @@ return|return
 name|ExceptionSelectorRegister
 return|;
 block|}
-comment|/// getJumpBufSize - returns the target's jmp_buf size in bytes (if never
-comment|/// set, the default is 200)
+comment|/// Returns the target's jmp_buf size in bytes (if never set, the default is
+comment|/// 200)
 name|unsigned
 name|getJumpBufSize
 argument_list|()
@@ -2963,8 +3043,8 @@ return|return
 name|JumpBufSize
 return|;
 block|}
-comment|/// getJumpBufAlignment - returns the target's jmp_buf alignment in bytes
-comment|/// (if never set, the default is 0)
+comment|/// Returns the target's jmp_buf alignment in bytes (if never set, the default
+comment|/// is 0)
 name|unsigned
 name|getJumpBufAlignment
 argument_list|()
@@ -2974,8 +3054,7 @@ return|return
 name|JumpBufAlignment
 return|;
 block|}
-comment|/// getMinStackArgumentAlignment - return the minimum stack alignment of an
-comment|/// argument.
+comment|/// Return the minimum stack alignment of an argument.
 name|unsigned
 name|getMinStackArgumentAlignment
 argument_list|()
@@ -2985,8 +3064,7 @@ return|return
 name|MinStackArgumentAlignment
 return|;
 block|}
-comment|/// getMinFunctionAlignment - return the minimum function alignment.
-comment|///
+comment|/// Return the minimum function alignment.
 name|unsigned
 name|getMinFunctionAlignment
 argument_list|()
@@ -2996,8 +3074,7 @@ return|return
 name|MinFunctionAlignment
 return|;
 block|}
-comment|/// getPrefFunctionAlignment - return the preferred function alignment.
-comment|///
+comment|/// Return the preferred function alignment.
 name|unsigned
 name|getPrefFunctionAlignment
 argument_list|()
@@ -3007,8 +3084,7 @@ return|return
 name|PrefFunctionAlignment
 return|;
 block|}
-comment|/// getPrefLoopAlignment - return the preferred loop alignment.
-comment|///
+comment|/// Return the preferred loop alignment.
 name|unsigned
 name|getPrefLoopAlignment
 argument_list|()
@@ -3018,9 +3094,8 @@ return|return
 name|PrefLoopAlignment
 return|;
 block|}
-comment|/// getInsertFencesFor - return whether the DAG builder should automatically
-comment|/// insert fences and reduce ordering for atomics.
-comment|///
+comment|/// Return whether the DAG builder should automatically insert fences and
+comment|/// reduce ordering for atomics.
 name|bool
 name|getInsertFencesForAtomic
 argument_list|()
@@ -3030,10 +3105,9 @@ return|return
 name|InsertFencesForAtomic
 return|;
 block|}
-comment|/// getStackCookieLocation - Return true if the target stores stack
-comment|/// protector cookies at a fixed offset in some non-standard address
-comment|/// space, and populates the address space and offset as
-comment|/// appropriate.
+comment|/// Return true if the target stores stack protector cookies at a fixed offset
+comment|/// in some non-standard address space, and populates the address space and
+comment|/// offset as appropriate.
 name|virtual
 name|bool
 name|getStackCookieLocation
@@ -3052,8 +3126,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getMaximalGlobalOffset - Returns the maximal possible offset which can be
-comment|/// used for loads / stores from the global.
+comment|/// Returns the maximal possible offset which can be used for loads / stores
+comment|/// from the global.
 name|virtual
 name|unsigned
 name|getMaximalGlobalOffset
@@ -3062,6 +3136,23 @@ specifier|const
 block|{
 return|return
 literal|0
+return|;
+block|}
+comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
+name|virtual
+name|bool
+name|isNoopAddrSpaceCast
+argument_list|(
+name|unsigned
+name|SrcAS
+argument_list|,
+name|unsigned
+name|DestAS
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -3104,8 +3195,8 @@ parameter_list|()
 block|{}
 name|protected
 label|:
-comment|/// setBooleanContents - Specify how the target extends the result of a
-comment|/// boolean value from i1 to a wider type.  See getBooleanContents.
+comment|/// Specify how the target extends the result of a boolean value from i1 to a
+comment|/// wider type.  See getBooleanContents.
 name|void
 name|setBooleanContents
 parameter_list|(
@@ -3118,9 +3209,8 @@ operator|=
 name|Ty
 expr_stmt|;
 block|}
-comment|/// setBooleanVectorContents - Specify how the target extends the result
-comment|/// of a vector boolean value from a vector of i1 to a wider type.  See
-comment|/// getBooleanContents.
+comment|/// Specify how the target extends the result of a vector boolean value from a
+comment|/// vector of i1 to a wider type.  See getBooleanContents.
 name|void
 name|setBooleanVectorContents
 parameter_list|(
@@ -3133,7 +3223,7 @@ operator|=
 name|Ty
 expr_stmt|;
 block|}
-comment|/// setSchedulingPreference - Specify the target scheduling preference.
+comment|/// Specify the target scheduling preference.
 name|void
 name|setSchedulingPreference
 argument_list|(
@@ -3148,9 +3238,8 @@ operator|=
 name|Pref
 expr_stmt|;
 block|}
-comment|/// setUseUnderscoreSetJmp - Indicate whether this target prefers to
-comment|/// use _setjmp to implement llvm.setjmp or the non _ version.
-comment|/// Defaults to false.
+comment|/// Indicate whether this target prefers to use _setjmp to implement
+comment|/// llvm.setjmp or the non _ version.  Defaults to false.
 name|void
 name|setUseUnderscoreSetJmp
 parameter_list|(
@@ -3163,9 +3252,8 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-comment|/// setUseUnderscoreLongJmp - Indicate whether this target prefers to
-comment|/// use _longjmp to implement llvm.longjmp or the non _ version.
-comment|/// Defaults to false.
+comment|/// Indicate whether this target prefers to use _longjmp to implement
+comment|/// llvm.longjmp or the non _ version.  Defaults to false.
 name|void
 name|setUseUnderscoreLongJmp
 parameter_list|(
@@ -3178,8 +3266,7 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-comment|/// setSupportJumpTables - Indicate whether the target can generate code for
-comment|/// jump tables.
+comment|/// Indicate whether the target can generate code for jump tables.
 name|void
 name|setSupportJumpTables
 parameter_list|(
@@ -3192,8 +3279,8 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-comment|/// setMinimumJumpTableEntries - Indicate the number of blocks to generate
-comment|/// jump tables rather than if sequence.
+comment|/// Indicate the number of blocks to generate jump tables rather than if
+comment|/// sequence.
 name|void
 name|setMinimumJumpTableEntries
 parameter_list|(
@@ -3206,9 +3293,8 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-comment|/// setStackPointerRegisterToSaveRestore - If set to a physical register, this
-comment|/// specifies the register that llvm.savestack/llvm.restorestack should save
-comment|/// and restore.
+comment|/// If set to a physical register, this specifies the register that
+comment|/// llvm.savestack/llvm.restorestack should save and restore.
 name|void
 name|setStackPointerRegisterToSaveRestore
 parameter_list|(
@@ -3221,9 +3307,8 @@ operator|=
 name|R
 expr_stmt|;
 block|}
-comment|/// setExceptionPointerRegister - If set to a physical register, this sets
-comment|/// the register that receives the exception address on entry to a landing
-comment|/// pad.
+comment|/// If set to a physical register, this sets the register that receives the
+comment|/// exception address on entry to a landing pad.
 name|void
 name|setExceptionPointerRegister
 parameter_list|(
@@ -3236,9 +3321,8 @@ operator|=
 name|R
 expr_stmt|;
 block|}
-comment|/// setExceptionSelectorRegister - If set to a physical register, this sets
-comment|/// the register that receives the exception typeid on entry to a landing
-comment|/// pad.
+comment|/// If set to a physical register, this sets the register that receives the
+comment|/// exception typeid on entry to a landing pad.
 name|void
 name|setExceptionSelectorRegister
 parameter_list|(
@@ -3251,8 +3335,8 @@ operator|=
 name|R
 expr_stmt|;
 block|}
-comment|/// SelectIsExpensive - Tells the code generator not to expand operations
-comment|/// into sequences that use the select operations if possible.
+comment|/// Tells the code generator not to expand operations into sequences that use
+comment|/// the select operations if possible.
 name|void
 name|setSelectIsExpensive
 parameter_list|(
@@ -3267,9 +3351,8 @@ operator|=
 name|isExpensive
 expr_stmt|;
 block|}
-comment|/// JumpIsExpensive - Tells the code generator not to expand sequence of
-comment|/// operations into a separate sequences that increases the amount of
-comment|/// flow control.
+comment|/// Tells the code generator not to expand sequence of operations into a
+comment|/// separate sequences that increases the amount of flow control.
 name|void
 name|setJumpIsExpensive
 parameter_list|(
@@ -3284,9 +3367,9 @@ operator|=
 name|isExpensive
 expr_stmt|;
 block|}
-comment|/// setIntDivIsCheap - Tells the code generator that integer divide is
-comment|/// expensive, and if possible, should be replaced by an alternate sequence
-comment|/// of instructions not containing an integer divide.
+comment|/// Tells the code generator that integer divide is expensive, and if
+comment|/// possible, should be replaced by an alternate sequence of instructions not
+comment|/// containing an integer divide.
 name|void
 name|setIntDivIsCheap
 parameter_list|(
@@ -3301,7 +3384,7 @@ operator|=
 name|isCheap
 expr_stmt|;
 block|}
-comment|/// addBypassSlowDiv - Tells the code generator which bitwidths to bypass.
+comment|/// Tells the code generator which bitwidths to bypass.
 name|void
 name|addBypassSlowDiv
 parameter_list|(
@@ -3322,9 +3405,8 @@ operator|=
 name|FastBitWidth
 expr_stmt|;
 block|}
-comment|/// setPow2DivIsCheap - Tells the code generator that it shouldn't generate
-comment|/// srl/add/sra for a signed divide by power of two, and let the target handle
-comment|/// it.
+comment|/// Tells the code generator that it shouldn't generate srl/add/sra for a
+comment|/// signed divide by power of two, and let the target handle it.
 name|void
 name|setPow2DivIsCheap
 parameter_list|(
@@ -3339,9 +3421,9 @@ operator|=
 name|isCheap
 expr_stmt|;
 block|}
-comment|/// addRegisterClass - Add the specified register class as an available
-comment|/// regclass for the specified value type.  This indicates the selector can
-comment|/// handle values of that class natively.
+comment|/// Add the specified register class as an available regclass for the
+comment|/// specified value type. This indicates the selector can handle values of
+comment|/// that class natively.
 name|void
 name|addRegisterClass
 parameter_list|(
@@ -3393,7 +3475,7 @@ operator|=
 name|RC
 expr_stmt|;
 block|}
-comment|/// clearRegisterClasses - Remove all register classes.
+comment|/// Remove all register classes.
 name|void
 name|clearRegisterClasses
 parameter_list|()
@@ -3426,8 +3508,8 @@ name|void
 name|clearOperationActions
 parameter_list|()
 block|{   }
-comment|/// findRepresentativeClass - Return the largest legal super-reg register class
-comment|/// of the register class for the specified type and its associated "cost".
+comment|/// Return the largest legal super-reg register class of the register class
+comment|/// for the specified type and its associated "cost".
 name|virtual
 name|std
 operator|::
@@ -3445,14 +3527,14 @@ argument|MVT VT
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// computeRegisterProperties - Once all of the register classes are added,
-comment|/// this allows us to compute derived properties we expose.
+comment|/// Once all of the register classes are added, this allows us to compute
+comment|/// derived properties we expose.
 name|void
 name|computeRegisterProperties
 parameter_list|()
 function_decl|;
-comment|/// setOperationAction - Indicate that the specified operation does not work
-comment|/// with the specified type and indicate what to do about it.
+comment|/// Indicate that the specified operation does not work with the specified
+comment|/// type and indicate what to do about it.
 name|void
 name|setOperationAction
 parameter_list|(
@@ -3500,8 +3582,8 @@ operator|)
 name|Action
 expr_stmt|;
 block|}
-comment|/// setLoadExtAction - Indicate that the specified load with extension does
-comment|/// not work with the specified type and indicate what to do about it.
+comment|/// Indicate that the specified load with extension does not work with the
+comment|/// specified type and indicate what to do about it.
 name|void
 name|setLoadExtAction
 parameter_list|(
@@ -3548,8 +3630,8 @@ operator|)
 name|Action
 expr_stmt|;
 block|}
-comment|/// setTruncStoreAction - Indicate that the specified truncating store does
-comment|/// not work with the specified type and indicate what to do about it.
+comment|/// Indicate that the specified truncating store does not work with the
+comment|/// specified type and indicate what to do about it.
 name|void
 name|setTruncStoreAction
 parameter_list|(
@@ -3598,9 +3680,10 @@ operator|)
 name|Action
 expr_stmt|;
 block|}
-comment|/// setIndexedLoadAction - Indicate that the specified indexed load does or
-comment|/// does not work with the specified type and indicate what to do abort
-comment|/// it. NOTE: All indexed mode loads are initialized to Expand in
+comment|/// Indicate that the specified indexed load does or does not work with the
+comment|/// specified type and indicate what to do abort it.
+comment|///
+comment|/// NOTE: All indexed mode loads are initialized to Expand in
 comment|/// TargetLowering.cpp
 name|void
 name|setIndexedLoadAction
@@ -3679,9 +3762,10 @@ operator|<<
 literal|4
 expr_stmt|;
 block|}
-comment|/// setIndexedStoreAction - Indicate that the specified indexed store does or
-comment|/// does not work with the specified type and indicate what to do about
-comment|/// it. NOTE: All indexed mode stores are initialized to Expand in
+comment|/// Indicate that the specified indexed store does or does not work with the
+comment|/// specified type and indicate what to do about it.
+comment|///
+comment|/// NOTE: All indexed mode stores are initialized to Expand in
 comment|/// TargetLowering.cpp
 name|void
 name|setIndexedStoreAction
@@ -3758,8 +3842,8 @@ name|Action
 operator|)
 expr_stmt|;
 block|}
-comment|/// setCondCodeAction - Indicate that the specified condition code is or isn't
-comment|/// supported on the target and indicate what to do about it.
+comment|/// Indicate that the specified condition code is or isn't supported on the
+comment|/// target and indicate what to do about it.
 name|void
 name|setCondCodeAction
 argument_list|(
@@ -3796,14 +3880,24 @@ operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
-comment|/// The lower 5 bits of the SimpleTy index into Nth 2bit set from the 64bit
-comment|/// value and the upper 27 bits index into the second dimension of the
-comment|/// array to select what 64bit value to use.
+comment|/// The lower 5 bits of the SimpleTy index into Nth 2bit set from the 32-bit
+comment|/// value and the upper 27 bits index into the second dimension of the array
+comment|/// to select what 32-bit value to use.
+name|uint32_t
+name|Shift
+init|=
+literal|2
+operator|*
+operator|(
+name|VT
+operator|.
+name|SimpleTy
+operator|&
+literal|0xF
+operator|)
+decl_stmt|;
 name|CondCodeActions
 index|[
-operator|(
-name|unsigned
-operator|)
 name|CC
 index|]
 index|[
@@ -3811,32 +3905,21 @@ name|VT
 operator|.
 name|SimpleTy
 operator|>>
-literal|5
+literal|4
 index|]
 operator|&=
 operator|~
 operator|(
-name|uint64_t
-argument_list|(
-literal|3UL
-argument_list|)
-operator|<<
 operator|(
-name|VT
-operator|.
-name|SimpleTy
-operator|&
-literal|0x1F
+name|uint32_t
 operator|)
-operator|*
-literal|2
+literal|0x3
+operator|<<
+name|Shift
 operator|)
 expr_stmt|;
 name|CondCodeActions
 index|[
-operator|(
-name|unsigned
-operator|)
 name|CC
 index|]
 index|[
@@ -3844,29 +3927,21 @@ name|VT
 operator|.
 name|SimpleTy
 operator|>>
-literal|5
+literal|4
 index|]
 operator||=
 operator|(
-name|uint64_t
+name|uint32_t
 operator|)
 name|Action
 operator|<<
-operator|(
-name|VT
-operator|.
-name|SimpleTy
-operator|&
-literal|0x1F
-operator|)
-operator|*
-literal|2
+name|Shift
 expr_stmt|;
 block|}
-comment|/// AddPromotedToType - If Opc/OrigVT is specified as being promoted, the
-comment|/// promotion code defaults to trying a larger integer/fp until it can find
-comment|/// one that works.  If that default is insufficient, this method can be used
-comment|/// by the target to override the default.
+comment|/// If Opc/OrigVT is specified as being promoted, the promotion code defaults
+comment|/// to trying a larger integer/fp until it can find one that works. If that
+comment|/// default is insufficient, this method can be used by the target to override
+comment|/// the default.
 name|void
 name|AddPromotedToType
 parameter_list|(
@@ -3899,9 +3974,9 @@ operator|.
 name|SimpleTy
 expr_stmt|;
 block|}
-comment|/// setTargetDAGCombine - Targets should invoke this method for each target
-comment|/// independent node that they want to provide a custom DAG combiner for by
-comment|/// implementing the PerformDAGCombine virtual method.
+comment|/// Targets should invoke this method for each target independent node that
+comment|/// they want to provide a custom DAG combiner for by implementing the
+comment|/// PerformDAGCombine virtual method.
 name|void
 name|setTargetDAGCombine
 argument_list|(
@@ -3942,8 +4017,7 @@ literal|7
 operator|)
 expr_stmt|;
 block|}
-comment|/// setJumpBufSize - Set the target's required jmp_buf buffer size (in
-comment|/// bytes); default is 200
+comment|/// Set the target's required jmp_buf buffer size (in bytes); default is 200
 name|void
 name|setJumpBufSize
 parameter_list|(
@@ -3956,8 +4030,8 @@ operator|=
 name|Size
 expr_stmt|;
 block|}
-comment|/// setJumpBufAlignment - Set the target's required jmp_buf buffer
-comment|/// alignment (in bytes); default is 0
+comment|/// Set the target's required jmp_buf buffer alignment (in bytes); default is
+comment|/// 0
 name|void
 name|setJumpBufAlignment
 parameter_list|(
@@ -3970,8 +4044,7 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-comment|/// setMinFunctionAlignment - Set the target's minimum function alignment (in
-comment|/// log2(bytes))
+comment|/// Set the target's minimum function alignment (in log2(bytes))
 name|void
 name|setMinFunctionAlignment
 parameter_list|(
@@ -3984,9 +4057,9 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-comment|/// setPrefFunctionAlignment - Set the target's preferred function alignment.
-comment|/// This should be set if there is a performance benefit to
-comment|/// higher-than-minimum alignment (in log2(bytes))
+comment|/// Set the target's preferred function alignment.  This should be set if
+comment|/// there is a performance benefit to higher-than-minimum alignment (in
+comment|/// log2(bytes))
 name|void
 name|setPrefFunctionAlignment
 parameter_list|(
@@ -3999,9 +4072,9 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-comment|/// setPrefLoopAlignment - Set the target's preferred loop alignment. Default
-comment|/// alignment is zero, it means the target does not care about loop alignment.
-comment|/// The alignment is specified in log2(bytes).
+comment|/// Set the target's preferred loop alignment. Default alignment is zero, it
+comment|/// means the target does not care about loop alignment.  The alignment is
+comment|/// specified in log2(bytes).
 name|void
 name|setPrefLoopAlignment
 parameter_list|(
@@ -4014,8 +4087,7 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-comment|/// setMinStackArgumentAlignment - Set the minimum stack alignment of an
-comment|/// argument (in log2(bytes)).
+comment|/// Set the minimum stack alignment of an argument (in log2(bytes)).
 name|void
 name|setMinStackArgumentAlignment
 parameter_list|(
@@ -4028,9 +4100,8 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-comment|/// setInsertFencesForAtomic - Set if the DAG builder should
-comment|/// automatically insert fences and reduce the order of atomic memory
-comment|/// operations to Monotonic.
+comment|/// Set if the DAG builder should automatically insert fences and reduce the
+comment|/// order of atomic memory operations to Monotonic.
 name|void
 name|setInsertFencesForAtomic
 parameter_list|(
@@ -4048,18 +4119,18 @@ label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// Addressing mode description hooks (used by LSR etc).
 comment|//
-comment|/// GetAddrModeArguments - CodeGenPrepare sinks address calculations into the
-comment|/// same BB as Load/Store instructions reading the address.  This allows as
-comment|/// much computation as possible to be done in the address mode for that
-comment|/// operand.  This hook lets targets also pass back when this should be done
-comment|/// on intrinsics which load/store.
+comment|/// CodeGenPrepare sinks address calculations into the same BB as Load/Store
+comment|/// instructions reading the address. This allows as much computation as
+comment|/// possible to be done in the address mode for that operand. This hook lets
+comment|/// targets also pass back when this should be done on intrinsics which
+comment|/// load/store.
 name|virtual
 name|bool
 name|GetAddrModeArguments
 argument_list|(
 name|IntrinsicInst
 operator|*
-name|I
+comment|/*I*/
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -4067,12 +4138,12 @@ name|Value
 operator|*
 operator|>
 operator|&
-name|Ops
+comment|/*Ops*/
 argument_list|,
 name|Type
 operator|*
 operator|&
-name|AccessTy
+comment|/*AccessTy*/
 argument_list|)
 decl|const
 block|{
@@ -4080,14 +4151,13 @@ return|return
 name|false
 return|;
 block|}
-comment|/// AddrMode - This represents an addressing mode of:
+comment|/// This represents an addressing mode of:
 comment|///    BaseGV + BaseOffs + BaseReg + Scale*ScaleReg
 comment|/// If BaseGV is null,  there is no BaseGV.
 comment|/// If BaseOffs is zero, there is no base offset.
 comment|/// If HasBaseReg is false, there is no base register.
 comment|/// If Scale is zero, there is no ScaleReg.  Scale of 1 indicates a reg with
 comment|/// no scale.
-comment|///
 struct|struct
 name|AddrMode
 block|{
@@ -4129,11 +4199,12 @@ argument_list|)
 block|{}
 block|}
 struct|;
-comment|/// isLegalAddressingMode - Return true if the addressing mode represented by
-comment|/// AM is legal for this target, for a load/store of the specified type.
+comment|/// Return true if the addressing mode represented by AM is legal for this
+comment|/// target, for a load/store of the specified type.
+comment|///
 comment|/// The type may be VoidTy, in which case only return true if the addressing
-comment|/// mode is legal for a load/store of any legal type.
-comment|/// TODO: Handle pre/postinc as well.
+comment|/// mode is legal for a load/store of any legal type.  TODO: Handle
+comment|/// pre/postinc as well.
 name|virtual
 name|bool
 name|isLegalAddressingMode
@@ -4149,10 +4220,48 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
-comment|/// icmp immediate, that is the target has icmp instructions which can compare
-comment|/// a register against the immediate without having to materialize the
-comment|/// immediate into a register.
+comment|/// \brief Return the cost of the scaling factor used in the addressing mode
+comment|/// represented by AM for this target, for a load/store of the specified type.
+comment|///
+comment|/// If the AM is supported, the return value must be>= 0.
+comment|/// If the AM is not supported, it returns a negative value.
+comment|/// TODO: Handle pre/postinc as well.
+name|virtual
+name|int
+name|getScalingFactorCost
+argument_list|(
+specifier|const
+name|AddrMode
+operator|&
+name|AM
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+block|{
+comment|// Default: assume that any scaling factor used in a legal AM is free.
+if|if
+condition|(
+name|isLegalAddressingMode
+argument_list|(
+name|AM
+argument_list|,
+name|Ty
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+comment|/// Return true if the specified immediate is legal icmp immediate, that is
+comment|/// the target has icmp instructions which can compare a register against the
+comment|/// immediate without having to materialize the immediate into a register.
 name|virtual
 name|bool
 name|isLegalICmpImmediate
@@ -4165,10 +4274,9 @@ return|return
 name|true
 return|;
 block|}
-comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
-comment|/// add immediate, that is the target has add instructions which can add
-comment|/// a register with the immediate without having to materialize the
-comment|/// immediate into a register.
+comment|/// Return true if the specified immediate is legal add immediate, that is the
+comment|/// target has add instructions which can add a register with the immediate
+comment|/// without having to materialize the immediate into a register.
 name|virtual
 name|bool
 name|isLegalAddImmediate
@@ -4181,12 +4289,35 @@ return|return
 name|true
 return|;
 block|}
-comment|/// isTruncateFree - Return true if it's free to truncate a value of
-comment|/// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
-comment|/// register EAX to i16 by referencing its sub-register AX.
+comment|/// Return true if it's free to truncate a value of type Ty1 to type
+comment|/// Ty2. e.g. On x86 it's free to truncate a i32 value in register EAX to i16
+comment|/// by referencing its sub-register AX.
 name|virtual
 name|bool
 name|isTruncateFree
+argument_list|(
+name|Type
+operator|*
+comment|/*Ty1*/
+argument_list|,
+name|Type
+operator|*
+comment|/*Ty2*/
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Return true if a truncation from Ty1 to Ty2 is permitted when deciding
+comment|/// whether a call is in tail position. Typically this means that both results
+comment|/// would be assigned to the same register or stack slot, but it could mean
+comment|/// the target performs adequate checks of its own before proceeding with the
+comment|/// tail call.
+name|virtual
+name|bool
+name|allowTruncateForTailCall
 argument_list|(
 name|Type
 operator|*
@@ -4218,14 +4349,14 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isZExtFree - Return true if any actual instruction that defines a
-comment|/// value of type Ty1 implicitly zero-extends the value to Ty2 in the result
-comment|/// register. This does not necessarily include registers defined in
-comment|/// unknown ways, such as incoming arguments, or copies from unknown
-comment|/// virtual registers. Also, if isTruncateFree(Ty2, Ty1) is true, this
-comment|/// does not necessarily apply to truncate instructions. e.g. on x86-64,
-comment|/// all instructions that define 32-bit values implicit zero-extend the
-comment|/// result out to 64 bits.
+comment|/// Return true if any actual instruction that defines a value of type Ty1
+comment|/// implicitly zero-extends the value to Ty2 in the result register.
+comment|///
+comment|/// This does not necessarily include registers defined in unknown ways, such
+comment|/// as incoming arguments, or copies from unknown virtual registers. Also, if
+comment|/// isTruncateFree(Ty2, Ty1) is true, this does not necessarily apply to
+comment|/// truncate instructions. e.g. on x86-64, all instructions that define 32-bit
+comment|/// values implicit zero-extend the result out to 64 bits.
 name|virtual
 name|bool
 name|isZExtFree
@@ -4260,9 +4391,65 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isZExtFree - Return true if zero-extending the specific node Val to type
-comment|/// VT2 is free (either because it's implicitly zero-extended such as ARM
-comment|/// ldrb / ldrh or because it's folded such as X86 zero-extending loads).
+comment|/// Return true if the target supplies and combines to a paired load
+comment|/// two loaded values of type LoadedType next to each other in memory.
+comment|/// RequiredAlignment gives the minimal alignment constraints that must be met
+comment|/// to be able to select this paired load.
+comment|///
+comment|/// This information is *not* used to generate actual paired loads, but it is
+comment|/// used to generate a sequence of loads that is easier to combine into a
+comment|/// paired load.
+comment|/// For instance, something like this:
+comment|/// a = load i64* addr
+comment|/// b = trunc i64 a to i32
+comment|/// c = lshr i64 a, 32
+comment|/// d = trunc i64 c to i32
+comment|/// will be optimized into:
+comment|/// b = load i32* addr1
+comment|/// d = load i32* addr2
+comment|/// Where addr1 = addr2 +/- sizeof(i32).
+comment|///
+comment|/// In other words, unless the target performs a post-isel load combining,
+comment|/// this information should not be provided because it will generate more
+comment|/// loads.
+name|virtual
+name|bool
+name|hasPairedLoad
+argument_list|(
+name|Type
+operator|*
+comment|/*LoadedType*/
+argument_list|,
+name|unsigned
+operator|&
+comment|/*RequiredAligment*/
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|hasPairedLoad
+argument_list|(
+name|EVT
+comment|/*LoadedType*/
+argument_list|,
+name|unsigned
+operator|&
+comment|/*RequiredAligment*/
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Return true if zero-extending the specific node Val to type VT2 is free
+comment|/// (either because it's implicitly zero-extended such as ARM ldrb / ldrh or
+comment|/// because it's folded such as X86 zero-extending loads).
 name|virtual
 name|bool
 name|isZExtFree
@@ -4287,41 +4474,63 @@ name|VT2
 argument_list|)
 return|;
 block|}
-comment|/// isFNegFree - Return true if an fneg operation is free to the point where
-comment|/// it is never worthwhile to replace it with a bitwise operation.
+comment|/// Return true if an fneg operation is free to the point where it is never
+comment|/// worthwhile to replace it with a bitwise operation.
 name|virtual
 name|bool
 name|isFNegFree
 argument_list|(
 name|EVT
+name|VT
 argument_list|)
 decl|const
 block|{
+name|assert
+argument_list|(
+name|VT
+operator|.
+name|isFloatingPoint
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return
 name|false
 return|;
 block|}
-comment|/// isFAbsFree - Return true if an fneg operation is free to the point where
-comment|/// it is never worthwhile to replace it with a bitwise operation.
+comment|/// Return true if an fabs operation is free to the point where it is never
+comment|/// worthwhile to replace it with a bitwise operation.
 name|virtual
 name|bool
 name|isFAbsFree
 argument_list|(
 name|EVT
+name|VT
 argument_list|)
 decl|const
 block|{
+name|assert
+argument_list|(
+name|VT
+operator|.
+name|isFloatingPoint
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return
 name|false
 return|;
 block|}
-comment|/// isFMAFasterThanMulAndAdd - Return true if an FMA operation is faster than
-comment|/// a pair of mul and add instructions. fmuladd intrinsics will be expanded to
-comment|/// FMAs when this method returns true (and FMAs are legal), otherwise fmuladd
-comment|/// is expanded to mul + add.
+comment|/// Return true if an FMA operation is faster than a pair of fmul and fadd
+comment|/// instructions. fmuladd intrinsics will be expanded to FMAs when this method
+comment|/// returns true, otherwise fmuladd is expanded to fmul + fadd.
+comment|///
+comment|/// NOTE: This may be called before legalization on types for which FMAs are
+comment|/// not legal, but should return true if those types will eventually legalize
+comment|/// to types that support FMAs. After legalization, it will only be called on
+comment|/// types that support FMAs (via Legal or Custom actions)
 name|virtual
 name|bool
-name|isFMAFasterThanMulAndAdd
+name|isFMAFasterThanFMulAndFAdd
 argument_list|(
 name|EVT
 argument_list|)
@@ -4331,9 +4540,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isNarrowingProfitable - Return true if it's profitable to narrow
-comment|/// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
-comment|/// from i32 to i8 but not from i32 to i16.
+comment|/// Return true if it's profitable to narrow operations of type VT1 to
+comment|/// VT2. e.g. on x86, it's profitable to narrow from i32 to i8 but not from
+comment|/// i32 to i16.
 name|virtual
 name|bool
 name|isNarrowingProfitable
@@ -4353,8 +4562,7 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Runtime Library hooks
 comment|//
-comment|/// setLibcallName - Rename the default libcall routine name for the specified
-comment|/// libcall.
+comment|/// Rename the default libcall routine name for the specified libcall.
 name|void
 name|setLibcallName
 argument_list|(
@@ -4377,8 +4585,7 @@ operator|=
 name|Name
 expr_stmt|;
 block|}
-comment|/// getLibcallName - Get the libcall routine name for the specified libcall.
-comment|///
+comment|/// Get the libcall routine name for the specified libcall.
 specifier|const
 name|char
 modifier|*
@@ -4398,8 +4605,8 @@ name|Call
 index|]
 return|;
 block|}
-comment|/// setCmpLibcallCC - Override the default CondCode to be used to test the
-comment|/// result of the comparison libcall against zero.
+comment|/// Override the default CondCode to be used to test the result of the
+comment|/// comparison libcall against zero.
 name|void
 name|setCmpLibcallCC
 argument_list|(
@@ -4422,8 +4629,8 @@ operator|=
 name|CC
 expr_stmt|;
 block|}
-comment|/// getCmpLibcallCC - Get the CondCode that's to be used to test the result of
-comment|/// the comparison libcall against zero.
+comment|/// Get the CondCode that's to be used to test the result of the comparison
+comment|/// libcall against zero.
 name|ISD
 operator|::
 name|CondCode
@@ -4440,8 +4647,7 @@ name|Call
 index|]
 return|;
 block|}
-comment|/// setLibcallCallingConv - Set the CallingConv that should be used for the
-comment|/// specified libcall.
+comment|/// Set the CallingConv that should be used for the specified libcall.
 name|void
 name|setLibcallCallingConv
 argument_list|(
@@ -4464,8 +4670,7 @@ operator|=
 name|CC
 expr_stmt|;
 block|}
-comment|/// getLibcallCallingConv - Get the CallingConv that should be used for the
-comment|/// specified libcall.
+comment|/// Get the CallingConv that should be used for the specified libcall.
 name|CallingConv
 operator|::
 name|ID
@@ -4499,33 +4704,26 @@ name|TargetLoweringObjectFile
 modifier|&
 name|TLOF
 decl_stmt|;
-comment|/// PointerTy - The type to use for pointers for the default address space,
-comment|/// usually i32 or i64.
-comment|///
-name|MVT
-name|PointerTy
-decl_stmt|;
-comment|/// IsLittleEndian - True if this is a little endian target.
-comment|///
+comment|/// True if this is a little endian target.
 name|bool
 name|IsLittleEndian
 decl_stmt|;
-comment|/// SelectIsExpensive - Tells the code generator not to expand operations
-comment|/// into sequences that use the select operations if possible.
+comment|/// Tells the code generator not to expand operations into sequences that use
+comment|/// the select operations if possible.
 name|bool
 name|SelectIsExpensive
 decl_stmt|;
-comment|/// IntDivIsCheap - Tells the code generator not to expand integer divides by
-comment|/// constants into a sequence of muls, adds, and shifts.  This is a hack until
-comment|/// a real cost model is in place.  If we ever optimize for size, this will be
-comment|/// set to true unconditionally.
+comment|/// Tells the code generator not to expand integer divides by constants into a
+comment|/// sequence of muls, adds, and shifts.  This is a hack until a real cost
+comment|/// model is in place.  If we ever optimize for size, this will be set to true
+comment|/// unconditionally.
 name|bool
 name|IntDivIsCheap
 decl_stmt|;
-comment|/// BypassSlowDivMap - Tells the code generator to bypass slow divide or
-comment|/// remainder instructions. For example, BypassSlowDivWidths[32,8] tells the
-comment|/// code generator to bypass 32-bit integer div/rem with an 8-bit unsigned
-comment|/// integer div/rem when the operands are positive and less than 256.
+comment|/// Tells the code generator to bypass slow divide or remainder
+comment|/// instructions. For example, BypassSlowDivWidths[32,8] tells the code
+comment|/// generator to bypass 32-bit integer div/rem with an 8-bit unsigned integer
+comment|/// div/rem when the operands are positive and less than 256.
 name|DenseMap
 operator|<
 name|unsigned
@@ -4536,114 +4734,104 @@ name|int
 operator|>
 name|BypassSlowDivWidths
 expr_stmt|;
-comment|/// Pow2DivIsCheap - Tells the code generator that it shouldn't generate
-comment|/// srl/add/sra for a signed divide by power of two, and let the target handle
-comment|/// it.
+comment|/// Tells the code generator that it shouldn't generate srl/add/sra for a
+comment|/// signed divide by power of two, and let the target handle it.
 name|bool
 name|Pow2DivIsCheap
 decl_stmt|;
-comment|/// JumpIsExpensive - Tells the code generator that it shouldn't generate
-comment|/// extra flow control instructions and should attempt to combine flow
-comment|/// control instructions via predication.
+comment|/// Tells the code generator that it shouldn't generate extra flow control
+comment|/// instructions and should attempt to combine flow control instructions via
+comment|/// predication.
 name|bool
 name|JumpIsExpensive
 decl_stmt|;
-comment|/// UseUnderscoreSetJmp - This target prefers to use _setjmp to implement
-comment|/// llvm.setjmp.  Defaults to false.
+comment|/// This target prefers to use _setjmp to implement llvm.setjmp.
+comment|///
+comment|/// Defaults to false.
 name|bool
 name|UseUnderscoreSetJmp
 decl_stmt|;
-comment|/// UseUnderscoreLongJmp - This target prefers to use _longjmp to implement
-comment|/// llvm.longjmp.  Defaults to false.
+comment|/// This target prefers to use _longjmp to implement llvm.longjmp.
+comment|///
+comment|/// Defaults to false.
 name|bool
 name|UseUnderscoreLongJmp
 decl_stmt|;
-comment|/// SupportJumpTables - Whether the target can generate code for jumptables.
-comment|/// If it's not true, then each jumptable must be lowered into if-then-else's.
+comment|/// Whether the target can generate code for jumptables.  If it's not true,
+comment|/// then each jumptable must be lowered into if-then-else's.
 name|bool
 name|SupportJumpTables
 decl_stmt|;
-comment|/// MinimumJumpTableEntries - Number of blocks threshold to use jump tables.
+comment|/// Number of blocks threshold to use jump tables.
 name|int
 name|MinimumJumpTableEntries
 decl_stmt|;
-comment|/// BooleanContents - Information about the contents of the high-bits in
-comment|/// boolean values held in a type wider than i1.  See getBooleanContents.
+comment|/// Information about the contents of the high-bits in boolean values held in
+comment|/// a type wider than i1. See getBooleanContents.
 name|BooleanContent
 name|BooleanContents
 decl_stmt|;
-comment|/// BooleanVectorContents - Information about the contents of the high-bits
-comment|/// in boolean vector values when the element type is wider than i1.  See
-comment|/// getBooleanContents.
+comment|/// Information about the contents of the high-bits in boolean vector values
+comment|/// when the element type is wider than i1. See getBooleanContents.
 name|BooleanContent
 name|BooleanVectorContents
 decl_stmt|;
-comment|/// SchedPreferenceInfo - The target scheduling preference: shortest possible
-comment|/// total cycles or lowest register usage.
+comment|/// The target scheduling preference: shortest possible total cycles or lowest
+comment|/// register usage.
 name|Sched
 operator|::
 name|Preference
 name|SchedPreferenceInfo
 expr_stmt|;
-comment|/// JumpBufSize - The size, in bytes, of the target's jmp_buf buffers
+comment|/// The size, in bytes, of the target's jmp_buf buffers
 name|unsigned
 name|JumpBufSize
 decl_stmt|;
-comment|/// JumpBufAlignment - The alignment, in bytes, of the target's jmp_buf
-comment|/// buffers
+comment|/// The alignment, in bytes, of the target's jmp_buf buffers
 name|unsigned
 name|JumpBufAlignment
 decl_stmt|;
-comment|/// MinStackArgumentAlignment - The minimum alignment that any argument
-comment|/// on the stack needs to have.
-comment|///
+comment|/// The minimum alignment that any argument on the stack needs to have.
 name|unsigned
 name|MinStackArgumentAlignment
 decl_stmt|;
-comment|/// MinFunctionAlignment - The minimum function alignment (used when
-comment|/// optimizing for size, and to prevent explicitly provided alignment
-comment|/// from leading to incorrect code).
-comment|///
+comment|/// The minimum function alignment (used when optimizing for size, and to
+comment|/// prevent explicitly provided alignment from leading to incorrect code).
 name|unsigned
 name|MinFunctionAlignment
 decl_stmt|;
-comment|/// PrefFunctionAlignment - The preferred function alignment (used when
-comment|/// alignment unspecified and optimizing for speed).
-comment|///
+comment|/// The preferred function alignment (used when alignment unspecified and
+comment|/// optimizing for speed).
 name|unsigned
 name|PrefFunctionAlignment
 decl_stmt|;
-comment|/// PrefLoopAlignment - The preferred loop alignment.
-comment|///
+comment|/// The preferred loop alignment.
 name|unsigned
 name|PrefLoopAlignment
 decl_stmt|;
-comment|/// InsertFencesForAtomic - Whether the DAG builder should automatically
-comment|/// insert fences and reduce ordering for atomics.  (This will be set for
-comment|/// for most architectures with weak memory ordering.)
+comment|/// Whether the DAG builder should automatically insert fences and reduce
+comment|/// ordering for atomics.  (This will be set for for most architectures with
+comment|/// weak memory ordering.)
 name|bool
 name|InsertFencesForAtomic
 decl_stmt|;
-comment|/// StackPointerRegisterToSaveRestore - If set to a physical register, this
-comment|/// specifies the register that llvm.savestack/llvm.restorestack should save
-comment|/// and restore.
+comment|/// If set to a physical register, this specifies the register that
+comment|/// llvm.savestack/llvm.restorestack should save and restore.
 name|unsigned
 name|StackPointerRegisterToSaveRestore
 decl_stmt|;
-comment|/// ExceptionPointerRegister - If set to a physical register, this specifies
-comment|/// the register that receives the exception address on entry to a landing
-comment|/// pad.
+comment|/// If set to a physical register, this specifies the register that receives
+comment|/// the exception address on entry to a landing pad.
 name|unsigned
 name|ExceptionPointerRegister
 decl_stmt|;
-comment|/// ExceptionSelectorRegister - If set to a physical register, this specifies
-comment|/// the register that receives the exception typeid on entry to a landing
-comment|/// pad.
+comment|/// If set to a physical register, this specifies the register that receives
+comment|/// the exception typeid on entry to a landing pad.
 name|unsigned
 name|ExceptionSelectorRegister
 decl_stmt|;
-comment|/// RegClassForVT - This indicates the default register class to use for
-comment|/// each ValueType the target supports natively.
+comment|/// This indicates the default register class to use for each ValueType the
+comment|/// target supports natively.
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -4671,12 +4859,12 @@ operator|::
 name|LAST_VALUETYPE
 index|]
 decl_stmt|;
-comment|/// RepRegClassForVT - This indicates the "representative" register class to
-comment|/// use for each ValueType the target supports natively. This information is
-comment|/// used by the scheduler to track register pressure. By default, the
-comment|/// representative register class is the largest legal super-reg register
-comment|/// class of the register class of the specified type. e.g. On x86, i8, i16,
-comment|/// and i32's representative class would be GR32.
+comment|/// This indicates the "representative" register class to use for each
+comment|/// ValueType the target supports natively. This information is used by the
+comment|/// scheduler to track register pressure. By default, the representative
+comment|/// register class is the largest legal super-reg register class of the
+comment|/// register class of the specified type. e.g. On x86, i8, i16, and i32's
+comment|/// representative class would be GR32.
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -4687,9 +4875,9 @@ operator|::
 name|LAST_VALUETYPE
 index|]
 decl_stmt|;
-comment|/// RepRegClassCostForVT - This indicates the "cost" of the "representative"
-comment|/// register class for each ValueType. The cost is used by the scheduler to
-comment|/// approximate register pressure.
+comment|/// This indicates the "cost" of the "representative" register class for each
+comment|/// ValueType. The cost is used by the scheduler to approximate register
+comment|/// pressure.
 name|uint8_t
 name|RepRegClassCostForVT
 index|[
@@ -4698,11 +4886,11 @@ operator|::
 name|LAST_VALUETYPE
 index|]
 decl_stmt|;
-comment|/// TransformToType - For any value types we are promoting or expanding, this
-comment|/// contains the value type that we are changing to.  For Expanded types, this
-comment|/// contains one step of the expand (e.g. i64 -> i32), even if there are
-comment|/// multiple steps required (e.g. i64 -> i16).  For types natively supported
-comment|/// by the system, this holds the same type (e.g. i32 -> i32).
+comment|/// For any value types we are promoting or expanding, this contains the value
+comment|/// type that we are changing to.  For Expanded types, this contains one step
+comment|/// of the expand (e.g. i64 -> i32), even if there are multiple steps required
+comment|/// (e.g. i64 -> i16).  For types natively supported by the system, this holds
+comment|/// the same type (e.g. i32 -> i32).
 name|MVT
 name|TransformToType
 index|[
@@ -4711,9 +4899,9 @@ operator|::
 name|LAST_VALUETYPE
 index|]
 decl_stmt|;
-comment|/// OpActions - For each operation and each value type, keep a LegalizeAction
-comment|/// that indicates how instruction selection should deal with the operation.
-comment|/// Most operations are Legal (aka, supported natively by the target), but
+comment|/// For each operation and each value type, keep a LegalizeAction that
+comment|/// indicates how instruction selection should deal with the operation.  Most
+comment|/// operations are Legal (aka, supported natively by the target), but
 comment|/// operations that are not should be described.  Note that operations on
 comment|/// non-legal value types are not described here.
 name|uint8_t
@@ -4729,9 +4917,9 @@ operator|::
 name|BUILTIN_OP_END
 index|]
 decl_stmt|;
-comment|/// LoadExtActions - For each load extension type and each value type,
-comment|/// keep a LegalizeAction that indicates how instruction selection should deal
-comment|/// with a load of a specific value type and extension type.
+comment|/// For each load extension type and each value type, keep a LegalizeAction
+comment|/// that indicates how instruction selection should deal with a load of a
+comment|/// specific value type and extension type.
 name|uint8_t
 name|LoadExtActions
 index|[
@@ -4745,9 +4933,8 @@ operator|::
 name|LAST_LOADEXT_TYPE
 index|]
 decl_stmt|;
-comment|/// TruncStoreActions - For each value type pair keep a LegalizeAction that
-comment|/// indicates whether a truncating store of a specific value type and
-comment|/// truncating type is legal.
+comment|/// For each value type pair keep a LegalizeAction that indicates whether a
+comment|/// truncating store of a specific value type and truncating type is legal.
 name|uint8_t
 name|TruncStoreActions
 index|[
@@ -4761,11 +4948,12 @@ operator|::
 name|LAST_VALUETYPE
 index|]
 decl_stmt|;
-comment|/// IndexedModeActions - For each indexed mode and each value type,
-comment|/// keep a pair of LegalizeAction that indicates how instruction
-comment|/// selection should deal with the load / store.  The first dimension is the
-comment|/// value_type for the reference. The second dimension represents the various
-comment|/// modes for load store.
+comment|/// For each indexed mode and each value type, keep a pair of LegalizeAction
+comment|/// that indicates how instruction selection should deal with the load /
+comment|/// store.
+comment|///
+comment|/// The first dimension is the value_type for the reference. The second
+comment|/// dimension represents the various modes for load store.
 name|uint8_t
 name|IndexedModeActions
 index|[
@@ -4779,13 +4967,13 @@ operator|::
 name|LAST_INDEXED_MODE
 index|]
 decl_stmt|;
-comment|/// CondCodeActions - For each condition code (ISD::CondCode) keep a
-comment|/// LegalizeAction that indicates how instruction selection should
-comment|/// deal with the condition code.
-comment|/// Because each CC action takes up 2 bits, we need to have the array size
-comment|/// be large enough to fit all of the value types. This can be done by
-comment|/// dividing the MVT::LAST_VALUETYPE by 32 and adding one.
-name|uint64_t
+comment|/// For each condition code (ISD::CondCode) keep a LegalizeAction that
+comment|/// indicates how instruction selection should deal with the condition code.
+comment|///
+comment|/// Because each CC action takes up 2 bits, we need to have the array size be
+comment|/// large enough to fit all of the value types. This can be done by rounding
+comment|/// up the MVT::LAST_VALUETYPE value to the next multiple of 16.
+name|uint32_t
 name|CondCodeActions
 index|[
 name|ISD
@@ -4797,11 +4985,11 @@ operator|(
 name|MVT
 operator|::
 name|LAST_VALUETYPE
-operator|/
-literal|32
-operator|)
 operator|+
-literal|1
+literal|15
+operator|)
+operator|/
+literal|16
 index|]
 decl_stmt|;
 name|ValueTypeActionImpl
@@ -5096,7 +5284,9 @@ argument_list|,
 name|EltVT
 argument_list|)
 return|;
-comment|// Try to widen vector elements until a legal type is found.
+comment|// Try to widen vector elements until the element type is a power of two and
+comment|// promote it to a legal type later on, for example:
+comment|//<3 x i8> -><4 x i8> -><4 x i32>
 if|if
 condition|(
 name|EltVT
@@ -5106,7 +5296,7 @@ argument_list|()
 condition|)
 block|{
 comment|// Vectors with a number of elements that is not a power of two are always
-comment|// widened, for example<3 x float> -><4 x float>.
+comment|// widened, for example<3 x i8> -><4 x i8>.
 if|if
 condition|(
 operator|!
@@ -5228,7 +5418,8 @@ argument_list|)
 expr_stmt|;
 comment|// Stop trying when getting a non-simple element type.
 comment|// Note that vector elements may be greater than legal vector element
-comment|// types. Example: X86 XMM registers hold 64bit element on 32bit systems.
+comment|// types. Example: X86 XMM registers hold 64bit element on 32bit
+comment|// systems.
 if|if
 condition|(
 operator|!
@@ -5447,9 +5638,9 @@ operator|>
 expr|>
 name|AvailableRegClasses
 expr_stmt|;
-comment|/// TargetDAGCombineArray - Targets can specify ISD nodes that they would
-comment|/// like PerformDAGCombine callbacks for by calling setTargetDAGCombine(),
-comment|/// which sets a bit in this array.
+comment|/// Targets can specify ISD nodes that they would like PerformDAGCombine
+comment|/// callbacks for by calling setTargetDAGCombine(), which sets a bit in this
+comment|/// array.
 name|unsigned
 name|char
 name|TargetDAGCombineArray
@@ -5467,9 +5658,9 @@ operator|/
 name|CHAR_BIT
 index|]
 decl_stmt|;
-comment|/// PromoteToType - For operations that must be promoted to a specific type,
-comment|/// this holds the destination type.  This map should be sparse, so don't hold
-comment|/// it as an array.
+comment|/// For operations that must be promoted to a specific type, this holds the
+comment|/// destination type.  This map should be sparse, so don't hold it as an
+comment|/// array.
 comment|///
 comment|/// Targets add entries to this map with AddPromotedToType(..), clients access
 comment|/// this with getTypeToPromoteTo(..).
@@ -5494,8 +5685,7 @@ name|SimpleValueType
 operator|>
 name|PromoteToType
 expr_stmt|;
-comment|/// LibcallRoutineNames - Stores the name each libcall.
-comment|///
+comment|/// Stores the name each libcall.
 specifier|const
 name|char
 modifier|*
@@ -5506,8 +5696,8 @@ operator|::
 name|UNKNOWN_LIBCALL
 index|]
 decl_stmt|;
-comment|/// CmpLibcallCCs - The ISD::CondCode that should be used to test the result
-comment|/// of each of the comparison libcall against zero.
+comment|/// The ISD::CondCode that should be used to test the result of each of the
+comment|/// comparison libcall against zero.
 name|ISD
 operator|::
 name|CondCode
@@ -5518,8 +5708,7 @@ operator|::
 name|UNKNOWN_LIBCALL
 index|]
 expr_stmt|;
-comment|/// LibcallCallingConvs - Stores the CallingConv that should be used for each
-comment|/// libcall.
+comment|/// Stores the CallingConv that should be used for each libcall.
 name|CallingConv
 operator|::
 name|ID
@@ -5532,6 +5721,8 @@ index|]
 expr_stmt|;
 name|protected
 label|:
+comment|/// \brief Specify maximum number of store instructions per memset call.
+comment|///
 comment|/// When lowering \@llvm.memset this field specifies the maximum number of
 comment|/// store operations that may be substituted for the call to memset. Targets
 comment|/// must set this value based on the cost threshold for that target. Targets
@@ -5540,7 +5731,6 @@ comment|/// store operations first, followed by smaller ones, if necessary, per
 comment|/// alignment restrictions. For example, storing 9 bytes on a 32-bit machine
 comment|/// with 16-bit alignment would result in four 2-byte stores and one 1-byte
 comment|/// store.  This only applies to setting a constant array of a constant size.
-comment|/// @brief Specify maximum number of store instructions per memset call.
 name|unsigned
 name|MaxStoresPerMemset
 decl_stmt|;
@@ -5549,6 +5739,8 @@ comment|/// to memset, used for functions with OptSize attribute.
 name|unsigned
 name|MaxStoresPerMemsetOptSize
 decl_stmt|;
+comment|/// \brief Specify maximum bytes of store instructions per memcpy call.
+comment|///
 comment|/// When lowering \@llvm.memcpy this field specifies the maximum number of
 comment|/// store operations that may be substituted for a call to memcpy. Targets
 comment|/// must set this value based on the cost threshold for that target. Targets
@@ -5558,15 +5750,16 @@ comment|/// alignment restrictions. For example, storing 7 bytes on a 32-bit mac
 comment|/// with 32-bit alignment would result in one 4-byte store, a one 2-byte store
 comment|/// and one 1-byte store. This only applies to copying a constant array of
 comment|/// constant size.
-comment|/// @brief Specify maximum bytes of store instructions per memcpy call.
 name|unsigned
 name|MaxStoresPerMemcpy
 decl_stmt|;
-comment|/// Maximum number of store operations that may be substituted for a call
-comment|/// to memcpy, used for functions with OptSize attribute.
+comment|/// Maximum number of store operations that may be substituted for a call to
+comment|/// memcpy, used for functions with OptSize attribute.
 name|unsigned
 name|MaxStoresPerMemcpyOptSize
 decl_stmt|;
+comment|/// \brief Specify maximum bytes of store instructions per memmove call.
+comment|///
 comment|/// When lowering \@llvm.memmove this field specifies the maximum number of
 comment|/// store instructions that may be substituted for a call to memmove. Targets
 comment|/// must set this value based on the cost threshold for that target. Targets
@@ -5575,24 +5768,23 @@ comment|/// store operations first, followed by smaller ones, if necessary, per
 comment|/// alignment restrictions. For example, moving 9 bytes on a 32-bit machine
 comment|/// with 8-bit alignment would result in nine 1-byte stores.  This only
 comment|/// applies to copying a constant array of constant size.
-comment|/// @brief Specify maximum bytes of store instructions per memmove call.
 name|unsigned
 name|MaxStoresPerMemmove
 decl_stmt|;
-comment|/// Maximum number of store instructions that may be substituted for a call
-comment|/// to memmove, used for functions with OpSize attribute.
+comment|/// Maximum number of store instructions that may be substituted for a call to
+comment|/// memmove, used for functions with OpSize attribute.
 name|unsigned
 name|MaxStoresPerMemmoveOptSize
 decl_stmt|;
-comment|/// PredictableSelectIsExpensive - Tells the code generator that select is
-comment|/// more expensive than a branch if the branch is usually predicted right.
+comment|/// Tells the code generator that select is more expensive than a branch if
+comment|/// the branch is usually predicted right.
 name|bool
 name|PredictableSelectIsExpensive
 decl_stmt|;
 name|protected
 label|:
-comment|/// isLegalRC - Return true if the value types that can be represented by the
-comment|/// specified register class are all legal.
+comment|/// Return true if the value types that can be represented by the specified
+comment|/// register class are all legal.
 name|bool
 name|isLegalRC
 argument_list|(
@@ -5605,14 +5797,11 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// TargetLowering - This class defines information used to lower LLVM code to
-comment|/// legal SelectionDAG operators that the target instruction selector can accept
-comment|/// natively.
+comment|/// This class defines information used to lower LLVM code to legal SelectionDAG
+comment|/// operators that the target instruction selector can accept natively.
 comment|///
 comment|/// This class also defines callbacks that targets must implement to lower
 comment|/// target-specific constructs to SelectionDAG operators.
-comment|///
 name|class
 name|TargetLowering
 range|:
@@ -5652,9 +5841,9 @@ operator|*
 name|TLOF
 argument_list|)
 block|;
-comment|/// getPreIndexedAddressParts - returns true by value, base pointer and
-comment|/// offset pointer and addressing mode by reference if the node's address
-comment|/// can be legally represented as pre-indexed load / store address.
+comment|/// Returns true by value, base pointer and offset pointer and addressing mode
+comment|/// by reference if the node's address can be legally represented as
+comment|/// pre-indexed load / store address.
 name|virtual
 name|bool
 name|getPreIndexedAddressParts
@@ -5680,9 +5869,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getPostIndexedAddressParts - returns true by value, base pointer and
-comment|/// offset pointer and addressing mode by reference if this node can be
-comment|/// combined with a load / store to form a post-indexed load / store.
+comment|/// Returns true by value, base pointer and offset pointer and addressing mode
+comment|/// by reference if this node can be combined with a load / store to form a
+comment|/// post-indexed load / store.
 name|virtual
 name|bool
 name|getPostIndexedAddressParts
@@ -5711,9 +5900,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getJumpTableEncoding - Return the entry encoding for a jump table in the
-comment|/// current function.  The returned value is a member of the
-comment|/// MachineJumpTableInfo::JTEntryKind enum.
+comment|/// Return the entry encoding for a jump table in the current function.  The
+comment|/// returned value is a member of the MachineJumpTableInfo::JTEntryKind enum.
 name|virtual
 name|unsigned
 name|getJumpTableEncoding
@@ -5745,8 +5933,7 @@ argument_list|(
 literal|"Need to implement this hook if target has custom JTIs"
 argument_list|)
 block|;   }
-comment|/// getPICJumpTableRelocaBase - Returns relocation base for the given PIC
-comment|/// jumptable.
+comment|/// Returns relocation base for the given PIC jumptable.
 name|virtual
 name|SDValue
 name|getPICJumpTableRelocBase
@@ -5757,9 +5944,8 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-comment|/// getPICJumpTableRelocBaseExpr - This returns the relocation base for the
-comment|/// given PIC jumptable, the same as getPICJumpTableRelocBase, but as an
-comment|/// MCExpr.
+comment|/// This returns the relocation base for the given PIC jumptable, the same as
+comment|/// getPICJumpTableRelocBase, but as an MCExpr.
 name|virtual
 specifier|const
 name|MCExpr
@@ -5774,9 +5960,8 @@ argument|MCContext&Ctx
 argument_list|)
 specifier|const
 block|;
-comment|/// isOffsetFoldingLegal - Return true if folding a constant offset
-comment|/// with the given GlobalAddress is legal.  It is frequently not legal in
-comment|/// PIC relocation models.
+comment|/// Return true if folding a constant offset with the given GlobalAddress is
+comment|/// legal.  It is frequently not legal in PIC relocation models.
 name|virtual
 name|bool
 name|isOffsetFoldingLegal
@@ -5809,11 +5994,19 @@ argument|SDValue&NewRHS
 argument_list|,
 argument|ISD::CondCode&CCCode
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|)
 specifier|const
 block|;
+comment|/// Returns a pair of (return value, chain).
+name|std
+operator|::
+name|pair
+operator|<
 name|SDValue
+block|,
+name|SDValue
+operator|>
 name|makeLibCall
 argument_list|(
 argument|SelectionDAG&DAG
@@ -5828,16 +6021,20 @@ argument|unsigned NumOps
 argument_list|,
 argument|bool isSigned
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
+argument_list|,
+argument|bool doesNotReturn = false
+argument_list|,
+argument|bool isReturnValueUsed = true
 argument_list|)
 specifier|const
 block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// TargetLowering Optimization Methods
 comment|//
-comment|/// TargetLoweringOpt - A convenience struct that encapsulates a DAG, and two
-comment|/// SDValues for returning information from TargetLowering to its clients
-comment|/// that want to combine
+comment|/// A convenience struct that encapsulates a DAG, and two SDValues for
+comment|/// returning information from TargetLowering to its clients that want to
+comment|/// combine.
 block|struct
 name|TargetLoweringOpt
 block|{
@@ -5920,10 +6117,10 @@ return|return
 name|true
 return|;
 block|}
-comment|/// ShrinkDemandedConstant - Check to see if the specified operand of the
-comment|/// specified instruction is a constant integer.  If so, check to see if
-comment|/// there are any bits set in the constant that are not demanded.  If so,
-comment|/// shrink the constant and return true.
+comment|/// Check to see if the specified operand of the specified instruction is a
+comment|/// constant integer.  If so, check to see if there are any bits set in the
+comment|/// constant that are not demanded.  If so, shrink the constant and return
+comment|/// true.
 name|bool
 name|ShrinkDemandedConstant
 argument_list|(
@@ -5932,10 +6129,9 @@ argument_list|,
 argument|const APInt&Demanded
 argument_list|)
 block|;
-comment|/// ShrinkDemandedOp - Convert x+y to (VT)((SmallVT)x+(SmallVT)y) if the
-comment|/// casts are free.  This uses isZExtFree and ZERO_EXTEND for the widening
-comment|/// cast, but it could be generalized for targets with other types of
-comment|/// implicit widening casts.
+comment|/// Convert x+y to (VT)((SmallVT)x+(SmallVT)y) if the casts are free.  This
+comment|/// uses isZExtFree and ZERO_EXTEND for the widening cast, but it could be
+comment|/// generalized for targets with other types of implicit widening casts.
 name|bool
 name|ShrinkDemandedOp
 argument_list|(
@@ -5945,18 +6141,17 @@ argument|unsigned BitWidth
 argument_list|,
 argument|const APInt&Demanded
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|)
 block|;   }
 block|;
-comment|/// SimplifyDemandedBits - Look at Op.  At this point, we know that only the
-comment|/// DemandedMask bits of the result of Op are ever used downstream.  If we can
-comment|/// use this information to simplify Op, create a new simplified DAG node and
-comment|/// return true, returning the original and new nodes in Old and New.
-comment|/// Otherwise, analyze the expression and return a mask of KnownOne and
-comment|/// KnownZero bits for the expression (used to simplify the caller).
-comment|/// The KnownZero/One bits may only be accurate for those bits in the
-comment|/// DemandedMask.
+comment|/// Look at Op.  At this point, we know that only the DemandedMask bits of the
+comment|/// result of Op are ever used downstream.  If we can use this information to
+comment|/// simplify Op, create a new simplified DAG node and return true, returning
+comment|/// the original and new nodes in Old and New.  Otherwise, analyze the
+comment|/// expression and return a mask of KnownOne and KnownZero bits for the
+comment|/// expression (used to simplify the caller).  The KnownZero/One bits may only
+comment|/// be accurate for those bits in the DemandedMask.
 name|bool
 name|SimplifyDemandedBits
 argument_list|(
@@ -5975,9 +6170,8 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-comment|/// computeMaskedBitsForTargetNode - Determine which of the bits specified in
-comment|/// Mask are known to be either zero or one and return them in the
-comment|/// KnownZero/KnownOne bitsets.
+comment|/// Determine which of the bits specified in Mask are known to be either zero
+comment|/// or one and return them in the KnownZero/KnownOne bitsets.
 name|virtual
 name|void
 name|computeMaskedBitsForTargetNode
@@ -5995,9 +6189,8 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-comment|/// ComputeNumSignBitsForTargetNode - This method can be implemented by
-comment|/// targets that want to expose additional information about sign bits to the
-comment|/// DAG Combiner.
+comment|/// This method can be implemented by targets that want to expose additional
+comment|/// information about sign bits to the DAG Combiner.
 name|virtual
 name|unsigned
 name|ComputeNumSignBitsForTargetNode
@@ -6167,8 +6360,8 @@ name|TLO
 argument_list|)
 block|;   }
 block|;
-comment|/// SimplifySetCC - Try to simplify a setcc built with the specified operands
-comment|/// and cc. If it is unable to simplify it, return a null SDValue.
+comment|/// Try to simplify a setcc built with the specified operands and cc. If it is
+comment|/// unable to simplify it, return a null SDValue.
 name|SDValue
 name|SimplifySetCC
 argument_list|(
@@ -6184,12 +6377,12 @@ argument|bool foldBooleans
 argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|)
 specifier|const
 block|;
-comment|/// isGAPlusOffset - Returns true (and the GlobalValue and the offset) if the
-comment|/// node is a GlobalAddress + offset.
+comment|/// Returns true (and the GlobalValue and the offset) if the node is a
+comment|/// GlobalAddress + offset.
 name|virtual
 name|bool
 name|isGAPlusOffset
@@ -6202,9 +6395,9 @@ argument|int64_t&Offset
 argument_list|)
 specifier|const
 block|;
-comment|/// PerformDAGCombine - This method will be invoked for all target nodes and
-comment|/// for any target-independent nodes that the target has registered with
-comment|/// invoke it for.
+comment|/// This method will be invoked for all target nodes and for any
+comment|/// target-independent nodes that the target has registered with invoke it
+comment|/// for.
 comment|///
 comment|/// The semantics are as follows:
 comment|/// Return Value:
@@ -6225,10 +6418,10 @@ argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;
-comment|/// isTypeDesirableForOp - Return true if the target has native support for
-comment|/// the specified value type and it is 'desirable' to use the type for the
-comment|/// given node type. e.g. On x86 i16 is legal, but undesirable since i16
-comment|/// instruction encodings are longer and some i16 instructions are slow.
+comment|/// Return true if the target has native support for the specified value type
+comment|/// and it is 'desirable' to use the type for the given node type. e.g. On x86
+comment|/// i16 is legal, but undesirable since i16 instruction encodings are longer
+comment|/// and some i16 instructions are slow.
 name|virtual
 name|bool
 name|isTypeDesirableForOp
@@ -6248,9 +6441,9 @@ name|VT
 argument_list|)
 return|;
 block|}
-comment|/// isDesirableToPromoteOp - Return true if it is profitable for dag combiner
-comment|/// to transform a floating point op of specified opcode to a equivalent op of
-comment|/// an integer type. e.g. f32 load -> i32 load can be profitable on ARM.
+comment|/// Return true if it is profitable for dag combiner to transform a floating
+comment|/// point op of specified opcode to a equivalent op of an integer
+comment|/// type. e.g. f32 load -> i32 load can be profitable on ARM.
 name|virtual
 name|bool
 name|isDesirableToTransformToIntegerOp
@@ -6267,9 +6460,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// IsDesirableToPromoteOp - This method query the target whether it is
-comment|/// beneficial for dag combiner to promote the specified node. If true, it
-comment|/// should return the desired promotion type by reference.
+comment|/// This method query the target whether it is beneficial for dag combiner to
+comment|/// promote the specified node. If true, it should return the desired
+comment|/// promotion type by reference.
 name|virtual
 name|bool
 name|IsDesirableToPromoteOp
@@ -6290,11 +6483,10 @@ comment|//===-------------------------------------------------------------------
 comment|// Lowering methods - These methods must be implemented by targets so that
 comment|// the SelectionDAGBuilder code knows how to lower these.
 comment|//
-comment|/// LowerFormalArguments - This hook must be implemented to lower the
-comment|/// incoming (formal) arguments, described by the Ins array, into the
-comment|/// specified DAG. The implementation should fill in the InVals array
-comment|/// with legal-type argument values, and return the resulting token
-comment|/// chain value.
+comment|/// This hook must be implemented to lower the incoming (formal) arguments,
+comment|/// described by the Ins array, into the specified DAG. The implementation
+comment|/// should fill in the InVals array with legal-type argument values, and
+comment|/// return the resulting token chain value.
 comment|///
 name|virtual
 name|SDValue
@@ -6312,7 +6504,7 @@ argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&
 comment|/*Ins*/
 argument_list|,
-argument|DebugLoc
+argument|SDLoc
 comment|/*dl*/
 argument_list|,
 argument|SelectionDAG&
@@ -6419,7 +6611,14 @@ argument_list|(
 literal|0
 argument_list|)
 block|{ }
-block|}
+name|void
+name|setAttributes
+argument_list|(
+argument|ImmutableCallSite *CS
+argument_list|,
+argument|unsigned AttrIdx
+argument_list|)
+block|;   }
 block|;
 typedef|typedef
 name|std
@@ -6430,10 +6629,10 @@ name|ArgListEntry
 operator|>
 name|ArgListTy
 expr_stmt|;
-comment|/// CallLoweringInfo - This structure contains all information that is
-comment|/// necessary for lowering calls. It is passed to TLI::LowerCallTo when the
-comment|/// SelectionDAG builder needs to lower a call, and targets will see this
-comment|/// struct in their LowerCall implementation.
+comment|/// This structure contains all information that is necessary for lowering
+comment|/// calls. It is passed to TLI::LowerCallTo when the SelectionDAG builder
+comment|/// needs to lower a call, and targets will see this struct in their LowerCall
+comment|/// implementation.
 block|struct
 name|CallLoweringInfo
 block|{
@@ -6498,7 +6697,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 block|;
-name|DebugLoc
+name|SDLoc
 name|DL
 block|;
 name|ImmutableCallSite
@@ -6533,8 +6732,7 @@ literal|32
 operator|>
 name|Ins
 block|;
-comment|/// CallLoweringInfo - Constructs a call lowering context based on the
-comment|/// ImmutableCallSite \p cs.
+comment|/// Constructs a call lowering context based on the ImmutableCallSite \p cs.
 name|CallLoweringInfo
 argument_list|(
 argument|SDValue chain
@@ -6551,7 +6749,7 @@ argument|ArgListTy&args
 argument_list|,
 argument|SelectionDAG&dag
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|ImmutableCallSite&cs
 argument_list|)
@@ -6682,8 +6880,8 @@ argument_list|(
 argument|&cs
 argument_list|)
 block|{}
-comment|/// CallLoweringInfo - Constructs a call lowering context based on the
-comment|/// provided call information.
+comment|/// Constructs a call lowering context based on the provided call
+comment|/// information.
 name|CallLoweringInfo
 argument_list|(
 argument|SDValue chain
@@ -6714,7 +6912,7 @@ argument|ArgListTy&args
 argument_list|,
 argument|SelectionDAG&dag
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|)
 operator|:
 name|Chain
@@ -6799,11 +6997,10 @@ argument_list|)
 block|{}
 block|}
 decl_stmt|;
-comment|/// LowerCallTo - This function lowers an abstract call to a function into an
-comment|/// actual call.  This returns a pair of operands.  The first element is the
-comment|/// return value for the function (if RetTy is not VoidTy).  The second
-comment|/// element is the outgoing token chain. It calls LowerCall to do the actual
-comment|/// lowering.
+comment|/// This function lowers an abstract call to a function into an actual call.
+comment|/// This returns a pair of operands.  The first element is the return value
+comment|/// for the function (if RetTy is not VoidTy).  The second element is the
+comment|/// outgoing token chain. It calls LowerCall to do the actual lowering.
 name|std
 operator|::
 name|pair
@@ -6818,12 +7015,11 @@ argument|CallLoweringInfo&CLI
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// LowerCall - This hook must be implemented to lower calls into the
-comment|/// the specified DAG. The outgoing arguments to the call are described
-comment|/// by the Outs array, and the values to be returned by the call are
-comment|/// described by the Ins array. The implementation should fill in the
-comment|/// InVals array with legal-type return values from the call, and return
-comment|/// the resulting token chain value.
+comment|/// This hook must be implemented to lower calls into the the specified
+comment|/// DAG. The outgoing arguments to the call are described by the Outs array,
+comment|/// and the values to be returned by the call are described by the Ins
+comment|/// array. The implementation should fill in the InVals array with legal-type
+comment|/// return values from the call, and return the resulting token chain value.
 name|virtual
 name|SDValue
 name|LowerCall
@@ -6847,7 +7043,7 @@ literal|"Not Implemented"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// HandleByVal - Target-specific cleanup for formal ByVal parameters.
+comment|/// Target-specific cleanup for formal ByVal parameters.
 name|virtual
 name|void
 name|HandleByVal
@@ -6862,10 +7058,9 @@ name|unsigned
 argument_list|)
 decl|const
 block|{}
-comment|/// CanLowerReturn - This hook should be implemented to check whether the
-comment|/// return values described by the Outs array can fit into the return
-comment|/// registers.  If false is returned, an sret-demotion is performed.
-comment|///
+comment|/// This hook should be implemented to check whether the return values
+comment|/// described by the Outs array can fit into the return registers.  If false
+comment|/// is returned, an sret-demotion is performed.
 name|virtual
 name|bool
 name|CanLowerReturn
@@ -6903,11 +7098,9 @@ return|return
 name|true
 return|;
 block|}
-comment|/// LowerReturn - This hook must be implemented to lower outgoing
-comment|/// return values, described by the Outs array, into the specified
-comment|/// DAG. The implementation should return the resulting token chain
-comment|/// value.
-comment|///
+comment|/// This hook must be implemented to lower outgoing return values, described
+comment|/// by the Outs array, into the specified DAG. The implementation should
+comment|/// return the resulting token chain value.
 name|virtual
 name|SDValue
 name|LowerReturn
@@ -6941,7 +7134,7 @@ operator|>
 operator|&
 comment|/*OutVals*/
 argument_list|,
-name|DebugLoc
+name|SDLoc
 comment|/*dl*/
 argument_list|,
 name|SelectionDAG
@@ -6956,11 +7149,11 @@ literal|"Not Implemented"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// isUsedByReturnOnly - Return true if result of the specified node is used
-comment|/// by a return node only. It also compute and return the input chain for the
-comment|/// tail call.
-comment|/// This is used to determine whether it is possible
-comment|/// to codegen a libcall as tail call at legalization time.
+comment|/// Return true if result of the specified node is used by a return node
+comment|/// only. It also compute and return the input chain for the tail call.
+comment|///
+comment|/// This is used to determine whether it is possible to codegen a libcall as
+comment|/// tail call at legalization time.
 name|virtual
 name|bool
 name|isUsedByReturnOnly
@@ -6970,7 +7163,7 @@ operator|*
 argument_list|,
 name|SDValue
 operator|&
-name|Chain
+comment|/*Chain*/
 argument_list|)
 decl|const
 block|{
@@ -6978,10 +7171,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// mayBeEmittedAsTailCall - Return true if the target may be able emit the
-comment|/// call instruction as a tail call. This is used by optimization passes to
-comment|/// determine if it's profitable to duplicate return instructions to enable
-comment|/// tailcall optimization.
+comment|/// Return true if the target may be able emit the call instruction as a tail
+comment|/// call. This is used by optimization passes to determine if it's profitable
+comment|/// to duplicate return instructions to enable tailcall optimization.
 name|virtual
 name|bool
 name|mayBeEmittedAsTailCall
@@ -6995,12 +7187,12 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getTypeForExtArgOrReturn - Return the type that should be used to zero or
-comment|/// sign extend a zeroext/signext integer argument or return value.
-comment|/// FIXME: Most C calling convention requires the return type to be promoted,
-comment|/// but this is not true all the time, e.g. i1 on x86-64. It is also not
-comment|/// necessary for non-C calling conventions. The frontend should handle this
-comment|/// and include all of the necessary information.
+comment|/// Return the type that should be used to zero or sign extend a
+comment|/// zeroext/signext integer argument or return value.  FIXME: Most C calling
+comment|/// convention requires the return type to be promoted, but this is not true
+comment|/// all the time, e.g. i1 on x86-64. It is also not necessary for non-C
+comment|/// calling conventions. The frontend should handle this and include all of
+comment|/// the necessary information.
 name|virtual
 name|MVT
 name|getTypeForExtArgOrReturn
@@ -7038,12 +7230,33 @@ else|:
 name|VT
 return|;
 block|}
-comment|/// LowerOperationWrapper - This callback is invoked by the type legalizer
-comment|/// to legalize nodes with an illegal operand type but legal result types.
-comment|/// It replaces the LowerOperation callback in the type Legalizer.
-comment|/// The reason we can not do away with LowerOperation entirely is that
-comment|/// LegalizeDAG isn't yet ready to use this callback.
+comment|/// Returns a 0 terminated array of registers that can be safely used as
+comment|/// scratch registers.
+name|virtual
+specifier|const
+name|uint16_t
+modifier|*
+name|getScratchRegisters
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
+name|CC
+argument_list|)
+decl|const
+block|{
+return|return
+name|NULL
+return|;
+block|}
+comment|/// This callback is invoked by the type legalizer to legalize nodes with an
+comment|/// illegal operand type but legal result types.  It replaces the
+comment|/// LowerOperation callback in the type Legalizer.  The reason we can not do
+comment|/// away with LowerOperation entirely is that LegalizeDAG isn't yet ready to
+comment|/// use this callback.
+comment|///
 comment|/// TODO: Consider merging with ReplaceNodeResults.
+comment|///
 comment|/// The target places new result values for the node in Results (their number
 comment|/// and types must exactly match those of the original return values of
 comment|/// the node), or leaves Results empty, which indicates that the node is not
@@ -7070,11 +7283,11 @@ name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// LowerOperation - This callback is invoked for operations that are
-comment|/// unsupported by the target, which are registered to use 'custom' lowering,
-comment|/// and whose defined values are all legal.
-comment|/// If the target has no operations that require custom lowering, it need not
-comment|/// implement this.  The default implementation of this aborts.
+comment|/// This callback is invoked for operations that are unsupported by the
+comment|/// target, which are registered to use 'custom' lowering, and whose defined
+comment|/// values are all legal.  If the target has no operations that require custom
+comment|/// lowering, it need not implement this.  The default implementation of this
+comment|/// aborts.
 name|virtual
 name|SDValue
 name|LowerOperation
@@ -7088,12 +7301,12 @@ name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// ReplaceNodeResults - This callback is invoked when a node result type is
-comment|/// illegal for the target, and the operation was registered to use 'custom'
-comment|/// lowering for that result type.  The target places new result values for
-comment|/// the node in Results (their number and types must exactly match those of
-comment|/// the original return values of the node), or leaves Results empty, which
-comment|/// indicates that the node is not to be custom lowered after all.
+comment|/// This callback is invoked when a node result type is illegal for the
+comment|/// target, and the operation was registered to use 'custom' lowering for that
+comment|/// result type.  The target places new result values for the node in Results
+comment|/// (their number and types must exactly match those of the original return
+comment|/// values of the node), or leaves Results empty, which indicates that the
+comment|/// node is not to be custom lowered after all.
 comment|///
 comment|/// If the target has no operations that require custom lowering, it need not
 comment|/// implement this.  The default implementation aborts.
@@ -7124,8 +7337,7 @@ literal|"ReplaceNodeResults not implemented for this target!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getTargetNodeName() - This method returns the name of a target specific
-comment|/// DAG node.
+comment|/// This method returns the name of a target specific DAG node.
 name|virtual
 specifier|const
 name|char
@@ -7137,8 +7349,8 @@ name|Opcode
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// createFastISel - This method returns a target specific FastISel object,
-comment|/// or null if the target does not support "fast" ISel.
+comment|/// This method returns a target specific FastISel object, or null if the
+comment|/// target does not support "fast" ISel.
 name|virtual
 name|FastISel
 modifier|*
@@ -7160,10 +7372,10 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Inline Asm Support hooks
 comment|//
-comment|/// ExpandInlineAsm - This hook allows the target to expand an inline asm
-comment|/// call to be explicit llvm code if it wants to.  This is useful for
-comment|/// turning simple inline asms into LLVM intrinsics, which gives the
-comment|/// compiler more information about the behavior of the code.
+comment|/// This hook allows the target to expand an inline asm call to be explicit
+comment|/// llvm code if it wants to.  This is useful for turning simple inline asms
+comment|/// into LLVM intrinsics, which gives the compiler more information about the
+comment|/// behavior of the code.
 name|virtual
 name|bool
 name|ExpandInlineAsm
@@ -7253,8 +7465,7 @@ name|CW_Okay
 comment|// Default or don't know type.
 block|}
 enum|;
-comment|/// AsmOperandInfo - This contains information for each constraint that we are
-comment|/// lowering.
+comment|/// This contains information for each constraint that we are lowering.
 name|struct
 name|AsmOperandInfo
 range|:
@@ -7263,41 +7474,41 @@ name|InlineAsm
 operator|::
 name|ConstraintInfo
 block|{
-comment|/// ConstraintCode - This contains the actual string for the code, like "m".
-comment|/// TargetLowering picks the 'best' code from ConstraintInfo::Codes that
-comment|/// most closely matches the operand.
+comment|/// This contains the actual string for the code, like "m".  TargetLowering
+comment|/// picks the 'best' code from ConstraintInfo::Codes that most closely
+comment|/// matches the operand.
 name|std
 operator|::
 name|string
 name|ConstraintCode
 block|;
-comment|/// ConstraintType - Information about the constraint code, e.g. Register,
-comment|/// RegisterClass, Memory, Other, Unknown.
+comment|/// Information about the constraint code, e.g. Register, RegisterClass,
+comment|/// Memory, Other, Unknown.
 name|TargetLowering
 operator|::
 name|ConstraintType
 name|ConstraintType
 block|;
-comment|/// CallOperandval - If this is the result output operand or a
-comment|/// clobber, this is null, otherwise it is the incoming operand to the
-comment|/// CallInst.  This gets modified as the asm is processed.
+comment|/// If this is the result output operand or a clobber, this is null,
+comment|/// otherwise it is the incoming operand to the CallInst.  This gets
+comment|/// modified as the asm is processed.
 name|Value
 operator|*
 name|CallOperandVal
 block|;
-comment|/// ConstraintVT - The ValueType for the operand value.
+comment|/// The ValueType for the operand value.
 name|MVT
 name|ConstraintVT
 block|;
-comment|/// isMatchingInputConstraint - Return true of this is an input operand that
-comment|/// is a matching constraint like "4".
+comment|/// Return true of this is an input operand that is a matching constraint
+comment|/// like "4".
 name|bool
 name|isMatchingInputConstraint
 argument_list|()
 specifier|const
 block|;
-comment|/// getMatchedOperand - If this is an input matching constraint, this method
-comment|/// returns the output operand it matches.
+comment|/// If this is an input matching constraint, this method returns the output
+comment|/// operand it matches.
 name|unsigned
 name|getMatchedOperand
 argument_list|()
@@ -7391,11 +7602,10 @@ name|AsmOperandInfo
 operator|>
 name|AsmOperandInfoVector
 expr_stmt|;
-comment|/// ParseConstraints - Split up the constraint string from the inline
-comment|/// assembly value into the specific constraints and their prefixes,
-comment|/// and also tie in the associated operand values.
-comment|/// If this returns an empty vector, and if the constraint string itself
-comment|/// isn't empty, there was an error parsing.
+comment|/// Split up the constraint string from the inline assembly value into the
+comment|/// specific constraints and their prefixes, and also tie in the associated
+comment|/// operand values.  If this returns an empty vector, and if the constraint
+comment|/// string itself isn't empty, there was an error parsing.
 name|virtual
 name|AsmOperandInfoVector
 name|ParseConstraints
@@ -7437,11 +7647,10 @@ name|constraint
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// ComputeConstraintToUse - Determines the constraint code and constraint
-comment|/// type to use for the specific AsmOperandInfo, setting
-comment|/// OpInfo.ConstraintCode and OpInfo.ConstraintType.  If the actual operand
-comment|/// being passed in is available, it can be passed in as Op, otherwise an
-comment|/// empty SDValue can be passed.
+comment|/// Determines the constraint code and constraint type to use for the specific
+comment|/// AsmOperandInfo, setting OpInfo.ConstraintCode and OpInfo.ConstraintType.
+comment|/// If the actual operand being passed in is available, it can be passed in as
+comment|/// Op, otherwise an empty SDValue can be passed.
 name|virtual
 name|void
 name|ComputeConstraintToUse
@@ -7461,8 +7670,7 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getConstraintType - Given a constraint, return the type of constraint it
-comment|/// is for this target.
+comment|/// Given a constraint, return the type of constraint it is for this target.
 name|virtual
 name|ConstraintType
 name|getConstraintType
@@ -7476,16 +7684,15 @@ name|Constraint
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getRegForInlineAsmConstraint - Given a physical register constraint (e.g.
-comment|/// {edx}), return the register number and the register class for the
-comment|/// register.
+comment|/// Given a physical register constraint (e.g.  {edx}), return the register
+comment|/// number and the register class for the register.
 comment|///
 comment|/// Given a register class constraint, like 'r', if this corresponds directly
 comment|/// to an LLVM register class, return a register of 0 and the register class
 comment|/// pointer.
 comment|///
-comment|/// This should only be used for C_Register constraints.  On error,
-comment|/// this returns a register number of 0 and a null register class pointer..
+comment|/// This should only be used for C_Register constraints.  On error, this
+comment|/// returns a register number of 0 and a null register class pointer..
 name|virtual
 name|std
 operator|::
@@ -7501,14 +7708,13 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// LowerXConstraint - try to replace an X constraint, which matches anything,
-comment|/// with another that has more specific requirements based on the type of the
-comment|/// corresponding operand.  This returns null if there is no replacement to
-comment|/// make.
+comment|/// Try to replace an X constraint, which matches anything, with another that
+comment|/// has more specific requirements based on the type of the corresponding
+comment|/// operand.  This returns null if there is no replacement to make.
 name|virtual
 specifier|const
 name|char
@@ -7520,8 +7726,8 @@ name|ConstraintVT
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
-comment|/// vector.  If it is invalid, don't add anything to Ops.
+comment|/// Lower the specified operand into the Ops vector.  If it is invalid, don't
+comment|/// add anything to Ops.
 name|virtual
 name|void
 name|LowerAsmOperandForConstraint
@@ -7562,7 +7768,7 @@ argument_list|,
 name|SDValue
 name|Op2
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -7626,12 +7832,12 @@ decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Instruction Emitting Hooks
 comment|//
-comment|// EmitInstrWithCustomInserter - This method should be implemented by targets
-comment|// that mark instructions with the 'usesCustomInserter' flag.  These
-comment|// instructions are special in various ways, which require special support to
-comment|// insert.  The specified MachineInstr is created but not inserted into any
-comment|// basic blocks, and this method is called to expand it into a sequence of
-comment|// instructions, potentially also creating new basic blocks and control flow.
+comment|/// This method should be implemented by targets that mark instructions with
+comment|/// the 'usesCustomInserter' flag.  These instructions are special in various
+comment|/// ways, which require special support to insert.  The specified MachineInstr
+comment|/// is created but not inserted into any basic blocks, and this method is
+comment|/// called to expand it into a sequence of instructions, potentially also
+comment|/// creating new basic blocks and control flow.
 name|virtual
 name|MachineBasicBlock
 modifier|*
@@ -7647,10 +7853,10 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// AdjustInstrPostInstrSelection - This method should be implemented by
-comment|/// targets that mark instructions with the 'hasPostISelHook' flag. These
-comment|/// instructions must be adjusted after instruction selection by target hooks.
-comment|/// e.g. To fill in optional defs for ARM 's' setting instructions.
+comment|/// This method should be implemented by targets that mark instructions with
+comment|/// the 'hasPostISelHook' flag. These instructions must be adjusted after
+comment|/// instruction selection by target hooks.  e.g. To fill in optional defs for
+comment|/// ARM 's' setting instructions.
 name|virtual
 name|void
 name|AdjustInstrPostInstrSelection
@@ -7673,15 +7879,15 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// GetReturnInfo - Given an LLVM IR type and return type attributes,
+comment|/// Given an LLVM IR type and return type attributes, compute the return value
 end_comment
 
 begin_comment
-comment|/// compute the return value EVTs and flags, and optionally also
+comment|/// EVTs and flags, and optionally also the offsets, if the return value is
 end_comment
 
 begin_comment
-comment|/// the offsets, if the return value is being lowered to memory.
+comment|/// being lowered to memory.
 end_comment
 
 begin_decl_stmt

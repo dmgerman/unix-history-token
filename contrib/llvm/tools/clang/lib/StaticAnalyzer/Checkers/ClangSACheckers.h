@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Checkers/CommonBugCategories.h"
+file|"clang/StaticAnalyzer/Core/BugReporter/CommonBugCategories.h"
 end_include
 
 begin_decl_stmt

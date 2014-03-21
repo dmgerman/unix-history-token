@@ -121,19 +121,6 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|setMips16LibcallName
-argument_list|(
-name|RTLIB
-operator|::
-name|Libcall
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|Name
-argument_list|)
-block|;
-name|void
 name|setMips16HardFloatLibCalls
 argument_list|()
 block|;
@@ -245,6 +232,8 @@ argument_list|,
 argument|unsigned CmpiOpc
 argument_list|,
 argument|unsigned CmpiXOpc
+argument_list|,
+argument|bool ImmSigned
 argument_list|,
 argument|MachineInstr *MI
 argument_list|,

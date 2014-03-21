@@ -90,6 +90,11 @@ argument|const ObjectImage&other
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 name|OwningPtr

@@ -198,14 +198,9 @@ name|B
 init|=
 name|BlockQueue
 operator|.
-name|back
+name|pop_back_val
 argument_list|()
 decl_stmt|;
-name|BlockQueue
-operator|.
-name|pop_back
-argument_list|()
-expr_stmt|;
 name|BlockSet
 index|[
 name|B

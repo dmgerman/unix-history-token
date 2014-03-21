@@ -963,6 +963,37 @@ operator|*
 literal|8
 return|;
 block|}
+comment|/// Layout pointer size, in bits, based on the type.  If this function is
+comment|/// called with a pointer type, then the type size of the pointer is returned.
+comment|/// If this function is called with a vector of pointers, then the type size
+comment|/// of the pointer is returned.  This should only be called with a pointer or
+comment|/// vector of pointers.
+name|unsigned
+name|getPointerTypeSizeInBits
+argument_list|(
+name|Type
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getPointerTypeSize
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+block|{
+return|return
+name|getPointerTypeSizeInBits
+argument_list|(
+name|Ty
+argument_list|)
+operator|/
+literal|8
+return|;
+block|}
 comment|/// Size examples:
 comment|///
 comment|/// Type        SizeInBits  StoreSizeInBits  AllocSizeInBits[*]
@@ -1188,6 +1219,50 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getLargestLegalIntType - Return the largest legal integer type, or null if
+comment|/// none are set.
+name|Type
+modifier|*
+name|getLargestLegalIntType
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|)
+decl|const
+block|{
+name|unsigned
+name|LargestSize
+init|=
+name|getLargestLegalIntTypeSize
+argument_list|()
+decl_stmt|;
+return|return
+operator|(
+name|LargestSize
+operator|==
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
+name|Type
+operator|::
+name|getIntNTy
+argument_list|(
+name|C
+argument_list|,
+name|LargestSize
+argument_list|)
+return|;
+block|}
+comment|/// getLargestLegalIntType - Return the size of largest legal integer type
+comment|/// size, or 0 if none are set.
+name|unsigned
+name|getLargestLegalIntTypeSize
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getIndexedOffset - return the offset from the beginning of the type for
 comment|/// the specified indices.  This is used to implement getelementptr.
 name|uint64_t
@@ -1510,15 +1585,9 @@ case|:
 return|return
 name|getPointerSizeInBits
 argument_list|(
-name|cast
-operator|<
-name|PointerType
-operator|>
-operator|(
 name|Ty
-operator|)
 operator|->
-name|getAddressSpace
+name|getPointerAddressSpace
 argument_list|()
 argument_list|)
 return|;
@@ -1597,15 +1666,9 @@ end_case
 
 begin_return
 return|return
-name|cast
-operator|<
-name|IntegerType
-operator|>
-operator|(
 name|Ty
-operator|)
 operator|->
-name|getBitWidth
+name|getIntegerBitWidth
 argument_list|()
 return|;
 end_return

@@ -149,6 +149,14 @@ block|;
 name|private
 operator|:
 name|void
+name|printRegOperand
+argument_list|(
+argument|unsigned RegNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printOperand
 argument_list|(
 argument|const MCInst *MI
@@ -314,7 +322,37 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printRSel
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printCT
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printKCache
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printWaitFlag
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

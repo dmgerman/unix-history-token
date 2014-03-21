@@ -624,7 +624,7 @@ name|string
 operator|&
 name|Filename
 operator|=
-literal|"bugpoint.reference.out"
+literal|"bugpoint.reference.out-%%%%%%%"
 argument_list|)
 decl_stmt|;
 comment|/// diffProgram - This method executes the specified module and diffs the
@@ -918,6 +918,26 @@ operator|::
 name|string
 operator|&
 name|Filename
+argument_list|,
+specifier|const
+name|Module
+operator|*
+name|M
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|writeProgramToFile
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Filename
+argument_list|,
+name|int
+name|FD
 argument_list|,
 specifier|const
 name|Module

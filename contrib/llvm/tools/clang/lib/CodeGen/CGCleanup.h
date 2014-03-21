@@ -59,18 +59,22 @@ directive|define
 name|CLANG_CODEGEN_CGCLEANUP_H
 end_define
 
-begin_comment
-comment|/// EHScopeStack is defined in CodeGenFunction.h, but its
-end_comment
-
-begin_comment
-comment|/// implementation is in this file and in CGCleanup.cpp.
-end_comment
+begin_include
+include|#
+directive|include
+file|"EHScopeStack.h"
+end_include
 
 begin_include
 include|#
 directive|include
-file|"CodeGenFunction.h"
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_decl_stmt
@@ -78,10 +82,16 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|BasicBlock
+decl_stmt|;
+name|class
 name|Value
 decl_stmt|;
 name|class
-name|BasicBlock
+name|ConstantInt
+decl_stmt|;
+name|class
+name|AllocaInst
 decl_stmt|;
 block|}
 end_decl_stmt

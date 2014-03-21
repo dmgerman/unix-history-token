@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===---- BlockFrequencyImpl.h - Machine Block Frequency Implementation ---===//
+comment|//===-- BlockFrequencyImpl.h - Block Frequency Implementation --*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -136,7 +136,7 @@ name|class
 name|MachineBlockFrequencyInfo
 decl_stmt|;
 comment|/// BlockFrequencyImpl implements block frequency algorithm for IR and
-comment|/// Machine Instructions. Algorithm starts with value 1024 (START_FREQ)
+comment|/// Machine Instructions. Algorithm starts with value ENTRY_FREQ
 comment|/// for the entry block and then propagates frequencies using branch weights
 comment|/// from (Machine)BranchProbabilityInfo. LoopInfo is not required because
 comment|/// algorithm can find "backedges" by itself.
@@ -408,116 +408,6 @@ block|}
 end_function
 
 begin_comment
-comment|/// divBlockFreq - Divide BB block frequency by PROB. If Prob = 0 do nothing.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_function
-name|void
-name|divBlockFreq
-parameter_list|(
-name|BlockT
-modifier|*
-name|BB
-parameter_list|,
-name|BranchProbability
-name|Prob
-parameter_list|)
-block|{
-name|uint64_t
-name|N
-init|=
-name|Prob
-operator|.
-name|getNumerator
-argument_list|()
-decl_stmt|;
-name|assert
-argument_list|(
-name|N
-operator|&&
-literal|"Illegal division by zero!"
-argument_list|)
-expr_stmt|;
-name|uint64_t
-name|D
-init|=
-name|Prob
-operator|.
-name|getDenominator
-argument_list|()
-decl_stmt|;
-name|uint64_t
-name|Freq
-init|=
-operator|(
-name|Freqs
-index|[
-name|BB
-index|]
-operator|.
-name|getFrequency
-argument_list|()
-operator|*
-name|D
-operator|)
-operator|/
-name|N
-decl_stmt|;
-comment|// Should we assert it?
-if|if
-condition|(
-name|Freq
-operator|>
-name|UINT32_MAX
-condition|)
-name|Freq
-operator|=
-name|UINT32_MAX
-expr_stmt|;
-name|Freqs
-index|[
-name|BB
-index|]
-operator|=
-name|BlockFrequency
-argument_list|(
-name|Freq
-argument_list|)
-expr_stmt|;
-name|DEBUG
-argument_list|(
-name|dbgs
-argument_list|()
-operator|<<
-literal|"Frequency("
-operator|<<
-name|getBlockName
-argument_list|(
-name|BB
-argument_list|)
-operator|<<
-literal|") /= ("
-operator|<<
-name|Prob
-operator|<<
-literal|") --> "
-operator|<<
-name|Freqs
-index|[
-name|BB
-index|]
-operator|<<
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|// All blocks in postorder.
 end_comment
 
@@ -550,20 +440,31 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// Cycle Probability for each bloch.
+comment|// For each loop header, record the per-iteration probability of exiting the
 end_comment
 
-begin_expr_stmt
+begin_comment
+comment|// loop. This is the reciprocal of the expected number of loop iterations.
+end_comment
+
+begin_typedef
+typedef|typedef
 name|DenseMap
 operator|<
 name|BlockT
 operator|*
 operator|,
-name|uint32_t
+name|BranchProbability
 operator|>
-name|CycleProb
+name|LoopExitProbMap
 expr_stmt|;
-end_expr_stmt
+end_typedef
+
+begin_decl_stmt
+name|LoopExitProbMap
+name|LoopExitProb
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// (reverse-)postorder traversal iterators.
@@ -676,9 +577,11 @@ name|unsigned
 name|idx
 init|=
 name|RPO
-index|[
+operator|.
+name|lookup
+argument_list|(
 name|BB
-index|]
+argument_list|)
 decl_stmt|;
 name|assert
 argument_list|(
@@ -711,93 +614,69 @@ block|}
 end_function
 
 begin_comment
-comment|/// isReachable - Returns if BB block is reachable from the entry.
+comment|/// isBackedge - Return if edge Src -> Dst is a reachable backedge.
 end_comment
 
 begin_comment
 comment|///
 end_comment
 
-begin_function
-name|bool
-name|isReachable
-parameter_list|(
-name|BlockT
-modifier|*
-name|BB
-parameter_list|)
-block|{
-return|return
-name|RPO
-operator|.
-name|count
-argument_list|(
-name|BB
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// isBackedge - Return if edge Src -> Dst is a backedge.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_function
+begin_decl_stmt
 name|bool
 name|isBackedge
-parameter_list|(
+argument_list|(
 name|BlockT
-modifier|*
+operator|*
 name|Src
-parameter_list|,
+argument_list|,
 name|BlockT
-modifier|*
+operator|*
 name|Dst
-parameter_list|)
+argument_list|)
+decl|const
 block|{
-name|assert
-argument_list|(
-name|isReachable
-argument_list|(
-name|Src
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|isReachable
-argument_list|(
-name|Dst
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|unsigned
 name|a
 init|=
 name|RPO
-index|[
+operator|.
+name|lookup
+argument_list|(
 name|Src
-index|]
+argument_list|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|a
+condition|)
+return|return
+name|false
+return|;
 name|unsigned
 name|b
 init|=
 name|RPO
-index|[
+operator|.
+name|lookup
+argument_list|(
 name|Dst
-index|]
+argument_list|)
 decl_stmt|;
+name|assert
+argument_list|(
+name|b
+operator|&&
+literal|"Destination block should be reachable"
+argument_list|)
+expr_stmt|;
 return|return
 name|a
 operator|>=
 name|b
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/// getSingleBlockPred - return single BB block predecessor or NULL if
@@ -1049,11 +928,6 @@ name|PI
 decl_stmt|;
 if|if
 condition|(
-name|isReachable
-argument_list|(
-name|Pred
-argument_list|)
-operator|&&
 name|isBackedge
 argument_list|(
 name|Pred
@@ -1109,47 +983,56 @@ operator|!
 name|isLoopHead
 condition|)
 return|return;
-name|assert
+comment|// This block is a loop header, so boost its frequency by the expected
+comment|// number of loop iterations. The loop blocks will be revisited so they all
+comment|// get this boost.
+name|typename
+name|LoopExitProbMap
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|LoopExitProb
+operator|.
+name|find
 argument_list|(
-name|EntryFreq
-operator|>=
-name|CycleProb
-index|[
 name|BB
-index|]
 argument_list|)
 expr_stmt|;
-name|uint32_t
-name|CProb
-init|=
-name|CycleProb
+name|assert
+argument_list|(
+name|I
+operator|!=
+name|LoopExitProb
+operator|.
+name|end
+argument_list|()
+operator|&&
+literal|"Loop header missing from table"
+argument_list|)
+expr_stmt|;
+name|Freqs
 index|[
 name|BB
 index|]
-decl_stmt|;
-name|uint32_t
-name|Numerator
-init|=
-name|EntryFreq
-operator|-
-name|CProb
-condition|?
-name|EntryFreq
-operator|-
-name|CProb
-else|:
-literal|1
-decl_stmt|;
-name|divBlockFreq
+operator|/=
+name|I
+operator|->
+name|second
+expr_stmt|;
+name|DEBUG
 argument_list|(
+name|dbgs
+argument_list|()
+operator|<<
+literal|"Loop header scaled to "
+operator|<<
+name|Freqs
+index|[
 name|BB
-argument_list|,
-name|BranchProbability
-argument_list|(
-name|Numerator
-argument_list|,
-name|EntryFreq
-argument_list|)
+index|]
+operator|<<
+literal|".\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1257,6 +1140,9 @@ condition|)
 break|break;
 block|}
 comment|// Compute loop's cyclic probability using backedges probabilities.
+name|BlockFrequency
+name|BackFreq
+decl_stmt|;
 for|for
 control|(
 name|typename
@@ -1317,11 +1203,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isReachable
-argument_list|(
-name|Pred
-argument_list|)
-operator|&&
 name|isBackedge
 argument_list|(
 name|Pred
@@ -1329,23 +1210,33 @@ argument_list|,
 name|Head
 argument_list|)
 condition|)
-block|{
-name|uint64_t
-name|N
-init|=
+name|BackFreq
+operator|+=
 name|getEdgeFreq
 argument_list|(
 name|Pred
 argument_list|,
 name|Head
 argument_list|)
-operator|.
-name|getFrequency
-argument_list|()
-decl_stmt|;
+expr_stmt|;
+block|}
+comment|// The cyclic probability is freq(BackEdges) / freq(Head), where freq(Head)
+comment|// only counts edges entering the loop, not the loop backedges.
+comment|// The probability of leaving the loop on each iteration is:
+comment|//
+comment|//   ExitProb = 1 - CyclicProb
+comment|//
+comment|// The Expected number of loop iterations is:
+comment|//
+comment|//   Iterations = 1 / ExitProb
+comment|//
 name|uint64_t
 name|D
 init|=
+name|std
+operator|::
+name|max
+argument_list|(
 name|getBlockFreq
 argument_list|(
 name|Head
@@ -1353,72 +1244,148 @@ argument_list|)
 operator|.
 name|getFrequency
 argument_list|()
-decl_stmt|;
-name|assert
+argument_list|,
+name|UINT64_C
 argument_list|(
-name|N
-operator|<=
-name|EntryFreq
-operator|&&
-literal|"Backedge frequency must be<= EntryFreq!"
+literal|1
 argument_list|)
-expr_stmt|;
+argument_list|)
+decl_stmt|;
 name|uint64_t
-name|Res
-init|=
-operator|(
 name|N
-operator|*
-name|EntryFreq
-operator|)
-operator|/
-name|D
+init|=
+name|std
+operator|::
+name|max
+argument_list|(
+name|BackFreq
+operator|.
+name|getFrequency
+argument_list|()
+argument_list|,
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|N
+operator|<
+name|D
+condition|)
+name|N
+operator|=
+name|D
+operator|-
+name|N
+expr_stmt|;
+else|else
+comment|// We'd expect N< D, but rounding and saturation means that can't be
+comment|// guaranteed.
+name|N
+operator|=
+literal|1
+expr_stmt|;
+comment|// Now ExitProb = N / D, make sure it fits in an i32/i32 fraction.
 name|assert
 argument_list|(
-name|Res
+name|N
 operator|<=
-name|UINT32_MAX
+name|D
 argument_list|)
 expr_stmt|;
-name|CycleProb
-index|[
+if|if
+condition|(
+name|D
+operator|>
+name|UINT32_MAX
+condition|)
+block|{
+name|unsigned
+name|Shift
+init|=
+literal|32
+operator|-
+name|countLeadingZeros
+argument_list|(
+name|D
+argument_list|)
+decl_stmt|;
+name|D
+operator|>>=
+name|Shift
+expr_stmt|;
+name|N
+operator|>>=
+name|Shift
+expr_stmt|;
+if|if
+condition|(
+name|N
+operator|==
+literal|0
+condition|)
+name|N
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|BranchProbability
+name|LEP
+init|=
+name|BranchProbability
+argument_list|(
+name|N
+argument_list|,
+name|D
+argument_list|)
+decl_stmt|;
+name|LoopExitProb
+operator|.
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
 name|Head
-index|]
-operator|+=
-operator|(
-name|uint32_t
-operator|)
-name|Res
+argument_list|,
+name|LEP
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
 name|dbgs
 argument_list|()
 operator|<<
-literal|"  CycleProb["
+literal|"LoopExitProb["
 operator|<<
 name|getBlockName
 argument_list|(
 name|Head
 argument_list|)
 operator|<<
-literal|"] += "
+literal|"] = "
 operator|<<
-name|Res
+name|LEP
 operator|<<
-literal|" --> "
+literal|" from 1 - "
 operator|<<
-name|CycleProb
-index|[
+name|BackFreq
+operator|<<
+literal|" / "
+operator|<<
+name|getBlockFreq
+argument_list|(
 name|Head
-index|]
+argument_list|)
 operator|<<
-literal|"\n"
+literal|".\n"
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -1472,7 +1439,7 @@ operator|.
 name|clear
 argument_list|()
 block|;
-name|CycleProb
+name|LoopExitProb
 operator|.
 name|clear
 argument_list|()
@@ -1688,11 +1655,6 @@ name|PI
 decl_stmt|;
 if|if
 condition|(
-name|isReachable
-argument_list|(
-name|Pred
-argument_list|)
-operator|&&
 name|isBackedge
 argument_list|(
 name|Pred

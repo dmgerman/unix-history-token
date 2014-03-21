@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/StaticAnalyzer/Core/BugReporter/CommonBugCategories.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -113,6 +119,11 @@ expr_stmt|;
 name|bool
 name|SuppressonSink
 decl_stmt|;
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|BugType
@@ -141,7 +152,7 @@ name|virtual
 operator|~
 name|BugType
 argument_list|()
-expr_stmt|;
+block|{}
 comment|// FIXME: Should these be made strings as well?
 name|StringRef
 name|getName
@@ -202,16 +213,16 @@ range|:
 name|public
 name|BugType
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 specifier|const
 name|std
 operator|::
 name|string
 name|desc
+block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
 block|;
 name|public
 operator|:
@@ -232,7 +243,9 @@ name|BugType
 argument_list|(
 name|name
 argument_list|,
-literal|"Logic error"
+name|categories
+operator|::
+name|LogicError
 argument_list|)
 block|,
 name|desc
@@ -252,7 +265,9 @@ name|BugType
 argument_list|(
 name|name
 argument_list|,
-literal|"Logic error"
+name|categories
+operator|::
+name|LogicError
 argument_list|)
 block|,
 name|desc

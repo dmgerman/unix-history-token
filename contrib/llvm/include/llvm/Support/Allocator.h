@@ -391,6 +391,10 @@ comment|/// allocate a separate slab.
 name|size_t
 name|SizeThreshold
 decl_stmt|;
+comment|/// \brief the default allocator used if one is not provided
+name|MallocSlabAllocator
+name|DefaultSlabAllocator
+decl_stmt|;
 comment|/// Allocator - The underlying allocator we use to get slabs of memory.  This
 comment|/// defaults to MallocSlabAllocator, which wraps malloc, but it could be
 comment|/// changed to use a custom allocator.
@@ -453,10 +457,6 @@ modifier|*
 name|Slab
 parameter_list|)
 function_decl|;
-specifier|static
-name|MallocSlabAllocator
-name|DefaultSlabAllocator
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -475,8 +475,15 @@ literal|4096
 argument_list|,
 argument|size_t threshold =
 literal|4096
+argument_list|)
+empty_stmt|;
+name|BumpPtrAllocator
+argument_list|(
+argument|size_t size
 argument_list|,
-argument|SlabAllocator&allocator = DefaultSlabAllocator
+argument|size_t threshold
+argument_list|,
+argument|SlabAllocator&allocator
 argument_list|)
 empty_stmt|;
 operator|~
@@ -682,8 +689,22 @@ literal|4096
 argument_list|,
 argument|size_t threshold =
 literal|4096
+argument_list|)
+operator|:
+name|Allocator
+argument_list|(
+argument|size
 argument_list|,
-argument|SlabAllocator&allocator = BumpPtrAllocator::DefaultSlabAllocator
+argument|threshold
+argument_list|)
+block|{}
+name|SpecificBumpPtrAllocator
+argument_list|(
+argument|size_t size
+argument_list|,
+argument|size_t threshold
+argument_list|,
+argument|SlabAllocator&allocator
 argument_list|)
 operator|:
 name|Allocator

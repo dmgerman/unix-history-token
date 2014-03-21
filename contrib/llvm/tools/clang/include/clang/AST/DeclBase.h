@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Linkage.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Specifiers.h"
 end_include
 
@@ -125,6 +131,9 @@ name|EnumDecl
 decl_stmt|;
 name|class
 name|FunctionDecl
+decl_stmt|;
+name|class
+name|LinkageComputer
 decl_stmt|;
 name|class
 name|LinkageSpecDecl
@@ -423,6 +432,13 @@ comment|/// C++ lexical operator lookup looks for these.
 name|IDNS_NonMemberOperator
 init|=
 literal|0x0400
+block|,
+comment|/// This declaration is a function-local extern declaration of a
+comment|/// variable or function. This may also be IDNS_Ordinary if it
+comment|/// has been declared outside any function.
+name|IDNS_LocalExtern
+init|=
+literal|0x0800
 block|}
 enum|;
 comment|/// ObjCDeclQualifier - 'Qualifiers' written next to the return and
@@ -710,23 +726,13 @@ name|IdentifierNamespace
 range|:
 literal|12
 decl_stmt|;
-comment|/// \brief Whether the \c CachedLinkage field is active.
-comment|///
-comment|/// This field is only valid for NamedDecls subclasses.
+comment|/// \brief If 0, we have not computed the linkage of this declaration.
+comment|/// Otherwise, it is the linkage + 1.
 name|mutable
 name|unsigned
-name|HasCachedLinkage
+name|CacheValidAndLinkage
 range|:
-literal|1
-decl_stmt|;
-comment|/// \brief If \c HasCachedLinkage, the linkage of this declaration.
-comment|///
-comment|/// This field is only valid for NamedDecls subclasses.
-name|mutable
-name|unsigned
-name|CachedLinkage
-range|:
-literal|2
+literal|3
 decl_stmt|;
 name|friend
 name|class
@@ -740,6 +746,19 @@ name|friend
 name|class
 name|ASTReader
 decl_stmt|;
+name|friend
+name|class
+name|LinkageComputer
+decl_stmt|;
+name|template
+operator|<
+name|typename
+name|decl_type
+operator|>
+name|friend
+name|class
+name|Redeclarable
+expr_stmt|;
 name|private
 label|:
 name|void
@@ -824,7 +843,7 @@ name|DK
 argument_list|)
 argument_list|)
 operator|,
-name|HasCachedLinkage
+name|CacheValidAndLinkage
 argument_list|(
 literal|0
 argument_list|)
@@ -902,7 +921,7 @@ name|DK
 argument_list|)
 argument_list|)
 operator|,
-name|HasCachedLinkage
+name|CacheValidAndLinkage
 argument_list|(
 literal|0
 argument_list|)
@@ -957,6 +976,44 @@ name|II
 argument_list|)
 decl|const
 decl_stmt|;
+name|Linkage
+name|getCachedLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Linkage
+argument_list|(
+name|CacheValidAndLinkage
+operator|-
+literal|1
+argument_list|)
+return|;
+block|}
+name|void
+name|setCachedLinkage
+argument_list|(
+name|Linkage
+name|L
+argument_list|)
+decl|const
+block|{
+name|CacheValidAndLinkage
+operator|=
+name|L
+operator|+
+literal|1
+expr_stmt|;
+block|}
+name|bool
+name|hasCachedLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CacheValidAndLinkage
+return|;
+block|}
 name|public
 label|:
 comment|/// \brief Source range that this declaration covers.
@@ -1303,14 +1360,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|void
-name|swapAttrs
-parameter_list|(
-name|Decl
-modifier|*
-name|D
-parameter_list|)
-function_decl|;
-name|void
 name|dropAttrs
 parameter_list|()
 function_decl|;
@@ -1629,20 +1678,30 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Set whether the declaration is used, in the sense of odr-use.
+comment|///
+comment|/// This should only be used immediately after creating a declaration.
 name|void
-name|setUsed
-parameter_list|(
-name|bool
-name|U
-init|=
-name|true
-parameter_list|)
+name|setIsUsed
+parameter_list|()
 block|{
 name|Used
 operator|=
-name|U
+name|true
 expr_stmt|;
 block|}
+comment|/// \brief Mark the declaration used, in the sense of odr-use.
+comment|///
+comment|/// This notifies any mutation listeners in addition to setting a bit
+comment|/// indicating the declaration is used.
+name|void
+name|markUsed
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|)
+function_decl|;
 comment|/// \brief Whether this declaration was referenced.
 name|bool
 name|isReferenced
@@ -1719,8 +1778,6 @@ name|Bits
 argument_list|)
 expr_stmt|;
 block|}
-name|protected
-label|:
 comment|/// \brief Whether this declaration was marked as being private to the
 comment|/// module in which it was defined.
 name|bool
@@ -1737,6 +1794,8 @@ operator|&
 name|ModulePrivateFlag
 return|;
 block|}
+name|protected
+label|:
 comment|/// \brief Specify whether this declaration was marked as being private
 comment|/// to the module in which it was defined.
 name|void
@@ -2801,6 +2860,25 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief True if this is the first declaration in its redeclaration chain.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isFirstDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPreviousDecl
+argument_list|()
+operator|==
+literal|0
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the most recent declaration that declares the same entity
 end_comment
 
@@ -2880,11 +2958,19 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Returns true if this Decl represents a declaration for a body of
+comment|/// \brief Returns true if this \c Decl represents a declaration for a body of
 end_comment
 
 begin_comment
 comment|/// code, such as a function or method definition.
+end_comment
+
+begin_comment
+comment|/// Note that \c hasBody can also return true if any redeclaration of this
+end_comment
+
+begin_comment
+comment|/// \c Decl represents a declaration for a body of code.
 end_comment
 
 begin_expr_stmt
@@ -3023,6 +3109,109 @@ comment|/// \brief Changes the namespace of this declaration to reflect that it'
 end_comment
 
 begin_comment
+comment|/// a function-local extern declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// These declarations appear in the lexical context of the extern
+end_comment
+
+begin_comment
+comment|/// declaration, but in the semantic context of the enclosing namespace
+end_comment
+
+begin_comment
+comment|/// scope.
+end_comment
+
+begin_function
+name|void
+name|setLocalExternDecl
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+operator|(
+name|IdentifierNamespace
+operator|==
+name|IDNS_Ordinary
+operator|||
+name|IdentifierNamespace
+operator|==
+name|IDNS_OrdinaryFriend
+operator|)
+operator|&&
+literal|"namespace is not ordinary"
+argument_list|)
+expr_stmt|;
+name|Decl
+modifier|*
+name|Prev
+init|=
+name|getPreviousDecl
+argument_list|()
+decl_stmt|;
+name|IdentifierNamespace
+operator|&=
+operator|~
+name|IDNS_Ordinary
+expr_stmt|;
+name|IdentifierNamespace
+operator||=
+name|IDNS_LocalExtern
+expr_stmt|;
+if|if
+condition|(
+name|Prev
+operator|&&
+name|Prev
+operator|->
+name|getIdentifierNamespace
+argument_list|()
+operator|&
+name|IDNS_Ordinary
+condition|)
+name|IdentifierNamespace
+operator||=
+name|IDNS_Ordinary
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether this is a block-scope declaration with linkage.
+end_comment
+
+begin_comment
+comment|/// This will either be a local variable declaration declared 'extern', or a
+end_comment
+
+begin_comment
+comment|/// local function declaration.
+end_comment
+
+begin_function
+name|bool
+name|isLocalExternDecl
+parameter_list|()
+block|{
+return|return
+name|IdentifierNamespace
+operator|&
+name|IDNS_LocalExtern
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Changes the namespace of this declaration to reflect that it's
+end_comment
+
+begin_comment
 comment|/// the object of a friend declaration.
 end_comment
 
@@ -3051,7 +3240,9 @@ name|void
 name|setObjectOfFriendDecl
 parameter_list|(
 name|bool
-name|PreviouslyDeclared
+name|PerformFriendInjection
+init|=
+name|false
 parameter_list|)
 block|{
 name|unsigned
@@ -3072,6 +3263,8 @@ operator||
 name|IDNS_TagFriend
 operator||
 name|IDNS_OrdinaryFriend
+operator||
+name|IDNS_LocalExtern
 operator|)
 operator|)
 operator|&&
@@ -3095,15 +3288,31 @@ operator||
 name|IDNS_TagFriend
 operator||
 name|IDNS_OrdinaryFriend
+operator||
+name|IDNS_LocalExtern
 operator|)
 operator|)
 operator|&&
 literal|"namespace includes other than ordinary or tag"
 argument_list|)
 expr_stmt|;
+name|Decl
+modifier|*
+name|Prev
+init|=
+name|getPreviousDecl
+argument_list|()
+decl_stmt|;
 name|IdentifierNamespace
-operator|=
-literal|0
+operator|&=
+operator|~
+operator|(
+name|IDNS_Ordinary
+operator||
+name|IDNS_Tag
+operator||
+name|IDNS_Type
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -3122,7 +3331,18 @@ name|IDNS_TagFriend
 expr_stmt|;
 if|if
 condition|(
-name|PreviouslyDeclared
+name|PerformFriendInjection
+operator|||
+operator|(
+name|Prev
+operator|&&
+name|Prev
+operator|->
+name|getIdentifierNamespace
+argument_list|()
+operator|&
+name|IDNS_Tag
+operator|)
 condition|)
 name|IdentifierNamespace
 operator||=
@@ -3139,6 +3359,8 @@ operator|(
 name|IDNS_Ordinary
 operator||
 name|IDNS_OrdinaryFriend
+operator||
+name|IDNS_LocalExtern
 operator|)
 condition|)
 block|{
@@ -3148,7 +3370,18 @@ name|IDNS_OrdinaryFriend
 expr_stmt|;
 if|if
 condition|(
-name|PreviouslyDeclared
+name|PerformFriendInjection
+operator|||
+operator|(
+name|Prev
+operator|&&
+name|Prev
+operator|->
+name|getIdentifierNamespace
+argument_list|()
+operator|&
+name|IDNS_Ordinary
+operator|)
 condition|)
 name|IdentifierNamespace
 operator||=
@@ -3164,12 +3397,12 @@ name|FriendObjectKind
 block|{
 name|FOK_None
 block|,
-comment|// not a friend object
+comment|///< Not a friend object.
 name|FOK_Declared
 block|,
-comment|// a friend of a previously-declared entity
+comment|///< A friend of a previously-declared entity.
 name|FOK_Undeclared
-comment|// a friend of a previously-undeclared entity
+comment|///< A friend of a previously-undeclared entity.
 block|}
 enum|;
 end_enum
@@ -3434,31 +3667,6 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|Out
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Debuggers don't usually respect default arguments.
-end_comment
-
-begin_expr_stmt
-name|LLVM_ATTRIBUTE_USED
-name|void
-name|dumpXML
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|void
-name|dumpXML
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3807,6 +4015,10 @@ decl_stmt|;
 name|friend
 name|class
 name|ExternalASTSource
+decl_stmt|;
+name|friend
+name|class
+name|ASTDeclReader
 decl_stmt|;
 name|friend
 name|class
@@ -4233,6 +4445,20 @@ comment|/// Examples of transparent contexts include: enumerations (except for
 comment|/// C++0x scoped enums), and C++ linkage specifications.
 name|bool
 name|isTransparentContext
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determines whether this context or some of its ancestors is a
+comment|/// linkage specification context that specifies C linkage.
+name|bool
+name|isExternCContext
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determines whether this context or some of its ancestors is a
+comment|/// linkage specification context that specifies C++ linkage.
+name|bool
+name|isExternCXXContext
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -5615,6 +5841,28 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Find the declarations with the given name that are visible
+end_comment
+
+begin_comment
+comment|/// within this context; don't attempt to retrieve anything from an
+end_comment
+
+begin_comment
+comment|/// external source.
+end_comment
+
+begin_function_decl
+name|lookup_result
+name|noload_lookup
+parameter_list|(
+name|DeclarationName
+name|Name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief A simplistic name lookup mechanism that performs name lookup
 end_comment
 
@@ -5636,6 +5884,18 @@ end_comment
 
 begin_comment
 comment|/// See the ASTImporter for the (few, but important) use cases.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// FIXME: This is very inefficient; replace uses of it with uses of
+end_comment
+
+begin_comment
+comment|/// noload_lookup.
 end_comment
 
 begin_decl_stmt
@@ -5737,6 +5997,10 @@ name|all_lookups_iterator
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// \brief Iterators over all possible lookups within this context.
+end_comment
+
 begin_expr_stmt
 name|all_lookups_iterator
 name|lookups_begin
@@ -5748,6 +6012,34 @@ end_expr_stmt
 begin_expr_stmt
 name|all_lookups_iterator
 name|lookups_end
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Iterators over all possible lookups within this context that are
+end_comment
+
+begin_comment
+comment|/// currently loaded; don't attempt to retrieve anything from an external
+end_comment
+
+begin_comment
+comment|/// source.
+end_comment
+
+begin_expr_stmt
+name|all_lookups_iterator
+name|noload_lookups_begin
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|all_lookups_iterator
+name|noload_lookups_end
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -6102,6 +6394,30 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|LLVM_ATTRIBUTE_USED
+name|void
+name|dumpLookups
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|LLVM_ATTRIBUTE_USED
+name|void
+name|dumpLookups
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_label
 name|private
 label|:
@@ -6177,16 +6493,34 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_expr_stmt
+name|template
+operator|<
+name|decl_iterator
+argument_list|(
+argument|DeclContext::*Begin
+argument_list|)
+operator|(
+operator|)
+specifier|const
+operator|,
+name|decl_iterator
+argument_list|(
+argument|DeclContext::*End
+argument_list|)
+operator|(
+operator|)
+specifier|const
+operator|>
 name|void
 name|buildLookupImpl
-parameter_list|(
+argument_list|(
 name|DeclContext
-modifier|*
+operator|*
 name|DCtx
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void

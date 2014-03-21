@@ -114,21 +114,8 @@ decl_stmt|;
 union|union
 name|DataRefImpl
 block|{
-struct|struct
-block|{
-comment|// ELF needs this for relocations. This entire union should probably be a
+comment|// This entire union should probably be a
 comment|// char[max(8, sizeof(uintptr_t))] and require the impl to cast.
-name|uint16_t
-name|a
-decl_stmt|,
-name|b
-decl_stmt|;
-name|uint32_t
-name|c
-decl_stmt|;
-block|}
-name|w
-struct|;
 struct|struct
 block|{
 name|uint32_t
@@ -383,6 +370,16 @@ name|SymbolRef
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+name|content_iterator
+operator|<
+name|SymbolRef
+operator|>
+name|symbol_iterator
+expr_stmt|;
+end_typedef
+
 begin_comment
 comment|/// RelocationRef - This is a value type class that represents a single
 end_comment
@@ -458,15 +455,11 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
-name|error_code
+name|symbol_iterator
 name|getSymbol
-argument_list|(
-name|SymbolRef
-operator|&
-name|Result
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|error_code
 name|getType
 argument_list|(
@@ -503,15 +496,6 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
-name|error_code
-name|getAdditionalInfo
-argument_list|(
-name|int64_t
-operator|&
-name|Result
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// @brief Get a string that represents the calculation of the value of this
 comment|///        relocation.
 comment|///
@@ -530,6 +514,13 @@ decl|const
 decl_stmt|;
 name|DataRefImpl
 name|getRawDataRefImpl
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|ObjectFile
+operator|*
+name|getObjectFile
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -557,6 +548,22 @@ end_comment
 begin_comment
 comment|/// the list of sections in the object file.
 end_comment
+
+begin_decl_stmt
+name|class
+name|SectionRef
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|content_iterator
+operator|<
+name|SectionRef
+operator|>
+name|section_iterator
+expr_stmt|;
+end_typedef
 
 begin_decl_stmt
 name|class
@@ -754,6 +761,11 @@ name|end_relocations
 argument_list|()
 specifier|const
 expr_stmt|;
+name|section_iterator
+name|getRelocatedSection
+argument_list|()
+specifier|const
+expr_stmt|;
 name|DataRefImpl
 name|getRawDataRefImpl
 argument_list|()
@@ -765,16 +777,6 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_typedef
-typedef|typedef
-name|content_iterator
-operator|<
-name|SectionRef
-operator|>
-name|section_iterator
-expr_stmt|;
-end_typedef
 
 begin_comment
 comment|/// SymbolRef - This is a value type class that represents a single symbol in
@@ -827,64 +829,68 @@ block|,
 name|ST_Other
 block|}
 expr_stmt|;
-enum|enum
+name|enum
 name|Flags
+name|LLVM_ENUM_INT_TYPE
+parameter_list|(
+name|unsigned
+parameter_list|)
 block|{
 name|SF_None
-init|=
+operator|=
 literal|0
-block|,
+operator|,
 name|SF_Undefined
-init|=
+operator|=
 literal|1U
 operator|<<
 literal|0
-block|,
+operator|,
 comment|// Symbol is defined in another object file
 name|SF_Global
-init|=
+operator|=
 literal|1U
 operator|<<
 literal|1
-block|,
+operator|,
 comment|// Global symbol
 name|SF_Weak
-init|=
+operator|=
 literal|1U
 operator|<<
 literal|2
-block|,
+operator|,
 comment|// Weak symbol
 name|SF_Absolute
-init|=
+operator|=
 literal|1U
 operator|<<
 literal|3
-block|,
+operator|,
 comment|// Absolute symbol
 name|SF_ThreadLocal
-init|=
+operator|=
 literal|1U
 operator|<<
 literal|4
-block|,
+operator|,
 comment|// Thread local symbol
 name|SF_Common
-init|=
+operator|=
 literal|1U
 operator|<<
 literal|5
-block|,
+operator|,
 comment|// Symbol has common linkage
 name|SF_FormatSpecific
-init|=
+operator|=
 literal|1U
 operator|<<
 literal|31
 comment|// Specific to the object file format
 comment|// (e.g. section symbols)
 block|}
-enum|;
+empty_stmt|;
 name|SymbolRef
 argument_list|(
 argument|DataRefImpl SymbolP
@@ -982,17 +988,6 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Returns the ascii char that should be displayed in a symbol table dump via
-comment|/// nm for this symbol.
-name|error_code
-name|getNMTypeChar
-argument_list|(
-name|char
-operator|&
-name|Result
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// Get symbol flags (bitwise OR of SymbolRef::Flags)
 name|error_code
 name|getFlags
@@ -1035,16 +1030,6 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_typedef
-typedef|typedef
-name|content_iterator
-operator|<
-name|SymbolRef
-operator|>
-name|symbol_iterator
-expr_stmt|;
-end_typedef
 
 begin_comment
 comment|/// LibraryRef - This is a value type class that represents a single library in
@@ -1321,18 +1306,6 @@ literal|0
 block|;
 name|virtual
 name|error_code
-name|getSymbolNMTypeChar
-argument_list|(
-argument|DataRefImpl Symb
-argument_list|,
-argument|char&Res
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-name|virtual
-name|error_code
 name|getSymbolFlags
 argument_list|(
 argument|DataRefImpl Symb
@@ -1545,7 +1518,7 @@ literal|0
 block|;
 name|virtual
 name|relocation_iterator
-name|getSectionRelBegin
+name|section_rel_begin
 argument_list|(
 argument|DataRefImpl Sec
 argument_list|)
@@ -1555,13 +1528,21 @@ literal|0
 block|;
 name|virtual
 name|relocation_iterator
-name|getSectionRelEnd
+name|section_rel_end
 argument_list|(
 argument|DataRefImpl Sec
 argument_list|)
 specifier|const
 operator|=
 literal|0
+block|;
+name|virtual
+name|section_iterator
+name|getRelocatedSection
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|)
+specifier|const
 block|;
 comment|// Same as above for RelocationRef.
 name|friend
@@ -1605,12 +1586,10 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|error_code
+name|symbol_iterator
 name|getRelocationSymbol
 argument_list|(
 argument|DataRefImpl Rel
-argument_list|,
-argument|SymbolRef&Res
 argument_list|)
 specifier|const
 operator|=
@@ -1635,18 +1614,6 @@ argument_list|(
 argument|DataRefImpl Rel
 argument_list|,
 argument|SmallVectorImpl<char>&Result
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-name|virtual
-name|error_code
-name|getRelocationAdditionalInfo
-argument_list|(
-argument|DataRefImpl Rel
-argument_list|,
-argument|int64_t&Res
 argument_list|)
 specifier|const
 operator|=
@@ -2098,30 +2065,6 @@ return|return
 name|OwningObject
 operator|->
 name|getSymbolSize
-argument_list|(
-name|SymbolPimpl
-argument_list|,
-name|Result
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|inline
-name|error_code
-name|SymbolRef
-operator|::
-name|getNMTypeChar
-argument_list|(
-argument|char&Result
-argument_list|)
-specifier|const
-block|{
-return|return
-name|OwningObject
-operator|->
-name|getSymbolNMTypeChar
 argument_list|(
 name|SymbolPimpl
 argument_list|,
@@ -2670,7 +2613,7 @@ block|{
 return|return
 name|OwningObject
 operator|->
-name|getSectionRelBegin
+name|section_rel_begin
 argument_list|(
 name|SectionPimpl
 argument_list|)
@@ -2690,7 +2633,27 @@ block|{
 return|return
 name|OwningObject
 operator|->
-name|getSectionRelEnd
+name|section_rel_end
+argument_list|(
+name|SectionPimpl
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|section_iterator
+name|SectionRef
+operator|::
+name|getRelocatedSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwningObject
+operator|->
+name|getRelocatedSection
 argument_list|(
 name|SectionPimpl
 argument_list|)
@@ -2836,13 +2799,11 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|error_code
+name|symbol_iterator
 name|RelocationRef
 operator|::
 name|getSymbol
-argument_list|(
-argument|SymbolRef&Result
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2851,8 +2812,6 @@ operator|->
 name|getRelocationSymbol
 argument_list|(
 name|RelocationPimpl
-argument_list|,
-name|Result
 argument_list|)
 return|;
 block|}
@@ -2897,30 +2856,6 @@ return|return
 name|OwningObject
 operator|->
 name|getRelocationTypeName
-argument_list|(
-name|RelocationPimpl
-argument_list|,
-name|Result
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|inline
-name|error_code
-name|RelocationRef
-operator|::
-name|getAdditionalInfo
-argument_list|(
-argument|int64_t&Result
-argument_list|)
-specifier|const
-block|{
-return|return
-name|OwningObject
-operator|->
-name|getRelocationAdditionalInfo
 argument_list|(
 name|RelocationPimpl
 argument_list|,
@@ -2989,6 +2924,23 @@ specifier|const
 block|{
 return|return
 name|RelocationPimpl
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|ObjectFile
+operator|*
+name|RelocationRef
+operator|::
+name|getObjectFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwningObject
 return|;
 block|}
 end_expr_stmt

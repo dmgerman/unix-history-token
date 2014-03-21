@@ -93,6 +93,9 @@ decl_stmt|;
 name|class
 name|TargetSchedModel
 decl_stmt|;
+struct_decl|struct
+name|MachineSchedPolicy
+struct_decl|;
 name|template
 operator|<
 name|typename
@@ -190,6 +193,12 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// \brief Temporary API to test migration to MI scheduler.
+name|bool
+name|useMachineScheduler
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief True if the subtarget should run MachineScheduler after aggressive
 comment|/// coalescing.
 comment|///
@@ -200,7 +209,33 @@ name|bool
 name|enableMachineScheduler
 argument_list|()
 specifier|const
-expr_stmt|;
+decl_stmt|;
+comment|/// \brief Override generic scheduling policy within a region.
+comment|///
+comment|/// This is a convenient way for targets that don't provide any custom
+comment|/// scheduling heuristics (no custom MachineSchedStrategy) to make
+comment|/// changes to the generic scheduling policy.
+name|virtual
+name|void
+name|overrideSchedPolicy
+argument_list|(
+name|MachineSchedPolicy
+operator|&
+name|Policy
+argument_list|,
+name|MachineInstr
+operator|*
+name|begin
+argument_list|,
+name|MachineInstr
+operator|*
+name|end
+argument_list|,
+name|unsigned
+name|NumRegionInstrs
+argument_list|)
+decl|const
+block|{}
 comment|// enablePostRAScheduler - If the target can benefit from post-regalloc
 comment|// scheduling and the specified optimization level meets the requirement
 comment|// return true to enable post-register-allocation scheduling. In
@@ -210,13 +245,20 @@ name|virtual
 name|bool
 name|enablePostRAScheduler
 argument_list|(
-argument|CodeGenOpt::Level OptLevel
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
 argument_list|,
-argument|AntiDepBreakMode& Mode
+name|AntiDepBreakMode
+operator|&
+name|Mode
 argument_list|,
-argument|RegClassVector& CriticalPathRCs
+name|RegClassVector
+operator|&
+name|CriticalPathRCs
 argument_list|)
-specifier|const
+decl|const
 decl_stmt|;
 comment|// adjustSchedDependency - Perform target specific adjustments to
 comment|// the latency of a schedule dependency.
@@ -238,6 +280,14 @@ name|dep
 argument_list|)
 decl|const
 block|{ }
+comment|/// \brief Enable use of alias analysis during code generation (during MI
+comment|/// scheduling, DAGCombine, etc.).
+name|virtual
+name|bool
+name|useAA
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Reset the features for the subtarget.
 name|virtual
 name|void

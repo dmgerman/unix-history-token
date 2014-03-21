@@ -72,6 +72,11 @@ name|defined
 argument_list|(
 name|__linux__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNU__
+argument_list|)
 end_if
 
 begin_include
@@ -85,11 +90,21 @@ else|#
 directive|else
 end_else
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BYTE_ORDER
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|LLVM_ON_WIN32
-end_ifndef
+argument_list|)
+end_if
 
 begin_include
 include|#

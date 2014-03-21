@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -108,7 +114,7 @@ block|{
 name|class
 name|CXXRecordDecl
 decl_stmt|;
-comment|/// VTableComponent - Represents a single component in a vtable.
+comment|/// \brief Represents a single component in a vtable.
 name|class
 name|VTableComponent
 block|{
@@ -127,15 +133,17 @@ name|CK_RTTI
 block|,
 name|CK_FunctionPointer
 block|,
-comment|/// CK_CompleteDtorPointer - A pointer to the complete destructor.
+comment|/// \brief A pointer to the complete destructor.
 name|CK_CompleteDtorPointer
 block|,
-comment|/// CK_DeletingDtorPointer - A pointer to the deleting destructor.
+comment|/// \brief A pointer to the deleting destructor.
 name|CK_DeletingDtorPointer
 block|,
-comment|/// CK_UnusedFunctionPointer - In some cases, a vtable function pointer
-comment|/// will end up never being called. Such vtable function pointers are
-comment|/// represented as a CK_UnusedFunctionPointer.
+comment|/// \brief An entry that is never used.
+comment|///
+comment|/// In some cases, a vtable function pointer will end up never being
+comment|/// called. Such vtable function pointers are represented as a
+comment|/// CK_UnusedFunctionPointer.
 name|CK_UnusedFunctionPointer
 block|}
 enum|;
@@ -361,7 +369,7 @@ name|I
 argument_list|)
 return|;
 block|}
-comment|/// getKind - Get the kind of this vtable component.
+comment|/// \brief Get the kind of this vtable component.
 name|Kind
 name|getKind
 argument_list|()
@@ -790,7 +798,7 @@ argument_list|)
 block|{ }
 comment|/// The kind is stored in the lower 3 bits of the value. For offsets, we
 comment|/// make use of the facts that classes can't be larger than 2^55 bytes,
-comment|/// so we store the offset in the lower part of the 61 bytes that remain.
+comment|/// so we store the offset in the lower part of the 61 bits that remain.
 comment|/// (The reason that we're not simply using a PointerIntPair here is that we
 comment|/// need the offsets to be 64-bit, even when on a 32-bit machine).
 name|int64_t
@@ -813,15 +821,6 @@ operator|,
 name|ThunkInfo
 operator|>
 name|VTableThunkTy
-expr_stmt|;
-typedef|typedef
-name|SmallVector
-operator|<
-name|ThunkInfo
-operator|,
-literal|1
-operator|>
-name|ThunkInfoVectorTy
 expr_stmt|;
 typedef|typedef
 specifier|const
@@ -859,7 +858,7 @@ name|VTableComponent
 operator|>
 name|VTableComponents
 expr_stmt|;
-comment|/// VTableThunks - Contains thunks needed by vtables.
+comment|/// \brief Contains thunks needed by vtables, sorted by indices.
 name|uint64_t
 name|NumVTableThunks
 decl_stmt|;
@@ -871,7 +870,7 @@ name|VTableThunkTy
 operator|>
 name|VTableThunks
 expr_stmt|;
-comment|/// Address points - Address points for all vtables.
+comment|/// \brief Address points for all vtables.
 name|AddressPointsMapTy
 name|AddressPoints
 decl_stmt|;
@@ -1031,30 +1030,10 @@ block|}
 block|}
 empty_stmt|;
 name|class
-name|VTableContext
+name|VTableContextBase
 block|{
-name|ASTContext
-modifier|&
-name|Context
-decl_stmt|;
 name|public
 label|:
-typedef|typedef
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-operator|,
-name|ThunkInfo
-operator|>
-operator|,
-literal|1
-operator|>
-name|VTableThunksTy
-expr_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
@@ -1064,13 +1043,133 @@ literal|1
 operator|>
 name|ThunkInfoVectorTy
 expr_stmt|;
-name|private
+name|protected
 label|:
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXMethodDecl
+operator|*
+operator|,
+name|ThunkInfoVectorTy
+operator|>
+name|ThunksMapTy
+expr_stmt|;
+comment|/// \brief Contains all thunks that a given method decl will need.
+name|ThunksMapTy
+name|Thunks
+decl_stmt|;
+comment|/// Compute and store all vtable related information (vtable layout, vbase
+comment|/// offset offsets, thunks etc) for the given record decl.
+name|virtual
+name|void
+name|computeVTableRelatedInformation
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+operator|~
+name|VTableContextBase
+argument_list|()
+block|{}
+name|public
+operator|:
+name|virtual
+specifier|const
+name|ThunkInfoVectorTy
+operator|*
+name|getThunkInfo
+argument_list|(
+argument|GlobalDecl GD
+argument_list|)
+block|{
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|MD
+operator|=
+name|cast
+operator|<
+name|CXXMethodDecl
+operator|>
+operator|(
+name|GD
+operator|.
+name|getDecl
+argument_list|()
+operator|->
+name|getCanonicalDecl
+argument_list|()
+operator|)
+block|;
+name|computeVTableRelatedInformation
+argument_list|(
+name|MD
+operator|->
+name|getParent
+argument_list|()
+argument_list|)
+block|;
+comment|// This assumes that all the destructors present in the vtable
+comment|// use exactly the same set of thunks.
+name|ThunksMapTy
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|Thunks
+operator|.
+name|find
+argument_list|(
+name|MD
+argument_list|)
+block|;
+if|if
+condition|(
+name|I
+operator|==
+name|Thunks
+operator|.
+name|end
+argument_list|()
+condition|)
+block|{
+comment|// We did not find a thunk for this method.
+return|return
+literal|0
+return|;
+block|}
+return|return
+operator|&
+name|I
+operator|->
+name|second
+return|;
+block|}
+block|}
+empty_stmt|;
+name|class
+name|ItaniumVTableContext
+range|:
+name|public
+name|VTableContextBase
+block|{
+name|private
+operator|:
 name|bool
 name|IsMicrosoftABI
-decl_stmt|;
-comment|/// MethodVTableIndices - Contains the index (relative to the vtable address
-comment|/// point) where the function pointer for a virtual function is stored.
+block|;
+comment|/// \brief Contains the index (relative to the vtable address point)
+comment|/// where the function pointer for a virtual function is stored.
 typedef|typedef
 name|llvm
 operator|::
@@ -1103,20 +1202,6 @@ expr_stmt|;
 name|VTableLayoutMapTy
 name|VTableLayouts
 decl_stmt|;
-comment|/// NumVirtualFunctionPointers - Contains the number of virtual function
-comment|/// pointers in the vtable for a given record decl.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|uint64_t
-operator|>
-name|NumVirtualFunctionPointers
-expr_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -1132,9 +1217,10 @@ operator|*
 operator|>
 name|ClassPairTy
 expr_stmt|;
-comment|/// VirtualBaseClassOffsetOffsets - Contains the vtable offset (relative to
-comment|/// the address point) in chars where the offsets for virtual bases of a class
-comment|/// are stored.
+comment|/// \brief vtable offsets for offsets of virtual bases of a class.
+comment|///
+comment|/// Contains the vtable offset (relative to the address point) in chars
+comment|/// where the offsets for virtual bases of a class are stored.
 typedef|typedef
 name|llvm
 operator|::
@@ -1149,59 +1235,18 @@ expr_stmt|;
 name|VirtualBaseClassOffsetOffsetsMapTy
 name|VirtualBaseClassOffsetOffsets
 decl_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXMethodDecl
-operator|*
-operator|,
-name|ThunkInfoVectorTy
-operator|>
-name|ThunksMapTy
-expr_stmt|;
-comment|/// Thunks - Contains all thunks that a given method decl will need.
-name|ThunksMapTy
-name|Thunks
-decl_stmt|;
 name|void
-name|ComputeMethodVTableIndices
+name|computeVTableRelatedInformation
 parameter_list|(
 specifier|const
 name|CXXRecordDecl
 modifier|*
 name|RD
-parameter_list|)
-function_decl|;
-comment|/// ComputeVTableRelatedInformation - Compute and store all vtable related
-comment|/// information (vtable layout, vbase offset offsets, thunks etc) for the
-comment|/// given record decl.
-name|void
-name|ComputeVTableRelatedInformation
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|)
-function_decl|;
-comment|/// ErrorUnsupported - Print out an error that the v-table layout code
-comment|/// doesn't support the particular C++ feature yet.
-name|void
-name|ErrorUnsupported
-parameter_list|(
-name|StringRef
-name|Feature
-parameter_list|,
-name|SourceLocation
-name|Location
 parameter_list|)
 function_decl|;
 name|public
 label|:
-name|VTableContext
+name|ItaniumVTableContext
 argument_list|(
 name|ASTContext
 operator|&
@@ -1209,21 +1254,9 @@ name|Context
 argument_list|)
 expr_stmt|;
 operator|~
-name|VTableContext
+name|ItaniumVTableContext
 argument_list|()
 expr_stmt|;
-name|bool
-name|isMicrosoftABI
-argument_list|()
-specifier|const
-block|{
-comment|// FIXME: Currently, this method is only used in the VTableContext and
-comment|// VTableBuilder code which is ABI-specific. Probably we can remove it
-comment|// when we add a layer of abstraction for vtable generation.
-return|return
-name|IsMicrosoftABI
-return|;
-block|}
 specifier|const
 name|VTableLayout
 modifier|&
@@ -1235,7 +1268,7 @@ modifier|*
 name|RD
 parameter_list|)
 block|{
-name|ComputeVTableRelatedInformation
+name|computeVTableRelatedInformation
 argument_list|(
 name|RD
 argument_list|)
@@ -1281,73 +1314,10 @@ modifier|*
 name|LayoutClass
 parameter_list|)
 function_decl|;
-specifier|const
-name|ThunkInfoVectorTy
-modifier|*
-name|getThunkInfo
-parameter_list|(
-specifier|const
-name|CXXMethodDecl
-modifier|*
-name|MD
-parameter_list|)
-block|{
-name|ComputeVTableRelatedInformation
-argument_list|(
-name|MD
-operator|->
-name|getParent
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|ThunksMapTy
-operator|::
-name|const_iterator
-name|I
-operator|=
-name|Thunks
-operator|.
-name|find
-argument_list|(
-name|MD
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|I
-operator|==
-name|Thunks
-operator|.
-name|end
-argument_list|()
-condition|)
-block|{
-comment|// We did not find a thunk for this method.
-return|return
-literal|0
-return|;
-block|}
-return|return
-operator|&
-name|I
-operator|->
-name|second
-return|;
-block|}
-comment|/// getNumVirtualFunctionPointers - Return the number of virtual function
-comment|/// pointers in the vtable for a given record decl.
-name|uint64_t
-name|getNumVirtualFunctionPointers
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|)
-function_decl|;
-comment|/// getMethodVTableIndex - Return the index (relative to the vtable address
-comment|/// point) where the function pointer for the given virtual function is
-comment|/// stored.
+comment|/// \brief Locate a virtual function in the vtable.
+comment|///
+comment|/// Return the index (relative to the vtable address point) where the
+comment|/// function pointer for the given virtual function is stored.
 name|uint64_t
 name|getMethodVTableIndex
 parameter_list|(
@@ -1355,11 +1325,11 @@ name|GlobalDecl
 name|GD
 parameter_list|)
 function_decl|;
-comment|/// getVirtualBaseOffsetOffset - Return the offset in chars (relative to the
-comment|/// vtable address point) where the offset of the virtual base that contains
-comment|/// the given base is stored, otherwise, if no virtual base contains the given
-comment|/// class, return 0.  Base must be a virtual base class or an unambigious
-comment|/// base.
+comment|/// Return the offset in chars (relative to the vtable address point) where
+comment|/// the offset of the virtual base that contains the given base is stored,
+comment|/// otherwise, if no virtual base contains the given class, return 0.
+comment|///
+comment|/// Base must be a virtual base class or an unambiguous base.
 name|CharUnits
 name|getVirtualBaseOffsetOffset
 parameter_list|(
@@ -1375,11 +1345,768 @@ name|VBase
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_struct
+struct|struct
+name|VFPtrInfo
+block|{
+typedef|typedef
+name|SmallVector
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+literal|1
+operator|>
+name|BasePath
+expr_stmt|;
+comment|// Don't pass the PathToMangle as it should be calculated later.
+name|VFPtrInfo
+argument_list|(
+argument|CharUnits VFPtrOffset
+argument_list|,
+argument|const BasePath&PathToBaseWithVFPtr
+argument_list|)
+block|:
+name|VBTableIndex
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|LastVBase
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|VFPtrOffset
+argument_list|(
+name|VFPtrOffset
+argument_list|)
+operator|,
+name|PathToBaseWithVFPtr
+argument_list|(
+name|PathToBaseWithVFPtr
+argument_list|)
+operator|,
+name|VFPtrFullOffset
+argument_list|(
+argument|VFPtrOffset
+argument_list|)
+block|{   }
+comment|// Don't pass the PathToMangle as it should be calculated later.
+name|VFPtrInfo
+argument_list|(
+argument|uint64_t VBTableIndex
+argument_list|,
+argument|const CXXRecordDecl *LastVBase
+argument_list|,
+argument|CharUnits VFPtrOffset
+argument_list|,
+argument|const BasePath&PathToBaseWithVFPtr
+argument_list|,
+argument|CharUnits VFPtrFullOffset
+argument_list|)
+operator|:
+name|VBTableIndex
+argument_list|(
+name|VBTableIndex
+argument_list|)
+operator|,
+name|LastVBase
+argument_list|(
+name|LastVBase
+argument_list|)
+operator|,
+name|VFPtrOffset
+argument_list|(
+name|VFPtrOffset
+argument_list|)
+operator|,
+name|PathToBaseWithVFPtr
+argument_list|(
+name|PathToBaseWithVFPtr
+argument_list|)
+operator|,
+name|VFPtrFullOffset
+argument_list|(
+argument|VFPtrFullOffset
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|VBTableIndex
+operator|&&
+literal|"The full constructor should only be used "
+literal|"for vfptrs in virtual bases"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|LastVBase
+argument_list|)
+block|;   }
+comment|/// If nonzero, holds the vbtable index of the virtual base with the vfptr.
+name|uint64_t
+name|VBTableIndex
+expr_stmt|;
+comment|/// Stores the last vbase on the path from the complete type to the vfptr.
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|LastVBase
+decl_stmt|;
+comment|/// This is the offset of the vfptr from the start of the last vbase,
+comment|/// or the complete type if there are no virtual bases.
+name|CharUnits
+name|VFPtrOffset
+decl_stmt|;
+comment|/// This holds the base classes path from the complete type to the first base
+comment|/// with the given vfptr offset, in the base-to-derived order.
+name|BasePath
+name|PathToBaseWithVFPtr
+decl_stmt|;
+comment|/// This holds the subset of records that need to be mangled into the vftable
+comment|/// symbol name in order to get a unique name, in the derived-to-base order.
+name|BasePath
+name|PathToMangle
+decl_stmt|;
+comment|/// This is the full offset of the vfptr from the start of the complete type.
+name|CharUnits
+name|VFPtrFullOffset
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|class
+name|MicrosoftVTableContext
+range|:
+name|public
+name|VTableContextBase
+block|{
+name|public
+operator|:
+expr|struct
+name|MethodVFTableLocation
+block|{
+comment|/// If nonzero, holds the vbtable index of the virtual base with the vfptr.
+name|uint64_t
+name|VBTableIndex
+block|;
+comment|/// If nonnull, holds the last vbase which contains the vfptr that the
+comment|/// method definition is adjusted to.
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|VBase
+block|;
+comment|/// This is the offset of the vfptr from the start of the last vbase, or the
+comment|/// complete type if there are no virtual bases.
+name|CharUnits
+name|VFPtrOffset
+block|;
+comment|/// Method's index in the vftable.
+name|uint64_t
+name|Index
+block|;
+name|MethodVFTableLocation
+argument_list|()
+operator|:
+name|VBTableIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VBase
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VFPtrOffset
+argument_list|(
+name|CharUnits
+operator|::
+name|Zero
+argument_list|()
+argument_list|)
+block|,
+name|Index
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|MethodVFTableLocation
+argument_list|(
+argument|uint64_t VBTableIndex
+argument_list|,
+argument|const CXXRecordDecl *VBase
+argument_list|,
+argument|CharUnits VFPtrOffset
+argument_list|,
+argument|uint64_t Index
+argument_list|)
+operator|:
+name|VBTableIndex
+argument_list|(
+name|VBTableIndex
+argument_list|)
+block|,
+name|VBase
+argument_list|(
+name|VBase
+argument_list|)
+block|,
+name|VFPtrOffset
+argument_list|(
+name|VFPtrOffset
+argument_list|)
+block|,
+name|Index
+argument_list|(
+argument|Index
+argument_list|)
+block|{}
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|MethodVFTableLocation
+operator|&
+name|other
+operator|)
+specifier|const
+block|{
+if|if
+condition|(
+name|VBTableIndex
+operator|!=
+name|other
+operator|.
+name|VBTableIndex
+condition|)
+block|{
+name|assert
+argument_list|(
+name|VBase
+operator|!=
+name|other
+operator|.
+name|VBase
+argument_list|)
+expr_stmt|;
+return|return
+name|VBTableIndex
+operator|<
+name|other
+operator|.
+name|VBTableIndex
+return|;
+block|}
+if|if
+condition|(
+name|VFPtrOffset
+operator|!=
+name|other
+operator|.
+name|VFPtrOffset
+condition|)
+return|return
+name|VFPtrOffset
+operator|<
+name|other
+operator|.
+name|VFPtrOffset
+return|;
+if|if
+condition|(
+name|Index
+operator|!=
+name|other
+operator|.
+name|Index
+condition|)
+return|return
+name|Index
+operator|<
+name|other
+operator|.
+name|Index
+return|;
+return|return
+name|false
+return|;
 block|}
 end_decl_stmt
 
+begin_typedef
+unit|};
+typedef|typedef
+name|SmallVector
+operator|<
+name|VFPtrInfo
+operator|,
+literal|1
+operator|>
+name|VFPtrListTy
+expr_stmt|;
+end_typedef
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_decl_stmt
+name|ASTContext
+modifier|&
+name|Context
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|GlobalDecl
+operator|,
+name|MethodVFTableLocation
+operator|>
+name|MethodVFTableLocationsTy
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|MethodVFTableLocationsTy
+name|MethodVFTableLocations
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|VFPtrListTy
+operator|>
+name|VFPtrLocationsMapTy
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|VFPtrLocationsMapTy
+name|VFPtrLocations
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|CharUnits
+operator|>
+name|VFTableIdTy
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|VFTableIdTy
+operator|,
+specifier|const
+name|VTableLayout
+operator|*
+operator|>
+name|VFTableLayoutMapTy
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|VFTableLayoutMapTy
+name|VFTableLayouts
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|SmallSetVector
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+literal|8
+operator|>
+name|BasesSetVectorTy
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|void
+name|enumerateVFPtrs
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|MostDerivedClass
+argument_list|,
+specifier|const
+name|ASTRecordLayout
+operator|&
+name|MostDerivedClassLayout
+argument_list|,
+name|BaseSubobject
+name|Base
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|LastVBase
+argument_list|,
+specifier|const
+name|VFPtrInfo
+operator|::
+name|BasePath
+operator|&
+name|PathFromCompleteClass
+argument_list|,
+name|BasesSetVectorTy
+operator|&
+name|VisitedVBases
+argument_list|,
+name|MicrosoftVTableContext
+operator|::
+name|VFPtrListTy
+operator|&
+name|Result
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|enumerateVFPtrs
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|ForClass
+argument_list|,
+name|MicrosoftVTableContext
+operator|::
+name|VFPtrListTy
+operator|&
+name|Result
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|computeVTableRelatedInformation
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dumpMethodLocations
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+specifier|const
+name|MethodVFTableLocationsTy
+modifier|&
+name|NewMethods
+parameter_list|,
+name|raw_ostream
+modifier|&
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|>
+name|ClassPairTy
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|ClassPairTy
+operator|,
+name|unsigned
+operator|>
+name|VBTableIndicesTy
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|VBTableIndicesTy
+name|VBTableIndices
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|>
+name|ComputedVBTableIndices
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|computeVBTableRelatedInformation
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_expr_stmt
+name|MicrosoftVTableContext
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+operator|:
+name|Context
+argument_list|(
+argument|Context
+argument_list|)
+block|{}
+operator|~
+name|MicrosoftVTableContext
+argument_list|()
+block|{
+name|llvm
+operator|::
+name|DeleteContainerSeconds
+argument_list|(
+name|VFTableLayouts
+argument_list|)
+block|; }
+specifier|const
+name|VFPtrListTy
+operator|&
+name|getVFPtrOffsets
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+specifier|const
+name|VTableLayout
+modifier|&
+name|getVFTableLayout
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+name|CharUnits
+name|VFPtrOffset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|MethodVFTableLocation
+modifier|&
+name|getMethodVFTableLocation
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|const
+name|ThunkInfoVectorTy
+modifier|*
+name|getThunkInfo
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+block|{
+comment|// Complete destructors don't have a slot in a vftable, so no thunks needed.
+if|if
+condition|(
+name|isa
+operator|<
+name|CXXDestructorDecl
+operator|>
+operator|(
+name|GD
+operator|.
+name|getDecl
+argument_list|()
+operator|)
+operator|&&
+name|GD
+operator|.
+name|getDtorType
+argument_list|()
+operator|==
+name|Dtor_Complete
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|VTableContextBase
+operator|::
+name|getThunkInfo
+argument_list|(
+name|GD
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns the index of VBase in the vbtable of Derived.
+end_comment
+
+begin_comment
+comment|/// VBase must be a morally virtual base of Derived.
+end_comment
+
+begin_comment
+comment|/// The vbtable is an array of i32 offsets.  The first entry is a self entry,
+end_comment
+
+begin_comment
+comment|/// and the rest are offsets from the vbptr to virtual bases.
+end_comment
+
+begin_function
+name|unsigned
+name|getVBTableIndex
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|Derived
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|VBase
+parameter_list|)
+block|{
+name|computeVBTableRelatedInformation
+argument_list|(
+name|Derived
+argument_list|)
+expr_stmt|;
+name|ClassPairTy
+name|Pair
+argument_list|(
+name|Derived
+argument_list|,
+name|VBase
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|VBTableIndices
+operator|.
+name|count
+argument_list|(
+name|Pair
+argument_list|)
+operator|==
+literal|1
+operator|&&
+literal|"VBase must be a vbase of Derived"
+argument_list|)
+expr_stmt|;
+return|return
+name|VBTableIndices
+index|[
+name|Pair
+index|]
+return|;
+block|}
+end_function
+
 begin_endif
+unit|}; }
 endif|#
 directive|endif
 end_endif

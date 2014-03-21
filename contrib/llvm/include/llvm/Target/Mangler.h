@@ -70,10 +70,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Twine
+name|GlobalValue
 decl_stmt|;
 name|class
-name|GlobalValue
+name|MCContext
 decl_stmt|;
 name|template
 operator|<
@@ -84,13 +84,10 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 name|class
-name|MCContext
+name|TargetMachine
 decl_stmt|;
 name|class
-name|MCSymbol
-decl_stmt|;
-name|class
-name|DataLayout
+name|Twine
 decl_stmt|;
 name|class
 name|Mangler
@@ -112,14 +109,10 @@ block|}
 enum|;
 name|private
 label|:
-name|MCContext
-modifier|&
-name|Context
-decl_stmt|;
 specifier|const
-name|DataLayout
-modifier|&
-name|TD
+name|TargetMachine
+modifier|*
+name|TM
 decl_stmt|;
 comment|/// AnonGlobalIDs - We need to give global values the same name every time
 comment|/// they are mangled.  This keeps track of the number we give to anonymous
@@ -144,24 +137,15 @@ name|public
 label|:
 name|Mangler
 argument_list|(
-name|MCContext
-operator|&
-name|context
-argument_list|,
 specifier|const
-name|DataLayout
-operator|&
-name|td
+name|TargetMachine
+operator|*
+name|TM
 argument_list|)
 operator|:
-name|Context
+name|TM
 argument_list|(
-name|context
-argument_list|)
-operator|,
-name|TD
-argument_list|(
-name|td
+name|TM
 argument_list|)
 operator|,
 name|NextAnonGlobalID
@@ -169,40 +153,21 @@ argument_list|(
 literal|1
 argument_list|)
 block|{}
-comment|/// getSymbol - Return the MCSymbol for the specified global value.  This
-comment|/// symbol is the main label that is the address of the global.
-name|MCSymbol
-operator|*
-name|getSymbol
-argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
-argument_list|)
-expr_stmt|;
 comment|/// getNameWithPrefix - Fill OutName with the name of the appropriate prefix
 comment|/// and the specified global variable's name.  If the global variable doesn't
 comment|/// have a name, this fills in a unique name for the global.
 name|void
 name|getNameWithPrefix
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|OutName
+argument|SmallVectorImpl<char>&OutName
 argument_list|,
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue *GV
 argument_list|,
-name|bool
-name|isImplicitlyPrivate
+argument|bool isImplicitlyPrivate
+argument_list|,
+argument|bool UseGlobalPrefix = true
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// getNameWithPrefix - Fill OutName with the name of the appropriate prefix
 comment|/// and the specified name as the global variable name.  GVName must not be
 comment|/// empty.
@@ -227,6 +192,11 @@ operator|=
 name|Mangler
 operator|::
 name|Default
+argument_list|,
+name|bool
+name|UseGlobalPrefix
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 block|}

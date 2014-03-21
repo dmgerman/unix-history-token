@@ -285,18 +285,6 @@ operator|.
 name|IssueWidth
 return|;
 block|}
-comment|/// \brief Number of cycles the OOO processor is expected to hide.
-name|unsigned
-name|getILPWindow
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SchedModel
-operator|.
-name|ILPWindow
-return|;
-block|}
 comment|/// \brief Return the number of issue slots required for this MI.
 name|unsigned
 name|getNumMicroOps
@@ -434,15 +422,44 @@ return|return
 name|ResourceLCM
 return|;
 block|}
+comment|/// \brief Number of micro-ops that may be buffered for OOO execution.
+name|unsigned
+name|getMicroOpBufferSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SchedModel
+operator|.
+name|MicroOpBufferSize
+return|;
+block|}
+comment|/// \brief Number of resource units that may be buffered for OOO execution.
+comment|/// \return The buffer size in resource units or -1 for unlimited.
+name|int
+name|getResourceBufferSize
+argument_list|(
+name|unsigned
+name|PIdx
+argument_list|)
+decl|const
+block|{
+return|return
+name|SchedModel
+operator|.
+name|getProcResource
+argument_list|(
+name|PIdx
+argument_list|)
+operator|->
+name|BufferSize
+return|;
+block|}
 comment|/// \brief Compute operand latency based on the available machine model.
 comment|///
-comment|/// Computes and return the latency of the given data dependent def and use
+comment|/// Compute and return the latency of the given data dependent def and use
 comment|/// when the operand indices are already known. UseMI may be NULL for an
 comment|/// unknown user.
-comment|///
-comment|/// FindMin may be set to get the minimum vs. expected latency. Minimum
-comment|/// latency is used for scheduling groups, while expected latency is for
-comment|/// instruction cost and critical path.
 name|unsigned
 name|computeOperandLatency
 argument_list|(
@@ -461,9 +478,6 @@ name|UseMI
 argument_list|,
 name|unsigned
 name|UseOperIdx
-argument_list|,
-name|bool
-name|FindMin
 argument_list|)
 decl|const
 decl_stmt|;
@@ -473,6 +487,11 @@ comment|///
 comment|/// Compute and return the expected latency of this instruction independent of
 comment|/// a particular use. computeOperandLatency is the prefered API, but this is
 comment|/// occasionally useful to help estimate instruction cost.
+comment|///
+comment|/// If UseDefaultDefLatency is false and no new machine sched model is
+comment|/// present this method falls back to TII->getInstrLatency with an empty
+comment|/// instruction itinerary (this is so we preserve the previous behavior of the
+comment|/// if converter after moving it to TargetSchedModel).
 name|unsigned
 name|computeInstrLatency
 argument_list|(
@@ -480,6 +499,11 @@ specifier|const
 name|MachineInstr
 operator|*
 name|MI
+argument_list|,
+name|bool
+name|UseDefaultDefLatency
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -501,24 +525,6 @@ specifier|const
 name|MachineInstr
 operator|*
 name|DepMI
-argument_list|)
-decl|const
-decl_stmt|;
-name|private
-label|:
-comment|/// getDefLatency is a helper for computeOperandLatency. Return the
-comment|/// instruction's latency if operand lookup is not required.
-comment|/// Otherwise return -1.
-name|int
-name|getDefLatency
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|DefMI
-argument_list|,
-name|bool
-name|FindMin
 argument_list|)
 decl|const
 decl_stmt|;

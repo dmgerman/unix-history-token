@@ -292,66 +292,6 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|/// startExceptionTable - When we finished JITing the function, if exception
-comment|/// handling is set, we emit the exception table.
-name|virtual
-name|uint8_t
-operator|*
-name|startExceptionTable
-argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
-argument_list|,
-name|uintptr_t
-operator|&
-name|ActualSize
-argument_list|)
-operator|=
-literal|0
-block|;
-comment|/// endExceptionTable - This method is called when the JIT is done emitting
-comment|/// the exception table.
-name|virtual
-name|void
-name|endExceptionTable
-argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
-argument_list|,
-name|uint8_t
-operator|*
-name|TableStart
-argument_list|,
-name|uint8_t
-operator|*
-name|TableEnd
-argument_list|,
-name|uint8_t
-operator|*
-name|FrameRegister
-argument_list|)
-operator|=
-literal|0
-block|;
-comment|/// deallocateExceptionTable - Free the specified exception table's memory.
-comment|/// The argument must be the return value from a call to startExceptionTable()
-comment|/// that hasn't been deallocated yet.  This is never called when the JIT is
-comment|/// currently emitting an exception table.
-name|virtual
-name|void
-name|deallocateExceptionTable
-argument_list|(
-name|void
-operator|*
-name|ET
-argument_list|)
-operator|=
-literal|0
-block|;
 comment|/// CheckInvariants - For testing only.  Return true if all internal
 comment|/// invariants are preserved, or return false and set ErrorStr to a helpful
 comment|/// error message.

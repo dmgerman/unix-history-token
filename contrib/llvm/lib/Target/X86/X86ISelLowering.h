@@ -153,6 +153,10 @@ comment|/// FXOR - Bitwise logical XOR of floating point values. This correspond
 comment|/// to X86::XORPS or X86::XORPD.
 name|FXOR
 block|,
+comment|/// FANDN - Bitwise logical ANDNOT of floating point values. This
+comment|/// corresponds to X86::ANDNPS or X86::ANDNPD.
+name|FANDN
+block|,
 comment|/// FSRL - Bitwise logical right shift of floating point values. These
 comment|/// corresponds to X86::PSRLDQ.
 name|FSRL
@@ -369,6 +373,12 @@ block|,
 comment|// VSEXT - Vector integer signed-extend.
 name|VSEXT
 block|,
+comment|// VTRUNC - Vector integer truncate.
+name|VTRUNC
+block|,
+comment|// VTRUNC - Vector integer truncate with mask.
+name|VTRUNCM
+block|,
 comment|// VFPEXT - Vector FP extend.
 name|VFPEXT
 block|,
@@ -402,6 +412,17 @@ name|PCMPEQ
 block|,
 name|PCMPGT
 block|,
+comment|// PCMP*M - Vector integer comparisons, the result is in a mask vector.
+name|PCMPEQM
+block|,
+name|PCMPGTM
+block|,
+comment|/// CMPM, CMPMU - Vector comparison generating mask bits for fp and
+comment|/// integer signed and unsigned data types.
+name|CMPM
+block|,
+name|CMPMU
+block|,
 comment|// ADD, SUB, SMUL, etc. - Arithmetic operations with FLAGS results.
 name|ADD
 block|,
@@ -432,17 +453,31 @@ comment|// BLSMSK - Get mask up to lowest set bit
 name|BLSR
 block|,
 comment|// BLSR - Reset lowest set bit
+name|BZHI
+block|,
+comment|// BZHI - Zero high bits
+name|BEXTR
+block|,
+comment|// BEXTR - Bit field extract
 name|UMUL
 block|,
 comment|// LOW, HI, FLAGS = umul LHS, RHS
 comment|// MUL_IMM - X86 specific multiply by immediate.
 name|MUL_IMM
 block|,
-comment|// PTEST - Vector bitwise comparisons
+comment|// PTEST - Vector bitwise comparisons.
 name|PTEST
 block|,
-comment|// TESTP - Vector packed fp sign bitwise comparisons
+comment|// TESTP - Vector packed fp sign bitwise comparisons.
 name|TESTP
+block|,
+comment|// TESTM - Vector "test" in AVX-512, the result is in a mask vector.
+name|TESTM
+block|,
+comment|// OR/AND test for masks
+name|KORTEST
+block|,
+name|KTEST
 block|,
 comment|// Several flavors of instructions with vector shuffle behaviors.
 name|PALIGNR
@@ -483,11 +518,18 @@ name|VPERMILP
 block|,
 name|VPERMV
 block|,
+name|VPERMV3
+block|,
 name|VPERMI
 block|,
 name|VPERM2X128
 block|,
 name|VBROADCAST
+block|,
+comment|// masked broadcast
+name|VBROADCASTM
+block|,
+name|VINSERT
 block|,
 comment|// PMULUDQ - Vector multiply packed unsigned doubleword integers
 name|PMULUDQ
@@ -638,44 +680,88 @@ comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|X86
 block|{
-comment|/// isVEXTRACTF128Index - Return true if the specified
+comment|/// isVEXTRACT128Index - Return true if the specified
 comment|/// EXTRACT_SUBVECTOR operand specifies a vector extract that is
-comment|/// suitable for input to VEXTRACTF128.
+comment|/// suitable for input to VEXTRACTF128, VEXTRACTI128 instructions.
 name|bool
-name|isVEXTRACTF128Index
+name|isVEXTRACT128Index
 parameter_list|(
 name|SDNode
 modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// isVINSERTF128Index - Return true if the specified
+comment|/// isVINSERT128Index - Return true if the specified
 comment|/// INSERT_SUBVECTOR operand specifies a subvector insert that is
-comment|/// suitable for input to VINSERTF128.
+comment|/// suitable for input to VINSERTF128, VINSERTI128 instructions.
 name|bool
-name|isVINSERTF128Index
+name|isVINSERT128Index
 parameter_list|(
 name|SDNode
 modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// getExtractVEXTRACTF128Immediate - Return the appropriate
+comment|/// isVEXTRACT256Index - Return true if the specified
+comment|/// EXTRACT_SUBVECTOR operand specifies a vector extract that is
+comment|/// suitable for input to VEXTRACTF64X4, VEXTRACTI64X4 instructions.
+name|bool
+name|isVEXTRACT256Index
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// isVINSERT256Index - Return true if the specified
+comment|/// INSERT_SUBVECTOR operand specifies a subvector insert that is
+comment|/// suitable for input to VINSERTF64X4, VINSERTI64X4 instructions.
+name|bool
+name|isVINSERT256Index
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// getExtractVEXTRACT128Immediate - Return the appropriate
 comment|/// immediate to extract the specified EXTRACT_SUBVECTOR index
-comment|/// with VEXTRACTF128 instructions.
+comment|/// with VEXTRACTF128, VEXTRACTI128 instructions.
 name|unsigned
-name|getExtractVEXTRACTF128Immediate
+name|getExtractVEXTRACT128Immediate
 parameter_list|(
 name|SDNode
 modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// getInsertVINSERTF128Immediate - Return the appropriate
+comment|/// getInsertVINSERT128Immediate - Return the appropriate
 comment|/// immediate to insert at the specified INSERT_SUBVECTOR index
-comment|/// with VINSERTF128 instructions.
+comment|/// with VINSERTF128, VINSERT128 instructions.
 name|unsigned
-name|getInsertVINSERTF128Immediate
+name|getInsertVINSERT128Immediate
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// getExtractVEXTRACT256Immediate - Return the appropriate
+comment|/// immediate to extract the specified EXTRACT_SUBVECTOR index
+comment|/// with VEXTRACTF64X4, VEXTRACTI64x4 instructions.
+name|unsigned
+name|getExtractVEXTRACT256Immediate
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// getInsertVINSERT256Immediate - Return the appropriate
+comment|/// immediate to insert at the specified INSERT_SUBVECTOR index
+comment|/// with VINSERTF64x4, VINSERTI64x4 instructions.
+name|unsigned
+name|getInsertVINSERT256Immediate
 parameter_list|(
 name|SDNode
 modifier|*
@@ -974,6 +1060,8 @@ name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
@@ -1102,7 +1190,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
@@ -1165,6 +1253,16 @@ argument|EVT VT2
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|allowTruncateForTailCall
+argument_list|(
+argument|Type *Ty1
+argument_list|,
+argument|Type *Ty2
+argument_list|)
+specifier|const
+block|;
 comment|/// isZExtFree - Return true if any actual instruction that defines a
 comment|/// value of type Ty1 implicit zero-extends the value to Ty2 in the result
 comment|/// register. This does not necessarily include registers defined in
@@ -1203,22 +1301,18 @@ argument|EVT VT2
 argument_list|)
 specifier|const
 block|;
-comment|/// isFMAFasterThanMulAndAdd - Return true if an FMA operation is faster than
-comment|/// a pair of mul and add instructions. fmuladd intrinsics will be expanded to
-comment|/// FMAs when this method returns true (and FMAs are legal), otherwise fmuladd
-comment|/// is expanded to mul + add.
+comment|/// isFMAFasterThanFMulAndFAdd - Return true if an FMA operation is faster
+comment|/// than a pair of fmul and fadd instructions. fmuladd intrinsics will be
+comment|/// expanded to FMAs when this method returns true, otherwise fmuladd is
+comment|/// expanded to fmul + fadd.
 name|virtual
 name|bool
-name|isFMAFasterThanMulAndAdd
+name|isFMAFasterThanFMulAndFAdd
 argument_list|(
-argument|EVT
+argument|EVT VT
 argument_list|)
 specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
+block|;
 comment|/// isNarrowingProfitable - Return true if it's profitable to narrow
 comment|/// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
 comment|/// from i32 to i8 but not from i32 to i16.
@@ -1424,6 +1518,17 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|isNoopAddrSpaceCast
+argument_list|(
+argument|unsigned SrcAS
+argument_list|,
+argument|unsigned DestAS
+argument_list|)
+specifier|const
+name|LLVM_OVERRIDE
+block|;
 comment|/// \brief Reset the operation actions based on target options.
 name|virtual
 name|void
@@ -1456,11 +1561,6 @@ specifier|const
 name|X86Subtarget
 operator|*
 name|Subtarget
-block|;
-specifier|const
-name|X86RegisterInfo
-operator|*
-name|RegInfo
 block|;
 specifier|const
 name|DataLayout
@@ -1519,7 +1619,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1536,7 +1636,7 @@ argument|CallingConv::ID CallConv
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&ArgInfo
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1557,7 +1657,7 @@ argument|SDValue StackPtr
 argument_list|,
 argument|SDValue Arg
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1620,7 +1720,7 @@ argument|bool Is64Bit
 argument_list|,
 argument|int FPDiff
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|)
 specifier|const
 block|;
@@ -1654,20 +1754,16 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerAsSplatVectorLoad
+name|LowerBUILD_VECTOR
 argument_list|(
-argument|SDValue SrcOp
-argument_list|,
-argument|EVT VT
-argument_list|,
-argument|DebugLoc dl
+argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerBUILD_VECTOR
+name|LowerBUILD_VECTORvXi1
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1725,7 +1821,7 @@ name|LowerGlobalAddress
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|int64_t Offset
 argument_list|,
@@ -1764,15 +1860,6 @@ name|SDValue
 name|LowerShiftParts
 argument_list|(
 argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerBITCAST
-argument_list|(
-argument|SDValue op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -1833,33 +1920,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerZERO_EXTEND
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSIGN_EXTEND
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerANY_EXTEND
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerFP_TO_SINT
 argument_list|(
 argument|SDValue Op
@@ -1911,7 +1971,7 @@ argument|SDValue And
 argument_list|,
 argument|ISD::CondCode CC
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -2062,80 +2122,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerShift
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSDIV
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerSIGN_EXTEND_INREG
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerFSINCOS
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-comment|// Utility functions to help LowerVECTOR_SHUFFLE& LowerBUILD_VECTOR
-name|SDValue
-name|LowerVectorBroadcast
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|NormalizeVectorShuffle
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|buildFromShuffleMostly
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerVectorAllZeroTest
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerVectorIntExtend
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2155,7 +2142,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -2187,7 +2174,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -2234,6 +2221,16 @@ argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|LLVMContext&Context
+argument_list|)
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|uint16_t
+operator|*
+name|getScratchRegisters
+argument_list|(
+argument|CallingConv::ID CC
 argument_list|)
 specifier|const
 block|;

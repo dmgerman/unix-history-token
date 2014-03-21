@@ -143,30 +143,52 @@ name|protected
 operator|:
 name|MCObjectStreamer
 argument_list|(
-argument|StreamerKind Kind
+name|MCContext
+operator|&
+name|Context
 argument_list|,
-argument|MCContext&Context
+name|MCTargetStreamer
+operator|*
+name|TargetStreamer
 argument_list|,
-argument|MCAsmBackend&TAB
+name|MCAsmBackend
+operator|&
+name|TAB
 argument_list|,
-argument|raw_ostream&_OS
+name|raw_ostream
+operator|&
+name|_OS
 argument_list|,
-argument|MCCodeEmitter *_Emitter
+name|MCCodeEmitter
+operator|*
+name|_Emitter
 argument_list|)
 block|;
 name|MCObjectStreamer
 argument_list|(
-argument|StreamerKind Kind
+name|MCContext
+operator|&
+name|Context
 argument_list|,
-argument|MCContext&Context
+name|MCTargetStreamer
+operator|*
+name|TargetStreamer
 argument_list|,
-argument|MCAsmBackend&TAB
+name|MCAsmBackend
+operator|&
+name|TAB
 argument_list|,
-argument|raw_ostream&_OS
+name|raw_ostream
+operator|&
+name|_OS
 argument_list|,
-argument|MCCodeEmitter *_Emitter
+name|MCCodeEmitter
+operator|*
+name|_Emitter
 argument_list|,
-argument|MCAssembler *_Assembler
+name|MCAssembler
+operator|*
+name|_Assembler
 argument_list|)
 block|;
 operator|~
@@ -297,8 +319,6 @@ argument_list|(
 argument|const MCExpr *Value
 argument_list|,
 argument|unsigned Size
-argument_list|,
-argument|unsigned AddrSpace
 argument_list|)
 block|;
 name|virtual
@@ -396,9 +416,6 @@ name|void
 name|EmitBytes
 argument_list|(
 argument|StringRef Data
-argument_list|,
-argument|unsigned AddrSpace =
-literal|0
 argument_list|)
 block|;
 name|virtual
@@ -434,6 +451,25 @@ argument_list|(
 argument|const MCExpr *Offset
 argument_list|,
 argument|unsigned char Value
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitDwarfLocDirective
+argument_list|(
+argument|unsigned FileNo
+argument_list|,
+argument|unsigned Line
+argument_list|,
+argument|unsigned Column
+argument_list|,
+argument|unsigned Flags
+argument_list|,
+argument|unsigned Isa
+argument_list|,
+argument|unsigned Discriminator
+argument_list|,
+argument|StringRef FileName
 argument_list|)
 block|;
 name|virtual
@@ -491,42 +527,22 @@ argument_list|(
 argument|uint64_t NumBytes
 argument_list|,
 argument|uint8_t FillValue
-argument_list|,
-argument|unsigned AddrSpace =
-literal|0
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitZeros
+argument_list|(
+argument|uint64_t NumBytes
 argument_list|)
 block|;
 name|virtual
 name|void
 name|FinishImpl
 argument_list|()
-block|;
-comment|/// @}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCStreamer *S
-argument_list|)
-block|{
-return|return
-name|S
-operator|->
-name|getKind
-argument_list|()
-operator|>=
-name|SK_ELFStreamer
-operator|&&
-name|S
-operator|->
-name|getKind
-argument_list|()
-operator|<=
-name|SK_WinCOFFStreamer
-return|;
+block|; }
+decl_stmt|;
 block|}
-expr|}
-block|;  }
 end_decl_stmt
 
 begin_comment

@@ -172,21 +172,11 @@ name|HexagonSubtarget
 operator|&
 name|Subtarget
 block|;
-specifier|const
-name|HexagonInstrInfo
-operator|&
-name|TII
-block|;
 name|HexagonRegisterInfo
 argument_list|(
 name|HexagonSubtarget
 operator|&
 name|st
-argument_list|,
-specifier|const
-name|HexagonInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 comment|/// Code Generation virtual methods...
@@ -283,26 +273,8 @@ name|getFrameRegister
 argument_list|()
 specifier|const
 block|;
-name|void
-name|getInitialFrameState
-argument_list|(
-argument|std::vector<MachineMove>&Moves
-argument_list|)
-specifier|const
-block|;
 name|unsigned
 name|getStackRegister
-argument_list|()
-specifier|const
-block|;
-comment|// Exception handling queries.
-name|unsigned
-name|getEHExceptionRegister
-argument_list|()
-specifier|const
-block|;
-name|unsigned
-name|getEHHandlerRegister
 argument_list|()
 specifier|const
 block|; }

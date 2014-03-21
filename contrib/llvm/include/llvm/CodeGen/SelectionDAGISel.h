@@ -119,9 +119,6 @@ name|class
 name|TargetLibraryInfo
 decl_stmt|;
 name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
 name|TargetTransformInfo
 decl_stmt|;
 name|class
@@ -149,15 +146,9 @@ name|MachineFunctionPass
 block|{
 name|public
 operator|:
-specifier|const
 name|TargetMachine
 operator|&
 name|TM
-block|;
-specifier|const
-name|TargetLowering
-operator|&
-name|TLI
 block|;
 specifier|const
 name|TargetLibraryInfo
@@ -209,7 +200,7 @@ block|;
 name|explicit
 name|SelectionDAGISel
 argument_list|(
-argument|const TargetMachine&tm
+argument|TargetMachine&tm
 argument_list|,
 argument|CodeGenOpt::Level OL = CodeGenOpt::Default
 argument_list|)
@@ -221,12 +212,16 @@ argument_list|()
 block|;
 specifier|const
 name|TargetLowering
-operator|&
+operator|*
 name|getTargetLowering
 argument_list|()
+specifier|const
 block|{
 return|return
-name|TLI
+name|TM
+operator|.
+name|getTargetLowering
+argument_list|()
 return|;
 block|}
 name|virtual
@@ -364,6 +359,14 @@ block|,
 name|OPC_MoveParent
 block|,
 name|OPC_CheckSame
+block|,
+name|OPC_CheckChild0Same
+block|,
+name|OPC_CheckChild1Same
+block|,
+name|OPC_CheckChild2Same
+block|,
+name|OPC_CheckChild3Same
 block|,
 name|OPC_CheckPatternPredicate
 block|,

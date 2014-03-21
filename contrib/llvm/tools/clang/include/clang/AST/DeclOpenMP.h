@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- OpenMP.h - Classes for representing OpenMP directives ---*- C++ -*-===//
+comment|//===- DeclOpenMP.h - Classes for representing OpenMP directives -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|/// \file
 end_comment
 
 begin_comment
-comment|/// \brief This file defines OpenMP nodes.
+comment|/// \brief This file defines OpenMP nodes for declarative directives.
 end_comment
 
 begin_comment
@@ -79,9 +79,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|DeclRefExpr
-decl_stmt|;
 comment|/// \brief This represents '#pragma omp threadprivate ...' directive.
 comment|/// For example, in the following, both 'a' and 'A::b' are threadprivate:
 comment|///
@@ -138,7 +135,7 @@ block|{ }
 name|ArrayRef
 operator|<
 specifier|const
-name|DeclRefExpr
+name|Expr
 operator|*
 operator|>
 name|getVars
@@ -149,14 +146,14 @@ return|return
 name|ArrayRef
 operator|<
 specifier|const
-name|DeclRefExpr
+name|Expr
 operator|*
 operator|>
 operator|(
 name|reinterpret_cast
 operator|<
 specifier|const
-name|DeclRefExpr
+name|Expr
 operator|*
 specifier|const
 operator|*
@@ -175,7 +172,7 @@ name|llvm
 operator|::
 name|MutableArrayRef
 operator|<
-name|DeclRefExpr
+name|Expr
 operator|*
 operator|>
 name|getVars
@@ -186,13 +183,13 @@ name|llvm
 operator|::
 name|MutableArrayRef
 operator|<
-name|DeclRefExpr
+name|Expr
 operator|*
 operator|>
 operator|(
 name|reinterpret_cast
 operator|<
-name|DeclRefExpr
+name|Expr
 operator|*
 operator|*
 operator|>
@@ -211,7 +208,7 @@ name|setVars
 argument_list|(
 name|ArrayRef
 operator|<
-name|DeclRefExpr
+name|Expr
 operator|*
 operator|>
 name|VL
@@ -230,7 +227,7 @@ argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
 argument_list|,
-argument|ArrayRef<DeclRefExpr *> VL
+argument|ArrayRef<Expr *> VL
 argument_list|)
 block|;
 specifier|static
@@ -250,7 +247,7 @@ name|llvm
 operator|::
 name|MutableArrayRef
 operator|<
-name|DeclRefExpr
+name|Expr
 operator|*
 operator|>
 operator|::
@@ -261,7 +258,7 @@ typedef|typedef
 name|ArrayRef
 operator|<
 specifier|const
-name|DeclRefExpr
+name|Expr
 operator|*
 operator|>
 operator|::

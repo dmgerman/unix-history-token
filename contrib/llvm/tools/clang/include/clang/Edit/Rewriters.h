@@ -43,6 +43,12 @@ directive|define
 name|LLVM_CLANG_EDIT_REWRITERS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -51,7 +57,22 @@ name|class
 name|ObjCMessageExpr
 decl_stmt|;
 name|class
+name|ObjCMethodDecl
+decl_stmt|;
+name|class
+name|ObjCInterfaceDecl
+decl_stmt|;
+name|class
+name|ObjCProtocolDecl
+decl_stmt|;
+name|class
 name|NSAPI
+decl_stmt|;
+name|class
+name|EnumDecl
+decl_stmt|;
+name|class
+name|TypedefDecl
 decl_stmt|;
 name|class
 name|ParentMap

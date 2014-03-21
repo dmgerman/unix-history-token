@@ -282,9 +282,26 @@ name|isMemberFunctionCCDefault
 argument_list|()
 specifier|const
 block|{
-comment|// Right now, this is always true for Microsoft.
+comment|// Right now, this is always false for Microsoft.
 return|return
 operator|!
+name|isMicrosoft
+argument_list|()
+return|;
+block|}
+comment|/// Are temporary objects passed by value to a call destroyed by the callee?
+comment|/// This is a fundamental language change, since it implies that objects
+comment|/// passed by value do *not* live to the end of the full expression.
+comment|/// Temporaries passed to a function taking a const reference live to the end
+comment|/// of the full expression as usual.  Both the caller and the callee must
+comment|/// have access to the destructor, while only the caller needs the
+comment|/// destructor if this is false.
+name|bool
+name|isArgumentDestroyedByCallee
+argument_list|()
+specifier|const
+block|{
+return|return
 name|isMicrosoft
 argument_list|()
 return|;
@@ -301,10 +318,9 @@ name|isItaniumFamily
 argument_list|()
 return|;
 block|}
-comment|/// \brief Does this ABI have different entrypoints for complete-object
-comment|/// and base-subobject destructors?
+comment|/// \brief Does this ABI allow virtual bases to be primary base classes?
 name|bool
-name|hasDestructorVariants
+name|hasPrimaryVBases
 argument_list|()
 specifier|const
 block|{
@@ -313,9 +329,11 @@ name|isItaniumFamily
 argument_list|()
 return|;
 block|}
-comment|/// \brief Does this ABI allow virtual bases to be primary base classes?
+comment|/// \brief Does this ABI use key functions?  If so, class data such as the
+comment|/// vtable is emitted with strong linkage by the TU containing the key
+comment|/// function.
 name|bool
-name|hasPrimaryVBases
+name|hasKeyFunctions
 argument_list|()
 specifier|const
 block|{

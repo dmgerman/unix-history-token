@@ -373,11 +373,9 @@ name|TargetRegisterClass
 operator|*
 name|RC
 argument_list|,
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|unsigned
-argument_list|,
-literal|2
 operator|>
 operator|&
 name|Forbid

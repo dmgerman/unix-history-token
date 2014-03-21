@@ -366,34 +366,14 @@ argument_list|)
 block|;
 name|public
 operator|:
-name|void
-name|PrintDebugValueComment
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|raw_ostream
-operator|&
-name|OS
-argument_list|)
-block|;
-name|virtual
-name|MachineLocation
-name|getDebugValueLocation
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|)
-specifier|const
-name|LLVM_OVERRIDE
-block|;
 comment|/// EmitDwarfRegOp - Emit dwarf register operation.
 name|virtual
 name|void
 name|EmitDwarfRegOp
 argument_list|(
 argument|const MachineLocation&MLoc
+argument_list|,
+argument|bool Indirect
 argument_list|)
 specifier|const
 name|LLVM_OVERRIDE

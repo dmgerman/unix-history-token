@@ -146,6 +146,9 @@ name|BR_JT
 block|,
 comment|// Jumptable branch using long branches for each entry.
 name|BR_JT32
+block|,
+comment|// Memory barrier.
+name|MEMBARRIER
 block|}
 enum|;
 block|}
@@ -167,6 +170,21 @@ name|XCoreTargetMachine
 operator|&
 name|TM
 argument_list|)
+block|;
+name|using
+name|TargetLowering
+operator|::
+name|isZExtFree
+block|;
+name|virtual
+name|bool
+name|isZExtFree
+argument_list|(
+argument|SDValue Val
+argument_list|,
+argument|EVT VT2
+argument_list|)
+specifier|const
 block|;
 name|virtual
 name|unsigned
@@ -271,7 +289,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -298,7 +316,7 @@ argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -319,7 +337,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -348,7 +366,7 @@ block|;
 name|SDValue
 name|lowerLoadWordFromAlignedBasePlusOffset
 argument_list|(
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -505,6 +523,15 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|LowerATOMIC_FENCE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 comment|// Inline asm support
 name|std
 operator|::
@@ -520,7 +547,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
@@ -582,7 +609,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -614,7 +641,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)

@@ -716,6 +716,16 @@ argument|A64SE::ShiftExtSpecifiers Ext
 argument_list|)
 block|;
 name|void
+name|printVPRRegister
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printOperand
 argument_list|(
 argument|const MCInst *MI
@@ -756,8 +766,88 @@ operator|::
 name|WSP
 return|;
 block|}
-expr|}
-block|;  }
+name|template
+operator|<
+name|A64SE
+operator|::
+name|ShiftExtSpecifiers
+name|Ext
+block|,
+name|bool
+name|IsHalf
+operator|>
+name|void
+name|printNeonMovImmShiftOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printNeonUImm0Operand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printUImmHexOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printUImmBareOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printNeonUImm64MaskOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|template
+operator|<
+name|A64Layout
+operator|::
+name|VectorLayout
+name|Layout
+block|,
+name|unsigned
+name|Count
+operator|>
+name|void
+name|printVectorList
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif

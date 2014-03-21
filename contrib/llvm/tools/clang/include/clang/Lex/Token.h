@@ -159,12 +159,14 @@ name|StartOfLine
 init|=
 literal|0x01
 block|,
-comment|// At start of line or only after whitespace.
+comment|// At start of line or only after whitespace
+comment|// (considering the line after macro expansion).
 name|LeadingSpace
 init|=
 literal|0x02
 block|,
-comment|// Whitespace exists before this token.
+comment|// Whitespace exists before this token (considering
+comment|// whitespace after macro expansion).
 name|DisableExpand
 init|=
 literal|0x04
@@ -188,7 +190,12 @@ comment|// This string or character literal has a ud-suffix.
 name|HasUCN
 init|=
 literal|0x40
+block|,
 comment|// This identifier contains a UCN.
+name|IgnoredComma
+init|=
+literal|0x80
+comment|// This comma is not a macro argument separator (MS).
 block|}
 enum|;
 name|tok

@@ -10725,7 +10725,7 @@ begin_decl_stmt
 name|void
 name|__clear_cache
 argument_list|(
-name|char
+name|void
 operator|*
 name|beg
 name|__attribute__
@@ -10735,7 +10735,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|char
+name|void
 operator|*
 name|end
 name|__attribute__

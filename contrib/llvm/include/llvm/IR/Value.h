@@ -94,34 +94,64 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Constant
+name|APInt
 decl_stmt|;
 name|class
 name|Argument
 decl_stmt|;
 name|class
-name|Instruction
+name|AssemblyAnnotationWriter
 decl_stmt|;
 name|class
 name|BasicBlock
 decl_stmt|;
 name|class
-name|GlobalValue
+name|Constant
+decl_stmt|;
+name|class
+name|DataLayout
 decl_stmt|;
 name|class
 name|Function
 decl_stmt|;
 name|class
-name|GlobalVariable
+name|GlobalAlias
 decl_stmt|;
 name|class
-name|GlobalAlias
+name|GlobalValue
+decl_stmt|;
+name|class
+name|GlobalVariable
 decl_stmt|;
 name|class
 name|InlineAsm
 decl_stmt|;
 name|class
+name|Instruction
+decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
+name|class
+name|MDNode
+decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
+name|class
+name|Twine
+decl_stmt|;
+name|class
+name|Type
+decl_stmt|;
+name|class
+name|ValueHandleBase
+decl_stmt|;
+name|class
 name|ValueSymbolTable
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 name|template
 operator|<
@@ -139,30 +169,6 @@ operator|*
 operator|>
 name|ValueName
 expr_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
-name|AssemblyAnnotationWriter
-decl_stmt|;
-name|class
-name|ValueHandleBase
-decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
-name|class
-name|Twine
-decl_stmt|;
-name|class
-name|MDNode
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                 Value Class
 comment|//===----------------------------------------------------------------------===//
@@ -777,10 +783,10 @@ return|return
 name|HasValueHandle
 return|;
 block|}
-comment|/// \brief This method strips off any unneeded pointer casts,
-comment|/// all-zero GEPs and aliases from the specified value, returning the original
-comment|/// uncasted value. If this is called on a non-pointer value, it returns
-comment|/// 'this'.
+comment|/// \brief Strips off any unneeded pointer casts, all-zero GEPs and aliases
+comment|/// from the specified value, returning the original uncasted value.
+comment|///
+comment|/// If this is called on a non-pointer value, it returns 'this'.
 name|Value
 modifier|*
 name|stripPointerCasts
@@ -807,10 +813,10 @@ name|stripPointerCasts
 argument_list|()
 return|;
 block|}
-comment|/// \brief This method strips off any unneeded pointer casts and
-comment|/// all-zero GEPs from the specified value, returning the original
-comment|/// uncasted value. If this is called on a non-pointer value, it returns
-comment|/// 'this'.
+comment|/// \brief Strips off any unneeded pointer casts and all-zero GEPs from the
+comment|/// specified value, returning the original uncasted value.
+comment|///
+comment|/// If this is called on a non-pointer value, it returns 'this'.
 name|Value
 modifier|*
 name|stripPointerCastsNoFollowAliases
@@ -837,10 +843,10 @@ name|stripPointerCastsNoFollowAliases
 argument_list|()
 return|;
 block|}
-comment|/// stripInBoundsConstantOffsets - This method strips off unneeded pointer casts and
-comment|/// all-constant GEPs from the specified value, returning the original
-comment|/// pointer value. If this is called on a non-pointer value, it returns
-comment|/// 'this'.
+comment|/// \brief Strips off unneeded pointer casts and all-constant GEPs from the
+comment|/// specified value, returning the original pointer value.
+comment|///
+comment|/// If this is called on a non-pointer value, it returns 'this'.
 name|Value
 modifier|*
 name|stripInBoundsConstantOffsets
@@ -867,10 +873,66 @@ name|stripInBoundsConstantOffsets
 argument_list|()
 return|;
 block|}
-comment|/// stripInBoundsOffsets - This method strips off unneeded pointer casts and
-comment|/// any in-bounds Offsets from the specified value, returning the original
-comment|/// pointer value. If this is called on a non-pointer value, it returns
-comment|/// 'this'.
+comment|/// \brief Strips like \c stripInBoundsConstantOffsets but also accumulates
+comment|/// the constant offset stripped.
+comment|///
+comment|/// Stores the resulting constant offset stripped into the APInt provided.
+comment|/// The provided APInt will be extended or truncated as needed to be the
+comment|/// correct bitwidth for an offset of this pointer type.
+comment|///
+comment|/// If this is called on a non-pointer value, it returns 'this'.
+name|Value
+modifier|*
+name|stripAndAccumulateInBoundsConstantOffsets
+parameter_list|(
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|APInt
+modifier|&
+name|Offset
+parameter_list|)
+function_decl|;
+specifier|const
+name|Value
+modifier|*
+name|stripAndAccumulateInBoundsConstantOffsets
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+name|APInt
+operator|&
+name|Offset
+argument_list|)
+decl|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|stripAndAccumulateInBoundsConstantOffsets
+argument_list|(
+name|DL
+argument_list|,
+name|Offset
+argument_list|)
+return|;
+block|}
+comment|/// \brief Strips off unneeded pointer casts and any in-bounds offsets from
+comment|/// the specified value, returning the original pointer value.
+comment|///
+comment|/// If this is called on a non-pointer value, it returns 'this'.
 name|Value
 modifier|*
 name|stripInBoundsOffsets

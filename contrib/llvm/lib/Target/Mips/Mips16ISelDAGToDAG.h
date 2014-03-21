@@ -108,7 +108,7 @@ argument|SDNode *N
 argument_list|,
 argument|unsigned Opc
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|EVT Ty
 argument_list|,

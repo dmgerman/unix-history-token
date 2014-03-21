@@ -111,6 +111,17 @@ name|HiPE
 init|=
 literal|11
 block|,
+comment|// WebKit JS - Calling convention for stack based JavaScript calls
+name|WebKit_JS
+init|=
+literal|12
+block|,
+comment|// AnyReg - Calling convention for dynamic register based calls (e.g.
+comment|// stackmap and patchpoint intrinsics).
+name|AnyReg
+init|=
+literal|13
+block|,
 comment|// Target - This is the start of the target-specific calling conventions,
 comment|// e.g. fastcall and thiscall on X86.
 name|FirstTargetCC
@@ -172,17 +183,6 @@ comment|/// Passes all arguments in register or parameter space.
 name|PTX_Device
 init|=
 literal|72
-block|,
-comment|/// MBLAZE_INTR - Calling convention used for MBlaze interrupt routines.
-name|MBLAZE_INTR
-init|=
-literal|73
-block|,
-comment|/// MBLAZE_INTR - Calling convention used for MBlaze interrupt support
-comment|/// routines (i.e. GCC's save_volatiles attribute).
-name|MBLAZE_SVOL
-init|=
-literal|74
 block|,
 comment|/// SPIR_FUNC - Calling convention for SPIR non-kernel device functions.
 comment|/// No lowering or expansion of arguments.

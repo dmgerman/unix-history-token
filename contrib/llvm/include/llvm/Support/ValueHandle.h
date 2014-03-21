@@ -1660,6 +1660,11 @@ range|:
 name|public
 name|ValueHandleBase
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|CallbackVH
@@ -1744,7 +1749,12 @@ name|virtual
 name|void
 name|deleted
 argument_list|()
-block|;
+block|{
+name|setValPtr
+argument_list|(
+name|NULL
+argument_list|)
+block|; }
 comment|/// Called when this->getValPtr()->replaceAllUsesWith(new_value) is called,
 comment|/// _before_ any of the uses have actually been replaced.  If WeakVH were
 comment|/// implemented as a CallbackVH, it would use this method to call
@@ -1753,15 +1763,14 @@ name|virtual
 name|void
 name|allUsesReplacedWith
 argument_list|(
-name|Value
-operator|*
+argument|Value *
 argument_list|)
-block|; }
-decl_stmt|;
+block|{}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

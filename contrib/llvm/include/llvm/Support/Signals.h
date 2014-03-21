@@ -94,9 +94,7 @@ comment|/// @brief Remove a file if a fatal signal occurs.
 name|bool
 name|RemoveFileOnSignal
 argument_list|(
-specifier|const
-name|Path
-operator|&
+name|StringRef
 name|Filename
 argument_list|,
 name|std
@@ -113,9 +111,7 @@ comment|/// signal delivery.
 name|void
 name|DontRemoveFileOnSignal
 parameter_list|(
-specifier|const
-name|Path
-modifier|&
+name|StringRef
 name|Filename
 parameter_list|)
 function_decl|;

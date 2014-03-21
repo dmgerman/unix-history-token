@@ -111,10 +111,10 @@ name|class
 name|LiveIntervals
 decl_stmt|;
 name|class
-name|MachineFunction
+name|MachineBlockFrequencyInfo
 decl_stmt|;
 name|class
-name|MachineLoopInfo
+name|MachineFunction
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
@@ -185,7 +185,7 @@ name|recordVReg
 argument_list|(
 argument|unsigned vreg
 argument_list|,
-argument|PBQP::Graph::NodeItr node
+argument|PBQP::Graph::NodeId nodeId
 argument_list|,
 argument|AllowedRegsItr arBegin
 argument_list|,
@@ -198,7 +198,7 @@ name|node2VReg
 operator|.
 name|find
 argument_list|(
-name|node
+name|nodeId
 argument_list|)
 operator|==
 name|node2VReg
@@ -241,7 +241,7 @@ argument_list|)
 block|;
 name|node2VReg
 index|[
-name|node
+name|nodeId
 index|]
 operator|=
 name|vreg
@@ -251,7 +251,7 @@ index|[
 name|vreg
 index|]
 operator|=
-name|node
+name|nodeId
 block|;
 name|std
 operator|::
@@ -276,7 +276,7 @@ comment|/// Get the virtual register corresponding to the given PBQP node.
 name|unsigned
 name|getVRegForNode
 argument_list|(
-argument|PBQP::Graph::ConstNodeItr node
+argument|PBQP::Graph::NodeId nodeId
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -285,7 +285,7 @@ name|PBQP
 operator|::
 name|Graph
 operator|::
-name|NodeItr
+name|NodeId
 name|getNodeForVReg
 argument_list|(
 argument|unsigned vreg
@@ -371,13 +371,9 @@ name|PBQP
 operator|::
 name|Graph
 operator|::
-name|ConstNodeItr
+name|NodeId
 operator|,
 name|unsigned
-operator|,
-name|PBQP
-operator|::
-name|NodeItrComparator
 operator|>
 name|Node2VReg
 expr_stmt|;
@@ -390,7 +386,7 @@ name|PBQP
 operator|::
 name|Graph
 operator|::
-name|NodeItr
+name|NodeId
 operator|>
 name|VReg2Node
 expr_stmt|;
@@ -481,9 +477,9 @@ operator|*
 name|lis
 argument_list|,
 specifier|const
-name|MachineLoopInfo
+name|MachineBlockFrequencyInfo
 operator|*
-name|loopInfo
+name|mbfi
 argument_list|,
 specifier|const
 name|RegSet
@@ -565,9 +561,9 @@ operator|*
 name|lis
 argument_list|,
 specifier|const
-name|MachineLoopInfo
+name|MachineBlockFrequencyInfo
 operator|*
-name|loopInfo
+name|mbfi
 argument_list|,
 specifier|const
 name|RegSet

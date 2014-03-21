@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -161,13 +167,9 @@ argument_list|)
 block|{}
 name|DILineInfo
 argument_list|(
-argument|const SmallString<
-literal|16
-argument|>&fileName
+argument|StringRef fileName
 argument_list|,
-argument|const SmallString<
-literal|16
-argument|>&functionName
+argument|StringRef functionName
 argument_list|,
 argument|uint32_t line
 argument_list|,
@@ -478,11 +480,21 @@ name|DIDT_Info
 block|,
 name|DIDT_InfoDwo
 block|,
+name|DIDT_Types
+block|,
 name|DIDT_Line
+block|,
+name|DIDT_Loc
 block|,
 name|DIDT_Ranges
 block|,
 name|DIDT_Pubnames
+block|,
+name|DIDT_Pubtypes
+block|,
+name|DIDT_GnuPubnames
+block|,
+name|DIDT_GnuPubtypes
 block|,
 name|DIDT_Str
 block|,
@@ -517,6 +529,31 @@ name|DIContext
 block|{
 name|public
 label|:
+enum|enum
+name|DIContextKind
+block|{
+name|CK_DWARF
+block|}
+enum|;
+name|DIContextKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+name|DIContext
+argument_list|(
+argument|DIContextKind K
+argument_list|)
+block|:
+name|Kind
+argument_list|(
+argument|K
+argument_list|)
+block|{}
 name|virtual
 operator|~
 name|DIContext
@@ -601,6 +638,12 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|private
+label|:
+specifier|const
+name|DIContextKind
+name|Kind
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

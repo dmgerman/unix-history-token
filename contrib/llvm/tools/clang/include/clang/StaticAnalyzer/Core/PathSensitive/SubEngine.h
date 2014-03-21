@@ -517,10 +517,9 @@ name|CallEvent
 operator|*
 name|Call
 argument_list|,
-name|bool
-name|IsConst
-operator|=
-name|false
+name|RegionAndSymbolInvalidationTraits
+operator|&
+name|HTraits
 argument_list|)
 init|=
 literal|0

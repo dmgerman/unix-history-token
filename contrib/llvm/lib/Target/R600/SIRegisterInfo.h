@@ -76,9 +76,6 @@ block|{
 name|class
 name|AMDGPUTargetMachine
 decl_stmt|;
-name|class
-name|TargetInstrInfo
-decl_stmt|;
 name|struct
 name|SIRegisterInfo
 range|:
@@ -89,21 +86,11 @@ name|AMDGPUTargetMachine
 operator|&
 name|TM
 block|;
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
-block|;
 name|SIRegisterInfo
 argument_list|(
 name|AMDGPUTargetMachine
 operator|&
 name|tm
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 name|virtual
@@ -146,6 +133,65 @@ operator|*
 name|getCFGStructurizerRegClass
 argument_list|(
 argument|MVT VT
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getHWRegIndex
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return the 'base' register class for this register.
+comment|/// e.g. SGPR0 => SReg_32, VGPR => VReg_32 SGPR0_SGPR1 -> SReg_32, etc.
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getPhysRegClass
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns true if this class contains only SGPR registers
+name|bool
+name|isSGPRClass
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns true if this class contains VGPR registers.
+name|bool
+name|hasVGPRs
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns A VGPR reg class with the same width as \p SRC
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getEquivalentVGPRClass
+argument_list|(
+argument|const TargetRegisterClass *SRC
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns The register class that is used for a sub-register of \p RC for
+comment|/// the given \p SubIdx.  If \p SubIdx equals NoSubRegister, \p RC will
+comment|/// be returned.
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getSubRegClass
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|unsigned SubIdx
 argument_list|)
 specifier|const
 block|; }

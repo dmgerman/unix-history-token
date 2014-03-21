@@ -107,6 +107,11 @@ specifier|const
 name|NVPTXRegisterInfo
 name|RegInfo
 block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|explicit

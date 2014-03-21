@@ -146,7 +146,7 @@ name|class
 name|ModuleMap
 block|{
 name|SourceManager
-modifier|*
+modifier|&
 name|SourceMgr
 decl_stmt|;
 name|IntrusiveRefCntPtr
@@ -182,6 +182,25 @@ comment|/// These are always simple C language options.
 name|LangOptions
 name|MMapLangOpts
 decl_stmt|;
+comment|// The module that we are building; related to \c LangOptions::CurrentModule.
+name|Module
+modifier|*
+name|CompilingModule
+decl_stmt|;
+name|public
+label|:
+comment|// The module that the .cc source file is associated with.
+name|Module
+modifier|*
+name|SourceModule
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|SourceModuleName
+expr_stmt|;
+name|private
+label|:
 comment|/// \brief The top-level modules that are known.
 name|llvm
 operator|::
@@ -192,6 +211,27 @@ operator|*
 operator|>
 name|Modules
 expr_stmt|;
+name|public
+label|:
+comment|/// \brief Describes the role of a module header.
+enum|enum
+name|ModuleHeaderRole
+block|{
+comment|/// \brief This header is normally included in the module.
+name|NormalHeader
+block|,
+comment|/// \brief This header is included but private.
+name|PrivateHeader
+block|,
+comment|/// \brief This header is explicitly excluded from the module.
+name|ExcludedHeader
+comment|// Caution: Adding an enumerator needs other changes.
+comment|// Adjust the number of bits for KnownHeader::Storage.
+comment|// Adjust the bitfield HeaderFileInfo::HeaderRole size.
+comment|// Adjust the HeaderFileInfoTrait::ReadData streaming.
+comment|// Adjust the HeaderFileInfoTrait::EmitData streaming.
+block|}
+enum|;
 comment|/// \brief A header that is known to reside within a given module,
 comment|/// whether it was included or excluded.
 name|class
@@ -204,9 +244,9 @@ operator|<
 name|Module
 operator|*
 operator|,
-literal|1
+literal|2
 operator|,
-name|bool
+name|ModuleHeaderRole
 operator|>
 name|Storage
 expr_stmt|;
@@ -219,21 +259,21 @@ name|Storage
 argument_list|(
 literal|0
 argument_list|,
-argument|false
+argument|NormalHeader
 argument_list|)
 block|{ }
 name|KnownHeader
 argument_list|(
 argument|Module *M
 argument_list|,
-argument|bool Excluded
+argument|ModuleHeaderRole Role
 argument_list|)
 operator|:
 name|Storage
 argument_list|(
 argument|M
 argument_list|,
-argument|Excluded
+argument|Role
 argument_list|)
 block|{ }
 comment|/// \brief Retrieve the module the header is stored in.
@@ -250,9 +290,9 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-comment|/// \brief Whether this header is explicitly excluded from the module.
-name|bool
-name|isExcluded
+comment|/// \brief The role of this header within the module.
+name|ModuleHeaderRole
+name|getRole
 argument_list|()
 specifier|const
 block|{
@@ -270,9 +310,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|isExcluded
+name|getRole
 argument_list|()
+operator|!=
+name|ExcludedHeader
 operator|&&
 name|getModule
 argument_list|()
@@ -283,6 +324,7 @@ return|;
 block|}
 comment|// \brief Whether this known header is valid (i.e., it has an
 comment|// associated module).
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -299,6 +341,8 @@ return|;
 block|}
 block|}
 empty_stmt|;
+name|private
+label|:
 typedef|typedef
 name|llvm
 operator|::
@@ -308,11 +352,16 @@ specifier|const
 name|FileEntry
 operator|*
 operator|,
+name|SmallVector
+operator|<
 name|KnownHeader
+operator|,
+literal|1
 operator|>
+expr|>
 name|HeadersMap
 expr_stmt|;
-comment|/// \brief Mapping from each header to the module that owns the contents of the
+comment|/// \brief Mapping from each header to the module that owns the contents of
 comment|/// that header.
 name|HeadersMap
 name|Headers
@@ -465,9 +514,9 @@ name|public
 label|:
 comment|/// \brief Construct a new module map.
 comment|///
-comment|/// \param FileMgr The file manager used to find module files and headers.
-comment|/// This file manager should be shared with the header-search mechanism, since
-comment|/// they will refer to the same headers.
+comment|/// \param SourceMgr The source manager used to find module files and headers.
+comment|/// This source manager should be shared with the header-search mechanism,
+comment|/// since they will refer to the same headers.
 comment|///
 comment|/// \param DC A diagnostic consumer that will be cloned for use in generating
 comment|/// diagnostics.
@@ -477,9 +526,9 @@ comment|///
 comment|/// \param Target The target for this translation unit.
 name|ModuleMap
 argument_list|(
-name|FileManager
+name|SourceManager
 operator|&
-name|FileMgr
+name|SourceMgr
 argument_list|,
 name|DiagnosticConsumer
 operator|&
@@ -536,16 +585,26 @@ comment|/// \brief Retrieve the module that owns the given header file, if any.
 comment|///
 comment|/// \param File The header file that is likely to be included.
 comment|///
-comment|/// \returns The module that owns the given header file, or null to indicate
+comment|/// \param RequestingModule Specifies the module the header is intended to be
+comment|/// used from.  Used to disambiguate if a header is present in multiple
+comment|/// modules.
+comment|///
+comment|/// \returns The module KnownHeader, which provides the module that owns the
+comment|/// given header file.  The KnownHeader is default constructed to indicate
 comment|/// that no module owns this header file.
-name|Module
-modifier|*
+name|KnownHeader
 name|findModuleForHeader
 parameter_list|(
 specifier|const
 name|FileEntry
 modifier|*
 name|File
+parameter_list|,
+name|Module
+modifier|*
+name|RequestingModule
+init|=
+name|NULL
 parameter_list|)
 function_decl|;
 comment|/// \brief Determine whether the given header is part of a module
@@ -741,6 +800,25 @@ name|bool
 name|Complain
 parameter_list|)
 function_decl|;
+comment|/// \brief Resolve all of the unresolved uses in the given module.
+comment|///
+comment|/// \param Mod The module whose uses should be resolved.
+comment|///
+comment|/// \param Complain Whether to emit diagnostics for failures.
+comment|///
+comment|/// \returns true if any errors were encountered while resolving uses,
+comment|/// false otherwise.
+name|bool
+name|resolveUses
+parameter_list|(
+name|Module
+modifier|*
+name|Mod
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|)
+function_decl|;
 comment|/// \brief Resolve all of the unresolved conflicts in the given module.
 comment|///
 comment|/// \param Mod The module whose conflicts should be resolved.
@@ -807,8 +885,7 @@ name|UmbrellaDir
 parameter_list|)
 function_decl|;
 comment|/// \brief Adds this header to the given module.
-comment|/// \param Excluded Whether this header is explicitly excluded from the
-comment|/// module; otherwise, it's included in the module.
+comment|/// \param Role The role of the header wrt the module.
 name|void
 name|addHeader
 parameter_list|(
@@ -821,14 +898,17 @@ name|FileEntry
 modifier|*
 name|Header
 parameter_list|,
-name|bool
-name|Excluded
+name|ModuleHeaderRole
+name|Role
 parameter_list|)
 function_decl|;
 comment|/// \brief Parse the given module map file, and record any modules we
 comment|/// encounter.
 comment|///
 comment|/// \param File The file to be parsed.
+comment|///
+comment|/// \param IsSystem Whether this module map file is in a system header
+comment|/// directory, and therefore should be considered a system module.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 name|bool
@@ -838,6 +918,9 @@ specifier|const
 name|FileEntry
 modifier|*
 name|File
+parameter_list|,
+name|bool
+name|IsSystem
 parameter_list|)
 function_decl|;
 comment|/// \brief Dump the contents of the module map, for debugging purposes.

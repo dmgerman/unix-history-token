@@ -123,6 +123,11 @@ name|getTypeTempSuffix
 parameter_list|(
 name|ID
 name|Id
+parameter_list|,
+name|bool
+name|CLMode
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// onlyAssembleType - Should this type only be assembled.
@@ -227,15 +232,11 @@ name|Id
 argument_list|,
 name|llvm
 operator|::
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|phases
 operator|::
 name|ID
-argument_list|,
-name|phases
-operator|::
-name|MaxNumberOfPhases
 operator|>
 operator|&
 name|Phases

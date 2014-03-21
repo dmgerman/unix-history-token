@@ -192,7 +192,7 @@ name|PTHLexer
 argument_list|()
 block|{}
 comment|/// Lex - Return the next token.
-name|void
+name|bool
 name|Lex
 argument_list|(
 name|Token
