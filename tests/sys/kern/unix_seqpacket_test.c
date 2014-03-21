@@ -94,6 +94,7 @@ value|((x)> (y) ? (x) : (y))
 end_define
 
 begin_function
+specifier|static
 name|void
 name|do_socketpair
 parameter_list|(
@@ -162,6 +163,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|do_socketpair_nonblocking
 parameter_list|(
@@ -270,6 +272,7 @@ comment|/*   * Returns a pair of sockets made the hard way: bind, listen, connec
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -531,6 +534,7 @@ name|void
 name|shutdown_send_sigpipe_handler
 parameter_list|(
 name|int
+name|__unused
 name|x
 parameter_list|)
 block|{
@@ -546,6 +550,7 @@ comment|/*  * Parameterized test function bodies  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|test_eagain
 parameter_list|(
@@ -590,22 +595,22 @@ argument_list|)
 operator|/
 literal|4
 decl_stmt|;
+specifier|const
+name|int
+name|numpkts
+init|=
+name|totalsize
+operator|/
+name|pktsize
+decl_stmt|;
 name|char
 name|sndbuf
 index|[
 name|pktsize
 index|]
 decl_stmt|;
-name|char
-name|recv_buf
-index|[
-name|pktsize
-index|]
-decl_stmt|;
 name|ssize_t
 name|ssize
-decl_stmt|,
-name|rsize
 decl_stmt|;
 comment|/* setup the socket pair */
 name|do_socketpair_nonblocking
@@ -680,9 +685,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|totalsize
-operator|/
-name|pktsize
+name|numpkts
 condition|;
 name|i
 operator|++
@@ -745,6 +748,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_sendrecv_symmetric_buffers
 parameter_list|(
@@ -765,7 +769,7 @@ literal|2
 index|]
 decl_stmt|;
 specifier|const
-name|size_t
+name|ssize_t
 name|pktsize
 init|=
 name|bufsize
@@ -971,6 +975,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_pipe_simulator
 parameter_list|(
@@ -982,8 +987,6 @@ name|rcvbufsize
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|,
 name|num_sent
 decl_stmt|,
 name|num_received
@@ -995,7 +998,7 @@ literal|2
 index|]
 decl_stmt|;
 specifier|const
-name|size_t
+name|ssize_t
 name|pktsize
 init|=
 name|MIN
@@ -1622,6 +1625,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_pipe
 parameter_list|(
@@ -1641,11 +1645,6 @@ name|pthread_t
 name|writer
 decl_stmt|,
 name|reader
-decl_stmt|;
-name|int
-name|num_sent
-decl_stmt|,
-name|num_received
 decl_stmt|;
 name|int
 name|sv
@@ -3457,9 +3456,6 @@ end_macro
 begin_block
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|sv
 index|[
 literal|2
@@ -3484,7 +3480,7 @@ index|[
 name|bufsize
 index|]
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|datalen
 decl_stmt|;
 name|ssize_t
@@ -3615,9 +3611,6 @@ name|sockaddr_storage
 name|from
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|sv
 index|[
 literal|2
@@ -3642,7 +3635,7 @@ index|[
 name|bufsize
 index|]
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|datalen
 decl_stmt|;
 name|ssize_t
@@ -3811,11 +3804,6 @@ end_macro
 
 begin_block
 block|{
-specifier|const
-name|char
-modifier|*
-name|path
-decl_stmt|;
 name|int
 name|sv
 index|[
@@ -3841,7 +3829,7 @@ index|[
 name|bufsize
 index|]
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|datalen
 decl_stmt|;
 name|ssize_t
@@ -4169,9 +4157,6 @@ end_macro
 begin_block
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|sv
 index|[
 literal|2
@@ -4196,7 +4181,7 @@ index|[
 name|bufsize
 index|]
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|datalen
 decl_stmt|;
 name|ssize_t
@@ -4350,9 +4335,6 @@ end_macro
 begin_block
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|sv
 index|[
 literal|2
@@ -4388,16 +4370,8 @@ index|[
 name|pktsize
 index|]
 decl_stmt|;
-name|char
-name|recv_buf
-index|[
-name|pktsize
-index|]
-decl_stmt|;
 name|ssize_t
 name|ssize
-decl_stmt|,
-name|rsize
 decl_stmt|;
 comment|/* setup the socket pair */
 name|do_socketpair
@@ -4514,9 +4488,6 @@ end_macro
 begin_block
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|sv
 index|[
 literal|2
@@ -4552,16 +4523,8 @@ index|[
 name|pktsize
 index|]
 decl_stmt|;
-name|char
-name|recv_buf
-index|[
-name|pktsize
-index|]
-decl_stmt|;
 name|ssize_t
 name|ssize
-decl_stmt|,
-name|rsize
 decl_stmt|;
 comment|/* setup the socket pair */
 name|do_socketpair_nonblocking
@@ -4818,17 +4781,19 @@ end_macro
 begin_block
 block|{
 name|int
-name|s
-decl_stmt|,
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|int
 name|sv
 index|[
 literal|2
 index|]
+decl_stmt|;
+specifier|const
+name|int
+name|pktsize
+init|=
+literal|1024
 decl_stmt|;
 specifier|const
 name|size_t
@@ -4844,15 +4809,17 @@ literal|131072
 decl_stmt|;
 specifier|const
 name|size_t
-name|geom_mean_bufsize
+name|geometric_mean_bufsize
 init|=
 literal|32768
 decl_stmt|;
 specifier|const
 name|int
-name|pktsize
+name|numpkts
 init|=
-literal|1024
+name|geometric_mean_bufsize
+operator|/
+name|pktsize
 decl_stmt|;
 name|char
 name|sndbuf
@@ -4866,9 +4833,6 @@ index|[
 name|pktsize
 index|]
 decl_stmt|;
-name|size_t
-name|datalen
-decl_stmt|;
 name|ssize_t
 name|ssize
 decl_stmt|,
@@ -4880,6 +4844,56 @@ argument_list|(
 name|sv
 argument_list|)
 expr_stmt|;
+name|ATF_REQUIRE_EQ
+argument_list|(
+literal|0
+argument_list|,
+name|setsockopt
+argument_list|(
+name|sv
+index|[
+literal|0
+index|]
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_SNDBUF
+argument_list|,
+operator|&
+name|sndbufsize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sndbufsize
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE_EQ
+argument_list|(
+literal|0
+argument_list|,
+name|setsockopt
+argument_list|(
+name|sv
+index|[
+literal|1
+index|]
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_RCVBUF
+argument_list|,
+operator|&
+name|rcvbufsize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rcvbufsize
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/*  	 * Send and receive packets that are collectively greater than the send 	 * buffer, but less than the receive buffer 	 */
 for|for
 control|(
@@ -4889,9 +4903,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|geom_mean_bufsize
-operator|/
-name|pktsize
+name|numpkts
 condition|;
 name|i
 operator|++
