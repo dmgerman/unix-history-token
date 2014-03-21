@@ -62,7 +62,7 @@ index|[]
 init|=
 block|{
 block|{
-name|NULL
+name|ALIAS_NONE
 block|,
 literal|0
 block|}

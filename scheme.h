@@ -21,14 +21,45 @@ directive|include
 file|<sys/linker_set.h>
 end_include
 
+begin_enum
+enum|enum
+name|alias
+block|{
+name|ALIAS_NONE
+block|,
+comment|/* Keep first! */
+comment|/* start */
+name|ALIAS_EFI
+block|,
+name|ALIAS_FREEBSD
+block|,
+name|ALIAS_FREEBSD_BOOT
+block|,
+name|ALIAS_FREEBSD_NANDFS
+block|,
+name|ALIAS_FREEBSD_SWAP
+block|,
+name|ALIAS_FREEBSD_UFS
+block|,
+name|ALIAS_FREEBSD_VINUM
+block|,
+name|ALIAS_FREEBSD_ZFS
+block|,
+name|ALIAS_MBR
+block|,
+comment|/* end */
+name|ALIAS_COUNT
+comment|/* Keep last! */
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|mkimg_alias
 block|{
-specifier|const
-name|char
-modifier|*
-name|name
+name|u_int
+name|alias
 decl_stmt|;
 name|uintptr_t
 name|type
