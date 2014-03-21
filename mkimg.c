@@ -339,23 +339,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t<type>::<size>\t-  empty partition of given size\n"
+literal|"\t<t>[/<l>]::<size>\t-  empty partition of given "
+literal|"size\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t<type>:=<file>\t-  partition content and size\n"
-literal|"\t\t\t   determined by the named file\n"
+literal|"\t<t>[/<l>]:=<file>\t-  partition content and size "
+literal|"are determined\n\t\t\t\t   by the named file\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t<type>:!<cmd>\t-  partition content and size\n"
-literal|"\t\t\t   taken from the output of the command to run\n"
+literal|"\t<t>[/<l>]:!<cmd>\t-  partition content and size "
+literal|"are taken from\n\t\t\t\t   the output of the command to run\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -369,7 +370,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t\ttype\t-  scheme neutral partition type\n"
+literal|"\t\t<t>\t-  scheme neutral partition type\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t\t<l>\t-  optional scheme-dependent partition "
+literal|"label\n"
 argument_list|)
 expr_stmt|;
 name|exit
