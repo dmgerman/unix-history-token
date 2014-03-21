@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<i386/_types.h>
+file|<x86/_types.h>
 end_include
 
 end_unit
