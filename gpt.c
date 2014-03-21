@@ -793,7 +793,7 @@ name|SCHEME_META_IMG_START
 operator|&&
 name|where
 operator|!=
-name|SCHEME_META_IMG_START
+name|SCHEME_META_IMG_END
 condition|)
 return|return
 operator|(
@@ -1507,7 +1507,7 @@ name|nblocks
 operator|-
 name|tblsz
 operator|-
-literal|1
+literal|2
 expr_stmt|;
 name|uuidgen
 argument_list|(
