@@ -5014,6 +5014,12 @@ literal|0
 expr_stmt|;
 name|new_entry
 operator|->
+name|wiring_thread
+operator|=
+name|NULL
+expr_stmt|;
+name|new_entry
+operator|->
 name|read_ahead
 operator|=
 name|VM_FAULT_READ_AHEAD_INIT
