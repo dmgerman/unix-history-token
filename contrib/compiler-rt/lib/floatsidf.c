@@ -73,15 +73,14 @@ directive|include
 file|"int_lib.h"
 end_include
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|i2d
+argument|i2d
 argument_list|,
-name|floatsidf
+argument|floatsidf
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|fp_t

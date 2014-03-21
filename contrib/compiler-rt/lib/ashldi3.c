@@ -17,15 +17,14 @@ begin_comment
 comment|/* Precondition:  0<= b< bits_in_dword */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|llsl
+argument|llsl
 argument_list|,
-name|ashldi3
+argument|ashldi3
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|COMPILER_RT_ABI

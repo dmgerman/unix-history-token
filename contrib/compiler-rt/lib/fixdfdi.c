@@ -21,15 +21,14 @@ begin_comment
 comment|/* seee eeee eeee mmmm mmmm mmmm mmmm mmmm | mmmm mmmm mmmm mmmm mmmm mmmm mmmm mmmm */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|d2lz
+argument|d2lz
 argument_list|,
-name|fixdfdi
+argument|fixdfdi
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|di_int

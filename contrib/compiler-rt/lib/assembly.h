@@ -84,6 +84,13 @@ parameter_list|)
 value|L_##name
 end_define
 
+begin_define
+define|#
+directive|define
+name|FILE_LEVEL_DIRECTIVE
+value|.subsections_via_symbols
+end_define
+
 begin_else
 else|#
 directive|else
@@ -104,6 +111,12 @@ parameter_list|(
 name|name
 parameter_list|)
 value|.L_##name
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_LEVEL_DIRECTIVE
 end_define
 
 begin_endif
@@ -189,7 +202,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.globl SYMBOL_NAME(name) SEPARATOR                       \   DECLARE_SYMBOL_VISIBILITY(name)                          \   SYMBOL_NAME(name):
+value|FILE_LEVEL_DIRECTIVE     SEPARATOR                       \   .globl SYMBOL_NAME(name) SEPARATOR                       \   DECLARE_SYMBOL_VISIBILITY(name)                          \   SYMBOL_NAME(name):
 end_define
 
 begin_define

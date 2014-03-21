@@ -63,15 +63,14 @@ directive|include
 file|"fp_lib.h"
 end_include
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|fmul
+argument|fmul
 argument_list|,
-name|mulsf3
+argument|mulsf3
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|COMPILER_RT_ABI
@@ -449,8 +448,11 @@ argument_list|,
 operator|&
 name|productLo
 argument_list|,
-literal|1
+literal|1U
 operator|-
+operator|(
+name|unsigned
+operator|)
 name|productExponent
 argument_list|)
 expr_stmt|;

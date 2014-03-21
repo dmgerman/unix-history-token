@@ -21,15 +21,14 @@ begin_comment
 comment|/* seee eeee eeee mmmm mmmm mmmm mmmm mmmm | mmmm mmmm mmmm mmmm mmmm mmmm mmmm mmmm */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|l2d
+argument|l2d
 argument_list|,
-name|floatdidf
+argument|floatdidf
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_ifndef
 ifndef|#

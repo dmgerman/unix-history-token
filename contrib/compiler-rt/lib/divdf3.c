@@ -79,15 +79,14 @@ directive|include
 file|"fp_lib.h"
 end_include
 
-begin_expr_stmt
+begin_macro
 name|ARM_EABI_FNALIAS
 argument_list|(
-name|ddiv
+argument|ddiv
 argument_list|,
-name|divdf3
+argument|divdf3
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|fp_t
