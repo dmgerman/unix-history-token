@@ -157,6 +157,9 @@ parameter_list|,
 name|u_int
 parameter_list|,
 name|u_int
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 name|u_int
@@ -164,6 +167,9 @@ name|nparts
 decl_stmt|;
 name|u_int
 name|labellen
+decl_stmt|;
+name|u_int
+name|bootcode
 decl_stmt|;
 block|}
 struct|;
@@ -208,6 +214,16 @@ modifier|*
 name|scheme_selected
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|scheme_bootcode
+parameter_list|(
+name|int
+name|fd
 parameter_list|)
 function_decl|;
 end_function_decl

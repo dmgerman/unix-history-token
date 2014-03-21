@@ -139,7 +139,8 @@ specifier|static
 name|int
 name|bcfd
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -887,7 +888,8 @@ specifier|static
 name|void
 name|mkimg
 parameter_list|(
-name|void
+name|int
+name|bfd
 parameter_list|)
 block|{
 name|FILE
@@ -927,6 +929,26 @@ literal|"only %d partitions are supported"
 argument_list|,
 name|scheme_max_parts
 argument_list|()
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|scheme_bootcode
+argument_list|(
+name|bfd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|errc
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+name|error
+argument_list|,
+literal|"boot code"
 argument_list|)
 expr_stmt|;
 comment|/* First check partition information */
@@ -1235,7 +1257,8 @@ if|if
 condition|(
 name|bcfd
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
 name|usage
 argument_list|(
@@ -1498,7 +1521,9 @@ operator|=
 name|outfd
 expr_stmt|;
 name|mkimg
-argument_list|()
+argument_list|(
+name|bcfd
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

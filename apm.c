@@ -131,6 +131,11 @@ parameter_list|,
 name|u_int
 name|secsz
 name|__unused
+parameter_list|,
+name|void
+modifier|*
+name|bootcode
+name|__unused
 parameter_list|)
 block|{
 return|return
