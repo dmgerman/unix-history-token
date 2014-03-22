@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-rsa.c,v 1.50 2014/01/09 23:20:00 djm Exp $ */
+comment|/* $OpenBSD: ssh-rsa.c,v 1.51 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -312,11 +312,9 @@ operator|->
 name|rsa
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|digest
-argument_list|,
-literal|'d'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -395,11 +393,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sig
-argument_list|,
-literal|0
 argument_list|,
 name|diff
 argument_list|)
@@ -514,11 +510,9 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sig
-argument_list|,
-literal|'s'
 argument_list|,
 name|slen
 argument_list|)
@@ -867,11 +861,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sigblob
-argument_list|,
-literal|0
 argument_list|,
 name|diff
 argument_list|)
@@ -966,11 +958,9 @@ operator|->
 name|rsa
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|digest
-argument_list|,
-literal|'d'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -978,11 +968,9 @@ name|digest
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sigblob
-argument_list|,
-literal|'s'
 argument_list|,
 name|len
 argument_list|)

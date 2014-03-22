@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.60 2013/12/07 00:51:54 djm Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.61 2014/02/04 00:18:23 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1479,6 +1479,31 @@ name|size_t
 parameter_list|,
 name|unsigned
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_EXPLICIT_BZERO
+end_ifndef
+
+begin_function_decl
+name|void
+name|explicit_bzero
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|size_t
+name|n
 parameter_list|)
 function_decl|;
 end_function_decl

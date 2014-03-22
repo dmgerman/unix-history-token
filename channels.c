@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.328 2013/12/19 01:04:36 djm Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.331 2014/02/26 20:29:29 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1862,7 +1862,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|cc
 argument_list|,
@@ -4992,6 +4992,28 @@ operator|->
 name|input
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|memchr
+argument_list|(
+name|p
+argument_list|,
+literal|'\0'
+argument_list|,
+name|have
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"channel %d: decode socks4: user not nul terminated"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|strlen
@@ -6800,6 +6822,15 @@ decl_stmt|;
 name|int
 name|local_port
 init|=
+name|c
+operator|->
+name|sock
+operator|==
+operator|-
+literal|1
+condition|?
+literal|65536
+else|:
 name|get_sock_port
 argument_list|(
 name|c
@@ -13248,7 +13279,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|cc
 argument_list|,
@@ -15988,9 +16019,11 @@ operator|->
 name|aitop
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|cctx
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -15998,22 +16031,6 @@ operator|*
 name|cctx
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|cctx
-operator|->
-name|host
-operator|=
-name|NULL
-expr_stmt|;
-name|cctx
-operator|->
-name|ai
-operator|=
-name|cctx
-operator|->
-name|aitop
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 comment|/* Return CONNECTING channel to remote host, port */

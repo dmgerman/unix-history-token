@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.c,v 1.215 2013/12/06 13:39:49 markus Exp $ */
+comment|/* $OpenBSD: readconf.c,v 1.218 2014/02/23 20:11:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -390,8 +396,6 @@ block|,
 name|oVisualHostKey
 block|,
 name|oUseRoaming
-block|,
-name|oZeroKnowledgePasswordAuthentication
 block|,
 name|oKexAlgorithms
 block|,
@@ -994,25 +998,6 @@ block|,
 name|oUseRoaming
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|JPAKE
-block|{
-literal|"zeroknowledgepasswordauthentication"
-block|,
-name|oZeroKnowledgePasswordAuthentication
-block|}
-block|,
-else|#
-directive|else
-block|{
-literal|"zeroknowledgepasswordauthentication"
-block|,
-name|oUnsupported
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|"kexalgorithms"
 block|,
@@ -2596,6 +2581,28 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+literal|1
+condition|)
+block|{
+comment|/* skip execution if prior predicate failed */
+name|debug
+argument_list|(
+literal|"%.200s line %d: skipped exec \"%.100s\""
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|r
 operator|=
 name|execute_in_shell
@@ -2613,8 +2620,8 @@ condition|)
 block|{
 name|fatal
 argument_list|(
-literal|"%.200s line %d: match exec '%.100s' "
-literal|"error"
+literal|"%.200s line %d: match exec "
+literal|"'%.100s' error"
 argument_list|,
 name|filename
 argument_list|,
@@ -2635,7 +2642,7 @@ block|{
 name|debug
 argument_list|(
 literal|"%.200s line %d: matched "
-literal|"'exec \"%.100s\"' "
+literal|"'exec \"%.100s\"'"
 argument_list|,
 name|filename
 argument_list|,
@@ -2646,10 +2653,25 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|debug
+argument_list|(
+literal|"%.200s line %d: no match "
+literal|"'exec \"%.100s\"'"
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 literal|0
 expr_stmt|;
+block|}
+block|}
 name|free
 argument_list|(
 name|cmd
@@ -4021,19 +4043,6 @@ operator|&
 name|options
 operator|->
 name|password_authentication
-expr_stmt|;
-goto|goto
-name|parse_flag
-goto|;
-case|case
-name|oZeroKnowledgePasswordAuthentication
-case|:
-name|intptr
-operator|=
-operator|&
-name|options
-operator|->
-name|zero_knowledge_password_authentication
 expr_stmt|;
 goto|goto
 name|parse_flag
@@ -7279,6 +7288,37 @@ block|}
 end_function
 
 begin_comment
+comment|/* Returns 1 if a string option is unset or set to "none" or 0 otherwise. */
+end_comment
+
+begin_function
+name|int
+name|option_clear_or_none
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|o
+parameter_list|)
+block|{
+return|return
+name|o
+operator|==
+name|NULL
+operator|||
+name|strcasecmp
+argument_list|(
+name|o
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Initializes options to special values that indicate that they have not yet  * been set.  Read_config_file will only set options with this value. Options  * are processed in the following order: command line, user config file,  * system config file.  Last, fill_default_options is called.  */
 end_comment
 
@@ -7791,13 +7831,6 @@ literal|1
 expr_stmt|;
 name|options
 operator|->
-name|zero_knowledge_password_authentication
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|options
-operator|->
 name|ip_qos_interactive
 operator|=
 operator|-
@@ -7862,6 +7895,67 @@ name|canonicalize_hostname
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * A petite version of fill_default_options() that just fills the options  * needed for hostname canonicalization to proceed.  */
+end_comment
+
+begin_function
+name|void
+name|fill_default_options_for_canonicalization
+parameter_list|(
+name|Options
+modifier|*
+name|options
+parameter_list|)
+block|{
+if|if
+condition|(
+name|options
+operator|->
+name|canonicalize_max_dots
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|->
+name|canonicalize_max_dots
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|->
+name|canonicalize_fallback_local
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|->
+name|canonicalize_fallback_local
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|->
+name|canonicalize_hostname
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|->
+name|canonicalize_hostname
+operator|=
+name|SSH_CANONICALISE_NO
 expr_stmt|;
 block|}
 end_function
@@ -8798,21 +8892,6 @@ if|if
 condition|(
 name|options
 operator|->
-name|zero_knowledge_password_authentication
-operator|==
-operator|-
-literal|1
-condition|)
-name|options
-operator|->
-name|zero_knowledge_password_authentication
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|options
-operator|->
 name|ip_qos_interactive
 operator|==
 operator|-
@@ -8921,7 +9000,7 @@ parameter_list|(
 name|v
 parameter_list|)
 define|\
-value|do { \ 		if (v != NULL&& strcasecmp(v, "none") == 0) { \ 			free(v); \ 			v = NULL; \ 		} \ 	} while(0)
+value|do { \ 		if (option_clear_or_none(v)) { \ 			free(v); \ 			v = NULL; \ 		} \ 	} while(0)
 name|CLEAR_ON_NONE
 argument_list|(
 name|options

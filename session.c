@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.269 2014/01/18 09:36:26 dtucker Exp $ */
+comment|/* $OpenBSD: session.c,v 1.270 2014/01/31 16:39:19 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -4205,6 +4205,27 @@ name|i
 decl_stmt|,
 name|namelen
 decl_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|name
+argument_list|,
+literal|'='
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Invalid environment variable \"%.100s\""
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * If we're passed an uninitialized list, allocate a single null 	 * entry before continuing. 	 */
 if|if
 condition|(
@@ -8598,13 +8619,15 @@ name|sessions_nalloc
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sessions
 index|[
 name|id
 index|]
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -10292,7 +10315,7 @@ name|i
 decl_stmt|;
 name|name
 operator|=
-name|packet_get_string
+name|packet_get_cstring
 argument_list|(
 operator|&
 name|name_len
@@ -10300,7 +10323,7 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|=
-name|packet_get_string
+name|packet_get_cstring
 argument_list|(
 operator|&
 name|val_len

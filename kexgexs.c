@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexgexs.c,v 1.18 2014/01/12 08:13:13 djm Exp $ */
+comment|/* $OpenBSD: kexgexs.c,v 1.19 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -697,11 +697,9 @@ argument_list|(
 literal|"kexgex_server: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|kbuf
-argument_list|,
-literal|0
 argument_list|,
 name|klen
 argument_list|)

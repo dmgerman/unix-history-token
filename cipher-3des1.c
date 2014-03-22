@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher-3des1.c,v 1.9 2013/11/08 00:39:15 djm Exp $ */
+comment|/* $OpenBSD: cipher-3des1.c,v 1.10 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -383,11 +383,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|c
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -649,11 +647,9 @@ operator|->
 name|k3
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|c
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

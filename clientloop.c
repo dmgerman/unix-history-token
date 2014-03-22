@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.256 2013/11/20 20:54:10 deraadt Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.258 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2079,7 +2079,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|gc
 argument_list|,
@@ -3510,10 +3510,12 @@ decl_stmt|;
 name|Forward
 name|fwd
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|fwd
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7182,11 +7184,9 @@ argument_list|,
 name|data_len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|data
-argument_list|,
-literal|0
 argument_list|,
 name|data_len
 argument_list|)
@@ -7241,11 +7241,9 @@ argument_list|,
 name|data_len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|data
-argument_list|,
-literal|0
 argument_list|,
 name|data_len
 argument_list|)

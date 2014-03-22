@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexc25519.c,v 1.4 2014/01/12 08:13:13 djm Exp $ */
+comment|/* $OpenBSD: kexc25519.c,v 1.5 2014/01/31 16:39:19 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -262,16 +262,13 @@ argument_list|,
 name|CURVE25519_SIZE
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|shared_key
-argument_list|,
-literal|0
 argument_list|,
 name|CURVE25519_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* XXX explicit_bzero() */
 block|}
 end_function
 

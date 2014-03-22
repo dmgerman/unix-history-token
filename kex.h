@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.h,v 1.61 2014/01/25 10:12:50 dtucker Exp $ */
+comment|/* $OpenBSD: kex.h,v 1.62 2014/01/27 18:58:14 markus Exp $ */
 end_comment
 
 begin_comment
@@ -320,13 +320,10 @@ name|int
 name|etm
 decl_stmt|;
 comment|/* Encrypt-then-MAC */
-specifier|const
-name|EVP_MD
+name|struct
+name|ssh_hmac_ctx
 modifier|*
-name|evp_md
-decl_stmt|;
-name|HMAC_CTX
-name|evp_ctx
+name|hmac_ctx
 decl_stmt|;
 name|struct
 name|umac_ctx

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: rsa.c,v 1.30 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: rsa.c,v 1.31 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -185,20 +185,16 @@ argument_list|(
 literal|"rsa_public_encrypt: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|outbuf
-argument_list|,
-literal|0
 argument_list|,
 name|olen
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|inbuf
-argument_list|,
-literal|0
 argument_list|,
 name|ilen
 argument_list|)
@@ -333,20 +329,16 @@ literal|"rsa_private_decrypt: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
 block|}
-name|memset
+name|explicit_bzero
 argument_list|(
 name|outbuf
-argument_list|,
-literal|0
 argument_list|,
 name|olen
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|inbuf
-argument_list|,
-literal|0
 argument_list|,
 name|ilen
 argument_list|)
