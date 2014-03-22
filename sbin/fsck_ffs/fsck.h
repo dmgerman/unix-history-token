@@ -1608,7 +1608,7 @@ name|void
 modifier|*
 name|Malloc
 parameter_list|(
-name|int
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -1656,10 +1656,10 @@ name|void
 modifier|*
 name|Calloc
 parameter_list|(
-name|int
+name|size_t
 name|cnt
 parameter_list|,
-name|int
+name|size_t
 name|size
 parameter_list|)
 block|{
