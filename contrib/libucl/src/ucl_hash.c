@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"ucl_internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ucl_hash.h"
 end_include
 
