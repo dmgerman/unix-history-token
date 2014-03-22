@@ -63,11 +63,22 @@ directive|ifdef
 name|__APPLE__
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MACH_MACH_TIME_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<mach/mach_time.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
