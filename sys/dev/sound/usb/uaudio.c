@@ -737,7 +737,7 @@ begin_define
 define|#
 directive|define
 name|CHAN_MAX_ALT
-value|20
+value|24
 end_define
 
 begin_struct
@@ -9949,6 +9949,14 @@ name|CHAN_MAX_ALT
 index|]
 init|=
 block|{
+literal|384000
+block|,
+literal|352800
+block|,
+literal|192000
+block|,
+literal|176400
+block|,
 literal|96000
 block|,
 literal|88200
