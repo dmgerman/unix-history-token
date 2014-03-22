@@ -943,6 +943,7 @@ name|ktr_idx
 operator|!=
 literal|0
 condition|)
+block|{
 name|memcpy
 argument_list|(
 name|ktr_buf
@@ -962,6 +963,11 @@ name|ktr_buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ktr_idx
+operator|=
+name|KTR_BOOT_ENTRIES
+expr_stmt|;
+block|}
 name|ktr_entries
 operator|=
 name|KTR_ENTRIES
