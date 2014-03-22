@@ -29,6 +29,12 @@ directive|include
 file|<float.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ARM_PCS_VFP
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -47,6 +53,11 @@ directive|include
 file|"softfloat.h"
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|__flt_rounds
@@ -54,13 +65,32 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|mode
+decl_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_HARD_FLOAT
+name|__ARM_PCS_VFP
 comment|/* 	 * Translate our rounding modes to the unnamed 	 * manifest constants required by C99 et. al. 	 */
+name|mode
+operator|=
+name|__softfloat_float_rounding_mode
+expr_stmt|;
+else|#
+directive|else
+comment|/* __ARM_PCS_VFP */
+comment|/* 	 * Read the floating-point status and control register 	 */
+asm|__asm __volatile("vmrs %0, fpscr" : "=&r"(mode));
+name|mode
+operator|&=
+name|_ROUND_MASK
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __ARM_PCS_VFP */
 switch|switch
 condition|(
-name|__softfloat_float_rounding_mode
+name|mode
 condition|)
 block|{
 case|case
@@ -102,19 +132,6 @@ operator|-
 literal|1
 operator|)
 return|;
-else|#
-directive|else
-comment|/* ARM_HARD_FLOAT */
-comment|/* 	 * Apparently, the rounding mode is specified as part of the 	 * instruction format on ARM, so the dynamic rounding mode is 	 * indeterminate.  Some FPUs may differ. 	 */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* ARM_HARD_FLOAT */
 block|}
 end_function
 
