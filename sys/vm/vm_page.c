@@ -661,13 +661,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_size
 operator|==
 literal|0
 condition|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_size
 operator|=
@@ -677,14 +677,14 @@ if|if
 condition|(
 operator|(
 operator|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_size
 operator|-
 literal|1
 operator|)
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_size
 operator|)
@@ -870,7 +870,7 @@ name|pq_vcnt
 argument_list|)
 operator|=
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_inactive_count
 expr_stmt|;
@@ -913,7 +913,7 @@ name|pq_vcnt
 argument_list|)
 operator|=
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_active_count
 expr_stmt|;
@@ -1759,13 +1759,13 @@ name|vm_phys_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Add every available physical page that is not blacklisted to 	 * the free lists. 	 */
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|=
 literal|0
 expr_stmt|;
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|=
@@ -4665,7 +4665,7 @@ name|object
 operator|=
 name|NULL
 expr_stmt|;
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|--
@@ -5066,15 +5066,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_reserved
 operator|||
@@ -5083,15 +5083,15 @@ name|req_class
 operator|==
 name|VM_ALLOC_SYSTEM
 operator|&&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>
-name|cnt
+name|vm_cnt
 operator|.
 name|v_interrupt_free_min
 operator|)
@@ -5101,11 +5101,11 @@ name|req_class
 operator|==
 name|VM_ALLOC_INTERRUPT
 operator|&&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>
@@ -5533,7 +5533,7 @@ name|pindex
 operator|==
 name|pindex
 condition|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_reactivated
 operator|++
@@ -5754,7 +5754,7 @@ comment|/* 		 * The page lock is not required for wiring a page until that 		 * 
 name|atomic_add_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -5820,7 +5820,7 @@ block|{
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -6165,17 +6165,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>=
 name|npages
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_reserved
 operator|||
@@ -6184,17 +6184,17 @@ name|req_class
 operator|==
 name|VM_ALLOC_SYSTEM
 operator|&&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>=
 name|npages
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_interrupt_free_min
 operator|)
@@ -6204,11 +6204,11 @@ name|req_class
 operator|==
 name|VM_ALLOC_INTERRUPT
 operator|&&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>=
@@ -6461,7 +6461,7 @@ condition|)
 name|atomic_add_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -6654,7 +6654,7 @@ condition|)
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -7084,15 +7084,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_reserved
 operator|||
@@ -7101,15 +7101,15 @@ name|req_class
 operator|==
 name|VM_ALLOC_SYSTEM
 operator|&&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>
-name|cnt
+name|vm_cnt
 operator|.
 name|v_interrupt_free_min
 operator|)
@@ -7119,11 +7119,11 @@ name|req_class
 operator|==
 name|VM_ALLOC_INTERRUPT
 operator|&&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>
@@ -7254,7 +7254,7 @@ comment|/* 		 * The page lock is not required for wiring a page that does 		 * n
 name|atomic_add_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -7370,7 +7370,7 @@ block|}
 name|msleep
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|,
@@ -7427,7 +7427,7 @@ block|}
 name|msleep
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|,
@@ -8016,15 +8016,15 @@ if|if
 condition|(
 name|vm_pageout_pages_needed
 operator|&&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|>=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_pageout_free_min
 condition|)
@@ -8057,7 +8057,7 @@ expr_stmt|;
 name|wakeup
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
@@ -8125,7 +8125,7 @@ operator|&=
 operator|~
 name|PG_CACHED
 expr_stmt|;
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|--
@@ -8505,7 +8505,7 @@ expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -8626,7 +8626,7 @@ block|{
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -9354,7 +9354,7 @@ name|flags
 operator||=
 name|PG_CACHED
 expr_stmt|;
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|++
@@ -11181,90 +11181,90 @@ argument_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"cnt.v_free_count: %d\n"
+literal|"vm_cnt.v_free_count: %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"cnt.v_cache_count: %d\n"
+literal|"vm_cnt.v_cache_count: %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"cnt.v_inactive_count: %d\n"
+literal|"vm_cnt.v_inactive_count: %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_inactive_count
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"cnt.v_active_count: %d\n"
+literal|"vm_cnt.v_active_count: %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_active_count
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"cnt.v_wire_count: %d\n"
+literal|"vm_cnt.v_wire_count: %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"cnt.v_free_reserved: %d\n"
+literal|"vm_cnt.v_free_reserved: %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_reserved
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"cnt.v_free_min: %d\n"
+literal|"vm_cnt.v_free_min: %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_min
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"cnt.v_free_target: %d\n"
+literal|"vm_cnt.v_free_target: %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_target
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"cnt.v_cache_min: %d\n"
+literal|"vm_cnt.v_cache_min: %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_min
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"cnt.v_inactive_target: %d\n"
+literal|"vm_cnt.v_inactive_target: %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_inactive_target
 argument_list|)
@@ -11284,11 +11284,11 @@ name|db_printf
 argument_list|(
 literal|"pq_free %d pq_cache %d\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 argument_list|)

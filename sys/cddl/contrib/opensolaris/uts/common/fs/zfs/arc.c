@@ -17855,11 +17855,11 @@ argument_list|(
 operator|(
 name|uintmax_t
 operator|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 argument_list|)
@@ -17906,11 +17906,11 @@ directive|endif
 comment|/* sun */
 if|if
 condition|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>

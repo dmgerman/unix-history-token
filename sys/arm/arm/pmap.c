@@ -6554,7 +6554,7 @@ name|shpgperproc
 operator|*
 name|maxproc
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 expr_stmt|;

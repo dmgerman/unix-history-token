@@ -869,7 +869,7 @@ expr_stmt|;
 comment|/* 	 * Limit consumption of physical pages to 	 * 1/vm_memguard_divisor of system memory.  If the KVA is 	 * smaller than this then the KVA limit comes into play first. 	 * This prevents memguard's page promotions from completely 	 * using up memory, since most malloc(9) calls are sub-page. 	 */
 name|mem_pgs
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 expr_stmt|;

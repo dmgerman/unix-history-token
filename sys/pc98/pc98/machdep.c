@@ -1262,7 +1262,7 @@ argument_list|(
 operator|(
 name|uintmax_t
 operator|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
@@ -1272,7 +1272,7 @@ argument_list|(
 operator|(
 name|uintmax_t
 operator|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)

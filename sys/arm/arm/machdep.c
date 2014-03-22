@@ -1613,7 +1613,7 @@ name|uintmax_t
 operator|)
 name|arm32_ptob
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
@@ -1623,7 +1623,7 @@ name|uintmax_t
 operator|)
 name|arm32_ptob
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)

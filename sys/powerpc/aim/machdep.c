@@ -790,7 +790,7 @@ argument|] -
 literal|1
 argument|, size1, 			    size1 / PAGE_SIZE); 		} 	}  	vm_ksubmap_init(&kmi);  	printf(
 literal|"avail memory = %ld (%ld MB)\n"
-argument|, ptoa(cnt.v_free_count), 	    ptoa(cnt.v_free_count) /
+argument|, ptoa(vm_cnt.v_free_count), 	    ptoa(vm_cnt.v_free_count) /
 literal|1048576
 argument|);
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */

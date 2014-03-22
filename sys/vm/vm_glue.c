@@ -676,7 +676,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * XXX - not yet 	 * 	 * The limit for transient usage of wired pages should be 	 * larger than for "permanent" wired pages (mlock()). 	 * 	 * Also, the sysctl code, which is the only present user 	 * of vslock(), does a hard loop on EAGAIN. 	 */
-block|if (npages + cnt.v_wire_count> vm_page_max_wired) 		return (EAGAIN);
+block|if (npages + vm_cnt.v_wire_count> vm_page_max_wired) 		return (EAGAIN);
 endif|#
 directive|endif
 name|error

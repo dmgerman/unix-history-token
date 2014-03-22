@@ -371,11 +371,11 @@ name|avail
 operator|=
 name|swap_pager_avail
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|-

@@ -578,10 +578,10 @@ name|physmem
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 	 * The correct thing here would be: 	 * 	memfree = cnt.v_free_count * PAGE_SIZE; 	memused = memtotal - memfree; 	 * 	 * but it might mislead linux binaries into thinking there 	 * is very little memory left, so we cheat and tell them that 	 * all memory that isn't wired down is free. 	 */
+comment|/* 	 * The correct thing here would be: 	 * 	memfree = vm_cnt.v_free_count * PAGE_SIZE; 	memused = memtotal - memfree; 	 * 	 * but it might mislead linux binaries into thinking there 	 * is very little memory left, so we cheat and tell them that 	 * all memory that isn't wired down is free. 	 */
 name|memused
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 operator|*
@@ -679,7 +679,7 @@ literal|0
 expr_stmt|;
 name|cached
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|*
@@ -2073,27 +2073,27 @@ literal|"intr %u\n"
 literal|"ctxt %u\n"
 literal|"btime %lld\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_vnodepgsin
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_vnodepgsout
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_swappgsin
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_swappgsout
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_intr
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_swtch
 argument_list|,

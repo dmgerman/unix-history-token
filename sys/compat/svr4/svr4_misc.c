@@ -3583,7 +3583,7 @@ directive|else
 operator|*
 name|retval
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 expr_stmt|;
@@ -3613,7 +3613,7 @@ directive|else
 operator|*
 name|retval
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_active_count
 expr_stmt|;

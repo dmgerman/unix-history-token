@@ -134,7 +134,7 @@ end_include
 begin_decl_stmt
 name|struct
 name|vmmeter
-name|cnt
+name|vm_cnt
 decl_stmt|;
 end_decl_stmt
 
@@ -150,7 +150,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_min
 argument_list|,
@@ -173,7 +173,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_target
 argument_list|,
@@ -196,7 +196,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_reserved
 argument_list|,
@@ -219,7 +219,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_inactive_target
 argument_list|,
@@ -242,7 +242,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_min
 argument_list|,
@@ -265,7 +265,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_max
 argument_list|,
@@ -288,7 +288,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_pageout_free_min
 argument_list|,
@@ -311,7 +311,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_severe
 argument_list|,
@@ -976,11 +976,11 @@ name|total
 operator|.
 name|t_free
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 expr_stmt|;
@@ -1041,7 +1041,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|cnt
+name|vm_cnt
 decl_stmt|;
 name|int
 name|i
@@ -1219,7 +1219,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_PROC(parent, OID_AUTO, var, \ 	    CTLTYPE_UINT | CTLFLAG_RD | CTLFLAG_MPSAFE,&cnt.var, 0, vcnt, \ 	    "IU", descr)
+value|SYSCTL_PROC(parent, OID_AUTO, var, \ 	    CTLTYPE_UINT | CTLFLAG_RD | CTLFLAG_MPSAFE,&vm_cnt.var, 0, vcnt, \ 	    "IU", descr)
 end_define
 
 begin_define

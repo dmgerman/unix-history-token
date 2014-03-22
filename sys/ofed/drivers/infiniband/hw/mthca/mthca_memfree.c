@@ -2823,7 +2823,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 operator|+

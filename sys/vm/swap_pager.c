@@ -688,15 +688,15 @@ condition|)
 block|{
 name|s
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|-
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_reserved
 operator|-
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 expr_stmt|;
@@ -2152,7 +2152,7 @@ expr_stmt|;
 comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 16 pages, so this is probably overkill.  This reservation 	 * is typically limited to around 32MB by default. 	 */
 name|n
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|/
@@ -7994,11 +7994,11 @@ expr_stmt|;
 comment|/* 	 * We can turn off this swap device safely only if the 	 * available virtual memory in the system will fit the amount 	 * of data we will have to page back in, plus an epsilon so 	 * the system doesn't become critically low on swap space. 	 */
 if|if
 condition|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|+

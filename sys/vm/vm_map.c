@@ -7370,11 +7370,11 @@ operator|&
 name|MAP_PREFAULT_MADVISE
 operator|)
 operator|&&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|<
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_reserved
 condition|)

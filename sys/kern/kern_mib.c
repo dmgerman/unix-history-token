@@ -1058,7 +1058,7 @@ name|ctob
 argument_list|(
 name|physmem
 operator|-
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|)

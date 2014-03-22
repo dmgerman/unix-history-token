@@ -8908,7 +8908,7 @@ comment|/* 	 * This is a release store so that the ordinary store unmapping 	 * 
 name|atomic_subtract_rel_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -9757,7 +9757,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -9928,7 +9928,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -10050,7 +10050,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -10616,7 +10616,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -12342,7 +12342,7 @@ expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -15780,7 +15780,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -24035,7 +24035,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
