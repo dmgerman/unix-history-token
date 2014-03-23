@@ -21,6 +21,13 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_typedef
+typedef|typedef
+name|int64_t
+name|lba_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|part
@@ -69,14 +76,14 @@ name|uintptr_t
 name|type
 decl_stmt|;
 comment|/* Scheme-specific partition type. */
-name|off_t
-name|offset
+name|lba_t
+name|block
 decl_stmt|;
-comment|/* Byte-offset of partition in image. */
-name|off_t
+comment|/* Block-offset of partition in image. */
+name|lba_t
 name|size
 decl_stmt|;
-comment|/* Size in bytes of partition. */
+comment|/* Size in blocks of partition. */
 name|char
 modifier|*
 name|label
@@ -104,6 +111,26 @@ name|u_int
 name|nparts
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|secsz
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|mkimg_seek
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|lba_t
+name|blk
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
