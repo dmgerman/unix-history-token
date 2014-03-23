@@ -1241,6 +1241,8 @@ literal|"Obtained from:"
 block|,
 literal|"MFC after:"
 block|,
+literal|"Relnotes:"
+block|,
 literal|"Security:"
 block|,
 literal|"Sponsored by:"
@@ -1639,6 +1641,14 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
+literal|"Relnotes:\t"
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
 literal|"Security:\t"
 name|APR_EOL_STR
 argument_list|)
@@ -1724,6 +1734,14 @@ argument_list|(
 name|default_msg
 argument_list|,
 literal|"> MFC after:     N [day[s]|week[s]|month[s]].  Request a reminder email."
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+literal|"> Relnotes:      Set to 'yes' for mention in release notes."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
