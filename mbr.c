@@ -225,6 +225,15 @@ argument_list|,
 name|secsz
 argument_list|)
 expr_stmt|;
+name|le16enc
+argument_list|(
+name|mbr
+operator|+
+name|DOSMAGICOFFSET
+argument_list|,
+name|DOSMAGIC
+argument_list|)
+expr_stmt|;
 name|dpbase
 operator|=
 operator|(
