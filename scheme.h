@@ -29,7 +29,11 @@ name|ALIAS_NONE
 block|,
 comment|/* Keep first! */
 comment|/* start */
+name|ALIAS_EBR
+block|,
 name|ALIAS_EFI
+block|,
+name|ALIAS_FAT32
 block|,
 name|ALIAS_FREEBSD
 block|,
