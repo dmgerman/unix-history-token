@@ -523,6 +523,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CM_WKUP_ADC_TSC_CLKCTRL
+value|(CM_WKUP + 0x0BC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CM_DPLL
 value|0x500
 end_define
@@ -1209,6 +1216,12 @@ argument_list|(
 name|I2C2_CLK
 argument_list|)
 block|,
+comment|/* TSC_ADC */
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|TSC_ADC_CLK
+argument_list|)
+block|,
 comment|/* EDMA */
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
@@ -1533,6 +1546,16 @@ argument_list|(
 name|I2C2_CLK
 argument_list|,
 name|CM_PER_I2C2_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* TSC_ADC module */
+name|_CLK_DETAIL
+argument_list|(
+name|TSC_ADC_CLK
+argument_list|,
+name|CM_WKUP_ADC_TSC_CLKCTRL
 argument_list|,
 literal|0
 argument_list|)
