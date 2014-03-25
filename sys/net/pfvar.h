@@ -5904,6 +5904,20 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|pf_hashmask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|pf_srchashmask
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -5935,16 +5949,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|u_long
-argument_list|,
-name|pf_hashmask
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -5959,13 +5963,6 @@ name|V_pf_idhash
 value|VNET(pf_idhash)
 end_define
 
-begin_define
-define|#
-directive|define
-name|V_pf_hashmask
-value|VNET(pf_hashmask)
-end_define
-
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -5974,16 +5971,6 @@ name|pf_srchash
 operator|*
 argument_list|,
 name|pf_srchash
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|u_long
-argument_list|,
-name|pf_srchashmask
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5998,18 +5985,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_pf_srchashmask
-value|VNET(pf_srchashmask)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PF_IDHASH
 parameter_list|(
 name|s
 parameter_list|)
-value|(be64toh((s)->id) % (V_pf_hashmask + 1))
+value|(be64toh((s)->id) % (pf_hashmask + 1))
 end_define
 
 begin_expr_stmt

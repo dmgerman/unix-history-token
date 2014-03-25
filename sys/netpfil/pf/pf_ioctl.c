@@ -8814,7 +8814,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|V_pf_hashmask
+name|pf_hashmask
 condition|;
 name|i
 operator|++
@@ -9044,7 +9044,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|V_pf_hashmask
+name|pf_hashmask
 condition|;
 name|i
 operator|++
@@ -9690,7 +9690,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|V_pf_hashmask
+name|pf_hashmask
 condition|;
 name|i
 operator|++
@@ -16824,7 +16824,7 @@ name|V_pf_srchash
 init|;
 name|i
 operator|<=
-name|V_pf_srchashmask
+name|pf_srchashmask
 condition|;
 name|i
 operator|++
@@ -16896,7 +16896,7 @@ name|V_pf_srchash
 init|;
 name|i
 operator|<=
-name|V_pf_srchashmask
+name|pf_srchashmask
 condition|;
 name|i
 operator|++
@@ -18168,7 +18168,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|V_pf_hashmask
+name|pf_hashmask
 condition|;
 name|i
 operator|++
@@ -18314,7 +18314,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|V_pf_hashmask
+name|pf_hashmask
 condition|;
 name|i
 operator|++
@@ -18412,7 +18412,7 @@ name|V_pf_srchash
 init|;
 name|i
 operator|<=
-name|V_pf_srchashmask
+name|pf_srchashmask
 condition|;
 name|i
 operator|++
@@ -18504,7 +18504,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|V_pf_srchashmask
+name|pf_srchashmask
 condition|;
 name|i
 operator|++
@@ -18672,7 +18672,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|V_pf_hashmask
+name|pf_hashmask
 condition|;
 name|i
 operator|++
