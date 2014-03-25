@@ -2393,6 +2393,7 @@ return|;
 case|case
 name|FIOASYNC
 case|:
+comment|/* 		 * FIXME: 		 * Since this is a simple assignment there is no guarantee that 		 * devsoftc.async_proc consumers will get a valid pointer. 		 * 		 * Example scenario where things break (processes A and B): 		 * 1. A opens devctl 		 * 2. A sends fd to B 		 * 3. B sets itself as async_proc 		 * 4. B exits 		 * 		 * However, normally this requires root privileges and the only 		 * in-tree consumer does not behave in a dangerous way so the 		 * issue is not critical. 		 */
 if|if
 condition|(
 operator|*
@@ -2786,6 +2787,7 @@ operator|.
 name|sel
 argument_list|)
 expr_stmt|;
+comment|/* XXX see a comment in devioctl */
 name|p
 operator|=
 name|devsoftc
