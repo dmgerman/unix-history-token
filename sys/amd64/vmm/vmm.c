@@ -230,6 +230,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vatpit.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vhpet.h"
 end_include
 
@@ -457,6 +463,12 @@ modifier|*
 name|vatpic
 decl_stmt|;
 comment|/* virtual atpic */
+name|struct
+name|vatpit
+modifier|*
+name|vatpit
+decl_stmt|;
+comment|/* virtual atpit */
 name|struct
 name|vmspace
 modifier|*
@@ -1516,6 +1528,15 @@ argument_list|(
 name|vm
 argument_list|)
 expr_stmt|;
+name|vm
+operator|->
+name|vatpit
+operator|=
+name|vatpit_init
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1649,6 +1670,13 @@ argument_list|(
 name|vm
 operator|->
 name|iommu
+argument_list|)
+expr_stmt|;
+name|vatpit_cleanup
+argument_list|(
+name|vm
+operator|->
+name|vatpit
 argument_list|)
 expr_stmt|;
 name|vhpet_cleanup
@@ -7735,6 +7763,28 @@ operator|(
 name|vm
 operator|->
 name|vatpic
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|struct
+name|vatpit
+modifier|*
+name|vm_atpit
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vm
+operator|->
+name|vatpit
 operator|)
 return|;
 block|}

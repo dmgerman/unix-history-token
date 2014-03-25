@@ -1419,6 +1419,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|vatpit
+modifier|*
+name|vm_atpit
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Inject exception 'vme' into the guest vcpu. This function returns 0 on  * success and non-zero on failure.  *  * Wrapper functions like 'vm_inject_gp()' should be preferred to calling  * this function directly because they enforce the trap-like or fault-like  * behavior of an exception.  *  * This function should only be called in the context of the thread that is  * executing this vcpu.  */
 end_comment
