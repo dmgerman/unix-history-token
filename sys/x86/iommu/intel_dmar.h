@@ -1452,6 +1452,15 @@ parameter_list|,
 name|device_t
 name|dev
 parameter_list|,
+name|int
+name|bus
+parameter_list|,
+name|int
+name|slot
+parameter_list|,
+name|int
+name|func
+parameter_list|,
 name|bool
 name|id_mapped
 parameter_list|,
