@@ -757,6 +757,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|auth_group_set_type_str
+parameter_list|(
+name|struct
+name|auth_group
+modifier|*
+name|ag
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|struct
 name|auth
