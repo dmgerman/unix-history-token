@@ -115,9 +115,45 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
+name|ncyls
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|nheads
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|nsecs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|secsz
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Logical block size. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|blksz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Physical block size. */
+end_comment
 
 begin_function_decl
 name|int
