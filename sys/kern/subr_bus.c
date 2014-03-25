@@ -2062,17 +2062,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-if|if
-condition|(
-name|devsoftc
-operator|.
-name|inuse
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
 name|mtx_lock
 argument_list|(
 operator|&
