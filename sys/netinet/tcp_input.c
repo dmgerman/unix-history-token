@@ -8747,7 +8747,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * Received initial SYN in SYN-SENT[*] state => 			 * simultaneous open.  If segment contains CC option 			 * and there is a cached CC, apply TAO test. 			 * If it succeeds, connection is * half-synchronized. 			 * Otherwise, do 3-way handshake: 			 *        SYN-SENT -> SYN-RECEIVED 			 *        SYN-SENT* -> SYN-RECEIVED* 			 * If there was no CC option, clear cached CC value. 			 */
+comment|/* 			 * Received initial SYN in SYN-SENT[*] state => 			 * simultaneous open. 			 * If it succeeds, connection is * half-synchronized. 			 * Otherwise, do 3-way handshake: 			 *        SYN-SENT -> SYN-RECEIVED 			 *        SYN-SENT* -> SYN-RECEIVED* 			 */
 name|tp
 operator|->
 name|t_flags
