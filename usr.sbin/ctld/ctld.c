@@ -668,7 +668,7 @@ name|a_auth_group
 operator|->
 name|ag_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -723,7 +723,7 @@ name|a_auth_group
 operator|->
 name|ag_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -796,7 +796,7 @@ name|a_auth_group
 operator|->
 name|ag_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -851,7 +851,7 @@ name|a_auth_group
 operator|->
 name|ag_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -938,7 +938,7 @@ name|ag
 operator|->
 name|ag_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -1074,7 +1074,7 @@ name|ag
 operator|->
 name|ag_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -3143,7 +3143,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|iqn
+name|name
 parameter_list|)
 block|{
 name|struct
@@ -3162,7 +3162,7 @@ name|target_find
 argument_list|(
 name|conf
 argument_list|,
-name|iqn
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -3176,7 +3176,7 @@ name|log_warnx
 argument_list|(
 literal|"duplicated target \"%s\""
 argument_list|,
-name|iqn
+name|name
 argument_list|)
 expr_stmt|;
 return|return
@@ -3189,7 +3189,7 @@ if|if
 condition|(
 name|valid_iscsi_name
 argument_list|(
-name|iqn
+name|name
 argument_list|)
 operator|==
 name|false
@@ -3199,7 +3199,7 @@ name|log_warnx
 argument_list|(
 literal|"target name \"%s\" is invalid"
 argument_list|,
-name|iqn
+name|name
 argument_list|)
 expr_stmt|;
 return|return
@@ -3236,11 +3236,11 @@ argument_list|)
 expr_stmt|;
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 operator|=
 name|checked_strdup
 argument_list|(
-name|iqn
+name|name
 argument_list|)
 expr_stmt|;
 comment|/* 	 * RFC 3722 requires us to normalize the name to lowercase. 	 */
@@ -3248,7 +3248,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|iqn
+name|name
 argument_list|)
 expr_stmt|;
 for|for
@@ -3266,7 +3266,7 @@ operator|++
 control|)
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 index|[
 name|i
 index|]
@@ -3275,7 +3275,7 @@ name|tolower
 argument_list|(
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 index|[
 name|i
 index|]
@@ -3366,7 +3366,7 @@ name|free
 argument_list|(
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 name|free
@@ -3391,7 +3391,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|iqn
+name|name
 parameter_list|)
 block|{
 name|struct
@@ -3414,9 +3414,9 @@ name|strcasecmp
 argument_list|(
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
-name|iqn
+name|name
 argument_list|)
 operator|==
 literal|0
@@ -3479,7 +3479,7 @@ name|lun_id
 argument_list|,
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -3947,7 +3947,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -4271,7 +4271,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void conf_print(struct conf *conf) { 	struct auth_group *ag; 	struct auth *auth; 	struct auth_name *auth_name; 	struct auth_portal *auth_portal; 	struct portal_group *pg; 	struct portal *portal; 	struct target *targ; 	struct lun *lun; 	struct lun_option *lo;  	TAILQ_FOREACH(ag,&conf->conf_auth_groups, ag_next) { 		fprintf(stderr, "auth-group %s {\n", ag->ag_name); 		TAILQ_FOREACH(auth,&ag->ag_auths, a_next) 			fprintf(stderr, "\t chap-mutual %s %s %s %s\n", 			    auth->a_user, auth->a_secret, 			    auth->a_mutual_user, auth->a_mutual_secret); 		TAILQ_FOREACH(auth_name,&ag->ag_names, an_next) 			fprintf(stderr, "\t initiator-name %s\n", 			    auth_name->an_initator_name); 		TAILQ_FOREACH(auth_portal,&ag->ag_portals, an_next) 			fprintf(stderr, "\t initiator-portal %s\n", 			    auth_portal->an_initator_portal); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(pg,&conf->conf_portal_groups, pg_next) { 		fprintf(stderr, "portal-group %s {\n", pg->pg_name); 		TAILQ_FOREACH(portal,&pg->pg_portals, p_next) 			fprintf(stderr, "\t listen %s\n", portal->p_listen); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(targ,&conf->conf_targets, t_next) { 		fprintf(stderr, "target %s {\n", targ->t_iqn); 		if (targ->t_alias != NULL) 			fprintf(stderr, "\t alias %s\n", targ->t_alias); 		TAILQ_FOREACH(lun,&targ->t_luns, l_next) { 			fprintf(stderr, "\tlun %d {\n", lun->l_lun); 			fprintf(stderr, "\t\tpath %s\n", lun->l_path); 			TAILQ_FOREACH(lo,&lun->l_options, lo_next) 				fprintf(stderr, "\t\toption %s %s\n", 				    lo->lo_name, lo->lo_value); 			fprintf(stderr, "\t}\n"); 		} 		fprintf(stderr, "}\n"); 	} }
+unit|static void conf_print(struct conf *conf) { 	struct auth_group *ag; 	struct auth *auth; 	struct auth_name *auth_name; 	struct auth_portal *auth_portal; 	struct portal_group *pg; 	struct portal *portal; 	struct target *targ; 	struct lun *lun; 	struct lun_option *lo;  	TAILQ_FOREACH(ag,&conf->conf_auth_groups, ag_next) { 		fprintf(stderr, "auth-group %s {\n", ag->ag_name); 		TAILQ_FOREACH(auth,&ag->ag_auths, a_next) 			fprintf(stderr, "\t chap-mutual %s %s %s %s\n", 			    auth->a_user, auth->a_secret, 			    auth->a_mutual_user, auth->a_mutual_secret); 		TAILQ_FOREACH(auth_name,&ag->ag_names, an_next) 			fprintf(stderr, "\t initiator-name %s\n", 			    auth_name->an_initator_name); 		TAILQ_FOREACH(auth_portal,&ag->ag_portals, an_next) 			fprintf(stderr, "\t initiator-portal %s\n", 			    auth_portal->an_initator_portal); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(pg,&conf->conf_portal_groups, pg_next) { 		fprintf(stderr, "portal-group %s {\n", pg->pg_name); 		TAILQ_FOREACH(portal,&pg->pg_portals, p_next) 			fprintf(stderr, "\t listen %s\n", portal->p_listen); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(targ,&conf->conf_targets, t_next) { 		fprintf(stderr, "target %s {\n", targ->t_name); 		if (targ->t_alias != NULL) 			fprintf(stderr, "\t alias %s\n", targ->t_alias); 		TAILQ_FOREACH(lun,&targ->t_luns, l_next) { 			fprintf(stderr, "\tlun %d {\n", lun->l_lun); 			fprintf(stderr, "\t\tpath %s\n", lun->l_path); 			TAILQ_FOREACH(lo,&lun->l_options, lo_next) 				fprintf(stderr, "\t\toption %s %s\n", 				    lo->lo_name, lo->lo_value); 			fprintf(stderr, "\t}\n"); 		} 		fprintf(stderr, "}\n"); 	} }
 endif|#
 directive|endif
 end_endif
@@ -4349,7 +4349,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -4396,7 +4396,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -4427,7 +4427,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -4465,7 +4465,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -4514,7 +4514,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -4555,7 +4555,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -4635,7 +4635,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|lun2
 operator|->
@@ -4645,7 +4645,7 @@ name|lun2
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -4738,7 +4738,7 @@ literal|"or \"chap-mutual\""
 argument_list|,
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -4834,7 +4834,7 @@ literal|"for target \"%s\""
 argument_list|,
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -5351,7 +5351,7 @@ name|newconf
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -5380,7 +5380,7 @@ literal|"backed by CTL lun %d"
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|oldlun
 operator|->
@@ -5416,7 +5416,7 @@ name|l_lun
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|oldlun
 operator|->
@@ -5482,7 +5482,7 @@ name|l_lun
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|oldlun
 operator|->
@@ -5514,7 +5514,7 @@ name|l_lun
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|oldlun
 operator|->
@@ -5582,7 +5582,7 @@ name|l_lun
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|oldlun
 operator|->
@@ -5616,7 +5616,7 @@ name|l_lun
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|oldlun
 operator|->
@@ -5669,7 +5669,7 @@ name|l_lun
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|oldlun
 operator|->
@@ -5722,7 +5722,7 @@ name|l_lun
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|oldlun
 operator|->
@@ -5775,7 +5775,7 @@ name|l_lun
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|oldlun
 operator|->
@@ -5817,7 +5817,7 @@ name|l_lun
 argument_list|,
 name|oldtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|oldlun
 operator|->
@@ -5864,7 +5864,7 @@ name|oldconf
 argument_list|,
 name|newtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -5923,7 +5923,7 @@ name|l_lun
 argument_list|,
 name|newtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|newlun
 operator|->
@@ -5957,7 +5957,7 @@ name|l_lun
 argument_list|,
 name|newtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|newlun
 operator|->
@@ -5982,7 +5982,7 @@ name|l_lun
 argument_list|,
 name|newtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 name|error
@@ -6009,7 +6009,7 @@ name|l_lun
 argument_list|,
 name|newtarg
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 name|cumulated_error

@@ -433,7 +433,7 @@ name|t_portal_group
 decl_stmt|;
 name|char
 modifier|*
-name|t_iqn
+name|t_name
 decl_stmt|;
 name|char
 modifier|*
@@ -1028,7 +1028,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|iqn
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1059,7 +1059,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|iqn
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl

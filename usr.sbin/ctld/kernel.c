@@ -1717,7 +1717,7 @@ name|cl
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|cl
 operator|->
@@ -1919,7 +1919,7 @@ name|cl
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -2224,7 +2224,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -2242,7 +2242,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 name|assert
@@ -3113,7 +3113,7 @@ name|conn
 operator|->
 name|conn_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 sizeof|sizeof
 argument_list|(

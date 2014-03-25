@@ -855,7 +855,7 @@ literal|"belongs to a different portal group"
 argument_list|,
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -868,7 +868,7 @@ literal|"TargetName"
 argument_list|,
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -916,7 +916,7 @@ literal|"TargetName"
 argument_list|,
 name|targ
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}

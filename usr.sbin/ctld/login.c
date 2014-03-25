@@ -4627,7 +4627,7 @@ name|conn
 operator|->
 name|conn_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|conn
 operator|->
@@ -4650,7 +4650,7 @@ name|conn
 operator|->
 name|conn_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
