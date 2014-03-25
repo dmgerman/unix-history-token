@@ -4968,22 +4968,26 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log_warnx
-argument_list|(
-literal|"missing authentication for target \"%s\"; "
-literal|"must specify either \"auth-group\", \"chap\", "
-literal|"or \"chap-mutual\""
-argument_list|,
 name|targ
 operator|->
-name|t_name
+name|t_auth_group
+operator|=
+name|auth_group_find
+argument_list|(
+name|conf
+argument_list|,
+literal|"default"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+name|assert
+argument_list|(
+name|targ
+operator|->
+name|t_auth_group
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
