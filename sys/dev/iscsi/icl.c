@@ -525,6 +525,9 @@ name|icl_pdu
 modifier|*
 name|ip
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|refcount_acquire
 argument_list|(
 operator|&
@@ -533,6 +536,8 @@ operator|->
 name|ic_outstanding_pdus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ip
 operator|=
 name|uma_zalloc
@@ -562,6 +567,9 @@ name|ip
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|refcount_release
 argument_list|(
 operator|&
@@ -570,6 +578,8 @@ operator|->
 name|ic_outstanding_pdus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL
@@ -639,6 +649,9 @@ argument_list|,
 name|ip
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|refcount_release
 argument_list|(
 operator|&
@@ -647,6 +660,8 @@ operator|->
 name|ic_outstanding_pdus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3948,6 +3963,9 @@ argument_list|,
 literal|"icl_rx"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|refcount_init
 argument_list|(
 operator|&
@@ -3958,6 +3976,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ic
 operator|->
 name|ic_max_data_segment_length

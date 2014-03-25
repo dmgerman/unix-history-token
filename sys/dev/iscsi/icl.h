@@ -241,10 +241,15 @@ name|socket
 modifier|*
 name|ic_socket
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 specifier|volatile
 name|u_int
 name|ic_outstanding_pdus
 decl_stmt|;
+endif|#
+directive|endif
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
