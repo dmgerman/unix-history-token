@@ -4788,8 +4788,8 @@ argument_list|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"target %s not found in the "
-literal|"configuration file; removing its lun %d, "
+literal|"target %s not found in new "
+literal|"configuration; removing its lun %d, "
 literal|"backed by CTL lun %d"
 argument_list|,
 name|oldtarg
@@ -4887,7 +4887,7 @@ block|{
 name|log_debugx
 argument_list|(
 literal|"lun %d, target %s, CTL lun %d "
-literal|"not found in the configuration file; "
+literal|"not found in new configuration; "
 literal|"removing"
 argument_list|,
 name|oldlun
