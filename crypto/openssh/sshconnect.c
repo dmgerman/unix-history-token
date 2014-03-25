@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.244 2014/01/09 23:26:48 djm Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.246 2014/02/06 22:21:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1385,6 +1385,8 @@ name|hints
 decl_stmt|,
 modifier|*
 name|res
+init|=
+name|NULL
 decl_stmt|;
 name|sock
 operator|=
@@ -1462,6 +1464,13 @@ condition|)
 return|return
 name|sock
 return|;
+if|if
+condition|(
+name|options
+operator|.
+name|bind_address
+condition|)
+block|{
 name|memset
 argument_list|(
 operator|&
@@ -1551,6 +1560,7 @@ operator|-
 literal|1
 return|;
 block|}
+block|}
 comment|/* 	 * If we are running as root and want to connect to a privileged 	 * port, bind our own socket to a privileged port. 	 */
 if|if
 condition|(
@@ -1566,8 +1576,12 @@ argument_list|(
 name|sock
 argument_list|,
 name|res
+condition|?
+name|res
 operator|->
 name|ai_addr
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 name|PRIV_END
@@ -1650,6 +1664,12 @@ literal|1
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|res
+operator|!=
+name|NULL
+condition|)
 name|freeaddrinfo
 argument_list|(
 name|res
@@ -6086,11 +6106,9 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|padded
-argument_list|,
-literal|0
 argument_list|,
 name|size
 argument_list|)

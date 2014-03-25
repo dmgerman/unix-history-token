@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.c,v 1.101 2013/12/29 04:35:50 djm Exp $ */
+comment|/* $OpenBSD: authfile.c,v 1.103 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -566,11 +566,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|key
-argument_list|,
-literal|0
 argument_list|,
 name|keylen
 operator|+
@@ -666,11 +664,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|cp
-argument_list|,
-literal|0
 argument_list|,
 name|len
 argument_list|)
@@ -2239,11 +2235,9 @@ if|if
 condition|(
 name|key
 condition|)
-name|memset
+name|explicit_bzero
 argument_list|(
 name|key
-argument_list|,
-literal|0
 argument_list|,
 name|keylen
 operator|+
@@ -2693,12 +2687,10 @@ operator|&
 name|ciphercontext
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 operator|&
 name|ciphercontext
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2707,11 +2699,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Destroy temporary data. */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3829,7 +3819,7 @@ argument_list|(
 name|blob
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|buf
 argument_list|,
@@ -3867,7 +3857,7 @@ argument_list|(
 name|blob
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|buf
 argument_list|,
@@ -3882,7 +3872,7 @@ name|toobig
 goto|;
 block|}
 block|}
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|buf
 argument_list|,
@@ -4469,12 +4459,10 @@ operator|&
 name|ciphercontext
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 operator|&
 name|ciphercontext
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

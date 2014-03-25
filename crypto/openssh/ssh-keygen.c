@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.238 2013/12/06 13:39:49 markus Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.241 2014/02/05 20:13:25 naddy Exp $ */
 end_comment
 
 begin_comment
@@ -1226,11 +1226,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|pass
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -6854,11 +6852,9 @@ operator|&
 name|comment
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|old_passphrase
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -6949,11 +6945,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase1
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -6961,11 +6955,9 @@ name|passphrase1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase2
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -6995,11 +6987,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Destroy the other copy. */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase2
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -7042,11 +7032,9 @@ argument_list|,
 name|identity_file
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase1
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -7076,11 +7064,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Destroy the passphrase and the copy of the key in memory. */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase1
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -7420,11 +7406,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -7539,11 +7523,9 @@ name|stdin
 argument_list|)
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -7604,11 +7586,9 @@ argument_list|,
 name|identity_file
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -7637,11 +7617,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -9479,10 +9457,12 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|tm
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -12573,14 +12553,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -z serial   Specify a serial number.\n"
+literal|"  -Z cipher   Specify a cipher for new private key format.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -Z cipher   Specify a cipher for new private key format.\n"
+literal|"  -z serial   Specify a serial number.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -14525,11 +14505,9 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * The passphrases do not match.  Clear them and 			 * retry. 			 */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase1
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -14537,11 +14515,9 @@ name|passphrase1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase2
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -14569,11 +14545,9 @@ name|passphrase_again
 goto|;
 block|}
 comment|/* Clear the other copy of the passphrase. */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase2
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -14654,11 +14628,9 @@ argument_list|,
 name|identity_file
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase1
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -14678,11 +14650,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Clear the passphrase. */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase1
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(

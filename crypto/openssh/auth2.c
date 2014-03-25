@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.129 2013/05/19 02:42:42 djm Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.130 2014/01/29 06:18:35 djm Exp $ */
 end_comment
 
 begin_comment
@@ -276,24 +276,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JPAKE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|Authmethod
-name|method_jpake
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|Authmethod
 modifier|*
@@ -312,14 +294,6 @@ directive|ifdef
 name|GSSAPI
 operator|&
 name|method_gssapi
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|JPAKE
-operator|&
-name|method_jpake
 block|,
 endif|#
 directive|endif
@@ -1455,16 +1429,6 @@ argument_list|(
 name|authctxt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|JPAKE
-name|auth2_jpake_stop
-argument_list|(
-name|authctxt
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|GSSAPI

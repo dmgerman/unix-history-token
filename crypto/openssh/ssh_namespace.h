@@ -1889,6 +1889,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|explicit_bzero
+value|ssh_explicit_bzero
+end_define
+
+begin_define
+define|#
+directive|define
 name|export_dns_rr
 value|ssh_export_dns_rr
 end_define

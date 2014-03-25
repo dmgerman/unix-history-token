@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.113 2014/01/17 00:21:06 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.114 2014/01/31 16:39:19 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -1585,9 +1585,11 @@ name|type
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|st
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-poll.c,v 1.5 2013/11/08 10:12:58 dtucker Exp $ */
+comment|/* $Id: bsd-poll.c,v 1.6 2014/02/05 23:44:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -508,34 +508,16 @@ block|}
 block|}
 name|out
 label|:
-if|if
-condition|(
-name|readfds
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|readfds
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|writefds
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|writefds
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|exceptfds
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|exceptfds

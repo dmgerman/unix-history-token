@@ -17,14 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -396,9 +388,8 @@ argument_list|,
 operator|&
 name|rights
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 operator|&&
 name|errno
 operator|!=
@@ -432,9 +423,8 @@ argument_list|,
 operator|&
 name|rights
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 operator|&&
 name|errno
 operator|!=

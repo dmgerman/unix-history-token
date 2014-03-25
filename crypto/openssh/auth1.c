@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth1.c,v 1.79 2013/05/19 02:42:42 djm Exp $ */
+comment|/* $OpenBSD: auth1.c,v 1.80 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -550,11 +550,9 @@ name|password
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|password
-argument_list|,
-literal|0
 argument_list|,
 name|dlen
 argument_list|)
@@ -911,11 +909,9 @@ argument_list|,
 name|response
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|response
-argument_list|,
-literal|'r'
 argument_list|,
 name|dlen
 argument_list|)

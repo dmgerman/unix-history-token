@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-ecdsa.c,v 1.8 2014/01/09 23:20:00 djm Exp $ */
+comment|/* $OpenBSD: ssh-ecdsa.c,v 1.10 2014/02/03 23:28:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -258,11 +258,9 @@ operator|->
 name|ecdsa
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|digest
-argument_list|,
-literal|'d'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -659,37 +657,6 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|sig
-operator|->
-name|r
-operator|=
-name|BN_new
-argument_list|()
-operator|)
-operator|==
-name|NULL
-operator|||
-operator|(
-name|sig
-operator|->
-name|s
-operator|=
-name|BN_new
-argument_list|()
-operator|)
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: BN_new failed"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|buffer_init
 argument_list|(
 operator|&
@@ -750,11 +717,9 @@ name|bb
 argument_list|)
 expr_stmt|;
 comment|/* clean up */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sigblob
-argument_list|,
-literal|0
 argument_list|,
 name|len
 argument_list|)
@@ -850,11 +815,9 @@ operator|->
 name|ecdsa
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|digest
-argument_list|,
-literal|'d'
 argument_list|,
 sizeof|sizeof
 argument_list|(

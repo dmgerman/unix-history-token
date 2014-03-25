@@ -1215,6 +1215,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `EVP_MD_CTX_copy_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_MD_CTX_COPY_EX
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `EVP_MD_CTX_init' function. */
 end_comment
 
@@ -1242,6 +1253,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_EXIT_IN_UTMP */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `explicit_bzero' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EXPLICIT_BZERO */
 end_comment
 
 begin_comment

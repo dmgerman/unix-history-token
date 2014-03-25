@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-passwd.c,v 1.10 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: auth2-passwd.c,v 1.11 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -170,11 +170,9 @@ operator|&
 name|newlen
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|newpass
-argument_list|,
-literal|0
 argument_list|,
 name|newlen
 argument_list|)
@@ -216,11 +214,9 @@ name|authenticated
 operator|=
 literal|1
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|password
-argument_list|,
-literal|0
 argument_list|,
 name|len
 argument_list|)

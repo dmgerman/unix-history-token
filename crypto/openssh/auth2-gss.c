@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-gss.c,v 1.20 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: auth2-gss.c,v 1.21 2014/02/26 20:28:44 djm Exp $ */
 end_comment
 
 begin_comment
@@ -211,9 +211,6 @@ decl_stmt|;
 name|int
 name|mechs
 decl_stmt|;
-name|gss_OID_set
-name|supported
-decl_stmt|;
 name|int
 name|present
 decl_stmt|;
@@ -270,12 +267,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|ssh_gssapi_supported_oids
-argument_list|(
-operator|&
-name|supported
-argument_list|)
-expr_stmt|;
 do|do
 block|{
 name|mechs
@@ -337,15 +328,13 @@ name|len
 operator|-
 literal|2
 expr_stmt|;
-name|gss_test_oid_set_member
+name|ssh_gssapi_test_oid_supported
 argument_list|(
 operator|&
 name|ms
 argument_list|,
 operator|&
 name|goid
-argument_list|,
-name|supported
 argument_list|,
 operator|&
 name|present
@@ -371,15 +360,6 @@ operator|!
 name|present
 condition|)
 do|;
-name|gss_release_oid_set
-argument_list|(
-operator|&
-name|ms
-argument_list|,
-operator|&
-name|supported
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!

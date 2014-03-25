@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.111 2013/12/05 01:16:41 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.112 2014/01/29 06:18:35 djm Exp $ */
 end_comment
 
 begin_comment
@@ -505,10 +505,6 @@ comment|/* If true, permit */
 name|int
 name|challenge_response_authentication
 decl_stmt|;
-name|int
-name|zero_knowledge_password_authentication
-decl_stmt|;
-comment|/* If true, permit jpake auth */
 name|int
 name|permit_empty_passwd
 decl_stmt|;
