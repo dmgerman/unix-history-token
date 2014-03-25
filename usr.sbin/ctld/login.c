@@ -4705,6 +4705,115 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Enforce initiator-name and initiator-portal. 	 */
+if|if
+condition|(
+name|auth_name_defined
+argument_list|(
+name|ag
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|auth_name_find
+argument_list|(
+name|ag
+argument_list|,
+name|initiator_name
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|login_send_error
+argument_list|(
+name|request
+argument_list|,
+literal|0x02
+argument_list|,
+literal|0x02
+argument_list|)
+expr_stmt|;
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"initiator does not match allowed "
+literal|"initiator names"
+argument_list|)
+expr_stmt|;
+block|}
+name|log_debugx
+argument_list|(
+literal|"initiator matches allowed initiator names"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|log_debugx
+argument_list|(
+literal|"auth-group does not define initiator name "
+literal|"restrictions"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|auth_portal_defined
+argument_list|(
+name|ag
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|auth_portal_find
+argument_list|(
+name|ag
+argument_list|,
+name|conn
+operator|->
+name|conn_initiator_addr
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|login_send_error
+argument_list|(
+name|request
+argument_list|,
+literal|0x02
+argument_list|,
+literal|0x02
+argument_list|)
+expr_stmt|;
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"initiator does not match allowed "
+literal|"initiator portals"
+argument_list|)
+expr_stmt|;
+block|}
+name|log_debugx
+argument_list|(
+literal|"initiator matches allowed initiator portals"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|log_debugx
+argument_list|(
+literal|"auth-group does not define initiator portal "
+literal|"restrictions"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Let's see if the initiator intends to do any kind of authentication 	 * at all. 	 */
 if|if
 condition|(
