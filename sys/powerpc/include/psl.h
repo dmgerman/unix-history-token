@@ -421,6 +421,17 @@ name|PSL_KERNSET
 value|(PSL_CE | PSL_ME | PSL_EE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PSL_SRR1_MASK
+value|0x00000000UL
+end_define
+
+begin_comment
+comment|/* No mask on Book-E */
+end_comment
+
 begin_elif
 elif|#
 directive|elif
