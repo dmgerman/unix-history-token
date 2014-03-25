@@ -166,22 +166,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|AG_TYPE_NO_AUTHENTICATION
+name|AG_TYPE_DENY
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|AG_TYPE_CHAP
+name|AG_TYPE_NO_AUTHENTICATION
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|AG_TYPE_CHAP_MUTUAL
+name|AG_TYPE_CHAP
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|AG_TYPE_CHAP_MUTUAL
+value|4
 end_define
 
 begin_struct
