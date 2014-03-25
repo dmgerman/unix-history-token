@@ -153,21 +153,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|request
-operator|->
-name|pdu_data_len
-operator|==
-literal|0
-condition|)
-name|log_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"received Text PDU with empty data segment"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|ntohl
 argument_list|(
 name|bhstr
