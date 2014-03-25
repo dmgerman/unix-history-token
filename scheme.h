@@ -167,6 +167,9 @@ decl_stmt|;
 name|u_int
 name|bootcode
 decl_stmt|;
+name|u_int
+name|maxsecsz
+decl_stmt|;
 block|}
 struct|;
 end_struct

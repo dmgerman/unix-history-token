@@ -564,6 +564,11 @@ operator|=
 name|APM_ENT_NAMELEN
 operator|-
 literal|1
+block|,
+operator|.
+name|maxsecsz
+operator|=
+literal|4096
 block|}
 decl_stmt|;
 end_decl_stmt

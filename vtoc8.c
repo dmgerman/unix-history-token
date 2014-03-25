@@ -492,6 +492,11 @@ operator|.
 name|nparts
 operator|=
 name|VTOC8_NPARTS
+block|,
+operator|.
+name|maxsecsz
+operator|=
+literal|512
 block|}
 decl_stmt|;
 end_decl_stmt

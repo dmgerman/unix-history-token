@@ -507,6 +507,11 @@ operator|.
 name|nparts
 operator|=
 name|PC98_NPARTS
+block|,
+operator|.
+name|maxsecsz
+operator|=
+literal|512
 block|}
 decl_stmt|;
 end_decl_stmt

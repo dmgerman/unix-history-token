@@ -465,6 +465,11 @@ operator|.
 name|nparts
 operator|=
 name|NDOSPART
+block|,
+operator|.
+name|maxsecsz
+operator|=
+literal|4096
 block|}
 decl_stmt|;
 end_decl_stmt

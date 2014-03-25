@@ -581,6 +581,11 @@ operator|.
 name|nparts
 operator|=
 literal|4096
+block|,
+operator|.
+name|maxsecsz
+operator|=
+literal|4096
 block|}
 decl_stmt|;
 end_decl_stmt
