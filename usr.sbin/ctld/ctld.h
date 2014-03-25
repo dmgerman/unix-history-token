@@ -489,6 +489,12 @@ name|pidfh
 modifier|*
 name|conf_pidfh
 decl_stmt|;
+name|bool
+name|conf_default_pg_defined
+decl_stmt|;
+name|bool
+name|conf_default_ag_defined
+decl_stmt|;
 block|}
 struct|;
 end_struct
