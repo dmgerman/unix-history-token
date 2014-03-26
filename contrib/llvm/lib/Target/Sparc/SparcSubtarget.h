@@ -116,6 +116,9 @@ block|;
 name|bool
 name|HasHardQuad
 block|;
+name|bool
+name|UsePopc
+block|;
 name|public
 operator|:
 name|SparcSubtarget
@@ -163,6 +166,15 @@ specifier|const
 block|{
 return|return
 name|HasHardQuad
+return|;
+block|}
+name|bool
+name|usePopc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsePopc
 return|;
 block|}
 comment|/// ParseSubtargetFeatures - Parses features string setting specified
