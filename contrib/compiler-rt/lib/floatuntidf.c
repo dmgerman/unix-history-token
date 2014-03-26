@@ -9,11 +9,11 @@ directive|include
 file|"int_lib.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|__x86_64
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRT_HAS_128BIT
+end_ifdef
 
 begin_comment
 comment|/* Returns: convert a to a double, rounding toward even. */
@@ -91,7 +91,7 @@ operator|>
 name|DBL_MANT_DIG
 condition|)
 block|{
-comment|/*  start:  0000000000000000000001xxxxxxxxxxxxxxxxxxxxxxPQxxxxxxxxxxxxxxxxxx          *  finish: 000000000000000000000000000000000000001xxxxxxxxxxxxxxxxxxxxxxPQR          *                                                12345678901234567890123456          *  1 = msb 1 bit          *  P = bit DBL_MANT_DIG-1 bits to the right of 1          *  Q = bit DBL_MANT_DIG bits to the right of 1          *  R = "or" of all bits to the right of Q 	 */
+comment|/*  start:  0000000000000000000001xxxxxxxxxxxxxxxxxxxxxxPQxxxxxxxxxxxxxxxxxx          *  finish: 000000000000000000000000000000000000001xxxxxxxxxxxxxxxxxxxxxxPQR          *                                                12345678901234567890123456          *  1 = msb 1 bit          *  P = bit DBL_MANT_DIG-1 bits to the right of 1          *  Q = bit DBL_MANT_DIG bits to the right of 1          *  R = "or" of all bits to the right of Q          */
 switch|switch
 condition|(
 name|sd
@@ -282,6 +282,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* CRT_HAS_128BIT */
+end_comment
 
 end_unit
 
