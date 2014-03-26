@@ -170,6 +170,9 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|SelectionDAG
+decl_stmt|;
+name|class
 name|TargetLowering
 decl_stmt|;
 name|class
@@ -436,6 +439,10 @@ argument_list|,
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|SelectionDAG
+operator|*
+name|DAG
 argument_list|)
 expr_stmt|;
 comment|/// clear - Clear out all the function-specific state. This returns this
