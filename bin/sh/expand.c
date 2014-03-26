@@ -4637,6 +4637,8 @@ name|ifsregion
 modifier|*
 name|ifsp
 decl_stmt|;
+name|INTOFF
+expr_stmt|;
 if|if
 condition|(
 name|ifslastp
@@ -4673,6 +4675,8 @@ operator|->
 name|endoff
 operator|=
 name|end
+expr_stmt|;
+name|INTON
 expr_stmt|;
 return|return;
 block|}
@@ -4726,6 +4730,8 @@ operator|->
 name|inquotes
 operator|=
 name|inquotes
+expr_stmt|;
+name|INTON
 expr_stmt|;
 block|}
 end_function

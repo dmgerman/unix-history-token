@@ -734,6 +734,8 @@ decl_stmt|,
 modifier|*
 name|ap
 decl_stmt|;
+name|INTOFF
+expr_stmt|;
 name|sorted
 operator|=
 name|ckmalloc
@@ -826,6 +828,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|printalias
 argument_list|(
 name|sorted
@@ -834,10 +837,19 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|int_pending
+argument_list|()
+condition|)
+break|break;
+block|}
 name|ckfree
 argument_list|(
 name|sorted
 argument_list|)
+expr_stmt|;
+name|INTON
 expr_stmt|;
 block|}
 end_function
