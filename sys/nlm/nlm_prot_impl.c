@@ -3986,11 +3986,16 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|strcmp
+name|strlcpy
 argument_list|(
 name|tmp
 argument_list|,
 literal|"<unknown>"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
