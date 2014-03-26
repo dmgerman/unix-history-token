@@ -158,7 +158,11 @@ name|pmap
 parameter_list|,
 name|void
 modifier|*
-name|cookie
+name|rptr
+parameter_list|,
+name|void
+modifier|*
+name|sptr
 parameter_list|)
 block|{
 name|printf

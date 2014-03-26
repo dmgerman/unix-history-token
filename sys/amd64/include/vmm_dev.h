@@ -450,6 +450,10 @@ name|IOCNUM_GET_CAPABILITY
 init|=
 literal|3
 block|,
+name|IOCNUM_SUSPEND
+init|=
+literal|4
+block|,
 comment|/* memory apis */
 name|IOCNUM_MAP_MEMORY
 init|=
@@ -582,6 +586,14 @@ directive|define
 name|VM_RUN
 define|\
 value|_IOWR('v', IOCNUM_RUN, struct vm_run)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_SUSPEND
+define|\
+value|_IO('v', IOCNUM_SUSPEND)
 end_define
 
 begin_define
