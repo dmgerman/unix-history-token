@@ -402,9 +402,9 @@ comment|/// about the control flow of such functions.
 name|bool
 name|ExposesReturnsTwice
 decl_stmt|;
-comment|/// True if the function includes MS-style inline assembly.
+comment|/// True if the function includes any inline assembly.
 name|bool
-name|HasMSInlineAsm
+name|HasInlineAsm
 decl_stmt|;
 name|MachineFunction
 argument_list|(
@@ -690,26 +690,25 @@ operator|=
 name|B
 expr_stmt|;
 block|}
-comment|/// Returns true if the function contains any MS-style inline assembly.
+comment|/// Returns true if the function contains any inline assembly.
 name|bool
-name|hasMSInlineAsm
+name|hasInlineAsm
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasMSInlineAsm
+name|HasInlineAsm
 return|;
 block|}
-comment|/// Set a flag that indicates that the function contains MS-style inline
-comment|/// assembly.
+comment|/// Set a flag that indicates that the function contains inline assembly.
 name|void
-name|setHasMSInlineAsm
+name|setHasInlineAsm
 parameter_list|(
 name|bool
 name|B
 parameter_list|)
 block|{
-name|HasMSInlineAsm
+name|HasInlineAsm
 operator|=
 name|B
 expr_stmt|;

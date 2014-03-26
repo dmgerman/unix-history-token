@@ -471,6 +471,11 @@ comment|/// Whether the "realign-stack" option is on.
 name|bool
 name|RealignOption
 decl_stmt|;
+comment|/// True if the function includes inline assembly that adjusts the stack
+comment|/// pointer.
+name|bool
+name|HasInlineAsmWithSPAdjust
+decl_stmt|;
 specifier|const
 name|TargetFrameLowering
 operator|*
@@ -555,6 +560,10 @@ operator|=
 literal|0
 block|;
 name|UseLocalStackAllocationBlock
+operator|=
+name|false
+block|;
+name|HasInlineAsmWithSPAdjust
 operator|=
 name|false
 block|;   }
@@ -1416,6 +1425,28 @@ operator|=
 name|V
 expr_stmt|;
 block|}
+comment|/// Returns true if the function contains any stack-adjusting inline assembly.
+name|bool
+name|hasInlineAsmWithSPAdjust
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasInlineAsmWithSPAdjust
+return|;
+block|}
+name|void
+name|setHasInlineAsmWithSPAdjust
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+name|HasInlineAsmWithSPAdjust
+operator|=
+name|B
+expr_stmt|;
+block|}
 comment|/// getMaxCallFrameSize - Return the maximum size of a call frame that must be
 comment|/// allocated for an outgoing function call.  This is only available if
 comment|/// CallFrameSetup/Destroy pseudo instructions are used by the target, and
@@ -1678,6 +1709,11 @@ name|CreateVariableSizedObject
 parameter_list|(
 name|unsigned
 name|Alignment
+parameter_list|,
+specifier|const
+name|AllocaInst
+modifier|*
+name|Alloca
 parameter_list|)
 function_decl|;
 comment|/// getCalleeSavedInfo - Returns a reference to call saved info vector for the
