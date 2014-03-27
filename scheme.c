@@ -717,11 +717,13 @@ name|nheads
 expr_stmt|;
 name|ncyls
 operator|=
+operator|(
 name|end
 operator|+
 name|cylsz
 operator|-
 literal|1
+operator|)
 operator|/
 name|cylsz
 expr_stmt|;
