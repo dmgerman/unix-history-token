@@ -2140,7 +2140,7 @@ name|nmi
 operator|->
 name|IntiFlags
 operator|&
-name|ACPI_MADT_TRIGGER_CONFORMS
+name|ACPI_MADT_POLARITY_CONFORMS
 operator|)
 condition|)
 name|ioapic_set_polarity
