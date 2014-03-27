@@ -4034,7 +4034,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sbappendaddr_locked
+name|sbappendaddr_nospacecheck_locked
 argument_list|(
 operator|&
 name|so2
@@ -4317,9 +4317,10 @@ operator|=
 operator|&
 name|sun_noname
 expr_stmt|;
+comment|/* 			 * Don't check for space available in so2->so_rcv. 			 * Unix domain sockets only check for space in the 			 * sending sockbuf, and that check is performed one 			 * level up the stack. 			 */
 if|if
 condition|(
-name|sbappendaddr_locked
+name|sbappendaddr_nospacecheck_locked
 argument_list|(
 operator|&
 name|so2
