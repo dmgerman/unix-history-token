@@ -9821,6 +9821,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* radeon_fb.c */
+end_comment
+
+begin_function_decl
+name|struct
+name|fb_info
+modifier|*
+name|radeon_fb_helper_getinfo
+parameter_list|(
+name|device_t
+name|kdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* r600.c */
 end_comment
 
