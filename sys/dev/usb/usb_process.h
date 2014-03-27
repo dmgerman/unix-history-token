@@ -287,6 +287,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|usb_proc_is_called_from
+parameter_list|(
+name|struct
+name|usb_process
+modifier|*
+name|up
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|usb_proc_explore_mwait
 parameter_list|(
