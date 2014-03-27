@@ -269,6 +269,23 @@ argument_list|,
 name|BBSIZE
 argument_list|)
 expr_stmt|;
+name|imgsz
+operator|=
+name|ncyls
+operator|*
+name|nheads
+operator|*
+name|nsecs
+expr_stmt|;
+name|ftruncate
+argument_list|(
+name|fd
+argument_list|,
+name|imgsz
+operator|*
+name|secsz
+argument_list|)
+expr_stmt|;
 name|d
 operator|=
 operator|(
@@ -312,10 +329,9 @@ name|d
 operator|->
 name|d_nsectors
 argument_list|,
-literal|1
+name|nsecs
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|le32enc
 argument_list|(
 operator|&
@@ -323,10 +339,9 @@ name|d
 operator|->
 name|d_ntracks
 argument_list|,
-literal|1
+name|nheads
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|le32enc
 argument_list|(
 operator|&
@@ -334,10 +349,9 @@ name|d
 operator|->
 name|d_ncylinders
 argument_list|,
-literal|0
+name|ncyls
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|le32enc
 argument_list|(
 operator|&
@@ -345,10 +359,11 @@ name|d
 operator|->
 name|d_secpercyl
 argument_list|,
-literal|1
+name|nsecs
+operator|*
+name|nheads
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|le32enc
 argument_list|(
 operator|&
