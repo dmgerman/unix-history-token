@@ -409,12 +409,7 @@ name|le32enc
 argument_list|(
 operator|&
 name|dp
-index|[
-name|part
 operator|->
-name|index
-index|]
-operator|.
 name|dp_start
 argument_list|,
 name|part
@@ -426,12 +421,7 @@ name|le32enc
 argument_list|(
 operator|&
 name|dp
-index|[
-name|part
 operator|->
-name|index
-index|]
-operator|.
 name|dp_size
 argument_list|,
 name|part
