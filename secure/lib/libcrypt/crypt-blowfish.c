@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: bcrypt.c,v 1.29 2014/02/24 19:45:43 tedu Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright 1997 Niels Provos<provos@physnet.uni-hamburg.de>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Niels Provos.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -18,11 +22,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* This password hashing algorithm was designed by David Mazieres  *<dm@lcs.mit.edu> and works as follows:  *  * 1. state := InitState ()  * 2. state := ExpandKey (state, salt, password) 3.  * REPEAT rounds:  *	state := ExpandKey (state, 0, salt)  *      state := ExpandKey(state, 0, password)  * 4. ctext := "OrpheanBeholderScryDoubt"  * 5. REPEAT 64:  * 	ctext := Encrypt_ECB (state, ctext);  * 6. RETURN Concatenate (salt, ctext);  *  */
+comment|/* This password hashing algorithm was designed by David Mazieres  *<dm@lcs.mit.edu> and works as follows:  *  * 1. state := InitState ()  * 2. state := ExpandKey (state, salt, password)  * 3. REPEAT rounds:  *      state := ExpandKey (state, 0, password)  *	state := ExpandKey (state, 0, salt)  * 4. ctext := "OrpheanBeholderScryDoubt"  * 5. REPEAT 64:  * 	ctext := Encrypt_ECB (state, ctext);  * 6. RETURN Concatenate (salt, ctext);  *  */
 end_comment
 
 begin_comment
-comment|/*  * FreeBSD implementation by Paul Herman<pherman@frenchfries.net>  */
+comment|/*  * FreeBSD implementation by Paul Herman<pherman@frenchfries.net>  * and updated by Xin Li<delphij@FreeBSD.org>  */
 end_comment
 
 begin_include
@@ -103,8 +107,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BCRYPT_MINROUNDS
-value|16
+name|BCRYPT_MINLOGROUNDS
+value|4
 end_define
 
 begin_comment
@@ -165,8 +169,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 specifier|const
+specifier|static
 name|u_int8_t
 name|Base64Code
 index|[]
@@ -176,8 +180,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 specifier|const
+specifier|static
 name|u_int8_t
 name|index_64
 index|[
@@ -539,10 +543,6 @@ operator|*
 name|bp
 operator|++
 operator|=
-call|(
-name|u_int8_t
-call|)
-argument_list|(
 operator|(
 name|c1
 operator|<<
@@ -558,7 +558,6 @@ operator|)
 operator|>>
 literal|4
 operator|)
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -697,9 +696,10 @@ decl_stmt|;
 name|u_int16_t
 name|j
 decl_stmt|;
-name|u_int8_t
+name|size_t
 name|key_len
-decl_stmt|,
+decl_stmt|;
+name|u_int8_t
 name|salt_len
 decl_stmt|,
 name|logr
@@ -728,13 +728,11 @@ index|[
 name|BCRYPT_BLOCKS
 index|]
 decl_stmt|;
-specifier|static
-specifier|const
 name|char
-modifier|*
-name|magic
-init|=
-literal|"$2a$04$"
+name|arounds
+index|[
+literal|3
+index|]
 decl_stmt|;
 comment|/* Defaults */
 name|minr
@@ -743,40 +741,14 @@ literal|'a'
 expr_stmt|;
 name|logr
 operator|=
-literal|4
+name|BCRYPT_MINLOGROUNDS
 expr_stmt|;
 name|rounds
 operator|=
-literal|1
+literal|1U
 operator|<<
 name|logr
 expr_stmt|;
-comment|/* If it starts with the magic string, then skip that */
-if|if
-condition|(
-operator|!
-name|strncmp
-argument_list|(
-name|salt
-argument_list|,
-name|magic
-argument_list|,
-name|strlen
-argument_list|(
-name|magic
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|salt
-operator|+=
-name|strlen
-argument_list|(
-name|magic
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 operator|*
@@ -825,11 +797,12 @@ case|case
 literal|'a'
 case|:
 comment|/* 'ab' should not yield the same as 'abab' */
+case|case
+literal|'b'
+case|:
+comment|/* cap input length at 72 bytes */
 name|minr
 operator|=
-operator|(
-name|u_int8_t
-operator|)
 name|salt
 index|[
 literal|1
@@ -868,38 +841,98 @@ comment|/* Out of sync with passwd entry */
 return|return
 name|error
 return|;
-comment|/* Computer power doesnt increase linear, 2^x should be fine */
-name|logr
-operator|=
-operator|(
-name|u_int8_t
-operator|)
-name|atoi
+name|memcpy
 argument_list|(
+name|arounds
+argument_list|,
 name|salt
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|arounds
 argument_list|)
-expr_stmt|;
-name|rounds
-operator|=
-literal|1
-operator|<<
-name|logr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rounds
-operator|<
-name|BCRYPT_MINROUNDS
+name|arounds
+index|[
+sizeof|sizeof
+argument_list|(
+name|arounds
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'$'
 condition|)
 return|return
 name|error
 return|;
+name|arounds
+index|[
+sizeof|sizeof
+argument_list|(
+name|arounds
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|logr
+operator|=
+name|strtonum
+argument_list|(
+name|arounds
+argument_list|,
+name|BCRYPT_MINLOGROUNDS
+argument_list|,
+literal|31
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|logr
+operator|==
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* Computer power doesn't increase linearly, 2^x should be fine */
+name|rounds
+operator|=
+literal|1U
+operator|<<
+name|logr
+expr_stmt|;
 comment|/* Discard num rounds + "$" identifier */
 name|salt
 operator|+=
 literal|3
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|salt
+argument_list|)
+operator|*
+literal|3
+operator|/
+literal|4
+operator|<
+name|BCRYPT_MAXSALT
+condition|)
+return|return
+name|NULL
+return|;
 comment|/* We dont want the base64 salt but the raw data */
 name|decode_base64
 argument_list|(
@@ -919,6 +952,12 @@ name|salt_len
 operator|=
 name|BCRYPT_MAXSALT
 expr_stmt|;
+if|if
+condition|(
+name|minr
+operator|<=
+literal|'a'
+condition|)
 name|key_len
 operator|=
 call|(
@@ -941,6 +980,31 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* strlen() returns a size_t, but the function calls 		 * below result in implicit casts to a narrower integer 		 * type, so cap key_len at the actual maximum supported 		 * length here to avoid integer wraparound */
+name|key_len
+operator|=
+name|strlen
+argument_list|(
+name|key
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|key_len
+operator|>
+literal|72
+condition|)
+name|key_len
+operator|=
+literal|72
+expr_stmt|;
+name|key_len
+operator|++
+expr_stmt|;
+comment|/* include the NUL */
+block|}
 comment|/* Setting up S-Boxes and Subkeys */
 name|Blowfish_initstate
 argument_list|(
@@ -1213,9 +1277,6 @@ name|i
 operator|++
 index|]
 operator|=
-operator|(
-name|int8_t
-operator|)
 name|minr
 expr_stmt|;
 name|encrypted
@@ -1276,6 +1337,55 @@ operator|*
 name|BCRYPT_BLOCKS
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|state
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|state
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|ciphertext
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ciphertext
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|csalt
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|csalt
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|cdata
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cdata
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1483,7 +1593,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void main() { 	char    blubber[73]; 	char    salt[100]; 	char   *p; 	salt[0] = '$'; 	salt[1] = BCRYPT_VERSION; 	salt[2] = '$';  	snprintf(salt + 3, 4, "%2.2u$", 5);  	printf("24 bytes of salt: "); 	fgets(salt + 6, 94, stdin); 	salt[99] = 0; 	printf("72 bytes of password: "); 	fpurge(stdin); 	fgets(blubber, 73, stdin); 	blubber[72] = 0;  	p = crypt(blubber, salt); 	printf("Passwd entry: %s\n\n", p);  	p = bcrypt_gensalt(5); 	printf("Generated salt: %s\n", p); 	p = crypt(blubber, p); 	printf("Passwd entry: %s\n", p); }
+unit|void main() { 	char    blubber[73]; 	char    salt[100]; 	char   *p; 	salt[0] = '$'; 	salt[1] = BCRYPT_VERSION; 	salt[2] = '$';  	snprintf(salt + 3, 4, "%2.2u$", 5);  	printf("24 bytes of salt: "); 	fgets(salt + 6, sizeof(salt) - 6, stdin); 	salt[99] = 0; 	printf("72 bytes of password: "); 	fpurge(stdin); 	fgets(blubber, sizeof(blubber), stdin); 	blubber[72] = 0;  	p = crypt(blubber, salt); 	printf("Passwd entry: %s\n\n", p);  	p = bcrypt_gensalt(5); 	printf("Generated salt: %s\n", p); 	p = crypt(blubber, p); 	printf("Passwd entry: %s\n", p); }
 endif|#
 directive|endif
 end_endif
