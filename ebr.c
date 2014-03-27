@@ -218,8 +218,6 @@ name|next
 decl_stmt|;
 name|lba_t
 name|block
-decl_stmt|,
-name|trksz
 decl_stmt|;
 name|int
 name|error
@@ -264,11 +262,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|trksz
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Sectors/track */
 name|STAILQ_FOREACH_SAFE
 argument_list|(
 argument|part
@@ -286,7 +279,7 @@ name|part
 operator|->
 name|block
 operator|-
-name|trksz
+name|nsecs
 expr_stmt|;
 name|dp
 operator|=
@@ -317,7 +310,7 @@ name|dp
 operator|->
 name|dp_ssect
 argument_list|,
-name|trksz
+name|nsecs
 argument_list|)
 expr_stmt|;
 name|dp
@@ -366,7 +359,7 @@ name|dp
 operator|->
 name|dp_start
 argument_list|,
-name|trksz
+name|nsecs
 argument_list|)
 expr_stmt|;
 name|le32enc
@@ -413,7 +406,7 @@ name|next
 operator|->
 name|block
 operator|-
-name|trksz
+name|nsecs
 argument_list|)
 expr_stmt|;
 name|dp
@@ -461,7 +454,7 @@ name|next
 operator|->
 name|block
 operator|-
-name|trksz
+name|nsecs
 argument_list|)
 expr_stmt|;
 name|le32enc
@@ -475,7 +468,7 @@ name|next
 operator|->
 name|size
 operator|+
-name|trksz
+name|nsecs
 argument_list|)
 expr_stmt|;
 block|}
