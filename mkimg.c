@@ -142,6 +142,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int
+name|verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
 name|ncyls
 init|=
 literal|0
@@ -176,7 +182,7 @@ begin_decl_stmt
 name|u_int
 name|blksz
 init|=
-literal|512
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1134,25 +1140,6 @@ name|error
 decl_stmt|,
 name|fd
 decl_stmt|;
-if|if
-condition|(
-name|nparts
-operator|>
-name|scheme_max_parts
-argument_list|()
-condition|)
-name|errc
-argument_list|(
-name|EX_DATAERR
-argument_list|,
-name|ENOSPC
-argument_list|,
-literal|"only %d partitions are supported"
-argument_list|,
-name|scheme_max_parts
-argument_list|()
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|scheme_bootcode
@@ -1456,7 +1443,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:o:p:s:zH:P:S:T:"
+literal|"b:o:p:s:vzH:P:S:T:"
 argument_list|)
 operator|)
 operator|!=
@@ -1629,6 +1616,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'v'
+case|:
+name|verbose
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'z'
 case|:
 comment|/* SPARSE OUTPUT */
@@ -1744,7 +1738,7 @@ operator|&&
 operator|!
 name|pwr_of_two
 argument_list|(
-name|blksz
+name|secsz
 argument_list|)
 condition|)
 name|error
@@ -1841,6 +1835,71 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|secsz
+operator|>
+name|blksz
+condition|)
+block|{
+if|if
+condition|(
+name|blksz
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"the physical block size cannot "
+literal|"be smaller than the sector size"
+argument_list|)
+expr_stmt|;
+name|blksz
+operator|=
+name|secsz
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|secsz
+operator|>
+name|scheme_max_secsz
+argument_list|()
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"maximum sector size supported is %u; "
+literal|"size specified is %u"
+argument_list|,
+name|scheme_max_secsz
+argument_list|()
+argument_list|,
+name|secsz
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nparts
+operator|>
+name|scheme_max_parts
+argument_list|()
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"%d partitions supported; %d given"
+argument_list|,
+name|scheme_max_parts
+argument_list|()
+argument_list|,
+name|nparts
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|outfd
 operator|==
 literal|0
@@ -1894,6 +1953,26 @@ name|tmpfd
 operator|=
 name|outfd
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Logical sector size: %u\n"
+argument_list|,
+name|secsz
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Physical block size: %u\n"
+argument_list|,
+name|blksz
+argument_list|)
+expr_stmt|;
+block|}
 name|mkimg
 argument_list|(
 name|bcfd

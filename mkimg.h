@@ -115,6 +115,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
+name|verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|ncyls
 decl_stmt|;
 end_decl_stmt
