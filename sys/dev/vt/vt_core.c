@@ -439,7 +439,7 @@ name|VT_SYSCTL_INT
 argument_list|(
 name|suspendswitch
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|"Switch to VT0 before suspend"
 argument_list|)
