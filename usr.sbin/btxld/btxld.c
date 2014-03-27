@@ -2754,7 +2754,7 @@ operator|.
 name|p_memsz
 argument_list|)
 argument_list|,
-literal|4
+literal|4096
 argument_list|)
 argument_list|)
 expr_stmt|;
