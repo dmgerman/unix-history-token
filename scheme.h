@@ -258,18 +258,9 @@ end_function_decl
 
 begin_function_decl
 name|lba_t
-name|scheme_first_block
+name|scheme_metadata
 parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|lba_t
-name|scheme_next_block
-parameter_list|(
-name|lba_t
+name|u_int
 parameter_list|,
 name|lba_t
 parameter_list|)
