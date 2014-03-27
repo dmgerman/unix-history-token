@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/efi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/eventhandler.h>
 end_include
 
@@ -315,12 +321,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/efi.h>
 end_include
 
 begin_include
