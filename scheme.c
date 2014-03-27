@@ -640,6 +640,23 @@ block|}
 end_function
 
 begin_function
+name|u_int
+name|scheme_max_secsz
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|scheme
+operator|->
+name|maxsecsz
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|lba_t
 name|scheme_first_block
 parameter_list|(

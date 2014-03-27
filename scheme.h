@@ -248,6 +248,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int
+name|scheme_max_secsz
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|lba_t
 name|scheme_first_block
 parameter_list|(
