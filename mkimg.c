@@ -357,13 +357,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-z\t\t-  write a sparse file\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"    schemes:\n"
 argument_list|)
 expr_stmt|;
@@ -1521,7 +1514,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:o:p:s:vzH:P:S:T:"
+literal|"b:o:p:s:vH:P:S:T:"
 argument_list|)
 operator|)
 operator|!=
@@ -1699,11 +1692,6 @@ case|:
 name|verbose
 operator|++
 expr_stmt|;
-break|break;
-case|case
-literal|'z'
-case|:
-comment|/* SPARSE OUTPUT */
 break|break;
 case|case
 literal|'H'
