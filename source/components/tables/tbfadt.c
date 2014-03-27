@@ -765,7 +765,7 @@ name|Length
 argument_list|)
 expr_stmt|;
 comment|/* Obtain the DSDT and FACS tables via their addresses within the FADT */
-name|AcpiTbInstallTable
+name|AcpiTbInstallFixedTable
 argument_list|(
 operator|(
 name|ACPI_PHYSICAL_ADDRESS
@@ -786,7 +786,7 @@ operator|!
 name|AcpiGbl_ReducedHardware
 condition|)
 block|{
-name|AcpiTbInstallTable
+name|AcpiTbInstallFixedTable
 argument_list|(
 operator|(
 name|ACPI_PHYSICAL_ADDRESS

@@ -350,6 +350,8 @@ operator|,
 name|AcpiUtGetNotifyName
 argument_list|(
 name|NotifyValue
+argument_list|,
+name|ACPI_TYPE_ANY
 argument_list|)
 operator|,
 name|Node

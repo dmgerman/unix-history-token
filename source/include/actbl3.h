@@ -19,19 +19,6 @@ directive|define
 name|__ACTBL3_H__
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_comment
 comment|/*******************************************************************************  *  * Additional ACPI Tables (3)  *  * These tables are not consumed directly by the ACPICA subsystem, but are  * included here to support device drivers and the AML disassembler.  *  * The tables in this file are fully defined within the ACPI specification.  *  ******************************************************************************/
 end_comment
@@ -1657,18 +1644,17 @@ name|ACPI_TPM2_CONTROL
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Reset to default packing */
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
 name|pack
 name|(
-name|pop
 name|)
 end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
 
 begin_endif
 endif|#

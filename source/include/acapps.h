@@ -19,19 +19,6 @@ directive|define
 name|_ACAPPS
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -269,6 +256,21 @@ modifier|*
 name|AcpiGbl_Optarg
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * cmfsize - Common get file size function  */
+end_comment
+
+begin_function_decl
+name|UINT32
+name|CmGetFileSize
+parameter_list|(
+name|FILE
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifndef
 ifndef|#
@@ -560,19 +562,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
 
 begin_endif
 endif|#

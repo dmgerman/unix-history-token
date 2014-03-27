@@ -161,6 +161,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AH_DECODE_ASL_AML
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|AH_MAX_ASL_LINE_LENGTH
 value|70
 end_define
@@ -256,24 +263,6 @@ name|AH_ASL_KEYWORD
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|ah_device_id
-block|{
-name|char
-modifier|*
-name|Name
-decl_stmt|;
-name|char
-modifier|*
-name|Description
-decl_stmt|;
-block|}
-name|AH_DEVICE_ID
-typedef|;
-end_typedef
-
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -365,6 +354,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AhFindAslAndAmlOperators
+parameter_list|(
+name|char
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|UINT32
 name|AhFindAslOperators
 parameter_list|(
 name|char
@@ -389,7 +389,9 @@ begin_function_decl
 name|void
 name|AhDisplayDeviceIds
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|Name
 parameter_list|)
 function_decl|;
 end_function_decl

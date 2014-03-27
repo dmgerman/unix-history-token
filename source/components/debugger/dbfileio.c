@@ -251,6 +251,12 @@ directive|ifdef
 name|ACPI_APPLICATION
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|"acapps.h"
+end_include
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbCheckTextModeCorruption  *  * PARAMETERS:  Table           - Table buffer  *              TableLength     - Length of table from the table header  *              FileLength      - Length of the file that contains the table  *  * RETURN:      Status  *  * DESCRIPTION: Check table for text mode file corruption where all linefeed  *              characters (LF) have been replaced by carriage return linefeed  *              pairs (CR/LF).  *  ******************************************************************************/
 end_comment
@@ -435,34 +441,26 @@ init|=
 name|TRUE
 decl_stmt|;
 comment|/* Get the file size */
-name|fseek
-argument_list|(
-name|fp
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_END
-argument_list|)
-expr_stmt|;
 name|FileSize
 operator|=
+name|CmGetFileSize
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|FileSize
+operator|==
+name|ACPI_UINT32_MAX
+condition|)
+block|{
+return|return
 operator|(
-name|UINT32
+name|AE_ERROR
 operator|)
-name|ftell
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-name|fseek
-argument_list|(
-name|fp
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_SET
-argument_list|)
-expr_stmt|;
+return|;
+block|}
 if|if
 condition|(
 name|FileSize
@@ -954,7 +952,7 @@ directive|if
 literal|0
 block|if (!Table)     {         return_ACPI_STATUS (AE_BAD_PARAMETER);     }      TableInfo.Pointer = Table;     Status = AcpiTbRecognizeTable (&TableInfo, ACPI_TABLE_ALL);     if (ACPI_FAILURE (Status))     {         return_ACPI_STATUS (Status);     }
 comment|/* Install the new table into the local data structures */
-block|Status = AcpiTbInstallTable (&TableInfo);     if (ACPI_FAILURE (Status))     {         if (Status == AE_ALREADY_EXISTS)         {
+block|Status = AcpiTbInitTableDescriptor (&TableInfo);     if (ACPI_FAILURE (Status))     {         if (Status == AE_ALREADY_EXISTS)         {
 comment|/* Table already exists, no error */
 block|Status = AE_OK;         }
 comment|/* Free table allocated by AcpiTbGetTable */
@@ -1019,8 +1017,10 @@ name|TableLength
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_ERROR
 decl_stmt|;
-comment|/* Open the file */
+comment|/* Open the file, get current size */
 name|File
 operator|=
 name|fopen
@@ -1043,39 +1043,28 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|AE_ERROR
+name|Status
 operator|)
 return|;
 block|}
-comment|/* Get the file size */
-name|fseek
-argument_list|(
-name|File
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_END
-argument_list|)
-expr_stmt|;
 name|FileSize
 operator|=
-operator|(
-name|UINT32
-operator|)
-name|ftell
+name|CmGetFileSize
 argument_list|(
 name|File
 argument_list|)
 expr_stmt|;
-name|fseek
-argument_list|(
-name|File
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_SET
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|FileSize
+operator|==
+name|ACPI_UINT32_MAX
+condition|)
+block|{
+goto|goto
+name|Exit
+goto|;
+block|}
 comment|/* Get the entire file */
 name|fprintf
 argument_list|(
@@ -1102,11 +1091,6 @@ operator|&
 name|TableLength
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|File
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1120,15 +1104,17 @@ argument_list|(
 literal|"Could not get table from the file\n"
 argument_list|)
 expr_stmt|;
+block|}
+name|Exit
+label|:
+name|fclose
+argument_list|(
+name|File
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|AE_OK
 operator|)
 return|;
 block|}
@@ -1265,6 +1251,13 @@ name|Status
 operator|)
 return|;
 block|}
+name|AcpiTbPrintTableHeader
+argument_list|(
+literal|0
+argument_list|,
+name|Table
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr

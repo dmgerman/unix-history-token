@@ -23,19 +23,6 @@ directive|define
 name|__AMLRESRC_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_comment
 comment|/*  * Resource descriptor tags, as defined in the ACPI specification.  * Used to symbolically reference fields within a descriptor.  */
 end_comment
@@ -1511,19 +1498,6 @@ block|}
 name|AML_RESOURCE
 typedef|;
 end_typedef
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
 
 begin_endif
 endif|#

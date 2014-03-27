@@ -192,7 +192,7 @@ argument_list|(
 name|EvSciXruptHandler
 argument_list|)
 expr_stmt|;
-comment|/*      * We are guaranteed by the ACPI CA initialization/shutdown code that      * if this interrupt handler is installed, ACPI is enabled.      */
+comment|/*      * We are guaranteed by the ACPICA initialization/shutdown code that      * if this interrupt handler is installed, ACPI is enabled.      */
 comment|/*      * Fixed Events:      * Check for and dispatch any Fixed Events that have occurred      */
 name|InterruptHandled
 operator||=

@@ -19,19 +19,6 @@ directive|define
 name|__ACGLOBAL_H__
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_comment
 comment|/*  * Ensure that the globals are actually defined and initialized only once.  *  * The use of these macros allows a single list of globals (here) in order  * to simplify maintenance of the code.  */
 end_comment
@@ -155,7 +142,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Create the predefined _OSI method in the namespace? Default is TRUE  * because ACPI CA is fully compatible with other ACPI implementations.  * Changing this will revert ACPI CA (and machine ASL) to pre-OSI behavior.  */
+comment|/*  * Create the predefined _OSI method in the namespace? Default is TRUE  * because ACPICA is fully compatible with other ACPI implementations.  * Changing this will revert ACPICA (and machine ASL) to pre-OSI behavior.  */
 end_comment
 
 begin_expr_stmt
@@ -283,7 +270,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Optionally do not load any SSDTs from the RSDT/XSDT during initialization.  * This can be useful for debugging ACPI problems on some machines.  */
+comment|/*  * Optionally do not install any SSDTs from the RSDT/XSDT during initialization.  * This can be useful for debugging ACPI problems on some machines.  */
 end_comment
 
 begin_expr_stmt
@@ -291,7 +278,7 @@ name|ACPI_INIT_GLOBAL
 argument_list|(
 name|UINT8
 argument_list|,
-name|AcpiGbl_DisableSsdtTableLoad
+name|AcpiGbl_DisableSsdtTableInstall
 argument_list|,
 name|FALSE
 argument_list|)
@@ -2072,18 +2059,14 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|AH_DEVICE_ID
+name|AslDeviceIds
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

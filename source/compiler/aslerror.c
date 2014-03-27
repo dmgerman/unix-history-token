@@ -1972,7 +1972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AslCoreSubsystemError  *  * PARAMETERS:  Op                  - Parse node where error happened  *              Status              - The ACPI CA Exception  *              ExtraMessage        - additional error message  *              Abort               - TRUE -> Abort compilation  *  * RETURN:      None  *  * DESCRIPTION: Error reporting routine for exceptions returned by the ACPI  *              CA core subsystem.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AslCoreSubsystemError  *  * PARAMETERS:  Op                  - Parse node where error happened  *              Status              - The ACPICA Exception  *              ExtraMessage        - additional error message  *              Abort               - TRUE -> Abort compilation  *  * RETURN:      None  *  * DESCRIPTION: Error reporting routine for exceptions returned by the ACPICA  *              core subsystem.  *  ******************************************************************************/
 end_comment
 
 begin_function

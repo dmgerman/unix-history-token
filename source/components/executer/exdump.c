@@ -643,7 +643,7 @@ specifier|static
 name|ACPI_EXDUMP_INFO
 name|AcpiExDumpMutex
 index|[
-literal|5
+literal|6
 index|]
 init|=
 block|{
@@ -669,6 +669,19 @@ name|SyncLevel
 argument_list|)
 block|,
 literal|"Sync Level"
+block|}
+block|,
+block|{
+name|ACPI_EXD_UINT8
+block|,
+name|ACPI_EXD_OFFSET
+argument_list|(
+name|Mutex
+operator|.
+name|OriginalSyncLevel
+argument_list|)
+block|,
+literal|"Original Sync Level"
 block|}
 block|,
 block|{

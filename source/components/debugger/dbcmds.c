@@ -234,7 +234,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Address %p is invalid in this address space\n"
+literal|"Address %p is invalid"
 argument_list|,
 name|Node
 argument_list|)
@@ -258,7 +258,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Address %p is not a valid NS node [%s]\n"
+literal|"Address %p is not a valid namespace node [%s]\n"
 argument_list|,
 name|Node
 argument_list|,
@@ -291,6 +291,13 @@ operator|!
 name|Node
 condition|)
 block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not find [%s] in namespace, defaulting to root node\n"
+argument_list|,
+name|InString
+argument_list|)
+expr_stmt|;
 name|Node
 operator|=
 name|AcpiGbl_RootNode
@@ -787,38 +794,29 @@ name|ACPI_TABLE_ORIGIN_MASK
 condition|)
 block|{
 case|case
-name|ACPI_TABLE_ORIGIN_UNKNOWN
+name|ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unknown   "
+literal|"External virtual  "
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_TABLE_ORIGIN_MAPPED
+name|ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Mapped    "
+literal|"Internal physical "
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_TABLE_ORIGIN_ALLOCATED
+name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Allocated "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_TABLE_ORIGIN_OVERRIDE
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"Override  "
+literal|"Internal virtual  "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -833,7 +831,7 @@ block|}
 comment|/* Make sure that the table is mapped */
 name|Status
 operator|=
-name|AcpiTbVerifyTable
+name|AcpiTbValidateTable
 argument_list|(
 name|TableDesc
 argument_list|)
@@ -925,13 +923,6 @@ operator|!
 name|Node
 condition|)
 block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"Could not find [%s] in namespace\n"
-argument_list|,
-name|ObjectName
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|Status

@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|AH_SUPPORTED_OPTIONS
-value|"ehikmopsv"
+value|"aehikmopsv"
 end_define
 
 begin_comment
@@ -55,7 +55,7 @@ parameter_list|)
 block|{
 name|ACPI_USAGE_HEADER
 argument_list|(
-literal|"acpihelp<options> [NamePrefix | HexValue]"
+literal|"acpihelp<options> [Name/Prefix | HexValue]"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -74,35 +74,59 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nACPI Names and Symbols:\n"
+literal|"\nAML (ACPI Machine Language) Names and Encodings:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-k [NamePrefix]"
+literal|"-a [Name/Prefix]"
+argument_list|,
+literal|"Find/Display both ASL operator and AML opcode name(s)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-m [Name/Prefix]"
+argument_list|,
+literal|"Find/Display AML opcode name(s)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nASL (ACPI Source Language) Names and Symbols:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-k [Name/Prefix]"
 argument_list|,
 literal|"Find/Display ASL non-operator keyword(s)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-m [NamePrefix]"
-argument_list|,
-literal|"Find/Display AML opcode name(s)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-p [NamePrefix]"
+literal|"-p [Name/Prefix]"
 argument_list|,
 literal|"Find/Display ASL predefined method name(s)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-s [NamePrefix]"
+literal|"-s [Name/Prefix]"
 argument_list|,
 literal|"Find/Display ASL operator name(s)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nOther ACPI Names:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-i [Name/Prefix]"
+argument_list|,
+literal|"Find/Display ACPI/PNP Hardware ID(s)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -119,13 +143,6 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-i"
-argument_list|,
-literal|"Display known ACPI Device IDs (_HID)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-o [HexValue]"
 argument_list|,
 literal|"Decode hex AML opcode"
@@ -133,17 +150,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nNamePrefix/HexValue not specified means \"Display All\"\n"
+literal|"\nName/Prefix or HexValue not specified means \"Display All\"\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nDefault search with NamePrefix and no options:\n"
+literal|"\nDefault search with valid Name/Prefix and no options:\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    Find ASL operator names - if NamePrefix does not start with underscore\n"
+literal|"    Find ASL/AML operator names - if NamePrefix does not start with underscore\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -238,6 +255,14 @@ name|j
 condition|)
 block|{
 case|case
+literal|'a'
+case|:
+name|DecodeType
+operator|=
+name|AH_DECODE_ASL_AML
+expr_stmt|;
+break|break;
+case|case
 literal|'e'
 case|:
 name|DecodeType
@@ -330,6 +355,15 @@ name|DecodeType
 condition|)
 block|{
 case|case
+name|AH_DECODE_ASL_AML
+case|:
+name|AhFindAslAndAmlOperators
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|AH_DECODE_AML
 case|:
 name|AhFindAmlOpcode
@@ -378,7 +412,9 @@ case|case
 name|AH_DISPLAY_DEVICE_IDS
 case|:
 name|AhDisplayDeviceIds
-argument_list|()
+argument_list|(
+name|Name
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -420,7 +456,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AhFindAslOperators
+name|AhFindAslAndAmlOperators
 argument_list|(
 name|Name
 argument_list|)

@@ -19,19 +19,6 @@ directive|define
 name|__ACEXCEP_H__
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_comment
 comment|/* This module contains all possible exception codes for ACPI_STATUS */
 end_comment
@@ -1673,19 +1660,6 @@ end_endif
 
 begin_comment
 comment|/* EXCEPTION_TABLE */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
 end_comment
 
 begin_endif

@@ -141,18 +141,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|UINT32
-name|AdGetFileSize
-parameter_list|(
-name|FILE
-modifier|*
-name|File
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|AdCreateTableHeader
 parameter_list|(
@@ -348,70 +336,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AdGetFileSize  *  * PARAMETERS:  File                - Open file handle  *  * RETURN:      File Size  *  * DESCRIPTION: Get current file size. Uses seek-to-EOF. File must be open.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|UINT32
-name|AdGetFileSize
-parameter_list|(
-name|FILE
-modifier|*
-name|File
-parameter_list|)
-block|{
-name|UINT32
-name|FileSize
-decl_stmt|;
-name|long
-name|Offset
-decl_stmt|;
-name|Offset
-operator|=
-name|ftell
-argument_list|(
-name|File
-argument_list|)
-expr_stmt|;
-name|fseek
-argument_list|(
-name|File
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_END
-argument_list|)
-expr_stmt|;
-name|FileSize
-operator|=
-operator|(
-name|UINT32
-operator|)
-name|ftell
-argument_list|(
-name|File
-argument_list|)
-expr_stmt|;
-comment|/* Restore file pointer */
-name|fseek
-argument_list|(
-name|File
-argument_list|,
-name|Offset
-argument_list|,
-name|SEEK_SET
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|FileSize
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AdInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: ACPICA and local initialization  *  ******************************************************************************/
 end_comment
 
@@ -425,7 +349,7 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-comment|/* ACPI CA subsystem initialization */
+comment|/* ACPICA subsystem initialization */
 name|Status
 operator|=
 name|AcpiOsInitialize
@@ -877,7 +801,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|OutFilename
+name|DisasmFilename
 condition|)
 block|{
 name|fprintf
@@ -991,7 +915,7 @@ literal|"Formatted output:  %s - %u bytes\n"
 argument_list|,
 name|DisasmFilename
 argument_list|,
-name|AdGetFileSize
+name|CmGetFileSize
 argument_list|(
 name|File
 argument_list|)
@@ -1116,11 +1040,15 @@ name|AcpiDmGetExternalMethodCount
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* Reparse, rebuild namespace. no need to xref namespace */
+comment|/* Reparse, rebuild namespace */
 name|AcpiPsDeleteParseTree
 argument_list|(
 name|AcpiGbl_ParseOpRoot
 argument_list|)
+expr_stmt|;
+name|AcpiGbl_ParseOpRoot
+operator|=
+name|NULL
 expr_stmt|;
 name|AcpiNsDeleteNamespaceSubtree
 argument_list|(
@@ -1186,6 +1114,7 @@ operator|=
 name|AcpiNsRootInitialize
 argument_list|()
 expr_stmt|;
+comment|/* New namespace, add the external definitions first */
 name|AcpiDmAddExternalsToNamespace
 argument_list|()
 expr_stmt|;
@@ -1225,6 +1154,25 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+comment|/* Cross reference the namespace again */
+name|AcpiDmFinishNamespaceLoad
+argument_list|(
+name|AcpiGbl_ParseOpRoot
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|,
+name|OwnerId
+argument_list|)
+expr_stmt|;
+name|AcpiDmCrossReferenceNamespace
+argument_list|(
+name|AcpiGbl_ParseOpRoot
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|,
+name|OwnerId
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|AslCompilerdebug
@@ -1298,7 +1246,7 @@ literal|"ASL Output:    %s - %u bytes\n"
 argument_list|,
 name|DisasmFilename
 argument_list|,
-name|AdGetFileSize
+name|CmGetFileSize
 argument_list|(
 name|File
 argument_list|)
@@ -1376,7 +1324,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdDisassemblerHeader  *  * PARAMETERS:  Filename            - Input file for the table  *  * RETURN:      None  *  * DESCRIPTION: Create the disassembler header, including ACPI CA signon with  *              current time and date.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdDisassemblerHeader  *  * PARAMETERS:  Filename            - Input file for the table  *  * RETURN:      None  *  * DESCRIPTION: Create the disassembler header, including ACPICA signon with  *              current time and date.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1435,7 +1383,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdCreateTableHeader  *  * PARAMETERS:  Filename            - Input file for the table  *              Table               - Pointer to the raw table  *  * RETURN:      None  *  * DESCRIPTION: Create the ASL table header, including ACPI CA signon with  *              current time and date.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdCreateTableHeader  *  * PARAMETERS:  Filename            - Input file for the table  *              Table               - Pointer to the raw table  *  * RETURN:      None  *  * DESCRIPTION: Create the ASL table header, including ACPICA signon with  *              current time and date.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1685,6 +1633,11 @@ argument_list|(
 literal|9
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NewFilename
+condition|)
+block|{
 name|strncat
 argument_list|(
 name|NewFilename
@@ -1703,6 +1656,20 @@ argument_list|,
 literal|".aml"
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|NewFilename
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" **** Could not generate AML output filename\n"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 comment|/* Open the ASL definition block */
 name|AcpiOsPrintf
@@ -2224,7 +2191,7 @@ name|Table
 operator|->
 name|Length
 argument_list|,
-name|ACPI_TABLE_ORIGIN_ALLOCATED
+name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
 argument_list|,
 operator|&
 name|TableIndex
@@ -2347,7 +2314,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/* Pass 3: Parse control methods and link their parse trees into the main parse tree */
+comment|/*      * Pass 3: Parse control methods and link their parse trees      * into the main parse tree      */
 name|fprintf
 argument_list|(
 name|stderr

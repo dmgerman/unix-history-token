@@ -534,6 +534,13 @@ comment|/* Get entire list of external files */
 name|AcpiGbl_Optind
 operator|--
 expr_stmt|;
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+operator|=
+name|AcpiGbl_Optarg
+expr_stmt|;
 while|while
 condition|(
 name|argv

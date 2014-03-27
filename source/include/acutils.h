@@ -19,19 +19,6 @@ directive|define
 name|_ACUTILS_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -748,6 +735,9 @@ name|AcpiUtGetNotifyName
 parameter_list|(
 name|UINT32
 name|NotifyValue
+parameter_list|,
+name|ACPI_OBJECT_TYPE
+name|Type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3444,18 +3434,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
 begin_comment
-comment|/* Restore original struct packing */
+comment|/*  * Utility functions for ACPI names and IDs  */
 end_comment
+
+begin_function_decl
+specifier|const
+name|AH_PREDEFINED_NAME
+modifier|*
+name|AcpiAhMatchPredefinedName
+parameter_list|(
+name|char
+modifier|*
+name|Nameseg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|AH_DEVICE_ID
+modifier|*
+name|AcpiAhMatchHardwareId
+parameter_list|(
+name|char
+modifier|*
+name|Hid
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

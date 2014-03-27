@@ -25,19 +25,6 @@ directive|include
 file|"amlresrc.h"
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2146,6 +2133,28 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiDmDisplayTargetPathname
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDmNotifyDescription
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiDmPredefinedDescription
 parameter_list|(
 name|ACPI_PARSE_OBJECT
@@ -2346,7 +2355,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDmIsEisaId
+name|AcpiDmCheckForHardwareId
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -2357,7 +2366,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDmEisaId
+name|AcpiDmDecompressEisaId
 parameter_list|(
 name|UINT32
 name|EncodedId
@@ -3111,19 +3120,6 @@ name|Filename
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
 
 begin_endif
 endif|#

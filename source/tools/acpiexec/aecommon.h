@@ -127,19 +127,6 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|BOOLEAN
@@ -517,19 +504,6 @@ name|Context
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
 
 begin_endif
 endif|#

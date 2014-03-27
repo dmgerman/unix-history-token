@@ -133,7 +133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ApIsValidChecksum  *  * PARAMETERS:  Table               - Pointer to table to be validated  *  * RETURN:      TRUE if the checksum appears to be valid. FALSE otherwise  *  * DESCRIPTION: Check for a valid ACPI table checksum  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    ApIsValidChecksum  *  * PARAMETERS:  Table               - Pointer to table to be validated  *  * RETURN:      TRUE if the checksum appears to be valid. FALSE otherwise.  *  * DESCRIPTION: Check for a valid ACPI table checksum.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -206,7 +206,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%4.4s: Warning: wrong checksum\n"
+literal|"%4.4s: Warning: wrong checksum in table\n"
 argument_list|,
 name|Table
 operator|->
@@ -223,7 +223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ApGetTableLength  *  * PARAMETERS:  Table               - Pointer to the table  *  * RETURN:      Table length  *  * DESCRIPTION: Obtain table length according to table signature  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    ApGetTableLength  *  * PARAMETERS:  Table               - Pointer to the table  *  * RETURN:      Table length  *  * DESCRIPTION: Obtain table length according to table signature.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -282,8 +282,7 @@ name|Length
 operator|)
 return|;
 block|}
-else|else
-block|{
+comment|/* Normal ACPI table */
 return|return
 operator|(
 name|Table
@@ -291,7 +290,6 @@ operator|->
 name|Length
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -361,7 +359,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/*      * Dump the table with header for use with acpixtract utility      * Note: simplest to just always emit a 64-bit address. AcpiXtract      * utility can handle this.      */
+comment|/*      * Dump the table with header for use with acpixtract utility.      * Note: simplest to just always emit a 64-bit address. AcpiXtract      * utility can handle this.      */
 name|printf
 argument_list|(
 literal|"%4.4s @ 0x%8.8X%8.8X\n"
@@ -430,6 +428,9 @@ name|Address
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
+decl_stmt|;
+name|int
+name|TableStatus
 decl_stmt|;
 name|UINT32
 name|i
@@ -533,8 +534,8 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-if|if
-condition|(
+name|TableStatus
+operator|=
 name|ApDumpTableBuffer
 argument_list|(
 name|Table
@@ -543,20 +544,19 @@ name|Instance
 argument_list|,
 name|Address
 argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
+expr_stmt|;
 name|free
 argument_list|(
 name|Table
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TableStatus
+condition|)
+block|{
+break|break;
+block|}
 block|}
 comment|/* Something seriously bad happened if the loop terminates here */
 return|return
@@ -741,6 +741,9 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|int
+name|TableStatus
+decl_stmt|;
 if|if
 condition|(
 name|strlen
@@ -891,8 +894,8 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|TableStatus
+operator|=
 name|ApDumpTableBuffer
 argument_list|(
 name|Table
@@ -901,20 +904,19 @@ name|Instance
 argument_list|,
 name|Address
 argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
+expr_stmt|;
 name|free
 argument_list|(
 name|Table
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TableStatus
+condition|)
+block|{
+break|break;
+block|}
 block|}
 comment|/* Something seriously bad happened if the loop terminates here */
 return|return
@@ -950,6 +952,9 @@ literal|0
 decl_stmt|;
 name|int
 name|TableStatus
+init|=
+operator|-
+literal|1
 decl_stmt|;
 comment|/* Get the entire ACPI table from the file */
 name|Table
@@ -1000,12 +1005,9 @@ argument_list|,
 name|Pathname
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+goto|goto
+name|Exit
+goto|;
 block|}
 if|if
 condition|(
@@ -1041,6 +1043,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|Exit
+label|:
 name|free
 argument_list|(
 name|Table

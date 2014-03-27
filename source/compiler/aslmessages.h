@@ -533,7 +533,7 @@ comment|/*    ASL_MSG_CONSTANT_FOLDED */
 literal|"Constant expression evaluated and reduced"
 block|,
 comment|/*    ASL_MSG_CORE_EXCEPTION */
-literal|"From ACPI CA Subsystem"
+literal|"From ACPICA Subsystem"
 block|,
 comment|/*    ASL_MSG_DEBUG_FILE_OPEN */
 literal|"Could not open debug file"

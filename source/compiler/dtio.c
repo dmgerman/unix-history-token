@@ -25,6 +25,12 @@ directive|include
 file|"dtcompiler.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acapps.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1592,11 +1598,22 @@ expr_stmt|;
 comment|/* Get the file size */
 name|Gbl_InputByteCount
 operator|=
-name|DtGetFileSize
+name|CmGetFileSize
 argument_list|(
 name|Handle
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_InputByteCount
+operator|==
+name|ACPI_UINT32_MAX
+condition|)
+block|{
+name|AslAbort
+argument_list|()
+expr_stmt|;
+block|}
 name|Gbl_CurrentLineNumber
 operator|=
 literal|0
@@ -1751,7 +1768,7 @@ argument_list|)
 expr_stmt|;
 name|Gbl_TableLength
 operator|=
-name|DtGetFileSize
+name|CmGetFileSize
 argument_list|(
 name|Gbl_Files
 index|[
@@ -1761,6 +1778,17 @@ operator|.
 name|Handle
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_TableLength
+operator|==
+name|ACPI_UINT32_MAX
+condition|)
+block|{
+name|AslAbort
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 

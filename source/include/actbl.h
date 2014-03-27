@@ -19,19 +19,6 @@ directive|define
 name|__ACTBL_H__
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_comment
 comment|/*******************************************************************************  *  * Fundamental ACPI tables  *  * This file contains definitions for the ACPI tables that are directly consumed  * by ACPICA. All other tables are consumed by the OS-dependent ACPI-related  * device drivers and other OS support code.  *  * The RSDP and FACS do not use the common ACPI table header. All other ACPI  * tables use the header.  *  ******************************************************************************/
 end_comment
@@ -1276,36 +1263,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_ORIGIN_UNKNOWN
+name|ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL
 value|(0)
 end_define
 
+begin_comment
+comment|/* Virtual address, external maintained */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_ORIGIN_MAPPED
+name|ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL
 value|(1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_ORIGIN_ALLOCATED
-value|(2)
-end_define
+begin_comment
+comment|/* Physical address, internally mapped */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_ORIGIN_OVERRIDE
-value|(4)
+name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
+value|(2)
 end_define
+
+begin_comment
+comment|/* Virtual address, internallly allocated */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TABLE_ORIGIN_MASK
-value|(7)
+value|(3)
 end_define
 
 begin_define
@@ -1382,19 +1374,6 @@ directive|define
 name|ACPI_FADT_V5_SIZE
 value|(UINT32) (sizeof (ACPI_TABLE_FADT))
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
 
 begin_endif
 endif|#

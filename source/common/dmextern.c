@@ -87,7 +87,7 @@ index|[]
 init|=
 block|{
 comment|/* 00 */
-literal|""
+literal|", UnknownObj"
 block|,
 comment|/* Type ANY */
 comment|/* 01 */
@@ -796,6 +796,9 @@ literal|"Could not open external reference file \"%s\"\n"
 argument_list|,
 name|Gbl_ExternalRefFilename
 argument_list|)
+expr_stmt|;
+name|AslAbort
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -1693,6 +1696,12 @@ name|Value
 operator|!=
 name|Value
 operator|)
+operator|&&
+operator|(
+name|Value
+operator|>
+literal|0
+operator|)
 condition|)
 block|{
 name|ACPI_ERROR
@@ -2315,8 +2324,8 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|")    // Warning: Unresolved Method, "
-literal|"guessing %u arguments (may be incorrect, see warning above)\n"
+literal|")    // Warning: Unresolved method, "
+literal|"guessing %u arguments\n"
 argument_list|,
 name|NextExternal
 operator|->
@@ -2622,6 +2631,12 @@ literal|"     * In addition, the -fe option can be used to specify a file contai
 literal|"     * control method external declarations with the associated method\n"
 literal|"     * argument counts. Each line of the file must be of the form:\n"
 literal|"     *     External (<method pathname>, MethodObj,<argument count>)\n"
+literal|"     * Invocation:\n"
+literal|"     *     iasl -fe refs.txt -d dsdt.aml\n"
+literal|"     *\n"
+literal|"     * The following methods were unresolved and many not compile properly\n"
+literal|"     * because the disassembler had to guess at the number of arguments\n"
+literal|"     * required for each:\n"
 literal|"     */\n"
 argument_list|,
 name|AcpiGbl_NumExternalMethods
@@ -2651,6 +2666,12 @@ literal|"     * If necessary, the -fe option can be used to specify a file conta
 literal|"     * control method external declarations with the associated method\n"
 literal|"     * argument counts. Each line of the file must be of the form:\n"
 literal|"     *     External (<method pathname>, MethodObj,<argument count>)\n"
+literal|"     * Invocation:\n"
+literal|"     *     iasl -fe refs.txt -d dsdt.aml\n"
+literal|"     *\n"
+literal|"     * The following methods were unresolved and many not compile properly\n"
+literal|"     * because the disassembler had to guess at the number of arguments\n"
+literal|"     * required for each:\n"
 literal|"     */\n"
 argument_list|,
 name|AcpiGbl_NumExternalMethods
@@ -2705,6 +2726,8 @@ literal|"In addition, the -fe option can be used to specify a file containing\n"
 literal|"control method external declarations with the associated method\n"
 literal|"argument counts. Each line of the file must be of the form:\n"
 literal|"    External (<method pathname>, MethodObj,<argument count>)\n"
+literal|"Invocation:\n"
+literal|"    iasl -fe refs.txt -d dsdt.aml\n"
 argument_list|,
 name|AcpiGbl_NumExternalMethods
 argument_list|)
@@ -2735,6 +2758,8 @@ literal|"If necessary, the -fe option can be used to specify a file containing\n
 literal|"control method external declarations with the associated method\n"
 literal|"argument counts. Each line of the file must be of the form:\n"
 literal|"    External (<method pathname>, MethodObj,<argument count>)\n"
+literal|"Invocation:\n"
+literal|"    iasl -fe refs.txt -d dsdt.aml\n"
 argument_list|,
 name|AcpiGbl_NumExternalMethods
 argument_list|,

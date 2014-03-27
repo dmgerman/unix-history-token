@@ -37,6 +37,12 @@ directive|include
 file|"amlcode.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acinterp.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -76,7 +82,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|AcpiDmIsEisaIdElement
+name|AcpiDmGetHardwareIdType
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -1433,13 +1439,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsEisaIdElement  *  * PARAMETERS:  Op              - Op to be examined  *  * RETURN:      None  *  * DESCRIPTION: Determine if an Op (argument to _HID or _CID) can be converted  *              to an EISA ID.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGetHardwareIdType  *  * PARAMETERS:  Op              - Op to be examined  *  * RETURN:      None  *  * DESCRIPTION: Determine the type of the argument to a _HID or _CID  *              1) Strings are allowed  *              2) If Integer, determine if it is a valid EISAID  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|AcpiDmIsEisaIdElement
+name|AcpiDmGetHardwareIdType
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -1458,32 +1464,35 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-comment|/* The parameter must be either a word or a dword */
-if|if
+switch|switch
 condition|(
-operator|(
 name|Op
 operator|->
 name|Common
 operator|.
 name|AmlOpcode
-operator|!=
-name|AML_DWORD_OP
-operator|)
-operator|&&
-operator|(
-name|Op
-operator|->
-name|Common
-operator|.
-name|AmlOpcode
-operator|!=
-name|AML_WORD_OP
-operator|)
 condition|)
 block|{
-return|return;
-block|}
+case|case
+name|AML_STRING_OP
+case|:
+comment|/* Mark this string as an _HID/_CID string */
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|=
+name|ACPI_DASM_HID_STRING
+expr_stmt|;
+break|break;
+case|case
+name|AML_WORD_OP
+case|:
+case|case
+name|AML_DWORD_OP
+case|:
+comment|/* Determine if a Word/Dword is a valid encoded EISAID */
 comment|/* Swap from little-endian to big-endian to simplify conversion */
 name|BigEndianId
 operator|=
@@ -1592,7 +1601,7 @@ block|{
 return|return;
 block|}
 block|}
-comment|/* OK - mark this node as convertable to an EISA ID */
+comment|/* Mark this node as convertable to an EISA ID string */
 name|Op
 operator|->
 name|Common
@@ -1601,16 +1610,20 @@ name|DisasmOpcode
 operator|=
 name|ACPI_DASM_EISAID
 expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsEisaId  *  * PARAMETERS:  Op              - Op to be examined  *  * RETURN:      None  *  * DESCRIPTION: Determine if a Name() Op can be converted to an EisaId.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmCheckForHardwareId  *  * PARAMETERS:  Op              - Op to be examined  *  * RETURN:      None  *  * DESCRIPTION: Determine if a Name() Op is a _HID/_CID.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDmIsEisaId
+name|AcpiDmCheckForHardwareId
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -1669,7 +1682,7 @@ name|METHOD_NAME__HID
 argument_list|)
 condition|)
 block|{
-name|AcpiDmIsEisaIdElement
+name|AcpiDmGetHardwareIdType
 argument_list|(
 name|NextOp
 argument_list|)
@@ -1703,14 +1716,14 @@ operator|!=
 name|AML_PACKAGE_OP
 condition|)
 block|{
-name|AcpiDmIsEisaIdElement
+name|AcpiDmGetHardwareIdType
 argument_list|(
 name|NextOp
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* _CID with Package: get the package length */
+comment|/* _CID with Package: get the package length, check all elements */
 name|NextOp
 operator|=
 name|AcpiPsGetDepthNext
@@ -1734,7 +1747,7 @@ condition|(
 name|NextOp
 condition|)
 block|{
-name|AcpiDmIsEisaIdElement
+name|AcpiDmGetHardwareIdType
 argument_list|(
 name|NextOp
 argument_list|)
@@ -1752,90 +1765,66 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmEisaId  *  * PARAMETERS:  EncodedId       - Raw encoded EISA ID.  *  * RETURN:      None  *  * DESCRIPTION: Convert an encoded EISAID back to the original ASCII String.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDecompressEisaId  *  * PARAMETERS:  EncodedId       - Raw encoded EISA ID.  *  * RETURN:      None  *  * DESCRIPTION: Convert an encoded EISAID back to the original ASCII String  *              and emit the correct ASL statement. If the ID is known, emit  *              a description of the ID as a comment.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDmEisaId
+name|AcpiDmDecompressEisaId
 parameter_list|(
 name|UINT32
 name|EncodedId
 parameter_list|)
 block|{
-name|UINT32
-name|BigEndianId
+name|char
+name|IdBuffer
+index|[
+name|ACPI_EISAID_STRING_SIZE
+index|]
 decl_stmt|;
-comment|/* Swap from little-endian to big-endian to simplify conversion */
-name|BigEndianId
-operator|=
-name|AcpiUtDwordByteSwap
+specifier|const
+name|AH_DEVICE_ID
+modifier|*
+name|Info
+decl_stmt|;
+comment|/* Convert EISAID to a string an emit the statement */
+name|AcpiExEisaIdToString
 argument_list|(
+name|IdBuffer
+argument_list|,
 name|EncodedId
 argument_list|)
 expr_stmt|;
-comment|/* Split to form "AAANNNN" string */
 name|AcpiOsPrintf
 argument_list|(
-literal|"EisaId (\"%c%c%c%4.4X\")"
+literal|"EisaId (\"%s\")"
 argument_list|,
-comment|/* Three Alpha characters (AAA), 5 bits each */
-call|(
-name|int
-call|)
-argument_list|(
-operator|(
-name|BigEndianId
-operator|>>
-literal|26
-operator|)
-operator|&
-literal|0x1F
-argument_list|)
-operator|+
-literal|0x40
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-operator|(
-name|BigEndianId
-operator|>>
-literal|21
-operator|)
-operator|&
-literal|0x1F
-argument_list|)
-operator|+
-literal|0x40
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-operator|(
-name|BigEndianId
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0x1F
-argument_list|)
-operator|+
-literal|0x40
-argument_list|,
-comment|/* Numeric part (NNNN) is simply the lower 16 bits */
-call|(
-name|UINT32
-call|)
-argument_list|(
-name|BigEndianId
-operator|&
-literal|0xFFFF
-argument_list|)
+name|IdBuffer
 argument_list|)
 expr_stmt|;
+comment|/* If we know about the ID, emit the description */
+name|Info
+operator|=
+name|AcpiAhMatchHardwareId
+argument_list|(
+name|IdBuffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Info
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" /* %s */"
+argument_list|,
+name|Info
+operator|->
+name|Description
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

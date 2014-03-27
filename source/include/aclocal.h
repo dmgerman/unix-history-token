@@ -19,19 +19,6 @@ directive|define
 name|__ACLOCAL_H__
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_comment
 comment|/* acpisrc:StructDefs -- for acpisrc conversion */
 end_comment
@@ -2479,8 +2466,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_DASM_IGNORE
+name|ACPI_DASM_HID_STRING
 value|0x09
+end_define
+
+begin_comment
+comment|/* String is a _HID or _CID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_IGNORE
+value|0x0A
 end_define
 
 begin_comment
@@ -4027,18 +4025,23 @@ name|AH_PREDEFINED_NAME
 typedef|;
 end_typedef
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
+begin_typedef
+typedef|typedef
+struct|struct
+name|ah_device_id
+block|{
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+name|char
+modifier|*
+name|Description
+decl_stmt|;
+block|}
+name|AH_DEVICE_ID
+typedef|;
+end_typedef
 
 begin_endif
 endif|#

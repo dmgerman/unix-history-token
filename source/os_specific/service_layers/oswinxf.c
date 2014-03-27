@@ -2454,7 +2454,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSignal  *  * PARAMETERS:  Function            - ACPI CA signal function code  *              Info                - Pointer to function-dependent structure  *  * RETURN:      Status  *  * DESCRIPTION: Miscellaneous functions. Example implementation only.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSignal  *  * PARAMETERS:  Function            - ACPICA signal function code  *              Info                - Pointer to function-dependent structure  *  * RETURN:      Status  *  * DESCRIPTION: Miscellaneous functions. Example implementation only.  *  *****************************************************************************/
 end_comment
 
 begin_function

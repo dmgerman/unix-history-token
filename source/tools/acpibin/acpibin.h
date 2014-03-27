@@ -145,25 +145,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|AbExtractAmlFile
-parameter_list|(
-name|char
-modifier|*
-name|TableSig
-parameter_list|,
-name|char
-modifier|*
-name|File1Path
-parameter_list|,
-name|char
-modifier|*
-name|File2Path
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|AbDumpAmlFile
 parameter_list|(
 name|char

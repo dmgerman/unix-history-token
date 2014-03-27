@@ -19,19 +19,6 @@ directive|define
 name|__ACRESTYP_H__
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_comment
 comment|/*  * Definitions for Resource Attributes  */
 end_comment
@@ -2055,19 +2042,6 @@ block|}
 name|ACPI_PCI_ROUTING_TABLE
 typedef|;
 end_typedef
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
 
 begin_endif
 endif|#

@@ -402,7 +402,7 @@ name|char
 modifier|*
 name|DirectoryPosition
 decl_stmt|;
-comment|/*      * Copy the original filename to a new buffer. Leave room for the worst case      * where we append the suffix, an added dot and the null terminator.      */
+comment|/*      * Copy the original filename to a new buffer. Leave room for the worst      * case where we append the suffix, an added dot and the null terminator.      */
 name|NewFilename
 operator|=
 name|ACPI_ALLOCATE_ZEROED
@@ -423,6 +423,18 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NewFilename
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|strcpy
 argument_list|(
 name|NewFilename

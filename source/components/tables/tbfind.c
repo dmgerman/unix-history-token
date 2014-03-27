@@ -190,7 +190,7 @@ block|{
 comment|/* Table is not currently mapped, map it */
 name|Status
 operator|=
-name|AcpiTbVerifyTable
+name|AcpiTbValidateTable
 argument_list|(
 operator|&
 name|AcpiGbl_RootTableList

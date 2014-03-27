@@ -3152,6 +3152,13 @@ block|,
 name|SRC_TYPE_STRUCT
 block|}
 block|,
+comment|/* AcpiDump utility */
+block|{
+literal|"AP_DUMP_ACTION"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
 comment|/* AcpiHelp utility */
 block|{
 literal|"AH_AML_OPCODE"
@@ -3180,6 +3187,19 @@ block|,
 comment|/* AcpiXtract utility */
 block|{
 literal|"AX_TABLE_INFO"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+comment|/* OS service layers */
+block|{
+literal|"EXTERNAL_FIND_INFO"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
+literal|"OSL_TABLE_INFO"
 block|,
 name|SRC_TYPE_STRUCT
 block|}

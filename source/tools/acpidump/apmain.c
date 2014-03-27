@@ -718,7 +718,7 @@ block|{
 comment|/* Summary for the output file */
 name|FileSize
 operator|=
-name|ApGetFileSize
+name|CmGetFileSize
 argument_list|(
 name|Gbl_OutputFile
 argument_list|)

@@ -426,17 +426,6 @@ comment|/*  * apfiles - File I/O utilities  */
 end_comment
 
 begin_function_decl
-name|UINT32
-name|ApGetFileSize
-parameter_list|(
-name|FILE
-modifier|*
-name|File
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|ApOpenOutputFile
 parameter_list|(

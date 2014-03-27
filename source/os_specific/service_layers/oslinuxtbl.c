@@ -52,10 +52,10 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|table_info
+name|osl_table_info
 block|{
 name|struct
-name|table_info
+name|osl_table_info
 modifier|*
 name|Next
 decl_stmt|;
@@ -575,7 +575,7 @@ operator|=
 name|AE_BAD_HEADER
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 name|LocalTable
@@ -598,7 +598,7 @@ operator|=
 name|AE_NO_MEMORY
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 name|ACPI_MEMCPY
@@ -610,7 +610,7 @@ argument_list|,
 name|TableLength
 argument_list|)
 expr_stmt|;
-name|ErrorExit
+name|Exit
 label|:
 name|OslUnmapTable
 argument_list|(
@@ -624,7 +624,7 @@ name|LocalTable
 expr_stmt|;
 return|return
 operator|(
-name|AE_OK
+name|Status
 operator|)
 return|;
 block|}
@@ -2637,7 +2637,7 @@ operator|=
 name|AE_BAD_HEADER
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 comment|/* Copy table to local buffer and return it */
@@ -2661,7 +2661,7 @@ operator|=
 name|AE_NO_MEMORY
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 name|ACPI_MEMCPY
@@ -2683,7 +2683,7 @@ name|Table
 operator|=
 name|LocalTable
 expr_stmt|;
-name|ErrorExit
+name|Exit
 label|:
 name|OslUnmapTable
 argument_list|(
@@ -2692,7 +2692,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|AE_OK
+name|Status
 operator|)
 return|;
 block|}
@@ -3318,7 +3318,7 @@ operator|=
 name|AE_BAD_HEADER
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 comment|/* If signature is specified, it must match the table */
@@ -3355,7 +3355,7 @@ operator|=
 name|AE_BAD_SIGNATURE
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 name|TableLength
@@ -3378,7 +3378,7 @@ operator|=
 name|AE_BAD_HEADER
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 comment|/* Read the entire table into a local buffer */
@@ -3415,7 +3415,7 @@ operator|=
 name|AE_NO_MEMORY
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 name|fseek
@@ -3478,7 +3478,7 @@ operator|=
 name|AE_INVALID_TABLE_LENGTH
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 name|Total
@@ -3495,7 +3495,7 @@ argument_list|(
 name|LocalTable
 argument_list|)
 expr_stmt|;
-name|ErrorExit
+name|Exit
 label|:
 name|fclose
 argument_list|(

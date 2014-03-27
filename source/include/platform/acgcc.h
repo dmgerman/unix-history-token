@@ -62,6 +62,27 @@ name|ACPI_UNUSED_VAR
 value|__attribute__ ((unused))
 end_define
 
+begin_comment
+comment|/*  * Some versions of gcc implement strchr() with a buggy macro. So,  * undef it here. Prevents error messages of this form (usually from the  * file getopt.c):  *  * error: logical '&&' with non-zero constant will always evaluate as true  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|strchr
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|strchr
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

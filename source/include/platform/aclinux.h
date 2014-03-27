@@ -208,6 +208,44 @@ file|<unistd.h>
 end_include
 
 begin_comment
+comment|/* Define/disable kernel-specific declarators */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__init
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__init
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__iomem
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__iomem
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Host-dependent types and defines for user-space ACPICA */
 end_comment
 
@@ -241,9 +279,15 @@ argument_list|(
 name|__x86_64__
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|__aarch64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__PPC64__
 argument_list|)
 end_if
 

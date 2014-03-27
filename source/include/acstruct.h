@@ -19,19 +19,6 @@ directive|define
 name|__ACSTRUCT_H__
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_comment
 comment|/* acpisrc:StructDefs -- for acpisrc conversion */
 end_comment
@@ -699,19 +686,6 @@ directive|define
 name|ACPI_DISPLAY_SHORT
 value|(UINT8) 2
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|pop
-name|)
-end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
 
 begin_endif
 endif|#

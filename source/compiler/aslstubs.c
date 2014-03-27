@@ -58,7 +58,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*  * Stubs to simplify linkage to the ACPI CA core subsystem.  * Things like Events, Global Lock, etc. are not used  * by the compiler, so they are stubbed out here.  */
+comment|/*  * Stubs to simplify linkage to the ACPICA core subsystem.  * Things like Events, Global Lock, etc. are not used  * by the compiler, so they are stubbed out here.  */
 end_comment
 
 begin_function

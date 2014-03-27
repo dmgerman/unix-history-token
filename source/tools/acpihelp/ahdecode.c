@@ -31,183 +31,6 @@ directive|include
 file|"acpredef.h"
 end_include
 
-begin_comment
-comment|/* Device IDs defined in the ACPI specification */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|AH_DEVICE_ID
-name|AhDeviceIds
-index|[]
-init|=
-block|{
-block|{
-literal|"PNP0A05"
-block|,
-literal|"Generic Container Device"
-block|}
-block|,
-block|{
-literal|"PNP0A06"
-block|,
-literal|"Generic Container Device"
-block|}
-block|,
-block|{
-literal|"PNP0C08"
-block|,
-literal|"ACPI core hardware"
-block|}
-block|,
-block|{
-literal|"PNP0C09"
-block|,
-literal|"Embedded Controller Device"
-block|}
-block|,
-block|{
-literal|"PNP0C0A"
-block|,
-literal|"Control Method Battery"
-block|}
-block|,
-block|{
-literal|"PNP0C0B"
-block|,
-literal|"Fan"
-block|}
-block|,
-block|{
-literal|"PNP0C0C"
-block|,
-literal|"Power Button Device"
-block|}
-block|,
-block|{
-literal|"PNP0C0D"
-block|,
-literal|"Lid Device"
-block|}
-block|,
-block|{
-literal|"PNP0C0E"
-block|,
-literal|"Sleep Button Device"
-block|}
-block|,
-block|{
-literal|"PNP0C0F"
-block|,
-literal|"PCI Interrupt Link Device"
-block|}
-block|,
-block|{
-literal|"PNP0C80"
-block|,
-literal|"Memory Device"
-block|}
-block|,
-block|{
-literal|"ACPI0001"
-block|,
-literal|"SMBus 1.0 Host Controller"
-block|}
-block|,
-block|{
-literal|"ACPI0002"
-block|,
-literal|"Smart Battery Subsystem"
-block|}
-block|,
-block|{
-literal|"ACPI0003"
-block|,
-literal|"Power Source Device"
-block|}
-block|,
-block|{
-literal|"ACPI0004"
-block|,
-literal|"Module Device"
-block|}
-block|,
-block|{
-literal|"ACPI0005"
-block|,
-literal|"SMBus 2.0 Host Controller"
-block|}
-block|,
-block|{
-literal|"ACPI0006"
-block|,
-literal|"GPE Block Device"
-block|}
-block|,
-block|{
-literal|"ACPI0007"
-block|,
-literal|"Processor Device"
-block|}
-block|,
-block|{
-literal|"ACPI0008"
-block|,
-literal|"Ambient Light Sensor Device"
-block|}
-block|,
-block|{
-literal|"ACPI0009"
-block|,
-literal|"I/O xAPIC Device"
-block|}
-block|,
-block|{
-literal|"ACPI000A"
-block|,
-literal|"I/O APIC Device"
-block|}
-block|,
-block|{
-literal|"ACPI000B"
-block|,
-literal|"I/O SAPIC Device"
-block|}
-block|,
-block|{
-literal|"ACPI000C"
-block|,
-literal|"Processor Aggregator Device"
-block|}
-block|,
-block|{
-literal|"ACPI000D"
-block|,
-literal|"Power Meter Device"
-block|}
-block|,
-block|{
-literal|"ACPI000E"
-block|,
-literal|"Time/Alarm Device"
-block|}
-block|,
-block|{
-literal|"ACPI000F"
-block|,
-literal|"User Presence Detection Device"
-block|}
-block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1442,11 +1265,50 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AhFindAslOperators (entry point for ASL operator search)  *  * PARAMETERS:  Name                - Name or prefix for an ASL operator.  *                                    NULL means "find all"  *  * RETURN:      None  *  * DESCRIPTION: Find all ASL operators that match the input Name or name  *              prefix.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AhFindAslAndAmlOperators  *  * PARAMETERS:  Name                - Name or prefix for an ASL operator.  *                                    NULL means "find all"  *  * RETURN:      None  *  * DESCRIPTION: Find all ASL operators that match the input Name or name  *              prefix. Also displays the AML information if only one entry  *              matches.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
+name|AhFindAslAndAmlOperators
+parameter_list|(
+name|char
+modifier|*
+name|Name
+parameter_list|)
+block|{
+name|UINT32
+name|MatchCount
+decl_stmt|;
+name|MatchCount
+operator|=
+name|AhFindAslOperators
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MatchCount
+operator|==
+literal|1
+condition|)
+block|{
+name|AhFindAmlOpcode
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AhFindAslOperators (entry point for ASL operator search)  *  * PARAMETERS:  Name                - Name or prefix for an ASL operator.  *                                    NULL means "find all"  *  * RETURN:      Number of operators that matched the name prefix.  *  * DESCRIPTION: Find all ASL operators that match the input Name or name  *              prefix.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|UINT32
 name|AhFindAslOperators
 parameter_list|(
 name|char
@@ -1460,9 +1322,9 @@ modifier|*
 name|Operator
 decl_stmt|;
 name|BOOLEAN
-name|Found
+name|MatchCount
 init|=
-name|FALSE
+literal|0
 decl_stmt|;
 name|AhStrupr
 argument_list|(
@@ -1495,9 +1357,8 @@ argument_list|(
 name|Operator
 argument_list|)
 expr_stmt|;
-name|Found
-operator|=
-name|TRUE
+name|MatchCount
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
@@ -1533,16 +1394,15 @@ argument_list|(
 name|Operator
 argument_list|)
 expr_stmt|;
-name|Found
-operator|=
-name|TRUE
+name|MatchCount
+operator|++
 expr_stmt|;
 block|}
 block|}
 if|if
 condition|(
 operator|!
-name|Found
+name|MatchCount
 condition|)
 block|{
 name|printf
@@ -1553,6 +1413,11 @@ name|Name
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|MatchCount
+operator|)
+return|;
 block|}
 end_function
 
@@ -1943,50 +1808,198 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AhDisplayDeviceIds  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display all PNP* and ACPI* device IDs defined in the ACPI spec.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AhDisplayDeviceIds  *  * PARAMETERS:  Name                - Device Hardware ID string.  *                                    NULL means "find all"  *  * RETURN:      None  *  * DESCRIPTION: Display PNP* and ACPI* device IDs.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AhDisplayDeviceIds
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|Name
 parameter_list|)
 block|{
 specifier|const
 name|AH_DEVICE_ID
 modifier|*
-name|DeviceId
-init|=
-name|AhDeviceIds
+name|Info
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"ACPI and PNP Device IDs defined in the ACPI specification:\n\n"
-argument_list|)
-expr_stmt|;
-while|while
+name|UINT32
+name|Length
+decl_stmt|;
+name|BOOLEAN
+name|Matched
+decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
+name|BOOLEAN
+name|Found
+init|=
+name|FALSE
+decl_stmt|;
+comment|/* Null input name indicates "display all" */
+if|if
 condition|(
-name|DeviceId
-operator|->
+operator|!
 name|Name
 condition|)
 block|{
 name|printf
 argument_list|(
+literal|"ACPI and PNP Device/Hardware IDs:\n\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|Info
+operator|=
+name|AslDeviceIds
+init|;
+name|Info
+operator|->
+name|Name
+condition|;
+name|Info
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
 literal|"%8s   %s\n"
 argument_list|,
-name|DeviceId
+name|Info
 operator|->
 name|Name
 argument_list|,
-name|DeviceId
+name|Info
 operator|->
 name|Description
 argument_list|)
 expr_stmt|;
-name|DeviceId
+block|}
+return|return;
+block|}
+name|Length
+operator|=
+name|strlen
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Length
+operator|>
+literal|8
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%.8s: Hardware ID must be 8 characters maximum\n"
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Find/display all names that match the input name prefix */
+name|AhStrupr
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|Info
+operator|=
+name|AslDeviceIds
+init|;
+name|Info
+operator|->
+name|Name
+condition|;
+name|Info
 operator|++
+control|)
+block|{
+name|Matched
+operator|=
+name|TRUE
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|Length
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|Info
+operator|->
+name|Name
+index|[
+name|i
+index|]
+operator|!=
+name|Name
+index|[
+name|i
+index|]
+condition|)
+block|{
+name|Matched
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|Matched
+condition|)
+block|{
+name|Found
+operator|=
+name|TRUE
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%8s   %s\n"
+argument_list|,
+name|Info
+operator|->
+name|Name
+argument_list|,
+name|Info
+operator|->
+name|Description
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|Found
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s, Hardware ID not found\n"
+argument_list|,
+name|Name
+argument_list|)
 expr_stmt|;
 block|}
 block|}

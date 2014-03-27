@@ -314,6 +314,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Node
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
 name|Node
 operator|->
 name|Type

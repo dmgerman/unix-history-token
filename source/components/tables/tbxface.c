@@ -424,7 +424,7 @@ operator|&
 name|ACPI_TABLE_ORIGIN_MASK
 operator|)
 operator|==
-name|ACPI_TABLE_ORIGIN_MAPPED
+name|ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL
 condition|)
 block|{
 name|Header
@@ -635,7 +635,7 @@ continue|continue;
 block|}
 name|Status
 operator|=
-name|AcpiTbVerifyTable
+name|AcpiTbValidateTable
 argument_list|(
 operator|&
 name|AcpiGbl_RootTableList
@@ -774,7 +774,7 @@ block|{
 comment|/* Table is not mapped, map it */
 name|Status
 operator|=
-name|AcpiTbVerifyTable
+name|AcpiTbValidateTable
 argument_list|(
 operator|&
 name|AcpiGbl_RootTableList

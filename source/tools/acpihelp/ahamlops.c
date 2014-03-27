@@ -859,7 +859,7 @@ literal|0x5B80
 block|,
 literal|"0x5B80"
 block|,
-literal|"OpRegionOp"
+literal|"OperationRegionOp"
 block|,
 literal|"TermObject"
 block|,

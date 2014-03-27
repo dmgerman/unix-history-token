@@ -51,7 +51,7 @@ begin_define
 define|#
 directive|define
 name|AB_SUPPORTED_OPTIONS
-value|"c:d:e:h:s:tv"
+value|"c:d:h:s:tv"
 end_define
 
 begin_comment
@@ -97,13 +97,6 @@ argument_list|(
 literal|"-d<In><Out>"
 argument_list|,
 literal|"Dump AML binary to text file"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-e<Sig><In><Out>"
-argument_list|,
-literal|"Extract binary AML table from AcpiDump file"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -295,49 +288,6 @@ argument_list|,
 name|argv
 index|[
 name|AcpiGbl_Optind
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'e'
-case|:
-comment|/* Extract AML text file */
-if|if
-condition|(
-name|argc
-operator|<
-literal|5
-condition|)
-block|{
-name|AbDisplayUsage
-argument_list|(
-literal|3
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-name|Status
-operator|=
-name|AbExtractAmlFile
-argument_list|(
-name|AcpiGbl_Optarg
-argument_list|,
-name|argv
-index|[
-name|AcpiGbl_Optind
-index|]
-argument_list|,
-name|argv
-index|[
-name|AcpiGbl_Optind
-operator|+
-literal|1
 index|]
 argument_list|)
 expr_stmt|;

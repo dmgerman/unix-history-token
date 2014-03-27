@@ -1103,7 +1103,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|AcpiGbl_NotifyValueNames
+name|AcpiGbl_GenericNotify
 index|[
 name|ACPI_NOTIFY_MAX
 operator|+
@@ -1141,14 +1141,92 @@ block|,
 comment|/* 09 */
 literal|"Device PLD Check"
 block|,
-comment|/* 10 */
+comment|/* 0A */
 literal|"Reserved"
 block|,
-comment|/* 11 */
+comment|/* 0B */
 literal|"System Locality Update"
 block|,
-comment|/* 12 */
+comment|/* 0C */
 literal|"Shutdown Request"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_DeviceNotify
+index|[
+literal|4
+index|]
+init|=
+block|{
+comment|/* 80 */
+literal|"Status Change"
+block|,
+comment|/* 81 */
+literal|"Information Change"
+block|,
+comment|/* 82 */
+literal|"Device-Specific Change"
+block|,
+comment|/* 83 */
+literal|"Device-Specific Change"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_ProcessorNotify
+index|[
+literal|4
+index|]
+init|=
+block|{
+comment|/* 80 */
+literal|"Performance Capability Change"
+block|,
+comment|/* 81 */
+literal|"C-State Change"
+block|,
+comment|/* 82 */
+literal|"Throttling Capability Change"
+block|,
+comment|/* 83 */
+literal|"Device-Specific Change"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_ThermalNotify
+index|[
+literal|4
+index|]
+init|=
+block|{
+comment|/* 80 */
+literal|"Thermal Status Change"
+block|,
+comment|/* 81 */
+literal|"Thermal Trip Point Change"
+block|,
+comment|/* 82 */
+literal|"Thermal Device List Change"
+block|,
+comment|/* 83 */
+literal|"Thermal Relationship Change"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1161,8 +1239,12 @@ name|AcpiUtGetNotifyName
 parameter_list|(
 name|UINT32
 name|NotifyValue
+parameter_list|,
+name|ACPI_OBJECT_TYPE
+name|Type
 parameter_list|)
 block|{
+comment|/* 00 - 0C are common to all object types */
 if|if
 condition|(
 name|NotifyValue
@@ -1172,14 +1254,14 @@ condition|)
 block|{
 return|return
 operator|(
-name|AcpiGbl_NotifyValueNames
+name|AcpiGbl_GenericNotify
 index|[
 name|NotifyValue
 index|]
 operator|)
 return|;
 block|}
-elseif|else
+comment|/* 0D - 7F are reserved */
 if|if
 condition|(
 name|NotifyValue
@@ -1193,7 +1275,70 @@ literal|"Reserved"
 operator|)
 return|;
 block|}
-elseif|else
+comment|/* 80 - 83 are per-object-type */
+if|if
+condition|(
+name|NotifyValue
+operator|<=
+literal|0x83
+condition|)
+block|{
+switch|switch
+condition|(
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_ANY
+case|:
+case|case
+name|ACPI_TYPE_DEVICE
+case|:
+return|return
+operator|(
+name|AcpiGbl_DeviceNotify
+index|[
+name|NotifyValue
+operator|-
+literal|0x80
+index|]
+operator|)
+return|;
+case|case
+name|ACPI_TYPE_PROCESSOR
+case|:
+return|return
+operator|(
+name|AcpiGbl_ProcessorNotify
+index|[
+name|NotifyValue
+operator|-
+literal|0x80
+index|]
+operator|)
+return|;
+case|case
+name|ACPI_TYPE_THERMAL
+case|:
+return|return
+operator|(
+name|AcpiGbl_ThermalNotify
+index|[
+name|NotifyValue
+operator|-
+literal|0x80
+index|]
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|"Target object type does not support notifies"
+operator|)
+return|;
+block|}
+block|}
+comment|/* 84 - BF are device-specific */
 if|if
 condition|(
 name|NotifyValue
@@ -1203,18 +1348,16 @@ condition|)
 block|{
 return|return
 operator|(
-literal|"Device Specific"
+literal|"Device-Specific"
 operator|)
 return|;
 block|}
-else|else
-block|{
+comment|/* C0 and above are hardware-specific */
 return|return
 operator|(
-literal|"Hardware Specific"
+literal|"Hardware-Specific"
 operator|)
 return|;
-block|}
 block|}
 end_function
 

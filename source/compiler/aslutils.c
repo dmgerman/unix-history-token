@@ -1982,7 +1982,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TBD: use version in ACPI CA main code base? */
+comment|/* TBD: use version in ACPICA main code base? */
 end_comment
 
 begin_comment

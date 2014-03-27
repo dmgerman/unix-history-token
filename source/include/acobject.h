@@ -19,19 +19,6 @@ directive|define
 name|_ACOBJECT_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|push
-name|)
-end_pragma
-
-begin_comment
-comment|/* Set default struct packing */
-end_comment
-
 begin_comment
 comment|/* acpisrc:StructDefs -- for acpisrc conversion */
 end_comment
@@ -515,8 +502,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_METHOD_MODIFIED_NAMESPACE
+name|ACPI_METHOD_IGNORE_SYNC_LEVEL
 value|0x10
+end_define
+
+begin_comment
+comment|/* Method was auto-serialized at table load time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_METHOD_MODIFIED_NAMESPACE
+value|0x20
 end_define
 
 begin_comment
@@ -1316,13 +1314,8 @@ pragma|#
 directive|pragma
 name|pack
 name|(
-name|pop
 name|)
 end_pragma
-
-begin_comment
-comment|/* Restore original struct packing */
-end_comment
 
 begin_endif
 endif|#

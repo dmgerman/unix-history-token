@@ -1316,7 +1316,7 @@ case|case
 name|AML_NAME_OP
 case|:
 comment|/* Check for _HID and related EISAID() */
-name|AcpiDmIsEisaId
+name|AcpiDmCheckForHardwareId
 argument_list|(
 name|Op
 argument_list|)
@@ -2054,6 +2054,29 @@ name|Op
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Decode Notify() values */
+if|if
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_NOTIFY_OP
+condition|)
+block|{
+name|AcpiDmNotifyDescription
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiDmDisplayTargetPathname
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
 comment|/* Could be a nested operator, check if comma required */
 if|if
 condition|(

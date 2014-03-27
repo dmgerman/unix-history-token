@@ -366,7 +366,17 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/*      * At this point, we know we have a Named object opcode.      * Mark the method as serialized. Later code will create a mutex for      * this method to enforce serialization.      */
+comment|/*      * At this point, we know we have a Named object opcode.      * Mark the method as serialized. Later code will create a mutex for      * this method to enforce serialization.      *      * Note, ACPI_METHOD_IGNORE_SYNC_LEVEL flag means that we will ignore the      * Sync Level mechanism for this method, even though it is now serialized.      * Otherwise, there can be conflicts with existing ASL code that actually      * uses sync levels.      */
+name|WalkState
+operator|->
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|SyncLevel
+operator|=
+literal|0
+expr_stmt|;
 name|WalkState
 operator|->
 name|MethodDesc
@@ -375,7 +385,11 @@ name|Method
 operator|.
 name|InfoFlags
 operator||=
+operator|(
 name|ACPI_METHOD_SERIALIZED
+operator||
+name|ACPI_METHOD_IGNORE_SYNC_LEVEL
+operator|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -765,10 +779,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * The CurrentSyncLevel (per-thread) must be less than or equal to          * the sync level of the method. This mechanism provides some          * deadlock prevention          *          * Top-level method invocation has no walk state at this point          */
+comment|/*          * The CurrentSyncLevel (per-thread) must be less than or equal to          * the sync level of the method. This mechanism provides some          * deadlock prevention.          *          * If the method was auto-serialized, we just ignore the sync level          * mechanism, because auto-serialization of methods can interfere          * with ASL code that actually uses sync levels.          *          * Top-level method invocation has no walk state at this point          */
 if|if
 condition|(
 name|WalkState
+operator|&&
+operator|(
+operator|!
+operator|(
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|InfoFlags
+operator|&
+name|ACPI_METHOD_IGNORE_SYNC_LEVEL
+operator|)
+operator|)
 operator|&&
 operator|(
 name|WalkState
@@ -1915,7 +1942,11 @@ name|Method
 operator|.
 name|InfoFlags
 operator||=
+operator|(
 name|ACPI_METHOD_SERIALIZED
+operator||
+name|ACPI_METHOD_IGNORE_SYNC_LEVEL
+operator|)
 expr_stmt|;
 name|MethodDesc
 operator|->

@@ -623,6 +623,8 @@ argument_list|,
 name|AcpiUtGetNotifyName
 argument_list|(
 name|Value
+argument_list|,
+name|ACPI_TYPE_ANY
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -698,6 +700,8 @@ argument_list|,
 name|AcpiUtGetNotifyName
 argument_list|(
 name|Value
+argument_list|,
+name|ACPI_TYPE_ANY
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -767,6 +771,8 @@ argument_list|,
 name|AcpiUtGetNotifyName
 argument_list|(
 name|Value
+argument_list|,
+name|ACPI_TYPE_ANY
 argument_list|)
 argument_list|)
 expr_stmt|;

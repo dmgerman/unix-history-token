@@ -714,7 +714,7 @@ block|}
 comment|/* Header length field must match the file size */
 name|FileSize
 operator|=
-name|DtGetFileSize
+name|CmGetFileSize
 argument_list|(
 name|Handle
 argument_list|)
