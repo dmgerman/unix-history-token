@@ -203,6 +203,13 @@ name|DEVICEID_AMD_MISC11
 value|0x1303
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_AMD_MISC16
+value|0x1533
+end_define
+
 begin_struct
 specifier|static
 struct|struct
@@ -235,6 +242,12 @@ block|{
 name|VENDORID_AMD
 block|,
 name|DEVICEID_AMD_MISC11
+block|}
+block|,
+block|{
+name|VENDORID_AMD
+block|,
+name|DEVICEID_AMD_MISC16
 block|}
 block|,
 block|{
@@ -748,6 +761,9 @@ case|:
 case|case
 literal|0x11
 case|:
+case|case
+literal|0x16
+case|:
 break|break;
 default|default:
 return|return
@@ -979,6 +995,9 @@ literal|0x10
 case|:
 case|case
 literal|0x11
+case|:
+case|case
+literal|0x16
 case|:
 comment|/* 		 * There is only one sensor per package. 		 */
 name|sc
