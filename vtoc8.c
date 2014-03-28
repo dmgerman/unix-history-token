@@ -159,7 +159,9 @@ operator|==
 name|SCHEME_META_IMG_START
 operator|)
 condition|?
-literal|1
+name|nsecs
+operator|*
+name|nheads
 else|:
 literal|0
 expr_stmt|;
