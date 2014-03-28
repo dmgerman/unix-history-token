@@ -1518,9 +1518,12 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"partition %d: starting block %llu ... "
+name|stderr
+argument_list|,
+literal|"partition %d: starting block %llu "
+literal|"... "
 argument_list|,
 name|part
 operator|->
@@ -1723,8 +1726,10 @@ name|size
 operator|*
 name|secsz
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"size %llu bytes (%llu blocks)\n"
 argument_list|,
 operator|(
@@ -2321,29 +2326,37 @@ condition|(
 name|verbose
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Logical sector size: %u\n"
 argument_list|,
 name|secsz
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Physical block size: %u\n"
 argument_list|,
 name|blksz
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Sectors per track:   %u\n"
 argument_list|,
 name|nsecs
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Number of heads:     %u\n"
 argument_list|,
 name|nheads
@@ -2359,8 +2372,10 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Number of cylinders: %u\n"
 argument_list|,
 name|ncyls
@@ -2399,6 +2414,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 name|errc
 argument_list|(
 name|EX_IOERR
