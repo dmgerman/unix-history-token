@@ -126,7 +126,7 @@ operator|==
 name|SCHEME_META_PART_BEFORE
 operator|)
 condition|?
-literal|1
+name|nsecs
 else|:
 literal|0
 expr_stmt|;
