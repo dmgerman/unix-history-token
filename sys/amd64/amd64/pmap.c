@@ -491,7 +491,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|vm_paddr_t
 name|dmaplimit
 decl_stmt|;
