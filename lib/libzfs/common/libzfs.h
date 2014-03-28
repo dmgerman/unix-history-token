@@ -1040,6 +1040,8 @@ name|proplen
 parameter_list|,
 name|zprop_source_t
 modifier|*
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 specifier|extern
