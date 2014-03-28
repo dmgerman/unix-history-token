@@ -437,7 +437,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t<t>[/<l>]:!<cmd>\t-  partition content and size "
+literal|"\t<t>[/<l>]:-<cmd>\t-  partition content and size "
 literal|"are taken from\n\t\t\t\t   the output of the command to run\n"
 argument_list|)
 expr_stmt|;
@@ -588,7 +588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A partition specification has the following format:  *<type> ':'<kind><contents>  * where:  *	type	  the partition type alias  *	kind	  the interpretation of the contents specification  *		  ':'   contents holds the size of an empty partition  *		  '='   contents holds the name of a file to read  *		  '!'   contents holds a command to run; the output of  *			which is the contents of the partition.  *	contents  the specification of a partition's contents  */
+comment|/*  * A partition specification has the following format:  *<type> ':'<kind><contents>  * where:  *	type	  the partition type alias  *	kind	  the interpretation of the contents specification  *		  ':'   contents holds the size of an empty partition  *		  '='   contents holds the name of a file to read  *		  '-'   contents holds a command to run; the output of  *			which is the contents of the partition.  *	contents  the specification of a partition's contents  */
 end_comment
 
 begin_function
@@ -758,7 +758,7 @@ name|PART_KIND_FILE
 expr_stmt|;
 break|break;
 case|case
-literal|'!'
+literal|'-'
 case|:
 name|part
 operator|->
