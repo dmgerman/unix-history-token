@@ -453,6 +453,23 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_DEVMEMIO
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning with /dev/mem i/o leaked"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|td
 operator|->
 name|td_no_sleeping
