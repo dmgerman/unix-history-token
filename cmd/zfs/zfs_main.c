@@ -14314,6 +14314,8 @@ literal|"volume"
 block|,
 literal|"snapshot"
 block|,
+literal|"snap"
+block|,
 literal|"bookmark"
 block|,
 literal|"all"
@@ -14354,13 +14356,16 @@ break|break;
 case|case
 literal|2
 case|:
+case|case
+literal|3
+case|:
 name|types
 operator||=
 name|ZFS_TYPE_SNAPSHOT
 expr_stmt|;
 break|break;
 case|case
-literal|3
+literal|4
 case|:
 name|types
 operator||=
@@ -14368,7 +14373,7 @@ name|ZFS_TYPE_BOOKMARK
 expr_stmt|;
 break|break;
 case|case
-literal|4
+literal|5
 case|:
 name|types
 operator|=
@@ -31890,6 +31895,22 @@ condition|)
 name|cmdname
 operator|=
 literal|"receive"
+expr_stmt|;
+comment|/* 		 * The 'snap' command is an alias for 'snapshot' 		 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cmdname
+argument_list|,
+literal|"snap"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|cmdname
+operator|=
+literal|"snapshot"
 expr_stmt|;
 comment|/* 		 * Special case '-?' 		 */
 if|if
