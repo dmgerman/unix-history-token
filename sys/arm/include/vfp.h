@@ -538,6 +538,61 @@ begin_comment
 comment|/* vfp enable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VFPEXC_FP2V
+value|(0x10000000)
+end_define
+
+begin_comment
+comment|/* FPINST2 valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFPEXC_INV
+value|(0x00000080)
+end_define
+
+begin_comment
+comment|/* Input exception */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFPEXC_UFC
+value|(0x00000008)
+end_define
+
+begin_comment
+comment|/* Underflow exception */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFPEXC_OFC
+value|(0x00000004)
+end_define
+
+begin_comment
+comment|/* Overflow exception */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFPEXC_IOC
+value|(0x00000001)
+end_define
+
+begin_comment
+comment|/* Invlaid operation */
+end_comment
+
 begin_comment
 comment|/* version 3 registers */
 end_comment
