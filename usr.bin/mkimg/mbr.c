@@ -71,6 +71,24 @@ directive|include
 file|"scheme.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DOSPTYP_FAT32
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_FAT32
+value|0x0b
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|struct
