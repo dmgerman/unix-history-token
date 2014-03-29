@@ -875,7 +875,9 @@ begin_function
 specifier|static
 name|u_int
 name|gpt_tblsz
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_int
 name|ents

@@ -1013,9 +1013,14 @@ operator|!=
 name|NULL
 operator|)
 condition|?
+call|(
+name|size_t
+call|)
+argument_list|(
 name|p
 operator|-
 name|buf
+argument_list|)
 else|:
 name|sz
 expr_stmt|;
@@ -2042,7 +2047,7 @@ literal|512
 argument_list|,
 name|INT_MAX
 operator|+
-literal|1
+literal|1U
 argument_list|,
 name|optarg
 argument_list|)
@@ -2092,7 +2097,7 @@ literal|512
 argument_list|,
 name|INT_MAX
 operator|+
-literal|1
+literal|1U
 argument_list|,
 name|optarg
 argument_list|)
