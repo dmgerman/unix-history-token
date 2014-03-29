@@ -342,6 +342,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vfp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -4621,6 +4627,18 @@ name|pcb_vfpcpu
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|thread0
+operator|.
+name|td_pcb
+operator|->
+name|pcb_vfpstate
+operator|.
+name|fpscr
+operator|=
+name|VFPSCR_DN
+operator||
+name|VFPSCR_FZ
 expr_stmt|;
 name|thread0
 operator|.
