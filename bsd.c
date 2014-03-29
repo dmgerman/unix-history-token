@@ -251,8 +251,6 @@ name|memset
 argument_list|(
 name|buf
 operator|+
-name|LABELSECTOR
-operator|*
 name|secsz
 argument_list|,
 literal|0
@@ -297,11 +295,7 @@ operator|)
 operator|(
 name|buf
 operator|+
-name|LABELSECTOR
-operator|*
 name|secsz
-operator|+
-name|LABELOFFSET
 operator|)
 expr_stmt|;
 name|le32enc
