@@ -67,6 +67,15 @@ decl_stmt|;
 name|u_int32_t
 name|fpscr
 decl_stmt|;
+name|u_int32_t
+name|fpexec
+decl_stmt|;
+name|u_int32_t
+name|fpinst
+decl_stmt|;
+name|u_int32_t
+name|fpinst2
+decl_stmt|;
 block|}
 struct|;
 end_struct
