@@ -95,6 +95,25 @@ directive|include
 file|"scheme.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GPT_ENT_TYPE_FREEBSD_NANDFS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GPT_ENT_TYPE_FREEBSD_NANDFS
+define|\
+value|{0x74ba7dd9,0xa689,0x11e1,0xbd,0x04,{0x00,0xe0,0x81,0x28,0x6a,0xcf}}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|uuid_t

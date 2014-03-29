@@ -71,6 +71,24 @@ directive|include
 file|"scheme.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|APM_ENT_TYPE_FREEBSD_NANDFS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|APM_ENT_TYPE_FREEBSD_NANDFS
+value|"FreeBSD-nandfs"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|struct
