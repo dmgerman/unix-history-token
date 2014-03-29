@@ -272,6 +272,24 @@ name|_GLIBCXX_BEGIN_NAMESPACE
 parameter_list|(
 name|std
 parameter_list|)
+ifdef|#
+directive|ifdef
+name|__clang__
+comment|// When using clang, suppress warnings about possible keywords (such as
+comment|// __is_void, __is_pod, etc) being used as identifiers.
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|push
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|ignored
+literal|"-Wkeyword-compat"
+endif|#
+directive|endif
 name|namespace
 name|__detail
 decl_stmt|{
@@ -1567,6 +1585,25 @@ end_expr_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__clang__
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|pop
+end_pragma
 
 begin_endif
 endif|#
