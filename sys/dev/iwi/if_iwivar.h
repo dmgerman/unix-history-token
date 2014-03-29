@@ -619,6 +619,13 @@ name|struct
 name|iwi_tx_radiotap_header
 name|sc_txtap
 decl_stmt|;
+name|struct
+name|iwi_notif_link_quality
+name|sc_linkqual
+decl_stmt|;
+name|int
+name|sc_linkqual_valid
+decl_stmt|;
 block|}
 struct|;
 end_struct
