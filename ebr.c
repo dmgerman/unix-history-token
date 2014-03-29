@@ -499,6 +499,9 @@ argument_list|,
 name|secsz
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|secsz
 condition|)
 name|error
