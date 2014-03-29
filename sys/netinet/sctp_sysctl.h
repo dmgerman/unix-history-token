@@ -2128,7 +2128,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_UDP_TUNNELING_PORT_DEFAULT
-value|SCTP_OVER_UDP_TUNNELING_PORT
+value|0
 end_define
 
 begin_comment
