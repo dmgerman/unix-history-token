@@ -902,8 +902,8 @@ comment|/* Get the maximum number of memory pages this file system is 	 * allowe
 if|if
 condition|(
 name|size_max
-operator|<
-name|PAGE_SIZE
+operator|==
+literal|0
 operator|||
 name|size_max
 operator|>
@@ -928,6 +928,16 @@ operator|=
 name|SIZE_MAX
 expr_stmt|;
 else|else
+block|{
+name|size_max
+operator|=
+name|roundup
+argument_list|(
+name|size_max
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 name|pages
 operator|=
 name|howmany
@@ -937,6 +947,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+block|}
 name|MPASS
 argument_list|(
 name|pages
