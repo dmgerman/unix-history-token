@@ -3708,11 +3708,6 @@ name|device_t
 modifier|*
 name|devlist
 decl_stmt|;
-name|struct
-name|pci_devinfo
-modifier|*
-name|dinfo
-decl_stmt|;
 name|int
 name|dstate
 decl_stmt|,
@@ -3764,13 +3759,6 @@ name|devlist
 index|[
 name|i
 index|]
-expr_stmt|;
-name|dinfo
-operator|=
-name|device_get_ivars
-argument_list|(
-name|child
-argument_list|)
 expr_stmt|;
 name|dstate
 operator|=

@@ -533,9 +533,15 @@ name|uint32_t
 name|cons_head
 decl_stmt|,
 name|cons_next
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PREFETCH_DEFINED
+name|uint32_t
 name|cons_next_next
 decl_stmt|;
+endif|#
+directive|endif
 name|uint32_t
 name|prod_tail
 decl_stmt|;
@@ -567,6 +573,9 @@ name|br
 operator|->
 name|br_cons_mask
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PREFETCH_DEFINED
 name|cons_next_next
 operator|=
 operator|(
@@ -579,6 +588,8 @@ name|br
 operator|->
 name|br_cons_mask
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cons_head

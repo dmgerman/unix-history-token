@@ -1742,11 +1742,6 @@ modifier|*
 name|csio
 decl_stmt|;
 name|struct
-name|ccb_hdr
-modifier|*
-name|ccbh
-decl_stmt|;
-name|struct
 name|acb
 modifier|*
 name|acb
@@ -1760,13 +1755,6 @@ operator|&
 name|ccb
 operator|->
 name|csio
-expr_stmt|;
-name|ccbh
-operator|=
-operator|&
-name|ccb
-operator|->
-name|ccb_h
 expr_stmt|;
 comment|/* Max supported CDB length is 12 bytes */
 if|if

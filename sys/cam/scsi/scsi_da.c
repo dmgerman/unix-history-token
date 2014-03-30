@@ -12368,10 +12368,6 @@ name|uint64_t
 name|maxsector
 decl_stmt|;
 name|u_int
-name|lbppbe
-decl_stmt|;
-comment|/* LB per physical block exponent. */
-name|u_int
 name|lalba
 decl_stmt|;
 comment|/* Lowest aligned LBA. */
@@ -12399,10 +12395,6 @@ name|rdcap
 operator|->
 name|addr
 argument_list|)
-expr_stmt|;
-name|lbppbe
-operator|=
-literal|0
 expr_stmt|;
 name|lalba
 operator|=
@@ -12463,14 +12455,6 @@ name|rcaplong
 operator|->
 name|addr
 argument_list|)
-expr_stmt|;
-name|lbppbe
-operator|=
-name|rcaplong
-operator|->
-name|prot_lbppbe
-operator|&
-name|SRC16_LBPPBE
 expr_stmt|;
 name|lalba
 operator|=

@@ -779,11 +779,6 @@ name|length
 decl_stmt|,
 name|gran
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
@@ -1663,10 +1658,6 @@ name|Address16
 operator|.
 name|AddressLength
 expr_stmt|;
-name|name
-operator|=
-literal|"Address16"
-expr_stmt|;
 break|break;
 case|case
 name|ACPI_RESOURCE_TYPE_ADDRESS32
@@ -1711,10 +1702,6 @@ name|Address32
 operator|.
 name|AddressLength
 expr_stmt|;
-name|name
-operator|=
-literal|"Address32"
-expr_stmt|;
 break|break;
 case|case
 name|ACPI_RESOURCE_TYPE_ADDRESS64
@@ -1758,10 +1745,6 @@ operator|.
 name|Address64
 operator|.
 name|AddressLength
-expr_stmt|;
-name|name
-operator|=
-literal|"Address64"
 expr_stmt|;
 break|break;
 default|default:
@@ -1817,10 +1800,6 @@ operator|.
 name|ExtAddress64
 operator|.
 name|AddressLength
-expr_stmt|;
-name|name
-operator|=
-literal|"ExtAddress64"
 expr_stmt|;
 break|break;
 block|}
