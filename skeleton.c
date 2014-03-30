@@ -62,11 +62,11 @@ name|banner
 index|[]
 init|=
 block|{
-literal|"#ifndef lint"
+literal|"/* original parser id follows */"
 block|,
-literal|"static const char yysccsid[] = \"@(#)yaccpar	1.9 (Berkeley) 02/21/93\";"
+literal|"/* yysccsid[] = \"@(#)yaccpar 1.9 (Berkeley) 02/21/93\" */"
 block|,
-literal|"#endif"
+literal|"/* (use YYMAJOR/YYMINOR for ifdefs dependent on parser version) */"
 block|,
 literal|""
 block|,
