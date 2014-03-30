@@ -7756,7 +7756,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"Notification (%u) - len=%d, sizeof=%d\n"
+literal|"Notification (%u) - len=%d, sizeof=%zu\n"
 operator|,
 name|notif
 operator|->
