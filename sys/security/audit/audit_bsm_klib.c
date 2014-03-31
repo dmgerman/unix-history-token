@@ -1782,6 +1782,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|FILEDESC_SUNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|cpath
 index|[
 literal|0
