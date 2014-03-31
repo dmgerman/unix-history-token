@@ -93,6 +93,9 @@ name|size
 parameter_list|,
 name|bool
 name|zero
+parameter_list|,
+name|dss_prec_t
+name|dss_prec
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -110,6 +113,9 @@ name|alignment
 parameter_list|,
 name|bool
 name|zero
+parameter_list|,
+name|dss_prec_t
+name|dss_prec
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -160,6 +166,9 @@ name|zero
 parameter_list|,
 name|bool
 name|try_tcache_dalloc
+parameter_list|,
+name|dss_prec_t
+name|dss_prec
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -220,6 +229,17 @@ specifier|const
 name|void
 modifier|*
 name|ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|dss_prec_t
+name|huge_dss_prec_get
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
 parameter_list|)
 function_decl|;
 end_function_decl

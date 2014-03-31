@@ -1395,6 +1395,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|huge_dss_prec_get
+value|JEMALLOC_N(huge_dss_prec_get)
+end_define
+
+begin_define
+define|#
+directive|define
 name|huge_malloc
 value|JEMALLOC_N(huge_malloc)
 end_define

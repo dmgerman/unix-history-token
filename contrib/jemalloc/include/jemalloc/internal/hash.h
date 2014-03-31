@@ -2131,6 +2131,12 @@ operator|(
 name|LG_SIZEOF_PTR
 operator|==
 literal|3
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|JEMALLOC_BIG_ENDIAN
+argument_list|)
 operator|)
 name|hash_x64_128
 argument_list|(

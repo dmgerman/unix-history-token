@@ -8846,6 +8846,14 @@ argument_list|(
 name|size
 argument_list|,
 name|zero
+argument_list|,
+name|huge_dss_prec_get
+argument_list|(
+name|arenas
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 operator|)
 return|;

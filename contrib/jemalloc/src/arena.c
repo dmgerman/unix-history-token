@@ -3195,6 +3195,7 @@ name|arena
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|chunk
 operator|=
 name|arena_chunk_init_hard
@@ -3202,6 +3203,18 @@ argument_list|(
 name|arena
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|chunk
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* Insert the run into the runs_avail tree. */
 name|arena_avail_insert
 argument_list|(

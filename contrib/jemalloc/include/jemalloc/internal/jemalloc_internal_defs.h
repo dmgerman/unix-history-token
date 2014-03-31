@@ -371,6 +371,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* For use by hash code. */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_BIG_ENDIAN */
+end_comment
+
+begin_comment
 comment|/* sizeof(int) == 2^LG_SIZEOF_INT. */
 end_comment
 
