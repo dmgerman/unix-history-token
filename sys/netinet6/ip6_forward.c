@@ -2287,8 +2287,6 @@ name|freecopy
 goto|;
 block|}
 block|}
-name|senderr
-label|:
 if|if
 condition|(
 name|mcopy
