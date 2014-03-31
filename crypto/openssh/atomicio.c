@@ -155,6 +155,9 @@ name|struct
 name|pollfd
 name|pfd
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BROKEN_READ_COMPARISON
 name|pfd
 operator|.
 name|fd
@@ -173,6 +176,8 @@ name|POLLIN
 else|:
 name|POLLOUT
 expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|n
@@ -224,6 +229,9 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|BROKEN_READ_COMPARISON
 operator|(
 name|void
 operator|)
@@ -238,6 +246,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 return|return

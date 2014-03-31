@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: gss-serv.c,v 1.23 2011/08/01 19:18:15 markus Exp $ */
+comment|/* $OpenBSD: gss-serv.c,v 1.26 2014/02/26 20:28:44 djm Exp $ */
 end_comment
 
 begin_comment
@@ -135,6 +135,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -204,6 +206,73 @@ name|gssapi_null_mech
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * ssh_gssapi_supported_oids() can cause sandbox violations, so prepare the  * list of supported mechanisms before privsep is set up.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|gss_OID_set
+name|supported_oids
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|ssh_gssapi_prepare_supported_oids
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ssh_gssapi_supported_oids
+argument_list|(
+operator|&
+name|supported_oids
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|OM_uint32
+name|ssh_gssapi_test_oid_supported
+parameter_list|(
+name|OM_uint32
+modifier|*
+name|ms
+parameter_list|,
+name|gss_OID
+name|member
+parameter_list|,
+name|int
+modifier|*
+name|present
+parameter_list|)
+block|{
+if|if
+condition|(
+name|supported_oids
+operator|==
+name|NULL
+condition|)
+name|ssh_gssapi_prepare_supported_oids
+argument_list|()
+expr_stmt|;
+return|return
+name|gss_test_oid_set_member
+argument_list|(
+name|ms
+argument_list|,
+name|member
+argument_list|,
+name|supported_oids
+argument_list|,
+name|present
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Acquire credentials for a server running on the current host.  * Requires that the context structure contains a valid OID  */
@@ -1491,12 +1560,10 @@ operator|.
 name|creds
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 operator|&
 name|gssapi_client
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

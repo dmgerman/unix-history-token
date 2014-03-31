@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: xmalloc.c,v 1.27 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: xmalloc.c,v 1.29 2014/01/04 17:50:55 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -94,11 +94,8 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"xmalloc: out of memory (allocating %lu bytes)"
+literal|"xmalloc: out of memory (allocating %zu bytes)"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -169,16 +166,11 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"xcalloc: out of memory (allocating %lu bytes)"
+literal|"xcalloc: out of memory (allocating %zu bytes)"
 argument_list|,
-call|(
-name|u_long
-call|)
-argument_list|(
 name|size
 operator|*
 name|nmemb
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -269,45 +261,14 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"xrealloc: out of memory (new_size %lu bytes)"
+literal|"xrealloc: out of memory (new_size %zu bytes)"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|new_size
 argument_list|)
 expr_stmt|;
 return|return
 name|new_ptr
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|xfree
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-if|if
-condition|(
-name|ptr
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"xfree: NULL pointer given as argument"
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ptr
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

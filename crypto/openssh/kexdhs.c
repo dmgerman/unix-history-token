@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexdhs.c,v 1.12 2010/11/10 01:33:07 djm Exp $ */
+comment|/* $OpenBSD: kexdhs.c,v 1.18 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -95,29 +95,6 @@ begin_include
 include|#
 directive|include
 file|"ssh2.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GSSAPI
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"ssh-gss.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"monitor_wrap.h"
 end_include
 
 begin_function
@@ -291,21 +268,6 @@ name|kex
 operator|->
 name|load_host_private_key
 argument_list|(
-name|kex
-operator|->
-name|hostkey_type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|server_host_private
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"Missing private key for hostkey type %d"
-argument_list|,
 name|kex
 operator|->
 name|hostkey_type
@@ -506,16 +468,14 @@ argument_list|(
 literal|"kexdh_server: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|kbuf
-argument_list|,
-literal|0
 argument_list|,
 name|klen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|kbuf
 argument_list|)
@@ -640,13 +600,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* sign H */
-if|if
-condition|(
-name|PRIVSEP
-argument_list|(
-name|key_sign
+name|kex
+operator|->
+name|sign
 argument_list|(
 name|server_host_private
+argument_list|,
+name|server_host_public
 argument_list|,
 operator|&
 name|signature
@@ -657,14 +617,6 @@ argument_list|,
 name|hash
 argument_list|,
 name|hashlen
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"kexdh_server: key_sign failed"
 argument_list|)
 expr_stmt|;
 comment|/* destroy_sensitive_data(); */
@@ -699,12 +651,12 @@ expr_stmt|;
 name|packet_send
 argument_list|()
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|signature
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|server_host_key_blob
 argument_list|)
@@ -715,7 +667,7 @@ argument_list|(
 name|dh
 argument_list|)
 expr_stmt|;
-name|kex_derive_keys
+name|kex_derive_keys_bn
 argument_list|(
 name|kex
 argument_list|,

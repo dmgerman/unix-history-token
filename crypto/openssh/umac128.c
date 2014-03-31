@@ -13,6 +13,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|umac_ctx
+end_undef
+
+begin_define
+define|#
+directive|define
+name|umac_ctx
+value|umac128_ctx
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|umac_new
 end_undef
 
@@ -20,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|umac_new
-value|ssh_umac128_new
+value|umac128_new
 end_define
 
 begin_undef
@@ -33,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|umac_update
-value|ssh_umac128_update
+value|umac128_update
 end_define
 
 begin_undef
@@ -46,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|umac_final
-value|ssh_umac128_final
+value|umac128_final
 end_define
 
 begin_undef
@@ -59,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|umac_delete
-value|ssh_umac128_delete
+value|umac128_delete
 end_define
 
 begin_include

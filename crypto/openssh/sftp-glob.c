@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-glob.c,v 1.23 2011/10/04 14:17:32 djm Exp $ */
+comment|/* $OpenBSD: sftp-glob.c,v 1.26 2013/11/08 11:15:19 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -159,8 +165,10 @@ name|r
 decl_stmt|;
 name|r
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -189,7 +197,7 @@ name|dir
 argument_list|)
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|r
 argument_list|)
@@ -403,7 +411,7 @@ operator|->
 name|dir
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|od
 argument_list|)

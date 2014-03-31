@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-gss.c,v 1.18 2012/12/02 20:34:09 djm Exp $ */
+comment|/* $OpenBSD: auth2-gss.c,v 1.21 2014/02/26 20:28:44 djm Exp $ */
 end_comment
 
 begin_comment
@@ -211,9 +211,6 @@ decl_stmt|;
 name|int
 name|mechs
 decl_stmt|;
-name|gss_OID_set
-name|supported
-decl_stmt|;
 name|int
 name|present
 decl_stmt|;
@@ -270,22 +267,12 @@ literal|0
 operator|)
 return|;
 block|}
-name|ssh_gssapi_supported_oids
-argument_list|(
-operator|&
-name|supported
-argument_list|)
-expr_stmt|;
 do|do
 block|{
 name|mechs
 operator|--
 expr_stmt|;
-if|if
-condition|(
-name|doid
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|doid
 argument_list|)
@@ -341,15 +328,13 @@ name|len
 operator|-
 literal|2
 expr_stmt|;
-name|gss_test_oid_set_member
+name|ssh_gssapi_test_oid_supported
 argument_list|(
 operator|&
 name|ms
 argument_list|,
 operator|&
 name|goid
-argument_list|,
-name|supported
 argument_list|,
 operator|&
 name|present
@@ -375,22 +360,13 @@ operator|!
 name|present
 condition|)
 do|;
-name|gss_release_oid_set
-argument_list|(
-operator|&
-name|ms
-argument_list|,
-operator|&
-name|supported
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|present
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|doid
 argument_list|)
@@ -437,7 +413,7 @@ operator|&
 name|ctxt
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|doid
 argument_list|)
@@ -480,7 +456,7 @@ expr_stmt|;
 name|packet_send
 argument_list|()
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|doid
 argument_list|)
@@ -626,7 +602,7 @@ name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|recv_tok
 operator|.
@@ -883,7 +859,7 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|recv_tok
 operator|.
@@ -944,10 +920,6 @@ name|authctxt
 init|=
 name|ctxt
 decl_stmt|;
-name|Gssctxt
-modifier|*
-name|gssctxt
-decl_stmt|;
 name|int
 name|authenticated
 decl_stmt|;
@@ -972,12 +944,6 @@ name|fatal
 argument_list|(
 literal|"No authentication or GSSAPI context"
 argument_list|)
-expr_stmt|;
-name|gssctxt
-operator|=
-name|authctxt
-operator|->
-name|methoddata
 expr_stmt|;
 comment|/* 	 * We don't need to check the status, because we're only enabled in 	 * the dispatcher once the exchange is complete 	 */
 name|packet_check_eom
@@ -1209,7 +1175,7 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|mic
 operator|.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshlogin.c,v 1.27 2011/01/11 06:06:09 djm Exp $ */
+comment|/* $OpenBSD: sshlogin.c,v 1.28 2014/01/31 16:39:19 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -255,7 +255,7 @@ name|time_string
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|time_string
 argument_list|)

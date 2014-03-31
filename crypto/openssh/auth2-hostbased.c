@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-hostbased.c,v 1.14 2010/08/04 05:42:47 djm Exp $ */
+comment|/* $OpenBSD: auth2-hostbased.c,v 1.17 2013/12/30 23:52:27 djm Exp $ */
 end_comment
 
 begin_comment
@@ -397,6 +397,36 @@ goto|goto
 name|done
 goto|;
 block|}
+if|if
+condition|(
+name|key_type_plain
+argument_list|(
+name|key
+operator|->
+name|type
+argument_list|)
+operator|==
+name|KEY_RSA
+operator|&&
+operator|(
+name|datafellows
+operator|&
+name|SSH_BUG_RSASIGMD5
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Refusing RSA key because peer uses unsafe "
+literal|"signature format"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 name|service
 operator|=
 name|datafellows
@@ -507,6 +537,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|pubkey_auth_info
+argument_list|(
+name|authctxt
+argument_list|,
+name|key
+argument_list|,
+literal|"client user \"%.100s\", client host \"%.100s\""
+argument_list|,
+name|cuser
+argument_list|,
+name|chost
+argument_list|)
+expr_stmt|;
 comment|/* test for allowed key and correct signature */
 name|authenticated
 operator|=
@@ -586,27 +629,27 @@ argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pkalg
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pkblob
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cuser
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|chost
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|sig
 argument_list|)
@@ -1007,7 +1050,7 @@ name|lookup
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)

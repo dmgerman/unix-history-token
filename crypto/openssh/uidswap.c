@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: uidswap.c,v 1.35 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: uidswap.c,v 1.36 2013/11/08 11:15:19 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -354,13 +360,7 @@ block|}
 else|else
 block|{
 comment|/* saved_egroupslen == 0 */
-if|if
-condition|(
-name|saved_egroups
-operator|!=
-name|NULL
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|saved_egroups
 argument_list|)
@@ -475,11 +475,7 @@ block|}
 else|else
 block|{
 comment|/* user_groupslen == 0 */
-if|if
-condition|(
-name|user_groups
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|user_groups
 argument_list|)
@@ -636,12 +632,17 @@ name|uid_t
 name|uid
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|HAVE_CYGWIN
 name|uid_t
 name|old_uid
 init|=
 name|getuid
 argument_list|()
 decl_stmt|;
+endif|#
+directive|endif
 name|debug
 argument_list|(
 literal|"permanently_drop_suid: %u"
@@ -922,6 +923,9 @@ modifier|*
 name|pw
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|HAVE_CYGWIN
 name|uid_t
 name|old_uid
 init|=
@@ -934,6 +938,8 @@ init|=
 name|getgid
 argument_list|()
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pw

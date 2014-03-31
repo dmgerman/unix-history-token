@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: gss-genr.c,v 1.20 2009/06/22 05:39:28 dtucker Exp $ */
+comment|/* $OpenBSD: gss-genr.c,v 1.22 2013/11/08 00:39:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -182,7 +182,7 @@ operator|!=
 name|GSS_C_NO_OID
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|ctx
 operator|->
@@ -191,7 +191,7 @@ operator|->
 name|elements
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ctx
 operator|->
@@ -203,8 +203,10 @@ name|ctx
 operator|->
 name|oid
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|gss_OID_desc
@@ -313,7 +315,7 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|s
 argument_list|)
@@ -743,7 +745,7 @@ operator|!=
 name|GSS_C_NO_OID
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 operator|(
 operator|*
@@ -755,7 +757,7 @@ operator|->
 name|elements
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 operator|(
 operator|*
@@ -850,7 +852,7 @@ operator|->
 name|client_creds
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 operator|*
 name|ctx
@@ -1066,7 +1068,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|gssbuf
 operator|.

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: pathnames.h,v 1.22 2011/05/23 03:30:07 djm Exp $ */
+comment|/* $OpenBSD: pathnames.h,v 1.24 2013/12/06 13:39:49 markus Exp $ */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -114,6 +118,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_HOST_ED25519_KEY_FILE
+value|SSHDIR "/ssh_host_ed25519_key"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_HOST_RSA_KEY_FILE
 value|SSHDIR "/ssh_host_rsa_key"
 end_define
@@ -184,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_USER_HOSTFILE
-value|"~/.ssh/known_hosts"
+value|"~/" _PATH_SSH_USER_DIR "/known_hosts"
 end_define
 
 begin_comment
@@ -195,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_USER_HOSTFILE2
-value|"~/.ssh/known_hosts2"
+value|"~/" _PATH_SSH_USER_DIR "/known_hosts2"
 end_define
 
 begin_comment
@@ -206,28 +217,35 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_CLIENT_IDENTITY
-value|".ssh/identity"
+value|_PATH_SSH_USER_DIR "/identity"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_SSH_CLIENT_ID_DSA
-value|".ssh/id_dsa"
+value|_PATH_SSH_USER_DIR "/id_dsa"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_SSH_CLIENT_ID_ECDSA
-value|".ssh/id_ecdsa"
+value|_PATH_SSH_USER_DIR "/id_ecdsa"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_SSH_CLIENT_ID_RSA
-value|".ssh/id_rsa"
+value|_PATH_SSH_USER_DIR "/id_rsa"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_SSH_CLIENT_ID_ED25519
+value|_PATH_SSH_USER_DIR "/id_ed25519"
 end_define
 
 begin_comment
@@ -238,7 +256,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_USER_CONFFILE
-value|".ssh/config"
+value|_PATH_SSH_USER_DIR "/config"
 end_define
 
 begin_comment
@@ -249,7 +267,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_USER_PERMITTED_KEYS
-value|".ssh/authorized_keys"
+value|_PATH_SSH_USER_DIR "/authorized_keys"
 end_define
 
 begin_comment
@@ -260,7 +278,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_USER_PERMITTED_KEYS2
-value|".ssh/authorized_keys2"
+value|_PATH_SSH_USER_DIR "/authorized_keys2"
 end_define
 
 begin_comment
@@ -271,7 +289,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_USER_RC
-value|".ssh/rc"
+value|_PATH_SSH_USER_DIR "/rc"
 end_define
 
 begin_define

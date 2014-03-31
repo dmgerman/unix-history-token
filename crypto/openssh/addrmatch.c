@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: addrmatch.c,v 1.6 2012/06/21 00:16:07 dtucker Exp $ */
+comment|/*	$OpenBSD: addrmatch.c,v 1.9 2014/01/19 11:21:51 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -304,6 +304,9 @@ if|if
 condition|(
 name|slen
 operator|<
+operator|(
+name|socklen_t
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -348,6 +351,9 @@ if|if
 condition|(
 name|slen
 operator|<
+operator|(
+name|socklen_t
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1994,7 +2000,7 @@ name|foundit
 goto|;
 block|}
 block|}
-name|xfree
+name|free
 argument_list|(
 name|o
 argument_list|)
@@ -2299,7 +2305,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|xfree
+name|free
 argument_list|(
 name|o
 argument_list|)

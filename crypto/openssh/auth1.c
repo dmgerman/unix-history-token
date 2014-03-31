@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth1.c,v 1.77 2012/12/02 20:34:09 djm Exp $ */
+comment|/* $OpenBSD: auth1.c,v 1.80 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -193,11 +193,6 @@ name|auth1_process_password
 parameter_list|(
 name|Authctxt
 modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -209,11 +204,6 @@ name|auth1_process_rsa
 parameter_list|(
 name|Authctxt
 modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -225,11 +215,6 @@ name|auth1_process_rhosts_rsa
 parameter_list|(
 name|Authctxt
 modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -241,11 +226,6 @@ name|auth1_process_tis_challenge
 parameter_list|(
 name|Authctxt
 modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -257,11 +237,6 @@ name|auth1_process_tis_response
 parameter_list|(
 name|Authctxt
 modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -303,11 +278,6 @@ function_decl|)
 parameter_list|(
 name|Authctxt
 modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 block|}
@@ -541,13 +511,6 @@ parameter_list|(
 name|Authctxt
 modifier|*
 name|authctxt
-parameter_list|,
-name|char
-modifier|*
-name|info
-parameter_list|,
-name|size_t
-name|infolen
 parameter_list|)
 block|{
 name|int
@@ -587,16 +550,14 @@ name|password
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|password
-argument_list|,
-literal|0
 argument_list|,
 name|dlen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|password
 argument_list|)
@@ -621,13 +582,6 @@ parameter_list|(
 name|Authctxt
 modifier|*
 name|authctxt
-parameter_list|,
-name|char
-modifier|*
-name|info
-parameter_list|,
-name|size_t
-name|infolen
 parameter_list|)
 block|{
 name|int
@@ -698,13 +652,6 @@ parameter_list|(
 name|Authctxt
 modifier|*
 name|authctxt
-parameter_list|,
-name|char
-modifier|*
-name|info
-parameter_list|,
-name|size_t
-name|infolen
 parameter_list|)
 block|{
 name|int
@@ -826,13 +773,11 @@ argument_list|(
 name|client_host_key
 argument_list|)
 expr_stmt|;
-name|snprintf
+name|auth_info
 argument_list|(
-name|info
+name|authctxt
 argument_list|,
-name|infolen
-argument_list|,
-literal|" ruser %.100s"
+literal|"ruser %.100s"
 argument_list|,
 name|client_user
 argument_list|)
@@ -857,13 +802,6 @@ parameter_list|(
 name|Authctxt
 modifier|*
 name|authctxt
-parameter_list|,
-name|char
-modifier|*
-name|info
-parameter_list|,
-name|size_t
-name|infolen
 parameter_list|)
 block|{
 name|char
@@ -905,7 +843,7 @@ argument_list|(
 name|challenge
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|challenge
 argument_list|)
@@ -937,13 +875,6 @@ parameter_list|(
 name|Authctxt
 modifier|*
 name|authctxt
-parameter_list|,
-name|char
-modifier|*
-name|info
-parameter_list|,
-name|size_t
-name|infolen
 parameter_list|)
 block|{
 name|int
@@ -978,16 +909,14 @@ argument_list|,
 name|response
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|response
-argument_list|,
-literal|'r'
 argument_list|,
 name|dlen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|response
 argument_list|)
@@ -1018,12 +947,6 @@ name|int
 name|authenticated
 init|=
 literal|0
-decl_stmt|;
-name|char
-name|info
-index|[
-literal|1024
-index|]
 decl_stmt|;
 name|int
 name|prev
@@ -1126,8 +1049,6 @@ argument_list|,
 literal|"without authentication"
 argument_list|,
 name|NULL
-argument_list|,
-literal|""
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1155,13 +1076,6 @@ comment|/* default to fail */
 name|authenticated
 operator|=
 literal|0
-expr_stmt|;
-name|info
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* Get a packet from the client. */
 name|prev
@@ -1259,13 +1173,6 @@ operator|->
 name|method
 argument_list|(
 name|authctxt
-argument_list|,
-name|info
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|info
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1520,18 +1427,9 @@ name|type
 argument_list|)
 argument_list|,
 name|NULL
-argument_list|,
-name|info
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|client_user
-operator|!=
-name|NULL
-condition|)
-block|{
-name|xfree
+name|free
 argument_list|(
 name|client_user
 argument_list|)
@@ -1540,7 +1438,6 @@ name|client_user
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|authenticated

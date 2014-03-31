@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.85 2011/03/15 10:36:02 okan Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.89 2013/12/06 13:39:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -250,6 +250,13 @@ define|#
 directive|define
 name|KT_ECDSA
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|KT_ED25519
+value|16
 end_define
 
 begin_decl_stmt
@@ -1129,7 +1136,17 @@ name|KT_RSA
 condition|?
 literal|"ssh-rsa"
 else|:
+operator|(
+name|c
+operator|->
+name|c_keytype
+operator|==
+name|KT_ED25519
+condition|?
+literal|"ssh-ed25519"
+else|:
 literal|"ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521"
+operator|)
 operator|)
 expr_stmt|;
 name|c
@@ -1200,6 +1217,17 @@ name|c
 operator|->
 name|c_kex
 operator|->
+name|kex
+index|[
+name|KEX_C25519_SHA256
+index|]
+operator|=
+name|kexc25519_client
+expr_stmt|;
+name|c
+operator|->
+name|c_kex
+operator|->
 name|verify_host_key
 operator|=
 name|hostjump
@@ -1254,7 +1282,7 @@ name|nonfatal_fatal
 operator|=
 literal|0
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|c
 operator|->
@@ -1656,7 +1684,7 @@ operator|!
 name|name
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|namebase
 argument_list|)
@@ -1907,7 +1935,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fdcon
 index|[
@@ -1917,7 +1945,7 @@ operator|.
 name|c_namebase
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fdcon
 index|[
@@ -1938,7 +1966,7 @@ name|c_status
 operator|==
 name|CS_KEYS
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|fdcon
 index|[
@@ -3073,12 +3101,12 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|e
 argument_list|)
@@ -3195,7 +3223,7 @@ name|KT_RSA1
 init|;
 name|j
 operator|<=
-name|KT_ECDSA
+name|KT_ED25519
 condition|;
 name|j
 operator|*=
@@ -3638,6 +3666,14 @@ case|:
 name|get_keytypes
 operator||=
 name|KT_RSA
+expr_stmt|;
+break|break;
+case|case
+name|KEY_ED25519
+case|:
+name|get_keytypes
+operator||=
+name|KT_ED25519
 expr_stmt|;
 break|break;
 case|case

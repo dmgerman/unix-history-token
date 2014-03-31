@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-poll.c,v 1.4 2008/08/29 21:32:38 dtucker Exp $ */
+comment|/* $Id: bsd-poll.c,v 1.6 2014/02/05 23:44:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -23,6 +23,18 @@ name|HAVE_POLL
 argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -43,13 +55,19 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -490,34 +508,16 @@ block|}
 block|}
 name|out
 label|:
-if|if
-condition|(
-name|readfds
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|readfds
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|writefds
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|writefds
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|exceptfds
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|exceptfds

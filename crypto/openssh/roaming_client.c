@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: roaming_client.c,v 1.4 2011/12/07 05:44:38 djm Exp $ */
+comment|/* $OpenBSD: roaming_client.c,v 1.7 2014/01/09 23:20:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -178,6 +178,12 @@ begin_include
 include|#
 directive|include
 file|"sshconnect.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"digest.h"
 end_include
 
 begin_comment
@@ -374,22 +380,11 @@ block|{
 name|u_char
 name|digest
 index|[
-name|SHA_DIGEST_LENGTH
+name|SSH_DIGEST_MAX_LENGTH
 index|]
-decl_stmt|;
-name|EVP_MD_CTX
-name|md
 decl_stmt|;
 name|Buffer
 name|b
-decl_stmt|;
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
-init|=
-name|EVP_sha1
-argument_list|()
 decl_stmt|;
 name|u_int64_t
 name|chall
@@ -448,40 +443,30 @@ argument_list|,
 name|chall
 argument_list|)
 expr_stmt|;
-name|EVP_DigestInit
+if|if
+condition|(
+name|ssh_digest_buffer
 argument_list|(
-operator|&
-name|md
+name|SSH_DIGEST_SHA1
 argument_list|,
-name|evp_md
-argument_list|)
-expr_stmt|;
-name|EVP_DigestUpdate
-argument_list|(
-operator|&
-name|md
-argument_list|,
-name|buffer_ptr
-argument_list|(
 operator|&
 name|b
-argument_list|)
-argument_list|,
-name|buffer_len
-argument_list|(
-operator|&
-name|b
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|EVP_DigestFinal
-argument_list|(
-operator|&
-name|md
 argument_list|,
 name|digest
 argument_list|,
-name|NULL
+sizeof|sizeof
+argument_list|(
+name|digest
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: ssh_digest_buffer failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|buffer_free
@@ -507,9 +492,9 @@ name|packet_put_raw
 argument_list|(
 name|digest
 argument_list|,
-sizeof|sizeof
+name|ssh_digest_bytes
 argument_list|(
-name|digest
+name|SSH_DIGEST_SHA1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -821,7 +806,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|str
 argument_list|)
@@ -841,7 +826,7 @@ operator|++
 control|)
 block|{
 comment|/* kex algorithm taken care of so start with i=1 and not 0 */
-name|xfree
+name|free
 argument_list|(
 name|packet_get_string
 argument_list|(
@@ -997,11 +982,7 @@ literal|0
 return|;
 name|fail
 label|:
-if|if
-condition|(
-name|kexlist
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|kexlist
 argument_list|)
@@ -1147,6 +1128,8 @@ name|ssh_connect
 argument_list|(
 name|host
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|hostaddr
 argument_list|,
@@ -1170,10 +1153,6 @@ argument_list|,
 name|options
 operator|.
 name|use_privileged_port
-argument_list|,
-name|options
-operator|.
-name|proxy_command
 argument_list|)
 operator|==
 literal|0

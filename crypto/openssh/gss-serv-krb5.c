@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: gss-serv-krb5.c,v 1.7 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: gss-serv-krb5.c,v 1.8 2013/07/20 01:55:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -110,10 +110,10 @@ directive|include
 file|<krb5.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -138,11 +138,6 @@ include|#
 directive|include
 file|<gssapi/gssapi_krb5.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -234,6 +229,11 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errmsg
+decl_stmt|;
 if|if
 condition|(
 name|ssh_gssapi_krb5_init
@@ -265,16 +265,27 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|logit
-argument_list|(
-literal|"krb5_parse_name(): %.100s"
-argument_list|,
-name|krb5_get_err_text
+name|errmsg
+operator|=
+name|krb5_get_error_message
 argument_list|(
 name|krb_context
 argument_list|,
 name|retval
 argument_list|)
+expr_stmt|;
+name|logit
+argument_list|(
+literal|"krb5_parse_name(): %.100s"
+argument_list|,
+name|errmsg
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
+argument_list|(
+name|krb_context
+argument_list|,
+name|errmsg
 argument_list|)
 expr_stmt|;
 return|return
@@ -364,6 +375,11 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errmsg
+decl_stmt|;
 if|if
 condition|(
 name|client
@@ -391,6 +407,50 @@ return|return;
 ifdef|#
 directive|ifdef
 name|HEIMDAL
+ifdef|#
+directive|ifdef
+name|HAVE_KRB5_CC_NEW_UNIQUE
+if|if
+condition|(
+operator|(
+name|problem
+operator|=
+name|krb5_cc_new_unique
+argument_list|(
+name|krb_context
+argument_list|,
+name|krb5_fcc_ops
+operator|.
+name|prefix
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|ccache
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|errmsg
+operator|=
+name|krb5_get_error_message
+argument_list|(
+name|krb_context
+argument_list|,
+name|problem
+argument_list|)
+expr_stmt|;
+name|logit
+argument_list|(
+literal|"krb5_cc_new_unique(): %.100s"
+argument_list|,
+name|errmsg
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -421,6 +481,15 @@ name|problem
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+name|krb5_free_error_message
+argument_list|(
+name|krb_context
+argument_list|,
+name|errmsg
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 else|#
@@ -440,16 +509,27 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|logit
-argument_list|(
-literal|"ssh_krb5_cc_gen(): %.100s"
-argument_list|,
-name|krb5_get_err_text
+name|errmsg
+operator|=
+name|krb5_get_error_message
 argument_list|(
 name|krb_context
 argument_list|,
 name|problem
 argument_list|)
+expr_stmt|;
+name|logit
+argument_list|(
+literal|"ssh_krb5_cc_gen(): %.100s"
+argument_list|,
+name|errmsg
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
+argument_list|(
+name|krb_context
+argument_list|,
+name|errmsg
 argument_list|)
 expr_stmt|;
 return|return;
@@ -478,23 +558,27 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|logit
-argument_list|(
-literal|"krb5_parse_name(): %.100s"
-argument_list|,
-name|krb5_get_err_text
+name|errmsg
+operator|=
+name|krb5_get_error_message
 argument_list|(
 name|krb_context
 argument_list|,
 name|problem
 argument_list|)
+expr_stmt|;
+name|logit
+argument_list|(
+literal|"krb5_parse_name(): %.100s"
+argument_list|,
+name|errmsg
 argument_list|)
 expr_stmt|;
-name|krb5_cc_destroy
+name|krb5_free_error_message
 argument_list|(
 name|krb_context
 argument_list|,
-name|ccache
+name|errmsg
 argument_list|)
 expr_stmt|;
 return|return;
@@ -515,16 +599,27 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|logit
-argument_list|(
-literal|"krb5_cc_initialize(): %.100s"
-argument_list|,
-name|krb5_get_err_text
+name|errmsg
+operator|=
+name|krb5_get_error_message
 argument_list|(
 name|krb_context
 argument_list|,
 name|problem
 argument_list|)
+expr_stmt|;
+name|logit
+argument_list|(
+literal|"krb5_cc_initialize(): %.100s"
+argument_list|,
+name|errmsg
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
+argument_list|(
+name|krb_context
+argument_list|,
+name|errmsg
 argument_list|)
 expr_stmt|;
 name|krb5_free_principal
@@ -685,9 +780,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_decl_stmt
 name|ssh_gssapi_mech
 name|gssapi_kerberos_mech
 init|=
@@ -713,7 +805,7 @@ operator|&
 name|ssh_gssapi_krb5_storecreds
 block|}
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_endif
 endif|#

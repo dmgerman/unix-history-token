@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: umac.h,v 1.2 2012/10/04 13:21:50 markus Exp $ */
+comment|/* $OpenBSD: umac.h,v 1.3 2013/07/22 12:20:02 djm Exp $ */
 end_comment
 
 begin_comment
@@ -40,6 +40,7 @@ name|umac_ctx
 modifier|*
 name|umac_new
 parameter_list|(
+specifier|const
 name|u_char
 name|key
 index|[]
@@ -61,6 +62,7 @@ name|umac_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|input
@@ -82,6 +84,7 @@ name|u_char
 name|tag
 index|[]
 parameter_list|,
+specifier|const
 name|u_char
 name|nonce
 index|[
@@ -129,6 +132,7 @@ name|umac_ctx
 modifier|*
 name|umac128_new
 parameter_list|(
+specifier|const
 name|u_char
 name|key
 index|[]
@@ -142,6 +146,7 @@ name|umac_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|input
@@ -162,6 +167,7 @@ name|u_char
 name|tag
 index|[]
 parameter_list|,
+specifier|const
 name|u_char
 name|nonce
 index|[

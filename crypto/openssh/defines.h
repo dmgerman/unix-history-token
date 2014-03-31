@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.171 2013/03/07 09:06:13 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.176 2014/01/17 13:12:38 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -910,28 +910,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* *-*-nto-qnx doesn't define this constant in the system headers */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MISSING_NFDBITS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NFDBITS
-value|(8 * sizeof(unsigned long))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* SCO Open Server 3 has INADDR_LOOPBACK defined in rpc/rpc.h but including rpc/rpc.h breaks Solaris 6 */
 end_comment
 
@@ -1504,6 +1482,84 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_UINTXX_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|u_int8_t
+name|uint8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int16_t
+name|uint16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int64_t
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_INTMAX_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|intmax_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_UINTMAX_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|uintmax_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_U_CHAR
 end_ifndef
 
@@ -1948,14 +2004,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* *-*-nto-qnx does not define this type in the system headers */
+comment|/* bits needed for select that may not be in the system headers */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MISSING_FD_MASK
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_FD_MASK
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -1965,6 +2021,61 @@ name|int
 name|fd_mask
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_DECL_NFDBITS
+argument_list|)
+operator|&&
+name|HAVE_DECL_NFDBITS
+operator|==
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|NFDBITS
+value|(8 * sizeof(unsigned long))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_DECL_HOWMANY
+argument_list|)
+operator|&&
+name|HAVE_DECL_HOWMANY
+operator|==
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|howmany
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x)+((y)-1))/(y))
+end_define
 
 begin_endif
 endif|#
@@ -2580,33 +2691,6 @@ name|__nonnull__
 parameter_list|(
 name|x
 parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* *-*-nto-qnx doesn't define this macro in the system headers */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MISSING_HOWMANY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|howmany
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(((x)+((y)-1))/(y))
 end_define
 
 begin_endif
@@ -4436,6 +4520,43 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Platforms that have arc4random_uniform() and not arc4random_stir()  * shouldn't need the latter.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_ARC4RANDOM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_ARC4RANDOM_UNIFORM
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ARC4RANDOM_STIR
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|arc4random_stir
+parameter_list|()
+end_define
 
 begin_endif
 endif|#

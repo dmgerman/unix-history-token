@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mac.h,v 1.6 2007/06/07 19:37:34 pvalchev Exp $ */
+comment|/* $OpenBSD: mac.h,v 1.8 2013/11/07 11:58:27 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -14,6 +14,16 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|mac_alg_list
+parameter_list|(
+name|char
 parameter_list|)
 function_decl|;
 end_function_decl

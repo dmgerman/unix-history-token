@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexecdhs.c,v 1.2 2010/09/22 05:01:29 djm Exp $ */
+comment|/* $OpenBSD: kexecdhs.c,v 1.10 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -76,36 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dh.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ssh2.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GSSAPI
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"ssh-gss.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"monitor_wrap.h"
 end_include
 
 begin_ifdef
@@ -180,36 +151,6 @@ name|sbloblen
 decl_stmt|,
 name|hashlen
 decl_stmt|;
-name|int
-name|curve_nid
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|curve_nid
-operator|=
-name|kex_ecdh_name_to_nid
-argument_list|(
-name|kex
-operator|->
-name|name
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: unsupported ECDH curve \"%s\""
-argument_list|,
-name|__func__
-argument_list|,
-name|kex
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -217,7 +158,9 @@ name|server_key
 operator|=
 name|EC_KEY_new_by_curve_name
 argument_list|(
-name|curve_nid
+name|kex
+operator|->
+name|ec_nid
 argument_list|)
 operator|)
 operator|==
@@ -321,21 +264,6 @@ name|kex
 operator|->
 name|load_host_private_key
 argument_list|(
-name|kex
-operator|->
-name|hostkey_type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|server_host_private
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"Missing private key for hostkey type %d"
-argument_list|,
 name|kex
 operator|->
 name|hostkey_type
@@ -518,16 +446,14 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|kbuf
-argument_list|,
-literal|0
 argument_list|,
 name|klen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|kbuf
 argument_list|)
@@ -548,7 +474,7 @@ name|kex_ecdh_hash
 argument_list|(
 name|kex
 operator|->
-name|evp_md
+name|hash_alg
 argument_list|,
 name|group
 argument_list|,
@@ -659,13 +585,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* sign H */
-if|if
-condition|(
-name|PRIVSEP
-argument_list|(
-name|key_sign
+name|kex
+operator|->
+name|sign
 argument_list|(
 name|server_host_private
+argument_list|,
+name|server_host_public
 argument_list|,
 operator|&
 name|signature
@@ -676,14 +602,6 @@ argument_list|,
 name|hash
 argument_list|,
 name|hashlen
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"kexdh_server: key_sign failed"
 argument_list|)
 expr_stmt|;
 comment|/* destroy_sensitive_data(); */
@@ -720,12 +638,12 @@ expr_stmt|;
 name|packet_send
 argument_list|()
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|signature
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|server_host_key_blob
 argument_list|)
@@ -736,7 +654,7 @@ argument_list|(
 name|server_key
 argument_list|)
 expr_stmt|;
-name|kex_derive_keys
+name|kex_derive_keys_bn
 argument_list|(
 name|kex
 argument_list|,

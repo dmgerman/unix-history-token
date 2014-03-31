@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-gss.h,v 1.10 2007/06/12 08:20:00 djm Exp $ */
+comment|/* $OpenBSD: ssh-gss.h,v 1.11 2014/02/26 20:28:44 djm Exp $ */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -25,16 +29,19 @@ directive|ifdef
 name|GSSAPI
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_GSSAPI_H
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_GSSAPI_GSSAPI_H
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
-file|<gssapi.h>
+file|<gssapi/gssapi.h>
 end_include
 
 begin_elif
@@ -42,14 +49,14 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_GSSAPI_GSSAPI_H
+name|HAVE_GSSAPI_H
 argument_list|)
 end_elif
 
 begin_include
 include|#
 directive|include
-file|<gssapi/gssapi.h>
+file|<gssapi.h>
 end_include
 
 begin_endif
@@ -426,6 +433,30 @@ modifier|*
 name|ssh_gssapi_get_ctype
 parameter_list|(
 name|Gssctxt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ssh_gssapi_prepare_supported_oids
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|ssh_gssapi_test_oid_supported
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+name|gss_OID
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;

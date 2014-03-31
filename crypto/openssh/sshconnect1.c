@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect1.c,v 1.70 2006/11/06 21:25:28 markus Exp $ */
+comment|/* $OpenBSD: sshconnect1.c,v 1.74 2014/02/02 03:44:32 djm Exp $ */
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/bn.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/md5.h>
 end_include
 
 begin_include
@@ -187,6 +181,12 @@ directive|include
 file|"auth.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"digest.h"
+end_include
+
 begin_comment
 comment|/* Session id for the current session. */
 end_comment
@@ -333,7 +333,7 @@ argument_list|,
 name|comment
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -438,11 +438,9 @@ argument_list|(
 literal|"Authentication agent failed to decrypt challenge."
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|response
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -592,7 +590,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|MD5_CTX
+name|struct
+name|ssh_digest_ctx
+modifier|*
 name|md
 decl_stmt|;
 name|int
@@ -678,37 +678,64 @@ operator|-
 name|len
 argument_list|)
 expr_stmt|;
-name|MD5_Init
-argument_list|(
-operator|&
+if|if
+condition|(
+operator|(
 name|md
-argument_list|)
-expr_stmt|;
-name|MD5_Update
+operator|=
+name|ssh_digest_start
 argument_list|(
-operator|&
+name|SSH_DIGEST_MD5
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+name|ssh_digest_update
+argument_list|(
 name|md
 argument_list|,
 name|buf
 argument_list|,
 literal|32
 argument_list|)
-expr_stmt|;
-name|MD5_Update
+operator|<
+literal|0
+operator|||
+name|ssh_digest_update
 argument_list|(
-operator|&
 name|md
 argument_list|,
 name|session_id
 argument_list|,
 literal|16
 argument_list|)
-expr_stmt|;
-name|MD5_Final
+operator|<
+literal|0
+operator|||
+name|ssh_digest_final
 argument_list|(
+name|md
+argument_list|,
 name|response
 argument_list|,
-operator|&
+sizeof|sizeof
+argument_list|(
+name|response
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: md5 failed"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|ssh_digest_free
+argument_list|(
 name|md
 argument_list|)
 expr_stmt|;
@@ -750,11 +777,9 @@ expr_stmt|;
 name|packet_write_wait
 argument_list|()
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -762,11 +787,9 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|response
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -774,12 +797,10 @@ name|response
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 operator|&
 name|md
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -912,7 +933,7 @@ argument_list|(
 literal|"Server refused our key."
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -1092,11 +1113,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|memset
+name|explicit_bzero
 argument_list|(
 name|passphrase
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -1104,7 +1123,7 @@ name|passphrase
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase
 argument_list|)
@@ -1126,7 +1145,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* We no longer need the comment. */
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -1624,7 +1643,7 @@ else|:
 literal|"\nResponse: "
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|challenge
 argument_list|)
@@ -1675,7 +1694,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|response
 argument_list|)
@@ -1692,11 +1711,9 @@ argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|response
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -1704,7 +1721,7 @@ name|response
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|response
 argument_list|)
@@ -1838,11 +1855,9 @@ argument_list|(
 name|password
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|password
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -1850,7 +1865,7 @@ name|password
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|password
 argument_list|)
@@ -2216,10 +2231,6 @@ name|cookie
 argument_list|,
 name|session_id
 argument_list|)
-expr_stmt|;
-comment|/* Generate a session key. */
-name|arc4random_stir
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Generate an encryption key for the session.   The key is a 256 bit 	 * random number, interpreted as a 32-byte key, with the least 	 * significant 8 bits being the first byte of the key. 	 */
 for|for
@@ -2755,12 +2766,10 @@ operator|.
 name|cipher
 argument_list|)
 expr_stmt|;
-comment|/* We will no longer need the session key here.  Destroy any extra copies. */
-name|memset
+comment|/* 	 * We will no longer need the session key here. 	 * Destroy any extra copies. 	 */
+name|explicit_bzero
 argument_list|(
 name|session_key
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

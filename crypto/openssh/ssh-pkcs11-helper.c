@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.4 2012/07/02 12:13:26 dtucker Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.7 2013/12/02 02:56:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -329,7 +329,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ki
 operator|->
@@ -573,6 +573,8 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
 name|key_to_blob
 argument_list|(
 name|keys
@@ -586,7 +588,10 @@ argument_list|,
 operator|&
 name|blen
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|buffer_put_string
 argument_list|(
 operator|&
@@ -605,7 +610,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -621,7 +626,7 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|keys
 argument_list|)
@@ -638,12 +643,12 @@ name|SSH_AGENT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|pin
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
@@ -732,12 +737,12 @@ argument_list|,
 name|SSH_AGENT_FAILURE
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pin
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
@@ -957,23 +962,17 @@ name|SSH_AGENT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|signature
-operator|!=
-name|NULL
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|signature
 argument_list|)
@@ -1294,11 +1293,6 @@ literal|4
 operator|*
 literal|4096
 index|]
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
 decl_stmt|;
 specifier|extern
 name|char

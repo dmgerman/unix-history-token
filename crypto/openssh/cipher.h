@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher.h,v 1.39 2013/01/08 18:49:04 markus Exp $ */
+comment|/* $OpenBSD: cipher.h,v 1.44 2014/01/25 10:12:50 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/evp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cipher-chachapoly.h"
 end_include
 
 begin_comment
@@ -194,6 +200,12 @@ decl_stmt|;
 name|EVP_CIPHER_CTX
 name|evp
 decl_stmt|;
+name|struct
+name|chachapoly_ctx
+name|cp_ctx
+decl_stmt|;
+comment|/* XXX union with evp? */
+specifier|const
 name|Cipher
 modifier|*
 name|cipher
@@ -212,6 +224,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|Cipher
 modifier|*
 name|cipher_by_name
@@ -224,6 +237,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|Cipher
 modifier|*
 name|cipher_by_number
@@ -266,12 +280,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|cipher_alg_list
+parameter_list|(
+name|char
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|cipher_init
 parameter_list|(
 name|CipherContext
 modifier|*
 parameter_list|,
+specifier|const
 name|Cipher
 modifier|*
 parameter_list|,
@@ -293,11 +320,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cipher_crypt
 parameter_list|(
 name|CipherContext
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_char
 modifier|*
@@ -309,6 +338,27 @@ parameter_list|,
 name|u_int
 parameter_list|,
 name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cipher_get_length
+parameter_list|(
+name|CipherContext
+modifier|*
+parameter_list|,
+name|u_int
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -332,6 +382,7 @@ parameter_list|(
 name|CipherContext
 modifier|*
 parameter_list|,
+specifier|const
 name|Cipher
 modifier|*
 parameter_list|,
@@ -358,6 +409,17 @@ end_function_decl
 begin_function_decl
 name|u_int
 name|cipher_keylen
+parameter_list|(
+specifier|const
+name|Cipher
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|cipher_seclen
 parameter_list|(
 specifier|const
 name|Cipher

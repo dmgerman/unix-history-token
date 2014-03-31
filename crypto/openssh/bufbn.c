@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bufbn.c,v 1.6 2007/06/02 09:04:58 djm Exp $*/
+comment|/* $OpenBSD: bufbn.c,v 1.11 2014/02/27 08:25:09 djm Exp $*/
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -142,7 +148,7 @@ argument_list|,
 name|bin_size
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buf
 argument_list|)
@@ -181,16 +187,14 @@ argument_list|,
 name|oi
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|bin_size
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buf
 argument_list|)
@@ -307,6 +311,29 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bits
+operator|>
+literal|65535
+operator|-
+literal|7
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"buffer_get_bignum_ret: cannot handle BN of size %d"
+argument_list|,
+name|bits
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* Compute the number of binary bytes that follow. */
 name|bytes
 operator|=
@@ -614,7 +641,7 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buf
 argument_list|)
@@ -654,16 +681,14 @@ operator|-
 name|hasnohigh
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buf
 argument_list|)
@@ -780,7 +805,7 @@ argument_list|(
 literal|"buffer_get_bignum2_ret: negative numbers not supported"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|bin
 argument_list|)
@@ -808,7 +833,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|bin
 argument_list|)
@@ -839,7 +864,7 @@ argument_list|(
 literal|"buffer_get_bignum2_ret: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|bin
 argument_list|)
@@ -851,7 +876,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|bin
 argument_list|)

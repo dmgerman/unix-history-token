@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: umac.c,v 1.4 2011/10/19 10:39:48 djm Exp $ */
+comment|/* $OpenBSD: umac.c,v 1.8 2013/11/08 00:39:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -379,7 +379,7 @@ name|LOAD_UINT32_REVERSED
 parameter_list|(
 name|p
 parameter_list|)
-value|(swap32(*(UINT32 *)(p)))
+value|(swap32(*(const UINT32 *)(p)))
 end_define
 
 begin_define
@@ -408,6 +408,7 @@ specifier|static
 name|UINT32
 name|LOAD_UINT32_REVERSED
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|ptr
@@ -418,6 +419,7 @@ name|temp
 init|=
 operator|*
 operator|(
+specifier|const
 name|UINT32
 operator|*
 operator|)
@@ -574,7 +576,7 @@ name|LOAD_UINT32_LITTLE
 parameter_list|(
 name|ptr
 parameter_list|)
-value|(*(UINT32 *)(ptr))
+value|(*(const UINT32 *)(ptr))
 end_define
 
 begin_define
@@ -714,7 +716,7 @@ parameter_list|,
 name|int_key
 parameter_list|)
 define|\
-value|AES_set_encrypt_key((u_char *)(key),UMAC_KEY_LEN*8,int_key)
+value|AES_set_encrypt_key((const u_char *)(key),UMAC_KEY_LEN*8,int_key)
 end_define
 
 begin_comment
@@ -975,6 +977,7 @@ name|pdf_ctx
 modifier|*
 name|pc
 parameter_list|,
+specifier|const
 name|UINT8
 name|nonce
 index|[
@@ -1024,12 +1027,20 @@ name|LOW_BIT_MASK
 value|0
 endif|#
 directive|endif
+union|union
+block|{
 name|UINT8
 name|tmp_nonce_lo
 index|[
 literal|4
 index|]
 decl_stmt|;
+name|UINT32
+name|align
+decl_stmt|;
+block|}
+name|t
+union|;
 if|#
 directive|if
 name|LOW_BIT_MASK
@@ -1052,10 +1063,13 @@ operator|(
 name|UINT32
 operator|*
 operator|)
+name|t
+operator|.
 name|tmp_nonce_lo
 operator|=
 operator|(
 operator|(
+specifier|const
 name|UINT32
 operator|*
 operator|)
@@ -1065,6 +1079,8 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|t
+operator|.
 name|tmp_nonce_lo
 index|[
 literal|3
@@ -1082,6 +1098,8 @@ operator|(
 name|UINT32
 operator|*
 operator|)
+name|t
+operator|.
 name|tmp_nonce_lo
 operator|)
 index|[
@@ -1105,6 +1123,7 @@ operator|||
 operator|(
 operator|(
 operator|(
+specifier|const
 name|UINT32
 operator|*
 operator|)
@@ -1144,6 +1163,7 @@ index|]
 operator|=
 operator|(
 operator|(
+specifier|const
 name|UINT32
 operator|*
 operator|)
@@ -1171,6 +1191,8 @@ operator|(
 name|UINT32
 operator|*
 operator|)
+name|t
+operator|.
 name|tmp_nonce_lo
 operator|)
 index|[
@@ -1525,6 +1547,7 @@ name|void
 modifier|*
 name|kp
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|dp
@@ -1558,11 +1581,13 @@ operator|*
 operator|)
 name|kp
 decl_stmt|;
+specifier|const
 name|UINT32
 modifier|*
 name|d
 init|=
 operator|(
+specifier|const
 name|UINT32
 operator|*
 operator|)
@@ -1875,6 +1900,7 @@ name|void
 modifier|*
 name|kp
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|dp
@@ -1910,11 +1936,13 @@ operator|*
 operator|)
 name|kp
 decl_stmt|;
+specifier|const
 name|UINT32
 modifier|*
 name|d
 init|=
 operator|(
+specifier|const
 name|UINT32
 operator|*
 operator|)
@@ -2383,6 +2411,7 @@ name|void
 modifier|*
 name|kp
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|dp
@@ -2420,11 +2449,13 @@ operator|*
 operator|)
 name|kp
 decl_stmt|;
+specifier|const
 name|UINT32
 modifier|*
 name|d
 init|=
 operator|(
+specifier|const
 name|UINT32
 operator|*
 operator|)
@@ -3047,6 +3078,7 @@ name|void
 modifier|*
 name|kp
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|dp
@@ -3086,11 +3118,13 @@ operator|*
 operator|)
 name|kp
 decl_stmt|;
+specifier|const
 name|UINT32
 modifier|*
 name|d
 init|=
 operator|(
+specifier|const
 name|UINT32
 operator|*
 operator|)
@@ -3878,6 +3912,7 @@ name|nh_ctx
 modifier|*
 name|hc
 parameter_list|,
+specifier|const
 name|UINT8
 modifier|*
 name|buf
@@ -4264,6 +4299,7 @@ name|nh_ctx
 modifier|*
 name|hc
 parameter_list|,
+specifier|const
 name|UINT8
 modifier|*
 name|buf
@@ -4821,6 +4857,7 @@ name|nh_ctx
 modifier|*
 name|hc
 parameter_list|,
+specifier|const
 name|UINT8
 modifier|*
 name|buf
@@ -6381,6 +6418,7 @@ parameter_list|(
 name|uhash_ctx_t
 name|ctx
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|input
@@ -6431,6 +6469,7 @@ operator|->
 name|hash
 argument_list|,
 operator|(
+specifier|const
 name|UINT8
 operator|*
 operator|)
@@ -6501,6 +6540,7 @@ operator|->
 name|hash
 argument_list|,
 operator|(
+specifier|const
 name|UINT8
 operator|*
 operator|)
@@ -6561,6 +6601,7 @@ operator|->
 name|hash
 argument_list|,
 operator|(
+specifier|const
 name|UINT8
 operator|*
 operator|)
@@ -6614,6 +6655,7 @@ operator|->
 name|hash
 argument_list|,
 operator|(
+specifier|const
 name|UINT8
 operator|*
 operator|)
@@ -6903,7 +6945,7 @@ name|ctx
 operator|->
 name|free_ptr
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ctx
 argument_list|)
@@ -6927,6 +6969,7 @@ name|umac_ctx
 modifier|*
 name|umac_new
 parameter_list|(
+specifier|const
 name|u_char
 name|key
 index|[]
@@ -6951,8 +6994,10 @@ name|octx
 operator|=
 name|ctx
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -7066,6 +7111,7 @@ name|u_char
 name|tag
 index|[]
 parameter_list|,
+specifier|const
 name|u_char
 name|nonce
 index|[
@@ -7096,6 +7142,7 @@ operator|->
 name|pdf
 argument_list|,
 operator|(
+specifier|const
 name|UINT8
 operator|*
 operator|)
@@ -7129,6 +7176,7 @@ name|umac_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|input

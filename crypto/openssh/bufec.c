@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bufec.c,v 1.1 2010/08/31 11:54:45 djm Exp $ */
+comment|/* $OpenBSD: bufec.c,v 1.3 2014/01/31 16:39:19 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -249,14 +249,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|buf
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buf
 argument_list|)
@@ -506,14 +506,14 @@ argument_list|(
 name|bnctx
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|buf
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buf
 argument_list|)

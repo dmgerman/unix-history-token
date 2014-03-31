@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.20 2010/12/04 00:18:01 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.24 2013/10/17 00:30:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -393,6 +393,10 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+name|m
+parameter_list|,
+name|int
+name|force_legacy
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -440,8 +444,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* XXX: add callbacks to do_download/do_upload so we can do progress meter */
+comment|/* Call fsync() on open file 'handle' */
 end_comment
+
+begin_function_decl
+name|int
+name|do_fsync
+parameter_list|(
+name|struct
+name|sftp_conn
+modifier|*
+name|conn
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Download 'remote_path' to 'local_path'. Preserve permissions and times  * if 'pflag' is set  */
@@ -463,6 +484,10 @@ modifier|*
 parameter_list|,
 name|Attrib
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -493,6 +518,10 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -516,6 +545,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -537,6 +568,8 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,

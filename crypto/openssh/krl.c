@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.c,v 1.10 2013/02/19 02:12:47 dtucker Exp $ */
+comment|/* $OpenBSD: krl.c,v 1.14 2014/01/31 16:39:19 tedu Exp $ */
 end_comment
 
 begin_include
@@ -1225,10 +1225,12 @@ name|hi
 operator|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rs
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2683,53 +2685,53 @@ argument_list|,
 name|__func__
 argument_list|,
 operator|(
+name|long
+name|long
 name|unsigned
-name|long
-name|long
 operator|)
 name|contig
 argument_list|,
 operator|(
+name|long
+name|long
 name|unsigned
-name|long
-name|long
 operator|)
 name|last_gap
 argument_list|,
 operator|(
+name|long
+name|long
 name|unsigned
-name|long
-name|long
 operator|)
 name|next_gap
 argument_list|,
 name|final
 argument_list|,
 operator|(
+name|long
+name|long
 name|unsigned
-name|long
-name|long
 operator|)
 name|cost_list
 argument_list|,
 operator|(
+name|long
+name|long
 name|unsigned
-name|long
-name|long
 operator|)
 name|cost_range
 argument_list|,
 operator|(
+name|long
+name|long
 name|unsigned
-name|long
-name|long
 operator|)
 name|cost_bitmap
 argument_list|,
 operator|(
+name|long
+name|long
 name|unsigned
-name|long
-name|long
 operator|)
 name|cost_bitmap_restart
 argument_list|,
@@ -2925,18 +2927,18 @@ argument_list|,
 name|__func__
 argument_list|,
 operator|(
+name|long
+name|long
 name|unsigned
-name|long
-name|long
 operator|)
 name|rs
 operator|->
 name|lo
 argument_list|,
 operator|(
+name|long
+name|long
 name|unsigned
-name|long
-name|long
 operator|)
 name|rs
 operator|->
@@ -4794,6 +4796,11 @@ name|type
 decl_stmt|,
 modifier|*
 name|blob
+decl_stmt|,
+modifier|*
+name|rdata
+init|=
+name|NULL
 decl_stmt|;
 name|u_int
 name|i
@@ -4804,14 +4811,18 @@ name|sig_off
 decl_stmt|,
 name|sects_off
 decl_stmt|,
+name|rlen
+decl_stmt|,
 name|blen
 decl_stmt|,
 name|format_version
 decl_stmt|,
 name|nca_used
-init|=
-literal|0
 decl_stmt|;
+name|nca_used
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|krlp
 operator|=
@@ -5072,9 +5083,9 @@ argument_list|(
 literal|"KRL version %llu generated at %s%s%s"
 argument_list|,
 operator|(
+name|long
+name|long
 name|unsigned
-name|long
-name|long
 operator|)
 name|krl
 operator|->
@@ -5297,8 +5308,7 @@ argument_list|)
 operator|-
 name|sig_off
 argument_list|)
-operator|==
-operator|-
+operator|!=
 literal|1
 condition|)
 block|{
@@ -5531,7 +5541,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|blob
+name|rdata
 operator|=
 name|buffer_get_string_ret
 argument_list|(
@@ -5539,7 +5549,7 @@ operator|&
 name|sect
 argument_list|,
 operator|&
-name|blen
+name|rlen
 argument_list|)
 operator|)
 operator|==
@@ -5563,7 +5573,7 @@ name|type
 operator|==
 name|KRL_SECTION_FINGERPRINT_SHA1
 operator|&&
-name|blen
+name|rlen
 operator|!=
 literal|20
 condition|)
@@ -5597,9 +5607,9 @@ name|krl
 operator|->
 name|revoked_sha1s
 argument_list|,
-name|blob
+name|rdata
 argument_list|,
-name|blen
+name|rlen
 argument_list|)
 operator|!=
 literal|0
@@ -5607,6 +5617,10 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|rdata
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* revoke_blob frees blob */
 block|}
 break|break;
@@ -5910,6 +5924,11 @@ argument_list|(
 name|ca_used
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|rdata
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|key
@@ -5986,10 +6005,12 @@ modifier|*
 name|rc
 decl_stmt|;
 comment|/* Check explicitly revoked hashes first */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rb
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -6065,10 +6086,12 @@ literal|1
 return|;
 block|}
 comment|/* Next, explicit keys */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rb
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -6187,10 +6210,12 @@ literal|0
 return|;
 comment|/* No entry for this CA */
 comment|/* Check revocation by cert key ID */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rki
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -6261,10 +6286,12 @@ condition|)
 return|return
 literal|0
 return|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rs
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

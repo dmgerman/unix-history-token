@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.81 2012/10/30 21:29:54 djm Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.86 2014/01/27 19:18:54 markus Exp $ */
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/rsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/md5.h>
 end_include
 
 begin_include
@@ -178,6 +172,12 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"digest.h"
 end_include
 
 begin_comment
@@ -345,7 +345,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|MD5_CTX
+name|struct
+name|ssh_digest_ctx
+modifier|*
 name|md
 decl_stmt|;
 name|int
@@ -368,7 +370,9 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"auth_rsa_verify_response: RSA modulus too small: %d< minimum %d bits"
+literal|"%s: RSA modulus too small: %d< minimum %d bits"
+argument_list|,
+name|__func__
 argument_list|,
 name|BN_num_bits
 argument_list|(
@@ -408,7 +412,9 @@ literal|32
 condition|)
 name|fatal
 argument_list|(
-literal|"auth_rsa_verify_response: bad challenge length %d"
+literal|"%s: bad challenge length %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|len
 argument_list|)
@@ -433,37 +439,64 @@ operator|-
 name|len
 argument_list|)
 expr_stmt|;
-name|MD5_Init
-argument_list|(
-operator|&
+if|if
+condition|(
+operator|(
 name|md
-argument_list|)
-expr_stmt|;
-name|MD5_Update
+operator|=
+name|ssh_digest_start
 argument_list|(
-operator|&
+name|SSH_DIGEST_MD5
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+name|ssh_digest_update
+argument_list|(
 name|md
 argument_list|,
 name|buf
 argument_list|,
 literal|32
 argument_list|)
-expr_stmt|;
-name|MD5_Update
+operator|<
+literal|0
+operator|||
+name|ssh_digest_update
 argument_list|(
-operator|&
 name|md
 argument_list|,
 name|session_id
 argument_list|,
 literal|16
 argument_list|)
-expr_stmt|;
-name|MD5_Final
+operator|<
+literal|0
+operator|||
+name|ssh_digest_final
 argument_list|(
+name|md
+argument_list|,
 name|mdbuf
 argument_list|,
-operator|&
+sizeof|sizeof
+argument_list|(
+name|mdbuf
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: md5 failed"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|ssh_digest_free
+argument_list|(
 name|md
 argument_list|)
 expr_stmt|;
@@ -675,6 +708,9 @@ name|rkey
 parameter_list|)
 block|{
 name|char
+modifier|*
+name|fp
+decl_stmt|,
 name|line
 index|[
 name|SSH_MAX_PUBKEY_BYTES
@@ -684,8 +720,7 @@ name|int
 name|allowed
 init|=
 literal|0
-decl_stmt|;
-name|u_int
+decl_stmt|,
 name|bits
 decl_stmt|;
 name|FILE
@@ -963,9 +998,6 @@ literal|0
 operator|||
 name|bits
 operator|!=
-operator|(
-name|u_int
-operator|)
 name|keybits
 condition|)
 name|logit
@@ -987,6 +1019,38 @@ name|n
 argument_list|)
 argument_list|,
 name|bits
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|key_fingerprint
+argument_list|(
+name|key
+argument_list|,
+name|SSH_FP_MD5
+argument_list|,
+name|SSH_FP_HEX
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"matching key found: file %s, line %lu %s %s"
+argument_list|,
+name|file
+argument_list|,
+name|linenum
+argument_list|,
+name|key_type
+argument_list|(
+name|key
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 comment|/* Never accept a revoked key */
@@ -1161,7 +1225,7 @@ argument_list|,
 name|rkey
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|file
 argument_list|)
@@ -1196,10 +1260,6 @@ block|{
 name|Key
 modifier|*
 name|key
-decl_stmt|;
-name|char
-modifier|*
-name|fp
 decl_stmt|;
 name|struct
 name|passwd
@@ -1281,37 +1341,13 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Correct response.  The client has been successfully 	 * authenticated. Note that we have not yet processed the 	 * options; this will be reset if the options cause the 	 * authentication to be rejected. 	 */
-name|fp
-operator|=
-name|key_fingerprint
+name|pubkey_auth_info
 argument_list|(
+name|authctxt
+argument_list|,
 name|key
 argument_list|,
-name|SSH_FP_MD5
-argument_list|,
-name|SSH_FP_HEX
-argument_list|)
-expr_stmt|;
-name|verbose
-argument_list|(
-literal|"Found matching %s key: %s"
-argument_list|,
-name|key_type
-argument_list|(
-name|key
-argument_list|)
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-name|key_free
-argument_list|(
-name|key
+name|NULL
 argument_list|)
 expr_stmt|;
 name|packet_send_debug

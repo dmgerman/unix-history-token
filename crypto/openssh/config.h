@@ -131,6 +131,14 @@ comment|/* #undef BROKEN_READV_COMPARISON */
 end_comment
 
 begin_comment
+comment|/* NetBSD read function is sometimes redirected, breaking atomicio comparisons    against it */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_READ_COMPARISON */
+end_comment
+
+begin_comment
 comment|/* Define if you have a broken realpath. */
 end_comment
 
@@ -203,7 +211,7 @@ comment|/* #undef BROKEN_SNPRINTF */
 end_comment
 
 begin_comment
-comment|/* FreeBSD strnvis does not do what we need */
+comment|/* FreeBSD strnvis argument order is swapped compared to OpenBSD */
 end_comment
 
 begin_define
@@ -527,6 +535,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `arc4random_stir' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ARC4RANDOM_STIR
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `arc4random_uniform' function. */
 end_comment
 
@@ -622,6 +641,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `bcrypt_pbkdf' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BCRYPT_PBKDF */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `bindresvport_sa' function. */
 end_comment
 
@@ -631,6 +658,54 @@ directive|define
 name|HAVE_BINDRESVPORT_SA
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `blf_enc' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLF_ENC */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<blf.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLF_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `Blowfish_expand0state' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLOWFISH_EXPAND0STATE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `Blowfish_expandstate' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLOWFISH_EXPANDSTATE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `Blowfish_initstate' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLOWFISH_INITSTATE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `Blowfish_stream2word' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLOWFISH_STREAM2WORD */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `BN_is_prime_ex' function. */
@@ -668,6 +743,14 @@ comment|/* #undef HAVE_BSTRING_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `cap_rights_limit' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CAP_RIGHTS_LIMIT */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `clock' function. */
 end_comment
 
@@ -675,6 +758,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_CLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* Have clock_gettime */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CLOCK_GETTIME
 value|1
 end_define
 
@@ -719,6 +813,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_CONTROL_IN_MSGHDR
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `crypt' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CRYPT
 value|1
 end_define
 
@@ -785,6 +890,17 @@ comment|/* #undef HAVE_DECL_GSS_C_NT_HOSTBASED_SERVICE */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `howmany', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_HOWMANY
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `h_errno', and to 0 if you    don't. */
 end_comment
 
@@ -827,6 +943,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL_MAXSYMLINKS
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `NFDBITS', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_NFDBITS
 value|1
 end_define
 
@@ -913,6 +1040,17 @@ value|0
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `DES_crypt' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DES_CRYPT
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have /dev/ptmx */
 end_comment
 
@@ -987,6 +1125,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `endgrent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ENDGRENT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<endian.h> header file. */
 end_comment
 
@@ -1033,6 +1182,61 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `EVP_DigestFinal_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_DIGESTFINAL_EX
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_DigestInit_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_DIGESTINIT_EX
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_MD_CTX_cleanup' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_MD_CTX_CLEANUP
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_MD_CTX_copy_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_MD_CTX_COPY_EX
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_MD_CTX_init' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_MD_CTX_INIT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `EVP_sha256' function. */
 end_comment
 
@@ -1049,6 +1253,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_EXIT_IN_UTMP */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `explicit_bzero' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EXPLICIT_BZERO */
 end_comment
 
 begin_comment
@@ -1089,6 +1301,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FCNTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `fd_mask'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FD_MASK
 value|1
 end_define
 
@@ -1149,6 +1372,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FSFILCNT_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `fstatfs' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FSTATFS
 value|1
 end_define
 
@@ -1708,6 +1942,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if the system has the type `intmax_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INTMAX_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
 end_comment
 
@@ -1761,6 +2006,30 @@ directive|define
 name|HAVE_ISBLANK
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `krb5_cc_new_unique' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_KRB5_CC_NEW_UNIQUE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `krb5_free_error_message' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_KRB5_FREE_ERROR_MESSAGE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `krb5_get_error_message' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_KRB5_GET_ERROR_MESSAGE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<lastlog.h> header file. */
@@ -1938,6 +2207,17 @@ comment|/* #undef HAVE_LINUX_SECCOMP_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<locale.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOCALE_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `login' function. */
 end_comment
 
@@ -2020,6 +2300,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_MAILLOCK_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `mblen' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MBLEN
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `md5_crypt' function. */
@@ -2353,39 +2644,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if your password has a pw_change field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PW_CHANGE_IN_PASSWD
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your password has a pw_class field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PW_CLASS_IN_PASSWD
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your password has a pw_expire field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PW_EXPIRE_IN_PASSWD
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `readpassphrase' function. */
 end_comment
 
@@ -2513,6 +2771,14 @@ directive|define
 name|HAVE_SA_FAMILY_T
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `scan_scaled' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SCAN_SCALED */
+end_comment
 
 begin_comment
 comment|/* Define if you have SecureWare-based protected password database */
@@ -3175,6 +3441,50 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if `pw_change' is a member of `struct passwd'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_PASSWD_PW_CHANGE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `pw_class' is a member of `struct passwd'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_PASSWD_PW_CLASS
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `pw_expire' is a member of `struct passwd'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_PASSWD_PW_EXPIRE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `pw_gecos' is a member of `struct passwd'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_PASSWD_PW_GECOS
+value|1
+end_define
+
+begin_comment
 comment|/* define if you have struct sockaddr_in6 data type */
 end_comment
 
@@ -3290,6 +3600,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SYS_BSDTTY_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/capability.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_CAPABILITY_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/cdefs.h> header file. */
@@ -3660,6 +3981,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_UCRED_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if the system has the type `uintmax_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINTMAX_T
+value|1
+end_define
 
 begin_comment
 comment|/* define if you have uintxx_t data type */
@@ -4200,30 +4532,6 @@ comment|/* #undef MAIL_DIRECTORY */
 end_comment
 
 begin_comment
-comment|/* Define on *nto-qnx systems */
-end_comment
-
-begin_comment
-comment|/* #undef MISSING_FD_MASK */
-end_comment
-
-begin_comment
-comment|/* Define on *nto-qnx systems */
-end_comment
-
-begin_comment
-comment|/* #undef MISSING_HOWMANY */
-end_comment
-
-begin_comment
-comment|/* Define on *nto-qnx systems */
-end_comment
-
-begin_comment
-comment|/* #undef MISSING_NFDBITS */
-end_comment
-
-begin_comment
 comment|/* Need setpgrp to acquire controlling tty */
 end_comment
 
@@ -4272,13 +4580,46 @@ comment|/* #undef OPENSSL_EVP_DIGESTUPDATE_VOID */
 end_comment
 
 begin_comment
-comment|/* libcrypto includes complete ECC support */
+comment|/* OpenSSL has ECC */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPENSSL_HAS_ECC
+value|1
+end_define
+
+begin_comment
+comment|/* libcrypto has NID_X9_62_prime256v1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_HAS_NISTP256
+value|1
+end_define
+
+begin_comment
+comment|/* libcrypto has NID_secp384r1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_HAS_NISTP384
+value|1
+end_define
+
+begin_comment
+comment|/* libcrypto has NID_secp521r1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_HAS_NISTP521
 value|1
 end_define
 
@@ -4440,6 +4781,14 @@ comment|/* #undef PTY_ZEROREAD */
 end_comment
 
 begin_comment
+comment|/* Sandbox using capsicum */
+end_comment
+
+begin_comment
+comment|/* #undef SANDBOX_CAPSICUM */
+end_comment
+
+begin_comment
 comment|/* Sandbox using Darwin sandbox_init(3) */
 end_comment
 
@@ -4481,6 +4830,17 @@ end_comment
 begin_comment
 comment|/* #undef SANDBOX_SKIP_RLIMIT_FSIZE */
 end_comment
+
+begin_comment
+comment|/* define if setrlimit RLIMIT_NOFILE breaks things */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SANDBOX_SKIP_RLIMIT_NOFILE
+value|1
+end_define
 
 begin_comment
 comment|/* Sandbox using systrace(4) */
@@ -4525,7 +4885,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_LONG_INT
-value|4
+value|8
 end_define
 
 begin_comment
@@ -4929,28 +5289,6 @@ end_comment
 begin_comment
 comment|/* #undef XAUTH_PATH */
 end_comment
-
-begin_comment
-comment|/* Enable large inode numbers on Mac OS X 10.5.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_DARWIN_USE_64_BIT_INODE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_DARWIN_USE_64_BIT_INODE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Number of bits in a file offset, on hosts where this is settable. */

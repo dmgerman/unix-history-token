@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-misc.h,v 1.23 2013/03/14 23:34:27 djm Exp $ */
+comment|/* $Id: bsd-misc.h,v 1.25 2013/08/04 11:48:41 dtucker Exp $ */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -24,6 +28,14 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|char
@@ -582,6 +594,66 @@ name|pid_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ENDGRENT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|endgrent
+parameter_list|()
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_KRB5_GET_ERROR_MESSAGE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|krb5_get_error_message
+value|krb5_get_err_text
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_KRB5_FREE_ERROR_MESSAGE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|krb5_free_error_message
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|do { } while(0)
+end_define
 
 begin_endif
 endif|#

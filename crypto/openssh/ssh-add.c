@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.105 2012/12/05 15:42:52 markus Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.109 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -180,6 +180,8 @@ name|_PATH_SSH_CLIENT_ID_ECDSA
 block|,
 endif|#
 directive|endif
+name|_PATH_SSH_CLIENT_ID_ED25519
+block|,
 name|_PATH_SSH_CLIENT_IDENTITY
 block|,
 name|NULL
@@ -240,11 +242,9 @@ condition|(
 name|pass
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|pass
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -252,7 +252,7 @@ name|pass
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pass
 argument_list|)
@@ -870,7 +870,7 @@ block|{
 name|clear_pass
 argument_list|()
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -1195,12 +1195,12 @@ name|certpath
 operator|!=
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|certpath
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -1237,6 +1237,8 @@ block|{
 name|char
 modifier|*
 name|pin
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|ret
@@ -1244,6 +1246,14 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|add
+condition|)
+block|{
+if|if
+condition|(
+operator|(
 name|pin
 operator|=
 name|read_passphrase
@@ -1252,10 +1262,7 @@ literal|"Enter passphrase for PKCS#11: "
 argument_list|,
 name|RP_ALLOW_STDIN
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pin
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -1263,6 +1270,7 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
 if|if
 condition|(
 name|ssh_update_card
@@ -1273,6 +1281,12 @@ name|add
 argument_list|,
 name|id
 argument_list|,
+name|pin
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
 name|pin
 argument_list|,
 name|lifetime
@@ -1324,7 +1338,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|pin
 argument_list|)
@@ -1451,7 +1465,7 @@ name|key
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)
@@ -1491,7 +1505,7 @@ argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -1624,11 +1638,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|memset
+name|explicit_bzero
 argument_list|(
 name|p2
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -1636,7 +1648,7 @@ name|p2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p2
 argument_list|)
@@ -1688,11 +1700,9 @@ else|:
 literal|"un"
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|p1
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -1700,7 +1710,7 @@ name|p1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p1
 argument_list|)

@@ -25,6 +25,12 @@ directive|include
 file|"config.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GNU_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -34,6 +40,11 @@ end_define
 begin_comment
 comment|/* activate extra prototypes for glibc */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
