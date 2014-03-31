@@ -13873,6 +13873,8 @@ argument_list|,
 name|CTLTYPE_OPAQUE
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -15195,6 +15197,8 @@ argument_list|,
 name|ofiledesc
 argument_list|,
 name|CTLFLAG_RD
+operator|||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc_ofiledesc
 argument_list|,
@@ -17995,6 +17999,8 @@ argument_list|,
 name|filedesc
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc_filedesc
 argument_list|,
