@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|ALC_MAXTXSEGS
-value|32
+value|35
 end_define
 
 begin_define
