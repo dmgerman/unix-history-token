@@ -8424,7 +8424,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FILEDESC_XLOCK
+name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
 argument_list|)
@@ -8510,7 +8510,7 @@ operator|.
 name|fd_jdir
 argument_list|)
 expr_stmt|;
-name|FILEDESC_XUNLOCK
+name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
 argument_list|)
