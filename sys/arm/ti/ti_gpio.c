@@ -159,20 +159,6 @@ end_if
 begin_define
 define|#
 directive|define
-name|TI_GPIO_REVISION
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|TI_GPIO_SYSCONFIG
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
 name|TI_GPIO_SYSSTATUS
 value|0x0014
 end_define
@@ -607,7 +593,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*Other SoC Specific definitions*/
+comment|/* Other SoC Specific definitions */
 end_comment
 
 begin_if
@@ -631,13 +617,6 @@ define|#
 directive|define
 name|FIRST_GPIO_BANK
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PINS_PER_BANK
-value|32
 end_define
 
 begin_define
@@ -673,13 +652,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PINS_PER_BANK
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
 name|TI_GPIO_REV
 value|0x50600801
 end_define
@@ -710,13 +682,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PINS_PER_BANK
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
 name|TI_GPIO_REV
 value|0x50600801
 end_define
@@ -725,6 +690,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|PINS_PER_BANK
+value|32
+end_define
 
 begin_comment
 comment|/**  *	ti_gpio_mem_spec - Resource specification used when allocating resources  *	ti_gpio_irq_spec - Resource specification used when allocating resources  *  *	This driver module can have up to six independent memory regions, each  *	region typically controls 32 GPIO pins.  */
@@ -915,7 +887,7 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
-comment|/* The memory resource(s) for the PRCM register set, when the device is 	 * created the caller can assign up to 4 memory regions. 	 */
+comment|/* 	 * The memory resource(s) for the PRCM register set, when the device is 	 * created the caller can assign up to 6 memory regions depending on 	 * the SoC type. 	 */
 name|struct
 name|resource
 modifier|*
@@ -932,7 +904,7 @@ index|[
 name|MAX_GPIO_BANKS
 index|]
 decl_stmt|;
-comment|/* The handle for the register IRQ handlers */
+comment|/* The handle for the register IRQ handlers. */
 name|void
 modifier|*
 name|sc_irq_hdl
@@ -940,7 +912,7 @@ index|[
 name|MAX_GPIO_BANKS
 index|]
 decl_stmt|;
-comment|/* The following describes the H/W revision of each of the GPIO banks */
+comment|/* 	 * The following describes the H/W revision of each of the GPIO banks. 	 */
 name|uint32_t
 name|sc_revision
 index|[
@@ -987,7 +959,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->sc_dev), \ 	         "ti_gpio", MTX_DEF)
+value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->sc_dev), \ 	    "ti_gpio", MTX_DEF)
 end_define
 
 begin_define
@@ -997,7 +969,7 @@ name|TI_GPIO_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_destroy(&_sc->sc_mtx);
+value|mtx_destroy(&_sc->sc_mtx)
 end_define
 
 begin_define
@@ -1007,7 +979,7 @@ name|TI_GPIO_ASSERT_LOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_OWNED);
+value|mtx_assert(&_sc->sc_mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -1017,7 +989,7 @@ name|TI_GPIO_ASSERT_UNLOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_NOTOWNED);
+value|mtx_assert(&_sc->sc_mtx, MA_NOTOWNED)
 end_define
 
 begin_comment
@@ -2459,13 +2431,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Store the device handle back in the sc */
-name|sc
-operator|->
-name|sc_dev
-operator|=
-name|dev
-expr_stmt|;
 comment|/* We need to go through each block and ensure the clocks are running and 	 * the module is enabled.  It might be better to do this only when the 	 * pins are configured which would result in less power used if the GPIO 	 * pins weren't used ...  	 */
 for|for
 control|(
