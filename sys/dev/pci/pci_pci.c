@@ -356,6 +356,13 @@ argument_list|,
 name|pcib_power_for_sleep
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_get_rid
+argument_list|,
+name|pcib_get_rid
+argument_list|)
+block|,
 name|DEVMETHOD_END
 block|}
 decl_stmt|;

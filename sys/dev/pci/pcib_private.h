@@ -960,6 +960,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|uint16_t
+name|pcib_get_rid
+parameter_list|(
+name|device_t
+name|pcib
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
