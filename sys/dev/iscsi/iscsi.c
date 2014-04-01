@@ -7526,6 +7526,8 @@ name|is_conn
 operator|=
 name|icl_conn_new
 argument_list|(
+literal|"iscsi"
+argument_list|,
 operator|&
 name|is
 operator|->

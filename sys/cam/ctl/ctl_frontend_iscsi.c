@@ -5503,6 +5503,8 @@ name|cs_conn
 operator|=
 name|icl_conn_new
 argument_list|(
+literal|"cfiscsi"
+argument_list|,
 operator|&
 name|cs
 operator|->
