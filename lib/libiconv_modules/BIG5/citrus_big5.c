@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: citrus_big5.c,v 1.12 2008/06/14 16:01:07 tnozaki Exp $	*/
+comment|/*	$NetBSD: citrus_big5.c,v 1.13 2011/05/23 14:53:46 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -163,10 +163,10 @@ argument_list|)
 name|entry
 expr_stmt|;
 name|wint_t
-name|end
+name|start
 decl_stmt|;
 name|wint_t
-name|start
+name|end
 decl_stmt|;
 block|}
 name|_BIG5Exclude
@@ -1422,8 +1422,7 @@ name|__restrict
 name|nresult
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|size_t
 name|l
 decl_stmt|;
 name|int

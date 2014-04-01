@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_lookup.c,v 1.6 2009/02/03 04:58:38 lukem Exp $ */
+comment|/*	$NetBSD: citrus_lookup.c,v 1.7 2012/05/04 16:45:05 joerg Exp $	*/
 end_comment
 
 begin_comment

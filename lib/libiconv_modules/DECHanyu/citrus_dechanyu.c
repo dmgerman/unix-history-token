@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_dechanyu.c,v 1.3 2008/06/14 16:01:07 tnozaki Exp $ */
+comment|/* $NetBSD: citrus_dechanyu.c,v 1.4 2011/11/19 18:20:13 tnozaki Exp $ */
 end_comment
 
 begin_comment

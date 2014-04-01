@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: citrus_iso2022.c,v 1.19 2008/06/14 16:01:07 tnozaki Exp $	*/
+comment|/*	$NetBSD: citrus_iso2022.c,v 1.20 2010/12/07 22:01:45 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ struct|struct
 block|{
 name|unsigned
 name|char
-name|interm
+name|type
 decl_stmt|;
 name|unsigned
 name|char
@@ -157,7 +157,7 @@ name|final
 decl_stmt|;
 name|unsigned
 name|char
-name|type
+name|interm
 decl_stmt|;
 name|unsigned
 name|char
