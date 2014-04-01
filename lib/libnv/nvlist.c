@@ -2576,7 +2576,7 @@ operator|(
 name|nvlhdrp
 operator|->
 name|nvlh_flags
-operator|&=
+operator|&
 operator|~
 name|NV_FLAG_ALL_MASK
 operator|)
