@@ -87,6 +87,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIE_ARI_SLOTMAX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_ARI_FUNCMAX
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_RID_BUS_SHIFT
 value|8
 end_define
@@ -161,6 +175,26 @@ parameter_list|(
 name|rid
 parameter_list|)
 value|(((rid)>> PCI_RID_FUNC_SHIFT)& PCI_FUNCMAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_ARI_SLOT
+parameter_list|(
+name|func
+parameter_list|)
+value|(((func)>> PCI_RID_SLOT_SHIFT)& PCI_SLOTMAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_ARI_FUNC
+parameter_list|(
+name|func
+parameter_list|)
+value|(((func)>> PCI_RID_FUNC_SHIFT)& PCI_FUNCMAX)
 end_define
 
 begin_comment
@@ -5067,6 +5101,13 @@ define|#
 directive|define
 name|PCIER_DEVICE_CAP2
 value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIEM_CAP2_ARI
+value|0x20
 end_define
 
 begin_define

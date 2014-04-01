@@ -94,6 +94,22 @@ file|"pcib_if.h"
 end_include
 
 begin_function
+name|int
+name|pcib_maxfuncs
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PCI_FUNCMAX
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|uint16_t
 name|pcib_get_rid
 parameter_list|(
