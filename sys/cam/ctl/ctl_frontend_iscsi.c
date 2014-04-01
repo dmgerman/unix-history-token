@@ -5502,7 +5502,12 @@ operator|->
 name|cs_conn
 operator|=
 name|icl_conn_new
-argument_list|()
+argument_list|(
+operator|&
+name|cs
+operator|->
+name|cs_lock
+argument_list|)
 expr_stmt|;
 name|cs
 operator|->

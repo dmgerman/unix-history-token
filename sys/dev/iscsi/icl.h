@@ -234,6 +234,7 @@ name|icl_conn
 block|{
 name|struct
 name|mtx
+modifier|*
 name|ic_lock
 decl_stmt|;
 name|struct
@@ -334,7 +335,10 @@ name|icl_conn
 modifier|*
 name|icl_conn_new
 parameter_list|(
-name|void
+name|struct
+name|mtx
+modifier|*
+name|lock
 parameter_list|)
 function_decl|;
 end_function_decl

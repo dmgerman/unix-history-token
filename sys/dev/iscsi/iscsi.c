@@ -7525,7 +7525,12 @@ operator|->
 name|is_conn
 operator|=
 name|icl_conn_new
-argument_list|()
+argument_list|(
+operator|&
+name|is
+operator|->
+name|is_lock
+argument_list|)
 expr_stmt|;
 name|is
 operator|->
