@@ -441,7 +441,7 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|int
-name|__wchar_t
+name|___wchar_t
 typedef|;
 end_typedef
 
@@ -475,7 +475,7 @@ end_else
 begin_typedef
 typedef|typedef
 name|int
-name|__wchar_t
+name|___wchar_t
 typedef|;
 end_typedef
 

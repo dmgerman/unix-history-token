@@ -41,7 +41,7 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|__wchar_t
+name|___wchar_t
 name|wchar_t
 typedef|;
 end_typedef

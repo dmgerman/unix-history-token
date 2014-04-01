@@ -394,7 +394,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-name|__wchar_t
+name|___wchar_t
 typedef|;
 end_typedef
 
