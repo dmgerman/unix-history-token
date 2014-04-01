@@ -5004,11 +5004,26 @@ literal|"destroying session with non-empty send queue"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|KASSERT
+argument_list|(
+name|ic
+operator|->
+name|ic_outstanding_pdus
+operator|==
 literal|0
-block|KASSERT(ic->ic_outstanding_pdus == 0, 	    ("destroying session with %d outstanding PDUs", 	     ic->ic_outstanding_pdus));
+argument_list|,
+operator|(
+literal|"destroying session with %d outstanding PDUs"
+operator|,
+name|ic
+operator|->
+name|ic_outstanding_pdus
+operator|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|ICL_CONN_UNLOCK
