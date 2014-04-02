@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/arm/mpcore_timervar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/freescale/imx/imx6_anatopreg.h>
 end_include
 
@@ -111,7 +117,14 @@ name|initarm_early_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{  }
+block|{
+comment|/* Inform the MPCore timer driver that its clock is variable. */
+name|arm_tmr_change_frequency
+argument_list|(
+name|ARM_TMR_FREQUENCY_VARIES
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
