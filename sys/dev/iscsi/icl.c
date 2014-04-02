@@ -4227,7 +4227,7 @@ condition|)
 block|{
 name|ICL_WARN
 argument_list|(
-literal|"kern.icl.sendspace too low; must be at least %jd"
+literal|"kern.icl.sendspace too low; must be at least %zd"
 argument_list|,
 name|minspace
 argument_list|)
@@ -4246,7 +4246,7 @@ condition|)
 block|{
 name|ICL_WARN
 argument_list|(
-literal|"kern.icl.recvspace too low; must be at least %jd"
+literal|"kern.icl.recvspace too low; must be at least %zd"
 argument_list|,
 name|minspace
 argument_list|)
