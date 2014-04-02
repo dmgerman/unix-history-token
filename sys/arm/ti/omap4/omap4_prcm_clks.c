@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/arm/mpcore_timervar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/ti/tivar.h>
 end_include
 
@@ -4680,11 +4686,12 @@ operator|&
 name|freq
 argument_list|)
 expr_stmt|;
-name|platform_arm_tmr_freq
-operator|=
+name|arm_tmr_change_frequency
+argument_list|(
 name|freq
 operator|/
 literal|2
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
