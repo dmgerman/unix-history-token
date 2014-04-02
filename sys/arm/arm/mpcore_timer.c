@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.
 end_comment
 
 begin_comment
-comment|/**  *	The ARM Cortex-A9 core can support a global timer plus a private and  *	watchdog timer per core.  This driver reserves memory and interrupt  *	resources for accessing both timer register sets, these resources are  *	stored globally and used to setup the timecount and eventtimer.  *  *	The timecount timer uses the global 64-bit counter, whereas the  *	per-CPU eventtimer uses the private 32-bit counters.  *  *  *	REF: ARM Cortex-A9 MPCore, Technical Reference Manual (rev. r2p2)  */
+comment|/**  * The ARM Cortex-A9 core can support a global timer plus a private and  * watchdog timer per core.  This driver reserves memory and interrupt  * resources for accessing both timer register sets, these resources are  * stored globally and used to setup the timecount and eventtimer.  *  * The timecount timer uses the global 64-bit counter, whereas the  * per-CPU eventtimer uses the private 32-bit counters.  *  *  * REF: ARM Cortex-A9 MPCore, Technical Reference Manual (rev. r2p2)  */
 end_comment
 
 begin_include
