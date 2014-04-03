@@ -17575,6 +17575,10 @@ name|maxslots
 condition|;
 name|s
 operator|++
+operator|,
+name|first_func
+operator|=
+literal|0
 control|)
 block|{
 name|pcifunchigh
@@ -17652,11 +17656,6 @@ name|f
 argument_list|,
 name|dinfo_size
 argument_list|)
-expr_stmt|;
-comment|/* For slots after slot 0 we need to check for function 0. */
-name|first_func
-operator|=
-literal|0
 expr_stmt|;
 block|}
 undef|#
