@@ -167,7 +167,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_int64_t
+name|u_int
 name|ddflags
 decl_stmt|;
 end_decl_stmt

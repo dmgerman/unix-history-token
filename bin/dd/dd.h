@@ -135,210 +135,210 @@ begin_define
 define|#
 directive|define
 name|C_ASCII
-value|0x000000001
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_BLOCK
-value|0x000000002
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_BS
-value|0x000000004
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_CBS
-value|0x000000008
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_COUNT
-value|0x000000010
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_EBCDIC
-value|0x000000020
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_FILES
-value|0x000000040
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_IBS
-value|0x000000080
+value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_IF
-value|0x000000100
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_LCASE
-value|0x000000200
+value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_NOERROR
-value|0x000000400
+value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_NOTRUNC
-value|0x000000800
+value|0x00000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_OBS
-value|0x000001000
+value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_OF
-value|0x000002000
+value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_OSYNC
-value|0x000004000
+value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_PAREVEN
-value|0x000008000
+value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_PARNONE
-value|0x000100000
+value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_PARODD
-value|0x000200000
+value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_PARSET
-value|0x000400000
+value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_SEEK
-value|0x000800000
+value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_SKIP
-value|0x001000000
+value|0x00100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_SPARSE
-value|0x002000000
+value|0x00200000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_SWAB
-value|0x004000000
+value|0x00400000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_SYNC
-value|0x008000000
+value|0x00800000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_UCASE
-value|0x010000000
+value|0x01000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_UNBLOCK
-value|0x020000000
+value|0x02000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_FILL
-value|0x040000000
+value|0x04000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_STATUS
-value|0x080000000
+value|0x08000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_NOXFER
-value|0x100000000
+value|0x10000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_NOINFO
-value|0x200000000
+value|0x20000000
 end_define
 
 begin_define
