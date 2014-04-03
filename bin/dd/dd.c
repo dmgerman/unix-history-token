@@ -271,7 +271,7 @@ comment|/* pending seek if sparse */
 end_comment
 
 begin_decl_stmt
-name|u_int
+name|u_int64_t
 name|ddflags
 init|=
 literal|0
