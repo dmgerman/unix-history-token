@@ -171,6 +171,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|setsid
+argument_list|()
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Unable to detach from session"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|dup2
 argument_list|(
 name|fd
