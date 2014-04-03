@@ -4646,11 +4646,6 @@ end_macro
 
 begin_block
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR kern/185812 send(2) on a UNIX domain SEQPACKET socket returns EMSGSIZE instead of EAGAIN"
-argument_list|)
-expr_stmt|;
 name|test_eagain
 argument_list|(
 literal|8192
@@ -4680,11 +4675,6 @@ end_macro
 
 begin_block
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR kern/185812 send(2) on a UNIX domain SEQPACKET socket returns EMSGSIZE instead of EAGAIN"
-argument_list|)
-expr_stmt|;
 name|test_eagain
 argument_list|(
 literal|8192
@@ -4714,11 +4704,6 @@ end_macro
 
 begin_block
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR kern/185812 send(2) on a UNIX domain SEQPACKET socket returns EMSGSIZE instead of EAGAIN"
-argument_list|)
-expr_stmt|;
 name|test_eagain
 argument_list|(
 literal|131072
@@ -4748,11 +4733,6 @@ end_macro
 
 begin_block
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR kern/185812 send(2) on a UNIX domain SEQPACKET socket returns EMSGSIZE instead of EAGAIN"
-argument_list|)
-expr_stmt|;
 name|test_eagain
 argument_list|(
 literal|131072
@@ -5217,11 +5197,6 @@ end_macro
 
 begin_block
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR kern/185812 send(2) on a UNIX domain SEQPACKET socket returns EMSGSIZE instead of EAGAIN"
-argument_list|)
-expr_stmt|;
 name|test_pipe
 argument_list|(
 literal|8192
@@ -5251,11 +5226,6 @@ end_macro
 
 begin_block
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR kern/185812 send(2) on a UNIX domain SEQPACKET socket returns EMSGSIZE instead of EAGAIN"
-argument_list|)
-expr_stmt|;
 name|test_pipe
 argument_list|(
 literal|8192
@@ -5285,12 +5255,6 @@ end_macro
 
 begin_block
 block|{
-comment|/*  	 * kern/185812 causes this test case to both fail and timeout.  The 	 * atf-c-api(3) doesn't have a way to set such an expectation. 	 * If you use atf_tc_expect_fail, then it will timeout.  If you use 	 * atf_tc_expect_timeout, then it will fail.  If you use both, then it 	 * will show up as an unexpected pass, which is much worse 	 * 	 * https://code.google.com/p/kyua/issues/detail?id=76 	 */
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR kern/185812 send(2) on a UNIX domain SEQPACKET socket returns EMSGSIZE instead of EAGAIN"
-argument_list|)
-expr_stmt|;
 name|test_pipe
 argument_list|(
 literal|131072
@@ -5320,11 +5284,6 @@ end_macro
 
 begin_block
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR kern/185812 send(2) on a UNIX domain SEQPACKET socket returns EMSGSIZE instead of EAGAIN"
-argument_list|)
-expr_stmt|;
 name|test_pipe
 argument_list|(
 literal|131072
