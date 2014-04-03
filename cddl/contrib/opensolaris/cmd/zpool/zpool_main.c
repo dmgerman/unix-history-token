@@ -8618,7 +8618,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":aCc:d:DEfFmnNo:rR:T:VX"
+literal|":aCc:d:DEfFmnNo:R:T:VX"
 argument_list|)
 operator|)
 operator|!=
