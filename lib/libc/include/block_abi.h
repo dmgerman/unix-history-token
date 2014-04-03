@@ -105,7 +105,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((struct {\ 		void *isa;\ 		int flags;\ 		int reserved;\ 		void (*invoke)(void *, ...);\ 	}*)x)->invoke)
+value|(((struct {\ 		void *isa;\ 		int flags;\ 		int reserved;\ 		void (*invoke)(void *, ...);\ 	}*)(void*)x)->invoke)
 end_define
 
 end_unit
