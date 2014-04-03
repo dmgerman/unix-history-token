@@ -80,6 +80,12 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_IFI_OQDROPS
+end_define
+
 begin_include
 include|#
 directive|include
@@ -1164,7 +1170,7 @@ name|dflag
 condition|)
 name|printf
 argument_list|(
-literal|" %s"
+literal|"  %s"
 argument_list|,
 literal|"Drop"
 argument_list|)
@@ -1920,7 +1926,24 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-comment|/* XXXGL: output queue drops */
+if|if
+condition|(
+name|dflag
+condition|)
+name|show_stat
+argument_list|(
+literal|"LSlu"
+argument_list|,
+literal|5
+argument_list|,
+name|IFA_STAT
+argument_list|(
+name|oqdrops
+argument_list|)
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
@@ -2249,6 +2272,10 @@ name|ift_oe
 decl_stmt|;
 comment|/* output errors */
 name|u_long
+name|ift_od
+decl_stmt|;
+comment|/* output drops */
+name|u_long
 name|ift_co
 decl_stmt|;
 comment|/* collisions */
@@ -2423,6 +2450,15 @@ operator|+=
 name|IFA_STAT
 argument_list|(
 name|oerrors
+argument_list|)
+expr_stmt|;
+name|st
+operator|->
+name|ift_od
+operator|+=
+name|IFA_STAT
+argument_list|(
+name|oqdrops
 argument_list|)
 expr_stmt|;
 name|st
@@ -2866,7 +2902,27 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* XXXGL: output queue drops */
+if|if
+condition|(
+name|dflag
+condition|)
+name|show_stat
+argument_list|(
+literal|"LSlu"
+argument_list|,
+literal|5
+argument_list|,
+name|new
+operator|->
+name|ift_od
+operator|-
+name|old
+operator|->
+name|ift_od
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'

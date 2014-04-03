@@ -264,6 +264,15 @@ name|timeval
 name|ifi_lastchange
 decl_stmt|;
 comment|/* time of last administrative change */
+ifdef|#
+directive|ifdef
+name|_IFI_OQDROPS
+name|u_long
+name|ifi_oqdrops
+decl_stmt|;
+comment|/* dropped on output */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1089,6 +1098,14 @@ name|if_data
 name|ifm_data
 decl_stmt|;
 comment|/* statistics and other data about if */
+ifdef|#
+directive|ifdef
+name|_IN_NET_RTSOCK_C
+name|u_long
+name|ifi_oqdrops
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
