@@ -555,9 +555,6 @@ name|itos
 decl_stmt|;
 endif|#
 directive|endif
-name|u_int8_t
-name|nxt
-decl_stmt|;
 name|int
 name|isr
 decl_stmt|;
@@ -937,12 +934,6 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-name|nxt
-operator|=
-name|ipo
-operator|->
-name|ip_p
-expr_stmt|;
 name|ip_ecn_egress
 argument_list|(
 name|V_ip4_ipsec_ecn
@@ -974,12 +965,6 @@ name|ip6_hdr
 operator|*
 operator|)
 name|ipo
-expr_stmt|;
-name|nxt
-operator|=
-name|ip6
-operator|->
-name|ip6_nxt
 expr_stmt|;
 name|itos
 operator|=
