@@ -297,7 +297,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|debug
@@ -338,7 +338,7 @@ name|OID_AUTO
 argument_list|,
 name|ping_timeout
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ping_timeout
@@ -379,7 +379,7 @@ name|OID_AUTO
 argument_list|,
 name|login_timeout
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|login_timeout
@@ -420,7 +420,7 @@ name|OID_AUTO
 argument_list|,
 name|maxcmdsn_delta
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|maxcmdsn_delta

@@ -186,7 +186,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|debug
@@ -233,7 +233,7 @@ name|OID_AUTO
 argument_list|,
 name|partial_receive_len
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|partial_receive_len
@@ -277,7 +277,7 @@ name|OID_AUTO
 argument_list|,
 name|sendspace
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|sendspace
@@ -318,7 +318,7 @@ name|OID_AUTO
 argument_list|,
 name|recvspace
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|recvspace
