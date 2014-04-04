@@ -258,6 +258,9 @@ argument|icl_pdu
 argument_list|)
 name|ic_to_send
 expr_stmt|;
+name|bool
+name|ic_check_send_space
+decl_stmt|;
 name|size_t
 name|ic_receive_len
 decl_stmt|;
