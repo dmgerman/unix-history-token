@@ -1025,7 +1025,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|is
@@ -1036,7 +1036,7 @@ condition|)
 block|{
 name|request
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|is
@@ -1056,14 +1056,12 @@ condition|(
 name|postpone
 condition|)
 break|break;
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|is
 operator|->
 name|is_postponed
-argument_list|,
-name|request
 argument_list|,
 name|ip_next
 argument_list|)
@@ -1125,7 +1123,7 @@ condition|(
 name|postpone
 condition|)
 block|{
-name|TAILQ_INSERT_TAIL
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|is
@@ -1516,7 +1514,7 @@ comment|/* 	 * Remove postponed PDUs. 	 */
 while|while
 condition|(
 operator|!
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|is
@@ -1527,7 +1525,7 @@ condition|)
 block|{
 name|pdu
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|is
@@ -1535,14 +1533,12 @@ operator|->
 name|is_postponed
 argument_list|)
 expr_stmt|;
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|is
 operator|->
 name|is_postponed
-argument_list|,
-name|pdu
 argument_list|,
 name|ip_next
 argument_list|)
@@ -1579,7 +1575,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|is
@@ -1823,7 +1819,7 @@ comment|/* 	 * Remove postponed PDUs. 	 */
 while|while
 condition|(
 operator|!
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|is
@@ -1834,7 +1830,7 @@ condition|)
 block|{
 name|pdu
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|is
@@ -1842,14 +1838,12 @@ operator|->
 name|is_postponed
 argument_list|)
 expr_stmt|;
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|is
 operator|->
 name|is_postponed
-argument_list|,
-name|pdu
 argument_list|,
 name|ip_next
 argument_list|)
@@ -1977,7 +1971,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|is
@@ -2101,7 +2095,7 @@ name|is_terminating
 operator|==
 name|false
 operator|&&
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|is
@@ -2699,7 +2693,7 @@ comment|/* 			 * Command window increased; kick the maintanance thread 			 * to 
 if|if
 condition|(
 operator|!
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|is
@@ -7566,7 +7560,7 @@ operator|->
 name|is_outstanding
 argument_list|)
 expr_stmt|;
-name|TAILQ_INIT
+name|STAILQ_INIT
 argument_list|(
 operator|&
 name|is

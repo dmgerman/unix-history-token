@@ -162,7 +162,7 @@ argument|iscsi_outstanding
 argument_list|)
 name|is_outstanding
 expr_stmt|;
-name|TAILQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|icl_pdu

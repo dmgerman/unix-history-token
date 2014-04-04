@@ -29,7 +29,7 @@ begin_struct
 struct|struct
 name|icl_pdu
 block|{
-name|TAILQ_ENTRY
+name|STAILQ_ENTRY
 argument_list|(
 argument|icl_pdu
 argument_list|)
@@ -251,7 +251,7 @@ name|ic_outstanding_pdus
 decl_stmt|;
 endif|#
 directive|endif
-name|TAILQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|icl_pdu

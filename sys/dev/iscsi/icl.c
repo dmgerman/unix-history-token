@@ -3396,7 +3396,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|ic
@@ -3414,7 +3414,7 @@ condition|)
 return|return;
 name|request
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|ic
@@ -3482,14 +3482,12 @@ name|available
 operator|-=
 name|size
 expr_stmt|;
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|ic
 operator|->
 name|ic_to_send
-argument_list|,
-name|request
 argument_list|,
 name|ip_next
 argument_list|)
@@ -3948,7 +3946,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|TAILQ_INSERT_TAIL
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|ic
@@ -4010,7 +4008,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|TAILQ_INIT
+name|STAILQ_INIT
 argument_list|(
 operator|&
 name|ic
@@ -4952,7 +4950,7 @@ comment|/* 	 * Remove any outstanding PDUs from the send queue. 	 */
 while|while
 condition|(
 operator|!
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|ic
@@ -4963,7 +4961,7 @@ condition|)
 block|{
 name|pdu
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|ic
@@ -4971,14 +4969,12 @@ operator|->
 name|ic_to_send
 argument_list|)
 expr_stmt|;
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|ic
 operator|->
 name|ic_to_send
-argument_list|,
-name|pdu
 argument_list|,
 name|ip_next
 argument_list|)
@@ -4991,7 +4987,7 @@ expr_stmt|;
 block|}
 name|KASSERT
 argument_list|(
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|ic
