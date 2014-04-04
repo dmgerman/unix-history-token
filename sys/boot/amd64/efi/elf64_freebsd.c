@@ -413,6 +413,11 @@ name|buf
 argument_list|,
 literal|"0x%016llx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rsdp
 argument_list|)
 expr_stmt|;
@@ -530,6 +535,11 @@ name|buf
 argument_list|,
 literal|"0x%016llx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rsdp
 operator|->
 name|XsdtPhysicalAddress

@@ -114,11 +114,17 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"failed to allocate staging area: %d\n"
+literal|"failed to allocate staging area: %lu\n"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|status
 operator|&
 name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

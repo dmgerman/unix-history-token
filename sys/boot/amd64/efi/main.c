@@ -1474,8 +1474,11 @@ name|sprintf
 argument_list|(
 name|rowenv
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|rows
 argument_list|)
 expr_stmt|;
@@ -1532,12 +1535,18 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"Mode %d: %d columns, %d rows\n"
+literal|"Mode %d: %u columns, %u rows\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cols
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|rows
 argument_list|)
 expr_stmt|;
