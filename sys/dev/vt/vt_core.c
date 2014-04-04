@@ -3874,7 +3874,7 @@ name|vd
 operator|->
 name|vd_driver
 operator|->
-name|vd_bitbltchr
+name|vd_maskbitbltchr
 argument_list|(
 name|vd
 argument_list|,
@@ -9690,6 +9690,22 @@ block|}
 name|vd
 operator|=
 name|main_vd
+expr_stmt|;
+if|if
+condition|(
+name|drv
+operator|->
+name|vd_maskbitbltchr
+operator|==
+name|NULL
+condition|)
+name|drv
+operator|->
+name|vd_maskbitbltchr
+operator|=
+name|drv
+operator|->
+name|vd_bitbltchr
 expr_stmt|;
 comment|/* Stop vt_flush periodic task. */
 if|if
