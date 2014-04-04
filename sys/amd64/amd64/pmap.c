@@ -3816,7 +3816,7 @@ name|pm_active
 argument_list|)
 expr_stmt|;
 comment|/* don't allow deactivation */
-name|CPU_ZERO
+name|CPU_FILL
 argument_list|(
 operator|&
 name|kernel_pmap
@@ -3824,6 +3824,7 @@ operator|->
 name|pm_save
 argument_list|)
 expr_stmt|;
+comment|/* always superset of pm_active */
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -6346,6 +6347,19 @@ name|invltlb_globpcid
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|CPU_ISSET
+argument_list|(
+name|cpuid
+argument_list|,
+operator|&
+name|pmap
+operator|->
+name|pm_active
+argument_list|)
+condition|)
 name|CPU_CLR_ATOMIC
 argument_list|(
 name|cpuid
@@ -6485,6 +6499,19 @@ condition|)
 name|invltlb
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|CPU_ISSET
+argument_list|(
+name|cpuid
+argument_list|,
+operator|&
+name|pmap
+operator|->
+name|pm_active
+argument_list|)
+condition|)
 name|CPU_CLR_ATOMIC
 argument_list|(
 name|cpuid
