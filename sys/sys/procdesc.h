@@ -317,7 +317,7 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|int
+name|pid_t
 name|pdfork
 parameter_list|(
 name|int
