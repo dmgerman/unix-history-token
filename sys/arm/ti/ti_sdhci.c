@@ -616,7 +616,7 @@ name|clkdiv
 decl_stmt|,
 name|val32
 decl_stmt|;
-comment|/* 	 * The MMCHS hardware has a non-standard interpretation of the sdclock 	 * divisor bits.  It uses the same bit positions as SDHCI 3.0 (15..6) 	 * but doesn't split them into low:high fields.  Instead they're a 	 * single number in the range 0..1023 and the number is exactly the 	 * clock divisor (with 0 and 1 both meaning divide by 1).  The SDHCI 	 * driver code expects a v2.0 divisor (value N is power of two in the 	 * range 0..128 and clock is divided by 2N).  The shifting and masking 	 * here extracts the MMCHS representation from the hardware word, cleans 	 * those bits out, applies the 2N adjustment, and plugs that into the 	 * bit positions for the 2.0 divisor in the returned register value. The 	 * ti_sdhci_write_2() routine performs the opposite transformation when 	 * the SDHCI driver writes to the register. 	 */
+comment|/* 	 * The MMCHS hardware has a non-standard interpretation of the sdclock 	 * divisor bits.  It uses the same bit positions as SDHCI 3.0 (15..6) 	 * but doesn't split them into low:high fields.  Instead they're a 	 * single number in the range 0..1023 and the number is exactly the 	 * clock divisor (with 0 and 1 both meaning divide by 1).  The SDHCI 	 * driver code expects a v2.0 or v3.0 divisor.  The shifting and masking 	 * here extracts the MMCHS representation from the hardware word, cleans 	 * those bits out, applies the 2N adjustment, and plugs the result into 	 * the bit positions for the 2.0 or 3.0 divisor in the returned register 	 * value. The ti_sdhci_write_2() routine performs the opposite 	 * transformation when the SDHCI driver writes to the register. 	 */
 if|if
 condition|(
 name|off
@@ -1016,7 +1016,7 @@ name|clkdiv
 decl_stmt|,
 name|val32
 decl_stmt|;
-comment|/* 	 * Translate between the hardware and SDHCI 2.0 representations of the 	 * clock divisor.  See the comments in ti_sdhci_read_2() for details. 	 */
+comment|/* 	 * Translate between the hardware and SDHCI 2.0 or 3.0 representations 	 * of the clock divisor.  See the comments in ti_sdhci_read_2() for 	 * details. 	 */
 if|if
 condition|(
 name|off
