@@ -143,6 +143,12 @@ directive|include
 file|"efierr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"efigop.h"
+end_include
+
 begin_define
 define|#
 directive|define
