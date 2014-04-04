@@ -1176,13 +1176,25 @@ operator|=
 name|clock
 expr_stmt|;
 comment|/* Turn off the clock. */
+name|clk
+operator|=
+name|RD2
+argument_list|(
+name|slot
+argument_list|,
+name|SDHCI_CLOCK_CONTROL
+argument_list|)
+expr_stmt|;
 name|WR2
 argument_list|(
 name|slot
 argument_list|,
 name|SDHCI_CLOCK_CONTROL
 argument_list|,
-literal|0
+name|clk
+operator|&
+operator|~
+name|SDHCI_CLOCK_CARD_EN
 argument_list|)
 expr_stmt|;
 comment|/* If no clock requested - left it so. */
