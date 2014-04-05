@@ -1117,6 +1117,9 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|packet
 operator|->
 name|compl
@@ -1625,6 +1628,9 @@ name|send_completion_tid
 operator|=
 operator|(
 name|uint64_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|m_head
 expr_stmt|;
@@ -2223,7 +2229,10 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|packet
 operator|->
 name|page_buffers
@@ -2234,7 +2243,7 @@ operator|.
 name|pfn
 operator|<<
 name|PAGE_SHIFT
-operator|)
+argument_list|)
 decl_stmt|;
 name|hv_m_append
 argument_list|(

@@ -638,6 +638,9 @@ argument_list|,
 operator|(
 name|uint64_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|init_pkt
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
@@ -1005,6 +1008,9 @@ argument_list|,
 operator|(
 name|uint64_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|init_pkt
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
@@ -1179,6 +1185,9 @@ argument_list|)
 argument_list|,
 operator|(
 name|uint64_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|revoke_pkt
 argument_list|,
@@ -1402,6 +1411,9 @@ argument_list|,
 operator|(
 name|uint64_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|revoke_pkt
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
@@ -1606,6 +1618,9 @@ argument_list|,
 operator|(
 name|uint64_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|init_pkt
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
@@ -1783,6 +1798,9 @@ argument_list|)
 argument_list|,
 operator|(
 name|uint64_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|init_pkt
 argument_list|,
@@ -2052,6 +2070,9 @@ argument_list|)
 argument_list|,
 operator|(
 name|uint64_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|init_pkt
 argument_list|,
@@ -2967,6 +2988,9 @@ argument_list|,
 operator|(
 name|uint64_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|pkt
 argument_list|)
 expr_stmt|;
@@ -2991,6 +3015,9 @@ argument_list|)
 argument_list|,
 operator|(
 name|uint64_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|pkt
 argument_list|,

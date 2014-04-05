@@ -1105,6 +1105,9 @@ argument_list|,
 operator|(
 name|uint64_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|request
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
@@ -1232,6 +1235,9 @@ argument_list|,
 operator|(
 name|uint64_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|request
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
@@ -1336,6 +1342,9 @@ argument_list|)
 argument_list|,
 operator|(
 name|uint64_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|request
 argument_list|,
@@ -1442,6 +1451,9 @@ argument_list|)
 argument_list|,
 operator|(
 name|uint64_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|request
 argument_list|,
@@ -1756,9 +1768,12 @@ expr|struct
 name|vstor_packet
 argument_list|)
 argument_list|,
-operator|(
+call|(
 name|uint64_t
-operator|)
+call|)
+argument_list|(
+name|uintptr_t
+argument_list|)
 operator|&
 name|sc
 operator|->
@@ -1983,6 +1998,9 @@ argument_list|,
 operator|(
 name|uint64_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|request
 argument_list|)
 expr_stmt|;
@@ -2007,6 +2025,9 @@ argument_list|)
 argument_list|,
 operator|(
 name|uint64_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|request
 argument_list|,
@@ -2357,6 +2378,9 @@ operator|(
 expr|struct
 name|hv_storvsc_request
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|request_id
 expr_stmt|;
