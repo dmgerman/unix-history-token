@@ -979,6 +979,11 @@ directive|define
 name|KN_HASKQLOCK
 value|0x80
 comment|/* for _inevent */
+define|#
+directive|define
+name|KN_SCAN
+value|0x100
+comment|/* flux set in kqueue_scan() */
 name|int
 name|kn_sfflags
 decl_stmt|;
