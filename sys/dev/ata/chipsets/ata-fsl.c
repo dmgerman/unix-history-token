@@ -247,6 +247,14 @@ name|dev
 argument_list|,
 literal|"fsl,imx51-ata"
 argument_list|)
+operator|&&
+operator|!
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"fsl,imx53-ata"
+argument_list|)
 condition|)
 return|return
 operator|(
