@@ -434,12 +434,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|pid_t
+name|getjobpgrp
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|struct
 name|job
 modifier|*
 name|getjob_nonotfound
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -453,16 +464,7 @@ name|job
 modifier|*
 name|getjob
 parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|pid_t
-name|getjobpgrp
-parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -2738,6 +2740,7 @@ name|job
 modifier|*
 name|getjob_nonotfound
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3226,6 +3229,7 @@ name|job
 modifier|*
 name|getjob
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

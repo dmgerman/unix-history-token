@@ -584,6 +584,7 @@ name|nfile
 operator|.
 name|fd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -1125,6 +1126,7 @@ modifier|*
 name|redir
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
