@@ -1710,6 +1710,8 @@ operator|(
 name|PCB_NPXINITDONE
 operator||
 name|PCB_NPXUSERINITDONE
+operator||
+name|PCB_KERNNPX
 operator|)
 expr_stmt|;
 name|pcb2
