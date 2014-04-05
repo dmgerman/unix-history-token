@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<xen/xenstore/xenstorevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/xen/xenvar.h>
 end_include
 
@@ -2788,21 +2794,6 @@ name|startinfo
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_struct_decl
-struct_decl|struct
-name|xenstore_domain_interface
-struct_decl|;
-end_struct_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|xenstore_domain_interface
-modifier|*
-name|xen_store
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void

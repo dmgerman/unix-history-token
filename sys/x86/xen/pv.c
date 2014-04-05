@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<xen/xenstore/xenstorevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/interface/vcpu.h>
 end_include
 
