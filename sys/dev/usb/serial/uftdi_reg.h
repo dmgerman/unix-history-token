@@ -107,6 +107,50 @@ begin_comment
 comment|/* Set the error character */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_SET_LATENCY
+value|9
+end_define
+
+begin_comment
+comment|/* Set the latency timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_GET_LATENCY
+value|10
+end_define
+
+begin_comment
+comment|/* Read the latency timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_SET_BITMODE
+value|11
+end_define
+
+begin_comment
+comment|/* Set the bit bang I/O mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_GET_BITMODE
+value|12
+end_define
+
+begin_comment
+comment|/* Read pin states in bit bang mode */
+end_comment
+
 begin_comment
 comment|/* Port Identifier Table */
 end_comment
