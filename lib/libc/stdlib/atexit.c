@@ -279,6 +279,19 @@ begin_comment
 comment|/* points to head of LIFO stack */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|DECLARE_BLOCK
+argument_list|(
+name|void
+argument_list|,
+name|atexit_block
+argument_list|,
+name|void
+argument_list|)
+expr_stmt|;
+end_typedef
+
 begin_comment
 comment|/*  * Register the function described by 'fptr' to be called at application  * exit or owning shared object unload time. This is a helper function  * for atexit and __cxa_atexit.  */
 end_comment
@@ -531,19 +544,13 @@ begin_comment
 comment|/**  * Register a block to be performed at exit.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
 name|atexit_b
-argument_list|(
-name|DECLARE_BLOCK
-argument_list|(
-name|void
-argument_list|,
+parameter_list|(
+name|atexit_block
 name|func
-argument_list|,
-name|void
-argument_list|)
-argument_list|)
+parameter_list|)
 block|{
 name|struct
 name|atexit_fn
@@ -630,7 +637,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Register a function to be performed at exit or when an shared object  * with given dso handle is unloaded dynamically.  */
