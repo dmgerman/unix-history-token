@@ -4133,6 +4133,12 @@ name|vmxstate
 operator|->
 name|vpid
 expr_stmt|;
+name|invvpid_desc
+operator|.
+name|linear_addr
+operator|=
+literal|0
+expr_stmt|;
 name|invvpid
 argument_list|(
 name|INVVPID_TYPE_SINGLE_CONTEXT
@@ -11380,6 +11386,9 @@ name|int
 name|rvi
 decl_stmt|,
 name|pirbase
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|uint16_t
 name|intr_status_old
@@ -11615,6 +11624,30 @@ name|pirval
 operator|=
 name|val
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|pirbase
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|VCPU_CTR0
+argument_list|(
+name|vlapic
+operator|->
+name|vm
+argument_list|,
+name|vlapic
+operator|->
+name|vcpuid
+argument_list|,
+literal|"vmx_inject_pir: "
+literal|"no posted interrupt found"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|VLAPIC_CTR_IRR
 argument_list|(

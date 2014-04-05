@@ -875,6 +875,10 @@ literal|2
 expr_stmt|;
 break|break;
 default|default:
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 break|break;
 block|}
 switch|switch

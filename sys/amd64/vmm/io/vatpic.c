@@ -2018,7 +2018,10 @@ name|atpic
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
+empty_stmt|;
 name|uint8_t
 name|val
 decl_stmt|;
