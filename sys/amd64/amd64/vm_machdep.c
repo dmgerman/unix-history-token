@@ -1686,6 +1686,8 @@ argument_list|,
 name|PCB_FPUINITDONE
 operator||
 name|PCB_USERFPUINITDONE
+operator||
+name|PCB_KERNFPU
 argument_list|)
 expr_stmt|;
 name|pcb2
