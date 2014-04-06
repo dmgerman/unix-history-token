@@ -2949,6 +2949,17 @@ argument_list|(
 name|pl1pd
 argument_list|)
 expr_stmt|;
+name|cpu_tlb_flushD_SE
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|ptep
+argument_list|)
+expr_stmt|;
+name|cpu_cpwait
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* 	 * Release the L2 descriptor table back to the pool cache. 	 */
 name|pmap_free_l2_ptp
@@ -8171,6 +8182,20 @@ expr_stmt|;
 block|}
 end_block
 
+begin_expr_stmt
+name|cpu_tlb_flushID_SE
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|cpu_cpwait
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 operator|(
@@ -9544,6 +9569,9 @@ name|l2b_occupancy
 operator|++
 expr_stmt|;
 block|}
+name|cpu_cpwait
+argument_list|()
+expr_stmt|;
 name|PDEBUG
 argument_list|(
 literal|1
@@ -20473,12 +20501,12 @@ argument_list|(
 name|sva
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+block|}
 name|cpu_cpwait
 argument_list|()
 expr_stmt|;
-block|}
-block|}
-block|}
 name|rw_wunlock
 argument_list|(
 operator|&
