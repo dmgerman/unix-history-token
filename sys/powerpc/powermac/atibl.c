@@ -1181,7 +1181,7 @@ name|RADEON_LVDS_BL_MOD_EN
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|2000000
+literal|200000
 argument_list|)
 expr_stmt|;
 name|bus_write_4
@@ -1226,7 +1226,11 @@ expr_stmt|;
 name|lvds_gen_cntl
 operator|&=
 operator|~
+operator|(
 name|RADEON_LVDS_BL_MOD_EN
+operator||
+name|RADEON_LVDS_BL_MOD_LEVEL_MASK
+operator|)
 expr_stmt|;
 name|bus_write_4
 argument_list|(
@@ -1250,7 +1254,7 @@ operator|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|2000000
+literal|200000
 argument_list|)
 expr_stmt|;
 name|bus_write_4
@@ -1275,7 +1279,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|2000000
+literal|200000
 argument_list|)
 expr_stmt|;
 block|}
