@@ -1268,7 +1268,13 @@ name|proctree_lock
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1278,12 +1284,7 @@ operator|==
 name|PRS_ZOMBIE
 condition|)
 block|{
-comment|/* 		 * If the process is already dead and just awaiting reaping, 		 * do that now.  This will release the process's reference to 		 * the process descriptor when it calls back into 		 * procdesc_reap(). 		 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
+comment|/* 			 * If the process is already dead and just awaiting 			 * reaping, do that now.  This will release the 			 * process's reference to the process descriptor when it 			 * calls back into procdesc_reap(). 			 */
 name|PROC_SLOCK
 argument_list|(
 name|p
@@ -1303,12 +1304,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * If the process is not yet dead, we need to kill it, but we 		 * can't wait around synchronously for it to go away, as that 		 * path leads to madness (and deadlocks).  First, detach the 		 * process from its descriptor so that its exit status will 		 * be reported normally. 		 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
+comment|/* 			 * If the process is not yet dead, we need to kill it, 			 * but we can't wait around synchronously for it to go 			 * away, as that path leads to madness (and deadlocks). 			 * First, detach the process from its descriptor so that 			 * its exit status will be reported normally. 			 */
 name|pd
 operator|->
 name|pd_proc
@@ -1326,7 +1322,7 @@ argument_list|(
 name|pd
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Next, reparent it to init(8) so that there's someone to 		 * pick up the pieces; finally, terminate with prejudice. 		 */
+comment|/* 			 * Next, reparent it to init(8) so that there's someone 			 * to pick up the pieces; finally, terminate with 			 * prejudice. 			 */
 name|p
 operator|->
 name|p_sigparent
@@ -1370,6 +1366,7 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Release the file descriptor's reference on the process descriptor. 	 */
 name|procdesc_free
