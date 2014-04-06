@@ -147,27 +147,6 @@ name|TI_GPIO_SYSCONFIG
 value|0x0010
 end_define
 
-begin_define
-define|#
-directive|define
-name|TI_GPIO_SYSCONFIG_SOFTRESET
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TI_GPIO_SYSCONFIG_AUTOIDLE
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TI_GPIO_SYSSTATUS_RESETDONE
-value|(1<< 0)
-end_define
-
 begin_if
 if|#
 directive|if
@@ -2571,8 +2550,6 @@ parameter_list|)
 block|{
 name|int
 name|pin
-decl_stmt|,
-name|timeout
 decl_stmt|;
 name|struct
 name|ti_gpio_softc
@@ -2601,58 +2578,6 @@ operator|+
 name|bank
 argument_list|)
 expr_stmt|;
-comment|/* Reset the GPIO module. */
-name|timeout
-operator|=
-literal|0
-expr_stmt|;
-name|ti_gpio_write_4
-argument_list|(
-name|sc
-argument_list|,
-name|bank
-argument_list|,
-name|TI_GPIO_SYSCONFIG
-argument_list|,
-name|TI_GPIO_SYSCONFIG_SOFTRESET
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|ti_gpio_read_4
-argument_list|(
-name|sc
-argument_list|,
-name|bank
-argument_list|,
-name|TI_GPIO_SYSSTATUS
-argument_list|)
-operator|&
-name|TI_GPIO_SYSSTATUS_RESETDONE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|timeout
-operator|++
-operator|>
-literal|100
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-name|DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Read the revision number of the module.  TI don't publish the 	 * actual revision numbers, so instead the values have been 	 * determined by experimentation. 	 */
 name|sc
 operator|->
@@ -2967,7 +2892,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Reset and initialize the GPIO module. */
+comment|/* Initialize the GPIO module. */
 name|err
 operator|=
 name|ti_gpio_bank_init
