@@ -502,7 +502,7 @@ begin_define
 define|#
 directive|define
 name|PSL_SRR1_MASK
-value|0x78300000UL
+value|0x783f0000UL
 end_define
 
 begin_comment
