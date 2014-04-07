@@ -83,6 +83,10 @@ name|int
 name|pd_flags
 decl_stmt|;
 comment|/* (p) PD_ flags. */
+name|u_short
+name|pd_xstat
+decl_stmt|;
+comment|/* (p) Exit status. */
 name|struct
 name|selinfo
 name|pd_selinfo

@@ -90,8 +90,15 @@ begin_comment
 comment|/* timers */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EVFILT_PROCDESC
+value|(-8)
+end_define
+
 begin_comment
-comment|/*	EVFILT_NETDEV		(-8)	   no longer supported */
+comment|/* attached to process descriptors */
 end_comment
 
 begin_define
@@ -526,7 +533,7 @@ comment|/* vnode access was revoked */
 end_comment
 
 begin_comment
-comment|/*  * data/hint flags for EVFILT_PROC, shared with userspace  */
+comment|/*  * data/hint flags for EVFILT_PROC and EVFILT_PROCDESC, shared with userspace  */
 end_comment
 
 begin_define

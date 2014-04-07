@@ -1505,10 +1505,10 @@ block|,
 comment|/* EVFILT_TIMER */
 block|{
 operator|&
-name|null_filtops
+name|file_filtops
 block|}
 block|,
-comment|/* former EVFILT_NETDEV */
+comment|/* EVFILT_PROCDESC */
 block|{
 operator|&
 name|fs_filtops
@@ -2034,17 +2034,19 @@ name|struct
 name|proc
 modifier|*
 name|p
-init|=
+decl_stmt|;
+name|u_int
+name|event
+decl_stmt|;
+name|p
+operator|=
 name|kn
 operator|->
 name|kn_ptr
 operator|.
 name|p_proc
-decl_stmt|;
-name|u_int
-name|event
-decl_stmt|;
-comment|/* 	 * mask off extra data 	 */
+expr_stmt|;
+comment|/* Mask off extra data. */
 name|event
 operator|=
 operator|(
@@ -2054,7 +2056,7 @@ name|hint
 operator|&
 name|NOTE_PCTRLMASK
 expr_stmt|;
-comment|/* 	 * if the user is interested in this event, record it. 	 */
+comment|/* If the user is interested in this event, record it. */
 if|if
 condition|(
 name|kn
@@ -2069,7 +2071,7 @@ name|kn_fflags
 operator||=
 name|event
 expr_stmt|;
-comment|/* 	 * process is gone, so flag the event as finished. 	 */
+comment|/* Process is gone, so flag the event as finished. */
 if|if
 condition|(
 name|event
@@ -2102,11 +2104,9 @@ name|kn
 operator|->
 name|kn_flags
 operator||=
-operator|(
 name|EV_EOF
 operator||
 name|EV_ONESHOT
-operator|)
 expr_stmt|;
 name|kn
 operator|->
