@@ -1631,6 +1631,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_UDPLITE
+value|136
+end_define
+
+begin_comment
+comment|/* UDP-Lite */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_HIP
 value|139
 end_define

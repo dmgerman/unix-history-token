@@ -157,6 +157,14 @@ name|u_int
 name|u_flags
 decl_stmt|;
 comment|/* Generic UDP flags. */
+name|uint16_t
+name|u_rxcslen
+decl_stmt|;
+comment|/* Coverage for incoming datagrams. */
+name|uint16_t
+name|u_txcslen
+decl_stmt|;
+comment|/* Coverage for outgoing datagrams. */
 block|}
 struct|;
 end_struct
@@ -460,6 +468,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
+name|inpcbhead
+argument_list|,
+name|ulitecb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
+name|inpcbinfo
+argument_list|,
+name|ulitecbinfo
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -472,6 +502,20 @@ define|#
 directive|define
 name|V_udbinfo
 value|VNET(udbinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ulitecb
+value|VNET(ulitecb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ulitecbinfo
+value|VNET(ulitecbinfo)
 end_define
 
 begin_decl_stmt
@@ -529,6 +573,60 @@ name|udp_log_in_vain
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|inpcbinfo
+operator|*
+name|get_inpcbinfo
+argument_list|(
+argument|uint8_t protocol
+argument_list|)
+block|{
+return|return
+operator|(
+name|protocol
+operator|==
+name|IPPROTO_UDP
+operator|)
+operator|?
+operator|&
+name|V_udbinfo
+operator|:
+operator|&
+name|V_ulitecbinfo
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|inpcbhead
+operator|*
+name|get_pcblist
+argument_list|(
+argument|uint8_t protocol
+argument_list|)
+block|{
+return|return
+operator|(
+name|protocol
+operator|==
+name|IPPROTO_UDP
+operator|)
+operator|?
+operator|&
+name|V_udb
+operator|:
+operator|&
+name|V_ulitecb
+return|;
+block|}
+end_expr_stmt
+
 begin_function_decl
 name|int
 name|udp_newudpcb
@@ -568,6 +666,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|udplite_ctlinput
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|udp_ctloutput
 parameter_list|(
@@ -591,6 +705,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|udplite_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -606,6 +729,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|udplite_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -614,6 +746,19 @@ end_endif
 begin_function_decl
 name|void
 name|udp_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|udplite_input
 parameter_list|(
 name|struct
 name|mbuf
@@ -673,10 +818,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _NETINET_UDP_VAR_H_ */
+end_comment
 
 end_unit
 

@@ -2045,7 +2045,7 @@ operator|->
 name|ipi_lastport
 expr_stmt|;
 block|}
-comment|/* 	 * For UDP, use random port allocation as long as the user 	 * allows it.  For TCP (and as of yet unknown) connections, 	 * use random port allocation only if the user allows it AND 	 * ipport_tick() allows it. 	 */
+comment|/* 	 * For UDP(-Lite), use random port allocation as long as the user 	 * allows it.  For TCP (and as of yet unknown) connections, 	 * use random port allocation only if the user allows it AND 	 * ipport_tick() allows it. 	 */
 if|if
 condition|(
 name|V_ipport_randomized
@@ -2058,6 +2058,11 @@ name|pcbinfo
 operator|==
 operator|&
 name|V_udbinfo
+operator|||
+name|pcbinfo
+operator|==
+operator|&
+name|V_ulitecbinfo
 operator|)
 condition|)
 name|dorandom
@@ -2080,13 +2085,18 @@ name|dorandom
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Make sure to not include UDP packets in the count. */
+comment|/* Make sure to not include UDP(-Lite) packets in the count. */
 if|if
 condition|(
 name|pcbinfo
 operator|!=
 operator|&
 name|V_udbinfo
+operator|||
+name|pcbinfo
+operator|!=
+operator|&
+name|V_ulitecbinfo
 condition|)
 name|V_ipport_tcpallocs
 operator|++
