@@ -83,13 +83,6 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|VERSION
-value|"1.0"
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3487,7 +3480,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"vqf:"
+literal|"Vqf:"
 argument_list|)
 operator|)
 operator|!=
@@ -3517,32 +3510,23 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'v'
+literal|'V'
 case|:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n  units version %s  Copyright (c) 1993 by Adrian Mariano\n"
-argument_list|,
-name|VERSION
+literal|"FreeBSD units\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"                    This program may be freely distributed\n"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-default|default:
 name|usage
 argument_list|()
 expr_stmt|;
 break|break;
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 if|if
