@@ -942,15 +942,6 @@ begin_comment
 comment|/*  * Called by events that want to shut down.. e.g<CTL><ALT><DEL> on a PC  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|shutdown_howto
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|shutdown_nice
@@ -959,11 +950,6 @@ name|int
 name|howto
 parameter_list|)
 block|{
-name|shutdown_howto
-operator|=
-name|howto
-expr_stmt|;
-comment|/* Send a signal to init(8) and have it shutdown the world */
 if|if
 condition|(
 name|initproc
@@ -971,11 +957,40 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Send a signal to init(8) and have it shutdown the world. */
 name|PROC_LOCK
 argument_list|(
 name|initproc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|howto
+operator|&
+name|RB_POWEROFF
+condition|)
+name|kern_psignal
+argument_list|(
+name|initproc
+argument_list|,
+name|SIGUSR2
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|howto
+operator|&
+name|RB_HALT
+condition|)
+name|kern_psignal
+argument_list|(
+name|initproc
+argument_list|,
+name|SIGUSR1
+argument_list|)
+expr_stmt|;
+else|else
 name|kern_psignal
 argument_list|(
 name|initproc
@@ -991,7 +1006,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* No init(8) running, so simply reboot */
+comment|/* No init(8) running, so simply reboot. */
 name|kern_reboot
 argument_list|(
 name|RB_NOSYNC
@@ -1001,16 +1016,6 @@ block|}
 return|return;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|int
-name|waittime
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -1340,6 +1345,13 @@ name|first_buf_printf
 init|=
 literal|1
 decl_stmt|;
+specifier|static
+name|int
+name|waittime
+init|=
+operator|-
+literal|1
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -1392,11 +1404,6 @@ comment|/* We're in the process of rebooting. */
 name|rebooting
 operator|=
 literal|1
-expr_stmt|;
-comment|/* collect extra flags that shutdown_nice might have set */
-name|howto
-operator||=
-name|shutdown_howto
 expr_stmt|;
 comment|/* We are out of the debugger now. */
 name|kdb_active
