@@ -1749,6 +1749,12 @@ name|ip_tos
 operator|=
 literal|0
 expr_stmt|;
+name|nip
+operator|->
+name|ip_off
+operator|=
+literal|0
+expr_stmt|;
 name|icmp_reflect
 argument_list|(
 name|m
