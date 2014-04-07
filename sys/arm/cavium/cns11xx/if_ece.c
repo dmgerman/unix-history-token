@@ -199,19 +199,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/econa/if_ecereg.h>
+file|<arm/cavium/cns11xx/if_ecereg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/econa/if_ecevar.h>
+file|<arm/cavium/cns11xx/if_ecevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/econa/econa_var.h>
+file|<arm/cavium/cns11xx/econa_var.h>
 end_include
 
 begin_include
