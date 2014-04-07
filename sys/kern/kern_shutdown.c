@@ -1009,11 +1009,12 @@ block|{
 comment|/* No init(8) running, so simply reboot. */
 name|kern_reboot
 argument_list|(
+name|howto
+operator||
 name|RB_NOSYNC
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
