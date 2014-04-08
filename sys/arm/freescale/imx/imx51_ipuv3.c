@@ -1094,7 +1094,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"i.MX515 Image Processing Unit (FB)"
+literal|"i.MX5x Image Processing Unit v3 (FB)"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1158,8 +1158,17 @@ decl_stmt|;
 name|bus_space_handle_t
 name|ioh
 decl_stmt|;
+name|phandle_t
+name|node
+decl_stmt|;
+name|pcell_t
+name|reg
+decl_stmt|;
 name|int
 name|err
+decl_stmt|;
+name|uintptr_t
+name|base
 decl_stmt|;
 if|if
 condition|(
@@ -1174,11 +1183,15 @@ name|ipu3sc_softc
 operator|=
 name|sc
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"\tclock gate status is %d\n"
+literal|"clock gate status is %d\n"
 argument_list|,
 name|imx51_get_clk_gating
 argument_list|(
@@ -1242,13 +1255,50 @@ name|iot
 operator|=
 name|fdtbus_bs_tag
 expr_stmt|;
-name|device_printf
+comment|/* 	 * Retrieve the device address based on the start address in the 	 * DTS.  The DTS for i.MX51 specifies 0x5e000000 as the first register 	 * address, so we just subtract IPU_CM_BASE to get the offset at which 	 * the IPU device was memory mapped. 	 * On i.MX53, the offset is 0. 	 */
+name|node
+operator|=
+name|ofw_bus_get_node
 argument_list|(
-name|sc
-operator|->
 name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|OF_getprop
+argument_list|(
+name|node
 argument_list|,
-literal|": i.MX51 IPUV3 controller\n"
+literal|"reg"
+argument_list|,
+operator|&
+name|reg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|reg
+argument_list|)
+argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+name|base
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|base
+operator|=
+name|fdt32_to_cpu
+argument_list|(
+name|reg
+argument_list|)
+operator|-
+name|IPU_CM_BASE
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* map controller registers */
@@ -1259,6 +1309,9 @@ argument_list|(
 name|iot
 argument_list|,
 name|IPU_CM_BASE
+argument_list|(
+name|base
+argument_list|)
 argument_list|,
 name|IPU_CM_SIZE
 argument_list|,
@@ -1289,6 +1342,9 @@ argument_list|(
 name|iot
 argument_list|,
 name|IPU_DMFC_BASE
+argument_list|(
+name|base
+argument_list|)
 argument_list|,
 name|IPU_DMFC_SIZE
 argument_list|,
@@ -1319,6 +1375,9 @@ argument_list|(
 name|iot
 argument_list|,
 name|IPU_DI0_BASE
+argument_list|(
+name|base
+argument_list|)
 argument_list|,
 name|IPU_DI0_SIZE
 argument_list|,
@@ -1349,6 +1408,9 @@ argument_list|(
 name|iot
 argument_list|,
 name|IPU_DI1_BASE
+argument_list|(
+name|base
+argument_list|)
 argument_list|,
 name|IPU_DI0_SIZE
 argument_list|,
@@ -1379,6 +1441,9 @@ argument_list|(
 name|iot
 argument_list|,
 name|IPU_DP_BASE
+argument_list|(
+name|base
+argument_list|)
 argument_list|,
 name|IPU_DP_SIZE
 argument_list|,
@@ -1409,6 +1474,9 @@ argument_list|(
 name|iot
 argument_list|,
 name|IPU_DC_BASE
+argument_list|(
+name|base
+argument_list|)
 argument_list|,
 name|IPU_DC_SIZE
 argument_list|,
@@ -1439,6 +1507,9 @@ argument_list|(
 name|iot
 argument_list|,
 name|IPU_IDMAC_BASE
+argument_list|(
+name|base
+argument_list|)
 argument_list|,
 name|IPU_IDMAC_SIZE
 argument_list|,
@@ -1469,6 +1540,9 @@ argument_list|(
 name|iot
 argument_list|,
 name|IPU_CPMEM_BASE
+argument_list|(
+name|base
+argument_list|)
 argument_list|,
 name|IPU_CPMEM_SIZE
 argument_list|,
@@ -1499,6 +1573,9 @@ argument_list|(
 name|iot
 argument_list|,
 name|IPU_DCTMPL_BASE
+argument_list|(
+name|base
+argument_list|)
 argument_list|,
 name|IPU_DCTMPL_SIZE
 argument_list|,
