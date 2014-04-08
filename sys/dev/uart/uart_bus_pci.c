@@ -686,6 +686,24 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x1fd4
+block|,
+literal|0x1999
+block|,
+literal|0x1fd4
+block|,
+literal|0x0001
+block|,
+literal|"Sunix SER5xxxx Serial Port"
+block|,
+literal|0x10
+block|,
+literal|8
+operator|*
+name|DEFAULT_RCLK
+block|}
+block|,
+block|{
 literal|0x8086
 block|,
 literal|0x1c3d
