@@ -1683,10 +1683,6 @@ decl_stmt|;
 name|uint8_t
 name|pr
 decl_stmt|;
-name|iphlen
-operator|=
-name|off
-expr_stmt|;
 name|ifp
 operator|=
 name|m
