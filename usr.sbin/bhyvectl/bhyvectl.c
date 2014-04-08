@@ -3119,6 +3119,10 @@ name|vcpu
 operator|=
 literal|0
 expr_stmt|;
+name|vmname
+operator|=
+name|NULL
+expr_stmt|;
 name|assert_lapic_lvt
 operator|=
 operator|-
