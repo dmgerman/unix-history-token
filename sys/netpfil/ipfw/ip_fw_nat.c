@@ -3128,7 +3128,7 @@ begin_define
 define|#
 directive|define
 name|IPFW_NAT_MODEVENT_ORDER
-value|(SI_ORDER_ANY - 255)
+value|(SI_ORDER_ANY - 128)
 end_define
 
 begin_define
