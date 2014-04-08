@@ -54216,7 +54216,7 @@ name|softc
 operator|=
 name|control_softc
 expr_stmt|;
-name|wakeup
+name|wakeup_one
 argument_list|(
 name|softc
 argument_list|)
