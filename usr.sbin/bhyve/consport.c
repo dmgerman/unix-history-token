@@ -364,6 +364,27 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Guests might probe this port to look for old ISA devices 	 * using single-byte reads.  Return 0xff for those. 	 */
+if|if
+condition|(
+name|bytes
+operator|==
+literal|1
+operator|&&
+name|in
+condition|)
+block|{
+operator|*
+name|eax
+operator|=
+literal|0xff
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|bytes
