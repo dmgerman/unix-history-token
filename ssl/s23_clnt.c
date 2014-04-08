@@ -855,6 +855,10 @@ name|unsigned
 name|long
 name|Time
 init|=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|time
 argument_list|(
 name|NULL

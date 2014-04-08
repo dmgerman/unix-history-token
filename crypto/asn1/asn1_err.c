@@ -2158,7 +2158,7 @@ argument_list|(
 name|ASN1_R_UNKOWN_FORMAT
 argument_list|)
 block|,
-literal|"unkown format"
+literal|"unknown format"
 block|}
 block|,
 block|{

@@ -5150,6 +5150,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
 name|EVP_MD_CTX_copy
 argument_list|(
 operator|&
@@ -5157,7 +5160,11 @@ name|hmac
 argument_list|,
 name|hash
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|mac_ctx
 operator|=
 operator|&

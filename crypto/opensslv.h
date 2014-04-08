@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_NUMBER
-value|0x1000106fL
+value|0x1000107fL
 end_define
 
 begin_ifdef
@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_TEXT
-value|"OpenSSL 1.0.1f-fips 6 Jan 2014"
+value|"OpenSSL 1.0.1g-fips 7 Apr 2014"
 end_define
 
 begin_else
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_TEXT
-value|"OpenSSL 1.0.1f 6 Jan 2014"
+value|"OpenSSL 1.0.1g 7 Apr 2014"
 end_define
 
 begin_endif

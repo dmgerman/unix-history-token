@@ -2688,7 +2688,7 @@ name|max_send_fragment
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|OPENSSL_ENGINE
+name|OPENSSL_NO_ENGINE
 comment|/* Engine to pass requests for client certs to 	 */
 name|ENGINE
 modifier|*

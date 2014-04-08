@@ -3950,10 +3950,8 @@ literal|0x0333
 comment|/* this -------------v--- guards NT-specific calls */
 if|if
 condition|(
-name|GetVersion
+name|check_winnt
 argument_list|()
-operator|<
-literal|0x80000000
 operator|&&
 name|OPENSSL_isservice
 argument_list|()
