@@ -12473,6 +12473,7 @@ name|bf_list
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* And only resume if we had paused before */
 if|if
 condition|(
 name|do_resume
