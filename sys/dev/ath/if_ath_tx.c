@@ -10303,9 +10303,13 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
-literal|"%s: baw is now %d:%d, baw head=%d\n"
+literal|"%s: tid=%d: baw is now %d:%d, baw head=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|,
 name|tap
 operator|->
@@ -12320,9 +12324,13 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
-literal|"%s: filter transition\n"
+literal|"%s: tid=%d; filter transition\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|)
 expr_stmt|;
 name|tid
@@ -12402,9 +12410,13 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
-literal|"%s: hwq=0, transition back\n"
+literal|"%s: tid=%d, hwq=0, transition back\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|)
 expr_stmt|;
 if|if
@@ -12557,11 +12569,14 @@ name|__func__
 argument_list|,
 name|bf
 argument_list|,
+name|SEQNO
+argument_list|(
 name|bf
 operator|->
 name|bf_state
 operator|.
 name|bfs_seqno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|retval
@@ -12769,17 +12784,24 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
-literal|"%s: bf=%p, seqno=%d, exceeded retries\n"
+literal|"%s: tid=%d, bf=%p, seqno=%d, exceeded retries\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|tid
+operator|->
+name|tid
+argument_list|,
 name|bf
 argument_list|,
+name|SEQNO
+argument_list|(
 name|bf
 operator|->
 name|bf_state
 operator|.
 name|bfs_seqno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -12825,13 +12847,26 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
-literal|"%s: busy buffer cloned: %p -> %p"
+literal|"%s: tid=%d, busy buffer cloned: %p -> %p, seqno=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|,
 name|bf
 argument_list|,
 name|nbf
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12856,11 +12891,24 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
-literal|"%s: buffer couldn't be cloned! (%p)\n"
+literal|"%s: tid=%d, buffer couldn't be cloned! (%p) seqno=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|tid
+operator|->
+name|tid
+argument_list|,
 name|bf
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -18132,6 +18180,7 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If freeframe=0 then bf is no longer ours; don't 		 * touch it. 		 */
 if|if
 condition|(
 name|freeframe
@@ -20763,13 +20812,16 @@ name|tap
 operator|->
 name|txa_attempts
 decl_stmt|;
+name|int
+name|old_txa_start
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: %6D: called; txa_tid=%d, atid->tid=%d, status=%d, attempts=%d\n"
+literal|"%s: %6D: called; txa_tid=%d, atid->tid=%d, status=%d, attempts=%d, txa_start=%d, txa_seqpending=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -20790,9 +20842,29 @@ argument_list|,
 name|status
 argument_list|,
 name|attempts
+argument_list|,
+name|tap
+operator|->
+name|txa_start
+argument_list|,
+name|tap
+operator|->
+name|txa_seqpending
 argument_list|)
 expr_stmt|;
 comment|/* Note: This may update the BAW details */
+comment|/* 	 * XXX What if this does slide the BAW along? We need to somehow 	 * XXX either fix things when it does happen, or prevent the 	 * XXX seqpending value to be anything other than exactly what 	 * XXX the hell we want! 	 * 	 * XXX So for now, how I do this inside the TX lock for now 	 * XXX and just correct it afterwards? The below condition should 	 * XXX never happen and if it does I need to fix all kinds of things. 	 */
+name|ATH_TX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|old_txa_start
+operator|=
+name|tap
+operator|->
+name|txa_start
+expr_stmt|;
 name|sc
 operator|->
 name|sc_bar_response
@@ -20802,6 +20874,46 @@ argument_list|,
 name|tap
 argument_list|,
 name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tap
+operator|->
+name|txa_start
+operator|!=
+name|old_txa_start
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: tid=%d; txa_start=%d, old=%d, adjusting\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|tid
+argument_list|,
+name|tap
+operator|->
+name|txa_start
+argument_list|,
+name|old_txa_start
+argument_list|)
+expr_stmt|;
+block|}
+name|tap
+operator|->
+name|txa_start
+operator|=
+name|old_txa_start
+expr_stmt|;
+name|ATH_TX_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Unpause the TID */
