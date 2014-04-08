@@ -712,7 +712,7 @@ if|if
 condition|(
 name|ibe
 operator|->
-name|ibe_mask
+name|ibe_magic
 condition|)
 name|free
 argument_list|(
