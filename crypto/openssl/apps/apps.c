@@ -2863,7 +2863,7 @@ name|buf
 argument_list|,
 name|PW_MIN_LENGTH
 argument_list|,
-name|BUFSIZ
+name|bufsiz
 operator|-
 literal|1
 argument_list|)
@@ -2902,7 +2902,7 @@ name|buff
 argument_list|,
 name|PW_MIN_LENGTH
 argument_list|,
-name|BUFSIZ
+name|bufsiz
 operator|-
 literal|1
 argument_list|,
@@ -14603,10 +14603,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|GetVersion
+name|check_winnt
 argument_list|()
-operator|<
-literal|0x80000000
 condition|)
 name|proc
 operator|=
