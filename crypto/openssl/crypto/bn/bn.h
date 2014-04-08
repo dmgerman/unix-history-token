@@ -2125,6 +2125,24 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
+name|void
+name|BN_consttime_swap
+parameter_list|(
+name|BN_ULONG
+name|swap
+parameter_list|,
+name|BIGNUM
+modifier|*
+name|a
+parameter_list|,
+name|BIGNUM
+modifier|*
+name|b
+parameter_list|,
+name|int
+name|nwords
+parameter_list|)
+function_decl|;
 comment|/* Deprecated versions */
 ifndef|#
 directive|ifndef
@@ -3676,6 +3694,25 @@ parameter_list|(
 name|a
 parameter_list|)
 value|bn_check_top(a)
+define|#
+directive|define
+name|bn_check_size
+parameter_list|(
+name|bn
+parameter_list|,
+name|bits
+parameter_list|)
+value|bn_wcheck_size(bn, ((bits+BN_BITS2-1))/BN_BITS2)
+define|#
+directive|define
+name|bn_wcheck_size
+parameter_list|(
+name|bn
+parameter_list|,
+name|words
+parameter_list|)
+define|\
+value|do { \ 		const BIGNUM *_bnum2 = (bn); \ 		assert(words<= (_bnum2)->dmax&& words>= (_bnum2)->top); \ 	} while(0)
 else|#
 directive|else
 comment|/* !BN_DEBUG */
@@ -3698,6 +3735,22 @@ parameter_list|(
 name|a
 parameter_list|)
 value|bn_correct_top(a)
+define|#
+directive|define
+name|bn_check_size
+parameter_list|(
+name|bn
+parameter_list|,
+name|bits
+parameter_list|)
+define|#
+directive|define
+name|bn_wcheck_size
+parameter_list|(
+name|bn
+parameter_list|,
+name|words
+parameter_list|)
 endif|#
 directive|endif
 define|#
