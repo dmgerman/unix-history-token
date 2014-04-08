@@ -417,6 +417,11 @@ argument_list|,
 operator|&
 name|devpath_guid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
 operator|&
 name|devpath
 argument_list|)
@@ -467,6 +472,11 @@ argument_list|,
 operator|&
 name|blkio_guid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
 operator|&
 name|blkio
 argument_list|)
@@ -692,6 +702,11 @@ argument_list|,
 operator|&
 name|blkio_guid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
 operator|&
 name|blkio
 argument_list|)
@@ -843,6 +858,11 @@ argument_list|,
 operator|&
 name|blkio_guid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
 operator|&
 name|blkio
 argument_list|)
