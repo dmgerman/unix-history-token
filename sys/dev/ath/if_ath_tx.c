@@ -12489,7 +12489,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called when a single (aggregate or otherwise) frame is completed.  *  * Returns 1 if the buffer could be added to the filtered list  * (cloned or otherwise), 0 if the buffer couldn't be added to the  * filtered list (failed clone; expired retry) and the caller should  * free it and handle it like a failure (eg by sending a BAR.)  */
+comment|/*  * Called when a single (aggregate or otherwise) frame is completed.  *  * Returns 0 if the buffer could be added to the filtered list  * (cloned or otherwise), 1 if the buffer couldn't be added to the  * filtered list (failed clone; expired retry) and the caller should  * free it and handle it like a failure (eg by sending a BAR.)  *  * since the buffer may be cloned, bf must be not touched after this  * if the return value is 0.  */
 end_comment
 
 begin_function
@@ -12564,11 +12564,14 @@ operator|.
 name|bfs_seqno
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+comment|/* error */
+goto|goto
+name|finish
+goto|;
 block|}
 comment|/* 	 * A busy buffer can't be added to the retry list. 	 * It needs to be cloned. 	 */
 if|if
@@ -12642,6 +12645,7 @@ name|retval
 operator|=
 literal|1
 expr_stmt|;
+comment|/* error */
 block|}
 else|else
 block|{
@@ -12658,7 +12662,10 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
+comment|/* ok */
 block|}
+name|finish
+label|:
 name|ath_tx_tid_filt_comp_complete
 argument_list|(
 name|sc
