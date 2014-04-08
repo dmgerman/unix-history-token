@@ -3802,7 +3802,7 @@ name|end
 operator|-
 name|buf
 operator|<
-literal|32
+literal|2
 operator|)
 condition|?
 name|TRUE
