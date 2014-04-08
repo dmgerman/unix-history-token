@@ -2387,6 +2387,10 @@ name|softc
 operator|=
 name|softc
 expr_stmt|;
+name|unmap
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2586,7 +2590,7 @@ operator|->
 name|ctl_be_lun
 operator|.
 name|flags
-operator|=
+operator||=
 name|CTL_LUN_FLAG_UNMAP
 expr_stmt|;
 name|be_lun
