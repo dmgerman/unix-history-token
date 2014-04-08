@@ -973,24 +973,30 @@ block|}
 block|,
 comment|/* 41 WRITE SAME(10) */
 block|{
-name|NULL
+name|ctl_write_same
 block|,
-name|CTL_SERIDX_INVLD
+name|CTL_SERIDX_WRITE
 block|,
-name|CTL_CMD_FLAG_NONE
+name|CTL_CMD_FLAG_OK_ON_SLUN
+operator||
+name|CTL_FLAG_DATA_OUT
 block|,
-name|CTL_LUN_PAT_NONE
+name|CTL_LUN_PAT_WRITE
+operator||
+name|CTL_LUN_PAT_RANGE
 block|}
 block|,
-comment|/* 42 READ SUB-CHANNEL */
+comment|/* 42 READ SUB-CHANNEL / UNMAP */
 block|{
-name|NULL
+name|ctl_unmap
 block|,
-name|CTL_SERIDX_INVLD
+name|CTL_SERIDX_WRITE
 block|,
-name|CTL_CMD_FLAG_NONE
+name|CTL_CMD_FLAG_OK_ON_SLUN
+operator||
+name|CTL_FLAG_DATA_OUT
 block|,
-name|CTL_LUN_PAT_NONE
+name|CTL_LUN_PAT_WRITE
 block|}
 block|,
 comment|/* 43 READ TOC/PMA/ATIP */
@@ -1953,13 +1959,17 @@ block|}
 block|,
 comment|/* 93 WRITE SAME(16) */
 block|{
-name|NULL
+name|ctl_write_same
 block|,
-name|CTL_SERIDX_INVLD
+name|CTL_SERIDX_WRITE
 block|,
-name|CTL_CMD_FLAG_NONE
+name|CTL_CMD_FLAG_OK_ON_SLUN
+operator||
+name|CTL_FLAG_DATA_OUT
 block|,
-name|CTL_LUN_PAT_NONE
+name|CTL_LUN_PAT_WRITE
+operator||
+name|CTL_LUN_PAT_RANGE
 block|}
 block|,
 comment|/* 94 */
