@@ -19626,7 +19626,9 @@ name|tid
 argument_list|)
 condition|)
 block|{
-continue|continue;
+goto|goto
+name|loop_done
+goto|;
 block|}
 if|if
 condition|(
@@ -19716,6 +19718,8 @@ condition|)
 block|{
 break|break;
 block|}
+name|loop_done
+label|:
 comment|/* 		 * If this was the last entry on the original list, stop. 		 * Otherwise nodes that have been rescheduled onto the end 		 * of the TID FIFO list will just keep being rescheduled. 		 * 		 * XXX What should we do about nodes that were paused 		 * but are pending a leaking frame in response to a ps-poll? 		 * They'll be put at the front of the list; so they'll 		 * prematurely trigger this condition! Ew. 		 */
 if|if
 condition|(
