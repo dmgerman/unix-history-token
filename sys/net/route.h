@@ -188,16 +188,6 @@ comment|/* number fo usable routing tables */
 end_comment
 
 begin_comment
-comment|/*  * XXX kernel function pointer `rt_output' is visible to applications.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_comment
 comment|/*  * We distinguish between routes to hosts and routes to networks,  * preferring the former if available.  For each route we infer  * the interface to use from the gateway address supplied when  * the route was entered.  Routes that forward packets through  * gateways are marked so that the output routines know to address the  * gateway rather than the ultimate destination.  */
 end_comment
 
@@ -343,50 +333,6 @@ end_endif
 begin_comment
 comment|/* _KERNEL || _WANT_RTENTRY */
 end_comment
-
-begin_comment
-comment|/*  * Following structure necessary for 4.3 compatibility;  * We should eventually move it to a compat file.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ortentry
-block|{
-name|u_long
-name|rt_hash
-decl_stmt|;
-comment|/* to speed lookups */
-name|struct
-name|sockaddr
-name|rt_dst
-decl_stmt|;
-comment|/* key */
-name|struct
-name|sockaddr
-name|rt_gateway
-decl_stmt|;
-comment|/* value */
-name|short
-name|rt_flags
-decl_stmt|;
-comment|/* up/down?, host/net */
-name|short
-name|rt_refcnt
-decl_stmt|;
-comment|/* # held references */
-name|u_long
-name|rt_use
-decl_stmt|;
-comment|/* raw # packets forwarded */
-name|struct
-name|ifnet
-modifier|*
-name|rt_ifp
-decl_stmt|;
-comment|/* the answer: interface to use */
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
@@ -551,30 +497,8 @@ comment|/* protocol specific routing flag */
 end_comment
 
 begin_comment
-comment|/* XXX: temporary to stay API/ABI compatible with userland */
+comment|/*			0x10000		   unused, was RTF_PRCLONING */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RTF_PRCLONING
-value|0x10000
-end_define
-
-begin_comment
-comment|/* unused, for compatibility */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*			0x20000		   unused, was RTF_WASCLONED */
@@ -884,26 +808,12 @@ begin_comment
 comment|/* fix specified metrics */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RTM_OLDADD
-value|0x9
-end_define
-
 begin_comment
-comment|/* caused by SIOCADDRT */
+comment|/*	0x9  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RTM_OLDDEL
-value|0xa
-end_define
-
 begin_comment
-comment|/* caused by SIOCDELRT */
+comment|/*	0xa  */
 end_comment
 
 begin_define
@@ -1848,36 +1758,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
-
-begin_comment
-comment|/* defaults to "all" FIBs */
-end_comment
-
-begin_function_decl
-name|int
-name|rtinit_fib
-parameter_list|(
-name|struct
-name|ifaddr
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* XXX MRT NEW VERSIONS THAT USE FIBs  * For now the protocol indepedent versions are the same as the AF_INET ones  * but this will change..   */
