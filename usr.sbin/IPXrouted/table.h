@@ -29,24 +29,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RTM_ADD
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|rtentry
-value|ortentry
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|rt_entry
@@ -63,10 +45,6 @@ name|rt_back
 decl_stmt|;
 union|union
 block|{
-name|struct
-name|rtentry
-name|rtu_rt
-decl_stmt|;
 struct|struct
 name|rtuentry
 block|{
