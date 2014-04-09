@@ -3853,7 +3853,7 @@ name|logit
 argument_list|(
 literal|"%s, %s"
 argument_list|,
-name|SSH_VERSION
+name|SSH_RELEASE
 argument_list|,
 name|SSLeay_version
 argument_list|(
