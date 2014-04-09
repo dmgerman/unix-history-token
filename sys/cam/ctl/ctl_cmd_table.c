@@ -990,7 +990,7 @@ comment|/* 42 READ SUB-CHANNEL / UNMAP */
 block|{
 name|ctl_unmap
 block|,
-name|CTL_SERIDX_WRITE
+name|CTL_SERIDX_UNMAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_SLUN
 operator||
