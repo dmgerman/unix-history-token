@@ -1385,16 +1385,10 @@ argument|tcptw
 argument_list|)
 name|tw_2msl
 expr_stmt|;
-name|void
-modifier|*
-name|tw_pspare
-decl_stmt|;
-comment|/* TCP_SIGNATURE */
 name|u_int
-modifier|*
-name|tw_spare
+name|tw_refcount
 decl_stmt|;
-comment|/* TCP_SIGNATURE */
+comment|/* refcount */
 block|}
 struct|;
 end_struct
