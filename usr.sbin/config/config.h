@@ -433,6 +433,37 @@ name|hints
 expr_stmt|;
 end_expr_stmt
 
+begin_struct
+struct|struct
+name|includepath
+block|{
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|includepath
+argument_list|)
+name|path_next
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_macro
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|includepath
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|includepath
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Tag present in the kernelconf.tmlp template file. It's mandatory for those  * two strings to be the same. Otherwise you'll get into trouble.  */
 end_comment
