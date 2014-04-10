@@ -330,6 +330,15 @@ operator|.
 name|finish_md
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|s
 operator|->
 name|s3

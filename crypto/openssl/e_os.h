@@ -1230,6 +1230,31 @@ name|DEFAULT_HOME
 value|"C:"
 endif|#
 directive|endif
+comment|/* Avoid Windows 8 SDK GetVersion deprecated problems */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|>=
+literal|1800
+define|#
+directive|define
+name|check_winnt
+parameter_list|()
+value|(1)
+else|#
+directive|else
+define|#
+directive|define
+name|check_winnt
+parameter_list|()
+value|(GetVersion()< 0x80000000)
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* The non-microsoft world */

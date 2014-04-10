@@ -1988,7 +1988,7 @@ name|pctx
 argument_list|,
 name|md
 argument_list|,
-name|e
+name|NULL
 argument_list|,
 name|sigkey
 argument_list|)
@@ -2005,7 +2005,7 @@ name|pctx
 argument_list|,
 name|md
 argument_list|,
-name|e
+name|NULL
 argument_list|,
 name|sigkey
 argument_list|)

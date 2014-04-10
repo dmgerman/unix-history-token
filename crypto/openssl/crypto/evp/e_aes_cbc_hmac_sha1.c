@@ -1861,6 +1861,7 @@ operator|!=
 name|SHA_CBLOCK
 condition|)
 continue|continue;
+comment|/* j is not incremented yet */
 name|mask
 operator|=
 literal|0
@@ -1869,7 +1870,7 @@ operator|(
 operator|(
 name|inp_len
 operator|+
-literal|8
+literal|7
 operator|-
 name|j
 operator|)
@@ -1921,7 +1922,7 @@ name|j
 operator|-
 name|inp_len
 operator|-
-literal|73
+literal|72
 operator|)
 operator|>>
 operator|(

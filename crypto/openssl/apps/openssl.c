@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/rand.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/lhash.h>
 end_include
 

@@ -4524,8 +4524,15 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
+else|else
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
+literal|0
+expr_stmt|;
+comment|/* terminate potentially open 'else' */
 name|AES_set_encrypt_key
 argument_list|(
 name|key
@@ -5687,8 +5694,15 @@ name|ks1
 expr_stmt|;
 break|break;
 block|}
+else|else
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
+literal|0
+expr_stmt|;
+comment|/* terminate potentially open 'else' */
 if|if
 condition|(
 name|enc

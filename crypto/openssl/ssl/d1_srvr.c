@@ -693,6 +693,11 @@ name|shutdown
 operator|=
 literal|0
 expr_stmt|;
+name|dtls1_clear_record_buffer
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|dtls1_start_timer
 argument_list|(
 name|s
@@ -722,7 +727,7 @@ name|tmp
 operator|.
 name|next_state
 operator|=
-name|SSL3_ST_SW_HELLO_REQ_C
+name|SSL3_ST_SR_CLNT_HELLO_A
 expr_stmt|;
 name|s
 operator|->
@@ -2586,7 +2591,15 @@ goto|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
-comment|/* Change to new shared key of SCTP-Auth, 			 * will be ignored if no SCTP used. 			 */
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|hit
+condition|)
+block|{
+comment|/* Change to new shared key of SCTP-Auth, 				 * will be ignored if no SCTP used. 				 */
 name|BIO_ctrl
 argument_list|(
 name|SSL_get_wbio
@@ -2601,6 +2614,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|s
@@ -2703,6 +2717,7 @@ name|s
 operator|->
 name|hit
 condition|)
+block|{
 name|s
 operator|->
 name|s3
@@ -2713,6 +2728,27 @@ name|next_state
 operator|=
 name|SSL3_ST_SR_FINISHED_A
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SCTP
+comment|/* Change to new shared key of SCTP-Auth, 				 * will be ignored if no SCTP used. 				 */
+name|BIO_ctrl
+argument_list|(
+name|SSL_get_wbio
+argument_list|(
+name|s
+argument_list|)
+argument_list|,
+name|BIO_CTRL_DGRAM_SCTP_NEXT_AUTH_KEY
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 else|else
 block|{
 name|s
@@ -3434,8 +3470,6 @@ decl_stmt|;
 name|unsigned
 name|long
 name|l
-decl_stmt|,
-name|Time
 decl_stmt|;
 if|if
 condition|(
@@ -3467,32 +3501,15 @@ name|s3
 operator|->
 name|server_random
 expr_stmt|;
-name|Time
-operator|=
-operator|(
-name|unsigned
-name|long
-operator|)
-name|time
+name|ssl_fill_hello_random
 argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* Time */
-name|l2n
-argument_list|(
-name|Time
+name|s
 argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|RAND_pseudo_bytes
-argument_list|(
+literal|1
+argument_list|,
 name|p
 argument_list|,
 name|SSL3_RANDOM_SIZE
-operator|-
-literal|4
 argument_list|)
 expr_stmt|;
 comment|/* Do the message type and length last */
