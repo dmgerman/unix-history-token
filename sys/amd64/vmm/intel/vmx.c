@@ -11447,6 +11447,11 @@ name|pirval
 operator|=
 literal|0
 expr_stmt|;
+name|pirbase
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|lapic
 operator|=
 name|vlapic
@@ -11625,30 +11630,6 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|pirbase
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|VCPU_CTR0
-argument_list|(
-name|vlapic
-operator|->
-name|vm
-argument_list|,
-name|vlapic
-operator|->
-name|vcpuid
-argument_list|,
-literal|"vmx_inject_pir: "
-literal|"no posted interrupt found"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|VLAPIC_CTR_IRR
 argument_list|(
 name|vlapic
@@ -11656,7 +11637,7 @@ argument_list|,
 literal|"vmx_inject_pir"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Update RVI so the processor can evaluate pending virtual 	 * interrupts on VM-entry. 	 */
+comment|/* 	 * Update RVI so the processor can evaluate pending virtual 	 * interrupts on VM-entry. 	 * 	 * It is possible for pirval to be 0 here, even though the 	 * pending bit has been set. The scenario is: 	 * CPU-Y is sending a posted interrupt to CPU-X, which 	 * is running a guest and processing posted interrupts in h/w. 	 * CPU-X will eventually exit and the state seen in s/w is 	 * the pending bit set, but no PIR bits set. 	 * 	 *      CPU-X                      CPU-Y 	 *   (vm running)                (host running) 	 *   rx posted interrupt 	 *   CLEAR pending bit 	 *				 SET PIR bit 	 *   READ/CLEAR PIR bits 	 *				 SET pending bit 	 *   (vm exit) 	 *   pending bit set, PIR 0 	 */
 if|if
 condition|(
 name|pirval
