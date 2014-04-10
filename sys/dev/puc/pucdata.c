@@ -3562,31 +3562,6 @@ operator|=
 name|puc_config_syba
 block|}
 block|,
-comment|/* Prevent puc(4) from attaching, directly use uart(4) instead. */
-block|{
-literal|0x1fd4
-block|,
-literal|0x1999
-block|,
-literal|0x1fd4
-block|,
-literal|0x0001
-block|,
-literal|"Sunix SER5xxxx 1-port serial"
-block|,
-name|DEFAULT_RCLK
-operator|*
-literal|8
-block|,
-name|PUC_PORT_1S
-block|,
-literal|0x10
-block|,
-literal|0
-block|,
-literal|8
-block|, 	}
-block|,
 block|{
 literal|0x1fd4
 block|,
