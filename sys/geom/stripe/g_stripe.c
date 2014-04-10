@@ -2413,6 +2413,14 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_cmd
+operator|!=
+name|BIO_DELETE
+condition|)
 name|addr
 operator|+=
 name|length
@@ -2439,10 +2447,6 @@ operator|++
 operator|,
 name|length
 operator|-=
-name|stripesize
-operator|,
-name|addr
-operator|+=
 name|stripesize
 control|)
 block|{
@@ -2596,6 +2600,18 @@ name|sc_disks
 index|[
 name|no
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_cmd
+operator|!=
+name|BIO_DELETE
+condition|)
+name|addr
+operator|+=
+name|stripesize
 expr_stmt|;
 block|}
 comment|/* 	 * Fire off all allocated requests! 	 */
@@ -3145,7 +3161,7 @@ operator|-
 name|start
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do use "fast" mode when: 	 * 1. "Fast" mode is ON. 	 * and 	 * 2. Request size is less than or equal to MAXPHYS, 	 *    which should always be true. 	 * and 	 * 3. Request size is bigger than stripesize * ndisks. If it isn't, 	 *    there will be no need to send more than one I/O request to 	 *    a provider, so there is nothing to optmize. 	 * and 	 * 4. Request is not unmapped. 	 */
+comment|/* 	 * Do use "fast" mode when: 	 * 1. "Fast" mode is ON. 	 * and 	 * 2. Request size is less than or equal to MAXPHYS, 	 *    which should always be true. 	 * and 	 * 3. Request size is bigger than stripesize * ndisks. If it isn't, 	 *    there will be no need to send more than one I/O request to 	 *    a provider, so there is nothing to optmize. 	 * and 	 * 4. Request is not unmapped. 	 * and 	 * 5. It is not a BIO_DELETE. 	 */
 if|if
 condition|(
 name|g_stripe_fast
@@ -3175,6 +3191,12 @@ name|BIO_UNMAPPED
 operator|)
 operator|==
 literal|0
+operator|&&
+name|bp
+operator|->
+name|bio_cmd
+operator|!=
+name|BIO_DELETE
 condition|)
 block|{
 name|fast
