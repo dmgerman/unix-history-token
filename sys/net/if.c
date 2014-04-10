@@ -13201,19 +13201,6 @@ name|ifma_refcount
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|ifma
-operator|->
-name|ifma_protospec
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"if_freemulti: protospec not NULL"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifma
