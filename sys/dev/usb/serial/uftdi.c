@@ -1210,6 +1210,15 @@ argument_list|)
 block|,
 name|UFTDI_DEV
 argument_list|(
+name|DRESDENELEKTRONIK
+argument_list|,
+name|LEVELSHIFTERSTICKLOWCOST
+argument_list|,
+name|UFTDI_TYPE_8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
 name|ELEKTOR
 argument_list|,
 name|FT323R
