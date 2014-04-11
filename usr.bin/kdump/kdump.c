@@ -622,6 +622,10 @@ decl_stmt|,
 name|abiflag
 init|=
 literal|0
+decl_stmt|,
+name|syscallno
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1121,7 +1125,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:dElm:np:AHRrsTt:"
+literal|"f:dElm:np:AHRrSsTt:"
 argument_list|)
 operator|)
 operator|!=
@@ -1199,6 +1203,14 @@ case|case
 literal|'r'
 case|:
 name|resolv
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|syscallno
 operator|=
 literal|1
 expr_stmt|;
@@ -2689,6 +2701,7 @@ name|ktr_code
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"%s"
@@ -2701,6 +2714,20 @@ name|ktr_code
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|syscallno
+condition|)
+name|printf
+argument_list|(
+literal|"[%d]"
+argument_list|,
+name|ktr
+operator|->
+name|ktr_code
+argument_list|)
+expr_stmt|;
+block|}
 name|ip
 operator|=
 operator|&
@@ -5115,9 +5142,10 @@ name|code
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|printf
 argument_list|(
-literal|"%s "
+literal|"%s"
 argument_list|,
 name|syscallnames
 index|[
@@ -5125,6 +5153,23 @@ name|code
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|syscallno
+condition|)
+name|printf
+argument_list|(
+literal|"[%d]"
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -8360,6 +8405,7 @@ name|ktr_code
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"%s"
@@ -8372,6 +8418,20 @@ name|ktr_code
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|syscallno
+condition|)
+name|printf
+argument_list|(
+literal|"[%d]"
+argument_list|,
+name|ktr
+operator|->
+name|ktr_code
+argument_list|)
+expr_stmt|;
+block|}
 name|ip
 operator|=
 operator|&
@@ -8470,9 +8530,10 @@ name|code
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|printf
 argument_list|(
-literal|"%s "
+literal|"%s"
 argument_list|,
 name|linux_syscallnames
 index|[
@@ -8480,6 +8541,23 @@ name|code
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|syscallno
+condition|)
+name|printf
+argument_list|(
+literal|"[%d]"
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -8655,7 +8733,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kdump [-dEnlHRrsTA] [-f trfile] "
+literal|"usage: kdump [-dEnlHRrSsTA] [-f trfile] "
 literal|"[-m maxdata] [-p pid] [-t trstr]\n"
 argument_list|)
 expr_stmt|;
