@@ -315,7 +315,7 @@ operator|(
 name|inc
 operator|)
 operator|:
-literal|"cc"
+literal|"cr0"
 operator|,
 literal|"memory"
 block|)
