@@ -113,9 +113,6 @@ decl_stmt|;
 name|register_t
 name|host_rbx
 decl_stmt|;
-name|register_t
-name|host_rip
-decl_stmt|;
 comment|/* 	 * XXX todo debug registers and fpu state 	 */
 name|int
 name|inst_fail_status
