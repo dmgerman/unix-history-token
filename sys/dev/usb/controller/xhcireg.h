@@ -1526,7 +1526,7 @@ begin_define
 define|#
 directive|define
 name|XHCI_IMOD_DEFAULT
-value|0x000003E8U
+value|0x000001F4U
 end_define
 
 begin_comment
