@@ -548,7 +548,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drop a refcount on an tw elevated using tw_pcbref().  Return  * the tw lock released.  */
+comment|/*  * Drop a refcount on an tw elevated using tw_pcbref().  */
 end_comment
 
 begin_function
@@ -562,11 +562,6 @@ modifier|*
 name|tw
 parameter_list|)
 block|{
-name|TW_WLOCK_ASSERT
-argument_list|(
-name|V_tw_lock
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|tw
@@ -593,28 +588,16 @@ operator|->
 name|tw_refcount
 argument_list|)
 condition|)
-block|{
-name|TW_WUNLOCK
-argument_list|(
-name|V_tw_lock
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 name|uma_zfree
 argument_list|(
 name|V_tcptw_zone
 argument_list|,
 name|tw
-argument_list|)
-expr_stmt|;
-name|TW_WUNLOCK
-argument_list|(
-name|V_tw_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2773,22 +2756,19 @@ name|tw_cred
 operator|=
 name|NULL
 expr_stmt|;
+name|TW_WUNLOCK
+argument_list|(
+name|V_tw_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|reuse
 condition|)
-block|{
 name|tw_pcbrele
 argument_list|(
 name|tw
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|TW_WUNLOCK
-argument_list|(
-name|V_tw_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2947,11 +2927,6 @@ name|V_tcbinfo
 argument_list|)
 condition|)
 block|{
-name|TW_WLOCK
-argument_list|(
-name|V_tw_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tw_pcbrele
@@ -3007,11 +2982,6 @@ block|}
 else|else
 block|{
 comment|/* INP_INFO lock is busy, continue later */
-name|TW_WLOCK
-argument_list|(
-name|V_tw_lock
-argument_list|)
-expr_stmt|;
 name|tw_pcbrele
 argument_list|(
 name|tw
