@@ -265,7 +265,7 @@ argument_list|,
 operator|&
 name|debug
 argument_list|,
-literal|2
+literal|0
 argument_list|,
 literal|"Enable debug messages"
 argument_list|)
@@ -306,7 +306,7 @@ argument_list|,
 operator|&
 name|ping_timeout
 argument_list|,
-literal|5
+literal|0
 argument_list|,
 literal|"Timeout for ping (NOP-Out) requests, in seconds"
 argument_list|)
@@ -347,7 +347,7 @@ argument_list|,
 operator|&
 name|iscsid_timeout
 argument_list|,
-literal|60
+literal|0
 argument_list|,
 literal|"Time to wait for iscsid(8) to handle reconnection, in seconds"
 argument_list|)
@@ -388,7 +388,7 @@ argument_list|,
 operator|&
 name|login_timeout
 argument_list|,
-literal|60
+literal|0
 argument_list|,
 literal|"Time to wait for iscsid(8) to finish Login Phase, in seconds"
 argument_list|)
@@ -429,7 +429,7 @@ argument_list|,
 operator|&
 name|maxtags
 argument_list|,
-literal|255
+literal|0
 argument_list|,
 literal|"Max number of IO requests queued"
 argument_list|)
