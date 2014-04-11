@@ -2959,7 +2959,15 @@ argument_list|(
 name|tw
 argument_list|)
 condition|)
+block|{
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|KASSERT
 argument_list|(
 name|tw
