@@ -6521,7 +6521,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -6531,10 +6530,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out_im6f_rollback
-goto|;
-block|}
+else|else
+block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -6566,6 +6563,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+block|}
 name|IN6_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -9031,9 +9029,14 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|IN6_MULTI_UNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|out_im6o_free
 goto|;
+block|}
 name|imo
 operator|->
 name|im6o_membership
@@ -9068,7 +9071,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -9078,10 +9080,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out_im6f_rollback
-goto|;
-block|}
+else|else
+block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -9104,7 +9104,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -9114,16 +9113,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out_im6f_rollback
-goto|;
 block|}
 block|}
 name|IN6_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
-name|out_im6f_rollback
-label|:
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
@@ -10114,7 +10108,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -10124,10 +10117,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out_im6f_rollback
-goto|;
-block|}
+else|else
+block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -10150,7 +10141,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -10165,8 +10155,6 @@ block|}
 name|IN6_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
-name|out_im6f_rollback
-label|:
 if|if
 condition|(
 name|error
@@ -11030,7 +11018,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -11040,10 +11027,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out_im6f_rollback
-goto|;
-block|}
+else|else
+block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -11075,6 +11060,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+block|}
 name|IN6_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
