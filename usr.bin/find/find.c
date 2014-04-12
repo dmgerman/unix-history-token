@@ -479,8 +479,6 @@ name|p
 decl_stmt|;
 name|int
 name|e
-decl_stmt|,
-name|rval
 decl_stmt|;
 name|tree
 operator|=
@@ -512,12 +510,12 @@ argument_list|,
 literal|"ftsopen"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|rval
+name|exitstatus
 operator|=
 literal|0
-init|;
+expr_stmt|;
+while|while
+condition|(
 name|errno
 operator|=
 literal|0
@@ -532,8 +530,7 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
-condition|;
-control|)
+condition|)
 block|{
 if|if
 condition|(
@@ -649,7 +646,7 @@ name|fts_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rval
+name|exitstatus
 operator|=
 literal|1
 expr_stmt|;
@@ -700,7 +697,7 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
-name|rval
+name|exitstatus
 operator|=
 literal|1
 expr_stmt|;
@@ -779,7 +776,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|rval
+name|exitstatus
 operator|)
 return|;
 block|}
