@@ -2507,12 +2507,14 @@ if|if
 condition|(
 name|data
 operator|>
-name|INT64_MAX
+name|SBT_MAX
 operator|/
 name|SBT_1MS
 condition|)
 return|return
-name|INT64_MAX
+operator|(
+name|SBT_MAX
+operator|)
 return|;
 endif|#
 directive|endif
@@ -6724,7 +6726,7 @@ if|if
 condition|(
 name|asbt
 operator|<=
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|rsbt
 condition|)
