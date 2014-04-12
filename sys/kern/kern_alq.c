@@ -2095,6 +2095,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|ret
 operator|=
 name|alq_open_flags
@@ -2113,7 +2116,11 @@ name|count
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 operator|(
 operator|*
 name|alqp
@@ -2141,6 +2148,7 @@ name|aq_entlen
 operator|=
 name|size
 expr_stmt|;
+block|}
 block|}
 else|else
 name|ret
