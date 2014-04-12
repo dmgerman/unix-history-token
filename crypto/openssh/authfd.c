@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfd.c,v 1.91 2013/12/29 04:29:25 djm Exp $ */
+comment|/* $OpenBSD: authfd.c,v 1.92 2014/01/31 16:39:19 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -274,10 +274,12 @@ return|return
 operator|-
 literal|1
 return|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sunaddr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-chall.c,v 1.39 2013/11/08 00:39:14 djm Exp $ */
+comment|/* $OpenBSD: auth2-chall.c,v 1.41 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -642,7 +642,7 @@ operator|->
 name|devices
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|kbdintctxt
 argument_list|,
@@ -1521,14 +1521,12 @@ name|i
 operator|++
 control|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|response
 index|[
 name|i
 index|]
-argument_list|,
-literal|'r'
 argument_list|,
 name|strlen
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-dss.c,v 1.30 2014/01/09 23:20:00 djm Exp $ */
+comment|/* $OpenBSD: ssh-dss.c,v 1.31 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -232,11 +232,9 @@ operator|->
 name|dsa
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|digest
-argument_list|,
-literal|'d'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -309,11 +307,9 @@ operator|-
 literal|1
 return|;
 block|}
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sigblob
-argument_list|,
-literal|0
 argument_list|,
 name|SIGBLOB_LEN
 argument_list|)
@@ -846,11 +842,9 @@ name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* clean up */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sigblob
-argument_list|,
-literal|0
 argument_list|,
 name|len
 argument_list|)
@@ -909,11 +903,9 @@ operator|->
 name|dsa
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|digest
-argument_list|,
-literal|'d'
 argument_list|,
 sizeof|sizeof
 argument_list|(

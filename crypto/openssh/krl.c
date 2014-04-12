@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.c,v 1.13 2013/07/20 22:20:42 djm Exp $ */
+comment|/* $OpenBSD: krl.c,v 1.14 2014/01/31 16:39:19 tedu Exp $ */
 end_comment
 
 begin_include
@@ -1225,10 +1225,12 @@ name|hi
 operator|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rs
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -6003,10 +6005,12 @@ modifier|*
 name|rc
 decl_stmt|;
 comment|/* Check explicitly revoked hashes first */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rb
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -6082,10 +6086,12 @@ literal|1
 return|;
 block|}
 comment|/* Next, explicit keys */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rb
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -6204,10 +6210,12 @@ literal|0
 return|;
 comment|/* No entry for this CA */
 comment|/* Check revocation by cert key ID */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rki
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -6278,10 +6286,12 @@ condition|)
 return|return
 literal|0
 return|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rs
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: digest.h,v 1.1 2014/01/09 23:20:00 djm Exp $ */
+comment|/* $OpenBSD: digest.h,v 1.2 2014/01/27 18:58:14 markus Exp $ */
 end_comment
 
 begin_comment
@@ -83,6 +83,12 @@ name|SSH_DIGEST_MAX
 value|6
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|ssh_digest_ctx
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* Returns the algorithm's digest length in bytes or 0 for invalid algorithm */
 end_comment
@@ -93,6 +99,43 @@ name|ssh_digest_bytes
 parameter_list|(
 name|int
 name|alg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Returns the block size of the digest, e.g. for implementing HMAC */
+end_comment
+
+begin_function_decl
+name|size_t
+name|ssh_digest_blocksize
+parameter_list|(
+name|struct
+name|ssh_digest_ctx
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Copies internal state of digest of 'from' to 'to' */
+end_comment
+
+begin_function_decl
+name|int
+name|ssh_digest_copy_state
+parameter_list|(
+name|struct
+name|ssh_digest_ctx
+modifier|*
+name|from
+parameter_list|,
+name|struct
+name|ssh_digest_ctx
+modifier|*
+name|to
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -190,12 +233,6 @@ end_empty_stmt
 begin_comment
 comment|/* Update API */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|ssh_digest_ctx
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|struct

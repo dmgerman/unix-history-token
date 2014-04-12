@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-ed25519.c,v 1.1 2013/12/06 13:39:49 markus Exp $ */
+comment|/* $OpenBSD: ssh-ed25519.c,v 1.3 2014/02/23 20:03:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"crypto_api.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -141,6 +147,29 @@ argument_list|(
 literal|"%s: no ED25519 key"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|datalen
+operator|>=
+name|UINT_MAX
+operator|-
+name|crypto_sign_ed25519_BYTES
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s: datalen %u too long"
+argument_list|,
+name|__func__
+argument_list|,
+name|datalen
 argument_list|)
 expr_stmt|;
 return|return
@@ -293,11 +322,9 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sig
-argument_list|,
-literal|'s'
 argument_list|,
 name|slen
 argument_list|)
@@ -661,29 +688,23 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* XXX compare 'm' and 'data' ? */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sigblob
-argument_list|,
-literal|'s'
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sm
-argument_list|,
-literal|'S'
 argument_list|,
 name|smlen
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|m
-argument_list|,
-literal|'m'
 argument_list|,
 name|smlen
 argument_list|)

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2013 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: cipher-chachapoly.c,v 1.3 2013/12/15 21:42:35 djm Exp $ */
+comment|/* $OpenBSD: cipher-chachapoly.c,v 1.4 2014/01/31 16:39:19 tedu Exp $ */
 end_comment
 
 begin_include
@@ -218,9 +218,11 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* 	 * Run ChaCha20 once to generate the Poly1305 key. The IV is the 	 * packet sequence number. 	 */
-name|bzero
+name|memset
 argument_list|(
 name|poly_key
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -406,7 +408,7 @@ literal|0
 expr_stmt|;
 name|out
 label|:
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|expected_tag
 argument_list|,
@@ -416,7 +418,7 @@ name|expected_tag
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|seqbuf
 argument_list|,
@@ -426,7 +428,7 @@ name|seqbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|poly_key
 argument_list|,

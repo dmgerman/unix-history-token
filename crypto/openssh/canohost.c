@@ -883,9 +883,11 @@ name|a6
 operator|->
 name|sin6_port
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|a4
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.108 2013/12/19 00:10:30 djm Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.109 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -242,11 +242,9 @@ condition|(
 name|pass
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|pass
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -1640,11 +1638,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|memset
+name|explicit_bzero
 argument_list|(
 name|p2
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -1704,11 +1700,9 @@ else|:
 literal|"un"
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|p1
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(

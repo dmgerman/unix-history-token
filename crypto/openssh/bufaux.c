@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bufaux.c,v 1.54 2014/01/12 08:13:13 djm Exp $ */
+comment|/* $OpenBSD: bufaux.c,v 1.56 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -752,7 +752,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|ret
 argument_list|,
@@ -1334,11 +1334,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|p
-argument_list|,
-literal|'\0'
 argument_list|,
 name|len
 argument_list|)
@@ -1509,11 +1507,9 @@ operator|+
 name|pad
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|buf
-argument_list|,
-literal|'\0'
 argument_list|,
 name|l
 operator|+

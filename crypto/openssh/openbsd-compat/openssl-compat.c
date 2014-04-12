@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.c,v 1.16 2014/01/17 07:00:41 dtucker Exp $ */
+comment|/* $Id: openssl-compat.c,v 1.17 2014/02/13 05:38:33 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -364,6 +364,42 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_EVP_MD_CTX_COPY_EX
+end_ifndef
+
+begin_function
+name|int
+name|EVP_MD_CTX_copy_ex
+parameter_list|(
+name|EVP_MD_CTX
+modifier|*
+name|out
+parameter_list|,
+specifier|const
+name|EVP_MD_CTX
+modifier|*
+name|in
+parameter_list|)
+block|{
+return|return
+name|EVP_MD_CTX_copy
+argument_list|(
+name|out
+argument_list|,
+name|in
+argument_list|)
 return|;
 block|}
 end_function

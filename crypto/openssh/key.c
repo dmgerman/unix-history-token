@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.c,v 1.115 2014/01/09 23:20:00 djm Exp $ */
+comment|/* $OpenBSD: key.c,v 1.116 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1023,13 +1023,11 @@ operator|->
 name|ed25519_pk
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|k
 operator|->
 name|ed25519_pk
-argument_list|,
-literal|0
 argument_list|,
 name|ED25519_PK_SZ
 argument_list|)
@@ -1055,13 +1053,11 @@ operator|->
 name|ed25519_sk
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|k
 operator|->
 name|ed25519_sk
-argument_list|,
-literal|0
 argument_list|,
 name|ED25519_SK_SZ
 argument_list|)
@@ -1984,11 +1980,9 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|blob
-argument_list|,
-literal|0
 argument_list|,
 name|len
 argument_list|)
@@ -3214,11 +3208,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|memset
+name|explicit_bzero
 argument_list|(
 name|dgst_raw
-argument_list|,
-literal|0
 argument_list|,
 name|dgst_raw_len
 argument_list|)
@@ -9251,15 +9243,13 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|memset
+name|explicit_bzero
 argument_list|(
 name|buffer_ptr
 argument_list|(
 operator|&
 name|b
 argument_list|)
-argument_list|,
-literal|0
 argument_list|,
 name|len
 argument_list|)

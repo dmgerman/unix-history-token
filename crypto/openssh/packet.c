@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.191 2013/12/06 13:34:54 markus Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.192 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3151,39 +3151,33 @@ argument_list|(
 name|mac
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|enc
 operator|->
 name|iv
-argument_list|,
-literal|0
 argument_list|,
 name|enc
 operator|->
 name|iv_len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|enc
 operator|->
 name|key
-argument_list|,
-literal|0
 argument_list|,
 name|enc
 operator|->
 name|key_len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|mac
 operator|->
 name|key
-argument_list|,
-literal|0
 argument_list|,
 name|mac
 operator|->
@@ -3371,7 +3365,7 @@ name|crypt_type
 argument_list|)
 expr_stmt|;
 comment|/* Deleting the keys does not gain extra security */
-comment|/* memset(enc->iv,  0, enc->block_size); 	   memset(enc->key, 0, enc->key_len); 	   memset(mac->key, 0, mac->key_len); */
+comment|/* explicit_bzero(enc->iv,  enc->block_size); 	   explicit_bzero(enc->key, enc->key_len); 	   explicit_bzero(mac->key, mac->key_len); */
 if|if
 condition|(
 operator|(
@@ -4097,11 +4091,9 @@ block|}
 else|else
 block|{
 comment|/* clear padding */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|cp
-argument_list|,
-literal|0
 argument_list|,
 name|padlen
 argument_list|)

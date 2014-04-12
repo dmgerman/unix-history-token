@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.99 2013/10/16 22:49:38 djm Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.101 2014/02/23 20:11:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -181,10 +181,6 @@ modifier|*
 name|kbd_interactive_devices
 decl_stmt|;
 comment|/* Keyboard-interactive auth devices. */
-name|int
-name|zero_knowledge_password_authentication
-decl_stmt|;
-comment|/* Try jpake */
 name|int
 name|batch_mode
 decl_stmt|;
@@ -655,6 +651,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|fill_default_options_for_canonicalization
+parameter_list|(
+name|Options
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|process_config_line
 parameter_list|(
@@ -733,6 +739,17 @@ name|int
 name|default_ssh_port
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|option_clear_or_none
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
