@@ -9468,6 +9468,7 @@ block|,
 literal|"NMI_INTERRUPT_TRM"
 block|,
 literal|"NMI_INTERRUPT_BREAKPOINT"
+block|,
 literal|"DEBUG_0"
 block|,
 literal|"DEBUG_1"
