@@ -2768,6 +2768,50 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Check if a function by a certain name exists.  */
+end_comment
+
+begin_function
+name|int
+name|isfunc
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|struct
+name|tblentry
+modifier|*
+name|cmdp
+decl_stmt|;
+name|cmdp
+operator|=
+name|cmdlookup
+argument_list|(
+name|name
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|cmdp
+operator|!=
+name|NULL
+operator|&&
+name|cmdp
+operator|->
+name|cmdtype
+operator|==
+name|CMDFUNCTION
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Shared code for the following builtin commands:  *    type, command -v, command -V  */
 end_comment
 
