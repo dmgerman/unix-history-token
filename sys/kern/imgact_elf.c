@@ -9394,6 +9394,7 @@ name|sb
 operator|!=
 name|NULL
 condition|)
+block|{
 name|sbuf_bcat
 argument_list|(
 name|sb
@@ -9403,6 +9404,14 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|sizep
 operator|=
