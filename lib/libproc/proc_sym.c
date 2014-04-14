@@ -384,7 +384,7 @@ operator|->
 name|rdl_saddr
 operator|&&
 name|addr
-operator|<=
+operator|<
 name|rdl
 operator|->
 name|rdl_eaddr
@@ -813,7 +813,7 @@ operator|->
 name|kve_start
 operator|&&
 name|addr
-operator|<=
+operator|<
 name|kve
 operator|->
 name|kve_end
@@ -1045,7 +1045,7 @@ operator|->
 name|rdl_saddr
 operator|&&
 name|addr
-operator|<=
+operator|<
 name|rdl
 operator|->
 name|rdl_eaddr
