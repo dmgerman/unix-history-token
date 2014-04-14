@@ -16811,7 +16811,7 @@ begin_define
 define|#
 directive|define
 name|MSK_MAXTXSEGS
-value|32
+value|35
 end_define
 
 begin_define

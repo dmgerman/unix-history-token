@@ -4325,7 +4325,7 @@ begin_define
 define|#
 directive|define
 name|RL_NTXSEGS
-value|32
+value|35
 end_define
 
 begin_define
