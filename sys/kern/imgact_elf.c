@@ -9328,10 +9328,6 @@ operator|=
 operator|*
 name|sizep
 expr_stmt|;
-name|buf
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|size
@@ -9354,6 +9350,11 @@ name|M_ZERO
 operator||
 name|M_WAITOK
 argument_list|)
+expr_stmt|;
+else|else
+name|buf
+operator|=
+name|NULL
 expr_stmt|;
 name|size
 operator|=
@@ -9394,7 +9395,6 @@ name|sb
 operator|!=
 name|NULL
 condition|)
-block|{
 name|sbuf_bcat
 argument_list|(
 name|sb
@@ -9411,7 +9411,6 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|sizep
 operator|=
