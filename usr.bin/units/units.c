@@ -3626,13 +3626,6 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|el_source
-argument_list|(
-name|el
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|el_set
 argument_list|(
 name|el
@@ -3670,6 +3663,13 @@ argument_list|,
 name|history
 argument_list|,
 name|inhistory
+argument_list|)
+expr_stmt|;
+name|el_source
+argument_list|(
+name|el
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|history
