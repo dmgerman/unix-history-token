@@ -1650,7 +1650,7 @@ name|FSE_AZ_TX_DESCQ_FLS_DONE_EV
 case|:
 block|{
 name|uint32_t
-name|label
+name|txq_index
 decl_stmt|;
 name|EFX_EV_QSTAT_INCR
 argument_list|(
@@ -1659,7 +1659,7 @@ argument_list|,
 name|EV_DRIVER_TX_DESCQ_FLS_DONE
 argument_list|)
 expr_stmt|;
-name|label
+name|txq_index
 operator|=
 name|EFX_QWORD_FIELD
 argument_list|(
@@ -1675,7 +1675,7 @@ name|tx_descq_fls_done
 argument_list|,
 name|uint32_t
 argument_list|,
-name|label
+name|txq_index
 argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT
@@ -1695,7 +1695,7 @@ name|eec_txq_flush_done
 argument_list|(
 name|arg
 argument_list|,
-name|label
+name|txq_index
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1705,12 +1705,12 @@ name|FSE_AZ_RX_DESCQ_FLS_DONE_EV
 case|:
 block|{
 name|uint32_t
-name|label
+name|rxq_index
 decl_stmt|;
 name|uint32_t
 name|failed
 decl_stmt|;
-name|label
+name|rxq_index
 operator|=
 name|EFX_QWORD_FIELD
 argument_list|(
@@ -1766,7 +1766,7 @@ name|rx_descq_fls_failed
 argument_list|,
 name|uint32_t
 argument_list|,
-name|label
+name|rxq_index
 argument_list|)
 expr_stmt|;
 name|should_abort
@@ -1777,7 +1777,7 @@ name|eec_rxq_flush_failed
 argument_list|(
 name|arg
 argument_list|,
-name|label
+name|rxq_index
 argument_list|)
 expr_stmt|;
 block|}
@@ -1796,7 +1796,7 @@ name|rx_descq_fls_done
 argument_list|,
 name|uint32_t
 argument_list|,
-name|label
+name|rxq_index
 argument_list|)
 expr_stmt|;
 name|should_abort
@@ -1807,7 +1807,7 @@ name|eec_rxq_flush_done
 argument_list|(
 name|arg
 argument_list|,
-name|label
+name|rxq_index
 argument_list|)
 expr_stmt|;
 block|}

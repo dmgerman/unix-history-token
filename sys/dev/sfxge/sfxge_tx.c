@@ -3,6 +3,10 @@ begin_comment
 comment|/*-  * Copyright (c) 2010-2011 Solarflare Communications, Inc.  * All rights reserved.  *  * This software was developed in part by Philip Paeps under contract for  * Solarflare Communications, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_comment
+comment|/* Theory of operation:  *  * Tx queues allocation and mapping  *  * One Tx queue with enabled checksum offload is allocated per Rx channel  * (event queue).  Also 2 Tx queues (one without checksum offload and one  * with IP checksum offload only) are allocated and bound to event queue 0.  * sfxge_txq_type is used as Tx queue label.  *  * So, event queue plus label mapping to Tx queue index is:  *	if event queue index is 0, TxQ-index = TxQ-label * [0..SFXGE_TXQ_NTYPES)  *	else TxQ-index = SFXGE_TXQ_NTYPES + EvQ-index - 1  * See sfxge_get_txq_by_label() sfxge_ev.c  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -5255,7 +5259,9 @@ name|enp
 argument_list|,
 name|index
 argument_list|,
-name|index
+name|txq
+operator|->
+name|type
 argument_list|,
 name|esmp
 argument_list|,
