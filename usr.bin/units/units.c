@@ -1364,7 +1364,7 @@ operator|+
 literal|1
 operator|)
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 operator|*
 name|ptr
