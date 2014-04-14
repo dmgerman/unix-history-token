@@ -3440,7 +3440,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: units [-f unitsfile] [-q] [-v] [from-unit to-unit]\n"
+literal|"usage: units [-f unitsfile] [-UVq] [from-unit to-unit]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3522,7 +3522,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Vqf:"
+literal|"UVqf:"
 argument_list|)
 operator|)
 operator|!=
@@ -3569,6 +3569,39 @@ case|:
 name|quiet
 operator|=
 name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+if|if
+condition|(
+name|access
+argument_list|(
+name|UNITSFILE
+argument_list|,
+name|F_OK
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|UNITSFILE
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Units data file not found"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
