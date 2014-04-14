@@ -15387,7 +15387,7 @@ begin_define
 define|#
 directive|define
 name|BGE_NSEG_NEW
-value|32
+value|35
 end_define
 
 begin_define

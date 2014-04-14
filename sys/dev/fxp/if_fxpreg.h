@@ -1328,7 +1328,7 @@ begin_define
 define|#
 directive|define
 name|FXP_NTXSEG
-value|32
+value|35
 end_define
 
 begin_struct
