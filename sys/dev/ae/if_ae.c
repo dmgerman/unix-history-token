@@ -801,7 +801,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|ae_rxeof
 parameter_list|(
 name|ae_softc_t
@@ -9425,7 +9425,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ae_rxeof
 parameter_list|(
 name|ae_softc_t
@@ -9517,11 +9517,12 @@ argument_list|,
 literal|"Runt frame received."
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
+name|ifp
+operator|->
+name|if_ierrors
+operator|++
+expr_stmt|;
+return|return;
 block|}
 name|m
 operator|=
@@ -9550,11 +9551,14 @@ name|m
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|ENOBUFS
-operator|)
-return|;
+block|{
+name|ifp
+operator|->
+name|if_iqdrops
+operator|++
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -9599,6 +9603,11 @@ operator||=
 name|M_VLANTAG
 expr_stmt|;
 block|}
+name|ifp
+operator|->
+name|if_ipackets
+operator|++
+expr_stmt|;
 comment|/* 	 * Pass it through. 	 */
 name|AE_UNLOCK
 argument_list|(
@@ -9622,11 +9631,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -9654,8 +9658,6 @@ name|flags
 decl_stmt|;
 name|int
 name|count
-decl_stmt|,
-name|error
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -9789,19 +9791,9 @@ name|flags
 operator|&
 name|AE_RXD_SUCCESS
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
-continue|continue;
-block|}
-name|error
-operator|=
 name|ae_rxeof
 argument_list|(
 name|sc
@@ -9809,28 +9801,12 @@ argument_list|,
 name|rxd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
+else|else
 name|ifp
 operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
-continue|continue;
-block|}
-else|else
-block|{
-name|ifp
-operator|->
-name|if_ipackets
-operator|++
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
