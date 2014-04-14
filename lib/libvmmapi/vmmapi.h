@@ -518,7 +518,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vm_isa_deassert_irq
+name|vm_isa_assert_irq
 parameter_list|(
 name|struct
 name|vmctx
@@ -536,7 +536,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vm_isa_pulse_irq
+name|vm_isa_deassert_irq
 parameter_list|(
 name|struct
 name|vmctx
