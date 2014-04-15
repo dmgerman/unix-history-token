@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_db_factory.c,v 1.9 2008/02/09 14:56:20 junyoung Exp $ */
+comment|/*	$NetBSD: citrus_db_factory.c,v 1.10 2013/09/14 13:05:51 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -1033,56 +1033,6 @@ operator|*
 name|rofs
 operator|+=
 literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|put16
-parameter_list|(
-name|struct
-name|_region
-modifier|*
-name|r
-parameter_list|,
-name|size_t
-modifier|*
-name|rofs
-parameter_list|,
-name|uint16_t
-name|val
-parameter_list|)
-block|{
-name|val
-operator|=
-name|htons
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|_region_offset
-argument_list|(
-name|r
-argument_list|,
-operator|*
-name|rofs
-argument_list|)
-argument_list|,
-operator|&
-name|val
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-operator|*
-name|rofs
-operator|+=
-literal|2
 expr_stmt|;
 block|}
 end_function

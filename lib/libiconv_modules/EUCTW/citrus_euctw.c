@@ -293,8 +293,8 @@ literal|2
 case|:
 return|return
 operator|(
-literal|2
-operator|^
+literal|1
+operator|<<
 name|cs
 operator|)
 return|;

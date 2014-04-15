@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_iconv.c,v 1.7 2008/07/25 14:05:25 christos Exp $ */
+comment|/*	$NetBSD: citrus_iconv.c,v 1.10 2011/11/19 18:34:21 tnozaki Exp $	*/
 end_comment
 
 begin_comment
@@ -718,9 +718,15 @@ name|io_convert
 operator|==
 name|NULL
 condition|)
+block|{
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 comment|/* initialize the converter */
 name|ret
 operator|=

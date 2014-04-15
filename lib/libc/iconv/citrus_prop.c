@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_prop.c,v 1.3 2006/11/22 23:47:21 tnozaki Exp $ */
+comment|/* $NetBSD: citrus_prop.c,v 1.4 2011/03/30 08:22:01 jruoho Exp $ */
 end_comment
 
 begin_comment

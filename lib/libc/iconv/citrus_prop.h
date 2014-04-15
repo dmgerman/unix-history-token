@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_prop.h,v 1.3 2006/11/23 13:59:03 tnozaki Exp $ */
+comment|/* $NetBSD: citrus_prop.h,v 1.5 2011/05/23 14:52:32 joerg Exp $ */
 end_comment
 
 begin_comment
@@ -235,7 +235,7 @@ define|#
 directive|define
 name|_CITRUS_PROP_HINT_END
 define|\
-value|{ NULL, _CITRUS_PROP_NUM, { .num = { 0 } } }
+value|{ .name = NULL }
 end_define
 
 begin_function_decl

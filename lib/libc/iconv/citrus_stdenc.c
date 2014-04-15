@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_stdenc.c,v 1.3 2005/10/29 18:02:04 tshiozak Exp $ */
+comment|/*	$NetBSD: citrus_stdenc.c,v 1.4 2011/11/19 18:39:58 tnozaki Exp $	*/
 end_comment
 
 begin_comment
@@ -395,9 +395,15 @@ name|eo_get_state_desc
 operator|==
 name|NULL
 condition|)
+block|{
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 comment|/* allocate traits */
 name|ce
 operator|->
