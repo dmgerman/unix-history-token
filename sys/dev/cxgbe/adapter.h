@@ -856,6 +856,10 @@ name|first_txq
 decl_stmt|;
 comment|/* index of first tx queue */
 name|int
+name|rsrv_noflowq
+decl_stmt|;
+comment|/* Reserve queue 0 for non-flowid packets */
+name|int
 name|nrxq
 decl_stmt|;
 comment|/* # of rx queues */
