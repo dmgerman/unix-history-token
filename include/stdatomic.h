@@ -611,7 +611,7 @@ begin_typedef
 typedef|typedef
 atomic|_Atomic
 argument_list|(
-name|__wchar_t
+name|___wchar_t
 argument_list|)
 name|atomic_wchar_t
 typedef|;

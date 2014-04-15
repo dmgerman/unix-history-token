@@ -368,7 +368,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|__ct_rune_t
-name|__wchar_t
+name|___wchar_t
 typedef|;
 end_typedef
 
