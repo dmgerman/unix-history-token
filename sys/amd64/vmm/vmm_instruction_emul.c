@@ -120,6 +120,8 @@ literal|0
 block|,
 name|VIE_OP_TYPE_MOV
 block|,
+name|VIE_OP_TYPE_MOVSX
+block|,
 name|VIE_OP_TYPE_MOVZX
 block|,
 name|VIE_OP_TYPE_AND
@@ -184,6 +186,22 @@ operator|.
 name|op_type
 operator|=
 name|VIE_OP_TYPE_MOVZX
+block|, 	}
+block|,
+index|[
+literal|0xBE
+index|]
+operator|=
+block|{
+operator|.
+name|op_byte
+operator|=
+literal|0xBE
+block|,
+operator|.
+name|op_type
+operator|=
+name|VIE_OP_TYPE_MOVSX
 block|, 	}
 block|, }
 decl_stmt|;
@@ -1114,7 +1132,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|emulate_movzx
+name|emulate_movx
 parameter_list|(
 name|void
 modifier|*
@@ -1218,6 +1236,79 @@ condition|)
 name|size
 operator|=
 literal|8
+expr_stmt|;
+comment|/* write the result */
+name|error
+operator|=
+name|vie_update_register
+argument_list|(
+name|vm
+argument_list|,
+name|vcpuid
+argument_list|,
+name|reg
+argument_list|,
+name|val
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0xBE
+case|:
+comment|/* 		 * MOV and sign extend byte from mem (ModRM:r/m) to 		 * reg (ModRM:reg). 		 * 		 * 0F BE/r		movsx r/m8, r32 		 * REX.W + 0F BE/r	movsx r/m8, r64 		 */
+comment|/* get the first operand */
+name|error
+operator|=
+name|memread
+argument_list|(
+name|vm
+argument_list|,
+name|vcpuid
+argument_list|,
+name|gpa
+argument_list|,
+operator|&
+name|val
+argument_list|,
+literal|1
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+break|break;
+comment|/* get the second operand */
+name|reg
+operator|=
+name|gpr_map
+index|[
+name|vie
+operator|->
+name|reg
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|vie
+operator|->
+name|rex_w
+condition|)
+name|size
+operator|=
+literal|8
+expr_stmt|;
+comment|/* sign extend byte */
+name|val
+operator|=
+operator|(
+name|int8_t
+operator|)
+name|val
 expr_stmt|;
 comment|/* write the result */
 name|error
@@ -1705,11 +1796,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|VIE_OP_TYPE_MOVSX
+case|:
+case|case
 name|VIE_OP_TYPE_MOVZX
 case|:
 name|error
 operator|=
-name|emulate_movzx
+name|emulate_movx
 argument_list|(
 name|vm
 argument_list|,
