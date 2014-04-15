@@ -215,6 +215,12 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -236,12 +242,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_endif
@@ -2817,12 +2817,34 @@ init|=
 operator|~
 literal|0UL
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|u_int
 name|hw_tsomax
 init|=
 name|IP_MAXPACKET
 decl_stmt|;
 comment|/* Initialize to the maximum value. */
+else|#
+directive|else
+name|u_int
+name|hw_tsomax
+init|=
+operator|~
+literal|0
+decl_stmt|;
+comment|/* if_hw_tsomax is only for INET/INET6, but.. */
+endif|#
+directive|endif
 name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
