@@ -451,6 +451,8 @@ modifier|*
 name|sc
 decl_stmt|;
 name|off_t
+name|iolen
+decl_stmt|,
 name|pos
 decl_stmt|,
 name|upos
@@ -587,6 +589,12 @@ name|pp2
 operator|->
 name|sectorsize
 expr_stmt|;
+name|iolen
+operator|=
+name|bp
+operator|->
+name|bio_completed
+expr_stmt|;
 name|pos
 operator|=
 name|sc
@@ -605,7 +613,8 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: done: start_blk %d, pos %jd, upos %jd (%jd, %d, %zd)\n"
+literal|"%s: done: start_blk %d, pos %jd, upos %jd, iolen %jd "
+literal|"(%jd, %d, %zd)\n"
 operator|,
 name|gp
 operator|->
@@ -622,6 +631,11 @@ operator|(
 name|intmax_t
 operator|)
 name|upos
+operator|,
+operator|(
+name|intmax_t
+operator|)
+name|iolen
 operator|,
 operator|(
 name|intmax_t
@@ -742,6 +756,37 @@ operator|+=
 name|ulen
 expr_stmt|;
 continue|continue;
+block|}
+if|if
+condition|(
+name|len
+operator|>
+name|iolen
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"%s: done: early termination: len (%jd)> "
+literal|"iolen (%jd)\n"
+operator|,
+name|gp
+operator|->
+name|name
+operator|,
+operator|(
+name|intmax_t
+operator|)
+name|len
+operator|,
+operator|(
+name|intmax_t
+operator|)
+name|iolen
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|zs
 operator|.
@@ -936,6 +981,10 @@ argument_list|)
 expr_stmt|;
 name|pos
 operator|+=
+name|len
+expr_stmt|;
+name|iolen
+operator|-=
 name|len
 expr_stmt|;
 name|upos
@@ -1479,6 +1528,11 @@ index|]
 operator|%
 name|bsize
 expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
 name|bp2
 operator|->
 name|bio_length
@@ -1512,6 +1566,40 @@ name|bsize
 operator|*
 name|bsize
 expr_stmt|;
+if|if
+condition|(
+name|bp2
+operator|->
+name|bio_length
+operator|<
+name|MAXPHYS
+condition|)
+break|break;
+name|end_blk
+operator|--
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"%s: bio_length (%jd)> MAXPHYS: lowering end_blk "
+literal|"to %u\n"
+operator|,
+name|gp
+operator|->
+name|name
+operator|,
+operator|(
+name|intmax_t
+operator|)
+name|bp2
+operator|->
+name|bio_length
+operator|,
+name|end_blk
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|DPRINTF
 argument_list|(
 operator|(
