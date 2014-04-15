@@ -4946,7 +4946,7 @@ modifier|*
 name|lun
 decl_stmt|;
 name|bool
-name|found_lun0
+name|found_lun
 decl_stmt|;
 name|int
 name|error
@@ -5037,7 +5037,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|found_lun0
+name|found_lun
 operator|=
 name|false
 expr_stmt|;
@@ -5068,15 +5068,7 @@ operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
-name|lun
-operator|->
-name|l_lun
-operator|==
-literal|0
-condition|)
-name|found_lun0
+name|found_lun
 operator|=
 name|true
 expr_stmt|;
@@ -5084,13 +5076,12 @@ block|}
 if|if
 condition|(
 operator|!
-name|found_lun0
+name|found_lun
 condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"mandatory LUN 0 not configured "
-literal|"for target \"%s\""
+literal|"no LUNs defined for target \"%s\""
 argument_list|,
 name|targ
 operator|->
