@@ -4543,7 +4543,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Spindown the vcpu if the apic is disabled and it 			 * had entered the halted state. 			 */
+comment|/* 			 * Spindown the vcpu if the APIC is disabled and it 			 * had entered the halted state, but never spin 			 * down the BSP. 			 */
+if|if
+condition|(
+name|vcpuid
+operator|!=
+literal|0
+condition|)
 name|spindown
 operator|=
 literal|1
