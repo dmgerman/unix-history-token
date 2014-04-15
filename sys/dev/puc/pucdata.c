@@ -3683,7 +3683,7 @@ literal|0x1fd4
 block|,
 literal|0x0102
 block|,
-literal|"Sunix MIOxxxx 2-port serial and 1284 Printer port"
+literal|"Sunix MIO5xxxx 2-port serial and 1284 Printer port"
 block|,
 name|DEFAULT_RCLK
 operator|*
