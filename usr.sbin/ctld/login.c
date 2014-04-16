@@ -3943,7 +3943,7 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"beginning parameter negotiation; "
+literal|"beginning operational parameter negotiation; "
 literal|"waiting for Login PDU"
 argument_list|)
 expr_stmt|;
@@ -4082,7 +4082,7 @@ expr_stmt|;
 block|}
 name|log_debugx
 argument_list|(
-literal|"parameter negotiation done; "
+literal|"operational parameter negotiation done; "
 literal|"transitioning to Full Feature Phase"
 argument_list|)
 expr_stmt|;
@@ -4859,7 +4859,7 @@ comment|/* 		 * Initiator might want to to authenticate, 		 * but we don't need 
 name|log_debugx
 argument_list|(
 literal|"authentication not required; "
-literal|"transitioning to parameter negotiation"
+literal|"transitioning to operational parameter negotiation"
 argument_list|)
 expr_stmt|;
 if|if
