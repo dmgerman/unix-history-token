@@ -518,6 +518,9 @@ decl_stmt|;
 name|bool
 name|conf_default_ag_defined
 decl_stmt|;
+name|bool
+name|conf_kernel_port_on
+decl_stmt|;
 block|}
 struct|;
 end_struct
