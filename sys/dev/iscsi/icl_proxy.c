@@ -629,6 +629,10 @@ name|struct
 name|socket
 modifier|*
 parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 parameter_list|)
@@ -1188,6 +1192,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 call|(
 name|ils
@@ -1198,6 +1203,8 @@ name|il_accept
 call|)
 argument_list|(
 name|so
+argument_list|,
+name|sa
 argument_list|,
 name|ils
 operator|->

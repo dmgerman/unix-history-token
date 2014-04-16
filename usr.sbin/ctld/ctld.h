@@ -21,6 +21,29 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ICL_KERNEL_PROXY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -1428,9 +1451,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * ICL_KERNEL_PROXY  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ICL_KERNEL_PROXY
+end_ifdef
 
 begin_function_decl
 name|void
@@ -1461,6 +1486,15 @@ parameter_list|,
 name|int
 modifier|*
 name|portal_id
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|client_sa
+parameter_list|,
+name|socklen_t
+modifier|*
+name|client_salen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1488,6 +1522,11 @@ name|pdu
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|struct
