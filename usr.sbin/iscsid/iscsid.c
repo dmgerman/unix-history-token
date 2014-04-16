@@ -788,6 +788,15 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ICL_KERNEL_PROXY
+if|if
+condition|(
+name|conn
+operator|->
+name|conn_conf
+operator|.
+name|isc_iser
+condition|)
+block|{
 name|memset
 argument_list|(
 operator|&
@@ -927,15 +936,22 @@ name|log_err
 argument_list|(
 literal|1
 argument_list|,
-literal|"failed to connect to %s using ICL kernel proxy"
+literal|"failed to connect to %s "
+literal|"using ICL kernel proxy: ISCSIDCONNECT"
 argument_list|,
 name|to_addr
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* !ICL_KERNEL_PROXY */
+return|return
+operator|(
+name|conn
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* ICL_KERNEL_PROXY */
 if|if
 condition|(
 name|conn
@@ -1112,9 +1128,6 @@ name|to_addr
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* !ICL_KERNEL_PROXY */
 return|return
 operator|(
 name|conn
@@ -1167,9 +1180,6 @@ name|conn
 operator|->
 name|conn_session_id
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ICL_KERNEL_PROXY
 name|idh
 operator|.
 name|idh_socket
@@ -1178,8 +1188,6 @@ name|conn
 operator|->
 name|conn_socket
 expr_stmt|;
-endif|#
-directive|endif
 name|strlcpy
 argument_list|(
 name|idh

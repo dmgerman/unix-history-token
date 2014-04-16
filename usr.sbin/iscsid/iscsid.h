@@ -68,14 +68,9 @@ block|{
 name|int
 name|conn_iscsi_fd
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|ICL_KERNEL_PROXY
 name|int
 name|conn_socket
 decl_stmt|;
-endif|#
-directive|endif
 name|unsigned
 name|int
 name|conn_session_id
