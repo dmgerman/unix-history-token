@@ -5618,7 +5618,7 @@ name|log_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"failed to enable CTL iSCSI port, exiting"
+literal|"failed to enable CTL iSCSI port; exiting"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8255,7 +8255,7 @@ name|log_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"configuration error, exiting"
+literal|"configuration error; exiting"
 argument_list|)
 expr_stmt|;
 if|if
@@ -8297,7 +8297,7 @@ name|log_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"failed to apply configuration, exiting"
+literal|"failed to apply configuration; exiting"
 argument_list|)
 expr_stmt|;
 name|conf_delete
