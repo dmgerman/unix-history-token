@@ -106,6 +106,14 @@ file|"ctld.h"
 end_include
 
 begin_decl_stmt
+name|bool
+name|proxy_mode
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|volatile
 name|bool
@@ -2582,29 +2590,6 @@ name|colons
 init|=
 literal|0
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|ICL_KERNEL_PROXY
-if|if
-condition|(
-name|iser
-condition|)
-block|{
-name|log_warnx
-argument_list|(
-literal|"ctld(8) compiled without ICL_KERNEL_PROXY "
-literal|"does not support iSER protocol"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
 name|portal
 operator|=
 name|portal_new
@@ -5394,16 +5379,11 @@ literal|0
 decl_stmt|,
 name|error
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|ICL_KERNEL_PROXY
 name|int
 name|one
 init|=
 literal|1
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|oldconf
@@ -6392,6 +6372,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|ICL_KERNEL_PROXY
+if|if
+condition|(
+name|proxy_mode
+condition|)
+block|{
 name|log_debugx
 argument_list|(
 literal|"listening on %s, portal-group \"%s\" using ICL proxy"
@@ -6416,8 +6401,17 @@ operator|->
 name|p_iser
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+continue|continue;
+block|}
+endif|#
+directive|endif
+name|assert
+argument_list|(
+name|proxy_mode
+operator|==
+name|false
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|newp
@@ -6645,9 +6639,6 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-endif|#
-directive|endif
-comment|/* !ICL_KERNEL_PROXY */
 block|}
 block|}
 comment|/* 	 * Go through the no longer used sockets, closing them. 	 */
@@ -7077,9 +7068,6 @@ name|connection
 modifier|*
 name|conn
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|ICL_KERNEL_PROXY
 name|struct
 name|sockaddr_storage
 name|ss
@@ -7095,8 +7083,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-endif|#
-directive|endif
 name|pid_t
 name|pid
 decl_stmt|;
@@ -7242,13 +7228,28 @@ ifdef|#
 directive|ifdef
 name|ICL_KERNEL_PROXY
 comment|/* 	 * XXX 	 */
+if|if
+condition|(
+name|proxy_mode
+condition|)
+block|{
 name|log_set_peer_addr
 argument_list|(
 literal|"XXX"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
+block|{
+endif|#
+directive|endif
+name|assert
+argument_list|(
+name|proxy_mode
+operator|==
+name|false
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|getpeername
@@ -7351,6 +7352,10 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ICL_KERNEL_PROXY
+block|}
 endif|#
 directive|endif
 name|conn
@@ -7427,12 +7432,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ICL_KERNEL_PROXY
-end_ifndef
-
 begin_function
 specifier|static
 name|int
@@ -7486,11 +7485,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -7521,8 +7515,8 @@ name|ICL_KERNEL_PROXY
 name|int
 name|connection_id
 decl_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
 name|fd_set
 name|fdset
 decl_stmt|;
@@ -7533,8 +7527,6 @@ name|nfds
 decl_stmt|,
 name|client_fd
 decl_stmt|;
-endif|#
-directive|endif
 name|pidfile_write
 argument_list|(
 name|conf
@@ -7558,6 +7550,11 @@ return|return;
 ifdef|#
 directive|ifdef
 name|ICL_KERNEL_PROXY
+if|if
+condition|(
+name|proxy_mode
+condition|)
+block|{
 name|connection_id
 operator|=
 name|kernel_accept
@@ -7570,7 +7567,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * XXX: This is obviously temporary. 		 */
+comment|/* 			 * XXX: This is obviously temporary. 			 */
 name|pg
 operator|=
 name|TAILQ_FIRST
@@ -7600,8 +7597,18 @@ argument_list|,
 name|dont_fork
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
+block|{
+endif|#
+directive|endif
+name|assert
+argument_list|(
+name|proxy_mode
+operator|==
+name|false
+argument_list|)
+expr_stmt|;
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -7754,9 +7761,12 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ICL_KERNEL_PROXY
+block|}
 endif|#
 directive|endif
-comment|/* !ICL_KERNEL_PROXY */
 block|}
 block|}
 end_function
@@ -8026,7 +8036,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"df:"
+literal|"df:R"
 argument_list|)
 operator|)
 operator|!=
@@ -8056,6 +8066,27 @@ case|:
 name|config_path
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+ifndef|#
+directive|ifndef
+name|ICL_KERNEL_PROXY
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"ctld(8) compiled without ICL_KERNEL_PROXY "
+literal|"does not support iSER protocol"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|proxy_mode
+operator|=
+name|true
 expr_stmt|;
 break|break;
 case|case
@@ -8133,9 +8164,6 @@ operator|=
 name|debug
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ICL_KERNEL_PROXY
 name|log_debugx
 argument_list|(
 literal|"enabling CTL iSCSI port"
@@ -8159,8 +8187,6 @@ argument_list|,
 literal|"failed to enable CTL iSCSI port, exiting"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|conf_apply
@@ -8195,34 +8221,6 @@ expr_stmt|;
 name|register_signals
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ICL_KERNEL_PROXY
-name|log_debugx
-argument_list|(
-literal|"enabling CTL iSCSI port"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|kernel_port_on
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-name|log_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"failed to enable CTL iSCSI port, exiting"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|dont_daemonize
