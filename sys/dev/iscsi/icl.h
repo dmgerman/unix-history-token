@@ -463,6 +463,9 @@ decl_stmt|;
 name|bool
 name|ils_disconnecting
 decl_stmt|;
+name|int
+name|ils_id
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -491,6 +494,8 @@ parameter_list|(
 name|struct
 name|socket
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 block|}
@@ -554,6 +559,8 @@ parameter_list|(
 name|struct
 name|socket
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -596,6 +603,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|sa
+parameter_list|,
+name|int
+name|portal_id
 parameter_list|)
 function_decl|;
 end_function_decl

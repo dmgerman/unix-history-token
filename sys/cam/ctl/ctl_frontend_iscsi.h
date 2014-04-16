@@ -231,6 +231,9 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ICL_KERNEL_PROXY
+name|int
+name|cs_portal_id
+decl_stmt|;
 name|bool
 name|cs_login_phase
 decl_stmt|;
