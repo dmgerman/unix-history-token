@@ -1562,9 +1562,6 @@ decl_stmt|;
 name|int
 name|fault_type
 decl_stmt|;
-name|int
-name|protection
-decl_stmt|;
 block|}
 name|paging
 struct|;
@@ -1590,14 +1587,22 @@ comment|/* 		 * VMX specific payload. Used when there is no "better" 		 * exitco
 struct|struct
 block|{
 name|int
-name|error
+name|status
 decl_stmt|;
-comment|/* vmx inst error */
+comment|/* vmx inst status */
+comment|/* 			 * 'exit_reason' and 'exit_qualification' are valid 			 * only if 'status' is zero. 			 */
 name|uint32_t
 name|exit_reason
 decl_stmt|;
 name|uint64_t
 name|exit_qualification
+decl_stmt|;
+comment|/* 			 * 'inst_error' and 'inst_type' are valid 			 * only if 'status' is non-zero. 			 */
+name|int
+name|inst_type
+decl_stmt|;
+name|int
+name|inst_error
 decl_stmt|;
 block|}
 name|vmx

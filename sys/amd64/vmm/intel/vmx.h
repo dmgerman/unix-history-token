@@ -43,16 +43,6 @@ struct|struct
 name|vmxctx
 block|{
 name|register_t
-name|tmpstk
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/* vmx_return() stack */
-name|register_t
-name|tmpstktop
-decl_stmt|;
-name|register_t
 name|guest_rdi
 decl_stmt|;
 comment|/* Guest state */
@@ -128,11 +118,7 @@ name|host_rip
 decl_stmt|;
 comment|/* 	 * XXX todo debug registers and fpu state 	 */
 name|int
-name|launched
-decl_stmt|;
-comment|/* vmcs launch state */
-name|int
-name|launch_error
+name|inst_fail_status
 decl_stmt|;
 name|long
 name|eptgen
@@ -314,107 +300,54 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|VMX_RETURN_DIRECT
+name|VMX_GUEST_VMEXIT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMX_RETURN_LONGJMP
+name|VMX_VMRESUME_ERROR
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMX_RETURN_VMRESUME
+name|VMX_VMLAUNCH_ERROR
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMX_RETURN_VMLAUNCH
+name|VMX_INVEPT_ERROR
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|VMX_RETURN_AST
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMX_RETURN_INVEPT
-value|5
-end_define
-
-begin_comment
-comment|/*  * vmx_setjmp() returns:  * - 0 when it returns directly  * - 1 when it returns from vmx_longjmp  * - 2 when it returns from vmx_resume (which would only be in the error case)  * - 3 when it returns from vmx_launch (which would only be in the error case)  * - 4 when it returns from vmx_resume or vmx_launch because of AST pending  * - 5 when it returns from vmx_launch/vmx_resume because of invept error  */
-end_comment
-
 begin_function_decl
 name|int
-name|vmx_setjmp
+name|vmx_enter_guest
 parameter_list|(
 name|struct
 name|vmxctx
 modifier|*
 name|ctx
+parameter_list|,
+name|int
+name|launched
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|vmx_longjmp
+name|vmx_exit_guest
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* returns via vmx_setjmp */
-end_comment
-
-begin_decl_stmt
-name|void
-name|vmx_launch
-argument_list|(
-expr|struct
-name|vmxctx
-operator|*
-name|ctx
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* may return via vmx_setjmp */
-end_comment
-
-begin_decl_stmt
-name|void
-name|vmx_resume
-argument_list|(
-expr|struct
-name|vmxctx
-operator|*
-name|ctx
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* may return via vmx_setjmp */
-end_comment
 
 begin_function_decl
 name|u_long
