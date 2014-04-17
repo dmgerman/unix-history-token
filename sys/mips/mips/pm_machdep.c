@@ -2082,7 +2082,7 @@ name|mcp
 operator|->
 name|mc_tls
 expr_stmt|;
-comment|/* Dont let user to set any bits in Status and casue registers */
+comment|/* Dont let user to set any bits in status and cause registers. */
 return|return
 operator|(
 literal|0
