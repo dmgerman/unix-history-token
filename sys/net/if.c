@@ -254,6 +254,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -3182,7 +3188,20 @@ name|ifp
 operator|->
 name|if_hw_tsomax
 operator|=
+name|min
+argument_list|(
 name|IP_MAXPACKET
+argument_list|,
+literal|32
+operator|*
+name|MCLBYTES
+operator|-
+operator|(
+name|ETHER_HDR_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
+operator|)
+argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
