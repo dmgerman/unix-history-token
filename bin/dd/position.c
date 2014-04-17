@@ -77,6 +77,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -264,6 +270,13 @@ block|}
 else|else
 operator|--
 name|cnt
+expr_stmt|;
+if|if
+condition|(
+name|need_summary
+condition|)
+name|summary
+argument_list|()
 expr_stmt|;
 continue|continue;
 block|}

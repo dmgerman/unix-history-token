@@ -50,6 +50,30 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * There are currently six tables:  *  *	ebcdic		-> ascii	32V		conv=oldascii  *	ascii		-> ebcdic	32V		conv=oldebcdic  *	ascii		-> ibm ebcdic	32V		conv=oldibm  *  *	ebcdic		-> ascii	POSIX/S5	conv=ascii  *	ascii		-> ebcdic	POSIX/S5	conv=ebcdic  *	ascii		-> ibm ebcdic	POSIX/S5	conv=ibm  *  * Other tables are built from these if multiple conversions are being  * done.  *  * Tables used for conversions to/from IBM and EBCDIC to support an extension  * to POSIX P1003.2/D11. The tables referencing POSIX contain data extracted  * from tables 4-3 and 4-4 in P1003.2/Draft 11.  The historic tables were  * constructed by running against a file with all possible byte values.  *  * More information can be obtained in "Correspondences of 8-Bit and Hollerith  * Codes for Computer Environments-A USASI Tutorial", Communications of the  * ACM, Volume 11, Number 11, November 1968, pp. 783-789.  */
 end_comment

@@ -326,6 +326,13 @@ begin_comment
 comment|/* Character to fill with if defined */
 end_comment
 
+begin_decl_stmt
+specifier|volatile
+name|sig_atomic_t
+name|need_summary
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -365,7 +372,7 @@ name|signal
 argument_list|(
 name|SIGINFO
 argument_list|,
-name|summaryx
+name|siginfo_handler
 argument_list|)
 expr_stmt|;
 operator|(
@@ -393,6 +400,14 @@ argument_list|()
 expr_stmt|;
 name|dd_close
 argument_list|()
+expr_stmt|;
+comment|/* 	 * Some devices such as cfi(4) may perform significant amounts 	 * of work when a write descriptor is closed.  Close the out 	 * descriptor explicitly so that the summary handler (called 	 * from an atexit() hook) includes this work. 	 */
+name|close
+argument_list|(
+name|out
+operator|.
+name|fd
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
@@ -1236,11 +1251,6 @@ argument_list|(
 operator|&
 name|tv
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1890,6 +1900,15 @@ name|cfunc
 call|)
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|need_summary
+condition|)
+block|{
+name|summary
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
