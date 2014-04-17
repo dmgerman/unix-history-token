@@ -125,22 +125,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|yytext
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|yyin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|fileindex
 decl_stmt|;
@@ -215,13 +199,6 @@ specifier|extern
 name|struct
 name|termios
 name|ttysaved
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|interactive
 decl_stmt|;
 end_decl_stmt
 
