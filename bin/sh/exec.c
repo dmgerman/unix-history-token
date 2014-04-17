@@ -2701,7 +2701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delete a function if it exists.  */
+comment|/*  * Delete a function if it exists.  * Called with interrupts off.  */
 end_comment
 
 begin_function

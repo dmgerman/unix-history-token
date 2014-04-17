@@ -1159,6 +1159,8 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
+name|INTOFF
+expr_stmt|;
 name|nameeq
 operator|=
 name|ckmalloc
@@ -1213,6 +1215,8 @@ name|nameeq
 argument_list|,
 name|flags
 argument_list|)
+expr_stmt|;
+name|INTON
 expr_stmt|;
 block|}
 end_function
@@ -1352,6 +1356,8 @@ name|char
 modifier|*
 name|ss
 decl_stmt|;
+name|INTOFF
+expr_stmt|;
 name|ss
 operator|=
 name|savestr
@@ -1414,6 +1420,8 @@ name|ckfree
 argument_list|(
 name|ss
 argument_list|)
+expr_stmt|;
+name|INTON
 expr_stmt|;
 return|return;
 block|}
@@ -1680,6 +1688,8 @@ operator|&
 name|VNOSET
 condition|)
 return|return;
+name|INTOFF
+expr_stmt|;
 name|vp
 operator|=
 name|ckmalloc
@@ -1721,8 +1731,6 @@ operator|->
 name|func
 operator|=
 name|NULL
-expr_stmt|;
-name|INTOFF
 expr_stmt|;
 operator|*
 name|vpp
@@ -3517,6 +3525,8 @@ name|var
 modifier|*
 name|vp
 decl_stmt|;
+name|INTOFF
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3644,6 +3654,8 @@ name|lvp
 argument_list|)
 expr_stmt|;
 block|}
+name|INTON
+expr_stmt|;
 block|}
 end_function
 
@@ -3794,6 +3806,8 @@ name|flg_var
 operator|=
 literal|1
 expr_stmt|;
+name|INTOFF
+expr_stmt|;
 for|for
 control|(
 name|ap
@@ -3832,6 +3846,8 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
+name|INTON
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -3839,7 +3855,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unset the specified variable.  */
+comment|/*  * Unset the specified variable.  * Called with interrupts off.  */
 end_comment
 
 begin_function
@@ -3899,8 +3915,6 @@ operator|(
 literal|1
 operator|)
 return|;
-name|INTOFF
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -4019,8 +4033,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-name|INTON
-expr_stmt|;
 return|return
 operator|(
 literal|0
