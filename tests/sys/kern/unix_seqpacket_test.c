@@ -4776,7 +4776,7 @@ literal|2
 index|]
 decl_stmt|;
 specifier|const
-name|int
+name|ssize_t
 name|pktsize
 init|=
 literal|1024
