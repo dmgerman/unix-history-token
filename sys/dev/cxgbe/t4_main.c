@@ -22730,7 +22730,7 @@ literal|0
 argument_list|,
 name|sysctl_temperature
 argument_list|,
-literal|"A"
+literal|"I"
 argument_list|,
 literal|"chip temperature (in Celsius)"
 argument_list|)
