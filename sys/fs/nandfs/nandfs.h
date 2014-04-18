@@ -588,9 +588,6 @@ decl_stmt|;
 name|int
 name|nd_cleaner_exit
 decl_stmt|;
-name|int
-name|nd_is_nand
-decl_stmt|;
 name|struct
 name|nandfs_fsarea
 name|nd_fsarea
