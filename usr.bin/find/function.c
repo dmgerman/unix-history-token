@@ -7363,6 +7363,9 @@ name|entry
 name|__unused
 parameter_list|)
 block|{
+name|finish_execplus
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
