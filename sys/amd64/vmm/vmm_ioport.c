@@ -111,6 +111,12 @@ operator|=
 name|vatpit_handler
 block|,
 index|[
+name|NMISC_PORT
+index|]
+operator|=
+name|vatpit_nmisc_handler
+block|,
+index|[
 name|IO_ICU1
 index|]
 operator|=
