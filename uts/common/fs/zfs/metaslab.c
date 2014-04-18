@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2623,7 +2623,7 @@ name|msp
 operator|->
 name|ms_lbas
 index|[
-name|highbit
+name|highbit64
 argument_list|(
 name|align
 argument_list|)
@@ -2729,7 +2729,7 @@ name|msp
 operator|->
 name|ms_lbas
 index|[
-name|highbit
+name|highbit64
 argument_list|(
 name|align
 argument_list|)
@@ -3210,7 +3210,7 @@ decl_stmt|;
 name|uint64_t
 name|hbit
 init|=
-name|highbit
+name|highbit64
 argument_list|(
 name|size
 argument_list|)
@@ -4267,7 +4267,7 @@ name|mg_vd
 decl_stmt|;
 name|i
 operator|=
-name|highbit
+name|highbit64
 argument_list|(
 name|msp
 operator|->

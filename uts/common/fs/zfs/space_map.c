@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1084,7 +1084,7 @@ name|size
 else|:
 literal|1ULL
 operator|<<
-name|highbit
+name|highbit64
 argument_list|(
 name|size
 argument_list|)
