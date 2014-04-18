@@ -710,6 +710,9 @@ decl_stmt|;
 name|uint32_t
 name|nd_devblocksize
 decl_stmt|;
+name|uint32_t
+name|nd_segs_reserved
+decl_stmt|;
 comment|/* Segment usage */
 name|uint64_t
 name|nd_clean_segs

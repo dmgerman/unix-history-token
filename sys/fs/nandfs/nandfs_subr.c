@@ -4415,7 +4415,9 @@ operator|->
 name|nd_dirty_bufs
 operator|+
 operator|(
-literal|10
+name|nffsdev
+operator|->
+name|nd_segs_reserved
 operator|*
 name|bps
 operator|)

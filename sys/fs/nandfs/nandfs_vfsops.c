@@ -3526,6 +3526,25 @@ name|nd_fakevblk
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * FIXME: bogus calculation. Should use actual number of usable segments 	 * instead of total amount. 	 */
+name|nandfsdev
+operator|->
+name|nd_segs_reserved
+operator|=
+name|nandfsdev
+operator|->
+name|nd_fsdata
+operator|.
+name|f_nsegments
+operator|*
+name|nandfsdev
+operator|->
+name|nd_fsdata
+operator|.
+name|f_r_segments_percentage
+operator|/
+literal|100
+expr_stmt|;
 name|nandfsdev
 operator|->
 name|nd_last_ino
@@ -3538,7 +3557,8 @@ name|VOLUMES
 argument_list|,
 operator|(
 literal|"%s: last_pseg %#jx last_cno %#jx last_seq %#jx\n"
-literal|"fsdev: last_seg: seq %#jx num %#jx, next_seg_num %#jx\n"
+literal|"fsdev: last_seg: seq %#jx num %#jx, next_seg_num %#jx "
+literal|"segs_reserved %#jx\n"
 operator|,
 name|__func__
 operator|,
@@ -3583,6 +3603,13 @@ operator|)
 name|nandfsdev
 operator|->
 name|nd_next_seg_num
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|nandfsdev
+operator|->
+name|nd_segs_reserved
 operator|)
 argument_list|)
 expr_stmt|;
