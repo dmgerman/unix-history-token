@@ -3960,6 +3960,14 @@ operator|=
 literal|4096
 expr_stmt|;
 break|break;
+case|case
+name|LIBUSB20_SPEED_SUPER
+case|:
+name|ret
+operator|=
+literal|65536
+expr_stmt|;
+break|break;
 default|default:
 name|ret
 operator|=
