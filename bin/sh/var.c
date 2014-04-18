@@ -1511,6 +1511,26 @@ name|flags
 operator|&
 name|VREADONLY
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|VTEXTFIXED
+operator||
+name|VSTACK
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|ckfree
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"%.*s: is read only"
@@ -1522,6 +1542,7 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|flags
