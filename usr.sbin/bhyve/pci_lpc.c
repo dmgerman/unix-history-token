@@ -958,11 +958,6 @@ argument_list|(
 literal|"}"
 argument_list|)
 expr_stmt|;
-name|dsdt_unindent
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|dsdt_line
 argument_list|(
 literal|""
@@ -1023,6 +1018,11 @@ expr_stmt|;
 name|dsdt_line
 argument_list|(
 literal|"}"
+argument_list|)
+expr_stmt|;
+name|dsdt_unindent
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|dsdt_line
