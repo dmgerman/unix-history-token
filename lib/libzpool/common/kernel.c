@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -3416,18 +3416,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find highest one bit set.  *	Returns bit number + 1 of highest bit that is set, otherwise returns 0.  * High order bit is 31 (or 63 in _LP64 kernel).  */
+comment|/*  * Find highest one bit set.  *	Returns bit number + 1 of highest bit that is set, otherwise returns 0.  */
 end_comment
 
 begin_function
 name|int
-name|highbit
+name|highbit64
 parameter_list|(
-name|ulong_t
+name|uint64_t
 name|i
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|h
 init|=
@@ -3444,14 +3443,11 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|_LP64
 if|if
 condition|(
 name|i
 operator|&
-literal|0xffffffff00000000ul
+literal|0xffffffff00000000ULL
 condition|)
 block|{
 name|h
@@ -3463,8 +3459,6 @@ operator|>>=
 literal|32
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|i
