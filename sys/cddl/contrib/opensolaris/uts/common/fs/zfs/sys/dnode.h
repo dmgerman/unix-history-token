@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -507,8 +507,10 @@ index|[
 name|TXG_SIZE
 index|]
 decl_stmt|;
-name|avl_tree_t
-name|dn_ranges
+name|struct
+name|range_tree
+modifier|*
+name|dn_free_ranges
 index|[
 name|TXG_SIZE
 index|]
@@ -927,24 +929,6 @@ name|off
 parameter_list|,
 name|uint64_t
 name|len
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-name|tx
-parameter_list|)
-function_decl|;
-name|void
-name|dnode_clear_range
-parameter_list|(
-name|dnode_t
-modifier|*
-name|dn
-parameter_list|,
-name|uint64_t
-name|blkid
-parameter_list|,
-name|uint64_t
-name|nblks
 parameter_list|,
 name|dmu_tx_t
 modifier|*

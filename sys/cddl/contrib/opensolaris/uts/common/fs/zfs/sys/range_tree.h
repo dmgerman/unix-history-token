@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -332,6 +332,20 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|uint64_t
+name|start
+parameter_list|,
+name|uint64_t
+name|size
+parameter_list|)
+function_decl|;
+name|void
+name|range_tree_clear
+parameter_list|(
+name|range_tree_t
+modifier|*
+name|rt
 parameter_list|,
 name|uint64_t
 name|start

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sa_impl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/range_tree.h>
 end_include
 
 begin_comment
@@ -6201,19 +6207,35 @@ operator|->
 name|dn_mtx
 argument_list|)
 expr_stmt|;
-name|dnode_clear_range
+if|if
+condition|(
+name|dn
+operator|->
+name|dn_free_ranges
+index|[
+name|txgoff
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
+name|range_tree_clear
 argument_list|(
 name|dn
+operator|->
+name|dn_free_ranges
+index|[
+name|txgoff
+index|]
 argument_list|,
 name|db
 operator|->
 name|db_blkid
 argument_list|,
 literal|1
-argument_list|,
-name|tx
 argument_list|)
 expr_stmt|;
+block|}
 name|mutex_exit
 argument_list|(
 operator|&

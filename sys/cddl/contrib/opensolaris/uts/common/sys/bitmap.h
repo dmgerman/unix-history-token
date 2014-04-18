@@ -8,6 +8,10 @@ comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
+comment|/*  * Copyright (c) 2014 by Delphix. All rights reserved.  */
+end_comment
+
+begin_comment
 comment|/*	Copyright (c) 1984, 1986, 1987, 1988, 1989 AT&T	*/
 end_comment
 
@@ -26,13 +30,6 @@ define|#
 directive|define
 name|_SYS_BITMAP_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -356,6 +353,13 @@ name|int
 name|highbit
 parameter_list|(
 name|ulong_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|highbit64
+parameter_list|(
+name|uint64_t
 parameter_list|)
 function_decl|;
 specifier|extern
