@@ -175,13 +175,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|zfs_mg_alloc_failures
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * The following actions directly effect the spa's sync-to-convergence logic.  * The values below define the sync pass when we start performing the action.  * Care should be taken when changing these values as they directly impact  * spa_sync() performance. Tuning these values may introduce subtle performance  * pathologies and should only be done in the context of performance analysis.  * These tunables will eventually be removed and replaced with #defines once  * enough analysis has been done to determine optimal values.  *  * The 'zfs_sync_pass_deferred_free' pass must be greater than 1 to ensure that  * regular blocks are not deferred.  */
 end_comment
@@ -664,28 +657,6 @@ name|c
 index|]
 expr_stmt|;
 block|}
-comment|/* 	 * The zio write taskqs have 1 thread per cpu, allow 1/2 of the taskqs 	 * to fail 3 times per txg or 8 failures, whichever is greater. 	 */
-if|if
-condition|(
-name|zfs_mg_alloc_failures
-operator|==
-literal|0
-condition|)
-name|zfs_mg_alloc_failures
-operator|=
-name|MAX
-argument_list|(
-operator|(
-literal|3
-operator|*
-name|max_ncpus
-operator|/
-literal|2
-operator|)
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
 name|zio_inject_init
 argument_list|()
 expr_stmt|;

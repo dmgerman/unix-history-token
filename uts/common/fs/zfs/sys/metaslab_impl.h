@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -122,9 +122,6 @@ name|mg_metaslab_tree
 decl_stmt|;
 name|uint64_t
 name|mg_aliquot
-decl_stmt|;
-name|uint64_t
-name|mg_alloc_failures
 decl_stmt|;
 name|boolean_t
 name|mg_allocatable
