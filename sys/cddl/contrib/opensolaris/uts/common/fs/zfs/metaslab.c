@@ -82,7 +82,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Allow allocations to switch to gang blocks quickly. We do this to  * avoid having to load lots of space_maps in a given txg. There are,  * however, some cases where we want to avoid "fast" ganging and instead  * we want to do an exhaustive search of all metaslabs on this device.  * Currently we don't allow any gang, zil, or dump device related allocations  * to "fast" gang.  */
+comment|/*  * Allow allocations to switch to gang blocks quickly. We do this to  * avoid having to load lots of space_maps in a given txg. There are,  * however, some cases where we want to avoid "fast" ganging and instead  * we want to do an exhaustive search of all metaslabs on this device.  * Currently we don't allow any gang, slog, or dump device related allocations  * to "fast" gang.  */
 end_comment
 
 begin_define
@@ -215,50 +215,6 @@ literal|0
 argument_list|,
 literal|"Condense on-disk spacemap when it is more than this many percents"
 literal|" of in-memory counterpart"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * This value defines the number of allowed allocation failures per vdev.  * If a device reaches this threshold in a given txg then we consider skipping  * allocations on that device. The value of zfs_mg_alloc_failures is computed  * in zio_init() unless it has been overridden in /etc/system.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|zfs_mg_alloc_failures
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.mg_alloc_failures"
-argument_list|,
-operator|&
-name|zfs_mg_alloc_failures
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_zfs
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|mg_alloc_failures
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|zfs_mg_alloc_failures
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of allowed allocation failures per vdev"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7075,27 +7031,9 @@ modifier|*
 name|mg
 parameter_list|)
 block|{
-name|int64_t
-name|failures
-init|=
-name|mg
-operator|->
-name|mg_alloc_failures
-decl_stmt|;
 name|metaslab_group_alloc_update
 argument_list|(
 name|mg
-argument_list|)
-expr_stmt|;
-name|atomic_add_64
-argument_list|(
-operator|&
-name|mg
-operator|->
-name|mg_alloc_failures
-argument_list|,
-operator|-
-name|failures
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Preload the next potential metaslabs 	 */
@@ -7240,9 +7178,6 @@ name|dva
 parameter_list|,
 name|int
 name|d
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|spa_t
@@ -7382,7 +7317,7 @@ argument_list|,
 literal|"%s: failed to meet weight "
 literal|"requirement: vdev %llu, txg %llu, mg %p, "
 literal|"msp %p, psize %llu, asize %llu, "
-literal|"failures %llu, weight %llu"
+literal|"weight %llu"
 argument_list|,
 name|spa_name
 argument_list|(
@@ -7404,10 +7339,6 @@ argument_list|,
 name|psize
 argument_list|,
 name|asize
-argument_list|,
-name|mg
-operator|->
-name|mg_alloc_failures
 argument_list|,
 name|msp
 operator|->
@@ -7538,82 +7469,6 @@ operator|->
 name|ms_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If we've already reached the allowable number of failed 		 * allocation attempts on this metaslab group then we 		 * consider skipping it. We skip it only if we're allowed 		 * to "fast" gang, the physical size is larger than 		 * a gang block, and we're attempting to allocate from 		 * the primary metaslab. 		 */
-if|if
-condition|(
-name|mg
-operator|->
-name|mg_alloc_failures
-operator|>
-name|zfs_mg_alloc_failures
-operator|&&
-name|CAN_FASTGANG
-argument_list|(
-name|flags
-argument_list|)
-operator|&&
-name|psize
-operator|>
-name|SPA_GANGBLOCKSIZE
-operator|&&
-name|activation_weight
-operator|==
-name|METASLAB_WEIGHT_PRIMARY
-condition|)
-block|{
-name|spa_dbgmsg
-argument_list|(
-name|spa
-argument_list|,
-literal|"%s: skipping metaslab group: "
-literal|"vdev %llu, txg %llu, mg %p, msp[%llu] %p, "
-literal|"psize %llu, asize %llu, failures %llu"
-argument_list|,
-name|spa_name
-argument_list|(
-name|spa
-argument_list|)
-argument_list|,
-name|mg
-operator|->
-name|mg_vd
-operator|->
-name|vdev_id
-argument_list|,
-name|txg
-argument_list|,
-name|mg
-argument_list|,
-name|msp
-operator|->
-name|ms_id
-argument_list|,
-name|msp
-argument_list|,
-name|psize
-argument_list|,
-name|asize
-argument_list|,
-name|mg
-operator|->
-name|mg_alloc_failures
-argument_list|)
-expr_stmt|;
-name|mutex_exit
-argument_list|(
-operator|&
-name|msp
-operator|->
-name|ms_lock
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1ULL
-operator|)
-return|;
-block|}
 comment|/* 		 * Ensure that the metaslab we have selected is still 		 * capable of handling our request. It's possible that 		 * another thread may have changed the weight while we 		 * were blocked on the metaslab lock. 		 */
 if|if
 condition|(
@@ -7745,14 +7600,6 @@ operator|-
 literal|1ULL
 condition|)
 break|break;
-name|atomic_inc_64
-argument_list|(
-operator|&
-name|mg
-operator|->
-name|mg_alloc_failures
-argument_list|)
-expr_stmt|;
 name|metaslab_passivate
 argument_list|(
 name|msp
@@ -8312,8 +8159,6 @@ argument_list|,
 name|dva
 argument_list|,
 name|d
-argument_list|,
-name|flags
 argument_list|)
 expr_stmt|;
 if|if
