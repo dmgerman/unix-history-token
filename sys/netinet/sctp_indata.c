@@ -4759,8 +4759,10 @@ name|stream_number
 condition|)
 block|{
 comment|/* 					 * Huh, need the correct STR here, 					 * they must be the same. 					 */
-name|SCTP_PRINTF
+name|SCTPDBG
 argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
 literal|"Prev check - Gak, Evil plot, sid:%d not the same as at:%d\n"
 argument_list|,
 name|chk
