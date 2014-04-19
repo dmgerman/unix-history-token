@@ -514,9 +514,13 @@ if|#
 directive|if
 name|__BSD_VISIBLE
 operator|||
+operator|(
+name|__XSI_VISIBLE
+operator|&&
 name|__XSI_VISIBLE
 operator|<=
 literal|500
+operator|)
 end_if
 
 begin_define
