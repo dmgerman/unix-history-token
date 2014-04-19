@@ -1127,18 +1127,6 @@ name|CAP_FCNTL_SETFL
 value|(1<< F_SETFL)
 end_define
 
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-operator|||
-name|__XSI_VISIBLE
-operator|||
-name|__POSIX_VISIBLE
-operator|>=
-literal|200112
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1153,46 +1141,12 @@ name|CAP_FCNTL_SETOWN
 value|(1<< F_SETOWN)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-operator|||
-name|__XSI_VISIBLE
-operator|||
-name|__POSIX_VISIBLE
-operator|>=
-literal|200112
-end_if
-
 begin_define
 define|#
 directive|define
 name|CAP_FCNTL_ALL
 value|(CAP_FCNTL_GETFL | CAP_FCNTL_SETFL | \ 				 CAP_FCNTL_GETOWN | CAP_FCNTL_SETOWN)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CAP_FCNTL_ALL
-value|(CAP_FCNTL_GETFL | CAP_FCNTL_SETFL)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
