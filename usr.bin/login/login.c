@@ -2235,29 +2235,6 @@ argument_list|,
 name|ttyn
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Exclude cons/vt/ptys only, assume dialup otherwise 	 * TODO: Make dialup tty determination a library call 	 * for consistency (finger etc.) 	 */
-if|if
-condition|(
-name|hflag
-operator|&&
-name|isdialuptty
-argument_list|(
-name|tty
-argument_list|)
-condition|)
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"DIALUP %s, %s"
-argument_list|,
-name|tty
-argument_list|,
-name|pwd
-operator|->
-name|pw_name
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOGALL
