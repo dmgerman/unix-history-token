@@ -7535,12 +7535,6 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
-argument_list|()
-expr_stmt|;
 name|cpu_tlb_flushID
 argument_list|()
 expr_stmt|;
@@ -8252,19 +8246,6 @@ name|kpmap
 argument_list|,
 name|pmap_curmaxkvaddr
 argument_list|)
-expr_stmt|;
-comment|/* 	 * flush out the cache, expensive but growkernel will happen so 	 * rarely 	 */
-name|cpu_dcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_tlb_flushD
-argument_list|()
-expr_stmt|;
-name|cpu_cpwait
-argument_list|()
 expr_stmt|;
 name|kernel_vm_end
 operator|=
