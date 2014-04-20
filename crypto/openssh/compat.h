@@ -243,8 +243,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSH_BUG_LARGEWINDOW
+name|SSH_BUG_CURVE25519PAD
 value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_BUG_LARGEWINDOW
+value|0x80000000
 end_define
 
 begin_function_decl
@@ -302,6 +309,17 @@ begin_function_decl
 name|char
 modifier|*
 name|compat_pkalg_proposal
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|compat_kex_proposal
 parameter_list|(
 name|char
 modifier|*
