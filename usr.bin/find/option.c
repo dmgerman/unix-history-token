@@ -400,7 +400,7 @@ block|,
 block|{
 literal|"-ignore_readdir_race"
 block|,
-name|c_simple
+name|c_ignore_readdir_race
 block|,
 name|f_always_true
 block|,
@@ -816,7 +816,7 @@ block|,
 block|{
 literal|"-noignore_readdir_race"
 block|,
-name|c_simple
+name|c_ignore_readdir_race
 block|,
 name|f_always_true
 block|,

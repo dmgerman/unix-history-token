@@ -178,6 +178,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|ignore_readdir_race
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ignore readdir race */
+end_comment
+
+begin_decl_stmt
+name|int
 name|isdeprecated
 decl_stmt|;
 end_decl_stmt
