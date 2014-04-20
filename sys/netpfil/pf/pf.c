@@ -814,23 +814,11 @@ name|V_pf_sources_z
 value|VNET(pf_sources_z)
 end_define
 
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
+begin_decl_stmt
 name|uma_zone_t
-argument_list|,
 name|pf_mtag_z
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_pf_mtag_z
-value|VNET(pf_mtag_z)
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1782,7 +1770,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pf_mtag_init
+name|pf_mtag_uminit
 parameter_list|(
 name|void
 modifier|*
@@ -4186,8 +4174,47 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|pf_mtag_initialize
+parameter_list|()
+block|{
+name|pf_mtag_z
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"pf mtags"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|m_tag
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pf_mtag
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|pf_mtag_uminit
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/* Data storage structures initialization. */
+comment|/* Per-vnet data storage structures initialization. */
 end_comment
 
 begin_function
@@ -4594,38 +4621,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* Mbuf tags */
-name|V_pf_mtag_z
-operator|=
-name|uma_zcreate
-argument_list|(
-literal|"pf mtags"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|m_tag
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pf_mtag
-argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|pf_mtag_init
-argument_list|,
-name|NULL
-argument_list|,
-name|UMA_ALIGN_PTR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Send& overload+flush queues. */
 name|STAILQ_INIT
 argument_list|(
@@ -4692,6 +4687,19 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pf_mtag_cleanup
+parameter_list|()
+block|{
+name|uma_zdestroy
+argument_list|(
+name|pf_mtag_z
 argument_list|)
 expr_stmt|;
 block|}
@@ -4921,11 +4929,6 @@ argument_list|)
 expr_stmt|;
 name|uma_zdestroy
 argument_list|(
-name|V_pf_mtag_z
-argument_list|)
-expr_stmt|;
-name|uma_zdestroy
-argument_list|(
 name|V_pf_sources_z
 argument_list|)
 expr_stmt|;
@@ -4945,7 +4948,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pf_mtag_init
+name|pf_mtag_uminit
 parameter_list|(
 name|void
 modifier|*
@@ -5021,7 +5024,7 @@ parameter_list|)
 block|{
 name|uma_zfree
 argument_list|(
-name|V_pf_mtag_z
+name|pf_mtag_z
 argument_list|,
 name|t
 argument_list|)
@@ -5081,7 +5084,7 @@ name|mtag
 operator|=
 name|uma_zalloc
 argument_list|(
-name|V_pf_mtag_z
+name|pf_mtag_z
 argument_list|,
 name|M_NOWAIT
 argument_list|)
