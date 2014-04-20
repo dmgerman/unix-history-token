@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION
-value|"OpenSSH_6.6"
+value|"OpenSSH_6.6.1"
 end_define
 
 begin_define

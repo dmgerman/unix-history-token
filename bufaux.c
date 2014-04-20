@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bufaux.c,v 1.56 2014/02/02 03:44:31 djm Exp $ */
+comment|/* $OpenBSD: bufaux.c,v 1.57 2014/04/16 23:22:45 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1446,6 +1446,26 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
+comment|/* Skip leading zero bytes */
+for|for
+control|(
+init|;
+name|l
+operator|>
+literal|0
+operator|&&
+operator|*
+name|s
+operator|==
+literal|0
+condition|;
+name|l
+operator|--
+operator|,
+name|s
+operator|++
+control|)
+empty_stmt|;
 name|p
 operator|=
 name|buf
