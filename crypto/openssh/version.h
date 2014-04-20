@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION
-value|"OpenSSH_6.6"
+value|"OpenSSH_6.6.1"
 end_define
 
 begin_define
@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION_FREEBSD
-value|"FreeBSD-20140324"
+value|"FreeBSD-20140420"
 end_define
 
 begin_define
