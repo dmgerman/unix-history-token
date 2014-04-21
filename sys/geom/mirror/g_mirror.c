@@ -13775,11 +13775,13 @@ name|G_MIRROR_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Cannot destroy %s."
+literal|"Cannot destroy %s (error=%d)."
 argument_list|,
 name|sc
 operator|->
 name|sc_name
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|sx_xunlock
