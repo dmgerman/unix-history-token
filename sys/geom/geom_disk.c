@@ -840,7 +840,7 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_disk_kernedump(%s, %jd, %jd)"
+literal|"g_disk_kerneldump(%s, %jd, %jd)"
 argument_list|,
 name|gp
 operator|->
