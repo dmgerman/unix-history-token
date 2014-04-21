@@ -8546,6 +8546,7 @@ name|if_hwassist
 operator|&
 name|CSUM_TSO
 condition|)
+block|{
 name|cap
 operator|->
 name|ifcap
@@ -8560,6 +8561,7 @@ name|ifp
 operator|->
 name|if_hw_tsomax
 expr_stmt|;
+block|}
 block|}
 name|RTFREE
 argument_list|(
@@ -8779,6 +8781,7 @@ name|if_hwassist
 operator|&
 name|CSUM_TSO
 condition|)
+block|{
 name|cap
 operator|->
 name|ifcap
@@ -8793,6 +8796,7 @@ name|ifp
 operator|->
 name|if_hw_tsomax
 expr_stmt|;
+block|}
 block|}
 name|RTFREE
 argument_list|(
