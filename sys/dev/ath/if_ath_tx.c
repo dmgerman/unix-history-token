@@ -12035,9 +12035,23 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
-literal|"%s: paused = %d\n"
+literal|"%s: [%6D]: tid=%d, paused = %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|,
 name|tid
 operator|->
@@ -12082,13 +12096,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DPRINTF
+name|device_printf
 argument_list|(
 name|sc
+operator|->
+name|sc_dev
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
-argument_list|,
-literal|"%s: %6D: paused=0?\n"
+literal|"%s: [%6D]: tid=%d, paused=0?\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -12101,6 +12115,10 @@ operator|.
 name|ni_macaddr
 argument_list|,
 literal|":"
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|)
 expr_stmt|;
 block|}
@@ -12118,9 +12136,23 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
-literal|"%s: unpaused = %d\n"
+literal|"%s: [%6D]: tid=%d, unpaused = %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|,
 name|tid
 operator|->
