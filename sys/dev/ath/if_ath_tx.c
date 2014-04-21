@@ -16705,7 +16705,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Handle frame completion */
+comment|/* Handle frame completion as individual frames */
 name|bf
 operator|=
 name|bf_first
@@ -16720,6 +16720,12 @@ operator|=
 name|bf
 operator|->
 name|bf_next
+expr_stmt|;
+name|bf
+operator|->
+name|bf_next
+operator|=
+name|NULL
 expr_stmt|;
 name|ath_tx_default_comp
 argument_list|(
@@ -20680,7 +20686,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In case there's a followup call to this, only call it 		 * if we don't have a cleanup in progress. 		 */
+comment|/* 		 * In case there's a followup call to this, only call it 		 * if we don't have a cleanup in progress. 		 */
 if|if
 condition|(
 operator|!
