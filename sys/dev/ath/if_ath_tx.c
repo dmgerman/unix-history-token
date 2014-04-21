@@ -20485,6 +20485,24 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In case there's a followup call to this, only call it 	 * if we don't have a cleanup in progress. 	 * 	 * Since we've paused the queue above, we need to make 	 * sure we unpause if there's already a cleanup in 	 * progress - it means something else is also doing 	 * this stuff, so we don't need to also keep it paused. 	 */
+if|if
+condition|(
+name|atid
+operator|->
+name|cleanup_inprogress
+condition|)
+block|{
+name|ath_tx_tid_resume
+argument_list|(
+name|sc
+argument_list|,
+name|atid
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ath_tx_tid_cleanup
 argument_list|(
 name|sc
@@ -20497,7 +20515,7 @@ operator|&
 name|bf_cq
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unpause the TID if no cleanup is required. 	 */
+comment|/* 		 * Unpause the TID if no cleanup is required. 		 */
 if|if
 condition|(
 operator|!
@@ -20512,6 +20530,7 @@ argument_list|,
 name|atid
 argument_list|)
 expr_stmt|;
+block|}
 name|ATH_TX_UNLOCK
 argument_list|(
 name|sc
@@ -20640,13 +20659,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|ath_tx_tid_pause
-argument_list|(
-name|sc
-argument_list|,
-name|tid
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -20668,6 +20680,22 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In case there's a followup call to this, only call it 		 * if we don't have a cleanup in progress. 		 */
+if|if
+condition|(
+operator|!
+name|tid
+operator|->
+name|cleanup_inprogress
+condition|)
+block|{
+name|ath_tx_tid_pause
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|)
+expr_stmt|;
 name|ath_tx_tid_cleanup
 argument_list|(
 name|sc
@@ -20680,7 +20708,7 @@ operator|&
 name|bf_cq
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Unpause the TID if no cleanup is required. 		 */
+comment|/* 			 * Unpause the TID if no cleanup is required. 			 */
 if|if
 condition|(
 operator|!
@@ -20695,6 +20723,7 @@ argument_list|,
 name|tid
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|ATH_TX_UNLOCK
 argument_list|(
