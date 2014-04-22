@@ -956,8 +956,10 @@ block|}
 comment|/* 	 * Allocate an entry, populate it, and add it to the change list. 	 */
 name|mevp
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -976,19 +978,6 @@ goto|goto
 name|exit
 goto|;
 block|}
-name|memset
-argument_list|(
-name|mevp
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mevent
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|type
