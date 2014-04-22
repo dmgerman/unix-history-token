@@ -1958,6 +1958,9 @@ name|resource
 modifier|*
 name|sc_io_res
 decl_stmt|;
+name|int
+name|sc_irq_rid
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
