@@ -1661,11 +1661,6 @@ operator|->
 name|fts_accpath
 argument_list|)
 expr_stmt|;
-name|acl_free
-argument_list|(
-name|facl
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
