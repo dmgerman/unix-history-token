@@ -1146,6 +1146,7 @@ modifier|*
 name|obj
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -1539,7 +1540,7 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
-name|ucl_object_free
+name|ucl_object_unref
 argument_list|(
 name|obj
 argument_list|)

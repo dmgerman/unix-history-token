@@ -138,11 +138,22 @@ directive|define
 name|HAVE_STDARG_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|HAVE_REGEX_H
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -394,6 +405,29 @@ include|#
 directive|include
 file|<openssl/evp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__DECONST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__DECONST
+parameter_list|(
+name|type
+parameter_list|,
+name|var
+parameter_list|)
+value|((type)(uintptr_t)(const void *)(var))
+end_define
 
 begin_endif
 endif|#
@@ -1387,6 +1421,7 @@ end_function_decl
 begin_function
 specifier|static
 specifier|inline
+specifier|const
 name|ucl_object_t
 modifier|*
 name|ucl_hash_search_obj
@@ -1402,6 +1437,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
+specifier|const
 name|ucl_object_t
 operator|*
 operator|)
@@ -1432,6 +1468,7 @@ name|ucl_hash_t
 operator|*
 name|hashlin
 argument_list|,
+specifier|const
 name|ucl_object_t
 operator|*
 name|obj
@@ -1451,6 +1488,7 @@ name|ucl_hash_t
 modifier|*
 name|hashlin
 parameter_list|,
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1500,6 +1538,7 @@ name|char
 modifier|*
 name|ucl_object_emit_single_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj

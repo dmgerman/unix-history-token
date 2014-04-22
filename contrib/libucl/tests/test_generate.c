@@ -49,6 +49,9 @@ name|cur
 decl_stmt|,
 modifier|*
 name|ar
+decl_stmt|,
+modifier|*
+name|ref
 decl_stmt|;
 name|FILE
 modifier|*
@@ -145,8 +148,6 @@ argument_list|,
 name|UCL_STRING_TRIM
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -173,8 +174,6 @@ operator||
 name|UCL_STRING_ESCAPE
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -199,8 +198,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -215,6 +212,13 @@ name|false
 argument_list|)
 expr_stmt|;
 comment|/* Array of numbers */
+name|ar
+operator|=
+name|ucl_object_typed_new
+argument_list|(
+name|UCL_ARRAY
+argument_list|)
+expr_stmt|;
 name|cur
 operator|=
 name|ucl_object_fromint
@@ -222,11 +226,9 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-name|ar
-operator|=
 name|ucl_array_append
 argument_list|(
-name|NULL
+name|ar
 argument_list|,
 name|cur
 argument_list|)
@@ -238,8 +240,6 @@ argument_list|(
 literal|10.1
 argument_list|)
 expr_stmt|;
-name|ar
-operator|=
 name|ucl_array_append
 argument_list|(
 name|ar
@@ -254,8 +254,6 @@ argument_list|(
 literal|9.999
 argument_list|)
 expr_stmt|;
-name|ar
-operator|=
 name|ucl_array_prepend
 argument_list|(
 name|ar
@@ -271,8 +269,6 @@ argument_list|(
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|ar
-operator|=
 name|ucl_array_append
 argument_list|(
 name|ar
@@ -311,8 +307,6 @@ argument_list|(
 literal|2.0
 argument_list|)
 expr_stmt|;
-name|ar
-operator|=
 name|ucl_array_append
 argument_list|(
 name|ar
@@ -349,8 +343,6 @@ argument_list|(
 literal|3.0
 argument_list|)
 expr_stmt|;
-name|ar
-operator|=
 name|ucl_array_prepend
 argument_list|(
 name|ar
@@ -380,8 +372,6 @@ argument_list|(
 name|cur
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -402,8 +392,14 @@ argument_list|(
 name|true
 argument_list|)
 expr_stmt|;
-name|obj
+comment|/* Ref object to test refcounts */
+name|ref
 operator|=
+name|ucl_object_ref
+argument_list|(
+name|cur
+argument_list|)
+expr_stmt|;
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -429,8 +425,6 @@ argument_list|,
 name|UCL_STRING_TRIM
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -455,8 +449,6 @@ argument_list|,
 name|UCL_STRING_ESCAPE
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -481,8 +473,6 @@ argument_list|,
 name|UCL_STRING_ESCAPE
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -510,8 +500,6 @@ operator||
 name|UCL_STRING_PARSE
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -536,8 +524,6 @@ argument_list|,
 name|UCL_STRING_PARSE
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -562,8 +548,6 @@ argument_list|,
 name|UCL_STRING_PARSE
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -590,8 +574,6 @@ operator||
 name|UCL_STRING_TRIM
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -616,8 +598,6 @@ argument_list|,
 name|UCL_STRING_PARSE_INT
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -642,8 +622,6 @@ argument_list|,
 name|UCL_STRING_PARSE_INT
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -664,8 +642,6 @@ argument_list|(
 name|true
 argument_list|)
 expr_stmt|;
-name|obj
-operator|=
 name|ucl_object_insert_key
 argument_list|(
 name|obj
@@ -718,6 +694,20 @@ block|}
 name|fclose
 argument_list|(
 name|out
+argument_list|)
+expr_stmt|;
+comment|/* Ref should still be accessible */
+name|ref
+operator|->
+name|value
+operator|.
+name|iv
+operator|=
+literal|100500
+expr_stmt|;
+name|ucl_object_unref
+argument_list|(
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
