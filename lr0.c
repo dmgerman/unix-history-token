@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lr0.c,v 1.13 2012/05/26 00:40:47 tom Exp $ */
+comment|/* $Id: lr0.c,v 1.16 2014/04/07 21:53:50 tom Exp $ */
 end_comment
 
 begin_include
@@ -219,7 +219,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|short
+name|Value_t
 modifier|*
 name|shift_symbol
 decl_stmt|;
@@ -275,11 +275,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|short
+name|Value_t
 modifier|*
 name|itemp
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|item_end
 decl_stmt|;
@@ -295,7 +295,7 @@ decl_stmt|;
 name|int
 name|max
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|symbol_count
 decl_stmt|;
@@ -309,7 +309,7 @@ name|NEW2
 argument_list|(
 name|nsyms
 argument_list|,
-name|short
+name|Value_t
 argument_list|)
 expr_stmt|;
 name|item_end
@@ -361,7 +361,7 @@ name|NEW2
 argument_list|(
 name|nsyms
 argument_list|,
-name|short
+name|Value_t
 operator|*
 argument_list|)
 expr_stmt|;
@@ -371,7 +371,7 @@ name|NEW2
 argument_list|(
 name|count
 argument_list|,
-name|short
+name|Value_t
 argument_list|)
 expr_stmt|;
 name|count
@@ -439,7 +439,7 @@ name|NEW2
 argument_list|(
 name|nsyms
 argument_list|,
-name|short
+name|Value_t
 operator|*
 argument_list|)
 expr_stmt|;
@@ -463,7 +463,7 @@ name|NEW2
 argument_list|(
 name|nsyms
 argument_list|,
-name|short
+name|Value_t
 argument_list|)
 expr_stmt|;
 name|redset
@@ -474,7 +474,7 @@ name|nrules
 operator|+
 literal|1
 argument_list|,
-name|short
+name|Value_t
 argument_list|)
 expr_stmt|;
 name|state_set
@@ -682,7 +682,7 @@ name|NEW2
 argument_list|(
 name|nitems
 argument_list|,
-name|short
+name|Value_t
 argument_list|)
 expr_stmt|;
 name|ruleset
@@ -762,15 +762,15 @@ block|{
 name|int
 name|key
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|isp1
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|isp2
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|iend
 decl_stmt|;
@@ -989,7 +989,7 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|start_derives
 decl_stmt|;
@@ -1038,7 +1038,7 @@ name|i
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|Value_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1140,11 +1140,11 @@ decl_stmt|;
 name|int
 name|shiftcount
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|isp
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|ksp
 decl_stmt|;
@@ -1281,15 +1281,15 @@ name|core
 modifier|*
 name|p
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|isp1
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|isp2
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|iend
 decl_stmt|;
@@ -1311,7 +1311,7 @@ if|if
 condition|(
 name|nstates
 operator|>=
-name|MAXSHORT
+name|MAXYYINT
 condition|)
 name|fatal
 argument_list|(
@@ -1365,7 +1365,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|Value_t
 argument_list|)
 operator|)
 argument_list|)
@@ -1441,6 +1441,12 @@ end_function
 begin_comment
 comment|/* show_cores is used for debugging */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
 
 begin_function
 name|void
@@ -1844,6 +1850,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -1856,15 +1867,15 @@ name|shifts
 modifier|*
 name|p
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|sp1
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|sp2
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|send
 decl_stmt|;
@@ -1893,7 +1904,7 @@ argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|Value_t
 argument_list|)
 operator|)
 argument_list|)
@@ -1983,15 +1994,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|short
+name|Value_t
 modifier|*
 name|isp
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|rp1
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|rp2
 decl_stmt|;
@@ -2005,7 +2016,7 @@ name|reductions
 modifier|*
 name|p
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|rend
 decl_stmt|;
@@ -2086,7 +2097,7 @@ argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|Value_t
 argument_list|)
 operator|)
 argument_list|)
@@ -2182,7 +2193,7 @@ decl_stmt|;
 name|int
 name|lhs
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|rules
 decl_stmt|;
@@ -2192,7 +2203,7 @@ name|NEW2
 argument_list|(
 name|nsyms
 argument_list|,
-name|short
+name|Value_t
 operator|*
 argument_list|)
 expr_stmt|;
@@ -2204,7 +2215,7 @@ name|nvars
 operator|+
 name|nrules
 argument_list|,
-name|short
+name|Value_t
 argument_list|)
 expr_stmt|;
 name|k
@@ -2309,7 +2320,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|sp
 decl_stmt|;
@@ -2623,6 +2634,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|derives
+condition|)
+block|{
 name|DO_FREE
 argument_list|(
 name|derives
@@ -2636,6 +2652,7 @@ argument_list|(
 name|derives
 argument_list|)
 expr_stmt|;
+block|}
 name|DO_FREE
 argument_list|(
 name|nullable
