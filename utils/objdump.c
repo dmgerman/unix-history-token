@@ -25,6 +25,7 @@ begin_function
 name|void
 name|ucl_obj_dump
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -61,6 +62,7 @@ name|char
 argument_list|)
 argument_list|)
 decl_stmt|;
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -315,10 +317,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%svalue: %ld\n"
+literal|"%svalue: %jd\n"
 argument_list|,
 name|pre
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ucl_object_toint
 argument_list|(
 name|obj
@@ -534,6 +539,7 @@ name|obj
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|ucl_object_t
 modifier|*
 name|par

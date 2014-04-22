@@ -168,10 +168,12 @@ specifier|static
 name|bool
 name|perform_test
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|schema
 parameter_list|,
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -182,6 +184,8 @@ modifier|*
 name|err
 parameter_list|)
 block|{
+specifier|const
+specifier|const
 name|ucl_object_t
 modifier|*
 name|valid
@@ -309,6 +313,7 @@ specifier|static
 name|int
 name|perform_tests
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -323,6 +328,7 @@ name|iter
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|ucl_object_t
 modifier|*
 name|schema
@@ -507,7 +513,9 @@ modifier|*
 name|obj
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|ucl_object_t
 modifier|*
 name|elt
 decl_stmt|;

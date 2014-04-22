@@ -81,6 +81,7 @@ specifier|static
 name|void
 name|ucl_obj_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -108,6 +109,7 @@ specifier|static
 name|void
 name|ucl_elt_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -135,6 +137,7 @@ specifier|static
 name|void
 name|ucl_elt_write_config
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -165,6 +168,7 @@ specifier|static
 name|void
 name|ucl_elt_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -195,6 +199,7 @@ specifier|static
 name|void
 name|ucl_elt_array_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -550,6 +555,7 @@ specifier|static
 name|void
 name|ucl_elt_obj_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -570,6 +576,7 @@ name|bool
 name|compact
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -848,6 +855,7 @@ specifier|static
 name|void
 name|ucl_elt_array_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -868,6 +876,7 @@ name|bool
 name|compact
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -1051,6 +1060,7 @@ specifier|static
 name|void
 name|ucl_elt_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1332,6 +1342,7 @@ specifier|static
 name|void
 name|ucl_obj_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1352,6 +1363,7 @@ name|bool
 name|compact
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -1548,6 +1560,7 @@ specifier|static
 name|void
 name|ucl_object_emit_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1586,6 +1599,7 @@ specifier|static
 name|void
 name|ucl_elt_obj_write_config
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1606,6 +1620,7 @@ name|bool
 name|is_top
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -1887,6 +1902,7 @@ specifier|static
 name|void
 name|ucl_elt_array_write_config
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1907,6 +1923,7 @@ name|bool
 name|is_top
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -2017,6 +2034,7 @@ specifier|static
 name|void
 name|ucl_elt_write_config
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -2329,6 +2347,7 @@ specifier|static
 name|void
 name|ucl_object_emit_config
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -2362,6 +2381,7 @@ specifier|static
 name|void
 name|ucl_obj_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -2439,6 +2459,7 @@ specifier|static
 name|void
 name|ucl_elt_obj_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -2459,6 +2480,7 @@ name|bool
 name|is_top
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -2705,6 +2727,7 @@ specifier|static
 name|void
 name|ucl_elt_array_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -2725,6 +2748,7 @@ name|bool
 name|is_top
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -2835,6 +2859,7 @@ specifier|static
 name|void
 name|ucl_elt_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -3147,6 +3172,7 @@ specifier|static
 name|void
 name|ucl_object_emit_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -3448,6 +3474,7 @@ name|char
 modifier|*
 name|ucl_object_emit
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -3613,6 +3640,7 @@ begin_function
 name|bool
 name|ucl_object_emit_full
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -3701,6 +3729,7 @@ name|char
 modifier|*
 name|ucl_object_emit_single_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
