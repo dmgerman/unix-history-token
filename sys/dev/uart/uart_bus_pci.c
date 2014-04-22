@@ -672,6 +672,24 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x1fd4
+block|,
+literal|0x1999
+block|,
+literal|0x1fd4
+block|,
+literal|0x0001
+block|,
+literal|"Sunix SER5xxxx Serial Port"
+block|,
+literal|0x10
+block|,
+literal|8
+operator|*
+name|DEFAULT_RCLK
+block|}
+block|,
+block|{
 literal|0x8086
 block|,
 literal|0x1c3d
@@ -723,6 +741,62 @@ block|,
 literal|0
 block|,
 literal|"5 Series/3400 Series Chipset KT Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x8811
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Intel EG20T Serial Port 0"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x8812
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Intel EG20T Serial Port 1"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x8813
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Intel EG20T Serial Port 2"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x8814
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Intel EG20T Serial Port 3"
 block|,
 literal|0x10
 block|}
