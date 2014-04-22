@@ -1371,19 +1371,6 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|port
-operator|->
-name|init_state
-operator|==
-name|SFXGE_PORT_STARTED
-argument_list|,
-operator|(
-literal|"port not started"
-operator|)
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1392,12 +1379,26 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The function may be called without softc_lock held in the 	 * case of SIOCADDMULTI and SIOCDELMULTI ioctls. ioctl handler 	 * checks IFF_DRV_RUNNING flag which implies port started, but 	 * it is not guaranteed to remain. softc_lock shared lock can't 	 * be held in the case of these ioctls processing, since it 	 * results in failure where kernel complains that non-sleepable 	 * lock is held in sleeping thread. Both problems are repeatable 	 * on LAG with LACP proto bring up. 	 */
+if|if
+condition|(
+name|port
+operator|->
+name|init_state
+operator|==
+name|SFXGE_PORT_STARTED
+condition|)
 name|rc
 operator|=
 name|sfxge_mac_filter_set_locked
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+else|else
+name|rc
+operator|=
+literal|0
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
