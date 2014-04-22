@@ -16718,8 +16718,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
+operator|&&
+operator|(
+name|nd
+operator|->
+name|nd_flag
+operator|&
+name|ND_NFSV4
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* Get rid of the PutFH and Getattr status values. */
