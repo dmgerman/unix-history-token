@@ -211,6 +211,29 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: bspatch oldfile newfile patchfile\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -307,17 +330,8 @@ name|argc
 operator|!=
 literal|4
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"usage: %s oldfile newfile patchfile\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 comment|/* Open patch file */
 if|if
