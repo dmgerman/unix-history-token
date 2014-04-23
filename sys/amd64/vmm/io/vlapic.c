@@ -192,11 +192,15 @@ parameter_list|)
 value|mtx_owned(&((vlapic)->timer_mtx))
 end_define
 
+begin_comment
+comment|/*  * APIC timer frequency:  * - arbitrary but chosen to be in the ballpark of contemporary hardware.  * - power-of-two to avoid loss of precision when converted to a bintime.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|VLAPIC_BUS_FREQ
-value|tsc_freq
+value|(128 * 1024 * 1024)
 end_define
 
 begin_function
