@@ -4136,7 +4136,7 @@ name|percent
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Since we ignore an formatting argument it is no  			 * longer safe to obey the remaining formatting 			 * arguments as the arguments will no longer match 			 * the format specs. 			 */
+comment|/* 			 * Since we ignore a formatting argument it is no  			 * longer safe to obey the remaining formatting 			 * arguments as the arguments will no longer match 			 * the format specs. 			 */
 name|stop
 operator|=
 literal|1
