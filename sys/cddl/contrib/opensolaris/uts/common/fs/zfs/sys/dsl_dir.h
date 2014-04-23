@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -64,6 +64,15 @@ directive|endif
 struct_decl|struct
 name|dsl_dataset
 struct_decl|;
+comment|/*  * DD_FIELD_* are strings that are used in the "extensified" dsl_dir zap object.  * They should be of the format<reverse-dns>:<field>.  */
+define|#
+directive|define
+name|DD_FIELD_FILESYSTEM_COUNT
+value|"com.joyent:filesystem_count"
+define|#
+directive|define
+name|DD_FIELD_SNAPSHOT_COUNT
+value|"com.joyent:snapshot_count"
 typedef|typedef
 enum|enum
 name|dd_used
@@ -510,6 +519,47 @@ name|reservation
 parameter_list|)
 function_decl|;
 name|int
+name|dsl_dir_activate_fs_ss_limit
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_fs_ss_limit_check
+parameter_list|(
+name|dsl_dir_t
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|zfs_prop_t
+parameter_list|,
+name|dsl_dir_t
+modifier|*
+parameter_list|,
+name|cred_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|dsl_fs_ss_count_adjust
+parameter_list|(
+name|dsl_dir_t
+modifier|*
+parameter_list|,
+name|int64_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
 name|dsl_dir_rename
 parameter_list|(
 specifier|const
@@ -535,7 +585,16 @@ modifier|*
 name|tdd
 parameter_list|,
 name|uint64_t
+name|fs_cnt
+parameter_list|,
+name|uint64_t
+name|ss_cnt
+parameter_list|,
+name|uint64_t
 name|space
+parameter_list|,
+name|cred_t
+modifier|*
 parameter_list|)
 function_decl|;
 name|boolean_t
@@ -599,6 +658,26 @@ parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
+parameter_list|)
+function_decl|;
+name|void
+name|dsl_dir_zapify
+parameter_list|(
+name|dsl_dir_t
+modifier|*
+name|dd
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|dsl_dir_is_zapified
+parameter_list|(
+name|dsl_dir_t
+modifier|*
+name|dd
 parameter_list|)
 function_decl|;
 comment|/* internal reserved dir name */
