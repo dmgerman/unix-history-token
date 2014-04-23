@@ -2760,7 +2760,7 @@ name|nerr
 operator|++
 expr_stmt|;
 goto|goto
-name|closeall
+name|closefd
 goto|;
 block|}
 name|nsaved
