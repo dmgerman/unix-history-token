@@ -7953,7 +7953,7 @@ case|:
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-comment|/* 		 * If output packets don't require headers (the common case) we 		 * can just load the buffer up with payload bytes all at once. 		 * Otherwise, loop to format packets into the buffer while there 		 * is data available, and room for a packet header and at least 		 * one byte of payload. 		 */
+comment|/* 		 * If output packets don't require headers (the common case) we 		 * can just load the buffer up with payload bytes all at once. 		 * Otherwise, loop to format packets into the buffer while there 		 * is data available, and room for a packet header and at least 		 * one byte of payload. 		 * 		 * NOTE: The FTDI chip doesn't accept zero length 		 * packets. This cannot happen because the "pktlen" 		 * will always be non-zero when "ucom_get_data()" 		 * returns non-zero which we check below. 		 */
 name|pc
 operator|=
 name|usbd_xfer_get_frame
@@ -7972,6 +7972,8 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|ucom_get_data
 argument_list|(
 operator|&
@@ -7988,7 +7990,10 @@ argument_list|,
 operator|&
 name|buflen
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 else|else
 block|{
@@ -9140,7 +9145,7 @@ condition|(
 operator|(
 name|divisor
 operator|&
-literal|0xfffffff0
+literal|0xf
 operator|)
 operator|==
 literal|1
@@ -10895,7 +10900,7 @@ name|UFTDIIOC_SET_ERROR_CHAR
 case|:
 name|err
 operator|=
-name|uftdi_set_event_char
+name|uftdi_set_error_char
 argument_list|(
 name|ucom
 argument_list|,
@@ -10913,7 +10918,7 @@ name|UFTDIIOC_SET_EVENT_CHAR
 case|:
 name|err
 operator|=
-name|uftdi_set_error_char
+name|uftdi_set_event_char
 argument_list|(
 name|ucom
 argument_list|,
@@ -10925,6 +10930,7 @@ operator|)
 name|data
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|UFTDIIOC_GET_HWREV
 case|:
