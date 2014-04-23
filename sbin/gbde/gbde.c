@@ -4109,6 +4109,7 @@ operator|=
 operator|!
 name|i_opt
 expr_stmt|;
+break|break;
 case|case
 literal|'k'
 case|:
