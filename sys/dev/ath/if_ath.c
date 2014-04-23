@@ -22546,6 +22546,11 @@ operator|->
 name|mgmtrate
 argument_list|)
 expr_stmt|;
+name|ATH_NODE_LOCK
+argument_list|(
+name|an
+argument_list|)
+expr_stmt|;
 name|ath_rate_newassoc
 argument_list|(
 name|sc
@@ -22553,6 +22558,11 @@ argument_list|,
 name|an
 argument_list|,
 name|isnew
+argument_list|)
+expr_stmt|;
+name|ATH_NODE_UNLOCK
+argument_list|(
+name|an
 argument_list|)
 expr_stmt|;
 if|if
