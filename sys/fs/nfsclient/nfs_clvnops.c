@@ -17865,13 +17865,8 @@ name|error
 decl_stmt|;
 if|if
 condition|(
-name|NFS_ISV4
-argument_list|(
-name|vp
-argument_list|)
-operator|||
 operator|(
-name|NFS_ISV3
+name|NFS_ISV34
 argument_list|(
 name|vp
 argument_list|)
@@ -17902,9 +17897,22 @@ operator|==
 name|_PC_NO_TRUNC
 operator|)
 operator|)
+operator|||
+operator|(
+name|NFS_ISV4
+argument_list|(
+name|vp
+argument_list|)
+operator|&&
+name|ap
+operator|->
+name|a_name
+operator|==
+name|_PC_ACL_NFS4
+operator|)
 condition|)
 block|{
-comment|/* 		 * Since only the above 4 a_names are returned by the NFSv3 		 * Pathconf RPC, there is no point in doing it for others. 		 */
+comment|/* 		 * Since only the above 4 a_names are returned by the NFSv3 		 * Pathconf RPC, there is no point in doing it for others. 		 * For NFSv4, the Pathconf RPC (actually a Getattr Op.) can 		 * be used for _PC_NFS4_ACL as well. 		 */
 name|error
 operator|=
 name|nfsrpc_pathconf
