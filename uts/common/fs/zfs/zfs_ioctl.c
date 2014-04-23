@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -2231,6 +2231,12 @@ break|break;
 case|case
 name|ZFS_PROP_QUOTA
 case|:
+case|case
+name|ZFS_PROP_FILESYSTEM_LIMIT
+case|:
+case|case
+name|ZFS_PROP_SNAPSHOT_LIMIT
+case|:
 if|if
 condition|(
 operator|!
@@ -2249,7 +2255,7 @@ index|[
 name|MAXNAMELEN
 index|]
 decl_stmt|;
-comment|/* 			 * Unprivileged users are allowed to modify the 			 * quota on things *under* (ie. contained by) 			 * the thing they own. 			 */
+comment|/* 			 * Unprivileged users are allowed to modify the 			 * limit on things *under* (ie. contained by) 			 * the thing they own. 			 */
 if|if
 condition|(
 name|dsl_prop_get_integer
@@ -10329,6 +10335,48 @@ name|source
 argument_list|,
 name|intval
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ZFS_PROP_FILESYSTEM_LIMIT
+case|:
+case|case
+name|ZFS_PROP_SNAPSHOT_LIMIT
+case|:
+if|if
+condition|(
+name|intval
+operator|==
+name|UINT64_MAX
+condition|)
+block|{
+comment|/* clearing the limit, just do it */
+name|err
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|err
+operator|=
+name|dsl_dir_activate_fs_ss_limit
+argument_list|(
+name|dsname
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * Set err to -1 to force the zfs_set_prop_nvlist code down the 		 * default path to set the value in the nvlist. 		 */
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
+name|err
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 break|break;
 case|case

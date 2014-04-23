@@ -79,6 +79,8 @@ name|SPA_FEATURE_EXTENSIBLE_DATASET
 block|,
 name|SPA_FEATURE_BOOKMARKS
 block|,
+name|SPA_FEATURE_FS_SS_LIMIT
+block|,
 name|SPA_FEATURES
 block|}
 name|spa_feature_t

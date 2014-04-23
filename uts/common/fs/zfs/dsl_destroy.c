@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2013 by Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2132,6 +2132,8 @@ operator|->
 name|ds_snapname
 argument_list|,
 name|tx
+argument_list|,
+name|B_TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3201,6 +3203,38 @@ operator|->
 name|dd_phys
 operator|->
 name|dd_head_dataset_obj
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Decrement the filesystem count for all parent filesystems. 	 * 	 * When we receive an incremental stream into a filesystem that already 	 * exists, a temporary clone is created.  We never count this temporary 	 * clone, whose name begins with a '%'. 	 */
+if|if
+condition|(
+name|dd
+operator|->
+name|dd_myname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'%'
+operator|&&
+name|dd
+operator|->
+name|dd_parent
+operator|!=
+name|NULL
+condition|)
+name|dsl_fs_ss_count_adjust
+argument_list|(
+name|dd
+operator|->
+name|dd_parent
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|DD_FIELD_FILESYSTEM_COUNT
+argument_list|,
+name|tx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove our reservation. The impl() routine avoids setting the 	 * actual property, which would require the (already destroyed) ds. 	 */
