@@ -10931,6 +10931,7 @@ name|data
 argument_list|)
 expr_stmt|;
 break|break;
+break|break;
 case|case
 name|UFTDIIOC_GET_HWREV
 case|:
