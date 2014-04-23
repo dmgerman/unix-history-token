@@ -1294,6 +1294,52 @@ directive|endif
 comment|/* 	 * We've resolved the sender, so attempt to transmit it. 	 */
 if|if
 condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_SLEEP
+condition|)
+block|{
+comment|/* 		 * In power save; queue frame and then  wakeup device 		 * for transmit. 		 */
+name|ic
+operator|->
+name|ic_lastdata
+operator|=
+name|ticks
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ieee80211_pwrsave
+argument_list|(
+name|ni
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+name|ieee80211_new_state
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_S_RUN
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|ieee80211_vap_pkt_send_dest
 argument_list|(
 name|vap
@@ -1404,36 +1450,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_state
-operator|==
-name|IEEE80211_S_SLEEP
-condition|)
-block|{
-comment|/* 		 * In power save, wakeup device for transmit. 		 */
-name|ieee80211_new_state
-argument_list|(
-name|vap
-argument_list|,
-name|IEEE80211_S_RUN
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/* 	 * No data frames go out unless we're running. 	 * Note in particular this covers CAC and CSA 	 * states (though maybe we should check muting 	 * for CSA). 	 */
 if|if
 condition|(
@@ -1442,6 +1458,12 @@ operator|->
 name|iv_state
 operator|!=
 name|IEEE80211_S_RUN
+operator|&&
+name|vap
+operator|->
+name|iv_state
+operator|!=
+name|IEEE80211_S_SLEEP
 condition|)
 block|{
 name|IEEE80211_LOCK
@@ -1457,6 +1479,12 @@ operator|->
 name|iv_state
 operator|!=
 name|IEEE80211_S_RUN
+operator|&&
+name|vap
+operator|->
+name|iv_state
+operator|!=
+name|IEEE80211_S_SLEEP
 condition|)
 block|{
 name|IEEE80211_DPRINTF
@@ -1555,7 +1583,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 802.11 raw output routine.  */
+comment|/*  * 802.11 raw output routine.  *  * XXX TODO: this (and other send routines) should correctly  * XXX keep the pwr mgmt bit set if it decides to call into the  * XXX driver to send a frame whilst the state is SLEEP.  *  * Otherwise the peer may decide that we're awake and flood us  * with traffic we are still too asleep to receive!  */
 end_comment
 
 begin_function
