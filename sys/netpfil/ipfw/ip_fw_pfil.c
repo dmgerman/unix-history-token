@@ -1550,9 +1550,15 @@ name|args
 operator|.
 name|oif
 operator|=
+name|dir
+operator|==
+name|PFIL_OUT
+condition|?
 name|dst
+else|:
+name|NULL
 expr_stmt|;
-comment|/* destination, if any			*/
+comment|/* destination, if any	*/
 name|args
 operator|.
 name|next_hop
