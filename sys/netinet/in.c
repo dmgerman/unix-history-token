@@ -3314,6 +3314,8 @@ operator|&
 name|target
 operator|->
 name|ia_addr
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 name|ifa_free
