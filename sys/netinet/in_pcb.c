@@ -3492,7 +3492,6 @@ comment|/*  * Do proper source address selection on an unbound socket in case  *
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|in_pcbladdr
 parameter_list|(
