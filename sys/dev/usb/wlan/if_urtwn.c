@@ -11327,6 +11327,11 @@ name|page
 decl_stmt|,
 name|error
 decl_stmt|;
+name|URTWN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Read firmware image from the filesystem. */
 if|if
 condition|(
@@ -11358,6 +11363,11 @@ operator|=
 name|firmware_get
 argument_list|(
 name|imagename
+argument_list|)
+expr_stmt|;
+name|URTWN_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -15852,6 +15862,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|URTWN_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -16593,6 +16608,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|URTWN_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
