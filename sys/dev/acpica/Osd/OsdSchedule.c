@@ -113,14 +113,6 @@ literal|"SCHEDULE"
 argument_list|)
 end_macro
 
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_debug_acpi
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Allow the user to tune the maximum number of tasks we may enqueue.  */
 end_comment
