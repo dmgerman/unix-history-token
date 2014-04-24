@@ -763,6 +763,7 @@ name|proto
 operator|=
 literal|"tcp"
 expr_stmt|;
+break|break;
 default|default:
 name|__ipsec_errcode
 operator|=
