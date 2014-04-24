@@ -4143,10 +4143,6 @@ name|ip6_hbh
 modifier|*
 name|hbh
 decl_stmt|;
-name|u_int8_t
-modifier|*
-name|opt
-decl_stmt|;
 comment|/* validation of the length of the header */
 ifndef|#
 directive|ifndef
@@ -4325,20 +4321,6 @@ name|hbhlen
 expr_stmt|;
 name|hbhlen
 operator|-=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip6_hbh
-argument_list|)
-expr_stmt|;
-name|opt
-operator|=
-operator|(
-name|u_int8_t
-operator|*
-operator|)
-name|hbh
-operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
