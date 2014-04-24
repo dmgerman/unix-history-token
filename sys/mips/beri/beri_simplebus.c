@@ -594,7 +594,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|simplebus
+name|beri_simplebus
 argument_list|,
 name|ofwbus
 argument_list|,
@@ -612,7 +612,7 @@ end_expr_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|simplebus
+name|beri_simplebus
 argument_list|,
 name|simplebus
 argument_list|,
@@ -668,7 +668,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Flattened device tree simple bus"
+literal|"Flattened device tree simple bus (BERI version)"
 argument_list|)
 expr_stmt|;
 return|return
