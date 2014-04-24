@@ -45,21 +45,21 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The number of Rx/Tx queues this driver supports.  */
+comment|/*  * The number of Rx/Tx queues this driver prefers.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VMXNET3_RX_QUEUES
-value|1
+name|VMXNET3_DEF_RX_QUEUES
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMXNET3_TX_QUEUES
-value|1
+name|VMXNET3_DEF_TX_QUEUES
+value|8
 end_define
 
 begin_comment
@@ -381,10 +381,28 @@ struct|struct
 name|vmxnet3_txq_stats
 block|{
 name|uint64_t
-name|vtxrs_full
+name|vmtxs_opackets
+decl_stmt|;
+comment|/* if_opackets */
+name|uint64_t
+name|vmtxs_obytes
+decl_stmt|;
+comment|/* if_obytes */
+name|uint64_t
+name|vmtxs_omcasts
+decl_stmt|;
+comment|/* if_omcasts */
+name|uint64_t
+name|vmtxs_csum
 decl_stmt|;
 name|uint64_t
-name|vtxrs_offload_failed
+name|vmtxs_tso
+decl_stmt|;
+name|uint64_t
+name|vmtxs_full
+decl_stmt|;
+name|uint64_t
+name|vmtxs_offload_failed
 decl_stmt|;
 block|}
 struct|;
@@ -403,6 +421,16 @@ name|vmxnet3_softc
 modifier|*
 name|vxtxq_sc
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|VMXNET3_TX_LEGACY
+name|struct
+name|buf_ring
+modifier|*
+name|vxtxq_br
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|vxtxq_id
 decl_stmt|;
@@ -434,6 +462,15 @@ name|sysctl_oid_list
 modifier|*
 name|vxtxq_sysctl
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|VMXNET3_TX_LEGACY
+name|struct
+name|task
+name|vxtxq_defrtask
+decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|vxtxq_name
 index|[
@@ -441,6 +478,10 @@ literal|16
 index|]
 decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -499,7 +540,24 @@ end_define
 begin_struct
 struct|struct
 name|vmxnet3_rxq_stats
-block|{  }
+block|{
+name|uint64_t
+name|vmrxs_ipackets
+decl_stmt|;
+comment|/* if_ipackets */
+name|uint64_t
+name|vmrxs_ibytes
+decl_stmt|;
+comment|/* if_ibytes */
+name|uint64_t
+name|vmrxs_iqdrops
+decl_stmt|;
+comment|/* if_iqdrops */
+name|uint64_t
+name|vmrxs_ierrors
+decl_stmt|;
+comment|/* if_ierrors */
+block|}
 struct|;
 end_struct
 
@@ -554,6 +612,10 @@ literal|16
 index|]
 decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -604,7 +666,10 @@ struct|struct
 name|vmxnet3_statistics
 block|{
 name|uint32_t
-name|vmst_collapsed
+name|vmst_defragged
+decl_stmt|;
+name|uint32_t
+name|vmst_defrag_failed
 decl_stmt|;
 name|uint32_t
 name|vmst_mgetcl_failed
@@ -660,6 +725,10 @@ define|#
 directive|define
 name|VMXNET3_FLAG_NO_MSIX
 value|0x0001
+define|#
+directive|define
+name|VMXNET3_FLAG_RSS
+value|0x0002
 name|struct
 name|vmxnet3_rxqueue
 modifier|*
@@ -751,6 +820,16 @@ name|struct
 name|mtx
 name|vmx_mtx
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|VMXNET3_LEGACY_TX
+name|struct
+name|taskqueue
+modifier|*
+name|vmx_tq
+decl_stmt|;
+endif|#
+directive|endif
 name|uint8_t
 modifier|*
 name|vmx_mcast
@@ -758,6 +837,11 @@ decl_stmt|;
 name|void
 modifier|*
 name|vmx_qs
+decl_stmt|;
+name|struct
+name|vmxnet3_rss_shared
+modifier|*
+name|vmx_rss
 decl_stmt|;
 name|struct
 name|callout
@@ -776,8 +860,18 @@ name|vmxnet3_dma_alloc
 name|vmx_mcast_dma
 decl_stmt|;
 name|struct
+name|vmxnet3_dma_alloc
+name|vmx_rss_dma
+decl_stmt|;
+name|struct
 name|ifmedia
 name|vmx_media
+decl_stmt|;
+name|int
+name|vmx_max_ntxqueues
+decl_stmt|;
+name|int
+name|vmx_max_nrxqueues
 decl_stmt|;
 name|eventhandler_tag
 name|vmx_vlan_attach
@@ -892,8 +986,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMXNET3_TX_MAXSIZE
+value|(VMXNET3_TX_MAXSEGS * MCLBYTES)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMXNET3_TSO_MAXSIZE
-value|65550
+define|\
+value|(VMXNET3_TX_MAXSIZE - sizeof(struct ether_vlan_header))
 end_define
 
 begin_comment
@@ -938,6 +1040,17 @@ define|#
 directive|define
 name|VMXNET3_WATCHDOG_TIMEOUT
 value|5
+end_define
+
+begin_comment
+comment|/*  * Number of slots in the Tx bufrings. This value matches most other  * multiqueue drivers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_DEF_BUFRING_SIZE
+value|4096
 end_define
 
 begin_comment
