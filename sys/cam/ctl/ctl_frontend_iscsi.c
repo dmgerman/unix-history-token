@@ -3279,7 +3279,7 @@ name|bhs_opcode
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We're only using fields common for Data Out and SCSI Command PDUs. 	 */
+comment|/* 	 * We're only using fields common for Data-Out and SCSI Command PDUs. 	 */
 name|bhsdo
 operator|=
 operator|(
@@ -3425,6 +3425,12 @@ name|io
 operator|->
 name|scsiio
 operator|.
+name|kern_rel_offset
+operator|+
+name|io
+operator|->
+name|scsiio
+operator|.
 name|ext_data_filled
 condition|)
 block|{
@@ -3433,7 +3439,7 @@ argument_list|(
 name|cs
 argument_list|,
 literal|"received bad buffer offset %zd, "
-literal|"expected %zd"
+literal|"expected %zd; dropping connection"
 argument_list|,
 name|buffer_offset
 argument_list|,
@@ -3444,7 +3450,24 @@ name|io
 operator|->
 name|scsiio
 operator|.
+name|kern_rel_offset
+operator|+
+operator|(
+name|size_t
+operator|)
+name|io
+operator|->
+name|scsiio
+operator|.
 name|ext_data_filled
+argument_list|)
+expr_stmt|;
+name|ctl_set_data_phase_error
+argument_list|(
+operator|&
+name|io
+operator|->
+name|scsiio
 argument_list|)
 expr_stmt|;
 name|cfiscsi_session_terminate
@@ -3642,12 +3665,29 @@ operator|>
 name|off
 condition|)
 block|{
-name|CFISCSI_SESSION_WARN
+comment|/* 		 * In case of unsolicited data, it's possible that the buffer 		 * provided by CTL is smaller than negotiated FirstBurstLength. 		 * Just ignore the superfluous data; will ask for them with R2T 		 * on next call to cfiscsi_datamove(). 		 * 		 * This obviously can only happen with SCSI Command PDU.  		 */
+if|if
+condition|(
+operator|(
+name|request
+operator|->
+name|ip_bhs
+operator|->
+name|bhs_opcode
+operator|&
+operator|~
+name|ISCSI_BHS_OPCODE_IMMEDIATE
+operator|)
+operator|==
+name|ISCSI_BHS_OPCODE_SCSI_COMMAND
+condition|)
+block|{
+name|CFISCSI_SESSION_DEBUG
 argument_list|(
 name|cs
 argument_list|,
-literal|"received too much data: got %zd bytes, "
-literal|"expected %zd"
+literal|"received too much immediate "
+literal|"data: got %zd bytes, expected %zd"
 argument_list|,
 name|icl_pdu_data_segment_length
 argument_list|(
@@ -3655,6 +3695,35 @@ name|request
 argument_list|)
 argument_list|,
 name|off
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|true
+operator|)
+return|;
+block|}
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"received too much data: got %zd bytes, "
+literal|"expected %zd; dropping connection"
+argument_list|,
+name|icl_pdu_data_segment_length
+argument_list|(
+name|request
+argument_list|)
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
+name|ctl_set_data_phase_error
+argument_list|(
+operator|&
+name|io
+operator|->
+name|scsiio
 argument_list|)
 expr_stmt|;
 name|cfiscsi_session_terminate
@@ -3670,12 +3739,6 @@ return|;
 block|}
 if|if
 condition|(
-name|bhsdo
-operator|->
-name|bhsdo_flags
-operator|&
-name|BHSDO_FLAGS_F
-operator|||
 name|io
 operator|->
 name|scsiio
@@ -3686,11 +3749,8 @@ name|io
 operator|->
 name|scsiio
 operator|.
-name|kern_total_len
-condition|)
-block|{
-if|if
-condition|(
+name|kern_data_len
+operator|&&
 operator|(
 name|bhsdo
 operator|->
@@ -3712,6 +3772,14 @@ argument_list|,
 name|bhsdo
 operator|->
 name|bhsdo_flags
+argument_list|)
+expr_stmt|;
+name|ctl_set_data_phase_error
+argument_list|(
+operator|&
+name|io
+operator|->
+name|scsiio
 argument_list|)
 expr_stmt|;
 name|cfiscsi_session_terminate
@@ -3737,7 +3805,17 @@ name|io
 operator|->
 name|scsiio
 operator|.
-name|kern_total_len
+name|kern_data_len
+operator|&&
+operator|(
+name|bhsdo
+operator|->
+name|bhsdo_flags
+operator|&
+name|BHSDO_FLAGS_F
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -3777,7 +3855,15 @@ name|io
 operator|->
 name|scsiio
 operator|.
-name|kern_total_len
+name|kern_data_len
+argument_list|)
+expr_stmt|;
+name|ctl_set_data_phase_error
+argument_list|(
+operator|&
+name|io
+operator|->
+name|scsiio
 argument_list|)
 expr_stmt|;
 name|cfiscsi_session_terminate
@@ -3793,7 +3879,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 				 * For SCSI Command PDU, this just means we need to 				 * solicit more data by sending R2T. 				 */
+comment|/* 			 * For SCSI Command PDU, this just means we need to 			 * solicit more data by sending R2T. 			 */
 return|return
 operator|(
 name|false
@@ -3801,6 +3887,21 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|io
+operator|->
+name|scsiio
+operator|.
+name|ext_data_filled
+operator|==
+name|io
+operator|->
+name|scsiio
+operator|.
+name|kern_data_len
+condition|)
+block|{
 if|#
 directive|if
 literal|0
@@ -11288,7 +11389,7 @@ name|scsiio
 operator|.
 name|kern_total_len
 expr_stmt|;
-comment|/* 	 * This is the offset within the current SCSI command; for the first 	 * call to cfiscsi_datamove() it will be 0, and for subsequent ones 	 * it will be the sum of lengths of previous ones.  It's being 	 * incremented as we append data to the data segment. 	 */
+comment|/* 	 * This is the offset within the current SCSI command; for the first 	 * call to cfiscsi_datamove() it will be 0, and for subsequent ones 	 * it will be the sum of lengths of previous ones. 	 */
 name|buffer_offset
 operator|=
 name|io
@@ -11310,7 +11411,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (expected_len != io->scsiio.kern_total_len) 		CFISCSI_SESSION_DEBUG(cs, "expected transfer length = %zd, " 		    "actual length = %zd", expected_len, 		    io->scsiio.kern_total_len);
+block|if (expected_len != io->scsiio.kern_total_len) { 		CFISCSI_SESSION_DEBUG(cs, "expected transfer length %zd, " 		    "actual length %zd", expected_len, 		    (size_t)io->scsiio.kern_total_len); 	}
 endif|#
 directive|endif
 if|if
@@ -11326,18 +11427,6 @@ literal|0
 block|CFISCSI_SESSION_DEBUG(cs, "buffer_offset = %zd, " 		    "already sent the expected len", buffer_offset);
 endif|#
 directive|endif
-name|io
-operator|->
-name|scsiio
-operator|.
-name|ext_data_filled
-operator|=
-name|io
-operator|->
-name|scsiio
-operator|.
-name|kern_total_len
-expr_stmt|;
 name|io
 operator|->
 name|scsiio
@@ -11547,7 +11636,7 @@ operator|->
 name|cs_max_data_segment_length
 argument_list|,
 operator|(
-literal|"max_data_segment_length %zd>= ip_data_len %zd"
+literal|"ip_data_len %zd>= max_data_segment_length %zd"
 operator|,
 name|response
 operator|->
@@ -11571,6 +11660,7 @@ name|cs
 operator|->
 name|cs_max_data_segment_length
 condition|)
+block|{
 name|len
 operator|=
 name|cs
@@ -11581,6 +11671,22 @@ name|response
 operator|->
 name|ip_data_len
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|len
+operator|<=
+name|sg_len
+argument_list|,
+operator|(
+literal|"len %zd> sg_len %zd"
+operator|,
+name|len
+operator|,
+name|sg_len
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Truncate to expected data transfer length. 		 */
 name|KASSERT
 argument_list|(
@@ -11593,10 +11699,10 @@ operator|<
 name|expected_len
 argument_list|,
 operator|(
-literal|"%zd>= %zd"
+literal|"buffer_offset %zd + ip_data_len %zd>= expected_len %zd"
 operator|,
 name|buffer_offset
-operator|+
+operator|,
 name|response
 operator|->
 name|ip_data_len
@@ -11648,7 +11754,6 @@ operator|->
 name|ip_data_len
 operator|)
 expr_stmt|;
-block|}
 name|KASSERT
 argument_list|(
 name|len
@@ -11656,10 +11761,15 @@ operator|<=
 name|sg_len
 argument_list|,
 operator|(
-literal|"len> sg_len"
+literal|"len %zd> sg_len %zd"
+operator|,
+name|len
+operator|,
+name|sg_len
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|icl_pdu_append_data
@@ -11725,21 +11835,36 @@ name|sg_len
 operator|-=
 name|len
 expr_stmt|;
+name|KASSERT
+argument_list|(
 name|buffer_offset
-operator|+=
-name|len
-expr_stmt|;
-name|io
+operator|+
+name|request
 operator|->
-name|scsiio
-operator|.
-name|ext_data_filled
-operator|+=
-name|len
+name|ip_data_len
+operator|<=
+name|expected_len
+argument_list|,
+operator|(
+literal|"buffer_offset %zd + ip_data_len %zd> expected_len %zd"
+operator|,
+name|buffer_offset
+operator|,
+name|request
+operator|->
+name|ip_data_len
+operator|,
+name|expected_len
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|buffer_offset
+operator|+
+name|request
+operator|->
+name|ip_data_len
 operator|==
 name|expected_len
 condition|)
@@ -11783,6 +11908,12 @@ name|cs_max_data_segment_length
 condition|)
 block|{
 comment|/* 			 * Can't stuff more data into the current PDU; 			 * queue it.  Note that's not enough to check 			 * for kern_data_resid == 0 instead; there 			 * may be several Data-In PDUs for the final 			 * call to cfiscsi_datamove(), and we want 			 * to set the F flag only on the last of them. 			 */
+name|buffer_offset
+operator|+=
+name|response
+operator|->
+name|ip_data_len
+expr_stmt|;
 if|if
 condition|(
 name|buffer_offset
@@ -11825,6 +11956,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|buffer_offset
+operator|+=
+name|response
+operator|->
+name|ip_data_len
+expr_stmt|;
 if|if
 condition|(
 name|buffer_offset
@@ -11984,6 +12121,15 @@ name|scsiio
 operator|.
 name|kern_total_len
 expr_stmt|;
+comment|/* 	 * We hadn't received anything during this datamove yet. 	 */
+name|io
+operator|->
+name|scsiio
+operator|.
+name|ext_data_filled
+operator|=
+literal|0
+expr_stmt|;
 name|target_transfer_tag
 operator|=
 name|atomic_fetchadd_32
@@ -12078,6 +12224,14 @@ name|cs
 operator|->
 name|cs_immediate_data
 operator|&&
+name|io
+operator|->
+name|scsiio
+operator|.
+name|kern_rel_offset
+operator|==
+literal|0
+operator|&&
 name|icl_pdu_data_segment_length
 argument_list|(
 name|request
@@ -12118,12 +12272,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|#
-directive|if
-literal|0
-block|if (io->scsiio.ext_data_filled != 0) 			CFISCSI_SESSION_DEBUG(cs, "got %zd bytes of immediate data, need %zd", 			    io->scsiio.ext_data_filled, io->scsiio.kern_data_len);
-endif|#
-directive|endif
 block|}
 name|CFISCSI_SESSION_LOCK
 argument_list|(
