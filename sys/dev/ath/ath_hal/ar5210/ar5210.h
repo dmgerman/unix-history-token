@@ -466,6 +466,10 @@ name|u_int
 name|ah_ctstimeout
 decl_stmt|;
 comment|/* user-specified cts timeout */
+name|uint16_t
+name|ah_associd
+decl_stmt|;
+comment|/* association id */
 block|}
 struct|;
 end_struct
