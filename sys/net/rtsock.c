@@ -3497,6 +3497,8 @@ name|RTAX_DST
 index|]
 argument_list|,
 literal|1
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 if|if

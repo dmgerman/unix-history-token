@@ -7433,6 +7433,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|addr
+parameter_list|,
+name|int
+name|fibnum
 parameter_list|)
 block|{
 name|struct
@@ -7468,6 +7471,17 @@ name|IFF_POINTOPOINT
 operator|)
 operator|==
 literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_fib
+operator|!=
+name|fibnum
+operator|)
 condition|)
 continue|continue;
 name|IF_ADDR_RLOCK
@@ -7570,6 +7584,9 @@ name|addr
 parameter_list|,
 name|int
 name|ignore_ptp
+parameter_list|,
+name|int
+name|fibnum
 parameter_list|)
 block|{
 name|struct
@@ -7650,7 +7667,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * Scan though each interface, looking for ones that have addresses 	 * in this address family.  Maintain a reference on ifa_maybe once 	 * we find one, as we release the IF_ADDR_RLOCK() that kept it stable 	 * when we move onto the next interface. 	 */
+comment|/* 	 * Scan though each interface, looking for ones that have addresses 	 * in this address family and the requested fib.  Maintain a reference 	 * on ifa_maybe once we find one, as we release the IF_ADDR_RLOCK() that 	 * kept it stable when we move onto the next interface. 	 */
 name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
@@ -7663,6 +7680,15 @@ argument_list|,
 argument|if_link
 argument_list|)
 block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_fib
+operator|!=
+name|fibnum
+condition|)
+continue|continue;
 name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp

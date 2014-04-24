@@ -936,6 +936,8 @@ name|sintosa
 argument_list|(
 name|dst
 argument_list|)
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 operator|)
@@ -1010,6 +1012,8 @@ name|sintosa
 argument_list|(
 name|dst
 argument_list|)
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 operator|)
@@ -1029,6 +1033,8 @@ name|dst
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 operator|)

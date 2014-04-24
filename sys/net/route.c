@@ -2338,6 +2338,8 @@ argument_list|(
 name|gateway
 argument_list|,
 literal|0
+argument_list|,
+name|fibnum
 argument_list|)
 operator|)
 operator|==
@@ -3010,6 +3012,8 @@ operator|=
 name|ifa_ifwithdstaddr
 argument_list|(
 name|dst
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -3034,6 +3038,8 @@ operator|=
 name|ifa_ifwithdstaddr
 argument_list|(
 name|gateway
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -3050,6 +3056,8 @@ argument_list|(
 name|gateway
 argument_list|,
 literal|0
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -3546,6 +3554,8 @@ argument_list|(
 name|ifpaddr
 argument_list|,
 literal|0
+argument_list|,
+name|fibnum
 argument_list|)
 operator|)
 operator|!=
