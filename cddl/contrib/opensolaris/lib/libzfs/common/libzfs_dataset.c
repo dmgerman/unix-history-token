@@ -11430,6 +11430,12 @@ operator|!
 literal|"invalid code path"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+comment|// silence compiler warning
 endif|#
 directive|endif
 comment|/* !sun */
