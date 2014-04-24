@@ -901,6 +901,7 @@ case|case
 name|IEEE80211_S_SLEEP
 case|:
 comment|/* XXX wakeup */
+comment|/* XXX driver hook to wakeup the hardware? */
 case|case
 name|IEEE80211_S_RUN
 case|:
@@ -1449,6 +1450,7 @@ break|break;
 case|case
 name|IEEE80211_S_SLEEP
 case|:
+comment|/* Wake up from sleep */
 name|vap
 operator|->
 name|iv_sta_ps
@@ -1539,7 +1541,7 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Fake association when joining an existing bss. 		 */
+comment|/* 		 * Fake association when joining an existing bss. 		 * 		 * Don't do this if we're doing SLEEP->RUN. 		 */
 if|if
 condition|(
 name|ic
@@ -1547,6 +1549,10 @@ operator|->
 name|ic_newassoc
 operator|!=
 name|NULL
+operator|&&
+name|ostate
+operator|!=
+name|IEEE80211_S_SLEEP
 condition|)
 name|ic
 operator|->
@@ -1556,9 +1562,11 @@ name|vap
 operator|->
 name|iv_bss
 argument_list|,
+operator|(
 name|ostate
 operator|!=
 name|IEEE80211_S_RUN
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5805,12 +5813,92 @@ name|scan
 operator|.
 name|tim
 decl_stmt|;
+comment|/* 				 * XXX Check/debug this code; see if it's about 				 * the right time to force the VAP awake if we 				 * receive a frame destined for us? 				 */
+name|int
+name|aid
+init|=
+name|IEEE80211_AID
+argument_list|(
+name|ni
+operator|->
+name|ni_associd
+argument_list|)
+decl_stmt|;
+name|int
+name|ix
+init|=
+name|aid
+operator|/
+name|NBBY
+decl_stmt|;
+name|int
+name|min
+init|=
+name|tim
+operator|->
+name|tim_bitctl
+operator|&
+operator|~
+literal|1
+decl_stmt|;
+name|int
+name|max
+init|=
+name|tim
+operator|->
+name|tim_len
+operator|+
+name|min
+operator|-
+literal|4
+decl_stmt|;
+comment|/* 				 * Only do this for unicast traffic in the TIM 				 * The multicast traffic notification for 				 * the scan notification stuff should occur 				 * differently. 				 */
+if|if
+condition|(
+name|min
+operator|<=
+name|ix
+operator|&&
+name|ix
+operator|<=
+name|max
+operator|&&
+name|isset
+argument_list|(
+name|tim
+operator|->
+name|tim_bitmap
+operator|-
+name|min
+argument_list|,
+name|aid
+argument_list|)
+condition|)
+block|{
+name|ieee80211_sta_tim_notify
+argument_list|(
+name|vap
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
+name|ic_lastdata
+operator|=
+name|ticks
+expr_stmt|;
+block|}
+comment|/* 				 * XXX TODO: do a separate notification 				 * for the multicast bit being set. 				 */
 if|#
 directive|if
 literal|0
-block|int aid = IEEE80211_AID(ni->ni_associd); 				int ix = aid / NBBY; 				int min = tim->tim_bitctl&~ 1; 				int max = tim->tim_len + min - 4; 				if ((tim->tim_bitctl&1) || 				    (min<= ix&& ix<= max&& 				     isset(tim->tim_bitmap - min, aid))) {
+block|if ((tim->tim_bitctl& 1) || 				    (min<= ix&& ix<= max&& 				     isset(tim->tim_bitmap - min, aid))) {
 comment|/*  					 * XXX Do not let bg scan kick off 					 * we are expecting data. 					 */
-block|ic->ic_lastdata = ticks; 					vap->iv_sta_ps(vap, 0); 				}
+block|ieee80211_sta_tim_notify(vap, 1); 					ic->ic_lastdata = ticks;
+comment|// XXX not yet?
+comment|//					vap->iv_sta_ps(vap, 0);
+block|}
 endif|#
 directive|endif
 name|ni
@@ -5959,6 +6047,22 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * Put the station to sleep if we haven't seen 			 * traffic in a while. 			 */
+name|IEEE80211_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|ieee80211_sta_ps_timer_check
+argument_list|(
+name|vap
+argument_list|)
+expr_stmt|;
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 comment|/* 			 * If we've had a channel width change (eg HT20<->HT40) 			 * then schedule a delayed driver notification. 			 */
 if|if
 condition|(

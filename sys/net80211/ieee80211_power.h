@@ -256,6 +256,37 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee80211_sta_tim_notify
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|,
+name|int
+name|set
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_sta_ps_timer_check
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX what's this? */
+end_comment
+
+begin_function_decl
+name|void
 name|ieee80211_power_poll
 parameter_list|(
 name|struct
