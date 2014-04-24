@@ -555,7 +555,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|callout_stop
+name|callout_drain
 argument_list|(
 operator|&
 name|sc
