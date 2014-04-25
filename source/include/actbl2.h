@@ -129,6 +129,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_SIG_LPIT
+value|"LPIT"
+end_define
+
+begin_comment
+comment|/* Low Power Idle Table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_SIG_MCFG
 value|"MCFG"
 end_define
@@ -1239,7 +1250,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * DMAR Sub-tables, correspond to Type in ACPI_DMAR_HEADER  */
+comment|/*  * DMAR Subtables, correspond to Type in ACPI_DMAR_HEADER  */
 end_comment
 
 begin_comment
@@ -2309,7 +2320,173 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * MCFG - PCI Memory Mapped Configuration table and sub-table  *        Version 1  *  * Conforms to "PCI Firmware Specification", Revision 3.0, June 20, 2005  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * LPIT - Low Power Idle Table  *  * Conforms to "ACPI Low Power Idle Table (LPIT) and _LPD Proposal (DRAFT)"  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_lpit
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+block|}
+name|ACPI_TABLE_LPIT
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* LPIT subtable header */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_lpit_header
+block|{
+name|UINT32
+name|Type
+decl_stmt|;
+comment|/* Subtable type */
+name|UINT32
+name|Length
+decl_stmt|;
+comment|/* Subtable length */
+name|UINT16
+name|UniqueId
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+name|UINT32
+name|Flags
+decl_stmt|;
+block|}
+name|ACPI_LPIT_HEADER
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for subtable Type above */
+end_comment
+
+begin_enum
+enum|enum
+name|AcpiLpitType
+block|{
+name|ACPI_LPIT_TYPE_NATIVE_CSTATE
+init|=
+literal|0x00
+block|,
+name|ACPI_LPIT_TYPE_SIMPLE_IO
+init|=
+literal|0x01
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Masks for Flags field above  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_LPIT_STATE_DISABLED
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LPIT_NO_COUNTER
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/*  * LPIT subtables, correspond to Type in ACPI_LPIT_HEADER  */
+end_comment
+
+begin_comment
+comment|/* 0x00: Native C-state instruction based LPI structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_lpit_native
+block|{
+name|ACPI_LPIT_HEADER
+name|Header
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|EntryTrigger
+decl_stmt|;
+name|UINT32
+name|Residency
+decl_stmt|;
+name|UINT32
+name|Latency
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ResidencyCounter
+decl_stmt|;
+name|UINT64
+name|CounterFrequency
+decl_stmt|;
+block|}
+name|ACPI_LPIT_NATIVE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 0x01: Simple I/O based LPI structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_lpit_io
+block|{
+name|ACPI_LPIT_HEADER
+name|Header
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|EntryTrigger
+decl_stmt|;
+name|UINT32
+name|TriggerAction
+decl_stmt|;
+name|UINT64
+name|TriggerValue
+decl_stmt|;
+name|UINT64
+name|TriggerMask
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|MinimumIdleState
+decl_stmt|;
+name|UINT32
+name|Residency
+decl_stmt|;
+name|UINT32
+name|Latency
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ResidencyCounter
+decl_stmt|;
+name|UINT64
+name|CounterFrequency
+decl_stmt|;
+block|}
+name|ACPI_LPIT_IO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*******************************************************************************  *  * MCFG - PCI Memory Mapped Configuration table and subtable  *        Version 1  *  * Conforms to "PCI Firmware Specification", Revision 3.0, June 20, 2005  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -2527,7 +2704,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * SLIC Sub-tables, correspond to Type in ACPI_SLIC_HEADER  */
+comment|/*  * SLIC Subtables, correspond to Type in ACPI_SLIC_HEADER  */
 end_comment
 
 begin_comment

@@ -257,13 +257,13 @@ argument_list|,
 name|ListHead
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Always delete the list */
+comment|/* Delete the list */
 name|AcpiHwDeletePciList
 argument_list|(
 name|ListHead
 argument_list|)
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -340,6 +340,13 @@ name|Status
 argument_list|)
 condition|)
 block|{
+comment|/* Must delete the list before exit */
+name|AcpiHwDeletePciList
+argument_list|(
+operator|*
+name|ReturnListHead
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status
@@ -381,6 +388,13 @@ operator|!
 name|ListElement
 condition|)
 block|{
+comment|/* Must delete the list before exit */
+name|AcpiHwDeletePciList
+argument_list|(
+operator|*
+name|ReturnListHead
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_NO_MEMORY

@@ -759,7 +759,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"%p is not not an ACPI operand obj [%s]\n"
+literal|"%p is not an ACPI operand obj [%s]\n"
 operator|,
 name|Object
 operator|,

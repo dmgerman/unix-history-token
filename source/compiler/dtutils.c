@@ -80,7 +80,7 @@ parameter_list|(
 name|UINT8
 name|Level
 parameter_list|,
-name|UINT8
+name|UINT16
 name|MessageId
 parameter_list|,
 name|DT_FIELD
@@ -179,7 +179,7 @@ parameter_list|(
 name|UINT8
 name|Level
 parameter_list|,
-name|UINT8
+name|UINT16
 name|MessageId
 parameter_list|,
 name|DT_FIELD
@@ -286,7 +286,7 @@ begin_function
 name|void
 name|DtFatal
 parameter_list|(
-name|UINT8
+name|UINT16
 name|MessageId
 parameter_list|,
 name|DT_FIELD
@@ -967,6 +967,9 @@ name|ACPI_DMT_SLIC
 case|:
 case|case
 name|ACPI_DMT_SIG
+case|:
+case|case
+name|ACPI_DMT_LPIT
 case|:
 name|ByteLength
 operator|=

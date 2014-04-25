@@ -742,7 +742,7 @@ parameter_list|(
 name|UINT8
 name|Level
 parameter_list|,
-name|UINT8
+name|UINT16
 name|MessageId
 parameter_list|,
 name|UINT32

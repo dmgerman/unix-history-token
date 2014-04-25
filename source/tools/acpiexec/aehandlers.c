@@ -1259,7 +1259,7 @@ name|GpeDevice
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"[AcpiExec] GPE Handler received GPE%02X (GPE block %4.4s)\n"
+literal|"[AcpiExec] GPE Handler received GPE %02X (GPE block %4.4s)\n"
 argument_list|,
 name|GpeNumber
 argument_list|,

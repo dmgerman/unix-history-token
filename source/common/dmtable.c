@@ -548,6 +548,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmLpitSubnames
+index|[]
+init|=
+block|{
+literal|"Native C-state Idle Structure"
+block|,
+literal|"Simple I/O Idle Structure"
+block|,
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -878,6 +897,20 @@ block|,
 name|TemplateIvrs
 block|,
 literal|"I/O Virtualization Reporting Structure"
+block|}
+block|,
+block|{
+name|ACPI_SIG_LPIT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpLpit
+block|,
+name|DtCompileLpit
+block|,
+name|TemplateLpit
+block|,
+literal|"Low Power Idle Table"
 block|}
 block|,
 block|{
@@ -2193,6 +2226,9 @@ name|ACPI_DMT_SIG
 case|:
 case|case
 name|ACPI_DMT_SLIC
+case|:
+case|case
+name|ACPI_DMT_LPIT
 case|:
 name|ByteLength
 operator|=
@@ -3633,6 +3669,63 @@ block|}
 name|AcpiOsPrintf
 argument_list|(
 name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_LPIT
+case|:
+comment|/* LPIT subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+switch|switch
+condition|(
+name|Temp8
+condition|)
+block|{
+case|case
+name|ACPI_LPIT_TYPE_NATIVE_CSTATE
+case|:
+name|Name
+operator|=
+name|AcpiDmLpitSubnames
+index|[
+literal|0
+index|]
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_LPIT_TYPE_SIMPLE_IO
+case|:
+name|Name
+operator|=
+name|AcpiDmLpitSubnames
+index|[
+literal|1
+index|]
+expr_stmt|;
+break|break;
+default|default:
+name|Name
+operator|=
+name|AcpiDmLpitSubnames
+index|[
+literal|2
+index|]
+expr_stmt|;
+break|break;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT32_FORMAT
 argument_list|,
 operator|*
 name|Target

@@ -410,7 +410,7 @@ block|,
 block|{
 literal|"GPE"
 block|,
-literal|2
+literal|1
 block|}
 block|,
 block|{
@@ -1239,7 +1239,7 @@ block|,
 block|{
 literal|1
 block|,
-literal|"  Gpe<GpeNum><GpeBlock>"
+literal|"  Gpe<GpeNum> [GpeBlockDevice]"
 block|,
 literal|"Simulate a GPE\n"
 block|}

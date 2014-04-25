@@ -847,6 +847,11 @@ name|Status
 operator|=
 name|AE_ERROR
 expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|DisasmFilename
+argument_list|)
+expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;

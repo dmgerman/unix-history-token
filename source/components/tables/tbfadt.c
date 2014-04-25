@@ -70,6 +70,9 @@ parameter_list|,
 name|char
 modifier|*
 name|RegisterName
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -138,7 +141,7 @@ name|UINT8
 name|DefaultLength
 decl_stmt|;
 name|UINT8
-name|Type
+name|Flags
 decl_stmt|;
 block|}
 name|ACPI_FADT_INFO
@@ -164,6 +167,13 @@ define|#
 directive|define
 name|ACPI_FADT_SEPARATE_LENGTH
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_GPE_REGISTER
+value|4
 end_define
 
 begin_decl_stmt
@@ -339,6 +349,8 @@ block|,
 literal|0
 block|,
 name|ACPI_FADT_SEPARATE_LENGTH
+operator||
+name|ACPI_FADT_GPE_REGISTER
 block|}
 block|,
 block|{
@@ -362,6 +374,8 @@ block|,
 literal|0
 block|,
 name|ACPI_FADT_SEPARATE_LENGTH
+operator||
+name|ACPI_FADT_GPE_REGISTER
 block|}
 block|}
 decl_stmt|;
@@ -490,12 +504,15 @@ parameter_list|,
 name|char
 modifier|*
 name|RegisterName
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 block|{
 name|UINT8
 name|BitWidth
 decl_stmt|;
-comment|/* Bit width field in the GAS is only one byte long, 255 max */
+comment|/*      * Bit width field in the GAS is only one byte long, 255 max.      * Check for BitWidth overflow in GAS.      */
 name|BitWidth
 operator|=
 call|(
@@ -513,7 +530,18 @@ name|ByteWidth
 operator|>
 literal|31
 condition|)
-comment|/* (31*8)=248 */
+comment|/* (31*8)=248, (32*8)=256 */
+block|{
+comment|/*          * No error for GPE blocks, because we do not use the BitWidth          * for GPEs, the legacy length (ByteWidth) is used instead to          * allow for a large number of GPEs.          */
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|ACPI_FADT_GPE_REGISTER
+operator|)
+condition|)
 block|{
 name|ACPI_ERROR
 argument_list|(
@@ -535,6 +563,7 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|BitWidth
 operator|=
 literal|255
@@ -945,6 +974,9 @@ decl_stmt|;
 name|UINT8
 name|Length
 decl_stmt|;
+name|UINT8
+name|Flags
+decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
@@ -1118,6 +1150,15 @@ index|]
 operator|.
 name|Name
 expr_stmt|;
+name|Flags
+operator|=
+name|FadtInfoTable
+index|[
+name|i
+index|]
+operator|.
+name|Flags
+expr_stmt|;
 comment|/*          * Expand the ACPI 1.0 32-bit addresses to the ACPI 2.0 64-bit "X"          * generic address structures as necessary. Later code will always use          * the 64-bit address structures.          *          * November 2013:          * Now always use the 64-bit address if it is valid (non-zero), in          * accordance with the ACPI specification which states that a 64-bit          * address supersedes the 32-bit version. This behavior can be          * overridden by the AcpiGbl_Use32BitFadtAddresses flag.          *          * During 64-bit address construction and verification,          * these cases are handled:          *          * Address32 zero, Address64 [don't care]   - Use Address64          *          * Address32 non-zero, Address64 zero       - Copy/use Address32          * Address32 non-zero == Address64 non-zero - Use Address64          * Address32 non-zero != Address64 non-zero - Warning, use Address64          *          * Override: if AcpiGbl_Use32BitFadtAddresses is TRUE, and:          * Address32 non-zero != Address64 non-zero - Warning, copy/use Address32          *          * Note: SpaceId is always I/O for 32-bit legacy address fields          */
 if|if
 condition|(
@@ -1161,6 +1202,8 @@ operator|)
 name|Address32
 argument_list|,
 name|Name
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -1239,6 +1282,8 @@ operator|)
 name|Address32
 argument_list|,
 name|Name
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -1300,7 +1345,7 @@ index|[
 name|i
 index|]
 operator|.
-name|Type
+name|Flags
 operator|&
 name|ACPI_FADT_REQUIRED
 condition|)
@@ -1348,7 +1393,7 @@ index|[
 name|i
 index|]
 operator|.
-name|Type
+name|Flags
 operator|&
 name|ACPI_FADT_SEPARATE_LENGTH
 condition|)
@@ -1626,6 +1671,8 @@ name|Pm1RegisterByteWidth
 operator|)
 argument_list|,
 literal|"PmRegisters"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

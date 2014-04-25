@@ -1982,7 +1982,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * MADT Sub-tables, correspond to Type in ACPI_SUBTABLE_HEADER  */
+comment|/*  * MADT Subtables, correspond to Type in ACPI_SUBTABLE_HEADER  */
 end_comment
 
 begin_comment
@@ -2720,7 +2720,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * SRAT Sub-tables, correspond to Type in ACPI_SUBTABLE_HEADER  */
+comment|/*  * SRAT Subtables, correspond to Type in ACPI_SUBTABLE_HEADER  */
 end_comment
 
 begin_comment

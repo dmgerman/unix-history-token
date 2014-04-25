@@ -1174,7 +1174,7 @@ name|LocalFADT
 operator|.
 name|Gpe0BlockLength
 operator|=
-literal|16
+literal|0x08
 expr_stmt|;
 name|LocalFADT
 operator|.
@@ -1186,7 +1186,7 @@ name|LocalFADT
 operator|.
 name|Gpe1BlockLength
 operator|=
-literal|6
+literal|0x80
 expr_stmt|;
 name|LocalFADT
 operator|.
@@ -1198,7 +1198,7 @@ name|LocalFADT
 operator|.
 name|Gpe1Base
 operator|=
-literal|96
+literal|100
 expr_stmt|;
 name|LocalFADT
 operator|.

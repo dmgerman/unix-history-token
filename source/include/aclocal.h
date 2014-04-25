@@ -1456,6 +1456,10 @@ name|ACPI_GENERIC_ADDRESS
 name|EnableAddress
 decl_stmt|;
 comment|/* Address of enable reg */
+name|UINT16
+name|BaseGpeNumber
+decl_stmt|;
+comment|/* Base GPE number for this register */
 name|UINT8
 name|EnableForWake
 decl_stmt|;
@@ -1464,10 +1468,6 @@ name|UINT8
 name|EnableForRun
 decl_stmt|;
 comment|/* GPEs to keep enabled when running */
-name|UINT8
-name|BaseGpeNumber
-decl_stmt|;
-comment|/* Base GPE number for this register */
 block|}
 name|ACPI_GPE_REGISTER_INFO
 typedef|;
@@ -1512,8 +1512,8 @@ modifier|*
 name|EventInfo
 decl_stmt|;
 comment|/* One for each GPE */
-name|ACPI_GENERIC_ADDRESS
-name|BlockAddress
+name|UINT64
+name|Address
 decl_stmt|;
 comment|/* Base address of the block */
 name|UINT32
@@ -1524,10 +1524,13 @@ name|UINT16
 name|GpeCount
 decl_stmt|;
 comment|/* Number of individual GPEs in block */
-name|UINT8
+name|UINT16
 name|BlockBaseNumber
 decl_stmt|;
 comment|/* Base GPE number for this block */
+name|UINT8
+name|SpaceId
+decl_stmt|;
 name|BOOLEAN
 name|Initialized
 decl_stmt|;

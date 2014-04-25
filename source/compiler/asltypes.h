@@ -468,7 +468,7 @@ decl_stmt|;
 name|UINT32
 name|FilenameLength
 decl_stmt|;
-name|UINT8
+name|UINT16
 name|MessageId
 decl_stmt|;
 name|UINT8

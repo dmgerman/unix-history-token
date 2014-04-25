@@ -203,6 +203,14 @@ name|OriginalTermAttributes
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|TermAttributesWereSet
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtReadLine
@@ -273,7 +281,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Could not get/set terminal attributes!\n"
+literal|"Could not get terminal attributes!\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -323,6 +331,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
@@ -332,6 +342,20 @@ argument_list|,
 operator|&
 name|LocalTermAttributes
 argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not set terminal attributes!\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|TermAttributesWereSet
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -344,7 +368,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|TermAttributesWereSet
+condition|)
+block|{
+return|return;
+block|}
 comment|/* Set terminal attributes back to the original values */
+if|if
+condition|(
 name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
@@ -354,7 +388,16 @@ argument_list|,
 operator|&
 name|OriginalTermAttributes
 argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not restore terminal attributes!\n"
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

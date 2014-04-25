@@ -48,6 +48,12 @@ directive|ifdef
 name|__KERNEL__
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_INTTYPES
+end_define
+
 begin_include
 include|#
 directive|include
@@ -118,6 +124,134 @@ include|#
 directive|include
 file|<asm/acpi.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_ACPI
+end_ifndef
+
+begin_comment
+comment|/* External globals for __KERNEL__, stubs is needed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GLOBAL
+parameter_list|(
+name|t
+parameter_list|,
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|t
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* Generating stubs for configurable ACPICA macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_MEM_ALLOCATIONS
+end_define
+
+begin_comment
+comment|/* Generating stubs for configurable ACPICA functions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_ERROR_MESSAGES
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ACPI_DEBUG_OUTPUT
+end_undef
+
+begin_comment
+comment|/* External interface for __KERNEL__, stub is needed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTERNAL_RETURN_STATUS
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return(AE_NOT_CONFIGURED);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTERNAL_RETURN_OK
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return(AE_OK);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTERNAL_RETURN_VOID
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return;}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTERNAL_RETURN_UINT32
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return(0);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTERNAL_RETURN_PTR
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return(NULL);}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_ACPI */
+end_comment
 
 begin_comment
 comment|/* Host-dependent types and defines for in-kernel ACPICA */

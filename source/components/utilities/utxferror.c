@@ -49,6 +49,16 @@ begin_comment
 comment|/*  * This module is used for the in-kernel ACPICA as well as the ACPICA  * tools/applications.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_NO_ERROR_MESSAGES
+end_ifndef
+
+begin_comment
+comment|/* Entire module */
+end_comment
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiError  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print "ACPI Error" message with module/line/version info  *  ******************************************************************************/
 end_comment
@@ -468,6 +478,15 @@ argument_list|(
 argument|AcpiBiosWarning
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_NO_ERROR_MESSAGES */
+end_comment
 
 end_unit
 

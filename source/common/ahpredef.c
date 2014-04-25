@@ -1075,6 +1075,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_LPD"
+argument_list|,
+literal|"Low Power Dependencies"
+argument_list|,
+literal|"Returns a list of dependencies for low power idle entry"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_MAF"
 argument_list|,
 literal|"Maximum Address Fixed"
@@ -1467,6 +1476,15 @@ argument_list|,
 literal|"Power Source Redundancy List"
 argument_list|,
 literal|"Returns a list of power source devices in the same redundancy grouping"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_PRP"
+argument_list|,
+literal|"Device Properties"
+argument_list|,
+literal|"Returns a list of device property information"
 argument_list|)
 block|,
 name|AH_PREDEF

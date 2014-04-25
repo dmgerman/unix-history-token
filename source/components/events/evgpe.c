@@ -798,7 +798,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INTERRUPTS
 operator|,
-literal|"Ignore disabled registers for GPE%02X-GPE%02X: "
+literal|"Ignore disabled registers for GPE %02X-%02X: "
 literal|"RunEnable=%02X, WakeEnable=%02X\n"
 operator|,
 name|GpeRegisterInfo
@@ -884,7 +884,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INTERRUPTS
 operator|,
-literal|"Read registers for GPE%02X-GPE%02X: Status=%02X, Enable=%02X, "
+literal|"Read registers for GPE %02X-%02X: Status=%02X, Enable=%02X, "
 literal|"RunEnable=%02X, WakeEnable=%02X\n"
 operator|,
 name|GpeRegisterInfo
@@ -1550,7 +1550,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to clear GPE%02X"
+literal|"Unable to clear GPE %02X"
 operator|,
 name|GpeNumber
 operator|)
@@ -1588,7 +1588,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to disable GPE%02X"
+literal|"Unable to disable GPE %02X"
 operator|,
 name|GpeNumber
 operator|)
@@ -1688,7 +1688,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to queue handler for GPE%02X - event disabled"
+literal|"Unable to queue handler for GPE %02X - event disabled"
 operator|,
 name|GpeNumber
 operator|)
@@ -1703,7 +1703,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No handler or method for GPE%02X, disabling event"
+literal|"No handler or method for GPE %02X, disabling event"
 operator|,
 name|GpeNumber
 operator|)

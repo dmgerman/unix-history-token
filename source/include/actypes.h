@@ -45,10 +45,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*! [Begin] no source code translation */
-end_comment
-
-begin_comment
 comment|/*  * Data type ranges  * Note: These macros are designed to be compiler independent as well as  * working around problems that some 32-bit compilers have with 64-bit  * constants.  */
 end_comment
 
@@ -111,6 +107,12 @@ begin_comment
 comment|/*******************************************************************************  *  * Common types for all compilers, all targets  *  ******************************************************************************/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_SYSTEM_INTTYPES
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -149,8 +151,13 @@ name|INT64
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*! [End] no source code translation !*/
+comment|/* ACPI_USE_SYSTEM_INTTYPES */
 end_comment
 
 begin_comment
@@ -176,9 +183,11 @@ operator|==
 literal|64
 end_if
 
-begin_comment
-comment|/*! [Begin] no source code translation (keep the typedefs as-is) */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_SYSTEM_INTTYPES
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -195,8 +204,13 @@ name|INT32
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*! [End] no source code translation !*/
+comment|/* ACPI_USE_SYSTEM_INTTYPES */
 end_comment
 
 begin_typedef
@@ -292,9 +306,11 @@ operator|==
 literal|32
 end_elif
 
-begin_comment
-comment|/*! [Begin] no source code translation (keep the typedefs as-is) */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_SYSTEM_INTTYPES
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -311,8 +327,13 @@ name|INT32
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*! [End] no source code translation !*/
+comment|/* ACPI_USE_SYSTEM_INTTYPES */
 end_comment
 
 begin_typedef
@@ -722,6 +743,59 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|ACPI_NO_MEM_ALLOCATIONS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE
+parameter_list|(
+name|a
+parameter_list|)
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE_ZEROED
+parameter_list|(
+name|a
+parameter_list|)
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FREE
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_TRACKING
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ACPI_NO_MEM_ALLOCATIONS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ACPI_DBG_TRACK_ALLOCATIONS
 end_ifdef
 
@@ -831,6 +905,15 @@ end_endif
 
 begin_comment
 comment|/* ACPI_DBG_TRACK_ALLOCATIONS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_NO_MEM_ALLOCATIONS */
 end_comment
 
 begin_comment
@@ -3122,6 +3205,35 @@ name|ACPI_NO_BUFFER
 value|0
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_NO_MEM_ALLOCATIONS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE_BUFFER
+value|(ACPI_SIZE) (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE_LOCAL_BUFFER
+value|(ACPI_SIZE) (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ACPI_NO_MEM_ALLOCATIONS */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3142,6 +3254,15 @@ end_define
 
 begin_comment
 comment|/* For internal use only (enables tracking) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_NO_MEM_ALLOCATIONS */
 end_comment
 
 begin_typedef

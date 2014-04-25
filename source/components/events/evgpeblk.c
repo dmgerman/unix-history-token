@@ -633,7 +633,7 @@ operator|->
 name|BaseGpeNumber
 operator|=
 call|(
-name|UINT8
+name|UINT16
 call|)
 argument_list|(
 name|GpeBlock
@@ -655,8 +655,6 @@ name|Address
 operator|=
 name|GpeBlock
 operator|->
-name|BlockAddress
-operator|.
 name|Address
 operator|+
 name|i
@@ -669,8 +667,6 @@ name|Address
 operator|=
 name|GpeBlock
 operator|->
-name|BlockAddress
-operator|.
 name|Address
 operator|+
 name|i
@@ -687,8 +683,6 @@ name|SpaceId
 operator|=
 name|GpeBlock
 operator|->
-name|BlockAddress
-operator|.
 name|SpaceId
 expr_stmt|;
 name|ThisRegister
@@ -699,8 +693,6 @@ name|SpaceId
 operator|=
 name|GpeBlock
 operator|->
-name|BlockAddress
-operator|.
 name|SpaceId
 expr_stmt|;
 name|ThisRegister
@@ -878,14 +870,16 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|GpeDevice
 parameter_list|,
-name|ACPI_GENERIC_ADDRESS
-modifier|*
-name|GpeBlockAddress
+name|UINT64
+name|Address
+parameter_list|,
+name|UINT8
+name|SpaceId
 parameter_list|,
 name|UINT32
 name|RegisterCount
 parameter_list|,
-name|UINT8
+name|UINT16
 name|GpeBlockBaseNumber
 parameter_list|,
 name|UINT32
@@ -950,6 +944,18 @@ block|}
 comment|/* Initialize the new GPE block */
 name|GpeBlock
 operator|->
+name|Address
+operator|=
+name|Address
+expr_stmt|;
+name|GpeBlock
+operator|->
+name|SpaceId
+operator|=
+name|SpaceId
+expr_stmt|;
+name|GpeBlock
+operator|->
 name|Node
 operator|=
 name|GpeDevice
@@ -984,21 +990,6 @@ operator|->
 name|BlockBaseNumber
 operator|=
 name|GpeBlockBaseNumber
-expr_stmt|;
-name|ACPI_MEMCPY
-argument_list|(
-operator|&
-name|GpeBlock
-operator|->
-name|BlockAddress
-argument_list|,
-name|GpeBlockAddress
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_GENERIC_ADDRESS
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/*      * Create the RegisterInfo and EventInfo sub-structures      * Note: disables and clears all GPEs in the block      */
 name|Status
@@ -1134,7 +1125,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"    Initialized GPE %02X to %02X [%4.4s] %u regs on interrupt 0x%X\n"
+literal|"    Initialized GPE %02X to %02X [%4.4s] %u regs on interrupt 0x%X%s\n"
 operator|,
 operator|(
 name|UINT32
@@ -1171,6 +1162,16 @@ operator|->
 name|RegisterCount
 operator|,
 name|InterruptNumber
+operator|,
+name|InterruptNumber
+operator|==
+name|AcpiGbl_FADT
+operator|.
+name|SciInterrupt
+condition|?
+literal|" (SCI)"
+else|:
+literal|""
 operator|)
 argument_list|)
 expr_stmt|;

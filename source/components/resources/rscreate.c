@@ -86,6 +86,11 @@ name|void
 modifier|*
 name|CurrentResourcePtr
 decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|AcpiBufferToResource
+argument_list|)
+expr_stmt|;
 comment|/*      * Note: we allow AE_AML_NO_RESOURCE_END_TAG, since an end tag      * is not required here.      */
 comment|/* Get the required length for the converted resource */
 name|Status
@@ -120,11 +125,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Allocate a buffer for the converted resource */
 name|Resource
@@ -144,11 +149,11 @@ operator|!
 name|Resource
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_NO_MEMORY
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Perform the AML-to-Resource conversion */
 name|Status
@@ -201,13 +206,20 @@ operator|=
 name|Resource
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiBufferToResource
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateResourceList  *  * PARAMETERS:  AmlBuffer           - Pointer to the resource byte stream  *              OutputBuffer        - Pointer to the user's buffer  *  * RETURN:      Status: AE_OK if okay, else a valid ACPI_STATUS code  *              If OutputBuffer is not large enough, OutputBufferLength  *              indicates how large OutputBuffer should be, else it  *              indicates how may UINT8 elements of OutputBuffer are valid.  *  * DESCRIPTION: Takes the byte stream returned from a _CRS, _PRS control method  *              execution and parses the stream to create a linked list  *              of device resources.  *  ******************************************************************************/

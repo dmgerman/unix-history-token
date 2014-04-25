@@ -2703,13 +2703,14 @@ argument_list|,
 name|Status
 argument_list|)
 expr_stmt|;
+comment|/* GPE block 1 */
 name|Status
 operator|=
 name|AcpiInstallGpeHandler
 argument_list|(
 name|NULL
 argument_list|,
-literal|0x62
+literal|101
 argument_list|,
 name|ACPI_GPE_LEVEL_TRIGGERED
 argument_list|,
@@ -2731,7 +2732,7 @@ name|AcpiEnableGpe
 argument_list|(
 name|NULL
 argument_list|,
-literal|0x62
+literal|101
 argument_list|)
 expr_stmt|;
 name|AE_CHECK_OK
@@ -2747,7 +2748,7 @@ name|AcpiDisableGpe
 argument_list|(
 name|NULL
 argument_list|,
-literal|0x62
+literal|101
 argument_list|)
 expr_stmt|;
 name|AE_CHECK_OK

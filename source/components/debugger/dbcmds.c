@@ -715,7 +715,7 @@ decl_stmt|;
 comment|/* Header */
 name|AcpiOsPrintf
 argument_list|(
-literal|"Idx ID Status    Type            Sig  Address  Len   Header\n"
+literal|"Idx ID    Status Type              TableHeader (Sig, Address, Length)\n"
 argument_list|)
 expr_stmt|;
 comment|/* Walk the entire root table list */
@@ -798,7 +798,7 @@ name|ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"External virtual  "
+literal|"External/virtual  "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -807,7 +807,7 @@ name|ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Internal physical "
+literal|"Internal/physical "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -816,14 +816,14 @@ name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Internal virtual  "
+literal|"Internal/virtual  "
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"INVALID   "
+literal|"INVALID TYPE      "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2954,6 +2954,8 @@ parameter_list|)
 block|{
 name|UINT32
 name|BlockNumber
+init|=
+literal|0
 decl_stmt|;
 name|UINT32
 name|GpeNumber
@@ -2973,6 +2975,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/*      * If no block arg, or block arg == 0 or 1, use the FADT-defined      * GPE blocks.      */
+if|if
+condition|(
+name|BlockArg
+condition|)
+block|{
 name|BlockNumber
 operator|=
 name|ACPI_STRTOUL
@@ -2984,6 +2992,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|BlockNumber
+operator|==
+literal|1
+condition|)
+block|{
+name|BlockNumber
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 name|GpeEventInfo
 operator|=
 name|AcpiEvGetGpeEventInfo

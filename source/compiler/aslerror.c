@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ASL_EXCEPTIONS
-end_define
-
 begin_include
 include|#
 directive|include
@@ -268,6 +262,7 @@ decl_stmt|;
 name|UINT32
 name|MsgLength
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|MainMessage
@@ -783,7 +778,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* NULL message ID, just print the raw message */
+comment|/* If a NULL message ID, just print the raw message */
 if|if
 condition|(
 name|Enode
@@ -804,88 +799,42 @@ operator|->
 name|Message
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-else|else
-block|{
 comment|/* Decode the message ID */
-if|if
-condition|(
-name|Gbl_VerboseErrors
-condition|)
-block|{
 name|fprintf
 argument_list|(
 name|OutputFile
 argument_list|,
 literal|"%s %4.4d -"
 argument_list|,
-name|AslErrorLevel
-index|[
-name|Enode
-operator|->
-name|Level
-index|]
-argument_list|,
-name|Enode
-operator|->
-name|MessageId
-operator|+
-operator|(
-operator|(
-name|Enode
-operator|->
-name|Level
-operator|+
-literal|1
-operator|)
-operator|*
-literal|1000
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-comment|/* IDE case */
-block|{
-name|fprintf
+name|AeDecodeExceptionLevel
 argument_list|(
-name|OutputFile
-argument_list|,
-literal|"%s %4.4d:"
-argument_list|,
-name|AslErrorLevelIde
-index|[
 name|Enode
 operator|->
 name|Level
-index|]
+argument_list|)
+argument_list|,
+name|AeBuildFullExceptionCode
+argument_list|(
+name|Enode
+operator|->
+name|Level
 argument_list|,
 name|Enode
 operator|->
 name|MessageId
-operator|+
-operator|(
-operator|(
-name|Enode
-operator|->
-name|Level
-operator|+
-literal|1
-operator|)
-operator|*
-literal|1000
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|MainMessage
 operator|=
-name|AslMessages
-index|[
+name|AeDecodeMessageId
+argument_list|(
 name|Enode
 operator|->
 name|MessageId
-index|]
+argument_list|)
 expr_stmt|;
 name|ExtraMessage
 operator|=
@@ -893,24 +842,27 @@ name|Enode
 operator|->
 name|Message
 expr_stmt|;
+comment|/* If a NULL line number, just print the decoded message */
 if|if
 condition|(
+operator|!
 name|Enode
 operator|->
 name|LineNumber
 condition|)
 block|{
-comment|/* Main message: try to use string from AslMessages first */
-if|if
-condition|(
-operator|!
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|" %s %s\n\n"
+argument_list|,
 name|MainMessage
-condition|)
-block|{
-name|MainMessage
-operator|=
-literal|""
+argument_list|,
+name|ExtraMessage
+argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|MsgLength
 operator|=
@@ -1138,22 +1090,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|OutputFile
-argument_list|,
-literal|" %s %s\n\n"
-argument_list|,
-name|MainMessage
-argument_list|,
-name|ExtraMessage
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
 end_function
 
 begin_comment
@@ -1210,7 +1146,7 @@ parameter_list|(
 name|UINT8
 name|Level
 parameter_list|,
-name|UINT8
+name|UINT16
 name|MessageId
 parameter_list|,
 name|UINT32
@@ -1430,7 +1366,7 @@ parameter_list|(
 name|UINT8
 name|Level
 parameter_list|,
-name|UINT8
+name|UINT16
 name|MessageId
 parameter_list|,
 name|UINT32
@@ -1762,7 +1698,7 @@ parameter_list|(
 name|UINT8
 name|Level
 parameter_list|,
-name|UINT8
+name|UINT16
 name|MessageId
 parameter_list|)
 block|{
@@ -1807,17 +1743,12 @@ case|:
 comment|/*          * Ignore this warning/remark if it has been disabled by          * the user (-vw option)          */
 name|EncodedMessageId
 operator|=
-name|MessageId
-operator|+
-operator|(
-operator|(
+name|AeBuildFullExceptionCode
+argument_list|(
 name|Level
-operator|+
-literal|1
-operator|)
-operator|*
-literal|1000
-operator|)
+argument_list|,
+name|MessageId
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1874,7 +1805,7 @@ parameter_list|(
 name|UINT8
 name|Level
 parameter_list|,
-name|UINT8
+name|UINT16
 name|MessageId
 parameter_list|,
 name|ACPI_PARSE_OBJECT

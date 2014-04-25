@@ -1540,6 +1540,12 @@ argument_list|(
 name|Node
 argument_list|,
 name|GpeBlockAddress
+operator|->
+name|Address
+argument_list|,
+name|GpeBlockAddress
+operator|->
+name|SpaceId
 argument_list|,
 name|RegisterCount
 argument_list|,

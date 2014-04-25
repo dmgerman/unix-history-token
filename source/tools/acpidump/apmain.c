@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|AP_SUPPORTED_OPTIONS
-value|"?a:bcf:hn:o:r:svz"
+value|"?a:bcf:hn:o:r:svxz"
 end_define
 
 begin_comment
@@ -206,6 +206,20 @@ argument_list|(
 literal|"-n<Signature>"
 argument_list|,
 literal|"Get table via a name/signature"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-x"
+argument_list|,
+literal|"Do not use but dump XSDT"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-x -x"
+argument_list|,
+literal|"Do not use or dump XSDT"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -432,6 +446,29 @@ name|Gbl_SummaryMode
 operator|=
 name|TRUE
 expr_stmt|;
+continue|continue;
+case|case
+literal|'x'
+case|:
+comment|/* Do not use XSDT */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_DoNotUseXsdt
+condition|)
+block|{
+name|AcpiGbl_DoNotUseXsdt
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Gbl_DoNotDumpXsdt
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 continue|continue;
 case|case
 literal|'v'
