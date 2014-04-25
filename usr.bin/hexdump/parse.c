@@ -107,6 +107,7 @@ begin_function
 name|void
 name|addfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2296,6 +2297,7 @@ begin_function
 name|void
 name|badcnt
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2356,6 +2358,7 @@ begin_function
 name|void
 name|badconv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ch
