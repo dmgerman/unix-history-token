@@ -447,12 +447,6 @@ name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
-name|int
-name|mem_rid
-decl_stmt|;
-name|int
-name|irq_rid
-decl_stmt|;
 name|struct
 name|wpi_config
 name|config
