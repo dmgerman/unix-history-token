@@ -980,9 +980,6 @@ name|struct
 name|iwn_rx_ring
 name|rxq
 decl_stmt|;
-name|int
-name|mem_rid
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -993,9 +990,6 @@ name|sc_st
 decl_stmt|;
 name|bus_space_handle_t
 name|sc_sh
-decl_stmt|;
-name|int
-name|irq_rid
 decl_stmt|;
 name|struct
 name|resource
