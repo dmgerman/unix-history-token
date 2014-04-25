@@ -1090,6 +1090,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|IEEE80211_S_SLEEP
+case|:
+comment|/* beacon miss */
+comment|/* 			 * XXX if in sleep we need to wakeup the hardware. 			 */
+comment|/* FALLTHROUGH */
+case|case
 name|IEEE80211_S_RUN
 case|:
 comment|/* beacon miss */
@@ -5893,12 +5899,7 @@ comment|/* 				 * XXX TODO: do a separate notification 				 * for the multicast 
 if|#
 directive|if
 literal|0
-block|if ((tim->tim_bitctl& 1) || 				    (min<= ix&& ix<= max&& 				     isset(tim->tim_bitmap - min, aid))) {
-comment|/*  					 * XXX Do not let bg scan kick off 					 * we are expecting data. 					 */
-block|ieee80211_sta_tim_notify(vap, 1); 					ic->ic_lastdata = ticks;
-comment|// XXX not yet?
-comment|//					vap->iv_sta_ps(vap, 0);
-block|}
+block|if (tim->tim_bitctl& 1) { 					ieee80211_sta_tim_notify(vap, 1); 					ic->ic_lastdata = ticks; 				}
 endif|#
 directive|endif
 name|ni
