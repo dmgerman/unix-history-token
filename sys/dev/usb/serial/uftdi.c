@@ -210,21 +210,6 @@ directive|include
 file|<dev/usb/uftdiio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|uftdi_debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -243,6 +228,21 @@ literal|"USB uftdi"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|uftdi_debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -274,13 +274,6 @@ begin_define
 define|#
 directive|define
 name|UFTDI_CONFIG_INDEX
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|UFTDI_IFACE_INDEX_JTAG
 value|0
 end_define
 
@@ -1204,7 +1197,7 @@ name|ACTON
 argument_list|,
 name|SPECTRAPRO
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1213,7 +1206,7 @@ name|ALTI2
 argument_list|,
 name|N3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1222,9 +1215,10 @@ name|ANALOGDEVICES
 argument_list|,
 name|GNICE
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1233,9 +1227,10 @@ name|ANALOGDEVICES
 argument_list|,
 name|GNICEPLUS
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1244,7 +1239,7 @@ name|ATMEL
 argument_list|,
 name|STK541
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1253,7 +1248,7 @@ name|BAYER
 argument_list|,
 name|CONTOUR_CABLE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1262,7 +1257,7 @@ name|BBELECTRONICS
 argument_list|,
 literal|232USB9M
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1271,7 +1266,7 @@ name|BBELECTRONICS
 argument_list|,
 literal|485USB9F_2W
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1280,7 +1275,7 @@ name|BBELECTRONICS
 argument_list|,
 literal|485USB9F_4W
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1289,7 +1284,7 @@ name|BBELECTRONICS
 argument_list|,
 literal|485USBTB_2W
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1298,7 +1293,7 @@ name|BBELECTRONICS
 argument_list|,
 literal|485USBTB_4W
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1307,7 +1302,7 @@ name|BBELECTRONICS
 argument_list|,
 name|TTL3USB9M
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1316,7 +1311,7 @@ name|BBELECTRONICS
 argument_list|,
 name|TTL5USB9M
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1325,7 +1320,7 @@ name|BBELECTRONICS
 argument_list|,
 name|USO9ML2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1334,7 +1329,7 @@ name|BBELECTRONICS
 argument_list|,
 name|USO9ML2DR
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1343,7 +1338,7 @@ name|BBELECTRONICS
 argument_list|,
 name|USO9ML2DR_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1352,7 +1347,7 @@ name|BBELECTRONICS
 argument_list|,
 name|USOPTL4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1361,7 +1356,7 @@ name|BBELECTRONICS
 argument_list|,
 name|USOPTL4DR
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1370,7 +1365,7 @@ name|BBELECTRONICS
 argument_list|,
 name|USOPTL4DR2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1379,7 +1374,7 @@ name|BBELECTRONICS
 argument_list|,
 name|USOTL4
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1388,7 +1383,7 @@ name|BBELECTRONICS
 argument_list|,
 name|USPTL4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1397,7 +1392,7 @@ name|BBELECTRONICS
 argument_list|,
 name|USTL4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1406,7 +1401,7 @@ name|BBELECTRONICS
 argument_list|,
 name|ZZ_PROG1_USB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1415,7 +1410,7 @@ name|CONTEC
 argument_list|,
 name|COM1USBH
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1424,7 +1419,7 @@ name|DRESDENELEKTRONIK
 argument_list|,
 name|SENSORTERMINALBOARD
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1433,7 +1428,7 @@ name|DRESDENELEKTRONIK
 argument_list|,
 name|WIRELESSHANDHELDTERMINAL
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1442,7 +1437,7 @@ name|DRESDENELEKTRONIK
 argument_list|,
 name|LEVELSHIFTERSTICKLOWCOST
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1451,7 +1446,7 @@ name|ELEKTOR
 argument_list|,
 name|FT323R
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1460,7 +1455,7 @@ name|EVOLUTION
 argument_list|,
 name|ER1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1469,7 +1464,7 @@ name|EVOLUTION
 argument_list|,
 name|HYBRID
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1478,7 +1473,7 @@ name|EVOLUTION
 argument_list|,
 name|RCM4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1487,7 +1482,7 @@ name|FALCOM
 argument_list|,
 name|SAMBA
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1496,7 +1491,7 @@ name|FALCOM
 argument_list|,
 name|TWIST
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1505,9 +1500,10 @@ name|FIC
 argument_list|,
 name|NEO1973_DEBUG
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1516,9 +1512,10 @@ name|FIC
 argument_list|,
 name|NEO1973_DEBUG
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1527,7 +1524,7 @@ name|FTDI
 argument_list|,
 literal|232EX
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1536,7 +1533,7 @@ name|FTDI
 argument_list|,
 literal|232H
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1545,7 +1542,7 @@ name|FTDI
 argument_list|,
 literal|232RL
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1554,7 +1551,7 @@ name|FTDI
 argument_list|,
 literal|4N_GALAXY_DE_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1563,7 +1560,7 @@ name|FTDI
 argument_list|,
 literal|4N_GALAXY_DE_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1572,7 +1569,7 @@ name|FTDI
 argument_list|,
 literal|4N_GALAXY_DE_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1581,7 +1578,7 @@ name|FTDI
 argument_list|,
 literal|8U232AM_ALT
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1590,7 +1587,7 @@ name|FTDI
 argument_list|,
 name|ACCESSO
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1599,7 +1596,7 @@ name|FTDI
 argument_list|,
 name|ACG_HFDUAL
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1608,7 +1605,7 @@ name|FTDI
 argument_list|,
 name|ACTIVE_ROBOTS
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1617,7 +1614,7 @@ name|FTDI
 argument_list|,
 name|ACTZWAVE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1626,7 +1623,7 @@ name|FTDI
 argument_list|,
 name|AMC232
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1635,7 +1632,7 @@ name|FTDI
 argument_list|,
 name|ARTEMIS
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1644,7 +1641,7 @@ name|FTDI
 argument_list|,
 name|ASK_RDR400
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1653,7 +1650,7 @@ name|FTDI
 argument_list|,
 name|ATIK_ATK16
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1662,7 +1659,7 @@ name|FTDI
 argument_list|,
 name|ATIK_ATK16C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1671,7 +1668,7 @@ name|FTDI
 argument_list|,
 name|ATIK_ATK16HR
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1680,7 +1677,7 @@ name|FTDI
 argument_list|,
 name|ATIK_ATK16HRC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1689,7 +1686,7 @@ name|FTDI
 argument_list|,
 name|ATIK_ATK16IC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1698,7 +1695,7 @@ name|FTDI
 argument_list|,
 name|BCS_SE923
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1707,7 +1704,10 @@ name|FTDI
 argument_list|,
 name|BEAGLEBONE
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1716,7 +1716,7 @@ name|FTDI
 argument_list|,
 name|CANDAPTER
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1725,7 +1725,7 @@ name|FTDI
 argument_list|,
 name|CANUSB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1734,7 +1734,7 @@ name|FTDI
 argument_list|,
 name|CCSICDU20_0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1743,7 +1743,7 @@ name|FTDI
 argument_list|,
 name|CCSICDU40_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1752,7 +1752,7 @@ name|FTDI
 argument_list|,
 name|CCSICDU64_4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1761,7 +1761,7 @@ name|FTDI
 argument_list|,
 name|CCSLOAD_N_GO_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1770,7 +1770,7 @@ name|FTDI
 argument_list|,
 name|CCSMACHX_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1779,7 +1779,7 @@ name|FTDI
 argument_list|,
 name|CCSPRIME8_5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1788,7 +1788,7 @@ name|FTDI
 argument_list|,
 name|CFA_631
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1797,7 +1797,7 @@ name|FTDI
 argument_list|,
 name|CFA_632
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1806,7 +1806,7 @@ name|FTDI
 argument_list|,
 name|CFA_633
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1815,7 +1815,7 @@ name|FTDI
 argument_list|,
 name|CFA_634
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1824,7 +1824,7 @@ name|FTDI
 argument_list|,
 name|CFA_635
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1833,7 +1833,7 @@ name|FTDI
 argument_list|,
 name|CHAMSYS_24_MASTER_WING
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1842,7 +1842,7 @@ name|FTDI
 argument_list|,
 name|CHAMSYS_MAXI_WING
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1851,7 +1851,7 @@ name|FTDI
 argument_list|,
 name|CHAMSYS_MEDIA_WING
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1860,7 +1860,7 @@ name|FTDI
 argument_list|,
 name|CHAMSYS_MIDI_TIMECODE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1869,7 +1869,7 @@ name|FTDI
 argument_list|,
 name|CHAMSYS_MINI_WING
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1878,7 +1878,7 @@ name|FTDI
 argument_list|,
 name|CHAMSYS_PC_WING
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1887,7 +1887,7 @@ name|FTDI
 argument_list|,
 name|CHAMSYS_USB_DMX
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1896,7 +1896,7 @@ name|FTDI
 argument_list|,
 name|CHAMSYS_WING
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1905,7 +1905,7 @@ name|FTDI
 argument_list|,
 name|COM4SM
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1914,7 +1914,7 @@ name|FTDI
 argument_list|,
 name|CONVERTER_0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1923,7 +1923,7 @@ name|FTDI
 argument_list|,
 name|CONVERTER_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1932,7 +1932,7 @@ name|FTDI
 argument_list|,
 name|CONVERTER_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1941,7 +1941,7 @@ name|FTDI
 argument_list|,
 name|CONVERTER_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1950,7 +1950,7 @@ name|FTDI
 argument_list|,
 name|CONVERTER_4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1959,7 +1959,7 @@ name|FTDI
 argument_list|,
 name|CONVERTER_5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1968,7 +1968,7 @@ name|FTDI
 argument_list|,
 name|CONVERTER_6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1977,7 +1977,7 @@ name|FTDI
 argument_list|,
 name|CONVERTER_7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1986,7 +1986,7 @@ name|FTDI
 argument_list|,
 name|CTI_USB_MINI_485
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -1995,7 +1995,7 @@ name|FTDI
 argument_list|,
 name|CTI_USB_NANO_485
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2004,7 +2004,7 @@ name|FTDI
 argument_list|,
 name|DMX4ALL
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2013,7 +2013,7 @@ name|FTDI
 argument_list|,
 name|DOMINTELL_DGQG
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2022,7 +2022,7 @@ name|FTDI
 argument_list|,
 name|DOMINTELL_DUSB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2031,7 +2031,7 @@ name|FTDI
 argument_list|,
 name|DOTEC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2040,7 +2040,7 @@ name|FTDI
 argument_list|,
 name|ECLO_COM_1WIRE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2049,7 +2049,7 @@ name|FTDI
 argument_list|,
 name|ECO_PRO_CDS
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2058,7 +2058,7 @@ name|FTDI
 argument_list|,
 name|EISCOU
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2067,7 +2067,7 @@ name|FTDI
 argument_list|,
 name|ELSTER_UNICOM
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2076,7 +2076,7 @@ name|FTDI
 argument_list|,
 name|ELV_ALC8500
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2085,7 +2085,7 @@ name|FTDI
 argument_list|,
 name|ELV_CLI7000
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2094,7 +2094,7 @@ name|FTDI
 argument_list|,
 name|ELV_CSI8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2103,7 +2103,7 @@ name|FTDI
 argument_list|,
 name|ELV_EC3000
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2112,7 +2112,7 @@ name|FTDI
 argument_list|,
 name|ELV_EM1000DL
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2121,7 +2121,7 @@ name|FTDI
 argument_list|,
 name|ELV_EM1010PC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2130,7 +2130,7 @@ name|FTDI
 argument_list|,
 name|ELV_FEM
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2139,7 +2139,7 @@ name|FTDI
 argument_list|,
 name|ELV_FHZ1000PC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2148,7 +2148,7 @@ name|FTDI
 argument_list|,
 name|ELV_FHZ1300PC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2157,7 +2157,7 @@ name|FTDI
 argument_list|,
 name|ELV_FM3RX
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2166,7 +2166,7 @@ name|FTDI
 argument_list|,
 name|ELV_FS20SIG
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2175,7 +2175,7 @@ name|FTDI
 argument_list|,
 name|ELV_HS485
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2184,7 +2184,7 @@ name|FTDI
 argument_list|,
 name|ELV_KL100
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2193,7 +2193,7 @@ name|FTDI
 argument_list|,
 name|ELV_MSM1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2202,7 +2202,7 @@ name|FTDI
 argument_list|,
 name|ELV_PCD200
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2211,7 +2211,7 @@ name|FTDI
 argument_list|,
 name|ELV_PCK100
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2220,7 +2220,7 @@ name|FTDI
 argument_list|,
 name|ELV_PPS7330
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2229,7 +2229,7 @@ name|FTDI
 argument_list|,
 name|ELV_RFP500
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2238,7 +2238,7 @@ name|FTDI
 argument_list|,
 name|ELV_T1100
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2247,7 +2247,7 @@ name|FTDI
 argument_list|,
 name|ELV_TFD128
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2256,7 +2256,7 @@ name|FTDI
 argument_list|,
 name|ELV_TFM100
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2265,7 +2265,7 @@ name|FTDI
 argument_list|,
 name|ELV_TWS550
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2274,7 +2274,7 @@ name|FTDI
 argument_list|,
 name|ELV_UAD8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2283,7 +2283,7 @@ name|FTDI
 argument_list|,
 name|ELV_UDA7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2292,7 +2292,7 @@ name|FTDI
 argument_list|,
 name|ELV_UDF77
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2301,7 +2301,7 @@ name|FTDI
 argument_list|,
 name|ELV_UIO88
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2310,7 +2310,7 @@ name|FTDI
 argument_list|,
 name|ELV_ULA200
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2319,7 +2319,7 @@ name|FTDI
 argument_list|,
 name|ELV_UM100
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2328,7 +2328,7 @@ name|FTDI
 argument_list|,
 name|ELV_UMS100
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2337,7 +2337,7 @@ name|FTDI
 argument_list|,
 name|ELV_UO100
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2346,7 +2346,7 @@ name|FTDI
 argument_list|,
 name|ELV_UR100
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2355,7 +2355,7 @@ name|FTDI
 argument_list|,
 name|ELV_USI2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2364,7 +2364,7 @@ name|FTDI
 argument_list|,
 name|ELV_USR
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2373,7 +2373,7 @@ name|FTDI
 argument_list|,
 name|ELV_UTP8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2382,7 +2382,7 @@ name|FTDI
 argument_list|,
 name|ELV_WS300PC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2391,7 +2391,7 @@ name|FTDI
 argument_list|,
 name|ELV_WS444PC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2400,7 +2400,7 @@ name|FTDI
 argument_list|,
 name|ELV_WS500
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2409,7 +2409,7 @@ name|FTDI
 argument_list|,
 name|ELV_WS550
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2418,7 +2418,7 @@ name|FTDI
 argument_list|,
 name|ELV_WS777
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2427,7 +2427,7 @@ name|FTDI
 argument_list|,
 name|ELV_WS888
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2436,7 +2436,7 @@ name|FTDI
 argument_list|,
 name|EMCU2D
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2445,7 +2445,7 @@ name|FTDI
 argument_list|,
 name|EMCU2H
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2454,7 +2454,7 @@ name|FTDI
 argument_list|,
 name|FUTURE_0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2463,7 +2463,7 @@ name|FTDI
 argument_list|,
 name|FUTURE_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2472,7 +2472,7 @@ name|FTDI
 argument_list|,
 name|FUTURE_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2481,7 +2481,7 @@ name|FTDI
 argument_list|,
 name|GAMMASCOUT
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2490,7 +2490,7 @@ name|FTDI
 argument_list|,
 name|GENERIC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2499,7 +2499,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E808
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2508,7 +2508,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E809
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2517,7 +2517,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E80A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2526,7 +2526,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E80B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2535,7 +2535,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E80C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2544,7 +2544,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E80D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2553,7 +2553,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E80E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2562,7 +2562,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E80F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2571,7 +2571,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E88D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2580,7 +2580,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E88E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2589,7 +2589,7 @@ name|FTDI
 argument_list|,
 name|GUDEADS_E88F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2598,7 +2598,7 @@ name|FTDI
 argument_list|,
 name|HD_RADIO
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2607,7 +2607,7 @@ name|FTDI
 argument_list|,
 name|HO720
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2616,7 +2616,7 @@ name|FTDI
 argument_list|,
 name|HO730
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2625,7 +2625,7 @@ name|FTDI
 argument_list|,
 name|HO820
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2634,7 +2634,7 @@ name|FTDI
 argument_list|,
 name|HO870
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2643,7 +2643,7 @@ name|FTDI
 argument_list|,
 name|IBS_APP70
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2652,7 +2652,7 @@ name|FTDI
 argument_list|,
 name|IBS_PCMCIA
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2661,7 +2661,7 @@ name|FTDI
 argument_list|,
 name|IBS_PEDO
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2670,7 +2670,7 @@ name|FTDI
 argument_list|,
 name|IBS_PICPRO
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2679,7 +2679,7 @@ name|FTDI
 argument_list|,
 name|IBS_PK1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2688,7 +2688,7 @@ name|FTDI
 argument_list|,
 name|IBS_PROD
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2697,7 +2697,7 @@ name|FTDI
 argument_list|,
 name|IBS_RS232MON
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2706,7 +2706,7 @@ name|FTDI
 argument_list|,
 name|IBS_US485
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2715,7 +2715,7 @@ name|FTDI
 argument_list|,
 name|IPLUS
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2724,7 +2724,7 @@ name|FTDI
 argument_list|,
 name|IPLUS2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2733,7 +2733,7 @@ name|FTDI
 argument_list|,
 name|IRTRANS
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2742,7 +2742,7 @@ name|FTDI
 argument_list|,
 name|KBS
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2751,7 +2751,7 @@ name|FTDI
 argument_list|,
 name|KTLINK
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2760,7 +2760,7 @@ name|FTDI
 argument_list|,
 name|LENZ_LIUSB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2769,7 +2769,7 @@ name|FTDI
 argument_list|,
 name|LK202
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2778,7 +2778,7 @@ name|FTDI
 argument_list|,
 name|LK204
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2787,9 +2787,10 @@ name|FTDI
 argument_list|,
 name|LM3S_DEVEL_BOARD
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2798,9 +2799,10 @@ name|FTDI
 argument_list|,
 name|LM3S_EVAL_BOARD
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2809,9 +2811,10 @@ name|FTDI
 argument_list|,
 name|LM3S_ICDI_B_BOARD
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2820,7 +2823,7 @@ name|FTDI
 argument_list|,
 name|MASTERDEVEL2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2829,7 +2832,7 @@ name|FTDI
 argument_list|,
 name|MAXSTREAM
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2838,7 +2841,7 @@ name|FTDI
 argument_list|,
 name|MHAM_DB9
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2847,7 +2850,7 @@ name|FTDI
 argument_list|,
 name|MHAM_IC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2856,7 +2859,7 @@ name|FTDI
 argument_list|,
 name|MHAM_KW
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2865,7 +2868,7 @@ name|FTDI
 argument_list|,
 name|MHAM_RS232
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2874,7 +2877,7 @@ name|FTDI
 argument_list|,
 name|MHAM_Y6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2883,7 +2886,7 @@ name|FTDI
 argument_list|,
 name|MHAM_Y8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2892,7 +2895,7 @@ name|FTDI
 argument_list|,
 name|MHAM_Y9
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2901,7 +2904,7 @@ name|FTDI
 argument_list|,
 name|MHAM_YS
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2910,7 +2913,7 @@ name|FTDI
 argument_list|,
 name|MICRO_CHAMELEON
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2919,7 +2922,7 @@ name|FTDI
 argument_list|,
 name|MTXORB_5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2928,7 +2931,7 @@ name|FTDI
 argument_list|,
 name|MTXORB_6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2937,7 +2940,7 @@ name|FTDI
 argument_list|,
 name|MX2_3
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2946,7 +2949,7 @@ name|FTDI
 argument_list|,
 name|MX4_5
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2955,7 +2958,7 @@ name|FTDI
 argument_list|,
 name|NXTCAM
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2964,7 +2967,7 @@ name|FTDI
 argument_list|,
 name|OCEANIC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2973,9 +2976,10 @@ name|FTDI
 argument_list|,
 name|OOCDLINK
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2984,7 +2988,7 @@ name|FTDI
 argument_list|,
 name|OPENDCC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -2993,7 +2997,7 @@ name|FTDI
 argument_list|,
 name|OPENDCC_GATEWAY
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3002,7 +3006,7 @@ name|FTDI
 argument_list|,
 name|OPENDCC_GBM
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3011,7 +3015,7 @@ name|FTDI
 argument_list|,
 name|OPENDCC_SNIFFER
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3020,7 +3024,7 @@ name|FTDI
 argument_list|,
 name|OPENDCC_THROTTLE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3029,7 +3033,7 @@ name|FTDI
 argument_list|,
 name|PCDJ_DAC2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3038,7 +3042,7 @@ name|FTDI
 argument_list|,
 name|PCMSFU
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3047,7 +3051,7 @@ name|FTDI
 argument_list|,
 name|PERLE_ULTRAPORT
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3056,7 +3060,7 @@ name|FTDI
 argument_list|,
 name|PHI_FISCO
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3065,7 +3069,7 @@ name|FTDI
 argument_list|,
 name|PIEGROUP
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3074,7 +3078,7 @@ name|FTDI
 argument_list|,
 name|PROPOX_JTAGCABLEII
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3083,7 +3087,7 @@ name|FTDI
 argument_list|,
 name|R2000KU_TRUE_RNG
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3092,7 +3096,7 @@ name|FTDI
 argument_list|,
 name|R2X0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3101,7 +3105,7 @@ name|FTDI
 argument_list|,
 name|RELAIS
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3110,7 +3114,7 @@ name|FTDI
 argument_list|,
 name|REU_TINY
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3119,7 +3123,7 @@ name|FTDI
 argument_list|,
 name|RMP200
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3128,7 +3132,7 @@ name|FTDI
 argument_list|,
 name|RM_CANVIEW
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3137,7 +3141,7 @@ name|FTDI
 argument_list|,
 name|RRCIRKITS_LOCOBUFFER
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3146,7 +3150,7 @@ name|FTDI
 argument_list|,
 name|SCIENCESCOPE_HS_LOGBOOK
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3155,7 +3159,7 @@ name|FTDI
 argument_list|,
 name|SCIENCESCOPE_LOGBOOKML
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3164,7 +3168,7 @@ name|FTDI
 argument_list|,
 name|SCIENCESCOPE_LS_LOGBOOK
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3173,7 +3177,7 @@ name|FTDI
 argument_list|,
 name|SCS_DEVICE_0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3182,7 +3186,7 @@ name|FTDI
 argument_list|,
 name|SCS_DEVICE_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3191,7 +3195,7 @@ name|FTDI
 argument_list|,
 name|SCS_DEVICE_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3200,7 +3204,7 @@ name|FTDI
 argument_list|,
 name|SCS_DEVICE_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3209,7 +3213,7 @@ name|FTDI
 argument_list|,
 name|SCS_DEVICE_4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3218,7 +3222,7 @@ name|FTDI
 argument_list|,
 name|SCS_DEVICE_5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3227,7 +3231,7 @@ name|FTDI
 argument_list|,
 name|SCS_DEVICE_6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3236,7 +3240,7 @@ name|FTDI
 argument_list|,
 name|SCS_DEVICE_7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3245,7 +3249,7 @@ name|FTDI
 argument_list|,
 name|SDMUSBQSS
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3254,7 +3258,7 @@ name|FTDI
 argument_list|,
 name|SEMC_DSS20
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3263,7 +3267,7 @@ name|FTDI
 argument_list|,
 name|SERIAL_2232C
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+name|UFTDI_JTAG_CHECK_STRING
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3272,7 +3276,7 @@ name|FTDI
 argument_list|,
 name|SERIAL_2232D
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3281,7 +3285,7 @@ name|FTDI
 argument_list|,
 name|SERIAL_232RL
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3290,7 +3294,7 @@ name|FTDI
 argument_list|,
 name|SERIAL_4232H
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3299,7 +3303,7 @@ name|FTDI
 argument_list|,
 name|SERIAL_8U100AX
 argument_list|,
-name|UFTDI_TYPE_SIO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3308,7 +3312,7 @@ name|FTDI
 argument_list|,
 name|SERIAL_8U232AM
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3317,7 +3321,7 @@ name|FTDI
 argument_list|,
 name|SERIAL_8U232AM4
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3326,9 +3330,10 @@ name|FTDI
 argument_list|,
 name|SIGNALYZER_SH2
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3337,9 +3342,10 @@ name|FTDI
 argument_list|,
 name|SIGNALYZER_SH4
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3348,9 +3354,10 @@ name|FTDI
 argument_list|,
 name|SIGNALYZER_SLITE
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3359,9 +3366,10 @@ name|FTDI
 argument_list|,
 name|SIGNALYZER_ST
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3370,7 +3378,7 @@ name|FTDI
 argument_list|,
 name|SPECIAL_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3379,7 +3387,7 @@ name|FTDI
 argument_list|,
 name|SPECIAL_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3388,7 +3396,7 @@ name|FTDI
 argument_list|,
 name|SPECIAL_4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3397,7 +3405,7 @@ name|FTDI
 argument_list|,
 name|SPROG_II
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3406,7 +3414,7 @@ name|FTDI
 argument_list|,
 name|SR_RADIO
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3415,7 +3423,7 @@ name|FTDI
 argument_list|,
 name|SUUNTO_SPORTS
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3424,7 +3432,7 @@ name|FTDI
 argument_list|,
 name|TACTRIX_OPENPORT_13M
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3433,7 +3441,7 @@ name|FTDI
 argument_list|,
 name|TACTRIX_OPENPORT_13S
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3442,7 +3450,7 @@ name|FTDI
 argument_list|,
 name|TACTRIX_OPENPORT_13U
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3451,7 +3459,7 @@ name|FTDI
 argument_list|,
 name|TAVIR_STK500
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3460,7 +3468,7 @@ name|FTDI
 argument_list|,
 name|TERATRONIK_D2XX
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3469,7 +3477,7 @@ name|FTDI
 argument_list|,
 name|TERATRONIK_VCP
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3478,7 +3486,7 @@ name|FTDI
 argument_list|,
 name|THORLABS
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3487,7 +3495,7 @@ name|FTDI
 argument_list|,
 name|TNC_X
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3496,7 +3504,7 @@ name|FTDI
 argument_list|,
 name|TTUSB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3505,9 +3513,10 @@ name|FTDI
 argument_list|,
 name|TURTELIZER2
 argument_list|,
-name|UFTDI_TYPE_8U232AM
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3516,7 +3525,7 @@ name|FTDI
 argument_list|,
 name|UOPTBR
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3525,7 +3534,7 @@ name|FTDI
 argument_list|,
 name|USBSERIAL
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3534,7 +3543,7 @@ name|FTDI
 argument_list|,
 name|USBX_707
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3543,7 +3552,7 @@ name|FTDI
 argument_list|,
 name|USB_UIRT
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3552,7 +3561,7 @@ name|FTDI
 argument_list|,
 name|USINT_CAT
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3561,7 +3570,7 @@ name|FTDI
 argument_list|,
 name|USINT_RS232
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3570,7 +3579,7 @@ name|FTDI
 argument_list|,
 name|USINT_WKEY
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3579,7 +3588,7 @@ name|FTDI
 argument_list|,
 name|VARDAAN
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3588,7 +3597,7 @@ name|FTDI
 argument_list|,
 name|VNHCPCUSB_D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3597,7 +3606,7 @@ name|FTDI
 argument_list|,
 name|WESTREX_MODEL_777
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3606,7 +3615,7 @@ name|FTDI
 argument_list|,
 name|WESTREX_MODEL_8900F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3615,7 +3624,7 @@ name|FTDI
 argument_list|,
 name|XF_547
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3624,7 +3633,7 @@ name|FTDI
 argument_list|,
 name|XF_640
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3633,7 +3642,7 @@ name|FTDI
 argument_list|,
 name|XF_642
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3642,7 +3651,7 @@ name|FTDI
 argument_list|,
 name|XM_RADIO
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3651,7 +3660,7 @@ name|FTDI
 argument_list|,
 name|YEI_SERVOCENTER31
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3660,7 +3669,7 @@ name|GNOTOMETRICS
 argument_list|,
 name|USB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3669,7 +3678,7 @@ name|ICOM
 argument_list|,
 name|SP1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3678,7 +3687,7 @@ name|ICOM
 argument_list|,
 name|OPC_U_UC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3687,7 +3696,7 @@ name|ICOM
 argument_list|,
 name|RP2C1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3696,7 +3705,7 @@ name|ICOM
 argument_list|,
 name|RP2C2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3705,7 +3714,7 @@ name|ICOM
 argument_list|,
 name|RP2D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3714,7 +3723,7 @@ name|ICOM
 argument_list|,
 name|RP2KVR
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3723,7 +3732,7 @@ name|ICOM
 argument_list|,
 name|RP2KVT
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3732,7 +3741,7 @@ name|ICOM
 argument_list|,
 name|RP2VR
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3741,7 +3750,7 @@ name|ICOM
 argument_list|,
 name|RP2VT
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3750,7 +3759,7 @@ name|ICOM
 argument_list|,
 name|RP4KVR
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3759,7 +3768,7 @@ name|ICOM
 argument_list|,
 name|RP4KVT
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3768,7 +3777,7 @@ name|IDTECH
 argument_list|,
 name|IDT1221U
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3777,7 +3786,7 @@ name|INTERBIOMETRICS
 argument_list|,
 name|IOBOARD
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3786,7 +3795,7 @@ name|INTERBIOMETRICS
 argument_list|,
 name|MINI_IOBOARD
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3795,7 +3804,7 @@ name|INTREPIDCS
 argument_list|,
 name|NEOVI
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3804,7 +3813,7 @@ name|INTREPIDCS
 argument_list|,
 name|VALUECAN
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3813,9 +3822,10 @@ name|IONICS
 argument_list|,
 name|PLUGCOMPUTER
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3824,7 +3834,7 @@ name|JETI
 argument_list|,
 name|SPC1201
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3833,7 +3843,7 @@ name|KOBIL
 argument_list|,
 name|CONV_B1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3842,7 +3852,7 @@ name|KOBIL
 argument_list|,
 name|CONV_KAAN
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3851,7 +3861,7 @@ name|LARSENBRUSGAARD
 argument_list|,
 name|ALTITRACK
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3860,7 +3870,7 @@ name|MARVELL
 argument_list|,
 name|SHEEVAPLUG
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3869,7 +3879,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0100
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3878,7 +3888,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0101
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3887,7 +3897,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0102
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3896,7 +3906,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0103
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3905,7 +3915,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0104
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3914,7 +3924,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0105
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3923,7 +3933,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0106
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3932,7 +3942,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0107
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3941,7 +3951,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0108
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3950,7 +3960,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0109
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3959,7 +3969,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_010A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3968,7 +3978,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_010B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3977,7 +3987,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_010C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3986,7 +3996,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_010D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -3995,7 +4005,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_010E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4004,7 +4014,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_010F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4013,7 +4023,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0110
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4022,7 +4032,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0111
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4031,7 +4041,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0112
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4040,7 +4050,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0113
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4049,7 +4059,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0114
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4058,7 +4068,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0115
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4067,7 +4077,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0116
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4076,7 +4086,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0117
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4085,7 +4095,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0118
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4094,7 +4104,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0119
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4103,7 +4113,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_011A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4112,7 +4122,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_011B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4121,7 +4131,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_011C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4130,7 +4140,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_011D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4139,7 +4149,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_011E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4148,7 +4158,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_011F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4157,7 +4167,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0120
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4166,7 +4176,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0121
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4175,7 +4185,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0122
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4184,7 +4194,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0123
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4193,7 +4203,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0124
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4202,7 +4212,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0125
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4211,7 +4221,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0126
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4220,7 +4230,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0128
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4229,7 +4239,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0129
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4238,7 +4248,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_012A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4247,7 +4257,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_012B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4256,7 +4266,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_012D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4265,7 +4275,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_012E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4274,7 +4284,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_012F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4283,7 +4293,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0130
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4292,7 +4302,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0131
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4301,7 +4311,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0132
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4310,7 +4320,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0133
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4319,7 +4329,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0134
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4328,7 +4338,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0135
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4337,7 +4347,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0136
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4346,7 +4356,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0137
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4355,7 +4365,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0138
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4364,7 +4374,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0139
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4373,7 +4383,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_013A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4382,7 +4392,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_013B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4391,7 +4401,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_013C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4400,7 +4410,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_013D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4409,7 +4419,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_013E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4418,7 +4428,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_013F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4427,7 +4437,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0140
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4436,7 +4446,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0141
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4445,7 +4455,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0142
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4454,7 +4464,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0143
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4463,7 +4473,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0144
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4472,7 +4482,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0145
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4481,7 +4491,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0146
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4490,7 +4500,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0147
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4499,7 +4509,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0148
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4508,7 +4518,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0149
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4517,7 +4527,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_014A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4526,7 +4536,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_014B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4535,7 +4545,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_014C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4544,7 +4554,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_014D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4553,7 +4563,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_014E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4562,7 +4572,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_014F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4571,7 +4581,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0150
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4580,7 +4590,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0151
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4589,7 +4599,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0152
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4598,7 +4608,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0159
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4607,7 +4617,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_015A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4616,7 +4626,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_015B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4625,7 +4635,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_015C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4634,7 +4644,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_015D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4643,7 +4653,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_015E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4652,7 +4662,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_015F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4661,7 +4671,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0160
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4670,7 +4680,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0161
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4679,7 +4689,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0162
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4688,7 +4698,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0163
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4697,7 +4707,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0164
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4706,7 +4716,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0165
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4715,7 +4725,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0166
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4724,7 +4734,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0167
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4733,7 +4743,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0168
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4742,7 +4752,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0169
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4751,7 +4761,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_016A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4760,7 +4770,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_016B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4769,7 +4779,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_016C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4778,7 +4788,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_016D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4787,7 +4797,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_016E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4796,7 +4806,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_016F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4805,7 +4815,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0170
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4814,7 +4824,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0171
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4823,7 +4833,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0172
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4832,7 +4842,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0173
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4841,7 +4851,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0174
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4850,7 +4860,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0175
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4859,7 +4869,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0176
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4868,7 +4878,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0177
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4877,7 +4887,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0178
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4886,7 +4896,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0179
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4895,7 +4905,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_017A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4904,7 +4914,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_017B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4913,7 +4923,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_017C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4922,7 +4932,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_017D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4931,7 +4941,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_017E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4940,7 +4950,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_017F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4949,7 +4959,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0180
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4958,7 +4968,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0181
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4967,7 +4977,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0182
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4976,7 +4986,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0183
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4985,7 +4995,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0184
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -4994,7 +5004,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0185
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5003,7 +5013,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0186
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5012,7 +5022,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0187
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5021,7 +5031,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0188
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5030,7 +5040,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0189
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5039,7 +5049,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_018A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5048,7 +5058,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_018B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5057,7 +5067,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_018C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5066,7 +5076,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_018D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5075,7 +5085,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_018E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5084,7 +5094,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_018F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5093,7 +5103,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0190
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5102,7 +5112,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0191
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5111,7 +5121,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0192
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5120,7 +5130,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0193
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5129,7 +5139,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0194
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5138,7 +5148,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0195
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5147,7 +5157,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0196
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5156,7 +5166,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0197
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5165,7 +5175,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0198
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5174,7 +5184,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_0199
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5183,7 +5193,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_019A
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5192,7 +5202,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_019B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5201,7 +5211,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_019C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5210,7 +5220,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_019D
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5219,7 +5229,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_019E
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5228,7 +5238,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_019F
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5237,7 +5247,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01A0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5246,7 +5256,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01A1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5255,7 +5265,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01A2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5264,7 +5274,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01A3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5273,7 +5283,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01A4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5282,7 +5292,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01A5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5291,7 +5301,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01A6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5300,7 +5310,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01A7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5309,7 +5319,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01A8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5318,7 +5328,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01A9
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5327,7 +5337,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01AA
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5336,7 +5346,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01AB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5345,7 +5355,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01AC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5354,7 +5364,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01AD
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5363,7 +5373,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01AE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5372,7 +5382,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01AF
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5381,7 +5391,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01B0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5390,7 +5400,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01B1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5399,7 +5409,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01B2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5408,7 +5418,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01B3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5417,7 +5427,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01B4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5426,7 +5436,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01B5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5435,7 +5445,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01B6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5444,7 +5454,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01B7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5453,7 +5463,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01B8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5462,7 +5472,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01B9
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5471,7 +5481,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01BA
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5480,7 +5490,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01BB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5489,7 +5499,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01BC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5498,7 +5508,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01BD
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5507,7 +5517,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01BE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5516,7 +5526,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01BF
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5525,7 +5535,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01C0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5534,7 +5544,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01C1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5543,7 +5553,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01C2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5552,7 +5562,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01C3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5561,7 +5571,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01C4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5570,7 +5580,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01C5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5579,7 +5589,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01C6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5588,7 +5598,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01C7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5597,7 +5607,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01C8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5606,7 +5616,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01C9
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5615,7 +5625,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01CA
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5624,7 +5634,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01CB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5633,7 +5643,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01CC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5642,7 +5652,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01CD
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5651,7 +5661,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01CE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5660,7 +5670,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01CF
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5669,7 +5679,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01D0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5678,7 +5688,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01D1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5687,7 +5697,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01D2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5696,7 +5706,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01D3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5705,7 +5715,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01D4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5714,7 +5724,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01D5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5723,7 +5733,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01D6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5732,7 +5742,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01D7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5741,7 +5751,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01D8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5750,7 +5760,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01D9
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5759,7 +5769,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01DA
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5768,7 +5778,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01DB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5777,7 +5787,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01DC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5786,7 +5796,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01DD
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5795,7 +5805,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01DE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5804,7 +5814,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01DF
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5813,7 +5823,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01E0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5822,7 +5832,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01E1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5831,7 +5841,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01E2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5840,7 +5850,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01E3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5849,7 +5859,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01E4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5858,7 +5868,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01E5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5867,7 +5877,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01E6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5876,7 +5886,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01E7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5885,7 +5895,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01E8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5894,7 +5904,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01E9
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5903,7 +5913,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01EA
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5912,7 +5922,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01EB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5921,7 +5931,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01EC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5930,7 +5940,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01ED
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5939,7 +5949,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01EE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5948,7 +5958,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01EF
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5957,7 +5967,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01F0
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5966,7 +5976,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01F1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5975,7 +5985,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01F2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5984,7 +5994,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01F3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -5993,7 +6003,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01F4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6002,7 +6012,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01F5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6011,7 +6021,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01F6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6020,7 +6030,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01F7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6029,7 +6039,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01F8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6038,7 +6048,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01F9
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6047,7 +6057,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01FA
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6056,7 +6066,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01FB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6065,7 +6075,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01FC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6074,7 +6084,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01FD
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6083,7 +6093,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01FE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6092,7 +6102,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|FTDI_RANGE_01FF
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6101,7 +6111,7 @@ name|MATRIXORBITAL
 argument_list|,
 name|MOUA
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6110,7 +6120,7 @@ name|MELCO
 argument_list|,
 name|PCOPRS1
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6119,7 +6129,7 @@ name|METAGEEK
 argument_list|,
 name|TELLSTICK
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6128,7 +6138,7 @@ name|MOBILITY
 argument_list|,
 name|USB_SERIAL
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6137,9 +6147,10 @@ name|OLIMEX
 argument_list|,
 name|ARM_USB_OCD
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6148,9 +6159,10 @@ name|OLIMEX
 argument_list|,
 name|ARM_USB_OCD_H
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6159,7 +6171,7 @@ name|OPTO
 argument_list|,
 name|CRD7734
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6168,7 +6180,7 @@ name|OPTO
 argument_list|,
 name|CRD7734_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6177,7 +6189,7 @@ name|PAPOUCH
 argument_list|,
 name|AD4USB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6186,7 +6198,7 @@ name|PAPOUCH
 argument_list|,
 name|AP485
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6195,7 +6207,7 @@ name|PAPOUCH
 argument_list|,
 name|AP485_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6204,7 +6216,7 @@ name|PAPOUCH
 argument_list|,
 name|DRAK5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6213,7 +6225,7 @@ name|PAPOUCH
 argument_list|,
 name|DRAK6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6222,7 +6234,7 @@ name|PAPOUCH
 argument_list|,
 name|GMSR
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6231,7 +6243,7 @@ name|PAPOUCH
 argument_list|,
 name|GMUX
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6240,7 +6252,7 @@ name|PAPOUCH
 argument_list|,
 name|IRAMP
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6249,7 +6261,7 @@ name|PAPOUCH
 argument_list|,
 name|LEC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6258,7 +6270,7 @@ name|PAPOUCH
 argument_list|,
 name|MU
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6267,7 +6279,7 @@ name|PAPOUCH
 argument_list|,
 name|QUIDO10X1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6276,7 +6288,7 @@ name|PAPOUCH
 argument_list|,
 name|QUIDO2X16
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6285,7 +6297,7 @@ name|PAPOUCH
 argument_list|,
 name|QUIDO2X2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6294,7 +6306,7 @@ name|PAPOUCH
 argument_list|,
 name|QUIDO30X3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6303,7 +6315,7 @@ name|PAPOUCH
 argument_list|,
 name|QUIDO3X32
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6312,7 +6324,7 @@ name|PAPOUCH
 argument_list|,
 name|QUIDO4X4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6321,7 +6333,7 @@ name|PAPOUCH
 argument_list|,
 name|QUIDO60X3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6330,7 +6342,7 @@ name|PAPOUCH
 argument_list|,
 name|QUIDO8X8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6339,7 +6351,7 @@ name|PAPOUCH
 argument_list|,
 name|SB232
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6348,7 +6360,7 @@ name|PAPOUCH
 argument_list|,
 name|SB422
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6357,7 +6369,7 @@ name|PAPOUCH
 argument_list|,
 name|SB422_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6366,7 +6378,7 @@ name|PAPOUCH
 argument_list|,
 name|SB485
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6375,7 +6387,7 @@ name|PAPOUCH
 argument_list|,
 name|SB485C
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6384,7 +6396,7 @@ name|PAPOUCH
 argument_list|,
 name|SB485S
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6393,7 +6405,7 @@ name|PAPOUCH
 argument_list|,
 name|SB485_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6402,7 +6414,7 @@ name|PAPOUCH
 argument_list|,
 name|SIMUKEY
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6411,7 +6423,7 @@ name|PAPOUCH
 argument_list|,
 name|TMU
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6420,7 +6432,7 @@ name|PAPOUCH
 argument_list|,
 name|UPSUSB
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6429,7 +6441,7 @@ name|POSIFLEX
 argument_list|,
 name|PP7000
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6438,9 +6450,10 @@ name|QIHARDWARE
 argument_list|,
 name|JTAGSERIAL
 argument_list|,
-name|UFTDI_TYPE_AUTO
-operator||
-name|UFTDI_FLAG_JTAG
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6449,7 +6462,7 @@ name|RATOC
 argument_list|,
 name|REXUSB60F
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6458,7 +6471,7 @@ name|RTSYSTEMS
 argument_list|,
 name|CT29B
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6467,7 +6480,7 @@ name|RTSYSTEMS
 argument_list|,
 name|SERIAL_VX7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6476,7 +6489,7 @@ name|SEALEVEL
 argument_list|,
 literal|2101
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6485,7 +6498,7 @@ name|SEALEVEL
 argument_list|,
 literal|2102
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6494,7 +6507,7 @@ name|SEALEVEL
 argument_list|,
 literal|2103
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6503,7 +6516,7 @@ name|SEALEVEL
 argument_list|,
 literal|2104
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6512,7 +6525,7 @@ name|SEALEVEL
 argument_list|,
 literal|2106
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6521,7 +6534,7 @@ name|SEALEVEL
 argument_list|,
 literal|2201_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6530,7 +6543,7 @@ name|SEALEVEL
 argument_list|,
 literal|2201_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6539,7 +6552,7 @@ name|SEALEVEL
 argument_list|,
 literal|2202_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6548,7 +6561,7 @@ name|SEALEVEL
 argument_list|,
 literal|2202_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6557,7 +6570,7 @@ name|SEALEVEL
 argument_list|,
 literal|2203_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6566,7 +6579,7 @@ name|SEALEVEL
 argument_list|,
 literal|2203_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6575,7 +6588,7 @@ name|SEALEVEL
 argument_list|,
 literal|2401_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6584,7 +6597,7 @@ name|SEALEVEL
 argument_list|,
 literal|2401_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6593,7 +6606,7 @@ name|SEALEVEL
 argument_list|,
 literal|2401_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6602,7 +6615,7 @@ name|SEALEVEL
 argument_list|,
 literal|2401_4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6611,7 +6624,7 @@ name|SEALEVEL
 argument_list|,
 literal|2402_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6620,7 +6633,7 @@ name|SEALEVEL
 argument_list|,
 literal|2402_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6629,7 +6642,7 @@ name|SEALEVEL
 argument_list|,
 literal|2402_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6638,7 +6651,7 @@ name|SEALEVEL
 argument_list|,
 literal|2402_4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6647,7 +6660,7 @@ name|SEALEVEL
 argument_list|,
 literal|2403_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6656,7 +6669,7 @@ name|SEALEVEL
 argument_list|,
 literal|2403_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6665,7 +6678,7 @@ name|SEALEVEL
 argument_list|,
 literal|2403_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6674,7 +6687,7 @@ name|SEALEVEL
 argument_list|,
 literal|2403_4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6683,7 +6696,7 @@ name|SEALEVEL
 argument_list|,
 literal|2801_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6692,7 +6705,7 @@ name|SEALEVEL
 argument_list|,
 literal|2801_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6701,7 +6714,7 @@ name|SEALEVEL
 argument_list|,
 literal|2801_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6710,7 +6723,7 @@ name|SEALEVEL
 argument_list|,
 literal|2801_4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6719,7 +6732,7 @@ name|SEALEVEL
 argument_list|,
 literal|2801_5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6728,7 +6741,7 @@ name|SEALEVEL
 argument_list|,
 literal|2801_6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6737,7 +6750,7 @@ name|SEALEVEL
 argument_list|,
 literal|2801_7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6746,7 +6759,7 @@ name|SEALEVEL
 argument_list|,
 literal|2801_8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6755,7 +6768,7 @@ name|SEALEVEL
 argument_list|,
 literal|2802_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6764,7 +6777,7 @@ name|SEALEVEL
 argument_list|,
 literal|2802_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6773,7 +6786,7 @@ name|SEALEVEL
 argument_list|,
 literal|2802_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6782,7 +6795,7 @@ name|SEALEVEL
 argument_list|,
 literal|2802_4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6791,7 +6804,7 @@ name|SEALEVEL
 argument_list|,
 literal|2802_5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6800,7 +6813,7 @@ name|SEALEVEL
 argument_list|,
 literal|2802_6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6809,7 +6822,7 @@ name|SEALEVEL
 argument_list|,
 literal|2802_7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6818,7 +6831,7 @@ name|SEALEVEL
 argument_list|,
 literal|2802_8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6827,7 +6840,7 @@ name|SEALEVEL
 argument_list|,
 literal|2803_1
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6836,7 +6849,7 @@ name|SEALEVEL
 argument_list|,
 literal|2803_2
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6845,7 +6858,7 @@ name|SEALEVEL
 argument_list|,
 literal|2803_3
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6854,7 +6867,7 @@ name|SEALEVEL
 argument_list|,
 literal|2803_4
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6863,7 +6876,7 @@ name|SEALEVEL
 argument_list|,
 literal|2803_5
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6872,7 +6885,7 @@ name|SEALEVEL
 argument_list|,
 literal|2803_6
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6881,7 +6894,7 @@ name|SEALEVEL
 argument_list|,
 literal|2803_7
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6890,7 +6903,7 @@ name|SEALEVEL
 argument_list|,
 literal|2803_8
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6899,7 +6912,7 @@ name|SIIG2
 argument_list|,
 name|DK201
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6908,7 +6921,7 @@ name|SIIG2
 argument_list|,
 name|US2308
 argument_list|,
-name|UFTDI_TYPE_8U232AM
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6917,7 +6930,7 @@ name|TESTO
 argument_list|,
 name|USB_INTERFACE
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6926,7 +6939,7 @@ name|TML
 argument_list|,
 name|USB_SERIAL
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6935,7 +6948,7 @@ name|TTI
 argument_list|,
 name|QL355P
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 name|UFTDI_DEV
@@ -6944,7 +6957,7 @@ name|UNKNOWN4
 argument_list|,
 name|NF_RIC
 argument_list|,
-name|UFTDI_TYPE_AUTO
+literal|0
 argument_list|)
 block|,
 undef|#
@@ -6953,6 +6966,251 @@ name|UFTDI_DEV
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Jtag product name strings table.  Some products have one or more interfaces  * dedicated to jtag or gpio, but use a product ID that's the same as other  * products which don't.  They are marked with a flag in the table above, and  * the following string table is checked for flagged products.  The string check  * is done with strstr(); in effect there is an implicit wildcard at the  * beginning and end of each product name string in table.  */
+end_comment
+
+begin_struct
+specifier|static
+specifier|const
+struct|struct
+name|jtag_by_name
+block|{
+specifier|const
+name|char
+modifier|*
+name|product_name
+decl_stmt|;
+name|uint32_t
+name|jtag_interfaces
+decl_stmt|;
+block|}
+name|jtag_products_by_name
+index|[]
+init|=
+block|{
+comment|/* TI Beaglebone and TI XDS100Vn jtag product line. */
+block|{
+literal|"XDS100V"
+block|,
+name|UFTDI_JTAG_IFACE
+argument_list|(
+literal|0
+argument_list|)
+block|}
+block|, }
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Set up a sysctl and tunable to en/disable the feature of skipping the  * creation of tty devices for jtag interfaces.  Enabled by default.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|skip_jtag_interfaces
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.uftdi.skip_jtag_interfaces"
+argument_list|,
+operator|&
+name|skip_jtag_interfaces
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_uftdi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|skip_jtag_interfaces
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|skip_jtag_interfaces
+argument_list|,
+literal|1
+argument_list|,
+literal|"Skip creating tty devices for jtag interfaces"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|static
+name|boolean_t
+name|is_jtag_interface
+parameter_list|(
+name|struct
+name|usb_attach_arg
+modifier|*
+name|uaa
+parameter_list|,
+specifier|const
+name|struct
+name|usb_device_id
+modifier|*
+name|id
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|iface_bit
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|product_name
+decl_stmt|;
+specifier|const
+name|struct
+name|jtag_by_name
+modifier|*
+name|jbn
+decl_stmt|;
+comment|/* We only allocate 8 flag bits for jtag interface flags. */
+if|if
+condition|(
+name|uaa
+operator|->
+name|info
+operator|.
+name|bIfaceIndex
+operator|>=
+name|UFTDI_JTAG_IFACES_MAX
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|iface_bit
+operator|=
+name|UFTDI_JTAG_IFACE
+argument_list|(
+name|uaa
+operator|->
+name|info
+operator|.
+name|bIfaceIndex
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If requested, search the name strings table and use the interface 	 * bits from that table when the product name string matches, else use 	 * the jtag interface bits from the main ID table. 	 */
+if|if
+condition|(
+operator|(
+name|id
+operator|->
+name|driver_info
+operator|&
+name|UFTDI_JTAG_MASK
+operator|)
+operator|==
+name|UFTDI_JTAG_CHECK_STRING
+condition|)
+block|{
+name|product_name
+operator|=
+name|usb_get_product
+argument_list|(
+name|uaa
+operator|->
+name|device
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nitems
+argument_list|(
+name|jtag_products_by_name
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|jbn
+operator|=
+operator|&
+name|jtag_products_by_name
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|product_name
+argument_list|,
+name|jbn
+operator|->
+name|product_name
+argument_list|)
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|jbn
+operator|->
+name|jtag_interfaces
+operator|&
+name|iface_bit
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|id
+operator|->
+name|driver_info
+operator|&
+name|iface_bit
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Set up softc fields whose value depends on the device type.  *  * Note that the 2232C and 2232D devices are the same for our purposes.  In the  * silicon the difference is that the D series has CPU FIFO mode and C doesn't.  * I haven't found any way of determining the C/D difference from info provided  * by the chip other than trying to set CPU FIFO mode and having it work or not.  *   * Due to a hardware bug, a 232B chip without an eeprom reports itself as a   * 232A, but if the serial number is also zero we know it's really a 232B.   */
@@ -7387,32 +7645,36 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
-name|id
-operator|->
-name|driver_info
-operator|&
-name|UFTDI_FLAG_JTAG
-operator|)
-operator|!=
-literal|0
+name|skip_jtag_interfaces
 operator|&&
+name|is_jtag_interface
+argument_list|(
+name|uaa
+argument_list|,
+name|id
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: skipping JTAG interface #%d for '%s' at %u.%u\n"
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
 name|uaa
 operator|->
 name|info
 operator|.
 name|bIfaceIndex
-operator|==
-name|UFTDI_IFACE_INDEX_JTAG
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: skipping JTAG interface at %u.%u\n"
 argument_list|,
-name|device_get_name
+name|usb_get_product
 argument_list|(
-name|dev
+name|uaa
+operator|->
+name|device
 argument_list|)
 argument_list|,
 name|usbd_get_bus_index
