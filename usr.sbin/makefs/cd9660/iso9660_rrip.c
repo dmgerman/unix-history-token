@@ -2921,7 +2921,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|36
+literal|44
 expr_stmt|;
 name|v
 operator|->
@@ -3024,7 +3024,27 @@ operator|.
 name|gid
 argument_list|)
 expr_stmt|;
-comment|/* Ignoring the serial number for now */
+name|cd9660_bothendian_dword
+argument_list|(
+name|pxinfo
+operator|->
+name|inode
+operator|->
+name|st
+operator|.
+name|st_ino
+argument_list|,
+name|v
+operator|->
+name|attr
+operator|.
+name|rr_entry
+operator|.
+name|PX
+operator|.
+name|serial
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
