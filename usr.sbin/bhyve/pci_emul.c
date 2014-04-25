@@ -6949,6 +6949,8 @@ end_function
 begin_decl_stmt
 specifier|static
 name|int
+name|cfgenable
+decl_stmt|,
 name|cfgbus
 decl_stmt|,
 name|cfgslot
@@ -7050,12 +7052,18 @@ operator|)
 operator||
 name|cfgoff
 expr_stmt|;
+if|if
+condition|(
+name|cfgenable
+condition|)
+name|x
+operator||=
+name|CONF1_ENABLE
+expr_stmt|;
 operator|*
 name|eax
 operator|=
 name|x
-operator||
-name|CONF1_ENABLE
 expr_stmt|;
 block|}
 else|else
@@ -7064,6 +7072,16 @@ name|x
 operator|=
 operator|*
 name|eax
+expr_stmt|;
+name|cfgenable
+operator|=
+operator|(
+name|x
+operator|&
+name|CONF1_ENABLE
+operator|)
+operator|==
+name|CONF1_ENABLE
 expr_stmt|;
 name|cfgoff
 operator|=
@@ -7480,9 +7498,12 @@ literal|0
 block|printf("pcicfg-%s from 0x%0x of %d bytes (%d/%d/%d)\n\r", 		in ? "read" : "write", coff, bytes, cfgbus, cfgslot, cfgfunc);
 endif|#
 directive|endif
-comment|/* 	 * Just return if there is no device at this cfgslot:cfgfunc or 	 * if the guest is doing an un-aligned access 	 */
+comment|/* 	 * Just return if there is no device at this cfgslot:cfgfunc, 	 * if the guest is doing an un-aligned access, or if the config 	 * address word isn't enabled. 	 */
 if|if
 condition|(
+operator|!
+name|cfgenable
+operator|||
 name|pi
 operator|==
 name|NULL
