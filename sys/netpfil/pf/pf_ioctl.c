@@ -1959,6 +1959,19 @@ break|break;
 case|case
 name|PF_ADDR_TABLE
 case|:
+comment|/* XXX: this could be unfinished pooladdr on pabuf */
+if|if
+condition|(
+name|pa
+operator|->
+name|addr
+operator|.
+name|p
+operator|.
+name|tbl
+operator|!=
+name|NULL
+condition|)
 name|pfr_detach_table
 argument_list|(
 name|pa
