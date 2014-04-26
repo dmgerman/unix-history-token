@@ -2240,7 +2240,7 @@ name|cnt
 decl_stmt|;
 if|if
 condition|(
-name|smp_active
+name|smp_started
 condition|)
 block|{
 name|map

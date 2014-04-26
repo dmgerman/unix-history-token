@@ -1275,10 +1275,6 @@ name|IDR_JALAPENO_MAX_BN_PAIRS
 operator|)
 argument_list|)
 expr_stmt|;
-name|smp_active
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_function
 

@@ -1269,7 +1269,7 @@ operator|>
 literal|1
 operator|&&
 operator|!
-name|smp_active
+name|smp_started
 condition|)
 block|{
 name|device_printf

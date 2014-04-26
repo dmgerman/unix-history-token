@@ -167,6 +167,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|int
+name|sysctl_kern_smp_active
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* This is used in modules that need to work in both SMP and UP. */
 end_comment
@@ -275,20 +285,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|smp_active
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* are the APs allowed to run? */
-end_comment
-
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_PROC
 argument_list|(
 name|_kern_smp
 argument_list|,
@@ -296,14 +294,19 @@ name|OID_AUTO
 argument_list|,
 name|active
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
+operator||
+name|CTLTYPE_INT
 argument_list|,
-operator|&
-name|smp_active
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of Auxillary Processors (APs) that were successfully started"
+name|sysctl_kern_smp_active
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Indicates system is running in SMP mode"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3371,6 +3374,50 @@ name|wmesg
 argument_list|,
 name|prio
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Extra care is taken with this sysctl because the data type is volatile */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|sysctl_kern_smp_active
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|,
+name|active
+decl_stmt|;
+name|active
+operator|=
+name|smp_started
+expr_stmt|;
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+operator|&
+name|active
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|active
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
