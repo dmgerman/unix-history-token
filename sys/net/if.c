@@ -7025,19 +7025,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|sa_equal
-parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
-define|\
-value|(bcmp((a1), (a2), ((a1))->sa_len) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|sa_dl_equal
 parameter_list|(
 name|a1

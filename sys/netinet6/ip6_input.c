@@ -2746,16 +2746,6 @@ name|bad
 operator|=
 literal|1
 expr_stmt|;
-define|#
-directive|define
-name|sa_equal
-parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
-define|\
-value|(bcmp((a1), (a2), ((a1))->sin6_len) == 0)
 name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
@@ -2812,9 +2802,6 @@ name|lle
 operator|)
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|sa_equal
 name|ia6
 operator|=
 operator|(

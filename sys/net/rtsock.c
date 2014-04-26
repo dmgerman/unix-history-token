@@ -2415,15 +2415,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-define|#
-directive|define
-name|sa_equal
-parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
-value|(bcmp((a1), (a2), (a1)->sa_len) == 0)
 name|struct
 name|rt_msghdr
 modifier|*
@@ -4751,9 +4742,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|sa_equal
 block|}
 end_function
 

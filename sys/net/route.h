@@ -1271,6 +1271,18 @@ define|\
 value|(  (!(sa) || ((struct sockaddr *)(sa))->sa_len == 0) ?	\ 	sizeof(long)		:				\ 	1 + ( (((struct sockaddr *)(sa))->sa_len - 1) | (sizeof(long) - 1) ) )
 end_define
 
+begin_define
+define|#
+directive|define
+name|sa_equal
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(	\     (((struct sockaddr *)(a))->sa_len == ((struct sockaddr *)(b))->sa_len)&& \     (bcmp((a), (b), ((struct sockaddr *)(b))->sa_len) == 0))
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -480,22 +480,6 @@ value|VNET(rttrash)
 end_define
 
 begin_comment
-comment|/* compare two sockaddr structures */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sa_equal
-parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
-value|(((a1)->sa_len == (a2)->sa_len)&& \     (bcmp((a1), (a2), (a1)->sa_len) == 0))
-end_define
-
-begin_comment
 comment|/*  * Convert a 'struct radix_node *' to a 'struct rtentry *'.  * The operation can be done safely (in this code) because a  * 'struct rtentry' starts with two 'struct radix_node''s, the first  * one representing leaf nodes in the routing tree, which is  * what the code in radix.c passes us as a 'struct radix_node'.  *  * But because there are a lot of assumptions in this conversion,  * do not cast explicitly, but always use the macro below.  */
 end_comment
 
