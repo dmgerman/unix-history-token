@@ -9139,8 +9139,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|error
 decl_stmt|;
 name|struct
 name|vmx
@@ -9192,33 +9190,6 @@ name|i
 index|]
 operator|.
 name|vpid
-argument_list|)
-expr_stmt|;
-comment|/* 	 * XXXSMP we also need to clear the VMCS active on the other vcpus. 	 */
-name|error
-operator|=
-name|vmclear
-argument_list|(
-operator|&
-name|vmx
-operator|->
-name|vmcs
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"vmx_vmcleanup: vmclear error %d on vcpu 0"
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 name|free
