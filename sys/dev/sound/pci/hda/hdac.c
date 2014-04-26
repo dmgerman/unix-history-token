@@ -159,6 +159,7 @@ specifier|static
 specifier|const
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|key
@@ -192,14 +193,6 @@ block|, }
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|HDAC_QUIRKS_TAB_LEN
-define|\
-value|(sizeof(hdac_quirks_tab) / sizeof(hdac_quirks_tab[0]))
-end_define
-
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -220,6 +213,7 @@ block|{
 name|uint32_t
 name|model
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|desc
@@ -1049,13 +1043,6 @@ block|, }
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|HDAC_DEVICES_LEN
-value|(sizeof(hdac_devices) / sizeof(hdac_devices[0]))
-end_define
-
 begin_struct
 specifier|static
 specifier|const
@@ -1110,14 +1097,6 @@ block|}
 block|, }
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|HDAC_PCIESNOOP_LEN
-define|\
-value|(sizeof(hdac_pcie_snoop) / sizeof(hdac_pcie_snoop[0]))
-end_define
 
 begin_comment
 comment|/****************************************************************************  * Function prototypes  ****************************************************************************/
@@ -1658,7 +1637,10 @@ name|inv
 operator|&&
 name|k
 operator|<
-name|HDAC_QUIRKS_TAB_LEN
+name|nitems
+argument_list|(
+name|hdac_quirks_tab
+argument_list|)
 condition|;
 name|k
 operator|++
@@ -5005,7 +4987,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|HDAC_DEVICES_LEN
+name|nitems
+argument_list|(
+name|hdac_devices
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -5319,7 +5304,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|HDAC_DEVICES_LEN
+name|nitems
+argument_list|(
+name|hdac_devices
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -5725,7 +5713,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|HDAC_PCIESNOOP_LEN
+name|nitems
+argument_list|(
+name|hdac_pcie_snoop
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -10731,11 +10722,7 @@ argument_list|,
 name|hdac_unsol_free
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -10777,9 +10764,9 @@ name|hdac_driver
 argument_list|,
 name|hdac_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

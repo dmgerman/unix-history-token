@@ -119,6 +119,7 @@ specifier|static
 specifier|const
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|key
@@ -221,14 +222,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|HDAA_QUIRKS_TAB_LEN
-define|\
-value|(sizeof(hdaa_quirks_tab) / sizeof(hdaa_quirks_tab[0]))
-end_define
-
-begin_define
-define|#
-directive|define
 name|HDA_PARSE_MAXDEPTH
 value|10
 end_define
@@ -246,6 +239,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -291,6 +285,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -336,6 +331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -357,6 +353,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -402,6 +399,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -543,6 +541,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -572,6 +571,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -5526,7 +5526,10 @@ name|inv
 operator|&&
 name|k
 operator|<
-name|HDAA_QUIRKS_TAB_LEN
+name|nitems
+argument_list|(
+name|hdaa_quirks_tab
+argument_list|)
 condition|;
 name|k
 operator|++
@@ -5691,7 +5694,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|HDAA_QUIRKS_TAB_LEN
+name|nitems
+argument_list|(
+name|hdaa_quirks_tab
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -7332,6 +7338,7 @@ modifier|*
 name|w
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|typestr
@@ -31127,6 +31134,7 @@ parameter_list|,
 name|uint32_t
 name|cap
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|banner
@@ -33785,7 +33793,7 @@ argument|) { 			device_printf(dev,
 literal|"FG config/quirks:"
 argument|); 			for (i =
 literal|0
-argument|; i< HDAA_QUIRKS_TAB_LEN; i++) { 				if ((devinfo->quirks& 				    hdaa_quirks_tab[i].value) == 				    hdaa_quirks_tab[i].value) 					printf(
+argument|; i< nitems(hdaa_quirks_tab); i++) { 				if ((devinfo->quirks& 				    hdaa_quirks_tab[i].value) == 				    hdaa_quirks_tab[i].value) 					printf(
 literal|" %s"
 argument|, hdaa_quirks_tab[i].key); 			} 			printf(
 literal|"\n"
@@ -37327,11 +37335,7 @@ argument_list|,
 name|hdaa_pindump
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -37373,9 +37377,9 @@ name|hdaa_driver
 argument_list|,
 name|hdaa_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -39301,11 +39305,7 @@ argument_list|,
 name|hdaa_pcm_detach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -39336,9 +39336,9 @@ name|hdaa_pcm_driver
 argument_list|,
 name|pcm_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
