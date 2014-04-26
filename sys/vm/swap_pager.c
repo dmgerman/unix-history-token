@@ -524,6 +524,64 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|long
+name|swzone
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|swzone
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|swzone
+argument_list|,
+literal|0
+argument_list|,
+literal|"Actual size of swap metadata zone"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|long
+name|swap_maxpages
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|swap_maxpages
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|swap_maxpages
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum amount of swap supported"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* bits from overcommit */
 end_comment
@@ -2090,7 +2148,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|unsigned
+name|long
 name|n
 decl_stmt|,
 name|n2
@@ -2149,7 +2208,7 @@ operator|&
 name|pbuf_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 16 pages, so this is probably overkill.  This reservation 	 * is typically limited to around 32MB by default. 	 */
+comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 32 pages, so this is probably overkill.  This reservation 	 * is typically limited to around 32MB by default. 	 */
 name|n
 operator|=
 name|vm_cnt
@@ -2265,11 +2324,27 @@ name|n
 condition|)
 name|printf
 argument_list|(
-literal|"Swap zone entries reduced from %d to %d.\n"
+literal|"Swap zone entries reduced from %lu to %lu.\n"
 argument_list|,
 name|n2
 argument_list|,
 name|n
+argument_list|)
+expr_stmt|;
+name|swap_maxpages
+operator|=
+name|n
+operator|*
+name|SWAP_META_PAGES
+expr_stmt|;
+name|swzone
+operator|=
+name|n
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|swblock
 argument_list|)
 expr_stmt|;
 name|n2
