@@ -126,7 +126,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/freescale/imx/imx51_ccmvar.h>
+file|<arm/freescale/imx/imx_ccmvar.h>
 end_include
 
 begin_include
@@ -2901,43 +2901,13 @@ argument_list|,
 literal|0x08800880
 argument_list|)
 expr_stmt|;
-comment|/* XXX get imx6 clock frequency from CCM */
-if|if
-condition|(
-name|sc
-operator|->
-name|hwtype
-operator|==
-name|HWTYPE_USDHC
-condition|)
-block|{
 name|sc
 operator|->
 name|baseclk_hz
 operator|=
-literal|200000000
+name|imx_ccm_sdhci_hz
+argument_list|()
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|sc
-operator|->
-name|hwtype
-operator|==
-name|HWTYPE_ESDHC
-condition|)
-block|{
-name|sc
-operator|->
-name|baseclk_hz
-operator|=
-name|imx51_get_clock
-argument_list|(
-name|IMX51CLK_PERCLK_ROOT
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * If the slot is flagged with the non-removable property, set our flag 	 * to always force the SDHCI_CARD_PRESENT bit on. 	 * 	 * XXX Workaround for gpio-based card detect... 	 * 	 * We don't have gpio support yet.  If there's a cd-gpios property just 	 * force the SDHCI_CARD_PRESENT bit on for now.  If there isn't really a 	 * card there it will fail to probe at the mmc layer and nothing bad 	 * happens except instantiating an mmcN device for an empty slot. 	 */
 name|node
 operator|=
