@@ -1265,7 +1265,7 @@ operator|=
 literal|"as=1 seq=15"
 expr_stmt|;
 break|break;
-comment|/*  		 * Group onboard mic and headphone mic 		 * together.  Fixes onboard mic. 		 */
+comment|/* 		 * Group onboard mic and headphone mic 		 * together.  Fixes onboard mic. 		 */
 case|case
 literal|27
 case|:
@@ -1344,6 +1344,33 @@ condition|)
 block|{
 case|case
 literal|33
+case|:
+name|patch
+operator|=
+literal|"as=1 seq=15"
+expr_stmt|;
+break|break;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|id
+operator|==
+name|HDA_CODEC_ALC892
+operator|&&
+name|subid
+operator|==
+name|INTEL_DH87RL_SUBVENDOR
+condition|)
+block|{
+switch|switch
+condition|(
+name|nid
+condition|)
+block|{
+case|case
+literal|27
 case|:
 name|patch
 operator|=
