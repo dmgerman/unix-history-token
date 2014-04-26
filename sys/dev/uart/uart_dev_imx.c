@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/uart/uart_dev_imx5xx.h>
+file|<dev/uart/uart_dev_imx.h>
 end_include
 
 begin_include
