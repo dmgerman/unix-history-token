@@ -3602,7 +3602,7 @@ operator|->
 name|iv_state
 operator|==
 name|IEEE80211_S_RUN
-operator||
+operator|||
 name|vap
 operator|->
 name|iv_state
