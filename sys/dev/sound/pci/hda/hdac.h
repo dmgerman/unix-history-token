@@ -774,6 +774,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INTEL_DH87RL_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x204a)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INTEL_D101GGC_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(INTEL, 0xd600)
 end_define
