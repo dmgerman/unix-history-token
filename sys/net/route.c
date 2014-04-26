@@ -2981,7 +2981,6 @@ name|u_int
 name|fibnum
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ifaddr
 modifier|*
@@ -4224,7 +4223,6 @@ name|rto
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -4572,7 +4570,6 @@ name|needlock
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|rtentry
 modifier|*
@@ -4581,7 +4578,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|FLOWTABLE
-specifier|register
 name|struct
 name|rtentry
 modifier|*
@@ -4589,13 +4585,11 @@ name|rt0
 decl_stmt|;
 endif|#
 directive|endif
-specifier|register
 name|struct
 name|radix_node
 modifier|*
 name|rn
 decl_stmt|;
-specifier|register
 name|struct
 name|radix_node_head
 modifier|*
@@ -6401,7 +6395,6 @@ modifier|*
 name|netmask
 parameter_list|)
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|cp1
@@ -6412,7 +6405,6 @@ operator|*
 operator|)
 name|src
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp2
@@ -6423,7 +6415,6 @@ operator|*
 operator|)
 name|dst
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp3
