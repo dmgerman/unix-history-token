@@ -7353,6 +7353,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|off
+operator|=
+literal|0
+expr_stmt|;
 name|urtwn_efuse_switch_power
 argument_list|(
 name|sc
