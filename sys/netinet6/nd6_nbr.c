@@ -1136,7 +1136,15 @@ operator|)
 operator|&
 name|ro
 argument_list|,
-name|RTF_ANNOUNCE
+name|ntohl
+argument_list|(
+name|taddr6
+operator|.
+name|s6_addr32
+index|[
+literal|3
+index|]
+argument_list|)
 argument_list|,
 name|RT_DEFAULT_FIB
 argument_list|)
