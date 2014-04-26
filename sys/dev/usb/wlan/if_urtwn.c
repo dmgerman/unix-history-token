@@ -9881,6 +9881,10 @@ decl_stmt|;
 name|int8_t
 name|rssi
 decl_stmt|;
+name|rssi
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|rate
