@@ -2465,6 +2465,8 @@ decl_stmt|,
 name|error
 init|=
 literal|0
+decl_stmt|,
+name|fibnum
 decl_stmt|;
 name|struct
 name|ifnet
@@ -2829,6 +2831,12 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+name|fibnum
+operator|=
+name|so
+operator|->
+name|so_fibnum
+expr_stmt|;
 comment|/* 	 * The given gateway address may be an interface address. 	 * For example, issuing a "route change" command on a route 	 * entry that was created from a tunnel, and the gateway 	 * address given is the local end point. In this case the  	 * RTF_GATEWAY flag must be cleared or the destination will 	 * not be reachable even though there is no error message. 	 */
 if|if
 condition|(
@@ -2887,9 +2895,7 @@ name|gw_ro
 argument_list|,
 literal|0
 argument_list|,
-name|so
-operator|->
-name|so_fibnum
+name|fibnum
 argument_list|)
 expr_stmt|;
 comment|/*  		 * A host route through the loopback interface is  		 * installed for each interface adddress. In pre 8.0 		 * releases the interface address of a PPP link type 		 * is not reachable locally. This behavior is fixed as  		 * part of the new L2/L3 redesign and rewrite work. The 		 * signature of this interface address route is the 		 * AF_LINK sa_family type of the rt_gateway, and the 		 * rt_ifp has the IFF_LOOPBACK flag set. 		 */
@@ -3062,9 +3068,7 @@ argument_list|,
 operator|&
 name|saved_nrt
 argument_list|,
-name|so
-operator|->
-name|so_fibnum
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -3213,9 +3217,7 @@ argument_list|,
 operator|&
 name|saved_nrt
 argument_list|,
-name|so
-operator|->
-name|so_fibnum
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -3262,18 +3264,9 @@ name|rnh
 operator|=
 name|rt_tables_get_rnh
 argument_list|(
-name|so
-operator|->
-name|so_fibnum
+name|fibnum
 argument_list|,
-name|info
-operator|.
-name|rti_info
-index|[
-name|RTAX_DST
-index|]
-operator|->
-name|sa_family
+name|saf
 argument_list|)
 expr_stmt|;
 if|if
@@ -4278,9 +4271,7 @@ name|M_SETFIB
 argument_list|(
 name|m
 argument_list|,
-name|so
-operator|->
-name|so_fibnum
+name|fibnum
 argument_list|)
 expr_stmt|;
 name|m
