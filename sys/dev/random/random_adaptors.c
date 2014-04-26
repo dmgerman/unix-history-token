@@ -853,7 +853,7 @@ literal|0
 argument_list|,
 name|random_sysctl_adaptors_handler
 argument_list|,
-literal|""
+literal|"A"
 argument_list|,
 literal|"Random Number Generator adaptors"
 argument_list|)
@@ -878,7 +878,7 @@ literal|0
 argument_list|,
 name|random_sysctl_active_adaptor_handler
 argument_list|,
-literal|""
+literal|"A"
 argument_list|,
 literal|"Active Random Number Generator Adaptor"
 argument_list|)
