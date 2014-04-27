@@ -180,6 +180,11 @@ decl_stmt|;
 comment|/* pins total */
 name|uint32_t
 modifier|*
+name|flags
+decl_stmt|;
+comment|/* pins flags */
+name|uint32_t
+modifier|*
 name|pins
 decl_stmt|;
 comment|/* pins map */
@@ -187,22 +192,27 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-name|void
-name|gpiobus_print_pins
-parameter_list|(
-name|struct
-name|gpiobus_ivar
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|FDT
 end_ifdef
+
+begin_struct
+struct|struct
+name|ofw_gpiobus_devinfo
+block|{
+name|struct
+name|gpiobus_ivar
+name|opd_dinfo
+decl_stmt|;
+name|struct
+name|ofw_bus_devinfo
+name|opd_obdinfo
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_function_decl
 name|device_t
@@ -219,6 +229,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|void
+name|gpiobus_print_pins
+parameter_list|(
+name|struct
+name|gpiobus_ivar
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
