@@ -4084,6 +4084,8 @@ block|}
 if|if
 condition|(
 name|rtm
+operator|!=
+name|NULL
 condition|)
 block|{
 ifdef|#
@@ -4261,6 +4263,11 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
+name|Free
+argument_list|(
+name|rtm
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4329,16 +4336,6 @@ name|saf
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* info.rti_info[RTAX_DST] (used above) can point inside of rtm */
-if|if
-condition|(
-name|rtm
-condition|)
-name|Free
-argument_list|(
-name|rtm
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(
