@@ -1356,6 +1356,17 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
+comment|/* Flush write */
+operator|(
+name|void
+operator|)
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_IMR
+argument_list|)
+expr_stmt|;
 name|mask
 operator|=
 name|OS_REG_READ
