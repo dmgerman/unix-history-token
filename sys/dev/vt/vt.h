@@ -1664,7 +1664,7 @@ begin_define
 define|#
 directive|define
 name|VT_FB_DEFAULT_WIDTH
-value|640
+value|2048
 end_define
 
 begin_endif
@@ -1682,7 +1682,7 @@ begin_define
 define|#
 directive|define
 name|VT_FB_DEFAULT_HEIGHT
-value|480
+value|1200
 end_define
 
 begin_endif
