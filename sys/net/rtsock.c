@@ -2484,6 +2484,12 @@ name|saf
 init|=
 name|AF_UNSPEC
 decl_stmt|;
+name|fibnum
+operator|=
+name|so
+operator|->
+name|so_fibnum
+expr_stmt|;
 define|#
 directive|define
 name|senderr
@@ -2831,12 +2837,6 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-name|fibnum
-operator|=
-name|so
-operator|->
-name|so_fibnum
-expr_stmt|;
 comment|/* 	 * The given gateway address may be an interface address. 	 * For example, issuing a "route change" command on a route 	 * entry that was created from a tunnel, and the gateway 	 * address given is the local end point. In this case the  	 * RTF_GATEWAY flag must be cleared or the destination will 	 * not be reachable even though there is no error message. 	 */
 if|if
 condition|(
