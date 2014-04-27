@@ -4530,11 +4530,6 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 comment|/* Disable if EFI framebuffer present. Should be handled by priority 	 * logic in vt(9), but this will do for now. XXX */
 name|caddr_t
 name|kmdp
