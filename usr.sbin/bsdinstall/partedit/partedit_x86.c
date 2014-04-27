@@ -35,13 +35,9 @@ index|[
 literal|255
 index|]
 init|=
-literal|"BIOS"
+literal|""
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX once sysctl exists, make this an empty string */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -50,7 +46,7 @@ name|char
 modifier|*
 name|platform_sysctl
 init|=
-literal|"hw.platform"
+literal|"machdep.bootmethod"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,7 +321,7 @@ name|strcmp
 argument_list|(
 name|platform
 argument_list|,
-literal|"EFI"
+literal|"UEFI"
 argument_list|)
 operator|==
 literal|0
@@ -393,7 +389,7 @@ name|strcmp
 argument_list|(
 name|platform
 argument_list|,
-literal|"EFI"
+literal|"UEFI"
 argument_list|)
 operator|==
 literal|0
@@ -521,7 +517,7 @@ name|strcmp
 argument_list|(
 name|platform
 argument_list|,
-literal|"EFI"
+literal|"UEFI"
 argument_list|)
 operator|==
 literal|0
