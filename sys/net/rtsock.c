@@ -5186,6 +5186,8 @@ name|dlen
 decl_stmt|;
 name|caddr_t
 name|cp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|rt_msghdr
