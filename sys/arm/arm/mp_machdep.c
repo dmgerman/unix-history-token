@@ -1141,9 +1141,6 @@ break|break;
 case|case
 name|IPI_STOP
 case|:
-case|case
-name|IPI_STOP_HARD
-case|:
 comment|/* 			 * IPI_STOP_HARD is mapped to IPI_STOP so it is not 			 * necessary to add it in the switch. 			 */
 name|CTR0
 argument_list|(
