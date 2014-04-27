@@ -1930,7 +1930,7 @@ name|armv7_tlb_flushID_SE
 block|,
 comment|/* tlb_flushD_SE        */
 comment|/* Cache operations */
-name|armv7_idcache_wbinv_all
+name|armv7_icache_sync_all
 block|,
 comment|/* icache_sync_all      */
 name|armv7_icache_sync_range
