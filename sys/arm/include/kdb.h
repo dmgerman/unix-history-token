@@ -105,11 +105,7 @@ parameter_list|,
 name|int
 name|code
 parameter_list|)
-block|{
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_endif
