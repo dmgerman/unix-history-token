@@ -4560,8 +4560,6 @@ name|vm_page_t
 name|src_m
 decl_stmt|;
 name|boolean_t
-name|src_readonly
-decl_stmt|,
 name|upgrade
 decl_stmt|;
 ifdef|#
@@ -4595,18 +4593,6 @@ name|src_entry
 operator|->
 name|offset
 argument_list|)
-expr_stmt|;
-name|src_readonly
-operator|=
-operator|(
-name|src_entry
-operator|->
-name|protection
-operator|&
-name|VM_PROT_WRITE
-operator|)
-operator|==
-literal|0
 expr_stmt|;
 comment|/* 	 * Create the top-level object for the destination entry. (Doesn't 	 * actually shadow anything - we copy the pages directly.) 	 */
 name|dst_object
@@ -4847,7 +4833,7 @@ operator|==
 name|NULL
 condition|)
 do|;
-comment|/* 		 * Find the page in the source object, and copy it in. 		 * (Because the source is wired down, the page will be in 		 * memory.) 		 */
+comment|/* 		 * Find the page in the source object, and copy it in. 		 * Because the source is wired down, the page will be 		 * in memory. 		 */
 name|VM_OBJECT_RLOCK
 argument_list|(
 name|src_object
@@ -4878,8 +4864,6 @@ operator|)
 operator|==
 name|NULL
 operator|&&
-name|src_readonly
-operator|&&
 operator|(
 name|backing_object
 operator|=
@@ -4891,7 +4875,26 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Allow fallback to backing objects if we are reading. 			 */
+comment|/* 			 * Unless the source mapping is read-only or 			 * it is presently being upgraded from 			 * read-only, the first object in the shadow 			 * chain should provide all of the pages.  In 			 * other words, this loop body should never be 			 * executed when the source mapping is already 			 * read/write. 			 */
+name|KASSERT
+argument_list|(
+operator|(
+name|src_entry
+operator|->
+name|protection
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|==
+literal|0
+operator|||
+name|upgrade
+argument_list|,
+operator|(
+literal|"vm_fault_copy_entry: main object missing page"
+operator|)
+argument_list|)
+expr_stmt|;
 name|VM_OBJECT_RLOCK
 argument_list|(
 name|backing_object
@@ -4916,15 +4919,15 @@ operator|=
 name|backing_object
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|src_m
-operator|==
-name|NULL
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"vm_fault_copy_wired: page missing"
+name|src_m
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"vm_fault_copy_entry: page missing"
+operator|)
 argument_list|)
 expr_stmt|;
 name|pmap_copy_page
