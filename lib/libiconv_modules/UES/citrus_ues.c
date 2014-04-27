@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_ues.c,v 1.1 2006/11/13 15:16:31 tnozaki Exp $ */
+comment|/* $NetBSD: citrus_ues.c,v 1.3 2012/02/12 13:51:29 wiz Exp $ */
 end_comment
 
 begin_comment
@@ -239,96 +239,27 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|void
-comment|/*ARGSUSED*/
-name|_citrus_UES_pack_state
-parameter_list|(
-name|_UESEncodingInfo
-modifier|*
-name|__restrict
-name|ei
-name|__unused
-parameter_list|,
-name|void
-modifier|*
-name|__restrict
-name|pspriv
-parameter_list|,
-specifier|const
-name|_UESState
-modifier|*
-name|__restrict
-name|psenc
-parameter_list|)
-block|{
-name|memcpy
-argument_list|(
-name|pspriv
-argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|)
-name|psenc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|psenc
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_function
-specifier|static
-name|__inline
-name|void
+begin_comment
+unit|static __inline void
 comment|/*ARGSUSED*/
-name|_citrus_UES_unpack_state
-parameter_list|(
-name|_UESEncodingInfo
-modifier|*
-name|__restrict
-name|ei
-name|__unused
-parameter_list|,
-name|_UESState
-modifier|*
-name|__restrict
-name|psenc
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|__restrict
-name|pspriv
-parameter_list|)
-block|{
-name|memcpy
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|psenc
-argument_list|,
-name|pspriv
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|psenc
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_comment
+
+begin_comment
+unit|_citrus_UES_pack_state(_UESEncodingInfo * __restrict ei __unused,     void *__restrict pspriv, const _UESState * __restrict psenc) {  	memcpy(pspriv, (const void *)psenc, sizeof(*psenc)); }  static __inline void
+comment|/*ARGSUSED*/
+end_comment
+
+begin_endif
+unit|_citrus_UES_unpack_state(_UESEncodingInfo * __restrict ei __unused,     _UESState * __restrict psenc, const void * __restrict pspriv) {  	memcpy((void *)psenc, pspriv, sizeof(*psenc)); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

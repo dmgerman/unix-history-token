@@ -677,8 +677,14 @@ literal|"_device_statq"
 block|,
 define|#
 directive|define
-name|X_END
+name|X_TIME_UPTIME
 value|4
+literal|"_time_uptime"
+block|,
+define|#
+directive|define
+name|X_END
+value|5
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -900,7 +906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is an easy way to get the generation number, but the generation is  * supplied in a more atmoic manner by the kern.devstat.all sysctl.  * Because this generation sysctl is separate from the statistics sysctl,  * the device list and the generation could change between the time that  * this function is called and the device list is retreived.  */
+comment|/*  * This is an easy way to get the generation number, but the generation is  * supplied in a more atmoic manner by the kern.devstat.all sysctl.  * Because this generation sysctl is separate from the statistics sysctl,  * the device list and the generation could change between the time that  * this function is called and the device list is retrieved.  */
 end_comment
 
 begin_function
@@ -1413,6 +1419,13 @@ name|dinfo
 operator|->
 name|generation
 expr_stmt|;
+if|if
+condition|(
+name|kd
+operator|==
+name|NULL
+condition|)
+block|{
 name|clock_gettime
 argument_list|(
 name|CLOCK_MONOTONIC
@@ -1435,13 +1448,6 @@ name|tv_nsec
 operator|*
 literal|1e-9
 expr_stmt|;
-if|if
-condition|(
-name|kd
-operator|==
-name|NULL
-condition|)
-block|{
 comment|/* If this is our first time through, mem_ptr will be null. */
 if|if
 condition|(
@@ -1761,6 +1767,37 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|KREADNL
+argument_list|(
+name|kd
+argument_list|,
+name|X_TIME_UPTIME
+argument_list|,
+name|ts
+operator|.
+name|tv_sec
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+else|else
+name|stats
+operator|->
+name|snap_time
+operator|=
+name|ts
+operator|.
+name|tv_sec
+expr_stmt|;
 comment|/*  		 * This is of course non-atomic, but since we are working 		 * on a core dump, the generation is unlikely to change 		 */
 if|if
 condition|(

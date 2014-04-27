@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_mapper.c,v 1.7 2008/07/25 14:05:25 christos Exp $ */
+comment|/*	$NetBSD: citrus_mapper.c,v 1.10 2012/06/08 07:49:42 martin Exp $	*/
 end_comment
 
 begin_comment
@@ -944,9 +944,15 @@ name|cm_ops
 operator|->
 name|mo_init_state
 condition|)
+block|{
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 comment|/* allocate traits structure */
 name|cm
 operator|->
@@ -1504,11 +1510,18 @@ name|cm_key
 argument_list|)
 expr_stmt|;
 block|}
+name|UNLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
+expr_stmt|;
 name|mapper_close
 argument_list|(
 name|cm
 argument_list|)
 expr_stmt|;
+return|return;
 name|quit
 label|:
 name|UNLOCK

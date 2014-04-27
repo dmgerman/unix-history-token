@@ -243,7 +243,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|DPRINTF
+name|DPRINTFX
 argument_list|(
 literal|"ERROR: child process %d status 0x%x"
 argument_list|,
@@ -508,7 +508,7 @@ name|error
 operator|=
 name|errno
 expr_stmt|;
-name|DPRINTF
+name|DPRINTFX
 argument_list|(
 literal|"ERROR: child process %d status 0x%x"
 argument_list|,

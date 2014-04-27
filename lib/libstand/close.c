@@ -90,6 +90,7 @@ name|f_rabuf
 operator|!=
 name|NULL
 condition|)
+block|{
 name|free
 argument_list|(
 name|f
@@ -97,6 +98,13 @@ operator|->
 name|f_rabuf
 argument_list|)
 expr_stmt|;
+name|f
+operator|->
+name|f_rabuf
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

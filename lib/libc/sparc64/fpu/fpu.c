@@ -654,7 +654,7 @@ value|((op3)<< IF_F3_OP3_SHIFT | (opf)<< IF_F3_OPF_SHIFT)
 end_define
 
 begin_comment
-comment|/*  * Implement a move operation for all supported operand types. The additional  * nand and xor parameters will be applied to the upper 32 bit word of the  * source operand. This allows to implement fabs and fneg (for fp operands  * only!) using this functions, too, by passing (1<< 31) for one of the  * parameters, and 0 for the other.  */
+comment|/*  * Implement a move operation for all supported operand types. The additional  * nand and xor parameters will be applied to the upper 32 bit word of the  * source operand. This allows to implement fabs and fneg (for fp operands  * only!) using this functions, too, by passing (1U<< 31) for one of the  * parameters, and 0 for the other.  */
 end_comment
 
 begin_function
@@ -1780,7 +1780,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -1810,7 +1810,7 @@ argument_list|,
 name|rs2
 argument_list|,
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

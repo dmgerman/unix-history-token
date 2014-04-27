@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -1941,7 +1941,10 @@ name|EDT_OVERSION
 block|,
 comment|/* client is requesting deprecated version */
 name|EDT_ENABLING_ERR
+block|,
 comment|/* failed to enable probe */
+name|EDT_NOPROBES
+comment|/* no probes sites for declared provider */
 block|}
 enum|;
 comment|/*  * Interfaces for parsing and comparing DTrace attribute tuples, which describe  * stability and architectural binding information.  The dtrace_attribute_t  * structure and associated constant definitions are found in<sys/dtrace.h>.  */

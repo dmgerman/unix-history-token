@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -489,6 +489,12 @@ block|{
 name|EDT_ENABLING_ERR
 block|,
 literal|"Failed to enable probe"
+block|}
+block|,
+block|{
+name|EDT_NOPROBES
+block|,
+literal|"No probe sites found for declared provider"
 block|}
 block|}
 struct|;

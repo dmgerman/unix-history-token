@@ -278,6 +278,14 @@ name|RLIMIT_SWAP
 block|}
 block|,
 block|{
+literal|"kqueues"
+block|,
+name|login_getcapsize
+block|,
+name|RLIMIT_KQUEUES
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

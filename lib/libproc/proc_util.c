@@ -492,7 +492,7 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|warn
+name|DPRINTF
 argument_list|(
 literal|"waitpid"
 argument_list|)

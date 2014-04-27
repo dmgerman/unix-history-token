@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ronnie Kon at Mindcraft Inc., Kevin Lew and Elmer Yglesias.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 2014 David T. Chisnall  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ronnie Kon at Mindcraft Inc., Kevin Lew and Elmer Yglesias.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -68,6 +68,71 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I_AM_HEAPSORT_B
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"block_abi.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|COMPAR
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|CALL_BLOCK(compar, x, y)
+end_define
+
+begin_typedef
+typedef|typedef
+name|DECLARE_BLOCK
+argument_list|(
+name|int
+argument_list|,
+name|heapsort_block
+argument_list|,
+specifier|const
+name|void
+operator|*
+argument_list|,
+specifier|const
+name|void
+operator|*
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|COMPAR
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|compar(x, y)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Swap two areas of size number of bytes.  Although qsort(3) permits random  * blocks of memory to be sorted, sorting pointers is almost certainly the  * common case (and, were it not, could easily be made so).  Regardless, it  * isn't worth optimizing; the SWAP's get sped up by the cache, and pointer  * arithmetic gets lost in the time required for comparison function calls.  */
@@ -142,7 +207,7 @@ name|count
 parameter_list|,
 name|tmp
 parameter_list|)
-value|{ \ 	for (par_i = initval; (child_i = par_i * 2)<= nmemb; \ 	    par_i = child_i) { \ 		child = base + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = base + par_i * size; \ 		if (compar(child, par)<= 0) \ 			break; \ 		SWAP(par, child, count, size, tmp); \ 	} \ }
+value|{ \ 	for (par_i = initval; (child_i = par_i * 2)<= nmemb; \ 	    par_i = child_i) { \ 		child = base + child_i * size; \ 		if (child_i< nmemb&& COMPAR(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = base + par_i * size; \ 		if (COMPAR(child, par)<= 0) \ 			break; \ 		SWAP(par, child, count, size, tmp); \ 	} \ }
 end_define
 
 begin_comment
@@ -174,12 +239,55 @@ name|tmp1
 parameter_list|,
 name|tmp2
 parameter_list|)
-value|{ \ 	for (par_i = 1; (child_i = par_i * 2)<= nmemb; par_i = child_i) { \ 		child = base + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = base + par_i * size; \ 		COPY(par, child, count, size, tmp1, tmp2); \ 	} \ 	for (;;) { \ 		child_i = par_i; \ 		par_i = child_i / 2; \ 		child = base + child_i * size; \ 		par = base + par_i * size; \ 		if (child_i == 1 || compar(k, par)< 0) { \ 			COPY(child, k, count, size, tmp1, tmp2); \ 			break; \ 		} \ 		COPY(child, par, count, size, tmp1, tmp2); \ 	} \ }
+value|{ \ 	for (par_i = 1; (child_i = par_i * 2)<= nmemb; par_i = child_i) { \ 		child = base + child_i * size; \ 		if (child_i< nmemb&& COMPAR(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = base + par_i * size; \ 		COPY(par, child, count, size, tmp1, tmp2); \ 	} \ 	for (;;) { \ 		child_i = par_i; \ 		par_i = child_i / 2; \ 		child = base + child_i * size; \ 		par = base + par_i * size; \ 		if (child_i == 1 || COMPAR(k, par)< 0) { \ 			COPY(child, k, count, size, tmp1, tmp2); \ 			break; \ 		} \ 		COPY(child, par, count, size, tmp1, tmp2); \ 	} \ }
 end_define
 
 begin_comment
 comment|/*  * Heapsort -- Knuth, Vol. 3, page 145.  Runs in O (N lg N), both average  * and worst.  While heapsort is faster than the worst case of quicksort,  * the BSD quicksort does median selection so that the chance of finding  * a data set that will trigger the worst case is nonexistent.  Heapsort's  * only advantage over quicksort is that it requires little additional memory.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I_AM_HEAPSORT_B
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|heapsort_b
+argument_list|(
+name|vbase
+argument_list|,
+name|nmemb
+argument_list|,
+name|size
+argument_list|,
+name|compar
+argument_list|)
+name|void
+modifier|*
+name|vbase
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|nmemb
+decl_stmt|,
+name|size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|heapsort_block
+name|compar
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 name|int
@@ -224,6 +332,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{

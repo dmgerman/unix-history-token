@@ -117,7 +117,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * __BT_PUT -- Add a btree item to the tree.  *  * Parameters:  *	dbp:	pointer to access method  *	key:	key  *	data:	data  *	flag:	R_NOOVERWRITE  *  * Returns:  *	RET_ERROR, RET_SUCCESS and RET_SPECIAL if the key is already in the  *	tree and R_NOOVERWRITE specified.  */
+comment|/*  * __BT_PUT -- Add a btree item to the tree.  *  * Parameters:  *	dbp:	pointer to access method  *	key:	key  *	data:	data  *	flag:	R_NOOVERWRITE, R_SETCURSOR, R_CURSOR  *  * Returns:  *	RET_ERROR, RET_SUCCESS and RET_SPECIAL if the key is already in the  *	tree and R_NOOVERWRITE specified.  */
 end_comment
 
 begin_function
@@ -260,6 +260,9 @@ literal|0
 case|:
 case|case
 name|R_NOOVERWRITE
+case|:
+case|case
+name|R_SETCURSOR
 case|:
 break|break;
 case|case

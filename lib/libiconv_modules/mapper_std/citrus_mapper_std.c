@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: citrus_mapper_std.c,v 1.8 2006/09/11 13:06:33 tnozaki Exp $	*/
+comment|/*	$NetBSD: citrus_mapper_std.c,v 1.10 2011/11/19 18:48:39 tnozaki Exp $	*/
 end_comment
 
 begin_comment
@@ -743,11 +743,26 @@ name|ret
 operator|!=
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|rc
+operator|->
+name|rc_src_rowcol
+argument_list|)
+expr_stmt|;
+name|rc
+operator|->
+name|rc_src_rowcol
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|ret
 operator|)
 return|;
+block|}
 operator|++
 name|rc
 operator|->

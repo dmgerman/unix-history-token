@@ -890,6 +890,27 @@ end_function
 
 begin_function
 name|uint64_t
+name|memstat_get_rsize
+parameter_list|(
+specifier|const
+name|struct
+name|memory_type
+modifier|*
+name|mtp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|mtp
+operator|->
+name|mt_rsize
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uint64_t
 name|memstat_get_memalloced
 parameter_list|(
 specifier|const

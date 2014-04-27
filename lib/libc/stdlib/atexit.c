@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<link.h>
 end_include
 
@@ -102,8 +108,36 @@ end_include
 begin_include
 include|#
 directive|include
+file|"block_abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libc_private.h"
 end_include
+
+begin_comment
+comment|/**  * The _Block_copy() function is provided by the block runtime.  */
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(weak)
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+modifier|*
+name|_Block_copy
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -244,6 +278,19 @@ end_decl_stmt
 begin_comment
 comment|/* points to head of LIFO stack */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|DECLARE_BLOCK
+argument_list|(
+name|void
+argument_list|,
+name|atexit_block
+argument_list|,
+name|void
+argument_list|)
+expr_stmt|;
+end_typedef
 
 begin_comment
 comment|/*  * Register the function described by 'fptr' to be called at application  * exit or owning shared object unload time. This is a helper function  * for atexit and __cxa_atexit.  */
@@ -494,6 +541,105 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * Register a block to be performed at exit.  */
+end_comment
+
+begin_function
+name|int
+name|atexit_b
+parameter_list|(
+name|atexit_block
+name|func
+parameter_list|)
+block|{
+name|struct
+name|atexit_fn
+name|fn
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+name|_Block_copy
+operator|==
+literal|0
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOSYS
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|func
+operator|=
+name|_Block_copy
+argument_list|(
+name|func
+argument_list|)
+expr_stmt|;
+comment|// Blocks are not C++ destructors, but they have the same signature (a
+comment|// single void* parameter), so we can pretend that they are.
+name|fn
+operator|.
+name|fn_type
+operator|=
+name|ATEXIT_FN_CXA
+expr_stmt|;
+name|fn
+operator|.
+name|fn_ptr
+operator|.
+name|cxa_func
+operator|=
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|)
+name|GET_BLOCK_FUNCTION
+argument_list|(
+name|func
+argument_list|)
+expr_stmt|;
+name|fn
+operator|.
+name|fn_arg
+operator|=
+name|func
+expr_stmt|;
+name|fn
+operator|.
+name|fn_dso
+operator|=
+name|NULL
+expr_stmt|;
+name|error
+operator|=
+name|atexit_register
+argument_list|(
+operator|&
+name|fn
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Register a function to be performed at exit or when an shared object  * with given dso handle is unloaded dynamically.  */
 end_comment
 
@@ -588,6 +734,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|int
+name|global_exit
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Call all handlers registered with __cxa_atexit for the shared  * object owning 'dso'.  Note: if 'dso' is NULL, then all remaining  * handlers are called.  */
 end_comment
@@ -625,6 +778,7 @@ name|dso
 operator|!=
 name|NULL
 condition|)
+block|{
 name|has_phdr
 operator|=
 name|_rtld_addr_phdr
@@ -635,11 +789,18 @@ operator|&
 name|phdr_info
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|has_phdr
 operator|=
 literal|0
 expr_stmt|;
+name|global_exit
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|_MUTEX_LOCK
 argument_list|(
 operator|&
@@ -718,6 +879,8 @@ if|if
 condition|(
 operator|!
 name|has_phdr
+operator|||
+name|global_exit
 operator|||
 operator|!
 name|__elf_phdr_match_addr
@@ -817,6 +980,9 @@ expr_stmt|;
 if|if
 condition|(
 name|has_phdr
+operator|&&
+operator|!
+name|global_exit
 operator|&&
 operator|&
 name|__pthread_cxa_finalize

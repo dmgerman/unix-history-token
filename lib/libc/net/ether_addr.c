@@ -193,14 +193,10 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|!=
+operator|==
 literal|7
 condition|)
-return|return
-operator|(
-name|i
-operator|)
-return|;
+block|{
 for|for
 control|(
 name|i
@@ -231,6 +227,16 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 block|}
 end_function
 

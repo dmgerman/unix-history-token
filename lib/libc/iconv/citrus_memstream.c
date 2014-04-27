@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_memstream.c,v 1.4 2009/02/03 05:02:12 lukem Exp $ */
+comment|/*	$NetBSD: citrus_memstream.c,v 1.5 2012/03/13 21:13:31 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -92,10 +92,9 @@ modifier|*
 name|p
 decl_stmt|;
 name|size_t
-name|ret
-decl_stmt|;
-name|int
 name|i
+decl_stmt|,
+name|ret
 decl_stmt|;
 if|if
 condition|(

@@ -103,11 +103,19 @@ define|#
 directive|define
 name|DPRINTF
 parameter_list|(
-name|fmt
-parameter_list|,
 modifier|...
 parameter_list|)
-value|warn(fmt, __VA_ARGS__)
+value|warn(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFX
+parameter_list|(
+modifier|...
+parameter_list|)
+value|warnx(__VA_ARGS__)
 end_define
 
 begin_else
@@ -120,10 +128,19 @@ define|#
 directive|define
 name|DPRINTF
 parameter_list|(
-name|fmt
-parameter_list|,
 modifier|...
 parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFX
+parameter_list|(
+modifier|...
+parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_endif

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_csmapper.h,v 1.2 2008/02/09 14:56:20 junyoung Exp $ */
+comment|/*	$NetBSD: citrus_csmapper.h,v 1.3 2013/06/24 17:28:35 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_CITRUS_CSMAPPER_H
+name|_CITRUS_CSMAPPER_H_
 end_define
 
 begin_define

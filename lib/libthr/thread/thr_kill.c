@@ -64,9 +64,6 @@ name|struct
 name|pthread
 modifier|*
 name|curthread
-init|=
-name|_get_curthread
-argument_list|()
 decl_stmt|;
 name|int
 name|ret
@@ -83,12 +80,17 @@ operator|>
 name|_SIG_MAXSIG
 condition|)
 comment|/* Invalid signal: */
-name|ret
-operator|=
+return|return
+operator|(
 name|EINVAL
+operator|)
+return|;
+name|curthread
+operator|=
+name|_get_curthread
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Ensure the thread is in the list of active threads, and the 	 * signal is valid (signal 0 specifies error checking only) and 	 * not being ignored: 	 */
-elseif|else
 if|if
 condition|(
 name|curthread
@@ -114,6 +116,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 operator|(

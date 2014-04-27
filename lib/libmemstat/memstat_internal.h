@@ -52,6 +52,10 @@ name|uint64_t
 name|mt_size
 decl_stmt|;
 comment|/* uma: size of objects. */
+name|uint64_t
+name|mt_rsize
+decl_stmt|;
+comment|/* uma: real size of objects. */
 comment|/* 	 * Zone or type information that includes all caches and any central 	 * zone state.  Depending on the allocator, this may be synthesized 	 * from several sources, or directly measured. 	 */
 name|uint64_t
 name|mt_memalloced

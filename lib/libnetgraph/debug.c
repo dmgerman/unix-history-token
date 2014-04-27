@@ -152,12 +152,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netgraph/ng_fec.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netgraph/ng_frame_relay.h>
 end_include
 
@@ -531,11 +525,6 @@ block|,
 name|COOKIE
 argument_list|(
 name|ETHER
-argument_list|)
-block|,
-name|COOKIE
-argument_list|(
-name|FEC
 argument_list|)
 block|,
 name|COOKIE
