@@ -6234,6 +6234,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pf_mtag_initialize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pf_mtag_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pf_cleanup
 parameter_list|(
 name|void
