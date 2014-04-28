@@ -107,6 +107,50 @@ begin_comment
 comment|/* Set the error character */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_SET_LATENCY
+value|9
+end_define
+
+begin_comment
+comment|/* Set the latency timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_GET_LATENCY
+value|10
+end_define
+
+begin_comment
+comment|/* Read the latency timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_SET_BITMODE
+value|11
+end_define
+
+begin_comment
+comment|/* Set the bit bang I/O mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_GET_BITMODE
+value|12
+end_define
+
+begin_comment
+comment|/* Read pin states in bit bang mode */
+end_comment
+
 begin_comment
 comment|/* Port Identifier Table */
 end_comment
@@ -231,83 +275,12 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * BmRequestType:  0100 0000B  * bRequest:       FTDI_SIO_SET_BAUDRATE  * wValue:         BaudRate value - see below  * wIndex:         Port  * wLength:        0  * Data:           None  */
+comment|/*  * BmRequestType:  0100 0000B  * bRequest:       FTDI_SIO_SET_BAUDRATE  * wValue:         BaudRate low bits  * wIndex:         Port and BaudRate high bits   * wLength:        0  * Data:           None  */
 end_comment
 
 begin_comment
 comment|/* FTDI_SIO_SET_BAUDRATE */
 end_comment
-
-begin_enum
-enum|enum
-block|{
-name|ftdi_sio_b300
-init|=
-literal|0
-block|,
-name|ftdi_sio_b600
-init|=
-literal|1
-block|,
-name|ftdi_sio_b1200
-init|=
-literal|2
-block|,
-name|ftdi_sio_b2400
-init|=
-literal|3
-block|,
-name|ftdi_sio_b4800
-init|=
-literal|4
-block|,
-name|ftdi_sio_b9600
-init|=
-literal|5
-block|,
-name|ftdi_sio_b19200
-init|=
-literal|6
-block|,
-name|ftdi_sio_b38400
-init|=
-literal|7
-block|,
-name|ftdi_sio_b57600
-init|=
-literal|8
-block|,
-name|ftdi_sio_b115200
-init|=
-literal|9
-block|}
-enum|;
-end_enum
-
-begin_define
-define|#
-directive|define
-name|FTDI_8U232AM_FREQ
-value|3000000
-end_define
-
-begin_comment
-comment|/* Bounds for normal divisors as 4-bit fixed precision ints. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTDI_8U232AM_MIN_DIV
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|FTDI_8U232AM_MAX_DIV
-value|0x3fff8
-end_define
 
 begin_comment
 comment|/*  * BmRequestType:  0100 0000B  * bRequest:       FTDI_SIO_SET_DATA  * wValue:         Data characteristics (see below)  * wIndex:         Port  * wLength:        0  * Data:           No  *  * Data characteristics  *  *   B0..7   Number of data bits  *   B8..10  Parity  *           0 = None  *           1 = Odd  *           2 = Even  *           3 = Mark  *           4 = Space  *   B11..13 Stop Bits  *           0 = 1  *           1 = 1.5  *           2 = 2  *   B14..15 Reserved  *  */
