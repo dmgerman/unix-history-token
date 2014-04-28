@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                                                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_refresh.c,v 1.41 2007/09/29 20:39:34 tom Exp $"
+literal|"$Id: lib_refresh.c,v 1.45 2011/06/25 19:02:22 Vassili.Courzakis Exp $"
 argument_list|)
 end_macro
 
@@ -43,6 +43,20 @@ block|{
 name|int
 name|code
 decl_stmt|;
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+name|SCREEN
+modifier|*
+name|SP_PARM
+init|=
+name|_nc_screen_of
+argument_list|(
+name|win
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 name|T
 argument_list|(
 operator|(
@@ -51,6 +65,10 @@ argument_list|(
 literal|"wrefresh(%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|win
 operator|)
 argument_list|)
@@ -72,10 +90,16 @@ if|if
 condition|(
 name|win
 operator|==
-name|curscr
+name|CurScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 condition|)
 block|{
-name|curscr
+name|CurScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_clear
 operator|=
@@ -83,8 +107,13 @@ name|TRUE
 expr_stmt|;
 name|code
 operator|=
+name|NCURSES_SP_NAME
+argument_list|(
 name|doupdate
-argument_list|()
+argument_list|)
+argument_list|(
+name|NCURSES_SP_ARG
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -108,7 +137,10 @@ name|win
 operator|->
 name|_clear
 condition|)
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_clear
 operator|=
@@ -116,8 +148,13 @@ name|TRUE
 expr_stmt|;
 name|code
 operator|=
+name|NCURSES_SP_NAME
+argument_list|(
 name|doupdate
-argument_list|()
+argument_list|)
+argument_list|(
+name|NCURSES_SP_ARG
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Reset the clearok() flag in case it was set for the special 	 * case in hardscroll.c (if we don't reset it here, we'll get 2 	 * refreshes because the flag is copied from stdscr to newscr). 	 * Resetting the flag shouldn't do any harm, anyway. 	 */
 name|win
@@ -151,21 +188,21 @@ end_macro
 
 begin_block
 block|{
-name|NCURSES_SIZE_T
+name|int
 name|limit_x
 decl_stmt|;
-name|NCURSES_SIZE_T
+name|int
 name|src_row
 decl_stmt|,
 name|src_col
 decl_stmt|;
-name|NCURSES_SIZE_T
+name|int
 name|begx
 decl_stmt|;
-name|NCURSES_SIZE_T
+name|int
 name|begy
 decl_stmt|;
-name|NCURSES_SIZE_T
+name|int
 name|dst_row
 decl_stmt|,
 name|dst_col
@@ -178,6 +215,20 @@ name|wide
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+name|SCREEN
+modifier|*
+name|SP_PARM
+init|=
+name|_nc_screen_of
+argument_list|(
+name|win
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 name|T
 argument_list|(
 operator|(
@@ -186,8 +237,34 @@ argument_list|(
 literal|"wnoutrefresh(%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|win
 operator|)
+argument_list|)
+expr_stmt|;
+comment|/*      * This function will break badly if we try to refresh a pad.      */
+if|if
+condition|(
+operator|(
+name|win
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|win
+operator|->
+name|_flags
+operator|&
+name|_ISPAD
+operator|)
+condition|)
+name|returnCode
+argument_list|(
+name|ERR
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -217,28 +294,6 @@ block|}
 endif|#
 directive|endif
 comment|/* TRACE */
-comment|/*      * This function will break badly if we try to refresh a pad.      */
-if|if
-condition|(
-operator|(
-name|win
-operator|==
-literal|0
-operator|)
-operator|||
-operator|(
-name|win
-operator|->
-name|_flags
-operator|&
-name|_ISPAD
-operator|)
-condition|)
-name|returnCode
-argument_list|(
-name|ERR
-argument_list|)
-expr_stmt|;
 comment|/* put them here so "win == 0" won't break our code */
 name|begx
 operator|=
@@ -252,7 +307,10 @@ name|win
 operator|->
 name|_begy
 expr_stmt|;
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_nc_bkgd
 operator|=
@@ -262,7 +320,10 @@ name|_nc_bkgd
 expr_stmt|;
 name|WINDOW_ATTRS
 argument_list|(
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 argument_list|)
 operator|=
 name|WINDOW_ATTRS
@@ -292,7 +353,10 @@ operator|->
 name|_maxx
 operator|>=
 operator|(
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_maxx
 operator|-
@@ -322,7 +386,10 @@ if|if
 condition|(
 name|limit_x
 operator|>
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_maxx
 operator|-
@@ -330,7 +397,10 @@ name|begx
 condition|)
 name|limit_x
 operator|=
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_maxx
 operator|-
@@ -358,7 +428,10 @@ name|_maxy
 operator|&&
 name|dst_row
 operator|<=
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_maxy
 condition|;
@@ -369,21 +442,24 @@ name|dst_row
 operator|++
 control|)
 block|{
-specifier|register
 name|struct
 name|ldat
 modifier|*
 name|nline
 init|=
 operator|&
-name|newscr
+operator|(
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_line
 index|[
 name|dst_row
 index|]
+operator|)
 decl_stmt|;
-specifier|register
 name|struct
 name|ldat
 modifier|*
@@ -437,7 +513,7 @@ name|begx
 expr_stmt|;
 name|if_WIDEC
 argument_list|(
-argument|{ 		register int j;
+argument|{ 		int j;
 comment|/* 		 * Ensure that we will copy complete multi-column characters 		 * on the left-boundary. 		 */
 argument|if (isWidecExt(oline->text[src_col])) { 		    j =
 literal|1
@@ -452,7 +528,7 @@ argument_list|)
 empty_stmt|;
 name|if_WIDEC
 argument_list|(
-argument|{ 		static cchar_t blank = BLANK; 		int last_dst = begx + ((last_src< win->_maxx) 				       ? last_src 				       : win->_maxx); 		int fix_left = dst_col; 		int fix_right = last_dst; 		register int j;
+argument|{ 		static cchar_t blank = BLANK; 		int last_dst = begx + ((last_src< win->_maxx) 				       ? last_src 				       : win->_maxx); 		int fix_left = dst_col; 		int fix_right = last_dst; 		int j;
 comment|/* 		 * Check for boundary cases where we may overwrite part of a 		 * multi-column character.  For those, wipe the remainder of 		 * the character to blanks. 		 */
 argument|j = dst_col; 		if (isWidecExt(nline->text[j])) {
 comment|/* 		     * On the left, we only care about multi-column characters 		     * that extend into the changed region. 		     */
@@ -468,7 +544,7 @@ argument|}  		j = last_dst; 		if (WidecExt(nline->text[j]) !=
 literal|0
 argument|) {
 comment|/* 		     * On the right, any multi-column character is a problem, 		     * unless it happens to be contained in the change, and 		     * ending at the right boundary of the change.  The 		     * computation for 'fix_left' accounts for the left-side of 		     * this character.  Find the end of the character. 		     */
-argument|++j; 		    while (j<= newscr->_maxx&& isWidecExt(nline->text[j])) { 			fix_right = j++; 		    } 		}
+argument|++j; 		    while (j<= NewScreen(SP_PARM)->_maxx&& 			   isWidecExt(nline->text[j])) { 			fix_right = j++; 		    } 		}
 comment|/* 		 * The analysis is simpler if we do the clearing afterwards. 		 * Do that now. 		 */
 argument|if (fix_left< dst_col || fix_right> last_dst) { 		    for (j = fix_left; j<= fix_right; ++j) { 			nline->text[j] = blank; 			CHANGED_CELL(nline, j); 		    } 		} 	    }
 argument_list|)
@@ -609,7 +685,10 @@ name|_clear
 operator|=
 name|FALSE
 expr_stmt|;
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_clear
 operator|=
@@ -624,10 +703,17 @@ operator|->
 name|_leaveok
 condition|)
 block|{
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_cury
 operator|=
+call|(
+name|NCURSES_SIZE_T
+call|)
+argument_list|(
 name|win
 operator|->
 name|_cury
@@ -639,11 +725,19 @@ operator|+
 name|win
 operator|->
 name|_yoffset
+argument_list|)
 expr_stmt|;
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_curx
 operator|=
+call|(
+name|NCURSES_SIZE_T
+call|)
+argument_list|(
 name|win
 operator|->
 name|_curx
@@ -651,9 +745,13 @@ operator|+
 name|win
 operator|->
 name|_begx
+argument_list|)
 expr_stmt|;
 block|}
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|_leaveok
 operator|=
@@ -676,7 +774,10 @@ name|_tracedump
 argument_list|(
 literal|"newscr"
 argument_list|,
-name|newscr
+name|NewScreen
+argument_list|(
+name|SP_PARM
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|_nc_unlock_global

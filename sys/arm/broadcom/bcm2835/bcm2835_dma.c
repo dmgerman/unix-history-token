@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"bcm2835_dma.h"
 end_include
 
@@ -282,7 +276,7 @@ begin_define
 define|#
 directive|define
 name|CS_RESET
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2853,6 +2847,19 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 operator|!

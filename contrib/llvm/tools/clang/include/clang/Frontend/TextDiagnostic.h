@@ -138,6 +138,8 @@ argument_list|,
 argument|DiagnosticsEngine::Level Level
 argument_list|,
 argument|bool ShowColors
+argument_list|,
+argument|bool CLFallbackMode = false
 argument_list|)
 block|;
 comment|/// \brief Pretty-print a diagnostic message to a raw_ostream.

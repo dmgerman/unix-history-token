@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -4443,7 +4443,7 @@ if|if
 condition|(
 name|npages
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 operator|>

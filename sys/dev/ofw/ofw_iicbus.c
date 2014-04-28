@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/iicbus/iicbus.h>
 end_include
 
@@ -291,6 +285,24 @@ name|DRIVER_MODULE
 argument_list|(
 name|ofw_iicbus
 argument_list|,
+name|iicbb
+argument_list|,
+name|ofw_iicbus_driver
+argument_list|,
+name|ofwiicbus_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|ofw_iicbus
+argument_list|,
 name|iichb
 argument_list|,
 name|ofw_iicbus_driver
@@ -402,9 +414,6 @@ decl_stmt|;
 name|device_t
 name|childdev
 decl_stmt|;
-name|uint32_t
-name|addr
-decl_stmt|;
 name|sc
 operator|->
 name|dev
@@ -474,7 +483,7 @@ block|{
 comment|/* 		 * Try to get the I2C address first from the i2c-address 		 * property, then try the reg property.  It moves around 		 * on different systems. 		 */
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
@@ -494,7 +503,7 @@ literal|1
 condition|)
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
@@ -513,13 +522,6 @@ operator|-
 literal|1
 condition|)
 continue|continue;
-name|addr
-operator|=
-name|fdt32_to_cpu
-argument_list|(
-name|paddr
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Now set up the I2C and OFW bus layer devinfo and add it 		 * to the bus. 		 */
 name|dinfo
 operator|=
@@ -551,7 +553,7 @@ name|opd_dinfo
 operator|.
 name|addr
 operator|=
-name|addr
+name|paddr
 expr_stmt|;
 if|if
 condition|(

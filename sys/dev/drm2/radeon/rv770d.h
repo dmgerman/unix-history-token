@@ -377,7 +377,7 @@ begin_define
 define|#
 directive|define
 name|RB_RPTR_WR_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2048,7 +2048,7 @@ begin_define
 define|#
 directive|define
 name|BILINEAR_PRECISION_8_BIT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3771,7 +3771,7 @@ begin_define
 define|#
 directive|define
 name|AFMT_RAMP_DATA_SIGN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4390,7 +4390,7 @@ begin_define
 define|#
 directive|define
 name|AUDIO_ENABLED
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

@@ -328,6 +328,8 @@ comment|/* prototypes */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|avr32dci_bus_methods
@@ -335,6 +337,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|avr32dci_device_non_isoc_methods
@@ -342,6 +346,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|avr32dci_device_isoc_fs_methods
@@ -5279,6 +5285,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|avr32dci_device_non_isoc_methods
@@ -5576,6 +5584,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|avr32dci_device_isoc_fs_methods
@@ -7985,6 +7995,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|avr32dci_bus_methods

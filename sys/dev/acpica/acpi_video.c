@@ -704,7 +704,7 @@ begin_define
 define|#
 directive|define
 name|DOD_DEVID_SCHEME_STD
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -793,7 +793,7 @@ begin_define
 define|#
 directive|define
 name|DSS_COMMIT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_decl_stmt

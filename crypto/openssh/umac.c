@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: umac.c,v 1.7 2013/07/22 05:00:17 djm Exp $ */
+comment|/* $OpenBSD: umac.c,v 1.8 2013/11/08 00:39:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -6994,8 +6994,10 @@ name|octx
 operator|=
 name|ctx
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*

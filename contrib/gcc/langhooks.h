@@ -411,6 +411,16 @@ parameter_list|,
 name|tree
 parameter_list|)
 function_decl|;
+comment|/* True if the type is an instantiation of a generic type,      e.g. C++ template implicit specializations.  */
+name|bool
+function_decl|(
+modifier|*
+name|generic_p
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
 comment|/* Given a type, apply default promotions to unnamed function      arguments and return the new type.  Return the same type if no      change.  Required by any language that supports variadic      arguments.  The default hook dies.  */
 name|tree
 function_decl|(
@@ -473,6 +483,18 @@ parameter_list|,
 name|tree
 parameter_list|)
 function_decl|;
+comment|/* APPLE LOCAL begin radar 6386976  */
+comment|/* Determine whether the type-tree passed in is specific to the      language/runtime definitions, e.g. is an Objective-C class...  */
+name|bool
+function_decl|(
+modifier|*
+name|is_runtime_specific_type
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+comment|/* APPLE LOCAL end radar 6386976  */
 comment|/* Nonzero if types that are identical are to be hashed so that only      one copy is kept.  If a language requires unique types for each      user-specified type, such as Ada, this should be set to TRUE.  */
 name|bool
 name|hash_types
@@ -1222,6 +1244,18 @@ modifier|*
 name|se
 parameter_list|)
 function_decl|;
+comment|/* APPLE LOCAL begin radar 6353006  */
+comment|/*  For c-based languages, builds a generic type for Blocks pointers (for    emitting debug information.  For other languages, returns NULL.  */
+name|tree
+function_decl|(
+modifier|*
+name|build_generic_block_struct_type
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* APPLE LOCAL end radar 6353006  */
 comment|/* Whenever you add entries here, make sure you adjust langhooks-def.h      and langhooks.c accordingly.  */
 block|}
 struct|;

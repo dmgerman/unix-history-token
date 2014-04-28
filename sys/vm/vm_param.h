@@ -70,7 +70,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* cnt.v_free_min */
+comment|/* vm_cnt.v_free_min */
 end_comment
 
 begin_define
@@ -81,7 +81,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* cnt.v_free_target */
+comment|/* vm_cnt.v_free_target */
 end_comment
 
 begin_define
@@ -92,7 +92,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* cnt.v_free_reserved */
+comment|/* vm_cnt.v_free_reserved */
 end_comment
 
 begin_define
@@ -103,7 +103,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* cnt.v_inactive_target */
+comment|/* vm_cnt.v_inactive_target */
 end_comment
 
 begin_define
@@ -114,7 +114,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* cnt.v_cache_min */
+comment|/* vm_cnt.v_cache_min */
 end_comment
 
 begin_define
@@ -125,7 +125,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* cnt.v_cache_max */
+comment|/* vm_cnt.v_cache_max */
 end_comment
 
 begin_define
@@ -136,7 +136,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* cnt.v_pageout_free_min */
+comment|/* vm_cnt.v_pageout_free_min */
 end_comment
 
 begin_define

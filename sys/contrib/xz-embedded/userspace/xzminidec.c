@@ -116,6 +116,14 @@ block|}
 name|xz_crc32_init
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XZ_USE_CRC64
+name|xz_crc64_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Support up to 64 MiB dictionary. The actually needed memory 	 * is allocated once the headers have been parsed. 	 */
 name|s
 operator|=

@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringExtras.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -1171,10 +1177,11 @@ expr_stmt|;
 name|virtual
 name|bool
 name|outputting
-parameter_list|()
-init|=
+argument_list|()
+specifier|const
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 name|virtual
 name|unsigned
 name|beginSequence
@@ -1213,6 +1220,13 @@ init|=
 literal|0
 function_decl|;
 name|virtual
+name|bool
+name|canElideEmptySequence
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
 name|unsigned
 name|beginFlowSequence
 parameter_list|()
@@ -1246,6 +1260,21 @@ name|virtual
 name|void
 name|endFlowSequence
 parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|bool
+name|mapTag
+parameter_list|(
+name|StringRef
+name|Tag
+parameter_list|,
+name|bool
+name|Default
+init|=
+name|false
+parameter_list|)
 init|=
 literal|0
 function_decl|;
@@ -1606,7 +1635,7 @@ if|if
 condition|(
 name|this
 operator|->
-name|outputting
+name|canElideEmptySequence
 argument_list|()
 operator|&&
 operator|!
@@ -3416,12 +3445,18 @@ name|IO
 block|{
 name|public
 operator|:
-comment|// Construct a yaml Input object from a StringRef and optional user-data.
+comment|// Construct a yaml Input object from a StringRef and optional
+comment|// user-data. The DiagHandler can be specified to provide
+comment|// alternative error reporting.
 name|Input
 argument_list|(
 argument|StringRef InputContent
 argument_list|,
-argument|void *Ctxt=NULL
+argument|void *Ctxt = NULL
+argument_list|,
+argument|SourceMgr::DiagHandlerTy DiagHandler = NULL
+argument_list|,
+argument|void *DiagHandlerCtxt = NULL
 argument_list|)
 block|;
 operator|~
@@ -3435,22 +3470,37 @@ name|error_code
 name|error
 argument_list|()
 block|;
-comment|// To set alternate error reporting.
-name|void
-name|setDiagHandler
+specifier|static
+name|bool
+name|classof
 argument_list|(
-argument|llvm::SourceMgr::DiagHandlerTy Handler
-argument_list|,
-argument|void *Ctxt =
-literal|0
+argument|const IO *io
 argument_list|)
-block|;
+block|{
+return|return
+operator|!
+name|io
+operator|->
+name|outputting
+argument_list|()
+return|;
+block|}
 name|private
 operator|:
 name|virtual
 name|bool
 name|outputting
 argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|mapTag
+argument_list|(
+name|StringRef
+argument_list|,
+name|bool
+argument_list|)
 block|;
 name|virtual
 name|void
@@ -3609,9 +3659,19 @@ operator|&
 name|message
 argument_list|)
 block|;
+name|virtual
+name|bool
+name|canElideEmptySequence
+argument_list|()
+block|;
 name|class
 name|HNode
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|HNode
@@ -3654,6 +3714,11 @@ operator|:
 name|public
 name|HNode
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|EmptyHNode
@@ -3668,11 +3733,6 @@ argument_list|(
 argument|n
 argument_list|)
 block|{ }
-name|virtual
-operator|~
-name|EmptyHNode
-argument_list|()
-block|{}
 specifier|static
 specifier|inline
 name|bool
@@ -3712,6 +3772,11 @@ operator|:
 name|public
 name|HNode
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|ScalarHNode
@@ -3730,11 +3795,6 @@ name|_value
 argument_list|(
 argument|s
 argument_list|)
-block|{ }
-name|virtual
-operator|~
-name|ScalarHNode
-argument_list|()
 block|{ }
 name|StringRef
 name|value
@@ -3838,80 +3898,13 @@ return|return
 name|true
 return|;
 block|}
-expr|struct
-name|StrMappingInfo
-block|{
-specifier|static
-name|StringRef
-name|getEmptyKey
-argument_list|()
-block|{
-return|return
-name|StringRef
-argument_list|()
-return|;
-block|}
-specifier|static
-name|StringRef
-name|getTombstoneKey
-argument_list|()
-block|{
-return|return
-name|StringRef
-argument_list|(
-literal|" "
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-specifier|static
-name|unsigned
-name|getHashValue
-argument_list|(
-argument|StringRef const val
-argument_list|)
-block|{
-return|return
-name|llvm
-operator|::
-name|HashString
-argument_list|(
-name|val
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|isEqual
-argument_list|(
-argument|StringRef const lhs
-argument_list|,
-argument|StringRef const rhs
-argument_list|)
-block|{
-return|return
-name|lhs
-operator|.
-name|equals
-argument_list|(
-name|rhs
-argument_list|)
-return|;
-block|}
-expr|}
-block|;
 typedef|typedef
 name|llvm
 operator|::
-name|DenseMap
+name|StringMap
 operator|<
-name|StringRef
-operator|,
 name|HNode
 operator|*
-operator|,
-name|StrMappingInfo
 operator|>
 name|NameToNode
 expr_stmt|;
@@ -4108,14 +4101,29 @@ block|;
 name|bool
 name|ScalarMatchFound
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// The Output class is used to generate a yaml document from in-memory structs
+end_comment
+
+begin_comment
 comment|/// and vectors.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|Output
-operator|:
+range|:
 name|public
 name|IO
 block|{
@@ -4140,10 +4148,34 @@ operator|~
 name|Output
 argument_list|()
 block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const IO *io
+argument_list|)
+block|{
+return|return
+name|io
+operator|->
+name|outputting
+argument_list|()
+return|;
+block|}
 name|virtual
 name|bool
 name|outputting
 argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|mapTag
+argument_list|(
+name|StringRef
+argument_list|,
+name|bool
+argument_list|)
 block|;
 name|virtual
 name|void
@@ -4305,6 +4337,11 @@ operator|&
 name|message
 argument_list|)
 block|;
+name|virtual
+name|bool
+name|canElideEmptySequence
+argument_list|()
+block|;
 name|public
 operator|:
 comment|// These are only used by operator<<. They could be private
@@ -4398,15 +4435,42 @@ block|;
 name|bool
 name|NeedsNewLine
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// YAML I/O does conversion based on types. But often native data types
+end_comment
+
+begin_comment
 comment|/// are just a typedef of built in intergral types (e.g. int).  But the C++
+end_comment
+
+begin_comment
 comment|/// type matching system sees through the typedef and all the typedefed types
+end_comment
+
+begin_comment
 comment|/// look like a built in type. This will cause the generic YAML I/O conversion
+end_comment
+
+begin_comment
 comment|/// to be used. To provide better control over the YAML conversion, you can
+end_comment
+
+begin_comment
 comment|/// use this macro instead of typedef.  It will create a class with one field
+end_comment
+
+begin_comment
 comment|/// and automatic conversion operators to and from the base type.
+end_comment
+
+begin_comment
 comment|/// Based on BOOST_STRONG_TYPEDEF
+end_comment
+
+begin_define
 define|#
 directive|define
 name|LLVM_YAML_STRONG_TYPEDEF
@@ -4417,34 +4481,61 @@ name|_type
 parameter_list|)
 define|\
 value|struct _type {                                                             \         _type() { }                                                            \         _type(const _base v) : value(v) { }                                    \         _type(const _type&v) : value(v.value) {}                              \         _type&operator=(const _type&rhs) { value = rhs.value; return *this; }\         _type&operator=(const _base&rhs) { value = rhs; return *this; }      \         operator const _base& () const { return value; }                      \         bool operator==(const _type&rhs) const { return value == rhs.value; } \         bool operator==(const _base&rhs) const { return value == rhs; }       \         bool operator<(const _type&rhs) const { return value< rhs.value; }   \         _base value;                                                           \     };
+end_define
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Use these types instead of uintXX_t in any mapping to have
+end_comment
+
+begin_comment
 comment|/// its yaml output formatted as hexadecimal.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_macro
 name|LLVM_YAML_STRONG_TYPEDEF
 argument_list|(
 argument|uint8_t
 argument_list|,
 argument|Hex8
 argument_list|)
+end_macro
+
+begin_macro
 name|LLVM_YAML_STRONG_TYPEDEF
 argument_list|(
 argument|uint16_t
 argument_list|,
 argument|Hex16
 argument_list|)
+end_macro
+
+begin_macro
 name|LLVM_YAML_STRONG_TYPEDEF
 argument_list|(
 argument|uint32_t
 argument_list|,
 argument|Hex32
 argument_list|)
+end_macro
+
+begin_macro
 name|LLVM_YAML_STRONG_TYPEDEF
 argument_list|(
 argument|uint64_t
 argument_list|,
 argument|Hex64
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -4484,7 +4575,10 @@ name|Hex8
 operator|&
 argument_list|)
 block|; }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -4524,7 +4618,10 @@ name|Hex16
 operator|&
 argument_list|)
 block|; }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -4564,7 +4661,10 @@ name|Hex32
 operator|&
 argument_list|)
 block|; }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -4604,8 +4704,14 @@ name|Hex64
 operator|&
 argument_list|)
 block|; }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Define non-member operator>> so that Input can stream in a document list.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4623,7 +4729,7 @@ name|T
 operator|>
 operator|::
 name|value
-block|,
+operator|,
 name|Input
 operator|&
 operator|>
@@ -4635,7 +4741,7 @@ operator|(
 name|Input
 operator|&
 name|yin
-expr|,
+operator|,
 name|T
 operator|&
 name|docList
@@ -4694,12 +4800,21 @@ operator|++
 name|i
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|yin
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|// Define non-member operator>> so that Input can stream in a map as a document.
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|T
@@ -4716,7 +4831,7 @@ name|T
 operator|>
 operator|::
 name|value
-block|,
+operator|,
 name|Input
 operator|&
 operator|>
@@ -4728,7 +4843,7 @@ operator|(
 name|Input
 operator|&
 name|yin
-expr|,
+operator|,
 name|T
 operator|&
 name|docMap
@@ -4752,8 +4867,17 @@ return|return
 name|yin
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Define non-member operator>> so that Input can stream in a sequence as
+end_comment
+
+begin_comment
 comment|// a document.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4771,7 +4895,7 @@ name|T
 operator|>
 operator|::
 name|value
-block|,
+operator|,
 name|Input
 operator|&
 operator|>
@@ -4783,17 +4907,19 @@ operator|(
 name|Input
 operator|&
 name|yin
-expr|,
+operator|,
 name|T
 operator|&
 name|docSeq
 operator|)
 block|{
+if|if
+condition|(
 name|yin
 operator|.
 name|setCurrentDocument
 argument_list|()
-block|;
+condition|)
 name|yamlize
 argument_list|(
 name|yin
@@ -4802,13 +4928,22 @@ name|docSeq
 argument_list|,
 name|true
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|yin
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|// Provide better error message about types missing a trait specialization
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|T
@@ -4825,7 +4960,7 @@ name|T
 operator|>
 operator|::
 name|value
-block|,
+operator|,
 name|Input
 operator|&
 operator|>
@@ -4837,7 +4972,7 @@ operator|(
 name|Input
 operator|&
 name|yin
-expr|,
+operator|,
 name|T
 operator|&
 name|docSeq
@@ -4859,7 +4994,13 @@ return|return
 name|yin
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Define non-member operator<< so that Output can stream out document list.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4877,7 +5018,7 @@ name|T
 operator|>
 operator|::
 name|value
-block|,
+operator|,
 name|Output
 operator|&
 operator|>
@@ -4889,7 +5030,7 @@ operator|(
 name|Output
 operator|&
 name|yout
-expr|,
+operator|,
 name|T
 operator|&
 name|docList
@@ -4968,24 +5109,29 @@ name|postflightDocument
 argument_list|()
 expr_stmt|;
 block|}
-block|}
-name|yout
+end_expr_stmt
+
+begin_expr_stmt
+unit|}   yout
 operator|.
 name|endDocuments
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|yout
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|// Define non-member operator<< so that Output can stream out a map.
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|T

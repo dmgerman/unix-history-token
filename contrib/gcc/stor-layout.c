@@ -6926,6 +6926,10 @@ case|:
 case|case
 name|REFERENCE_TYPE
 case|:
+comment|/* APPLE LOCAL blocks */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
 block|{
 name|enum
 name|machine_mode

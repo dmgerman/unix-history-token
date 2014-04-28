@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"options.h"
 end_include
 
@@ -106,6 +112,56 @@ name|debug_info_level
 name|debug_info_level
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* A major contribution to object and executable size is debug    information size.  A major contribution to debug information    size is struct descriptions replicated in several object files.    The following function determines whether or not debug information    should be generated for a given struct.  The indirect parameter    indicates that the struct is being handled indirectly, via    a pointer.  See opts.c for the implementation. */
+end_comment
+
+begin_enum
+enum|enum
+name|debug_info_usage
+block|{
+name|DINFO_USAGE_DFN
+block|,
+comment|/* A struct definition. */
+name|DINFO_USAGE_DIR_USE
+block|,
+comment|/* A direct use, such as the type of a variable. */
+name|DINFO_USAGE_IND_USE
+block|,
+comment|/* An indirect use, such as through a pointer. */
+name|DINFO_USAGE_NUM_ENUMS
+comment|/* The number of enumerators. */
+block|}
+enum|;
+end_enum
+
+begin_function_decl
+specifier|extern
+name|bool
+name|should_emit_struct_debug
+parameter_list|(
+name|tree
+name|type_decl
+parameter_list|,
+name|enum
+name|debug_info_usage
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|set_struct_debug_option
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Nonzero means use GNU-only extensions in the generated symbolic    debugging information.  */
@@ -247,6 +303,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Used to set the level of -Wstrict-aliasing, when no level is specified.      The external way to set the default level is to use    -Wstrict-aliasing=level.      ONOFF is assumed to take value 1 when -Wstrict-aliasing is specified,    and 0 otherwise.  After calling this function, wstrict_aliasing will be    set to the default value of -Wstrict_aliasing=level.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|set_warn_strict_aliasing
+parameter_list|(
+name|int
+name|onoff
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Nonzero means warn about any objects definitions whose size is larger    than N bytes.  Also want about function definitions whose returned    values are larger than N bytes. The value N is in `larger_than_size'.  */
 end_comment
 
@@ -261,6 +332,24 @@ begin_decl_stmt
 specifier|extern
 name|HOST_WIDE_INT
 name|larger_than_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about any function whose frame size is larger    than N bytes. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|warn_frame_larger_than
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|HOST_WIDE_INT
+name|frame_larger_than_size
 decl_stmt|;
 end_decl_stmt
 
@@ -567,17 +656,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Like align_functions_log above, but used by front-ends to force the    minimum function alignment.  Zero means no alignment is forced.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|force_align_functions_log
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Nonzero if we dump in VCG format, not plain text.  */
 end_comment
 
@@ -684,6 +762,21 @@ parameter_list|)
 define|\
 value|(flag_abi_version == 0 || flag_abi_version>= (N))
 end_define
+
+begin_comment
+comment|/* Return whether the function should be excluded from    instrumentation.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|bool
+name|flag_instrument_functions_exclude_p
+parameter_list|(
+name|tree
+name|fndecl
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* True if the given mode has a NaN representation and the treatment of    NaN operands is important.  Certain optimizations, such as folding    x * 0 into 0, are not correct for NaN operands, and are normally    disabled for modes with NaNs.  The user can ask for them to be    done anyway using the -funsafe-math-optimizations switch.  */

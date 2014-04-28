@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: spec.c,v 1.85 2012/12/20 16:43:16 christos Exp $	*/
+comment|/*	$NetBSD: spec.c,v 1.88 2013/10/17 17:22:59 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: spec.c,v 1.85 2012/12/20 16:43:16 christos Exp $"
+literal|"$NetBSD: spec.c,v 1.88 2013/10/17 17:22:59 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -135,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -980,6 +986,32 @@ name|NULL
 condition|)
 block|{
 comment|/* 				 * empty tree 				 */
+comment|/* 			 * Allow a bare "." root node by forcing it to 			 * type=dir for compatibility with FreeBSD. 			 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|centry
+operator|->
+name|name
+argument_list|,
+literal|"."
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|centry
+operator|->
+name|type
+operator|==
+literal|0
+condition|)
+name|centry
+operator|->
+name|type
+operator|=
+name|F_DIR
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1661,11 +1693,10 @@ name|appendfield
 argument_list|(
 name|pathlast
 argument_list|,
-literal|"device=%#llx"
+literal|"device=%#jx"
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|cur
 operator|->
@@ -1722,11 +1753,10 @@ name|appendfield
 argument_list|(
 name|pathlast
 argument_list|,
-literal|"size=%lld"
+literal|"size=%ju"
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|cur
 operator|->
@@ -1744,11 +1774,10 @@ name|appendfield
 argument_list|(
 name|pathlast
 argument_list|,
-literal|"time=%lld.%09ld"
+literal|"time=%jd.%09ld"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|cur
 operator|->

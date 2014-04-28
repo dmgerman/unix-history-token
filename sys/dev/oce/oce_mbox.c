@@ -977,11 +977,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|ret
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1663,11 +1673,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|ret
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1877,11 +1897,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|ret
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1906,6 +1936,8 @@ name|sc
 operator|->
 name|config_number
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -1913,11 +1945,14 @@ operator|.
 name|rsp
 operator|.
 name|config_number
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|asic_revision
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -1925,11 +1960,14 @@ operator|.
 name|rsp
 operator|.
 name|asic_revision
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|port_id
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -1937,11 +1975,14 @@ operator|.
 name|rsp
 operator|.
 name|port_id
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|function_mode
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -1949,11 +1990,14 @@ operator|.
 name|rsp
 operator|.
 name|function_mode
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|function_caps
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -1961,6 +2005,7 @@ operator|.
 name|rsp
 operator|.
 name|function_caps
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1984,6 +2029,8 @@ name|sc
 operator|->
 name|max_tx_rings
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -1996,11 +2043,14 @@ literal|0
 index|]
 operator|.
 name|nic_wq_tot
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|max_rx_rings
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -2013,6 +2063,7 @@ literal|0
 index|]
 operator|.
 name|lro_rqid_tot
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2021,6 +2072,8 @@ name|sc
 operator|->
 name|max_tx_rings
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -2033,11 +2086,14 @@ literal|1
 index|]
 operator|.
 name|nic_wq_tot
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|max_rx_rings
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -2050,6 +2106,7 @@ literal|1
 index|]
 operator|.
 name|lro_rqid_tot
+argument_list|)
 expr_stmt|;
 block|}
 name|error
@@ -2346,11 +2403,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2360,7 +2427,7 @@ block|}
 operator|*
 name|if_id
 operator|=
-name|LE_32
+name|HOST_32
 argument_list|(
 name|fwcmd
 operator|->
@@ -2381,7 +2448,7 @@ name|sc
 operator|->
 name|pmac_id
 operator|=
-name|LE_32
+name|HOST_32
 argument_list|(
 name|fwcmd
 operator|->
@@ -2563,11 +2630,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -2616,7 +2693,22 @@ name|fwcmd
 decl_stmt|;
 name|int
 name|rc
+init|=
+literal|0
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|vlans_added
+operator|>
+name|sc
+operator|->
+name|max_vlans
+condition|)
+goto|goto
+name|vlan_promisc
+goto|;
 name|bzero
 argument_list|(
 operator|&
@@ -2822,15 +2914,53 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
+goto|goto
+name|done
+goto|;
+name|vlan_promisc
+label|:
+comment|/* Enable Vlan Promis */
+name|oce_rxf_set_promiscuous
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"Enabling Vlan Promisc Mode\n"
+argument_list|)
+expr_stmt|;
+name|done
+label|:
 return|return
-literal|0
+name|rc
 return|;
 block|}
 end_function
@@ -3008,11 +3138,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -3455,11 +3595,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 block|}
@@ -3480,7 +3630,7 @@ parameter_list|(
 name|POCE_SOFTC
 name|sc
 parameter_list|,
-name|uint32_t
+name|uint8_t
 name|enable
 parameter_list|)
 block|{
@@ -3558,20 +3708,31 @@ name|MBX_RX_IFACE_FLAGS_PROMISCUOUS
 operator||
 name|MBX_RX_IFACE_FLAGS_VLAN_PROMISCUOUS
 expr_stmt|;
+comment|/* Bit 0 Mac promisc, Bit 1 Vlan promisc */
 if|if
 condition|(
 name|enable
+operator|&
+literal|0x01
 condition|)
-block|{
 name|req
 operator|->
 name|iface_flags
 operator|=
 name|MBX_RX_IFACE_FLAGS_PROMISCUOUS
-operator||
+expr_stmt|;
+if|if
+condition|(
+name|enable
+operator|&
+literal|0x02
+condition|)
+name|req
+operator|->
+name|iface_flags
+operator|=
 name|MBX_RX_IFACE_FLAGS_VLAN_PROMISCUOUS
 expr_stmt|;
-block|}
 name|req
 operator|->
 name|if_id
@@ -3832,15 +3993,25 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|rc
 return|;
 block|}
 end_function
@@ -3890,7 +4061,7 @@ name|oce_mbx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|IS_XE201
+name|IS_BE2
 argument_list|(
 name|sc
 argument_list|)
@@ -3898,13 +4069,13 @@ condition|?
 operator|(
 name|version
 operator|=
-name|OCE_MBX_VER_V1
+name|OCE_MBX_VER_V0
 operator|)
 else|:
 operator|(
 name|version
 operator|=
-name|OCE_MBX_VER_V0
+name|OCE_MBX_VER_V1
 operator|)
 expr_stmt|;
 name|fwcmd
@@ -4020,11 +4191,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4054,7 +4235,7 @@ name|link
 operator|->
 name|logical_link_status
 operator|=
-name|LE_32
+name|HOST_32
 argument_list|(
 name|link
 operator|->
@@ -4065,7 +4246,7 @@ name|link
 operator|->
 name|qos_link_speed
 operator|=
-name|LE_16
+name|HOST_16
 argument_list|(
 name|link
 operator|->
@@ -4327,11 +4508,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -4593,11 +4784,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -4884,11 +5085,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -5178,11 +5389,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -5416,11 +5637,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|req
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -5773,11 +6004,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5978,11 +6219,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -6160,11 +6411,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6175,6 +6436,8 @@ name|sc
 operator|->
 name|be3_native
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -6182,6 +6445,7 @@ operator|.
 name|rsp
 operator|.
 name|capability_flags
+argument_list|)
 operator|&
 name|CAP_BE3_NATIVE_ERX_API
 expr_stmt|;
@@ -6388,11 +6652,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -6622,11 +6896,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -6742,19 +7026,28 @@ name|fwcmd
 operator|->
 name|flash_op_type
 operator|=
+name|LE_32
+argument_list|(
 name|optype
+argument_list|)
 expr_stmt|;
 name|fwcmd
 operator|->
 name|flash_op_code
 operator|=
+name|LE_32
+argument_list|(
 name|opcode
+argument_list|)
 expr_stmt|;
 name|fwcmd
 operator|->
 name|data_buffer_size
 operator|=
+name|LE_32
+argument_list|(
 name|num_bytes
+argument_list|)
 expr_stmt|;
 name|mbx
 operator|.
@@ -6866,11 +7159,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -7053,11 +7356,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -7221,11 +7534,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -7236,6 +7559,8 @@ name|phy_info
 operator|->
 name|phy_type
 operator|=
+name|HOST_16
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -7245,11 +7570,14 @@ operator|.
 name|phy_info
 operator|.
 name|phy_type
+argument_list|)
 expr_stmt|;
 name|phy_info
 operator|->
 name|interface_type
 operator|=
+name|HOST_16
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -7259,11 +7587,14 @@ operator|.
 name|phy_info
 operator|.
 name|interface_type
+argument_list|)
 expr_stmt|;
 name|phy_info
 operator|->
 name|auto_speeds_supported
 operator|=
+name|HOST_16
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -7273,11 +7604,14 @@ operator|.
 name|phy_info
 operator|.
 name|auto_speeds_supported
+argument_list|)
 expr_stmt|;
 name|phy_info
 operator|->
 name|fixed_speeds_supported
 operator|=
+name|HOST_16
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -7287,11 +7621,14 @@ operator|.
 name|phy_info
 operator|.
 name|fixed_speeds_supported
+argument_list|)
 expr_stmt|;
 name|phy_info
 operator|->
 name|misc_params
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -7301,6 +7638,7 @@ operator|.
 name|phy_info
 operator|.
 name|misc_params
+argument_list|)
 expr_stmt|;
 name|error
 label|:
@@ -7579,11 +7917,19 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|params
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -7593,6 +7939,8 @@ block|}
 operator|*
 name|written_data
 operator|=
+name|HOST_32
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -7600,6 +7948,7 @@ operator|.
 name|rsp
 operator|.
 name|actual_write_length
+argument_list|)
 expr_stmt|;
 operator|*
 name|additional_status
@@ -7925,11 +8274,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -7940,6 +8299,8 @@ name|rq
 operator|->
 name|rq_id
 operator|=
+name|HOST_16
+argument_list|(
 name|fwcmd
 operator|->
 name|params
@@ -7947,6 +8308,7 @@ operator|.
 name|rsp
 operator|.
 name|rq_id
+argument_list|)
 expr_stmt|;
 name|rq
 operator|->
@@ -8034,24 +8396,10 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-block|{
 name|version
 operator|=
 name|OCE_MBX_VER_V1
 expr_stmt|;
-name|fwcmd
-operator|->
-name|params
-operator|.
-name|req
-operator|.
-name|if_id
-operator|=
-name|sc
-operator|->
-name|if_id
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -8081,6 +8429,24 @@ else|else
 name|version
 operator|=
 name|OCE_MBX_VER_V2
+expr_stmt|;
+if|if
+condition|(
+name|version
+operator|>
+name|OCE_MBX_VER_V0
+condition|)
+name|fwcmd
+operator|->
+name|params
+operator|.
+name|req
+operator|.
+name|if_id
+operator|=
+name|sc
+operator|->
+name|if_id
 expr_stmt|;
 name|mbx_common_req_hdr_init
 argument_list|(
@@ -8256,11 +8622,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8271,7 +8647,7 @@ name|wq
 operator|->
 name|wq_id
 operator|=
-name|LE_16
+name|HOST_16
 argument_list|(
 name|fwcmd
 operator|->
@@ -8292,7 +8668,7 @@ name|wq
 operator|->
 name|db_offset
 operator|=
-name|LE_32
+name|HOST_32
 argument_list|(
 name|fwcmd
 operator|->
@@ -8580,11 +8956,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8595,7 +8981,7 @@ name|eq
 operator|->
 name|eq_id
 operator|=
-name|LE_16
+name|HOST_16
 argument_list|(
 name|fwcmd
 operator|->
@@ -9068,11 +9454,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9083,7 +9479,7 @@ name|cq
 operator|->
 name|cq_id
 operator|=
-name|LE_16
+name|HOST_16
 argument_list|(
 name|fwcmd
 operator|->
@@ -9388,11 +9784,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9745,11 +10151,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 block|}
@@ -9761,6 +10177,9 @@ name|oce_get_profile_config
 parameter_list|(
 name|POCE_SOFTC
 name|sc
+parameter_list|,
+name|uint32_t
+name|max_rss
 parameter_list|)
 block|{
 name|struct
@@ -9868,7 +10287,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|IS_BE3
+operator|!
+name|IS_XE201
 argument_list|(
 name|sc
 argument_list|)
@@ -10073,11 +10493,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10191,9 +10621,20 @@ else|else
 block|{
 name|sc
 operator|->
+name|max_vlans
+operator|=
+name|HOST_16
+argument_list|(
+name|nic_desc
+operator|->
+name|vlan_count
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
 name|nwqs
 operator|=
-name|HOST_32
+name|HOST_16
 argument_list|(
 name|nic_desc
 operator|->
@@ -10226,6 +10667,55 @@ name|nwqs
 operator|=
 name|OCE_MAX_WQ
 expr_stmt|;
+name|sc
+operator|->
+name|nrssqs
+operator|=
+name|HOST_16
+argument_list|(
+name|nic_desc
+operator|->
+name|rssq_count
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|nrssqs
+condition|)
+name|sc
+operator|->
+name|nrssqs
+operator|=
+name|MIN
+argument_list|(
+name|sc
+operator|->
+name|nrssqs
+argument_list|,
+name|max_rss
+argument_list|)
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|nrssqs
+operator|=
+name|max_rss
+expr_stmt|;
+name|sc
+operator|->
+name|nrqs
+operator|=
+name|sc
+operator|->
+name|nrssqs
+operator|+
+literal|1
+expr_stmt|;
+comment|/* 1 for def RX */
+empty_stmt|;
 block|}
 name|error
 label|:
@@ -10575,11 +11065,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s failed - cmd status: %d\n"
+literal|"%s failed - cmd status: %d addi status: %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|rc
+argument_list|,
+name|fwcmd
+operator|->
+name|hdr
+operator|.
+name|u0
+operator|.
+name|rsp
+operator|.
+name|additional_status
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10691,6 +11191,14 @@ goto|;
 block|}
 else|else
 block|{
+name|sc
+operator|->
+name|max_vlans
+operator|=
+name|nic_desc
+operator|->
+name|vlan_count
+expr_stmt|;
 name|sc
 operator|->
 name|nwqs

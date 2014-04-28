@@ -105,8 +105,7 @@ literal|"taskq_zone"
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|ostask
+name|taskq_ent_t
 argument_list|)
 argument_list|,
 name|NULL
@@ -440,8 +439,7 @@ name|pending
 name|__unused
 parameter_list|)
 block|{
-name|struct
-name|ostask
+name|taskq_ent_t
 modifier|*
 name|task
 init|=
@@ -449,11 +447,11 @@ name|arg
 decl_stmt|;
 name|task
 operator|->
-name|ost_func
+name|tqent_func
 argument_list|(
 name|task
 operator|->
-name|ost_arg
+name|tqent_arg
 argument_list|)
 expr_stmt|;
 name|uma_zfree
@@ -485,8 +483,7 @@ name|uint_t
 name|flags
 parameter_list|)
 block|{
-name|struct
-name|ostask
+name|taskq_ent_t
 modifier|*
 name|task
 decl_stmt|;
@@ -518,7 +515,7 @@ name|mflag
 operator|=
 name|M_NOWAIT
 expr_stmt|;
-comment|/*  	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
+comment|/* 	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
 name|prio
 operator|=
 operator|!
@@ -551,13 +548,13 @@ operator|)
 return|;
 name|task
 operator|->
-name|ost_func
+name|tqent_func
 operator|=
 name|func
 expr_stmt|;
 name|task
 operator|->
-name|ost_arg
+name|tqent_arg
 operator|=
 name|arg
 expr_stmt|;
@@ -566,7 +563,7 @@ argument_list|(
 operator|&
 name|task
 operator|->
-name|ost_task
+name|tqent_task
 argument_list|,
 name|prio
 argument_list|,
@@ -584,7 +581,7 @@ argument_list|,
 operator|&
 name|task
 operator|->
-name|ost_task
+name|tqent_task
 argument_list|)
 expr_stmt|;
 return|return
@@ -602,17 +599,10 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|TASKQ_MAGIC
-value|0x74541c
-end_define
-
 begin_function
 specifier|static
 name|void
-name|taskq_run_safe
+name|taskq_run_ent
 parameter_list|(
 name|void
 modifier|*
@@ -623,8 +613,7 @@ name|pending
 name|__unused
 parameter_list|)
 block|{
-name|struct
-name|ostask
+name|taskq_ent_t
 modifier|*
 name|task
 init|=
@@ -632,19 +621,19 @@ name|arg
 decl_stmt|;
 name|task
 operator|->
-name|ost_func
+name|tqent_func
 argument_list|(
 name|task
 operator|->
-name|ost_arg
+name|tqent_arg
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
-name|taskqid_t
-name|taskq_dispatch_safe
+name|void
+name|taskq_dispatch_ent
 parameter_list|(
 name|taskq_t
 modifier|*
@@ -660,8 +649,7 @@ parameter_list|,
 name|u_int
 name|flags
 parameter_list|,
-name|struct
-name|ostask
+name|taskq_ent_t
 modifier|*
 name|task
 parameter_list|)
@@ -669,7 +657,7 @@ block|{
 name|int
 name|prio
 decl_stmt|;
-comment|/*  	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
+comment|/* 	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
 name|prio
 operator|=
 operator|!
@@ -682,13 +670,13 @@ operator|)
 expr_stmt|;
 name|task
 operator|->
-name|ost_func
+name|tqent_func
 operator|=
 name|func
 expr_stmt|;
 name|task
 operator|->
-name|ost_arg
+name|tqent_arg
 operator|=
 name|arg
 expr_stmt|;
@@ -697,11 +685,11 @@ argument_list|(
 operator|&
 name|task
 operator|->
-name|ost_task
+name|tqent_task
 argument_list|,
 name|prio
 argument_list|,
-name|taskq_run_safe
+name|taskq_run_ent
 argument_list|,
 name|task
 argument_list|)
@@ -715,21 +703,28 @@ argument_list|,
 operator|&
 name|task
 operator|->
-name|ost_task
+name|tqent_task
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|(
-name|taskqid_t
-operator|)
-operator|(
+block|}
+end_function
+
+begin_function
 name|void
-operator|*
-operator|)
-name|task
-operator|)
-return|;
+name|taskq_wait
+parameter_list|(
+name|taskq_t
+modifier|*
+name|tq
+parameter_list|)
+block|{
+name|taskqueue_drain_all
+argument_list|(
+name|tq
+operator|->
+name|tq_queue
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

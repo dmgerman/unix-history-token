@@ -223,6 +223,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printBDLAddrOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printU4ImmOperand
 argument_list|(
 argument|const MCInst *MI
@@ -303,7 +313,7 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printCallOperand
+name|printPCRelOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

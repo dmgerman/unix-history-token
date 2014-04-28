@@ -509,15 +509,15 @@ directive|ifdef
 name|LIBWRAP
 if|if
 condition|(
+name|libwrap
+operator|&&
 name|addr
 operator|->
 name|sa_family
-operator|==
+operator|!=
 name|AF_LOCAL
 condition|)
-return|return
-literal|1
-return|;
+block|{
 name|request_init
 argument_list|(
 operator|&
@@ -566,6 +566,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 block|}
 endif|#
 directive|endif

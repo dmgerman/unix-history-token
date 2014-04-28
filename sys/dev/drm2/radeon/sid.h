@@ -1130,7 +1130,7 @@ begin_define
 define|#
 directive|define
 name|TRAIN_DONE_D1
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1298,7 +1298,7 @@ begin_define
 define|#
 directive|define
 name|IH_WPTR_OVERFLOW_CLEAR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2482,7 +2482,7 @@ begin_define
 define|#
 directive|define
 name|GUI_ACTIVE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2573,7 +2573,7 @@ begin_define
 define|#
 directive|define
 name|SE_CB_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2736,7 +2736,7 @@ begin_define
 define|#
 directive|define
 name|SE_BROADCAST_WRITES
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4106,7 +4106,7 @@ begin_define
 define|#
 directive|define
 name|RB_RPTR_WR_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4316,7 +4316,7 @@ begin_define
 define|#
 directive|define
 name|CP_RINGID0_INT_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4372,7 +4372,7 @@ begin_define
 define|#
 directive|define
 name|CP_RINGID0_INT_STAT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -5334,7 +5334,7 @@ begin_define
 define|#
 directive|define
 name|PACKET3_CP_DMA_CP_SYNC
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment

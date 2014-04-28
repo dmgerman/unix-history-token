@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -90,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -133,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lockf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -223,6 +229,18 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include

@@ -11843,6 +11843,13 @@ operator|=
 name|AH_TRUE
 expr_stmt|;
 block|}
+comment|/*      * AR5416 and later NICs support MYBEACON filtering.      */
+name|p_cap
+operator|->
+name|halRxDoMyBeacon
+operator|=
+name|AH_TRUE
+expr_stmt|;
 if|#
 directive|if
 name|ATH_WOW_OFFLOAD

@@ -28,7 +28,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -1142,7 +1142,7 @@ name|rights
 argument_list|,
 name|CAP_IOCTL
 argument_list|,
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 argument_list|,
 name|CAP_READ
 argument_list|)

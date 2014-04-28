@@ -74,7 +74,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 argument_list|)
 operator|&&
 operator|!

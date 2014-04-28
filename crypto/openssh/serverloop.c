@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.168 2013/07/12 00:19:59 djm Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.170 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -16,6 +16,14 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -1307,6 +1315,9 @@ literal|1
 expr_stmt|;
 name|max_time_milliseconds
 operator|=
+operator|(
+name|u_int64_t
+operator|)
 name|options
 operator|.
 name|client_alive_interval
@@ -3744,11 +3755,9 @@ argument_list|,
 name|data_len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|data
-argument_list|,
-literal|0
 argument_list|,
 name|data_len
 argument_list|)

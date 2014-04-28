@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -835,17 +841,13 @@ name|ro
 operator|->
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 condition|?
 name|ro
 operator|->
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 else|:
 name|ro
 operator|->

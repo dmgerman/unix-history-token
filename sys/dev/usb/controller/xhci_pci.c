@@ -397,6 +397,9 @@ literal|"ASMedia ASM1042 USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x9c318086
+case|:
+case|case
 literal|0x1e318086
 case|:
 return|return
@@ -1106,6 +1109,10 @@ argument_list|)
 condition|)
 block|{
 case|case
+literal|0x9c318086
+case|:
+comment|/* Panther Point */
+case|case
 literal|0x1e318086
 case|:
 comment|/* Panther Point */
@@ -1119,6 +1126,12 @@ name|sc_port_route
 operator|=
 operator|&
 name|xhci_pci_port_route
+expr_stmt|;
+name|sc
+operator|->
+name|sc_imod_default
+operator|=
+name|XHCI_IMOD_DEFAULT_LP
 expr_stmt|;
 break|break;
 default|default:

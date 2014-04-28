@@ -119,6 +119,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_media.h>
 end_include
 
@@ -2725,7 +2731,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 block|{
 if|if
@@ -2824,7 +2830,7 @@ literal|1
 index|]
 operator|&=
 operator|~
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 block|}
 else|else
@@ -3496,7 +3502,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 block|{
 if|if
@@ -3625,7 +3631,7 @@ literal|1
 index|]
 operator|&=
 operator|~
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 block|}
 comment|/* 		 * Pass the packet to radiotap before calling iv_recv_mgmt(). 		 * Otherwise iv_recv_mgmt() might pass another packet to 		 * radiotap, resulting in out of order packet captures. 		 */

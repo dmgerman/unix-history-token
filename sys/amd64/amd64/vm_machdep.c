@@ -218,7 +218,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<x86/isa/isa.h>
+file|<isa/isareg.h>
 end_include
 
 begin_function_decl
@@ -1686,6 +1686,8 @@ argument_list|,
 name|PCB_FPUINITDONE
 operator||
 name|PCB_USERFPUINITDONE
+operator||
+name|PCB_KERNFPU
 argument_list|)
 expr_stmt|;
 name|pcb2
@@ -2238,7 +2240,7 @@ name|cnt
 decl_stmt|;
 if|if
 condition|(
-name|smp_active
+name|smp_started
 condition|)
 block|{
 name|map

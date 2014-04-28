@@ -402,6 +402,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ata_print_ident_short
+parameter_list|(
+name|struct
+name|ata_params
+modifier|*
+name|ident_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|uint32_t
 name|ata_logical_sector_size
 parameter_list|(
@@ -735,6 +747,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|semb_print_ident
+parameter_list|(
+name|struct
+name|sep_identify_data
+modifier|*
+name|ident_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|semb_print_ident_short
 parameter_list|(
 name|struct
 name|sep_identify_data

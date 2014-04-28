@@ -10739,7 +10739,7 @@ name|min
 argument_list|(
 name|maxproc
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|/

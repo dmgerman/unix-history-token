@@ -111,6 +111,10 @@ decl_stmt|;
 name|uintmax_t
 name|sc_wrotebytes
 decl_stmt|;
+name|struct
+name|mtx
+name|sc_lock
+decl_stmt|;
 block|}
 struct|;
 end_struct

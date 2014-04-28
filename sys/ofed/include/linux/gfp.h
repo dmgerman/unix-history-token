@@ -318,9 +318,10 @@ specifier|inline
 name|void
 name|__free_pages
 parameter_list|(
-name|void
+name|struct
+name|page
 modifier|*
-name|p
+name|m
 parameter_list|,
 name|unsigned
 name|int
@@ -332,9 +333,9 @@ name|size
 decl_stmt|;
 if|if
 condition|(
-name|p
+name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|size
@@ -350,7 +351,10 @@ argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
-name|p
+name|page_address
+argument_list|(
+name|m
+argument_list|)
 argument_list|,
 name|size
 argument_list|)

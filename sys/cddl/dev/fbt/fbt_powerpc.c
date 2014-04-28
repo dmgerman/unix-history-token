@@ -1037,6 +1037,7 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
+operator|(
 name|symval
 operator|->
 name|value
@@ -1044,6 +1045,7 @@ operator|+
 name|symval
 operator|->
 name|size
+operator|)
 expr_stmt|;
 for|for
 control|(
@@ -1300,7 +1302,7 @@ name|instr
 operator|==
 name|FBT_BLR
 operator|)
-operator||
+operator|||
 name|FBT_IS_JUMP
 argument_list|(
 operator|*

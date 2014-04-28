@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/openpicreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/openpicvar.h>
 end_include
 
@@ -571,7 +577,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|cpcht
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|cpcht_driver
 argument_list|,

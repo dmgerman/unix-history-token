@@ -257,6 +257,30 @@ name|bool
 name|notify
 argument_list|)
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Removes all invalid breakpoint locations.
+comment|///
+comment|/// Removes all breakpoint locations in the list with architectures
+comment|/// that aren't compatible with \a arch. Also remove any breakpoint
+comment|/// locations with whose locations have address where the section
+comment|/// has been deleted (module and object files no longer exist).
+comment|///
+comment|/// This is typically used after the process calls exec, or anytime
+comment|/// the architecture of the target changes.
+comment|///
+comment|/// @param[in] arch
+comment|///     If valid, check the module in each breakpoint to make sure
+comment|///     they are compatible, otherwise, ignore architecture.
+comment|//------------------------------------------------------------------
+name|void
+name|RemoveInvalidLocations
+parameter_list|(
+specifier|const
+name|ArchSpec
+modifier|&
+name|arch
+parameter_list|)
+function_decl|;
 name|void
 name|SetEnabledAll
 parameter_list|(
@@ -282,8 +306,12 @@ comment|///
 comment|/// @param[in] module_list
 comment|///   The module list that has changed.
 comment|///
-comment|/// @param[in] added
+comment|/// @param[in] load
 comment|///   \b true if the modules are loaded, \b false if unloaded.
+comment|///
+comment|/// @param[in] delete_locations
+comment|///   If \a load is \b false, then delete breakpoint locations when
+comment|///   when updating breakpoints.
 comment|//------------------------------------------------------------------
 name|void
 name|UpdateBreakpoints
@@ -293,7 +321,10 @@ modifier|&
 name|module_list
 parameter_list|,
 name|bool
-name|added
+name|load
+parameter_list|,
+name|bool
+name|delete_locations
 parameter_list|)
 function_decl|;
 name|void

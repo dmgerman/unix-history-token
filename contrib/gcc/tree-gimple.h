@@ -812,12 +812,18 @@ begin_comment
 comment|/* In tree-nested.c.  */
 end_comment
 
+begin_comment
+comment|/* APPLE LOCAL radar 6305545 */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
 name|lower_nested_functions
 parameter_list|(
 name|tree
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl

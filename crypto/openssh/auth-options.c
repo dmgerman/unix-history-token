@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.59 2013/07/12 00:19:58 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.62 2013/12/19 00:27:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -125,29 +125,6 @@ begin_include
 include|#
 directive|include
 file|"auth.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GSSAPI
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"ssh-gss.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"monitor_wrap.h"
 end_include
 
 begin_comment
@@ -1172,8 +1149,10 @@ operator|++
 expr_stmt|;
 name|new_envstring
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2121,6 +2100,8 @@ init|=
 operator|-
 literal|1
 decl_stmt|,
+name|result
+decl_stmt|,
 name|found
 decl_stmt|;
 name|buffer_init
@@ -2508,25 +2489,29 @@ operator|=
 name|get_remote_ipaddr
 argument_list|()
 expr_stmt|;
-switch|switch
-condition|(
+name|result
+operator|=
 name|addr_match_cidr_list
 argument_list|(
 name|remote_ip
 argument_list|,
 name|allowed
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|allowed
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|result
 condition|)
 block|{
 case|case
 literal|1
 case|:
 comment|/* accepted */
-name|free
-argument_list|(
-name|allowed
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 literal|0
@@ -2555,11 +2540,6 @@ argument_list|,
 name|remote_ip
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|allowed
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -2567,15 +2547,11 @@ case|case
 operator|-
 literal|1
 case|:
+default|default:
 name|error
 argument_list|(
 literal|"Certificate source-address "
 literal|"contents invalid"
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|allowed
 argument_list|)
 expr_stmt|;
 goto|goto

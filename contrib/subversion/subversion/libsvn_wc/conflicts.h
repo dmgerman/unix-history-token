@@ -641,7 +641,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Call the interactive conflict resolver RESOLVER_FUNC with RESOLVER_BATON to    allow resolving the conflicts on LOCAL_ABSPATH.     Call RESOLVER_FUNC once for each property conflict, and again for any    text conflict, and again for any tree conflict on the node.     CONFLICT_SKEL contains the details of the conflicts on LOCAL_ABSPATH.     Resolver actions are directly applied to the in-db state of LOCAL_ABSPATH,    so the conflict and the state in CONFLICT_SKEL must already be installed in    wc.db. */
+comment|/* Call the conflict resolver RESOLVER_FUNC with RESOLVER_BATON for each    of the conflicts on LOCAL_ABSPATH.  Depending on the results that    the callback returns, perhaps resolve the conflicts, and perhaps mark    them as resolved in the WC DB.     Call RESOLVER_FUNC once for each property conflict, and again for any    text conflict, and again for any tree conflict on the node.     CONFLICT_SKEL contains the details of the conflicts on LOCAL_ABSPATH.     Use MERGE_OPTIONS when the resolver requests a merge.     Resolver actions are directly applied to the in-db state of LOCAL_ABSPATH,    so the conflict and the state in CONFLICT_SKEL must already be installed in    wc.db. */
 name|svn_error_t
 modifier|*
 name|svn_wc__conflict_invoke_resolver

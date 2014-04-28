@@ -27,6 +27,38 @@ name|vmctx
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* Handler return values. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INOUT_ERROR
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|INOUT_OK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|INOUT_RESET
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|INOUT_POWEROFF
+value|2
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -110,8 +142,23 @@ begin_define
 define|#
 directive|define
 name|IOPORT_F_INOUT
-value|0x3
+value|(IOPORT_F_IN | IOPORT_F_OUT)
 end_define
+
+begin_comment
+comment|/*  * The following flags are used internally and must not be used by  * device models.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOPORT_F_DEFAULT
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* claimed by default handler */
+end_comment
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2013 Ganbold Tsagaankhuu<ganbold@gmail.com>  * Copyright (c) 2012 Oleksandr Tymoshenko<gonzo@freebsd.org>  * Copyright (c) 2012 Luiz Otavio O Souza.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2013 Ganbold Tsagaankhuu<ganbold@freebsd.org>  * Copyright (c) 2012 Oleksandr Tymoshenko<gonzo@freebsd.org>  * Copyright (c) 2012 Luiz Otavio O Souza.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -135,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|"gpio_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"a10_gpio.h"
 end_include
 
 begin_comment
@@ -359,6 +359,15 @@ directive|define
 name|A10_GPIO_GP_INT_DEB
 value|0x218
 end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|a10_gpio_softc
+modifier|*
+name|a10_gpio_sc
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1922,6 +1931,19 @@ block|{
 if|if
 condition|(
 operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+operator|!
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
@@ -2249,6 +2271,10 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|a10_gpio_sc
+operator|=
+name|sc
+expr_stmt|;
 return|return
 operator|(
 name|bus_generic_attach
@@ -2456,6 +2482,60 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|int
+name|a10_emac_gpio_config
+parameter_list|(
+name|uint32_t
+name|pin
+parameter_list|)
+block|{
+name|struct
+name|a10_gpio_softc
+modifier|*
+name|sc
+init|=
+name|a10_gpio_sc
+decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Configure pin mux settings for MII. */
+name|A10_GPIO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|a10_gpio_set_function
+argument_list|(
+name|sc
+argument_list|,
+name|pin
+argument_list|,
+name|A10_GPIO_PULLDOWN
+argument_list|)
+expr_stmt|;
+name|A10_GPIO_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

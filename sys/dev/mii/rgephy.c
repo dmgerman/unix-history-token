@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -316,6 +322,13 @@ argument_list|(
 name|REALTEK
 argument_list|,
 name|RTL8169S
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
+name|REALTEK
+argument_list|,
+name|RTL8251
 argument_list|)
 block|,
 name|MII_PHY_END
@@ -575,22 +588,6 @@ break|break;
 case|case
 name|MII_MEDIACHG
 case|:
-comment|/* 		 * If the interface is not up, don't do anything. 		 */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-break|break;
 name|PHY_RESET
 argument_list|(
 name|sc
@@ -940,26 +937,6 @@ break|break;
 case|case
 name|MII_TICK
 case|:
-comment|/* 		 * Is the interface even up? 		 */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 		 * Only used for autonegotiation. 		 */
 if|if
 condition|(
@@ -1695,6 +1672,12 @@ if|if
 condition|(
 name|sc
 operator|->
+name|mii_mpd_model
+operator|!=
+name|MII_MODEL_REALTEK_RTL8251
+operator|&&
+name|sc
+operator|->
 name|mii_mpd_rev
 operator|<
 literal|2
@@ -1811,6 +1794,12 @@ name|val
 decl_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|mii_mpd_model
+operator|==
+name|MII_MODEL_REALTEK_RTL8251
+operator|||
 name|sc
 operator|->
 name|mii_mpd_rev

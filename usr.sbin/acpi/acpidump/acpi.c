@@ -2444,6 +2444,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"\tFlags=0x%02x\n"
+argument_list|,
+name|hpet
+operator|->
+name|Flags
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 name|END_COMMENT
 argument_list|)
 expr_stmt|;

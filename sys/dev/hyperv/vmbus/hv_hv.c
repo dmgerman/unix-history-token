@@ -762,9 +762,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|hv_vmbus_query_hypervisor_presence
-argument_list|()
+name|vm_guest
+operator|!=
+name|VM_GUEST_HV
 condition|)
 goto|goto
 name|cleanup

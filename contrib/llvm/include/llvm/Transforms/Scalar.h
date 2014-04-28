@@ -63,6 +63,12 @@ directive|define
 name|LLVM_TRANSFORMS_SCALAR_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -84,6 +90,9 @@ name|TerminatorInst
 decl_stmt|;
 name|class
 name|TargetLowering
+decl_stmt|;
+name|class
+name|TargetMachine
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -251,9 +260,9 @@ modifier|*
 name|createGlobalMergePass
 parameter_list|(
 specifier|const
-name|TargetLowering
+name|TargetMachine
 modifier|*
-name|TLI
+name|TM
 init|=
 literal|0
 parameter_list|)
@@ -306,7 +315,22 @@ name|AllowPartial
 init|=
 operator|-
 literal|1
+parameter_list|,
+name|int
+name|Runtime
+init|=
+operator|-
+literal|1
 parameter_list|)
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LoopReroll - This pass is a simple loop rerolling pass.
+comment|//
+name|Pass
+modifier|*
+name|createLoopRerollPass
+parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -393,6 +417,25 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// FlattenCFG - flatten CFG, reduce number of conditional branches by using
+comment|// parallel-and and parallel-or mode, etc...
+comment|//
+name|FunctionPass
+modifier|*
+name|createFlattenCFGPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// CFG Structurization - Remove irreducible control flow
+comment|//
+name|Pass
+modifier|*
+name|createStructurizeCFGPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// BreakCriticalEdges - Break all of the critical edges in the CFG by inserting
 comment|// a dummy basic block. This pass may be "required" by passes that cannot deal
 comment|// with critical edges. For this usage, a pass must call:
@@ -470,24 +513,16 @@ modifier|*
 name|createLowerInvokePass
 parameter_list|(
 specifier|const
-name|TargetLowering
+name|TargetMachine
 modifier|*
-name|TLI
+name|TM
 init|=
 literal|0
-parameter_list|)
-function_decl|;
-name|FunctionPass
-modifier|*
-name|createLowerInvokePass
-parameter_list|(
-specifier|const
-name|TargetLowering
-modifier|*
-name|TLI
 parameter_list|,
 name|bool
 name|useExpensiveEHSupport
+init|=
+name|false
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -495,16 +530,6 @@ name|char
 modifier|&
 name|LowerInvokePassID
 decl_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// BlockPlacement - This pass reorders basic blocks in order to increase the
-comment|// number of fall-through conditional branches.
-comment|//
-name|FunctionPass
-modifier|*
-name|createBlockPlacementPass
-parameter_list|()
-function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
 comment|// LCSSA - This pass inserts phi nodes at loop boundaries to simplify other loop
@@ -567,15 +592,6 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|/// createSimplifyLibCallsPass - This pass optimizes specific calls to
-comment|/// specific well-known (library) functions.
-name|FunctionPass
-modifier|*
-name|createSimplifyLibCallsPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// CodeGenPrepare - This pass prepares a function for instruction selection.
 comment|//
 name|FunctionPass
@@ -583,9 +599,9 @@ modifier|*
 name|createCodeGenPreparePass
 parameter_list|(
 specifier|const
-name|TargetLowering
+name|TargetMachine
 modifier|*
-name|TLI
+name|TM
 init|=
 literal|0
 parameter_list|)
@@ -653,6 +669,33 @@ name|FunctionPass
 modifier|*
 name|createLowerExpectIntrinsicPass
 parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// PartiallyInlineLibCalls - Tries to inline the fast path of library
+comment|// calls such as sqrt.
+comment|//
+name|FunctionPass
+modifier|*
+name|createPartiallyInlineLibCallsPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// SampleProfilePass - Loads sample profile data from disk and generates
+comment|// IR metadata to reflect the profile.
+name|FunctionPass
+modifier|*
+name|createSampleProfileLoaderPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createSampleProfileLoaderPass
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

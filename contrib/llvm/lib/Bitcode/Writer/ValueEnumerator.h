@@ -571,13 +571,11 @@ name|MDValues
 return|;
 block|}
 specifier|const
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 specifier|const
 name|MDNode
 operator|*
-operator|,
-literal|8
 operator|>
 operator|&
 name|getFunctionLocalMDValues

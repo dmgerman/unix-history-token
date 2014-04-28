@@ -608,7 +608,8 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|uhci_bus_methods
@@ -616,7 +617,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uhci_device_bulk_methods
@@ -624,7 +626,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uhci_device_ctrl_methods
@@ -632,7 +635,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uhci_device_intr_methods
@@ -640,7 +644,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uhci_device_isoc_methods
@@ -4860,16 +4865,38 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-return|return
-operator|(
+if|if
+condition|(
 name|status
 operator|&
 name|UHCI_TD_STALLED
+condition|)
+block|{
+comment|/* try to separate I/O errors from STALL */
+if|if
+condition|(
+name|UHCI_TD_GET_ERRCNT
+argument_list|(
+name|status
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|USB_ERR_IOERROR
 operator|)
-condition|?
+return|;
+return|return
+operator|(
 name|USB_ERR_STALLED
-else|:
+operator|)
+return|;
+block|}
+return|return
+operator|(
 name|USB_ERR_NORMAL_COMPLETION
+operator|)
 return|;
 block|}
 end_function
@@ -7203,6 +7230,7 @@ name|usb_error_t
 name|error
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|usb_pipe_methods
 modifier|*
@@ -7623,6 +7651,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uhci_device_bulk_methods
@@ -7846,6 +7876,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uhci_device_ctrl_methods
@@ -8191,6 +8223,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uhci_device_intr_methods
@@ -8990,6 +9024,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uhci_device_isoc_methods
@@ -12364,6 +12400,7 @@ name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
+specifier|const
 name|struct
 name|usb_pipe_methods
 modifier|*
@@ -12565,6 +12602,7 @@ name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
+specifier|const
 name|struct
 name|usb_pipe_methods
 modifier|*
@@ -12917,6 +12955,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|uhci_bus_methods

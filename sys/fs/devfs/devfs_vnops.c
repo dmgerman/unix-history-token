@@ -5881,10 +5881,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5939,6 +5935,19 @@ name|file
 modifier|*
 name|fpop
 decl_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_resid
+operator|>
+name|DEVFS_IOSIZE_MAX
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|fpop
 operator|=
 name|td
@@ -8487,10 +8496,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -8545,6 +8550,19 @@ name|file
 modifier|*
 name|fpop
 decl_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_resid
+operator|>
+name|DEVFS_IOSIZE_MAX
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|fpop
 operator|=
 name|td

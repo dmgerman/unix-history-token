@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1994 by Rodney W. Grimes, Milwaukie, Oregon  97222  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2013 Robert N. M. Watson  * Copyright (C) 1994 by Rodney W. Grimes, Milwaukie, Oregon  97222  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -23,14 +23,7 @@ begin_define
 define|#
 directive|define
 name|BOOTINFO_VERSION
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|N_BIOS_GEOM
-value|8
+value|2
 end_define
 
 begin_define
@@ -40,49 +33,43 @@ name|MIPS_BOOTINFO_MAGIC
 value|0xCDEACDEA
 end_define
 
-begin_comment
-comment|/* Extended OLV bootinfo struct.  The data area includes a list of named    OIDs and associated data values.  The format is:     NUL-terminated dotted-string name    2 byte length, in big-endian order    LENGTH bytes of data    [...]     The two magic fields are used to guard against other bootloaders that    may place other sorts of data here.  */
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
 
-begin_struct
-struct|struct
-name|bootinfo_ext
-block|{
-define|#
-directive|define
-name|BOOTINFO_EXT_MAGIC1
-value|0x55aa00ff
-name|unsigned
-name|int
-name|magic1
-decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|data
-decl_stmt|;
-name|unsigned
-name|int
-name|size
-decl_stmt|;
-define|#
-directive|define
-name|BOOTINFO_EXT_MAGIC2
-value|0x32719187
-name|unsigned
-name|int
-name|magic2
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|bi_ptr_t
+typedef|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|BOOTINFO_EXT_MAX_SIZE
-value|16384
-end_define
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|bi_ptr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * A zero bootinfo field often means that there is no info available.  * Flags are used to indicate the validity of fields where zero is a  * normal value.  */
@@ -92,77 +79,86 @@ begin_struct
 struct|struct
 name|bootinfo
 block|{
-name|u_int32_t
+comment|/* bootinfo meta-data. */
+name|uint32_t
 name|bi_version
 decl_stmt|;
-name|u_int32_t
-name|bi_kernelname
-decl_stmt|;
-comment|/* represents a char * */
-name|u_int32_t
-name|bi_nfs_diskless
-decl_stmt|;
-comment|/* struct nfs_diskless * */
-comment|/* End of fields that are always present. */
-define|#
-directive|define
-name|bi_endcommon
-value|bi_n_bios_used
-name|u_int32_t
-name|bi_n_bios_used
-decl_stmt|;
-name|u_int32_t
-name|bi_bios_geom
-index|[
-name|N_BIOS_GEOM
-index|]
-decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|bi_size
 decl_stmt|;
-name|u_int8_t
-name|bi_memsizes_valid
+comment|/* bootinfo contents. */
+name|uint64_t
+name|bi_boot2opts
 decl_stmt|;
-name|u_int8_t
-name|bi_bios_dev
+comment|/* boot2 flags to loader. */
+name|bi_ptr_t
+name|bi_kernelname
 decl_stmt|;
-comment|/* bootdev BIOS unit number */
-name|u_int8_t
-name|bi_pad
-index|[
-literal|2
-index|]
+comment|/* Pointer to name. */
+name|bi_ptr_t
+name|bi_nfs_diskless
 decl_stmt|;
-name|u_int32_t
-name|bi_basemem
+comment|/* Pointer to NFS data. */
+name|bi_ptr_t
+name|bi_dtb
 decl_stmt|;
-name|u_int32_t
-name|bi_extmem
+comment|/* Pointer to dtb. */
+name|bi_ptr_t
+name|bi_memsize
 decl_stmt|;
-name|u_int32_t
-name|bi_symtab
-decl_stmt|;
-comment|/* struct symtab * */
-name|u_int32_t
-name|bi_esymtab
-decl_stmt|;
-comment|/* struct symtab * */
-comment|/* Items below only from advanced bootloader */
-name|u_int32_t
-name|bi_kernend
-decl_stmt|;
-comment|/* end of kernel space */
-name|u_int32_t
-name|bi_envp
-decl_stmt|;
-comment|/* environment */
-name|u_int32_t
+comment|/* Physical memory size in bytes. */
+name|bi_ptr_t
 name|bi_modulep
 decl_stmt|;
-comment|/* preloaded modules */
+comment|/* Preloaded modules. */
+name|bi_ptr_t
+name|bi_boot_dev_type
+decl_stmt|;
+comment|/* Boot-device type. */
+name|bi_ptr_t
+name|bi_boot_dev_unitptr
+decl_stmt|;
+comment|/* Boot-device unit/pointer. */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Possible boot-device types passed from boot2 to loader, loader to kernel.  * In most cases, the object pointed to will hold a filesystem; one exception  * is BOOTINFO_DEV_TYPE_DRAM, which points to a pre-loaded object (e.g.,  * loader, kernel).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOOTINFO_DEV_TYPE_DRAM
+value|0
+end_define
+
+begin_comment
+comment|/* DRAM loader/kernel (ptr). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOOTINFO_DEV_TYPE_CFI
+value|1
+end_define
+
+begin_comment
+comment|/* CFI flash (unit). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOOTINFO_DEV_TYPE_SDCARD
+value|2
+end_define
+
+begin_comment
+comment|/* SD card (unit). */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -182,215 +178,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Constants for converting boot-style device number to type,  * adaptor (uba, mba, etc), unit number and partition number.  * Type (== major device number) is in the low byte  * for backward compatibility.  Except for that of the "magic  * number", each mask applies to the shifted value.  * Format:  *	 (4) (4) (4) (4)  (8)     (8)  *	--------------------------------  *	|MA | AD| CT| UN| PART  | TYPE |  *	--------------------------------  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_ADAPTORSHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_ADAPTORMASK
-value|0x0f
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_ADAPTOR
-parameter_list|(
-name|val
-parameter_list|)
-value|(((val)>> B_ADAPTORSHIFT)& B_ADAPTORMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_CONTROLLERSHIFT
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_CONTROLLERMASK
-value|0xf
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_CONTROLLER
-parameter_list|(
-name|val
-parameter_list|)
-value|(((val)>>B_CONTROLLERSHIFT)& B_CONTROLLERMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_SLICESHIFT
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_SLICEMASK
-value|0xff
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_SLICE
-parameter_list|(
-name|val
-parameter_list|)
-value|(((val)>>B_SLICESHIFT)& B_SLICEMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_UNITSHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_UNITMASK
-value|0xf
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_UNIT
-parameter_list|(
-name|val
-parameter_list|)
-value|(((val)>> B_UNITSHIFT)& B_UNITMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_PARTITIONSHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_PARTITIONMASK
-value|0xff
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_PARTITION
-parameter_list|(
-name|val
-parameter_list|)
-value|(((val)>> B_PARTITIONSHIFT)& B_PARTITIONMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_TYPESHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_TYPEMASK
-value|0xff
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_TYPE
-parameter_list|(
-name|val
-parameter_list|)
-value|(((val)>> B_TYPESHIFT)& B_TYPEMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_MAGICMASK
-value|0xf0000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_DEVMAGIC
-value|0xa0000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAKEBOOTDEV
-parameter_list|(
-name|type
-parameter_list|,
-name|adaptor
-parameter_list|,
-name|controller
-parameter_list|,
-name|unit
-parameter_list|,
-name|partition
-parameter_list|)
-define|\
-value|(((type)<< B_TYPESHIFT) | ((adaptor)<< B_ADAPTORSHIFT) |	\ 	((controller)<< B_CONTROLLERSHIFT) | ((unit)<< B_UNITSHIFT) |	\ 	((partition)<< B_PARTITIONSHIFT) | B_DEVMAGIC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BASE_SLICE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMPATIBILITY_SLICE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_SLICES
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|WHOLE_DISK_SLICE
-value|1
-end_define
 
 begin_endif
 endif|#

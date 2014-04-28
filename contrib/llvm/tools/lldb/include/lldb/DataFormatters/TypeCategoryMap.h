@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/DataFormatters/FormatNavigator.h"
+file|"lldb/DataFormatters/FormattersContainer.h"
 end_include
 
 begin_include
@@ -341,6 +341,16 @@ return|;
 block|}
 name|lldb
 operator|::
+name|TypeFormatImplSP
+name|GetFormat
+argument_list|(
+argument|ValueObject& valobj
+argument_list|,
+argument|lldb::DynamicValueType use_dynamic
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
 name|TypeSummaryImplSP
 name|GetSummaryFormat
 argument_list|(
@@ -454,7 +464,7 @@ return|;
 block|}
 name|friend
 name|class
-name|FormatNavigator
+name|FormattersContainer
 operator|<
 name|KeyType
 operator|,

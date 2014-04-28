@@ -102,26 +102,12 @@ begin_comment
 comment|/* get process group */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCADDRT
-value|_IOW('r', 10, struct ortentry)
-end_define
-
 begin_comment
-comment|/* add route */
+comment|/*	SIOCADDRT	 _IOW('r', 10, struct ortentry)	4.3BSD */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCDELRT
-value|_IOW('r', 11, struct ortentry)
-end_define
-
 begin_comment
-comment|/* delete route */
+comment|/*	SIOCDELRT	 _IOW('r', 11, struct ortentry)	4.3BSD */
 end_comment
 
 begin_define
@@ -157,15 +143,8 @@ begin_comment
 comment|/* set ifnet address */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OSIOCGIFADDR
-value|_IOWR('i', 13, struct ifreq)
-end_define
-
 begin_comment
-comment|/* get ifnet address */
+comment|/*	OSIOCGIFADDR	_IOWR('i', 13, struct ifreq)	4.3BSD */
 end_comment
 
 begin_define
@@ -190,15 +169,8 @@ begin_comment
 comment|/* set p-p address */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OSIOCGIFDSTADDR
-value|_IOWR('i', 15, struct ifreq)
-end_define
-
 begin_comment
-comment|/* get p-p address */
+comment|/*	OSIOCGIFDSTADDR	_IOWR('i', 15, struct ifreq)	4.3BSD */
 end_comment
 
 begin_define
@@ -234,15 +206,8 @@ begin_comment
 comment|/* get ifnet flags */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OSIOCGIFBRDADDR
-value|_IOWR('i', 18, struct ifreq)
-end_define
-
 begin_comment
-comment|/* get broadcast addr */
+comment|/*	OSIOCGIFBRDADDR	_IOWR('i', 18, struct ifreq)	4.3BSD */
 end_comment
 
 begin_define
@@ -267,15 +232,8 @@ begin_comment
 comment|/* set broadcast addr */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OSIOCGIFCONF
-value|_IOWR('i', 20, struct ifconf)
-end_define
-
 begin_comment
-comment|/* get ifnet list */
+comment|/*	OSIOCGIFCONF	_IOWR('i', 20, struct ifconf)	4.3BSD */
 end_comment
 
 begin_define
@@ -289,15 +247,8 @@ begin_comment
 comment|/* get ifnet list */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OSIOCGIFNETMASK
-value|_IOWR('i', 21, struct ifreq)
-end_define
-
 begin_comment
-comment|/* get net addr mask */
+comment|/*	OSIOCGIFNETMASK	_IOWR('i', 21, struct ifreq)	4.3BSD */
 end_comment
 
 begin_define
@@ -363,40 +314,19 @@ value|_IOW('i', 26, struct oifaliasreq)
 end_define
 
 begin_comment
-comment|/* add/chg IF alias */
+comment|/* FreeBSD 9.x */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCALIFADDR
-value|_IOW('i', 27, struct if_laddrreq)
-end_define
-
 begin_comment
-comment|/* add IF addr */
+comment|/*	SIOCALIFADDR	 _IOW('i', 27, struct if_laddrreq) KAME */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCGLIFADDR
-value|_IOWR('i', 28, struct if_laddrreq)
-end_define
-
 begin_comment
-comment|/* get IF addr */
+comment|/*	SIOCGLIFADDR	_IOWR('i', 28, struct if_laddrreq) KAME */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCDLIFADDR
-value|_IOW('i', 29, struct if_laddrreq)
-end_define
-
 begin_comment
-comment|/* delete IF addr */
+comment|/*	SIOCDLIFADDR	 _IOW('i', 29, struct if_laddrreq) KAME */
 end_comment
 
 begin_define
@@ -674,26 +604,12 @@ begin_comment
 comment|/* delete gif addrs */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCSLIFPHYADDR
-value|_IOW('i', 74, struct if_laddrreq)
-end_define
-
 begin_comment
-comment|/* set gif addrs */
+comment|/*	SIOCSLIFPHYADDR	 _IOW('i', 74, struct if_laddrreq) KAME */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCGLIFPHYADDR
-value|_IOWR('i', 75, struct if_laddrreq)
-end_define
-
 begin_comment
-comment|/* get gif addrs */
+comment|/*	SIOCGLIFPHYADDR	_IOWR('i', 75, struct if_laddrreq) KAME */
 end_comment
 
 begin_define

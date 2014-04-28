@@ -385,6 +385,8 @@ comment|/* prototypes */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|dwc_otg_bus_methods
@@ -392,6 +394,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|dwc_otg_device_non_isoc_methods
@@ -399,6 +403,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|dwc_otg_device_isoc_methods
@@ -8724,9 +8730,22 @@ argument_list|,
 name|is_on
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the USB host mode is forced, then assume VBUS is always 	 * present else rely on the input to this function: 	 */
 if|if
 condition|(
+operator|(
 name|is_on
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|sc_mode
+operator|==
+name|DWC_MODE_HOST
+operator|)
 condition|)
 block|{
 if|if
@@ -12928,7 +12947,9 @@ name|dwc_otg_init_fifo
 argument_list|(
 name|sc
 argument_list|,
-name|DWC_MODE_OTG
+name|sc
+operator|->
+name|sc_mode
 argument_list|)
 condition|)
 return|return
@@ -13489,6 +13510,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|dwc_otg_device_non_isoc_methods
@@ -13861,6 +13884,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|dwc_otg_device_isoc_methods
@@ -16652,6 +16677,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|dwc_otg_bus_methods

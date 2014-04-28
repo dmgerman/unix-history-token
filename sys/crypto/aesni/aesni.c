@@ -349,6 +349,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|CRYPTOCAP_F_HARDWARE
+operator||
+name|CRYPTOCAP_F_SYNC
 argument_list|)
 expr_stmt|;
 if|if

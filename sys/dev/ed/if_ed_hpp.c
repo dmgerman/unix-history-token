@@ -110,6 +110,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_comment
+comment|/* XXX: ed_hpp_set_physical_link() */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -1926,6 +1936,19 @@ name|ED_HPP_ID_16_BIT_ACCESS
 operator|)
 decl_stmt|;
 comment|/* select page 0 registers */
+name|ed_nic_barrier
+argument_list|(
+name|sc
+argument_list|,
+name|ED_P0_CR
+argument_list|,
+literal|1
+argument_list|,
+name|BUS_SPACE_BARRIER_READ
+operator||
+name|BUS_SPACE_BARRIER_WRITE
+argument_list|)
+expr_stmt|;
 name|ed_nic_outb
 argument_list|(
 name|sc
@@ -1937,6 +1960,19 @@ operator|->
 name|cr_proto
 operator||
 name|ED_CR_STA
+argument_list|)
+expr_stmt|;
+name|ed_nic_barrier
+argument_list|(
+name|sc
+argument_list|,
+name|ED_P0_CR
+argument_list|,
+literal|1
+argument_list|,
+name|BUS_SPACE_BARRIER_READ
+operator||
+name|BUS_SPACE_BARRIER_WRITE
 argument_list|)
 expr_stmt|;
 comment|/* reset remote DMA complete flag */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: pkcs11.h,v 1.2 2010/02/24 06:12:53 djm Exp $ */
+comment|/* $OpenBSD: pkcs11.h,v 1.3 2013/11/26 19:15:09 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -772,7 +772,7 @@ value|(7)
 define|#
 directive|define
 name|CKO_VENDOR_DEFINED
-value|((unsigned long) (1<< 31))
+value|(1U<< 31)
 typedef|typedef
 name|unsigned
 name|long
@@ -793,7 +793,7 @@ value|(3)
 define|#
 directive|define
 name|CKH_VENDOR_DEFINED
-value|((unsigned long) (1<< 31))
+value|(1U<< 31)
 typedef|typedef
 name|unsigned
 name|long
@@ -902,7 +902,7 @@ value|(0x21)
 define|#
 directive|define
 name|CKK_VENDOR_DEFINED
-value|((unsigned long) (1<< 31))
+value|(1U<< 31)
 typedef|typedef
 name|unsigned
 name|long
@@ -923,7 +923,7 @@ value|(2)
 define|#
 directive|define
 name|CKC_VENDOR_DEFINED
-value|((unsigned long) (1<< 31))
+value|(1U<< 31)
 typedef|typedef
 name|unsigned
 name|long
@@ -1268,7 +1268,7 @@ value|(CKF_ARRAY_ATTRIBUTE | 0x600)
 define|#
 directive|define
 name|CKA_VENDOR_DEFINED
-value|((unsigned long) (1<< 31))
+value|(1U<< 31)
 struct|struct
 name|ck_attribute
 block|{
@@ -2111,7 +2111,7 @@ value|(0x2002)
 define|#
 directive|define
 name|CKM_VENDOR_DEFINED
-value|((unsigned long) (1<< 31))
+value|(1U<< 31)
 struct|struct
 name|ck_mechanism
 block|{
@@ -2199,7 +2199,7 @@ value|(1<< 19)
 define|#
 directive|define
 name|CKF_EXTENSION
-value|((unsigned long) (1<< 31))
+value|(1U<< 31)
 comment|/* Flags for C_WaitForSlotEvent.  */
 define|#
 directive|define
@@ -4311,7 +4311,7 @@ value|(0x200)
 define|#
 directive|define
 name|CKR_VENDOR_DEFINED
-value|((unsigned long) (1<< 31))
+value|(1U<< 31)
 comment|/* Compatibility layer.  */
 ifdef|#
 directive|ifdef

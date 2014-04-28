@@ -14149,6 +14149,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM57764
+value|0x1642
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM57765
 value|0x16B4
 end_define
@@ -14158,6 +14165,13 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM57766
 value|0x1686
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57767
+value|0x1683
 end_define
 
 begin_define
@@ -14177,8 +14191,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM57782
+value|0x16B7
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM57785
 value|0x16B5
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57786
+value|0x16B3
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57787
+value|0x1641
 end_define
 
 begin_define
@@ -15359,7 +15394,7 @@ begin_define
 define|#
 directive|define
 name|BGE_NSEG_NEW
-value|32
+value|35
 end_define
 
 begin_define

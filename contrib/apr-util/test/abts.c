@@ -487,6 +487,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|suite_name
+condition|)
+block|{
+name|suite_name
+operator|=
+name|strrchr
+argument_list|(
+name|suite_name_full
+argument_list|,
+literal|'\\'
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|suite_name
 condition|)
 block|{
@@ -1139,7 +1155,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Line %d: expected<%d>, but saw<%d>\n"
+literal|"Line %d: expected something other than<%d>, but saw<%d>\n"
 argument_list|,
 name|lineno
 argument_list|,
@@ -1312,7 +1328,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Line %d: expected<%s>, but saw<%s>\n"
+literal|"Line %d: expected something other than<%s>, but saw<%s>\n"
 argument_list|,
 name|lineno
 argument_list|,

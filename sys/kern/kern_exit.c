@@ -26,19 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_procdesc.h"
 end_include
 
 begin_include
@@ -62,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -340,8 +328,6 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|exit
-argument_list|,
 name|exit
 argument_list|,
 literal|"int"
@@ -1255,11 +1241,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Release our limits structure. 	 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|plim
 operator|=
 name|p
@@ -1271,11 +1252,6 @@ operator|->
 name|p_limit
 operator|=
 name|NULL
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 name|lim_free
 argument_list|(
@@ -1616,9 +1592,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If this is a process with a descriptor, we may not need to deliver 	 * a signal to the parent.  proctree_lock is held over 	 * procdesc_exit() to serialize concurrent calls to close() and 	 * exit(). 	 */
-ifdef|#
-directive|ifdef
-name|PROCDESC
 if|if
 condition|(
 name|p
@@ -1633,8 +1606,6 @@ name|p
 argument_list|)
 condition|)
 block|{
-endif|#
-directive|endif
 comment|/* 		 * Notify parent that we're gone.  If parent has the 		 * PS_NOCLDWAIT flag set, or if the handler is set to SIG_IGN, 		 * notify process 1 instead (and hope it will handle this 		 * situation). 		 */
 name|PROC_LOCK
 argument_list|(
@@ -1794,9 +1765,6 @@ name|p_sigparent
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PROCDESC
 block|}
 else|else
 name|PROC_LOCK
@@ -1806,8 +1774,6 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sx_xunlock
 argument_list|(
 operator|&
@@ -2990,9 +2956,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PROCDESC
 if|if
 condition|(
 name|p
@@ -3006,8 +2969,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sx_xunlock
 argument_list|(
 operator|&
@@ -3607,12 +3568,25 @@ operator|->
 name|p_xstat
 argument_list|)
 condition|)
+block|{
 name|siginfo
 operator|->
 name|si_code
 operator|=
 name|CLD_DUMPED
 expr_stmt|;
+name|siginfo
+operator|->
+name|si_status
+operator|=
+name|WTERMSIG
+argument_list|(
+name|p
+operator|->
+name|p_xstat
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -3623,19 +3597,45 @@ operator|->
 name|p_xstat
 argument_list|)
 condition|)
+block|{
 name|siginfo
 operator|->
 name|si_code
 operator|=
 name|CLD_KILLED
 expr_stmt|;
+name|siginfo
+operator|->
+name|si_status
+operator|=
+name|WTERMSIG
+argument_list|(
+name|p
+operator|->
+name|p_xstat
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|siginfo
 operator|->
 name|si_code
 operator|=
 name|CLD_EXITED
 expr_stmt|;
+name|siginfo
+operator|->
+name|si_status
+operator|=
+name|WEXITSTATUS
+argument_list|(
+name|p
+operator|->
+name|p_xstat
+argument_list|)
+expr_stmt|;
+block|}
 name|siginfo
 operator|->
 name|si_pid
@@ -3653,14 +3653,6 @@ operator|->
 name|p_ucred
 operator|->
 name|cr_uid
-expr_stmt|;
-name|siginfo
-operator|->
-name|si_status
-operator|=
-name|p
-operator|->
-name|p_xstat
 expr_stmt|;
 comment|/* 		 * The si_addr field would be useful additional 		 * detail, but apparently the PC value may be lost 		 * when we reach this point.  bzero() above sets 		 * siginfo->si_addr to NULL. 		 */
 block|}

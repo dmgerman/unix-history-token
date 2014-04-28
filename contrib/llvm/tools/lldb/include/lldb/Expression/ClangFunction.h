@@ -411,182 +411,6 @@ argument|Stream&errors
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|/// [Static] Execute a function, passing it a single void* parameter.
-comment|/// ClangFunction uses this to call the wrapper function.
-comment|///
-comment|/// @param[in] exe_ctx
-comment|///     The execution context to insert the function and its arguments
-comment|///     into.
-comment|///
-comment|/// @param[in] function_address
-comment|///     The address of the function in the target process.
-comment|///
-comment|/// @param[in] void_arg
-comment|///     The value of the void* parameter.
-comment|///
-comment|/// @param[in] stop_others
-comment|///     True if other threads should pause during execution.
-comment|///
-comment|/// @param[in] try_all_threads
-comment|///     If the timeout expires, true if other threads should run.  If
-comment|///     the function may try to take locks, this is useful.
-comment|///
-comment|/// @param[in] unwind_on_error
-comment|///     If true, and the execution stops before completion, we unwind the
-comment|///     function call, and return the program state to what it was before the
-comment|///     execution.  If false, we leave the program in the stopped state.
-comment|///
-comment|/// @param[in] timeout_usec
-comment|///     Timeout value (0 for no timeout). If try_all_threads is true, then we
-comment|///     will try on one thread for the lesser of .25 sec and half the total timeout.
-comment|///     then switch to running all threads, otherwise this will be the total timeout.
-comment|///
-comment|/// @param[in] errors
-comment|///     The stream to write errors to.
-comment|///
-comment|/// @param[in] this_arg
-comment|///     If non-NULL, the function is invoked like a C++ method, with the
-comment|///     value pointed to by the pointer as its 'this' argument.
-comment|///
-comment|/// @return
-comment|///     Returns one of the ExecutionResults enum indicating function call status.
-comment|//------------------------------------------------------------------
-specifier|static
-name|ExecutionResults
-name|ExecuteFunction
-argument_list|(
-argument|ExecutionContext&exe_ctx
-argument_list|,
-argument|lldb::addr_t function_address
-argument_list|,
-argument|lldb::addr_t&void_arg
-argument_list|,
-argument|bool stop_others
-argument_list|,
-argument|bool try_all_threads
-argument_list|,
-argument|bool unwind_on_error
-argument_list|,
-argument|bool ignore_breakpoints
-argument_list|,
-argument|uint32_t timeout_usec
-argument_list|,
-argument|Stream&errors
-argument_list|,
-argument|lldb::addr_t* this_arg =
-literal|0
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Run the function this ClangFunction was created with.
-comment|///
-comment|/// This simple version will run the function stopping other threads
-comment|/// for a fixed timeout period (1000 usec) and if it does not complete,
-comment|/// we halt the process and try with all threads running.
-comment|///
-comment|/// @param[in] exe_ctx
-comment|///     The thread& process in which this function will run.
-comment|///
-comment|/// @param[in] errors
-comment|///     Errors will be written here if there are any.
-comment|///
-comment|/// @param[out] results
-comment|///     The result value will be put here after running the function.
-comment|///
-comment|/// @return
-comment|///     Returns one of the ExecutionResults enum indicating function call status.
-comment|//------------------------------------------------------------------
-name|ExecutionResults
-name|ExecuteFunction
-argument_list|(
-name|ExecutionContext
-operator|&
-name|exe_ctx
-argument_list|,
-name|Stream
-operator|&
-name|errors
-argument_list|,
-name|Value
-operator|&
-name|results
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Run the function this ClangFunction was created with.
-comment|///
-comment|/// This simple version will run the function obeying the stop_others
-comment|/// argument.  There is no timeout.
-comment|///
-comment|/// @param[in] exe_ctx
-comment|///     The thread& process in which this function will run.
-comment|///
-comment|/// @param[in] errors
-comment|///     Errors will be written here if there are any.
-comment|///
-comment|/// @param[in] stop_others
-comment|///     If \b true, run only this thread, if \b false let all threads run.
-comment|///
-comment|/// @param[out] results
-comment|///     The result value will be put here after running the function.
-comment|///
-comment|/// @return
-comment|///     Returns one of the ExecutionResults enum indicating function call status.
-comment|//------------------------------------------------------------------
-name|ExecutionResults
-name|ExecuteFunction
-argument_list|(
-argument|ExecutionContext&exe_ctx
-argument_list|,
-argument|Stream&errors
-argument_list|,
-argument|bool stop_others
-argument_list|,
-argument|Value&results
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Run the function this ClangFunction was created with.
-comment|///
-comment|/// This simple version will run the function on one thread.  If \a timeout_usec
-comment|/// is not zero, we time out after that timeout.  If \a try_all_threads is true, then we will
-comment|/// resume with all threads on, otherwise we halt the process, and eExecutionInterrupted will be returned.
-comment|///
-comment|/// @param[in] exe_ctx
-comment|///     The thread& process in which this function will run.
-comment|///
-comment|/// @param[in] errors
-comment|///     Errors will be written here if there are any.
-comment|///
-comment|/// @param[in] timeout_usec
-comment|///     Timeout value (0 for no timeout). If try_all_threads is true, then we
-comment|///     will try on one thread for the lesser of .25 sec and half the total timeout.
-comment|///     then switch to running all threads, otherwise this will be the total timeout.
-comment|///
-comment|/// @param[in] try_all_threads
-comment|///     If \b true, run only this thread, if \b false let all threads run.
-comment|///
-comment|/// @param[out] results
-comment|///     The result value will be put here after running the function.
-comment|///
-comment|/// @return
-comment|///     Returns one of the ExecutionResults enum indicating function call status.
-comment|//------------------------------------------------------------------
-name|ExecutionResults
-name|ExecuteFunction
-argument_list|(
-argument|ExecutionContext&exe_ctx
-argument_list|,
-argument|Stream&errors
-argument_list|,
-argument|uint32_t single_thread_timeout_usec
-argument_list|,
-argument|bool try_all_threads
-argument_list|,
-argument|Value&results
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
 comment|/// Run the function this ClangFunction was created with.
 comment|///
 comment|/// This is the full version.
@@ -604,17 +428,8 @@ comment|///
 comment|/// @param[in] errors
 comment|///     Errors will be written here if there are any.
 comment|///
-comment|/// @param[in] stop_others
-comment|///     If \b true, run only this thread, if \b false let all threads run.
-comment|///
-comment|/// @param[in] timeout_usec
-comment|///     Timeout value (0 for no timeout). If try_all_threads is true, then we
-comment|///     will try on one thread for the lesser of .25 sec and half the total timeout.
-comment|///     then switch to running all threads, otherwise this will be the total timeout.
-comment|///
-comment|///
-comment|/// @param[in] try_all_threads
-comment|///     If \b true, run only this thread, if \b false let all threads run.
+comment|/// @param[in] options
+comment|///     The options for this expression execution.
 comment|///
 comment|/// @param[out] results
 comment|///     The result value will be put here after running the function.
@@ -625,86 +440,28 @@ comment|//------------------------------------------------------------------
 name|ExecutionResults
 name|ExecuteFunction
 argument_list|(
-argument|ExecutionContext&exe_ctx
+name|ExecutionContext
+operator|&
+name|exe_ctx
 argument_list|,
-argument|lldb::addr_t *args_addr_ptr
-argument_list|,
-argument|Stream&errors
-argument_list|,
-argument|bool stop_others
-argument_list|,
-argument|uint32_t timeout_usec
-argument_list|,
-argument|bool try_all_threads
-argument_list|,
-argument|bool unwind_on_error
-argument_list|,
-argument|bool ignore_breakpoints
-argument_list|,
-argument|Value&results
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// [static] Get a thread plan to run a function.
-comment|///
-comment|/// @param[in] exe_ctx
-comment|///     The execution context to insert the function and its arguments
-comment|///     into.
-comment|///
-comment|/// @param[in] func_addr
-comment|///     The address of the function in the target process.
-comment|///
-comment|/// @param[in] args_addr_ref
-comment|///     The value of the void* parameter.
-comment|///
-comment|/// @param[in] errors
-comment|///     The stream to write errors to.
-comment|///
-comment|/// @param[in] stop_others
-comment|///     True if other threads should pause during execution.
-comment|///
-comment|/// @param[in] unwind_on_error
-comment|///     True if the thread plan may simply be discarded if an error occurs.
-comment|///
-comment|/// @param[in] ignore_breakpoints
-comment|///     True if the expression execution will ignore breakpoint hits and continue executing.
-comment|///
-comment|/// @param[in] this_arg
-comment|///     If non-NULL (and cmd_arg is NULL), the function is invoked like a C++
-comment|///     method, with the value pointed to by the pointer as its 'this'
-comment|///     argument.
-comment|///
-comment|/// @param[in] cmd_arg
-comment|///     If non-NULL, the function is invoked like an Objective-C method, with
-comment|///     this_arg in the 'self' slot and cmd_arg in the '_cmd' slot
-comment|///
-comment|/// @return
-comment|///     A ThreadPlan for executing the function.
-comment|//------------------------------------------------------------------
-specifier|static
-name|ThreadPlan
+name|lldb
+operator|::
+name|addr_t
 operator|*
-name|GetThreadPlanToCallFunction
-argument_list|(
-argument|ExecutionContext&exe_ctx
+name|args_addr_ptr
 argument_list|,
-argument|lldb::addr_t func_addr
+specifier|const
+name|EvaluateExpressionOptions
+operator|&
+name|options
 argument_list|,
-argument|lldb::addr_t&args_addr_ref
+name|Stream
+operator|&
+name|errors
 argument_list|,
-argument|Stream&errors
-argument_list|,
-argument|bool stop_others
-argument_list|,
-argument|bool unwind_on_error
-argument_list|,
-argument|bool ignore_breakpoints
-argument_list|,
-argument|lldb::addr_t *this_arg =
-literal|0
-argument_list|,
-argument|lldb::addr_t *cmd_arg =
-literal|0
+name|Value
+operator|&
+name|results
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -717,8 +474,8 @@ comment|///
 comment|/// @param[in] func_addr
 comment|///     The address of the function in the target process.
 comment|///
-comment|/// @param[in] args_addr_ref
-comment|///     The value of the void* parameter.
+comment|/// @param[in] args_addr
+comment|///     The address of the argument struct.
 comment|///
 comment|/// @param[in] errors
 comment|///     The stream to write errors to.
@@ -738,38 +495,13 @@ name|GetThreadPlanToCallFunction
 argument_list|(
 argument|ExecutionContext&exe_ctx
 argument_list|,
-argument|lldb::addr_t&args_addr_ref
+argument|lldb::addr_t args_addr
+argument_list|,
+argument|const EvaluateExpressionOptions&options
 argument_list|,
 argument|Stream&errors
-argument_list|,
-argument|bool stop_others
-argument_list|,
-argument|bool unwind_on_error = true
-argument_list|,
-argument|bool ignore_breakpoints = true
 argument_list|)
-block|{
-return|return
-name|ClangFunction
-operator|::
-name|GetThreadPlanToCallFunction
-argument_list|(
-name|exe_ctx
-argument_list|,
-name|m_jit_start_addr
-argument_list|,
-name|args_addr_ref
-argument_list|,
-name|errors
-argument_list|,
-name|stop_others
-argument_list|,
-name|unwind_on_error
-argument_list|,
-name|ignore_breakpoints
-argument_list|)
-return|;
-block|}
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Get the result of the function from its struct
 comment|///
@@ -779,7 +511,7 @@ comment|///
 comment|/// @param[in] args_addr
 comment|///     The address of the argument struct.
 comment|///
-comment|/// @param[in] ret_value
+comment|/// @param[out] ret_value
 comment|///     The value returned by the function.
 comment|///
 comment|/// @return
@@ -966,11 +698,6 @@ name|ClangASTType
 name|m_function_return_type
 block|;
 comment|///< The opaque clang qual type for the function return type.
-name|ClangASTContext
-operator|*
-name|m_clang_ast_context
-block|;
-comment|///< This is the clang_ast_context that we're getting types from the and value, and the function return the function pointer is NULL.
 name|std
 operator|::
 name|string
@@ -1000,6 +727,15 @@ operator|>
 name|m_wrapper_args_addrs
 block|;
 comment|///< The addresses of the arguments to the wrapper function.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ASTStructExtractor
+operator|>
+name|m_struct_extractor
+block|;
+comment|///< The class that generates the argument struct below.
 name|bool
 name|m_struct_valid
 block|;

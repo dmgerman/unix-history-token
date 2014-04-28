@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libroff.h,v 1.27 2011/07/25 15:37:00 kristaps Exp $ */
+comment|/*	$Id: libroff.h,v 1.28 2013/05/31 21:37:17 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -65,7 +65,7 @@ name|tbl_part
 name|part
 decl_stmt|;
 name|struct
-name|tbl
+name|tbl_opts
 name|opts
 decl_stmt|;
 name|struct

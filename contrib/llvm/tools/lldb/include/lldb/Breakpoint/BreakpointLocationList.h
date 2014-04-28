@@ -398,10 +398,9 @@ operator|::
 name|BreakpointLocationSP
 name|Create
 argument_list|(
-specifier|const
-name|Address
-operator|&
-name|addr
+argument|const Address&addr
+argument_list|,
+argument|bool resolve_indirect_symbols
 argument_list|)
 expr_stmt|;
 name|void
@@ -421,16 +420,11 @@ operator|::
 name|BreakpointLocationSP
 name|AddLocation
 argument_list|(
-specifier|const
-name|Address
-operator|&
-name|addr
+argument|const Address&addr
 argument_list|,
-name|bool
-operator|*
-name|new_location
-operator|=
-name|NULL
+argument|bool resolve_indirect_symbols
+argument_list|,
+argument|bool *new_location = NULL
 argument_list|)
 expr_stmt|;
 name|bool
@@ -444,6 +438,15 @@ operator|&
 name|bp_loc_sp
 argument_list|)
 decl_stmt|;
+name|void
+name|RemoveInvalidLocations
+parameter_list|(
+specifier|const
+name|ArchSpec
+modifier|&
+name|arch
+parameter_list|)
+function_decl|;
 typedef|typedef
 name|std
 operator|::
@@ -481,6 +484,7 @@ decl_stmt|;
 name|collection
 name|m_locations
 decl_stmt|;
+comment|// Vector of locations, sorted by ID
 name|addr_map
 name|m_address_to_location
 decl_stmt|;

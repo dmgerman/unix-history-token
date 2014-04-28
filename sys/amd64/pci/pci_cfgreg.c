@@ -855,7 +855,7 @@ argument_list|(
 name|CONF1_ADDR_PORT
 argument_list|,
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

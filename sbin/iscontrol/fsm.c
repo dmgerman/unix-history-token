@@ -865,6 +865,9 @@ case|case
 name|ECONNREFUSED
 case|:
 case|case
+name|EHOSTUNREACH
+case|:
+case|case
 name|ENETUNREACH
 case|:
 case|case

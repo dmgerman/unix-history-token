@@ -637,14 +637,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|__LONG_MAX__
-operator|>
-literal|2147483647L
-end_if
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -652,24 +644,6 @@ name|int
 name|word32
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|word32
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

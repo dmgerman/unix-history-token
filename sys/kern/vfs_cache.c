@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -173,8 +167,6 @@ name|enter
 argument_list|,
 name|done
 argument_list|,
-name|done
-argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -195,8 +187,6 @@ name|enter_negative
 argument_list|,
 name|done
 argument_list|,
-name|done
-argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -212,8 +202,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|fullpath
-argument_list|,
-name|entry
 argument_list|,
 name|entry
 argument_list|,
@@ -233,8 +221,6 @@ name|fullpath
 argument_list|,
 name|hit
 argument_list|,
-name|hit
-argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -252,8 +238,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|fullpath
-argument_list|,
-name|miss
 argument_list|,
 name|miss
 argument_list|,
@@ -270,8 +254,6 @@ argument_list|,
 argument|namecache
 argument_list|,
 argument|fullpath
-argument_list|,
-argument|return
 argument_list|,
 argument|return
 argument_list|,
@@ -298,8 +280,6 @@ name|lookup
 argument_list|,
 name|hit
 argument_list|,
-name|hit
-argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -318,11 +298,7 @@ name|namecache
 argument_list|,
 name|lookup
 argument_list|,
-name|hit_negative
-argument_list|,
-name|hit
-operator|-
-name|negative
+name|hit__negative
 argument_list|,
 literal|"struct vnode *"
 argument_list|,
@@ -339,8 +315,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|lookup
-argument_list|,
-name|miss
 argument_list|,
 name|miss
 argument_list|,
@@ -362,8 +336,6 @@ name|purge
 argument_list|,
 name|done
 argument_list|,
-name|done
-argument_list|,
 literal|"struct vnode *"
 argument_list|)
 expr_stmt|;
@@ -377,8 +349,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|purge_negative
-argument_list|,
-name|done
 argument_list|,
 name|done
 argument_list|,
@@ -398,8 +368,6 @@ name|purgevfs
 argument_list|,
 name|done
 argument_list|,
-name|done
-argument_list|,
 literal|"struct mount *"
 argument_list|)
 expr_stmt|;
@@ -413,8 +381,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|zap
-argument_list|,
-name|done
 argument_list|,
 name|done
 argument_list|,
@@ -435,8 +401,6 @@ argument_list|,
 name|namecache
 argument_list|,
 name|zap_negative
-argument_list|,
-name|done
 argument_list|,
 name|done
 argument_list|,
@@ -3294,7 +3258,7 @@ name|namecache
 argument_list|,
 name|lookup
 argument_list|,
-name|hit_negative
+name|hit__negative
 argument_list|,
 name|dvp
 argument_list|,
@@ -3889,6 +3853,7 @@ name|nc_vp
 operator|!=
 name|NULL
 condition|)
+block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3903,7 +3868,9 @@ argument_list|,
 name|nc_dst
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3914,12 +3881,17 @@ argument_list|,
 name|nc_dst
 argument_list|)
 expr_stmt|;
+name|numneg
+operator|--
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|vp
 operator|!=
 name|NULL
 condition|)
+block|{
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -3932,7 +3904,9 @@ argument_list|,
 name|nc_dst
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -3943,6 +3917,10 @@ argument_list|,
 name|nc_dst
 argument_list|)
 expr_stmt|;
+name|numneg
+operator|++
+expr_stmt|;
+block|}
 name|ncp
 operator|->
 name|nc_vp
@@ -4585,6 +4563,25 @@ name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|ncneg
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ncp
+operator|->
+name|nc_vp
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"ncp %p vp %p on ncneg"
+operator|,
+name|ncp
+operator|,
+name|ncp
+operator|->
+name|nc_vp
+operator|)
 argument_list|)
 expr_stmt|;
 name|zap

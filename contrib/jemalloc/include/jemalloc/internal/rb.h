@@ -15,18 +15,6 @@ directive|define
 name|RB_H_
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|__FBSDID("$FreeBSD$");
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef

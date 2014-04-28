@@ -988,14 +988,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT91RM92_OHCI_BASE
+name|AT91RM92_OHCI_VA_BASE
 value|0xdfe00000
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91RM92_OHCI_PA_BASE
+name|AT91RM92_OHCI_BASE
 value|0x00300000
 end_define
 
@@ -1009,14 +1009,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91RM92_CF_BASE
+name|AT91RM92_CF_VA_BASE
 value|0xdfd00000
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91RM92_CF_PA_BASE
+name|AT91RM92_CF_BASE
 value|0x51400000
 end_define
 

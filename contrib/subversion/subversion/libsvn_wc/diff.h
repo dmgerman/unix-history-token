@@ -70,7 +70,7 @@ block|{
 endif|#
 directive|endif
 comment|/* __cplusplus */
-comment|/* Reports the file LOCAL_ABSPATH as ADDED file with relpath RELPATH to    PROCESSOR with as parent baton PROCESSOR_PARENT_BATON.     The node is expected to have status svn_wc__db_status_normal, or    svn_wc__db_status_added. When DIFF_PRISTINE is TRUE, report the pristine    version of LOCAL_ABSPATH as ADDED. In this case an    svn_wc__db_status_deleted may shadow an added or deleted node.     If CHANGELIST_HASH is not NULL and LOCAL_ABSPATH's changelist is not    in the changelist, don't report the node.  */
+comment|/* A function to diff locally added and locally copied files.       Reports the file LOCAL_ABSPATH as ADDED file with relpath RELPATH to    PROCESSOR with as parent baton PROCESSOR_PARENT_BATON.     The node is expected to have status svn_wc__db_status_normal, or    svn_wc__db_status_added. When DIFF_PRISTINE is TRUE, report the pristine    version of LOCAL_ABSPATH as ADDED. In this case an    svn_wc__db_status_deleted may shadow an added or deleted node.     If CHANGELIST_HASH is not NULL and LOCAL_ABSPATH's changelist is not    in the changelist, don't report the node.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__diff_local_only_file
@@ -117,7 +117,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Reports the directory LOCAL_ABSPATH and everything below it (limited by    DEPTH) as added with relpath RELPATH to PROCESSOR with as parent baton    PROCESSOR_PARENT_BATON.     The node is expected to have status svn_wc__db_status_normal, or    svn_wc__db_status_added. When DIFF_PRISTINE is TRUE, report the pristine    version of LOCAL_ABSPATH as ADDED. In this case an    svn_wc__db_status_deleted may shadow an added or deleted node.     If CHANGELIST_HASH is not NULL and LOCAL_ABSPATH's changelist is not    in the changelist, don't report the node.  */
+comment|/* A function to diff locally added and locally copied directories.       Reports the directory LOCAL_ABSPATH and everything below it (limited by    DEPTH) as added with relpath RELPATH to PROCESSOR with as parent baton    PROCESSOR_PARENT_BATON.     The node is expected to have status svn_wc__db_status_normal, or    svn_wc__db_status_added. When DIFF_PRISTINE is TRUE, report the pristine    version of LOCAL_ABSPATH as ADDED. In this case an    svn_wc__db_status_deleted may shadow an added or deleted node.     If CHANGELIST_HASH is not NULL and LOCAL_ABSPATH's changelist is not    in the changelist, don't report the node.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__diff_local_only_dir

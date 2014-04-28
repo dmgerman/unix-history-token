@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sandbox-systrace.c,v 1.7 2013/06/01 13:15:52 dtucker Exp $ */
+comment|/* $OpenBSD: sandbox-systrace.c,v 1.9 2014/01/31 16:39:19 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -257,6 +257,12 @@ name|SYSTR_POLICY_PERMIT
 block|}
 block|,
 block|{
+name|SYS_shutdown
+block|,
+name|SYSTR_POLICY_PERMIT
+block|}
+block|,
+block|{
 name|SYS_sigprocmask
 block|,
 name|SYSTR_POLICY_PERMIT
@@ -308,7 +314,10 @@ name|ssh_sandbox
 modifier|*
 name|ssh_sandbox_init
 parameter_list|(
-name|void
+name|struct
+name|monitor
+modifier|*
+name|monitor
 parameter_list|)
 block|{
 name|struct
@@ -696,10 +705,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Allocate and assign policy */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|policy
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

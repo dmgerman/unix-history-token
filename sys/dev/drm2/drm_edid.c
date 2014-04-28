@@ -588,7 +588,7 @@ condition|(
 name|csum
 condition|)
 block|{
-name|DRM_ERROR
+name|DRM_DEBUG
 argument_list|(
 literal|"EDID checksum is invalid, remainder is %d\n"
 argument_list|,

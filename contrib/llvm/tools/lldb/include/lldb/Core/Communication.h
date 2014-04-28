@@ -538,6 +538,17 @@ init|=
 name|NULL
 parameter_list|)
 function_decl|;
+name|virtual
+name|bool
+name|JoinReadThread
+parameter_list|(
+name|Error
+modifier|*
+name|error_ptr
+init|=
+name|NULL
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Checks if there is a currently running read thread.
 comment|///

@@ -184,6 +184,26 @@ comment|/// The ignoreVEX_L field from the record
 name|bool
 name|IgnoresVEX_L
 decl_stmt|;
+comment|/// The hasEVEXPrefix field from the record
+name|bool
+name|HasEVEXPrefix
+decl_stmt|;
+comment|/// The hasEVEX_L2Prefix field from the record
+name|bool
+name|HasEVEX_L2Prefix
+decl_stmt|;
+comment|/// The hasEVEX_K field from the record
+name|bool
+name|HasEVEX_K
+decl_stmt|;
+comment|/// The hasEVEX_KZ field from the record
+name|bool
+name|HasEVEX_KZ
+decl_stmt|;
+comment|/// The hasEVEX_B field from the record
+name|bool
+name|HasEVEX_B
+decl_stmt|;
 comment|/// The hasLockPrefix field from the record
 name|bool
 name|HasLockPrefix
@@ -434,6 +454,21 @@ decl_stmt|;
 specifier|static
 name|OperandEncoding
 name|vvvvRegisterEncodingFromString
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|s
+argument_list|,
+name|bool
+name|HasOpSizePrefix
+argument_list|)
+decl_stmt|;
+specifier|static
+name|OperandEncoding
+name|writemaskRegisterEncodingFromString
 argument_list|(
 specifier|const
 name|std

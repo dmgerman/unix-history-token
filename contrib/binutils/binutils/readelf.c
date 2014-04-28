@@ -31812,9 +31812,11 @@ literal|5
 condition|)
 name|fputs
 argument_list|(
+operator|&
 literal|"     "
-operator|+
+index|[
 name|n
+index|]
 argument_list|,
 name|stdout
 argument_list|)

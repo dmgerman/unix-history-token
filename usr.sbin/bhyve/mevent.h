@@ -24,6 +24,8 @@ block|,
 name|EVF_WRITE
 block|,
 name|EVF_TIMER
+block|,
+name|EVF_SIGNAL
 block|}
 enum|;
 end_enum

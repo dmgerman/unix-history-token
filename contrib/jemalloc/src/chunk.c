@@ -923,7 +923,7 @@ name|uintptr_t
 operator|)
 name|ret
 argument_list|,
-name|ret
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -1418,7 +1418,7 @@ name|NULL
 condition|)
 name|base_node_dealloc
 argument_list|(
-name|prev
+name|xprev
 argument_list|)
 expr_stmt|;
 block|}
@@ -1582,7 +1582,7 @@ name|uintptr_t
 operator|)
 name|chunk
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1775,6 +1775,10 @@ operator|)
 operator|)
 operator|-
 name|opt_lg_chunk
+argument_list|,
+name|base_alloc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1804,7 +1808,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|malloc_mutex_lock
+name|malloc_mutex_prefork
 argument_list|(
 operator|&
 name|chunks_mtx

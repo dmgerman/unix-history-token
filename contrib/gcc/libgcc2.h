@@ -70,10 +70,10 @@ specifier|extern
 name|void
 name|__clear_cache
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2022,6 +2022,16 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|UWtype
+name|__bswapsi2
+parameter_list|(
+name|UWtype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|DWtype
 name|__absvDI2
 parameter_list|(
@@ -2072,6 +2082,16 @@ name|DWtype
 name|__negvDI2
 parameter_list|(
 name|DWtype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|UDWtype
+name|__bswapdi2
+parameter_list|(
+name|UDWtype
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_vm.h"
 end_include
 
@@ -2873,8 +2867,29 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__sparc64__
+end_ifndef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|VM_KMEM_SIZE_SCALE
+operator|>=
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Initialize the kernel memory arena.  */
+comment|/*  * Initialize the kernel memory (kmem) arena.  */
 end_comment
 
 begin_function
@@ -2889,29 +2904,17 @@ name|mem_size
 decl_stmt|,
 name|tmp
 decl_stmt|;
-comment|/* 	 * Try to auto-tune the kernel memory size, so that it is 	 * more applicable for a wider range of machine sizes.  The 	 * VM_KMEM_SIZE_MAX is dependent on the maximum KVA space 	 * available. 	 * 	 * Note that the kmem arena is also used by the zone allocator, 	 * so make sure that there is enough space. 	 */
-name|vm_kmem_size
-operator|=
-name|VM_KMEM_SIZE
-expr_stmt|;
+comment|/* 	 * Calculate the amount of kernel virtual address (KVA) space that is 	 * preallocated to the kmem arena.  In order to support a wide range 	 * of machines, it is a function of the physical memory size, 	 * specifically, 	 * 	 *	min(max(physical memory size / VM_KMEM_SIZE_SCALE, 	 *	    VM_KMEM_SIZE_MIN), VM_KMEM_SIZE_MAX) 	 * 	 * Every architecture must define an integral value for 	 * VM_KMEM_SIZE_SCALE.  However, the definitions of VM_KMEM_SIZE_MIN 	 * and VM_KMEM_SIZE_MAX, which represent respectively the floor and 	 * ceiling on this preallocation, are optional.  Typically, 	 * VM_KMEM_SIZE_MAX is itself a function of the available KVA space on 	 * a given architecture. 	 */
 name|mem_size
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VM_KMEM_SIZE_SCALE
-argument_list|)
 name|vm_kmem_size_scale
 operator|=
 name|VM_KMEM_SIZE_SCALE
 expr_stmt|;
-endif|#
-directive|endif
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"vm.kmem_size_scale"
@@ -2923,21 +2926,13 @@ expr_stmt|;
 if|if
 condition|(
 name|vm_kmem_size_scale
-operator|>
-literal|0
-operator|&&
-operator|(
-name|mem_size
-operator|/
-name|vm_kmem_size_scale
-operator|)
-operator|>
-operator|(
-name|vm_kmem_size
-operator|/
-name|PAGE_SIZE
-operator|)
+operator|<
+literal|1
 condition|)
+name|vm_kmem_size_scale
+operator|=
+name|VM_KMEM_SIZE_SCALE
+expr_stmt|;
 name|vm_kmem_size
 operator|=
 operator|(
@@ -2978,12 +2973,10 @@ name|vm_kmem_size
 operator|<
 name|vm_kmem_size_min
 condition|)
-block|{
 name|vm_kmem_size
 operator|=
 name|vm_kmem_size_min
 expr_stmt|;
-block|}
 if|#
 directive|if
 name|defined
@@ -3018,7 +3011,19 @@ name|vm_kmem_size
 operator|=
 name|vm_kmem_size_max
 expr_stmt|;
-comment|/* Allow final override from the kernel environment */
+comment|/* 	 * Alternatively, the amount of KVA space that is preallocated to the 	 * kmem arena can be set statically at compile-time or manually 	 * through the kernel environment.  However, it is still limited to 	 * twice the physical memory size, which has been sufficient to handle 	 * the most severe cases of external fragmentation in the kmem arena.  	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VM_KMEM_SIZE
+argument_list|)
+name|vm_kmem_size
+operator|=
+name|VM_KMEM_SIZE
+expr_stmt|;
+endif|#
+directive|endif
 name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"vm.kmem_size"
@@ -3027,7 +3032,6 @@ operator|&
 name|vm_kmem_size
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Limit kmem virtual size to twice the physical memory. 	 * This allows for kmem map sparseness, but limits the size 	 * to something sane.  Be careful to not overflow the 32bit 	 * ints while doing the check or the adjustment. 	 */
 if|if
 condition|(
 name|vm_kmem_size
@@ -3363,7 +3367,7 @@ name|mtp
 decl_stmt|;
 name|KASSERT
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|!=

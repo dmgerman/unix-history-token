@@ -127,19 +127,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u_int
-name|num_chip_names
-init|=
-name|NUM_ELEMENTS
-argument_list|(
-name|ahc_chip_names
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Hardware error codes.  */
 end_comment
@@ -34557,7 +34544,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 block|}
@@ -34568,8 +34555,9 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
-literal|0
+operator|&=
+operator|~
+name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 block|}
 name|byte

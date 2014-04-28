@@ -183,6 +183,52 @@ operator|&
 name|platform_file
 argument_list|)
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Get accessor for the remote install path for a module.
+comment|///
+comment|/// When debugging to a remote platform by connecting to a remote
+comment|/// platform, the install path of the module can be set. If the
+comment|/// install path is set, every time the process is about to launch
+comment|/// the target will install this module on the remote platform prior
+comment|/// to launching.
+comment|///
+comment|/// @return
+comment|///     A file specification object.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBFileSpec
+name|GetRemoteInstallFileSpec
+argument_list|()
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Set accessor for the remote install path for a module.
+comment|///
+comment|/// When debugging to a remote platform by connecting to a remote
+comment|/// platform, the install path of the module can be set. If the
+comment|/// install path is set, every time the process is about to launch
+comment|/// the target will install this module on the remote platform prior
+comment|/// to launching.
+comment|///
+comment|/// If \a file specifies a full path to an install location, the
+comment|/// module will be installed to this path. If the path is relative
+comment|/// (no directory specified, or the path is partial like "usr/lib"
+comment|/// or "./usr/lib", then the install path will be resolved using
+comment|/// the platform's current working directory as the base path.
+comment|///
+comment|/// @param[in]
+comment|///     A file specification object.
+comment|//------------------------------------------------------------------
+name|bool
+name|SetRemoteInstallFileSpec
+argument_list|(
+name|lldb
+operator|::
+name|SBFileSpec
+operator|&
+name|file
+argument_list|)
+decl_stmt|;
 name|lldb
 operator|::
 name|ByteOrder
@@ -439,6 +485,30 @@ specifier|const
 name|char
 operator|*
 name|type
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Get a type using its type ID.
+comment|///
+comment|/// Each symbol file reader will assign different user IDs to their
+comment|/// types, but it is sometimes useful when debugging type issues to
+comment|/// be able to grab a type using its type ID.
+comment|///
+comment|/// For DWARF debug info, the type ID is the DIE offset.
+comment|///
+comment|/// @param[in] uid
+comment|///     The type user ID.
+comment|///
+comment|/// @return
+comment|///     An SBType for the given type ID, or an empty SBType if the
+comment|///     type was not found.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBType
+name|GetTypeByID
+argument_list|(
+argument|lldb::user_id_t uid
 argument_list|)
 expr_stmt|;
 name|lldb

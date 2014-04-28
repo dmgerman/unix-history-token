@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_atomic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"private/svn_cache.h"
 end_include
 
@@ -80,21 +86,33 @@ block|}
 end_function
 
 begin_comment
-comment|/* Access the process-global (singleton) membuffer cache. The first call  * will automatically allocate the cache using the current cache config.  * NULL will be returned if the desired cache size is 0 or if the cache  * could not be created for some reason.  */
+comment|/* Initializer function as required by svn_atomic__init_once.  Allocate  * the process-global (singleton) membuffer cache and return it in the  * svn_membuffer_t * in *BATON.  UNUSED_POOL is unused and should be NULL.  */
 end_comment
 
 begin_function
-name|svn_membuffer_t
+specifier|static
+name|svn_error_t
 modifier|*
-name|svn_cache__get_global_membuffer_cache
+name|initialize_cache
 parameter_list|(
 name|void
+modifier|*
+name|baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|unused_pool
 parameter_list|)
 block|{
-specifier|static
 name|svn_membuffer_t
 modifier|*
-specifier|volatile
+modifier|*
+name|cache_p
+init|=
+name|baton
+decl_stmt|;
+name|svn_membuffer_t
+modifier|*
 name|cache
 init|=
 name|NULL
@@ -108,27 +126,12 @@ name|cache_size
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|cache
-operator|&&
 name|cache_size
 condition|)
 block|{
 name|svn_error_t
 modifier|*
 name|err
-decl_stmt|;
-name|svn_membuffer_t
-modifier|*
-name|old_cache
-init|=
-name|NULL
-decl_stmt|;
-name|svn_membuffer_t
-modifier|*
-name|new_cache
-init|=
-name|NULL
 decl_stmt|;
 comment|/* auto-allocate cache */
 name|apr_allocator_t
@@ -152,7 +155,7 @@ name|allocator
 argument_list|)
 condition|)
 return|return
-name|NULL
+name|SVN_NO_ERROR
 return|;
 comment|/* Ensure that we free partially allocated data if we run OOM        * before the cache is complete: If the cache cannot be allocated        * in its full size, the create() function will clear the pool        * explicitly. The allocator will make sure that any memory no        * longer used by the pool will actually be returned to the OS.        *        * Please note that this pool and allocator is used *only* to        * allocate the large membuffer. All later dynamic allocations        * come from other, temporary pools and allocators.        */
 name|apr_allocator_max_free_set
@@ -182,7 +185,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|NULL
+name|SVN_NO_ERROR
 return|;
 name|apr_allocator_owner_set
 argument_list|(
@@ -196,7 +199,7 @@ operator|=
 name|svn_cache__membuffer_cache_create
 argument_list|(
 operator|&
-name|new_cache
+name|cache
 argument_list|,
 operator|(
 name|apr_size_t
@@ -231,59 +234,95 @@ condition|(
 name|err
 condition|)
 block|{
-comment|/* Memory and error cleanup */
-name|svn_error_clear
-argument_list|(
-name|err
-argument_list|)
-expr_stmt|;
+comment|/* Memory cleanup */
 name|svn_pool_destroy
 argument_list|(
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/* Prevent future attempts to create the cache. However, an            * existing cache instance (see next comment) remains valid.            */
+comment|/* Document that we actually don't have a cache. */
 name|cache_settings
 operator|.
 name|cache_size
 operator|=
 literal|0
 expr_stmt|;
-comment|/* The current caller won't get the cache object.            * However, a concurrent call might have succeeded in creating            * the cache object. That call and all following ones will then            * use the successfully created cache instance.            */
 return|return
-name|NULL
+name|svn_error_trace
+argument_list|(
+name|err
+argument_list|)
 return|;
 block|}
-comment|/* Handle race condition: if we are the first to create a        * cache object, make it our global singleton. Otherwise,        * discard the new cache and keep the existing one.        *        * Cast is necessary because of APR bug:        * https://issues.apache.org/bugzilla/show_bug.cgi?id=50731        */
-name|old_cache
+comment|/* done */
+operator|*
+name|cache_p
 operator|=
-name|apr_atomic_casptr
-argument_list|(
-operator|(
-specifier|volatile
+name|cache
+expr_stmt|;
+block|}
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Access the process-global (singleton) membuffer cache. The first call  * will automatically allocate the cache using the current cache config.  * NULL will be returned if the desired cache size is 0 or if the cache  * could not be created for some reason.  */
+end_comment
+
+begin_function
+name|svn_membuffer_t
+modifier|*
+name|svn_cache__get_global_membuffer_cache
+parameter_list|(
 name|void
-operator|*
-operator|*
-operator|)
+parameter_list|)
+block|{
+specifier|static
+name|svn_membuffer_t
+modifier|*
+name|cache
+init|=
+name|NULL
+decl_stmt|;
+specifier|static
+name|svn_atomic_t
+name|initialized
+init|=
+literal|0
+decl_stmt|;
+name|svn_error_t
+modifier|*
+name|err
+init|=
+name|svn_atomic__init_once
+argument_list|(
+operator|&
+name|initialized
+argument_list|,
+name|initialize_cache
+argument_list|,
 operator|&
 name|cache
 argument_list|,
-name|new_cache
-argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
-name|old_cache
-operator|!=
-name|NULL
+name|err
 condition|)
-name|svn_pool_destroy
+block|{
+comment|/* no caches today ... */
+name|svn_error_clear
 argument_list|(
-name|pool
+name|err
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 return|return
 name|cache

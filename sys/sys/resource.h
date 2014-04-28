@@ -367,8 +367,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RLIM_NLIMITS
+name|RLIMIT_KQUEUES
 value|13
+end_define
+
+begin_comment
+comment|/* kqueues allocated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RLIM_NLIMITS
+value|14
 end_define
 
 begin_comment
@@ -432,6 +443,8 @@ block|,
 literal|"npts"
 block|,
 literal|"swap"
+block|,
+literal|"kqueues"
 block|, }
 decl_stmt|;
 end_decl_stmt

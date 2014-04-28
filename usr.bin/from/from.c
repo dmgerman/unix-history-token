@@ -125,6 +125,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|int
 name|match
 parameter_list|(
@@ -280,14 +281,6 @@ condition|;
 operator|++
 name|p
 control|)
-if|if
-condition|(
-name|isupper
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|)
 operator|*
 name|p
 operator|=
@@ -617,6 +610,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|match
 parameter_list|(
@@ -675,13 +669,6 @@ return|;
 operator|++
 name|line
 expr_stmt|;
-if|if
-condition|(
-name|isupper
-argument_list|(
-name|ch
-argument_list|)
-condition|)
 name|ch
 operator|=
 name|tolower
@@ -725,23 +712,16 @@ operator|(
 literal|1
 operator|)
 return|;
-if|if
-condition|(
-name|isupper
-argument_list|(
-name|ch
-operator|=
-operator|*
-name|t
-operator|++
-argument_list|)
-condition|)
 name|ch
 operator|=
 name|tolower
 argument_list|(
-name|ch
+operator|*
+name|t
 argument_list|)
+expr_stmt|;
+name|t
+operator|++
 expr_stmt|;
 if|if
 condition|(

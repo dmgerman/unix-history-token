@@ -928,6 +928,13 @@ begin_comment
 comment|/* 16 bits */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RL_MISC
+value|0x00F0
+end_define
+
 begin_comment
 comment|/*  * TX config register bits  */
 end_comment
@@ -1219,6 +1226,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_HWREV_8106E
+value|0x44800000
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_HWREV_8168F
 value|0x48000000
 end_define
@@ -1228,6 +1242,34 @@ define|#
 directive|define
 name|RL_HWREV_8411
 value|0x48800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8168G
+value|0x4C000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8168EP
+value|0x50000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8168GU
+value|0x50800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8411B
+value|0x5C800000
 end_define
 
 begin_define
@@ -1732,6 +1774,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_RXCFG_EARLYOFFV2
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_RXCFG_MAXDMA
 value|0x00000700
 end_define
@@ -1741,6 +1790,13 @@ define|#
 directive|define
 name|RL_RXCFG_BUFSZ
 value|0x00001800
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_RXCFG_EARLYOFF
+value|0x00003800
 end_define
 
 begin_define
@@ -1975,7 +2031,7 @@ begin_define
 define|#
 directive|define
 name|RL_RXSTAT_UNFINISHED
-value|0xFFF0
+value|0x0000FFF0
 end_define
 
 begin_comment
@@ -3519,7 +3575,7 @@ comment|/*  * The 8139C+ and 8160 gigE chips support descriptor-based TX  * and 
 end_comment
 
 begin_comment
-comment|/*  * RX/TX descriptor definition. When large send mode is enabled, the  * lower 11 bits of the TX rl_cmd word are used to hold the MSS, and  * the checksum offload bits are disabled. The structure layout is  * the same for RX and TX descriptors  */
+comment|/*  * RX/TX descriptor definition. When large send mode is enabled, the  * lower 11 bits of the TX rl_cmdstat word are used to hold the MSS, and  * the checksum offload bits are disabled. The structure layout is  * the same for RX and TX descriptors  */
 end_comment
 
 begin_struct
@@ -4269,7 +4325,7 @@ begin_define
 define|#
 directive|define
 name|RL_NTXSEGS
-value|32
+value|35
 end_define
 
 begin_define
@@ -4716,6 +4772,9 @@ name|rl_hwrev
 modifier|*
 name|rl_hwrev
 decl_stmt|;
+name|uint32_t
+name|rl_macrev
+decl_stmt|;
 name|int
 name|rl_eecmd_read
 decl_stmt|;
@@ -4893,6 +4952,18 @@ define|#
 directive|define
 name|RL_FLAG_WOL_MANLINK
 value|0x00010000
+define|#
+directive|define
+name|RL_FLAG_EARLYOFF
+value|0x00020000
+define|#
+directive|define
+name|RL_FLAG_EARLYOFFV2
+value|0x00040000
+define|#
+directive|define
+name|RL_FLAG_RXDV_GATED
+value|0x00080000
 define|#
 directive|define
 name|RL_FLAG_PCIE

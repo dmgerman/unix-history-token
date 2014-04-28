@@ -97,12 +97,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -866,7 +860,7 @@ name|char
 modifier|*
 name|addr
 decl_stmt|;
-comment|/* Flush cache */
+comment|/* 	 * Flush caches.  Note that in the SMP case this operates only on the 	 * current CPU's L1 cache.  Before we reach this point, code in either 	 * the system shutdown or kernel debugger has called stop_cpus() to stop 	 * all cores other than this one.  Part of the ARM handling of 	 * stop_cpus() is to call wbinv_all() on that core's local L1 cache.  So 	 * by time we get to here, all that remains is to flush the L1 for the 	 * current CPU, then the L2. 	 */
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;

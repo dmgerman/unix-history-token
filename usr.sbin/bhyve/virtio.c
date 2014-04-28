@@ -286,11 +286,34 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* vs->vs_status = 0; -- redundant */
+name|VS_LOCK
+argument_list|(
+name|vs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vs
+operator|->
+name|vs_isr
+condition|)
+name|pci_lintr_deassert
+argument_list|(
+name|vs
+operator|->
+name|vs_pi
+argument_list|)
+expr_stmt|;
 name|vs
 operator|->
 name|vs_isr
 operator|=
 literal|0
+expr_stmt|;
+name|VS_UNLOCK
+argument_list|(
+name|vs
+argument_list|)
 expr_stmt|;
 name|vs
 operator|->
@@ -418,7 +441,6 @@ operator|)
 return|;
 block|}
 else|else
-block|{
 name|vs
 operator|->
 name|vs_flags
@@ -436,7 +458,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -497,6 +518,9 @@ name|pfn
 expr_stmt|;
 name|phys
 operator|=
+operator|(
+name|uint64_t
+operator|)
 name|pfn
 operator|<<
 name|VRING_PFN
@@ -2202,6 +2226,15 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* a read clears this flag */
+if|if
+condition|(
+name|value
+condition|)
+name|pci_lintr_deassert
+argument_list|(
+name|pi
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|VTCFG_R_CFGVEC

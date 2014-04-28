@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$						*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: bcode.h,v 1.5 2006/01/16 08:09:25 otto Exp $	*/
+comment|/*	$OpenBSD: bcode.h,v 1.7 2012/11/07 11:06:14 otto Exp $	*/
 end_comment
 
 begin_comment
@@ -378,6 +378,7 @@ name|number
 modifier|*
 parameter_list|,
 name|u_int
+name|scale
 parameter_list|)
 function_decl|;
 end_function_decl

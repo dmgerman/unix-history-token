@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCAsmInfo.h"
+file|"llvm/MC/MCAsmInfoELF.h"
 end_include
 
 begin_decl_stmt
@@ -73,13 +73,10 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
-name|Target
-decl_stmt|;
-name|class
 name|SparcELFMCAsmInfo
 range|:
 name|public
-name|MCAsmInfo
+name|MCAsmInfoELF
 block|{
 name|virtual
 name|void
@@ -91,11 +88,37 @@ operator|:
 name|explicit
 name|SparcELFMCAsmInfo
 argument_list|(
-argument|const Target&T
-argument_list|,
 argument|StringRef TT
 argument_list|)
-block|;   }
+block|;
+name|virtual
+specifier|const
+name|MCExpr
+operator|*
+name|getExprForPersonalitySymbol
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|,
+argument|unsigned Encoding
+argument_list|,
+argument|MCStreamer&Streamer
+argument_list|)
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|MCExpr
+operator|*
+name|getExprForFDESymbol
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|,
+argument|unsigned Encoding
+argument_list|,
+argument|MCStreamer&Streamer
+argument_list|)
+specifier|const
+block|;  }
 decl_stmt|;
 block|}
 end_decl_stmt

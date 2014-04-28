@@ -59,6 +59,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|DiagnosticsEngine
+decl_stmt|;
 name|namespace
 name|driver
 block|{
@@ -68,18 +71,6 @@ decl_stmt|;
 name|class
 name|JobAction
 decl_stmt|;
-comment|/// ArgStringList - Type used for constructing argv lists for subprocesses.
-typedef|typedef
-name|SmallVector
-operator|<
-specifier|const
-name|char
-operator|*
-operator|,
-literal|16
-operator|>
-name|ArgStringList
-expr_stmt|;
 comment|/// ArgStringMap - Type used to map a JobAction to its result file.
 typedef|typedef
 name|llvm

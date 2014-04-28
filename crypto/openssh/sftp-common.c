@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-common.c,v 1.24 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: sftp-common.c,v 1.26 2014/01/09 03:26:00 guenther Exp $ */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -12,6 +16,14 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -47,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -925,6 +943,9 @@ index|[
 name|FMT_SCALED_STRSIZE
 index|]
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 name|strmode
 argument_list|(
 name|st
@@ -1025,17 +1046,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
+name|now
+operator|=
 name|time
 argument_list|(
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|now
 operator|-
-name|st
-operator|->
-name|st_mtime
-operator|<
 operator|(
 literal|365
 operator|*
@@ -1047,6 +1068,16 @@ literal|60
 operator|)
 operator|/
 literal|2
+operator|<
+name|st
+operator|->
+name|st_mtime
+operator|&&
+name|now
+operator|>=
+name|st
+operator|->
+name|st_mtime
 condition|)
 name|sz
 operator|=

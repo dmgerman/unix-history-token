@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -169,6 +175,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_types.h>
 end_include
 
@@ -208,6 +220,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_rss.h>
 end_include
 
 begin_include
@@ -646,24 +664,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VIMAGE
-name|error
-operator|=
-name|vnet_sysctl_handle_int
-argument_list|(
-name|oidp
-argument_list|,
-name|arg1
-argument_list|,
-name|arg2
-argument_list|,
-name|req
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|error
 operator|=
 name|sysctl_handle_int
@@ -677,8 +677,6 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
@@ -2047,7 +2045,7 @@ operator|->
 name|ipi_lastport
 expr_stmt|;
 block|}
-comment|/* 	 * For UDP, use random port allocation as long as the user 	 * allows it.  For TCP (and as of yet unknown) connections, 	 * use random port allocation only if the user allows it AND 	 * ipport_tick() allows it. 	 */
+comment|/* 	 * For UDP(-Lite), use random port allocation as long as the user 	 * allows it.  For TCP (and as of yet unknown) connections, 	 * use random port allocation only if the user allows it AND 	 * ipport_tick() allows it. 	 */
 if|if
 condition|(
 name|V_ipport_randomized
@@ -2060,6 +2058,11 @@ name|pcbinfo
 operator|==
 operator|&
 name|V_udbinfo
+operator|||
+name|pcbinfo
+operator|==
+operator|&
+name|V_ulitecbinfo
 operator|)
 condition|)
 name|dorandom
@@ -2082,13 +2085,18 @@ name|dorandom
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Make sure to not include UDP packets in the count. */
+comment|/* Make sure to not include UDP(-Lite) packets in the count. */
 if|if
 condition|(
 name|pcbinfo
 operator|!=
 operator|&
 name|V_udbinfo
+operator|||
+name|pcbinfo
+operator|!=
+operator|&
+name|V_ulitecbinfo
 condition|)
 name|V_ipport_tcpallocs
 operator|++
@@ -3484,7 +3492,6 @@ comment|/*  * Do proper source address selection on an unbound socket in case  *
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|in_pcbladdr
 parameter_list|(
@@ -3686,6 +3693,8 @@ name|sockaddr
 operator|*
 operator|)
 name|sin
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3709,6 +3718,8 @@ operator|)
 name|sin
 argument_list|,
 literal|0
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4231,6 +4242,8 @@ argument_list|(
 operator|&
 name|sain
 argument_list|)
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4253,6 +4266,8 @@ name|sain
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8145,6 +8160,12 @@ name|defined
 argument_list|(
 name|PCBGROUP
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|RSS
+argument_list|)
 name|struct
 name|inpcbgroup
 modifier|*
@@ -8193,11 +8214,18 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * When not using RSS, use connection groups in preference to the 	 * reservation table when looking up 4-tuples.  When using RSS, just 	 * use the reservation table, due to the cost of the Toeplitz hash 	 * in software. 	 * 	 * XXXRW: This policy belongs in the pcbgroup code, as in principle 	 * we could be doing RSS with a non-Toeplitz hash that is affordable 	 * in software. 	 */
 if|#
 directive|if
 name|defined
 argument_list|(
 name|PCBGROUP
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|RSS
 argument_list|)
 if|if
 condition|(
@@ -8363,12 +8391,23 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PCBGROUP
+comment|/* 	 * If we can use a hardware-generated hash to look up the connection 	 * group, use that connection group to find the inpcb.  Otherwise 	 * fall back on a software hash -- or the reservation table if we're 	 * using RSS. 	 * 	 * XXXRW: As above, that policy belongs in the pcbgroup code. 	 */
 if|if
 condition|(
 name|in_pcbgroup_enabled
 argument_list|(
 name|pcbinfo
 argument_list|)
+operator|&&
+operator|!
+operator|(
+name|M_HASHTYPE_TEST
+argument_list|(
+name|m
+argument_list|,
+name|M_HASHTYPE_NONE
+argument_list|)
+operator|)
 condition|)
 block|{
 name|pcbgroup
@@ -8417,6 +8456,9 @@ name|ifp
 argument_list|)
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|RSS
 name|pcbgroup
 operator|=
 name|in_pcbgroup_bytuple
@@ -8454,6 +8496,8 @@ name|ifp
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif

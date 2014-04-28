@@ -281,6 +281,9 @@ decl_stmt|;
 name|uint16_t
 name|d_hba_subdevice
 decl_stmt|;
+name|uint16_t
+name|d_rotation_rate
+decl_stmt|;
 comment|/* Fields private to the driver */
 name|void
 modifier|*
@@ -293,9 +296,13 @@ end_struct
 begin_define
 define|#
 directive|define
-name|DISKFLAG_NEEDSGIANT
+name|DISKFLAG_RESERVED
 value|0x1
 end_define
+
+begin_comment
+comment|/* Was NEEDSGIANT */
+end_comment
 
 begin_define
 define|#
@@ -323,6 +330,13 @@ define|#
 directive|define
 name|DISKFLAG_UNMAPPED_BIO
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISKFLAG_DIRECT_COMPLETION
+value|0x20
 end_define
 
 begin_function_decl
@@ -471,8 +485,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DISK_VERSION_04
+value|0x5856105d
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISK_VERSION
-value|DISK_VERSION_03
+value|DISK_VERSION_04
 end_define
 
 begin_endif

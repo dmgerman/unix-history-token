@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2773,6 +2779,9 @@ name|union
 name|mfi_evt
 name|filter
 decl_stmt|;
+name|bool
+name|first
+decl_stmt|;
 name|long
 name|val
 decl_stmt|;
@@ -3294,11 +3303,16 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-for|for
-control|(
+name|first
+operator|=
+name|true
+expr_stmt|;
 name|seq
 operator|=
 name|start
+expr_stmt|;
+for|for
+control|(
 init|;
 condition|;
 control|)
@@ -3356,17 +3370,6 @@ operator|==
 name|MFI_STAT_NOT_FOUND
 condition|)
 block|{
-if|if
-condition|(
-name|seq
-operator|==
-name|start
-condition|)
-name|warnx
-argument_list|(
-literal|"No matching events found"
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 if|if
@@ -3429,7 +3432,7 @@ name|i
 index|]
 operator|.
 name|seq
-operator|>=
+operator|>
 name|stop
 condition|)
 block|{
@@ -3439,7 +3442,9 @@ name|start
 operator|<=
 name|stop
 condition|)
-break|break;
+goto|goto
+name|finish
+goto|;
 elseif|else
 if|if
 condition|(
@@ -3454,7 +3459,9 @@ name|seq
 operator|<
 name|start
 condition|)
-break|break;
+goto|goto
+name|finish
+goto|;
 block|}
 name|mfi_decode_evt
 argument_list|(
@@ -3470,6 +3477,10 @@ index|]
 argument_list|,
 name|verbose
 argument_list|)
+expr_stmt|;
+name|first
+operator|=
+name|false
 expr_stmt|;
 block|}
 comment|/* 		 * XXX: If the event's seq # is the end of the buffer 		 * then this probably won't do the right thing.  We 		 * need to know the size of the buffer somehow. 		 */
@@ -3491,6 +3502,17 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+name|finish
+label|:
+if|if
+condition|(
+name|first
+condition|)
+name|warnx
+argument_list|(
+literal|"No matching events found"
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|list

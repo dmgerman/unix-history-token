@@ -669,7 +669,9 @@ name|sc_bsc
 operator|.
 name|ops_pcib_sc
 operator|.
-name|secbus
+name|bus
+operator|.
+name|sec
 operator|=
 name|pci_read_config
 argument_list|(
@@ -686,7 +688,9 @@ name|sc_bsc
 operator|.
 name|ops_pcib_sc
 operator|.
-name|subbus
+name|bus
+operator|.
+name|sub
 operator|=
 name|pci_read_config
 argument_list|(
@@ -852,7 +856,9 @@ name|sc_bsc
 operator|.
 name|ops_pcib_sc
 operator|.
-name|secbus
+name|bus
+operator|.
+name|sec
 argument_list|,
 literal|0
 argument_list|,
@@ -881,7 +887,9 @@ name|sc_bsc
 operator|.
 name|ops_pcib_sc
 operator|.
-name|subbus
+name|bus
+operator|.
+name|sub
 argument_list|,
 literal|0
 argument_list|,
@@ -925,7 +933,9 @@ name|sc_bsc
 operator|.
 name|ops_pcib_sc
 operator|.
-name|secbus
+name|bus
+operator|.
+name|sec
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -940,7 +950,9 @@ name|sc_bsc
 operator|.
 name|ops_pcib_sc
 operator|.
-name|subbus
+name|bus
+operator|.
+name|sub
 argument_list|)
 expr_stmt|;
 name|device_printf

@@ -551,7 +551,8 @@ begin_function
 name|void
 name|undefinedinstruction
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|frame
 parameter_list|)
@@ -607,12 +608,6 @@ name|I32_bit
 operator||
 name|F32_bit
 argument_list|)
-expr_stmt|;
-name|frame
-operator|->
-name|tf_pc
-operator|-=
-name|INSN_SIZE
 expr_stmt|;
 name|PCPU_INC
 argument_list|(

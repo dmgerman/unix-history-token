@@ -8504,11 +8504,17 @@ decl_stmt|;
 name|tree
 name|to
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|for_stmt
 operator|=
 name|begin_for_stmt
-argument_list|()
+argument_list|(
+name|NULL_TREE
+argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|finish_for_init_stmt
 argument_list|(
 name|for_stmt
@@ -9773,15 +9779,52 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|TYPE_HAS_TRIVIAL_DESTRUCTOR
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
+name|tree
+name|dtor
+init|=
+name|CLASSTYPE_DESTRUCTORS
 argument_list|(
 name|BINFO_TYPE
 argument_list|(
 name|base_binfo
 argument_list|)
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|(
+operator|!
+name|CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE
+argument_list|(
+name|BINFO_TYPE
+argument_list|(
+name|base_binfo
+argument_list|)
+argument_list|)
+operator|&&
+operator|!
+name|CLASSTYPE_HAS_NONTRIVIAL_DESTRUCTOR_BODY
+argument_list|(
+name|BINFO_TYPE
+argument_list|(
+name|base_binfo
+argument_list|)
+argument_list|)
+operator|&&
+operator|!
+operator|(
+name|dtor
+operator|&&
+operator|(
+name|TREE_PRIVATE
+argument_list|(
+name|dtor
+argument_list|)
+operator|)
+operator|)
+operator|)
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
 operator|||
 name|BINFO_VIRTUAL_P
 argument_list|(
@@ -9918,6 +9961,16 @@ argument_list|,
 name|expr
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
+comment|/* Even if body of current class's destructor was found to be empty, 	     it must now be called because it must delete its members. */
+name|CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE
+argument_list|(
+name|current_class_type
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
 block|}
 block|}
 block|}

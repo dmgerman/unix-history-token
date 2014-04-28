@@ -189,6 +189,17 @@ expr_stmt|;
 block|}
 name|GlobalDecl
 argument_list|(
+argument|const CapturedDecl *D
+argument_list|)
+block|{
+name|Init
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+block|}
+name|GlobalDecl
+argument_list|(
 argument|const ObjCMethodDecl *D
 argument_list|)
 block|{

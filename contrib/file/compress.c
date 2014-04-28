@@ -2545,12 +2545,10 @@ name|n
 operator|=
 literal|0
 expr_stmt|;
+operator|*
 name|newch
-index|[
-literal|0
-index|]
 operator|=
-literal|'\0'
+name|NULL
 expr_stmt|;
 goto|goto
 name|err

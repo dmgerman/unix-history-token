@@ -426,7 +426,7 @@ begin_define
 define|#
 directive|define
 name|R300_PIPE_AUTO_CONFIG
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -808,7 +808,7 @@ begin_define
 define|#
 directive|define
 name|RS480_PDC_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3835,7 +3835,7 @@ begin_define
 define|#
 directive|define
 name|AVIVO_TMDSA_TRANSMITTER_CONTROL_INPUT_TEST_CLK_SEL
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4248,7 +4248,7 @@ begin_define
 define|#
 directive|define
 name|AVIVO_LVTMA_TRANSMITTER_CONTROL_INPUT_TEST_CLK_SEL
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

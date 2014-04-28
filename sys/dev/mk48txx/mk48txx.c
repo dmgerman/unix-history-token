@@ -174,7 +174,6 @@ name|MK48TXX_EXT_REGISTERS
 value|1
 comment|/* Has extended register set. */
 block|}
-decl|const
 name|mk48txx_models
 index|[]
 init|=

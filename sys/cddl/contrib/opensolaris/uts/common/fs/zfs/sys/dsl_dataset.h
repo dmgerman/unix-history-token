@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -106,7 +106,7 @@ name|ds
 parameter_list|)
 define|\
 value|((ds)->ds_phys->ds_flags& DS_FLAG_INCONSISTENT)
-comment|/*  * Note: nopromote can not yet be set, but we want support for it in this  * on-disk version, so that we don't need to upgrade for it later.  */
+comment|/*  * Do not allow this dataset to be promoted.  */
 define|#
 directive|define
 name|DS_FLAG_NOPROMOTE
@@ -129,6 +129,12 @@ name|ds
 parameter_list|)
 define|\
 value|((ds)->ds_phys->ds_flags& DS_FLAG_DEFER_DESTROY)
+comment|/*  * DS_FIELD_* are strings that are used in the "extensified" dataset zap object.  * They should be of the format<reverse-dns>:<field>.  */
+comment|/*  * This field's value is the object ID of a zap object which contains the  * bookmarks of this dataset.  If it is present, then this dataset is counted  * in the refcount of the SPA_FEATURES_BOOKMARKS feature.  */
+define|#
+directive|define
+name|DS_FIELD_BOOKMARK_NAMES
+value|"com.delphix:bookmarks"
 comment|/*  * DS_FLAG_CI_DATASET is set if the dataset contains a file system whose  * name lookups should be performed case-insensitively.  */
 define|#
 directive|define
@@ -256,6 +262,10 @@ name|dsl_dataset
 modifier|*
 name|ds_prev
 decl_stmt|;
+name|uint64_t
+name|ds_bookmarks
+decl_stmt|;
+comment|/* DMU_OTN_ZAP_METADATA */
 comment|/* has internal locking: */
 name|dsl_deadlist_t
 name|ds_deadlist
@@ -937,6 +947,9 @@ parameter_list|,
 name|dsl_dataset_t
 modifier|*
 name|earlier
+parameter_list|,
+name|uint64_t
+name|earlier_txg
 parameter_list|)
 function_decl|;
 name|void
@@ -1028,6 +1041,13 @@ name|tx
 parameter_list|,
 name|boolean_t
 name|recv
+parameter_list|,
+name|uint64_t
+name|cnt
+parameter_list|,
+name|cred_t
+modifier|*
+name|cr
 parameter_list|)
 function_decl|;
 name|void
@@ -1110,6 +1130,9 @@ parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
+parameter_list|,
+name|boolean_t
+name|adj_cnt
 parameter_list|)
 function_decl|;
 name|void
@@ -1124,6 +1147,18 @@ name|source
 parameter_list|,
 name|uint64_t
 name|value
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|void
+name|dsl_dataset_zapify
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|ds
 parameter_list|,
 name|dmu_tx_t
 modifier|*

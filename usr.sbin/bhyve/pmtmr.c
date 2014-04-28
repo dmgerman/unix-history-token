@@ -74,22 +74,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"inout.h"
 end_include
 
 begin_comment
 comment|/*  * The ACPI Power Management timer is a free-running 24- or 32-bit  * timer with a frequency of 3.579545MHz  *  * This implementation will be 32-bits  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_PMTMR
-value|0x408
-end_define
-
-begin_comment
-comment|/* 4-byte i/o port for the timer */
 end_comment
 
 begin_define
@@ -107,6 +102,15 @@ begin_decl_stmt
 specifier|static
 name|pthread_mutex_t
 name|pmtmr_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|pthread_once_t
+name|pmtmr_once
+init|=
+name|PTHREAD_ONCE_INIT
 decl_stmt|;
 end_decl_stmt
 
@@ -418,6 +422,14 @@ name|tsold
 argument_list|)
 expr_stmt|;
 block|}
+name|pthread_mutex_init
+argument_list|(
+operator|&
+name|pmtmr_mtx
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -442,34 +454,14 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-specifier|static
-name|int
-name|inited
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|inited
-condition|)
-block|{
-name|pthread_mutex_init
+name|pthread_once
 argument_list|(
 operator|&
-name|pmtmr_mtx
+name|pmtmr_once
 argument_list|,
-name|NULL
+name|pmtmr_init
 argument_list|)
 expr_stmt|;
-name|pmtmr_init
-argument_list|()
-expr_stmt|;
-name|inited
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|pthread_mutex_lock
 argument_list|(
 operator|&

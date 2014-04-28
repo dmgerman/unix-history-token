@@ -36,11 +36,15 @@ directive|ifndef
 name|IOV_MAX
 end_ifndef
 
+begin_comment
+comment|/* There is no limit for iovec count on Windows, but apr_socket_sendv    allocates WSABUF structures on stack if vecs_count<= 50. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IOV_MAX
-value|16
+value|50
 end_define
 
 begin_endif
@@ -293,7 +297,7 @@ modifier|*
 name|resp_bkt
 decl_stmt|;
 name|int
-name|written
+name|writing_started
 decl_stmt|;
 name|int
 name|priority
@@ -344,6 +348,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|baton
+decl_stmt|;
+name|int
+name|failed_authn_types
 decl_stmt|;
 block|}
 name|serf__authn_info_t
@@ -670,14 +677,9 @@ comment|/* Exploded host url, path ommitted. Only scheme, hostinfo, hostname&   
 name|apr_uri_t
 name|host_info
 decl_stmt|;
-comment|/* connection and authentication scheme specific information */
-name|void
-modifier|*
-name|authn_baton
-decl_stmt|;
-name|void
-modifier|*
-name|proxy_authn_baton
+comment|/* authentication info for this connection. */
+name|serf__authn_info_t
+name|authn_info
 decl_stmt|;
 comment|/* Time marker when connection begins. */
 name|apr_time_t
@@ -710,6 +712,26 @@ parameter_list|(
 name|serf_bucket_t
 modifier|*
 name|bucket
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Remove the header from the list, do nothing if the header wasn't added.  */
+end_comment
+
+begin_function_decl
+name|void
+name|serf__bucket_headers_remove
+parameter_list|(
+name|serf_bucket_t
+modifier|*
+name|headers_bucket
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|header
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -886,6 +908,11 @@ modifier|*
 name|serf__validate_response_func_t
 function_decl|)
 parameter_list|(
+specifier|const
+name|serf__authn_scheme_t
+modifier|*
+name|scheme
+parameter_list|,
 name|peer_t
 name|peer
 parameter_list|,

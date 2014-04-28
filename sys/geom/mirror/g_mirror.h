@@ -496,6 +496,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_MIRROR_DEVICE_FLAG_WIPE
+value|0x1000000000000000ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_MIRROR_DEVICE_STATE_STARTING
 value|0
 end_define
@@ -663,6 +670,10 @@ name|struct
 name|root_hold_token
 modifier|*
 name|sc_rootmount
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_done_mtx
 decl_stmt|;
 block|}
 struct|;

@@ -9,6 +9,24 @@ directive|include
 file|"opie_cfg.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_TIME_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_TIME_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -125,6 +143,18 @@ end_endif
 begin_comment
 comment|/* DEBUG */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#

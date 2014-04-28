@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3482,6 +3482,23 @@ argument_list|)
 operator|)
 return|;
 block|}
+name|error
+operator|=
+name|dsl_fs_ss_limit_check
+argument_list|(
+name|pdd
+argument_list|,
+literal|1
+argument_list|,
+name|ZFS_PROP_FILESYSTEM_LIMIT
+argument_list|,
+name|NULL
+argument_list|,
+name|doca
+operator|->
+name|doca_cred
+argument_list|)
+expr_stmt|;
 name|dsl_dir_rele
 argument_list|(
 name|pdd
@@ -3491,7 +3508,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -3963,6 +3980,46 @@ operator|(
 name|SET_ERROR
 argument_list|(
 name|EXDEV
+argument_list|)
+operator|)
+return|;
+block|}
+name|error
+operator|=
+name|dsl_fs_ss_limit_check
+argument_list|(
+name|pdd
+argument_list|,
+literal|1
+argument_list|,
+name|ZFS_PROP_FILESYSTEM_LIMIT
+argument_list|,
+name|NULL
+argument_list|,
+name|doca
+operator|->
+name|doca_cred
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|dsl_dir_rele
+argument_list|(
+name|pdd
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EDQUOT
 argument_list|)
 operator|)
 return|;
@@ -4910,6 +4967,8 @@ operator|&
 name|zp
 argument_list|,
 name|dmu_objset_write_ready
+argument_list|,
+name|NULL
 argument_list|,
 name|dmu_objset_write_done
 argument_list|,

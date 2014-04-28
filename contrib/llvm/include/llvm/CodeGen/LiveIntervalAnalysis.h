@@ -154,6 +154,9 @@ name|class
 name|BitVector
 decl_stmt|;
 name|class
+name|BlockFrequency
+decl_stmt|;
+name|class
 name|LiveRangeCalc
 decl_stmt|;
 name|class
@@ -295,16 +298,16 @@ literal|8
 operator|>
 name|RegMaskBlocks
 block|;
-comment|/// RegUnitIntervals - Keep a live interval for each register unit as a way
-comment|/// of tracking fixed physreg interference.
+comment|/// Keeps a live range set for each register unit to track fixed physreg
+comment|/// interference.
 name|SmallVector
 operator|<
-name|LiveInterval
+name|LiveRange
 operator|*
 block|,
 literal|0
 operator|>
-name|RegUnitIntervals
+name|RegUnitRanges
 block|;
 name|public
 operator|:
@@ -330,7 +333,7 @@ argument|bool isDef
 argument_list|,
 argument|bool isUse
 argument_list|,
-argument|unsigned loopDepth
+argument|BlockFrequency freq
 argument_list|)
 block|;
 name|LiveInterval
@@ -340,25 +343,26 @@ argument_list|(
 argument|unsigned Reg
 argument_list|)
 block|{
-name|LiveInterval
+if|if
+condition|(
+name|hasInterval
+argument_list|(
+name|Reg
+argument_list|)
+condition|)
+return|return
 operator|*
-name|LI
-operator|=
 name|VirtRegIntervals
 index|[
 name|Reg
 index|]
-block|;
-name|assert
-argument_list|(
-name|LI
-operator|&&
-literal|"Interval does not exist for virtual register"
-argument_list|)
-block|;
+return|;
+else|else
 return|return
-operator|*
-name|LI
+name|createAndComputeVirtRegInterval
+argument_list|(
+name|Reg
+argument_list|)
 return|;
 block|}
 specifier|const
@@ -410,27 +414,29 @@ block|}
 comment|// Interval creation.
 name|LiveInterval
 operator|&
-name|getOrCreateInterval
+name|createEmptyInterval
 argument_list|(
 argument|unsigned Reg
 argument_list|)
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
 operator|!
 name|hasInterval
 argument_list|(
 name|Reg
 argument_list|)
-condition|)
-block|{
+operator|&&
+literal|"Interval already exists!"
+argument_list|)
+block|;
 name|VirtRegIntervals
 operator|.
 name|grow
 argument_list|(
 name|Reg
 argument_list|)
-expr_stmt|;
+block|;
 name|VirtRegIntervals
 index|[
 name|Reg
@@ -440,13 +446,38 @@ name|createInterval
 argument_list|(
 name|Reg
 argument_list|)
-expr_stmt|;
-block|}
+block|;
 return|return
-name|getInterval
+operator|*
+name|VirtRegIntervals
+index|[
+name|Reg
+index|]
+return|;
+block|}
+name|LiveInterval
+operator|&
+name|createAndComputeVirtRegInterval
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|LiveInterval
+operator|&
+name|LI
+operator|=
+name|createEmptyInterval
 argument_list|(
 name|Reg
 argument_list|)
+block|;
+name|computeVirtRegInterval
+argument_list|(
+name|LI
+argument_list|)
+block|;
+return|return
+name|LI
 return|;
 block|}
 comment|// Interval removal.
@@ -469,10 +500,12 @@ index|]
 operator|=
 literal|0
 block|;     }
-comment|/// addLiveRangeToEndOfBlock - Given a register and an instruction,
-comment|/// adds a live range from that instruction to the end of its MBB.
-name|LiveRange
-name|addLiveRangeToEndOfBlock
+comment|/// Given a register and an instruction, adds a live segment from that
+comment|/// instruction to the end of its MBB.
+name|LiveInterval
+operator|::
+name|Segment
+name|addSegmentToEndOfBlock
 argument_list|(
 argument|unsigned reg
 argument_list|,
@@ -515,9 +548,9 @@ comment|/// See also LiveRangeCalc::extend().
 name|void
 name|extendToIndices
 argument_list|(
-name|LiveInterval
-operator|*
-name|LI
+name|LiveRange
+operator|&
+name|LR
 argument_list|,
 name|ArrayRef
 operator|<
@@ -654,14 +687,14 @@ block|}
 name|bool
 name|isLiveInToMBB
 argument_list|(
-argument|const LiveInterval&li
+argument|const LiveRange&LR
 argument_list|,
 argument|const MachineBasicBlock *mbb
 argument_list|)
 specifier|const
 block|{
 return|return
-name|li
+name|LR
 operator|.
 name|liveAt
 argument_list|(
@@ -675,14 +708,14 @@ block|}
 name|bool
 name|isLiveOutOfMBB
 argument_list|(
-argument|const LiveInterval&li
+argument|const LiveRange&LR
 argument_list|,
 argument|const MachineBasicBlock *mbb
 argument_list|)
 specifier|const
 block|{
 return|return
-name|li
+name|LR
 operator|.
 name|liveAt
 argument_list|(
@@ -775,6 +808,38 @@ argument_list|(
 name|MI
 argument_list|)
 return|;
+block|}
+name|void
+name|InsertMachineInstrRangeInMaps
+argument_list|(
+argument|MachineBasicBlock::iterator B
+argument_list|,
+argument|MachineBasicBlock::iterator E
+argument_list|)
+block|{
+for|for
+control|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+operator|=
+name|B
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+name|Indexes
+operator|->
+name|insertMachineInstrInMaps
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
 block|}
 name|void
 name|RemoveMachineInstrFromMaps
@@ -1120,18 +1185,18 @@ comment|// track liveness per register unit to handle aliasing registers more
 comment|// efficiently.
 comment|/// getRegUnit - Return the live range for Unit.
 comment|/// It will be computed if it doesn't exist.
-name|LiveInterval
+name|LiveRange
 operator|&
 name|getRegUnit
 argument_list|(
 argument|unsigned Unit
 argument_list|)
 block|{
-name|LiveInterval
+name|LiveRange
 operator|*
-name|LI
+name|LR
 operator|=
-name|RegUnitIntervals
+name|RegUnitRanges
 index|[
 name|Unit
 index|]
@@ -1139,39 +1204,38 @@ block|;
 if|if
 condition|(
 operator|!
-name|LI
+name|LR
 condition|)
 block|{
 comment|// Compute missing ranges on demand.
-name|RegUnitIntervals
+name|RegUnitRanges
 index|[
 name|Unit
 index|]
 operator|=
-name|LI
+name|LR
 operator|=
 name|new
-name|LiveInterval
-argument_list|(
-name|Unit
-argument_list|,
-name|HUGE_VALF
-argument_list|)
+name|LiveRange
+argument_list|()
 expr_stmt|;
-name|computeRegUnitInterval
+name|computeRegUnitRange
 argument_list|(
-name|LI
+operator|*
+name|LR
+argument_list|,
+name|Unit
 argument_list|)
 expr_stmt|;
 block|}
 return|return
 operator|*
-name|LI
+name|LR
 return|;
 block|}
 comment|/// getCachedRegUnit - Return the live range for Unit if it has already
 comment|/// been computed, or NULL if it hasn't been computed yet.
-name|LiveInterval
+name|LiveRange
 operator|*
 name|getCachedRegUnit
 argument_list|(
@@ -1179,14 +1243,14 @@ argument|unsigned Unit
 argument_list|)
 block|{
 return|return
-name|RegUnitIntervals
+name|RegUnitRanges
 index|[
 name|Unit
 index|]
 return|;
 block|}
 specifier|const
-name|LiveInterval
+name|LiveRange
 operator|*
 name|getCachedRegUnit
 argument_list|(
@@ -1195,7 +1259,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|RegUnitIntervals
+name|RegUnitRanges
 index|[
 name|Unit
 index|]
@@ -1238,17 +1302,18 @@ name|computeLiveInRegUnits
 argument_list|()
 block|;
 name|void
-name|computeRegUnitInterval
+name|computeRegUnitRange
 argument_list|(
-name|LiveInterval
-operator|*
+argument|LiveRange&
+argument_list|,
+argument|unsigned Unit
 argument_list|)
 block|;
 name|void
 name|computeVirtRegInterval
 argument_list|(
 name|LiveInterval
-operator|*
+operator|&
 argument_list|)
 block|;
 name|class

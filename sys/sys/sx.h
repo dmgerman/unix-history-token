@@ -168,6 +168,13 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|sx_recurse
+value|lock_object.lo_data
+end_define
+
 begin_comment
 comment|/*  * Function prototipes.  Routines that start with an underscore are not part  * of the public interface and are wrappered with a macro.  */
 end_comment
@@ -751,6 +758,21 @@ name|td
 decl_stmt|;
 if|if
 condition|(
+name|sx
+operator|->
+name|sx_recurse
+operator|==
+literal|0
+condition|)
+name|LOCKSTAT_PROFILE_RELEASE_LOCK
+argument_list|(
+name|LS_SX_XUNLOCK_RELEASE
+argument_list|,
+name|sx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|atomic_cmpset_rel_ptr
 argument_list|(
@@ -909,6 +931,13 @@ name|sx
 operator|->
 name|sx_lock
 decl_stmt|;
+name|LOCKSTAT_PROFILE_RELEASE_LOCK
+argument_list|(
+name|LS_SX_SUNLOCK_RELEASE
+argument_list|,
+name|sx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|x

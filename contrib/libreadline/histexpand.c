@@ -698,12 +698,14 @@ name|local_index
 operator|=
 name|i
 init|;
+operator|(
 name|c
 operator|=
 name|string
 index|[
 name|i
 index|]
+operator|)
 condition|;
 name|i
 operator|++

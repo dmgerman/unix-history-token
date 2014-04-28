@@ -4484,6 +4484,9 @@ operator|)
 condition|)
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* AUTHENTICATION */
 block|{
 name|argv
 operator|=
@@ -4504,9 +4507,6 @@ name|host
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* AUTHENTICATION */
 endif|#
 directive|endif
 if|#

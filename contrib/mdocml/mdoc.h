@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc.h,v 1.122 2011/03/22 14:05:45 kristaps Exp $ */
+comment|/*	$Id: mdoc.h,v 1.125 2013/12/24 19:11:45 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -757,6 +757,10 @@ modifier|*
 name|cols
 decl_stmt|;
 comment|/* -column val ptr */
+name|int
+name|count
+decl_stmt|;
+comment|/* -enum counter */
 block|}
 struct|;
 end_struct
@@ -881,6 +885,10 @@ name|int
 name|pos
 decl_stmt|;
 comment|/* parse column */
+name|int
+name|lastline
+decl_stmt|;
+comment|/* the node ends on this line */
 name|enum
 name|mdoct
 name|tok
@@ -938,6 +946,12 @@ modifier|*
 name|norm
 decl_stmt|;
 comment|/* normalised args */
+specifier|const
+name|void
+modifier|*
+name|prev_font
+decl_stmt|;
+comment|/* before entering this node */
 comment|/* FIXME: these can be union'd to shave a few bytes. */
 name|struct
 name|mdoc_arg

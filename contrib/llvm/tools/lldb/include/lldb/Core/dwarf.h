@@ -49,12 +49,6 @@ directive|include
 file|<stdint.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdbool.h>
-end_include
-
 begin_comment
 comment|// Get the DWARF constant defintions from llvm
 end_comment

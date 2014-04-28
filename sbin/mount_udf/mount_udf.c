@@ -200,8 +200,6 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
-name|i
-decl_stmt|,
 name|iovlen
 decl_stmt|,
 name|mntflags
@@ -210,8 +208,6 @@ name|udf_flags
 decl_stmt|,
 name|verbose
 decl_stmt|;
-name|i
-operator|=
 name|iovlen
 operator|=
 name|mntflags
@@ -512,7 +508,7 @@ name|nmount
 argument_list|(
 name|iov
 argument_list|,
-name|i
+name|iovlen
 argument_list|,
 name|mntflags
 argument_list|)

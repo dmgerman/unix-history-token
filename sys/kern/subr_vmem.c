@@ -178,8 +178,23 @@ end_include
 begin_define
 define|#
 directive|define
+name|VMEM_OPTORDER
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMEM_OPTVALUE
+value|(1<< VMEM_OPTORDER)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMEM_MAXORDER
-value|(sizeof(vmem_size_t) * NBBY)
+define|\
+value|(VMEM_OPTVALUE - 1 + sizeof(vmem_size_t) * NBBY - VMEM_OPTORDER)
 end_define
 
 begin_define
@@ -815,7 +830,7 @@ name|ORDER2SIZE
 parameter_list|(
 name|order
 parameter_list|)
-value|((vmem_size_t)1<< (order))
+value|((order)< VMEM_OPTVALUE ? ((order) + 1) : \     (vmem_size_t)1<< ((order) - (VMEM_OPTVALUE - VMEM_OPTORDER - 1)))
 end_define
 
 begin_define
@@ -825,7 +840,7 @@ name|SIZE2ORDER
 parameter_list|(
 name|size
 parameter_list|)
-value|((int)flsl(size) - 1)
+value|((size)<= VMEM_OPTVALUE ? ((size) - 1) : \     (flsl(size) + (VMEM_OPTVALUE - VMEM_OPTORDER - 2)))
 end_define
 
 begin_comment
@@ -1344,7 +1359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * freelist[0] ... [1, 1]  * freelist[1] ... [2, 3]  * freelist[2] ... [4, 7]  * freelist[3] ... [8, 15]  *  :  * freelist[n] ... [(1<< n), (1<< (n + 1)) - 1]  *  :  */
+comment|/*  * freelist[0] ... [1, 1]  * freelist[1] ... [2, 2]  *  :  * freelist[29] ... [30, 30]  * freelist[30] ... [31, 31]  * freelist[31] ... [32, 63]  * freelist[33] ... [64, 127]  *  :  * freelist[n] ... [(1<< (n - 26)), (1<< (n - 25)) - 1]  *  :  */
 end_comment
 
 begin_function
@@ -2009,6 +2024,16 @@ name|qc
 operator|=
 name|arg
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|VMEM_FITMASK
+operator|)
+operator|==
+literal|0
+condition|)
 name|flags
 operator||=
 name|M_BESTFIT
@@ -4245,6 +4270,21 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
+name|MPASS
+argument_list|(
+operator|(
+name|quantum
+operator|&
+operator|(
+name|quantum
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 name|vm
@@ -4312,22 +4352,12 @@ name|vm
 operator|->
 name|vm_quantum_shift
 operator|=
-name|SIZE2ORDER
+name|flsl
 argument_list|(
 name|quantum
 argument_list|)
-expr_stmt|;
-name|MPASS
-argument_list|(
-name|ORDER2SIZE
-argument_list|(
-name|vm
-operator|->
-name|vm_quantum_shift
-argument_list|)
-operator|==
-name|quantum
-argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|vm
 operator|->

@@ -1385,16 +1385,10 @@ argument|tcptw
 argument_list|)
 name|tw_2msl
 expr_stmt|;
-name|void
-modifier|*
-name|tw_pspare
-decl_stmt|;
-comment|/* TCP_SIGNATURE */
 name|u_int
-modifier|*
-name|tw_spare
+name|tw_refcount
 decl_stmt|;
-comment|/* TCP_SIGNATURE */
+comment|/* refcount */
 block|}
 struct|;
 end_struct
@@ -2143,7 +2137,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Names for TCP sysctl objects  */
+comment|/*  * Identifiers for TCP sysctl nodes  */
 end_comment
 
 begin_define
@@ -2299,20 +2293,6 @@ end_define
 begin_comment
 comment|/* drop tcp connection */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPCTL_MAXID
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPCTL_FINWAIT2_TIMEOUT
-value|17
-end_define
 
 begin_ifdef
 ifdef|#

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: svc.h,v 1.17 2000/06/02 22:57:56 fvdl Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)svc.h 1.35 88/12/17 SMI  *	from: @(#)svc.h      1.27    94/04/25 SMI  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2009, Sun Microsystems, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions are met:  * - Redistributions of source code must retain the above copyright notice,   *   this list of conditions and the following disclaimer.  * - Redistributions in binary form must reproduce the above copyright notice,   *   this list of conditions and the following disclaimer in the documentation   *   and/or other materials provided with the distribution.  * - Neither the name of Sun Microsystems, Inc. nor the names of its   *   contributors may be used to endorse or promote products derived   *   from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE   * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR   * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF   * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN   * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)   * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   * POSSIBILITY OF SUCH DAMAGE.  *  *	from: @(#)svc.h 1.35 88/12/17 SMI  *	from: @(#)svc.h      1.27    94/04/25 SMI  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -205,6 +205,21 @@ name|__rpc_svcxprt
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* get transport acknowledge sequence */
+name|bool_t
+function_decl|(
+modifier|*
+name|xp_ack
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_svcxprt
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* send reply */
 name|bool_t
 function_decl|(
@@ -226,6 +241,9 @@ modifier|*
 parameter_list|,
 name|struct
 name|mbuf
+modifier|*
+parameter_list|,
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -531,6 +549,14 @@ name|int
 name|xp_upcallset
 decl_stmt|;
 comment|/* socket upcall is set up */
+name|uint32_t
+name|xp_snd_cnt
+decl_stmt|;
+comment|/* # of bytes to send to socket */
+name|uint32_t
+name|xp_snt_cnt
+decl_stmt|;
+comment|/* # of bytes sent to socket */
 else|#
 directive|else
 name|int
@@ -804,6 +830,44 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * The services connection loss list  * The dispatch routine takes request structs and runs the  * apropriate procedure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|svc_loss_callout
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|svc_loss_callout
+argument_list|)
+name|slc_link
+expr_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|slc_dispatch
+function_decl|)
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|svc_loss_callout_list
+argument_list|,
+name|svc_loss_callout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|__rpc_svcthread
@@ -900,6 +964,10 @@ name|uint64_t
 name|rq_p3
 decl_stmt|;
 comment|/* application workspace */
+name|uint32_t
+name|rq_reply_seq
+decl_stmt|;
+comment|/* reply socket sequence # */
 name|char
 name|rq_credarea
 index|[
@@ -942,6 +1010,11 @@ typedef|typedef
 struct|struct
 name|__rpc_svcthread
 block|{
+name|struct
+name|__rpc_svcpool
+modifier|*
+name|st_pool
+decl_stmt|;
 name|SVCXPRT
 modifier|*
 name|st_xprt
@@ -953,9 +1026,9 @@ name|st_reqs
 decl_stmt|;
 comment|/* RPC requests to execute */
 name|int
-name|st_reqcount
+name|st_idle
 decl_stmt|;
-comment|/* number of queued reqs */
+comment|/* thread is on idle list */
 name|struct
 name|cv
 name|st_cond
@@ -982,6 +1055,14 @@ argument_list|)
 name|st_alink
 expr_stmt|;
 comment|/* application thread list */
+name|int
+name|st_p2
+decl_stmt|;
+comment|/* application workspace */
+name|uint64_t
+name|st_p3
+decl_stmt|;
+comment|/* application workspace */
 block|}
 name|SVCTHREAD
 typedef|;
@@ -1070,7 +1151,7 @@ struct|struct
 name|__rpc_svcpool
 block|{
 name|struct
-name|mtx
+name|mtx_padalign
 name|sp_lock
 decl_stmt|;
 comment|/* protect the transport lists */
@@ -1106,6 +1187,11 @@ name|svc_callout_list
 name|sp_callouts
 decl_stmt|;
 comment|/* (prog,vers)->dispatch list */
+name|struct
+name|svc_loss_callout_list
+name|sp_lcallouts
+decl_stmt|;
+comment|/* loss->dispatch list */
 name|struct
 name|svcthread_list
 name|sp_threads
@@ -1309,6 +1395,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|SVC_ACK
+parameter_list|(
+name|xprt
+parameter_list|,
+name|ack
+parameter_list|)
+define|\
+value|((xprt)->xp_ops->xp_ack == NULL ? FALSE :	\ 	    ((ack) == NULL ? TRUE : (*(xprt)->xp_ops->xp_ack)((xprt), (ack))))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SVC_REPLY
 parameter_list|(
 name|xprt
@@ -1318,9 +1417,11 @@ parameter_list|,
 name|addr
 parameter_list|,
 name|m
+parameter_list|,
+name|seq
 parameter_list|)
 define|\
-value|(*(xprt)->xp_ops->xp_reply) ((xprt), (msg), (addr), (m))
+value|(*(xprt)->xp_ops->xp_reply) ((xprt), (msg), (addr), (m), (seq))
 end_define
 
 begin_define
@@ -1732,6 +1833,57 @@ end_endif
 
 begin_function_decl
 name|__END_DECLS
+ifdef|#
+directive|ifdef
+name|_KERNEL
+comment|/*  * Service connection loss registration  *  * svc_loss_reg(xprt, dispatch)  *	const SVCXPRT *xprt;  *	const void (*dispatch)();  */
+name|__BEGIN_DECLS
+specifier|extern
+name|bool_t
+name|svc_loss_reg
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__END_DECLS
+comment|/*  * Service connection loss un-registration  *  * svc_loss_unreg(xprt, dispatch)  *	const SVCXPRT *xprt;  *	const void (*dispatch)();  */
+name|__BEGIN_DECLS
+specifier|extern
+name|void
+name|svc_loss_unreg
+parameter_list|(
+name|SVCPOOL
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__END_DECLS
+endif|#
+directive|endif
 comment|/*  * Transport registration.  *  * xprt_register(xprt)  *	SVCXPRT *xprt;  */
 name|__BEGIN_DECLS
 specifier|extern
@@ -1801,6 +1953,17 @@ begin_function_decl
 specifier|extern
 name|void
 name|xprt_inactive_locked
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|xprt_inactive_self
 parameter_list|(
 name|SVCXPRT
 modifier|*

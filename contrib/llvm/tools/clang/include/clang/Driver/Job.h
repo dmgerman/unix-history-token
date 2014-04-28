@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Driver/Util.h"
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -60,6 +60,22 @@ include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Option/Option.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -69,11 +85,22 @@ name|namespace
 name|driver
 block|{
 name|class
+name|Action
+decl_stmt|;
+name|class
 name|Command
 decl_stmt|;
 name|class
 name|Tool
 decl_stmt|;
+comment|// Re-export this as clang::driver::ArgStringList.
+name|using
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+expr_stmt|;
 name|class
 name|Job
 block|{
@@ -83,6 +110,8 @@ enum|enum
 name|JobClass
 block|{
 name|CommandClass
+block|,
+name|FallbackCommandClass
 block|,
 name|JobListClass
 block|}
@@ -120,16 +149,39 @@ return|return
 name|Kind
 return|;
 block|}
-comment|/// addCommand - Append a command to the current job, which must be
-comment|/// either a piped job or a job list.
+comment|/// Print - Print this Job in -### format.
+comment|///
+comment|/// \param OS - The stream to print on.
+comment|/// \param Terminator - A string to print at the end of the line.
+comment|/// \param Quote - Should separate arguments be quoted.
+comment|/// \param CrashReport - Whether to print for inclusion in a crash report.
+name|virtual
 name|void
-name|addCommand
-parameter_list|(
-name|Command
-modifier|*
-name|C
-parameter_list|)
-function_decl|;
+name|Print
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Terminator
+argument_list|,
+name|bool
+name|Quote
+argument_list|,
+name|bool
+name|CrashReport
+operator|=
+name|false
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Command - An executable path/name and argument vector to
@@ -140,11 +192,6 @@ range|:
 name|public
 name|Job
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 comment|/// Source - The action which caused the creation of this job.
 specifier|const
 name|Action
@@ -165,6 +212,10 @@ name|Executable
 block|;
 comment|/// The list of program arguments (not including the implicit first
 comment|/// argument, which will be the executable).
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 name|Arguments
 block|;
@@ -188,10 +239,40 @@ operator|*
 name|_Executable
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|_Arguments
 argument_list|)
+block|;
+name|virtual
+name|void
+name|Print
+argument_list|(
+argument|llvm::raw_ostream&OS
+argument_list|,
+argument|const char *Terminator
+argument_list|,
+argument|bool Quote
+argument_list|,
+argument|bool CrashReport = false
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|int
+name|Execute
+argument_list|(
+argument|const StringRef **Redirects
+argument_list|,
+argument|std::string *ErrMsg
+argument_list|,
+argument|bool *ExecutionFailed
+argument_list|)
+specifier|const
 block|;
 comment|/// getSource - Return the Action which caused the creation of this job.
 specifier|const
@@ -218,17 +299,10 @@ name|Creator
 return|;
 block|}
 specifier|const
-name|char
-operator|*
-name|getExecutable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Executable
-return|;
-block|}
-specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgStringList
 operator|&
 name|getArguments
@@ -253,9 +327,104 @@ name|getKind
 argument_list|()
 operator|==
 name|CommandClass
+operator|||
+name|J
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|FallbackCommandClass
 return|;
 block|}
 expr|}
+block|;
+comment|/// Like Command, but with a fallback which is executed in case
+comment|/// the primary command crashes.
+name|class
+name|FallbackCommand
+operator|:
+name|public
+name|Command
+block|{
+name|public
+operator|:
+name|FallbackCommand
+argument_list|(
+specifier|const
+name|Action
+operator|&
+name|Source_
+argument_list|,
+specifier|const
+name|Tool
+operator|&
+name|Creator_
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Executable_
+argument_list|,
+specifier|const
+name|ArgStringList
+operator|&
+name|Arguments_
+argument_list|,
+name|Command
+operator|*
+name|Fallback_
+argument_list|)
+block|;
+name|virtual
+name|void
+name|Print
+argument_list|(
+argument|llvm::raw_ostream&OS
+argument_list|,
+argument|const char *Terminator
+argument_list|,
+argument|bool Quote
+argument_list|,
+argument|bool CrashReport = false
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|int
+name|Execute
+argument_list|(
+argument|const StringRef **Redirects
+argument_list|,
+argument|std::string *ErrMsg
+argument_list|,
+argument|bool *ExecutionFailed
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Job *J
+argument_list|)
+block|{
+return|return
+name|J
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|FallbackCommandClass
+return|;
+block|}
+name|private
+operator|:
+name|OwningPtr
+operator|<
+name|Command
+operator|>
+name|Fallback
+block|; }
 block|;
 comment|/// JobList - A sequence of jobs to perform.
 name|class
@@ -309,6 +478,31 @@ operator|~
 name|JobList
 argument_list|()
 expr_stmt|;
+name|virtual
+name|void
+name|Print
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Terminator
+argument_list|,
+name|bool
+name|Quote
+argument_list|,
+name|bool
+name|CrashReport
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Add a job to the list (taking ownership).
 name|void
 name|addJob

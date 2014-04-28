@@ -255,6 +255,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|LIBLLDB_LOG_PLATFORM
+value|(1u<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIBLLDB_LOG_SYSTEM_RUNTIME
+value|(1u<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LIBLLDB_LOG_ALL
 value|(UINT32_MAX)
 end_define

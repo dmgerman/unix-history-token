@@ -44,6 +44,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -62,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/pfvar.h>
 end_include
 
@@ -69,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_pflog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/pf_mtag.h>
 end_include
 
 begin_define
@@ -1337,9 +1355,6 @@ name|struct
 name|pf_addr
 name|init_addr
 decl_stmt|;
-name|uint16_t
-name|cut
-decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -1578,6 +1593,8 @@ else|else
 block|{
 name|uint16_t
 name|tmp
+decl_stmt|,
+name|cut
 decl_stmt|;
 if|if
 condition|(
@@ -1602,11 +1619,8 @@ block|}
 comment|/* low< high */
 name|cut
 operator|=
-name|htonl
-argument_list|(
 name|arc4random
 argument_list|()
-argument_list|)
 operator|%
 operator|(
 literal|1
@@ -4148,6 +4162,11 @@ name|skp
 operator|=
 operator|*
 name|nkp
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|sn
 operator|=
 name|NULL
 expr_stmt|;

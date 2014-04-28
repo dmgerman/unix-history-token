@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -68,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -321,8 +315,6 @@ name|stat
 argument_list|,
 name|mode
 argument_list|,
-name|mode
-argument_list|,
 literal|"char *"
 argument_list|,
 literal|"int"
@@ -336,8 +328,6 @@ argument_list|(
 name|vfs
 argument_list|, ,
 name|stat
-argument_list|,
-name|reg
 argument_list|,
 name|reg
 argument_list|,
@@ -12506,12 +12496,6 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-block|}
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_retval
@@ -12524,6 +12508,12 @@ operator|-
 name|auio
 operator|.
 name|uio_resid
+expr_stmt|;
+block|}
+name|vput
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -22788,8 +22778,13 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-return|return
-operator|(
+name|td
+operator|->
+name|td_retval
+index|[
+literal|0
+index|]
+operator|=
 name|kern_posix_fallocate
 argument_list|(
 name|td
@@ -22806,6 +22801,10 @@ name|uap
 operator|->
 name|len
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -23405,8 +23404,13 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-return|return
-operator|(
+name|td
+operator|->
+name|td_retval
+index|[
+literal|0
+index|]
+operator|=
 name|kern_posix_fadvise
 argument_list|(
 name|td
@@ -23427,6 +23431,10 @@ name|uap
 operator|->
 name|advice
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

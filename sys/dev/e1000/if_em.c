@@ -178,6 +178,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -18586,12 +18592,6 @@ argument_list|,
 name|txr
 operator|->
 name|me
-operator||
-operator|(
-name|NETMAP_LOCKED_ENTER
-operator||
-name|NETMAP_LOCKED_EXIT
-operator|)
 argument_list|)
 condition|)
 return|return;
@@ -19500,7 +19500,7 @@ name|rxr
 operator|->
 name|rxtag
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 operator|&
 name|rxbuf
@@ -19662,7 +19662,9 @@ name|na
 argument_list|,
 name|NR_RX
 argument_list|,
-literal|0
+name|rxr
+operator|->
+name|me
 argument_list|,
 literal|0
 argument_list|)
@@ -20862,6 +20864,9 @@ name|IFCAP_NETMAP
 condition|)
 name|rdt
 operator|-=
+name|nm_kr_rxspace
+argument_list|(
+operator|&
 name|NA
 argument_list|(
 name|adapter
@@ -20873,8 +20878,7 @@ name|rx_rings
 index|[
 name|i
 index|]
-operator|.
-name|nr_hwavail
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -21217,18 +21221,23 @@ argument_list|,
 name|rxr
 operator|->
 name|me
-operator||
-name|NETMAP_LOCKED_ENTER
 argument_list|,
 operator|&
 name|processed
 argument_list|)
 condition|)
+block|{
+name|EM_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 comment|/* DEV_NETMAP */
@@ -21393,6 +21402,22 @@ goto|goto
 name|next_desc
 goto|;
 block|}
+name|bus_dmamap_unload
+argument_list|(
+name|rxr
+operator|->
+name|rxtag
+argument_list|,
+name|rxr
+operator|->
+name|rx_buffers
+index|[
+name|i
+index|]
+operator|.
+name|map
+argument_list|)
+expr_stmt|;
 comment|/* Assign correct length to the current fragment */
 name|mp
 operator|=
@@ -21773,6 +21798,17 @@ name|rx_buffers
 index|[
 name|i
 index|]
+expr_stmt|;
+name|bus_dmamap_unload
+argument_list|(
+name|rxr
+operator|->
+name|rxtag
+argument_list|,
+name|rbuf
+operator|->
+name|map
+argument_list|)
 expr_stmt|;
 comment|/* Free any previous pieces */
 if|if

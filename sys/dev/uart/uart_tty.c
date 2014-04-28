@@ -378,7 +378,15 @@ name|consdev
 modifier|*
 name|cp
 parameter_list|)
-block|{ }
+block|{
+name|uart_grab
+argument_list|(
+name|cp
+operator|->
+name|cn_arg
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -391,7 +399,15 @@ name|consdev
 modifier|*
 name|cp
 parameter_list|)
-block|{ }
+block|{
+name|uart_ungrab
+argument_list|(
+name|cp
+operator|->
+name|cn_arg
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -945,44 +961,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* Fixate certain parameters for system devices. */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_sysdev
-operator|!=
-name|NULL
-condition|)
-block|{
-name|t
-operator|->
-name|c_ispeed
-operator|=
-name|t
-operator|->
-name|c_ospeed
-operator|=
-name|sc
-operator|->
-name|sc_sysdev
-operator|->
-name|baudrate
-expr_stmt|;
-name|t
-operator|->
-name|c_cflag
-operator||=
-name|CLOCAL
-expr_stmt|;
-name|t
-operator|->
-name|c_cflag
-operator|&=
-operator|~
-name|HUPCL
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|t
@@ -1702,7 +1680,11 @@ name|tty_init_console
 argument_list|(
 name|tp
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|sc_sysdev
+operator|->
+name|baudrate
 argument_list|)
 expr_stmt|;
 block|}

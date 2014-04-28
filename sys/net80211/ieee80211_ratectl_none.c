@@ -32,7 +32,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -63,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
 end_include
 
 begin_ifdef

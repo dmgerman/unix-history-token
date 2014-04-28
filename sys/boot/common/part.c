@@ -3730,7 +3730,9 @@ operator|.
 name|dp_flag
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|out
+goto|;
 block|}
 ifdef|#
 directive|ifdef
@@ -3779,11 +3781,6 @@ block|}
 comment|/* Do we have some invalid values? */
 if|if
 condition|(
-name|i
-operator|!=
-name|NDOSPART
-operator|||
-operator|(
 name|table
 operator|->
 name|type
@@ -3793,7 +3790,6 @@ operator|&&
 name|count
 operator|>
 literal|1
-operator|)
 condition|)
 block|{
 if|if
@@ -3816,14 +3812,11 @@ name|PTABLE_NONE
 expr_stmt|;
 name|DEBUG
 argument_list|(
-literal|"invalid values detected, ignore "
-literal|"partition table"
+literal|"Incorrect PMBR, ignore it"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
+else|else
 name|DEBUG
 argument_list|(
 literal|"Bootcamp detected"

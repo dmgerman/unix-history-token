@@ -33,6 +33,34 @@ name|GPIO_BASE
 value|0x1a
 end_define
 
+begin_define
+define|#
+directive|define
+name|GPIO_EXTINT_COUNT
+value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPIO_COUNT
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPIO_LEVELS_0
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPIO_LEVELS_1
+value|0x54
+end_define
+
 begin_comment
 comment|/* gpio bit definitions */
 end_comment

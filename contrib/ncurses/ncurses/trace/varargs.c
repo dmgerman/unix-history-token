@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2001-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2001-2008,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: varargs.c,v 1.7 2008/08/03 15:42:49 tom Exp $"
+literal|"$Id: varargs.c,v 1.11 2012/10/27 21:03:28 tom Exp $"
 argument_list|)
 end_macro
 
@@ -66,7 +66,7 @@ name|VA_INT
 parameter_list|(
 name|type
 parameter_list|)
-value|ival = va_arg(ap, type)
+value|ival = (int) va_arg(ap, type)
 end_define
 
 begin_define
@@ -562,10 +562,17 @@ block|{
 case|case
 name|atInteger
 case|:
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|buffer
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|)
 literal|"%d"
 argument_list|,
 name|ival
@@ -575,10 +582,17 @@ break|break;
 case|case
 name|atFloat
 case|:
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|buffer
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|)
 literal|"%f"
 argument_list|,
 name|fval
@@ -588,10 +602,17 @@ break|break;
 case|case
 name|atPoint
 case|:
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|buffer
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|)
 literal|"%p"
 argument_list|,
 name|pval
@@ -615,11 +636,16 @@ case|case
 name|atUnknown
 case|:
 default|default:
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|buffer
 argument_list|,
 literal|"?"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -644,7 +670,14 @@ argument_list|,
 name|MyBuffer
 argument_list|)
 expr_stmt|;
-name|sprintf
+if|if
+condition|(
+name|MyBuffer
+operator|!=
+literal|0
+condition|)
+block|{
+name|_nc_SPRINTF
 argument_list|(
 name|MyBuffer
 operator|+
@@ -653,11 +686,21 @@ argument_list|(
 name|MyBuffer
 argument_list|)
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+name|MyLength
+operator|-
+name|strlen
+argument_list|(
+name|MyBuffer
+argument_list|)
+argument_list|)
 literal|", %s"
 argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|used
@@ -676,6 +719,10 @@ block|}
 return|return
 operator|(
 name|MyBuffer
+condition|?
+name|MyBuffer
+else|:
+name|dummy
 operator|)
 return|;
 block|}

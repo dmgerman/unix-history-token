@@ -599,17 +599,6 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|config_dir
-condition|)
-block|{
-comment|/* Can't locate the cache to clear */
-return|return
-name|SVN_NO_ERROR
-return|;
-block|}
 name|iterpool
 operator|=
 name|svn_pool_create

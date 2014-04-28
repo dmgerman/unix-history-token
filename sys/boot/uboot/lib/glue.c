@@ -47,18 +47,6 @@ directive|include
 file|"glue.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1442,11 +1430,11 @@ if|if
 condition|(
 name|type
 operator|&
-name|DT_STOR_NAND
+name|DT_STOR_SATA
 condition|)
 return|return
 operator|(
-literal|"NAND"
+literal|"SATA"
 operator|)
 return|;
 return|return

@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/ModuleMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Lex/PPCallbacks.h"
 end_include
 
@@ -716,6 +722,10 @@ block|,
 literal|2
 operator|>
 name|ModuleImportPath
+block|;
+comment|/// \brief Whether the last token we lexed was an '@'.
+name|bool
+name|LastTokenWasAt
 block|;
 comment|/// \brief Whether the module import expectes an identifier next. Otherwise,
 comment|/// it expects a '.' or ';'.
@@ -1434,6 +1444,17 @@ specifier|const
 block|{
 return|return
 name|TheModuleLoader
+return|;
+block|}
+name|bool
+name|hadModuleLoaderFatalFailure
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheModuleLoader
+operator|.
+name|HadFatalFailure
 return|;
 block|}
 comment|/// \brief True if we are currently preprocessing a #if or #elif directive
@@ -2255,8 +2276,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// Lex - To lex a token from the preprocessor, just pull a token from the
-comment|/// current lexer or macro object.
+comment|/// Lex - Lex the next token for this preprocessor.
 name|void
 name|Lex
 parameter_list|(
@@ -2264,65 +2284,7 @@ name|Token
 modifier|&
 name|Result
 parameter_list|)
-block|{
-switch|switch
-condition|(
-name|CurLexerKind
-condition|)
-block|{
-case|case
-name|CLK_Lexer
-case|:
-name|CurLexer
-operator|->
-name|Lex
-argument_list|(
-name|Result
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CLK_PTHLexer
-case|:
-name|CurPTHLexer
-operator|->
-name|Lex
-argument_list|(
-name|Result
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CLK_TokenLexer
-case|:
-name|CurTokenLexer
-operator|->
-name|Lex
-argument_list|(
-name|Result
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CLK_CachingLexer
-case|:
-name|CachingLex
-argument_list|(
-name|Result
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CLK_LexAfterModuleImport
-case|:
-name|LexAfterModuleImport
-argument_list|(
-name|Result
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
+function_decl|;
 name|void
 name|LexAfterModuleImport
 parameter_list|(
@@ -2691,6 +2653,32 @@ argument_list|(
 name|Tok
 argument_list|)
 expr_stmt|;
+block|}
+comment|/// Get the location of the last cached token, suitable for setting the end
+comment|/// location of an annotation token.
+name|SourceLocation
+name|getLastCachedTokenLocation
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CachedLexPos
+operator|!=
+literal|0
+argument_list|)
+block|;
+return|return
+name|CachedTokens
+index|[
+name|CachedLexPos
+operator|-
+literal|1
+index|]
+operator|.
+name|getLocation
+argument_list|()
+return|;
 block|}
 comment|/// \brief Replace the last token with an annotation token.
 comment|///
@@ -3184,6 +3172,11 @@ parameter_list|,
 name|Token
 modifier|&
 name|Result
+parameter_list|,
+name|bool
+name|IgnoreWhiteSpace
+init|=
+name|false
 parameter_list|)
 block|{
 return|return
@@ -3198,6 +3191,8 @@ argument_list|,
 name|SourceMgr
 argument_list|,
 name|LangOpts
+argument_list|,
+name|IgnoreWhiteSpace
 argument_list|)
 return|;
 block|}
@@ -3700,7 +3695,10 @@ comment|/// HandleIdentifier - This callback is invoked when the lexer reads an
 comment|/// identifier and has filled in the tokens IdentifierInfo member.  This
 comment|/// callback potentially macro expands it or turns it into a named token (like
 comment|/// 'for').
-name|void
+comment|///
+comment|/// \returns true if we actually computed a token, false if we need to
+comment|/// lex again.
+name|bool
 name|HandleIdentifier
 parameter_list|(
 name|Token
@@ -3866,6 +3864,9 @@ name|FileEntry
 modifier|*
 name|LookupFile
 argument_list|(
+name|SourceLocation
+name|FilenameLoc
+argument_list|,
 name|StringRef
 name|Filename
 argument_list|,
@@ -3897,8 +3898,9 @@ operator|>
 operator|*
 name|RelativePath
 argument_list|,
-name|Module
-operator|*
+name|ModuleMap
+operator|::
+name|KnownHeader
 operator|*
 name|SuggestedModule
 argument_list|,
@@ -4079,6 +4081,14 @@ name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
+name|void
+name|PropagateLineStartLeadingSpaceInfo
+parameter_list|(
+name|Token
+modifier|&
+name|Result
+parameter_list|)
+function_decl|;
 comment|/// \brief Allocate a new MacroInfo object.
 name|MacroInfo
 modifier|*
@@ -4220,7 +4230,7 @@ parameter_list|()
 function_decl|;
 comment|/// HandleMacroExpandedIdentifier - If an identifier token is read that is to
 comment|/// be expanded as a macro, handle it and return the next token as 'Tok'.  If
-comment|/// the macro should not be expanded return true, otherwise return false.
+comment|/// we lexed a token, return true; otherwise the caller should lex again.
 name|bool
 name|HandleMacroExpandedIdentifier
 parameter_list|(
@@ -4464,17 +4474,14 @@ block|{
 comment|// If the Lexer pointers are 0 and IncludeMacroStack is empty, it means
 comment|// that we are past EOF, not that we are in CachingLex mode.
 return|return
+operator|!
 name|CurPPLexer
-operator|==
-literal|0
 operator|&&
+operator|!
 name|CurTokenLexer
-operator|==
-literal|0
 operator|&&
+operator|!
 name|CurPTHLexer
-operator|==
-literal|0
 operator|&&
 operator|!
 name|IncludeMacroStack
@@ -4638,6 +4645,74 @@ modifier|&
 name|Tok
 parameter_list|)
 function_decl|;
+comment|// Module inclusion testing.
+comment|/// \brief Find the module for the source or header file that \p FilenameLoc
+comment|/// points to.
+name|Module
+modifier|*
+name|getModuleForLocation
+parameter_list|(
+name|SourceLocation
+name|FilenameLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Verify that a private header is included only from within its
+comment|/// module.
+name|bool
+name|violatesPrivateInclude
+argument_list|(
+name|Module
+operator|*
+name|RequestingModule
+argument_list|,
+specifier|const
+name|FileEntry
+operator|*
+name|IncFileEnt
+argument_list|,
+name|ModuleMap
+operator|::
+name|ModuleHeaderRole
+name|Role
+argument_list|,
+name|Module
+operator|*
+name|RequestedModule
+argument_list|)
+decl_stmt|;
+comment|/// \brief Verify that a module includes headers only from modules that it
+comment|/// has declared that it uses.
+name|bool
+name|violatesUseDeclarations
+parameter_list|(
+name|Module
+modifier|*
+name|RequestingModule
+parameter_list|,
+name|Module
+modifier|*
+name|RequestedModule
+parameter_list|)
+function_decl|;
+comment|/// \brief Verify that it is legal for the source file that \p FilenameLoc
+comment|/// points to to include the file \p Filename.
+comment|///
+comment|/// Tries to reuse \p IncFileEnt.
+name|void
+name|verifyModuleInclude
+parameter_list|(
+name|SourceLocation
+name|FilenameLoc
+parameter_list|,
+name|StringRef
+name|Filename
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|*
+name|IncFileEnt
+parameter_list|)
+function_decl|;
 comment|// Macro handling.
 name|void
 name|HandleDefineDirective
@@ -4645,6 +4720,9 @@ parameter_list|(
 name|Token
 modifier|&
 name|Tok
+parameter_list|,
+name|bool
+name|ImmediatelyAfterTopLevelIfndef
 parameter_list|)
 function_decl|;
 name|void
@@ -4709,7 +4787,10 @@ comment|// Pragmas.
 name|void
 name|HandlePragmaDirective
 parameter_list|(
-name|unsigned
+name|SourceLocation
+name|IntroducerLoc
+parameter_list|,
+name|PragmaIntroducerKind
 name|Introducer
 parameter_list|)
 function_decl|;

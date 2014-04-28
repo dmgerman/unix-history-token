@@ -16,7 +16,7 @@ name|_VIRTIO_H_
 end_define
 
 begin_comment
-comment|/*  * These are derived from several virtio specifications.  *  * Some useful links:  *    https://github.com/rustyrussel/virtio-spec  *    http://people.redhat.com/pbonzini/virtio-spec.pdf  */
+comment|/*  * These are derived from several virtio specifications.  *  * Some useful links:  *    https://github.com/rustyrussell/virtio-spec  *    http://people.redhat.com/pbonzini/virtio-spec.pdf  */
 end_comment
 
 begin_comment
@@ -265,6 +265,13 @@ define|#
 directive|define
 name|VIRTIO_DEV_BLOCK
 value|0x1001
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_DEV_RANDOM
+value|0x1002
 end_define
 
 begin_comment
@@ -665,6 +672,28 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|VS_LOCK
+parameter_list|(
+name|vs
+parameter_list|)
+define|\
+value|do {									\ 	if (vs->vs_mtx)							\ 		pthread_mutex_lock(vs->vs_mtx);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VS_UNLOCK
+parameter_list|(
+name|vs
+parameter_list|)
+define|\
+value|do {									\ 	if (vs->vs_mtx)							\ 		pthread_mutex_unlock(vs->vs_mtx);			\ } while (0)
+end_define
+
 begin_struct
 struct|struct
 name|virtio_consts
@@ -999,11 +1028,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|pci_msix_enabled
+argument_list|(
 name|vs
 operator|->
-name|vs_flags
-operator|&
-name|VIRTIO_USE_MSIX
+name|vs_pi
+argument_list|)
 condition|)
 name|pci_generate_msix
 argument_list|(
@@ -1018,6 +1048,11 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|VS_LOCK
+argument_list|(
+name|vs
+argument_list|)
+expr_stmt|;
 name|vs
 operator|->
 name|vs_isr
@@ -1031,6 +1066,18 @@ operator|->
 name|vs_pi
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|pci_lintr_assert
+argument_list|(
+name|vs
+operator|->
+name|vs_pi
+argument_list|)
+expr_stmt|;
+name|VS_UNLOCK
+argument_list|(
+name|vs
 argument_list|)
 expr_stmt|;
 block|}

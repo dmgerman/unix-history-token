@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -650,6 +644,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOSYS

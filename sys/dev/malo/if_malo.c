@@ -97,6 +97,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -5703,7 +5709,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 name|ismcast
 operator|=

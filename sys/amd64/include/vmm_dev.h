@@ -121,14 +121,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|vm_event
+name|vm_exception
 block|{
 name|int
 name|cpuid
-decl_stmt|;
-name|enum
-name|vm_event_type
-name|type
 decl_stmt|;
 name|int
 name|vector
@@ -145,6 +141,20 @@ end_struct
 
 begin_struct
 struct|struct
+name|vm_lapic_msi
+block|{
+name|uint64_t
+name|msg
+decl_stmt|;
+name|uint64_t
+name|addr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vm_lapic_irq
 block|{
 name|int
@@ -152,6 +162,31 @@ name|cpuid
 decl_stmt|;
 name|int
 name|vector
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vm_ioapic_irq
+block|{
+name|int
+name|irq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vm_isa_irq
+block|{
+name|int
+name|atpic_irq
+decl_stmt|;
+name|int
+name|ioapic_irq
 decl_stmt|;
 block|}
 struct|;
@@ -241,11 +276,11 @@ name|int
 name|numvec
 decl_stmt|;
 comment|/* 0 means disabled */
-name|int
-name|vector
+name|uint64_t
+name|msg
 decl_stmt|;
-name|int
-name|destcpu
+name|uint64_t
+name|addr
 decl_stmt|;
 block|}
 struct|;
@@ -270,7 +305,7 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|msg
 decl_stmt|;
 name|uint32_t
@@ -383,6 +418,18 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_hpet_cap
+block|{
+name|uint32_t
+name|capabilities
+decl_stmt|;
+comment|/* lower 32 bits of HPET capabilities */
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -402,6 +449,10 @@ block|,
 name|IOCNUM_GET_CAPABILITY
 init|=
 literal|3
+block|,
+name|IOCNUM_SUSPEND
+init|=
+literal|4
 block|,
 comment|/* memory apis */
 name|IOCNUM_MAP_MEMORY
@@ -434,7 +485,7 @@ init|=
 literal|23
 block|,
 comment|/* interrupt injection */
-name|IOCNUM_INJECT_EVENT
+name|IOCNUM_INJECT_EXCEPTION
 init|=
 literal|30
 block|,
@@ -445,6 +496,30 @@ block|,
 name|IOCNUM_INJECT_NMI
 init|=
 literal|32
+block|,
+name|IOCNUM_IOAPIC_ASSERT_IRQ
+init|=
+literal|33
+block|,
+name|IOCNUM_IOAPIC_DEASSERT_IRQ
+init|=
+literal|34
+block|,
+name|IOCNUM_IOAPIC_PULSE_IRQ
+init|=
+literal|35
+block|,
+name|IOCNUM_LAPIC_MSI
+init|=
+literal|36
+block|,
+name|IOCNUM_LAPIC_LOCAL_IRQ
+init|=
+literal|37
+block|,
+name|IOCNUM_IOAPIC_PINCOUNT
+init|=
+literal|38
 block|,
 comment|/* PCI pass-thru */
 name|IOCNUM_BIND_PPTDEV
@@ -484,6 +559,23 @@ block|,
 name|IOCNUM_GET_X2APIC_STATE
 init|=
 literal|61
+block|,
+name|IOCNUM_GET_HPET_CAPABILITIES
+init|=
+literal|62
+block|,
+comment|/* legacy interrupt injection */
+name|IOCNUM_ISA_ASSERT_IRQ
+init|=
+literal|80
+block|,
+name|IOCNUM_ISA_DEASSERT_IRQ
+init|=
+literal|81
+block|,
+name|IOCNUM_ISA_PULSE_IRQ
+init|=
+literal|82
 block|, }
 enum|;
 end_enum
@@ -494,6 +586,14 @@ directive|define
 name|VM_RUN
 define|\
 value|_IOWR('v', IOCNUM_RUN, struct vm_run)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_SUSPEND
+define|\
+value|_IO('v', IOCNUM_SUSPEND)
 end_define
 
 begin_define
@@ -547,9 +647,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_INJECT_EVENT
+name|VM_INJECT_EXCEPTION
 define|\
-value|_IOW('v', IOCNUM_INJECT_EVENT, struct vm_event)
+value|_IOW('v', IOCNUM_INJECT_EXCEPTION, struct vm_exception)
 end_define
 
 begin_define
@@ -558,6 +658,78 @@ directive|define
 name|VM_LAPIC_IRQ
 define|\
 value|_IOW('v', IOCNUM_LAPIC_IRQ, struct vm_lapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_LAPIC_LOCAL_IRQ
+define|\
+value|_IOW('v', IOCNUM_LAPIC_LOCAL_IRQ, struct vm_lapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_LAPIC_MSI
+define|\
+value|_IOW('v', IOCNUM_LAPIC_MSI, struct vm_lapic_msi)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_IOAPIC_ASSERT_IRQ
+define|\
+value|_IOW('v', IOCNUM_IOAPIC_ASSERT_IRQ, struct vm_ioapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_IOAPIC_DEASSERT_IRQ
+define|\
+value|_IOW('v', IOCNUM_IOAPIC_DEASSERT_IRQ, struct vm_ioapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_IOAPIC_PULSE_IRQ
+define|\
+value|_IOW('v', IOCNUM_IOAPIC_PULSE_IRQ, struct vm_ioapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_IOAPIC_PINCOUNT
+define|\
+value|_IOR('v', IOCNUM_IOAPIC_PINCOUNT, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ISA_ASSERT_IRQ
+define|\
+value|_IOW('v', IOCNUM_ISA_ASSERT_IRQ, struct vm_isa_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ISA_DEASSERT_IRQ
+define|\
+value|_IOW('v', IOCNUM_ISA_DEASSERT_IRQ, struct vm_isa_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ISA_PULSE_IRQ
+define|\
+value|_IOW('v', IOCNUM_ISA_PULSE_IRQ, struct vm_isa_irq)
 end_define
 
 begin_define
@@ -654,6 +826,14 @@ directive|define
 name|VM_GET_X2APIC_STATE
 define|\
 value|_IOWR('v', IOCNUM_GET_X2APIC_STATE, struct vm_x2apic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GET_HPET_CAPABILITIES
+define|\
+value|_IOR('v', IOCNUM_GET_HPET_CAPABILITIES, struct vm_hpet_cap)
 end_define
 
 begin_define

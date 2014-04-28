@@ -197,6 +197,7 @@ name|representation
 return|;
 block|}
 comment|// Overloaded operators for bool like qualities
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -279,6 +280,15 @@ comment|// 'z'
 name|AsPtrDiff
 block|,
 comment|// 't'
+name|AsInt32
+block|,
+comment|// 'I32' (MSVCRT, like __int32)
+name|AsInt3264
+block|,
+comment|// 'I'   (MSVCRT, like __int3264 from MIDL)
+name|AsInt64
+block|,
+comment|// 'I64' (MSVCRT, like __int64)
 name|AsLongDouble
 block|,
 comment|// 'L'
@@ -357,6 +367,15 @@ name|AsChar
 case|:
 return|return
 literal|2
+return|;
+case|case
+name|AsInt32
+case|:
+case|case
+name|AsInt64
+case|:
+return|return
+literal|3
 return|;
 case|case
 name|None

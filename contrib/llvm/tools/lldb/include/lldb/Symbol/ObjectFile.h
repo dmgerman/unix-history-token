@@ -683,6 +683,46 @@ init|=
 literal|0
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Appends a Symbol for the specified so_addr to the symbol table.
+comment|///
+comment|/// If verify_unique is false, the symbol table is not searched
+comment|/// to determine if a Symbol found at this address has already been
+comment|/// added to the symbol table.  When verify_unique is true, this
+comment|/// method resolves the Symbol as the first match in the SymbolTable
+comment|/// and appends a Symbol only if required/found.
+comment|///
+comment|/// @return
+comment|///     The resolved symbol or nullptr.  Returns nullptr if a
+comment|///     a Symbol could not be found for the specified so_addr.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Symbol
+modifier|*
+name|ResolveSymbolForAddress
+parameter_list|(
+specifier|const
+name|Address
+modifier|&
+name|so_addr
+parameter_list|,
+name|bool
+name|verify_unique
+parameter_list|)
+block|{
+comment|// Typically overridden to lazily add stripped symbols recoverable from
+comment|// the exception handling unwind information (i.e. without parsing
+comment|// the entire eh_frame section.
+comment|//
+comment|// The availability of LC_FUNCTION_STARTS allows ObjectFileMachO
+comment|// to efficiently add stripped symbols when the symbol table is
+comment|// first constructed.  Poorer cousins are PECoff and ELF.
+return|return
+name|nullptr
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Detect if this object file has been stripped of local symbols.
+comment|//------------------------------------------------------------------
 comment|/// Detect if this object file has been stripped of local symbols.
 comment|///
 comment|/// @return
@@ -757,6 +797,34 @@ block|{
 return|return
 name|FileSpecList
 argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Sets the load address for an entire module, assuming a rigid
+comment|/// slide of sections, if possible in the implementation.
+comment|///
+comment|/// @return
+comment|///     Returns true iff any section's load address changed.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|SetLoadAddress
+argument_list|(
+name|Target
+operator|&
+name|target
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+name|value
+argument_list|,
+name|bool
+name|value_is_offset
+argument_list|)
+block|{
+return|return
+name|false
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -839,7 +907,9 @@ name|lldb_private
 operator|::
 name|Address
 name|GetImageInfoAddress
-argument_list|()
+argument_list|(
+argument|Target *target
+argument_list|)
 block|{
 return|return
 name|Address
@@ -1020,6 +1090,140 @@ comment|//------------------------------------------------------------------
 name|virtual
 name|uint32_t
 name|GetVersion
+parameter_list|(
+name|uint32_t
+modifier|*
+name|versions
+parameter_list|,
+name|uint32_t
+name|num_versions
+parameter_list|)
+block|{
+if|if
+condition|(
+name|versions
+operator|&&
+name|num_versions
+condition|)
+block|{
+for|for
+control|(
+name|uint32_t
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|num_versions
+condition|;
+operator|++
+name|i
+control|)
+name|versions
+index|[
+name|i
+index|]
+operator|=
+name|UINT32_MAX
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Get the minimum OS version this object file can run on.
+comment|///
+comment|/// Some object files have information that specifies the minimum OS
+comment|/// version that they can be used on.
+comment|///
+comment|/// If \a versions is NULL, or if \a num_versions is 0, the return
+comment|/// value will indicate how many version numbers are available in
+comment|/// this object file. Then a subsequent call can be made to this
+comment|/// function with a value of \a versions and \a num_versions that
+comment|/// has enough storage to store some or all version numbers.
+comment|///
+comment|/// @param[out] versions
+comment|///     A pointer to an array of uint32_t types that is \a num_versions
+comment|///     long. If this value is NULL, the return value will indicate
+comment|///     how many version numbers are required for a subsequent call
+comment|///     to this function so that all versions can be retrieved. If
+comment|///     the value is non-NULL, then at most \a num_versions of the
+comment|///     existing versions numbers will be filled into \a versions.
+comment|///     If there is no version information available, \a versions
+comment|///     will be filled with \a num_versions UINT32_MAX values
+comment|///     and zero will be returned.
+comment|///
+comment|/// @param[in] num_versions
+comment|///     The maximum number of entries to fill into \a versions. If
+comment|///     this value is zero, then the return value will indicate
+comment|///     how many version numbers there are in total so another call
+comment|///     to this function can be make with adequate storage in
+comment|///     \a versions to get all of the version numbers. If \a
+comment|///     num_versions is less than the actual number of version
+comment|///     numbers in this object file, only \a num_versions will be
+comment|///     filled into \a versions (if \a versions is non-NULL).
+comment|///
+comment|/// @return
+comment|///     This function always returns the number of version numbers
+comment|///     that this object file has regardless of the number of
+comment|///     version numbers that were copied into \a versions.
+comment|//------------------------------------------------------------------
+name|virtual
+name|uint32_t
+name|GetMinimumOSVersion
+parameter_list|(
+name|uint32_t
+modifier|*
+name|versions
+parameter_list|,
+name|uint32_t
+name|num_versions
+parameter_list|)
+block|{
+if|if
+condition|(
+name|versions
+operator|&&
+name|num_versions
+condition|)
+block|{
+for|for
+control|(
+name|uint32_t
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|num_versions
+condition|;
+operator|++
+name|i
+control|)
+name|versions
+index|[
+name|i
+index|]
+operator|=
+name|UINT32_MAX
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Get the SDK OS version this object file was built with.
+comment|///
+comment|/// The versions arguments and returns values are the same as the
+comment|/// GetMinimumOSVersion()
+comment|//------------------------------------------------------------------
+name|virtual
+name|uint32_t
+name|GetSDKVersion
 parameter_list|(
 name|uint32_t
 modifier|*

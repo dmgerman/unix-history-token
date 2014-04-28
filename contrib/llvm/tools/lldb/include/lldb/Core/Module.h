@@ -232,10 +232,18 @@ comment|///
 comment|/// @param[in] target
 comment|///     The target in which to apply the section load addresses.
 comment|///
-comment|/// @param[in] offset
-comment|///     The offset to apply to all file addresses for all top
-comment|///     level sections in the object file as each section load
-comment|///     address is being set.
+comment|/// @param[in] value
+comment|///     if \a value_is_offset is true, then value is the offset to
+comment|///     apply to all file addresses for all top level sections in
+comment|///     the object file as each section load address is being set.
+comment|///     If \a value_is_offset is false, then "value" is the new
+comment|///     absolute base address for the image.
+comment|///
+comment|/// @param[in] value_is_offset
+comment|///     If \b true, then \a value is an offset to apply to each
+comment|///     file address of each top level section.
+comment|///     If \b false, then \a value is the image base address that
+comment|///     will be used to rigidly slide all loadable sections.
 comment|///
 comment|/// @param[out] changed
 comment|///     If any section load addresses were changed in \a target,
@@ -260,7 +268,10 @@ argument_list|,
 name|lldb
 operator|::
 name|addr_t
-name|offset
+name|value
+argument_list|,
+name|bool
+name|value_is_offset
 argument_list|,
 name|bool
 operator|&
@@ -614,6 +625,67 @@ name|sc_list
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Find addresses by file/line
+comment|///
+comment|/// @param[in] target_sp
+comment|///     The target the addresses are desired for.
+comment|///
+comment|/// @param[in] file
+comment|///     Source file to locate.
+comment|///
+comment|/// @param[in] line
+comment|///     Source line to locate.
+comment|///
+comment|/// @param[in] function
+comment|///	    Optional filter function. Addresses within this function will be
+comment|///     added to the 'local' list. All others will be added to the 'extern' list.
+comment|///
+comment|/// @param[out] output_local
+comment|///     All matching addresses within 'function'
+comment|///
+comment|/// @param[out] output_extern
+comment|///     All matching addresses not within 'function'
+name|void
+name|FindAddressesForLine
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|TargetSP
+name|target_sp
+argument_list|,
+specifier|const
+name|FileSpec
+operator|&
+name|file
+argument_list|,
+name|uint32_t
+name|line
+argument_list|,
+name|Function
+operator|*
+name|function
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|Address
+operator|>
+operator|&
+name|output_local
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|Address
+operator|>
+operator|&
+name|output_extern
+argument_list|)
+decl_stmt|;
+comment|//------------------------------------------------------------------
 comment|/// Find global and static variables by name.
 comment|///
 comment|/// @param[in] name
@@ -906,6 +978,31 @@ name|file
 parameter_list|)
 block|{
 name|m_platform_file
+operator|=
+name|file
+expr_stmt|;
+block|}
+specifier|const
+name|FileSpec
+operator|&
+name|GetRemoteInstallFileSpec
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_remote_install_file
+return|;
+block|}
+name|void
+name|SetRemoteInstallFileSpec
+parameter_list|(
+specifier|const
+name|FileSpec
+modifier|&
+name|file
+parameter_list|)
+block|{
+name|m_remote_install_file
 operator|=
 name|file
 expr_stmt|;
@@ -1215,6 +1312,46 @@ operator|&
 name|so_addr
 argument_list|)
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Resolve the symbol context for the given address.
+comment|///
+comment|/// Tries to resolve the matching symbol context based on a lookup
+comment|/// from the current symbol vendor.  If the lazy lookup fails,
+comment|/// an attempt is made to parse the eh_frame section to handle
+comment|/// stripped symbols.  If this fails, an attempt is made to resolve
+comment|/// the symbol to the previous address to handle the case of a
+comment|/// function with a tail call.
+comment|///
+comment|/// Use properties of the modified SymbolContext to inspect any
+comment|/// resolved target, module, compilation unit, symbol, function,
+comment|/// function block or line entry.  Use the return value to determine
+comment|/// which of these properties have been modified.
+comment|///
+comment|/// @param[in] so_addr
+comment|///     A load address to resolve.
+comment|///
+comment|/// @param[in] resolve_scope
+comment|///     The scope that should be resolved (see SymbolContext::Scope).
+comment|///     A combination of flags from the enumeration SymbolContextItem
+comment|///     requesting a resolution depth.  Note that the flags that are
+comment|///     actually resolved may be a superset of the requested flags.
+comment|///     For instance, eSymbolContextSymbol requires resolution of
+comment|///     eSymbolContextModule, and eSymbolContextFunction requires
+comment|///     eSymbolContextSymbol.
+comment|///
+comment|/// @param[out] sc
+comment|///     The SymbolContext that is modified based on symbol resolution.
+comment|///
+comment|/// @param[in] resolve_tail_call_address
+comment|///     Determines if so_addr should resolve to a symbol in the case
+comment|///     of a function whose last instruction is a call.  In this case,
+comment|///     the PC can be one past the address range of the function.
+comment|///
+comment|/// @return
+comment|///     The scope that has been resolved (see SymbolContext::Scope).
+comment|///
+comment|/// @see SymbolContext::Scope
+comment|//------------------------------------------------------------------
 name|uint32_t
 name|ResolveSymbolContextForAddress
 parameter_list|(
@@ -1229,6 +1366,11 @@ parameter_list|,
 name|SymbolContext
 modifier|&
 name|sc
+parameter_list|,
+name|bool
+name|resolve_tail_call_address
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -2101,6 +2243,16 @@ end_decl_stmt
 
 begin_comment
 comment|///< The path to the module on the platform on which it is being debugged
+end_comment
+
+begin_decl_stmt
+name|FileSpec
+name|m_remote_install_file
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|///< If set when debugging on remote platforms, this module will be installed at this location
 end_comment
 
 begin_decl_stmt

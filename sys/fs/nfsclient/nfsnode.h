@@ -557,6 +557,17 @@ begin_comment
 comment|/* Has been opened for writing */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NHASBEENLOCKED
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Has been file locked. */
+end_comment
+
 begin_comment
 comment|/*  * Convert between nfsnode pointers and vnode pointers  */
 end_comment

@@ -144,7 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apicvar.h>
+file|<x86/apicvar.h>
 end_include
 
 begin_include
@@ -309,6 +309,32 @@ modifier|*
 name|arg
 parameter_list|)
 function_decl|;
+end_typedef
+
+begin_comment
+comment|/* descriptions of MP table entries */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|BASETABLE_ENTRY
+block|{
+name|uint8_t
+name|type
+decl_stmt|;
+name|uint8_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|name
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|basetable_entry
+typedef|;
 end_typedef
 
 begin_decl_stmt
@@ -3672,12 +3698,12 @@ literal|0
 condition|)
 name|pin
 operator|=
-name|LVT_LINT0
+name|APIC_LVT_LINT0
 expr_stmt|;
 else|else
 name|pin
 operator|=
-name|LVT_LINT1
+name|APIC_LVT_LINT1
 expr_stmt|;
 switch|switch
 condition|(
@@ -4082,7 +4108,7 @@ name|lapic_set_lvt_mode
 argument_list|(
 name|APIC_ID_ALL
 argument_list|,
-name|LVT_LINT0
+name|APIC_LVT_LINT0
 argument_list|,
 name|APIC_LVT_DM_EXTINT
 argument_list|)
@@ -4091,7 +4117,7 @@ name|lapic_set_lvt_mode
 argument_list|(
 name|APIC_ID_ALL
 argument_list|,
-name|LVT_LINT1
+name|APIC_LVT_LINT1
 argument_list|,
 name|APIC_LVT_DM_NMI
 argument_list|)

@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -156,7 +150,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apicvar.h>
+file|<x86/apicvar.h>
 end_include
 
 begin_include
@@ -392,7 +386,7 @@ name|struct
 name|lvt
 name|la_lvts
 index|[
-name|LVT_MAX
+name|APIC_LVT_MAX
 operator|+
 literal|1
 index|]
@@ -460,7 +454,7 @@ name|struct
 name|lvt
 name|lvts
 index|[
-name|LVT_MAX
+name|APIC_LVT_MAX
 operator|+
 literal|1
 index|]
@@ -873,7 +867,7 @@ name|KASSERT
 argument_list|(
 name|pin
 operator|<=
-name|LVT_MAX
+name|APIC_LVT_MAX
 argument_list|,
 operator|(
 literal|"%s: pin %u out of range"
@@ -994,6 +988,8 @@ operator|!
 name|lvt
 operator|->
 name|lvt_edgetrigger
+operator|&&
+name|bootverbose
 condition|)
 block|{
 name|printf
@@ -1426,7 +1422,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|LVT_MAX
+name|APIC_LVT_MAX
 condition|;
 name|i
 operator|++
@@ -1673,7 +1669,7 @@ if|if
 condition|(
 name|maxlvt
 operator|>=
-name|LVT_PMC
+name|APIC_LVT_PMC
 condition|)
 name|printf
 argument_list|(
@@ -1693,7 +1689,7 @@ if|if
 condition|(
 name|maxlvt
 operator|>=
-name|LVT_CMCI
+name|APIC_LVT_CMCI
 condition|)
 name|printf
 argument_list|(
@@ -1790,7 +1786,7 @@ name|lvt_mode
 argument_list|(
 name|la
 argument_list|,
-name|LVT_LINT0
+name|APIC_LVT_LINT0
 argument_list|,
 name|lapic
 operator|->
@@ -1805,7 +1801,7 @@ name|lvt_mode
 argument_list|(
 name|la
 argument_list|,
-name|LVT_LINT1
+name|APIC_LVT_LINT1
 argument_list|,
 name|lapic
 operator|->
@@ -1817,7 +1813,7 @@ if|if
 condition|(
 name|maxlvt
 operator|>=
-name|LVT_PMC
+name|APIC_LVT_PMC
 condition|)
 name|lapic
 operator|->
@@ -1827,7 +1823,7 @@ name|lvt_mode
 argument_list|(
 name|la
 argument_list|,
-name|LVT_PMC
+name|APIC_LVT_PMC
 argument_list|,
 name|lapic
 operator|->
@@ -1847,7 +1843,7 @@ name|lvt_mode
 argument_list|(
 name|la
 argument_list|,
-name|LVT_TIMER
+name|APIC_LVT_TIMER
 argument_list|,
 name|lapic
 operator|->
@@ -1959,7 +1955,7 @@ name|lvt_mode
 argument_list|(
 name|la
 argument_list|,
-name|LVT_ERROR
+name|APIC_LVT_ERROR
 argument_list|,
 name|lapic
 operator|->
@@ -1978,7 +1974,7 @@ if|if
 condition|(
 name|maxlvt
 operator|>=
-name|LVT_CMCI
+name|APIC_LVT_CMCI
 condition|)
 name|lapic
 operator|->
@@ -1988,7 +1984,7 @@ name|lvt_mode
 argument_list|(
 name|la
 argument_list|,
-name|LVT_CMCI
+name|APIC_LVT_CMCI
 argument_list|,
 name|lapic
 operator|->
@@ -2076,7 +2072,7 @@ name|lvt_mode
 argument_list|(
 name|la
 argument_list|,
-name|LVT_PMC
+name|APIC_LVT_PMC
 argument_list|,
 name|lapic
 operator|->
@@ -2133,7 +2129,7 @@ if|if
 condition|(
 name|maxlvt
 operator|<
-name|LVT_PMC
+name|APIC_LVT_PMC
 condition|)
 return|return
 operator|(
@@ -2142,7 +2138,7 @@ operator|)
 return|;
 name|lvts
 index|[
-name|LVT_PMC
+name|APIC_LVT_PMC
 index|]
 operator|.
 name|lvt_masked
@@ -2231,12 +2227,12 @@ if|if
 condition|(
 name|maxlvt
 operator|<
-name|LVT_PMC
+name|APIC_LVT_PMC
 condition|)
 return|return;
 name|lvts
 index|[
-name|LVT_PMC
+name|APIC_LVT_PMC
 index|]
 operator|.
 name|lvt_masked
@@ -2867,7 +2863,7 @@ if|if
 condition|(
 name|pin
 operator|>
-name|LVT_MAX
+name|APIC_LVT_MAX
 condition|)
 return|return
 operator|(
@@ -3008,7 +3004,7 @@ if|if
 condition|(
 name|pin
 operator|>
-name|LVT_MAX
+name|APIC_LVT_MAX
 condition|)
 return|return
 operator|(
@@ -3242,7 +3238,7 @@ if|if
 condition|(
 name|pin
 operator|>
-name|LVT_MAX
+name|APIC_LVT_MAX
 operator|||
 name|pol
 operator|==
@@ -3393,7 +3389,7 @@ if|if
 condition|(
 name|pin
 operator|>
-name|LVT_MAX
+name|APIC_LVT_MAX
 operator|||
 name|trigger
 operator|==
@@ -4067,7 +4063,7 @@ index|]
 operator|.
 name|la_lvts
 index|[
-name|LVT_CMCI
+name|APIC_LVT_CMCI
 index|]
 operator|.
 name|lvt_masked
@@ -4081,7 +4077,7 @@ index|]
 operator|.
 name|la_lvts
 index|[
-name|LVT_CMCI
+name|APIC_LVT_CMCI
 index|]
 operator|.
 name|lvt_active

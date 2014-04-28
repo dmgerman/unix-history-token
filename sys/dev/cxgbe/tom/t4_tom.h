@@ -617,6 +617,11 @@ name|sge_ofld_rxq
 modifier|*
 name|ofld_rxq
 decl_stmt|;
+name|struct
+name|clip_entry
+modifier|*
+name|ce
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,

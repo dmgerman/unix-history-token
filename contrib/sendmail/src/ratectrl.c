@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Jose Marcio Martins da Cruz - Ecole des Mines de Paris  *   Jose-Marcio.Martins@ensmp.fr  */
+comment|/*  * Copyright (c) 2003 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Jose Marcio Martins da Cruz - Ecole des Mines de Paris  *   Jose-Marcio.Martins@ensmp.fr  */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ratectrl.c,v 8.13 2009/05/05 23:19:34 ca Exp $"
+literal|"@(#)$Id: ratectrl.c,v 8.14 2013/11/22 20:51:56 ca Exp $"
 argument_list|)
 end_macro
 

@@ -118,6 +118,10 @@ name|uint64_t
 name|tx_synced_txg
 decl_stmt|;
 comment|/* last synced txg id */
+name|hrtime_t
+name|tx_open_time
+decl_stmt|;
+comment|/* start time of tx_open_txg */
 name|uint64_t
 name|tx_sync_txg_waiting
 decl_stmt|;

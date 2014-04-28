@@ -250,17 +250,6 @@ begin_comment
 comment|/* DTrace pid return */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|T_DTRACE_PROBE
-value|33
-end_define
-
-begin_comment
-comment|/* DTrace fasttrap probe */
-end_comment
-
 begin_comment
 comment|/* XXX most of the following codes aren't used, but could be. */
 end_comment

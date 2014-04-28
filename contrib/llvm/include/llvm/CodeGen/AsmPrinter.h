@@ -144,13 +144,16 @@ name|class
 name|MachineModuleInfo
 decl_stmt|;
 name|class
-name|MachineMove
-decl_stmt|;
-name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCCFIInstruction
+decl_stmt|;
+name|class
 name|MCContext
+decl_stmt|;
+name|class
+name|MCInstrInfo
 decl_stmt|;
 name|class
 name|MCSection
@@ -204,6 +207,11 @@ specifier|const
 name|MCAsmInfo
 operator|*
 name|MAI
+block|;
+specifier|const
+name|MCInstrInfo
+operator|*
+name|MII
 block|;
 comment|/// OutContext - This is the context for the output file that we are
 comment|/// streaming.  This owns all of the global MC-related objects for the
@@ -306,6 +314,17 @@ operator|~
 name|AsmPrinter
 argument_list|()
 block|;
+specifier|const
+name|DwarfDebug
+operator|*
+name|getDwarfDebug
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DD
+return|;
+block|}
 comment|/// isVerbose - Return true if assembly output should contain comments.
 comment|///
 name|bool
@@ -352,6 +371,14 @@ name|MCSection
 operator|*
 name|getCurrentSection
 argument_list|()
+specifier|const
+block|;
+name|MCSymbol
+operator|*
+name|getSymbol
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|)
 specifier|const
 block|;
 comment|//===------------------------------------------------------------------===//
@@ -536,14 +563,14 @@ argument|const MachineBasicBlock *MBB
 argument_list|)
 specifier|const
 block|;
-comment|/// EmitGlobalConstant - Print a general LLVM constant to the .s file.
+comment|/// \brief Print a general LLVM constant to the .s file.
 name|void
 name|EmitGlobalConstant
 argument_list|(
-argument|const Constant *CV
-argument_list|,
-argument|unsigned AddrSpace =
-literal|0
+specifier|const
+name|Constant
+operator|*
+name|CV
 argument_list|)
 block|;
 comment|//===------------------------------------------------------------------===//
@@ -633,6 +660,16 @@ name|bool
 name|isBlockOnlyReachableByFallthrough
 argument_list|(
 argument|const MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
+comment|/// emitImplicitDef - Targets can override this to customize the output of
+comment|/// IMPLICIT_DEF instructions in verbose mode.
+name|virtual
+name|void
+name|emitImplicitDef
+argument_list|(
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
@@ -821,6 +858,8 @@ argument_list|,
 argument|uint64_t Offset
 argument_list|,
 argument|unsigned Size
+argument_list|,
+argument|bool IsSectionRelative = false
 argument_list|)
 specifier|const
 block|;
@@ -833,6 +872,8 @@ argument_list|(
 argument|const MCSymbol *Label
 argument_list|,
 argument|unsigned Size
+argument_list|,
+argument|bool IsSectionRelative = false
 argument_list|)
 specifier|const
 block|{
@@ -843,6 +884,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|Size
+argument_list|,
+name|IsSectionRelative
 argument_list|)
 block|;     }
 comment|//===------------------------------------------------------------------===//
@@ -852,7 +895,7 @@ comment|/// EmitSLEB128 - emit the specified signed leb128 value.
 name|void
 name|EmitSLEB128
 argument_list|(
-argument|int Value
+argument|int64_t Value
 argument_list|,
 argument|const char *Desc =
 literal|0
@@ -863,7 +906,7 @@ comment|/// EmitULEB128 - emit the specified unsigned leb128 value.
 name|void
 name|EmitULEB128
 argument_list|(
-argument|unsigned Value
+argument|uint64_t Value
 argument_list|,
 argument|const char *Desc =
 literal|0
@@ -929,16 +972,6 @@ argument|const MCSymbol *SectionLabel
 argument_list|)
 specifier|const
 block|;
-comment|/// getDebugValueLocation - Get location information encoded by DBG_VALUE
-comment|/// operands.
-name|virtual
-name|MachineLocation
-name|getDebugValueLocation
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
 comment|/// getISAEncoding - Get the value for DW_AT_APPLE_isa. Zero if no isa
 comment|/// encoding specified.
 name|virtual
@@ -956,18 +989,19 @@ name|void
 name|EmitDwarfRegOp
 argument_list|(
 argument|const MachineLocation&MLoc
+argument_list|,
+argument|bool Indirect
 argument_list|)
 specifier|const
 block|;
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Lowering Routines
 comment|//===------------------------------------------------------------------===//
-comment|/// EmitCFIFrameMove - Emit frame instruction to describe the layout of the
-comment|/// frame.
+comment|/// \brief Emit frame instruction to describe the layout of the frame.
 name|void
-name|EmitCFIFrameMove
+name|emitCFIInstruction
 argument_list|(
-argument|const MachineMove&Move
+argument|const MCCFIInstruction&Inst
 argument_list|)
 specifier|const
 block|;
@@ -1065,7 +1099,7 @@ argument_list|,
 argument|const MDNode *LocMDNode =
 literal|0
 argument_list|,
-argument|InlineAsm::AsmDialect AsmDialect = InlineAsm::AD_ATT
+argument|InlineAsm::AsmDialect AsmDialect =                            InlineAsm::AD_ATT
 argument_list|)
 specifier|const
 block|;
@@ -1097,7 +1131,7 @@ block|;
 name|void
 name|EmitLinkage
 argument_list|(
-argument|unsigned Linkage
+argument|const GlobalValue *GV
 argument_list|,
 argument|MCSymbol *GVSym
 argument_list|)
@@ -1121,6 +1155,15 @@ specifier|const
 name|ConstantArray
 operator|*
 name|InitList
+argument_list|)
+block|;
+comment|/// Emit llvm.ident metadata in an '.ident' directive.
+name|void
+name|EmitModuleIdents
+argument_list|(
+name|Module
+operator|&
+name|M
 argument_list|)
 block|;
 name|void

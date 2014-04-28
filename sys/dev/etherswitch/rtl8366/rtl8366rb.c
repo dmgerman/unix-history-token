@@ -30,7 +30,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -66,19 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
+file|<net/if_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_dl.h>
 end_include
 
 begin_include

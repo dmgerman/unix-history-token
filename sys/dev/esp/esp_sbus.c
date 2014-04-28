@@ -650,7 +650,6 @@ specifier|static
 specifier|const
 name|struct
 name|ncr53c9x_glue
-specifier|const
 name|esp_sbus_glue
 init|=
 block|{

@@ -307,6 +307,14 @@ name|engine_e_rdrand_name
 argument_list|)
 operator|||
 operator|!
+name|ENGINE_set_flags
+argument_list|(
+name|e
+argument_list|,
+name|ENGINE_FLAGS_NO_REGISTER_ALL
+argument_list|)
+operator|||
+operator|!
 name|ENGINE_set_init_function
 argument_list|(
 name|e

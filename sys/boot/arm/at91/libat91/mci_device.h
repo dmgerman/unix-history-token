@@ -1318,7 +1318,7 @@ begin_define
 define|#
 directive|define
 name|AT91C_CARD_POWER_UP_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

@@ -2412,6 +2412,11 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
+name|mask
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: pacify gcc */
 name|EFSYS_ASSERT3U
 argument_list|(
 name|enp

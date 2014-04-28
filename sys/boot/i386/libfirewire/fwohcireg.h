@@ -987,7 +987,7 @@ comment|/* HCC control clr 0x54 */
 define|#
 directive|define
 name|OHCI_HCC_BIBIV
-value|(1<< 31)
+value|(1U<< 31)
 comment|/* BIBimage Valid */
 define|#
 directive|define
@@ -1163,7 +1163,7 @@ comment|/* Node ID 0xe8 */
 define|#
 directive|define
 name|OHCI_NODE_VALID
-value|(1<< 31)
+value|(1U<< 31)
 define|#
 directive|define
 name|OHCI_NODE_ROOT

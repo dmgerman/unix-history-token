@@ -1331,7 +1331,7 @@ block|{
 comment|/* ### Issue #3014: Return a specific error for broken pipes,            * ### with a single element in the error chain. */
 if|if
 condition|(
-name|APR_STATUS_IS_EPIPE
+name|SVN__APR_STATUS_IS_EPIPE
 argument_list|(
 name|apr_get_os_error
 argument_list|()
@@ -1414,7 +1414,7 @@ block|{
 comment|/* ### Issue #3014: Return a specific error for broken pipes,            * ### with a single element in the error chain. */
 if|if
 condition|(
-name|APR_STATUS_IS_EPIPE
+name|SVN__APR_STATUS_IS_EPIPE
 argument_list|(
 name|apr_get_os_error
 argument_list|()
@@ -1836,7 +1836,7 @@ argument_list|)
 operator|=
 name|provider
 expr_stmt|;
-comment|/* The server-cert, client-cert, and client-cert-password providers. */
+comment|/* The windows ssl server certificate CRYPTOAPI provider. */
 name|SVN_ERR
 argument_list|(
 name|svn_auth_get_platform_specific_provider
@@ -1847,6 +1847,36 @@ argument_list|,
 literal|"windows"
 argument_list|,
 literal|"ssl_server_trust"
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|provider
+condition|)
+name|APR_ARRAY_PUSH
+argument_list|(
+name|providers
+argument_list|,
+name|svn_auth_provider_object_t
+operator|*
+argument_list|)
+operator|=
+name|provider
+expr_stmt|;
+comment|/* The windows ssl authority certificate CRYPTOAPI provider. */
+name|SVN_ERR
+argument_list|(
+name|svn_auth_get_platform_specific_provider
+argument_list|(
+operator|&
+name|provider
+argument_list|,
+literal|"windows"
+argument_list|,
+literal|"ssl_server_authority"
 argument_list|,
 name|pool
 argument_list|)

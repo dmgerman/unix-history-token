@@ -2003,6 +2003,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|bool
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|empty
 argument_list|()
 specifier|const
@@ -2781,6 +2782,7 @@ end_comment
 
 begin_expr_stmt
 name|size_type
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|size
 argument_list|()
 specifier|const

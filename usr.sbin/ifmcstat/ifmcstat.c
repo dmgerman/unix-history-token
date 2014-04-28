@@ -63,6 +63,12 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_IFADDR
+end_define
+
 begin_include
 include|#
 directive|include
@@ -443,19 +449,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|sa_equal
-parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
-define|\
-value|(bcmp((a1), (a2), ((a1))->sa_len) == 0)
-end_define
 
 begin_define
 define|#

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_media.h>
 end_include
 
@@ -447,23 +453,6 @@ name|ieee80211_newstate_cb
 parameter_list|(
 name|void
 modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ieee80211_new_state_locked
-parameter_list|(
-name|struct
-name|ieee80211vap
-modifier|*
-parameter_list|,
-name|enum
-name|ieee80211_state
 parameter_list|,
 name|int
 parameter_list|)
@@ -2137,7 +2126,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 block|{
 name|int
@@ -8716,7 +8705,6 @@ comment|/*  * Public interface for initiating a state machine change.  * This ro
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ieee80211_new_state_locked
 parameter_list|(

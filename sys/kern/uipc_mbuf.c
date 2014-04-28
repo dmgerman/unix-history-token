@@ -2689,10 +2689,7 @@ name|to
 argument_list|,
 name|from
 argument_list|,
-name|MBTOM
-argument_list|(
 name|how
-argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -6063,6 +6060,12 @@ operator|->
 name|m_type
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+name|NULL
+condition|)
 return|return
 operator|(
 name|NULL

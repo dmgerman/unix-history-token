@@ -239,6 +239,21 @@ directive|endif
 end_endif
 
 begin_function
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"wlanstats: [-ah] [-i ifname] [-l] [-o fmt] [interval]\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -323,7 +338,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ai:lm:o:"
+literal|"ahi:lm:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -343,6 +358,17 @@ name|allnodes
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'h'
+case|:
+name|usage
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 case|case
 literal|'i'
 case|:
@@ -419,17 +445,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|errx
+name|usage
+argument_list|()
+expr_stmt|;
+name|exit
 argument_list|(
-operator|-
 literal|1
-argument_list|,
-literal|"usage: %s [-a] [-i ifname] [-l] [-o fmt] [interval]\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/

@@ -1714,10 +1714,7 @@ name|humanize_number
 argument_list|(
 name|buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+literal|6
 argument_list|,
 name|info
 operator|->
@@ -4387,6 +4384,10 @@ name|prog_info
 operator|.
 name|clear
 argument_list|)
+expr_stmt|;
+name|busy
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}

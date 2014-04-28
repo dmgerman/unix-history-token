@@ -56,6 +56,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_OAK
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x080a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_BAY
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x0f04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_HSW1
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x0a0c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_HSW2
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x0c0c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_HSW3
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x0d0c)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_CPT
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x1c20)
 end_define
@@ -140,6 +175,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_MACBOOKPRO92
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x7270)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_SCH
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x811b)
 end_define
@@ -156,6 +198,34 @@ define|#
 directive|define
 name|HDA_INTEL_LPT2
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x8c21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_WELLS1
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x8d20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_WELLS2
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x8d21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_LPTLP1
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x9c20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_LPTLP2
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x9c21)
 end_define
 
 begin_define
@@ -700,6 +770,13 @@ end_comment
 begin_comment
 comment|/* Intel */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|INTEL_DH87RL_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x204a)
+end_define
 
 begin_define
 define|#
@@ -1337,8 +1414,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|APPLE_MACBOOKAIR31
+value|0x0d9410de
+end_define
+
+begin_define
+define|#
+directive|define
 name|APPLE_MACBOOKPRO55
 value|0xcb7910de
+end_define
+
+begin_define
+define|#
+directive|define
+name|APPLE_MACBOOKPRO71
+value|0xcb8910de
 end_define
 
 begin_comment
@@ -3520,6 +3611,13 @@ define|#
 directive|define
 name|HDA_CODEC_INTELPPT
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2806)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELHSW
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2807)
 end_define
 
 begin_define

@@ -110,12 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -148,12 +142,6 @@ include|#
 directive|include
 file|"gpio_if.h"
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
 
 begin_ifdef
 ifdef|#
@@ -2806,7 +2794,7 @@ name|OID_AUTO
 argument_list|,
 literal|"pin"
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 name|NULL
 argument_list|,
@@ -3292,6 +3280,19 @@ block|{
 if|if
 condition|(
 operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+operator|!
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
@@ -3730,6 +3731,30 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|phandle_t
+name|bcm_gpio_get_node
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+block|{
+comment|/* We only have one child, the GPIO bus, which needs our own node. */
+return|return
+operator|(
+name|ofw_bus_get_node
+argument_list|(
+name|bus
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -3814,6 +3839,14 @@ argument_list|(
 name|gpio_pin_toggle
 argument_list|,
 name|bcm_gpio_pin_toggle
+argument_list|)
+block|,
+comment|/* ofw_bus interface */
+name|DEVMETHOD
+argument_list|(
+name|ofw_bus_get_node
+argument_list|,
+name|bcm_gpio_get_node
 argument_list|)
 block|,
 name|DEVMETHOD_END

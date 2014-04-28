@@ -85,6 +85,81 @@ directive|include
 file|"ELFHeader.h"
 end_include
 
+begin_struct
+struct|struct
+name|ELFNote
+block|{
+name|elf
+operator|::
+name|elf_word
+name|n_namesz
+expr_stmt|;
+name|elf
+operator|::
+name|elf_word
+name|n_descsz
+expr_stmt|;
+name|elf
+operator|::
+name|elf_word
+name|n_type
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|n_name
+expr_stmt|;
+name|ELFNote
+argument_list|()
+operator|:
+name|n_namesz
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|n_descsz
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|n_type
+argument_list|(
+literal|0
+argument_list|)
+block|{     }
+comment|/// Parse an ELFNote entry from the given DataExtractor starting at position
+comment|/// \p offset.
+comment|///
+comment|/// @param[in] data
+comment|///    The DataExtractor to read from.
+comment|///
+comment|/// @param[in,out] offset
+comment|///    Pointer to an offset in the data.  On return the offset will be
+comment|///    advanced by the number of bytes read.
+comment|///
+comment|/// @return
+comment|///    True if the ELFRel entry was successfully read and false otherwise.
+name|bool
+name|Parse
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|data
+argument_list|,
+name|lldb
+operator|::
+name|offset_t
+operator|*
+name|offset
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|//------------------------------------------------------------------------------
 end_comment
@@ -240,6 +315,17 @@ name|ParseHeader
 argument_list|()
 block|;
 name|virtual
+name|bool
+name|SetLoadAddress
+argument_list|(
+argument|lldb_private::Target&target
+argument_list|,
+argument|lldb::addr_t value
+argument_list|,
+argument|bool value_is_offset
+argument_list|)
+block|;
+name|virtual
 name|lldb
 operator|::
 name|ByteOrder
@@ -266,6 +352,18 @@ name|Symtab
 operator|*
 name|GetSymtab
 argument_list|()
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Symbol
+operator|*
+name|ResolveSymbolForAddress
+argument_list|(
+argument|const lldb_private::Address& so_addr
+argument_list|,
+argument|bool verify_unique
+argument_list|)
 block|;
 name|virtual
 name|bool
@@ -339,7 +437,13 @@ name|lldb_private
 operator|::
 name|Address
 name|GetImageInfoAddress
-argument_list|()
+argument_list|(
+name|lldb_private
+operator|::
+name|Target
+operator|*
+name|target
+argument_list|)
 block|;
 name|virtual
 name|lldb_private

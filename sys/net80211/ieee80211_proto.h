@@ -2102,6 +2102,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ieee80211_new_state_locked
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|enum
+name|ieee80211_state
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ieee80211_print_essid
 parameter_list|(

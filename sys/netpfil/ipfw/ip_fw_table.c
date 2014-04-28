@@ -365,6 +365,12 @@ name|OFF_LEN_IFACE
 value|(8 * offsetof(struct xaddr_iface, ifname))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function
 specifier|static
 specifier|inline
@@ -435,6 +441,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -2755,12 +2766,10 @@ operator|)
 operator|(
 name|rnh
 operator|->
-name|rnh_lookup
+name|rnh_matchaddr
 argument_list|(
 operator|&
 name|sa
-argument_list|,
-name|NULL
 argument_list|,
 name|rnh
 argument_list|)
@@ -2908,12 +2917,10 @@ operator|)
 operator|(
 name|rnh
 operator|->
-name|rnh_lookup
+name|rnh_matchaddr
 argument_list|(
 operator|&
 name|sa6
-argument_list|,
-name|NULL
 argument_list|,
 name|rnh
 argument_list|)
@@ -2959,12 +2966,10 @@ operator|)
 operator|(
 name|rnh
 operator|->
-name|rnh_lookup
+name|rnh_matchaddr
 argument_list|(
 operator|&
 name|iface
-argument_list|,
-name|NULL
 argument_list|,
 name|rnh
 argument_list|)

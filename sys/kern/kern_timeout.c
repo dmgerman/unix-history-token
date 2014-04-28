@@ -23,12 +23,6 @@ directive|include
 file|"opt_callout_profiling.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_kdtrace.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -198,11 +192,7 @@ name|callout_execute
 argument_list|,
 name|kernel
 argument_list|, ,
-name|callout_start
-argument_list|,
-name|callout
-operator|-
-name|start
+name|callout__start
 argument_list|,
 literal|"struct callout *"
 argument_list|)
@@ -216,11 +206,7 @@ name|callout_execute
 argument_list|,
 name|kernel
 argument_list|, ,
-name|callout_end
-argument_list|,
-name|callout
-operator|-
-name|end
+name|callout__end
 argument_list|,
 literal|"struct callout *"
 argument_list|)
@@ -1283,7 +1269,7 @@ name|cc
 operator|->
 name|cc_firstevent
 operator|=
-name|INT64_MAX
+name|SBT_MAX
 expr_stmt|;
 for|for
 control|(
@@ -1490,6 +1476,12 @@ name|callout_cpu
 modifier|*
 name|cc
 decl_stmt|;
+name|char
+name|name
+index|[
+name|MAXCOMLEN
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -1505,6 +1497,20 @@ argument_list|(
 name|timeout_cpu
 argument_list|)
 expr_stmt|;
+name|snprintf
+argument_list|(
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
+argument_list|,
+literal|"clock (%d)"
+argument_list|,
+name|timeout_cpu
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|swi_add
@@ -1512,7 +1518,7 @@ argument_list|(
 operator|&
 name|clk_intr_event
 argument_list|,
-literal|"clock"
+name|name
 argument_list|,
 name|softclock
 argument_list|,
@@ -1567,13 +1573,27 @@ argument_list|(
 name|cc
 argument_list|)
 expr_stmt|;
+name|snprintf
+argument_list|(
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
+argument_list|,
+literal|"clock (%d)"
+argument_list|,
+name|cpu
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|swi_add
 argument_list|(
 name|NULL
 argument_list|,
-literal|"clock"
+name|name
 argument_list|,
 name|softclock
 argument_list|,
@@ -2534,7 +2554,7 @@ name|NO_EVENTTIMERS
 comment|/* 	 * Inform the eventtimers(4) subsystem there's a new callout 	 * that has been inserted, but only if really required. 	 */
 if|if
 condition|(
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|c
 operator|->
@@ -2548,7 +2568,7 @@ name|c
 operator|->
 name|c_precision
 operator|=
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|c
 operator|->
@@ -3114,7 +3134,7 @@ name|callout_execute
 argument_list|,
 name|kernel
 argument_list|, ,
-name|callout_start
+name|callout__start
 argument_list|,
 name|c
 argument_list|,
@@ -3138,7 +3158,7 @@ name|callout_execute
 argument_list|,
 name|kernel
 argument_list|, ,
-name|callout_end
+name|callout__end
 argument_list|,
 name|c
 argument_list|,
@@ -4187,7 +4207,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|to_sbt
 operator|<
@@ -4195,7 +4215,7 @@ name|sbt
 condition|)
 name|to_sbt
 operator|=
-name|INT64_MAX
+name|SBT_MAX
 expr_stmt|;
 else|else
 name|to_sbt

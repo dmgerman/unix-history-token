@@ -3126,6 +3126,9 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'i'
+case|:
+case|case
 literal|'I'
 case|:
 name|s

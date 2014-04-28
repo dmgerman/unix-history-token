@@ -1401,9 +1401,11 @@ expr_stmt|;
 block|}
 name|tmpfd
 operator|=
-name|mkstemp
+name|mkostemp
 argument_list|(
 name|tmpfil
+argument_list|,
+name|O_CLOEXEC
 argument_list|)
 expr_stmt|;
 name|fchown

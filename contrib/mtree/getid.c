@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: getid.c,v 1.7 2008/04/28 20:24:17 martin Exp $	*/
+comment|/*	$NetBSD: getid.c,v 1.8 2013/10/16 17:27:42 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -45,7 +45,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: getid.c,v 1.7 2008/04/28 20:24:17 martin Exp $"
+literal|"$NetBSD: getid.c,v 1.8 2013/10/16 17:27:42 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -865,6 +865,17 @@ condition|)
 empty_stmt|;
 continue|continue;
 block|}
+comment|/* skip comments */
+if|if
+condition|(
+name|pwline
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 if|if
 condition|(
 name|grmatchline
@@ -1511,6 +1522,17 @@ condition|)
 empty_stmt|;
 continue|continue;
 block|}
+comment|/* skip comments */
+if|if
+condition|(
+name|pwline
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 if|if
 condition|(
 name|pwmatchline

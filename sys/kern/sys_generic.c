@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -230,7 +230,7 @@ begin_decl_stmt
 name|int
 name|iosize_max_clamp
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +251,35 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Clamp max i/o size to INT_MAX"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|devfs_iosize_max_clamp
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|devfs_iosize_max_clamp
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|devfs_iosize_max_clamp
+argument_list|,
+literal|0
+argument_list|,
+literal|"Clamp max i/o size to INT_MAX for devices"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5213,7 +5242,7 @@ if|if
 condition|(
 name|asbt
 operator|<=
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|rsbt
 condition|)
@@ -5728,6 +5757,14 @@ block|{
 name|cap_rights_t
 name|rights
 decl_stmt|;
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_EVENT
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|fget_unlocked
@@ -5736,13 +5773,8 @@ name|fdp
 argument_list|,
 name|fd
 argument_list|,
-name|cap_rights_init
-argument_list|(
 operator|&
 name|rights
-argument_list|,
-name|CAP_POLL_EVENT
-argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -6806,7 +6838,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 argument_list|)
 argument_list|)
 operator|!=
@@ -7177,7 +7209,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 argument_list|)
 argument_list|)
 operator|!=
@@ -7501,7 +7533,7 @@ if|if
 condition|(
 name|asbt
 operator|<=
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|rsbt
 condition|)

@@ -5592,6 +5592,13 @@ name|halSerialiseRegWar
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * AR5416 and later NICs support MYBEACON filtering. 	 */
+name|pCap
+operator|->
+name|halRxDoMyBeacon
+operator|=
+name|AH_TRUE
+expr_stmt|;
 return|return
 name|AH_TRUE
 return|;

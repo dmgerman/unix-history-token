@@ -147,6 +147,10 @@ decl_stmt|;
 name|uint16_t
 name|sc_ndisks
 decl_stmt|;
+name|struct
+name|mtx
+name|sc_lock
+decl_stmt|;
 block|}
 struct|;
 end_struct

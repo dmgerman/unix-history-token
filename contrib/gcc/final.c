@@ -1129,21 +1129,17 @@ begin_comment
 comment|/* After shorten_branches, for any insn, uid_align[INSN_UID (insn)]    gives the next following alignment insn that increases the known    alignment, or NULL_RTX if there is no such insn.    For any alignment obtained this way, we can again index uid_align with    its uid to obtain the next following align that in turn increases the    alignment, till we reach NULL_RTX; the sequence obtained this way    for each insn we'll call the alignment chain of this insn in the following    comments.  */
 end_comment
 
-begin_struct
-struct|struct
-name|label_alignment
-block|{
-name|short
-name|alignment
-decl_stmt|;
-name|short
-name|max_skip
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
+begin_comment
+unit|\
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
 
 begin_decl_stmt
+unit|\
 specifier|static
 name|rtx
 modifier|*
@@ -1159,16 +1155,17 @@ name|uid_shuid
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|label_alignment
-modifier|*
-name|label_align
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
 
 begin_comment
+unit|\
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
+begin_comment
+unit|\
 comment|/* Indicate that branch shortening hasn't yet been done.  */
 end_comment
 
@@ -1823,38 +1820,17 @@ parameter_list|)
 value|(uid_shuid[INSN_UID (INSN)])
 end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|min_labelno
-decl_stmt|,
-name|max_labelno
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|LABEL_TO_ALIGNMENT
-parameter_list|(
-name|LABEL
-parameter_list|)
-define|\
-value|(label_align[CODE_LABEL_NUMBER (LABEL) - min_labelno].alignment)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LABEL_TO_MAX_SKIP
-parameter_list|(
-name|LABEL
-parameter_list|)
-define|\
-value|(label_align[CODE_LABEL_NUMBER (LABEL) - min_labelno].max_skip)
-end_define
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
 
 begin_comment
+unit|\
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
+begin_comment
+unit|\
 comment|/* For the benefit of port specific code do this also as a function.  */
 end_comment
 
@@ -1866,13 +1842,16 @@ name|rtx
 name|label
 parameter_list|)
 block|{
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 return|return
-name|LABEL_TO_ALIGNMENT
+name|LABEL_ALIGN_LOG
 argument_list|(
 name|label
 argument_list|)
 return|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\ }
 end_function
 
 begin_ifdef
@@ -1992,13 +1971,17 @@ operator|>
 name|end_shuid
 condition|)
 break|break;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|known_align_log
 operator|=
-name|LABEL_TO_ALIGNMENT
+name|LABEL_ALIGN_LOG
 argument_list|(
 name|align_label
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|new_align
 operator|=
 literal|1
@@ -2190,55 +2173,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|log
-decl_stmt|,
-name|max_skip
-decl_stmt|,
-name|max_log
-decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|basic_block
 name|bb
 decl_stmt|;
-if|if
-condition|(
-name|label_align
-condition|)
-block|{
-name|free
-argument_list|(
-name|label_align
-argument_list|)
-expr_stmt|;
-name|label_align
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|max_labelno
-operator|=
-name|max_label_num
-argument_list|()
-expr_stmt|;
-name|min_labelno
-operator|=
-name|get_first_label_num
-argument_list|()
-expr_stmt|;
-name|label_align
-operator|=
-name|XCNEWVEC
-argument_list|(
-expr|struct
-name|label_alignment
-argument_list|,
-name|max_labelno
-operator|-
-name|min_labelno
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 comment|/* If not optimizing or optimizing for size, don't assign any alignments.  */
 if|if
 condition|(
@@ -2282,6 +2227,17 @@ decl_stmt|;
 name|edge_iterator
 name|ei
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|int
+name|log
+decl_stmt|,
+name|max_skip
+decl_stmt|,
+name|max_log
+decl_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 if|if
 condition|(
 operator|!
@@ -2296,6 +2252,21 @@ name|bb
 argument_list|)
 condition|)
 continue|continue;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+comment|/* If user has specified an alignment, honour it.  */
+if|if
+condition|(
+name|LABEL_ALIGN_LOG
+argument_list|(
+name|label
+argument_list|)
+operator|>
+literal|0
+condition|)
+continue|continue;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|max_log
 operator|=
 name|LABEL_ALIGN
@@ -2460,21 +2431,19 @@ name|LOOP_ALIGN_MAX_SKIP
 expr_stmt|;
 block|}
 block|}
-name|LABEL_TO_ALIGNMENT
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|SET_LABEL_ALIGN
 argument_list|(
 name|label
-argument_list|)
-operator|=
+argument_list|,
 name|max_log
-expr_stmt|;
-name|LABEL_TO_MAX_SKIP
-argument_list|(
-name|label
-argument_list|)
-operator|=
+argument_list|,
 name|max_skip
+argument_list|)
 expr_stmt|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\     }
 return|return
 literal|0
 return|;
@@ -2597,7 +2566,11 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* Compute maximum UID and allocate label_align / uid_shuid.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+comment|/* Compute maximum UID and allocate uid_shuid.  */
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|max_uid
 operator|=
 name|get_max_uid
@@ -2618,92 +2591,9 @@ argument_list|,
 name|max_uid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|max_labelno
-operator|!=
-name|max_label_num
-argument_list|()
-condition|)
-block|{
-name|int
-name|old
-init|=
-name|max_labelno
-decl_stmt|;
-name|int
-name|n_labels
-decl_stmt|;
-name|int
-name|n_old_labels
-decl_stmt|;
-name|max_labelno
-operator|=
-name|max_label_num
-argument_list|()
-expr_stmt|;
-name|n_labels
-operator|=
-name|max_labelno
-operator|-
-name|min_labelno
-operator|+
-literal|1
-expr_stmt|;
-name|n_old_labels
-operator|=
-name|old
-operator|-
-name|min_labelno
-operator|+
-literal|1
-expr_stmt|;
-name|label_align
-operator|=
-name|xrealloc
-argument_list|(
-name|label_align
-argument_list|,
-name|n_labels
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|label_alignment
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Range of labels grows monotonically in the function.  Failing here          means that the initialization of array got lost.  */
-name|gcc_assert
-argument_list|(
-name|n_old_labels
-operator|<=
-name|n_labels
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|label_align
-operator|+
-name|n_old_labels
-argument_list|,
-literal|0
-argument_list|,
-operator|(
-name|n_labels
-operator|-
-name|n_old_labels
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|label_alignment
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Initialize label_align and set up uid_shuid to be strictly      monotonically rising with insn order.  */
+comment|/* APPLE LOCAL for-fsf-4_4 3274130 5295549 */
+block|\
+comment|/* Initialize set up uid_shuid to be strictly      monotonically rising with insn order.  */
 comment|/* We use max_log here to keep track of the maximum alignment we want to      impose on the next CODE_LABEL (or the current one if we are processing      the CODE_LABEL itself).  */
 name|max_log
 operator|=
@@ -2765,13 +2655,17 @@ name|rtx
 name|next
 decl_stmt|;
 comment|/* Merge in alignments computed by compute_alignments.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|log
 operator|=
-name|LABEL_TO_ALIGNMENT
+name|LABEL_ALIGN_LOG
 argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 if|if
 condition|(
 name|max_log
@@ -2783,14 +2677,17 @@ name|max_log
 operator|=
 name|log
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|max_skip
 operator|=
-name|LABEL_TO_MAX_SKIP
+name|LABEL_MAX_SKIP
 argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\ 	    }
 name|log
 operator|=
 name|LABEL_ALIGN
@@ -2890,20 +2787,19 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|LABEL_TO_ALIGNMENT
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|SET_LABEL_ALIGN
 argument_list|(
 name|insn
-argument_list|)
-operator|=
+argument_list|,
 name|max_log
-expr_stmt|;
-name|LABEL_TO_MAX_SKIP
-argument_list|(
-name|insn
-argument_list|)
-operator|=
+argument_list|,
 name|max_skip
+argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|max_log
 operator|=
 literal|0
@@ -3071,6 +2967,8 @@ decl_stmt|;
 name|int
 name|log
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|log
 operator|=
 operator|(
@@ -3079,7 +2977,7 @@ argument_list|(
 name|seq
 argument_list|)
 condition|?
-name|LABEL_TO_ALIGNMENT
+name|LABEL_ALIGN_LOG
 argument_list|(
 name|seq
 argument_list|)
@@ -3087,6 +2985,8 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|uid_align
 index|[
 name|uid
@@ -3344,23 +3244,29 @@ operator|=
 name|lab
 expr_stmt|;
 block|}
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 if|if
 condition|(
 name|min_align
 operator|>
-name|LABEL_TO_ALIGNMENT
+operator|(
+name|int
+operator|)
+name|LABEL_ALIGN_LOG
 argument_list|(
 name|lab
 argument_list|)
 condition|)
 name|min_align
 operator|=
-name|LABEL_TO_ALIGNMENT
+name|LABEL_ALIGN_LOG
 argument_list|(
 name|lab
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\ 	    }
 name|XEXP
 argument_list|(
 name|pat
@@ -3536,14 +3442,18 @@ name|insn
 argument_list|)
 condition|)
 block|{
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|int
 name|log
 init|=
-name|LABEL_TO_ALIGNMENT
+name|LABEL_ALIGN_LOG
 argument_list|(
 name|insn
 argument_list|)
 decl_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 if|if
 condition|(
 name|log
@@ -4055,14 +3965,18 @@ name|insn
 argument_list|)
 condition|)
 block|{
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|int
 name|log
 init|=
-name|LABEL_TO_ALIGNMENT
+name|LABEL_ALIGN_LOG
 argument_list|(
 name|insn
 argument_list|)
 decl_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 if|if
 condition|(
 name|log
@@ -4344,13 +4258,17 @@ operator|&
 literal|2
 condition|)
 block|{
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|rel_align
 operator|=
-name|LABEL_TO_ALIGNMENT
+name|LABEL_ALIGN_LOG
 argument_list|(
 name|prev
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 break|break;
 block|}
 comment|/* See the comment on addr_diff_vec_flags in rtl.h for the 		 meaning of the flags values.  base: REL_LAB   vec: INSN  */
@@ -5306,6 +5224,30 @@ argument_list|)
 argument_list|)
 operator|=
 literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|warn_frame_larger_than
+operator|&&
+name|get_frame_size
+argument_list|()
+operator|>
+name|frame_larger_than_size
+condition|)
+block|{
+comment|/* Issue a warning */
+name|warning
+argument_list|(
+name|OPT_Wframe_larger_than_
+argument_list|,
+literal|"the frame size of %wd bytes is larger than %wd bytes"
+argument_list|,
+name|get_frame_size
+argument_list|()
+argument_list|,
+name|frame_larger_than_size
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* First output the function prologue: code to set up the stack frame.  */
@@ -6809,20 +6751,13 @@ case|case
 name|CODE_LABEL
 case|:
 comment|/* The target port might emit labels in the output function for 	 some insn, e.g. sh.c output_branchy_insn.  */
-if|if
-condition|(
-name|CODE_LABEL_NUMBER
-argument_list|(
-name|insn
-argument_list|)
-operator|<=
-name|max_labelno
-condition|)
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 block|{
 name|int
 name|align
 init|=
-name|LABEL_TO_ALIGNMENT
+name|LABEL_ALIGN_LOG
 argument_list|(
 name|insn
 argument_list|)
@@ -6833,7 +6768,7 @@ name|ASM_OUTPUT_MAX_SKIP_ALIGN
 name|int
 name|max_skip
 init|=
-name|LABEL_TO_MAX_SKIP
+name|LABEL_MAX_SKIP
 argument_list|(
 name|insn
 argument_list|)
@@ -6889,8 +6824,10 @@ endif|#
 directive|endif
 block|}
 block|}
-ifdef|#
-directive|ifdef
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
+operator|#
+name|ifdef
 name|HAVE_cc0
 name|CC_STATUS_INIT
 expr_stmt|;

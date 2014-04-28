@@ -124,6 +124,41 @@ literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
+comment|/// ValueMaterializer - This is a class that can be implemented by clients
+comment|/// to materialize Values on demand.
+name|class
+name|ValueMaterializer
+block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+comment|// Out of line method.
+name|public
+label|:
+name|virtual
+operator|~
+name|ValueMaterializer
+argument_list|()
+block|{}
+comment|/// materializeValueFor - The client should implement this method if they
+comment|/// want to generate a mapped Value on demand. For example, if linking
+comment|/// lazily.
+name|virtual
+name|Value
+operator|*
+name|materializeValueFor
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/// RemapFlags - These are flags that the value mapping APIs allow.
 enum|enum
 name|RemapFlags
@@ -198,6 +233,12 @@ modifier|*
 name|TypeMapper
 init|=
 literal|0
+parameter_list|,
+name|ValueMaterializer
+modifier|*
+name|Materializer
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|void
@@ -219,6 +260,12 @@ parameter_list|,
 name|ValueMapTypeRemapper
 modifier|*
 name|TypeMapper
+init|=
+literal|0
+parameter_list|,
+name|ValueMaterializer
+modifier|*
+name|Materializer
 init|=
 literal|0
 parameter_list|)
@@ -249,6 +296,12 @@ modifier|*
 name|TypeMapper
 init|=
 literal|0
+parameter_list|,
+name|ValueMaterializer
+modifier|*
+name|Materializer
+init|=
+literal|0
 parameter_list|)
 block|{
 return|return
@@ -271,6 +324,8 @@ argument_list|,
 name|Flags
 argument_list|,
 name|TypeMapper
+argument_list|,
+name|Materializer
 argument_list|)
 operator|)
 return|;
@@ -299,6 +354,12 @@ modifier|*
 name|TypeMapper
 init|=
 literal|0
+parameter_list|,
+name|ValueMaterializer
+modifier|*
+name|Materializer
+init|=
+literal|0
 parameter_list|)
 block|{
 return|return
@@ -321,6 +382,8 @@ argument_list|,
 name|Flags
 argument_list|,
 name|TypeMapper
+argument_list|,
+name|Materializer
 argument_list|)
 operator|)
 return|;

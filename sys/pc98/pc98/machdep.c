@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_atalk.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_atpic.h"
 end_include
 
@@ -57,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ipx.h"
 end_include
 
 begin_include
@@ -99,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"opt_perfmon.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_kdtrace.h"
 end_include
 
 begin_include
@@ -518,6 +500,12 @@ directive|include
 file|<machine/vm86.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<x86/init.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -561,7 +549,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/apicvar.h>
+file|<x86/apicvar.h>
 end_include
 
 begin_endif
@@ -1087,6 +1075,29 @@ name|mem_range_softc
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Default init_ops implementation. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|init_ops
+name|init_ops
+init|=
+block|{
+operator|.
+name|early_clock_source_init
+operator|=
+name|i8254_init
+block|,
+operator|.
+name|early_delay
+operator|=
+name|i8254_delay
+block|,  }
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1251,7 +1262,7 @@ argument_list|(
 operator|(
 name|uintmax_t
 operator|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
@@ -1261,7 +1272,7 @@ argument_list|(
 operator|(
 name|uintmax_t
 operator|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
@@ -3933,6 +3944,26 @@ name|p_sysent
 operator|->
 name|sv_sigcode_base
 expr_stmt|;
+if|if
+condition|(
+name|regs
+operator|->
+name|tf_eip
+operator|==
+literal|0
+condition|)
+name|regs
+operator|->
+name|tf_eip
+operator|=
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_psstrings
+operator|-
+name|szsigcode
+expr_stmt|;
 name|regs
 operator|->
 name|tf_eflags
@@ -4316,23 +4347,16 @@ block|}
 else|else
 block|{
 comment|/* 		 * Don't allow users to change privileged or reserved flags. 		 */
-comment|/* 		 * XXX do allow users to change the privileged flag PSL_RF. 		 * The cpu sets PSL_RF in tf_eflags for faults.  Debuggers 		 * should sometimes set it there too.  tf_eflags is kept in 		 * the signal context during signal handling and there is no 		 * other place to remember it, so the PSL_RF bit may be 		 * corrupted by the signal handler without us knowing. 		 * Corruption of the PSL_RF bit at worst causes one more or 		 * one less debugger trap, so allowing it is fairly harmless. 		 */
 if|if
 condition|(
 operator|!
 name|EFL_SECURE
 argument_list|(
 name|eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|,
 name|regs
 operator|->
 name|tf_eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|)
 condition|)
 block|{
@@ -4959,23 +4983,16 @@ block|}
 else|else
 block|{
 comment|/* 		 * Don't allow users to change privileged or reserved flags. 		 */
-comment|/* 		 * XXX do allow users to change the privileged flag PSL_RF. 		 * The cpu sets PSL_RF in tf_eflags for faults.  Debuggers 		 * should sometimes set it there too.  tf_eflags is kept in 		 * the signal context during signal handling and there is no 		 * other place to remember it, so the PSL_RF bit may be 		 * corrupted by the signal handler without us knowing. 		 * Corruption of the PSL_RF bit at worst causes one more or 		 * one less debugger trap, so allowing it is fairly harmless. 		 */
 if|if
 condition|(
 operator|!
 name|EFL_SECURE
 argument_list|(
 name|eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|,
 name|regs
 operator|->
 name|tf_eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|)
 condition|)
 block|{
@@ -5525,23 +5542,16 @@ block|}
 else|else
 block|{
 comment|/* 		 * Don't allow users to change privileged or reserved flags. 		 */
-comment|/* 		 * XXX do allow users to change the privileged flag PSL_RF. 		 * The cpu sets PSL_RF in tf_eflags for faults.  Debuggers 		 * should sometimes set it there too.  tf_eflags is kept in 		 * the signal context during signal handling and there is no 		 * other place to remember it, so the PSL_RF bit may be 		 * corrupted by the signal handler without us knowing. 		 * Corruption of the PSL_RF bit at worst causes one more or 		 * one less debugger trap, so allowing it is fairly harmless. 		 */
 if|if
 condition|(
 operator|!
 name|EFL_SECURE
 argument_list|(
 name|eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|,
 name|regs
 operator|->
 name|tf_eflags
-operator|&
-operator|~
-name|PSL_RF
 argument_list|)
 condition|)
 block|{
@@ -6370,7 +6380,7 @@ argument_list|(
 name|sbt
 argument_list|)
 expr_stmt|;
-comment|/* Switch timers mack into active mode. */
+comment|/* Switch timers back into active mode. */
 if|if
 condition|(
 operator|!
@@ -9715,7 +9725,7 @@ index|]
 expr_stmt|;
 name|pte
 operator|=
-name|CMAP1
+name|CMAP3
 expr_stmt|;
 comment|/* 	 * Get dcons buffer address 	 */
 if|if
@@ -9832,7 +9842,7 @@ operator|(
 name|int
 operator|*
 operator|)
-name|CADDR1
+name|CADDR3
 decl_stmt|;
 name|full
 operator|=
@@ -11378,7 +11388,7 @@ name|r_idt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the i8254 before the console so that console 	 * initialization can use DELAY(). 	 */
-name|i8254_init
+name|clock_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */

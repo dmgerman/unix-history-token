@@ -218,7 +218,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<x86/isa/isa.h>
+file|<isa/isareg.h>
 end_include
 
 begin_endif
@@ -1748,7 +1748,7 @@ name|flags
 operator|&
 name|RF_ACTIVE
 decl_stmt|;
-comment|/* 	 * If this is an allocation of the "default" range for a given RID, and 	 * we know what the resources for this device are (ie. they aren't maintained 	 * by a child bus), then work out the start/end values. 	 */
+comment|/* 	 * If this is an allocation of the "default" range for a given 	 * RID, and we know what the resources for this device are 	 * (ie. they aren't maintained by a child bus), then work out 	 * the start/end values. 	 */
 if|if
 condition|(
 operator|(
@@ -1773,6 +1773,13 @@ condition|)
 block|{
 if|if
 condition|(
+name|device_get_parent
+argument_list|(
+name|child
+argument_list|)
+operator|!=
+name|bus
+operator|||
 name|ndev
 operator|==
 name|NULL

@@ -404,8 +404,7 @@ if|if
 condition|(
 name|route_addr
 operator|==
-operator|-
-literal|1
+name|INADDR_NONE
 condition|)
 block|{
 name|get_myaddress

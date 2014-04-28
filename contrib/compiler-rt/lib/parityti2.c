@@ -9,11 +9,11 @@ directive|include
 file|"int_lib.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|__x86_64
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRT_HAS_128BIT
+end_ifdef
 
 begin_comment
 comment|/* Returns: 1 if number of bits is odd else returns 0 */
@@ -69,6 +69,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* CRT_HAS_128BIT */
+end_comment
 
 end_unit
 

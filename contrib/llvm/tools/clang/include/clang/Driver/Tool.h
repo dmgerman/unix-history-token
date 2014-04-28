@@ -51,14 +51,25 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
+name|opt
+block|{
+name|class
+name|ArgList
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|namespace
 name|driver
 block|{
-name|class
-name|ArgList
-decl_stmt|;
 name|class
 name|Compilation
 decl_stmt|;
@@ -216,7 +227,8 @@ name|false
 return|;
 block|}
 comment|/// ConstructJob - Construct jobs to perform the action \p JA,
-comment|/// writing to \p Output and with \p Inputs.
+comment|/// writing to \p Output and with \p Inputs, and add the jobs to
+comment|/// \p C.
 comment|///
 comment|/// \param TCArgs - The argument list for this toolchain, with any
 comment|/// tool chain specific translations applied.
@@ -246,6 +258,10 @@ operator|&
 name|Inputs
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|TCArgs

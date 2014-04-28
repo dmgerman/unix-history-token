@@ -121,6 +121,13 @@ name|pcpu_stats
 name|stats
 decl_stmt|;
 comment|/* Interrupt stats. */
+name|void
+modifier|*
+name|xtrace_buffer
+decl_stmt|;
+name|uint64_t
+name|xtrace_tail
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -148,7 +155,7 @@ value|uint32_t	pc_acpi_id;
 comment|/* ACPI CPU id. */
 value|\ 	struct pcpu_md	pc_md;
 comment|/* MD fields. */
-value|\ 	char		__pad[1265]
+value|\ 	char		__pad[10*128]
 end_define
 
 begin_ifdef

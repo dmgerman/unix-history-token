@@ -109,6 +109,9 @@ name|class
 name|TargetFrameLowering
 decl_stmt|;
 name|class
+name|TargetMachine
+decl_stmt|;
+name|class
 name|BitVector
 decl_stmt|;
 name|class
@@ -320,6 +323,11 @@ argument_list|)
 block|{}
 block|}
 struct|;
+specifier|const
+name|TargetMachine
+modifier|&
+name|TM
+decl_stmt|;
 comment|/// Objects - The list of stack objects allocated...
 comment|///
 name|std
@@ -427,13 +435,6 @@ comment|/// CSIValid - Has CSInfo been set yet?
 name|bool
 name|CSIValid
 decl_stmt|;
-comment|/// TargetFrameLowering - Target information about frame layout.
-comment|///
-specifier|const
-name|TargetFrameLowering
-modifier|&
-name|TFI
-decl_stmt|;
 comment|/// LocalFrameObjects - References to frame indices which are mapped
 comment|/// into the local frame allocation block.<FrameIdx, LocalOffset>
 name|SmallVector
@@ -470,19 +471,31 @@ comment|/// Whether the "realign-stack" option is on.
 name|bool
 name|RealignOption
 decl_stmt|;
+comment|/// True if the function includes inline assembly that adjusts the stack
+comment|/// pointer.
+name|bool
+name|HasInlineAsmWithSPAdjust
+decl_stmt|;
+specifier|const
+name|TargetFrameLowering
+operator|*
+name|getFrameLowering
+argument_list|()
+specifier|const
+expr_stmt|;
 name|public
 label|:
 name|explicit
 name|MachineFrameInfo
 argument_list|(
-argument|const TargetFrameLowering&tfi
+argument|const TargetMachine&TM
 argument_list|,
 argument|bool RealignOpt
 argument_list|)
 block|:
-name|TFI
+name|TM
 argument_list|(
-name|tfi
+name|TM
 argument_list|)
 operator|,
 name|RealignOption
@@ -547,6 +560,10 @@ operator|=
 literal|0
 block|;
 name|UseLocalStackAllocationBlock
+operator|=
+name|false
+block|;
+name|HasInlineAsmWithSPAdjust
 operator|=
 name|false
 block|;   }
@@ -1408,6 +1425,28 @@ operator|=
 name|V
 expr_stmt|;
 block|}
+comment|/// Returns true if the function contains any stack-adjusting inline assembly.
+name|bool
+name|hasInlineAsmWithSPAdjust
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasInlineAsmWithSPAdjust
+return|;
+block|}
+name|void
+name|setHasInlineAsmWithSPAdjust
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+name|HasInlineAsmWithSPAdjust
+operator|=
+name|B
+expr_stmt|;
+block|}
 comment|/// getMaxCallFrameSize - Return the maximum size of a call frame that must be
 comment|/// allocated for an outgoing function call.  This is only available if
 comment|/// CallFrameSetup/Destroy pseudo instructions are used by the target, and
@@ -1670,6 +1709,11 @@ name|CreateVariableSizedObject
 parameter_list|(
 name|unsigned
 name|Alignment
+parameter_list|,
+specifier|const
+name|AllocaInst
+modifier|*
+name|Alloca
 parameter_list|)
 function_decl|;
 comment|/// getCalleeSavedInfo - Returns a reference to call saved info vector for the

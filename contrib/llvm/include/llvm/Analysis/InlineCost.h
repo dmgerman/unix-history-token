@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/CodeMetrics.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/CallGraphSCCPass.h"
 end_include
 
@@ -269,6 +263,7 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief Test whether the inline cost is low enough for inlining.
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()

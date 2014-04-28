@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_html.c,v 1.182 2011/11/03 20:37:00 schwarze Exp $ */
+comment|/*	$Id: mdoc_html.c,v 1.186 2013/12/24 20:45:27 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -107,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|MDOC_ARGS
-value|const struct mdoc_meta *m, \ 			  const struct mdoc_node *n, \ 			  struct html *h
+value|const struct mdoc_meta *meta, \ 			  const struct mdoc_node *n, \ 			  struct html *h
 end_define
 
 begin_ifndef
@@ -1763,19 +1763,19 @@ specifier|const
 name|struct
 name|mdoc
 modifier|*
-name|m
+name|mdoc
 parameter_list|)
 block|{
 name|print_mdoc
 argument_list|(
 name|mdoc_meta
 argument_list|(
-name|m
+name|mdoc
 argument_list|)
 argument_list|,
 name|mdoc_node
 argument_list|(
-name|m
+name|mdoc
 argument_list|)
 argument_list|,
 operator|(
@@ -2208,7 +2208,7 @@ argument_list|)
 expr_stmt|;
 name|print_mdoc_head
 argument_list|(
-name|m
+name|meta
 argument_list|,
 name|n
 argument_list|,
@@ -2263,7 +2263,7 @@ argument_list|)
 expr_stmt|;
 name|print_mdoc_nodelist
 argument_list|(
-name|m
+name|meta
 argument_list|,
 name|n
 argument_list|,
@@ -2308,18 +2308,18 @@ name|h
 argument_list|,
 literal|"%s(%s)"
 argument_list|,
-name|m
+name|meta
 operator|->
 name|title
 argument_list|,
-name|m
+name|meta
 operator|->
 name|msec
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
+name|meta
 operator|->
 name|arch
 condition|)
@@ -2329,7 +2329,7 @@ name|h
 argument_list|,
 literal|" (%s)"
 argument_list|,
-name|m
+name|meta
 operator|->
 name|arch
 argument_list|)
@@ -2367,7 +2367,7 @@ parameter_list|)
 block|{
 name|print_mdoc_node
 argument_list|(
-name|m
+name|meta
 argument_list|,
 name|n
 argument_list|,
@@ -2382,7 +2382,7 @@ name|next
 condition|)
 name|print_mdoc_nodelist
 argument_list|(
-name|m
+name|meta
 argument_list|,
 name|n
 operator|->
@@ -2438,7 +2438,7 @@ name|child
 operator|=
 name|mdoc_root_pre
 argument_list|(
-name|m
+name|meta
 argument_list|,
 name|n
 argument_list|,
@@ -2631,7 +2631,7 @@ operator|.
 name|pre
 operator|)
 operator|(
-name|m
+name|meta
 operator|,
 name|n
 operator|,
@@ -2654,16 +2654,34 @@ condition|(
 name|n
 operator|->
 name|prev
-operator|&&
+condition|?
+operator|(
 name|n
 operator|->
 name|prev
+operator|->
+name|lastline
+operator|!=
+name|n
+operator|->
+name|line
+operator|)
+else|:
+operator|(
+name|n
+operator|->
+name|parent
+operator|&&
+name|n
+operator|->
+name|parent
 operator|->
 name|line
 operator|!=
 name|n
 operator|->
 name|line
+operator|)
 condition|)
 block|{
 name|h
@@ -2679,48 +2697,6 @@ name|flags
 operator||=
 name|HTML_PREKEEP
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|NULL
-operator|==
-name|n
-operator|->
-name|prev
-condition|)
-block|{
-if|if
-condition|(
-name|n
-operator|->
-name|parent
-operator|&&
-name|n
-operator|->
-name|parent
-operator|->
-name|line
-operator|!=
-name|n
-operator|->
-name|line
-condition|)
-block|{
-name|h
-operator|->
-name|flags
-operator|&=
-operator|~
-name|HTML_KEEP
-expr_stmt|;
-name|h
-operator|->
-name|flags
-operator||=
-name|HTML_PREKEEP
-expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -2733,7 +2709,7 @@ name|child
 condition|)
 name|print_mdoc_nodelist
 argument_list|(
-name|m
+name|meta
 argument_list|,
 name|n
 operator|->
@@ -2763,7 +2739,7 @@ operator|)
 case|:
 name|mdoc_root_post
 argument_list|(
-name|m
+name|meta
 argument_list|,
 name|n
 argument_list|,
@@ -2807,7 +2783,7 @@ operator|.
 name|post
 operator|)
 operator|(
-name|m
+name|meta
 operator|,
 name|n
 operator|,
@@ -2979,7 +2955,7 @@ name|print_text
 argument_list|(
 name|h
 argument_list|,
-name|m
+name|meta
 operator|->
 name|date
 argument_list|)
@@ -3030,7 +3006,7 @@ name|print_text
 argument_list|(
 name|h
 argument_list|,
-name|m
+name|meta
 operator|->
 name|os
 argument_list|)
@@ -3087,7 +3063,7 @@ name|strlcpy
 argument_list|(
 name|b
 argument_list|,
-name|m
+name|meta
 operator|->
 name|vol
 argument_list|,
@@ -3096,7 +3072,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
+name|meta
 operator|->
 name|arch
 condition|)
@@ -3114,7 +3090,7 @@ name|strlcat
 argument_list|(
 name|b
 argument_list|,
-name|m
+name|meta
 operator|->
 name|arch
 argument_list|,
@@ -3141,11 +3117,11 @@ literal|1
 argument_list|,
 literal|"%s(%s)"
 argument_list|,
-name|m
+name|meta
 operator|->
 name|title
 argument_list|,
-name|m
+name|meta
 operator|->
 name|msec
 argument_list|)
@@ -3989,7 +3965,7 @@ name|n
 operator|->
 name|child
 operator|&&
-name|m
+name|meta
 operator|->
 name|name
 condition|)
@@ -3997,7 +3973,7 @@ name|print_text
 argument_list|(
 name|h
 argument_list|,
-name|m
+name|meta
 operator|->
 name|name
 argument_list|)
@@ -4031,7 +4007,7 @@ name|n
 operator|->
 name|child
 operator|&&
-name|m
+name|meta
 operator|->
 name|name
 condition|)
@@ -4039,7 +4015,7 @@ name|print_text
 argument_list|(
 name|h
 argument_list|,
-name|m
+name|meta
 operator|->
 name|name
 argument_list|)
@@ -4143,7 +4119,7 @@ literal|0
 operator|==
 name|len
 operator|&&
-name|m
+name|meta
 operator|->
 name|name
 condition|)
@@ -4151,7 +4127,7 @@ name|len
 operator|=
 name|html_strlen
 argument_list|(
-name|m
+name|meta
 operator|->
 name|name
 argument_list|)
@@ -5406,11 +5382,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|bufinit
-argument_list|(
-name|h
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|MDOC_BODY
@@ -5499,6 +5470,11 @@ name|i
 operator|++
 control|)
 block|{
+name|bufinit
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
 name|a2width
 argument_list|(
 name|n
@@ -5589,6 +5565,11 @@ operator|&
 name|su
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|bufinit
+argument_list|(
+name|h
 argument_list|)
 expr_stmt|;
 name|bufcat_su
@@ -6679,7 +6660,7 @@ control|)
 block|{
 name|print_mdoc_node
 argument_list|(
-name|m
+name|meta
 argument_list|,
 name|nn
 argument_list|,
@@ -11204,7 +11185,7 @@ name|print_text
 argument_list|(
 name|h
 argument_list|,
-literal|"\\(aq"
+literal|"\\(cq"
 argument_list|)
 expr_stmt|;
 break|break;

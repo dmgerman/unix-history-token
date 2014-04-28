@@ -1369,6 +1369,10 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s: ioctl: %s"
+argument_list|,
+name|__func__
+argument_list|,
 name|wf
 operator|->
 name|ifr
@@ -1385,7 +1389,7 @@ name|void
 name|mwl_collect_cur
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|)
@@ -1421,7 +1425,7 @@ name|void
 name|mwl_collect_tot
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|)
@@ -1457,7 +1461,7 @@ name|void
 name|mwl_update_tot
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|)
@@ -1563,7 +1567,7 @@ name|int
 name|mwl_get_curstat
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|,
@@ -2309,7 +2313,7 @@ name|int
 name|mwl_get_totstat
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|,
@@ -3037,7 +3041,7 @@ name|void
 name|mwl_print_verbose
 parameter_list|(
 name|struct
-name|statfoo
+name|bsdstat
 modifier|*
 name|sf
 parameter_list|,
@@ -3265,7 +3269,7 @@ block|}
 end_function
 
 begin_macro
-name|STATFOO_DEFINE_BOUNCE
+name|BSDSTAT_DEFINE_BOUNCE
 argument_list|(
 argument|mwlstatfoo
 argument_list|)
@@ -3320,7 +3324,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|statfoo_init
+name|bsdstat_init
 argument_list|(
 operator|&
 name|wf
@@ -3401,7 +3405,7 @@ operator|=
 name|mwl_print_verbose
 expr_stmt|;
 comment|/* setup bounce functions for public methods */
-name|STATFOO_BOUNCE
+name|BSDSTAT_BOUNCE
 argument_list|(
 name|wf
 argument_list|,

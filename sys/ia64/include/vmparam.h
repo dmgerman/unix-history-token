@@ -473,29 +473,7 @@ value|(USRSTACK - (2 * MAXSSIZ) - PAGE_SIZE)
 end_define
 
 begin_comment
-comment|/* virtual sizes (bytes) for various kernel submaps */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VM_KMEM_SIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VM_KMEM_SIZE
-value|(12 * 1024 * 1024)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * How many physical pages per KVA page allocated.  * min(max(max(VM_KMEM_SIZE, Physical memory/VM_KMEM_SIZE_SCALE),  *     VM_KMEM_SIZE_MIN), VM_KMEM_SIZE_MAX)  * is the total KVA space allocated for kmem_map.  */
+comment|/*  * How many physical pages per kmem arena virtual page.  */
 end_comment
 
 begin_ifndef
@@ -510,10 +488,6 @@ directive|define
 name|VM_KMEM_SIZE_SCALE
 value|(4)
 end_define
-
-begin_comment
-comment|/* XXX 8192 byte pages */
-end_comment
 
 begin_endif
 endif|#

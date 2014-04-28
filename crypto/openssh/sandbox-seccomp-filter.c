@@ -379,6 +379,17 @@ argument_list|(
 name|close
 argument_list|)
 block|,
+ifdef|#
+directive|ifdef
+name|__NR_shutdown
+comment|/* not defined on archs that go via socketcall(2) */
+name|SC_ALLOW
+argument_list|(
+name|shutdown
+argument_list|)
+block|,
+endif|#
+directive|endif
 name|SC_ALLOW
 argument_list|(
 name|brk
@@ -531,7 +542,10 @@ name|ssh_sandbox
 modifier|*
 name|ssh_sandbox_init
 parameter_list|(
-name|void
+name|struct
+name|monitor
+modifier|*
+name|monitor
 parameter_list|)
 block|{
 name|struct

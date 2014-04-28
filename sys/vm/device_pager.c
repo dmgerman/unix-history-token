@@ -722,6 +722,23 @@ name|size
 operator|=
 name|pindex
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|type
+operator|==
+name|tp
+argument_list|,
+operator|(
+literal|"Inconsistent device pager type %p %d"
+operator|,
+name|object
+operator|,
+name|tp
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -749,23 +766,6 @@ argument_list|,
 name|pager_object_list
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|object
-operator|->
-name|type
-operator|==
-name|tp
-argument_list|,
-operator|(
-literal|"Inconsistent device pager type %p %d"
-operator|,
-name|object
-operator|,
-name|tp
-operator|)
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -783,6 +783,23 @@ operator|->
 name|size
 operator|=
 name|pindex
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|type
+operator|==
+name|tp
+argument_list|,
+operator|(
+literal|"Inconsistent device pager type %p %d"
+operator|,
+name|object
+operator|,
+name|tp
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 name|mtx_unlock
@@ -1888,6 +1905,11 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+name|paddr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Make paddr initialized for the case of size == 0. */
 for|for
 control|(
 name|off

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,24 +26,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<term.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<tic.h>
 end_include
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tparm.c,v 1.76 2008/08/16 19:22:55 tom Exp $"
+literal|"$Id: lib_tparm.c,v 1.90 2013/11/09 14:53:05 tom Exp $"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*  *	char *  *	tparm(string, ...)  *  *	Substitute the given parameters into the given string by the following  *	rules (taken from terminfo(5)):  *  *	     Cursor addressing and other strings  requiring  parame-  *	ters in the terminal are described by a parameterized string  *	capability, with like escapes %x in  it.   For  example,  to  *	address  the  cursor, the cup capability is given, using two  *	parameters: the row and column to  address  to.   (Rows  and  *	columns  are  numbered  from  zero and refer to the physical  *	screen visible to the user, not to any  unseen  memory.)  If  *	the terminal has memory relative cursor addressing, that can  *	be indicated by  *  *	     The parameter mechanism uses  a  stack  and  special  %  *	codes  to manipulate it.  Typically a sequence will push one  *	of the parameters onto the stack and then print it  in  some  *	format.  Often more complex operations are necessary.  *  *	     The % encodings have the following meanings:  *  *	     %%        outputs `%'  *	     %c        print pop() like %c in printf()  *	     %s        print pop() like %s in printf()  *           %[[:]flags][width[.precision]][doxXs]  *                     as in printf, flags are [-+#] and space  *                     The ':' is used to avoid making %+ or %-  *                     patterns (see below).  *  *	     %p[1-9]   push ith parm  *	     %P[a-z]   set dynamic variable [a-z] to pop()  *	     %g[a-z]   get dynamic variable [a-z] and push it  *	     %P[A-Z]   set static variable [A-Z] to pop()  *	     %g[A-Z]   get static variable [A-Z] and push it  *	     %l        push strlen(pop)  *	     %'c'      push char constant c  *	     %{nn}     push integer constant nn  *  *	     %+ %- %* %/ %m  *	               arithmetic (%m is mod): push(pop() op pop())  *	     %& %| %^  bit operations: push(pop() op pop())  *	     %= %> %<  logical operations: push(pop() op pop())  *	     %A %O     logical and& or operations for conditionals  *	     %! %~     unary operations push(op pop())  *	     %i        add 1 to first two parms (for ANSI terminals)  *  *	     %? expr %t thenpart %e elsepart %;  *	               if-then-else, %e elsepart is optional.  *	               else-if's are possible ala Algol 68:  *	               %? c1 %t b1 %e c2 %t b2 %e c3 %t b3 %e c4 %t b4 %e b5 %;  *  *	For those of the above operators which are binary and not commutative,  *	the stack works in the usual way, with  *			%gx %gy %m  *	resulting in x mod y, not the reverse.  */
+comment|/*  *	char *  *	tparm(string, ...)  *  *	Substitute the given parameters into the given string by the following  *	rules (taken from terminfo(5)):  *  *	     Cursor addressing and other strings  requiring  parame-  *	ters in the terminal are described by a parameterized string  *	capability, with escapes like %x in  it.   For  example,  to  *	address  the  cursor, the cup capability is given, using two  *	parameters: the row and column to  address  to.   (Rows  and  *	columns  are  numbered  from  zero and refer to the physical  *	screen visible to the user, not to any  unseen  memory.)  If  *	the terminal has memory relative cursor addressing, that can  *	be indicated by  *  *	     The parameter mechanism uses  a  stack  and  special  %  *	codes  to manipulate it.  Typically a sequence will push one  *	of the parameters onto the stack and then print it  in  some  *	format.  Often more complex operations are necessary.  *  *	     The % encodings have the following meanings:  *  *	     %%        outputs `%'  *	     %c        print pop() like %c in printf()  *	     %s        print pop() like %s in printf()  *           %[[:]flags][width[.precision]][doxXs]  *                     as in printf, flags are [-+#] and space  *                     The ':' is used to avoid making %+ or %-  *                     patterns (see below).  *  *	     %p[1-9]   push ith parm  *	     %P[a-z]   set dynamic variable [a-z] to pop()  *	     %g[a-z]   get dynamic variable [a-z] and push it  *	     %P[A-Z]   set static variable [A-Z] to pop()  *	     %g[A-Z]   get static variable [A-Z] and push it  *	     %l        push strlen(pop)  *	     %'c'      push char constant c  *	     %{nn}     push integer constant nn  *  *	     %+ %- %* %/ %m  *	               arithmetic (%m is mod): push(pop() op pop())  *	     %& %| %^  bit operations: push(pop() op pop())  *	     %= %> %<  logical operations: push(pop() op pop())  *	     %A %O     logical and& or operations for conditionals  *	     %! %~     unary operations push(op pop())  *	     %i        add 1 to first two parms (for ANSI terminals)  *  *	     %? expr %t thenpart %e elsepart %;  *	               if-then-else, %e elsepart is optional.  *	               else-if's are possible ala Algol 68:  *	               %? c1 %t b1 %e c2 %t b2 %e c3 %t b3 %e c4 %t b4 %e b5 %;  *  *	For those of the above operators which are binary and not commutative,  *	the stack works in the usual way, with  *			%gx %gy %m  *	resulting in x mod y, not the reverse.  */
 end_comment
 
 begin_macro
@@ -69,6 +63,17 @@ name|var
 parameter_list|)
 value|_nc_prescreen.tparm_state.var
 end_define
+
+begin_define
+define|#
+directive|define
+name|popcount
+value|_nc_popcount
+end_define
+
+begin_comment
+comment|/* workaround for NetBSD 6.0 defect */
+end_comment
 
 begin_if
 if|#
@@ -184,12 +189,7 @@ name|need
 operator|*
 literal|2
 expr_stmt|;
-name|TPS
-argument_list|(
-name|out_buff
-argument_list|)
-operator|=
-name|typeRealloc
+name|TYPE_REALLOC
 argument_list|(
 name|char
 argument_list|,
@@ -202,20 +202,6 @@ name|TPS
 argument_list|(
 name|out_buff
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TPS
-argument_list|(
-name|out_buff
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|_nc_err_abort
-argument_list|(
-name|MSG_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
@@ -261,6 +247,9 @@ name|s_len
 condition|)
 name|s_len
 operator|=
+operator|(
+name|size_t
+operator|)
 name|len
 expr_stmt|;
 name|get_space
@@ -270,10 +259,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|TPS
 argument_list|(
@@ -285,6 +271,10 @@ argument_list|(
 name|out_used
 argument_list|)
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+argument|TPS(out_size) - TPS(out_used)
+argument_list|)
 name|fmt
 argument_list|,
 name|s
@@ -343,17 +333,14 @@ comment|/* actually log10(MAX_INT)+1 */
 name|get_space
 argument_list|(
 operator|(
-name|unsigned
+name|size_t
 operator|)
 name|len
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|TPS
 argument_list|(
@@ -365,6 +352,10 @@ argument_list|(
 name|out_used
 argument_list|)
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+argument|TPS(out_size) - TPS(out_used)
+argument_list|)
 name|fmt
 argument_list|,
 name|number
@@ -413,6 +404,9 @@ literal|0200
 expr_stmt|;
 name|get_space
 argument_list|(
+operator|(
+name|size_t
+operator|)
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1669,6 +1663,9 @@ name|char
 modifier|*
 name|tparam_internal
 parameter_list|(
+name|int
+name|use_TPARM_ARG
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1693,9 +1690,14 @@ index|]
 decl_stmt|;
 name|int
 name|popcount
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|number
+decl_stmt|;
+name|int
+name|num_args
 decl_stmt|;
 name|int
 name|len
@@ -1769,6 +1771,35 @@ condition|)
 return|return
 name|NULL
 return|;
+if|if
+condition|(
+name|number
+operator|>
+name|NUM_PARM
+condition|)
+name|number
+operator|=
+name|NUM_PARM
+expr_stmt|;
+if|if
+condition|(
+name|popcount
+operator|>
+name|NUM_PARM
+condition|)
+name|popcount
+operator|=
+name|NUM_PARM
+expr_stmt|;
+name|num_args
+operator|=
+name|max
+argument_list|(
+name|popcount
+argument_list|,
+name|number
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1777,12 +1808,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|max
-argument_list|(
-name|popcount
-argument_list|,
-name|number
-argument_list|)
+name|num_args
 condition|;
 name|i
 operator|++
@@ -1812,8 +1838,19 @@ name|char
 operator|*
 argument_list|)
 expr_stmt|;
+name|param
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|use_TPARM_ARG
+condition|)
 block|{
 name|param
 index|[
@@ -1825,6 +1862,24 @@ argument_list|(
 name|ap
 argument_list|,
 name|TPARM_ARG
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|param
+index|[
+name|i
+index|]
+operator|=
+operator|(
+name|TPARM_ARG
+operator|)
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|int
 argument_list|)
 expr_stmt|;
 block|}
@@ -1882,6 +1937,9 @@ expr_stmt|;
 else|else
 name|npush
 argument_list|(
+operator|(
+name|int
+operator|)
 name|param
 index|[
 name|i
@@ -1909,7 +1967,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|popcount
+name|num_args
 condition|;
 name|i
 operator|++
@@ -1944,6 +2002,9 @@ name|save_number
 argument_list|(
 literal|", %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|param
 index|[
 name|i
@@ -2110,10 +2171,8 @@ break|break;
 case|case
 literal|'l'
 case|:
-name|save_number
+name|npush
 argument_list|(
-literal|"%d"
-argument_list|,
 operator|(
 name|int
 operator|)
@@ -2122,8 +2181,6 @@ argument_list|(
 name|spop
 argument_list|()
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2191,6 +2248,9 @@ expr_stmt|;
 else|else
 name|npush
 argument_list|(
+operator|(
+name|int
+operator|)
 name|param
 index|[
 name|i
@@ -2893,6 +2953,9 @@ block|}
 comment|/* endwhile (*cp) */
 name|get_space
 argument_list|(
+operator|(
+name|size_t
+operator|)
 literal|1
 argument_list|)
 expr_stmt|;
@@ -3021,6 +3084,8 @@ name|result
 operator|=
 name|tparam_internal
 argument_list|(
+name|TRUE
+argument_list|,
 name|string
 argument_list|,
 name|ap
@@ -3113,6 +3178,77 @@ end_endif
 begin_comment
 comment|/* NCURSES_TPARM_VARARGS */
 end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
+name|tiparm
+argument_list|(
+argument|const char *string
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|char
+modifier|*
+name|result
+decl_stmt|;
+name|_nc_tparm_err
+operator|=
+literal|0
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TRACE
+name|TPS
+argument_list|(
+name|tname
+argument_list|)
+operator|=
+literal|"tiparm"
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* TRACE */
+name|result
+operator|=
+name|tparam_internal
+argument_list|(
+name|FALSE
+argument_list|,
+name|string
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+name|result
+return|;
+block|}
+end_block
 
 end_unit
 

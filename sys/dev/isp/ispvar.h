@@ -2058,12 +2058,17 @@ specifier|volatile
 name|uint32_t
 name|isp_residx
 decl_stmt|;
-comment|/* index of next result */
+comment|/* index of last ISP write */
 specifier|volatile
 name|uint32_t
 name|isp_resodx
 decl_stmt|;
 comment|/* index of next result */
+specifier|volatile
+name|uint32_t
+name|isp_atioodx
+decl_stmt|;
+comment|/* index of next ATIO */
 specifier|volatile
 name|uint32_t
 name|isp_obits

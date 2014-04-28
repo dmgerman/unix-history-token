@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|IPI_STOP_HARD
-value|5
+value|4
 end_define
 
 begin_define
@@ -82,6 +82,15 @@ name|init_secondary
 parameter_list|(
 name|int
 name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mpentry
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

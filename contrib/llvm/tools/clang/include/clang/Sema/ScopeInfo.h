@@ -84,13 +84,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/Ownership.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
 end_include
 
 begin_decl_stmt
@@ -108,6 +126,9 @@ name|CapturedDecl
 decl_stmt|;
 name|class
 name|CXXMethodDecl
+decl_stmt|;
+name|class
+name|FieldDecl
 decl_stmt|;
 name|class
 name|ObjCPropertyDecl
@@ -131,10 +152,19 @@ name|class
 name|SwitchStmt
 decl_stmt|;
 name|class
+name|TemplateTypeParmDecl
+decl_stmt|;
+name|class
+name|TemplateParameterList
+decl_stmt|;
+name|class
 name|VarDecl
 decl_stmt|;
 name|class
 name|DeclRefExpr
+decl_stmt|;
+name|class
+name|MemberExpr
 decl_stmt|;
 name|class
 name|ObjCIvarRefExpr
@@ -953,27 +983,33 @@ block|;
 name|class
 name|Capture
 block|{
-comment|// There are two categories of capture: capturing 'this', and capturing
-comment|// local variables.  There are three ways to capture a local variable:
-comment|// capture by copy in the C++11 sense, capture by reference
-comment|// in the C++11 sense, and __block capture.  Lambdas explicitly specify
-comment|// capture by copy or capture by reference.  For blocks, __block capture
-comment|// applies to variables with that annotation, variables of reference type
-comment|// are captured by reference, and other variables are captured by copy.
+comment|// There are three categories of capture: capturing 'this', capturing
+comment|// local variables, and C++1y initialized captures (which can have an
+comment|// arbitrary initializer, and don't really capture in the traditional
+comment|// sense at all).
+comment|//
+comment|// There are three ways to capture a local variable:
+comment|//  - capture by copy in the C++11 sense,
+comment|//  - capture by reference in the C++11 sense, and
+comment|//  - __block capture.
+comment|// Lambdas explicitly specify capture by copy or capture by reference.
+comment|// For blocks, __block capture applies to variables with that annotation,
+comment|// variables of reference type are captured by reference, and other
+comment|// variables are captured by copy.
 block|enum
 name|CaptureKind
 block|{
-name|Cap_This
-block|,
 name|Cap_ByCopy
 block|,
 name|Cap_ByRef
 block|,
 name|Cap_Block
+block|,
+name|Cap_This
 block|}
 block|;
-comment|// The variable being captured (if we are not capturing 'this'),
-comment|// and misc bits descibing the capture.
+comment|/// The variable being captured (if we are not capturing 'this') and whether
+comment|/// this is a nested capture.
 name|llvm
 operator|::
 name|PointerIntPair
@@ -981,16 +1017,16 @@ operator|<
 name|VarDecl
 operator|*
 block|,
-literal|2
+literal|1
 block|,
-name|CaptureKind
+name|bool
 operator|>
-name|VarAndKind
+name|VarAndNested
 block|;
-comment|// Expression to initialize a field of the given type, and whether this
-comment|// is a nested capture; the expression is only required if we are
-comment|// capturing ByVal and the variable's type has a non-trivial
-comment|// copy constructor.
+comment|/// Expression to initialize a field of the given type, and the kind of
+comment|/// capture (if this is a capture and not an init-capture). The expression
+comment|/// is only required if we are capturing ByVal and the variable's type has
+comment|/// a non-trivial copy constructor.
 name|llvm
 operator|::
 name|PointerIntPair
@@ -998,13 +1034,13 @@ operator|<
 name|Expr
 operator|*
 block|,
-literal|1
+literal|2
 block|,
-name|bool
+name|CaptureKind
 operator|>
-name|CopyExprAndNested
+name|InitExprAndCaptureKind
 block|;
-comment|/// \brief The source location at which the first capture occurred..
+comment|/// \brief The source location at which the first capture occurred.
 name|SourceLocation
 name|Loc
 block|;
@@ -1023,11 +1059,11 @@ name|Capture
 argument_list|(
 argument|VarDecl *Var
 argument_list|,
-argument|bool block
+argument|bool Block
 argument_list|,
-argument|bool byRef
+argument|bool ByRef
 argument_list|,
-argument|bool isNested
+argument|bool IsNested
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
@@ -1038,26 +1074,26 @@ argument_list|,
 argument|Expr *Cpy
 argument_list|)
 operator|:
-name|VarAndKind
+name|VarAndNested
 argument_list|(
 name|Var
 argument_list|,
-name|block
+name|IsNested
+argument_list|)
+block|,
+name|InitExprAndCaptureKind
+argument_list|(
+name|Cpy
+argument_list|,
+name|Block
 condition|?
 name|Cap_Block
 else|:
-name|byRef
+name|ByRef
 condition|?
 name|Cap_ByRef
 else|:
 name|Cap_ByCopy
-argument_list|)
-block|,
-name|CopyExprAndNested
-argument_list|(
-name|Cpy
-argument_list|,
-name|isNested
 argument_list|)
 block|,
 name|Loc
@@ -1085,7 +1121,7 @@ name|Capture
 argument_list|(
 argument|IsThisCapture
 argument_list|,
-argument|bool isNested
+argument|bool IsNested
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
@@ -1094,18 +1130,18 @@ argument_list|,
 argument|Expr *Cpy
 argument_list|)
 operator|:
-name|VarAndKind
+name|VarAndNested
 argument_list|(
 literal|0
 argument_list|,
-name|Cap_This
+name|IsNested
 argument_list|)
 block|,
-name|CopyExprAndNested
+name|InitExprAndCaptureKind
 argument_list|(
 name|Cpy
 argument_list|,
-name|isNested
+name|Cap_This
 argument_list|)
 block|,
 name|Loc
@@ -1120,14 +1156,14 @@ name|CaptureType
 argument_list|(
 argument|CaptureType
 argument_list|)
-block|{ }
+block|{}
 name|bool
 name|isThisCapture
 argument_list|()
 specifier|const
 block|{
 return|return
-name|VarAndKind
+name|InitExprAndCaptureKind
 operator|.
 name|getInt
 argument_list|()
@@ -1141,9 +1177,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|isThisCapture
+name|InitExprAndCaptureKind
+operator|.
+name|getInt
 argument_list|()
+operator|!=
+name|Cap_This
 return|;
 block|}
 name|bool
@@ -1152,7 +1191,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarAndKind
+name|InitExprAndCaptureKind
 operator|.
 name|getInt
 argument_list|()
@@ -1166,7 +1205,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarAndKind
+name|InitExprAndCaptureKind
 operator|.
 name|getInt
 argument_list|()
@@ -1180,7 +1219,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarAndKind
+name|InitExprAndCaptureKind
 operator|.
 name|getInt
 argument_list|()
@@ -1193,7 +1232,7 @@ name|isNested
 argument_list|()
 block|{
 return|return
-name|CopyExprAndNested
+name|VarAndNested
 operator|.
 name|getInt
 argument_list|()
@@ -1206,7 +1245,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarAndKind
+name|VarAndNested
 operator|.
 name|getPointer
 argument_list|()
@@ -1247,12 +1286,12 @@ return|;
 block|}
 name|Expr
 operator|*
-name|getCopyExpr
+name|getInitExpr
 argument_list|()
 specifier|const
 block|{
 return|return
-name|CopyExprAndNested
+name|InitExprAndCaptureKind
 operator|.
 name|getPointer
 argument_list|()
@@ -1741,6 +1780,12 @@ case|:
 return|return
 literal|"default captured statement"
 return|;
+case|case
+name|CR_OpenMP
+case|:
+return|return
+literal|"OpenMP region"
+return|;
 block|}
 name|llvm_unreachable
 argument_list|(
@@ -1778,7 +1823,7 @@ name|CXXRecordDecl
 operator|*
 name|Lambda
 block|;
-comment|/// \brief The class that describes the lambda.
+comment|/// \brief The lambda's compiler-generated \c operator().
 name|CXXMethodDecl
 operator|*
 name|CallOperator
@@ -1786,6 +1831,11 @@ block|;
 comment|/// \brief Source range covering the lambda introducer [...].
 name|SourceRange
 name|IntroducerRange
+block|;
+comment|/// \brief Source location of the '&' or '=' specifying the default capture
+comment|/// type, if any.
+name|SourceLocation
+name|CaptureDefaultLoc
 block|;
 comment|/// \brief The number of captures in the \c Captures list that are
 comment|/// explicit captures.
@@ -1828,19 +1878,79 @@ literal|4
 operator|>
 name|ArrayIndexStarts
 block|;
+comment|/// \brief If this is a generic lambda, use this as the depth of
+comment|/// each 'auto' parameter, during initial AST construction.
+name|unsigned
+name|AutoTemplateParameterDepth
+block|;
+comment|/// \brief Store the list of the auto parameters for a generic lambda.
+comment|/// If this is a generic lambda, store the list of the auto
+comment|/// parameters converted into TemplateTypeParmDecls into a vector
+comment|/// that can be used to construct the generic lambda's template
+comment|/// parameter list, during initial AST construction.
+name|SmallVector
+operator|<
+name|TemplateTypeParmDecl
+operator|*
+block|,
+literal|4
+operator|>
+name|AutoTemplateParams
+block|;
+comment|/// If this is a generic lambda, and the template parameter
+comment|/// list has been created (from the AutoTemplateParams) then
+comment|/// store a reference to it (cache it to avoid reconstructing it).
+name|TemplateParameterList
+operator|*
+name|GLTemplateParameterList
+block|;
+comment|/// \brief Contains all variable-referring-expressions (i.e. DeclRefExprs
+comment|///  or MemberExprs) that refer to local variables in a generic lambda
+comment|///  or a lambda in a potentially-evaluated-if-used context.
+comment|///
+comment|///  Potentially capturable variables of a nested lambda that might need
+comment|///   to be captured by the lambda are housed here.
+comment|///  This is specifically useful for generic lambdas or
+comment|///  lambdas within a a potentially evaluated-if-used context.
+comment|///  If an enclosing variable is named in an expression of a lambda nested
+comment|///  within a generic lambda, we don't always know know whether the variable
+comment|///  will truly be odr-used (i.e. need to be captured) by that nested lambda,
+comment|///  until its instantiation. But we still need to capture it in the
+comment|///  enclosing lambda if all intervening lambdas can capture the variable.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|Expr
+operator|*
+block|,
+literal|4
+operator|>
+name|PotentiallyCapturingExprs
+block|;
+comment|/// \brief Contains all variable-referring-expressions that refer
+comment|///  to local variables that are usable as constant expressions and
+comment|///  do not involve an odr-use (they may still need to be captured
+comment|///  if the enclosing full-expression is instantiation dependent).
+name|llvm
+operator|::
+name|SmallSet
+operator|<
+name|Expr
+operator|*
+block|,
+literal|8
+operator|>
+name|NonODRUsedCapturingExprs
+block|;
+name|SourceLocation
+name|PotentialThisCaptureLocation
+block|;
 name|LambdaScopeInfo
 argument_list|(
 name|DiagnosticsEngine
 operator|&
 name|Diag
-argument_list|,
-name|CXXRecordDecl
-operator|*
-name|Lambda
-argument_list|,
-name|CXXMethodDecl
-operator|*
-name|CallOperator
 argument_list|)
 operator|:
 name|CapturingScopeInfo
@@ -1852,12 +1962,12 @@ argument_list|)
 block|,
 name|Lambda
 argument_list|(
-name|Lambda
+literal|0
 argument_list|)
 block|,
 name|CallOperator
 argument_list|(
-name|CallOperator
+literal|0
 argument_list|)
 block|,
 name|NumExplicitCaptures
@@ -1877,7 +1987,17 @@ argument_list|)
 block|,
 name|ContainsUnexpandedParameterPack
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|AutoTemplateParameterDepth
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|GLTemplateParameterList
+argument_list|(
+literal|0
 argument_list|)
 block|{
 name|Kind
@@ -1889,7 +2009,7 @@ operator|~
 name|LambdaScopeInfo
 argument_list|()
 block|;
-comment|/// \brief Note when
+comment|/// \brief Note when all explicit captures have been added.
 name|void
 name|finishedExplicitCaptures
 argument_list|()
@@ -1916,7 +2036,270 @@ operator|==
 name|SK_Lambda
 return|;
 block|}
-expr|}
+comment|///
+comment|/// \brief Add a variable that might potentially be captured by the
+comment|/// lambda and therefore the enclosing lambdas.
+comment|///
+comment|/// This is also used by enclosing lambda's to speculatively capture
+comment|/// variables that nested lambda's - depending on their enclosing
+comment|/// specialization - might need to capture.
+comment|/// Consider:
+comment|/// void f(int, int);<-- don't capture
+comment|/// void f(const int&, double);<-- capture
+comment|/// void foo() {
+comment|///   const int x = 10;
+comment|///   auto L = [=](auto a) { // capture 'x'
+comment|///      return [=](auto b) {
+comment|///        f(x, a);  // we may or may not need to capture 'x'
+comment|///      };
+comment|///   };
+comment|/// }
+name|void
+name|addPotentialCapture
+argument_list|(
+argument|Expr *VarExpr
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|DeclRefExpr
+operator|>
+operator|(
+name|VarExpr
+operator|)
+operator|||
+name|isa
+operator|<
+name|MemberExpr
+operator|>
+operator|(
+name|VarExpr
+operator|)
+argument_list|)
+block|;
+name|PotentiallyCapturingExprs
+operator|.
+name|push_back
+argument_list|(
+name|VarExpr
+argument_list|)
+block|;   }
+name|void
+name|addPotentialThisCapture
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|PotentialThisCaptureLocation
+operator|=
+name|Loc
+block|;   }
+name|bool
+name|hasPotentialThisCapture
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PotentialThisCaptureLocation
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// \brief Mark a variable's reference in a lambda as non-odr using.
+comment|///
+comment|/// For generic lambdas, if a variable is named in a potentially evaluated
+comment|/// expression, where the enclosing full expression is dependent then we
+comment|/// must capture the variable (given a default capture).
+comment|/// This is accomplished by recording all references to variables
+comment|/// (DeclRefExprs or MemberExprs) within said nested lambda in its array of
+comment|/// PotentialCaptures. All such variables have to be captured by that lambda,
+comment|/// except for as described below.
+comment|/// If that variable is usable as a constant expression and is named in a
+comment|/// manner that does not involve its odr-use (e.g. undergoes
+comment|/// lvalue-to-rvalue conversion, or discarded) record that it is so. Upon the
+comment|/// act of analyzing the enclosing full expression (ActOnFinishFullExpr)
+comment|/// if we can determine that the full expression is not instantiation-
+comment|/// dependent, then we can entirely avoid its capture.
+comment|///
+comment|///   const int n = 0;
+comment|///   [&] (auto x) {
+comment|///     (void)+n + x;
+comment|///   };
+comment|/// Interestingly, this strategy would involve a capture of n, even though
+comment|/// it's obviously not odr-used here, because the full-expression is
+comment|/// instantiation-dependent.  It could be useful to avoid capturing such
+comment|/// variables, even when they are referred to in an instantiation-dependent
+comment|/// expression, if we can unambiguously determine that they shall never be
+comment|/// odr-used.  This would involve removal of the variable-referring-expression
+comment|/// from the array of PotentialCaptures during the lvalue-to-rvalue
+comment|/// conversions.  But per the working draft N3797, (post-chicago 2013) we must
+comment|/// capture such variables.
+comment|/// Before anyone is tempted to implement a strategy for not-capturing 'n',
+comment|/// consider the insightful warning in:
+comment|///    /cfe-commits/Week-of-Mon-20131104/092596.html
+comment|/// "The problem is that the set of captures for a lambda is part of the ABI
+comment|///  (since lambda layout can be made visible through inline functions and the
+comment|///  like), and there are no guarantees as to which cases we'll manage to build
+comment|///  an lvalue-to-rvalue conversion in, when parsing a template -- some
+comment|///  seemingly harmless change elsewhere in Sema could cause us to start or stop
+comment|///  building such a node. So we need a rule that anyone can implement and get
+comment|///  exactly the same result".
+comment|///
+name|void
+name|markVariableExprAsNonODRUsed
+argument_list|(
+argument|Expr *CapturingVarExpr
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|DeclRefExpr
+operator|>
+operator|(
+name|CapturingVarExpr
+operator|)
+operator|||
+name|isa
+operator|<
+name|MemberExpr
+operator|>
+operator|(
+name|CapturingVarExpr
+operator|)
+argument_list|)
+block|;
+name|NonODRUsedCapturingExprs
+operator|.
+name|insert
+argument_list|(
+name|CapturingVarExpr
+argument_list|)
+block|;   }
+name|bool
+name|isVariableExprMarkedAsNonODRUsed
+argument_list|(
+argument|Expr *CapturingVarExpr
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|DeclRefExpr
+operator|>
+operator|(
+name|CapturingVarExpr
+operator|)
+operator|||
+name|isa
+operator|<
+name|MemberExpr
+operator|>
+operator|(
+name|CapturingVarExpr
+operator|)
+argument_list|)
+block|;
+return|return
+name|NonODRUsedCapturingExprs
+operator|.
+name|count
+argument_list|(
+name|CapturingVarExpr
+argument_list|)
+return|;
+block|}
+name|void
+name|removePotentialCapture
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|PotentiallyCapturingExprs
+operator|.
+name|erase
+argument_list|(
+name|std
+operator|::
+name|remove
+argument_list|(
+name|PotentiallyCapturingExprs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|PotentiallyCapturingExprs
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|E
+argument_list|)
+argument_list|,
+name|PotentiallyCapturingExprs
+operator|.
+name|end
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|clearPotentialCaptures
+argument_list|()
+block|{
+name|PotentiallyCapturingExprs
+operator|.
+name|clear
+argument_list|()
+block|;
+name|PotentialThisCaptureLocation
+operator|=
+name|SourceLocation
+argument_list|()
+block|;   }
+name|unsigned
+name|getNumPotentialVariableCaptures
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PotentiallyCapturingExprs
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasPotentialCaptures
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumPotentialVariableCaptures
+argument_list|()
+operator|||
+name|PotentialThisCaptureLocation
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|// When passed the index, returns the VarDecl and Expr associated
+comment|// with the index.
+name|void
+name|getPotentialVariableCapture
+argument_list|(
+argument|unsigned Idx
+argument_list|,
+argument|VarDecl *&VD
+argument_list|,
+argument|Expr *&E
+argument_list|)
+block|;   }
 block|;
 name|FunctionScopeInfo
 operator|::

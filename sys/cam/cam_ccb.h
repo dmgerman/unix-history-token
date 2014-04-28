@@ -382,23 +382,14 @@ comment|/* Disconnects are mandatory     */
 name|CAM_SEND_STATUS
 init|=
 literal|0x40000000
+block|,
 comment|/* Send status after data phase  */
+name|CAM_UNLOCKED
+init|=
+literal|0x80000000
+comment|/* Call callback without lock.   */
 block|}
 name|ccb_flags
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CAM_EXTLUN_VALID
-init|=
-literal|0x00000001
-block|,
-comment|/* 64bit lun field is valid      */
-block|}
-name|ccb_xflags
 typedef|;
 end_typedef
 
@@ -513,6 +504,17 @@ init|=
 literal|0x0e
 block|,
 comment|/* Get/Set Device advanced information */
+name|XPT_ASYNC
+init|=
+literal|0x0f
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
+operator||
+name|XPT_FC_XPT_ONLY
+block|,
+comment|/* Asynchronous event */
 comment|/* SCSI Control Functions: 0x10->0x1F */
 name|XPT_ABORT
 init|=
@@ -1082,10 +1084,6 @@ name|lun_id_t
 name|target_lun
 decl_stmt|;
 comment|/* Target LUN number */
-name|lun64_id_t
-name|ext_lun
-decl_stmt|;
-comment|/* 64bit extended/multi-level LUNs */
 name|u_int32_t
 name|flags
 decl_stmt|;
@@ -1815,7 +1813,7 @@ begin_define
 define|#
 directive|define
 name|CAM_VERSION
-value|0x18
+value|0x19
 end_define
 
 begin_comment
@@ -3856,6 +3854,32 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * CCB for sending async events  */
+end_comment
+
+begin_struct
+struct|struct
+name|ccb_async
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+name|uint32_t
+name|async_code
+decl_stmt|;
+name|off_t
+name|async_arg_size
+decl_stmt|;
+name|void
+modifier|*
+name|async_arg_ptr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Union of all CCB types for kernel space allocation.  This union should  * never be used for manipulating CCBs - its only use is for the allocation  * and deallocation of raw CCB space and is the return type of xpt_ccb_alloc  * and the argument to xpt_ccb_free.  */
 end_comment
 
@@ -3991,6 +4015,10 @@ decl_stmt|;
 name|struct
 name|ccb_dev_advinfo
 name|cdai
+decl_stmt|;
+name|struct
+name|ccb_async
+name|casync
 decl_stmt|;
 block|}
 union|;

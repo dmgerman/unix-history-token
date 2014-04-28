@@ -65,6 +65,11 @@ name|defined
 argument_list|(
 name|__linux__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNU__
+argument_list|)
 end_elif
 
 begin_include
@@ -116,6 +121,21 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/mingw/Config.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/msvc/Config.h"
 end_include
 
 begin_else

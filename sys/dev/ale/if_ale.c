@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -9162,6 +9168,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|m_freem
+argument_list|(
+operator|*
+name|m_head
+argument_list|)
+expr_stmt|;
 operator|*
 name|m_head
 operator|=

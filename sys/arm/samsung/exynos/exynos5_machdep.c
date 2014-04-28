@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/pmap.h>
+file|<machine/armreg.h>
 end_include
 
 begin_include
@@ -74,12 +74,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
+file|<machine/devmap.h>
 end_include
-
-begin_comment
-comment|/* For trapframe_t, used in<machine/machdep.h> */
-end_comment
 
 begin_include
 include|#
@@ -90,21 +86,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|DEVMAP_BOOTSTRAP_MAP_START
-value|0xF0000000
-end_define
 
 begin_function
 name|vm_offset_t
@@ -115,12 +98,20 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|DEVMAP_BOOTSTRAP_MAP_START
-operator|-
-name|ARM_NOCACHE_KVA_SIZE
+name|arm_devmap_lastaddr
+argument_list|()
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|initarm_early_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
 end_function
 
 begin_function
@@ -129,7 +120,7 @@ name|initarm_gpio_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -138,120 +129,23 @@ name|initarm_late_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{  }
 end_function
-
-begin_define
-define|#
-directive|define
-name|FDT_DEVMAP_MAX
-value|(1 + 2 + 1 + 1)
-end_define
-
-begin_comment
-comment|/* FIXME */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|pmap_devmap
-name|fdt_devmap
-index|[
-name|FDT_DEVMAP_MAX
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Construct pmap_devmap[] with DT-derived config data.  */
-end_comment
 
 begin_function
 name|int
-name|platform_devmap_init
+name|initarm_devmap_init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_va
-operator|=
-literal|0xf2C00000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_pa
-operator|=
+comment|/* UART */
+name|arm_devmap_add_entry
+argument_list|(
 literal|0x12C00000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_size
-operator|=
+argument_list|,
 literal|0x100000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_prot
-operator|=
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_cache
-operator|=
-name|PTE_NOCACHE
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-name|pmap_devmap_bootstrap_table
-operator|=
-operator|&
-name|fdt_devmap
-index|[
-literal|0
-index|]
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

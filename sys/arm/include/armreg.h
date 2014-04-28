@@ -255,57 +255,7 @@ value|(!CPU_ID_ISOLD(x)&& !CPU_ID_IS7(x))
 end_define
 
 begin_comment
-comment|/* On ARM3 and ARM6, this byte holds the foundry ID. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_FOUNDRY_MASK
-value|0x00ff0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_FOUNDRY_VLSI
-value|0x00560000
-end_define
-
-begin_comment
-comment|/* On ARM7 it holds the architecture and variant (sub-model) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_7ARCH_MASK
-value|0x00800000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_7ARCH_V3
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_7ARCH_V4T
-value|0x00800000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_7VARIANT_MASK
-value|0x007f0000
-end_define
-
-begin_comment
-comment|/* On more recent ARMs, it does the same, but in a different format */
+comment|/* On recent ARMs this byte holds the architecture and variant (sub-model) */
 end_comment
 
 begin_define
@@ -456,148 +406,8 @@ value|0xfffffff0
 end_define
 
 begin_comment
-comment|/* Fake CPU IDs for ARMs without CP15 */
+comment|/* ARM9 and later CPUs */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM2
-value|0x41560200
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM250
-value|0x41560250
-end_define
-
-begin_comment
-comment|/* Pre-ARM7 CPUs -- [15:12] == 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM3
-value|0x41560300
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM600
-value|0x41560600
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM610
-value|0x41560610
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM620
-value|0x41560620
-end_define
-
-begin_comment
-comment|/* ARM7 CPUs -- [15:12] == 7 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM700
-value|0x41007000
-end_define
-
-begin_comment
-comment|/* XXX This is a guess. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM710
-value|0x41007100
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM7500
-value|0x41027100
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM710A
-value|0x41047100
-end_define
-
-begin_comment
-comment|/* inc ARM7100 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM7500FE
-value|0x41077100
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM710T
-value|0x41807100
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM720T
-value|0x41807200
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM740T8K
-value|0x41807400
-end_define
-
-begin_comment
-comment|/* XXX no MMU, 8KB cache */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM740T4K
-value|0x41817400
-end_define
-
-begin_comment
-comment|/* XXX no MMU, 4KB cache */
-end_comment
-
-begin_comment
-comment|/* Post-ARM7 CPUs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM810
-value|0x41018100
-end_define
 
 begin_define
 define|#
@@ -720,6 +530,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_CORTEXA5
+value|0x410fc050
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_CORTEXA7
 value|0x410fc070
 end_define
@@ -769,23 +586,41 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPU_ID_CORTEXA15
+name|CPU_ID_CORTEXA15R0
 value|0x410fc0f0
 end_define
 
 begin_define
 define|#
 directive|define
-name|CPU_ID_SA110
-value|0x4401a100
+name|CPU_ID_CORTEXA15R1
+value|0x411fc0f0
 end_define
 
 begin_define
 define|#
 directive|define
-name|CPU_ID_SA1100
-value|0x4401a110
+name|CPU_ID_CORTEXA15R2
+value|0x412fc0f0
 end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA15R3
+value|0x413fc0f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_KRAIT
+value|0x510f06f0
+end_define
+
+begin_comment
+comment|/* Snapdragon S4 Pro/APQ8064 */
+end_comment
 
 begin_define
 define|#
@@ -868,34 +703,12 @@ end_endif
 begin_define
 define|#
 directive|define
-name|CPU_ID_MV88SV581X_V6
-value|0x560F5810
-end_define
-
-begin_comment
-comment|/* Marvell Sheeva 88SV581x v6 Core */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CPU_ID_MV88SV581X_V7
 value|0x561F5810
 end_define
 
 begin_comment
 comment|/* Marvell Sheeva 88SV581x v7 Core */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_MV88SV584X_V6
-value|0x561F5840
-end_define
-
-begin_comment
-comment|/* Marvell Sheeva 88SV584x v6 Core */
 end_comment
 
 begin_define
@@ -916,34 +729,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPU_ID_ARM_88SV581X_V6
-value|0x410fb760
-end_define
-
-begin_comment
-comment|/* Marvell Sheeva 88SV581x v6 Core */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CPU_ID_ARM_88SV581X_V7
 value|0x413FC080
 end_define
 
 begin_comment
 comment|/* Marvell Sheeva 88SV581x v7 Core */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_ARM_88SV584X_V6
-value|0x410FB020
-end_define
-
-begin_comment
-comment|/* Marvell Sheeva 88SV584x v6 Core */
 end_comment
 
 begin_define
@@ -958,20 +749,6 @@ define|#
 directive|define
 name|CPU_ID_FA626TE
 value|0x66056260
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_SA1110
-value|0x6901b110
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_IXP1200
-value|0x6901c120
 end_define
 
 begin_define
@@ -1169,70 +946,6 @@ define|#
 directive|define
 name|CPU_ID_IXP465
 value|0x69054200
-end_define
-
-begin_comment
-comment|/* ARM3-specific coprocessor 15 registers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARM3_CP15_FLUSH
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM3_CP15_CONTROL
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM3_CP15_CACHEABLE
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM3_CP15_UPDATEABLE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM3_CP15_DISRUPTIVE
-value|5
-end_define
-
-begin_comment
-comment|/* ARM3 Control register bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARM3_CTL_CACHE_ON
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM3_CTL_SHARED
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM3_CTL_MONITOR
-value|0x00000004
 end_define
 
 begin_comment
@@ -2100,7 +1813,7 @@ begin_define
 define|#
 directive|define
 name|CPUV7_CT_CTYPE_WT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2450,6 +2163,28 @@ end_define
 
 begin_comment
 comment|/* Imprecise exception (XSCALE) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_EXTERNAL
+value|0x400
+end_define
+
+begin_comment
+comment|/* External abort (armv6+) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_WNR
+value|0x800
+end_define
+
+begin_comment
+comment|/* Write-not-Read access (armv6+) */
 end_comment
 
 begin_comment

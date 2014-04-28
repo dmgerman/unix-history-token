@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_types.h>
 end_include
 
@@ -1010,6 +1016,16 @@ argument_list|(
 name|OPTION
 argument_list|,
 name|GMT382
+argument_list|,
+name|UHSO_AUTO_IFACE
+argument_list|)
+block|,
+comment|/* Option GTM661W */
+name|UHSO_DEV
+argument_list|(
+name|OPTION
+argument_list|,
+name|GTM661W
 argument_list|,
 name|UHSO_AUTO_IFACE
 argument_list|)
@@ -4027,6 +4043,12 @@ name|UHSO_PORT_TYPE_DIAG
 case|:
 case|case
 name|UHSO_PORT_TYPE_DIAG2
+case|:
+case|case
+name|UHSO_PORT_TYPE_GPS
+case|:
+case|case
+name|UHSO_PORT_TYPE_GPSCTL
 case|:
 case|case
 name|UHSO_PORT_TYPE_CTL

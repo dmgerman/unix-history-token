@@ -841,9 +841,9 @@ name|nandbus_mtx
 argument_list|,
 literal|"nandbus lock"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -927,9 +927,26 @@ operator|==
 literal|0xff
 condition|)
 continue|continue;
-comment|/* Check if chip is ONFI compliant */
+comment|/* 		 * First try to get info from the table.  If that fails, see if 		 * the chip can provide ONFI info.  We check the table first to 		 * allow table entries to override info from chips that are 		 * known to provide bad ONFI data. 		 */
+name|onfi
+operator|=
+literal|0
+expr_stmt|;
+name|chip_params
+operator|=
+name|nand_get_params
+argument_list|(
+operator|&
+name|chip_id
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+name|chip_params
+operator|==
+name|NULL
+condition|)
+block|{
 name|nand_probe_onfi
 argument_list|(
 name|dev
@@ -937,10 +954,48 @@ argument_list|,
 operator|&
 name|onfi
 argument_list|)
-operator|!=
+expr_stmt|;
+block|}
+comment|/* 		 * At this point it appears there is a chip at this chipselect, 		 * so if we can't work with it, whine about it. 		 */
+if|if
+condition|(
+name|chip_params
+operator|==
+name|NULL
+operator|&&
+name|onfi
+operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+operator|||
+operator|(
+name|nand_debug_flag
+operator|&
+name|NDBG_BUS
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"Chip params not found, chipsel: %d "
+literal|"(manuf: 0x%0x, chipid: 0x%0x, onfi: %d)\n"
+argument_list|,
+name|cs
+argument_list|,
+name|chip_id
+operator|.
+name|man_id
+argument_list|,
+name|chip_id
+operator|.
+name|dev_id
+argument_list|,
+name|onfi
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|ivar
@@ -1036,46 +1091,6 @@ argument_list|(
 name|child
 argument_list|,
 name|ivar
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-name|chip_params
-operator|=
-name|nand_get_params
-argument_list|(
-operator|&
-name|chip_id
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|chip_params
-operator|==
-name|NULL
-condition|)
-block|{
-name|nand_debug
-argument_list|(
-name|NDBG_BUS
-argument_list|,
-literal|"Chip description not found! "
-literal|"(manuf: 0x%0x, chipid: 0x%0x)\n"
-argument_list|,
-name|chip_id
-operator|.
-name|man_id
-argument_list|,
-name|chip_id
-operator|.
-name|dev_id
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ivar
-argument_list|,
-name|M_NAND
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2211,7 +2226,7 @@ literal|50
 operator|*
 literal|5000
 expr_stmt|;
-comment|/* 10ms */
+comment|/* 250ms */
 name|getmicrotime
 argument_list|(
 operator|&

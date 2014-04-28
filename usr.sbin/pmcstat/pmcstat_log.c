@@ -325,6 +325,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"pmcpl_annotate_cg.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pmcpl_calltree.h"
 end_include
 
@@ -592,6 +598,18 @@ operator|.
 name|pl_topdisplay
 operator|=
 name|pmcpl_ct_topdisplay
+block|}
+block|,
+block|{
+operator|.
+name|pl_name
+operator|=
+literal|"annotate_cg"
+block|,
+operator|.
+name|pl_process
+operator|=
+name|pmcpl_annotate_cg_process
 block|}
 block|,
 block|{

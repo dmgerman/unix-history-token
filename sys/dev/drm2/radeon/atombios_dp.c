@@ -1266,8 +1266,11 @@ literal|0
 index|]
 expr_stmt|;
 return|return
-name|ret
+operator|(
+literal|0
+operator|)
 return|;
+comment|/* Return ret on Linux. */
 case|case
 name|AUX_I2C_REPLY_NACK
 case|:

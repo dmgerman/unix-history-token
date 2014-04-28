@@ -53,6 +53,42 @@ directive|include
 file|<stdint.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/windows/windows.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<winsock2.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<WS2tcpip.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|ADDRESS_FAMILY
+name|sa_family_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -70,6 +106,11 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -290,7 +331,7 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|// Get the port if the socket address for the family has a port
 comment|//------------------------------------------------------------------
-name|in_port_t
+name|uint16_t
 name|GetPort
 argument_list|()
 specifier|const
@@ -302,7 +343,7 @@ comment|//------------------------------------------------------------------
 name|bool
 name|SetPort
 parameter_list|(
-name|in_port_t
+name|uint16_t
 name|port
 parameter_list|)
 function_decl|;
@@ -314,15 +355,8 @@ comment|// filled in with the match that was used to populate this socket
 comment|// address.
 comment|//------------------------------------------------------------------
 name|bool
-name|SetAddress
+name|getaddrinfo
 parameter_list|(
-specifier|const
-name|struct
-name|addrinfo
-modifier|*
-name|hints_ptr
-parameter_list|,
-comment|// Optional hints where the family, protocol and other things can be specified.
 specifier|const
 name|char
 modifier|*
@@ -335,13 +369,27 @@ modifier|*
 name|service
 parameter_list|,
 comment|// Protocol name ("tcp", "http", etc) or a raw port number string ("81")
-name|struct
-name|addrinfo
-modifier|*
-name|addr_info_ptr
+name|int
+name|ai_family
+init|=
+name|PF_UNSPEC
+parameter_list|,
+name|int
+name|ai_socktype
+init|=
+literal|0
+parameter_list|,
+name|int
+name|ai_protocol
+init|=
+literal|0
+parameter_list|,
+name|int
+name|ai_flags
+init|=
+literal|0
 parameter_list|)
 function_decl|;
-comment|// If non-NULL, this will get filled in with the match
 comment|//------------------------------------------------------------------
 comment|// Quick way to set the SocketAddress to localhost given the family.
 comment|// Returns true if successful, false if "family" doesn't support
@@ -353,7 +401,17 @@ parameter_list|(
 name|sa_family_t
 name|family
 parameter_list|,
-name|in_port_t
+name|uint16_t
+name|port
+parameter_list|)
+function_decl|;
+name|bool
+name|SetToAnyAddress
+parameter_list|(
+name|sa_family_t
+name|family
+parameter_list|,
+name|uint16_t
 name|port
 parameter_list|)
 function_decl|;

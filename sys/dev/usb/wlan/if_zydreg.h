@@ -3470,7 +3470,7 @@ begin_define
 define|#
 directive|define
 name|ZYD_FILTER_CFE_A
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment

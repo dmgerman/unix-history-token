@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_turnstile_profiling.h"
 end_include
 
@@ -587,8 +581,6 @@ argument_list|(
 name|sched
 argument_list|, , ,
 name|sleep
-argument_list|,
-name|sleep
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -598,8 +590,6 @@ name|SDT_PROBE_DEFINE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|wakeup
-argument_list|,
 name|wakeup
 argument_list|,
 literal|"struct thread *"

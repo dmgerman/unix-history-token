@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.109 2013/07/19 07:37:48 markus Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.112 2014/01/29 06:18:35 djm Exp $ */
 end_comment
 
 begin_comment
@@ -400,6 +400,10 @@ name|xauth_location
 decl_stmt|;
 comment|/* Location of xauth program */
 name|int
+name|permit_tty
+decl_stmt|;
+comment|/* If false, deny pty allocation */
+name|int
 name|strict_modes
 decl_stmt|;
 comment|/* If true, require string home dir modes. */
@@ -501,10 +505,6 @@ comment|/* If true, permit */
 name|int
 name|challenge_response_authentication
 decl_stmt|;
-name|int
-name|zero_knowledge_password_authentication
-decl_stmt|;
-comment|/* If true, permit jpake auth */
 name|int
 name|permit_empty_passwd
 decl_stmt|;
@@ -769,7 +769,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * These are string config options that must be copied between the  * Match sub-config and the main config, and must be sent from the  * privsep slave to the privsep master. We use a macro to ensure all  * the options are copied and the copies are done in the correct order.  */
+comment|/*  * These are string config options that must be copied between the  * Match sub-config and the main config, and must be sent from the  * privsep slave to the privsep master. We use a macro to ensure all  * the options are copied and the copies are done in the correct order.  *  * NB. an option must appear in servconf.c:copy_set_server_options() or  * COPY_MATCH_STRING_OPTS here but never both.  */
 end_comment
 
 begin_define

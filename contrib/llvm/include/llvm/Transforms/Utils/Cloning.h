@@ -368,6 +368,12 @@ operator|*
 name|TypeMapper
 operator|=
 literal|0
+argument_list|,
+name|ValueMaterializer
+operator|*
+name|Materializer
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// CloneAndPruneFunctionInto - This works exactly like CloneFunctionInto,

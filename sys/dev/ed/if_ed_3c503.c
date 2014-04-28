@@ -110,6 +110,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_comment
+comment|/* XXX: ed_3c503_mediachg() */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -642,15 +652,43 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Determine if this is an 8bit or 16bit board 	 */
 comment|/* 	 * select page 0 registers 	 */
+name|ed_nic_barrier
+argument_list|(
+name|sc
+argument_list|,
+name|ED_P0_CR
+argument_list|,
+literal|1
+argument_list|,
+name|BUS_SPACE_BARRIER_READ
+operator||
+name|BUS_SPACE_BARRIER_WRITE
+argument_list|)
+expr_stmt|;
 name|ed_nic_outb
 argument_list|(
 name|sc
 argument_list|,
 name|ED_P0_CR
 argument_list|,
+name|ED_CR_PAGE_0
+operator||
 name|ED_CR_RD2
 operator||
 name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+name|ed_nic_barrier
+argument_list|(
+name|sc
+argument_list|,
+name|ED_P0_CR
+argument_list|,
+literal|1
+argument_list|,
+name|BUS_SPACE_BARRIER_READ
+operator||
+name|BUS_SPACE_BARRIER_WRITE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Attempt to clear WTS bit. If it doesn't clear, then this is a 16bit 	 * board. 	 */
@@ -664,6 +702,19 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * select page 2 registers 	 */
+name|ed_nic_barrier
+argument_list|(
+name|sc
+argument_list|,
+name|ED_P0_CR
+argument_list|,
+literal|1
+argument_list|,
+name|BUS_SPACE_BARRIER_READ
+operator||
+name|BUS_SPACE_BARRIER_WRITE
+argument_list|)
+expr_stmt|;
 name|ed_nic_outb
 argument_list|(
 name|sc
@@ -675,6 +726,19 @@ operator||
 name|ED_CR_RD2
 operator||
 name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+name|ed_nic_barrier
+argument_list|(
+name|sc
+argument_list|,
+name|ED_P0_CR
+argument_list|,
+literal|1
+argument_list|,
+name|BUS_SPACE_BARRIER_READ
+operator||
+name|BUS_SPACE_BARRIER_WRITE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The 3c503 forces the WTS bit to a one if this is a 16bit board 	 */

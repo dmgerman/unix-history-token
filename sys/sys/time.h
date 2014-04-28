@@ -557,6 +557,13 @@ name|SBT_1NS
 value|(SBT_1S / 1000000000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SBT_MAX
+value|INT64_MAX
+end_define
+
 begin_function
 specifier|static
 name|__inline

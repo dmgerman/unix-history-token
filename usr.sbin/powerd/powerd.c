@@ -1468,6 +1468,10 @@ name|acline_mib_len
 operator|=
 literal|4
 expr_stmt|;
+name|acline_status
+operator|=
+name|SRC_UNKNOWN
+expr_stmt|;
 if|if
 condition|(
 name|sysctlnametomib

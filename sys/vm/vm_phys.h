@@ -443,7 +443,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+=

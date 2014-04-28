@@ -3402,7 +3402,25 @@ block|,
 name|ECORE_RSS_IPV6_UDP
 block|,
 name|ECORE_RSS_TUNNELING
-block|, }
+block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__VMKLNX__
+argument_list|)
+operator|&&
+operator|(
+name|VMWARE_ESX_DDK_VERSION
+operator|<
+literal|55000
+operator|)
+comment|/* ! BNX2X_UPSTREAM */
+name|ECORE_RSS_MODE_ESX51
+block|,
+endif|#
+directive|endif
+block|}
 enum|;
 end_enum
 
@@ -5498,6 +5516,27 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|ind_table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* set as inline so printout will show the offending function */
+end_comment
+
+begin_function_decl
+name|int
+name|validate_vlan_mac
+parameter_list|(
+name|struct
+name|bxe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ecore_vlan_mac_obj
+modifier|*
+name|vlan_mac
 parameter_list|)
 function_decl|;
 end_function_decl

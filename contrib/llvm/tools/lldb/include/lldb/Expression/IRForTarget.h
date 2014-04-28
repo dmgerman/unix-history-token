@@ -91,6 +91,12 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -118,6 +124,9 @@ name|GlobalVariable
 decl_stmt|;
 name|class
 name|Instruction
+decl_stmt|;
+name|class
+name|IntegerType
 decl_stmt|;
 name|class
 name|Module
@@ -1175,6 +1184,13 @@ operator|*
 name|m_sel_registerName
 block|;
 comment|///< The address of the function sel_registerName, cast to the appropriate function pointer type
+name|llvm
+operator|::
+name|IntegerType
+operator|*
+name|m_intptr_ty
+block|;
+comment|///< The type of an integer large enough to hold a pointer.
 name|lldb_private
 operator|::
 name|Stream

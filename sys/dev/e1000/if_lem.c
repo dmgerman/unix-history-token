@@ -159,6 +159,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -12574,7 +12580,7 @@ name|adapter
 operator|->
 name|tx_desc_base
 index|[
-name|si
+name|i
 index|]
 operator|.
 name|buffer_addr
@@ -13955,12 +13961,6 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|0
-operator||
-operator|(
-name|NETMAP_LOCKED_ENTER
-operator||
-name|NETMAP_LOCKED_EXIT
-operator|)
 argument_list|)
 condition|)
 return|return;
@@ -14790,7 +14790,7 @@ name|adapter
 operator|->
 name|rxtag
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 operator|&
 name|adapter
@@ -14851,7 +14851,7 @@ name|adapter
 operator|->
 name|rxtag
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 operator|&
 name|rx_buffer
@@ -15618,6 +15618,9 @@ name|IFCAP_NETMAP
 condition|)
 name|rctl
 operator|-=
+name|nm_kr_rxspace
+argument_list|(
+operator|&
 name|NA
 argument_list|(
 name|adapter
@@ -15629,8 +15632,7 @@ name|rx_rings
 index|[
 literal|0
 index|]
-operator|.
-name|nr_hwavail
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -16005,18 +16007,23 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|0
-operator||
-name|NETMAP_LOCKED_ENTER
 argument_list|,
 operator|&
 name|rx_sent
 argument_list|)
 condition|)
+block|{
+name|EM_RX_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 comment|/* DEV_NETMAP */

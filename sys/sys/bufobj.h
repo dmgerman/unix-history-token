@@ -88,7 +88,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* A Buffer splay list */
+comment|/* A Buffer list& trie */
 end_comment
 
 begin_struct

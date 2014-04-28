@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.85 2013/07/12 00:19:58 djm Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.86 2014/01/27 19:18:54 markus Exp $ */
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/rsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/md5.h>
 end_include
 
 begin_include
@@ -178,6 +172,12 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"digest.h"
 end_include
 
 begin_comment
@@ -345,7 +345,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|MD5_CTX
+name|struct
+name|ssh_digest_ctx
+modifier|*
 name|md
 decl_stmt|;
 name|int
@@ -368,7 +370,9 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"auth_rsa_verify_response: RSA modulus too small: %d< minimum %d bits"
+literal|"%s: RSA modulus too small: %d< minimum %d bits"
+argument_list|,
+name|__func__
 argument_list|,
 name|BN_num_bits
 argument_list|(
@@ -408,7 +412,9 @@ literal|32
 condition|)
 name|fatal
 argument_list|(
-literal|"auth_rsa_verify_response: bad challenge length %d"
+literal|"%s: bad challenge length %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|len
 argument_list|)
@@ -433,37 +439,64 @@ operator|-
 name|len
 argument_list|)
 expr_stmt|;
-name|MD5_Init
-argument_list|(
-operator|&
+if|if
+condition|(
+operator|(
 name|md
-argument_list|)
-expr_stmt|;
-name|MD5_Update
+operator|=
+name|ssh_digest_start
 argument_list|(
-operator|&
+name|SSH_DIGEST_MD5
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+name|ssh_digest_update
+argument_list|(
 name|md
 argument_list|,
 name|buf
 argument_list|,
 literal|32
 argument_list|)
-expr_stmt|;
-name|MD5_Update
+operator|<
+literal|0
+operator|||
+name|ssh_digest_update
 argument_list|(
-operator|&
 name|md
 argument_list|,
 name|session_id
 argument_list|,
 literal|16
 argument_list|)
-expr_stmt|;
-name|MD5_Final
+operator|<
+literal|0
+operator|||
+name|ssh_digest_final
 argument_list|(
+name|md
+argument_list|,
 name|mdbuf
 argument_list|,
-operator|&
+sizeof|sizeof
+argument_list|(
+name|mdbuf
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: md5 failed"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|ssh_digest_free
+argument_list|(
 name|md
 argument_list|)
 expr_stmt|;

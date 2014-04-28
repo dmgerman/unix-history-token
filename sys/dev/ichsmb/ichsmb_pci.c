@@ -256,6 +256,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_AVOTON
+value|0x1f3c8086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_COLETOCRK
 value|0x23B08086
 end_define
@@ -689,6 +696,17 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Intel Panther Point SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_AVOTON
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel Avoton SMBus controller"
 argument_list|)
 expr_stmt|;
 break|break;

@@ -77,6 +77,12 @@ directive|include
 file|"lldb/Target/ThreadPlan.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -94,52 +100,34 @@ name|public
 operator|:
 name|ThreadPlanCallFunction
 argument_list|(
-argument|Thread&thread
+name|Thread
+operator|&
+name|thread
 argument_list|,
-argument|const Address&function
+specifier|const
+name|Address
+operator|&
+name|function
 argument_list|,
-argument|const ClangASTType&return_type
+specifier|const
+name|ClangASTType
+operator|&
+name|return_type
 argument_list|,
-argument|lldb::addr_t arg
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|lldb
+operator|::
+name|addr_t
+operator|>
+name|args
 argument_list|,
-argument|bool stop_other_threads
-argument_list|,
-argument|bool unwind_on_error = true
-argument_list|,
-argument|bool ignore_breakpoints = false
-argument_list|,
-argument|lldb::addr_t *this_arg =
-literal|0
-argument_list|,
-argument|lldb::addr_t *cmd_arg =
-literal|0
-argument_list|)
-block|;
-name|ThreadPlanCallFunction
-argument_list|(
-argument|Thread&thread
-argument_list|,
-argument|const Address&function
-argument_list|,
-argument|const ClangASTType&return_type
-argument_list|,
-argument|bool stop_other_threads
-argument_list|,
-argument|bool unwind_on_error
-argument_list|,
-argument|bool ignore_breakpoints
-argument_list|,
-argument|lldb::addr_t *arg1_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg2_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg3_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg4_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg5_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg6_ptr = NULL
+specifier|const
+name|EvaluateExpressionOptions
+operator|&
+name|options
 argument_list|)
 block|;
 name|virtual
@@ -298,6 +286,15 @@ name|bool
 name|RestoreThreadState
 argument_list|()
 block|;
+name|virtual
+name|void
+name|ThreadDestroyed
+argument_list|()
+block|{
+name|m_takedown_done
+operator|=
+name|true
+block|;     }
 name|protected
 operator|:
 name|void
@@ -369,6 +366,18 @@ block|;
 name|bool
 name|m_stop_other_threads
 block|;
+name|bool
+name|m_unwind_on_error
+block|;
+name|bool
+name|m_ignore_breakpoints
+block|;
+name|bool
+name|m_debug_execution
+block|;
+name|bool
+name|m_trap_exceptions
+block|;
 name|Address
 name|m_function_addr
 block|;
@@ -379,11 +388,6 @@ name|lldb
 operator|::
 name|addr_t
 name|m_function_sp
-block|;
-name|Thread
-operator|::
-name|RegisterCheckpoint
-name|m_register_backup
 block|;
 name|lldb
 operator|::
@@ -428,18 +432,18 @@ name|bool
 name|m_takedown_done
 block|;
 comment|// We want to ensure we only do the takedown once.  This ensures that.
+name|bool
+name|m_should_clear_objc_exception_bp
+block|;
+name|bool
+name|m_should_clear_cxx_exception_bp
+block|;
 name|lldb
 operator|::
 name|addr_t
 name|m_stop_address
 block|;
 comment|// This is the address we stopped at.  Also set in DoTakedown;
-name|bool
-name|m_unwind_on_error
-block|;
-name|bool
-name|m_ignore_breakpoints
-block|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ThreadPlanCallFunction

@@ -412,6 +412,29 @@ parameter_list|)
 value|(APR_STATUS_IS_ENOTDIR(s) \                       || ((s) == APR_OS_START_SYSERR + ERROR_DIRECTORY) \                       || ((s) == APR_OS_START_SYSERR + ERROR_INVALID_NAME))
 endif|#
 directive|endif
+comment|/** On Windows, APR_STATUS_IS_EPIPE does not include ERROR_NO_DATA error.  * So we include it.*/
+comment|/* ### These fixes should go into APR. */
+ifndef|#
+directive|ifndef
+name|WIN32
+define|#
+directive|define
+name|SVN__APR_STATUS_IS_EPIPE
+parameter_list|(
+name|s
+parameter_list|)
+value|APR_STATUS_IS_EPIPE(s)
+else|#
+directive|else
+define|#
+directive|define
+name|SVN__APR_STATUS_IS_EPIPE
+parameter_list|(
+name|s
+parameter_list|)
+value|(APR_STATUS_IS_EPIPE(s) \                       || ((s) == APR_OS_START_SYSERR + ERROR_NO_DATA))
+endif|#
+directive|endif
 comment|/** @} */
 comment|/** The various types of nodes in the Subversion filesystem. */
 typedef|typedef

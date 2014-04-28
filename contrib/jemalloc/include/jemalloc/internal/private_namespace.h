@@ -72,6 +72,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|arena_dalloc_junk_large
+value|JEMALLOC_N(arena_dalloc_junk_large)
+end_define
+
+begin_define
+define|#
+directive|define
 name|arena_dalloc_junk_small
 value|JEMALLOC_N(arena_dalloc_junk_small)
 end_define
@@ -247,6 +254,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|arena_mapbitsp_read
+value|JEMALLOC_N(arena_mapbitsp_read)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arena_mapbitsp_write
+value|JEMALLOC_N(arena_mapbitsp_write)
+end_define
+
+begin_define
+define|#
+directive|define
 name|arena_mapp_get
 value|JEMALLOC_N(arena_mapp_get)
 end_define
@@ -352,6 +373,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|arena_quarantine_junk_small
+value|JEMALLOC_N(arena_quarantine_junk_small)
+end_define
+
+begin_define
+define|#
+directive|define
 name|arena_ralloc
 value|JEMALLOC_N(arena_ralloc)
 end_define
@@ -359,8 +387,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|arena_ralloc_junk_large
+value|JEMALLOC_N(arena_ralloc_junk_large)
+end_define
+
+begin_define
+define|#
+directive|define
 name|arena_ralloc_no_move
 value|JEMALLOC_N(arena_ralloc_no_move)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arena_redzone_corruption
+value|JEMALLOC_N(arena_redzone_corruption)
 end_define
 
 begin_define
@@ -473,6 +515,13 @@ define|#
 directive|define
 name|arenas_tsd_get_wrapper
 value|JEMALLOC_N(arenas_tsd_get_wrapper)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arenas_tsd_init_head
+value|JEMALLOC_N(arenas_tsd_init_head)
 end_define
 
 begin_define
@@ -1339,6 +1388,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|huge_dalloc_junk
+value|JEMALLOC_N(huge_dalloc_junk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|huge_dss_prec_get
+value|JEMALLOC_N(huge_dss_prec_get)
+end_define
+
+begin_define
+define|#
+directive|define
 name|huge_malloc
 value|JEMALLOC_N(huge_malloc)
 end_define
@@ -1444,8 +1507,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|icallocx
-value|JEMALLOC_N(icallocx)
+name|icalloct
+value|JEMALLOC_N(icalloct)
 end_define
 
 begin_define
@@ -1458,8 +1521,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|idallocx
-value|JEMALLOC_N(idallocx)
+name|idalloct
+value|JEMALLOC_N(idalloct)
 end_define
 
 begin_define
@@ -1472,8 +1535,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|imallocx
-value|JEMALLOC_N(imallocx)
+name|imalloct
+value|JEMALLOC_N(imalloct)
 end_define
 
 begin_define
@@ -1486,8 +1549,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ipallocx
-value|JEMALLOC_N(ipallocx)
+name|ipalloct
+value|JEMALLOC_N(ipalloct)
 end_define
 
 begin_define
@@ -1500,8 +1563,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|iqallocx
-value|JEMALLOC_N(iqallocx)
+name|iqalloct
+value|JEMALLOC_N(iqalloct)
 end_define
 
 begin_define
@@ -1514,8 +1577,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|irallocx
-value|JEMALLOC_N(irallocx)
+name|iralloct
+value|JEMALLOC_N(iralloct)
+end_define
+
+begin_define
+define|#
+directive|define
+name|iralloct_realign
+value|JEMALLOC_N(iralloct_realign)
 end_define
 
 begin_define
@@ -1530,6 +1600,13 @@ define|#
 directive|define
 name|ivsalloc
 value|JEMALLOC_N(ivsalloc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ixalloc
+value|JEMALLOC_N(ixalloc)
 end_define
 
 begin_define
@@ -1745,6 +1822,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|opt_dss
+value|JEMALLOC_N(opt_dss)
+end_define
+
+begin_define
+define|#
+directive|define
 name|opt_junk
 value|JEMALLOC_N(opt_junk)
 end_define
@@ -1948,6 +2032,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|prof_bt_count
+value|JEMALLOC_N(prof_bt_count)
+end_define
+
+begin_define
+define|#
+directive|define
 name|prof_ctx_get
 value|JEMALLOC_N(prof_ctx_get)
 end_define
@@ -1957,6 +2048,13 @@ define|#
 directive|define
 name|prof_ctx_set
 value|JEMALLOC_N(prof_ctx_set)
+end_define
+
+begin_define
+define|#
+directive|define
+name|prof_dump_open
+value|JEMALLOC_N(prof_dump_open)
 end_define
 
 begin_define
@@ -2137,6 +2235,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|prof_tdata_tsd_init_head
+value|JEMALLOC_N(prof_tdata_tsd_init_head)
+end_define
+
+begin_define
+define|#
+directive|define
 name|prof_tdata_tsd_set
 value|JEMALLOC_N(prof_tdata_tsd_set)
 end_define
@@ -2228,6 +2333,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|quarantine_tsd_init_head
+value|JEMALLOC_N(quarantine_tsd_init_head)
+end_define
+
+begin_define
+define|#
+directive|define
 name|quarantine_tsd_set
 value|JEMALLOC_N(quarantine_tsd_set)
 end_define
@@ -2237,6 +2349,13 @@ define|#
 directive|define
 name|register_zone
 value|JEMALLOC_N(register_zone)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rtree_delete
+value|JEMALLOC_N(rtree_delete)
 end_define
 
 begin_define
@@ -2307,6 +2426,13 @@ define|#
 directive|define
 name|set_errno
 value|JEMALLOC_N(set_errno)
+end_define
+
+begin_define
+define|#
+directive|define
+name|small_size2bin
+value|JEMALLOC_N(small_size2bin)
 end_define
 
 begin_define
@@ -2536,6 +2662,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|tcache_enabled_tsd_init_head
+value|JEMALLOC_N(tcache_enabled_tsd_init_head)
+end_define
+
+begin_define
+define|#
+directive|define
 name|tcache_enabled_tsd_set
 value|JEMALLOC_N(tcache_enabled_tsd_set)
 end_define
@@ -2648,6 +2781,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|tcache_tsd_init_head
+value|JEMALLOC_N(tcache_tsd_init_head)
+end_define
+
+begin_define
+define|#
+directive|define
 name|tcache_tsd_set
 value|JEMALLOC_N(tcache_tsd_set)
 end_define
@@ -2711,8 +2851,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|thread_allocated_tsd_init_head
+value|JEMALLOC_N(thread_allocated_tsd_init_head)
+end_define
+
+begin_define
+define|#
+directive|define
 name|thread_allocated_tsd_set
 value|JEMALLOC_N(thread_allocated_tsd_set)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tsd_init_check_recursion
+value|JEMALLOC_N(tsd_init_check_recursion)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tsd_init_finish
+value|JEMALLOC_N(tsd_init_finish)
 end_define
 
 begin_define

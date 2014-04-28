@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1408,6 +1412,8 @@ argument_list|,
 name|blkid
 operator|+
 name|i
+argument_list|,
+name|ZIO_PRIORITY_ASYNC_READ
 argument_list|)
 expr_stmt|;
 block|}
@@ -2675,6 +2681,15 @@ name|zstream_t
 modifier|*
 name|zs
 decl_stmt|;
+name|clock_t
+name|ticks
+decl_stmt|;
+name|ticks
+operator|=
+name|zfetch_min_sec_reap
+operator|*
+name|hz
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2722,20 +2737,14 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
-operator|(
 name|ddi_get_lbolt
 argument_list|()
 operator|-
 name|zs
 operator|->
 name|zst_last
-operator|)
-operator|/
-name|hz
-operator|)
 operator|>
-name|zfetch_min_sec_reap
+name|ticks
 condition|)
 break|break;
 block|}

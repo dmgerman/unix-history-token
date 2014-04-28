@@ -833,6 +833,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -3520,7 +3526,7 @@ name|m
 parameter_list|,
 name|l
 parameter_list|)
-value|do { \ 					MGETHDR((m), M_DONTWAIT, MT_HEADER); \ 					if ((m) != NULL) { \ 						(m)->m_len = (l); \ 						(m)->m_pkthdr.len = (l); \ 					} \ 				} while (0)
+value|do { \ 					MGETHDR((m), M_NOWAIT, MT_HEADER); \ 					if ((m) != NULL) { \ 						(m)->m_len = (l); \ 						(m)->m_pkthdr.len = (l); \ 					} \ 				} while (0)
 end_define
 
 begin_else
@@ -3537,7 +3543,7 @@ name|m
 parameter_list|,
 name|l
 parameter_list|)
-value|do { \ 					MGET((m), M_DONTWAIT, MT_HEADER); \ 					if ((m) != NULL) { \ 						(m)->m_len = (l); \ 						(m)->m_pkthdr.len = (l); \ 					} \ 				} while (0)
+value|do { \ 					MGET((m), M_NOWAIT, MT_HEADER); \ 					if ((m) != NULL) { \ 						(m)->m_len = (l); \ 						(m)->m_pkthdr.len = (l); \ 					} \ 				} while (0)
 end_define
 
 begin_endif

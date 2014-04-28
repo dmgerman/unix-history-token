@@ -204,7 +204,7 @@ name|virtual
 name|lldb_private
 operator|::
 name|Error
-name|GetFile
+name|GetFileWithUUID
 argument_list|(
 specifier|const
 name|lldb_private
@@ -265,6 +265,44 @@ operator|::
 name|ProcessLaunchInfo
 operator|&
 name|launch_info
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|ProcessSP
+name|DebugProcess
+argument_list|(
+name|lldb_private
+operator|::
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
+argument_list|,
+name|lldb_private
+operator|::
+name|Debugger
+operator|&
+name|debugger
+argument_list|,
+name|lldb_private
+operator|::
+name|Target
+operator|*
+name|target
+argument_list|,
+comment|// Can be NULL, if NULL create a new target, else use existing one
+name|lldb_private
+operator|::
+name|Listener
+operator|&
+name|listener
+argument_list|,
+name|lldb_private
+operator|::
+name|Error
+operator|&
+name|error
 argument_list|)
 block|;
 name|virtual
@@ -366,6 +404,25 @@ name|ArchSpec
 name|GetRemoteSystemArchitecture
 argument_list|()
 block|;
+name|virtual
+name|lldb_private
+operator|::
+name|ConstString
+name|GetRemoteWorkingDirectory
+argument_list|()
+block|;
+name|virtual
+name|bool
+name|SetRemoteWorkingDirectory
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|ConstString
+operator|&
+name|path
+argument_list|)
+block|;
 comment|// Remote subclasses should override this and return a valid instance
 comment|// name if connected.
 name|virtual
@@ -417,6 +474,198 @@ name|lldb_private
 operator|::
 name|Error
 name|DisconnectRemote
+argument_list|()
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|MakeDirectory
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|uint32_t file_permissions
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|GetFilePermissions
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|path
+argument_list|,
+name|uint32_t
+operator|&
+name|file_permissions
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|SetFilePermissions
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|uint32_t file_permissions
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|user_id_t
+name|OpenFile
+argument_list|(
+argument|const lldb_private::FileSpec& file_spec
+argument_list|,
+argument|uint32_t flags
+argument_list|,
+argument|uint32_t mode
+argument_list|,
+argument|lldb_private::Error&error
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|CloseFile
+argument_list|(
+argument|lldb::user_id_t fd
+argument_list|,
+argument|lldb_private::Error&error
+argument_list|)
+block|;
+name|virtual
+name|uint64_t
+name|ReadFile
+argument_list|(
+argument|lldb::user_id_t fd
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|void *data_ptr
+argument_list|,
+argument|uint64_t len
+argument_list|,
+argument|lldb_private::Error&error
+argument_list|)
+block|;
+name|virtual
+name|uint64_t
+name|WriteFile
+argument_list|(
+argument|lldb::user_id_t fd
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|const void* data
+argument_list|,
+argument|uint64_t len
+argument_list|,
+argument|lldb_private::Error&error
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|user_id_t
+name|GetFileSize
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|PutFile
+argument_list|(
+argument|const lldb_private::FileSpec& source
+argument_list|,
+argument|const lldb_private::FileSpec& destination
+argument_list|,
+argument|uint32_t uid = UINT32_MAX
+argument_list|,
+argument|uint32_t gid = UINT32_MAX
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|CreateSymlink
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|src
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|dst
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|GetFileExists
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|Unlink
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|path
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|RunShellCommand
+argument_list|(
+argument|const char *command
+argument_list|,
+comment|// Shouldn't be NULL
+argument|const char *working_dir
+argument_list|,
+comment|// Pass NULL to use the current working directory
+argument|int *status_ptr
+argument_list|,
+comment|// Pass NULL if you don't want the process exit status
+argument|int *signo_ptr
+argument_list|,
+comment|// Pass NULL if you don't want the signal that caused the process to exit
+argument|std::string *command_output
+argument_list|,
+comment|// Pass NULL if you don't want the command output
+argument|uint32_t timeout_sec
+argument_list|)
+block|;
+comment|// Timeout in seconds to wait for shell program to finish
+name|virtual
+name|void
+name|CalculateTrapHandlerSymbolNames
 argument_list|()
 block|;
 name|protected

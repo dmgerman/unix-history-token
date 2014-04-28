@@ -442,6 +442,9 @@ decl_stmt|;
 name|uint32_t
 name|low_fa
 decl_stmt|;
+name|uint32_t
+name|bad_plcp_ht
+decl_stmt|;
 name|uint8_t
 name|cck_state
 decl_stmt|;
@@ -869,6 +872,10 @@ define|#
 directive|define
 name|IWN_FLAG_PAN_SUPPORT
 value|(1<< 9)
+define|#
+directive|define
+name|IWN_FLAG_BTCOEX
+value|(1<< 10)
 name|uint8_t
 name|hw_type
 decl_stmt|;
@@ -980,9 +987,6 @@ name|struct
 name|iwn_rx_ring
 name|rxq
 decl_stmt|;
-name|int
-name|mem_rid
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -993,9 +997,6 @@ name|sc_st
 decl_stmt|;
 name|bus_space_handle_t
 name|sc_sh
-decl_stmt|;
-name|int
-name|irq_rid
 decl_stmt|;
 name|struct
 name|resource
@@ -1026,6 +1027,7 @@ name|struct
 name|task
 name|sc_radiooff_task
 decl_stmt|;
+comment|/* Calibration information */
 name|struct
 name|callout
 name|calib_to
@@ -1036,6 +1038,9 @@ decl_stmt|;
 name|struct
 name|iwn_calib_state
 name|calib
+decl_stmt|;
+name|int
+name|last_calib_ticks
 decl_stmt|;
 name|struct
 name|callout
@@ -1053,7 +1058,7 @@ name|struct
 name|iwn_calib_info
 name|calibcmd
 index|[
-literal|5
+name|IWN5000_PHY_CALIB_MAX_RESULT
 index|]
 decl_stmt|;
 name|uint32_t
@@ -1092,6 +1097,15 @@ name|ivap
 index|[
 name|IWN_NUM_RXON_CTX
 index|]
+decl_stmt|;
+comment|/* General statistics */
+comment|/* 	 * The statistics are reset after each channel 	 * change.  So it may be zeroed after things like 	 * a background scan. 	 * 	 * So for now, this is just a cheap hack to 	 * expose the last received statistics dump 	 * via an ioctl().  Later versions of this 	 * could expose the last 'n' messages, or just 	 * provide a pipeline for the firmware responses 	 * via something like BPF. 	 */
+name|struct
+name|iwn_stats
+name|last_stat
+decl_stmt|;
+name|int
+name|last_stat_valid
 decl_stmt|;
 name|uint8_t
 name|uc_scan_progress
@@ -1193,6 +1207,10 @@ name|sc_tx_timer
 decl_stmt|;
 name|int
 name|sc_scan_timer
+decl_stmt|;
+comment|/* Are we doing a scan? */
+name|int
+name|sc_is_scanning
 decl_stmt|;
 name|struct
 name|ieee80211_tx_ampdu
@@ -1315,7 +1333,8 @@ comment|/* 	 * The current power save level, this may differ from the 	 * config
 name|int
 name|current_pwrsave_level
 decl_stmt|;
-comment|/* For specifique params */
+comment|/* For specific params */
+specifier|const
 name|struct
 name|iwn_base_params
 modifier|*

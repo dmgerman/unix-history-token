@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -127,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -6356,6 +6368,22 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * If the parent interface can do TSO on VLANs then 	 * propagate the hardware-assisted flag. TSO on VLANs 	 * does not necessarily require hardware VLAN tagging. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|if_hw_tsomax
+operator|>
+literal|0
+condition|)
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|=
+name|p
+operator|->
+name|if_hw_tsomax
+expr_stmt|;
 if|if
 condition|(
 name|p

@@ -262,13 +262,6 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|int
-name|smp_active
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|smp_cpus
 decl_stmt|;
 end_decl_stmt
@@ -494,7 +487,7 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * Machine dependent functions used to initialize MP support.  *  * The cpu_mp_probe() should check to see if MP support is present and return  * zero if it is not or non-zero if it is.  If MP support is present, then  * cpu_mp_start() will be called so that MP can be enabled.  This function  * should do things such as startup secondary processors.  It should also  * setup mp_ncpus, all_cpus, and smp_cpus.  It should also ensure that  * smp_active and smp_started are initialized at the appropriate time.  * Once cpu_mp_start() returns, machine independent MP startup code will be  * executed and a simple message will be output to the console.  Finally,  * cpu_mp_announce() will be called so that machine dependent messages about  * the MP support may be output to the console if desired.  *  * The cpu_setmaxid() function is called very early during the boot process  * so that the MD code may set mp_maxid to provide an upper bound on CPU IDs  * that other subsystems may use.  If a platform is not able to determine  * the exact maximum ID that early, then it may set mp_maxid to MAXCPU - 1.  */
+comment|/*  * Machine dependent functions used to initialize MP support.  *  * The cpu_mp_probe() should check to see if MP support is present and return  * zero if it is not or non-zero if it is.  If MP support is present, then  * cpu_mp_start() will be called so that MP can be enabled.  This function  * should do things such as startup secondary processors.  It should also  * setup mp_ncpus, all_cpus, and smp_cpus.  It should also ensure that  * smp_started is initialized at the appropriate time.  * Once cpu_mp_start() returns, machine independent MP startup code will be  * executed and a simple message will be output to the console.  Finally,  * cpu_mp_announce() will be called so that machine dependent messages about  * the MP support may be output to the console if desired.  *  * The cpu_setmaxid() function is called very early during the boot process  * so that the MD code may set mp_maxid to provide an upper bound on CPU IDs  * that other subsystems may use.  If a platform is not able to determine  * the exact maximum ID that early, then it may set mp_maxid to MAXCPU - 1.  */
 end_comment
 
 begin_struct_decl

@@ -21,23 +21,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -70,12 +53,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_struct_decl
-struct_decl|struct
-name|ifnet
-struct_decl|;
-end_struct_decl
 
 begin_endif
 endif|#
@@ -162,92 +139,92 @@ struct|struct
 name|if_data
 block|{
 comment|/* generic interface information */
-name|u_char
+name|uint8_t
 name|ifi_type
 decl_stmt|;
 comment|/* ethernet, tokenring, etc */
-name|u_char
+name|uint8_t
 name|ifi_physical
 decl_stmt|;
 comment|/* e.g., AUI, Thinnet, 10base-T, etc */
-name|u_char
+name|uint8_t
 name|ifi_addrlen
 decl_stmt|;
 comment|/* media address length */
-name|u_char
+name|uint8_t
 name|ifi_hdrlen
 decl_stmt|;
 comment|/* media header length */
-name|u_char
+name|uint8_t
 name|ifi_link_state
 decl_stmt|;
 comment|/* current link state */
-name|u_char
+name|uint8_t
 name|ifi_vhid
 decl_stmt|;
 comment|/* carp vhid */
-name|u_char
-name|ifi_baudrate_pf
-decl_stmt|;
-comment|/* baudrate power factor */
-name|u_char
+name|uint16_t
 name|ifi_datalen
 decl_stmt|;
 comment|/* length of this data struct */
-name|u_long
+name|uint32_t
 name|ifi_mtu
 decl_stmt|;
 comment|/* maximum transmission unit */
-name|u_long
+name|uint32_t
 name|ifi_metric
 decl_stmt|;
 comment|/* routing metric (external only) */
-name|u_long
+name|uint64_t
 name|ifi_baudrate
 decl_stmt|;
 comment|/* linespeed */
 comment|/* volatile statistics */
-name|u_long
+name|uint64_t
 name|ifi_ipackets
 decl_stmt|;
 comment|/* packets received on interface */
-name|u_long
+name|uint64_t
 name|ifi_ierrors
 decl_stmt|;
 comment|/* input errors on interface */
-name|u_long
+name|uint64_t
 name|ifi_opackets
 decl_stmt|;
 comment|/* packets sent on interface */
-name|u_long
+name|uint64_t
 name|ifi_oerrors
 decl_stmt|;
 comment|/* output errors on interface */
-name|u_long
+name|uint64_t
 name|ifi_collisions
 decl_stmt|;
 comment|/* collisions on csma interfaces */
-name|u_long
+name|uint64_t
 name|ifi_ibytes
 decl_stmt|;
 comment|/* total number of octets received */
-name|u_long
+name|uint64_t
 name|ifi_obytes
 decl_stmt|;
 comment|/* total number of octets sent */
-name|u_long
+name|uint64_t
 name|ifi_imcasts
 decl_stmt|;
 comment|/* packets received via multicast */
-name|u_long
+name|uint64_t
 name|ifi_omcasts
 decl_stmt|;
 comment|/* packets sent via multicast */
-name|u_long
+name|uint64_t
 name|ifi_iqdrops
 decl_stmt|;
-comment|/* dropped on input, this interface */
-name|u_long
+comment|/* dropped on input */
+name|uint64_t
+name|ifi_oqdrops
+decl_stmt|;
+comment|/* dropped on output */
+name|uint64_t
 name|ifi_noproto
 decl_stmt|;
 comment|/* destined for unsupported protocol */
@@ -255,15 +232,48 @@ name|uint64_t
 name|ifi_hwassist
 decl_stmt|;
 comment|/* HW offload capabilities, see IFCAP */
-name|time_t
-name|ifi_epoch
-decl_stmt|;
+comment|/* Unions are here to make sizes MI. */
+union|union
+block|{
 comment|/* uptime at attach or stat reset */
+name|time_t
+name|tt
+decl_stmt|;
+name|uint64_t
+name|ph
+decl_stmt|;
+block|}
+name|__ifi_epoch
+union|;
+define|#
+directive|define
+name|ifi_epoch
+value|__ifi_epoch.tt
+union|union
+block|{
+comment|/* time of last administrative change */
 name|struct
 name|timeval
-name|ifi_lastchange
+name|tv
 decl_stmt|;
-comment|/* time of last administrative change */
+struct|struct
+block|{
+name|uint64_t
+name|ph1
+decl_stmt|;
+name|uint64_t
+name|ph2
+decl_stmt|;
+block|}
+name|ph
+struct|;
+block|}
+name|__ifi_lastchange
+union|;
+define|#
+directive|define
+name|ifi_lastchange
+value|__ifi_lastchange.tv
 block|}
 struct|;
 end_struct
@@ -327,15 +337,8 @@ begin_comment
 comment|/* (i) is a point-to-point link */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IFF_SMART
-value|0x20
-end_define
-
 begin_comment
-comment|/* (i) interface manages own routes */
+comment|/*			0x20		   was IFF_SMART */
 end_comment
 
 begin_define
@@ -563,7 +566,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_DYING|IFF_CANTCONFIG)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_PROMISC|\ 	    IFF_DYING|IFF_CANTCONFIG)
 end_define
 
 begin_comment
@@ -1526,7 +1529,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Compat with pre-10.x */
+comment|/* 9.x compat */
 end_comment
 
 begin_struct
@@ -1806,46 +1809,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Structure for SIOC[AGD]LIFADDR  */
-end_comment
-
-begin_struct
-struct|struct
-name|if_laddrreq
-block|{
-name|char
-name|iflr_name
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-name|u_int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|IFLR_PREFIX
-value|0x8000
-comment|/* in: prefix given  out: kernel fills id */
-name|u_int
-name|prefixlen
-decl_stmt|;
-comment|/* in/out */
-name|struct
-name|sockaddr_storage
-name|addr
-decl_stmt|;
-comment|/* in/out */
-name|struct
-name|sockaddr_storage
-name|dstaddr
-decl_stmt|;
-comment|/* out */
-block|}
-struct|;
-end_struct
-
 begin_endif
 endif|#
 directive|endif
@@ -1969,27 +1932,6 @@ end_function_decl
 begin_macro
 name|__END_DECLS
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* XXX - this should go away soon. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
 
 begin_endif
 endif|#

@@ -256,6 +256,12 @@ block|;
 name|AsmToken
 name|LexFloatLiteral
 argument_list|()
+block|;
+name|AsmToken
+name|LexHexFloatLiteral
+argument_list|(
+argument|bool NoIntDigits
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

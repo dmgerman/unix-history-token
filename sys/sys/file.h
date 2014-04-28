@@ -415,6 +415,16 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX pollution? */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|sendfile_sync
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -685,6 +695,11 @@ name|flags
 parameter_list|,
 name|int
 name|kflags
+parameter_list|,
+name|struct
+name|sendfile_sync
+modifier|*
+name|sfs
 parameter_list|,
 name|struct
 name|thread
@@ -2176,6 +2191,11 @@ name|int
 name|kflags
 parameter_list|,
 name|struct
+name|sendfile_sync
+modifier|*
+name|sfs
+parameter_list|,
+name|struct
 name|thread
 modifier|*
 name|td
@@ -2209,6 +2229,8 @@ argument_list|,
 name|flags
 argument_list|,
 name|kflags
+argument_list|,
+name|sfs
 argument_list|,
 name|td
 argument_list|)

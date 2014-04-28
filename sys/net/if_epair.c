@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_clone.h>
 end_include
 
@@ -3571,14 +3577,13 @@ name|if_transmit
 operator|=
 name|epair_transmit
 expr_stmt|;
-name|if_initbaudrate
-argument_list|(
 name|ifp
-argument_list|,
+operator|->
+name|if_baudrate
+operator|=
 name|IF_Gbps
 argument_list|(
 literal|10
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* arbitrary maximum */
@@ -3728,14 +3733,13 @@ name|if_transmit
 operator|=
 name|epair_transmit
 expr_stmt|;
-name|if_initbaudrate
-argument_list|(
 name|ifp
-argument_list|,
+operator|->
+name|if_baudrate
+operator|=
 name|IF_Gbps
 argument_list|(
 literal|10
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* arbitrary maximum */

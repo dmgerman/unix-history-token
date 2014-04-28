@@ -571,7 +571,7 @@ operator|&
 name|protohandlerout
 block|}
 block|,
-comment|/*   * WATCH OUT!!! these 2 handlers NEED a priority of INT_MAX (highest possible)   * cause they will ALWAYS process packets, so they must be the last one  * in chain: look fingerprintgre() above.  */
+comment|/*  * WATCH OUT!!! these 2 handlers NEED a priority of INT_MAX (highest possible)  * cause they will ALWAYS process packets, so they must be the last one  * in chain: look fingerprintgre() above.  */
 block|{
 operator|.
 name|pri

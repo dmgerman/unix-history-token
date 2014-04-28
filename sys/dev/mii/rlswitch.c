@@ -60,6 +60,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_comment
+comment|/* XXXGL: if_rlreg.h contamination */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1701,26 +1711,6 @@ break|break;
 case|case
 name|MII_TICK
 case|:
-comment|/* 		 * Is the interface even up? 		 */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 break|break;
 block|}
 comment|/* Update the media status. */

@@ -394,7 +394,7 @@ name|void
 modifier|*
 name|priv
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|int
@@ -450,13 +450,17 @@ name|ready
 parameter_list|,
 name|arc_done_func_t
 modifier|*
+name|physdone
+parameter_list|,
+name|arc_done_func_t
+modifier|*
 name|done
 parameter_list|,
 name|void
 modifier|*
 name|priv
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|int

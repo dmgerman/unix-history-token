@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|BXE_DRIVER_VERSION
-value|"1.78.18"
+value|"1.78.78"
 end_define
 
 begin_include
@@ -808,7 +808,8 @@ comment|/* Debug */
 end_comment
 
 begin_decl_stmt
-name|uint32_t
+name|unsigned
+name|long
 name|bxe_debug
 init|=
 literal|0
@@ -816,7 +817,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|TUNABLE_ULONG
 argument_list|(
 literal|"hw.bxe.debug"
 argument_list|,
@@ -827,7 +828,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_ULONG
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -874,7 +875,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -919,7 +920,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -945,7 +946,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|bxe_max_rx_bufs
 init|=
 literal|0
@@ -964,7 +965,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -990,7 +991,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|bxe_hc_rx_ticks
 init|=
 literal|25
@@ -1009,7 +1010,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1035,7 +1036,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|bxe_hc_tx_ticks
 init|=
 literal|50
@@ -1054,7 +1055,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1080,7 +1081,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|bxe_rx_budget
 init|=
 literal|0xffffffff
@@ -1099,7 +1100,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1125,7 +1126,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|bxe_max_aggregation_size
 init|=
 literal|0
@@ -1144,7 +1145,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1190,7 +1191,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1235,7 +1236,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -1280,7 +1281,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
 argument_list|,
@@ -4307,7 +4308,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|BLOGD(dma->sc, DBG_LOAD,,               "DMA alloc '%s': vaddr=%p paddr=%p nseg=%d size=%lu\n",               dma->msg, dma->vaddr, (void *)dma->paddr,               dma->nseg, dma->size);
+block|BLOGD(dma->sc, DBG_LOAD,               "DMA alloc '%s': vaddr=%p paddr=%p nseg=%d size=%lu\n",               dma->msg, dma->vaddr, (void *)dma->paddr,               dma->nseg, dma->size);
 endif|#
 directive|endif
 block|}
@@ -10647,11 +10648,10 @@ name|sc
 argument_list|,
 name|DBG_SP
 argument_list|,
-literal|"SPQE -> %p\n"
+literal|"SPQE -> %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -10666,7 +10666,7 @@ name|sc
 argument_list|,
 name|DBG_SP
 argument_list|,
-literal|"FUNC_RDATA -> %p / %p\n"
+literal|"FUNC_RDATA -> %p / %#jx\n"
 argument_list|,
 name|BXE_SP
 argument_list|(
@@ -10676,8 +10676,7 @@ name|func_rdata
 argument_list|)
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|BXE_SP_MAPPING
 argument_list|(
@@ -11702,36 +11701,6 @@ operator|->
 name|fw_drv_pulse_wr_seq
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|bxe_has_tx_work_unload
-parameter_list|(
-name|struct
-name|bxe_fastpath
-modifier|*
-name|fp
-parameter_list|)
-block|{
-name|mb
-argument_list|()
-expr_stmt|;
-comment|/* consumer and producer can change */
-return|return
-operator|(
-name|fp
-operator|->
-name|tx_pkt_prod
-operator|!=
-name|fp
-operator|->
-name|tx_pkt_cons
-operator|)
-return|;
 block|}
 end_function
 
@@ -15023,11 +14992,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|BXE_FP_TX_UNLOCK
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|BLOGE
 argument_list|(
 name|sc
@@ -15037,6 +15001,11 @@ argument_list|,
 name|fp
 operator|->
 name|index
+argument_list|)
+expr_stmt|;
+name|BXE_FP_TX_UNLOCK
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 name|atomic_store_rel_long
@@ -15233,13 +15202,21 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* reset the watchdog timer if there are pending transmits */
 if|if
 condition|(
 name|tx_bd_avail
-operator|>=
+operator|<
 name|BXE_TX_CLEANUP_THRESHOLD
 condition|)
+block|{
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_OACTIVE
+expr_stmt|;
+block|}
+else|else
 block|{
 name|ifp
 operator|->
@@ -15248,18 +15225,34 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
+block|}
 if|if
 condition|(
-name|tx_bd_avail
-operator|>=
-operator|(
-name|TX_BD_USABLE
-operator|-
-literal|1
-operator|)
+name|fp
+operator|->
+name|tx_pkt_prod
+operator|!=
+name|fp
+operator|->
+name|tx_pkt_cons
 condition|)
 block|{
-comment|/* clear watchdog if the tx chain is empty */
+comment|/* reset the watchdog timer if there are pending transmits */
+name|fp
+operator|->
+name|watchdog_timer
+operator|=
+name|BXE_TX_TIMEOUT
+expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+else|else
+block|{
+comment|/* clear watchdog when there are no pending transmits */
 name|fp
 operator|->
 name|watchdog_timer
@@ -15272,19 +15265,6 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* reset watchdog if there are pending transmits */
-name|fp
-operator|->
-name|watchdog_timer
-operator|=
-name|BXE_TX_TIMEOUT
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
 block|}
 end_function
 
@@ -20574,6 +20554,11 @@ name|char
 modifier|*
 name|type
 decl_stmt|;
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -20617,7 +20602,9 @@ name|sc
 argument_list|,
 name|DBG_MBUF
 argument_list|,
-literal|"mbuf=%p m_len=%d m_flags=0x%b m_data=%p\n"
+literal|"%02d: mbuf=%p m_len=%d m_flags=0x%b m_data=%p\n"
+argument_list|,
+name|i
 argument_list|,
 name|m
 argument_list|,
@@ -20629,7 +20616,7 @@ name|m
 operator|->
 name|m_flags
 argument_list|,
-literal|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY"
+name|M_FLAG_BITS
 argument_list|,
 name|m
 operator|->
@@ -20651,7 +20638,9 @@ name|sc
 argument_list|,
 name|DBG_MBUF
 argument_list|,
-literal|"- m_pkthdr: len=%d flags=0x%b csum_flags=%b\n"
+literal|"%02d: - m_pkthdr: tot_len=%d flags=0x%b csum_flags=%b\n"
+argument_list|,
+name|i
 argument_list|,
 name|m
 operator|->
@@ -20663,9 +20652,7 @@ name|m
 operator|->
 name|m_flags
 argument_list|,
-literal|"\20\12M_BCAST\13M_MCAST\14M_FRAG"
-literal|"\15M_FIRSTFRAG\16M_LASTFRAG\21M_VLANTAG"
-literal|"\22M_PROMISC\23M_NOFREE"
+name|M_FLAG_BITS
 argument_list|,
 operator|(
 name|int
@@ -20676,10 +20663,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 argument_list|,
-literal|"\20\1CSUM_IP\2CSUM_TCP\3CSUM_UDP\4CSUM_IP_FRAGS"
-literal|"\5CSUM_FRAGMENT\6CSUM_TSO\11CSUM_IP_CHECKED"
-literal|"\12CSUM_IP_VALID\13CSUM_DATA_VALID"
-literal|"\14CSUM_PSEUDO_HDR"
+name|CSUM_BITS
 argument_list|)
 expr_stmt|;
 block|}
@@ -20715,6 +20699,14 @@ case|:
 name|type
 operator|=
 literal|"EXT_SFBUF"
+expr_stmt|;
+break|break;
+case|case
+name|EXT_JUMBOP
+case|:
+name|type
+operator|=
+literal|"EXT_JUMBOP"
 expr_stmt|;
 break|break;
 case|case
@@ -20794,7 +20786,9 @@ name|sc
 argument_list|,
 name|DBG_MBUF
 argument_list|,
-literal|"- m_ext: %p ext_size=%d, type=%s\n"
+literal|"%02d: - m_ext: %p ext_size=%d type=%s\n"
+argument_list|,
+name|i
 argument_list|,
 name|m
 operator|->
@@ -20834,6 +20828,9 @@ operator|=
 name|m
 operator|->
 name|m_next
+expr_stmt|;
+name|i
+operator|++
 expr_stmt|;
 block|}
 block|}
@@ -22583,7 +22580,7 @@ argument_list|(
 operator|*
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -22774,7 +22771,7 @@ name|__predict_false
 argument_list|(
 name|nsegs
 operator|>
-literal|12
+name|BXE_MAX_SEGMENTS
 argument_list|)
 condition|)
 block|{
@@ -22832,12 +22829,134 @@ name|tx_window_violation_std
 operator|++
 expr_stmt|;
 block|}
-comment|/* XXX I don't like this, change to double copy packet */
-comment|/* no sense trying to defrag again, just drop the frame */
+comment|/* lets try to defragment this mbuf and remap it */
+name|fp
+operator|->
+name|eth_q_stats
+operator|.
+name|mbuf_defrag_attempts
+operator|++
+expr_stmt|;
+name|bus_dmamap_unload
+argument_list|(
+name|fp
+operator|->
+name|tx_mbuf_tag
+argument_list|,
+name|tx_buf
+operator|->
+name|m_map
+argument_list|)
+expr_stmt|;
+name|m0
+operator|=
+name|m_defrag
+argument_list|(
+operator|*
+name|m_head
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m0
+operator|==
+name|NULL
+condition|)
+block|{
+name|fp
+operator|->
+name|eth_q_stats
+operator|.
+name|mbuf_defrag_failures
+operator|++
+expr_stmt|;
+comment|/* Ugh, just drop the frame... :( */
+name|rc
+operator|=
+name|ENOBUFS
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* defrag successful, try mapping again */
+operator|*
+name|m_head
+operator|=
+name|m0
+expr_stmt|;
+name|error
+operator|=
+name|bus_dmamap_load_mbuf_sg
+argument_list|(
+name|fp
+operator|->
+name|tx_mbuf_tag
+argument_list|,
+name|tx_buf
+operator|->
+name|m_map
+argument_list|,
+name|m0
+argument_list|,
+name|segs
+argument_list|,
+operator|&
+name|nsegs
+argument_list|,
+name|BUS_DMA_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|fp
+operator|->
+name|eth_q_stats
+operator|.
+name|tx_dma_mapping_failure
+operator|++
+expr_stmt|;
+comment|/* No sense in trying to defrag/copy chain, drop it. :( */
+name|rc
+operator|=
+name|error
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* if the chain is still too long then drop it */
+if|if
+condition|(
+name|__predict_false
+argument_list|(
+name|nsegs
+operator|>
+name|BXE_MAX_SEGMENTS
+argument_list|)
+condition|)
+block|{
+name|bus_dmamap_unload
+argument_list|(
+name|fp
+operator|->
+name|tx_mbuf_tag
+argument_list|,
+name|tx_buf
+operator|->
+name|m_map
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 name|ENODEV
 expr_stmt|;
+block|}
+block|}
+block|}
 block|}
 name|bxe_tx_encap_continue
 label|:
@@ -23518,6 +23637,15 @@ operator|=
 name|htole16
 argument_list|(
 name|nbds
+argument_list|)
+expr_stmt|;
+name|tx_start_bd
+operator|->
+name|nbytes
+operator|=
+name|htole16
+argument_list|(
+name|hlen
 argument_list|)
 expr_stmt|;
 name|bd_prod
@@ -24425,6 +24553,7 @@ operator|<
 name|BXE_TX_CLEANUP_THRESHOLD
 condition|)
 block|{
+comment|/* bxe_txeof will set IFF_DRV_OACTIVE appropriately */
 name|bxe_txeof
 argument_list|(
 name|sc
@@ -24432,23 +24561,17 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* close TX if we're still running low */
 if|if
 condition|(
-name|tx_bd_avail
-operator|<
-name|BXE_TX_CLEANUP_THRESHOLD
-condition|)
-block|{
 name|ifp
 operator|->
 name|if_drv_flags
-operator|&=
-operator|~
+operator|&
 name|IFF_DRV_OACTIVE
-expr_stmt|;
+condition|)
+block|{
 break|break;
+block|}
 block|}
 block|}
 comment|/* all TX packets were dequeued and/or the tx ring is full */
@@ -24903,6 +25026,7 @@ operator|<
 name|BXE_TX_CLEANUP_THRESHOLD
 condition|)
 block|{
+comment|/* bxe_txeof will set IFF_DRV_OACTIVE appropriately */
 name|bxe_txeof
 argument_list|(
 name|sc
@@ -24910,23 +25034,17 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* close TX if we're still running low */
 if|if
 condition|(
-name|tx_bd_avail
-operator|<
-name|BXE_TX_CLEANUP_THRESHOLD
-condition|)
-block|{
 name|ifp
 operator|->
 name|if_drv_flags
-operator|&=
-operator|~
+operator|&
 name|IFF_DRV_OACTIVE
-expr_stmt|;
+condition|)
+block|{
 break|break;
+block|}
 block|}
 name|next
 operator|=
@@ -27400,7 +27518,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -27800,7 +27918,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -28091,7 +28209,7 @@ name|m
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -28429,7 +28547,7 @@ name|BXE_BR_SIZE
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 operator|&
 name|fp
@@ -29087,11 +29205,10 @@ name|sc
 argument_list|,
 name|DBG_LOAD
 argument_list|,
-literal|"statistics request base address set to %p\n"
+literal|"statistics request base address set to %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -29104,11 +29221,10 @@ name|sc
 argument_list|,
 name|DBG_LOAD
 argument_list|,
-literal|"statistics data base address set to %p\n"
+literal|"statistics data base address set to %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -39801,7 +39917,7 @@ operator|||
 operator|(
 name|msi_count
 operator|<
-literal|2
+literal|1
 operator|)
 condition|)
 block|{
@@ -39814,21 +39930,10 @@ expr_stmt|;
 comment|/* try INTx next */
 break|break;
 block|}
-comment|/* ask for the necessary number of MSI vectors */
+comment|/* ask for a single MSI vector */
 name|num_requested
 operator|=
-name|min
-argument_list|(
-operator|(
-name|sc
-operator|->
-name|num_queues
-operator|+
 literal|1
-operator|)
-argument_list|,
-name|msi_count
-argument_list|)
 expr_stmt|;
 name|BLOGD
 argument_list|(
@@ -39885,8 +39990,8 @@ block|}
 if|if
 condition|(
 name|num_allocated
-operator|<
-literal|2
+operator|!=
+literal|1
 condition|)
 block|{
 comment|/* possible? */
@@ -39894,7 +39999,7 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"MSI allocation less than 2!\n"
+literal|"MSI allocation is not 1!\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -39936,43 +40041,22 @@ operator|->
 name|num_queues
 operator|=
 name|num_allocated
-operator|-
-literal|1
 expr_stmt|;
 name|rid
 operator|=
 literal|1
 expr_stmt|;
 comment|/* initial resource identifier */
-comment|/* allocate the MSI vectors */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|num_allocated
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|sc
 operator|->
 name|intr
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|rid
 operator|=
-operator|(
 name|rid
-operator|+
-name|i
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -39981,7 +40065,7 @@ name|sc
 operator|->
 name|intr
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|resource
@@ -39999,7 +40083,7 @@ name|sc
 operator|->
 name|intr
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|rid
@@ -40015,63 +40099,11 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Failed to map MSI[%d] (rid=%d)!\n"
+literal|"Failed to map MSI[0] (rid=%d)!\n"
 argument_list|,
-name|i
-argument_list|,
-operator|(
 name|rid
-operator|+
-name|i
-operator|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-operator|(
-name|i
-operator|-
-literal|1
-operator|)
-init|;
-name|j
-operator|>=
-literal|0
-condition|;
-name|j
-operator|--
-control|)
-block|{
-name|bus_release_resource
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-name|sc
-operator|->
-name|intr
-index|[
-name|j
-index|]
-operator|.
-name|rid
-argument_list|,
-name|sc
-operator|->
-name|intr
-index|[
-name|j
-index|]
-operator|.
-name|resource
-argument_list|)
-expr_stmt|;
-block|}
 name|sc
 operator|->
 name|intr_count
@@ -40106,18 +40138,11 @@ name|sc
 argument_list|,
 name|DBG_LOAD
 argument_list|,
-literal|"Mapped MSI[%d] (rid=%d)\n"
+literal|"Mapped MSI[0] (rid=%d)\n"
 argument_list|,
-name|i
-argument_list|,
-operator|(
 name|rid
-operator|+
-name|i
-operator|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 do|while
 condition|(
@@ -41128,10 +41153,10 @@ name|sc
 argument_list|,
 name|DBG_LOAD
 argument_list|,
-literal|"Enabling slowpath MSI[0] vector.\n"
+literal|"Enabling MSI[0] vector\n"
 argument_list|)
 expr_stmt|;
-comment|/*          * Setup the interrupt handler. Note that we pass the driver instance          * to the interrupt handler for the slowpath.          */
+comment|/*          * Setup the interrupt handler. Note that we pass the          * driver instance to the interrupt handler which          * will handle both the slowpath and fastpath.          */
 if|if
 condition|(
 operator|(
@@ -41160,7 +41185,7 @@ operator|)
 argument_list|,
 name|NULL
 argument_list|,
-name|bxe_intr_sp
+name|bxe_intr_legacy
 argument_list|,
 name|sc
 argument_list|,
@@ -41191,218 +41216,6 @@ expr_stmt|;
 goto|goto
 name|bxe_interrupt_attach_exit
 goto|;
-block|}
-name|bus_describe_intr
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-name|sc
-operator|->
-name|intr
-index|[
-literal|0
-index|]
-operator|.
-name|resource
-argument_list|,
-name|sc
-operator|->
-name|intr
-index|[
-literal|0
-index|]
-operator|.
-name|tag
-argument_list|,
-literal|"sp"
-argument_list|)
-expr_stmt|;
-comment|/* bus_bind_intr(sc->dev, sc->intr[0].resource, 0); */
-comment|/* initialize the fastpath vectors (note the first was used for sp) */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|sc
-operator|->
-name|num_queues
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|fp
-operator|=
-operator|&
-name|sc
-operator|->
-name|fp
-index|[
-name|i
-index|]
-expr_stmt|;
-name|BLOGD
-argument_list|(
-name|sc
-argument_list|,
-name|DBG_LOAD
-argument_list|,
-literal|"Enabling MSI[%d] vector\n"
-argument_list|,
-operator|(
-name|i
-operator|+
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*              * Setup the interrupt handler. Note that we pass the              * fastpath context to the interrupt handler in this              * case.              */
-if|if
-condition|(
-operator|(
-name|rc
-operator|=
-name|bus_setup_intr
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-name|sc
-operator|->
-name|intr
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|.
-name|resource
-argument_list|,
-operator|(
-name|INTR_TYPE_NET
-operator||
-name|INTR_MPSAFE
-operator|)
-argument_list|,
-name|NULL
-argument_list|,
-name|bxe_intr_fp
-argument_list|,
-name|fp
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|intr
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|.
-name|tag
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|BLOGE
-argument_list|(
-name|sc
-argument_list|,
-literal|"Failed to allocate MSI[%d] vector (%d)\n"
-argument_list|,
-operator|(
-name|i
-operator|+
-literal|1
-operator|)
-argument_list|,
-name|rc
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bxe_interrupt_attach_exit
-goto|;
-block|}
-name|bus_describe_intr
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-name|sc
-operator|->
-name|intr
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|.
-name|resource
-argument_list|,
-name|sc
-operator|->
-name|intr
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|.
-name|tag
-argument_list|,
-literal|"fp%02d"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-comment|/* bind the fastpath instance to a cpu */
-if|if
-condition|(
-name|sc
-operator|->
-name|num_queues
-operator|>
-literal|1
-condition|)
-block|{
-name|bus_bind_intr
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-name|sc
-operator|->
-name|intr
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|.
-name|resource
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
-name|fp
-operator|->
-name|state
-operator|=
-name|BXE_FP_STATE_IRQ
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -56748,31 +56561,15 @@ operator|~
 name|IFCAP_WOL_MAGIC
 expr_stmt|;
 comment|/* XXX not yet... */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|1000025
 name|ifp
 operator|->
 name|if_baudrate
 operator|=
-literal|1000000000
-expr_stmt|;
-else|#
-directive|else
-name|if_initbaudrate
-argument_list|(
-name|ifp
-argument_list|,
 name|IF_Gbps
 argument_list|(
 literal|10
 argument_list|)
-argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ifp
 operator|->
 name|if_snd
@@ -60781,7 +60578,7 @@ argument_list|,
 name|DBG_LOAD
 argument_list|,
 literal|"User Config: "
-literal|"debug=0x%x "
+literal|"debug=0x%lx "
 literal|"interrupt_mode=%d "
 literal|"queue_count=%d "
 literal|"hc_rx_ticks=%d "

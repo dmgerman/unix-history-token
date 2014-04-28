@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/API/SBQueue.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -442,6 +448,21 @@ name|index_id
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|// Queue related functions
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetNumQueues
+parameter_list|()
+function_decl|;
+name|lldb
+operator|::
+name|SBQueue
+name|GetQueueAtIndex
+argument_list|(
+argument|size_t index
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
 comment|// Stepping related functions
 comment|//------------------------------------------------------------------
 name|lldb
@@ -789,6 +810,45 @@ argument_list|(
 argument|uint32_t image_token
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Return the number of different thread-origin extended backtraces
+comment|/// this process can support.
+comment|///
+comment|/// When the process is stopped and you have an SBThread, lldb may be
+comment|/// able to show a backtrace of when that thread was originally created,
+comment|/// or the work item was enqueued to it (in the case of a libdispatch
+comment|/// queue).
+comment|///
+comment|/// @return
+comment|///   The number of thread-origin extended backtrace types that may be
+comment|///   available.
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetNumExtendedBacktraceTypes
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Return the name of one of the thread-origin extended backtrace
+comment|/// methods.
+comment|///
+comment|/// @param [in] idx
+comment|///   The index of the name to return.  They will be returned in
+comment|///   the order that the user will most likely want to see them.
+comment|///   e.g. if the type at index 0 is not available for a thread,
+comment|///   see if the type at index 1 provides an extended backtrace.
+comment|///
+comment|/// @return
+comment|///   The name at that index.
+comment|//------------------------------------------------------------------
+specifier|const
+name|char
+modifier|*
+name|GetExtendedBacktraceTypeAtIndex
+parameter_list|(
+name|uint32_t
+name|idx
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 name|friend
@@ -831,6 +891,12 @@ name|friend
 name|class
 name|SBValue
 decl_stmt|;
+name|friend
+name|class
+name|lldb_private
+operator|::
+name|QueueImpl
+expr_stmt|;
 name|lldb
 operator|::
 name|ProcessSP

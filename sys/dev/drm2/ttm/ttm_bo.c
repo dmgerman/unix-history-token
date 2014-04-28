@@ -699,6 +699,18 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
+operator|==
+operator|-
+name|EINTR
+condition|)
+name|ret
+operator|=
+operator|-
+name|ERESTARTSYS
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|!=
 literal|0
 condition|)
@@ -992,7 +1004,7 @@ operator|->
 name|val_seq
 operator|<
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -1054,7 +1066,7 @@ operator|-
 name|sequence
 operator|<
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -1374,7 +1386,7 @@ operator|-
 name|sequence
 operator|<
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

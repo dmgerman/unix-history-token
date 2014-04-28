@@ -101,6 +101,11 @@ comment|/// actual memory it points to.
 name|class
 name|ObjectBuffer
 block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|ObjectBuffer
@@ -174,6 +179,18 @@ name|getBufferSize
 argument_list|()
 return|;
 block|}
+name|StringRef
+name|getBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+operator|->
+name|getBuffer
+argument_list|()
+return|;
+block|}
 name|protected
 label|:
 comment|// The memory contained in an ObjectBuffer
@@ -195,6 +212,11 @@ range|:
 name|public
 name|ObjectBuffer
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|ObjectBufferStream

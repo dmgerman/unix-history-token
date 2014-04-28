@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -24,8 +18,22 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sdt.h>
 end_include
+
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|sdt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Hook for the DTrace probe function. The SDT provider will set this to  * dtrace_probe() when it loads.  */
@@ -68,8 +76,11 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"sdt_probe_stub: Why did this get called?\n"
+literal|"sdt_probe_stub: unexpectedly called\n"
 argument_list|)
+expr_stmt|;
+name|kdb_backtrace
+argument_list|()
 expr_stmt|;
 block|}
 end_function

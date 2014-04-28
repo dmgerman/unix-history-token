@@ -153,13 +153,13 @@ argument_list|()
 operator|(
 name|Graph
 operator|::
-name|NodeItr
-name|n1Itr
+name|NodeId
+name|n1Id
 expr|,
 name|Graph
 operator|::
-name|NodeItr
-name|n2Itr
+name|NodeId
+name|n2Id
 operator|)
 specifier|const
 block|{
@@ -169,14 +169,14 @@ name|s
 operator|->
 name|getSolverDegree
 argument_list|(
-name|n1Itr
+name|n1Id
 argument_list|)
 operator|>
 name|s
 operator|->
 name|getSolverDegree
 argument_list|(
-name|n2Itr
+name|n2Id
 argument_list|)
 condition|)
 return|return
@@ -228,13 +228,13 @@ argument_list|()
 operator|(
 name|Graph
 operator|::
-name|NodeItr
-name|n1Itr
+name|NodeId
+name|n1Id
 operator|,
 name|Graph
 operator|::
-name|NodeItr
-name|n2Itr
+name|NodeId
+name|n2Id
 operator|)
 specifier|const
 block|{
@@ -249,7 +249,7 @@ name|g
 operator|->
 name|getNodeCosts
 argument_list|(
-name|n1Itr
+name|n1Id
 argument_list|)
 block|;
 specifier|const
@@ -263,7 +263,7 @@ name|g
 operator|->
 name|getNodeCosts
 argument_list|(
-name|n2Itr
+name|n2Id
 argument_list|)
 block|;
 name|PBQPNum
@@ -278,7 +278,7 @@ name|s
 operator|->
 name|getSolverDegree
 argument_list|(
-name|n1Itr
+name|n1Id
 argument_list|)
 block|;
 name|PBQPNum
@@ -293,7 +293,7 @@ name|s
 operator|->
 name|getSolverDegree
 argument_list|(
-name|n2Itr
+name|n2Id
 argument_list|)
 block|;
 if|if
@@ -331,7 +331,7 @@ name|list
 operator|<
 name|Graph
 operator|::
-name|NodeItr
+name|NodeId
 operator|>
 name|RNAllocableList
 expr_stmt|;
@@ -348,7 +348,7 @@ name|list
 operator|<
 name|Graph
 operator|::
-name|NodeItr
+name|NodeId
 operator|>
 name|RNUnallocableList
 expr_stmt|;
@@ -490,7 +490,7 @@ operator|)
 block|{}
 comment|/// \brief Determine whether a node should be reduced using optimal
 comment|///        reduction.
-comment|/// @param nItr Node iterator to be considered.
+comment|/// @param nId Node id to be considered.
 comment|/// @return True if the given node should be optimally reduced, false
 comment|///         otherwise.
 comment|///
@@ -502,7 +502,7 @@ comment|/// selected for heuristic reduction instead.
 name|bool
 name|shouldOptimallyReduce
 argument_list|(
-argument|Graph::NodeItr nItr
+argument|Graph::NodeId nId
 argument_list|)
 block|{
 if|if
@@ -512,7 +512,7 @@ argument_list|()
 operator|.
 name|getSolverDegree
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|<
 literal|3
@@ -528,14 +528,14 @@ name|false
 return|;
 block|}
 comment|/// \brief Add a node to the heuristic reduce list.
-comment|/// @param nItr Node iterator to add to the heuristic reduce list.
+comment|/// @param nId Node id to add to the heuristic reduce list.
 name|void
 name|addToHeuristicReduceList
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|NodeData
@@ -544,12 +544,12 @@ name|nd
 init|=
 name|getHeuristicNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 decl_stmt|;
 name|initializeNode
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 name|nd
@@ -578,7 +578,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 block|}
@@ -597,7 +597,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 block|}
@@ -649,8 +649,8 @@ argument_list|)
 decl_stmt|;
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 operator|=
 operator|*
 name|rnaItr
@@ -664,7 +664,7 @@ argument_list|)
 expr_stmt|;
 name|handleRemoveNode
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 name|getSolver
@@ -672,7 +672,7 @@ argument_list|()
 operator|.
 name|pushToStack
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 return|return
@@ -713,8 +713,8 @@ argument_list|)
 decl_stmt|;
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 operator|=
 operator|*
 name|rnuItr
@@ -728,7 +728,7 @@ argument_list|)
 expr_stmt|;
 name|handleRemoveNode
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 name|getSolver
@@ -736,7 +736,7 @@ argument_list|()
 operator|.
 name|pushToStack
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 return|return
@@ -749,14 +749,14 @@ name|false
 return|;
 block|}
 comment|/// \brief Prepare a change in the costs on the given edge.
-comment|/// @param eItr Edge iterator.
+comment|/// @param eId Edge id.
 name|void
 name|preUpdateEdgeCosts
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 name|Graph
@@ -768,23 +768,23 @@ argument_list|()
 decl_stmt|;
 name|Graph
 operator|::
-name|NodeItr
-name|n1Itr
+name|NodeId
+name|n1Id
 operator|=
 name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 operator|,
-name|n2Itr
+name|n2Id
 operator|=
 name|g
 operator|.
 name|getEdgeNode2
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 name|NodeData
@@ -793,7 +793,7 @@ name|n1
 init|=
 name|getHeuristicNodeData
 argument_list|(
-name|n1Itr
+name|n1Id
 argument_list|)
 decl_stmt|,
 modifier|&
@@ -801,7 +801,7 @@ name|n2
 init|=
 name|getHeuristicNodeData
 argument_list|(
-name|n2Itr
+name|n2Id
 argument_list|)
 decl_stmt|;
 if|if
@@ -812,14 +812,14 @@ name|isHeuristic
 condition|)
 name|subtractEdgeContributions
 argument_list|(
-name|eItr
+name|eId
 argument_list|,
 name|getGraph
 argument_list|()
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -831,14 +831,14 @@ name|isHeuristic
 condition|)
 name|subtractEdgeContributions
 argument_list|(
-name|eItr
+name|eId
 argument_list|,
 name|getGraph
 argument_list|()
 operator|.
 name|getEdgeNode2
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -848,7 +848,7 @@ name|ed
 init|=
 name|getHeuristicEdgeData
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 name|ed
@@ -859,26 +859,26 @@ name|false
 expr_stmt|;
 block|}
 comment|/// \brief Handle the change in the costs on the given edge.
-comment|/// @param eItr Edge iterator.
+comment|/// @param eId Edge id.
 name|void
 name|postUpdateEdgeCosts
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 comment|// This is effectively the same as adding a new edge now, since
 comment|// we've factored out the costs of the old one.
 name|handleAddEdge
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Handle the addition of a new edge into the PBQP graph.
-comment|/// @param eItr Edge iterator for the added edge.
+comment|/// @param eId Edge id for the added edge.
 comment|///
 comment|/// Updates allocability of any nodes connected by this edge which are
 comment|/// being managed by the heuristic. If allocability changes they are
@@ -888,8 +888,8 @@ name|handleAddEdge
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 name|Graph
@@ -901,23 +901,23 @@ argument_list|()
 decl_stmt|;
 name|Graph
 operator|::
-name|NodeItr
-name|n1Itr
+name|NodeId
+name|n1Id
 operator|=
 name|g
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 operator|,
-name|n2Itr
+name|n2Id
 operator|=
 name|g
 operator|.
 name|getEdgeNode2
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 name|NodeData
@@ -926,7 +926,7 @@ name|n1
 init|=
 name|getHeuristicNodeData
 argument_list|(
-name|n1Itr
+name|n1Id
 argument_list|)
 decl_stmt|,
 modifier|&
@@ -934,7 +934,7 @@ name|n2
 init|=
 name|getHeuristicNodeData
 argument_list|(
-name|n2Itr
+name|n2Id
 argument_list|)
 decl_stmt|;
 comment|// If neither node is managed by the heuristic there's nothing to be
@@ -955,7 +955,7 @@ return|return;
 comment|// Ok - we need to update at least one node.
 name|computeEdgeContributions
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 comment|// Update node 1 if it's managed by the heuristic.
@@ -975,14 +975,14 @@ name|isAllocable
 decl_stmt|;
 name|addEdgeContributions
 argument_list|(
-name|eItr
+name|eId
 argument_list|,
-name|n1Itr
+name|n1Id
 argument_list|)
 expr_stmt|;
 name|updateAllocability
 argument_list|(
-name|n1Itr
+name|n1Id
 argument_list|)
 expr_stmt|;
 if|if
@@ -1017,7 +1017,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|n1Itr
+name|n1Id
 argument_list|)
 expr_stmt|;
 block|}
@@ -1039,14 +1039,14 @@ name|isAllocable
 decl_stmt|;
 name|addEdgeContributions
 argument_list|(
-name|eItr
+name|eId
 argument_list|,
-name|n2Itr
+name|n2Id
 argument_list|)
 expr_stmt|;
 name|updateAllocability
 argument_list|(
-name|n2Itr
+name|n2Id
 argument_list|)
 expr_stmt|;
 if|if
@@ -1081,15 +1081,15 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|n2Itr
+name|n2Id
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 block|}
 comment|/// \brief Handle disconnection of an edge from a node.
-comment|/// @param eItr Edge iterator for edge being disconnected.
-comment|/// @param nItr Node iterator for the node being disconnected from.
+comment|/// @param eId Edge id for edge being disconnected.
+comment|/// @param nId Node id for the node being disconnected from.
 comment|///
 comment|/// Updates allocability of the given node and, if appropriate, moves the
 comment|/// node to a new list.
@@ -1098,13 +1098,13 @@ name|handleRemoveEdge
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|,
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|NodeData
@@ -1113,7 +1113,7 @@ name|nd
 init|=
 name|getHeuristicNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 decl_stmt|;
 comment|// If the node is not managed by the heuristic there's nothing to be
@@ -1132,7 +1132,7 @@ name|ed
 init|=
 name|getHeuristicEdgeData
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 operator|(
@@ -1159,14 +1159,14 @@ name|isAllocable
 decl_stmt|;
 name|subtractEdgeContributions
 argument_list|(
-name|eItr
+name|eId
 argument_list|,
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 name|updateAllocability
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 comment|// If the node has gone optimal...
@@ -1174,7 +1174,7 @@ if|if
 condition|(
 name|shouldOptimallyReduce
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 condition|)
 block|{
@@ -1186,7 +1186,7 @@ name|false
 expr_stmt|;
 name|addToOptimalReduceList
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 if|if
@@ -1253,7 +1253,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 block|}
@@ -1267,8 +1267,8 @@ name|getHeuristicNodeData
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 return|return
@@ -1277,7 +1277,7 @@ argument_list|()
 operator|.
 name|getHeuristicNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 return|;
 block|}
@@ -1287,8 +1287,8 @@ name|getHeuristicEdgeData
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 return|return
@@ -1297,7 +1297,7 @@ argument_list|()
 operator|.
 name|getHeuristicEdgeData
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 return|;
 block|}
@@ -1308,8 +1308,8 @@ name|computeEdgeContributions
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|)
 block|{
 name|EdgeData
@@ -1318,7 +1318,7 @@ name|ed
 init|=
 name|getHeuristicEdgeData
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 if|if
@@ -1338,7 +1338,7 @@ argument_list|()
 operator|.
 name|getEdgeCosts
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 name|unsigned
@@ -1576,13 +1576,13 @@ name|addEdgeContributions
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|,
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|EdgeData
@@ -1591,7 +1591,7 @@ name|ed
 init|=
 name|getHeuristicEdgeData
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 name|assert
@@ -1609,7 +1609,7 @@ name|nd
 init|=
 name|getHeuristicNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 decl_stmt|;
 name|unsigned
@@ -1620,7 +1620,7 @@ argument_list|()
 operator|.
 name|getNodeCosts
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|getLength
@@ -1631,14 +1631,14 @@ decl_stmt|;
 name|bool
 name|nIsNode1
 init|=
-name|nItr
+name|nId
 operator|==
 name|getGraph
 argument_list|()
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 name|EdgeData
@@ -1732,13 +1732,13 @@ name|subtractEdgeContributions
 argument_list|(
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 argument_list|,
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|EdgeData
@@ -1747,7 +1747,7 @@ name|ed
 init|=
 name|getHeuristicEdgeData
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 name|assert
@@ -1765,7 +1765,7 @@ name|nd
 init|=
 name|getHeuristicNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 decl_stmt|;
 name|unsigned
@@ -1776,7 +1776,7 @@ argument_list|()
 operator|.
 name|getNodeCosts
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|getLength
@@ -1787,14 +1787,14 @@ decl_stmt|;
 name|bool
 name|nIsNode1
 init|=
-name|nItr
+name|nId
 operator|==
 name|getGraph
 argument_list|()
 operator|.
 name|getEdgeNode1
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 decl_stmt|;
 name|EdgeData
@@ -1884,8 +1884,8 @@ name|updateAllocability
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|NodeData
@@ -1894,7 +1894,7 @@ name|nd
 init|=
 name|getHeuristicNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 decl_stmt|;
 name|unsigned
@@ -1905,7 +1905,7 @@ argument_list|()
 operator|.
 name|getNodeCosts
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|getLength
@@ -1935,8 +1935,8 @@ name|initializeNode
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|nItr
+name|NodeId
+name|nId
 argument_list|)
 block|{
 name|NodeData
@@ -1945,7 +1945,7 @@ name|nd
 init|=
 name|getHeuristicNodeData
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 decl_stmt|;
 if|if
@@ -1964,7 +1964,7 @@ argument_list|()
 operator|.
 name|getNodeCosts
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 operator|.
 name|getLength
@@ -1988,7 +1988,7 @@ argument_list|()
 operator|.
 name|getNodeCosts
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 decl_stmt|;
 for|for
@@ -2068,7 +2068,7 @@ argument_list|()
 operator|.
 name|solverEdgesBegin
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 init|,
 name|aeEnd
@@ -2078,7 +2078,7 @@ argument_list|()
 operator|.
 name|solverEdgesEnd
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 init|;
 name|aeItr
@@ -2091,28 +2091,28 @@ control|)
 block|{
 name|Graph
 operator|::
-name|EdgeItr
-name|eItr
+name|EdgeId
+name|eId
 operator|=
 operator|*
 name|aeItr
 expr_stmt|;
 name|computeEdgeContributions
 argument_list|(
-name|eItr
+name|eId
 argument_list|)
 expr_stmt|;
 name|addEdgeContributions
 argument_list|(
-name|eItr
+name|eId
 argument_list|,
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 block|}
 name|updateAllocability
 argument_list|(
-name|nItr
+name|nId
 argument_list|)
 expr_stmt|;
 name|nd
@@ -2127,8 +2127,8 @@ name|handleRemoveNode
 argument_list|(
 name|Graph
 operator|::
-name|NodeItr
-name|xnItr
+name|NodeId
+name|xnId
 argument_list|)
 block|{
 typedef|typedef
@@ -2146,7 +2146,7 @@ name|vector
 operator|<
 name|Graph
 operator|::
-name|EdgeItr
+name|EdgeId
 operator|>
 name|edgesToRemove
 expr_stmt|;
@@ -2160,7 +2160,7 @@ argument_list|()
 operator|.
 name|solverEdgesBegin
 argument_list|(
-name|xnItr
+name|xnId
 argument_list|)
 init|,
 name|aeEnd
@@ -2170,7 +2170,7 @@ argument_list|()
 operator|.
 name|solverEdgesEnd
 argument_list|(
-name|xnItr
+name|xnId
 argument_list|)
 init|;
 name|aeItr
@@ -2183,8 +2183,8 @@ control|)
 block|{
 name|Graph
 operator|::
-name|NodeItr
-name|ynItr
+name|NodeId
+name|ynId
 operator|=
 name|getGraph
 argument_list|()
@@ -2194,7 +2194,7 @@ argument_list|(
 operator|*
 name|aeItr
 argument_list|,
-name|xnItr
+name|xnId
 argument_list|)
 expr_stmt|;
 name|handleRemoveEdge
@@ -2202,7 +2202,7 @@ argument_list|(
 operator|*
 name|aeItr
 argument_list|,
-name|ynItr
+name|ynId
 argument_list|)
 expr_stmt|;
 name|edgesToRemove

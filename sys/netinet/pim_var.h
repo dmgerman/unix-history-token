@@ -110,7 +110,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Names for PIM sysctl objects  */
+comment|/*  * Identifiers for PIM sysctl nodes  */
 end_comment
 
 begin_define
@@ -123,13 +123,6 @@ end_define
 begin_comment
 comment|/* statistics (read-only) */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PIMCTL_MAXID
-value|2
-end_define
 
 begin_ifdef
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compare.c,v 1.55 2012/10/05 00:59:35 christos Exp $	*/
+comment|/*	$NetBSD: compare.c,v 1.58 2013/11/21 18:39:50 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compare.c,v 1.55 2012/10/05 00:59:35 christos Exp $"
+literal|"$NetBSD: compare.c,v 1.58 2013/11/21 18:39:50 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -107,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -219,7 +225,7 @@ define|#
 directive|define
 name|MARK
 define|\
-value|do {									\ 	len = printf("%s: ", RP(p));					\ 	if (len> INDENTNAMELEN) {					\ 		tab = "\t";						\ 		printf("\n");						\ 	} else {							\ 		tab = "";						\ 		printf("%*s", INDENTNAMELEN - (int)len, "");		\ 	}								\ } while (0)
+value|do {									\ 	if (flavor == F_FREEBSD9) {					\ 		len = printf("%s changed\n", RP(p));			\ 		tab = "\t";						\ 	} else {							\ 		len = printf("%s: ", RP(p));				\ 		if (len> INDENTNAMELEN) {				\ 			tab = "\t";					\ 			printf("\n");					\ 		} else {						\ 			tab = "";					\ 			printf("%*s", INDENTNAMELEN - (int)len, "");	\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -509,6 +515,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"\ttype expected %s found %s\n"
+else|:
 literal|"\ttype (%s, %s)\n"
 argument_list|,
 name|nodetype
@@ -649,21 +661,25 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%sdevice (%#llx, %#llx"
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%sdevice expected %#jx found %#jx"
+else|:
+literal|"%sdevice (%#jx, %#jx"
 argument_list|,
 name|tab
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|s
 operator|->
 name|st_rdev
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|p
 operator|->
@@ -744,18 +760,34 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|", not modified: %s)\n"
+literal|", not modified: %s%s\n"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|", modified)\n"
+literal|", modified%s\n"
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 block|}
@@ -798,6 +830,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%suser expected %lu found %lu"
+else|:
 literal|"%suser (%lu, %lu"
 argument_list|,
 name|tab
@@ -842,18 +880,34 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|", not modified: %s)\n"
+literal|", not modified: %s%s\n"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|", modified)\n"
+literal|", modified%s\n"
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 block|}
@@ -895,6 +949,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%sgid expected %lu found %lu"
+else|:
 literal|"%sgid (%lu, %lu"
 argument_list|,
 name|tab
@@ -939,18 +999,34 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|", not modified: %s)\n"
+literal|", not modified: %s%s\n"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|", modified)\n"
+literal|", modified%s\n"
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1064,6 +1140,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%spermissions expcted %#lo found %#lo"
+else|:
 literal|"%spermissions (%#lo, %#lo"
 argument_list|,
 name|tab
@@ -1107,18 +1189,34 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|", not modified: %s)\n"
+literal|", not modified: %s%s\n"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|", modified)\n"
+literal|", modified%s\n"
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1165,6 +1263,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%slink count expected %lu found %lu\n"
+else|:
 literal|"%slink count (%lu, %lu)\n"
 argument_list|,
 name|tab
@@ -1214,21 +1318,25 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%ssize (%lld, %lld)\n"
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%ssize expected %ju found %ju\n"
+else|:
+literal|"%ssize (%ju, %ju)\n"
 argument_list|,
 name|tab
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|s
 operator|->
 name|st_size
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|p
 operator|->
@@ -1411,6 +1519,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%smodification time expected %.24s found "
+else|:
 literal|"%smodification time (%.24s, "
 argument_list|,
 name|tab
@@ -1461,25 +1575,49 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|", not modified: %s)\n"
+literal|", not modified: %s%s\n"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|", modified)\n"
+literal|", modified%s\n"
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|printf
 argument_list|(
-literal|")\n"
+literal|"%s\n"
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 name|tab
@@ -1553,6 +1691,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%sflags expected \"%s\" found "
+else|:
 literal|"%sflags (\"%s\" is not "
 argument_list|,
 name|tab
@@ -1636,7 +1780,15 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|")\n"
+literal|"%s\n"
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 name|tab
@@ -1765,6 +1917,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%scksum expected %lu found %lu\n"
+else|:
 literal|"%scksum (%lu, %lu)\n"
 argument_list|,
 name|tab
@@ -1860,6 +2018,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%s%s expected %s found %s\n"
+else|:
 literal|"%s%s (0x%s, 0x%s)\n"
 argument_list|,
 name|tab
@@ -1961,6 +2125,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%s%s expected %s found %s\n"
+else|:
 literal|"%s%s (0x%s, 0x%s)\n"
 argument_list|,
 name|tab
@@ -2062,6 +2232,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%s%s expected %s found %s\n"
+else|:
 literal|"%s%s (0x%s, 0x%s)\n"
 argument_list|,
 name|tab
@@ -2163,6 +2339,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%s%s expected %s found %s\n"
+else|:
 literal|"%s%s (0x%s, 0x%s)\n"
 argument_list|,
 name|tab
@@ -2261,6 +2443,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%s%s expected %s found %s\n"
+else|:
 literal|"%s%s (0x%s, 0x%s)\n"
 argument_list|,
 name|tab
@@ -2358,6 +2546,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%s%s expected %s found %s\n"
+else|:
 literal|"%s%s (0x%s, 0x%s)\n"
 argument_list|,
 name|tab
@@ -2415,6 +2609,12 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|"%slink ref expected %s found %s"
+else|:
 literal|"%slink ref (%s, %s"
 argument_list|,
 name|tab
@@ -2463,25 +2663,49 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|", not modified: %s)\n"
+literal|", not modified: %s%s\n"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|", modified)\n"
+literal|", modified%s\n"
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|printf
 argument_list|(
-literal|")\n"
+literal|"%s\n"
+argument_list|,
+name|flavor
+operator|==
+name|F_FREEBSD9
+condition|?
+literal|""
+else|:
+literal|")"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD: head/contrib/wpa/src/utils/radiotap.h 214734 2010-11-03 10:43:38Z rpaulo $ */
+comment|/* $FreeBSD: src/sys/net80211/ieee80211_radiotap.h,v 1.5 2005/01/22 20:12:05 sam Exp $ */
 end_comment
 
 begin_comment

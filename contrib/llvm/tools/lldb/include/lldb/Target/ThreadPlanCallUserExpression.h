@@ -89,6 +89,12 @@ directive|include
 file|"lldb/Target/ThreadPlanCallFunction.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -103,23 +109,34 @@ name|public
 operator|:
 name|ThreadPlanCallUserExpression
 argument_list|(
-argument|Thread&thread
+name|Thread
+operator|&
+name|thread
 argument_list|,
-argument|Address&function
+name|Address
+operator|&
+name|function
 argument_list|,
-argument|lldb::addr_t arg
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|lldb
+operator|::
+name|addr_t
+operator|>
+name|args
 argument_list|,
-argument|bool stop_other_threads
+specifier|const
+name|EvaluateExpressionOptions
+operator|&
+name|options
 argument_list|,
-argument|bool unwind_on_error
-argument_list|,
-argument|bool ignore_breakpoints
-argument_list|,
-argument|lldb::addr_t *this_arg
-argument_list|,
-argument|lldb::addr_t *cmd_arg
-argument_list|,
-argument|ClangUserExpression::ClangUserExpressionSP&user_expression_sp
+name|ClangUserExpression
+operator|::
+name|ClangUserExpressionSP
+operator|&
+name|user_expression_sp
 argument_list|)
 block|;
 name|virtual

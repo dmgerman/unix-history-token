@@ -260,6 +260,27 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// \brief Tests if a value is a call or invoke to a library function that
+comment|/// allocates memory and never returns null (such as operator new).
+name|bool
+name|isOperatorNewLikeFn
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+parameter_list|,
+name|bool
+name|LookThroughBitCast
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  malloc Call Utility Functions.
 comment|//
@@ -335,7 +356,7 @@ parameter_list|,
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
@@ -399,7 +420,7 @@ parameter_list|,
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
@@ -551,7 +572,7 @@ parameter_list|,
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
@@ -575,7 +596,7 @@ name|APInt
 operator|>
 name|SizeOffsetType
 expr_stmt|;
-comment|/// \brief Evaluate the size and offset of an object ponted by a Value*
+comment|/// \brief Evaluate the size and offset of an object pointed to by a Value*
 comment|/// statically. Fails if size or offset are not known at compile time.
 name|class
 name|ObjectSizeOffsetVisitor
@@ -591,7 +612,7 @@ block|{
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 specifier|const
 name|TargetLibraryInfo
@@ -647,7 +668,7 @@ name|public
 label|:
 name|ObjectSizeOffsetVisitor
 argument_list|(
-argument|const DataLayout *TD
+argument|const DataLayout *DL
 argument_list|,
 argument|const TargetLibraryInfo *TLI
 argument_list|,
@@ -852,7 +873,7 @@ operator|*
 operator|>
 name|SizeOffsetEvalType
 expr_stmt|;
-comment|/// \brief Evaluate the size and offset of an object ponted by a Value*.
+comment|/// \brief Evaluate the size and offset of an object pointed to by a Value*.
 comment|/// May create code to compute the result at run-time.
 name|class
 name|ObjectSizeOffsetEvaluator
@@ -910,7 +931,7 @@ expr_stmt|;
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 specifier|const
 name|TargetLibraryInfo
@@ -937,6 +958,9 @@ name|CacheMap
 decl_stmt|;
 name|PtrSetTy
 name|SeenVals
+decl_stmt|;
+name|bool
+name|RoundToAlign
 decl_stmt|;
 name|SizeOffsetEvalType
 name|unknown
@@ -973,21 +997,15 @@ name|public
 label|:
 name|ObjectSizeOffsetEvaluator
 argument_list|(
-specifier|const
-name|DataLayout
-operator|*
-name|TD
+argument|const DataLayout *DL
 argument_list|,
-specifier|const
-name|TargetLibraryInfo
-operator|*
-name|TLI
+argument|const TargetLibraryInfo *TLI
 argument_list|,
-name|LLVMContext
-operator|&
-name|Context
+argument|LLVMContext&Context
+argument_list|,
+argument|bool RoundToAlign = false
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|SizeOffsetEvalType
 name|compute
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: platform.c,v 1.19 2013/03/12 00:31:05 dtucker Exp $ */
+comment|/* $Id: platform.c,v 1.21 2014/01/21 01:59:29 tim Exp $ */
 end_comment
 
 begin_comment
@@ -129,6 +129,24 @@ ifdef|#
 directive|ifdef
 name|USE_SOLARIS_PROCESS_CONTRACTS
 name|solaris_contract_pre_fork
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+name|void
+name|platform_pre_restart
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|LINUX_OOM_ADJUST
+name|oom_adjust_restore
 argument_list|()
 expr_stmt|;
 endif|#
@@ -496,39 +514,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* _AIX */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_LOGIN_CAP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|USE_LIBIAF
-argument_list|)
-if|if
-condition|(
-name|set_id
-argument_list|(
-name|pw
-operator|->
-name|pw_name
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* USE_LIBIAF */
 ifdef|#
 directive|ifdef
 name|HAVE_SETPCRED

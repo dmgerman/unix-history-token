@@ -140,6 +140,11 @@ name|unsigned
 name|short
 name|AliasID
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|AliasArgs
+decl_stmt|;
 block|}
 struct|;
 name|private
@@ -152,6 +157,9 @@ name|OptionInfos
 decl_stmt|;
 name|unsigned
 name|NumOptionInfos
+decl_stmt|;
+name|bool
+name|IgnoreCase
 decl_stmt|;
 name|unsigned
 name|TheInputOptionID
@@ -228,6 +236,8 @@ argument_list|(
 argument|const Info *_OptionInfos
 argument_list|,
 argument|unsigned _NumOptionInfos
+argument_list|,
+argument|bool _IgnoreCase = false
 argument_list|)
 empty_stmt|;
 name|public
@@ -315,15 +325,6 @@ operator|.
 name|GroupID
 return|;
 block|}
-comment|/// \brief Should the help for the given option be hidden by default.
-name|bool
-name|isOptionHelpHidden
-argument_list|(
-name|OptSpecifier
-name|id
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// \brief Get the help text to use to describe this option.
 specifier|const
 name|char
@@ -371,6 +372,10 @@ comment|///
 comment|/// \param [in,out] Index - The current parsing position in the argument
 comment|/// string list; on return this will be the index of the next argument
 comment|/// string to parse.
+comment|/// \param [in] FlagsToInclude - Only parse options with any of these flags.
+comment|/// Zero is the default which includes all flags.
+comment|/// \param [in] FlagsToExclude - Don't parse options with this flag.  Zero
+comment|/// is the default and means exclude nothing.
 comment|///
 comment|/// \return The parsed argument, or 0 if the argument is missing values
 comment|/// (in which case Index still points at the conceptual next argument string
@@ -387,6 +392,16 @@ argument_list|,
 name|unsigned
 operator|&
 name|Index
+argument_list|,
+name|unsigned
+name|FlagsToInclude
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|FlagsToExclude
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -404,6 +419,10 @@ comment|/// \param ArgEnd - The end of the argument vector.
 comment|/// \param MissingArgIndex - On error, the index of the option which could
 comment|/// not be parsed.
 comment|/// \param MissingArgCount - On error, the number of missing options.
+comment|/// \param FlagsToInclude - Only parse options with any of these flags.
+comment|/// Zero is the default which includes all flags.
+comment|/// \param FlagsToExclude - Don't parse options with this flag.  Zero
+comment|/// is the default and means exclude nothing.
 comment|/// \return An InputArgList; on error this will contain all the options
 comment|/// which could be parsed.
 name|InputArgList
@@ -431,6 +450,16 @@ argument_list|,
 name|unsigned
 operator|&
 name|MissingArgCount
+argument_list|,
+name|unsigned
+name|FlagsToInclude
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|FlagsToExclude
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -439,7 +468,34 @@ comment|///
 comment|/// \param OS - The stream to write the help text to.
 comment|/// \param Name - The name to use in the usage line.
 comment|/// \param Title - The title to use in the usage line.
-comment|/// \param ShowHidden - Whether help-hidden arguments should be shown.
+comment|/// \param FlagsToInclude - If non-zero, only include options with any
+comment|///                         of these flags set.
+comment|/// \param FlagsToExclude - Exclude options with any of these flags set.
+name|void
+name|PrintHelp
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Name
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Title
+argument_list|,
+name|unsigned
+name|FlagsToInclude
+argument_list|,
+name|unsigned
+name|FlagsToExclude
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|PrintHelp
 argument_list|(

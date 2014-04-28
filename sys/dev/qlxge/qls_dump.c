@@ -526,7 +526,7 @@ block|,
 name|Q81_MAC_TX_PARAMS_JUMBO
 init|=
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

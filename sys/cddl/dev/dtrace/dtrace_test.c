@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -82,8 +76,6 @@ name|SDT_PROBE_DEFINE7
 argument_list|(
 name|test
 argument_list|, , ,
-name|sdttest
-argument_list|,
 name|sdttest
 argument_list|,
 literal|"int"

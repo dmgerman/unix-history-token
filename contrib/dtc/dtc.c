@@ -15,12 +15,6 @@ directive|include
 file|"srcpos.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"version_gen.h"
-end_include
-
 begin_comment
 comment|/*  * Command line options  */
 end_comment
@@ -171,343 +165,293 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Usage related data. */
+end_comment
+
 begin_decl_stmt
 specifier|static
-name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|noreturn
-operator|)
-argument_list|)
-name|usage
-argument_list|(
-name|void
-argument_list|)
+specifier|const
+name|char
+name|usage_synopsis
+index|[]
+init|=
+literal|"dtc [options]<input file>"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|usage_short_opts
+index|[]
+init|=
+literal|"qI:O:o:V:d:R:S:p:fb:i:H:sW:E:hv"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|option
+specifier|const
+name|usage_long_opts
+index|[]
+init|=
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\tdtc [options]<input file>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\nOptions:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-h\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tThis help text\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-q\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tQuiet: -q suppress warnings, -qq errors, -qqq all\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-I<input format>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tInput formats are:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t\tdts - device tree source text\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t\tdtb - device tree blob\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t\tfs - /proc/device-tree style directory\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-o<output file>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-O<output format>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tOutput formats are:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t\tdts - device tree source text\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t\tdtb - device tree blob\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t\tasm - assembler source\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-V<output version>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tBlob version to produce, defaults to %d (relevant for dtb\n\t\tand asm output only)\n"
-argument_list|,
-name|DEFAULT_FDT_VERSION
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-d<output dependency file>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-R<number>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tMake space for<number> reserve map entries (relevant for \n\t\tdtb and asm output only)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-S<bytes>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tMake the blob at least<bytes> long (extra space)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-p<bytes>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tAdd padding to the blob of<bytes> long (extra space)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-b<number>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tSet the physical boot cpu\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-f\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tForce - try to produce output even if the input tree has errors\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-i\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tAdd a path to search for include files\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-s\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tSort nodes and properties before outputting (only useful for\n\t\tcomparing trees)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-v\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tPrint DTC version and exit\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-H<phandle format>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\tphandle formats are:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t\tlegacy - \"linux,phandle\" properties only\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t\tepapr - \"phandle\" properties only\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t\tboth - Both \"linux,phandle\" and \"phandle\" properties\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-W [no-]<checkname>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-E [no-]<checkname>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t\tenable or disable warnings and errors\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|3
-argument_list|)
-expr_stmt|;
+block|{
+literal|"quiet"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'q'
 block|}
+block|,
+block|{
+literal|"in-format"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'I'
+block|}
+block|,
+block|{
+literal|"out"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'o'
+block|}
+block|,
+block|{
+literal|"out-format"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'O'
+block|}
+block|,
+block|{
+literal|"out-version"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'V'
+block|}
+block|,
+block|{
+literal|"out-dependency"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'d'
+block|}
+block|,
+block|{
+literal|"reserve"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'R'
+block|}
+block|,
+block|{
+literal|"space"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'S'
+block|}
+block|,
+block|{
+literal|"pad"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'p'
+block|}
+block|,
+block|{
+literal|"boot-cpu"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'b'
+block|}
+block|,
+block|{
+literal|"force"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'f'
+block|}
+block|,
+block|{
+literal|"include"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'i'
+block|}
+block|,
+block|{
+literal|"sort"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'s'
+block|}
+block|,
+block|{
+literal|"phandle"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'H'
+block|}
+block|,
+block|{
+literal|"warning"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'W'
+block|}
+block|,
+block|{
+literal|"error"
+block|,
+name|a_argument
+block|,
+name|NULL
+block|,
+literal|'E'
+block|}
+block|,
+block|{
+literal|"help"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'h'
+block|}
+block|,
+block|{
+literal|"version"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'v'
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|0x0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|usage_opts_help
+index|[]
+init|=
+block|{
+literal|"\n\tQuiet: -q suppress warnings, -qq errors, -qqq all"
+block|,
+literal|"\n\tInput formats are:\n"
+literal|"\t\tdts - device tree source text\n"
+literal|"\t\tdtb - device tree blob\n"
+literal|"\t\tfs  - /proc/device-tree style directory"
+block|,
+literal|"\n\tOutput file"
+block|,
+literal|"\n\tOutput formats are:\n"
+literal|"\t\tdts - device tree source text\n"
+literal|"\t\tdtb - device tree blob\n"
+literal|"\t\tasm - assembler source"
+block|,
+literal|"\n\tBlob version to produce, defaults to %d (for dtb and asm output)"
+block|,
+comment|//, DEFAULT_FDT_VERSION);
+literal|"\n\tOutput dependency file"
+block|,
+literal|"\n\ttMake space for<number> reserve map entries (for dtb and asm output)"
+block|,
+literal|"\n\tMake the blob at least<bytes> long (extra space)"
+block|,
+literal|"\n\tAdd padding to the blob of<bytes> long (extra space)"
+block|,
+literal|"\n\tSet the physical boot cpu"
+block|,
+literal|"\n\tTry to produce output even if the input tree has errors"
+block|,
+literal|"\n\tAdd a path to search for include files"
+block|,
+literal|"\n\tSort nodes and properties before outputting (useful for comparing trees)"
+block|,
+literal|"\n\tValid phandle formats are:\n"
+literal|"\t\tlegacy - \"linux,phandle\" properties only\n"
+literal|"\t\tepapr  - \"phandle\" properties only\n"
+literal|"\t\tboth   - Both \"linux,phandle\" and \"phandle\" properties"
+block|,
+literal|"\n\tEnable/disable warnings (prefix with \"no-\")"
+block|,
+literal|"\n\tEnable/disable errors (prefix with \"no-\")"
+block|,
+literal|"\n\tPrint this help and exit"
+block|,
+literal|"\n\tPrint version and exit"
+block|,
+name|NULL
+block|, }
+decl_stmt|;
 end_decl_stmt
 
 begin_function
@@ -556,14 +500,14 @@ name|depname
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|bool
 name|force
 init|=
-literal|0
+name|false
 decl_stmt|,
 name|sort
 init|=
-literal|0
+name|false
 decl_stmt|;
 specifier|const
 name|char
@@ -612,14 +556,8 @@ condition|(
 operator|(
 name|opt
 operator|=
-name|getopt
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-literal|"hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:"
-argument_list|)
+name|util_getopt_long
+argument_list|()
 operator|)
 operator|!=
 name|EOF
@@ -727,7 +665,7 @@ literal|'f'
 case|:
 name|force
 operator|=
-literal|1
+name|true
 expr_stmt|;
 break|break;
 case|case
@@ -764,17 +702,8 @@ break|break;
 case|case
 literal|'v'
 case|:
-name|printf
-argument_list|(
-literal|"Version: %s\n"
-argument_list|,
-name|DTC_VERSION
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
+name|util_version
+argument_list|()
 expr_stmt|;
 case|case
 literal|'H'
@@ -834,7 +763,7 @@ literal|'s'
 case|:
 name|sort
 operator|=
-literal|1
+name|true
 expr_stmt|;
 break|break;
 case|case
@@ -866,9 +795,16 @@ break|break;
 case|case
 literal|'h'
 case|:
+name|usage
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 default|default:
 name|usage
-argument_list|()
+argument_list|(
+literal|"unknown option"
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -883,7 +819,9 @@ literal|1
 operator|)
 condition|)
 name|usage
-argument_list|()
+argument_list|(
+literal|"missing files"
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -918,17 +856,6 @@ condition|)
 name|die
 argument_list|(
 literal|"Can't set both -p and -S\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|minsize
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"DTC: Use of \"-S\" is deprecated; it will be removed soon, use \"-p\" instead\n"
 argument_list|)
 expr_stmt|;
 if|if

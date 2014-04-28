@@ -166,6 +166,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_clone.h>
 end_include
 
@@ -1083,7 +1089,7 @@ literal|0600
 argument_list|,
 literal|"%s%d"
 argument_list|,
-name|tapname
+name|vmnetname
 argument_list|,
 name|unit
 argument_list|)
@@ -3067,15 +3073,6 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-name|dummy
-operator|=
-name|strlen
-argument_list|(
-name|ifs
-operator|->
-name|ascii
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3091,23 +3088,12 @@ operator|->
 name|tap_pid
 operator|!=
 literal|0
-operator|&&
-name|dummy
-operator|<
-sizeof|sizeof
-argument_list|(
-name|ifs
-operator|->
-name|ascii
-argument_list|)
 condition|)
 name|snprintf
 argument_list|(
 name|ifs
 operator|->
 name|ascii
-operator|+
-name|dummy
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3115,8 +3101,6 @@ name|ifs
 operator|->
 name|ascii
 argument_list|)
-operator|-
-name|dummy
 argument_list|,
 literal|"\tOpened by PID %d\n"
 argument_list|,
@@ -3124,6 +3108,16 @@ name|tp
 operator|->
 name|tap_pid
 argument_list|)
+expr_stmt|;
+else|else
+name|ifs
+operator|->
+name|ascii
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -4016,12 +4010,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|OSIOCGIFADDR
-case|:
-comment|/* get MAC address of the remote side */
-case|case
 name|SIOCGIFADDR
 case|:
+comment|/* get MAC address of the remote side */
 name|mtx_lock
 argument_list|(
 operator|&

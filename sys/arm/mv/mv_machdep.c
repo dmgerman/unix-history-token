@@ -74,23 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
+file|<machine/devmap.h>
 end_include
 
-begin_comment
-comment|/* For trapframe_t, used in<machine/machdep.h> */
-end_comment
+begin_include
+include|#
+directive|include
+file|<machine/fdt.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<machine/machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pmap.h>
 end_include
 
 begin_include
@@ -817,6 +813,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+return|return
+operator|(
+name|fdt_immr_va
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|initarm_early_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 if|if
 condition|(
 name|fdt_immr_addr
@@ -831,14 +842,6 @@ condition|(
 literal|1
 condition|)
 empty_stmt|;
-comment|/* Platform-specific initialisation */
-return|return
-operator|(
-name|fdt_immr_va
-operator|-
-name|ARM_NOCACHE_KVA_SIZE
-operator|)
-return|;
 block|}
 end_function
 
@@ -944,7 +947,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|fdt_devmap
 index|[
 name|FDT_DEVMAP_MAX
@@ -972,7 +975,7 @@ name|int
 name|platform_sram_devmap
 parameter_list|(
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|map
 parameter_list|)
@@ -1153,7 +1156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Supply a default do-nothing implementation of fdt_pci_devmap() via a weak  * alias.  Many Marvell platforms don't support a PCI interface, but to support  * those that do, we end up with a reference to this function below, in  * platform_devmap_init().  If "device pci" appears in the kernel config, the  * real implementation of this function in dev/fdt/fdt_pci.c overrides the weak  * alias defined here.  */
+comment|/*  * Supply a default do-nothing implementation of mv_pci_devmap() via a weak  * alias.  Many Marvell platforms don't support a PCI interface, but to support  * those that do, we end up with a reference to this function below, in  * initarm_devmap_init().  If "device pci" appears in the kernel config, the  * real implementation of this function in arm/mv/mv_pci.c overrides the weak  * alias defined here.  */
 end_comment
 
 begin_function_decl
@@ -1164,7 +1167,7 @@ name|phandle_t
 name|node
 parameter_list|,
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|devmap
 parameter_list|,
@@ -1185,7 +1188,7 @@ name|phandle_t
 name|node
 parameter_list|,
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|devmap
 parameter_list|,
@@ -1209,7 +1212,7 @@ name|__weak_reference
 argument_list|(
 name|mv_default_fdt_pci_devmap
 argument_list|,
-name|fdt_pci_devmap
+name|mv_pci_devmap
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1224,7 +1227,7 @@ end_comment
 
 begin_function
 name|int
-name|platform_devmap_init
+name|initarm_devmap_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -1246,14 +1249,45 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_devmap_bootstrap_table
-operator|=
+name|arm_devmap_register_table
+argument_list|(
 operator|&
 name|fdt_devmap
 index|[
 literal|0
 index|]
+argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SOC_MV_ARMADAXP
+name|vm_paddr_t
+name|cur_immr_pa
+decl_stmt|;
+comment|/* 	 * Acquire SoC registers' base passed by u-boot and fill devmap 	 * accordingly. DTB is going to be modified basing on this data 	 * later. 	 */
+asm|__asm __volatile("mrc p15, 4, %0, c15, c0, 0" : "=r" (cur_immr_pa));
+name|cur_immr_pa
+operator|=
+operator|(
+name|cur_immr_pa
+operator|<<
+literal|13
+operator|)
+operator|&
+literal|0xff000000
+expr_stmt|;
+if|if
+condition|(
+name|cur_immr_pa
+operator|!=
+literal|0
+condition|)
+name|fdt_immr_pa
+operator|=
+name|cur_immr_pa
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * IMMR range. 	 */
 name|fdt_devmap
 index|[
@@ -1403,7 +1437,7 @@ return|;
 comment|/* 			 * XXX this should account for PCI and multiple ranges 			 * of a given kind. 			 */
 if|if
 condition|(
-name|fdt_pci_devmap
+name|mv_pci_devmap
 argument_list|(
 name|child
 argument_list|,

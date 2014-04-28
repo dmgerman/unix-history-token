@@ -364,6 +364,7 @@ block|}
 comment|//----------------------------------------------------------------------
 comment|// Tests
 comment|//----------------------------------------------------------------------
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -518,6 +519,19 @@ name|NULL
 argument_list|)
 decl|const
 decl_stmt|;
+name|size_t
+name|GetNumberOfFunctionArguments
+argument_list|()
+specifier|const
+expr_stmt|;
+name|ClangASTType
+name|GetFunctionArgumentAtIndex
+parameter_list|(
+specifier|const
+name|size_t
+name|index
+parameter_list|)
+function_decl|;
 name|bool
 name|IsVariadicFunctionType
 argument_list|()
@@ -610,6 +624,11 @@ decl|const
 decl_stmt|;
 name|bool
 name|IsPointerToScalarType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|IsRuntimeGeneratedType
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -723,9 +742,7 @@ name|GetConstTypeName
 argument_list|()
 specifier|const
 expr_stmt|;
-name|std
-operator|::
-name|string
+name|ConstString
 name|GetTypeName
 argument_list|()
 specifier|const

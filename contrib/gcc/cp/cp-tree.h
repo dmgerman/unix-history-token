@@ -3189,13 +3189,32 @@ name|non_aggregate
 range|:
 literal|1
 decl_stmt|;
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
+name|unsigned
+name|has_nontrivial_destructor_body
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|destructor_nontrivial_because_of_base
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|destructor_triviality_final
+range|:
+literal|1
+decl_stmt|;
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
 comment|/* When adding a flag here, consider whether or not it ought to      apply to a template instance if it applies to the template.  If      so, make sure to copy it in instantiate_class_template!  */
 comment|/* There are some bits left to fill out a 32-bit word.  Keep track      of this by updating the size of this bitfield whenever you add or      remove a flag.  */
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
 name|unsigned
 name|dummy
 range|:
-literal|12
+literal|10
 decl_stmt|;
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
 name|tree
 name|primary_base
 decl_stmt|;
@@ -7198,7 +7217,9 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(TYPE_PTRMEM_P (TYPE)				\    || TREE_CODE (TYPE) == ENUMERAL_TYPE		\    || ARITHMETIC_TYPE_P (TYPE)			\    || TYPE_PTR_P (TYPE)				\    || TYPE_PTRMEMFUNC_P (TYPE))
+value|(TYPE_PTRMEM_P (TYPE)				\    || TREE_CODE (TYPE) == ENUMERAL_TYPE		\    || ARITHMETIC_TYPE_P (TYPE)			\    || TYPE_PTR_P (TYPE)				\
+comment|/* APPLE LOCAL blocks 6040305 */
+value|\    || TREE_CODE (TYPE) == BLOCK_POINTER_TYPE	\    || TYPE_PTRMEMFUNC_P (TYPE))
 end_define
 
 begin_comment
@@ -7363,6 +7384,56 @@ parameter_list|)
 define|\
 value|(TYPE_LANG_FLAG_4 (NODE))
 end_define
+
+begin_comment
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
+end_comment
+
+begin_comment
+comment|/* One if the body of the destructor of class type NODE has been shown to do  nothing, else zero. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASSTYPE_HAS_NONTRIVIAL_DESTRUCTOR_BODY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(LANG_TYPE_CLASS_CHECK (NODE)->has_nontrivial_destructor_body)
+end_define
+
+begin_comment
+comment|/* One if destructor of this type must be called by its base classes because  one of its base classes' destructors must be called. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(LANG_TYPE_CLASS_CHECK (NODE)->destructor_nontrivial_because_of_base)
+end_define
+
+begin_comment
+comment|/* One if the values of CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE  and CLASSTYPE_HAS_NONTRIVIAL_DESTRUCTOR_BODY are final. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASSTYPE_DESTRUCTOR_TRIVIALITY_FINAL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(LANG_TYPE_CLASS_CHECK (NODE)->destructor_triviality_final)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
+end_comment
 
 begin_comment
 comment|/* Nonzero for class type means that copy initialization of this type can use    a bitwise copy.  */
@@ -8762,10 +8833,29 @@ value|TREE_OPERAND (WHILE_STMT_CHECK (NODE), 1)
 end_define
 
 begin_comment
-comment|/* DO_STMT accessors. These give access to the condition of the do    statement and the body of the do statement, respectively.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
 end_comment
 
-begin_define
+begin_expr_stmt
+unit|\
+operator|#
+name|define
+name|WHILE_ATTRIBUTES
+argument_list|(
+argument|NODE
+argument_list|)
+name|TREE_OPERAND
+argument_list|(
+name|WHILE_STMT_CHECK
+argument_list|(
+name|NODE
+argument_list|)
+argument_list|,
+literal|2
+argument_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+expr|\
+comment|/* DO_STMT accessors. These give access to the condition of the do    statement and the body of the do statement, respectively.  */
 define|#
 directive|define
 name|DO_COND
@@ -8773,9 +8863,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (DO_STMT_CHECK (NODE), 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DO_BODY
@@ -8783,13 +8870,36 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (DO_STMT_CHECK (NODE), 1)
-end_define
-
-begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+expr|\
+operator|#
+name|define
+name|DO_ATTRIBUTES
+argument_list|(
+argument|NODE
+argument_list|)
+name|TREE_OPERAND
+argument_list|(
+name|DO_STMT_CHECK
+argument_list|(
+name|NODE
+argument_list|)
+argument_list|,
+literal|2
+argument_list|)
+comment|/* APPLE LOCAL begin C* language */
+comment|/* Used as a flag to indicate synthesized inner do-while loop of a     foreach statement.  Used for generation of break/continue statement     of the loop. */
+define|#
+directive|define
+name|DO_FOREACH
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (DO_STMT_CHECK (NODE), 3)
+comment|/* APPLE LOCAL end C* language */
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+expr|\
 comment|/* FOR_STMT accessors. These give access to the init statement,    condition, update expression, and body of the for statement,    respectively.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FOR_INIT_STMT
@@ -8797,9 +8907,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (FOR_STMT_CHECK (NODE), 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|FOR_COND
@@ -8807,9 +8914,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (FOR_STMT_CHECK (NODE), 1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|FOR_EXPR
@@ -8817,9 +8921,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (FOR_STMT_CHECK (NODE), 2)
-end_define
-
-begin_define
 define|#
 directive|define
 name|FOR_BODY
@@ -8827,19 +8928,40 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (FOR_STMT_CHECK (NODE), 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SWITCH_STMT_COND
-parameter_list|(
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+expr|\
+operator|#
+name|define
+name|FOR_ATTRIBUTES
+argument_list|(
+argument|NODE
+argument_list|)
+name|TREE_OPERAND
+argument_list|(
+name|FOR_STMT_CHECK
+argument_list|(
 name|NODE
-parameter_list|)
-value|TREE_OPERAND (SWITCH_STMT_CHECK (NODE), 0)
-end_define
-
-begin_define
+argument_list|)
+argument_list|,
+literal|4
+argument_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+expr|\
+operator|#
+name|define
+name|SWITCH_STMT_COND
+argument_list|(
+argument|NODE
+argument_list|)
+name|TREE_OPERAND
+argument_list|(
+name|SWITCH_STMT_CHECK
+argument_list|(
+name|NODE
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
 define|#
 directive|define
 name|SWITCH_STMT_BODY
@@ -8847,9 +8969,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (SWITCH_STMT_CHECK (NODE), 1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|SWITCH_STMT_TYPE
@@ -8857,13 +8976,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (SWITCH_STMT_CHECK (NODE), 2)
-end_define
-
-begin_comment
 comment|/* STMT_EXPR accessor.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|STMT_EXPR_STMT
@@ -8871,13 +8984,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (STMT_EXPR_CHECK (NODE), 0)
-end_define
-
-begin_comment
 comment|/* EXPR_STMT accessor. This gives the expression associated with an    expression statement.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|EXPR_STMT_EXPR
@@ -8885,13 +8992,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (EXPR_STMT_CHECK (NODE), 0)
-end_define
-
-begin_comment
 comment|/* True if this TARGET_EXPR was created by build_cplus_new, and so we can    discard it if it isn't useful.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|TARGET_EXPR_IMPLICIT_P
@@ -8900,18 +9001,12 @@ name|NODE
 parameter_list|)
 define|\
 value|TREE_LANG_FLAG_0 (TARGET_EXPR_CHECK (NODE))
-end_define
-
-begin_comment
 comment|/* An enumeration of the kind of tags that C++ accepts.  */
-end_comment
-
-begin_enum
-enum|enum
+expr|enum
 name|tag_types
 block|{
 name|none_type
-init|=
+operator|=
 literal|0
 block|,
 comment|/* Not a tag type.  */
@@ -8930,8 +9025,8 @@ comment|/* "enum" types.  */
 name|typename_type
 comment|/* "typename" types.  */
 block|}
-enum|;
-end_enum
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* The various kinds of lvalues we distinguish.  */
@@ -10857,6 +10952,9 @@ name|cdk_reference
 block|,
 name|cdk_ptrmem
 block|,
+comment|/* APPLE LOCAL blocks 6040305 (ch) */
+name|cdk_block_pointer
+block|,
 name|cdk_error
 block|}
 name|cp_declarator_kind
@@ -11005,6 +11103,18 @@ decl_stmt|;
 block|}
 name|pointer
 struct|;
+comment|/* APPLE LOCAL begin blocks 6040305 (ch) */
+comment|/* For cdk_block_pointer.  */
+struct|struct
+block|{
+comment|/* The cv-qualifiers for the pointer.  */
+name|cp_cv_quals
+name|qualifiers
+decl_stmt|;
+block|}
+name|block_pointer
+struct|;
+comment|/* APPLE LOCAL end blocks 6040305 (ch) */
 block|}
 name|u
 union|;
@@ -12612,6 +12722,25 @@ begin_function_decl
 specifier|extern
 name|tree
 name|groktypename
+parameter_list|(
+name|cp_decl_specifier_seq
+modifier|*
+parameter_list|,
+specifier|const
+name|cp_declarator
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL 6339747 */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|grokblockdecl
 parameter_list|(
 name|cp_decl_specifier_seq
 modifier|*
@@ -16127,17 +16256,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|tree
 name|begin_while_stmt
 parameter_list|(
-name|void
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|void
 name|finish_while_stmt_cond
@@ -16159,17 +16298,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|tree
 name|begin_do_stmt
 parameter_list|(
-name|void
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|void
 name|finish_do_body
@@ -16201,17 +16350,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|tree
 name|begin_for_stmt
 parameter_list|(
-name|void
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|void
 name|finish_for_init_stmt
@@ -17324,6 +17483,16 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|bool
+name|class_tmpl_impl_spec_p
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|zero_init_p
 parameter_list|(
@@ -18294,7 +18463,13 @@ name|tree_code
 parameter_list|,
 name|tree
 parameter_list|,
+name|enum
+name|tree_code
+parameter_list|,
 name|tree
+parameter_list|,
+name|enum
+name|tree_code
 parameter_list|,
 name|bool
 modifier|*
@@ -19413,6 +19588,44 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/* APPLE LOCAL radar 5741070  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|c_return_interface_record_type
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL begin blocks 6040305 (cg) */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|cp_declarator
+modifier|*
+name|make_block_pointer_declarator
+parameter_list|(
+name|tree
+parameter_list|,
+name|cp_cv_quals
+parameter_list|,
+name|cp_declarator
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL end blocks 6040305 (cg) */
+end_comment
 
 begin_endif
 endif|#

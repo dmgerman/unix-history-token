@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -37,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"fattr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"queue.h"
 end_include
 
 begin_include

@@ -29,20 +29,6 @@ end_include
 
 begin_struct
 struct|struct
-name|umtx
-block|{
-specifier|volatile
-name|unsigned
-name|long
-name|u_owner
-decl_stmt|;
-comment|/* Owner of the mutex. */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|umutex
 block|{
 specifier|volatile

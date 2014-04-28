@@ -74,6 +74,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|bool
+name|proxy_mode
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -341,8 +348,9 @@ name|ICL_KERNEL_PROXY
 end_ifdef
 
 begin_function
+specifier|static
 name|void
-name|pdu_receive
+name|pdu_receive_proxy
 parameter_list|(
 name|struct
 name|pdu
@@ -353,6 +361,11 @@ block|{
 name|size_t
 name|len
 decl_stmt|;
+name|assert
+argument_list|(
+name|proxy_mode
+argument_list|)
+expr_stmt|;
 name|kernel_receive
 argument_list|(
 name|pdu
@@ -402,8 +415,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|pdu_send
+name|pdu_send_proxy
 parameter_list|(
 name|struct
 name|pdu
@@ -411,6 +425,11 @@ modifier|*
 name|pdu
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|proxy_mode
+argument_list|)
+expr_stmt|;
 name|pdu_set_data_segment_length
 argument_list|(
 name|pdu
@@ -428,13 +447,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* !ICL_KERNEL_PROXY */
+comment|/* ICL_KERNEL_PROXY */
 end_comment
 
 begin_function
@@ -593,6 +612,30 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ICL_KERNEL_PROXY
+if|if
+condition|(
+name|proxy_mode
+condition|)
+return|return
+operator|(
+name|pdu_receive_proxy
+argument_list|(
+name|pdu
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
+name|assert
+argument_list|(
+name|proxy_mode
+operator|==
+name|false
+argument_list|)
+expr_stmt|;
 name|pdu_read
 argument_list|(
 name|pdu
@@ -800,6 +843,30 @@ decl_stmt|;
 name|int
 name|iovcnt
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ICL_KERNEL_PROXY
+if|if
+condition|(
+name|proxy_mode
+condition|)
+return|return
+operator|(
+name|pdu_send_proxy
+argument_list|(
+name|pdu
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
+name|assert
+argument_list|(
+name|proxy_mode
+operator|==
+name|false
+argument_list|)
+expr_stmt|;
 name|pdu_set_data_segment_length
 argument_list|(
 name|pdu
@@ -1007,15 +1074,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !ICL_KERNEL_PROXY */
-end_comment
 
 begin_function
 name|void

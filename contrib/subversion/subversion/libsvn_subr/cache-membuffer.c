@@ -835,7 +835,7 @@ comment|/* Offset in the data buffer where the next insertion shall occur.    */
 name|apr_uint64_t
 name|current_data
 decl_stmt|;
-comment|/* Total number of data buffer bytes in use. This is for statistics only.    */
+comment|/* Total number of data buffer bytes in use.    */
 name|apr_uint64_t
 name|data_used
 decl_stmt|;
@@ -3842,10 +3842,14 @@ operator|&&
 name|buffer
 condition|)
 block|{
+comment|/* Careful! We need to cast SIZE to the full width of CACHE->DATA_USED        * lest we run into trouble with 32 bit underflow *not* treated as a        * negative value.        */
 name|cache
 operator|->
 name|data_used
 operator|+=
+operator|(
+name|apr_uint64_t
+operator|)
 name|size
 operator|-
 name|entry

@@ -462,6 +462,12 @@ directive|include
 file|"opt_drm.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_syscons.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4448,6 +4454,14 @@ specifier|extern
 name|unsigned
 name|int
 name|drm_timestamp_precision
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
+name|drm_timestamp_monotonic
 decl_stmt|;
 end_decl_stmt
 

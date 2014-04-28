@@ -206,6 +206,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
@@ -692,15 +698,15 @@ specifier|static
 name|int
 name|_prison_check_ip4
 parameter_list|(
+specifier|const
 name|struct
 name|prison
 modifier|*
-name|pr
 parameter_list|,
+specifier|const
 name|struct
 name|in_addr
 modifier|*
-name|ia
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1554,10 +1560,14 @@ name|j
 operator|.
 name|ip4s
 operator|=
+name|htonl
+argument_list|(
 name|j0
 operator|.
 name|ip_number
+argument_list|)
 expr_stmt|;
+comment|/* jail_v0 is host order */
 break|break;
 block|}
 case|case
@@ -14960,11 +14970,13 @@ specifier|static
 name|int
 name|_prison_check_ip4
 parameter_list|(
+specifier|const
 name|struct
 name|prison
 modifier|*
 name|pr
 parameter_list|,
+specifier|const
 name|struct
 name|in_addr
 modifier|*
@@ -15092,11 +15104,13 @@ begin_function
 name|int
 name|prison_check_ip4
 parameter_list|(
+specifier|const
 name|struct
 name|ucred
 modifier|*
 name|cred
 parameter_list|,
+specifier|const
 name|struct
 name|in_addr
 modifier|*
@@ -15612,7 +15626,7 @@ name|ij
 operator|>=
 name|ppr
 operator|->
-name|pr_ip4s
+name|pr_ip6s
 condition|?
 operator|-
 literal|1
@@ -18288,10 +18302,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 		 * AppleTalk privileges. 		 */
-case|case
-name|PRIV_NETATALK_RESERVEDPORT
-case|:
 comment|/* 		 * ATM privileges. 		 */
 case|case
 name|PRIV_NETATM_CFG
@@ -18366,13 +18376,6 @@ case|:
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 		 * IPX/SPX privileges. 		 */
-case|case
-name|PRIV_NETIPX_RESERVEDPORT
-case|:
-case|case
-name|PRIV_NETIPX_RAW
-case|:
 comment|/* 		 * NCP privileges. 		 */
 case|case
 name|PRIV_NETNCP

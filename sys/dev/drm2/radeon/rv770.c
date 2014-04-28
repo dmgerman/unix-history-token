@@ -6675,6 +6675,35 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+comment|/* Don't start up if the ucode is missing. */
+if|if
+condition|(
+operator|!
+name|rdev
+operator|->
+name|me_fw
+operator|||
+operator|!
+name|rdev
+operator|->
+name|pfp_fw
+operator|||
+operator|!
+name|rdev
+operator|->
+name|rlc_fw
+condition|)
+block|{
+name|DRM_ERROR
+argument_list|(
+literal|"radeon: ucode required for R600+.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+name|EINVAL
+return|;
+block|}
 return|return
 literal|0
 return|;

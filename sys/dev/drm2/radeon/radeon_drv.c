@@ -63,6 +63,12 @@ directive|include
 file|<dev/drm2/drm_pciids.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"fb_if.h"
+end_include
+
 begin_comment
 comment|/*  * KMS wrapper.  * - 2.0.0 - initial interface  * - 2.1.0 - add square tiling interface  * - 2.2.0 - add r6xx/r7xx const buffer support  * - 2.3.0 - add MSPOS + 3D texture + r500 VAP regs  * - 2.4.0 - add crtc id query  * - 2.5.0 - add get accel 2 to work around ddx breakage for evergreen  * - 2.6.0 - add tiling config query (r6xx+), add initial HiZ support (r300->r500)  *   2.7.0 - fixups for r600 2D tiling support. (no external ABI change), add eg dyn gpr regs  *   2.8.0 - pageflip support, r500 US_FORMAT regs. r500 ARGB2101010 colorbuf, r300->r500 CMASK, clock crystal query  *   2.9.0 - r600 tiling (s3tc,rgtc) working, SET_PREDICATION packet 3 on r600 + eg, backend query  *   2.10.0 - fusion 2D tiling  *   2.11.0 - backend map, initial compute support for the CS checker  *   2.12.0 - RADEON_CS_KEEP_TILING_FLAGS  *   2.13.0 - virtual memory support, streamout  *   2.14.0 - add evergreen tiling informations  *   2.15.0 - add max_pipes query  *   2.16.0 - fix evergreen 2D tiled surface calculation  *   2.17.0 - add STRMOUT_BASE_UPDATE for r7xx  *   2.18.0 - r600-eg: allow "invalid" DB formats  *   2.19.0 - r600-eg: MSAA textures  *   2.20.0 - r600-si: RADEON_INFO_TIMESTAMP query  *   2.21.0 - r600-r700: FMASK and CMASK  *   2.22.0 - r600 only: RESOLVE_BOX allowed  *   2.23.0 - allow STRMOUT_BASE_UPDATE on RS780 and RS880  *   2.24.0 - eg only: allow MIP_ADDRESS=0 for MSAA textures  *   2.25.0 - eg+: new info request for num SE and num SH  *   2.26.0 - r600-eg: fix htile size computation  *   2.27.0 - r600-SI: Add CS ioctl support for async DMA  *   2.28.0 - r600-eg: Add MEM_WRITE packet support  *   2.29.0 - R500 FP16 color clear registers  */
 end_comment
@@ -1639,6 +1645,40 @@ begin_comment
 comment|/* DUMBBELL_WIP */
 end_comment
 
+begin_function
+specifier|static
+name|int
+name|radeon_sysctl_init
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|ctx
+parameter_list|,
+name|struct
+name|sysctl_oid
+modifier|*
+name|top
+parameter_list|)
+block|{
+return|return
+name|drm_add_busid_modesetting
+argument_list|(
+name|dev
+argument_list|,
+name|ctx
+argument_list|,
+name|top
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1779,6 +1819,11 @@ operator|.
 name|irq_handler
 operator|=
 name|radeon_driver_irq_handler_kms
+block|,
+operator|.
+name|sysctl_init
+operator|=
+name|radeon_sysctl_init
 block|,
 operator|.
 name|ioctls
@@ -2254,6 +2299,19 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+specifier|extern
+name|struct
+name|fb_info
+modifier|*
+name|radeon_fb_helper_getinfo
+parameter_list|(
+name|device_t
+name|kdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -2295,6 +2353,14 @@ argument_list|(
 name|device_detach
 argument_list|,
 name|drm_detach
+argument_list|)
+block|,
+comment|/* Framebuffer service methods */
+name|DEVMETHOD
+argument_list|(
+name|fb_getinfo
+argument_list|,
+name|radeon_fb_helper_getinfo
 argument_list|)
 block|,
 name|DEVMETHOD_END
@@ -2418,6 +2484,22 @@ argument_list|(
 name|radeonkms
 argument_list|,
 name|iicbb
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|radeonkms
+argument_list|,
+name|firmware
 argument_list|,
 literal|1
 argument_list|,

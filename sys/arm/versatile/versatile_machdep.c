@@ -80,23 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
+file|<machine/devmap.h>
 end_include
-
-begin_comment
-comment|/* For trapframe_t, used in<machine/machdep.h> */
-end_comment
 
 begin_include
 include|#
 directive|include
 file|<machine/machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pmap.h>
 end_include
 
 begin_include
@@ -126,11 +116,18 @@ block|{
 return|return
 operator|(
 name|DEVMAP_BOOTSTRAP_MAP_START
-operator|-
-name|ARM_NOCACHE_KVA_SIZE
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|initarm_early_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
 end_function
 
 begin_function
@@ -165,7 +162,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|fdt_devmap
 index|[
 name|FDT_DEVMAP_MAX
@@ -205,7 +202,7 @@ end_comment
 
 begin_function
 name|int
-name|platform_devmap_init
+name|initarm_devmap_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -263,13 +260,14 @@ name|pd_cache
 operator|=
 name|PTE_DEVICE
 expr_stmt|;
-name|pmap_devmap_bootstrap_table
-operator|=
+name|arm_devmap_register_table
+argument_list|(
 operator|&
 name|fdt_devmap
 index|[
 literal|0
 index|]
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

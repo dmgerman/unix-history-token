@@ -1752,6 +1752,7 @@ name|NodeRef
 argument_list|()
 block|{}
 comment|/// operator bool - Detect a null ref.
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -2508,7 +2509,7 @@ comment|/// to shrink because of coalescing.
 end_comment
 
 begin_comment
-comment|/// @param i    Starting index = insertFrom(0, size, a)
+comment|/// @param Pos  Starting index = insertFrom(0, size, a)
 end_comment
 
 begin_comment
@@ -11306,7 +11307,7 @@ comment|/// This may require allocating a new node.
 end_comment
 
 begin_comment
-comment|/// @param NodeT The type of node at Level (Leaf or Branch).
+comment|/// @tparam NodeT The type of node at Level (Leaf or Branch).
 end_comment
 
 begin_comment

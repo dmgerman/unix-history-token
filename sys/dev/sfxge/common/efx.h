@@ -3592,7 +3592,7 @@ name|arg
 parameter_list|,
 name|__in
 name|uint32_t
-name|label
+name|rxq_index
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -3610,7 +3610,7 @@ name|arg
 parameter_list|,
 name|__in
 name|uint32_t
-name|label
+name|rxq_index
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -3628,7 +3628,7 @@ name|arg
 parameter_list|,
 name|__in
 name|uint32_t
-name|label
+name|txq_index
 parameter_list|)
 function_decl|;
 typedef|typedef

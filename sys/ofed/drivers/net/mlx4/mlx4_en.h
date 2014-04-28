@@ -1886,6 +1886,9 @@ decl_stmt|;
 name|unsigned
 name|long
 name|last_moder_packets
+index|[
+name|MAX_RX_RINGS
+index|]
 decl_stmt|;
 name|unsigned
 name|long
@@ -1894,6 +1897,9 @@ decl_stmt|;
 name|unsigned
 name|long
 name|last_moder_bytes
+index|[
+name|MAX_RX_RINGS
+index|]
 decl_stmt|;
 name|unsigned
 name|long
@@ -1901,6 +1907,9 @@ name|last_moder_jiffies
 decl_stmt|;
 name|int
 name|last_moder_time
+index|[
+name|MAX_RX_RINGS
+index|]
 decl_stmt|;
 name|u16
 name|rx_usecs
@@ -2061,6 +2070,14 @@ decl_stmt|;
 name|struct
 name|work_struct
 name|mcast_task
+decl_stmt|;
+name|struct
+name|work_struct
+name|start_port_task
+decl_stmt|;
+name|struct
+name|work_struct
+name|stop_port_task
 decl_stmt|;
 name|struct
 name|work_struct
@@ -2263,7 +2280,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mlx4_en_start_port
+name|mlx4_en_do_start_port
 parameter_list|(
 name|struct
 name|net_device
@@ -2275,7 +2292,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mlx4_en_stop_port
+name|mlx4_en_do_stop_port
 parameter_list|(
 name|struct
 name|net_device

@@ -876,11 +876,9 @@ block|,
 name|dst_offset
 block|}
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|m_apply
 argument_list|(
 name|m
@@ -1777,7 +1775,9 @@ endif|#
 directive|endif
 while|while
 condition|(
-literal|1
+name|pc
+operator|->
+name|ismultiseg
 condition|)
 block|{
 name|off

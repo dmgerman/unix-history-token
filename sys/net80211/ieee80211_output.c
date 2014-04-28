@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_llc.h>
 end_include
 
@@ -461,10 +467,10 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-comment|/* XXX better status? */
+comment|/* 		 * We queued it fine, so tell the upper layer 		 * that we consumed it. 		 */
 return|return
 operator|(
-name|ENOBUFS
+literal|0
 operator|)
 return|;
 block|}
@@ -521,7 +527,7 @@ expr_stmt|;
 comment|/* XXX better status? */
 return|return
 operator|(
-name|ENOBUFS
+literal|0
 operator|)
 return|;
 block|}
@@ -1288,6 +1294,52 @@ directive|endif
 comment|/* 	 * We've resolved the sender, so attempt to transmit it. 	 */
 if|if
 condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_SLEEP
+condition|)
+block|{
+comment|/* 		 * In power save; queue frame and then  wakeup device 		 * for transmit. 		 */
+name|ic
+operator|->
+name|ic_lastdata
+operator|=
+name|ticks
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ieee80211_pwrsave
+argument_list|(
+name|ni
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+name|ieee80211_new_state
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_S_RUN
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|ieee80211_vap_pkt_send_dest
 argument_list|(
 name|vap
@@ -1398,36 +1450,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_state
-operator|==
-name|IEEE80211_S_SLEEP
-condition|)
-block|{
-comment|/* 		 * In power save, wakeup device for transmit. 		 */
-name|ieee80211_new_state
-argument_list|(
-name|vap
-argument_list|,
-name|IEEE80211_S_RUN
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/* 	 * No data frames go out unless we're running. 	 * Note in particular this covers CAC and CSA 	 * states (though maybe we should check muting 	 * for CSA). 	 */
 if|if
 condition|(
@@ -1436,6 +1458,12 @@ operator|->
 name|iv_state
 operator|!=
 name|IEEE80211_S_RUN
+operator|&&
+name|vap
+operator|->
+name|iv_state
+operator|!=
+name|IEEE80211_S_SLEEP
 condition|)
 block|{
 name|IEEE80211_LOCK
@@ -1451,6 +1479,12 @@ operator|->
 name|iv_state
 operator|!=
 name|IEEE80211_S_RUN
+operator|&&
+name|vap
+operator|->
+name|iv_state
+operator|!=
+name|IEEE80211_S_SLEEP
 condition|)
 block|{
 name|IEEE80211_DPRINTF
@@ -1549,7 +1583,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 802.11 raw output routine.  */
+comment|/*  * 802.11 raw output routine.  *  * XXX TODO: this (and other send routines) should correctly  * XXX keep the pwr mgmt bit set if it decides to call into the  * XXX driver to send a frame whilst the state is SLEEP.  *  * Otherwise the peer may decide that we're awake and flood us  * with traffic we are still too asleep to receive!  */
 end_comment
 
 begin_function
@@ -2973,7 +3007,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 block|}
 name|m
@@ -6297,7 +6331,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 if|if
 condition|(
@@ -12478,21 +12512,19 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-init|=
-name|arg
-decl_stmt|;
-name|struct
 name|ieee80211vap
 modifier|*
 name|vap
 init|=
-name|ni
-operator|->
-name|ni_vap
+name|arg
 decl_stmt|;
+name|IEEE80211_LOCK
+argument_list|(
+name|vap
+operator|->
+name|iv_ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -12515,7 +12547,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * NB: it's safe to specify a timeout as the reason here; 		 *     it'll only be used in the right state. 		 */
-name|ieee80211_new_state
+name|ieee80211_new_state_locked
 argument_list|(
 name|vap
 argument_list|,
@@ -12525,8 +12557,19 @@ name|IEEE80211_SCAN_FAIL_TIMEOUT
 argument_list|)
 expr_stmt|;
 block|}
+name|IEEE80211_UNLOCK
+argument_list|(
+name|vap
+operator|->
+name|iv_ic
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This is the callback set on net80211-sourced transmitted  * authentication request frames.  *  * This does a couple of things:  *  * + If the frame transmitted was a success, it schedules a future  *   event which will transition the interface to scan.  *   If a state transition _then_ occurs before that event occurs,  *   said state transition will cancel this callout.  *  * + If the frame transmit was a failure, it immediately schedules  *   the transition back to scan.  */
+end_comment
 
 begin_function
 specifier|static
@@ -12574,6 +12617,7 @@ name|iv_state
 operator|==
 name|ostate
 condition|)
+block|{
 name|callout_reset
 argument_list|(
 operator|&
@@ -12593,9 +12637,10 @@ literal|0
 argument_list|,
 name|ieee80211_tx_mgt_timeout
 argument_list|,
-name|ni
+name|vap
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

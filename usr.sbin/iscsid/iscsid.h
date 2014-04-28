@@ -68,14 +68,9 @@ block|{
 name|int
 name|conn_iscsi_fd
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|ICL_KERNEL_PROXY
 name|int
 name|conn_socket
 decl_stmt|;
-endif|#
-directive|endif
 name|unsigned
 name|int
 name|conn_session_id
@@ -466,7 +461,7 @@ argument_list|,
 operator|...
 argument_list|)
 name|__dead2
-name|__printf0like
+name|__printflike
 argument_list|(
 literal|2
 argument_list|,
@@ -488,7 +483,7 @@ argument_list|,
 operator|...
 argument_list|)
 name|__dead2
-name|__printf0like
+name|__printflike
 argument_list|(
 literal|2
 argument_list|,
@@ -507,7 +502,7 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|__printf0like
+function_decl|__printflike
 parameter_list|(
 function_decl|1
 operator|,
@@ -551,7 +546,7 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|__printf0like
+function_decl|__printflike
 parameter_list|(
 function_decl|1
 operator|,

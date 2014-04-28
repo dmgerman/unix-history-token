@@ -72,7 +72,7 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// emitSourceFileHeader - Output a LLVM style file header to the specified
+comment|/// emitSourceFileHeader - Output an LLVM style file header to the specified
 comment|/// raw_ostream.
 name|void
 name|emitSourceFileHeader

@@ -677,7 +677,7 @@ name|i
 operator|*
 name|BITWORD_SIZE
 operator|+
-name|CountTrailingZeros_32
+name|countTrailingZeros
 argument_list|(
 name|Bits
 index|[
@@ -699,7 +699,7 @@ name|i
 operator|*
 name|BITWORD_SIZE
 operator|+
-name|CountTrailingZeros_64
+name|countTrailingZeros
 argument_list|(
 name|Bits
 index|[
@@ -828,7 +828,7 @@ name|WordPos
 operator|*
 name|BITWORD_SIZE
 operator|+
-name|CountTrailingZeros_32
+name|countTrailingZeros
 argument_list|(
 name|Copy
 argument_list|)
@@ -847,7 +847,7 @@ name|WordPos
 operator|*
 name|BITWORD_SIZE
 operator|+
-name|CountTrailingZeros_64
+name|countTrailingZeros
 argument_list|(
 name|Copy
 argument_list|)
@@ -905,7 +905,7 @@ name|i
 operator|*
 name|BITWORD_SIZE
 operator|+
-name|CountTrailingZeros_32
+name|countTrailingZeros
 argument_list|(
 name|Bits
 index|[
@@ -927,7 +927,7 @@ name|i
 operator|*
 name|BITWORD_SIZE
 operator|+
-name|CountTrailingZeros_64
+name|countTrailingZeros
 argument_list|(
 name|Bits
 index|[

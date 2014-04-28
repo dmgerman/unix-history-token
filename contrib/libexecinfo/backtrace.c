@@ -339,6 +339,8 @@ operator|(
 name|size_t
 operator|)
 name|len
+operator|+
+literal|1
 operator|<
 operator|*
 name|bufsiz

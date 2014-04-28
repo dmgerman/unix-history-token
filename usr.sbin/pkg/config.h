@@ -22,6 +22,13 @@ name|_LOCALBASE
 value|"/usr/local"
 end_define
 
+begin_define
+define|#
+directive|define
+name|URL_SCHEME_PREFIX
+value|"pkg+"
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -35,6 +42,12 @@ block|,
 name|MIRROR_TYPE
 block|,
 name|ASSUME_ALWAYS_YES
+block|,
+name|SIGNATURE_TYPE
+block|,
+name|FINGERPRINTS
+block|,
+name|REPOS_DIR
 block|,
 name|CONFIG_SIZE
 block|}
@@ -51,8 +64,24 @@ init|=
 literal|0
 block|,
 name|PKG_CONFIG_BOOL
+block|,
+name|PKG_CONFIG_LIST
 block|, }
 name|pkg_config_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CONFFILE_PKG
+init|=
+literal|0
+block|,
+name|CONFFILE_REPO
+block|, }
+name|pkg_conf_file_t
 typedef|;
 end_typedef
 

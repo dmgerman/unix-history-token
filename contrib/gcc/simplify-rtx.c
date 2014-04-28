@@ -5547,6 +5547,12 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+name|BSWAP
+case|:
+return|return
+literal|0
+return|;
+case|case
 name|TRUNCATE
 case|:
 name|val

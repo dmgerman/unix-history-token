@@ -296,8 +296,6 @@ decl_stmt|,
 name|svnamemax
 decl_stmt|;
 name|int
-name|badch
-decl_stmt|,
 name|last
 decl_stmt|;
 name|char
@@ -562,28 +560,21 @@ if|if
 condition|(
 name|pflag
 operator|&&
-operator|(
-name|badch
-operator|=
+operator|!
 name|portable
 argument_list|(
 name|p
 argument_list|)
-operator|)
-operator|>=
-literal|0
 condition|)
 block|{
 name|warnx
 argument_list|(
 literal|"%s: %s: component contains non-portable "
-literal|"character `%c'"
+literal|"character"
 argument_list|,
 name|path
 argument_list|,
 name|p
-argument_list|,
-name|badch
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -745,7 +736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check whether a path component contains only portable characters. Return  * the first non-portable character found.  */
+comment|/*  * Check whether a path component contains only portable characters.  */
 end_comment
 
 begin_function
@@ -792,15 +783,11 @@ literal|'\0'
 condition|)
 return|return
 operator|(
-name|path
-index|[
-name|s
-index|]
+literal|0
 operator|)
 return|;
 return|return
 operator|(
-operator|-
 literal|1
 operator|)
 return|;

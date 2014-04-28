@@ -15,18 +15,6 @@ directive|define
 name|_IF_CSVAR_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_media.h>
-end_include
-
 begin_comment
 comment|/*  * cs_softc: per line info and status  */
 end_comment

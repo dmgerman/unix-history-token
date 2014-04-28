@@ -161,7 +161,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDValue
@@ -212,7 +212,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDValue
@@ -260,7 +260,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
-name|DebugLoc
+name|SDLoc
 name|dl
 argument_list|,
 name|SDValue
@@ -289,6 +289,265 @@ block|{
 return|return
 name|SDValue
 argument_list|()
+return|;
+block|}
+comment|/// EmitTargetCodeForMemcmp - Emit target-specific code that performs a
+comment|/// memcmp, in cases where that is faster than a libcall.  The first
+comment|/// returned SDValue is the result of the memcmp and the second is
+comment|/// the chain.  Both SDValues can be null if a normal libcall should
+comment|/// be used.
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|EmitTargetCodeForMemcmp
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Op1
+argument_list|,
+argument|SDValue Op2
+argument_list|,
+argument|SDValue Op3
+argument_list|,
+argument|MachinePointerInfo Op1PtrInfo
+argument_list|,
+argument|MachinePointerInfo Op2PtrInfo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|SDValue
+argument_list|()
+argument_list|,
+name|SDValue
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// EmitTargetCodeForMemchr - Emit target-specific code that performs a
+comment|/// memchr, in cases where that is faster than a libcall.  The first
+comment|/// returned SDValue is the result of the memchr and the second is
+comment|/// the chain.  Both SDValues can be null if a normal libcall should
+comment|/// be used.
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|EmitTargetCodeForMemchr
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|SDValue Char
+argument_list|,
+argument|SDValue Length
+argument_list|,
+argument|MachinePointerInfo SrcPtrInfo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|SDValue
+argument_list|()
+argument_list|,
+name|SDValue
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// EmitTargetCodeForStrcpy - Emit target-specific code that performs a
+comment|/// strcpy or stpcpy, in cases where that is faster than a libcall.
+comment|/// The first returned SDValue is the result of the copy (the start
+comment|/// of the destination string for strcpy, a pointer to the null terminator
+comment|/// for stpcpy) and the second is the chain.  Both SDValues can be null
+comment|/// if a normal libcall should be used.
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|EmitTargetCodeForStrcpy
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Dest
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|MachinePointerInfo DestPtrInfo
+argument_list|,
+argument|MachinePointerInfo SrcPtrInfo
+argument_list|,
+argument|bool isStpcpy
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|SDValue
+argument_list|()
+argument_list|,
+name|SDValue
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// EmitTargetCodeForStrcmp - Emit target-specific code that performs a
+comment|/// strcmp, in cases where that is faster than a libcall.  The first
+comment|/// returned SDValue is the result of the strcmp and the second is
+comment|/// the chain.  Both SDValues can be null if a normal libcall should
+comment|/// be used.
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|EmitTargetCodeForStrcmp
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Op1
+argument_list|,
+argument|SDValue Op2
+argument_list|,
+argument|MachinePointerInfo Op1PtrInfo
+argument_list|,
+argument|MachinePointerInfo Op2PtrInfo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|SDValue
+argument_list|()
+argument_list|,
+name|SDValue
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|EmitTargetCodeForStrlen
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|MachinePointerInfo SrcPtrInfo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|SDValue
+argument_list|()
+argument_list|,
+name|SDValue
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|EmitTargetCodeForStrnlen
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|SDValue MaxLength
+argument_list|,
+argument|MachinePointerInfo SrcPtrInfo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|SDValue
+argument_list|()
+argument_list|,
+name|SDValue
+argument_list|()
+argument_list|)
 return|;
 block|}
 block|}

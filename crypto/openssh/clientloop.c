@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.253 2013/06/07 15:37:52 dtucker Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.258 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -16,6 +16,14 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -1036,6 +1044,9 @@ condition|(
 operator|!
 name|isalnum
 argument_list|(
+operator|(
+name|u_char
+operator|)
 name|display
 index|[
 name|i
@@ -2080,7 +2091,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|gc
 argument_list|,
@@ -3307,8 +3318,10 @@ name|channel_reply_ctx
 modifier|*
 name|cr
 init|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3415,8 +3428,10 @@ return|return;
 block|}
 name|gc
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3507,10 +3522,12 @@ decl_stmt|;
 name|Forward
 name|fwd
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|fwd
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3570,6 +3587,9 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|u_char
+operator|)
 operator|*
 name|s
 argument_list|)
@@ -3784,6 +3804,9 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|u_char
+operator|)
 operator|*
 operator|++
 name|s
@@ -4896,7 +4919,9 @@ argument_list|)
 expr_stmt|;
 name|channel_request_start
 argument_list|(
-name|session_ident
+name|c
+operator|->
+name|self
 argument_list|,
 literal|"break"
 argument_list|,
@@ -5871,8 +5896,10 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -7169,11 +7196,9 @@ argument_list|,
 name|data_len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|data
-argument_list|,
-literal|0
 argument_list|,
 name|data_len
 argument_list|)
@@ -7228,11 +7253,9 @@ argument_list|,
 name|data_len
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|data
-argument_list|,
-literal|0
 argument_list|,
 name|data_len
 argument_list|)

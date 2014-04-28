@@ -117,6 +117,12 @@ directive|include
 file|"private/svn_atomic.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"private/svn_subr_private.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1686,7 +1692,9 @@ name|char
 modifier|*
 name|svn_ra_local__get_description
 parameter_list|(
-name|void
+name|apr_pool_t
+modifier|*
+name|pool
 parameter_list|)
 block|{
 return|return
@@ -6894,12 +6902,14 @@ argument_list|)
 return|;
 name|SVN_ERR
 argument_list|(
-name|svn_ver_check_list
+name|svn_ver_check_list2
 argument_list|(
 name|ra_local_version
 argument_list|()
 argument_list|,
 name|checklist
+argument_list|,
+name|svn_ver_equal
 argument_list|)
 argument_list|)
 expr_stmt|;

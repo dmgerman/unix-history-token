@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -8404,7 +8410,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 block|{
 name|k
@@ -9836,7 +9842,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 block|{
 name|k

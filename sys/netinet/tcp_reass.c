@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -242,16 +248,6 @@ begin_comment
 comment|/* TCPDEBUG */
 end_comment
 
-begin_function_decl
-specifier|static
-name|int
-name|tcp_reass_sysctl_qsize
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -311,35 +307,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Global maximum number of TCP Segments in Reassembly Queue"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_VNET_PROC
-argument_list|(
-name|_net_inet_tcp_reass
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|cursegments
-argument_list|,
-operator|(
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
-operator|)
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|tcp_reass_sysctl_qsize
-argument_list|,
-literal|"I"
-argument_list|,
-literal|"Global number of TCP Segments currently in Reassembly Queue"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -407,6 +374,28 @@ directive|define
 name|V_tcp_reass_zone
 value|VNET(tcp_reass_zone)
 end_define
+
+begin_expr_stmt
+name|SYSCTL_UMA_CUR
+argument_list|(
+name|_net_inet_tcp_reass
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cursegments
+argument_list|,
+name|CTLFLAG_VNET
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|tcp_reass_zone
+argument_list|)
+argument_list|,
+literal|"Global number of TCP Segments currently in Reassembly Queue"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Initialize TCP reassembly queue */
@@ -624,42 +613,6 @@ name|t_segqlen
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|tcp_reass_sysctl_qsize
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-block|{
-name|int
-name|qsize
-decl_stmt|;
-name|qsize
-operator|=
-name|uma_zone_get_cur
-argument_list|(
-name|V_tcp_reass_zone
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|sysctl_handle_int
-argument_list|(
-name|oidp
-argument_list|,
-operator|&
-name|qsize
-argument_list|,
-literal|0
-argument_list|,
-name|req
-argument_list|)
-operator|)
-return|;
 block|}
 end_function
 

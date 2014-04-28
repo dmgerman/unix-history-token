@@ -1000,13 +1000,59 @@ name|LK_NOWAIT
 argument_list|,
 name|NULL
 argument_list|)
+operator|==
+literal|0
 condition|)
-continue|continue;
+block|{
 name|BO_UNLOCK
 argument_list|(
 name|bo
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|wait
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|BUF_LOCK
+argument_list|(
+name|bp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_SLEEPFAIL
+operator||
+name|LK_INTERLOCK
+argument_list|,
+name|BO_LOCKPTR
+argument_list|(
+name|bo
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|bp
+operator|->
+name|b_vflags
+operator|&=
+operator|~
+name|BV_SCANNED
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+block|}
+else|else
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -2160,7 +2206,7 @@ literal|1
 condition|)
 block|{
 comment|/* 			 * If we are NOT allowed to cluster, then 			 * if we appear to be acting sequentially, 			 * fire off a request for a readahead 			 * as well as a read. Note that the 4th and 5th 			 * arguments point to arrays of the size specified in 			 * the 6th argument. 			 */
-name|int
+name|u_int
 name|nextsize
 init|=
 name|blksize
@@ -2951,7 +2997,7 @@ operator|+
 name|xfersize
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer.                  */
+comment|/* 		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer. 		 */
 if|if
 condition|(
 name|fs
@@ -3999,7 +4045,7 @@ block|}
 else|else
 block|{
 comment|/* 			 * If we have a second block, then 			 * fire off a request for a readahead 			 * as well as a read. Note that the 4th and 5th 			 * arguments point to arrays of the size specified in 			 * the 6th argument. 			 */
-name|int
+name|u_int
 name|nextsize
 init|=
 name|sblksize
@@ -4503,7 +4549,7 @@ name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
-comment|/* 		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer.                  */
+comment|/* 		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer. 		 */
 if|if
 condition|(
 name|fs
@@ -5197,9 +5243,10 @@ name|struct
 name|iovec
 name|liovec
 decl_stmt|;
-name|int
+name|u_int
 name|easize
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|u_char

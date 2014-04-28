@@ -754,6 +754,8 @@ name|q
 decl_stmt|;
 name|size_t
 name|len
+decl_stmt|,
+name|namelen
 decl_stmt|;
 if|if
 condition|(
@@ -794,16 +796,20 @@ operator|++
 control|)
 empty_stmt|;
 comment|/* nothing */
+name|namelen
+operator|=
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|p
 operator|-
 name|start
 operator|+
-name|strlen
-argument_list|(
-name|name
-argument_list|)
+name|namelen
 operator|+
 literal|2
 expr_stmt|;
@@ -851,11 +857,15 @@ operator|=
 literal|'/'
 expr_stmt|;
 block|}
-name|strcpy
+name|memcpy
 argument_list|(
 name|q
 argument_list|,
 name|name
+argument_list|,
+name|namelen
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|pathopt
@@ -2261,6 +2271,9 @@ modifier|*
 modifier|*
 name|pp
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 name|p
 operator|=
 name|name
@@ -2344,6 +2357,13 @@ condition|)
 block|{
 name|INTOFF
 expr_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 name|cmdp
 operator|=
 operator|*
@@ -2357,10 +2377,7 @@ expr|struct
 name|tblentry
 argument_list|)
 operator|+
-name|strlen
-argument_list|(
-name|name
-argument_list|)
+name|len
 operator|+
 literal|1
 argument_list|)
@@ -2377,13 +2394,17 @@ name|cmdtype
 operator|=
 name|CMDUNKNOWN
 expr_stmt|;
-name|strcpy
+name|memcpy
 argument_list|(
 name|cmdp
 operator|->
 name|cmdname
 argument_list|,
 name|name
+argument_list|,
+name|len
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|INTON
@@ -2572,7 +2593,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delete a function if it exists.  */
+comment|/*  * Delete a function if it exists.  * Called with interrupts off.  */
 end_comment
 
 begin_function
@@ -2858,20 +2879,32 @@ name|cmd
 operator|==
 name|TYPECMD_SMALLV
 condition|)
+block|{
 name|out1fmt
 argument_list|(
-literal|"alias %s='%s'\n"
+literal|"alias %s="
 argument_list|,
 name|argv
 index|[
 name|i
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|out1qstr
+argument_list|(
 name|ap
 operator|->
 name|val
 argument_list|)
 expr_stmt|;
+name|outcslow
+argument_list|(
+literal|'\n'
+argument_list|,
+name|out1
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|out1fmt
 argument_list|(

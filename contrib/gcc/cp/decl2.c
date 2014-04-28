@@ -6185,42 +6185,6 @@ argument_list|(
 name|decl
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|decl
-argument_list|)
-operator|==
-name|VAR_DECL
-operator|&&
-name|DECL_TINFO_P
-argument_list|(
-name|decl
-argument_list|)
-operator|&&
-name|CLASS_TYPE_P
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|DECL_NAME
-argument_list|(
-name|decl
-argument_list|)
-argument_list|)
-argument_list|)
-condition|)
-name|class_type
-operator|=
-name|TREE_TYPE
-argument_list|(
-name|DECL_NAME
-argument_list|(
-name|decl
-argument_list|)
-argument_list|)
-expr_stmt|;
 else|else
 block|{
 comment|/* Not a class member.  */
@@ -6314,6 +6278,71 @@ comment|/* Local classes in templates have CLASSTYPE_USE_TEMPLATE set, 	     but
 name|use_template
 operator|=
 literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|VAR_DECL
+operator|&&
+name|DECL_TINFO_P
+argument_list|(
+name|decl
+argument_list|)
+operator|&&
+name|flag_visibility_ms_compat
+condition|)
+block|{
+comment|/* Under -fvisibility-ms-compat, types are visible by default, 	     even though their contents aren't.  */
+name|tree
+name|underlying_type
+init|=
+name|TREE_TYPE
+argument_list|(
+name|DECL_NAME
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|int
+name|underlying_vis
+init|=
+name|type_visibility
+argument_list|(
+name|underlying_type
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|underlying_vis
+operator|==
+name|VISIBILITY_ANON
+operator|||
+name|CLASSTYPE_VISIBILITY_SPECIFIED
+argument_list|(
+name|underlying_type
+argument_list|)
+condition|)
+name|constrain_visibility
+argument_list|(
+name|decl
+argument_list|,
+name|underlying_vis
+argument_list|)
+expr_stmt|;
+else|else
+name|DECL_VISIBILITY
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+name|VISIBILITY_DEFAULT
 expr_stmt|;
 block|}
 elseif|else
@@ -6557,6 +6586,12 @@ condition|(
 name|tvis
 operator|==
 name|VISIBILITY_ANON
+operator|||
+operator|!
+name|DECL_VISIBILITY_SPECIFIED
+argument_list|(
+name|decl
+argument_list|)
 condition|)
 name|constrain_visibility
 argument_list|(
@@ -6988,6 +7023,92 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* APPLE LOCAL begin weak types 5954418 */
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|typeinfo_comdat
+parameter_list|(
+name|tree
+name|type
+parameter_list|)
+block|{
+name|tree
+name|binfo
+decl_stmt|,
+name|base_binfo
+decl_stmt|;
+name|int
+name|j
+decl_stmt|;
+if|if
+condition|(
+name|lookup_attribute
+argument_list|(
+literal|"weak"
+argument_list|,
+name|TYPE_ATTRIBUTES
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+for|for
+control|(
+name|binfo
+operator|=
+name|TYPE_BINFO
+argument_list|(
+name|type
+argument_list|)
+operator|,
+name|j
+operator|=
+literal|0
+init|;
+name|BINFO_BASE_ITERATE
+argument_list|(
+name|binfo
+argument_list|,
+name|j
+argument_list|,
+name|base_binfo
+argument_list|)
+condition|;
+operator|++
+name|j
+control|)
+block|{
+if|if
+condition|(
+name|typeinfo_comdat
+argument_list|(
+name|BINFO_TYPE
+argument_list|(
+name|base_binfo
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* APPLE LOCAL end weak types 5954418 */
+end_comment
 
 begin_comment
 comment|/* DECL is a FUNCTION_DECL or VAR_DECL.  If the object file linkage    for DECL has not already been determined, do so now by setting    DECL_EXTERNAL, DECL_COMDAT and other related flags.  Until this    function is called entities with vague linkage whose definitions    are available must have TREE_PUBLIC set.     If this function decides to place DECL in COMDAT, it will set    appropriate flags -- but will not clear DECL_EXTERNAL.  It is up to    the caller to decide whether or not to clear DECL_EXTERNAL.  Some    callers defer that decision until it is clear that DECL is actually    required.  */
@@ -7503,6 +7624,7 @@ name|CLASSTYPE_KEY_METHOD
 argument_list|(
 name|type
 argument_list|)
+comment|/* APPLE LOCAL begin weak types 5954418 */
 operator|&&
 name|DECL_DECLARED_INLINE_P
 argument_list|(
@@ -7512,8 +7634,14 @@ name|type
 argument_list|)
 argument_list|)
 operator|)
+operator|||
+name|typeinfo_comdat
+argument_list|(
+name|type
+argument_list|)
 operator|)
 expr_stmt|;
+comment|/* APPLE LOCAL end weak types 5954418 */
 name|mark_needed
 argument_list|(
 name|decl
@@ -8363,7 +8491,7 @@ name|build_lang_decl
 argument_list|(
 name|FUNCTION_DECL
 argument_list|,
-name|get_file_function_name_long
+name|get_file_function_name
 argument_list|(
 name|type
 argument_list|)
@@ -8396,6 +8524,14 @@ operator|!
 name|targetm
 operator|.
 name|have_ctors_dtors
+expr_stmt|;
+comment|/* Mark as artificial because it's not explicitly in the user's      source code.  */
+name|DECL_ARTIFICIAL
+argument_list|(
+name|current_function_decl
+argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Mark this declaration as used to avoid spurious warnings.  */
 name|TREE_USED
@@ -10597,6 +10733,25 @@ block|}
 end_function
 
 begin_comment
+comment|/* APPLE LOCAL begin radar 4721858 */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|emit_deferred
+parameter_list|(
+name|location_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL end radar 4721858 */
+end_comment
+
+begin_comment
 comment|/* This routine is called from the last rule in yyparse ().    Its job is to create all the code needed to initialize and    destroy the global aggregates.  We do the destruction    first, since that way we only need to reverse the decls once.  */
 end_comment
 
@@ -10607,31 +10762,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|tree
-name|vars
-decl_stmt|;
-name|bool
-name|reconsider
-decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
+comment|/* APPLE LOCAL begin radar 4721858 */
 name|location_t
 name|locus
 decl_stmt|;
-name|unsigned
-name|ssdf_count
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|retries
-init|=
-literal|0
-decl_stmt|;
-name|tree
-name|decl
-decl_stmt|;
+comment|/* APPLE LOCAL end radar 4721858 */
 name|locus
 operator|=
 name|input_location
@@ -10652,13 +10787,8 @@ operator|||
 name|decl_namespace_list
 condition|)
 return|return;
-if|if
-condition|(
-name|pch_file
-condition|)
-name|c_common_write_pch
-argument_list|()
-expr_stmt|;
+comment|/* APPLE LOCAL radar 4874613 */
+comment|/* dump of pch file moved to c_parse_file (). */
 ifdef|#
 directive|ifdef
 name|USE_MAPPED_LOCATION
@@ -10681,6 +10811,61 @@ expr_stmt|;
 name|emit_support_tinfos
 argument_list|()
 expr_stmt|;
+comment|/* APPLE LOCAL begin radar 4721858 */
+name|emit_instantiate_pending_templates
+argument_list|(
+operator|&
+name|locus
+argument_list|)
+expr_stmt|;
+name|emit_deferred
+argument_list|(
+operator|&
+name|locus
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* This routine emits pending functions and instatiates pending templates    as more opportunities arises. */
+end_comment
+
+begin_function
+name|void
+name|emit_instantiate_pending_templates
+parameter_list|(
+name|location_t
+modifier|*
+name|locusp
+parameter_list|)
+block|{
+name|tree
+name|vars
+decl_stmt|;
+name|bool
+name|reconsider
+decl_stmt|;
+name|size_t
+name|i
+decl_stmt|;
+name|unsigned
+name|ssdf_count
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|retries
+init|=
+literal|0
+decl_stmt|;
+comment|/* APPLE LOCAL radar 4874626 */
+comment|/* initialization removed. */
+name|at_eof
+operator|=
+literal|1
+expr_stmt|;
+comment|/* APPLE LOCAL end radar 4721858 */
 do|do
 block|{
 name|tree
@@ -10860,9 +11045,11 @@ name|tree
 name|ssdf_body
 decl_stmt|;
 comment|/* Set the line and file, so that it is obviously not from 	     the source file.  */
+comment|/* APPLE LOCAL radar 4721858 */
 name|input_location
 operator|=
-name|locus
+operator|*
+name|locusp
 expr_stmt|;
 name|ssdf_body
 operator|=
@@ -10921,9 +11108,11 @@ operator|=
 name|NULL_TREE
 expr_stmt|;
 comment|/* Finish up the static storage duration function for this 	     round.  */
+comment|/* APPLE LOCAL radar 4721858 */
 name|input_location
 operator|=
-name|locus
+operator|*
+name|locusp
 expr_stmt|;
 name|finish_static_storage_duration_function
 argument_list|(
@@ -10944,8 +11133,9 @@ name|USE_MAPPED_LOCATION
 comment|/* ??? */
 else|#
 directive|else
-name|locus
-operator|.
+comment|/* APPLE LOCAL radar 4721858 */
+name|locusp
+operator|->
 name|line
 operator|++
 expr_stmt|;
@@ -11245,6 +11435,32 @@ condition|(
 name|reconsider
 condition|)
 do|;
+comment|/* APPLE LOCAL begin radar 4721858 */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|emit_deferred
+parameter_list|(
+name|location_t
+modifier|*
+name|locusp
+parameter_list|)
+block|{
+name|size_t
+name|i
+decl_stmt|;
+name|tree
+name|decl
+decl_stmt|;
+name|bool
+name|reconsider
+init|=
+name|false
+decl_stmt|;
+comment|/* APPLE LOCAL end radar 4721858 */
 comment|/* All used inline functions must have a definition at this point.  */
 for|for
 control|(
@@ -11279,14 +11495,14 @@ name|DECL_DECLARED_INLINE_P
 argument_list|(
 name|decl
 argument_list|)
-comment|/* If the definition actually was available here, then the 	     fact that the function was not defined merely represents 	     that for some reason (use of a template repository, 	     #pragma interface, etc.) we decided not to emit the 	     definition here.  */
+comment|/* If the definition actually was available here, then the 	 fact that the function was not defined merely represents 	 that for some reason (use of a template repository, 	 #pragma interface, etc.) we decided not to emit the 	 definition here.  */
 operator|&&
 operator|!
 name|DECL_INITIAL
 argument_list|(
 name|decl
 argument_list|)
-comment|/* An explicit instantiation can be used to specify 	     that the body is in another unit. It will have 	     already verified there was a definition.  */
+comment|/* An explicit instantiation can be used to specify 	 that the body is in another unit. It will have 	 already verified there was a definition.  */
 operator|&&
 operator|!
 name|DECL_EXPLICIT_INSTANTIATION
@@ -11331,9 +11547,9 @@ name|priority_info_map
 argument_list|,
 name|generate_ctor_and_dtor_functions_for_priority
 argument_list|,
+comment|/* APPLE LOCAL radar 4721858 */
 comment|/*data=*/
-operator|&
-name|locus
+name|locusp
 argument_list|)
 expr_stmt|;
 else|else
@@ -11356,10 +11572,10 @@ argument_list|(
 comment|/*constructor_p=*/
 name|true
 argument_list|,
+comment|/* APPLE LOCAL radar 4721858 */
 name|DEFAULT_INIT_PRIORITY
 argument_list|,
-operator|&
-name|locus
+name|locusp
 argument_list|)
 expr_stmt|;
 if|if
@@ -11371,10 +11587,10 @@ argument_list|(
 comment|/*constructor_p=*/
 name|false
 argument_list|,
+comment|/* APPLE LOCAL radar 4721858 */
 name|DEFAULT_INIT_PRIORITY
 argument_list|,
-operator|&
-name|locus
+name|locusp
 argument_list|)
 expr_stmt|;
 block|}
@@ -11526,9 +11742,11 @@ name|dump_time_statistics
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* APPLE LOCAL radar 4721858 */
 name|input_location
 operator|=
-name|locus
+operator|*
+name|locusp
 expr_stmt|;
 ifdef|#
 directive|ifdef

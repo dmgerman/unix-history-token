@@ -68,7 +68,9 @@ modifier|*
 name|get_description
 function_decl|)
 parameter_list|(
-name|void
+name|apr_pool_t
+modifier|*
+name|pool
 parameter_list|)
 function_decl|;
 comment|/* Return a list of actual URI schemes supported by this implementation.    * The returned array is NULL-terminated. */

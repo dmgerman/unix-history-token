@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_no_adaptive_sx.h"
 end_include
 
@@ -256,13 +250,6 @@ end_define
 begin_comment
 comment|/*  * Returns true if an exclusive lock is recursed.  It assumes  * curthread currently has an exclusive lock.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|sx_recurse
-value|lock_object.lo_data
-end_define
 
 begin_define
 define|#
@@ -1834,13 +1821,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|LOCKSTAT_PROFILE_RELEASE_LOCK
-argument_list|(
-name|LS_SX_SUNLOCK_RELEASE
-argument_list|,
-name|sx
-argument_list|)
-expr_stmt|;
 name|curthread
 operator|->
 name|td_locks
@@ -1933,21 +1913,6 @@ argument_list|,
 name|file
 argument_list|,
 name|line
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sx_recursed
-argument_list|(
-name|sx
-argument_list|)
-condition|)
-name|LOCKSTAT_PROFILE_RELEASE_LOCK
-argument_list|(
-name|LS_SX_XUNLOCK_RELEASE
-argument_list|,
-name|sx
 argument_list|)
 expr_stmt|;
 name|__sx_xunlock

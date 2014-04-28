@@ -982,7 +982,7 @@ operator|(
 operator|(
 name|vm_paddr_t
 operator|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|*
@@ -3050,7 +3050,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Replace an existing page into the trie with another one.  * Panics if the replacing page is not present or if the new page has an  * invalid key.  */
+comment|/*  * Replace an existing page in the trie with another one.  * Panics if there is not an old page in the trie at the new page's index.  */
 end_comment
 
 begin_function
@@ -3064,9 +3064,6 @@ name|rtree
 parameter_list|,
 name|vm_page_t
 name|newpage
-parameter_list|,
-name|vm_pindex_t
-name|index
 parameter_list|)
 block|{
 name|struct
@@ -3077,23 +3074,17 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
+name|vm_pindex_t
+name|index
+decl_stmt|;
 name|int
 name|slot
 decl_stmt|;
-name|KASSERT
-argument_list|(
+name|index
+operator|=
 name|newpage
 operator|->
 name|pindex
-operator|==
-name|index
-argument_list|,
-operator|(
-literal|"%s: newpage index invalid"
-operator|,
-name|__func__
-operator|)
-argument_list|)
 expr_stmt|;
 name|rnode
 operator|=

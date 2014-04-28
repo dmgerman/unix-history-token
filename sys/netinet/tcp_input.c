@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -165,6 +159,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -700,7 +700,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable draft-ietf-tcpm-initcwnd-05 (Increasing initial CWND to 10)"
+literal|"Enable RFC 6928 (Increasing initial CWND to 10)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1948,7 +1948,7 @@ name|tcps_usedssthresh
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * Draft-ietf-tcpm-initcwnd-05 increases it to ten segments. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
+comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * RFC6928 increases it to ten segments. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
 if|if
 condition|(
 name|tp
@@ -2721,7 +2721,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  *	- there is no delayed ack timer in progress and  *	- our last ack wasn't a 0-sized window.  We never want to delay  *	  the ack that opens up a 0-sized window and  *		- delayed acks are enabled or  *		- this is a half-synchronized T/TCP connection.  */
+comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  * following conditions are met:  *	- There is no delayed ack timer in progress.  *	- Our last ack wasn't a 0-sized window. We never want to delay  *	  the ack that opens up a 0-sized window.  *	- LRO wasn't used for this segment. We make sure by checking that the  *	  segment size is not larger than the MSS.  *	- Delayed acks are enabled or this is a half-synchronized T/TCP  *	  connection.  */
 end_comment
 
 begin_define
@@ -2730,9 +2730,11 @@ directive|define
 name|DELAY_ACK
 parameter_list|(
 name|tp
+parameter_list|,
+name|tlen
 parameter_list|)
 define|\
-value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
+value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (tlen<= tp->t_maxopd)&&					\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
 end_define
 
 begin_comment
@@ -6308,9 +6310,14 @@ name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -6354,9 +6361,14 @@ name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -6475,9 +6487,14 @@ name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -8236,6 +8253,8 @@ condition|(
 name|DELAY_ACK
 argument_list|(
 name|tp
+argument_list|,
+name|tlen
 argument_list|)
 condition|)
 block|{
@@ -8440,15 +8459,20 @@ condition|)
 block|{
 name|TCP_PROBE5
 argument_list|(
-name|connect_refused
+name|connect__refused
 argument_list|,
 name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -8588,6 +8612,8 @@ condition|(
 name|DELAY_ACK
 argument_list|(
 name|tp
+argument_list|,
+name|tlen
 argument_list|)
 operator|&&
 name|tlen
@@ -8680,15 +8706,20 @@ argument_list|)
 expr_stmt|;
 name|TCP_PROBE5
 argument_list|(
-name|connect_established
+name|connect__established
 argument_list|,
 name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -8716,7 +8747,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * Received initial SYN in SYN-SENT[*] state => 			 * simultaneous open.  If segment contains CC option 			 * and there is a cached CC, apply TAO test. 			 * If it succeeds, connection is * half-synchronized. 			 * Otherwise, do 3-way handshake: 			 *        SYN-SENT -> SYN-RECEIVED 			 *        SYN-SENT* -> SYN-RECEIVED* 			 * If there was no CC option, clear cached CC value. 			 */
+comment|/* 			 * Received initial SYN in SYN-SENT[*] state => 			 * simultaneous open. 			 * If it succeeds, connection is * half-synchronized. 			 * Otherwise, do 3-way handshake: 			 *        SYN-SENT -> SYN-RECEIVED 			 *        SYN-SENT* -> SYN-RECEIVED* 			 */
 name|tp
 operator|->
 name|t_flags
@@ -9870,15 +9901,20 @@ argument_list|)
 expr_stmt|;
 name|TCP_PROBE5
 argument_list|(
-name|accept_established
+name|accept__established
 argument_list|,
 name|NULL
 argument_list|,
 name|tp
 argument_list|,
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
 argument_list|,
 name|tp
 argument_list|,
@@ -10074,12 +10110,41 @@ operator|->
 name|snd_wnd
 condition|)
 block|{
+comment|/* 				 * If this is the first time we've seen a 				 * FIN from the remote, this is not a 				 * duplicate and it needs to be processed 				 * normally.  This happens during a 				 * simultaneous close. 				 */
+if|if
+condition|(
+operator|(
+name|thflags
+operator|&
+name|TH_FIN
+operator|)
+operator|&&
+operator|(
+name|TCPS_HAVERCVDFIN
+argument_list|(
+name|tp
+operator|->
+name|t_state
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|tp
+operator|->
+name|t_dupacks
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 name|TCPSTAT_INC
 argument_list|(
 name|tcps_rcvdupack
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If we have outstanding data (other than 				 * a window probe), this is a completely 				 * duplicate ack (ie, window info didn't 				 * change), the ack is the biggest we've 				 * seen and we've seen exactly our rexmt 				 * threshhold of them, assume a packet 				 * has been dropped and retransmit it. 				 * Kludge snd_nxt& the congestion 				 * window so we send only this one 				 * packet. 				 * 				 * We know we're losing at the current 				 * window size so do congestion avoidance 				 * (set ssthresh to half the current window 				 * and pull our congestion window back to 				 * the new ssthresh). 				 * 				 * Dup acks mean that packets have left the 				 * network (they're now cached at the receiver) 				 * so bump cwnd by the amount in the receiver 				 * to keep a constant cwnd packets in the 				 * network. 				 * 				 * When using TCP ECN, notify the peer that 				 * we reduced the cwnd. 				 */
+comment|/* 				 * If we have outstanding data (other than 				 * a window probe), this is a completely 				 * duplicate ack (ie, window info didn't 				 * change and FIN isn't set), 				 * the ack is the biggest we've 				 * seen and we've seen exactly our rexmt 				 * threshhold of them, assume a packet 				 * has been dropped and retransmit it. 				 * Kludge snd_nxt& the congestion 				 * window so we send only this one 				 * packet. 				 * 				 * We know we're losing at the current 				 * window size so do congestion avoidance 				 * (set ssthresh to half the current window 				 * and pull our congestion window back to 				 * the new ssthresh). 				 * 				 * Dup acks mean that packets have left the 				 * network (they're now cached at the receiver) 				 * so bump cwnd by the amount in the receiver 				 * to keep a constant cwnd packets in the 				 * network. 				 * 				 * When using TCP ECN, notify the peer that 				 * we reduced the cwnd. 				 */
 if|if
 condition|(
 operator|!
@@ -10217,29 +10282,6 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|thflags
-operator|&
-name|TH_FIN
-operator|)
-operator|&&
-operator|(
-name|TCPS_HAVERCVDFIN
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|)
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-comment|/*  						 * If its a fin we need to process 						 * it to avoid a race where both 						 * sides enter FIN-WAIT and send FIN|ACK 						 * at the same time. 						 */
-break|break;
-block|}
 operator|(
 name|void
 operator|)
@@ -10415,29 +10457,6 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|thflags
-operator|&
-name|TH_FIN
-operator|)
-operator|&&
-operator|(
-name|TCPS_HAVERCVDFIN
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|)
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-comment|/*  						 * If its a fin we need to process 						 * it to avoid a race where both 						 * sides enter FIN-WAIT and send FIN|ACK 						 * at the same time. 						 */
-break|break;
-block|}
 operator|(
 name|void
 operator|)
@@ -10602,29 +10621,6 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|thflags
-operator|&
-name|TH_FIN
-operator|)
-operator|&&
-operator|(
-name|TCPS_HAVERCVDFIN
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|)
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-comment|/*  						 * If its a fin we need to process 						 * it to avoid a race where both 						 * sides enter FIN-WAIT and send FIN|ACK 						 * at the same time. 						 */
-break|break;
-block|}
 comment|/* 					 * Only call tcp_output when there 					 * is new data available to be sent. 					 * Otherwise we would send pure ACKs. 					 */
 name|SOCKBUF_LOCK
 argument_list|(
@@ -11961,6 +11957,8 @@ condition|(
 name|DELAY_ACK
 argument_list|(
 name|tp
+argument_list|,
+name|tlen
 argument_list|)
 condition|)
 name|tp

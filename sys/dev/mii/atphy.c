@@ -299,6 +299,13 @@ name|MII_PHY_DESC
 argument_list|(
 name|xxATHEROS
 argument_list|,
+name|AR8021
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
+name|xxATHEROS
+argument_list|,
 name|F2
 argument_list|)
 block|,
@@ -426,22 +433,6 @@ break|break;
 case|case
 name|MII_MEDIACHG
 case|:
-comment|/* 		 * If the interface is not up, don't do anything. 		 */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-break|break;
 if|if
 condition|(
 name|IFM_SUBTYPE
@@ -647,26 +638,6 @@ break|break;
 case|case
 name|MII_TICK
 case|:
-comment|/* 		 * Is the interface even up? 		 */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 		 * Only used for autonegotiation. 		 */
 if|if
 condition|(

@@ -648,6 +648,28 @@ name|LANG_HOOKS_TREE_INLINING_VAR_MOD_TYPE_P
 value|c_vla_unspec_p
 end_define
 
+begin_comment
+comment|/* APPLE LOCAL begin radar 6353006  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LANG_HOOKS_BUILD_GENERIC_BLOCK_STRUCT_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_BUILD_GENERIC_BLOCK_STRUCT_TYPE
+define|\
+value|c_build_generic_block_struct_type
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end radar 6353006  */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

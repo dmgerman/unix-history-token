@@ -909,11 +909,6 @@ name|u_int32_t
 name|seq_id
 decl_stmt|;
 comment|/* Sequence id */
-name|void
-modifier|*
-name|chan
-decl_stmt|;
-comment|/* IOCTL req wait channel */
 name|struct
 name|tws_circular_q
 name|aen_q

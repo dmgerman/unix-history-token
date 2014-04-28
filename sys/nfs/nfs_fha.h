@@ -66,25 +66,12 @@ begin_comment
 comment|/* Unlimited */
 end_comment
 
-begin_comment
-comment|/* This is the global structure that represents the state of the fha system. */
-end_comment
-
-begin_struct
-struct|struct
-name|fha_global
-block|{
-name|struct
-name|fha_hash_entry_list
-modifier|*
-name|hashtable
-decl_stmt|;
-name|u_long
-name|hashmask
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|FHA_HASH_SIZE
+value|251
+end_define
 
 begin_struct
 struct|struct
@@ -114,6 +101,11 @@ begin_struct
 struct|struct
 name|fha_hash_entry
 block|{
+name|struct
+name|mtx
+modifier|*
+name|mtx
+decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|fha_hash_entry
@@ -149,6 +141,22 @@ name|fha_hash_entry
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_struct
+struct|struct
+name|fha_hash_slot
+block|{
+name|struct
+name|fha_hash_entry_list
+name|list
+decl_stmt|;
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* A structure used for passing around data internally. */
@@ -207,7 +215,7 @@ modifier|*
 name|get_fh
 function_decl|)
 parameter_list|(
-name|fhandle_t
+name|uint64_t
 modifier|*
 name|fh
 parameter_list|,
@@ -313,8 +321,11 @@ struct|struct
 name|fha_params
 block|{
 name|struct
-name|fha_global
-name|g_fha
+name|fha_hash_slot
+name|fha_hash
+index|[
+name|FHA_HASH_SIZE
+index|]
 decl_stmt|;
 name|struct
 name|sysctl_ctx_list

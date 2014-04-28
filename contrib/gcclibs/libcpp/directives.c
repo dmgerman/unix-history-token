@@ -1933,7 +1933,7 @@ name|mi_valid
 operator|=
 name|false
 expr_stmt|;
-comment|/* Kluge alert.  In order to be sure that code like this  	 #define HASH # 	 HASH define foo bar  	 does not cause '#define foo bar' to get executed when 	 compiled with -save-temps, we recognize directives in 	 -fpreprocessed mode only if the # is in column 1.  macro.c 	 puts a space in front of any '#' at the start of a macro.  */
+comment|/* Kluge alert.  In order to be sure that code like this  	 #define HASH # 	 HASH define foo bar  	 does not cause '#define foo bar' to get executed when 	 compiled with -save-temps, we recognize directives in 	 -fpreprocessed mode only if the # is in column 1.  macro.c 	 puts a space in front of any '#' at the start of a macro. 	  	 We exclude the -fdirectives-only case because macro expansion 	 has not been performed yet, and block comments can cause spaces 	 to preceed the directive.  */
 if|if
 condition|(
 name|CPP_OPTION
@@ -1941,6 +1941,14 @@ argument_list|(
 name|pfile
 argument_list|,
 name|preprocessed
+argument_list|)
+operator|&&
+operator|!
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|directives_only
 argument_list|)
 operator|&&
 operator|(
@@ -4425,12 +4433,28 @@ operator|.
 name|prevent_expansion
 operator|++
 expr_stmt|;
+comment|/* APPLE LOCAL #error with unmatched quotes 5607574 */
+name|pfile
+operator|->
+name|state
+operator|.
+name|in_diagnostic
+operator|++
+expr_stmt|;
 name|cpp_output_line
 argument_list|(
 name|pfile
 argument_list|,
 name|stderr
 argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL #error with unmatched quotes 5607574 */
+name|pfile
+operator|->
+name|state
+operator|.
+name|in_diagnostic
+operator|--
 expr_stmt|;
 name|pfile
 operator|->
@@ -5207,6 +5231,50 @@ block|}
 end_function
 
 begin_comment
+comment|/* APPLE LOCAL begin pragma mark 5614511 */
+end_comment
+
+begin_comment
+comment|/* Handle #pragma mark.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|do_pragma_mark
+parameter_list|(
+name|cpp_reader
+modifier|*
+name|pfile
+parameter_list|)
+block|{
+operator|++
+name|pfile
+operator|->
+name|state
+operator|.
+name|skipping
+expr_stmt|;
+name|skip_rest_of_line
+argument_list|(
+name|pfile
+argument_list|)
+expr_stmt|;
+operator|--
+name|pfile
+operator|->
+name|state
+operator|.
+name|skipping
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* APPLE LOCAL end pragma mark 5614511 */
+end_comment
+
+begin_comment
 comment|/* Register the pragmas the preprocessor itself handles.  */
 end_comment
 
@@ -5229,6 +5297,18 @@ argument_list|,
 literal|"once"
 argument_list|,
 name|do_pragma_once
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL pragma mark 5614511 */
+name|register_pragma_internal
+argument_list|(
+name|pfile
+argument_list|,
+literal|0
+argument_list|,
+literal|"mark"
+argument_list|,
+name|do_pragma_mark
 argument_list|)
 expr_stmt|;
 comment|/* New GCC-specific pragmas should be put in the GCC namespace.  */

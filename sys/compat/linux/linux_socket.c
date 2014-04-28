@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -187,12 +193,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ip6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/in6_var.h>
 end_include
 
 begin_endif

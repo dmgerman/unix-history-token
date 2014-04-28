@@ -754,6 +754,15 @@ name|name_to_index_map
 argument_list|)
 decl|const
 decl_stmt|;
+name|ObjectFile
+modifier|*
+name|GetObjectFile
+parameter_list|()
+block|{
+return|return
+name|m_objfile
+return|;
+block|}
 name|protected
 label|:
 typedef|typedef

@@ -2580,7 +2580,9 @@ name|switch_dir_external
 argument_list|(
 name|local_abspath
 argument_list|,
-name|new_url
+name|new_loc
+operator|->
+name|url
 argument_list|,
 operator|&
 operator|(

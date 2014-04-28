@@ -2871,6 +2871,20 @@ name|DRM_CAP_DUMB_PREFER_SHADOW
 value|0x4
 end_define
 
+begin_define
+define|#
+directive|define
+name|DRM_CAP_PRIME
+value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_CAP_TIMESTAMP_MONOTONIC
+value|0x6
+end_define
+
 begin_include
 include|#
 directive|include

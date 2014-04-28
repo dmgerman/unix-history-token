@@ -1890,7 +1890,7 @@ name|__altivec_binary_pred
 argument_list|(
 argument|vec_cmple
 argument_list|,
-argument|__builtin_altivec_cmpge (a2, a1)
+argument|__builtin_vec_cmpge (a2, a1)
 argument_list|)
 end_macro
 
@@ -2176,7 +2176,7 @@ name|a1
 parameter_list|,
 name|a2
 parameter_list|)
-value|__builtin_altivec_vcmpgefp ((a2), (a1))
+value|__builtin_vec_cmpge ((a2), (a1))
 end_define
 
 begin_define

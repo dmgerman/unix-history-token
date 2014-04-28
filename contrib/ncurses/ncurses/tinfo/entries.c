@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2006-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2006-2011,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey                                                *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey                                                *  *     and: Juergen Pfeifer                                                 *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -25,16 +25,10 @@ directive|include
 file|<tic.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<term_entry.h>
-end_include
-
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: entries.c,v 1.8 2008/09/27 13:11:10 tom Exp $"
+literal|"$Id: entries.c,v 1.21 2012/05/05 20:33:44 tom Exp $"
 argument_list|)
 end_macro
 
@@ -257,6 +251,24 @@ block|}
 if|if
 condition|(
 name|ep
+operator|->
+name|next
+operator|!=
+literal|0
+condition|)
+block|{
+name|ep
+operator|->
+name|next
+operator|->
+name|last
+operator|=
+name|last
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ep
 operator|==
 name|_nc_head
 condition|)
@@ -333,6 +345,28 @@ expr_stmt|;
 name|_nc_tgetent_leaks
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|TerminalOf
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|del_curterm
+argument_list|(
+name|TerminalOf
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|_nc_comp_captab_leaks
+argument_list|()
+expr_stmt|;
 name|_nc_free_entries
 argument_list|(
 name|_nc_head
@@ -347,6 +381,9 @@ name|_nc_first_name
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|_nc_db_iterator_leaks
+argument_list|()
 expr_stmt|;
 name|_nc_keyname_leaks
 argument_list|()
@@ -371,6 +408,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|_nc_comp_error_leaks
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -387,6 +427,27 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TRACE
+name|trace
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|_nc_trace_buf
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+operator|(
+name|size_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* NO_LEAKS */

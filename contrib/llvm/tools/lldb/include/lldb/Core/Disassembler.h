@@ -544,6 +544,15 @@ operator|&
 name|target
 argument_list|)
 decl_stmt|;
+name|uint32_t
+name|GetIndexOfInstructionAtAddress
+parameter_list|(
+specifier|const
+name|Address
+modifier|&
+name|addr
+parameter_list|)
+function_decl|;
 name|void
 name|Clear
 parameter_list|()
@@ -794,30 +803,17 @@ operator|::
 name|DisassemblerSP
 name|DisassembleRange
 argument_list|(
-specifier|const
-name|ArchSpec
-operator|&
-name|arch
+argument|const ArchSpec&arch
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|plugin_name
+argument|const char *plugin_name
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|flavor
+argument|const char *flavor
 argument_list|,
-specifier|const
-name|ExecutionContext
-operator|&
-name|exe_ctx
+argument|const ExecutionContext&exe_ctx
 argument_list|,
-specifier|const
-name|AddressRange
-operator|&
-name|disasm_range
+argument|const AddressRange&disasm_range
+argument_list|,
+argument|bool prefer_file_cache
 argument_list|)
 expr_stmt|;
 specifier|static

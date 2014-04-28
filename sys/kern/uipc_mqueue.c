@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -10320,7 +10320,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 argument_list|)
 argument_list|,
 name|fget
@@ -11335,7 +11335,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 argument_list|)
 argument_list|)
 expr_stmt|;

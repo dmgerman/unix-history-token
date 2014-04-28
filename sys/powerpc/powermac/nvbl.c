@@ -121,7 +121,7 @@ begin_define
 define|#
 directive|define
 name|NVIDIA_PMC_BL_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_struct

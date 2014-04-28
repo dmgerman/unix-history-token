@@ -281,13 +281,13 @@ name|apr_pool_t
 modifier|*
 name|apr_hook_global_pool
 decl_stmt|;
-comment|/**  * A global variable to determine if debugging information about the  * hooks functions should be printed  */
+comment|/**  * A global variable to determine if debugging information about the  * hooks functions should be printed.  */
 name|APU_DECLARE_DATA
 specifier|extern
 name|int
 name|apr_hook_debug_enabled
 decl_stmt|;
-comment|/**  * The name of the module that is currently registering a function  */
+comment|/**  * The name of the module that is currently registering a function.  */
 name|APU_DECLARE_DATA
 specifier|extern
 specifier|const
@@ -295,7 +295,7 @@ name|char
 modifier|*
 name|apr_hook_debug_current
 decl_stmt|;
-comment|/**  * Register a hook function to be sorted  * @param szHookName The name of the Hook the function is registered for  * @param aHooks The array which stores all of the functions for this hook  */
+comment|/**  * Register a hook function to be sorted.  * @param szHookName The name of the Hook the function is registered for  * @param aHooks The array which stores all of the functions for this hook  */
 name|APU_DECLARE
 argument_list|(
 argument|void
@@ -313,7 +313,7 @@ operator|*
 name|aHooks
 argument_list|)
 expr_stmt|;
-comment|/**  * Sort all of the registerd functions for a given hook  */
+comment|/**  * Sort all of the registered functions for a given hook.  */
 name|APU_DECLARE
 argument_list|(
 argument|void

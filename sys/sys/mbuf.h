@@ -318,7 +318,7 @@ comment|/* layer 5 header length */
 union|union
 block|{
 name|uint8_t
-name|eigth
+name|eight
 index|[
 literal|8
 index|]
@@ -358,7 +358,7 @@ comment|/* Layer specific non-persistent local storage for reassembly, etc. */
 union|union
 block|{
 name|uint8_t
-name|eigth
+name|eight
 index|[
 literal|8
 index|]
@@ -2118,41 +2118,6 @@ comment|/* Not a type but a flag to allocate 				   a non-initialized mbuf */
 end_comment
 
 begin_comment
-comment|/*  * Compatibility with historic mbuf allocator.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBTOM
-parameter_list|(
-name|how
-parameter_list|)
-value|(how)
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_DONTWAIT
-value|M_NOWAIT
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_TRYWAIT
-value|M_WAITOK
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_WAIT
-value|M_WAITOK
-end_define
-
-begin_comment
 comment|/*  * String names of mbuf-related UMA(9) and malloc(9) types.  Exposed to  * !_KERNEL so that monitoring tools can look up the zones with  * libmemstat(3).  */
 end_comment
 
@@ -2398,9 +2363,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: invalid cluster size"
+literal|"%s: invalid cluster size %d"
 argument_list|,
 name|__func__
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -2618,9 +2585,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: invalid cluster size"
+literal|"%s: invalid cluster size %d"
 argument_list|,
 name|__func__
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -3210,9 +3179,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: unknown cluster type"
+literal|"%s: unknown cluster type %d"
 argument_list|,
 name|__func__
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 break|break;

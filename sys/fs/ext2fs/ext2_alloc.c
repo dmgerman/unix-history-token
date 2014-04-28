@@ -584,7 +584,7 @@ specifier|static
 name|int
 name|doasyncfree
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -614,7 +614,7 @@ specifier|static
 name|int
 name|doreallocblks
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 

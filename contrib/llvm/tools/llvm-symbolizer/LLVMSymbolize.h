@@ -68,7 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/DIContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/MachOUniversal.h"
 end_include
 
 begin_include
@@ -137,6 +149,11 @@ name|Demangle
 range|:
 literal|1
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|DefaultArch
+expr_stmt|;
 name|Options
 argument_list|(
 argument|bool UseSymbolTable = true
@@ -146,6 +163,9 @@ argument_list|,
 argument|bool PrintInlining = true
 argument_list|,
 argument|bool Demangle = true
+argument_list|,
+argument|std::string DefaultArch =
+literal|""
 argument_list|)
 block|:
 name|UseSymbolTable
@@ -165,7 +185,12 @@ argument_list|)
 operator|,
 name|Demangle
 argument_list|(
-argument|Demangle
+name|Demangle
+argument_list|)
+operator|,
+name|DefaultArch
+argument_list|(
+argument|DefaultArch
 argument_list|)
 block|{     }
 block|}
@@ -186,6 +211,13 @@ argument_list|(
 argument|Opts
 argument_list|)
 block|{}
+operator|~
+name|LLVMSymbolizer
+argument_list|()
+block|{
+name|flush
+argument_list|()
+block|;   }
 comment|// Returns the result of symbolization for module name/offset as
 comment|// a string (possibly containing newlines).
 name|std
@@ -212,8 +244,35 @@ name|void
 name|flush
 parameter_list|()
 function_decl|;
+specifier|static
+name|std
+operator|::
+name|string
+name|DemangleName
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+expr_stmt|;
 name|private
 label|:
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|Binary
+operator|*
+operator|,
+name|Binary
+operator|*
+operator|>
+name|BinaryPair
+expr_stmt|;
 name|ModuleInfo
 modifier|*
 name|getOrCreateModuleInfo
@@ -226,6 +285,36 @@ operator|&
 name|ModuleName
 argument_list|)
 decl_stmt|;
+comment|/// \brief Returns pair of pointers to binary and debug binary.
+name|BinaryPair
+name|getOrCreateBinary
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Path
+argument_list|)
+decl_stmt|;
+comment|/// \brief Returns a parsed object file for a given architecture in a
+comment|/// universal binary (or the binary itself if it is an object file).
+name|ObjectFile
+modifier|*
+name|getObjectFileFromBinary
+argument_list|(
+name|Binary
+operator|*
+name|Bin
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|ArchName
+argument_list|)
+decl_stmt|;
 name|std
 operator|::
 name|string
@@ -235,17 +324,31 @@ argument|DILineInfo LineInfo
 argument_list|)
 specifier|const
 expr_stmt|;
-name|void
-name|DemangleName
+specifier|static
+name|std
+operator|::
+name|string
+name|DemangleGlobalName
 argument_list|(
+specifier|const
 name|std
 operator|::
 name|string
 operator|&
 name|Name
 argument_list|)
-decl|const
-decl_stmt|;
+expr_stmt|;
+comment|// Owns all the parsed binaries and object files.
+name|SmallVector
+operator|<
+name|Binary
+operator|*
+operator|,
+literal|4
+operator|>
+name|ParsedBinariesAndObjects
+expr_stmt|;
+comment|// Owns module info objects.
 typedef|typedef
 name|std
 operator|::
@@ -262,6 +365,47 @@ name|ModuleMapTy
 expr_stmt|;
 name|ModuleMapTy
 name|Modules
+decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|BinaryPair
+operator|>
+name|BinaryMapTy
+expr_stmt|;
+name|BinaryMapTy
+name|BinaryForPath
+decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MachOUniversalBinary
+operator|*
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+operator|,
+name|ObjectFile
+operator|*
+operator|>
+name|ObjectFileForArchMapTy
+expr_stmt|;
+name|ObjectFileForArchMapTy
+name|ObjectFileForArch
 decl_stmt|;
 name|Options
 name|Opts
@@ -371,12 +515,10 @@ name|Size
 argument_list|)
 decl|const
 decl_stmt|;
-name|OwningPtr
-operator|<
 name|ObjectFile
-operator|>
+modifier|*
 name|Module
-expr_stmt|;
+decl_stmt|;
 name|OwningPtr
 operator|<
 name|DIContext
@@ -389,8 +531,10 @@ block|{
 name|uint64_t
 name|Addr
 decl_stmt|;
+comment|// If size is 0, assume that symbol occupies the whole memory range up to
+comment|// the following symbol.
 name|uint64_t
-name|AddrEnd
+name|Size
 decl_stmt|;
 name|friend
 name|bool
@@ -411,8 +555,8 @@ block|{
 return|return
 name|s1
 operator|.
-name|AddrEnd
-operator|<=
+name|Addr
+operator|<
 name|s2
 operator|.
 name|Addr

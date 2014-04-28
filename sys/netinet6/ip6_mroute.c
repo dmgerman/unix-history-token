@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -161,6 +155,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -892,6 +892,53 @@ name|DEBUG_PIM
 value|0x40
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEBUG_ERR
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_ANY
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRT6_DLOG
+parameter_list|(
+name|m
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|if (V_mrt6debug& (m))	\ 		log(((m)& DEBUG_ERR) ? LOG_ERR: LOG_DEBUG, \ 		    "%s: " fmt "\n", __func__, ##__VA_ARGS__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MRT6_DLOG
+parameter_list|(
+name|m
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1068,7 +1115,7 @@ name|g
 parameter_list|,
 name|rt
 parameter_list|)
-value|do { \ 	struct mf6c *_rt = mf6ctable[MF6CHASH(o,g)]; \ 	rt = NULL; \ 	MRT6STAT_INC(mrt6s_mfc_lookups); \ 	while (_rt) { \ 		if (IN6_ARE_ADDR_EQUAL(&_rt->mf6c_origin.sin6_addr,&(o))&& \ 		    IN6_ARE_ADDR_EQUAL(&_rt->mf6c_mcastgrp.sin6_addr,&(g))&& \ 		    (_rt->mf6c_stall == NULL)) { \ 			rt = _rt; \ 			break; \ 		} \ 		_rt = _rt->mf6c_next; \ 	} \ 	if (rt == NULL) { \ 		MRT6STAT_INC(mrt6s_mfc_misses); \ 	} \ } while (
+value|do { \ 	struct mf6c *_rt = mf6ctable[MF6CHASH(o,g)]; \ 	rt = NULL; \ 	while (_rt) { \ 		if (IN6_ARE_ADDR_EQUAL(&_rt->mf6c_origin.sin6_addr,&(o))&& \ 		    IN6_ARE_ADDR_EQUAL(&_rt->mf6c_mcastgrp.sin6_addr,&(g))&& \ 		    (_rt->mf6c_stall == NULL)) { \ 			rt = _rt; \ 			break; \ 		} \ 		_rt = _rt->mf6c_next; \ 	} \ 	if (rt == NULL) { \ 		MRT6STAT_INC(mrt6s_mfc_misses); \ 	} \ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -1380,7 +1427,7 @@ name|MRT6_INIT
 condition|)
 return|return
 operator|(
-name|EACCES
+name|EPERM
 operator|)
 return|;
 switch|switch
@@ -2055,18 +2102,11 @@ name|int
 name|cmd
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_ANY
 argument_list|,
-literal|"ip6_mrouter_init: so_type = %d, pr_protocol = %d\n"
+literal|"so_type = %d, pr_protocol = %d"
 argument_list|,
 name|so
 operator|->
@@ -2079,8 +2119,6 @@ operator|->
 name|pr_protocol
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|so
@@ -2194,22 +2232,13 @@ expr_stmt|;
 name|MROUTER6_UNLOCK
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_ANY
 argument_list|,
-literal|"ip6_mrouter_init\n"
+literal|"finished"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2505,22 +2534,13 @@ expr_stmt|;
 name|MROUTER6_UNLOCK
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_ANY
 argument_list|,
-literal|"ip6_mrouter_done\n"
+literal|"finished"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2838,30 +2858,22 @@ expr_stmt|;
 name|MIF6_UNLOCK
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_ANY
 argument_list|,
-literal|"add_mif #%d, phyint %s\n"
+literal|"mif #%d, phyint %s"
 argument_list|,
 name|mifcp
 operator|->
 name|mif6c_mifi
 argument_list|,
+name|if_name
+argument_list|(
 name|ifp
-operator|->
-name|if_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -3042,18 +3054,11 @@ name|nummifs
 operator|=
 name|mifi
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_ANY
 argument_list|,
-literal|"del_m6if %d, nummifs %d\n"
+literal|"mif %d, nummifs %d"
 argument_list|,
 operator|*
 name|mifip
@@ -3061,8 +3066,6 @@ argument_list|,
 name|nummifs
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -3173,21 +3176,11 @@ condition|(
 name|rt
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_MFC
-condition|)
-block|{
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_MFC
 argument_list|,
-literal|"add_m6fc no upcall h %d o %s g %s p %x\n"
+literal|"no upcall o %s g %s p %x"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -3218,9 +3211,6 @@ operator|->
 name|mf6cc_parent
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|rt
 operator|->
 name|mf6c_parent
@@ -3377,20 +3367,11 @@ operator|->
 name|mf6c_stall
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_MFC
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_MFC
 argument_list|,
-literal|"add_m6fc o %s g %s p %x dbg %x\n"
+literal|"o %s g %s p %x dbg %p"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -3425,8 +3406,6 @@ operator|->
 name|mf6c_stall
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|rt
 operator|->
 name|mf6c_origin
@@ -3579,20 +3558,11 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_MFC
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_MFC
 argument_list|,
-literal|"add_mfc no upcall h %d o %s g %s p %x\n"
+literal|"no upcall h %lu o %s g %s p %x"
 argument_list|,
 name|hash
 argument_list|,
@@ -3625,8 +3595,6 @@ operator|->
 name|mf6cc_parent
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|rt
@@ -3998,6 +3966,22 @@ modifier|*
 name|mfccp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|MRT6DEBUG
+name|char
+name|ip6bufo
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufg
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sockaddr_in6
 name|origin
@@ -4045,32 +4029,11 @@ operator|.
 name|sin6_addr
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_MFC
-condition|)
-block|{
-name|char
-name|ip6bufo
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|,
-name|ip6bufg
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|;
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_MFC
 argument_list|,
-literal|"del_m6fc orig %s mcastgrp %s\n"
+literal|"orig %s mcastgrp %s"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -4093,9 +4056,6 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|MFC6_LOCK
 argument_list|()
 expr_stmt|;
@@ -4313,6 +4273,16 @@ name|m
 parameter_list|)
 block|{
 name|struct
+name|rtdetq
+modifier|*
+name|rte
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mb0
+decl_stmt|;
+name|struct
 name|mf6c
 modifier|*
 name|rt
@@ -4326,6 +4296,9 @@ name|struct
 name|mbuf
 modifier|*
 name|mm
+decl_stmt|;
+name|u_long
+name|hash
 decl_stmt|;
 name|mifi_t
 name|mifi
@@ -4343,18 +4316,24 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_FORWARD
-condition|)
-name|log
+name|UPCALL_TIMING
+name|struct
+name|timeval
+name|tp
+decl_stmt|;
+name|GET_TIME
 argument_list|(
-name|LOG_DEBUG
+name|tp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* UPCALL_TIMING */
+name|MRT6_DLOG
+argument_list|(
+name|DEBUG_FORWARD
 argument_list|,
-literal|"ip6_mforward: src %s, dst %s, ifindex %d\n"
+literal|"src %s, dst %s, ifindex %d"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -4381,8 +4360,6 @@ operator|->
 name|if_index
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Don't forward a packet with Hop limit of zero or one, 	 * or a packet destined to a local-only group. 	 */
 if|if
 condition|(
@@ -4513,6 +4490,11 @@ argument_list|,
 name|rt
 argument_list|)
 expr_stmt|;
+name|MRT6STAT_INC
+argument_list|(
+name|mrt6s_mfc_lookups
+argument_list|)
+expr_stmt|;
 comment|/* Entry exists, so forward if necessary */
 if|if
 condition|(
@@ -4535,61 +4517,19 @@ argument_list|)
 operator|)
 return|;
 block|}
-else|else
-block|{
-comment|/* 		 * If we don't have a route for packet's origin, 		 * Make a copy of the packet& 		 * send message to routing daemon 		 */
-name|struct
-name|mbuf
-modifier|*
-name|mb0
-decl_stmt|;
-name|struct
-name|rtdetq
-modifier|*
-name|rte
-decl_stmt|;
-name|u_long
-name|hash
-decl_stmt|;
-comment|/*		int i, npkts;*/
-ifdef|#
-directive|ifdef
-name|UPCALL_TIMING
-name|struct
-name|timeval
-name|tp
-decl_stmt|;
-name|GET_TIME
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* UPCALL_TIMING */
+comment|/* 	 * If we don't have a route for packet's origin, 	 * Make a copy of the packet& send message to routing daemon. 	 */
 name|MRT6STAT_INC
 argument_list|(
 name|mrt6s_no_route
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-operator|(
+name|MRT6_DLOG
+argument_list|(
 name|DEBUG_FORWARD
 operator||
 name|DEBUG_MFC
-operator|)
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
 argument_list|,
-literal|"ip6_mforward: no rte s %s g %s\n"
+literal|"no rte s %s g %s"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -4612,9 +4552,7 @@ name|ip6_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* 		 * Allocate mbufs early so that we don't do extra work if we 		 * are just going to fail anyway. 		 */
+comment|/* 	 * Allocate mbufs early so that we don't do extra work if we 	 * are just going to fail anyway. 	 */
 name|rte
 operator|=
 operator|(
@@ -4662,7 +4600,7 @@ argument_list|,
 name|M_COPYALL
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Pullup packet header if needed before storing it, 		 * as other references may modify it in the meantime. 		 */
+comment|/* 	 * Pullup packet header if needed before storing it, 	 * as other references may modify it in the meantime. 	 */
 if|if
 condition|(
 name|mb0
@@ -4865,7 +4803,7 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-comment|/* 			 * Make a copy of the header to send to the user 			 * level process 			 */
+comment|/* 		 * Make a copy of the header to send to the user 		 * level process 		 */
 name|mm
 operator|=
 name|m_copy
@@ -4916,7 +4854,7 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-comment|/* 			 * Send message to routing daemon 			 */
+comment|/* 		 * Send message to routing daemon 		 */
 name|sin6
 operator|.
 name|sin6_addr
@@ -5031,24 +4969,13 @@ name|EINVAL
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_FORWARD
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_FORWARD
 argument_list|,
-literal|"getting the iif info in the kernel\n"
+literal|"getting the iif info in the kernel"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|mifp
@@ -5401,7 +5328,6 @@ literal|0
 operator|)
 return|;
 block|}
-block|}
 end_function
 
 begin_comment
@@ -5418,6 +5344,22 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|MRT6DEBUG
+name|char
+name|ip6bufo
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufg
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|rtdetq
 modifier|*
@@ -5509,33 +5451,11 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_EXPIRE
-condition|)
-block|{
-name|char
-name|ip6bufo
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|;
-name|char
-name|ip6bufg
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|;
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_EXPIRE
 argument_list|,
-literal|"expire_upcalls: expiring (%s %s)\n"
+literal|"expiring (%s %s)"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -5562,9 +5482,6 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* 				 * drop all the packets 				 * free the mbuf with the pkt, if, timing info 				 */
 do|do
 block|{
@@ -5780,20 +5697,11 @@ operator|)
 condition|)
 block|{
 comment|/* came in the wrong interface */
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_FORWARD
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_FORWARD
 argument_list|,
-literal|"wrong if: ifid %d mifi %d mififid %x\n"
+literal|"wrong if: ifid %d mifi %d mififid %x"
 argument_list|,
 name|ifp
 operator|->
@@ -5811,8 +5719,6 @@ operator|->
 name|if_index
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|MRT6STAT_INC
 argument_list|(
 name|mrt6s_wrong_if
@@ -6133,22 +6039,13 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_WARNING
+name|DEBUG_ANY
 argument_list|,
-literal|"mdq, ip6_mrouter socket queue full\n"
+literal|"ip6_mrouter socket queue full"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|MRT6STAT_INC
 argument_list|(
 name|mrt6s_upq_sockfull
@@ -6459,6 +6356,22 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|MRT6DEBUG
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufd
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|mbuf
 modifier|*
@@ -6600,30 +6513,24 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_XMIT
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_XMIT
 argument_list|,
-literal|"phyint_send on mif %d err %d\n"
+literal|"mif %u err %d"
 argument_list|,
+call|(
+name|uint16_t
+call|)
+argument_list|(
 name|mifp
 operator|-
 name|mif6table
+argument_list|)
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 comment|/* 	 * If configured to loop back multicasts by default, 	 * loop back a copy now. 	 */
@@ -6792,30 +6699,24 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_XMIT
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_XMIT
 argument_list|,
-literal|"phyint_send on mif %d err %d\n"
+literal|"mif %u err %d"
 argument_list|,
+call|(
+name|uint16_t
+call|)
+argument_list|(
 name|mifp
 operator|-
 name|mif6table
+argument_list|)
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -6837,34 +6738,12 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_XMIT
-condition|)
-block|{
-name|char
-name|ip6bufs
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|;
-name|char
-name|ip6bufd
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|;
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_XMIT
 argument_list|,
-literal|"phyint_send: packet too big on %s o %s "
-literal|"g %s size %d(discarded)\n"
+literal|" packet too big on %s o %s "
+literal|"g %s size %d (discarded)"
 argument_list|,
 name|if_name
 argument_list|(
@@ -6898,10 +6777,6 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* MRT6DEBUG */
 name|m_freem
 argument_list|(
 name|mb_copy
@@ -6934,6 +6809,22 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|MRT6DEBUG
+name|char
+name|ip6bufs
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|ip6bufd
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|mbuf
 modifier|*
@@ -6969,30 +6860,11 @@ name|mrt6msg
 modifier|*
 name|im6
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-condition|)
-block|{
-name|char
-name|ip6bufs
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|,
-name|ip6bufd
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|;
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_ANY
 argument_list|,
-literal|"** IPv6 register_send **\n src %s dst %s\n"
+literal|"src %s dst %s"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -7015,9 +6887,6 @@ name|ip6_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|PIM6STAT_INC
 argument_list|(
 name|pim6s_snd_registers
@@ -7206,22 +7075,13 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_WARNING
+name|DEBUG_ANY
 argument_list|,
-literal|"register_send: ip6_mrouter socket queue full\n"
+literal|"ip6_mrouter socket queue full"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|MRT6STAT_INC
 argument_list|(
 name|mrt6s_upq_sockfull
@@ -7393,24 +7253,13 @@ argument_list|(
 name|pim6s_rcv_tooshort
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_PIM
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_PIM
 argument_list|,
-literal|"pim6_input: PIM packet too short\n"
+literal|"PIM packet too short"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -7563,24 +7412,13 @@ argument_list|(
 name|pim6s_rcv_badsum
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_PIM
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_PIM
 argument_list|,
-literal|"pim6_input: invalid checksum\n"
+literal|"invalid checksum"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -7611,14 +7449,13 @@ argument_list|(
 name|pim6s_rcv_badversion
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_ERR
+name|DEBUG_ANY
+operator||
+name|DEBUG_ERR
 argument_list|,
-literal|"pim6_input: incorrect version %d, expecting %d\n"
+literal|"incorrect version %d, expecting %d"
 argument_list|,
 name|pim
 operator|->
@@ -7627,8 +7464,6 @@ argument_list|,
 name|PIM_VERSION
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -7721,26 +7556,15 @@ literal|1
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_PIM
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_PIM
 argument_list|,
-literal|"pim6_input: register mif not set: %d\n"
+literal|"register mif not set: %d"
 argument_list|,
 name|reg_mif_num
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -7797,15 +7621,14 @@ argument_list|(
 name|pim6s_rcv_badregisters
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_ERR
+name|DEBUG_ANY
+operator||
+name|DEBUG_ERR
 argument_list|,
-literal|"pim6_input: register packet size too "
-literal|"small %d from %s\n"
+literal|"register packet "
+literal|"size too small %d from %s"
 argument_list|,
 name|pimlen
 argument_list|,
@@ -7820,8 +7643,6 @@ name|ip6_src
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -7846,21 +7667,11 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_PIM
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_PIM
 argument_list|,
-literal|"pim6_input[register], eip6: %s -> %s, "
-literal|"eip6 plen %d\n"
+literal|"eip6: %s -> %s, eip6 plen %d"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -7890,8 +7701,6 @@ name|ip6_plen
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* verify the version number of the inner packet */
 if|if
 condition|(
@@ -7911,15 +7720,12 @@ argument_list|(
 name|pim6s_rcv_badregisters
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_ANY
 argument_list|,
-literal|"pim6_input: invalid IP version (%d) "
-literal|"of the inner packet\n"
+literal|"invalid IP version (%d) "
+literal|"of the inner packet"
 argument_list|,
 operator|(
 name|eip6
@@ -7930,8 +7736,6 @@ name|IPV6_VERSION
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -7961,21 +7765,12 @@ argument_list|(
 name|pim6s_rcv_badregisters
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_PIM
-condition|)
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_PIM
 argument_list|,
-literal|"pim6_input: inner packet of register "
-literal|"is not multicast %s\n"
+literal|"inner packet of register "
+literal|"is not multicast %s"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -7988,8 +7783,6 @@ name|ip6_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -8022,19 +7815,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_ERR
+name|DEBUG_ANY
+operator||
+name|DEBUG_ERR
 argument_list|,
-literal|"pim6_input: pim register: "
-literal|"could not copy register head\n"
+literal|"pim register: "
+literal|"could not copy register head"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -8056,22 +7846,12 @@ operator|+
 name|PIM_MINLEN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MRT6DEBUG
-if|if
-condition|(
-name|V_mrt6debug
-operator|&
-name|DEBUG_PIM
-condition|)
-block|{
-name|log
+name|MRT6_DLOG
 argument_list|(
-name|LOG_DEBUG
+name|DEBUG_PIM
 argument_list|,
-literal|"pim6_input: forwarding decapsulated register: "
-literal|"src %s, dst %s, mif %d\n"
+literal|"forwarding decapsulated register: "
+literal|"src %s, dst %s, mif %d"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -8096,9 +7876,6 @@ argument_list|,
 name|reg_mif_num
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|rc
 operator|=
 name|if_simloop

@@ -1961,6 +1961,8 @@ argument_list|(
 literal|"TZ"
 argument_list|)
 decl_stmt|;
+name|sshpam_err
+operator|=
 name|pam_get_item
 argument_list|(
 name|sshpam_handle
@@ -1976,6 +1978,15 @@ operator|)
 name|ptr_pam_user
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sshpam_err
+operator|!=
+name|PAM_SUCCESS
+condition|)
+goto|goto
+name|auth_fail
+goto|;
 name|environ
 index|[
 literal|0

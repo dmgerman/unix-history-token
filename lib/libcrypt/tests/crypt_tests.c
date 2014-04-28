@@ -188,7 +188,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This function must not do anything except enumerate  * the test cases, else atf-run is likely to be upset.  */
+comment|/*  * This function must not do anything except enumerate  * the test cases, per atf-c-api(3).  */
 end_comment
 
 begin_macro

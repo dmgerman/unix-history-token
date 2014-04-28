@@ -119,6 +119,7 @@ return|return
 name|m_object
 return|;
 block|}
+name|explicit
 name|operator
 name|bool
 parameter_list|()
@@ -424,6 +425,19 @@ operator|*
 name|data
 argument_list|)
 argument_list|;     typedef
+name|lldb
+operator|::
+name|ValueObjectSP
+argument_list|(
+operator|*
+name|SWIGPythonGetValueObjectSPFromSBValue
+argument_list|)
+argument_list|(
+name|void
+operator|*
+name|data
+argument_list|)
+argument_list|;     typedef
 name|bool
 argument_list|(
 operator|*
@@ -618,7 +632,31 @@ name|string
 operator|&
 name|output
 argument_list|)
-argument_list|;            typedef
+argument_list|;          typedef
+name|void
+operator|*
+call|(
+modifier|*
+name|SWIGPython_GetDynamicSetting
+call|)
+argument_list|(
+name|void
+operator|*
+name|module
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|setting
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|TargetSP
+operator|&
+name|target_sp
+argument_list|)
+argument_list|;      typedef
 expr|enum
 block|{
 name|eScriptReturnTypeCharPtr
@@ -648,6 +686,8 @@ block|,
 name|eScriptReturnTypeChar
 block|,
 name|eScriptReturnTypeCharStrOrNone
+block|,
+name|eScriptReturnTypeOpaqueObject
 block|}
 name|ScriptReturnType
 argument_list|;
@@ -822,7 +862,7 @@ name|true
 return|;
 block|}
 name|virtual
-name|bool
+name|Error
 name|ExecuteMultipleLines
 parameter_list|(
 specifier|const
@@ -839,8 +879,18 @@ name|ExecuteScriptOptions
 argument_list|()
 parameter_list|)
 block|{
+name|Error
+name|error
+decl_stmt|;
+name|error
+operator|.
+name|SetErrorString
+argument_list|(
+literal|"not implemented"
+argument_list|)
+expr_stmt|;
 return|return
-name|true
+name|error
 return|;
 block|}
 name|virtual
@@ -1112,6 +1162,46 @@ argument_list|,
 argument|lldb::tid_t tid
 argument_list|,
 argument|lldb::addr_t context
+argument_list|)
+block|{
+return|return
+name|lldb
+operator|::
+name|ScriptInterpreterObjectSP
+argument_list|()
+return|;
+block|}
+name|virtual
+name|lldb
+operator|::
+name|ScriptInterpreterObjectSP
+name|LoadPluginModule
+argument_list|(
+argument|const FileSpec& file_spec
+argument_list|,
+argument|lldb_private::Error& error
+argument_list|)
+block|{
+return|return
+name|lldb
+operator|::
+name|ScriptInterpreterObjectSP
+argument_list|()
+return|;
+block|}
+name|virtual
+name|lldb
+operator|::
+name|ScriptInterpreterObjectSP
+name|GetDynamicSettings
+argument_list|(
+argument|lldb::ScriptInterpreterObjectSP plugin_module_sp
+argument_list|,
+argument|Target* target
+argument_list|,
+argument|const char* setting_name
+argument_list|,
+argument|lldb_private::Error& error
 argument_list|)
 block|{
 return|return
@@ -1549,6 +1639,14 @@ operator|::
 name|Error
 operator|&
 name|error
+argument_list|,
+name|lldb
+operator|::
+name|ScriptInterpreterObjectSP
+operator|*
+name|module_sp
+operator|=
+name|nullptr
 argument_list|)
 block|{
 name|error
@@ -1620,6 +1718,63 @@ name|InitializeInterpreter
 parameter_list|(
 name|SWIGInitCallback
 name|python_swig_init_callback
+parameter_list|,
+name|SWIGBreakpointCallbackFunction
+name|swig_breakpoint_callback
+parameter_list|,
+name|SWIGWatchpointCallbackFunction
+name|swig_watchpoint_callback
+parameter_list|,
+name|SWIGPythonTypeScriptCallbackFunction
+name|swig_typescript_callback
+parameter_list|,
+name|SWIGPythonCreateSyntheticProvider
+name|swig_synthetic_script
+parameter_list|,
+name|SWIGPythonCalculateNumChildren
+name|swig_calc_children
+parameter_list|,
+name|SWIGPythonGetChildAtIndex
+name|swig_get_child_index
+parameter_list|,
+name|SWIGPythonGetIndexOfChildWithName
+name|swig_get_index_child
+parameter_list|,
+name|SWIGPythonCastPyObjectToSBValue
+name|swig_cast_to_sbvalue
+parameter_list|,
+name|SWIGPythonGetValueObjectSPFromSBValue
+name|swig_get_valobj_sp_from_sbvalue
+parameter_list|,
+name|SWIGPythonUpdateSynthProviderInstance
+name|swig_update_provider
+parameter_list|,
+name|SWIGPythonMightHaveChildrenSynthProviderInstance
+name|swig_mighthavechildren_provider
+parameter_list|,
+name|SWIGPythonCallCommand
+name|swig_call_command
+parameter_list|,
+name|SWIGPythonCallModuleInit
+name|swig_call_module_init
+parameter_list|,
+name|SWIGPythonCreateOSPlugin
+name|swig_create_os_plugin
+parameter_list|,
+name|SWIGPythonScriptKeyword_Process
+name|swig_run_script_keyword_process
+parameter_list|,
+name|SWIGPythonScriptKeyword_Thread
+name|swig_run_script_keyword_thread
+parameter_list|,
+name|SWIGPythonScriptKeyword_Target
+name|swig_run_script_keyword_target
+parameter_list|,
+name|SWIGPythonScriptKeyword_Frame
+name|swig_run_script_keyword_frame
+parameter_list|,
+name|SWIGPython_GetDynamicSetting
+name|swig_plugin_get
 parameter_list|)
 function_decl|;
 specifier|static

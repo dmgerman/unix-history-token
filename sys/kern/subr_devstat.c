@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -51,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/devicestat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -101,73 +101,76 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KDTRACE_HOOKS
-end_ifdef
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|<sys/dtrace_bsd.h>
-end_include
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|io
+argument_list|, , ,
+name|start
+argument_list|,
+literal|"struct bio *"
+argument_list|,
+literal|"struct devstat *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|dtrace_io_start_probe_func_t
-name|dtrace_io_start_probe
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|io
+argument_list|, , ,
+name|done
+argument_list|,
+literal|"struct bio *"
+argument_list|,
+literal|"struct devstat *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|dtrace_io_done_probe_func_t
-name|dtrace_io_done_probe
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|io
+argument_list|, , ,
+name|wait__start
+argument_list|,
+literal|"struct bio *"
+argument_list|,
+literal|"struct devstat *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|dtrace_io_wait_start_probe_func_t
-name|dtrace_io_wait_start_probe
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dtrace_io_wait_done_probe_func_t
-name|dtrace_io_wait_done_probe
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|uint32_t
-name|dtio_start_id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|uint32_t
-name|dtio_done_id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|uint32_t
-name|dtio_wait_start_id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|uint32_t
-name|dtio_wait_done_id
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2
+argument_list|(
+name|io
+argument_list|, , ,
+name|wait__done
+argument_list|,
+literal|"struct bio *"
+argument_list|,
+literal|"struct devstat *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
 directive|define
 name|DTRACE_DEVSTAT_START
 parameter_list|()
-define|\
-value|if (dtrace_io_start_probe != NULL) \ 		(*dtrace_io_start_probe)(dtio_start_id, NULL, ds);
+value|SDT_PROBE2(io, , , start, NULL, ds)
 end_define
 
 begin_define
@@ -175,8 +178,7 @@ define|#
 directive|define
 name|DTRACE_DEVSTAT_BIO_START
 parameter_list|()
-define|\
-value|if (dtrace_io_start_probe != NULL) \ 		(*dtrace_io_start_probe)(dtio_start_id, bp, ds);
+value|SDT_PROBE2(io, , , start, bp, ds)
 end_define
 
 begin_define
@@ -184,8 +186,7 @@ define|#
 directive|define
 name|DTRACE_DEVSTAT_DONE
 parameter_list|()
-define|\
-value|if (dtrace_io_done_probe != NULL) \ 		(*dtrace_io_done_probe)(dtio_done_id, NULL, ds);
+value|SDT_PROBE2(io, , , done, NULL, ds)
 end_define
 
 begin_define
@@ -193,8 +194,7 @@ define|#
 directive|define
 name|DTRACE_DEVSTAT_BIO_DONE
 parameter_list|()
-define|\
-value|if (dtrace_io_done_probe != NULL) \ 		(*dtrace_io_done_probe)(dtio_done_id, bp, ds);
+value|SDT_PROBE2(io, , , done, bp, ds)
 end_define
 
 begin_define
@@ -202,8 +202,7 @@ define|#
 directive|define
 name|DTRACE_DEVSTAT_WAIT_START
 parameter_list|()
-define|\
-value|if (dtrace_io_wait_start_probe != NULL) \ 		(*dtrace_io_wait_start_probe)(dtio_wait_start_id, NULL, ds);
+value|SDT_PROBE2(io, , , wait__start, NULL, ds)
 end_define
 
 begin_define
@@ -211,69 +210,8 @@ define|#
 directive|define
 name|DTRACE_DEVSTAT_WAIT_DONE
 parameter_list|()
-define|\
-value|if (dtrace_io_wait_done_probe != NULL) \ 		(*dtrace_io_wait_done_probe)(dtio_wait_done_id, NULL, ds);
+value|SDT_PROBE2(io, , , wait__done, NULL, ds)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ! KDTRACE_HOOKS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DTRACE_DEVSTAT_START
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|DTRACE_DEVSTAT_BIO_START
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|DTRACE_DEVSTAT_DONE
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|DTRACE_DEVSTAT_BIO_DONE
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|DTRACE_DEVSTAT_WAIT_START
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|DTRACE_DEVSTAT_WAIT_DONE
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KDTRACE_HOOKS */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -463,6 +401,12 @@ operator|-
 literal|1
 condition|)
 block|{
+name|ds
+operator|->
+name|unit_number
+operator|=
+name|unit_number
+expr_stmt|;
 name|ds
 operator|->
 name|id
@@ -839,9 +783,10 @@ if|if
 condition|(
 name|ds
 operator|->
-name|id
-operator|==
-name|NULL
+name|unit_number
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 name|devstat_num_devs
@@ -1257,6 +1202,38 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|devstat_end_transaction_bio_bt
+argument_list|(
+name|ds
+argument_list|,
+name|bp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|devstat_end_transaction_bio_bt
+parameter_list|(
+name|struct
+name|devstat
+modifier|*
+name|ds
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|,
+name|struct
+name|bintime
+modifier|*
+name|now
+parameter_list|)
+block|{
 name|devstat_trans_flags
 name|flg
 decl_stmt|;
@@ -1327,7 +1304,7 @@ name|DEVSTAT_TAG_SIMPLE
 argument_list|,
 name|flg
 argument_list|,
-name|NULL
+name|now
 argument_list|,
 operator|&
 name|bp
@@ -1689,11 +1666,6 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
-block|,
-operator|.
 name|d_mmap
 operator|=
 name|devstat_mmap
@@ -1799,6 +1771,12 @@ operator|-
 literal|1
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|devstat_mutex
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|spp
@@ -1825,6 +1803,12 @@ operator|->
 name|stat
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|devstat_mutex
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1836,6 +1820,12 @@ operator|-=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|devstat_mutex
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -1906,7 +1896,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0400
+literal|0444
 argument_list|,
 name|DEVSTAT_DEVICE_NAME
 argument_list|)

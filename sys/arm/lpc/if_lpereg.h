@@ -941,7 +941,7 @@ begin_define
 define|#
 directive|define
 name|LPE_HWDESC_INTERRUPT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1043,7 +1043,7 @@ begin_define
 define|#
 directive|define
 name|LPE_HWDESC_ERROR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -1145,7 +1145,7 @@ begin_define
 define|#
 directive|define
 name|LPE_HWDESC_ERROR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_endif

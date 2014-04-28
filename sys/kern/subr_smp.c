@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001, John Baldwin<jhb@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001, John Baldwin<jhb@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -167,6 +167,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|int
+name|sysctl_kern_smp_active
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* This is used in modules that need to work in both SMP and UP. */
 end_comment
@@ -275,20 +285,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|smp_active
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* are the APs allowed to run? */
-end_comment
-
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_PROC
 argument_list|(
 name|_kern_smp
 argument_list|,
@@ -296,14 +294,19 @@ name|OID_AUTO
 argument_list|,
 name|active
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
+operator||
+name|CTLTYPE_INT
 argument_list|,
-operator|&
-name|smp_active
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of Auxillary Processors (APs) that were successfully started"
+name|sysctl_kern_smp_active
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Indicates system is running in SMP mode"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3371,6 +3374,50 @@ name|wmesg
 argument_list|,
 name|prio
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Extra care is taken with this sysctl because the data type is volatile */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|sysctl_kern_smp_active
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|,
+name|active
+decl_stmt|;
+name|active
+operator|=
+name|smp_started
+expr_stmt|;
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+operator|&
+name|active
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|active
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function

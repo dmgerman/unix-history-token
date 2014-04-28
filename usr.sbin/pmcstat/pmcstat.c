@@ -2111,6 +2111,7 @@ literal|"\t -R file\t read events from \"file\"\n"
 literal|"\t -S spec\t allocate a system-wide sampling PMC\n"
 literal|"\t -T\t\t start in top mode\n"
 literal|"\t -W\t\t (toggle) show counts per context switch\n"
+literal|"\t -a<file>\t print sampled PCs and callgraph to \"file\"\n"
 literal|"\t -c cpu-list\t set cpus for subsequent system-wide PMCs\n"
 literal|"\t -d\t\t (toggle) track descendants\n"
 literal|"\t -f spec\t pass \"spec\" to as plugin option\n"
@@ -2568,7 +2569,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CD:EF:G:M:NO:P:R:S:TWc:df:gk:m:n:o:p:qr:s:t:vw:z:"
+literal|"CD:EF:G:M:NO:P:R:S:TWa:c:df:gk:m:n:o:p:qr:s:t:vw:z:"
 argument_list|)
 operator|)
 operator|!=
@@ -2580,6 +2581,27 @@ condition|(
 name|option
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+comment|/* Annotate + callgraph */
+name|args
+operator|.
+name|pa_flags
+operator||=
+name|FLAG_DO_ANNOTATE
+expr_stmt|;
+name|args
+operator|.
+name|pa_plugin
+operator|=
+name|PMCSTAT_PL_ANNOTATE_CG
+expr_stmt|;
+name|graphfilename
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'C'
 case|:
@@ -3907,7 +3929,17 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -m requires an input file"
+literal|"ERROR: option %s requires an input file"
+argument_list|,
+name|args
+operator|.
+name|pa_plugin
+operator|==
+name|PMCSTAT_PL_ANNOTATE
+condition|?
+literal|"-m"
+else|:
+literal|"-a"
 argument_list|)
 expr_stmt|;
 comment|/* -m option is not allowed combined with -g or -G. */

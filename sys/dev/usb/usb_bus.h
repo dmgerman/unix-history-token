@@ -173,6 +173,13 @@ index|]
 decl_stmt|;
 name|struct
 name|usb_bus_msg
+name|reset_msg
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|usb_bus_msg
 name|shutdown_msg
 index|[
 literal|2
@@ -218,6 +225,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+specifier|const
 name|struct
 name|usb_bus_methods
 modifier|*

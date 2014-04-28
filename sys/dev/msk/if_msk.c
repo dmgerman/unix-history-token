@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -19706,26 +19712,6 @@ argument_list|,
 name|SC_STAT_CLR_IRQ
 argument_list|)
 expr_stmt|;
-comment|/* Clear TWSI IRQ. */
-if|if
-condition|(
-operator|(
-name|status
-operator|&
-name|Y2_IS_TWSI_RDY
-operator|)
-operator|!=
-literal|0
-condition|)
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|B2_I2C_IRQ
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* Reenable interrupts. */
 name|CSR_WRITE_4
 argument_list|(
@@ -21542,18 +21528,6 @@ argument_list|,
 name|B0_IMSK
 argument_list|)
 expr_stmt|;
-name|sc_if
-operator|->
-name|msk_flags
-operator|&=
-operator|~
-name|MSK_FLAG_LINK
-expr_stmt|;
-name|mii_mediachg
-argument_list|(
-name|mii
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -21566,6 +21540,18 @@ name|if_drv_flags
 operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
+expr_stmt|;
+name|sc_if
+operator|->
+name|msk_flags
+operator|&=
+operator|~
+name|MSK_FLAG_LINK
+expr_stmt|;
+name|mii_mediachg
+argument_list|(
+name|mii
+argument_list|)
 expr_stmt|;
 name|callout_reset
 argument_list|(

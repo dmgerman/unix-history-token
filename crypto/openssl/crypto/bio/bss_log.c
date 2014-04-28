@@ -1121,10 +1121,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|GetVersion
+name|check_winnt
 argument_list|()
-operator|<
-literal|0x80000000
 condition|)
 name|bp
 operator|->

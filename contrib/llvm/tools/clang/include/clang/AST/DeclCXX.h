@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file defines the C++ Decl subclasses, other than those for
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//  templates (in DeclTemplate.h) and friends (in DeclFriend.h).
+comment|/// \brief Defines the C++ Decl subclasses, other than those for templates
 end_comment
 
 begin_comment
-comment|//
+comment|/// (found in DeclTemplate.h) and friends (in DeclFriend.h).
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -344,7 +348,7 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// @brief Represents an access specifier followed by colon ':'.
+comment|/// \brief Represents an access specifier followed by colon ':'.
 comment|///
 comment|/// An objects of this class represents sugar for the syntactic occurrence
 comment|/// of an access specifier followed by a colon in the list of member
@@ -558,18 +562,18 @@ comment|/// base class, whether it is a virtual or non-virtual base, and what
 comment|/// level of access (public, protected, private) is used for the
 comment|/// derivation. For example:
 comment|///
-comment|/// @code
+comment|/// \code
 comment|///   class A { };
 comment|///   class B { };
 comment|///   class C : public virtual A, protected B { };
-comment|/// @endcode
+comment|/// \endcode
 comment|///
 comment|/// In this code, C will have two CXXBaseSpecifiers, one for "public
 comment|/// virtual A" and the other for "protected B".
 name|class
 name|CXXBaseSpecifier
 block|{
-comment|/// Range - The source code range that covers the full base
+comment|/// \brief The source code range that covers the full base
 comment|/// specifier, including the "virtual" (if present) and access
 comment|/// specifier (if present).
 name|SourceRange
@@ -586,34 +590,35 @@ name|Virtual
 operator|:
 literal|1
 block|;
-comment|/// BaseOfClass - Whether this is the base of a class (true) or of a
-comment|/// struct (false). This determines the mapping from the access
-comment|/// specifier as written in the source code to the access specifier
-comment|/// used for semantic analysis.
+comment|/// \brief Whether this is the base of a class (true) or of a struct (false).
+comment|///
+comment|/// This determines the mapping from the access specifier as written in the
+comment|/// source code to the access specifier used for semantic analysis.
 name|bool
 name|BaseOfClass
 operator|:
 literal|1
 block|;
-comment|/// Access - Access specifier as written in the source code (which
-comment|/// may be AS_none). The actual type of data stored here is an
-comment|/// AccessSpecifier, but we use "unsigned" here to work around a
-comment|/// VC++ bug.
+comment|/// \brief Access specifier as written in the source code (may be AS_none).
+comment|///
+comment|/// The actual type of data stored here is an AccessSpecifier, but we use
+comment|/// "unsigned" here to work around a VC++ bug.
 name|unsigned
 name|Access
 operator|:
 literal|2
 block|;
-comment|/// InheritConstructors - Whether the class contains a using declaration
+comment|/// \brief Whether the class contains a using declaration
 comment|/// to inherit the named class's constructors.
 name|bool
 name|InheritConstructors
 operator|:
 literal|1
 block|;
-comment|/// BaseTypeInfo - The type of the base class. This will be a class or struct
-comment|/// (or a typedef of such). The source code range does not include the
-comment|/// "virtual" or access specifier.
+comment|/// \brief The type of the base class.
+comment|///
+comment|/// This will be a class or struct (or a typedef of such). The source code
+comment|/// range does not include the \c virtual or the access specifier.
 name|TypeSourceInfo
 operator|*
 name|BaseTypeInfo
@@ -673,8 +678,7 @@ argument_list|(
 argument|TInfo
 argument_list|)
 block|{ }
-comment|/// getSourceRange - Retrieves the source range that contains the
-comment|/// entire base specifier.
+comment|/// \brief Retrieves the source range that contains the entire base specifier.
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -711,8 +715,7 @@ name|getEnd
 argument_list|()
 return|;
 block|}
-comment|/// isVirtual - Determines whether the base class is a virtual base
-comment|/// class (or not).
+comment|/// \brief Determines whether the base class is a virtual base class (or not).
 name|bool
 name|isVirtual
 argument_list|()
@@ -777,11 +780,11 @@ return|return
 name|EllipsisLoc
 return|;
 block|}
-comment|/// getAccessSpecifier - Returns the access specifier for this base
-comment|/// specifier. This is the actual base specifier as used for
-comment|/// semantic analysis, so the result can never be AS_none. To
-comment|/// retrieve the access specifier as written in the source code, use
-comment|/// getAccessSpecifierAsWritten().
+comment|/// \brief Returns the access specifier for this base specifier.
+comment|///
+comment|/// This is the actual base specifier as used for semantic analysis, so
+comment|/// the result can never be AS_none. To retrieve the access specifier as
+comment|/// written in the source code, use getAccessSpecifierAsWritten().
 name|AccessSpecifier
 name|getAccessSpecifier
 argument_list|()
@@ -811,10 +814,11 @@ operator|)
 name|Access
 return|;
 block|}
-comment|/// getAccessSpecifierAsWritten - Retrieves the access specifier as
-comment|/// written in the source code (which may mean that no access
-comment|/// specifier was explicitly written). Use getAccessSpecifier() to
-comment|/// retrieve the access specifier for use in semantic analysis.
+comment|/// \brief Retrieves the access specifier as written in the source code
+comment|/// (which may mean that no access specifier was explicitly written).
+comment|///
+comment|/// Use getAccessSpecifier() to retrieve the access specifier for use in
+comment|/// semantic analysis.
 name|AccessSpecifier
 name|getAccessSpecifierAsWritten
 argument_list|()
@@ -827,8 +831,9 @@ operator|)
 name|Access
 return|;
 block|}
-comment|/// getType - Retrieves the type of the base class. This type will
-comment|/// always be an unqualified class type.
+comment|/// \brief Retrieves the type of the base class.
+comment|///
+comment|/// This type will always be an unqualified class type.
 name|QualType
 name|getType
 argument_list|()
@@ -839,9 +844,12 @@ name|BaseTypeInfo
 operator|->
 name|getType
 argument_list|()
+operator|.
+name|getUnqualifiedType
+argument_list|()
 return|;
 block|}
-comment|/// getTypeLoc - Retrieves the type and source location of the base class.
+comment|/// \brief Retrieves the type and source location of the base class.
 name|TypeSourceInfo
 operator|*
 name|getTypeSourceInfo
@@ -871,7 +879,8 @@ block|,
 name|MSIM_Unspecified
 block|}
 block|;
-comment|/// CXXRecordDecl - Represents a C++ struct/union/class.
+comment|/// \brief Represents a C++ struct/union/class.
+comment|///
 comment|/// FIXME: This class will disappear once we've properly taught RecordDecl
 comment|/// to deal with C++-specific things.
 name|class
@@ -935,25 +944,25 @@ name|UserDeclaredConstructor
 operator|:
 literal|1
 block|;
-comment|/// The user-declared special members which this class has.
+comment|/// \brief The user-declared special members which this class has.
 name|unsigned
 name|UserDeclaredSpecialMembers
 operator|:
 literal|6
 block|;
-comment|/// Aggregate - True when this class is an aggregate.
+comment|/// \brief True when this class is an aggregate.
 name|bool
 name|Aggregate
 operator|:
 literal|1
 block|;
-comment|/// PlainOldData - True when this class is a POD-type.
+comment|/// \brief True when this class is a POD-type.
 name|bool
 name|PlainOldData
 operator|:
 literal|1
 block|;
-comment|/// Empty - true when this class is empty for traits purposes,
+comment|/// true when this class is empty for traits purposes,
 comment|/// i.e. has no data members other than 0-width bit-fields, has no
 comment|/// virtual function/base, and doesn't inherit from a non-empty
 comment|/// class. Doesn't take union-ness into account.
@@ -962,23 +971,23 @@ name|Empty
 operator|:
 literal|1
 block|;
-comment|/// Polymorphic - True when this class is polymorphic, i.e. has at
+comment|/// \brief True when this class is polymorphic, i.e., has at
 comment|/// least one virtual member or derives from a polymorphic class.
 name|bool
 name|Polymorphic
 operator|:
 literal|1
 block|;
-comment|/// Abstract - True when this class is abstract, i.e. has at least
+comment|/// \brief True when this class is abstract, i.e., has at least
 comment|/// one pure virtual function, (that can come from a base class).
 name|bool
 name|Abstract
 operator|:
 literal|1
 block|;
-comment|/// IsStandardLayout - True when this class has standard layout.
+comment|/// \brief True when this class has standard layout.
 comment|///
-comment|/// C++0x [class]p7.  A standard-layout class is a class that:
+comment|/// C++11 [class]p7.  A standard-layout class is a class that:
 comment|/// * has no non-static data members of type non-standard-layout class (or
 comment|///   array of such types) or reference,
 comment|/// * has no virtual functions (10.3) and no virtual base classes (10.1),
@@ -995,7 +1004,7 @@ name|IsStandardLayout
 operator|:
 literal|1
 block|;
-comment|/// HasNoNonEmptyBases - True when there are no non-empty base classes.
+comment|/// \brief True when there are no non-empty base classes.
 comment|///
 comment|/// This is a helper bit of state used to implement IsStandardLayout more
 comment|/// efficiently.
@@ -1004,20 +1013,19 @@ name|HasNoNonEmptyBases
 operator|:
 literal|1
 block|;
-comment|/// HasPrivateFields - True when there are private non-static data members.
+comment|/// \brief True when there are private non-static data members.
 name|bool
 name|HasPrivateFields
 operator|:
 literal|1
 block|;
-comment|/// HasProtectedFields - True when there are protected non-static data
-comment|/// members.
+comment|/// \brief True when there are protected non-static data members.
 name|bool
 name|HasProtectedFields
 operator|:
 literal|1
 block|;
-comment|/// HasPublicFields - True when there are private non-static data members.
+comment|/// \brief True when there are private non-static data members.
 name|bool
 name|HasPublicFields
 operator|:
@@ -1042,8 +1050,10 @@ operator|:
 literal|1
 block|;
 comment|/// \brief True if any field is of reference type, and does not have an
-comment|/// in-class initializer. In this case, value-initialization of this class
-comment|/// is illegal in C++98 even if the class has a trivial default constructor.
+comment|/// in-class initializer.
+comment|///
+comment|/// In this case, value-initialization of this class is illegal in C++98
+comment|/// even if the class has a trivial default constructor.
 name|bool
 name|HasUninitializedReferenceMember
 operator|:
@@ -1109,45 +1119,44 @@ name|DeclaredNonTrivialSpecialMembers
 operator|:
 literal|6
 block|;
-comment|/// HasIrrelevantDestructor - True when this class has a destructor with no
-comment|/// semantic effect.
+comment|/// \brief True when this class has a destructor with no semantic effect.
 name|bool
 name|HasIrrelevantDestructor
 operator|:
 literal|1
 block|;
-comment|/// HasConstexprNonCopyMoveConstructor - True when this class has at least
-comment|/// one user-declared constexpr constructor which is neither the copy nor
-comment|/// move constructor.
+comment|/// \brief True when this class has at least one user-declared constexpr
+comment|/// constructor which is neither the copy nor move constructor.
 name|bool
 name|HasConstexprNonCopyMoveConstructor
 operator|:
 literal|1
 block|;
-comment|/// DefaultedDefaultConstructorIsConstexpr - True if a defaulted default
-comment|/// constructor for this class would be constexpr.
+comment|/// \brief True if a defaulted default constructor for this class would
+comment|/// be constexpr.
 name|bool
 name|DefaultedDefaultConstructorIsConstexpr
 operator|:
 literal|1
 block|;
-comment|/// HasConstexprDefaultConstructor - True if this class has a constexpr
-comment|/// default constructor (either user-declared or implicitly declared).
+comment|/// \brief True if this class has a constexpr default constructor.
+comment|///
+comment|/// This is true for either a user-declared constexpr default constructor
+comment|/// or an implicitly declared constexpr default constructor..
 name|bool
 name|HasConstexprDefaultConstructor
 operator|:
 literal|1
 block|;
-comment|/// HasNonLiteralTypeFieldsOrBases - True when this class contains at least
-comment|/// one non-static data member or base class of non-literal or volatile
-comment|/// type.
+comment|/// \brief True when this class contains at least one non-static data
+comment|/// member or base class of non-literal or volatile type.
 name|bool
 name|HasNonLiteralTypeFieldsOrBases
 operator|:
 literal|1
 block|;
-comment|/// ComputedVisibleConversions - True when visible conversion functions are
-comment|/// already computed and are available.
+comment|/// \brief True when visible conversion functions are already computed
+comment|/// and are available.
 name|bool
 name|ComputedVisibleConversions
 operator|:
@@ -1195,68 +1204,55 @@ name|HasDeclaredCopyAssignmentWithConstParam
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether an implicit move constructor was attempted to be declared
-comment|/// but would have been deleted.
-name|bool
-name|FailedImplicitMoveConstructor
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether an implicit move assignment operator was attempted to be
-comment|/// declared but would have been deleted.
-name|bool
-name|FailedImplicitMoveAssignment
-operator|:
-literal|1
-block|;
 comment|/// \brief Whether this class describes a C++ lambda.
 name|bool
 name|IsLambda
 operator|:
 literal|1
 block|;
-comment|/// NumBases - The number of base class specifiers in Bases.
+comment|/// \brief The number of base class specifiers in Bases.
 name|unsigned
 name|NumBases
 block|;
-comment|/// NumVBases - The number of virtual base class specifiers in VBases.
+comment|/// \brief The number of virtual base class specifiers in VBases.
 name|unsigned
 name|NumVBases
 block|;
-comment|/// Bases - Base classes of this class.
+comment|/// \brief Base classes of this class.
+comment|///
 comment|/// FIXME: This is wasted space for a union.
 name|LazyCXXBaseSpecifiersPtr
 name|Bases
 block|;
-comment|/// VBases - direct and indirect virtual base classes of this class.
+comment|/// \brief direct and indirect virtual base classes of this class.
 name|LazyCXXBaseSpecifiersPtr
 name|VBases
 block|;
-comment|/// Conversions - Overload set containing the conversion functions
-comment|/// of this C++ class (but not its inherited conversion
-comment|/// functions). Each of the entries in this overload set is a
-comment|/// CXXConversionDecl.
-name|ASTUnresolvedSet
+comment|/// \brief The conversion functions of this C++ class (but not its
+comment|/// inherited conversion functions).
+comment|///
+comment|/// Each of the entries in this overload set is a CXXConversionDecl.
+name|LazyASTUnresolvedSet
 name|Conversions
 block|;
-comment|/// VisibleConversions - Overload set containing the conversion
-comment|/// functions of this C++ class and all those inherited conversion
-comment|/// functions that are visible in this class. Each of the entries
-comment|/// in this overload set is a CXXConversionDecl or a
+comment|/// \brief The conversion functions of this C++ class and all those
+comment|/// inherited conversion functions that are visible in this class.
+comment|///
+comment|/// Each of the entries in this overload set is a CXXConversionDecl or a
 comment|/// FunctionTemplateDecl.
-name|ASTUnresolvedSet
+name|LazyASTUnresolvedSet
 name|VisibleConversions
 block|;
-comment|/// Definition - The declaration which defines this record.
+comment|/// \brief The declaration which defines this record.
 name|CXXRecordDecl
 operator|*
 name|Definition
 block|;
-comment|/// FirstFriend - The first friend declaration in this class, or
-comment|/// null if there aren't any.  This is actually currently stored
-comment|/// in reverse order.
-name|FriendDecl
-operator|*
+comment|/// \brief The first friend declaration in this class, or null if there
+comment|/// aren't any.
+comment|///
+comment|/// This is actually currently stored in reverse order.
+name|LazyDeclPtr
 name|FirstFriend
 block|;
 comment|/// \brief Retrieve the set of direct base classes.
@@ -1352,6 +1348,10 @@ argument_list|,
 argument|TypeSourceInfo *Info
 argument_list|,
 argument|bool Dependent
+argument_list|,
+argument|bool IsGeneric
+argument_list|,
+argument|LambdaCaptureDefault CaptureDefault
 argument_list|)
 operator|:
 name|DefinitionData
@@ -1362,6 +1362,16 @@ block|,
 name|Dependent
 argument_list|(
 name|Dependent
+argument_list|)
+block|,
+name|IsGenericLambda
+argument_list|(
+name|IsGeneric
+argument_list|)
+block|,
+name|CaptureDefault
+argument_list|(
+name|CaptureDefault
 argument_list|)
 block|,
 name|NumCaptures
@@ -1405,23 +1415,35 @@ comment|/// A lambda with a non-dependent context can be dependent if it occurs
 comment|/// within the default argument of a function template, because the
 comment|/// lambda will have been created with the enclosing context as its
 comment|/// declaration context, rather than function. This is an unfortunate
-comment|/// artifact of having to parse the default arguments before
+comment|/// artifact of having to parse the default arguments before.
 name|unsigned
 name|Dependent
 operator|:
 literal|1
 block|;
-comment|/// \brief The number of captures in this lambda.
+comment|/// \brief Whether this lambda is a generic lambda.
+name|unsigned
+name|IsGenericLambda
+operator|:
+literal|1
+block|;
+comment|/// \brief The Default Capture.
+name|unsigned
+name|CaptureDefault
+operator|:
+literal|2
+block|;
+comment|/// \brief The number of captures in this lambda is limited 2^NumCaptures.
 name|unsigned
 name|NumCaptures
 operator|:
-literal|16
+literal|15
 block|;
 comment|/// \brief The number of explicit captures in this lambda.
 name|unsigned
 name|NumExplicitCaptures
 operator|:
-literal|15
+literal|13
 block|;
 comment|/// \brief The number used to indicate this lambda expression for name
 comment|/// mangling in the Itanium C++ ABI.
@@ -1446,7 +1468,7 @@ comment|/// \brief The type of the call method.
 name|TypeSourceInfo
 operator|*
 name|MethodTyInfo
-block|;   }
+block|;           }
 decl_stmt|;
 name|struct
 name|DefinitionData
@@ -1524,7 +1546,7 @@ block|}
 comment|/// \brief The template or declaration that this declaration
 comment|/// describes or was instantiated from, respectively.
 comment|///
-comment|/// For non-templates, this value will be NULL. For record
+comment|/// For non-templates, this value will be null. For record
 comment|/// declarations that describe a class template, this will be a
 comment|/// pointer to a ClassTemplateDecl. For member
 comment|/// classes of class template specializations, this will be the
@@ -1590,6 +1612,14 @@ name|friend
 name|class
 name|ASTNodeImporter
 decl_stmt|;
+comment|/// \brief Get the head of our list of friend declarations, possibly
+comment|/// deserializing the friends from an external AST source.
+name|FriendDecl
+operator|*
+name|getFirstFriend
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|CXXRecordDecl
@@ -1611,23 +1641,21 @@ argument_list|)
 empty_stmt|;
 name|public
 label|:
-comment|/// base_class_iterator - Iterator that traverses the base classes
-comment|/// of a class.
+comment|/// \brief Iterator that traverses the base classes of a class.
 typedef|typedef
 name|CXXBaseSpecifier
 modifier|*
 name|base_class_iterator
 typedef|;
-comment|/// base_class_const_iterator - Iterator that traverses the base
-comment|/// classes of a class.
+comment|/// \brief Iterator that traverses the base classes of a class.
 typedef|typedef
 specifier|const
 name|CXXBaseSpecifier
 modifier|*
 name|base_class_const_iterator
 typedef|;
-comment|/// reverse_base_class_iterator = Iterator that traverses the base classes
-comment|/// of a class in reverse order.
+comment|/// \brief Iterator that traverses the base classes of a class in reverse
+comment|/// order.
 typedef|typedef
 name|std
 operator|::
@@ -1637,8 +1665,8 @@ name|base_class_iterator
 operator|>
 name|reverse_base_class_iterator
 expr_stmt|;
-comment|/// reverse_base_class_iterator = Iterator that traverses the base classes
-comment|/// of a class in reverse order.
+comment|/// \brief Iterator that traverses the base classes of a class in reverse
+comment|/// order.
 typedef|typedef
 name|std
 operator|::
@@ -1688,26 +1716,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|getPreviousDecl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cast_or_null
-operator|<
-name|CXXRecordDecl
-operator|>
-operator|(
-name|RecordDecl
-operator|::
-name|getPreviousDecl
-argument_list|()
-operator|)
-return|;
-block|}
 name|CXXRecordDecl
 modifier|*
 name|getPreviousDecl
@@ -1719,9 +1727,62 @@ operator|<
 name|CXXRecordDecl
 operator|>
 operator|(
+name|static_cast
+operator|<
 name|RecordDecl
-operator|::
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getPreviousDecl
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|getPreviousDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|CXXRecordDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getPreviousDecl
+argument_list|()
+return|;
+block|}
+name|CXXRecordDecl
+modifier|*
+name|getMostRecentDecl
+parameter_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|CXXRecordDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|RecordDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
 argument_list|()
 operator|)
 return|;
@@ -1734,34 +1795,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|cast_or_null
+name|const_cast
 operator|<
 name|CXXRecordDecl
+operator|*
 operator|>
 operator|(
-name|RecordDecl
-operator|::
+name|this
+operator|)
+operator|->
 name|getMostRecentDecl
 argument_list|()
-operator|)
-return|;
-block|}
-name|CXXRecordDecl
-modifier|*
-name|getMostRecentDecl
-parameter_list|()
-block|{
-return|return
-name|cast_or_null
-operator|<
-name|CXXRecordDecl
-operator|>
-operator|(
-name|RecordDecl
-operator|::
-name|getMostRecentDecl
-argument_list|()
-operator|)
 return|;
 block|}
 name|CXXRecordDecl
@@ -1867,6 +1911,12 @@ name|Loc
 parameter_list|,
 name|bool
 name|DependentLambda
+parameter_list|,
+name|bool
+name|IsGeneric
+parameter_list|,
+name|LambdaCaptureDefault
+name|CaptureDefault
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1911,7 +1961,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// setBases - Sets the base classes of this struct or class.
+comment|/// \brief Sets the base classes of this struct or class.
 end_comment
 
 begin_function_decl
@@ -1932,11 +1982,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// getNumBases - Retrieves the number of base classes of this
-end_comment
-
-begin_comment
-comment|/// class.
+comment|/// \brief Retrieves the number of base classes of this class.
 end_comment
 
 begin_expr_stmt
@@ -2083,11 +2129,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getNumVBases - Retrieves the number of virtual base classes of this
-end_comment
-
-begin_comment
-comment|/// class.
+comment|/// \brief Retrieves the number of virtual base classes of this class.
 end_comment
 
 begin_expr_stmt
@@ -2272,7 +2314,7 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|/// method_begin - Method begin iterator.  Iterates in the order the methods
+comment|/// \brief Method begin iterator.  Iterates in the order the methods
 end_comment
 
 begin_comment
@@ -2296,7 +2338,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// method_end - Method end iterator.
+comment|/// \brief Method past-the-end iterator.
 end_comment
 
 begin_expr_stmt
@@ -2417,8 +2459,9 @@ name|data
 argument_list|()
 operator|.
 name|FirstFriend
-operator|!=
-literal|0
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -2444,6 +2487,12 @@ argument_list|()
 operator|&&
 name|hasMoveConstructor
 argument_list|()
+operator|&&
+operator|!
+name|data
+argument_list|()
+operator|.
+name|DefaultedMoveConstructorIsDeleted
 return|;
 block|}
 end_expr_stmt
@@ -2469,6 +2518,12 @@ argument_list|()
 operator|&&
 name|hasMoveAssignment
 argument_list|()
+operator|&&
+operator|!
+name|data
+argument_list|()
+operator|.
+name|DefaultedMoveAssignmentIsDeleted
 return|;
 block|}
 end_expr_stmt
@@ -2570,15 +2625,15 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasUserDeclaredConstructor - Whether this class has any
+comment|/// \brief Determine whether this class has any user-declared constructors.
 end_comment
 
 begin_comment
-comment|/// user-declared constructors. When true, a default constructor
+comment|///
 end_comment
 
 begin_comment
-comment|/// will not be implicitly declared.
+comment|/// When true, a default constructor will not be implicitly declared.
 end_comment
 
 begin_expr_stmt
@@ -2597,11 +2652,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasUserProvidedDefaultconstructor - Whether this class has a
+comment|/// \brief Whether this class has a user-provided default constructor
 end_comment
 
 begin_comment
-comment|/// user-provided default constructor per C++0x.
+comment|/// per C++11.
 end_comment
 
 begin_expr_stmt
@@ -2620,15 +2675,15 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasUserDeclaredCopyConstructor - Whether this class has a
+comment|/// \brief Determine whether this class has a user-declared copy constructor.
 end_comment
 
 begin_comment
-comment|/// user-declared copy constructor. When false, a copy constructor
+comment|///
 end_comment
 
 begin_comment
-comment|/// will be implicitly declared.
+comment|/// When false, a copy constructor will be implicitly declared.
 end_comment
 
 begin_expr_stmt
@@ -2754,15 +2809,23 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasUserDeclaredMoveOperation - Whether this class has a user-
+comment|/// \brief Whether this class has a user-declared move constructor or
 end_comment
 
 begin_comment
-comment|/// declared move constructor or assignment operator. When false, a
+comment|/// assignment operator.
 end_comment
 
 begin_comment
-comment|/// move constructor and assignment operator may be implicitly declared.
+comment|///
+end_comment
+
+begin_comment
+comment|/// When false, a move constructor and assignment operator may be
+end_comment
+
+begin_comment
+comment|/// implicitly declared.
 end_comment
 
 begin_expr_stmt
@@ -2838,52 +2901,39 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether implicit move constructor generation for this
+comment|/// \brief Set that we attempted to declare an implicitly move
 end_comment
 
 begin_comment
-comment|/// class has failed before.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|hasFailedImplicitMoveConstructor
-argument_list|()
-specifier|const
-block|{
-return|return
-name|data
-argument_list|()
-operator|.
-name|FailedImplicitMoveConstructor
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Set whether implicit move constructor generation for this class
-end_comment
-
-begin_comment
-comment|/// has failed before.
+comment|/// constructor, but overload resolution failed so we deleted it.
 end_comment
 
 begin_function
 name|void
-name|setFailedImplicitMoveConstructor
-parameter_list|(
-name|bool
-name|Failed
-init|=
-name|true
-parameter_list|)
+name|setImplicitMoveConstructorIsDeleted
+parameter_list|()
 block|{
+name|assert
+argument_list|(
+operator|(
 name|data
 argument_list|()
 operator|.
-name|FailedImplicitMoveConstructor
+name|DefaultedMoveConstructorIsDeleted
+operator|||
+name|needsOverloadResolutionForMoveConstructor
+argument_list|()
+operator|)
+operator|&&
+literal|"move constructor should not be deleted"
+argument_list|)
+expr_stmt|;
+name|data
+argument_list|()
+operator|.
+name|DefaultedMoveConstructorIsDeleted
 operator|=
-name|Failed
+name|true
 expr_stmt|;
 block|}
 end_function
@@ -2903,10 +2953,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|hasFailedImplicitMoveConstructor
-argument_list|()
-operator|&&
 operator|!
 operator|(
 name|data
@@ -2932,12 +2978,6 @@ operator|&&
 operator|!
 name|hasUserDeclaredDestructor
 argument_list|()
-operator|&&
-operator|!
-name|data
-argument_list|()
-operator|.
-name|DefaultedMoveConstructorIsDeleted
 return|;
 block|}
 end_expr_stmt
@@ -2966,15 +3006,19 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasUserDeclaredCopyAssignment - Whether this class has a
+comment|/// \brief Determine whether this class has a user-declared copy assignment
 end_comment
 
 begin_comment
-comment|/// user-declared copy assignment operator. When false, a copy
+comment|/// operator.
 end_comment
 
 begin_comment
-comment|/// assigment operator will be implicitly declared.
+comment|///
+end_comment
+
+begin_comment
+comment|/// When false, a copy assigment operator will be implicitly declared.
 end_comment
 
 begin_expr_stmt
@@ -3077,7 +3121,7 @@ comment|/// a parameter type which is a reference to a const-qualified type or i
 end_comment
 
 begin_comment
-comment|/// a reference..
+comment|/// a reference.
 end_comment
 
 begin_expr_stmt
@@ -3155,52 +3199,39 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether implicit move assignment generation for this
+comment|/// \brief Set that we attempted to declare an implicit move assignment
 end_comment
 
 begin_comment
-comment|/// class has failed before.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|hasFailedImplicitMoveAssignment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|data
-argument_list|()
-operator|.
-name|FailedImplicitMoveAssignment
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Set whether implicit move assignment generation for this class
-end_comment
-
-begin_comment
-comment|/// has failed before.
+comment|/// operator, but overload resolution failed so we deleted it.
 end_comment
 
 begin_function
 name|void
-name|setFailedImplicitMoveAssignment
-parameter_list|(
-name|bool
-name|Failed
-init|=
-name|true
-parameter_list|)
+name|setImplicitMoveAssignmentIsDeleted
+parameter_list|()
 block|{
+name|assert
+argument_list|(
+operator|(
 name|data
 argument_list|()
 operator|.
-name|FailedImplicitMoveAssignment
+name|DefaultedMoveAssignmentIsDeleted
+operator|||
+name|needsOverloadResolutionForMoveAssignment
+argument_list|()
+operator|)
+operator|&&
+literal|"move assignment should not be deleted"
+argument_list|)
+expr_stmt|;
+name|data
+argument_list|()
+operator|.
+name|DefaultedMoveAssignmentIsDeleted
 operator|=
-name|Failed
+name|true
 expr_stmt|;
 block|}
 end_function
@@ -3224,10 +3255,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|hasFailedImplicitMoveAssignment
-argument_list|()
-operator|&&
 operator|!
 operator|(
 name|data
@@ -3253,12 +3280,6 @@ operator|&&
 operator|!
 name|hasUserDeclaredDestructor
 argument_list|()
-operator|&&
-operator|!
-name|data
-argument_list|()
-operator|.
-name|DefaultedMoveAssignmentIsDeleted
 return|;
 block|}
 end_expr_stmt
@@ -3287,15 +3308,15 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasUserDeclaredDestructor - Whether this class has a
+comment|/// \brief Determine whether this class has a user-declared destructor.
 end_comment
 
 begin_comment
-comment|/// user-declared destructor. When false, a destructor will be
+comment|///
 end_comment
 
 begin_comment
-comment|/// implicitly declared.
+comment|/// When false, a destructor will be implicitly declared.
 end_comment
 
 begin_expr_stmt
@@ -3389,11 +3410,117 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Determine whether this class describes a generic
+end_comment
+
+begin_comment
+comment|/// lambda function object (i.e. function call operator is
+end_comment
+
+begin_comment
+comment|/// a template).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isGenericLambda
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the lambda call operator of the closure type
+end_comment
+
+begin_comment
+comment|/// if this is a closure type.
+end_comment
+
+begin_expr_stmt
+name|CXXMethodDecl
+operator|*
+name|getLambdaCallOperator
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the lambda static invoker, the address of which
+end_comment
+
+begin_comment
+comment|/// is returned by the conversion operator, and the body of which
+end_comment
+
+begin_comment
+comment|/// is forwarded to the lambda call operator.
+end_comment
+
+begin_expr_stmt
+name|CXXMethodDecl
+operator|*
+name|getLambdaStaticInvoker
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the generic lambda's template parameter list.
+end_comment
+
+begin_comment
+comment|/// Returns null if the class does not represent a lambda or a generic
+end_comment
+
+begin_comment
+comment|/// lambda.
+end_comment
+
+begin_expr_stmt
+name|TemplateParameterList
+operator|*
+name|getGenericLambdaTemplateParameterList
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LambdaCaptureDefault
+name|getLambdaCaptureDefault
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isLambda
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|static_cast
+operator|<
+name|LambdaCaptureDefault
+operator|>
+operator|(
+name|getLambdaData
+argument_list|()
+operator|.
+name|CaptureDefault
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief For a closure type, retrieve the mapping from captured
 end_comment
 
 begin_comment
-comment|/// variables and this to the non-static data members that store the
+comment|/// variables and \c this to the non-static data members that store the
 end_comment
 
 begin_comment
@@ -3421,7 +3548,19 @@ comment|/// \param ThisCapture Will be set to the field declaration for the
 end_comment
 
 begin_comment
-comment|/// 'this' capture.
+comment|/// \c this capture.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \note No entries will be added for init-captures, as they do not capture
+end_comment
+
+begin_comment
+comment|/// variables.
 end_comment
 
 begin_decl_stmt
@@ -3524,6 +3663,12 @@ argument_list|()
 operator|.
 name|Conversions
 operator|.
+name|get
+argument_list|(
+name|getASTContext
+argument_list|()
+argument_list|)
+operator|.
 name|begin
 argument_list|()
 return|;
@@ -3541,6 +3686,12 @@ name|data
 argument_list|()
 operator|.
 name|Conversions
+operator|.
+name|get
+argument_list|(
+name|getASTContext
+argument_list|()
+argument_list|)
 operator|.
 name|end
 argument_list|()
@@ -3573,11 +3724,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// getVisibleConversionFunctions - get all conversion functions visible
+comment|/// \brief Get all conversion functions visible in current class,
 end_comment
 
 begin_comment
-comment|/// in current class; including conversion function templates.
+comment|/// including conversion function templates.
 end_comment
 
 begin_expr_stmt
@@ -3595,19 +3746,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// isAggregate - Whether this class is an aggregate (C++
+comment|/// Determine whether this class is an aggregate (C++ [dcl.init.aggr]),
 end_comment
 
 begin_comment
-comment|/// [dcl.init.aggr]), which is a class with no user-declared
+comment|/// which is a class with no user-declared constructors, no private
 end_comment
 
 begin_comment
-comment|/// constructors, no private or protected non-static data members,
+comment|/// or protected non-static data members, no base classes, and no virtual
 end_comment
 
 begin_comment
-comment|/// no base classes, and no virtual functions (C++ [dcl.init.aggr]p1).
+comment|/// functions (C++ [dcl.init.aggr]p1).
 end_comment
 
 begin_expr_stmt
@@ -3626,7 +3777,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasInClassInitializer - Whether this class has any in-class initializers
+comment|/// \brief Whether this class has any in-class initializers
 end_comment
 
 begin_comment
@@ -3653,35 +3804,31 @@ comment|/// \brief Whether this class or any of its subobjects has any members o
 end_comment
 
 begin_comment
-comment|/// reference type which would make value-initialization ill-formed, per
+comment|/// reference type which would make value-initialization ill-formed.
 end_comment
 
 begin_comment
-comment|/// C++03 [dcl.init]p5:
+comment|///
 end_comment
 
 begin_comment
-comment|///  -- if T is a non-union class type without a user-declared constructor,
+comment|/// Per C++03 [dcl.init]p5:
 end_comment
 
 begin_comment
-comment|///     then every non-static data member and base-class component of T is
+comment|///  - if T is a non-union class type without a user-declared constructor,
 end_comment
 
 begin_comment
-comment|///     value-initialized
+comment|///    then every non-static data member and base-class component of T is
 end_comment
 
 begin_comment
-comment|/// [...]
+comment|///    value-initialized [...] A program that calls for [...]
 end_comment
 
 begin_comment
-comment|/// A program that calls for [...] value-initialization of an entity of
-end_comment
-
-begin_comment
-comment|/// reference type is ill-formed.
+comment|///    value-initialization of an entity of reference type is ill-formed.
 end_comment
 
 begin_expr_stmt
@@ -3708,15 +3855,23 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isPOD - Whether this class is a POD-type (C++ [class]p4), which is a class
+comment|/// \brief Whether this class is a POD-type (C++ [class]p4)
 end_comment
 
 begin_comment
-comment|/// that is an aggregate that has no non-static non-POD data members, no
+comment|///
 end_comment
 
 begin_comment
-comment|/// reference data members, no user-defined copy assignment operator and no
+comment|/// For purposes of this function a class is POD if it is an aggregate
+end_comment
+
+begin_comment
+comment|/// that has no non-static non-POD data members, no reference data
+end_comment
+
+begin_comment
+comment|/// members, no user-defined copy assignment operator and no
 end_comment
 
 begin_comment
@@ -3763,19 +3918,35 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// isEmpty - Whether this class is empty (C++0x [meta.unary.prop]), which
+comment|/// \brief Determine whether this is an empty class in the sense of
 end_comment
 
 begin_comment
-comment|/// means it has a virtual function, virtual base, data member (other than
+comment|/// (C++11 [meta.unary.prop]).
 end_comment
 
 begin_comment
-comment|/// 0-width bit-field) or inherits from a non-empty class. Does NOT include
+comment|///
 end_comment
 
 begin_comment
-comment|/// a check for union-ness.
+comment|/// A non-union class is empty iff it has a virtual function, virtual base,
+end_comment
+
+begin_comment
+comment|/// data member (other than 0-width bit-field) or inherits from a non-empty
+end_comment
+
+begin_comment
+comment|/// class.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \note This does NOT include a check for union-ness.
 end_comment
 
 begin_expr_stmt
@@ -3794,7 +3965,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isPolymorphic - Whether this class is polymorphic (C++ [class.virtual]),
+comment|/// Whether this class is polymorphic (C++ [class.virtual]),
 end_comment
 
 begin_comment
@@ -3817,11 +3988,23 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isAbstract - Whether this class is abstract (C++ [class.abstract]),
+comment|/// \brief Determine whether this class has a pure virtual function.
 end_comment
 
 begin_comment
-comment|/// which means that the class contains or inherits a pure virtual function.
+comment|///
+end_comment
+
+begin_comment
+comment|/// The class is is abstract per (C++ [class.abstract]p2) if it declares
+end_comment
+
+begin_comment
+comment|/// a pure virtual function or inherits a pure virtual function that is
+end_comment
+
+begin_comment
+comment|/// not overridden.
 end_comment
 
 begin_expr_stmt
@@ -3840,7 +4023,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isStandardLayout - Whether this class has standard layout
+comment|/// \brief Determine whether this class has standard layout per
 end_comment
 
 begin_comment
@@ -3863,11 +4046,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Whether this class, or any of its class subobjects, contains a
+comment|/// \brief Determine whether this class, or any of its class subobjects,
 end_comment
 
 begin_comment
-comment|/// mutable field.
+comment|/// contains a mutable field.
 end_comment
 
 begin_expr_stmt
@@ -4353,15 +4536,23 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// hasIrrelevantDestructor - Whether this class has a destructor which has no
+comment|/// \brief Determine whether this class has a destructor which has no
 end_comment
 
 begin_comment
-comment|// semantic effect. Any such destructor will be trivial, public, defaulted
+comment|/// semantic effect.
 end_comment
 
 begin_comment
-comment|// and not deleted, and will call only irrelevant destructors.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Any such destructor will be trivial, public, defaulted and not deleted,
+end_comment
+
+begin_comment
+comment|/// and will call only irrelevant destructors.
 end_comment
 
 begin_expr_stmt
@@ -4380,11 +4571,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// hasNonLiteralTypeFieldsOrBases - Whether this class has a non-literal or
+comment|/// \brief Determine whether this class has a non-literal or/ volatile type
 end_comment
 
 begin_comment
-comment|// volatile type non-static data member or base class.
+comment|/// non-static data member or base class.
 end_comment
 
 begin_expr_stmt
@@ -4403,11 +4594,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// isTriviallyCopyable - Whether this class is considered trivially copyable
+comment|/// \brief Determine whether this class is considered trivially copyable per
 end_comment
 
 begin_comment
-comment|// (C++0x [class]p6).
+comment|/// (C++11 [class]p6).
 end_comment
 
 begin_expr_stmt
@@ -4419,23 +4610,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// isTrivial - Whether this class is considered trivial
+comment|/// \brief Determine whether this class is considered trivial.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// C++0x [class]p6
+comment|/// C++11 [class]p6:
 end_comment
 
 begin_comment
-comment|//    A trivial class is a class that has a trivial default constructor and
+comment|///    "A trivial class is a class that has a trivial default constructor and
 end_comment
 
 begin_comment
-comment|//    is trivially copiable.
+comment|///    is trivially copiable."
 end_comment
 
 begin_expr_stmt
@@ -4455,63 +4646,63 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// isLiteral - Whether this class is a literal type.
+comment|/// \brief Determine whether this class is a literal type.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// C++11 [basic.types]p10
+comment|/// C++11 [basic.types]p10:
 end_comment
 
 begin_comment
-comment|//   A class type that has all the following properties:
+comment|///   A class type that has all the following properties:
 end_comment
 
 begin_comment
-comment|//     -- it has a trivial destructor
+comment|///     - it has a trivial destructor
 end_comment
 
 begin_comment
-comment|//     -- every constructor call and full-expression in the
+comment|///     - every constructor call and full-expression in the
 end_comment
 
 begin_comment
-comment|//        brace-or-equal-intializers for non-static data members (if any) is
+comment|///       brace-or-equal-intializers for non-static data members (if any) is
 end_comment
 
 begin_comment
-comment|//        a constant expression.
+comment|///       a constant expression.
 end_comment
 
 begin_comment
-comment|//     -- it is an aggregate type or has at least one constexpr constructor or
+comment|///     - it is an aggregate type or has at least one constexpr constructor
 end_comment
 
 begin_comment
-comment|//        constructor template that is not a copy or move constructor, and
+comment|///       or constructor template that is not a copy or move constructor, and
 end_comment
 
 begin_comment
-comment|//     -- all of its non-static data members and base classes are of literal
+comment|///     - all of its non-static data members and base classes are of literal
 end_comment
 
 begin_comment
-comment|//        types
+comment|///       types
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// We resolve DR1361 by ignoring the second bullet. We resolve DR1452 by
+comment|/// We resolve DR1361 by ignoring the second bullet. We resolve DR1452 by
 end_comment
 
 begin_comment
-comment|// treating types with trivial default constructors as literal types.
+comment|/// treating types with trivial default constructors as literal types.
 end_comment
 
 begin_expr_stmt
@@ -4555,7 +4746,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This routine will return non-NULL for (non-templated) member
+comment|/// This routine will return non-null for (non-templated) member
 end_comment
 
 begin_comment
@@ -4567,7 +4758,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// \code
 end_comment
 
 begin_comment
@@ -4587,7 +4778,7 @@ comment|/// };
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_comment
@@ -4665,7 +4856,7 @@ comment|/// \brief Specify that this record is an instantiation of the
 end_comment
 
 begin_comment
-comment|/// member class RD.
+comment|/// member class \p RD.
 end_comment
 
 begin_function_decl
@@ -4798,7 +4989,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// getDestructor - Returns the destructor decl for this class.
+comment|/// \brief Returns the destructor decl for this class.
 end_comment
 
 begin_expr_stmt
@@ -4811,7 +5002,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// isLocalClass - If the class is a local class [class.local], returns
+comment|/// \brief If the class is a local class [class.local], returns
 end_comment
 
 begin_comment
@@ -4863,8 +5054,37 @@ operator|)
 return|;
 end_return
 
+begin_expr_stmt
+unit|}    FunctionDecl
+operator|*
+name|isLocalClass
+argument_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|FunctionDecl
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|isLocalClass
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|}
 comment|/// \brief Determine whether this dependent class is a current instantiation,
 end_comment
 
@@ -4872,16 +5092,16 @@ begin_comment
 comment|/// when viewed from within the given context.
 end_comment
 
-begin_macro
-unit|bool
+begin_decl_stmt
+name|bool
 name|isCurrentInstantiation
 argument_list|(
-argument|const DeclContext *CurContext
-argument_list|)
-end_macro
-
-begin_decl_stmt
 specifier|const
+name|DeclContext
+operator|*
+name|CurContext
+argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
 
@@ -4987,7 +5207,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \returns true if this class is derived from Base, false otherwise.
+comment|/// \returns true if this class is derived from \p Base, false otherwise.
 end_comment
 
 begin_comment
@@ -5160,6 +5380,34 @@ end_comment
 
 begin_comment
 comment|/// returns false if the class has non-computable base classes.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param BaseMatches Callback invoked for each (direct or indirect) base
+end_comment
+
+begin_comment
+comment|/// class of this type, or if \p AllowShortCircuit is true then until a call
+end_comment
+
+begin_comment
+comment|/// returns false.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param UserData Passed as the second argument of every call to
+end_comment
+
+begin_comment
+comment|/// \p BaseMatches.
 end_comment
 
 begin_comment
@@ -5654,7 +5902,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// viewInheritance - Renders and displays an inheritance diagram
+comment|/// Renders and displays an inheritance diagram
 end_comment
 
 begin_comment
@@ -5678,7 +5926,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// MergeAccess - Calculates the access of a decl that is reached
+comment|/// \brief Calculates the access of a decl that is reached
 end_comment
 
 begin_comment
@@ -6141,11 +6389,19 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|/// CXXMethodDecl - Represents a static or instance method of a
+comment|/// \brief Represents a static or instance method of a struct/union/class.
 end_comment
 
 begin_comment
-comment|/// struct/union/class.
+comment|///
+end_comment
+
+begin_comment
+comment|/// In the terminology of the C++ Standard, these are the (static and
+end_comment
+
+begin_comment
+comment|/// non-static) member functions, whether virtual or not.
 end_comment
 
 begin_decl_stmt
@@ -6271,6 +6527,38 @@ return|return
 operator|!
 name|isStatic
 argument_list|()
+return|;
+block|}
+comment|/// Returns true if the given operator is implicitly static in a record
+comment|/// context.
+specifier|static
+name|bool
+name|isStaticOverloadedOperator
+argument_list|(
+argument|OverloadedOperatorKind OOK
+argument_list|)
+block|{
+comment|// [class.free]p1:
+comment|// Any allocation function for a class T is a static member
+comment|// (even if not explicitly declared static).
+comment|// [class.free]p6 Any deallocation function for a class X is a static member
+comment|// (even if not explicitly declared static).
+return|return
+name|OOK
+operator|==
+name|OO_New
+operator|||
+name|OOK
+operator|==
+name|OO_Array_New
+operator|||
+name|OOK
+operator|==
+name|OO_Delete
+operator|||
+name|OOK
+operator|==
+name|OO_Array_Delete
 return|;
 block|}
 name|bool
@@ -6430,29 +6718,6 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|getCanonicalDecl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cast
-operator|<
-name|CXXMethodDecl
-operator|>
-operator|(
-name|FunctionDecl
-operator|::
-name|getCanonicalDecl
-argument_list|()
-operator|)
-return|;
-block|}
-end_expr_stmt
-
 begin_function
 name|CXXMethodDecl
 modifier|*
@@ -6474,8 +6739,84 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|CXXMethodDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getCanonicalDecl
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|CXXMethodDecl
+modifier|*
+name|getMostRecentDecl
+parameter_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|CXXMethodDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|FunctionDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|CXXMethodDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-comment|/// isUserProvided - True if this method is user-declared and was not
+comment|/// True if this method is user-declared and was not
 end_comment
 
 begin_comment
@@ -6556,7 +6897,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getParent - Returns the parent of this method declaration, which
+comment|/// Returns the parent of this method declaration, which
 end_comment
 
 begin_comment
@@ -6587,7 +6928,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getParent - Returns the parent of this method declaration, which
+comment|/// Returns the parent of this method declaration, which
 end_comment
 
 begin_comment
@@ -6623,11 +6964,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// getThisType - Returns the type of 'this' pointer.
+comment|/// \brief Returns the type of the \c this pointer.
 end_comment
 
 begin_comment
-comment|/// Should only be called for instance methods.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Should only be called for instance (i.e., non-static) methods.
 end_comment
 
 begin_decl_stmt
@@ -6777,7 +7122,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Find the method in RD that corresponds to this one.
+comment|/// \brief Find the method in \p RD that corresponds to this one.
 end_comment
 
 begin_comment
@@ -6785,15 +7130,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Find if RD or one of the classes it inherits from override this method.
+comment|/// Find if \p RD or one of the classes it inherits from override this method.
 end_comment
 
 begin_comment
-comment|/// If so, return it. RD is assumed to be a subclass of the class defining
+comment|/// If so, return it. \p RD is assumed to be a subclass of the class defining
 end_comment
 
 begin_comment
-comment|/// this method (or be the class itself), unless MayBeBase is set to true.
+comment|/// this method (or be the class itself), unless \p MayBeBase is set to true.
 end_comment
 
 begin_function_decl
@@ -6902,11 +7247,15 @@ end_function
 
 begin_comment
 unit|};
-comment|/// CXXCtorInitializer - Represents a C++ base or member
+comment|/// \brief Represents a C++ base or member initializer.
 end_comment
 
 begin_comment
-comment|/// initializer, which is part of a constructor initializer that
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is part of a constructor initializer that
 end_comment
 
 begin_comment
@@ -6926,7 +7275,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// \code
 end_comment
 
 begin_comment
@@ -6954,7 +7303,7 @@ comment|/// };
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -6980,7 +7329,9 @@ operator|>
 name|Initializee
 expr_stmt|;
 comment|/// \brief The source location for the field name or, for a base initializer
-comment|/// pack expansion, the location of the ellipsis. In the case of a delegating
+comment|/// pack expansion, the location of the ellipsis.
+comment|///
+comment|/// In the case of a delegating
 comment|/// constructor, it will still include the type's source location as the
 comment|/// Initializee points to the CXXConstructorDecl (to allow loop detection).
 name|SourceLocation
@@ -6992,11 +7343,11 @@ name|Stmt
 modifier|*
 name|Init
 decl_stmt|;
-comment|/// LParenLoc - Location of the left paren of the ctor-initializer.
+comment|/// \brief Location of the left paren of the ctor-initializer.
 name|SourceLocation
 name|LParenLoc
 decl_stmt|;
-comment|/// RParenLoc - Location of the right paren of the ctor-initializer.
+comment|/// \brief Location of the right paren of the ctor-initializer.
 name|SourceLocation
 name|RParenLoc
 decl_stmt|;
@@ -7007,25 +7358,24 @@ name|IsDelegating
 range|:
 literal|1
 decl_stmt|;
-comment|/// IsVirtual - If the initializer is a base initializer, this keeps track
+comment|/// \brief If the initializer is a base initializer, this keeps track
 comment|/// of whether the base is virtual or not.
 name|bool
 name|IsVirtual
 range|:
 literal|1
 decl_stmt|;
-comment|/// IsWritten - Whether or not the initializer is explicitly written
+comment|/// \brief Whether or not the initializer is explicitly written
 comment|/// in the sources.
 name|bool
 name|IsWritten
 range|:
 literal|1
 decl_stmt|;
-comment|/// SourceOrderOrNumArrayIndices - If IsWritten is true, then this
-comment|/// number keeps track of the textual order of this initializer in the
-comment|/// original sources, counting from 0; otherwise, if IsWritten is false,
-comment|/// it stores the number of array index variables stored after this
-comment|/// object in memory.
+comment|/// If IsWritten is true, then this number keeps track of the textual order
+comment|/// of this initializer in the original sources, counting from 0; otherwise,
+comment|/// it stores the number of array index variables stored after this object
+comment|/// in memory.
 name|unsigned
 name|SourceOrderOrNumArrayIndices
 range|:
@@ -7052,7 +7402,7 @@ argument_list|)
 empty_stmt|;
 name|public
 label|:
-comment|/// CXXCtorInitializer - Creates a new base-class initializer.
+comment|/// \brief Creates a new base-class initializer.
 name|explicit
 name|CXXCtorInitializer
 parameter_list|(
@@ -7081,7 +7431,7 @@ name|SourceLocation
 name|EllipsisLoc
 parameter_list|)
 function_decl|;
-comment|/// CXXCtorInitializer - Creates a new member initializer.
+comment|/// \brief Creates a new member initializer.
 name|explicit
 name|CXXCtorInitializer
 parameter_list|(
@@ -7107,7 +7457,7 @@ name|SourceLocation
 name|R
 parameter_list|)
 function_decl|;
-comment|/// CXXCtorInitializer - Creates a new anonymous field initializer.
+comment|/// \brief Creates a new anonymous field initializer.
 name|explicit
 name|CXXCtorInitializer
 parameter_list|(
@@ -7133,7 +7483,7 @@ name|SourceLocation
 name|R
 parameter_list|)
 function_decl|;
-comment|/// CXXCtorInitializer - Creates a new delegating Initializer.
+comment|/// \brief Creates a new delegating initializer.
 name|explicit
 name|CXXCtorInitializer
 parameter_list|(
@@ -7193,8 +7543,7 @@ name|unsigned
 name|NumIndices
 parameter_list|)
 function_decl|;
-comment|/// isBaseInitializer - Returns true when this initializer is
-comment|/// initializing a base class.
+comment|/// \brief Determine whether this initializer is initializing a base class.
 name|bool
 name|isBaseInitializer
 argument_list|()
@@ -7215,8 +7564,8 @@ operator|!
 name|IsDelegating
 return|;
 block|}
-comment|/// isMemberInitializer - Returns true when this initializer is
-comment|/// initializing a non-static data member.
+comment|/// \brief Determine whether this initializer is initializing a non-static
+comment|/// data member.
 name|bool
 name|isMemberInitializer
 argument_list|()
@@ -7264,9 +7613,12 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// isInClassMemberInitializer - Returns true when this initializer is an
-comment|/// implicit ctor initializer generated for a field with an initializer
-comment|/// defined on the member declaration.
+comment|/// \brief Determine whether this initializer is an implicit initializer
+comment|/// generated for a field with an initializer defined on the member
+comment|/// declaration.
+comment|///
+comment|/// In-class member initializers (also known as "non-static data member
+comment|/// initializations", NSDMIs) were introduced in C++11.
 name|bool
 name|isInClassMemberInitializer
 argument_list|()
@@ -7282,8 +7634,8 @@ name|Init
 operator|)
 return|;
 block|}
-comment|/// isDelegatingInitializer - Returns true when this initializer is creating
-comment|/// a delegating constructor.
+comment|/// \brief Determine whether this initializer is creating a delegating
+comment|/// constructor.
 name|bool
 name|isDelegatingInitializer
 argument_list|()
@@ -7346,7 +7698,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// If this is a base class initializer, returns the type of the base class.
-comment|/// Otherwise, returns NULL.
+comment|/// Otherwise, returns null.
 specifier|const
 name|Type
 operator|*
@@ -7392,9 +7744,8 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// getMember - If this is a member initializer, returns the
-comment|/// declaration of the non-static data member being
-comment|/// initialized. Otherwise, returns NULL.
+comment|/// \brief If this is a member initializer, returns the declaration of the
+comment|/// non-static data member being initialized. Otherwise, returns null.
 name|FieldDecl
 operator|*
 name|getMember
@@ -7548,7 +7899,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// isWritten - Returns true if this initializer is explicitly written
+comment|/// \brief Determine whether this initializer is explicitly written
 end_comment
 
 begin_comment
@@ -7599,15 +7950,31 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Set the source order of this initializer. This method can only
+comment|/// \brief Set the source order of this initializer.
 end_comment
 
 begin_comment
-comment|/// be called once for each initializer; it cannot be called on an
+comment|///
 end_comment
 
 begin_comment
-comment|/// initializer having a positive number of (implicit) array indices.
+comment|/// This can only be called once for each initializer; it cannot be called
+end_comment
+
+begin_comment
+comment|/// on an initializer having a positive number of (implicit) array indices.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This assumes that the initialzier was written in the source code, and
+end_comment
+
+begin_comment
+comment|/// ensures that isWritten() returns true.
 end_comment
 
 begin_function
@@ -7910,11 +8277,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// CXXConstructorDecl - Represents a C++ constructor within a
-end_comment
-
-begin_comment
-comment|/// class. For example:
+comment|/// \brief Represents a C++ constructor within a class.
 end_comment
 
 begin_comment
@@ -7922,7 +8285,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// For example:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
 end_comment
 
 begin_comment
@@ -7942,7 +8313,7 @@ comment|/// };
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -7957,27 +8328,16 @@ name|void
 name|anchor
 argument_list|()
 block|;
-comment|/// IsExplicitSpecified - Whether this constructor declaration has the
-comment|/// 'explicit' keyword specified.
+comment|/// \brief Whether this constructor declaration has the \c explicit keyword
+comment|/// specified.
 name|bool
 name|IsExplicitSpecified
 operator|:
 literal|1
 block|;
-comment|/// ImplicitlyDefined - Whether this constructor was implicitly
-comment|/// defined by the compiler. When false, the constructor was defined
-comment|/// by the user. In C++03, this flag will have the same value as
-comment|/// Implicit. In C++0x, however, a constructor that is
-comment|/// explicitly defaulted (i.e., defined with " = default") will have
-comment|/// @c !Implicit&& ImplicitlyDefined.
-name|bool
-name|ImplicitlyDefined
-operator|:
-literal|1
-block|;
-comment|/// Support for base and member initializers.
-comment|/// CtorInitializers - The arguments used to initialize the base
-comment|/// or member.
+comment|/// \name Support for base and member initializers.
+comment|/// \{
+comment|/// \brief The arguments used to initialize the base or member.
 name|CXXCtorInitializer
 operator|*
 operator|*
@@ -7986,6 +8346,7 @@ block|;
 name|unsigned
 name|NumCtorInitializers
 block|;
+comment|/// \}
 name|CXXConstructorDecl
 argument_list|(
 argument|CXXRecordDecl *RD
@@ -8034,11 +8395,6 @@ block|,
 name|IsExplicitSpecified
 argument_list|(
 name|isExplicitSpecified
-argument_list|)
-block|,
-name|ImplicitlyDefined
-argument_list|(
-name|false
 argument_list|)
 block|,
 name|CtorInitializers
@@ -8094,8 +8450,8 @@ argument_list|,
 argument|bool isConstexpr
 argument_list|)
 block|;
-comment|/// isExplicitSpecified - Whether this constructor declaration has the
-comment|/// 'explicit' keyword specified.
+comment|/// \brief Determine whether this constructor declaration has the
+comment|/// \c explicit keyword specified.
 name|bool
 name|isExplicitSpecified
 argument_list|()
@@ -8105,7 +8461,7 @@ return|return
 name|IsExplicitSpecified
 return|;
 block|}
-comment|/// isExplicit - Whether this constructor was marked "explicit" or not.
+comment|/// \brief Determine whether this constructor was marked "explicit" or not.
 name|bool
 name|isExplicit
 argument_list|()
@@ -8117,7 +8473,7 @@ operator|<
 name|CXXConstructorDecl
 operator|>
 operator|(
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 operator|)
 operator|->
@@ -8125,50 +8481,7 @@ name|isExplicitSpecified
 argument_list|()
 return|;
 block|}
-comment|/// isImplicitlyDefined - Whether this constructor was implicitly
-comment|/// defined. If false, then this constructor was defined by the
-comment|/// user. This operation can only be invoked if the constructor has
-comment|/// already been defined.
-name|bool
-name|isImplicitlyDefined
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isThisDeclarationADefinition
-argument_list|()
-operator|&&
-literal|"Can only get the implicit-definition flag once the "
-literal|"constructor has been defined"
-argument_list|)
-block|;
-return|return
-name|ImplicitlyDefined
-return|;
-block|}
-comment|/// setImplicitlyDefined - Set whether this constructor was
-comment|/// implicitly defined or not.
-name|void
-name|setImplicitlyDefined
-argument_list|(
-argument|bool ID
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|isThisDeclarationADefinition
-argument_list|()
-operator|&&
-literal|"Can only set the implicit-definition flag once the constructor "
-literal|"has been defined"
-argument_list|)
-block|;
-name|ImplicitlyDefined
-operator|=
-name|ID
-block|;   }
-comment|/// init_iterator - Iterates through the member/base initializer list.
+comment|/// \brief Iterates through the member/base initializer list.
 typedef|typedef
 name|CXXCtorInitializer
 modifier|*
@@ -8178,7 +8491,7 @@ typedef|;
 end_decl_stmt
 
 begin_comment
-comment|/// init_const_iterator - Iterates through the memberbase initializer list.
+comment|/// \brief Iterates through the member/base initializer list.
 end_comment
 
 begin_typedef
@@ -8192,7 +8505,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/// init_begin() - Retrieve an iterator to the first initializer.
+comment|/// \brief Retrieve an iterator to the first initializer.
 end_comment
 
 begin_function
@@ -8207,7 +8520,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// begin() - Retrieve an iterator to the first initializer.
+comment|/// \brief Retrieve an iterator to the first initializer.
 end_comment
 
 begin_expr_stmt
@@ -8223,7 +8536,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// init_end() - Retrieve an iterator past the last initializer.
+comment|/// \brief Retrieve an iterator past the last initializer.
 end_comment
 
 begin_function
@@ -8240,7 +8553,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// end() - Retrieve an iterator past the last initializer.
+comment|/// \brief Retrieve an iterator past the last initializer.
 end_comment
 
 begin_expr_stmt
@@ -8344,11 +8657,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getNumArgs - Determine the number of arguments used to
+comment|/// \brief Determine the number of arguments used to initialize the member
 end_comment
 
 begin_comment
-comment|/// initialize the member or base.
+comment|/// or base.
 end_comment
 
 begin_expr_stmt
@@ -8396,11 +8709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// isDelegatingConstructor - Whether this constructor is a
-end_comment
-
-begin_comment
-comment|/// delegating constructor
+comment|/// \brief Determine whether this constructor is a delegating constructor.
 end_comment
 
 begin_expr_stmt
@@ -8429,11 +8738,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getTargetConstructor - When this constructor delegates to
-end_comment
-
-begin_comment
-comment|/// another, retrieve the target
+comment|/// \brief When this constructor delegates to another, retrieve the target.
 end_comment
 
 begin_expr_stmt
@@ -8446,7 +8751,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// isDefaultConstructor - Whether this constructor is a default
+comment|/// Whether this constructor is a default
 end_comment
 
 begin_comment
@@ -8466,19 +8771,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// isCopyConstructor - Whether this constructor is a copy
+comment|/// \brief Whether this constructor is a copy constructor (C++ [class.copy]p2,
 end_comment
 
 begin_comment
-comment|/// constructor (C++ [class.copy]p2, which can be used to copy the
+comment|/// which can be used to copy the class.
 end_comment
 
 begin_comment
-comment|/// class. @p TypeQuals will be set to the qualifiers on the
+comment|///
 end_comment
 
 begin_comment
-comment|/// argument type. For example, @p TypeQuals would be set to @c
+comment|/// \p TypeQuals will be set to the qualifiers on the
+end_comment
+
+begin_comment
+comment|/// argument type. For example, \p TypeQuals would be set to \c
 end_comment
 
 begin_comment
@@ -8490,7 +8799,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// \code
 end_comment
 
 begin_comment
@@ -8510,7 +8819,7 @@ comment|/// };
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -8526,7 +8835,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// isCopyConstructor - Whether this constructor is a copy
+comment|/// Whether this constructor is a copy
 end_comment
 
 begin_comment
@@ -8668,7 +8977,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isConvertingConstructor - Whether this constructor is a
+comment|/// Whether this constructor is a
 end_comment
 
 begin_comment
@@ -8844,11 +9153,7 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|/// CXXDestructorDecl - Represents a C++ destructor within a
-end_comment
-
-begin_comment
-comment|/// class. For example:
+comment|/// \brief Represents a C++ destructor within a class.
 end_comment
 
 begin_comment
@@ -8856,7 +9161,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// For example:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
 end_comment
 
 begin_comment
@@ -8876,7 +9189,7 @@ comment|/// };
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -8890,17 +9203,6 @@ name|virtual
 name|void
 name|anchor
 argument_list|()
-block|;
-comment|/// ImplicitlyDefined - Whether this destructor was implicitly
-comment|/// defined by the compiler. When false, the destructor was defined
-comment|/// by the user. In C++03, this flag will have the same value as
-comment|/// Implicit. In C++0x, however, a destructor that is
-comment|/// explicitly defaulted (i.e., defined with " = default") will have
-comment|/// @c !Implicit&& ImplicitlyDefined.
-name|bool
-name|ImplicitlyDefined
-operator|:
-literal|1
 block|;
 name|FunctionDecl
 operator|*
@@ -8948,11 +9250,6 @@ name|SourceLocation
 argument_list|()
 argument_list|)
 block|,
-name|ImplicitlyDefined
-argument_list|(
-name|false
-argument_list|)
-block|,
 name|OperatorDelete
 argument_list|(
 literal|0
@@ -8997,49 +9294,6 @@ argument_list|,
 argument|unsigned ID
 argument_list|)
 block|;
-comment|/// isImplicitlyDefined - Whether this destructor was implicitly
-comment|/// defined. If false, then this destructor was defined by the
-comment|/// user. This operation can only be invoked if the destructor has
-comment|/// already been defined.
-name|bool
-name|isImplicitlyDefined
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isThisDeclarationADefinition
-argument_list|()
-operator|&&
-literal|"Can only get the implicit-definition flag once the destructor has "
-literal|"been defined"
-argument_list|)
-block|;
-return|return
-name|ImplicitlyDefined
-return|;
-block|}
-comment|/// setImplicitlyDefined - Set whether this destructor was
-comment|/// implicitly defined or not.
-name|void
-name|setImplicitlyDefined
-argument_list|(
-argument|bool ID
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|isThisDeclarationADefinition
-argument_list|()
-operator|&&
-literal|"Can only set the implicit-definition flag once the destructor has "
-literal|"been defined"
-argument_list|)
-block|;
-name|ImplicitlyDefined
-operator|=
-name|ID
-block|;   }
 name|void
 name|setOperatorDelete
 argument_list|(
@@ -9104,11 +9358,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// CXXConversionDecl - Represents a C++ conversion function within a
-end_comment
-
-begin_comment
-comment|/// class. For example:
+comment|/// \brief Represents a C++ conversion function within a class.
 end_comment
 
 begin_comment
@@ -9116,7 +9366,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// For example:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
 end_comment
 
 begin_comment
@@ -9136,7 +9394,7 @@ comment|/// };
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -9151,8 +9409,8 @@ name|void
 name|anchor
 argument_list|()
 block|;
-comment|/// IsExplicitSpecified - Whether this conversion function declaration is
-comment|/// marked "explicit", meaning that it can only be applied when the user
+comment|/// Whether this conversion function declaration is marked
+comment|/// "explicit", meaning that it can only be applied when the user
 comment|/// explicitly wrote a cast. This is a C++0x feature.
 name|bool
 name|IsExplicitSpecified
@@ -9246,9 +9504,9 @@ argument_list|,
 argument|unsigned ID
 argument_list|)
 block|;
-comment|/// IsExplicitSpecified - Whether this conversion function declaration is
-comment|/// marked "explicit", meaning that it can only be applied when the user
-comment|/// explicitly wrote a cast. This is a C++0x feature.
+comment|/// Whether this conversion function declaration is marked
+comment|/// "explicit", meaning that it can only be used for direct initialization
+comment|/// (including explitly written casts).  This is a C++11 feature.
 name|bool
 name|isExplicitSpecified
 argument_list|()
@@ -9258,9 +9516,10 @@ return|return
 name|IsExplicitSpecified
 return|;
 block|}
-comment|/// isExplicit - Whether this is an explicit conversion operator
-comment|/// (C++0x only). Explicit conversion operators are only considered
-comment|/// when the user has explicitly written a cast.
+comment|/// \brief Whether this is an explicit conversion operator (C++11 and later).
+comment|///
+comment|/// Explicit conversion operators are only considered for direct
+comment|/// initialization, e.g., when the user has explicitly written a cast.
 name|bool
 name|isExplicit
 argument_list|()
@@ -9272,7 +9531,7 @@ operator|<
 name|CXXConversionDecl
 operator|>
 operator|(
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 operator|)
 operator|->
@@ -9280,8 +9539,7 @@ name|isExplicitSpecified
 argument_list|()
 return|;
 block|}
-comment|/// getConversionType - Returns the type that this conversion
-comment|/// function is converting to.
+comment|/// \brief Returns the type that this conversion function is converting to.
 name|QualType
 name|getConversionType
 argument_list|()
@@ -9352,7 +9610,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// LinkageSpecDecl - This represents a linkage specification.  For example:
+comment|/// \brief Represents a linkage specification.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// For example:
+end_comment
+
+begin_comment
+comment|/// \code
 end_comment
 
 begin_comment
@@ -9360,7 +9630,7 @@ comment|///   extern "C" void foo();
 end_comment
 
 begin_comment
-comment|///
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -9380,10 +9650,11 @@ parameter_list|()
 function_decl|;
 name|public
 label|:
-comment|/// LanguageIDs - Used to represent the language in a linkage
-comment|/// specification.  The values are part of the serialization abi for
-comment|/// ASTs and cannot be changed without altering that abi.  To help
-comment|/// ensure a stable abi for this, we choose the DW_LANG_ encodings
+comment|/// \brief Represents the language in a linkage specification.
+comment|///
+comment|/// The values are part of the serialization ABI for
+comment|/// ASTs and cannot be changed without altering that ABI.  To help
+comment|/// ensure a stable ABI for this, we choose the DW_LANG_ encodings
 comment|/// from the dwarf standard.
 enum|enum
 name|LanguageIDs
@@ -9401,26 +9672,27 @@ block|}
 enum|;
 name|private
 label|:
-comment|/// Language - The language for this linkage specification.
+comment|/// \brief The language for this linkage specification.
 name|unsigned
 name|Language
 range|:
 literal|3
 decl_stmt|;
-comment|/// True if this linkage spec has brances. This is needed so that hasBraces()
-comment|/// returns the correct result while the linkage spec body is being parsed.
-comment|/// Once RBraceLoc has been set this is not used, so it doesn't need to be
-comment|/// serialized.
+comment|/// \brief True if this linkage spec has braces.
+comment|///
+comment|/// This is needed so that hasBraces() returns the correct result while the
+comment|/// linkage spec body is being parsed.  Once RBraceLoc has been set this is
+comment|/// not used, so it doesn't need to be serialized.
 name|unsigned
 name|HasBraces
 range|:
 literal|1
 decl_stmt|;
-comment|/// ExternLoc - The source location for the extern keyword.
+comment|/// \brief The source location for the extern keyword.
 name|SourceLocation
 name|ExternLoc
 decl_stmt|;
-comment|/// RBraceLoc - The source location for the right brace (if valid).
+comment|/// \brief The source location for the right brace (if valid).
 name|SourceLocation
 name|RBraceLoc
 decl_stmt|;
@@ -9759,11 +10031,19 @@ end_function
 
 begin_comment
 unit|};
-comment|/// UsingDirectiveDecl - Represents C++ using-directive. For example:
+comment|/// \brief Represents C++ using-directive.
 end_comment
 
 begin_comment
 comment|///
+end_comment
+
+begin_comment
+comment|/// For example:
+end_comment
+
+begin_comment
+comment|/// \code
 end_comment
 
 begin_comment
@@ -9771,19 +10051,23 @@ comment|///    using namespace std;
 end_comment
 
 begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
 comment|///
 end_comment
 
 begin_comment
-comment|// NB: UsingDirectiveDecl should be Decl not NamedDecl, but we provide
+comment|/// \note UsingDirectiveDecl should be Decl not NamedDecl, but we provide
 end_comment
 
 begin_comment
-comment|// artificial names for all using-directives in order to store
+comment|/// artificial names for all using-directives in order to store
 end_comment
 
 begin_comment
-comment|// them in DeclContext effectively.
+comment|/// them in DeclContext effectively.
 end_comment
 
 begin_decl_stmt
@@ -9798,11 +10082,11 @@ name|void
 name|anchor
 argument_list|()
 block|;
-comment|/// \brief The location of the "using" keyword.
+comment|/// \brief The location of the \c using keyword.
 name|SourceLocation
 name|UsingLoc
 block|;
-comment|/// SourceLocation - Location of 'namespace' token.
+comment|/// \brief The location of the \c namespace keyword.
 name|SourceLocation
 name|NamespaceLoc
 block|;
@@ -9810,7 +10094,7 @@ comment|/// \brief The nested-name-specifier that precedes the namespace.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
 block|;
-comment|/// NominatedNamespace - Namespace nominated by using-directive.
+comment|/// \brief The namespace nominated by this using-directive.
 name|NamedDecl
 operator|*
 name|NominatedNamespace
@@ -9821,9 +10105,10 @@ name|DeclContext
 operator|*
 name|CommonAncestor
 block|;
-comment|/// getUsingDirectiveName - Returns special DeclarationName used by
-comment|/// using-directives. This is only used by DeclContext for storing
-comment|/// UsingDirectiveDecls in its lookup structure.
+comment|/// \brief Returns special DeclarationName used by using-directives.
+comment|///
+comment|/// This is only used by DeclContext for storing UsingDirectiveDecls in
+comment|/// its lookup structure.
 specifier|static
 name|DeclarationName
 name|getName
@@ -9938,7 +10223,7 @@ return|return
 name|NominatedNamespace
 return|;
 block|}
-comment|/// getNominatedNamespace - Returns namespace nominated by using-directive.
+comment|/// \brief Returns the namespace nominated by this using-directive.
 name|NamespaceDecl
 operator|*
 name|getNominatedNamespace
@@ -9987,7 +10272,7 @@ return|return
 name|CommonAncestor
 return|;
 block|}
-comment|/// \brief Return the location of the "using" keyword.
+comment|/// \brief Return the location of the \c using keyword.
 name|SourceLocation
 name|getUsingLoc
 argument_list|()
@@ -9998,7 +10283,7 @@ name|UsingLoc
 return|;
 block|}
 comment|// FIXME: Could omit 'Key' in name.
-comment|/// getNamespaceKeyLocation - Returns location of namespace keyword.
+comment|/// \brief Returns the location of the \c namespace keyword.
 name|SourceLocation
 name|getNamespaceKeyLocation
 argument_list|()
@@ -10008,7 +10293,7 @@ return|return
 name|NamespaceLoc
 return|;
 block|}
-comment|/// getIdentLocation - Returns location of identifier.
+comment|/// \brief Returns the location of this using declaration's identifier.
 name|SourceLocation
 name|getIdentLocation
 argument_list|()
@@ -10126,7 +10411,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// \code
 end_comment
 
 begin_comment
@@ -10134,7 +10419,7 @@ comment|/// namespace Foo = Bar;
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -10149,11 +10434,13 @@ name|void
 name|anchor
 argument_list|()
 block|;
-comment|/// \brief The location of the "namespace" keyword.
+comment|/// \brief The location of the \c namespace keyword.
 name|SourceLocation
 name|NamespaceLoc
 block|;
-comment|/// IdentLoc - Location of namespace identifier. Accessed by TargetNameLoc.
+comment|/// \brief The location of the namespace's identifier.
+comment|///
+comment|/// This is accessed by TargetNameLoc.
 name|SourceLocation
 name|IdentLoc
 block|;
@@ -10161,8 +10448,8 @@ comment|/// \brief The nested-name-specifier that precedes the namespace.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
 block|;
-comment|/// Namespace - The Decl that this alias points to. Can either be a
-comment|/// NamespaceDecl or a NamespaceAliasDecl.
+comment|/// \brief The Decl that this alias points to, either a NamespaceDecl or
+comment|/// a NamespaceAliasDecl.
 name|NamedDecl
 operator|*
 name|Namespace
@@ -10331,7 +10618,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Returns the location of the 'namespace' keyword.
+comment|/// Returns the location of the \c namespace keyword.
 end_comment
 
 begin_expr_stmt
@@ -10513,7 +10800,7 @@ comment|/// For example,
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// \code
 end_comment
 
 begin_comment
@@ -10545,7 +10832,7 @@ comment|/// }
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -10554,27 +10841,33 @@ name|UsingShadowDecl
 range|:
 name|public
 name|NamedDecl
+decl_stmt|,
+name|public
+name|Redeclarable
+decl|<
+name|UsingShadowDecl
+decl|>
 block|{
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// The referenced declaration.
 name|NamedDecl
-operator|*
+modifier|*
 name|Underlying
-block|;
+decl_stmt|;
 comment|/// \brief The using declaration which introduced this decl or the next using
 comment|/// shadow declaration contained in the aforementioned using declaration.
 name|NamedDecl
-operator|*
+modifier|*
 name|UsingOrNextShadow
-block|;
+decl_stmt|;
 name|friend
 name|class
 name|UsingDecl
-block|;
+decl_stmt|;
 name|UsingShadowDecl
 argument_list|(
 argument|DeclContext *DC
@@ -10585,7 +10878,7 @@ argument|UsingDecl *Using
 argument_list|,
 argument|NamedDecl *Target
 argument_list|)
-operator|:
+block|:
 name|NamedDecl
 argument_list|(
 name|UsingShadow
@@ -10597,12 +10890,12 @@ argument_list|,
 name|DeclarationName
 argument_list|()
 argument_list|)
-block|,
+operator|,
 name|Underlying
 argument_list|(
 name|Target
 argument_list|)
-block|,
+operator|,
 name|UsingOrNextShadow
 argument_list|(
 argument|reinterpret_cast<NamedDecl *>(Using)
@@ -10633,23 +10926,74 @@ name|setImplicit
 argument_list|()
 expr_stmt|;
 block|}
+typedef|typedef
+name|Redeclarable
+operator|<
+name|UsingShadowDecl
+operator|>
+name|redeclarable_base
+expr_stmt|;
+name|virtual
+name|UsingShadowDecl
+modifier|*
+name|getNextRedeclaration
+parameter_list|()
+block|{
+return|return
+name|RedeclLink
+operator|.
+name|getNext
+argument_list|()
+return|;
+block|}
+name|virtual
+name|UsingShadowDecl
+modifier|*
+name|getPreviousDeclImpl
+parameter_list|()
+block|{
+return|return
+name|getPreviousDecl
+argument_list|()
+return|;
+block|}
+name|virtual
+name|UsingShadowDecl
+modifier|*
+name|getMostRecentDeclImpl
+parameter_list|()
+block|{
+return|return
+name|getMostRecentDecl
+argument_list|()
+return|;
+block|}
 name|public
-operator|:
+label|:
 specifier|static
 name|UsingShadowDecl
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation Loc
-argument_list|,
-argument|UsingDecl *Using
-argument_list|,
-argument|NamedDecl *Target
-argument_list|)
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|UsingDecl
+modifier|*
+name|Using
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|Target
+parameter_list|)
 block|{
 return|return
 name|new
@@ -10670,14 +11014,67 @@ return|;
 block|}
 specifier|static
 name|UsingShadowDecl
-operator|*
+modifier|*
 name|CreateDeserialized
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|unsigned ID
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|redeclarable_base
+operator|::
+name|redecl_iterator
+name|redecl_iterator
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|redecls_begin
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|redecls_end
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|getPreviousDecl
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|getMostRecentDecl
+expr_stmt|;
+name|virtual
+name|UsingShadowDecl
+modifier|*
+name|getCanonicalDecl
+parameter_list|()
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
+name|virtual
+specifier|const
+name|UsingShadowDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
 comment|/// \brief Gets the underlying declaration which has been brought into the
 comment|/// local scope.
 name|NamedDecl
@@ -10694,9 +11091,11 @@ comment|/// \brief Sets the underlying declaration which has been brought into t
 comment|/// local scope.
 name|void
 name|setTargetDecl
-argument_list|(
-argument|NamedDecl* ND
-argument_list|)
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -10704,25 +11103,26 @@ name|ND
 operator|&&
 literal|"Target decl is null!"
 argument_list|)
-block|;
+expr_stmt|;
 name|Underlying
 operator|=
 name|ND
-block|;
+expr_stmt|;
 name|IdentifierNamespace
 operator|=
 name|ND
 operator|->
 name|getIdentifierNamespace
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief Gets the using declaration to which this declaration is tied.
 name|UsingDecl
 operator|*
 name|getUsingDecl
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// \brief The next using shadow declaration contained in the shadow decl
 comment|/// chain of the using declaration which introduced this decl.
 name|UsingShadowDecl
@@ -10744,9 +11144,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -10761,9 +11164,10 @@ block|}
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -10776,13 +11180,17 @@ block|}
 name|friend
 name|class
 name|ASTDeclReader
-block|;
+decl_stmt|;
 name|friend
 name|class
 name|ASTDeclWriter
-block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/// \brief Represents a C++ using-declaration.
@@ -10797,7 +11205,7 @@ comment|/// For example:
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// \code
 end_comment
 
 begin_comment
@@ -10805,7 +11213,7 @@ comment|///    using someNameSpace::someIdentifier;
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -10820,7 +11228,7 @@ name|void
 name|anchor
 argument_list|()
 block|;
-comment|/// \brief The source location of the "using" location itself.
+comment|/// \brief The source location of the 'using' keyword itself.
 name|SourceLocation
 name|UsingLocation
 block|;
@@ -10828,8 +11236,8 @@ comment|/// \brief The nested-name-specifier that precedes the name.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
 block|;
-comment|/// DNLoc - Provides source/type location info for the
-comment|/// declaration name embedded in the ValueDecl base class.
+comment|/// \brief Provides source/type location info for the declaration name
+comment|/// embedded in the ValueDecl base class.
 name|DeclarationNameLoc
 name|DNLoc
 block|;
@@ -10861,7 +11269,7 @@ argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
-argument|bool IsTypeNameArg
+argument|bool HasTypenameKeyword
 argument_list|)
 operator|:
 name|NamedDecl
@@ -10903,14 +11311,14 @@ name|FirstUsingShadow
 argument_list|(
 literal|0
 argument_list|,
-argument|IsTypeNameArg
+argument|HasTypenameKeyword
 argument_list|)
 block|{   }
 name|public
 operator|:
-comment|/// \brief Returns the source location of the "using" keyword.
+comment|/// \brief Return the source location of the 'using' keyword.
 name|SourceLocation
-name|getUsingLocation
+name|getUsingLoc
 argument_list|()
 specifier|const
 block|{
@@ -10920,7 +11328,7 @@ return|;
 block|}
 comment|/// \brief Set the source location of the 'using' keyword.
 name|void
-name|setUsingLocation
+name|setUsingLoc
 argument_list|(
 argument|SourceLocation L
 argument_list|)
@@ -10972,9 +11380,22 @@ name|DNLoc
 argument_list|)
 return|;
 block|}
+comment|/// \brief Return true if it is a C++03 access declaration (no 'using').
+name|bool
+name|isAccessDeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsingLocation
+operator|.
+name|isInvalid
+argument_list|()
+return|;
+block|}
 comment|/// \brief Return true if the using declaration has 'typename'.
 name|bool
-name|isTypeName
+name|hasTypename
 argument_list|()
 specifier|const
 block|{
@@ -10987,7 +11408,7 @@ return|;
 block|}
 comment|/// \brief Sets whether the using declaration has 'typename'.
 name|void
-name|setTypeName
+name|setTypename
 argument_list|(
 argument|bool TN
 argument_list|)
@@ -10999,7 +11420,7 @@ argument_list|(
 name|TN
 argument_list|)
 block|; }
-comment|/// \brief Iterates through the using shadow declarations assosiated with
+comment|/// \brief Iterates through the using shadow declarations associated with
 comment|/// this using declaration.
 name|class
 name|shadow_iterator
@@ -11309,7 +11730,7 @@ modifier|&
 name|NameInfo
 parameter_list|,
 name|bool
-name|IsTypeNameArg
+name|HasTypenameKeyword
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11336,20 +11757,7 @@ name|getSourceRange
 argument_list|()
 specifier|const
 name|LLVM_READONLY
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|UsingLocation
-argument_list|,
-name|getNameInfo
-argument_list|()
-operator|.
-name|getEndLoc
-argument_list|()
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_function
@@ -11432,7 +11840,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// \code
 end_comment
 
 begin_comment
@@ -11448,7 +11856,7 @@ comment|/// };
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_decl_stmt
@@ -11471,8 +11879,8 @@ comment|/// \brief The nested-name-specifier that precedes the name.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
 block|;
-comment|/// DNLoc - Provides source/type location info for the
-comment|/// declaration name embedded in the ValueDecl base class.
+comment|/// \brief Provides source/type location info for the declaration name
+comment|/// embedded in the ValueDecl base class.
 name|DeclarationNameLoc
 name|DNLoc
 block|;
@@ -11546,6 +11954,19 @@ name|UsingLocation
 operator|=
 name|L
 block|; }
+comment|/// \brief Return true if it is a C++03 access declaration (no 'using').
+name|bool
+name|isAccessDeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsingLocation
+operator|.
+name|isInvalid
+argument_list|()
+return|;
+block|}
 comment|/// \brief Retrieve the nested-name-specifier that qualifies the name,
 comment|/// with source-location information.
 name|NestedNameSpecifierLoc
@@ -11620,20 +12041,7 @@ name|getSourceRange
 argument_list|()
 specifier|const
 name|LLVM_READONLY
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|UsingLocation
-argument_list|,
-name|getNameInfo
-argument_list|()
-operator|.
-name|getEndLoc
-argument_list|()
-argument_list|)
-return|;
-block|}
+block|;
 specifier|static
 name|bool
 name|classof
@@ -11676,7 +12084,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Represents a dependent using declaration which was marked with
+comment|/// \brief Represents a dependent using declaration which was marked with
 end_comment
 
 begin_comment
@@ -11688,7 +12096,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// \code
 end_comment
 
 begin_comment
@@ -11704,7 +12112,7 @@ comment|/// };
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_comment
@@ -11730,10 +12138,6 @@ name|virtual
 name|void
 name|anchor
 argument_list|()
-block|;
-comment|/// \brief The source location of the 'using' keyword
-name|SourceLocation
-name|UsingLocation
 block|;
 comment|/// \brief The source location of the 'typename' keyword
 name|SourceLocation

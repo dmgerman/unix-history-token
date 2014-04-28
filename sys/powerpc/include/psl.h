@@ -15,435 +15,9 @@ directive|define
 name|_MACHINE_PSL_H_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BOOKE_E500
-argument_list|)
-end_if
-
 begin_comment
-comment|/*  * Machine State Register (MSR) - e500 core  *  * The PowerPC e500 does not implement the following bits:  *  * FP, FE0, FE1 - reserved, always cleared, setting has no effect.  *  */
+comment|/*  * Machine State Register (MSR) - All cores  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_UCLE
-value|0x04000000UL
-end_define
-
-begin_comment
-comment|/* User mode cache lock enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_SPE
-value|0x02000000UL
-end_define
-
-begin_comment
-comment|/* SPE enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_WE
-value|0x00040000UL
-end_define
-
-begin_comment
-comment|/* Wait state enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_CE
-value|0x00020000UL
-end_define
-
-begin_comment
-comment|/* Critical interrupt enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_EE
-value|0x00008000UL
-end_define
-
-begin_comment
-comment|/* External interrupt enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_PR
-value|0x00004000UL
-end_define
-
-begin_comment
-comment|/* User mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_FP
-value|0x00002000UL
-end_define
-
-begin_comment
-comment|/* Floating point available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_ME
-value|0x00001000UL
-end_define
-
-begin_comment
-comment|/* Machine check interrupt enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_FE0
-value|0x00000800UL
-end_define
-
-begin_comment
-comment|/* Floating point exception mode 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_UBLE
-value|0x00000400UL
-end_define
-
-begin_comment
-comment|/* BTB lock enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_DE
-value|0x00000200UL
-end_define
-
-begin_comment
-comment|/* Debug interrupt enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_FE1
-value|0x00000100UL
-end_define
-
-begin_comment
-comment|/* Floating point exception mode 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_IS
-value|0x00000020UL
-end_define
-
-begin_comment
-comment|/* Instruction address space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_DS
-value|0x00000010UL
-end_define
-
-begin_comment
-comment|/* Data address space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_PMM
-value|0x00000004UL
-end_define
-
-begin_comment
-comment|/* Performance monitor mark */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_FE_DFLT
-value|0x00000000UL
-end_define
-
-begin_comment
-comment|/* default == none */
-end_comment
-
-begin_comment
-comment|/* Initial kernel MSR, use IS=1 ad DS=1. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_KERNSET_INIT
-value|(PSL_IS | PSL_DS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSL_KERNSET
-value|(PSL_CE | PSL_ME | PSL_EE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSL_USERSET
-value|(PSL_KERNSET | PSL_PR)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|BOOKE_PPC4XX
-argument_list|)
-end_elif
-
-begin_comment
-comment|/*  * Machine State Register (MSR) - PPC4xx core  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_WE
-value|(0x80000000>> 13)
-end_define
-
-begin_comment
-comment|/* Wait State Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_CE
-value|(0x80000000>> 14)
-end_define
-
-begin_comment
-comment|/* Critical Interrupt Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_EE
-value|(0x80000000>> 16)
-end_define
-
-begin_comment
-comment|/* External Interrupt Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_PR
-value|(0x80000000>> 17)
-end_define
-
-begin_comment
-comment|/* Problem State */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_FP
-value|(0x80000000>> 18)
-end_define
-
-begin_comment
-comment|/* Floating Point Available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_ME
-value|(0x80000000>> 19)
-end_define
-
-begin_comment
-comment|/* Machine Check Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_FE0
-value|(0x80000000>> 20)
-end_define
-
-begin_comment
-comment|/* Floating-point exception mode 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_DWE
-value|(0x80000000>> 21)
-end_define
-
-begin_comment
-comment|/* Debug Wait Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_DE
-value|(0x80000000>> 22)
-end_define
-
-begin_comment
-comment|/* Debug interrupt Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_FE1
-value|(0x80000000>> 23)
-end_define
-
-begin_comment
-comment|/* Floating-point exception mode 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_IS
-value|(0x80000000>> 26)
-end_define
-
-begin_comment
-comment|/* Instruction Address Space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_DS
-value|(0x80000000>> 27)
-end_define
-
-begin_comment
-comment|/* Data Address Space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_KERNSET
-value|(PSL_CE | PSL_ME | PSL_EE | PSL_FP)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSL_USERSET
-value|(PSL_KERNSET | PSL_PR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSL_FE_DFLT
-value|0x00000000UL
-end_define
-
-begin_comment
-comment|/* default == none */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* if defined(BOOKE_*) */
-end_comment
-
-begin_comment
-comment|/*  * Machine State Register (MSR)  *  * The PowerPC 601 does not implement the following bits:  *  *	VEC, POW, ILE, BE, RI, LE[*]  *  * [*] Little-endian mode on the 601 is implemented in the HID0 register.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PSL_SF
-value|0x8000000000000000UL
-end_define
-
-begin_comment
-comment|/* 64-bit addressing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_HV
-value|0x1000000000000000UL
-end_define
-
-begin_comment
-comment|/* hyper-privileged mode */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -453,29 +27,7 @@ value|0x02000000UL
 end_define
 
 begin_comment
-comment|/* AltiVec vector unit available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_POW
-value|0x00040000UL
-end_define
-
-begin_comment
-comment|/* power management */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_ILE
-value|0x00010000UL
-end_define
-
-begin_comment
-comment|/* interrupt endian mode (1 == le) */
+comment|/* AltiVec/SPE vector unit available */
 end_comment
 
 begin_define
@@ -536,17 +88,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSL_SE
-value|0x00000400UL
-end_define
-
-begin_comment
-comment|/* single-step trace enable */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PSL_BE
 value|0x00000200UL
 end_define
@@ -569,12 +110,185 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PSL_PMM
+value|0x00000004UL
+end_define
+
+begin_comment
+comment|/* performance monitor mark */
+end_comment
+
+begin_comment
+comment|/* Machine State Register - Book-E cores */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_UCLE
+value|0x04000000UL
+end_define
+
+begin_comment
+comment|/* User mode cache lock enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_WE
+value|0x00040000UL
+end_define
+
+begin_comment
+comment|/* Wait state enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_CE
+value|0x00020000UL
+end_define
+
+begin_comment
+comment|/* Critical interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_UBLE
+value|0x00000400UL
+end_define
+
+begin_comment
+comment|/* BTB lock enable - e500 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_DWE
+value|0x00000400UL
+end_define
+
+begin_comment
+comment|/* Debug Wait Enable - 440 only*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_DE
+value|0x00000200UL
+end_define
+
+begin_comment
+comment|/* Debug interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_IS
+value|0x00000020UL
+end_define
+
+begin_comment
+comment|/* Instruction address space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_DS
+value|0x00000010UL
+end_define
+
+begin_comment
+comment|/* Data address space */
+end_comment
+
+begin_comment
+comment|/* Machine State Register (MSR) - AIM cores */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PSL_SF
+value|0x8000000000000000UL
+end_define
+
+begin_comment
+comment|/* 64-bit addressing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_HV
+value|0x1000000000000000UL
+end_define
+
+begin_comment
+comment|/* hyper-privileged mode */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|PSL_POW
+value|0x00040000UL
+end_define
+
+begin_comment
+comment|/* power management */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_ILE
+value|0x00010000UL
+end_define
+
+begin_comment
+comment|/* interrupt endian mode (1 == le) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_SE
+value|0x00000400UL
+end_define
+
+begin_comment
+comment|/* single-step trace enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PSL_IP
 value|0x00000040UL
 end_define
 
 begin_comment
-comment|/* interrupt prefix */
+comment|/* interrupt prefix - 601 only */
 end_comment
 
 begin_define
@@ -602,17 +316,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSL_PMM
-value|0x00000004UL
-end_define
-
-begin_comment
-comment|/* performance monitor mark */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PSL_RI
 value|0x00000002UL
 end_define
@@ -631,13 +334,6 @@ end_define
 begin_comment
 comment|/* endian mode (1 == le) */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_601_MASK
-value|~(PSL_POW|PSL_ILE|PSL_BE|PSL_RI|PSL_LE)
-end_define
 
 begin_comment
 comment|/*  * Floating-point exception modes:  */
@@ -698,23 +394,79 @@ begin_comment
 comment|/* default == none */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BOOKE_E500
+argument_list|)
+end_if
+
 begin_comment
-comment|/*  * Note that PSL_POW and PSL_ILE are not in the saved copy of the MSR  */
+comment|/* Initial kernel MSR, use IS=1 ad DS=1. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PSL_MBO
-value|0
+name|PSL_KERNSET_INIT
+value|(PSL_IS | PSL_DS)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSL_MBZ
-value|0
+name|PSL_KERNSET
+value|(PSL_CE | PSL_ME | PSL_EE)
 end_define
+
+begin_define
+define|#
+directive|define
+name|PSL_SRR1_MASK
+value|0x00000000UL
+end_define
+
+begin_comment
+comment|/* No mask on Book-E */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|BOOKE_PPC4XX
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PSL_KERNSET
+value|(PSL_CE | PSL_ME | PSL_EE | PSL_FP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSL_SRR1_MASK
+value|0x00000000UL
+end_define
+
+begin_comment
+comment|/* No mask on Book-E */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
+end_elif
 
 begin_ifdef
 ifdef|#
@@ -749,6 +501,22 @@ end_endif
 begin_define
 define|#
 directive|define
+name|PSL_SRR1_MASK
+value|0x783f0000UL
+end_define
+
+begin_comment
+comment|/* Bits 1-4, 10-15 (ppc32), 33-36, 42-47 (ppc64) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|PSL_USERSET
 value|(PSL_KERNSET | PSL_PR)
 end_define
@@ -757,17 +525,8 @@ begin_define
 define|#
 directive|define
 name|PSL_USERSTATIC
-value|(PSL_USERSET | PSL_IP | 0x87c0008c)
+value|(~(PSL_VEC | PSL_FP | PSL_FE0 | PSL_FE1)& ~PSL_SRR1_MASK)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* if defined(BOOKE_E500) */
-end_comment
 
 begin_endif
 endif|#

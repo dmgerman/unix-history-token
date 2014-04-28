@@ -1985,7 +1985,7 @@ name|vm_domain
 modifier|*
 name|vmd
 decl_stmt|;
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|++
@@ -2039,12 +2039,6 @@ operator|<<
 name|m
 operator|->
 name|segind
-expr_stmt|;
-name|m
-operator|->
-name|flags
-operator|=
-name|PG_FREE
 expr_stmt|;
 name|KASSERT
 argument_list|(

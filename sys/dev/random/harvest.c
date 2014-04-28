@@ -130,7 +130,7 @@ literal|1
 block|,
 literal|1
 block|,
-literal|0
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -161,8 +161,6 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
-parameter_list|,
-name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -213,8 +211,6 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
-parameter_list|,
-name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -282,6 +278,7 @@ begin_function
 name|void
 name|random_harvest
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|entropy
@@ -291,9 +288,6 @@ name|count
 parameter_list|,
 name|u_int
 name|bits
-parameter_list|,
-name|u_int
-name|frac
 parameter_list|,
 name|enum
 name|esource
@@ -317,8 +311,6 @@ argument_list|,
 name|count
 argument_list|,
 name|bits
-argument_list|,
-name|frac
 argument_list|,
 name|origin
 argument_list|)

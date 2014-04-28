@@ -2292,6 +2292,9 @@ operator|*
 name|LC
 block|;
 comment|// Can be null */
+name|unsigned
+name|BlockCount
+block|;
 name|void
 operator|*
 name|ReferencedVars
@@ -2302,20 +2305,13 @@ name|OriginalVars
 block|;
 name|BlockDataRegion
 argument_list|(
-specifier|const
-name|BlockTextRegion
-operator|*
-name|bc
+argument|const BlockTextRegion *bc
 argument_list|,
-specifier|const
-name|LocationContext
-operator|*
-name|lc
+argument|const LocationContext *lc
 argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-name|sreg
+argument|unsigned count
+argument_list|,
+argument|const MemRegion *sreg
 argument_list|)
 operator|:
 name|TypedRegion
@@ -2333,6 +2329,11 @@ block|,
 name|LC
 argument_list|(
 name|lc
+argument_list|)
+block|,
+name|BlockCount
+argument_list|(
+name|count
 argument_list|)
 block|,
 name|ReferencedVars
@@ -2611,6 +2612,8 @@ argument_list|,
 specifier|const
 name|LocationContext
 operator|*
+argument_list|,
+name|unsigned
 argument_list|,
 specifier|const
 name|MemRegion
@@ -4850,17 +4853,25 @@ name|BlockDataRegion
 operator|*
 name|getBlockDataRegion
 argument_list|(
-specifier|const
-name|BlockTextRegion
-operator|*
-name|bc
+argument|const BlockTextRegion *bc
 argument_list|,
+argument|const LocationContext *lc
+argument_list|,
+argument|unsigned blockCount
+argument_list|)
+block|;
+comment|/// Create a CXXTempObjectRegion for temporaries which are lifetime-extended
+comment|/// by static references. This differs from getCXXTempObjectRegion in the
+comment|/// super-region used.
 specifier|const
-name|LocationContext
+name|CXXTempObjectRegion
 operator|*
-name|lc
-operator|=
-name|NULL
+name|getCXXStaticTempObjectRegion
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|Ex
 argument_list|)
 block|;
 name|private
@@ -5021,9 +5032,122 @@ name|getContext
 argument_list|()
 return|;
 block|}
-expr|}
+comment|//===----------------------------------------------------------------------===//
+comment|// Means for storing region/symbol handling traits.
+comment|//===----------------------------------------------------------------------===//
+comment|/// Information about invalidation for a particular region/symbol.
+name|class
+name|RegionAndSymbolInvalidationTraits
+block|{
+typedef|typedef
+name|unsigned
+name|char
+name|StorageTypeForKinds
+typedef|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|MemRegion
+operator|*
+block|,
+name|StorageTypeForKinds
+operator|>
+name|MRTraitsMap
+block|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|SymbolRef
+block|,
+name|StorageTypeForKinds
+operator|>
+name|SymTraitsMap
+block|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|MemRegion
+operator|*
+operator|,
+name|StorageTypeForKinds
+operator|>
+operator|::
+name|const_iterator
+name|const_region_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|SymbolRef
+operator|,
+name|StorageTypeForKinds
+operator|>
+operator|::
+name|const_iterator
+name|const_symbol_iterator
+expr_stmt|;
+name|public
+operator|:
+comment|/// \brief Describes different invalidation traits.
+block|enum
+name|InvalidationKinds
+block|{
+comment|/// Tells that a region's contents is not changed.
+name|TK_PreserveContents
+operator|=
+literal|0x1
+block|,
+comment|/// Suppress pointer-escaping of a region.
+name|TK_SuppressEscape
+operator|=
+literal|0x2
+comment|// Do not forget to extend StorageTypeForKinds if number of traits exceed
+comment|// the number of bits StorageTypeForKinds can store.
+block|}
+block|;
+name|void
+name|setTrait
+argument_list|(
+argument|SymbolRef Sym
+argument_list|,
+argument|InvalidationKinds IK
+argument_list|)
+block|;
+name|void
+name|setTrait
+argument_list|(
+argument|const MemRegion *MR
+argument_list|,
+argument|InvalidationKinds IK
+argument_list|)
+block|;
+name|bool
+name|hasTrait
+argument_list|(
+argument|SymbolRef Sym
+argument_list|,
+argument|InvalidationKinds IK
+argument_list|)
+block|;
+name|bool
+name|hasTrait
+argument_list|(
+argument|const MemRegion *MR
+argument_list|,
+argument|InvalidationKinds IK
+argument_list|)
+block|; }
+block|;    }
 comment|// end GR namespace
-expr|}
+block|}
 comment|// end clang namespace
 comment|//===----------------------------------------------------------------------===//
 comment|// Pretty-printing regions.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_mm.c,v 1.17 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: monitor_mm.c,v 1.19 2014/01/04 17:50:55 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -63,6 +63,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -112,7 +118,7 @@ modifier|*
 name|b
 parameter_list|)
 block|{
-name|long
+name|ptrdiff_t
 name|diff
 init|=
 operator|(
@@ -220,8 +226,10 @@ name|NULL
 condition|)
 name|tmp
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -276,7 +284,7 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"mm_make_entry(%p): double address %p->%p(%lu)"
+literal|"mm_make_entry(%p): double address %p->%p(%zu)"
 argument_list|,
 name|mm
 argument_list|,
@@ -284,9 +292,6 @@ name|tmp2
 argument_list|,
 name|address
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -334,8 +339,10 @@ name|NULL
 condition|)
 name|mm
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -383,11 +390,8 @@ name|MAP_FAILED
 condition|)
 name|fatal
 argument_list|(
-literal|"mmap(%lu): %s"
+literal|"mmap(%zu): %s"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|size
 argument_list|,
 name|strerror
@@ -592,15 +596,12 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"munmap(%p, %lu): %s"
+literal|"munmap(%p, %zu): %s"
 argument_list|,
 name|mm
 operator|->
 name|address
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|mm
 operator|->
 name|size
@@ -683,13 +684,19 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: mm_malloc(%lu)"
+literal|"%s: mm_malloc(%zu)"
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
-name|u_long
-operator|)
+name|size
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|address
+argument_list|,
+literal|0
+argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
@@ -843,7 +850,7 @@ operator|->
 name|address
 operator|=
 operator|(
-name|u_char
+name|char
 operator|*
 operator|)
 name|mms
@@ -1165,15 +1172,12 @@ name|address
 condition|)
 name|fatal
 argument_list|(
-literal|"mm_free: memory corruption: %p(%lu)> %p"
+literal|"mm_free: memory corruption: %p(%zu)> %p"
 argument_list|,
 name|prev
 operator|->
 name|address
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|prev
 operator|->
 name|size
@@ -1287,7 +1291,7 @@ name|address
 condition|)
 name|fatal
 argument_list|(
-literal|"mm_free: memory corruption: %p< %p(%lu)"
+literal|"mm_free: memory corruption: %p< %p(%zu)"
 argument_list|,
 name|mms
 operator|->
@@ -1297,9 +1301,6 @@ name|prev
 operator|->
 name|address
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|prev
 operator|->
 name|size
@@ -1700,7 +1701,7 @@ modifier|*
 name|end
 init|=
 operator|(
-name|u_char
+name|char
 operator|*
 operator|)
 name|address
@@ -1741,23 +1742,10 @@ if|if
 condition|(
 name|end
 operator|>
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-operator|(
-name|u_char
-operator|*
-operator|)
+name|MM_ADDRESS_END
+argument_list|(
 name|mm
-operator|->
-name|address
-operator|+
-name|mm
-operator|->
-name|size
-operator|)
+argument_list|)
 condition|)
 name|fatal
 argument_list|(

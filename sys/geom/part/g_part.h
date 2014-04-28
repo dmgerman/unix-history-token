@@ -164,6 +164,9 @@ comment|/* A VMware vmkDiagnostic partition entry */
 name|G_PART_ALIAS_VMRESERVED
 block|,
 comment|/* A VMware reserved partition entry */
+name|G_PART_ALIAS_VMVSANHDR
+block|,
+comment|/* A VMware vSAN header partition entry */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}

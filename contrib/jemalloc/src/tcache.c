@@ -1377,6 +1377,15 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+name|tcache_stats_merge
+argument_list|(
+name|tcache
+argument_list|,
+name|tcache
+operator|->
+name|arena
+argument_list|)
+expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
 operator|&
@@ -1385,15 +1394,6 @@ operator|->
 name|arena
 operator|->
 name|lock
-argument_list|)
-expr_stmt|;
-name|tcache_stats_merge
-argument_list|(
-name|tcache
-argument_list|,
-name|tcache
-operator|->
-name|arena
 argument_list|)
 expr_stmt|;
 block|}
@@ -1526,7 +1526,7 @@ operator|(
 name|tcache_t
 operator|*
 operator|)
-name|icallocx
+name|icalloct
 argument_list|(
 name|size
 argument_list|,
@@ -2004,7 +2004,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|idallocx
+name|idalloct
 argument_list|(
 name|tcache
 argument_list|,
@@ -2108,6 +2108,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Caller must own arena->lock. */
+end_comment
+
 begin_function
 name|void
 name|tcache_stats_merge
@@ -2124,6 +2128,11 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
+name|cassert
+argument_list|(
+name|config_stats
+argument_list|)
+expr_stmt|;
 comment|/* Merge and reset tcache stats. */
 for|for
 control|(

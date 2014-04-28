@@ -950,14 +950,14 @@ begin_define
 define|#
 directive|define
 name|CESA_CSHD_FRAG_LAST
-value|(2<< 30)
+value|(2U<< 30)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CESA_CSHD_FRAG_MIDDLE
-value|(3<< 30)
+value|(3U<< 30)
 end_define
 
 begin_comment

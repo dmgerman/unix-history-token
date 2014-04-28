@@ -76,13 +76,6 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
-name|namespace
-name|sys
-block|{
-name|class
-name|Path
-decl_stmt|;
-block|}
 comment|/// Determine if the raw_ostream provided is connected to a terminal. If so,
 comment|/// generate a warning message to errs() advising against display of bitcode
 comment|/// and return true. Otherwise just return false.
@@ -102,34 +95,6 @@ name|true
 comment|///< Control whether warnings are printed
 parameter_list|)
 function_decl|;
-comment|/// PrependMainExecutablePath - Prepend the path to the program being executed
-comment|/// to \p ExeName, given the value of argv[0] and the address of main()
-comment|/// itself. This allows us to find another LLVM tool if it is built in the same
-comment|/// directory. An empty string is returned on error; note that this function
-comment|/// just mainpulates the path and doesn't check for executability.
-comment|/// @brief Find a named executable.
-name|sys
-operator|::
-name|Path
-name|PrependMainExecutablePath
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|ExeName
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|Argv0
-argument_list|,
-name|void
-operator|*
-name|MainAddr
-argument_list|)
-expr_stmt|;
 block|}
 end_decl_stmt
 

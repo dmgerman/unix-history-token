@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_sched.h"
 end_include
 
@@ -56,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -436,6 +430,23 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|td
+operator|->
+name|td_rw_rlocks
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning with %d rwlocks held in read mode"
+operator|,
+name|td
+operator|->
+name|td_rw_rlocks
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 operator|(
 name|td
 operator|->
@@ -448,6 +459,23 @@ literal|0
 argument_list|,
 operator|(
 literal|"userret: Returning with pagefaults disabled"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_DEVMEMIO
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning with /dev/mem i/o leaked"
 operator|)
 argument_list|)
 expr_stmt|;

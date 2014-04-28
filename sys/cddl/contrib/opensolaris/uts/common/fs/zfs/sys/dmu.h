@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  */
 end_comment
 
 begin_comment
@@ -499,6 +499,8 @@ init|=
 literal|1
 block|,
 name|TXG_NOWAIT
+block|,
+name|TXG_WAITED
 block|, }
 name|txg_how_t
 typedef|;
@@ -956,6 +958,10 @@ define|#
 directive|define
 name|DMU_POOL_FEATURE_DESCRIPTIONS
 value|"feature_descriptions"
+define|#
+directive|define
+name|DMU_POOL_FEATURE_ENABLED_TXG
+value|"feature_enabled_txg"
 define|#
 directive|define
 name|DMU_POOL_ROOT_DATASET
@@ -1963,6 +1969,12 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+ifdef|#
+directive|ifdef
+name|sun
 name|int
 name|dmu_write_pages
 parameter_list|(
@@ -1989,6 +2001,39 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+else|#
+directive|else
+name|int
+name|dmu_write_pages
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|object
+parameter_list|,
+name|uint64_t
+name|offset
+parameter_list|,
+name|uint64_t
+name|size
+parameter_list|,
+name|struct
+name|vm_page
+modifier|*
+modifier|*
+name|ppa
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|struct
 name|arc_buf
 modifier|*
@@ -2831,6 +2876,10 @@ name|zfs_crc64_table
 index|[
 literal|256
 index|]
+decl_stmt|;
+specifier|extern
+name|int
+name|zfs_mdcomp_disable
 decl_stmt|;
 ifdef|#
 directive|ifdef

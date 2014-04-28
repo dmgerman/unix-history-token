@@ -127,6 +127,8 @@ name|eArchTypeMachO
 block|,
 name|eArchTypeELF
 block|,
+name|eArchTypeCOFF
+block|,
 name|kNumArchTypes
 block|}
 name|ArchitectureType
@@ -242,7 +244,10 @@ name|ePathTypeLLDBSystemPlugins
 block|,
 comment|// System plug-ins directory
 name|ePathTypeLLDBUserPlugins
+block|,
 comment|// User plug-ins directory
+name|ePathTypeLLDBTempSystemDir
+comment|// The LLDB temp directory for this system
 block|}
 name|PathType
 typedef|;
@@ -266,6 +271,8 @@ block|,
 name|eExecutionHitBreakpoint
 block|,
 name|eExecutionTimedOut
+block|,
+name|eExecutionStoppedForDebug
 block|}
 name|ExecutionResults
 typedef|;
@@ -383,6 +390,14 @@ block|,
 name|eFormatCategoryItemRegexSynth
 init|=
 literal|0x0020
+block|,
+name|eFormatCategoryItemValue
+init|=
+literal|0x0040
+block|,
+name|eFormatCategoryItemRegexValue
+init|=
+literal|0x0080
 block|}
 name|FormatCategoryItem
 typedef|;
@@ -458,6 +473,22 @@ block|}
 name|ScriptedCommandSynchronicity
 typedef|;
 comment|//----------------------------------------------------------------------
+comment|// Verbosity mode of "po" output
+comment|//----------------------------------------------------------------------
+typedef|typedef
+enum|enum
+name|LanguageRuntimeDescriptionDisplayVerbosity
+block|{
+name|eLanguageRuntimeDescriptionDisplayVerbosityCompact
+block|,
+comment|// only print the description string, if any
+name|eLanguageRuntimeDescriptionDisplayVerbosityFull
+block|,
+comment|// print the full-blown output
+block|}
+name|LanguageRuntimeDescriptionDisplayVerbosity
+typedef|;
+comment|//----------------------------------------------------------------------
 comment|// Loading modules from memory
 comment|//----------------------------------------------------------------------
 typedef|typedef
@@ -476,6 +507,23 @@ comment|// Load sections and all symbols
 block|}
 name|MemoryModuleLoadLevel
 typedef|;
+comment|//----------------------------------------------------------------------
+comment|// Result enums for when reading multiple lines from IOHandlers
+comment|//----------------------------------------------------------------------
+name|enum
+name|class
+name|LineStatus
+block|{
+name|Success
+operator|,
+comment|// The line that was just edited if good and should be added to the lines
+name|Error
+operator|,
+comment|// There is an error with the current line and it needs to be re-edited before it can be accepted
+name|Done
+comment|// Lines are complete
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

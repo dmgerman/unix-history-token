@@ -3546,6 +3546,7 @@ block|{
 comment|/* We didn't find an unclosed quoted substring upon which to do          completion, so use the word break characters to find the          substring on which to complete. */
 while|while
 condition|(
+operator|(
 name|rl_point
 operator|=
 name|MB_PREVCHAR
@@ -3556,6 +3557,7 @@ name|rl_point
 argument_list|,
 name|MB_FIND_ANY
 argument_list|)
+operator|)
 condition|)
 block|{
 name|scan
@@ -7126,6 +7128,7 @@ name|NULL
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|string
 operator|=
 call|(
@@ -7137,6 +7140,7 @@ name|text
 argument_list|,
 name|matches
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -7362,10 +7366,12 @@ name|HAVE_GETPWENT
 argument_list|)
 while|while
 condition|(
+operator|(
 name|entry
 operator|=
 name|getpwent
 argument_list|()
+operator|)
 condition|)
 block|{
 comment|/* Null usernames should result in all users as possible completions. */

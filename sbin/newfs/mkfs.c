@@ -593,24 +593,17 @@ if|if
 condition|(
 name|Rflag
 condition|)
-block|{
 name|utime
 operator|=
 literal|1000000000
 expr_stmt|;
-block|}
 else|else
-block|{
 name|time
 argument_list|(
 operator|&
 name|utime
 argument_list|)
 expr_stmt|;
-name|arc4random_stir
-argument_list|()
-expr_stmt|;
-block|}
 name|sblock
 operator|.
 name|fs_old_flags
@@ -3219,7 +3212,7 @@ expr_stmt|;
 comment|/* 	 * Now build the cylinders group blocks and 	 * then print out indices of cylinder groups. 	 */
 name|printf
 argument_list|(
-literal|"super-block backups (for fsck -b #) at:\n"
+literal|"super-block backups (for fsck_ffs -b #) at:\n"
 argument_list|)
 expr_stmt|;
 name|i

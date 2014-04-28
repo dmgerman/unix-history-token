@@ -355,6 +355,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if executing the callback */
+name|uint8_t
+name|maxp_was_clamped
+range|:
+literal|1
+decl_stmt|;
+comment|/* set if the max packet size  					 * was outside its allowed range */
 block|}
 struct|;
 end_struct

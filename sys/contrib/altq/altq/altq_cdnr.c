@@ -173,6 +173,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<altq/if_altq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<altq/altq.h>
 end_include
 

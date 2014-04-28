@@ -39,15 +39,22 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-end_if
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -77,6 +84,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_include
 include|#

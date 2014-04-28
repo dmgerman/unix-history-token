@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_sched.h"
 end_include
 
@@ -67,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/limits.h>
 end_include
 
 begin_include
@@ -222,31 +222,6 @@ include|#
 directive|include
 file|<machine/smp.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|BOOKE_E500
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"This architecture is not currently compatible with ULE"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1688,11 +1663,7 @@ name|SDT_PROBE_DEFINE3
 argument_list|(
 name|sched
 argument_list|, , ,
-name|change_pri
-argument_list|,
-name|change
-operator|-
-name|pri
+name|change__pri
 argument_list|,
 literal|"struct thread *"
 argument_list|,
@@ -1710,8 +1681,6 @@ name|sched
 argument_list|, , ,
 name|dequeue
 argument_list|,
-name|dequeue
-argument_list|,
 literal|"struct thread *"
 argument_list|,
 literal|"struct proc *"
@@ -1726,8 +1695,6 @@ name|SDT_PROBE_DEFINE4
 argument_list|(
 name|sched
 argument_list|, , ,
-name|enqueue
-argument_list|,
 name|enqueue
 argument_list|,
 literal|"struct thread *"
@@ -1746,11 +1713,7 @@ name|SDT_PROBE_DEFINE4
 argument_list|(
 name|sched
 argument_list|, , ,
-name|lend_pri
-argument_list|,
-name|lend
-operator|-
-name|pri
+name|lend__pri
 argument_list|,
 literal|"struct thread *"
 argument_list|,
@@ -1768,11 +1731,7 @@ name|SDT_PROBE_DEFINE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|load_change
-argument_list|,
-name|load
-operator|-
-name|change
+name|load__change
 argument_list|,
 literal|"int"
 argument_list|,
@@ -1786,11 +1745,7 @@ name|SDT_PROBE_DEFINE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|off_cpu
-argument_list|,
-name|off
-operator|-
-name|cpu
+name|off__cpu
 argument_list|,
 literal|"struct thread *"
 argument_list|,
@@ -1804,11 +1759,7 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|sched
 argument_list|, , ,
-name|on_cpu
-argument_list|,
-name|on
-operator|-
-name|cpu
+name|on__cpu
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1818,11 +1769,7 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|sched
 argument_list|, , ,
-name|remain_cpu
-argument_list|,
-name|remain
-operator|-
-name|cpu
+name|remain__cpu
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1832,8 +1779,6 @@ name|SDT_PROBE_DEFINE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|surrender
-argument_list|,
 name|surrender
 argument_list|,
 literal|"struct thread *"
@@ -2707,7 +2652,7 @@ name|SDT_PROBE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|load_change
+name|load__change
 argument_list|,
 operator|(
 name|int
@@ -2818,7 +2763,7 @@ name|SDT_PROBE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|load_change
+name|load__change
 argument_list|,
 operator|(
 name|int
@@ -3999,124 +3944,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Simultaneously find the highest and lowest loaded cpu reachable via  * cg.  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|sched_both
-parameter_list|(
-specifier|const
-name|struct
-name|cpu_group
-modifier|*
-name|cg
-parameter_list|,
-name|cpuset_t
-name|mask
-parameter_list|,
-name|int
-modifier|*
-name|lowcpu
-parameter_list|,
-name|int
-modifier|*
-name|highcpu
-parameter_list|)
-block|{
-name|struct
-name|cpu_search
-name|high
-decl_stmt|;
-name|struct
-name|cpu_search
-name|low
-decl_stmt|;
-name|low
-operator|.
-name|cs_cpu
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|low
-operator|.
-name|cs_prefer
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|low
-operator|.
-name|cs_pri
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|low
-operator|.
-name|cs_limit
-operator|=
-name|INT_MAX
-expr_stmt|;
-name|low
-operator|.
-name|cs_mask
-operator|=
-name|mask
-expr_stmt|;
-name|high
-operator|.
-name|cs_cpu
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|high
-operator|.
-name|cs_limit
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|high
-operator|.
-name|cs_mask
-operator|=
-name|mask
-expr_stmt|;
-name|cpu_search_both
-argument_list|(
-name|cg
-argument_list|,
-operator|&
-name|low
-argument_list|,
-operator|&
-name|high
-argument_list|)
-expr_stmt|;
-operator|*
-name|lowcpu
-operator|=
-name|low
-operator|.
-name|cs_cpu
-expr_stmt|;
-operator|*
-name|highcpu
-operator|=
-name|high
-operator|.
-name|cs_cpu
-expr_stmt|;
-return|return;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|void
@@ -5106,9 +4933,6 @@ name|int
 name|bit
 decl_stmt|;
 name|int
-name|pri
-decl_stmt|;
-name|int
 name|i
 decl_stmt|;
 name|rqb
@@ -5127,10 +4951,6 @@ name|RQB_BPW
 operator|-
 literal|1
 operator|)
-expr_stmt|;
-name|pri
-operator|=
-literal|0
 expr_stmt|;
 name|first
 operator|=
@@ -5174,49 +4994,10 @@ continue|continue;
 if|if
 condition|(
 name|bit
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
-for|for
-control|(
-name|pri
-operator|=
 name|bit
-init|;
-name|pri
-operator|<
-name|RQB_BPW
-condition|;
-name|pri
-operator|++
-control|)
-if|if
-condition|(
-name|rqb
-operator|->
-name|rqb_bits
-index|[
-name|i
-index|]
-operator|&
-operator|(
-literal|1ul
-operator|<<
-name|pri
-operator|)
-condition|)
-break|break;
-if|if
-condition|(
-name|pri
-operator|>=
-name|RQB_BPW
-condition|)
-continue|continue;
-block|}
-else|else
-name|pri
 operator|=
 name|RQB_FFS
 argument_list|(
@@ -5228,14 +5009,37 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|pri
-operator|+=
+for|for
+control|(
+init|;
+name|bit
+operator|<
+name|RQB_BPW
+condition|;
+name|bit
+operator|++
+control|)
+block|{
+if|if
+condition|(
 operator|(
+name|rqb
+operator|->
+name|rqb_bits
+index|[
 name|i
+index|]
+operator|&
+operator|(
+literal|1ul
 operator|<<
-name|RQB_L2BPW
+name|bit
 operator|)
-expr_stmt|;
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|rqh
 operator|=
 operator|&
@@ -5243,7 +5047,13 @@ name|rq
 operator|->
 name|rq_queues
 index|[
-name|pri
+name|bit
+operator|+
+operator|(
+name|i
+operator|<<
+name|RQB_L2BPW
+operator|)
 index|]
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -5280,6 +5090,7 @@ name|first
 operator|=
 name|td
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -7136,6 +6947,8 @@ name|td_sched
 argument_list|)
 argument_list|,
 name|SCHED_PRI_RANGE
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|pri
@@ -7711,7 +7524,7 @@ name|SDT_PROBE3
 argument_list|(
 name|sched
 argument_list|, , ,
-name|change_pri
+name|change__pri
 argument_list|,
 name|td
 argument_list|,
@@ -7770,7 +7583,7 @@ name|SDT_PROBE4
 argument_list|(
 name|sched
 argument_list|, , ,
-name|lend_pri
+name|lend__pri
 argument_list|,
 name|td
 argument_list|,
@@ -8750,7 +8563,7 @@ name|SDT_PROBE2
 argument_list|(
 name|sched
 argument_list|, , ,
-name|off_cpu
+name|off__cpu
 argument_list|,
 name|newtd
 argument_list|,
@@ -8856,7 +8669,7 @@ name|SDT_PROBE0
 argument_list|(
 name|sched
 argument_list|, , ,
-name|on_cpu
+name|on__cpu
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -8894,7 +8707,7 @@ name|SDT_PROBE0
 argument_list|(
 name|sched
 argument_list|, , ,
-name|remain_cpu
+name|remain__cpu
 argument_list|)
 expr_stmt|;
 block|}

@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -6555,6 +6561,12 @@ operator|->
 name|iv_state
 operator|==
 name|IEEE80211_S_RUN
+operator|||
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_SLEEP
 condition|)
 block|{
 name|imr

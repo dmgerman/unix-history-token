@@ -623,7 +623,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 end_ifdef
 
 begin_decl_stmt
@@ -6031,7 +6031,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 end_ifdef
 
 begin_comment
@@ -12635,6 +12635,8 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+literal|"%s"
+argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
@@ -28726,6 +28728,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|_
 argument_list|(
 literal|"\nFor bug reporting instructions, please see:\n"

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmdoc.h,v 1.78 2011/12/02 01:37:14 schwarze Exp $ */
+comment|/*	$Id: libmdoc.h,v 1.82 2013/10/21 23:47:58 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -42,6 +42,11 @@ modifier|*
 name|parse
 decl_stmt|;
 comment|/* parse pointer */
+name|char
+modifier|*
+name|defos
+decl_stmt|;
+comment|/* default argument for .Os */
 name|int
 name|flags
 decl_stmt|;
@@ -86,6 +91,16 @@ directive|define
 name|MDOC_SYNOPSIS
 value|(1<< 7)
 comment|/* SYNOPSIS-style formatting */
+define|#
+directive|define
+name|MDOC_KEEP
+value|(1<< 8)
+comment|/* in a word keep */
+define|#
+directive|define
+name|MDOC_SMOFF
+value|(1<< 9)
+comment|/* spacing is off */
 name|enum
 name|mdoc_next
 name|next
@@ -129,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|MACRO_PROT_ARGS
-value|struct mdoc *m, \ 			enum mdoct tok, \ 			int line, \ 			int ppos, \ 			int *pos, \ 			char *buf
+value|struct mdoc *mdoc, \ 			enum mdoct tok, \ 			int line, \ 			int ppos, \ 			int *pos, \ 			char *buf
 end_define
 
 begin_struct
@@ -168,7 +183,10 @@ define|#
 directive|define
 name|MDOC_IGNDELIM
 value|(1<< 4)
-comment|/* Reserved words in arguments treated as text. */
+define|#
+directive|define
+name|MDOC_JOIN
+value|(1<< 5)
 block|}
 struct|;
 end_struct
@@ -261,7 +279,7 @@ define|#
 directive|define
 name|mdoc_pmsg
 parameter_list|(
-name|m
+name|mdoc
 parameter_list|,
 name|l
 parameter_list|,
@@ -270,19 +288,19 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|mandoc_msg((t), (m)->parse, (l), (p), NULL)
+value|mandoc_msg((t), (mdoc)->parse, (l), (p), NULL)
 define|#
 directive|define
 name|mdoc_nmsg
 parameter_list|(
-name|m
+name|mdoc
 parameter_list|,
 name|n
 parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|mandoc_msg((t), (m)->parse, (n)->line, (n)->pos, NULL)
+value|mandoc_msg((t), (mdoc)->parse, (n)->line, (n)->pos, NULL)
 name|int
 name|mdoc_macro
 parameter_list|(
@@ -302,6 +320,21 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mdoc_word_append
+parameter_list|(
+name|struct
+name|mdoc
+modifier|*
 parameter_list|,
 specifier|const
 name|char
@@ -415,26 +448,20 @@ parameter_list|(
 name|struct
 name|mdoc
 modifier|*
-name|m
 parameter_list|,
 name|int
-name|line
 parameter_list|,
 name|int
-name|pos
 parameter_list|,
 name|enum
 name|mdoct
-name|tok
 parameter_list|,
 name|struct
 name|mdoc_node
 modifier|*
-name|body
 parameter_list|,
 name|enum
 name|mdoc_endbody
-name|end
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -442,6 +469,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|mdoc_node_delete
+parameter_list|(
+name|struct
+name|mdoc
+modifier|*
+parameter_list|,
+name|struct
+name|mdoc_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mdoc_node_relink
 parameter_list|(
 name|struct
 name|mdoc

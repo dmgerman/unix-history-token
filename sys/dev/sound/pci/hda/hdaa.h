@@ -171,7 +171,7 @@ begin_define
 define|#
 directive|define
 name|HDAA_QUIRK_OVREF100
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

@@ -306,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|BIT_31
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -16811,7 +16811,7 @@ begin_define
 define|#
 directive|define
 name|MSK_MAXTXSEGS
-value|32
+value|35
 end_define
 
 begin_define

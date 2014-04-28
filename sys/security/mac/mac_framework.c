@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mac.h"
 end_include
 
@@ -148,8 +142,6 @@ name|policy
 argument_list|,
 name|modevent
 argument_list|,
-name|modevent
-argument_list|,
 literal|"int"
 argument_list|,
 literal|"struct mac_policy_conf *"
@@ -168,8 +160,6 @@ name|policy
 argument_list|,
 specifier|register
 argument_list|,
-specifier|register
-argument_list|,
 literal|"struct mac_policy_conf *"
 argument_list|)
 expr_stmt|;
@@ -183,8 +173,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|policy
-argument_list|,
-name|unregister
 argument_list|,
 name|unregister
 argument_list|,
@@ -1791,12 +1779,6 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|mac
-operator|->
-name|m_buflen
-operator|<
-literal|0
-operator|||
 name|mac
 operator|->
 name|m_buflen

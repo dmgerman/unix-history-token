@@ -1278,7 +1278,7 @@ begin_define
 define|#
 directive|define
 name|GUI_ACTIVE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1376,7 +1376,7 @@ begin_define
 define|#
 directive|define
 name|SE_CB_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1515,7 +1515,7 @@ begin_define
 define|#
 directive|define
 name|SE_BROADCAST_WRITES
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2855,7 +2855,7 @@ begin_define
 define|#
 directive|define
 name|RB_RPTR_WR_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4080,7 +4080,7 @@ begin_define
 define|#
 directive|define
 name|CMD_VMID_FORCE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

@@ -20,6 +20,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__RDSEEDINTRIN_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__RDSEEDINTRIN_H
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -132,6 +144,15 @@ end_endif
 
 begin_comment
 comment|/* __RDSEED__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __RDSEEDINTRIN_H */
 end_comment
 
 end_unit

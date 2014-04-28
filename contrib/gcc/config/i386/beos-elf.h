@@ -338,7 +338,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 end_ifndef
 
 begin_undef
@@ -361,7 +361,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* CROSS_COMPILE */
+comment|/* CROSS_DIRECTORY_STRUCTURE */
 end_comment
 
 begin_undef

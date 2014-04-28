@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -524,6 +518,13 @@ define|#
 directive|define
 name|CM_WKUP_I2C0_CLKCTRL
 value|(CM_WKUP + 0x0B8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CM_WKUP_ADC_TSC_CLKCTRL
+value|(CM_WKUP + 0x0BC)
 end_define
 
 begin_define
@@ -1215,6 +1216,12 @@ argument_list|(
 name|I2C2_CLK
 argument_list|)
 block|,
+comment|/* TSC_ADC */
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|TSC_ADC_CLK
+argument_list|)
+block|,
 comment|/* EDMA */
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
@@ -1543,6 +1550,16 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* TSC_ADC module */
+name|_CLK_DETAIL
+argument_list|(
+name|TSC_ADC_CLK
+argument_list|,
+name|CM_WKUP_ADC_TSC_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* EDMA modules */
 name|_CLK_DETAIL
 argument_list|(
@@ -1709,6 +1726,19 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 name|ofw_bus_is_compatible

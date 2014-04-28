@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -434,6 +428,19 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 operator|!
@@ -1300,19 +1307,6 @@ argument_list|,
 name|LPC_TIMER_TC
 argument_list|)
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|cpu_initclocks
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|cpu_initclocks_bsp
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 

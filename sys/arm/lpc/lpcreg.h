@@ -39,13 +39,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LPC_DEV_BASE
-value|0xd0000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|LPC_DEV_SIZE
 value|0x10000000
 end_define
@@ -345,8 +338,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LPC_WDTIM_BASE
-value|(LPC_DEV_BASE + 0x3c000)
+name|LPC_WDTIM_PHYS_BASE
+value|(LPC_DEV_PHYS_BASE + 0x3c000)
 end_define
 
 begin_define
@@ -405,6 +398,13 @@ name|LPC_WDTIM_RES
 value|0x1c
 end_define
 
+begin_define
+define|#
+directive|define
+name|LPC_WDTIM_SIZE
+value|0x20
+end_define
+
 begin_comment
 comment|/*  * Clocking and power control. (from UM10326: LPC32x0 User manual, page 58)  */
 end_comment
@@ -412,8 +412,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LPC_CLKPWR_BASE
-value|(LPC_DEV_BASE + 0x4000)
+name|LPC_CLKPWR_PHYS_BASE
+value|(LPC_DEV_PHYS_BASE + 0x4000)
 end_define
 
 begin_define
@@ -1043,6 +1043,13 @@ name|LPC_CLKPWR_POS1_IRAM_CTRL
 value|0x114
 end_define
 
+begin_define
+define|#
+directive|define
+name|LPC_CLKPWR_SIZE
+value|0x118
+end_define
+
 begin_comment
 comment|/* Additional UART registers in CLKPWR address space. */
 end_comment
@@ -1117,21 +1124,21 @@ begin_define
 define|#
 directive|define
 name|LPC_UART_BASE
-value|(LPC_DEV_BASE + 0x80000)
+value|0x80000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LPC_UART_CONTROL_BASE
-value|(LPC_DEV_BASE + 0x54000)
+value|0x54000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LPC_UART5_BASE
-value|(LPC_DEV_BASE + 0x90000)
+value|0x90000
 end_define
 
 begin_define
@@ -1193,6 +1200,13 @@ define|#
 directive|define
 name|LPC_UART_LOOP
 value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPC_UART_CONTROL_SIZE
+value|0x0c
 end_define
 
 begin_define
@@ -1325,7 +1339,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LPC_SD_BASE
+name|LPC_SD_PHYS_BASE
 value|(LPC_DEV_P5_PHYS_BASE + 0x98000)
 end_define
 
@@ -3332,8 +3346,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LPC_GPIO_BASE
-value|(LPC_DEV_BASE + 0x28000)
+name|LPC_GPIO_PHYS_BASE
+value|(LPC_DEV_PHYS_BASE + 0x28000)
 end_define
 
 begin_define
@@ -3530,6 +3544,13 @@ define|#
 directive|define
 name|LPC_GPIO_P3_OUTP_STATE
 value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPC_GPIO_SIZE
+value|0x80
 end_define
 
 begin_comment
@@ -3804,7 +3825,7 @@ begin_define
 define|#
 directive|define
 name|LPC_DMAC_CH_CONTROL_I
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

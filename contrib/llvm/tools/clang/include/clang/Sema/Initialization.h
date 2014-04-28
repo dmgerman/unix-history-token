@@ -150,6 +150,9 @@ decl_stmt|;
 name|class
 name|VarDecl
 decl_stmt|;
+name|class
+name|ObjCMethodDecl
+decl_stmt|;
 comment|/// \brief Describes an entity that is being initialized.
 name|class
 name|InitializedEntity
@@ -212,6 +215,17 @@ block|,
 comment|/// \brief The entity being initialized is the initializer for a compound
 comment|/// literal.
 name|EK_CompoundLiteralInit
+block|,
+comment|/// \brief The entity being implicitly initialized back to the formal
+comment|/// result type.
+name|EK_RelatedResult
+block|,
+comment|/// \brief The entity being initialized is a function parameter; function
+comment|/// is member of group of audited CF APIs.
+name|EK_Parameter_CF_Audited
+comment|// Note: err_init_conversion_failed in DiagnosticSemaKinds.td uses this
+comment|// enum as an index for its first %select.  When modifying this list,
+comment|// that diagnostic text needs to be updated as well.
 block|}
 enum|;
 name|private
@@ -251,10 +265,10 @@ struct|;
 struct|struct
 name|C
 block|{
-comment|/// \brief The variable being captured by an EK_LambdaCapture.
-name|VarDecl
+comment|/// \brief The name of the variable being captured by an EK_LambdaCapture.
+name|IdentifierInfo
 modifier|*
-name|Var
+name|VarID
 decl_stmt|;
 comment|/// \brief The source location at which the capture occurs.
 name|unsigned
@@ -269,6 +283,12 @@ comment|/// FieldDecl, respectively.
 name|DeclaratorDecl
 modifier|*
 name|VariableOrMember
+decl_stmt|;
+comment|/// \brief When Kind == EK_RelatedResult, the ObjectiveC method where
+comment|/// result type was implicitly changed to accommodate ARC semantics.
+name|ObjCMethodDecl
+modifier|*
+name|MethodDecl
 decl_stmt|;
 comment|/// \brief When Kind == EK_Parameter, the ParmVarDecl, with the
 comment|/// low bit indicating whether the parameter is "consumed".
@@ -430,9 +450,9 @@ expr_stmt|;
 comment|/// \brief Create the initialization entity for a lambda capture.
 name|InitializedEntity
 argument_list|(
-argument|VarDecl *Var
+argument|IdentifierInfo *VarID
 argument_list|,
-argument|FieldDecl *Field
+argument|QualType FieldType
 argument_list|,
 argument|SourceLocation Loc
 argument_list|)
@@ -449,14 +469,14 @@ argument_list|)
 operator|,
 name|Type
 argument_list|(
-argument|Field->getType()
+argument|FieldType
 argument_list|)
 block|{
 name|Capture
 operator|.
-name|Var
+name|VarID
 operator|=
-name|Var
+name|VarID
 block|;
 name|Capture
 operator|.
@@ -831,6 +851,40 @@ return|return
 name|Result
 return|;
 block|}
+comment|/// \brief Create the initialization entity for a related result.
+specifier|static
+name|InitializedEntity
+name|InitializeRelatedResult
+parameter_list|(
+name|ObjCMethodDecl
+modifier|*
+name|MD
+parameter_list|,
+name|QualType
+name|Type
+parameter_list|)
+block|{
+name|InitializedEntity
+name|Result
+argument_list|(
+name|EK_RelatedResult
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|Type
+argument_list|)
+decl_stmt|;
+name|Result
+operator|.
+name|MethodDecl
+operator|=
+name|MD
+expr_stmt|;
+return|return
+name|Result
+return|;
+block|}
 comment|/// \brief Create the initialization entity for a base class subobject.
 specifier|static
 name|InitializedEntity
@@ -840,6 +894,7 @@ name|ASTContext
 modifier|&
 name|Context
 parameter_list|,
+specifier|const
 name|CXXBaseSpecifier
 modifier|*
 name|Base
@@ -958,13 +1013,12 @@ specifier|static
 name|InitializedEntity
 name|InitializeLambdaCapture
 parameter_list|(
-name|VarDecl
+name|IdentifierInfo
 modifier|*
-name|Var
+name|VarID
 parameter_list|,
-name|FieldDecl
-modifier|*
-name|Field
+name|QualType
+name|FieldType
 parameter_list|,
 name|SourceLocation
 name|Loc
@@ -973,9 +1027,9 @@ block|{
 return|return
 name|InitializedEntity
 argument_list|(
-name|Var
+name|VarID
 argument_list|,
-name|Field
+name|FieldType
 argument_list|,
 name|Loc
 argument_list|)
@@ -1088,6 +1142,17 @@ name|getDecl
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Retrieve the ObjectiveC method being initialized.
+name|ObjCMethodDecl
+operator|*
+name|getMethodDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MethodDecl
+return|;
+block|}
 comment|/// \brief Determine whether this initialization allows the named return
 comment|/// value optimization, which also applies to thrown objects.
 name|bool
@@ -1095,6 +1160,25 @@ name|allowsNRVO
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|isParameterKind
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getKind
+argument_list|()
+operator|==
+name|EK_Parameter
+operator|||
+name|getKind
+argument_list|()
+operator|==
+name|EK_Parameter_CF_Audited
+operator|)
+return|;
+block|}
 comment|/// \brief Determine whether this initialization consumes the
 comment|/// parameter.
 name|bool
@@ -1104,10 +1188,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|getKind
+name|isParameterKind
 argument_list|()
-operator|==
-name|EK_Parameter
 operator|&&
 literal|"Not a parameter"
 argument_list|)
@@ -1121,6 +1203,7 @@ operator|)
 return|;
 block|}
 comment|/// \brief Retrieve the base specifier.
+specifier|const
 name|CXXBaseSpecifier
 operator|*
 name|getBaseSpecifier
@@ -1140,6 +1223,7 @@ block|;
 return|return
 name|reinterpret_cast
 operator|<
+specifier|const
 name|CXXBaseSpecifier
 operator|*
 operator|>
@@ -1263,10 +1347,9 @@ operator|=
 name|Index
 expr_stmt|;
 block|}
-comment|/// \brief Retrieve the variable for a captured variable in a lambda.
-name|VarDecl
-operator|*
-name|getCapturedVar
+comment|/// \brief For a lambda capture, return the capture's name.
+name|StringRef
+name|getCapturedVarName
 argument_list|()
 specifier|const
 block|{
@@ -1283,7 +1366,10 @@ block|;
 return|return
 name|Capture
 operator|.
-name|Var
+name|VarID
+operator|->
+name|getName
+argument_list|()
 return|;
 block|}
 comment|/// \brief Determine the location of the capture when initializing
@@ -1314,6 +1400,33 @@ name|Location
 argument_list|)
 return|;
 block|}
+name|void
+name|setParameterCFAudited
+parameter_list|()
+block|{
+name|Kind
+operator|=
+name|EK_Parameter_CF_Audited
+expr_stmt|;
+block|}
+comment|/// Dump a representation of the initialized entity to standard error,
+comment|/// for debugging purposes.
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+name|private
+label|:
+name|unsigned
+name|dumpImpl
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1868,9 +1981,11 @@ argument_list|()
 return|;
 block|}
 comment|/// \brief Retrieve whether this initialization allows the use of explicit
-comment|/// conversion functions.
+comment|/// conversion functions when binding a reference. If the reference is the
+comment|/// first parameter in a copy or move constructor, such conversions are
+comment|/// permitted even though we are performing copy-initialization.
 name|bool
-name|allowExplicitConversionFunctions
+name|allowExplicitConversionFunctionsInRefBinding
 argument_list|()
 specifier|const
 block|{
@@ -2008,6 +2123,9 @@ name|SK_LValueToRValue
 block|,
 comment|/// \brief Perform an implicit conversion sequence.
 name|SK_ConversionSequence
+block|,
+comment|/// \brief Perform an implicit conversion sequence without narrowing.
+name|SK_ConversionSequenceNoNarrowing
 block|,
 comment|/// \brief Perform list-initialization without a constructor
 name|SK_ListInitialization
@@ -2161,6 +2279,20 @@ comment|/// \brief Array must be initialized with an initializer list or a
 comment|/// string literal.
 name|FK_ArrayNeedsInitListOrStringLiteral
 block|,
+comment|/// \brief Array must be initialized with an initializer list or a
+comment|/// wide string literal.
+name|FK_ArrayNeedsInitListOrWideStringLiteral
+block|,
+comment|/// \brief Initializing a wide char array with narrow string literal.
+name|FK_NarrowStringIntoWideCharArray
+block|,
+comment|/// \brief Initializing char array with wide string literal.
+name|FK_WideStringIntoCharArray
+block|,
+comment|/// \brief Initializing wide char array with incompatible wide string
+comment|/// literal.
+name|FK_IncompatWideStringIntoWideChar
+block|,
 comment|/// \brief Array type mismatch.
 name|FK_ArrayTypeMismatch
 block|,
@@ -2230,10 +2362,6 @@ comment|/// \brief Initializer has a placeholder type which cannot be
 comment|/// resolved by initialization.
 name|FK_PlaceholderType
 block|,
-comment|/// \brief Failed to initialize a std::initializer_list because copy
-comment|/// construction of some element failed.
-name|FK_InitListElementCopyFailure
-block|,
 comment|/// \brief List-copy-initialization chose an explicit constructor.
 name|FK_ExplicitConstructor
 block|}
@@ -2286,6 +2414,10 @@ comment|///
 comment|/// \param Kind the kind of initialization being performed.
 comment|///
 comment|/// \param Args the argument(s) provided for initialization.
+comment|///
+comment|/// \param InInitList true if we are initializing from an expression within
+comment|///        an initializer list. This disallows narrowing conversions in C++11
+comment|///        onwards.
 name|InitializationSequence
 argument_list|(
 argument|Sema&S
@@ -2295,8 +2427,34 @@ argument_list|,
 argument|const InitializationKind&Kind
 argument_list|,
 argument|MultiExprArg Args
+argument_list|,
+argument|bool InInitList = false
 argument_list|)
 empty_stmt|;
+name|void
+name|InitializeFrom
+parameter_list|(
+name|Sema
+modifier|&
+name|S
+parameter_list|,
+specifier|const
+name|InitializedEntity
+modifier|&
+name|Entity
+parameter_list|,
+specifier|const
+name|InitializationKind
+modifier|&
+name|Kind
+parameter_list|,
+name|MultiExprArg
+name|Args
+parameter_list|,
+name|bool
+name|InInitList
+parameter_list|)
+function_decl|;
 operator|~
 name|InitializationSequence
 argument_list|()
@@ -2404,6 +2562,7 @@ name|SK
 expr_stmt|;
 block|}
 comment|/// \brief Determine whether the initialization sequence is valid.
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -2428,11 +2587,9 @@ name|FailedSequence
 return|;
 block|}
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|Step
-operator|,
-literal|4
 operator|>
 operator|::
 name|const_iterator
@@ -2632,6 +2789,11 @@ name|ICS
 parameter_list|,
 name|QualType
 name|T
+parameter_list|,
+name|bool
+name|TopLevelOfInitList
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a list-initialization step.

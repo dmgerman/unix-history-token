@@ -117,7 +117,9 @@ name|bool
 name|overlap
 argument_list|(
 specifier|const
-name|LiveRange
+name|LiveInterval
+operator|::
+name|Segment
 operator|&
 name|VRSeg
 argument_list|,

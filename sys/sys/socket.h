@@ -237,6 +237,54 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UINT32_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__uint32_t
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UINT32_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UINTPTR_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__uintptr_t
+name|uintptr_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UINTPTR_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Types  */
 end_comment
@@ -2074,15 +2122,8 @@ value|AF_MAX
 end_define
 
 begin_comment
-comment|/*  * Definitions for network related sysctl, CTL_NET.  *  * Second level is protocol family.  * Third level is protocol number.  *  * Further levels are defined by the individual families below.  */
+comment|/*  * Definitions for network related sysctl, CTL_NET.  *  * Second level is protocol family.  * Third level is protocol number.  *  * Further levels are defined by the individual families.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NET_MAXID
-value|AF_MAX
-end_define
 
 begin_comment
 comment|/*  * PF_ROUTE - Routing table  *  * Three additional levels are defined:  *	Fourth: address family, 0 is wildcard  *	Fifth: type of info, defined below  *	Sixth: flag(s) to mask with for NET_RT_FLAGS  */
@@ -2142,13 +2183,6 @@ end_define
 begin_comment
 comment|/* Survey interface list, using 'l'en 					 * versions of msghdr structs. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NET_RT_MAXID
-value|6
-end_define
 
 begin_endif
 endif|#
@@ -2909,6 +2943,51 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * sendfile(2) kqueue information  */
+end_comment
+
+begin_struct
+struct|struct
+name|sf_hdtr_kq
+block|{
+name|uintptr_t
+name|kq_ident
+decl_stmt|;
+comment|/* ident (from userland?) */
+name|void
+modifier|*
+name|kq_udata
+decl_stmt|;
+comment|/* user data pointer */
+name|uint32_t
+name|kq_flags
+decl_stmt|;
+comment|/* extra flags to pass in */
+name|int
+name|kq_fd
+decl_stmt|;
+comment|/* kq fd to post completion events on */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sf_hdtr_all
+block|{
+name|struct
+name|sf_hdtr
+name|hdtr
+decl_stmt|;
+name|struct
+name|sf_hdtr_kq
+name|kq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Sendfile-specific flag(s)  */
 end_comment
 
@@ -2931,6 +3010,13 @@ define|#
 directive|define
 name|SF_SYNC
 value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SF_KQUEUE
+value|0x00000008
 end_define
 
 begin_ifdef

@@ -193,7 +193,7 @@ name|target_id_t
 name|target_id
 decl_stmt|;
 comment|/* Target device ID */
-name|lun_id_t
+name|u_int
 name|target_lun
 decl_stmt|;
 comment|/* Target LUN number */
@@ -392,6 +392,228 @@ define|#
 directive|define
 name|CAMGETPASSTHRU_0x17
 value|_IOC(IOC_INOUT, CAM_VERSION_0x17, 3, CAM_0X17_LEN)
+end_define
+
+begin_comment
+comment|/* Version 0x18 compatibility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAM_VERSION_0x18
+value|0x18
+end_define
+
+begin_struct
+struct|struct
+name|ccb_hdr_0x18
+block|{
+name|cam_pinfo
+name|pinfo
+decl_stmt|;
+comment|/* Info for priority scheduling */
+name|camq_entry
+name|xpt_links
+decl_stmt|;
+comment|/* For chaining in the XPT layer */
+name|camq_entry
+name|sim_links
+decl_stmt|;
+comment|/* For chaining in the SIM layer */
+name|camq_entry
+name|periph_links
+decl_stmt|;
+comment|/* For chaining in the type driver */
+name|u_int32_t
+name|retry_count
+decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|cbfcnp
+function_decl|)
+parameter_list|(
+name|struct
+name|cam_periph
+modifier|*
+parameter_list|,
+name|union
+name|ccb
+modifier|*
+parameter_list|)
+function_decl|;
+name|xpt_opcode
+name|func_code
+decl_stmt|;
+comment|/* XPT function code */
+name|u_int32_t
+name|status
+decl_stmt|;
+comment|/* Status returned by CAM subsystem */
+name|struct
+name|cam_path
+modifier|*
+name|path
+decl_stmt|;
+comment|/* Compiled path for this ccb */
+name|path_id_t
+name|path_id
+decl_stmt|;
+comment|/* Path ID for the request */
+name|target_id_t
+name|target_id
+decl_stmt|;
+comment|/* Target device ID */
+name|u_int
+name|target_lun
+decl_stmt|;
+comment|/* Target LUN number */
+name|u_int64_t
+name|ext_lun
+decl_stmt|;
+comment|/* 64-bit LUN, more or less */
+name|u_int32_t
+name|flags
+decl_stmt|;
+comment|/* ccb_flags */
+name|u_int32_t
+name|xflags
+decl_stmt|;
+comment|/* extended ccb_flags */
+name|ccb_ppriv_area
+name|periph_priv
+decl_stmt|;
+name|ccb_spriv_area
+name|sim_priv
+decl_stmt|;
+name|ccb_qos_area
+name|qos
+decl_stmt|;
+name|u_int32_t
+name|timeout
+decl_stmt|;
+comment|/* Hard timeout value in seconds */
+name|struct
+name|timeval
+name|softtimeout
+decl_stmt|;
+comment|/* Soft timeout value in sec + usec */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CAM_EXTLUN_VALID_0x18
+init|=
+literal|0x00000001
+block|,
+comment|/* 64bit lun field is valid      */
+block|}
+name|ccb_xflags_0x18
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|dev_match_result_0x18
+block|{
+name|dev_match_type
+name|type
+decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
+name|char
+name|periph_name
+index|[
+name|DEV_IDLEN
+index|]
+decl_stmt|;
+name|u_int32_t
+name|unit_number
+decl_stmt|;
+name|path_id_t
+name|path_id
+decl_stmt|;
+name|target_id_t
+name|target_id
+decl_stmt|;
+name|u_int
+name|target_lun
+decl_stmt|;
+block|}
+name|periph_result
+struct|;
+struct|struct
+block|{
+name|path_id_t
+name|path_id
+decl_stmt|;
+name|target_id_t
+name|target_id
+decl_stmt|;
+name|u_int
+name|target_lun
+decl_stmt|;
+name|cam_proto
+name|protocol
+decl_stmt|;
+name|struct
+name|scsi_inquiry_data
+name|inq_data
+decl_stmt|;
+name|struct
+name|ata_params
+name|ident_data
+decl_stmt|;
+name|dev_result_flags
+name|flags
+decl_stmt|;
+block|}
+name|device_result
+struct|;
+name|struct
+name|bus_match_result
+name|bus_result
+decl_stmt|;
+block|}
+name|result
+union|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CAM_0X18_LEN
+value|(sizeof(union ccb) - sizeof(struct ccb_hdr) + sizeof(struct ccb_hdr_0x18))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAM_0X18_DATA_LEN
+value|(sizeof(union ccb) - sizeof(struct ccb_hdr_0x18))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMIOCOMMAND_0x18
+value|_IOC(IOC_INOUT, CAM_VERSION_0x18, 2, CAM_0X18_LEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMGETPASSTHRU_0x18
+value|_IOC(IOC_INOUT, CAM_VERSION_0x18, 3, CAM_0X18_LEN)
 end_define
 
 begin_endif

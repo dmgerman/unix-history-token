@@ -158,12 +158,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -208,18 +202,6 @@ include|#
 directive|include
 file|<arm/lpc/lpcvar.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
 
 begin_ifdef
 ifdef|#
@@ -772,6 +754,19 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 operator|!
@@ -2652,7 +2647,7 @@ name|lm_dev
 argument_list|,
 name|LPC_MMC_DMACH_READ
 argument_list|,
-name|LPC_SD_BASE
+name|LPC_SD_PHYS_BASE
 operator|+
 name|LPC_SD_FIFO
 argument_list|,
@@ -2693,7 +2688,7 @@ name|sc
 operator|->
 name|lm_buffer_phys
 argument_list|,
-name|LPC_SD_BASE
+name|LPC_SD_PHYS_BASE
 operator|+
 name|LPC_SD_FIFO
 argument_list|,

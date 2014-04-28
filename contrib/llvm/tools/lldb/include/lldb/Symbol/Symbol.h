@@ -283,6 +283,43 @@ return|return
 name|m_mangled
 return|;
 block|}
+name|ConstString
+name|GetReExportedSymbolName
+argument_list|()
+specifier|const
+block|;
+name|FileSpec
+name|GetReExportedSymbolSharedLibrary
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|SetReExportedSymbolName
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|name
+argument_list|)
+block|;
+name|bool
+name|SetReExportedSymbolSharedLibrary
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|fspec
+argument_list|)
+block|;
+name|Symbol
+operator|*
+name|ResolveReExportedSymbol
+argument_list|(
+name|Target
+operator|&
+name|target
+argument_list|)
+block|;
 name|uint32_t
 name|GetSiblingIndex
 argument_list|()
@@ -496,23 +533,6 @@ name|m_size_is_sibling
 operator|=
 name|b
 block|;     }
-comment|//    void
-comment|//    SetValue (Address&value)
-comment|//    {
-comment|//        m_addr_range.GetBaseAddress() = value;
-comment|//    }
-comment|//
-comment|//    void
-comment|//    SetValue (const AddressRange&range)
-comment|//    {
-comment|//        m_addr_range = range;
-comment|//    }
-comment|//
-comment|//    void
-comment|//    SetValue (lldb::addr_t value);
-comment|//    {
-comment|//        m_addr_range.GetBaseAddress().SetRawAddress(value);
-comment|//    }
 comment|// If m_type is "Code" or "Function" then this will return the prologue size
 comment|// in bytes, else it will return zero.
 name|uint32_t
@@ -577,6 +597,30 @@ argument_list|(
 name|Stream
 operator|*
 name|s
+argument_list|)
+block|;
+name|lldb
+operator|::
+name|DisassemblerSP
+name|GetInstructions
+argument_list|(
+argument|const ExecutionContext&exe_ctx
+argument_list|,
+argument|const char *flavor
+argument_list|,
+argument|bool prefer_file_cache
+argument_list|)
+block|;
+name|bool
+name|GetDisassembly
+argument_list|(
+argument|const ExecutionContext&exe_ctx
+argument_list|,
+argument|const char *flavor
+argument_list|,
+argument|bool prefer_file_cache
+argument_list|,
+argument|Stream&strm
 argument_list|)
 block|;
 name|protected

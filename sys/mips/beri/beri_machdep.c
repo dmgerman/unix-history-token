@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006 Wojciech A. Koszek<wkoszek@FreeBSD.org>  * Copyright (c) 2012 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by SRI International and the University of  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)  * ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2006 Wojciech A. Koszek<wkoszek@FreeBSD.org>  * Copyright (c) 2012-2014 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by SRI International and the University of  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)  * ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -199,6 +199,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bootinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -392,7 +398,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform a board-level soft-reset.  *  * XXXRW: BERI doesn't yet have a board-level soft-reset.  */
+comment|/*  * Perform a board-level soft-reset.  */
 end_comment
 
 begin_function
@@ -402,13 +408,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|panic
+comment|/* XXX SMP will likely require us to do more. */
+asm|__asm__
+specifier|__volatile__
+asm|( 		"mfc0 $k0, $12\n\t" 		"li $k1, 0x00100000\n\t" 		"or $k0, $k0, $k1\n\t" 		"mtc0 $k0, $12\n");
+for|for
+control|(
+init|;
+condition|;
+control|)
+name|__asm__
+name|__volatile
 argument_list|(
-literal|"%s: not yet"
-argument_list|,
-name|__func__
+literal|"wait"
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 block|}
 end_function
 
@@ -429,6 +443,11 @@ name|__register_t
 name|a3
 parameter_list|)
 block|{
+name|struct
+name|bootinfo
+modifier|*
+name|bootinfop
+decl_stmt|;
 name|vm_offset_t
 name|kernend
 decl_stmt|;
@@ -464,11 +483,8 @@ operator|*
 operator|)
 name|a2
 decl_stmt|;
-name|unsigned
-name|int
+name|long
 name|memsize
-init|=
-name|a3
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -518,6 +534,49 @@ expr_stmt|;
 name|mips_pcpu0_init
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Over time, we've changed out boot-time binary interface for the 	 * kernel.  Miniboot simply provides a 'memsize' in a3, whereas the 	 * FreeBSD boot loader provides a 'bootinfo *' in a3.  While slightly 	 * grody, we support both here by detecting 'pointer-like' values in 	 * a3 and assuming physical memory can never be that back. 	 * 	 * XXXRW: Pull more values than memsize out of bootinfop -- e.g., 	 * module information. 	 */
+if|if
+condition|(
+name|a3
+operator|>=
+literal|0x9800000000000000ULL
+condition|)
+block|{
+name|bootinfop
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|a3
+expr_stmt|;
+name|memsize
+operator|=
+name|bootinfop
+operator|->
+name|bi_memsize
+expr_stmt|;
+name|preload_metadata
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|bootinfop
+operator|->
+name|bi_modulep
+expr_stmt|;
+block|}
+else|else
+block|{
+name|bootinfop
+operator|=
+name|NULL
+expr_stmt|;
+name|memsize
+operator|=
+name|a3
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|FDT
@@ -605,8 +664,11 @@ if|if
 condition|(
 name|OF_init
 argument_list|(
-operator|&
-name|fdt_static_dtb
+operator|(
+name|void
+operator|*
+operator|)
+name|dtbp
 argument_list|)
 operator|!=
 literal|0
@@ -618,6 +680,30 @@ condition|)
 empty_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Configure more boot-time parameters passed in by loader. 	 */
+name|boothowto
+operator|=
+name|MD_FETCH
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFOMD_HOWTO
+argument_list|,
+name|int
+argument_list|)
+expr_stmt|;
+name|kern_envp
+operator|=
+name|MD_FETCH
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFOMD_ENVP
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXXRW: We have no way to compare wallclock time to cycle rate on 	 * BERI, so for now assume we run at the MALTA default (100MHz). 	 */
 name|platform_counter_freq
 operator|=
@@ -715,10 +801,27 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootinfop
+operator|!=
+name|NULL
+condition|)
 name|printf
 argument_list|(
-literal|"memsize = %08x\n"
+literal|"bootinfo found at %p\n"
 argument_list|,
+name|bootinfop
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"memsize = %p\n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|memsize
 argument_list|)
 expr_stmt|;

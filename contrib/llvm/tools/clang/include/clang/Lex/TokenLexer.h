@@ -349,7 +349,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// Lex - Lex and return a token from this macro stream.
-name|void
+name|bool
 name|Lex
 parameter_list|(
 name|Token
@@ -444,6 +444,14 @@ parameter_list|,
 name|Token
 modifier|*
 name|end_tokens
+parameter_list|)
+function_decl|;
+name|void
+name|PropagateLineStartLeadingSpaceInfo
+parameter_list|(
+name|Token
+modifier|&
+name|Result
 parameter_list|)
 function_decl|;
 block|}

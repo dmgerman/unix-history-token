@@ -76,19 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/SourceManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Format/Format.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Lex/Lexer.h"
+file|"FormatToken.h"
 end_include
 
 begin_include
@@ -101,135 +95,12 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|DiagnosticsEngine
-decl_stmt|;
 name|namespace
 name|format
 block|{
-comment|/// \brief A wrapper around a \c Token storing information about the
-comment|/// whitespace characters preceeding it.
-struct|struct
-name|FormatToken
-block|{
-name|FormatToken
-argument_list|()
-operator|:
-name|NewlinesBefore
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|HasUnescapedNewline
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|WhiteSpaceLength
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastNewlineOffset
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TokenLength
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|IsFirst
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|MustBreakBefore
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|TrailingWhiteSpaceLength
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-comment|/// \brief The \c Token.
-name|Token
-name|Tok
-expr_stmt|;
-comment|/// \brief The number of newlines immediately before the \c Token.
-comment|///
-comment|/// This can be used to determine what the user wrote in the original code
-comment|/// and thereby e.g. leave an empty line between two function definitions.
-name|unsigned
-name|NewlinesBefore
-decl_stmt|;
-comment|/// \brief Whether there is at least one unescaped newline before the \c
-comment|/// Token.
-name|bool
-name|HasUnescapedNewline
-decl_stmt|;
-comment|/// \brief The location of the start of the whitespace immediately preceeding
-comment|/// the \c Token.
-comment|///
-comment|/// Used together with \c WhiteSpaceLength to create a \c Replacement.
-name|SourceLocation
-name|WhiteSpaceStart
-decl_stmt|;
-comment|/// \brief The length in characters of the whitespace immediately preceeding
-comment|/// the \c Token.
-name|unsigned
-name|WhiteSpaceLength
-decl_stmt|;
-comment|/// \brief The offset just past the last '\n' in this token's leading
-comment|/// whitespace (relative to \c WhiteSpaceStart). 0 if there is no '\n'.
-name|unsigned
-name|LastNewlineOffset
-decl_stmt|;
-comment|/// \brief The length of the non-whitespace parts of the token. This is
-comment|/// necessary because we need to handle escaped newlines that are stored
-comment|/// with the token.
-name|unsigned
-name|TokenLength
-decl_stmt|;
-comment|/// \brief Indicates that this is the first token.
-name|bool
-name|IsFirst
-decl_stmt|;
-comment|/// \brief Whether there must be a line break before this token.
-comment|///
-comment|/// This happens for example when a preprocessor directive ended directly
-comment|/// before the token.
-name|bool
-name|MustBreakBefore
-decl_stmt|;
-comment|/// \brief Number of characters of trailing whitespace.
-name|unsigned
-name|TrailingWhiteSpaceLength
-decl_stmt|;
-comment|/// \brief Returns actual token start location without leading escaped
-comment|/// newlines and whitespace.
-comment|///
-comment|/// This can be different to Tok.getLocation(), which includes leading escaped
-comment|/// newlines.
-name|SourceLocation
-name|getStartOfNonWhitespace
-argument_list|()
-specifier|const
-block|{
-return|return
-name|WhiteSpaceStart
-operator|.
-name|getLocWithOffset
-argument_list|(
-name|WhiteSpaceLength
-argument_list|)
-return|;
-block|}
-block|}
-struct|;
+struct_decl|struct
+name|UnwrappedLineNode
+struct_decl|;
 comment|/// \brief An unwrapped line is a sequence of \c Token, that we would like to
 comment|/// put on a single line if there was no column limit.
 comment|///
@@ -241,29 +112,14 @@ name|UnwrappedLine
 block|{
 name|UnwrappedLine
 argument_list|()
-operator|:
-name|Level
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|InPPDirective
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|MustBeDeclaration
-argument_list|(
-argument|false
-argument_list|)
-block|{   }
+expr_stmt|;
 comment|// FIXME: Don't use std::list here.
 comment|/// \brief The \c Tokens comprising this \c UnwrappedLine.
 name|std
 operator|::
 name|list
 operator|<
-name|FormatToken
+name|UnwrappedLineNode
 operator|>
 name|Tokens
 expr_stmt|;
@@ -289,7 +145,7 @@ name|virtual
 operator|~
 name|UnwrappedLineConsumer
 argument_list|()
-block|{   }
+block|{}
 name|virtual
 name|void
 name|consumeUnwrappedLine
@@ -302,27 +158,18 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|virtual
+name|void
+name|finishRun
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 block|}
 empty_stmt|;
 name|class
 name|FormatTokenSource
-block|{
-name|public
-label|:
-name|virtual
-operator|~
-name|FormatTokenSource
-argument_list|()
-block|{   }
-name|virtual
-name|FormatToken
-name|getNextToken
-argument_list|()
-operator|=
-literal|0
-expr_stmt|;
-block|}
-empty_stmt|;
+decl_stmt|;
 name|class
 name|UnwrappedLineParser
 block|{
@@ -330,19 +177,16 @@ name|public
 label|:
 name|UnwrappedLineParser
 argument_list|(
-name|clang
-operator|::
-name|DiagnosticsEngine
-operator|&
-name|Diag
-argument_list|,
 specifier|const
 name|FormatStyle
 operator|&
 name|Style
 argument_list|,
-name|FormatTokenSource
-operator|&
+name|ArrayRef
+operator|<
+name|FormatToken
+operator|*
+operator|>
 name|Tokens
 argument_list|,
 name|UnwrappedLineConsumer
@@ -357,6 +201,10 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
+name|void
+name|reset
+parameter_list|()
+function_decl|;
 name|void
 name|parseFile
 parameter_list|()
@@ -374,11 +222,20 @@ parameter_list|(
 name|bool
 name|MustBeDeclaration
 parameter_list|,
-name|unsigned
-name|AddLevels
+name|bool
+name|AddLevel
 init|=
-literal|1
+name|true
+parameter_list|,
+name|bool
+name|MunchSemi
+init|=
+name|true
 parameter_list|)
+function_decl|;
+name|void
+name|parseChildBlock
+parameter_list|()
 function_decl|;
 name|void
 name|parsePPDirective
@@ -389,6 +246,25 @@ name|parsePPDefine
 parameter_list|()
 function_decl|;
 name|void
+name|parsePPIf
+parameter_list|(
+name|bool
+name|IfDef
+parameter_list|)
+function_decl|;
+name|void
+name|parsePPElIf
+parameter_list|()
+function_decl|;
+name|void
+name|parsePPElse
+parameter_list|()
+function_decl|;
+name|void
+name|parsePPEndIf
+parameter_list|()
+function_decl|;
+name|void
 name|parsePPUnknown
 parameter_list|()
 function_decl|;
@@ -396,9 +272,18 @@ name|void
 name|parseStructuralElement
 parameter_list|()
 function_decl|;
-name|void
-name|parseBracedList
+name|bool
+name|tryToParseBracedList
 parameter_list|()
+function_decl|;
+name|bool
+name|parseBracedList
+parameter_list|(
+name|bool
+name|ContinueOnSemicolons
+init|=
+name|false
+parameter_list|)
 function_decl|;
 name|void
 name|parseReturn
@@ -465,6 +350,14 @@ name|parseObjCProtocol
 parameter_list|()
 function_decl|;
 name|void
+name|tryToParseLambda
+parameter_list|()
+function_decl|;
+name|bool
+name|tryToParseLambdaIntroducer
+parameter_list|()
+function_decl|;
+name|void
 name|addUnwrappedLine
 parameter_list|()
 function_decl|;
@@ -491,11 +384,18 @@ function_decl|;
 name|void
 name|pushToken
 parameter_list|(
-specifier|const
 name|FormatToken
-modifier|&
+modifier|*
 name|Tok
 parameter_list|)
+function_decl|;
+name|void
+name|calculateBraceTypes
+parameter_list|()
+function_decl|;
+name|void
+name|pushPPConditional
+parameter_list|()
 function_decl|;
 comment|// FIXME: We are constantly running into bugs where Line.Level is incorrectly
 comment|// subtracted from beyond 0. Introduce a method to subtract from Line.Level
@@ -513,34 +413,36 @@ comment|// store the comments belonging to that token.
 name|SmallVector
 operator|<
 name|FormatToken
+operator|*
 operator|,
 literal|1
 operator|>
 name|CommentsBeforeNextToken
 expr_stmt|;
 name|FormatToken
+modifier|*
 name|FormatTok
 decl_stmt|;
 name|bool
 name|MustBreakBeforeNextToken
 decl_stmt|;
 comment|// The parsed lines. Only added to through \c CurrentLines.
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|UnwrappedLine
+operator|,
+literal|8
 operator|>
 name|Lines
 expr_stmt|;
 comment|// Preprocessor directives are parsed out-of-order from other unwrapped lines.
 comment|// Thus, we need to keep a list of preprocessor directives to be reported
 comment|// after an unwarpped line that has been started was finished.
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|UnwrappedLine
+operator|,
+literal|4
 operator|>
 name|PreprocessorDirectives
 expr_stmt|;
@@ -548,9 +450,7 @@ comment|// New unwrapped lines are added via CurrentLines.
 comment|// Usually points to \c&Lines. While parsing a preprocessor directive when
 comment|// there is an unfinished previous unwrapped line, will point to
 comment|// \c&PreprocessorDirectives.
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|UnwrappedLine
 operator|>
@@ -572,12 +472,6 @@ comment|// indentation levels.
 name|bool
 name|StructuralError
 decl_stmt|;
-name|clang
-operator|::
-name|DiagnosticsEngine
-operator|&
-name|Diag
-expr_stmt|;
 specifier|const
 name|FormatStyle
 modifier|&
@@ -591,12 +485,141 @@ name|UnwrappedLineConsumer
 modifier|&
 name|Callback
 decl_stmt|;
+comment|// FIXME: This is a temporary measure until we have reworked the ownership
+comment|// of the format tokens. The goal is to have the actual tokens created and
+comment|// owned outside of and handed into the UnwrappedLineParser.
+name|ArrayRef
+operator|<
+name|FormatToken
+operator|*
+operator|>
+name|AllTokens
+expr_stmt|;
+comment|// Represents preprocessor branch type, so we can find matching
+comment|// #if/#else/#endif directives.
+enum|enum
+name|PPBranchKind
+block|{
+name|PP_Conditional
+block|,
+comment|// Any #if, #ifdef, #ifndef, #elif, block outside #if 0
+name|PP_Unreachable
+comment|// #if 0 or a conditional preprocessor block inside #if 0
+block|}
+enum|;
+comment|// Keeps a stack of currently active preprocessor branching directives.
+name|SmallVector
+operator|<
+name|PPBranchKind
+operator|,
+literal|16
+operator|>
+name|PPStack
+expr_stmt|;
+comment|// The \c UnwrappedLineParser re-parses the code for each combination
+comment|// of preprocessor branches that can be taken.
+comment|// To that end, we take the same branch (#if, #else, or one of the #elif
+comment|// branches) for each nesting level of preprocessor branches.
+comment|// \c PPBranchLevel stores the current nesting level of preprocessor
+comment|// branches during one pass over the code.
+name|int
+name|PPBranchLevel
+decl_stmt|;
+comment|// Contains the current branch (#if, #else or one of the #elif branches)
+comment|// for each nesting level.
+name|SmallVector
+operator|<
+name|int
+operator|,
+literal|8
+operator|>
+name|PPLevelBranchIndex
+expr_stmt|;
+comment|// Contains the maximum number of branches at each nesting level.
+name|SmallVector
+operator|<
+name|int
+operator|,
+literal|8
+operator|>
+name|PPLevelBranchCount
+expr_stmt|;
+comment|// Contains the number of branches per nesting level we are currently
+comment|// in while parsing a preprocessor branch sequence.
+comment|// This is used to update PPLevelBranchCount at the end of a branch
+comment|// sequence.
+name|std
+operator|::
+name|stack
+operator|<
+name|int
+operator|>
+name|PPChainBranchIndex
+expr_stmt|;
 name|friend
 name|class
 name|ScopedLineState
 decl_stmt|;
 block|}
 empty_stmt|;
+struct|struct
+name|UnwrappedLineNode
+block|{
+name|UnwrappedLineNode
+argument_list|()
+operator|:
+name|Tok
+argument_list|(
+argument|NULL
+argument_list|)
+block|{}
+name|UnwrappedLineNode
+argument_list|(
+name|FormatToken
+operator|*
+name|Tok
+argument_list|)
+operator|:
+name|Tok
+argument_list|(
+argument|Tok
+argument_list|)
+block|{}
+name|FormatToken
+operator|*
+name|Tok
+expr_stmt|;
+name|SmallVector
+operator|<
+name|UnwrappedLine
+operator|,
+literal|0
+operator|>
+name|Children
+expr_stmt|;
+block|}
+struct|;
+specifier|inline
+name|UnwrappedLine
+operator|::
+name|UnwrappedLine
+argument_list|()
+operator|:
+name|Level
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|InPPDirective
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|MustBeDeclaration
+argument_list|(
+argument|false
+argument_list|)
+block|{}
 block|}
 comment|// end namespace format
 block|}

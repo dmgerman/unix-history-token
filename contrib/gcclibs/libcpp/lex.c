@@ -549,6 +549,13 @@ operator|->
 name|from_stage3
 condition|)
 block|{
+specifier|const
+name|uchar
+modifier|*
+name|pbackslash
+init|=
+name|NULL
+decl_stmt|;
 comment|/* Short circuit for the common case of an un-escaped line with 	 no trigraphs.  The primary win here is by not writing any 	 data back to memory until we have to.  */
 for|for
 control|(
@@ -564,13 +571,23 @@ name|s
 expr_stmt|;
 if|if
 condition|(
+name|__builtin_expect
+argument_list|(
 name|c
 operator|==
 literal|'\n'
+argument_list|,
+name|false
+argument_list|)
 operator|||
+name|__builtin_expect
+argument_list|(
 name|c
 operator|==
 literal|'\r'
+argument_list|,
+name|false
+argument_list|)
 condition|)
 block|{
 name|d
@@ -583,11 +600,16 @@ name|s
 expr_stmt|;
 if|if
 condition|(
+name|__builtin_expect
+argument_list|(
 name|s
 operator|==
 name|buffer
 operator|->
 name|rlimit
+argument_list|,
+name|false
+argument_list|)
 condition|)
 goto|goto
 name|done
@@ -595,9 +617,14 @@ goto|;
 comment|/* DOS line ending? */
 if|if
 condition|(
+name|__builtin_expect
+argument_list|(
 name|c
 operator|==
 literal|'\r'
+argument_list|,
+name|false
+argument_list|)
 operator|&&
 name|s
 index|[
@@ -606,6 +633,7 @@ index|]
 operator|==
 literal|'\n'
 condition|)
+block|{
 name|s
 operator|++
 expr_stmt|;
@@ -620,19 +648,28 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/* check for escaped newline */
+block|}
+if|if
+condition|(
+name|__builtin_expect
+argument_list|(
+name|pbackslash
+operator|==
+name|NULL
+argument_list|,
+name|true
+argument_list|)
+condition|)
+goto|goto
+name|done
+goto|;
+comment|/* Check for escaped newline.  */
 name|p
 operator|=
 name|d
 expr_stmt|;
 while|while
 condition|(
-name|p
-operator|!=
-name|buffer
-operator|->
-name|next_line
-operator|&&
 name|is_nvspace
 argument_list|(
 name|p
@@ -648,18 +685,10 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-operator|==
-name|buffer
-operator|->
-name|next_line
-operator|||
-name|p
-index|[
 operator|-
 literal|1
-index|]
 operator|!=
-literal|'\\'
+name|pbackslash
 condition|)
 goto|goto
 name|done
@@ -700,16 +729,42 @@ break|break;
 block|}
 if|if
 condition|(
+name|__builtin_expect
+argument_list|(
+name|c
+operator|==
+literal|'\\'
+argument_list|,
+name|false
+argument_list|)
+condition|)
+name|pbackslash
+operator|=
+name|s
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|__builtin_expect
+argument_list|(
 name|c
 operator|==
 literal|'?'
+argument_list|,
+name|false
+argument_list|)
 operator|&&
+name|__builtin_expect
+argument_list|(
 name|s
 index|[
 literal|1
 index|]
 operator|==
 literal|'?'
+argument_list|,
+name|false
+argument_list|)
 operator|&&
 name|_cpp_trigraph_map
 index|[
@@ -2982,6 +3037,7 @@ argument_list|,
 literal|"null character(s) preserved in literal"
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin #error with unmatched quotes 5607574 */
 if|if
 condition|(
 name|type
@@ -2996,7 +3052,22 @@ name|lang
 argument_list|)
 operator|!=
 name|CLK_ASM
+operator|&&
+operator|!
+name|pfile
+operator|->
+name|state
+operator|.
+name|in_diagnostic
+operator|&&
+operator|!
+name|pfile
+operator|->
+name|state
+operator|.
+name|skipping
 condition|)
+comment|/* APPLE LOCAL end #error with unmatched quotes 5607574 */
 name|cpp_error
 argument_list|(
 name|pfile
@@ -3477,6 +3548,32 @@ operator|->
 name|base
 expr_stmt|;
 block|}
+comment|/* We assume that the current token is somewhere in the current 	 run.  */
+if|if
+condition|(
+name|pfile
+operator|->
+name|cur_token
+operator|<
+name|pfile
+operator|->
+name|cur_run
+operator|->
+name|base
+operator|||
+name|pfile
+operator|->
+name|cur_token
+operator|>=
+name|pfile
+operator|->
+name|cur_run
+operator|->
+name|limit
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|pfile
@@ -3771,7 +3868,7 @@ operator|->
 name|from_stage3
 condition|)
 block|{
-comment|/* Only warn once.  */
+comment|/* Clip to buffer size.  */
 name|buffer
 operator|->
 name|next_line
@@ -3780,6 +3877,17 @@ name|buffer
 operator|->
 name|rlimit
 expr_stmt|;
+comment|/* APPLE LOCAL begin suppress no newline warning.  */
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|warn_newline_at_eof
+argument_list|)
+condition|)
+block|{
 name|cpp_error_with_line
 argument_list|(
 name|pfile
@@ -3804,6 +3912,8 @@ argument_list|,
 literal|"no newline at end of file"
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* APPLE LOCAL end suppress no newline warning.  */
 block|}
 name|return_at_eof
 operator|=

@@ -342,7 +342,7 @@ name|DMU_OS_IS_L2COMPRESSIBLE
 parameter_list|(
 name|os
 parameter_list|)
-value|((os)->os_compress != ZIO_COMPRESS_OFF)
+value|(zfs_mdcomp_disable == B_FALSE)
 comment|/* called from zpl */
 name|int
 name|dmu_objset_hold

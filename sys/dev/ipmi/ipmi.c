@@ -3198,6 +3198,11 @@ decl_stmt|;
 name|int
 name|e
 decl_stmt|;
+if|if
+condition|(
+name|dumping
+condition|)
+return|return;
 name|cmd
 operator|&=
 name|WD_INTERVAL

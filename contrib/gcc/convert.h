@@ -75,6 +75,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL blocks */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|convert_to_block_pointer
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

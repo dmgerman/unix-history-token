@@ -70,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/LineEntry.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/LineEntry.h"
+file|"lldb/Utility/Iterable.h"
 end_include
 
 begin_decl_stmt
@@ -1104,6 +1104,30 @@ name|collection
 name|m_symbol_contexts
 decl_stmt|;
 comment|///< The list of symbol contexts.
+name|public
+label|:
+typedef|typedef
+name|AdaptedIterable
+operator|<
+name|collection
+operator|,
+name|SymbolContext
+operator|,
+name|vector_adapter
+operator|>
+name|SymbolContextIterable
+expr_stmt|;
+name|SymbolContextIterable
+name|SymbolContexts
+parameter_list|()
+block|{
+return|return
+name|SymbolContextIterable
+argument_list|(
+name|m_symbol_contexts
+argument_list|)
+return|;
+block|}
 block|}
 empty_stmt|;
 name|bool

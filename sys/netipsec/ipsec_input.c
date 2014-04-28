@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/pfil.h>
 end_include
 
@@ -2877,6 +2883,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Save protocol */
+name|prot
+operator|=
+literal|0
+expr_stmt|;
 name|m_copydata
 argument_list|(
 name|m

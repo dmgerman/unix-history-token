@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/efi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/exec.h>
 end_include
 
@@ -207,12 +213,6 @@ begin_include
 include|#
 directive|include
 file|<machine/fpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/efi.h>
 end_include
 
 begin_include
@@ -1539,6 +1539,23 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|user
+condition|)
+name|ia64_set_fpsr
+argument_list|(
+name|IA64_FPSR_DEFAULT
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XTRACE
+name|ia64_xtrace_save
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|PCPU_INC
 argument_list|(
 name|cnt
@@ -1565,11 +1582,6 @@ condition|(
 name|user
 condition|)
 block|{
-name|ia64_set_fpsr
-argument_list|(
-name|IA64_FPSR_DEFAULT
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_pticks

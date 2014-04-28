@@ -114,14 +114,7 @@ parameter_list|(
 name|vm_paddr_t
 name|fdt_immr_pa
 parameter_list|)
-block|{
-comment|/* Initialize TLB1 handling */
-name|tlb1_init
-argument_list|(
-name|fdt_immr_pa
-argument_list|)
-expr_stmt|;
-block|}
+block|{  }
 end_function
 
 begin_function

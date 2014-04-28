@@ -93,7 +93,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|class
-name|RegisterContextPOSIX
+name|POSIXBreakpointProtocol
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +190,13 @@ operator|*
 name|frame
 argument_list|)
 block|;
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetThreadPointer
+argument_list|()
+block|;
 comment|//--------------------------------------------------------------------------
 comment|// These functions provide a mapping from the register offset
 comment|// back to the register index or name for use in debugging or log
@@ -265,9 +272,9 @@ argument_list|()
 block|;
 name|protected
 operator|:
-name|RegisterContextPOSIX
+name|POSIXBreakpointProtocol
 operator|*
-name|GetRegisterContextPOSIX
+name|GetPOSIXBreakpointProtocol
 argument_list|()
 block|{
 if|if
@@ -280,21 +287,8 @@ operator|=
 name|GetRegisterContext
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|return dynamic_cast<RegisterContextPOSIX*>(m_reg_context_sp.get());
-endif|#
-directive|endif
 return|return
-operator|(
-name|RegisterContextPOSIX
-operator|*
-operator|)
-name|m_reg_context_sp
-operator|.
-name|get
-argument_list|()
+name|m_posix_thread
 return|;
 block|}
 end_decl_stmt
@@ -333,6 +327,13 @@ name|string
 name|m_thread_name
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|POSIXBreakpointProtocol
+modifier|*
+name|m_posix_thread
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|ProcessMonitor
@@ -450,6 +451,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|ExitNotify
+parameter_list|(
+specifier|const
+name|ProcessMessage
+modifier|&
+name|message
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ExecNotify
 parameter_list|(
 specifier|const
 name|ProcessMessage

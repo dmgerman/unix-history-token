@@ -953,7 +953,7 @@ operator|=
 name|HAL_TP_SCALE_MAX
 expr_stmt|;
 comment|/* no scaling */
-name|ahp
+name|ah
 operator|->
 name|ah_powerMode
 operator|=

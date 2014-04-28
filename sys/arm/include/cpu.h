@@ -25,6 +25,12 @@ directive|include
 file|<machine/armreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
 begin_function_decl
 name|void
 name|cpu_halt
@@ -169,6 +175,10 @@ name|vector_page
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Params passed into initarm. If you change the size of this you will  * need to update locore.S to allocate more memory on the stack before  * it calls initarm.  */
+end_comment
+
 begin_struct
 struct|struct
 name|arm_boot_params
@@ -193,6 +203,14 @@ name|register_t
 name|abp_r3
 decl_stmt|;
 comment|/* r3 from the boot loader */
+name|vm_offset_t
+name|abp_physaddr
+decl_stmt|;
+comment|/* The kernel physical address */
+name|vm_offset_t
+name|abp_pagetable
+decl_stmt|;
+comment|/* The early page table */
 block|}
 struct|;
 end_struct

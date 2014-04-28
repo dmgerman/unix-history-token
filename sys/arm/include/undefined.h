@@ -31,6 +31,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -45,7 +51,8 @@ parameter_list|,
 name|unsigned
 name|int
 parameter_list|,
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|int

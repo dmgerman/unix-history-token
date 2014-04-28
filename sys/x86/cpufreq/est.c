@@ -8628,17 +8628,17 @@ argument_list|,
 name|msr
 argument_list|)
 expr_stmt|;
-comment|/* Wait a short while for the new setting.  XXX Is this necessary? */
-name|DELAY
-argument_list|(
-name|EST_TRANS_LAT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|need_check
 condition|)
 block|{
+comment|/* Wait a short while and read the new status. */
+name|DELAY
+argument_list|(
+name|EST_TRANS_LAT
+argument_list|)
+expr_stmt|;
 name|est_get_id16
 argument_list|(
 operator|&

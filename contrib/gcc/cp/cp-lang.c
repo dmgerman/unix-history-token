@@ -139,6 +139,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|LANG_HOOKS_GENERIC_TYPE_P
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_GENERIC_TYPE_P
+value|class_tmpl_impl_spec_p
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|LANG_HOOKS_DECL_PRINTABLE_NAME
 end_undef
 

@@ -115,6 +115,12 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enable the FPU for when the thread returns from the exception. 	 * If this is the first time the FPU has been used by the thread, 	 * initialise the FPU registers and FPSCR to 0, and set the flag 	 * to indicate that the FPU is in use. 	 */
+name|pcb
+operator|->
+name|pcb_flags
+operator||=
+name|PCB_FPU
+expr_stmt|;
 name|tf
 operator|->
 name|srr1
@@ -129,7 +135,7 @@ name|pcb
 operator|->
 name|pcb_flags
 operator|&
-name|PCB_FPU
+name|PCB_FPREGS
 operator|)
 condition|)
 block|{
@@ -152,7 +158,7 @@ name|pcb
 operator|->
 name|pcb_flags
 operator||=
-name|PCB_FPU
+name|PCB_FPREGS
 expr_stmt|;
 block|}
 comment|/* 	 * Temporarily enable floating-point so the registers 	 * can be restored. 	 */

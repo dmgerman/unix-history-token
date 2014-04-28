@@ -92,16 +92,19 @@ name|class
 name|MachineFunctionPass
 decl_stmt|;
 name|class
+name|PassConfigImpl
+decl_stmt|;
+name|class
 name|PassInfo
 decl_stmt|;
 name|class
-name|PassManagerBase
-decl_stmt|;
-name|class
-name|TargetLoweringBase
+name|ScheduleDAGInstrs
 decl_stmt|;
 name|class
 name|TargetLowering
+decl_stmt|;
+name|class
+name|TargetLoweringBase
 decl_stmt|;
 name|class
 name|TargetRegisterClass
@@ -109,16 +112,22 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
+struct_decl|struct
+name|MachineSchedContext
+struct_decl|;
+comment|// The old pass manager infrastructure is hidden in a legacy namespace now.
 name|namespace
-name|llvm
+name|legacy
 block|{
 name|class
-name|PassConfigImpl
+name|PassManagerBase
 decl_stmt|;
+block|}
+name|using
+name|legacy
+operator|::
+name|PassManagerBase
+expr_stmt|;
 comment|/// Discriminated union of Pass ID types.
 comment|///
 comment|/// The PassConfig API prefers dealing with IDs because they are safer and more
@@ -599,6 +608,28 @@ name|void
 name|addMachinePasses
 argument_list|()
 block|;
+comment|/// createTargetScheduler - Create an instance of ScheduleDAGInstrs to be run
+comment|/// within the standard MachineScheduler pass for this function and target at
+comment|/// the current optimization level.
+comment|///
+comment|/// This can also be used to plug a new MachineSchedStrategy into an instance
+comment|/// of the standard ScheduleDAGMI:
+comment|///   return new ScheduleDAGMI(C, new MyStrategy(C))
+comment|///
+comment|/// Return NULL to select the default (generic) machine scheduler.
+name|virtual
+name|ScheduleDAGInstrs
+operator|*
+name|createMachineScheduler
+argument_list|(
+argument|MachineSchedContext *C
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 name|protected
 operator|:
 comment|// Helper to verify the analysis is really immutable.
@@ -779,7 +810,8 @@ argument|AnalysisID PassID
 argument_list|)
 block|;
 comment|/// Add a pass to the PassManager if that pass is supposed to be run, as
-comment|/// determined by the StartAfter and StopAfter options.
+comment|/// determined by the StartAfter and StopAfter options. Takes ownership of the
+comment|/// pass.
 name|void
 name|addPass
 argument_list|(
@@ -834,9 +866,9 @@ modifier|*
 name|createBasicTargetTransformInfoPass
 parameter_list|(
 specifier|const
-name|TargetLoweringBase
+name|TargetMachine
 modifier|*
-name|TLI
+name|TM
 parameter_list|)
 function_decl|;
 comment|/// createUnreachableBlockEliminationPass - The LLVM code generator does not
@@ -903,17 +935,6 @@ specifier|extern
 name|char
 modifier|&
 name|PHIEliminationID
-decl_stmt|;
-comment|/// StrongPHIElimination - This pass eliminates machine instruction PHI
-comment|/// nodes by inserting copy instructions.  This destroys SSA information, but
-comment|/// is the desired input for some register allocators.  This pass is
-comment|/// "required" by these register allocator like this:
-comment|///    AU.addRequiredID(PHIEliminationID);
-comment|///  This pass is still in development
-specifier|extern
-name|char
-modifier|&
-name|StrongPHIEliminationID
 decl_stmt|;
 comment|/// LiveIntervals - This analysis keeps track of the live ranges of virtual
 comment|/// and physical registers.
@@ -1178,9 +1199,9 @@ modifier|*
 name|createStackProtectorPass
 parameter_list|(
 specifier|const
-name|TargetLoweringBase
+name|TargetMachine
 modifier|*
-name|tli
+name|TM
 parameter_list|)
 function_decl|;
 comment|/// createMachineVerifierPass - This pass verifies cenerated machine code
@@ -1207,7 +1228,7 @@ parameter_list|(
 specifier|const
 name|TargetMachine
 modifier|*
-name|tm
+name|TM
 parameter_list|)
 function_decl|;
 comment|/// createSjLjEHPreparePass - This pass adapts exception handling code to use
@@ -1218,9 +1239,9 @@ modifier|*
 name|createSjLjEHPreparePass
 parameter_list|(
 specifier|const
-name|TargetLoweringBase
+name|TargetMachine
 modifier|*
-name|tli
+name|TM
 parameter_list|)
 function_decl|;
 comment|/// LocalStackSlotAllocation - This pass assigns local frame indices to stack

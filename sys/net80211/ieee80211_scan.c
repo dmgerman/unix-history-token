@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_media.h>
 end_include
 
@@ -3790,6 +3796,10 @@ literal|"%s: no channels to scan\n"
 argument_list|,
 name|__func__
 argument_list|)
+expr_stmt|;
+name|scandone
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|done

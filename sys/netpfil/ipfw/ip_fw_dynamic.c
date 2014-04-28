@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -147,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -262,7 +274,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Description of dynamic rules.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, its address fields are first masked  * with the mask defined for the rule, then hashed, then matched  * against the entries in the corresponding list.  * Dynamic rules can be used for different purposes:  *  + stateful rules;  *  + enforcing limits on the number of sessions;  *  + in-kernel NAT (not implemented yet)  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is equal to UMA zone items count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rule holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted. XXX we should make them survive.  *  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall. XXX check the latter!!!  */
+comment|/*  * Description of dynamic rules.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, its address fields are first masked  * with the mask defined for the rule, then hashed, then matched  * against the entries in the corresponding list.  * Dynamic rules can be used for different purposes:  *  + stateful rules;  *  + enforcing limits on the number of sessions;  *  + in-kernel NAT (not implemented yet)  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is equal to UMA zone items count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rule holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted. This can be changed by dyn_keep_states  * sysctl.  *  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall. XXX check the latter!!!  */
 end_comment
 
 begin_struct
@@ -430,6 +442,24 @@ parameter_list|(
 name|i
 parameter_list|)
 value|mtx_assert(&V_ipfw_dyn_v[(i)].mtx, MA_OWNED)
+end_define
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|dyn_keep_states
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_dyn_keep_states
+value|VNET(dyn_keep_states)
 end_define
 
 begin_comment
@@ -648,6 +678,50 @@ directive|define
 name|V_dyn_max
 value|VNET(dyn_max)
 end_define
+
+begin_comment
+comment|/* for userspace, we emulate the uma_zone_counter with ipfw_dyn_count */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ipfw_dyn_count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of objects */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USERSPACE
+end_ifdef
+
+begin_comment
+comment|/* emulation of UMA object counters for userspace */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|uma_zone_get_cur
+parameter_list|(
+name|x
+parameter_list|)
+value|ipfw_dyn_count
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USERSPACE */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1003,11 +1077,38 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_VNET_UINT
+argument_list|(
+name|_net_inet_ip_fw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dyn_keep_states
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|dyn_keep_states
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Do not flush dynamic states on rule deletion"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|SYSEND
 endif|#
 directive|endif
 comment|/* SYSCTL_NODE */
+ifdef|#
+directive|ifdef
+name|INET6
 specifier|static
 name|__inline
 name|int
@@ -1093,6 +1194,11 @@ name|i
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * IMPORTANT: the hash function for dynamic rules must be commutative  * in source and destination (ip,port), because rules are bidirectional  * and we want to find both in the same bucket.  */
@@ -1385,6 +1491,18 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((int)((a)-(b))<= 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIME_LE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((int)((a)-(b))< 0)
 end_define
 
 begin_comment
@@ -2633,6 +2751,9 @@ return|return
 name|NULL
 return|;
 block|}
+name|ipfw_dyn_count
+operator|++
+expr_stmt|;
 comment|/* 	 * refcount on parent is already incremented, so 	 * it is safe to use parent unlocked. 	 */
 if|if
 condition|(
@@ -4893,6 +5014,41 @@ operator|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|TIME_LE
+argument_list|(
+name|time_uptime
+argument_list|,
+name|q
+operator|->
+name|expire
+argument_list|)
+operator|&&
+name|q
+operator|->
+name|dyn_type
+operator|==
+name|O_KEEP_STATE
+operator|&&
+name|V_dyn_keep_states
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 					 * Do not delete state if 					 * it is not expired and 					 * dyn_keep_states is ON. 					 * However we need to re-link it 					 * to any other stable rule 					 */
+name|q
+operator|->
+name|rule
+operator|=
+name|chain
+operator|->
+name|default_rule
+expr_stmt|;
+name|NEXT_RULE
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* Unlink q from current list */
 name|q_next
 operator|=
@@ -5428,6 +5584,9 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
+name|ipfw_dyn_count
+operator|--
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -5456,6 +5615,9 @@ name|V_ipfw_dyn_rule_zone
 argument_list|,
 name|q
 argument_list|)
+expr_stmt|;
+name|ipfw_dyn_count
+operator|--
 expr_stmt|;
 block|}
 comment|/* 	 * The rest code MUST be called from timer routine only 	 * without holding any locks 	 */

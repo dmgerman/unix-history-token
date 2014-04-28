@@ -91,6 +91,33 @@ directive|include
 file|"llvm/Config/llvm-config.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+specifier|inline
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|inline
+value|__inline
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -123,12 +150,6 @@ name|struct
 name|LLVMOpaqueTargetLibraryInfotData
 modifier|*
 name|LLVMTargetLibraryInfoRef
-typedef|;
-typedef|typedef
-name|struct
-name|LLVMStructLayout
-modifier|*
-name|LLVMStructLayoutRef
 typedef|;
 comment|/* Declare all of the target-initialization functions that are available. */
 define|#
@@ -368,7 +389,7 @@ directive|undef
 name|LLVM_DISASSEMBLER
 comment|/* Explicit undef to make SWIG happier */
 block|}
-comment|/** LLVMInitializeNativeTarget - The main program should call this function to     initialize the native target corresponding to the host.  This is useful      for JIT applications to ensure that the target gets linked in correctly. */
+comment|/** LLVMInitializeNativeTarget - The main program should call this function to     initialize the native target corresponding to the host.  This is useful     for JIT applications to ensure that the target gets linked in correctly. */
 specifier|static
 specifier|inline
 name|LLVMBool
@@ -401,6 +422,84 @@ return|;
 endif|#
 directive|endif
 block|}
+comment|/** LLVMInitializeNativeTargetAsmParser - The main program should call this     function to initialize the parser for the native target corresponding to the     host. */
+specifier|static
+specifier|inline
+name|LLVMBool
+name|LLVMInitializeNativeAsmParser
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|LLVM_NATIVE_ASMPARSER
+name|LLVM_NATIVE_ASMPARSER
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+else|#
+directive|else
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
+block|}
+comment|/** LLVMInitializeNativeTargetAsmPrinter - The main program should call this     function to initialize the printer for the native target corresponding to     the host. */
+specifier|static
+specifier|inline
+name|LLVMBool
+name|LLVMInitializeNativeAsmPrinter
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|LLVM_NATIVE_ASMPRINTER
+name|LLVM_NATIVE_ASMPRINTER
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+else|#
+directive|else
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
+block|}
+comment|/** LLVMInitializeNativeTargetDisassembler - The main program should call this     function to initialize the disassembler for the native target corresponding     to the host. */
+specifier|static
+specifier|inline
+name|LLVMBool
+name|LLVMInitializeNativeDisassembler
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|LLVM_NATIVE_DISASSEMBLER
+name|LLVM_NATIVE_DISASSEMBLER
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+else|#
+directive|else
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
+block|}
 comment|/*===-- Target Data -------------------------------------------------------===*/
 comment|/** Creates target data from a target layout string.     See the constructor llvm::DataLayout::DataLayout. */
 name|LLVMTargetDataRef
@@ -417,8 +516,10 @@ name|void
 name|LLVMAddTargetData
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|LLVMPassManagerRef
+name|PM
 parameter_list|)
 function_decl|;
 comment|/** Adds target library information to a pass manager. This does not take     ownership of the target library info.     See the method llvm::PassManagerBase::add. */
@@ -426,8 +527,10 @@ name|void
 name|LLVMAddTargetLibraryInfo
 parameter_list|(
 name|LLVMTargetLibraryInfoRef
+name|TLI
 parameter_list|,
 name|LLVMPassManagerRef
+name|PM
 parameter_list|)
 function_decl|;
 comment|/** Converts target data to a target layout string. The string must be disposed     with LLVMDisposeMessage.     See the constructor llvm::DataLayout::DataLayout. */
@@ -436,6 +539,7 @@ modifier|*
 name|LLVMCopyStringRepOfTargetData
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|)
 function_decl|;
 comment|/** Returns the byte order of a target, either LLVMBigEndian or     LLVMLittleEndian.     See the method llvm::DataLayout::isLittleEndian. */
@@ -444,6 +548,7 @@ name|LLVMByteOrdering
 name|LLVMByteOrder
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|)
 function_decl|;
 comment|/** Returns the pointer size in bytes for a target.     See the method llvm::DataLayout::getPointerSize. */
@@ -451,6 +556,7 @@ name|unsigned
 name|LLVMPointerSize
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|)
 function_decl|;
 comment|/** Returns the pointer size in bytes for a target for a specified     address space.     See the method llvm::DataLayout::getPointerSize. */
@@ -458,6 +564,7 @@ name|unsigned
 name|LLVMPointerSizeForAS
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|unsigned
 name|AS
@@ -468,6 +575,7 @@ name|LLVMTypeRef
 name|LLVMIntPtrType
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|)
 function_decl|;
 comment|/** Returns the integer type that is the same size as a pointer on a target.     This version allows the address space to be specified.     See the method llvm::DataLayout::getIntPtrType. */
@@ -475,6 +583,32 @@ name|LLVMTypeRef
 name|LLVMIntPtrTypeForAS
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
+parameter_list|,
+name|unsigned
+name|AS
+parameter_list|)
+function_decl|;
+comment|/** Returns the integer type that is the same size as a pointer on a target.     See the method llvm::DataLayout::getIntPtrType. */
+name|LLVMTypeRef
+name|LLVMIntPtrTypeInContext
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
+name|LLVMTargetDataRef
+name|TD
+parameter_list|)
+function_decl|;
+comment|/** Returns the integer type that is the same size as a pointer on a target.     This version allows the address space to be specified.     See the method llvm::DataLayout::getIntPtrType. */
+name|LLVMTypeRef
+name|LLVMIntPtrTypeForASInContext
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
+name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|unsigned
 name|AS
@@ -487,8 +621,10 @@ name|long
 name|LLVMSizeOfTypeInBits
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|LLVMTypeRef
+name|Ty
 parameter_list|)
 function_decl|;
 comment|/** Computes the storage size of a type in bytes for a target.     See the method llvm::DataLayout::getTypeStoreSize. */
@@ -498,8 +634,10 @@ name|long
 name|LLVMStoreSizeOfType
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|LLVMTypeRef
+name|Ty
 parameter_list|)
 function_decl|;
 comment|/** Computes the ABI size of a type in bytes for a target.     See the method llvm::DataLayout::getTypeAllocSize. */
@@ -509,8 +647,10 @@ name|long
 name|LLVMABISizeOfType
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|LLVMTypeRef
+name|Ty
 parameter_list|)
 function_decl|;
 comment|/** Computes the ABI alignment of a type in bytes for a target.     See the method llvm::DataLayout::getTypeABISize. */
@@ -518,8 +658,10 @@ name|unsigned
 name|LLVMABIAlignmentOfType
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|LLVMTypeRef
+name|Ty
 parameter_list|)
 function_decl|;
 comment|/** Computes the call frame alignment of a type in bytes for a target.     See the method llvm::DataLayout::getTypeABISize. */
@@ -527,8 +669,10 @@ name|unsigned
 name|LLVMCallFrameAlignmentOfType
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|LLVMTypeRef
+name|Ty
 parameter_list|)
 function_decl|;
 comment|/** Computes the preferred alignment of a type in bytes for a target.     See the method llvm::DataLayout::getTypeABISize. */
@@ -536,8 +680,10 @@ name|unsigned
 name|LLVMPreferredAlignmentOfType
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|LLVMTypeRef
+name|Ty
 parameter_list|)
 function_decl|;
 comment|/** Computes the preferred alignment of a global variable in bytes for a target.     See the method llvm::DataLayout::getPreferredAlignment. */
@@ -545,6 +691,7 @@ name|unsigned
 name|LLVMPreferredAlignmentOfGlobal
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|LLVMValueRef
 name|GlobalVar
@@ -555,6 +702,7 @@ name|unsigned
 name|LLVMElementAtOffset
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|LLVMTypeRef
 name|StructTy
@@ -572,6 +720,7 @@ name|long
 name|LLVMOffsetOfElement
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|,
 name|LLVMTypeRef
 name|StructTy
@@ -585,6 +734,7 @@ name|void
 name|LLVMDisposeTargetData
 parameter_list|(
 name|LLVMTargetDataRef
+name|TD
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

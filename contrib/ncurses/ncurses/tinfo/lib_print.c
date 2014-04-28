@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                                                 *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -13,41 +13,54 @@ directive|include
 file|<curses.priv.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<term.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CUR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CUR
+value|SP_TERMTYPE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_print.c,v 1.16 2006/11/26 00:26:34 tom Exp $"
+literal|"$Id: lib_print.c,v 1.23 2012/02/22 22:34:31 tom Exp $"
 argument_list|)
 end_macro
 
-begin_macro
+begin_function
 name|NCURSES_EXPORT
+function|(
+name|int
+function|)
+name|NCURSES_SP_NAME
 argument_list|(
-argument|int
+argument|mcprint
 argument_list|)
-end_macro
-
-begin_macro
-name|mcprint
-argument_list|(
-argument|char *data
-argument_list|,
-argument|int len
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|len
+parameter_list|)
 comment|/* ship binary character data to the printer via mc4/mc5/mc5p */
-end_comment
-
-begin_block
 block|{
+name|int
+name|result
+decl_stmt|;
 name|char
 modifier|*
 name|mybuf
@@ -59,8 +72,9 @@ name|size_t
 name|onsize
 decl_stmt|,
 name|offsize
-decl_stmt|,
-name|res
+decl_stmt|;
+name|size_t
+name|need
 decl_stmt|;
 name|errno
 operator|=
@@ -69,7 +83,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cur_term
+name|HasTInfoTerminal
+argument_list|(
+name|SP_PARM
+argument_list|)
+operator|||
+name|len
+operator|<=
+literal|0
 operator|||
 operator|(
 operator|!
@@ -142,6 +163,17 @@ name|prtr_off
 argument_list|)
 expr_stmt|;
 block|}
+name|need
+operator|=
+name|onsize
+operator|+
+operator|(
+name|size_t
+operator|)
+name|len
+operator|+
+name|offsize
+expr_stmt|;
 if|if
 condition|(
 name|switchon
@@ -155,11 +187,7 @@ name|typeMalloc
 argument_list|(
 name|char
 argument_list|,
-name|onsize
-operator|+
-name|len
-operator|+
-name|offsize
+name|need
 operator|+
 literal|1
 argument_list|)
@@ -178,14 +206,13 @@ name|ERR
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|mybuf
 argument_list|,
 name|switchon
+argument_list|,
+name|need
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -197,7 +224,7 @@ argument_list|,
 name|data
 argument_list|,
 operator|(
-name|unsigned
+name|size_t
 operator|)
 name|len
 argument_list|)
@@ -206,10 +233,7 @@ if|if
 condition|(
 name|offsize
 condition|)
-operator|(
-name|void
-operator|)
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|mybuf
 operator|+
@@ -218,27 +242,34 @@ operator|+
 name|len
 argument_list|,
 name|prtr_off
+argument_list|,
+name|need
 argument_list|)
 expr_stmt|;
 comment|/*      * We're relying on the atomicity of UNIX writes here.  The      * danger is that output from a refresh() might get interspersed      * with the printer data after the write call returns but before the      * data has actually been shipped to the terminal.  If the write(2)      * operation is truly atomic we're protected from this.      */
-name|res
+name|result
 operator|=
+operator|(
+name|int
+operator|)
 name|write
 argument_list|(
-name|cur_term
+name|TerminalOf
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|->
 name|Filedes
 argument_list|,
 name|mybuf
 argument_list|,
-name|onsize
-operator|+
-name|len
-operator|+
-name|offsize
+name|need
 argument_list|)
 expr_stmt|;
 comment|/*      * By giving up our scheduler slot here we increase the odds that the      * kernel will ship the contiguous clist items from the last write      * immediately.      */
+ifndef|#
+directive|ifndef
+name|__MINGW32__
 operator|(
 name|void
 operator|)
@@ -247,6 +278,8 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|mybuf
@@ -254,11 +287,62 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|res
+name|result
 operator|)
 return|;
 block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_TERM_DRIVER
+argument_list|)
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|mcprint
+argument_list|(
+argument|char *data
+argument_list|,
+argument|int len
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|NCURSES_SP_NAME
+argument_list|(
+name|mcprint
+argument_list|)
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|,
+name|data
+argument_list|,
+name|len
+argument_list|)
+return|;
+block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

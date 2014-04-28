@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: schnorr.c,v 1.7 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: schnorr.c,v 1.9 2014/01/09 23:20:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -20,6 +20,14 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -79,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"schnorr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"digest.h"
 end_include
 
 begin_ifdef
@@ -168,7 +182,7 @@ comment|/* SCHNORR_DEBUG */
 end_comment
 
 begin_comment
-comment|/*  * Calculate hash component of Schnorr signature H(g || g^v || g^x || id)  * using the hash function defined by "evp_md". Returns signature as  * bignum or NULL on error.  */
+comment|/*  * Calculate hash component of Schnorr signature H(g || g^v || g^x || id)  * using the hash function defined by "hash_alg". Returns signature as  * bignum or NULL on error.  */
 end_comment
 
 begin_function
@@ -192,10 +206,8 @@ name|BIGNUM
 modifier|*
 name|g
 parameter_list|,
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
+name|int
+name|hash_alg
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -353,7 +365,7 @@ operator|&
 name|b
 argument_list|)
 argument_list|,
-name|evp_md
+name|hash_alg
 argument_list|,
 operator|&
 name|digest
@@ -464,7 +476,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generate Schnorr signature to prove knowledge of private value 'x' used  * in public exponent g^x, under group defined by 'grp_p', 'grp_q' and 'grp_g'  * using the hash function "evp_md".  * 'idlen' bytes from 'id' will be included in the signature hash as an anti-  * replay salt.  *   * On success, 0 is returned. The signature values are returned as *e_p  * (g^v mod p) and *r_p (v - xh mod q). The caller must free these values.  * On failure, -1 is returned.  */
+comment|/*  * Generate Schnorr signature to prove knowledge of private value 'x' used  * in public exponent g^x, under group defined by 'grp_p', 'grp_q' and 'grp_g'  * using the hash function "hash_alg".  * 'idlen' bytes from 'id' will be included in the signature hash as an anti-  * replay salt.  *   * On success, 0 is returned. The signature values are returned as *e_p  * (g^v mod p) and *r_p (v - xh mod q). The caller must free these values.  * On failure, -1 is returned.  */
 end_comment
 
 begin_function
@@ -486,10 +498,8 @@ name|BIGNUM
 modifier|*
 name|grp_g
 parameter_list|,
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
+name|int
+name|hash_alg
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -787,7 +797,7 @@ name|grp_q
 argument_list|,
 name|grp_g
 argument_list|,
-name|evp_md
+name|hash_alg
 argument_list|,
 name|g_v
 argument_list|,
@@ -1021,8 +1031,7 @@ name|grp_q
 argument_list|,
 name|grp_g
 argument_list|,
-name|EVP_sha256
-argument_list|()
+name|SSH_DIGEST_SHA256
 argument_list|,
 name|x
 argument_list|,
@@ -1146,7 +1155,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verify Schnorr signature { r (v - xh mod q), e (g^v mod p) } against  * public exponent g_x (g^x) under group defined by 'grp_p', 'grp_q' and  * 'grp_g' using hash "evp_md".  * Signature hash will be salted with 'idlen' bytes from 'id'.  * Returns -1 on failure, 0 on incorrect signature or 1 on matching signature.  */
+comment|/*  * Verify Schnorr signature { r (v - xh mod q), e (g^v mod p) } against  * public exponent g_x (g^x) under group defined by 'grp_p', 'grp_q' and  * 'grp_g' using hash "hash_alg".  * Signature hash will be salted with 'idlen' bytes from 'id'.  * Returns -1 on failure, 0 on incorrect signature or 1 on matching signature.  */
 end_comment
 
 begin_function
@@ -1168,10 +1177,8 @@ name|BIGNUM
 modifier|*
 name|grp_g
 parameter_list|,
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
+name|int
+name|hash_alg
 parameter_list|,
 specifier|const
 name|BIGNUM
@@ -1480,7 +1487,7 @@ name|grp_q
 argument_list|,
 name|grp_g
 argument_list|,
-name|evp_md
+name|hash_alg
 argument_list|,
 name|e
 argument_list|,
@@ -1912,8 +1919,7 @@ name|grp_q
 argument_list|,
 name|grp_g
 argument_list|,
-name|EVP_sha256
-argument_list|()
+name|SSH_DIGEST_SHA256
 argument_list|,
 name|g_x
 argument_list|,
@@ -2176,6 +2182,10 @@ block|}
 end_function
 
 begin_comment
+comment|/* XXX convert all callers of this to use ssh_digest_memory() directly */
+end_comment
+
+begin_comment
 comment|/*  * Hash contents of buffer 'b' with hash 'md'. Returns 0 on success,  * with digest via 'digestp' (caller to free) and length via 'lenp'.  * Returns -1 on failure.  */
 end_comment
 
@@ -2191,10 +2201,8 @@ parameter_list|,
 name|u_int
 name|len
 parameter_list|,
-specifier|const
-name|EVP_MD
-modifier|*
-name|md
+name|int
+name|hash_alg
 parameter_list|,
 name|u_char
 modifier|*
@@ -2209,105 +2217,65 @@ block|{
 name|u_char
 name|digest
 index|[
-name|EVP_MAX_MD_SIZE
+name|SSH_DIGEST_MAX_LENGTH
 index|]
 decl_stmt|;
 name|u_int
 name|digest_len
-decl_stmt|;
-name|EVP_MD_CTX
-name|evp_md_ctx
-decl_stmt|;
-name|int
-name|success
 init|=
-operator|-
-literal|1
-decl_stmt|;
-name|EVP_MD_CTX_init
+name|ssh_digest_bytes
 argument_list|(
-operator|&
-name|evp_md_ctx
+name|hash_alg
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
-name|EVP_DigestInit_ex
-argument_list|(
-operator|&
-name|evp_md_ctx
-argument_list|,
-name|md
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|1
+name|digest_len
+operator|==
+literal|0
 condition|)
 block|{
 name|error
 argument_list|(
-literal|"%s: EVP_DigestInit_ex"
+literal|"%s: invalid hash"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 if|if
 condition|(
-name|EVP_DigestUpdate
+name|ssh_digest_memory
 argument_list|(
-operator|&
-name|evp_md_ctx
+name|hash_alg
 argument_list|,
 name|buf
 argument_list|,
 name|len
-argument_list|)
-operator|!=
-literal|1
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"%s: EVP_DigestUpdate"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
-name|EVP_DigestFinal_ex
-argument_list|(
-operator|&
-name|evp_md_ctx
 argument_list|,
 name|digest
 argument_list|,
-operator|&
 name|digest_len
 argument_list|)
 operator|!=
-literal|1
+literal|0
 condition|)
 block|{
 name|error
 argument_list|(
-literal|"%s: EVP_DigestFinal_ex"
+literal|"%s: digest_memory failed"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 operator|*
 name|digestp
@@ -2333,18 +2301,6 @@ operator|*
 name|lenp
 argument_list|)
 expr_stmt|;
-name|success
-operator|=
-literal|0
-expr_stmt|;
-name|out
-label|:
-name|EVP_MD_CTX_cleanup
-argument_list|(
-operator|&
-name|evp_md_ctx
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
 name|digest
@@ -2360,7 +2316,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|success
+literal|0
 return|;
 block|}
 end_function
@@ -2722,8 +2678,10 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*

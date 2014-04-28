@@ -63,6 +63,13 @@ begin_comment
 comment|/*  * This code makes assumptions about the stack layout. These are correct  * when using APCS (the old ABI), but are no longer true with AAPCS and the  * ARM EABI. There is also an issue with clang and llvm when building for  * APCS where it lays out the stack incorrectly. Because of this we disable  * this when building for ARM EABI or when building with clang.  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|kernel_vm_end
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -100,6 +107,13 @@ name|INKERNEL
 argument_list|(
 name|frame
 argument_list|)
+operator|&&
+operator|(
+name|vm_offset_t
+operator|)
+name|frame
+operator|<
+name|kernel_vm_end
 condition|)
 block|{
 name|callpc

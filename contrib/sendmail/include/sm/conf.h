@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2011 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.144 2011/05/03 16:24:00 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2011 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.147 2013/11/22 20:51:31 ca Exp $  */
 end_comment
 
 begin_comment
@@ -10652,6 +10652,20 @@ literal|0x201
 operator|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|SOCKADDR_LEN_T
+value|socklen_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOCKOPT_LEN_T
+value|socklen_t
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -19067,6 +19081,32 @@ comment|/* ! SM_INT32 */
 end_comment
 
 begin_comment
+comment|/* XXX  16 bit type */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SM_UINT16
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SM_UINT16
+value|uint16_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SM_UINT16 */
+end_comment
+
+begin_comment
 comment|/* **  SVr4 and similar systems use different routines for setjmp/longjmp **  with signal support */
 end_comment
 
@@ -19554,6 +19594,26 @@ directive|define
 name|SM_ALIGN_BITS
 value|(SM_ALIGN_SIZE - 1)
 end_define
+
+begin_decl_stmt
+name|char
+modifier|*
+name|sm_inet6_ntop
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

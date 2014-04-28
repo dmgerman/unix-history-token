@@ -871,6 +871,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91SAM9G20_IRQ_AIC
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91SAM9G20_AIC_BASE
 value|0xffff000
 end_define
@@ -991,14 +998,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_OHCI_BASE
+name|AT91SAM9G20_OHCI_VA_BASE
 value|0xdfc00000
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_OHCI_PA_BASE
+name|AT91SAM9G20_OHCI_BASE
 value|0x00500000
 end_define
 
@@ -1012,14 +1019,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_NAND_BASE
+name|AT91SAM9G20_NAND_VA_BASE
 value|0xe0000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_NAND_PA_BASE
+name|AT91SAM9G20_NAND_BASE
 value|0x40000000
 end_define
 

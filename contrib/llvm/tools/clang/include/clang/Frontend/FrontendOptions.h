@@ -99,9 +99,6 @@ comment|///< Parse ASTs and list Decl nodes.
 name|ASTDump
 block|,
 comment|///< Parse ASTs and dump them.
-name|ASTDumpXML
-block|,
-comment|///< Parse ASTs and dump them in XML.
 name|ASTPrint
 block|,
 comment|///< Parse ASTs and print them.
@@ -507,6 +504,13 @@ literal|1
 decl_stmt|;
 comment|///< Whether we can generate the
 comment|///< global module index if needed.
+name|unsigned
+name|ASTDumpLookups
+range|:
+literal|1
+decl_stmt|;
+comment|///< Whether we include lookup table
+comment|///< dumps in AST dumps.
 name|CodeCompleteOptions
 name|CodeCompleteOpts
 decl_stmt|;
@@ -537,11 +541,98 @@ comment|/// \brief Enable migration to modern ObjC subscripting.
 name|ObjCMT_Subscripting
 init|=
 literal|0x2
+block|,
+comment|/// \brief Enable migration to modern ObjC readonly property.
+name|ObjCMT_ReadonlyProperty
+init|=
+literal|0x4
+block|,
+comment|/// \brief Enable migration to modern ObjC readwrite property.
+name|ObjCMT_ReadwriteProperty
+init|=
+literal|0x8
+block|,
+comment|/// \brief Enable migration to modern ObjC property.
+name|ObjCMT_Property
+init|=
+operator|(
+name|ObjCMT_ReadonlyProperty
+operator||
+name|ObjCMT_ReadwriteProperty
+operator|)
+block|,
+comment|/// \brief Enable annotation of ObjCMethods of all kinds.
+name|ObjCMT_Annotation
+init|=
+literal|0x10
+block|,
+comment|/// \brief Enable migration of ObjC methods to 'instancetype'.
+name|ObjCMT_Instancetype
+init|=
+literal|0x20
+block|,
+comment|/// \brief Enable migration to NS_ENUM/NS_OPTIONS macros.
+name|ObjCMT_NsMacros
+init|=
+literal|0x40
+block|,
+comment|/// \brief Enable migration to add conforming protocols.
+name|ObjCMT_ProtocolConformance
+init|=
+literal|0x80
+block|,
+comment|/// \brief prefer 'atomic' property over 'nonatomic'.
+name|ObjCMT_AtomicProperty
+init|=
+literal|0x100
+block|,
+comment|/// \brief annotate property with NS_RETURNS_INNER_POINTER
+name|ObjCMT_ReturnsInnerPointerProperty
+init|=
+literal|0x200
+block|,
+comment|/// \brief use NS_NONATOMIC_IOSONLY for property 'atomic' attribute
+name|ObjCMT_NsAtomicIOSOnlyProperty
+init|=
+literal|0x400
+block|,
+name|ObjCMT_MigrateDecls
+init|=
+operator|(
+name|ObjCMT_ReadonlyProperty
+operator||
+name|ObjCMT_ReadwriteProperty
+operator||
+name|ObjCMT_Annotation
+operator||
+name|ObjCMT_Instancetype
+operator||
+name|ObjCMT_NsMacros
+operator||
+name|ObjCMT_ProtocolConformance
+operator||
+name|ObjCMT_NsAtomicIOSOnlyProperty
+operator|)
+block|,
+name|ObjCMT_MigrateAll
+init|=
+operator|(
+name|ObjCMT_Literals
+operator||
+name|ObjCMT_Subscripting
+operator||
+name|ObjCMT_MigrateDecls
+operator|)
 block|}
 enum|;
 name|unsigned
 name|ObjCMTAction
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|ObjCMTWhiteListPath
+expr_stmt|;
 name|std
 operator|::
 name|string
@@ -747,6 +838,11 @@ operator|,
 name|GenerateGlobalModuleIndex
 argument_list|(
 name|true
+argument_list|)
+operator|,
+name|ASTDumpLookups
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|ARCMTAction

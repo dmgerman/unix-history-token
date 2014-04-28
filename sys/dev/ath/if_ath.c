@@ -188,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -10919,11 +10925,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_XMIT
 argument_list|,
 literal|"%s: sc_inreset_cnt> 0; bailing\n"
 argument_list|,
@@ -22540,6 +22546,11 @@ operator|->
 name|mgmtrate
 argument_list|)
 expr_stmt|;
+name|ATH_NODE_LOCK
+argument_list|(
+name|an
+argument_list|)
+expr_stmt|;
 name|ath_rate_newassoc
 argument_list|(
 name|sc
@@ -22547,6 +22558,11 @@ argument_list|,
 name|an
 argument_list|,
 name|isnew
+argument_list|)
+expr_stmt|;
+name|ATH_NODE_UNLOCK
+argument_list|(
+name|an
 argument_list|)
 expr_stmt|;
 if|if
@@ -24510,11 +24526,6 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
-name|ATH_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|IS_RUNNING
@@ -24524,7 +24535,17 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * To avoid rescanning another access point, 			 * do not call ath_init() here.  Instead, 			 * only reflect promisc mode settings. 			 */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_mode_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -24557,6 +24578,11 @@ comment|/* XXX lose error */
 block|}
 else|else
 block|{
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_stop_locked
 argument_list|(
 name|ifp
@@ -24584,12 +24610,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 name|ATH_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SIOCGIFMEDIA
@@ -26105,11 +26131,11 @@ operator|->
 name|an_is_powersave
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
 literal|"%s: %6D: not in powersave?\n"
 argument_list|,
@@ -26280,11 +26306,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX nothing in the TIDs at this point? Eek. 	 */
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
 literal|"%s: %6D: TIDs empty, but ath_node showed traffic?!\n"
 argument_list|,

@@ -4695,6 +4695,8 @@ name|warning
 argument_list|(
 name|OPT_Wstrict_overflow
 argument_list|,
+literal|"%s"
+argument_list|,
 name|gmsgid
 argument_list|)
 expr_stmt|;
@@ -9810,6 +9812,10 @@ name|POINTER_TYPE
 case|:
 case|case
 name|REFERENCE_TYPE
+case|:
+comment|/* APPLE LOCAL blocks 5862465 */
+case|case
+name|BLOCK_POINTER_TYPE
 case|:
 case|case
 name|OFFSET_TYPE
@@ -60281,6 +60287,12 @@ argument_list|(
 name|BUILT_IN_POPCOUNT
 argument_list|)
 operator|:
+case|case
+name|BUILT_IN_BSWAP32
+case|:
+case|case
+name|BUILT_IN_BSWAP64
+case|:
 comment|/* Always true.  */
 return|return
 literal|1

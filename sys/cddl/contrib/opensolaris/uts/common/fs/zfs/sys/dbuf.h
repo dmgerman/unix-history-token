@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -183,6 +183,11 @@ name|struct
 name|dbuf_dirty_record
 modifier|*
 name|dr_parent
+decl_stmt|;
+comment|/* How much space was changed to dsl_pool_dirty_space() for this? */
+name|unsigned
+name|int
+name|dr_accounted
 decl_stmt|;
 union|union
 name|dirty_types
@@ -526,6 +531,9 @@ name|dn
 parameter_list|,
 name|uint64_t
 name|blkid
+parameter_list|,
+name|zio_priority_t
+name|prio
 parameter_list|)
 function_decl|;
 name|void
@@ -601,30 +609,6 @@ name|zio
 parameter_list|,
 name|uint32_t
 name|flags
-parameter_list|)
-function_decl|;
-name|void
-name|dbuf_will_dirty
-parameter_list|(
-name|dmu_buf_impl_t
-modifier|*
-name|db
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-name|tx
-parameter_list|)
-function_decl|;
-name|void
-name|dbuf_fill_done
-parameter_list|(
-name|dmu_buf_impl_t
-modifier|*
-name|db
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-name|tx
 parameter_list|)
 function_decl|;
 name|void
@@ -826,24 +810,6 @@ parameter_list|(
 name|_db
 parameter_list|)
 value|(!zrl_is_zero(&DB_DNODE_LOCK(_db)))
-define|#
-directive|define
-name|DB_GET_SPA
-parameter_list|(
-name|_spa_p
-parameter_list|,
-name|_db
-parameter_list|)
-value|{		\ 	dnode_t *__dn;				\ 	DB_DNODE_ENTER(_db);			\ 	__dn = DB_DNODE(_db);			\ 	*(_spa_p) = __dn->dn_objset->os_spa;	\ 	DB_DNODE_EXIT(_db);			\ }
-define|#
-directive|define
-name|DB_GET_OBJSET
-parameter_list|(
-name|_os_p
-parameter_list|,
-name|_db
-parameter_list|)
-value|{		\ 	dnode_t *__dn;				\ 	DB_DNODE_ENTER(_db);			\ 	__dn = DB_DNODE(_db);			\ 	*(_os_p) = __dn->dn_objset;		\ 	DB_DNODE_EXIT(_db);			\ }
 name|void
 name|dbuf_init
 parameter_list|(
@@ -895,7 +861,7 @@ parameter_list|(
 name|_db
 parameter_list|)
 define|\
-value|((_db)->db_objset->os_compress != ZIO_COMPRESS_OFF)
+value|((_db)->db_objset->os_compress != ZIO_COMPRESS_OFF ||		\ 	(dbuf_is_metadata(_db)&& zfs_mdcomp_disable == B_FALSE))
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG
@@ -923,7 +889,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {			\ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) {			\ 	char *__blkbuf = kmem_alloc(BP_SPRINTF_LEN, KM_SLEEP);	\ 	sprintf_blkptr(__blkbuf, bp);				\ 	dprintf_dbuf(db, fmt " %s\n", __VA_ARGS__, __blkbuf);	\ 	kmem_free(__blkbuf, BP_SPRINTF_LEN);			\ 	}							\ _NOTE(CONSTCOND) } while (0)
+value|do {			\ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) {			\ 	char *__blkbuf = kmem_alloc(BP_SPRINTF_LEN, KM_SLEEP);	\ 	snprintf_blkptr(__blkbuf, BP_SPRINTF_LEN, bp);		\ 	dprintf_dbuf(db, fmt " %s\n", __VA_ARGS__, __blkbuf);	\ 	kmem_free(__blkbuf, BP_SPRINTF_LEN);			\ 	}							\ _NOTE(CONSTCOND) } while (0)
 define|#
 directive|define
 name|DBUF_VERIFY

@@ -15,12 +15,6 @@ directive|include
 file|"opt_ktrace.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_kdtrace.h"
-end_include
-
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
@@ -32,7 +26,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include

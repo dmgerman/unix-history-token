@@ -80,5 +80,19 @@ argument|uint32_t
 argument_list|)
 end_macro
 
+begin_decl_stmt
+specifier|extern
+name|driver_t
+name|spibus_driver
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|spibus_devclass
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

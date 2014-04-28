@@ -37,6 +37,26 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|arswitch_writemmd
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|phy
+parameter_list|,
+name|uint16_t
+name|dbg_addr
+parameter_list|,
+name|uint16_t
+name|dbg_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|arswitch_readreg
 parameter_list|(

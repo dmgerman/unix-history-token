@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -2448,7 +2448,7 @@ name|ip
 operator|->
 name|i_ump
 expr_stmt|;
-comment|/* 	 * If we are not tracking block clusters or if we have less than 2% 	 * free blocks left, then do not attempt to cluster. Running with 	 * less than 5% free block reserve is not recommended and those that 	 * choose to do so do not expect to have good file layout. 	 */
+comment|/* 	 * If we are not tracking block clusters or if we have less than 4% 	 * free blocks left, then do not attempt to cluster. Running with 	 * less than 5% free block reserve is not recommended and those that 	 * choose to do so do not expect to have good file layout. 	 */
 if|if
 condition|(
 name|fs
@@ -2461,7 +2461,7 @@ name|freespace
 argument_list|(
 name|fs
 argument_list|,
-literal|2
+literal|4
 argument_list|)
 operator|<
 literal|0
@@ -3680,7 +3680,7 @@ name|ip
 operator|->
 name|i_ump
 expr_stmt|;
-comment|/* 	 * If we are not tracking block clusters or if we have less than 2% 	 * free blocks left, then do not attempt to cluster. Running with 	 * less than 5% free block reserve is not recommended and those that 	 * choose to do so do not expect to have good file layout. 	 */
+comment|/* 	 * If we are not tracking block clusters or if we have less than 4% 	 * free blocks left, then do not attempt to cluster. Running with 	 * less than 5% free block reserve is not recommended and those that 	 * choose to do so do not expect to have good file layout. 	 */
 if|if
 condition|(
 name|fs
@@ -3693,7 +3693,7 @@ name|freespace
 argument_list|(
 name|fs
 argument_list|,
-literal|2
+literal|4
 argument_list|)
 operator|<
 literal|0
@@ -5949,7 +5949,7 @@ name|maxcontigdirs
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Limit number of dirs in one cg and reserve space for  	 * regular files, but only if we have no deficit in 	 * inodes or space. 	 * 	 * We are trying to find a suitable cylinder group nearby 	 * our preferred cylinder group to place a new directory. 	 * We scan from our preferred cylinder group forward looking 	 * for a cylinder group that meets our criterion. If we get 	 * to the final cylinder group and do not find anything, 	 * we start scanning backwards from our preferred cylinder 	 * group. The ideal would be to alternate looking forward 	 * and backward, but that is just too complex to code for 	 * the gain it would get. The most likely place where the 	 * backward scan would take effect is when we start near 	 * the end of the filesystem and do not find anything from 	 * where we are to the end. In that case, scanning backward 	 * will likely find us a suitable cylinder group much closer 	 * to our desired location than if we were to start scanning 	 * forward from the beginning of the filesystem. 	 */
+comment|/* 	 * Limit number of dirs in one cg and reserve space for  	 * regular files, but only if we have no deficit in 	 * inodes or space. 	 * 	 * We are trying to find a suitable cylinder group nearby 	 * our preferred cylinder group to place a new directory. 	 * We scan from our preferred cylinder group forward looking 	 * for a cylinder group that meets our criterion. If we get 	 * to the final cylinder group and do not find anything, 	 * we start scanning forwards from the beginning of the 	 * filesystem. While it might seem sensible to start scanning 	 * backwards or even to alternate looking forward and backward, 	 * this approach fails badly when the filesystem is nearly full. 	 * Specifically, we first search all the areas that have no space 	 * and finally try the one preceeding that. We repeat this on 	 * every request and in the case of the final block end up 	 * searching the entire filesystem. By jumping to the front 	 * of the filesystem, our future forward searches always look 	 * in new cylinder groups so finds every possible block after 	 * one pass over the filesystem. 	 */
 name|prefcg
 operator|=
 name|ino_to_cg

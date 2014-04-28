@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<climits>
 end_include
 
 begin_decl_stmt

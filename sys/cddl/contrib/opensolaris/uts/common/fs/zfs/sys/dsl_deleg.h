@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -137,6 +137,10 @@ define|#
 directive|define
 name|ZFS_DELEG_PERM_DIFF
 value|"diff"
+define|#
+directive|define
+name|ZFS_DELEG_PERM_BOOKMARK
+value|"bookmark"
 comment|/*  * Note: the names of properties that are marked delegatable are also  * valid delegated permissions  */
 name|int
 name|dsl_deleg_get

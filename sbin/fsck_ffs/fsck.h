@@ -592,6 +592,7 @@ value|{			\ 	"unknown",			\ 	"Superblock",			\ 	"Cylinder Group",		\ 	"Single Le
 end_define
 
 begin_decl_stmt
+specifier|extern
 name|long
 name|readcnt
 index|[
@@ -601,6 +602,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|long
 name|totalreadcnt
 index|[
@@ -610,6 +612,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|timespec
 name|readtime
@@ -620,6 +623,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|timespec
 name|totalreadtime
@@ -630,6 +634,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|timespec
 name|startprog
@@ -637,6 +642,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|bufarea
 name|sblk
@@ -648,6 +654,7 @@ comment|/* file system superblock */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|bufarea
 modifier|*
@@ -660,6 +667,7 @@ comment|/* current directory contents */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|bufarea
 modifier|*
@@ -724,6 +732,7 @@ enum|;
 end_enum
 
 begin_decl_stmt
+specifier|extern
 name|ino_t
 name|cursnapshot
 decl_stmt|;
@@ -935,6 +944,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|long
 name|numdirs
 decl_stmt|,
@@ -947,6 +957,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|long
 name|countdirs
 decl_stmt|;
@@ -968,6 +979,7 @@ comment|/* size of fsck sysctl MIBs */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|adjrefcnt
 index|[
@@ -981,6 +993,7 @@ comment|/* MIB command to adjust inode reference cnt */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|adjblkcnt
 index|[
@@ -994,6 +1007,7 @@ comment|/* MIB command to adjust inode block count */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|adjndir
 index|[
@@ -1007,6 +1021,7 @@ comment|/* MIB command to adjust number of directories */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|adjnbfree
 index|[
@@ -1020,6 +1035,7 @@ comment|/* MIB command to adjust number of free blocks */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|adjnifree
 index|[
@@ -1033,6 +1049,7 @@ comment|/* MIB command to adjust number of free inodes */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|adjnffree
 index|[
@@ -1046,6 +1063,7 @@ comment|/* MIB command to adjust number of free frags */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|adjnumclusters
 index|[
@@ -1059,6 +1077,7 @@ comment|/* MIB command to adjust number of free clusters */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|freefiles
 index|[
@@ -1072,6 +1091,7 @@ comment|/* MIB command to free a set of files */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|freedirs
 index|[
@@ -1085,6 +1105,7 @@ comment|/* MIB command to free a set of directories */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|freeblks
 index|[
@@ -1098,6 +1119,7 @@ comment|/* MIB command to free a set of data blocks */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|fsck_cmd
 name|cmd
@@ -1109,6 +1131,7 @@ comment|/* sysctl file system update commands */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|snapname
 index|[
@@ -1122,6 +1145,7 @@ comment|/* when doing snapshots, the name of the file */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|cdevname
@@ -1133,6 +1157,7 @@ comment|/* name of device being checked */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|long
 name|dev_bsize
 decl_stmt|;
@@ -1143,6 +1168,7 @@ comment|/* computed value of DEV_BSIZE */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|long
 name|secsize
 decl_stmt|;
@@ -1153,6 +1179,7 @@ comment|/* actual disk sector size */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|u_int
 name|real_dev_bsize
 decl_stmt|;
@@ -1163,6 +1190,7 @@ comment|/* actual disk sector size, not overriden */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|nflag
 decl_stmt|;
@@ -1173,6 +1201,7 @@ comment|/* assume a no response */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|yflag
 decl_stmt|;
@@ -1183,6 +1212,7 @@ comment|/* assume a yes response */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|bkgrdflag
 decl_stmt|;
@@ -1193,6 +1223,7 @@ comment|/* use a snapshot to run on an active system */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|bflag
 decl_stmt|;
@@ -1203,6 +1234,7 @@ comment|/* location of alternate super block */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|debug
 decl_stmt|;
@@ -1213,6 +1245,7 @@ comment|/* output debugging info */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|Eflag
 decl_stmt|;
@@ -1223,6 +1256,7 @@ comment|/* delete empty data blocks */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|Zflag
 decl_stmt|;
@@ -1233,6 +1267,7 @@ comment|/* zero empty data blocks */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|inoopt
 decl_stmt|;
@@ -1243,6 +1278,7 @@ comment|/* trim out unused inodes */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|ckclean
 decl_stmt|;
@@ -1253,6 +1289,7 @@ comment|/* only do work if not cleanly unmounted */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|cvtlevel
 decl_stmt|;
@@ -1263,6 +1300,7 @@ comment|/* convert to newer file system format */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|bkgrdcheck
 decl_stmt|;
@@ -1273,6 +1311,7 @@ comment|/* determine if background check is possible */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|bkgrdsumadj
 decl_stmt|;
@@ -1283,6 +1322,7 @@ comment|/* whether the kernel have ability to adjust superblock summary */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|usedsoftdep
 decl_stmt|;
@@ -1293,6 +1333,7 @@ comment|/* just fix soft dependency inconsistencies */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|preen
 decl_stmt|;
@@ -1303,6 +1344,7 @@ comment|/* just fix normal inconsistencies */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|rerun
 decl_stmt|;
@@ -1313,6 +1355,7 @@ comment|/* rerun fsck. Only used in non-preen mode */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|returntosingle
 decl_stmt|;
@@ -1323,6 +1366,7 @@ comment|/* 1 => return to single user mode on exit */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|resolved
 decl_stmt|;
@@ -1333,6 +1377,7 @@ comment|/* cleared if unresolved changes => not clean */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|havesb
 decl_stmt|;
@@ -1343,6 +1388,7 @@ comment|/* superblock has been read */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|skipclean
 decl_stmt|;
@@ -1353,6 +1399,7 @@ comment|/* skip clean file systems if preening */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|fsmodified
 decl_stmt|;
@@ -1363,6 +1410,7 @@ comment|/* 1 => write done to file system */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|fsreadfd
 decl_stmt|;
@@ -1373,6 +1421,7 @@ comment|/* file descriptor for reading file system */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|fswritefd
 decl_stmt|;
@@ -1383,6 +1432,7 @@ comment|/* file descriptor for writing file system */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|surrender
 decl_stmt|;
@@ -1393,6 +1443,18 @@ comment|/* Give up if reads fail */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|wantrestart
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Restart fsck on early termination */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|ufs2_daddr_t
 name|maxfsblock
 decl_stmt|;
@@ -1403,6 +1465,7 @@ comment|/* number of blocks in the file system */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|blockmap
@@ -1414,6 +1477,7 @@ comment|/* ptr to primary blk allocation map */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|ino_t
 name|maxino
 decl_stmt|;
@@ -1424,6 +1488,7 @@ comment|/* number of inodes in file system */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|ino_t
 name|lfdir
 decl_stmt|;
@@ -1434,6 +1499,7 @@ comment|/* lost& found directory inode number */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -1446,6 +1512,7 @@ comment|/* lost& found directory name */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|lfmode
 decl_stmt|;
@@ -1456,6 +1523,7 @@ comment|/* lost& found directory creation mode */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|ufs2_daddr_t
 name|n_blks
 decl_stmt|;
@@ -1466,6 +1534,7 @@ comment|/* number of blocks in use */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|ino_t
 name|n_files
 decl_stmt|;
@@ -1476,6 +1545,7 @@ comment|/* number of files in use */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 specifier|volatile
 name|sig_atomic_t
 name|got_siginfo
@@ -1487,6 +1557,7 @@ comment|/* received a SIGINFO */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 specifier|volatile
 name|sig_atomic_t
 name|got_sigalarm
@@ -1509,6 +1580,7 @@ value|if (sblock.fs_magic == FS_UFS1_MAGIC) { \ 		(dp)->dp1 = ufs1_zino; \ 	} el
 end_define
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|ufs1_dinode
 name|ufs1_zino
@@ -1516,6 +1588,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|ufs2_dinode
 name|ufs2_zino
@@ -1598,6 +1671,13 @@ begin_comment
 comment|/* Standard error exit. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ERESTART
+value|-1
+end_define
+
 begin_function_decl
 name|int
 name|flushentry
@@ -1618,7 +1698,7 @@ name|void
 modifier|*
 name|Malloc
 parameter_list|(
-name|int
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -1666,10 +1746,10 @@ name|void
 modifier|*
 name|Calloc
 parameter_list|(
-name|int
+name|size_t
 name|cnt
 parameter_list|,
-name|int
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -2168,6 +2248,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|fsutilinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ftypeok
 parameter_list|(
@@ -2646,6 +2735,15 @@ name|cg
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fsckinit
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

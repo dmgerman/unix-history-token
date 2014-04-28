@@ -14332,7 +14332,7 @@ block|{
 name|KdPrint
 argument_list|(
 operator|(
-literal|"hptiop: func_code=%x tid=%x lun=%x nsegs=%d\n"
+literal|"hptiop: func_code=%x tid=%x lun=%jx nsegs=%d\n"
 operator|,
 name|ccb
 operator|->
@@ -14346,6 +14346,9 @@ name|ccb_h
 operator|.
 name|target_id
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h

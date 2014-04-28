@@ -5469,7 +5469,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 operator|)
 condition|)
 block|{
@@ -5500,7 +5500,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 argument_list|)
 expr_stmt|;
 if|if
@@ -8076,7 +8076,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 operator|)
 operator|&&
 name|dlen
@@ -9173,7 +9173,7 @@ name|IEEE80211_FC1_DIR_TODS
 operator||
 name|IEEE80211_FC1_MORE_FRAG
 operator||
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 name|memset
 argument_list|(
@@ -9637,7 +9637,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 operator||
 name|IEEE80211_FC1_DIR_TODS
 expr_stmt|;
@@ -9772,7 +9772,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 operator||
 name|IEEE80211_FC1_DIR_TODS
 expr_stmt|;
@@ -10305,7 +10305,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 operator||
 name|IEEE80211_FC1_DIR_TODS
 expr_stmt|;
@@ -11652,7 +11652,7 @@ index|[
 literal|1
 index|]
 operator||=
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 operator||
 name|IEEE80211_FC1_DIR_TODS
 expr_stmt|;

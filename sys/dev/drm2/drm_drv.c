@@ -141,6 +141,19 @@ begin_comment
 comment|/* Default to 20 usecs. */
 end_comment
 
+begin_comment
+comment|/*  * Default to use monotonic timestamps for wait-for-vblank and page-flip  * complete events.  */
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|drm_timestamp_monotonic
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int

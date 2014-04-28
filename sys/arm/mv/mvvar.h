@@ -42,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
+file|<machine/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/vm.h>
+file|<dev/ofw/openfirm.h>
 end_include
 
 begin_define
@@ -124,16 +124,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|pmap_devmap
-name|pmap_devmap
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -803,6 +793,29 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|arm_devmap_entry
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|mv_pci_devmap
+parameter_list|(
+name|phandle_t
+parameter_list|,
+name|struct
+name|arm_devmap_entry
+modifier|*
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl

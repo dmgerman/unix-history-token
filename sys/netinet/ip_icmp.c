@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_types.h>
 end_include
 
@@ -1790,6 +1796,12 @@ expr_stmt|;
 name|nip
 operator|->
 name|ip_tos
+operator|=
+literal|0
+expr_stmt|;
+name|nip
+operator|->
+name|ip_off
 operator|=
 literal|0
 expr_stmt|;

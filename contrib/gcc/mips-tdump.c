@@ -53,7 +53,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CROSS_COMPILE
+name|CROSS_DIRECTORY_STRUCTURE
 end_ifndef
 
 begin_include
@@ -79,7 +79,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CROSS_COMPILE */
+comment|/* CROSS_DIRECTORY_STRUCTURE */
 end_comment
 
 begin_comment

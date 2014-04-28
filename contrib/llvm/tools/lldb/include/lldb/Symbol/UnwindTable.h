@@ -173,10 +173,11 @@ name|bool
 name|m_initialized
 decl_stmt|;
 comment|// delay some initialization until ObjectFile is set up
-name|UnwindAssembly
-modifier|*
+name|lldb
+operator|::
+name|UnwindAssemblySP
 name|m_assembly_profiler
-decl_stmt|;
+expr_stmt|;
 name|DWARFCallFrameInfo
 modifier|*
 name|m_eh_frame

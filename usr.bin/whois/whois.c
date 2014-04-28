@@ -1240,10 +1240,7 @@ parameter_list|)
 block|{
 name|FILE
 modifier|*
-name|sfi
-decl_stmt|,
-modifier|*
-name|sfo
+name|fp
 decl_stmt|;
 name|struct
 name|addrinfo
@@ -1371,31 +1368,18 @@ argument_list|,
 literal|"connect()"
 argument_list|)
 expr_stmt|;
-name|sfi
+name|fp
 operator|=
 name|fdopen
 argument_list|(
 name|s
 argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
-name|sfo
-operator|=
-name|fdopen
-argument_list|(
-name|s
-argument_list|,
-literal|"w"
+literal|"r+"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sfi
-operator|==
-name|NULL
-operator|||
-name|sfo
+name|fp
 operator|==
 name|NULL
 condition|)
@@ -1420,7 +1404,7 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
-name|sfo
+name|fp
 argument_list|,
 literal|"-T dn,ace -C US-ASCII %s\r\n"
 argument_list|,
@@ -1444,7 +1428,7 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
-name|sfo
+name|fp
 argument_list|,
 literal|"--show-handles %s\r\n"
 argument_list|,
@@ -1456,7 +1440,7 @@ else|else
 block|{
 name|fprintf
 argument_list|(
-name|sfo
+name|fp
 argument_list|,
 literal|"%s\r\n"
 argument_list|,
@@ -1466,7 +1450,7 @@ expr_stmt|;
 block|}
 name|fflush
 argument_list|(
-name|sfo
+name|fp
 argument_list|)
 expr_stmt|;
 name|nhost
@@ -1480,7 +1464,7 @@ name|buf
 operator|=
 name|fgetln
 argument_list|(
-name|sfi
+name|fp
 argument_list|,
 operator|&
 name|len
@@ -1806,6 +1790,11 @@ block|}
 block|}
 block|}
 block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nhost

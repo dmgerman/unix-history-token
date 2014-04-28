@@ -457,6 +457,16 @@ condition|(
 name|fp
 operator|==
 name|NULL
+operator|||
+operator|(
+name|ap
+operator|->
+name|a_mode
+operator|&
+name|FEXEC
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(

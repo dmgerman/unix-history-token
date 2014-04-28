@@ -1484,8 +1484,6 @@ name|int
 name|error
 decl_stmt|;
 name|uint32_t
-name|cap_units
-decl_stmt|,
 name|factor
 decl_stmt|;
 name|int16_t
@@ -1557,27 +1555,15 @@ name|val
 operator|&
 name|SMBATT_BM_CAPACITY_MODE
 condition|)
-block|{
 name|factor
 operator|=
 literal|10
 expr_stmt|;
-name|cap_units
-operator|=
-name|ACPI_BIF_UNITS_MW
-expr_stmt|;
-block|}
 else|else
-block|{
 name|factor
 operator|=
 literal|1
 expr_stmt|;
-name|cap_units
-operator|=
-name|ACPI_BIF_UNITS_MA
-expr_stmt|;
-block|}
 comment|/* get battery status */
 if|if
 condition|(

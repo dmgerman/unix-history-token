@@ -110,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/trap_aim.h>
+file|<machine/trap.h>
 end_include
 
 begin_include
@@ -1141,6 +1141,32 @@ argument_list|()
 operator|>>
 literal|16
 expr_stmt|;
+comment|/* The following is needed for restoring from sleep. */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+comment|/* Writing to the time base register is hypervisor-privileged */
+if|if
+condition|(
+name|mfmsr
+argument_list|()
+operator|&
+name|PSL_HV
+condition|)
+name|mttb
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|mttb
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|vers
@@ -1366,45 +1392,6 @@ end_break
 
 begin_case
 case|case
-name|MPC7450
-case|:
-end_case
-
-begin_case
-case|case
-name|MPC7455
-case|:
-end_case
-
-begin_case
-case|case
-name|MPC7457
-case|:
-end_case
-
-begin_comment
-comment|/* Only MPC745x CPUs have an L3 cache. */
-end_comment
-
-begin_expr_stmt
-name|reg
-operator|=
-name|mpc745x_l3_enable
-argument_list|(
-name|bsp_state
-index|[
-literal|3
-index|]
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Fallthrough */
-end_comment
-
-begin_case
-case|case
 name|MPC7400
 case|:
 end_case
@@ -1424,6 +1411,24 @@ end_case
 begin_case
 case|case
 name|MPC7448
+case|:
+end_case
+
+begin_case
+case|case
+name|MPC7450
+case|:
+end_case
+
+begin_case
+case|case
+name|MPC7455
+case|:
+end_case
+
+begin_case
+case|case
+name|MPC7457
 case|:
 end_case
 
@@ -1484,6 +1489,41 @@ name|isync
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Now enable the L3 cache. */
+end_comment
+
+begin_switch
+switch|switch
+condition|(
+name|vers
+condition|)
+block|{
+case|case
+name|MPC7450
+case|:
+case|case
+name|MPC7455
+case|:
+case|case
+name|MPC7457
+case|:
+comment|/* Only MPC745x CPUs have an L3 cache. */
+name|reg
+operator|=
+name|mpc745x_l3_enable
+argument_list|(
+name|bsp_state
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
+default|default:
+break|break;
+block|}
+end_switch
 
 begin_expr_stmt
 name|reg

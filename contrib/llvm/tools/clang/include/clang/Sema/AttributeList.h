@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -146,6 +152,62 @@ return|;
 block|}
 block|}
 struct|;
+comment|/// \brief Wraps an identifier and optional source location for the identifier.
+struct|struct
+name|IdentifierLoc
+block|{
+name|SourceLocation
+name|Loc
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|Ident
+decl_stmt|;
+specifier|static
+name|IdentifierLoc
+modifier|*
+name|create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Ctx
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|Ident
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+comment|/// \brief A union of the various pointer types that can be passed to an
+comment|/// AttributeList as an argument.
+typedef|typedef
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|Expr
+operator|*
+operator|,
+name|IdentifierLoc
+operator|*
+operator|>
+name|ArgsUnion
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|ArgsUnion
+operator|,
+literal|12U
+operator|>
+name|ArgsVector
+expr_stmt|;
 comment|/// AttributeList - Represents a syntactic attribute.
 comment|///
 comment|/// For a GNU attribute, there are four forms of this construct:
@@ -188,18 +250,11 @@ name|IdentifierInfo
 modifier|*
 name|ScopeName
 decl_stmt|;
-name|IdentifierInfo
-modifier|*
-name|ParmName
-decl_stmt|;
 name|SourceRange
 name|AttrRange
 decl_stmt|;
 name|SourceLocation
 name|ScopeLoc
-decl_stmt|;
-name|SourceLocation
-name|ParmLoc
 decl_stmt|;
 name|SourceLocation
 name|EllipsisLoc
@@ -252,6 +307,12 @@ name|IsProperty
 range|:
 literal|1
 decl_stmt|;
+comment|/// True if this has a ParsedType
+name|unsigned
+name|HasParsedType
+range|:
+literal|1
+decl_stmt|;
 name|unsigned
 name|AttrKind
 range|:
@@ -277,8 +338,8 @@ name|AttributeList
 modifier|*
 name|NextInPool
 decl_stmt|;
-name|Expr
-modifier|*
+comment|/// Arguments, if any, are stored immediately following the object.
+name|ArgsUnion
 modifier|*
 name|getArgsBuffer
 parameter_list|()
@@ -286,8 +347,7 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-name|Expr
-operator|*
+name|ArgsUnion
 operator|*
 operator|>
 operator|(
@@ -297,8 +357,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|Expr
-operator|*
+name|ArgsUnion
 specifier|const
 operator|*
 name|getArgsBuffer
@@ -308,8 +367,7 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-name|Expr
-operator|*
+name|ArgsUnion
 specifier|const
 operator|*
 operator|>
@@ -330,6 +388,8 @@ block|,
 name|ObsoletedSlot
 block|}
 enum|;
+comment|/// Availability information is stored immediately following the arguments,
+comment|/// if any, at the end of the object.
 name|AvailabilityChange
 modifier|&
 name|getAvailabilitySlot
@@ -345,9 +405,10 @@ name|AvailabilityChange
 operator|*
 operator|>
 operator|(
-name|this
+name|getArgsBuffer
+argument_list|()
 operator|+
-literal|1
+name|NumArgs
 operator|)
 index|[
 name|index
@@ -372,9 +433,10 @@ name|AvailabilityChange
 operator|*
 operator|>
 operator|(
-name|this
+name|getArgsBuffer
+argument_list|()
 operator|+
-literal|1
+name|NumArgs
 operator|)
 index|[
 name|index
@@ -437,6 +499,9 @@ block|}
 struct|;
 name|private
 label|:
+comment|/// Type tag information is stored immediately following the arguments, if
+comment|/// any, at the end of the object.  They are mutually exlusive with
+comment|/// availability slots.
 name|TypeTagForDatatypeData
 modifier|&
 name|getTypeTagForDatatypeDataSlot
@@ -450,9 +515,10 @@ name|TypeTagForDatatypeData
 operator|*
 operator|>
 operator|(
-name|this
+name|getArgsBuffer
+argument_list|()
 operator|+
-literal|1
+name|NumArgs
 operator|)
 return|;
 block|}
@@ -472,12 +538,15 @@ name|TypeTagForDatatypeData
 operator|*
 operator|>
 operator|(
-name|this
+name|getArgsBuffer
+argument_list|()
 operator|+
-literal|1
+name|NumArgs
 operator|)
 return|;
 block|}
+comment|/// The type buffer immediately follows the object and are mutually exclusive
+comment|/// with arguments.
 name|ParsedType
 modifier|&
 name|getTypeBuffer
@@ -519,6 +588,8 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/// The property data immediately follows the object is is mutually exclusive
+comment|/// with arguments.
 name|PropertyData
 modifier|&
 name|getPropertyDataBuffer
@@ -616,11 +687,7 @@ argument|IdentifierInfo *scopeName
 argument_list|,
 argument|SourceLocation scopeLoc
 argument_list|,
-argument|IdentifierInfo *parmName
-argument_list|,
-argument|SourceLocation parmLoc
-argument_list|,
-argument|Expr **args
+argument|ArgsUnion *args
 argument_list|,
 argument|unsigned numArgs
 argument_list|,
@@ -639,11 +706,6 @@ argument_list|(
 name|scopeName
 argument_list|)
 operator|,
-name|ParmName
-argument_list|(
-name|parmName
-argument_list|)
-operator|,
 name|AttrRange
 argument_list|(
 name|attrRange
@@ -652,11 +714,6 @@ operator|,
 name|ScopeLoc
 argument_list|(
 name|scopeLoc
-argument_list|)
-operator|,
-name|ParmLoc
-argument_list|(
-name|parmLoc
 argument_list|)
 operator|,
 name|EllipsisLoc
@@ -699,6 +756,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|HasParsedType
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|NextInPosition
 argument_list|(
 literal|0
@@ -724,8 +786,7 @@ name|numArgs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|Expr
-operator|*
+name|ArgsUnion
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -754,9 +815,7 @@ argument|IdentifierInfo *scopeName
 argument_list|,
 argument|SourceLocation scopeLoc
 argument_list|,
-argument|IdentifierInfo *parmName
-argument_list|,
-argument|SourceLocation parmLoc
+argument|IdentifierLoc *Parm
 argument_list|,
 argument|const AvailabilityChange&introduced
 argument_list|,
@@ -781,11 +840,6 @@ argument_list|(
 name|scopeName
 argument_list|)
 operator|,
-name|ParmName
-argument_list|(
-name|parmName
-argument_list|)
-operator|,
 name|AttrRange
 argument_list|(
 name|attrRange
@@ -796,17 +850,12 @@ argument_list|(
 name|scopeLoc
 argument_list|)
 operator|,
-name|ParmLoc
-argument_list|(
-name|parmLoc
-argument_list|)
-operator|,
 name|EllipsisLoc
 argument_list|()
 operator|,
 name|NumArgs
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 operator|,
 name|SyntaxUsed
@@ -839,6 +888,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|HasParsedType
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|UnavailableLoc
 argument_list|(
 name|unavailable
@@ -859,6 +913,26 @@ argument_list|(
 literal|0
 argument_list|)
 block|{
+name|ArgsUnion
+name|PVal
+argument_list|(
+name|Parm
+argument_list|)
+block|;
+name|memcpy
+argument_list|(
+name|getArgsBuffer
+argument_list|()
+argument_list|,
+operator|&
+name|PVal
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ArgsUnion
+argument_list|)
+argument_list|)
+block|;
 name|new
 argument_list|(
 argument|&getAvailabilitySlot(IntroducedSlot)
@@ -910,9 +984,7 @@ argument|IdentifierInfo *scopeName
 argument_list|,
 argument|SourceLocation scopeLoc
 argument_list|,
-argument|IdentifierInfo *argumentKindName
-argument_list|,
-argument|SourceLocation argumentKindLoc
+argument|IdentifierLoc *ArgKind
 argument_list|,
 argument|ParsedType matchingCType
 argument_list|,
@@ -933,11 +1005,6 @@ argument_list|(
 name|scopeName
 argument_list|)
 operator|,
-name|ParmName
-argument_list|(
-name|argumentKindName
-argument_list|)
-operator|,
 name|AttrRange
 argument_list|(
 name|attrRange
@@ -948,17 +1015,12 @@ argument_list|(
 name|scopeLoc
 argument_list|)
 operator|,
-name|ParmLoc
-argument_list|(
-name|argumentKindLoc
-argument_list|)
-operator|,
 name|EllipsisLoc
 argument_list|()
 operator|,
 name|NumArgs
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 operator|,
 name|SyntaxUsed
@@ -991,6 +1053,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|HasParsedType
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|NextInPosition
 argument_list|(
 name|NULL
@@ -1001,6 +1068,26 @@ argument_list|(
 argument|NULL
 argument_list|)
 block|{
+name|ArgsUnion
+name|PVal
+argument_list|(
+name|ArgKind
+argument_list|)
+block|;
+name|memcpy
+argument_list|(
+name|getArgsBuffer
+argument_list|()
+argument_list|,
+operator|&
+name|PVal
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ArgsUnion
+argument_list|)
+argument_list|)
+block|;
 name|TypeTagForDatatypeData
 operator|&
 name|ExtraData
@@ -1053,10 +1140,6 @@ argument|IdentifierInfo *scopeName
 argument_list|,
 argument|SourceLocation scopeLoc
 argument_list|,
-argument|IdentifierInfo *parmName
-argument_list|,
-argument|SourceLocation parmLoc
-argument_list|,
 argument|ParsedType typeArg
 argument_list|,
 argument|Syntax syntaxUsed
@@ -1072,11 +1155,6 @@ argument_list|(
 name|scopeName
 argument_list|)
 operator|,
-name|ParmName
-argument_list|(
-name|parmName
-argument_list|)
-operator|,
 name|AttrRange
 argument_list|(
 name|attrRange
@@ -1087,17 +1165,12 @@ argument_list|(
 name|scopeLoc
 argument_list|)
 operator|,
-name|ParmLoc
-argument_list|(
-name|parmLoc
-argument_list|)
-operator|,
 name|EllipsisLoc
 argument_list|()
 operator|,
 name|NumArgs
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 operator|,
 name|SyntaxUsed
@@ -1128,6 +1201,11 @@ operator|,
 name|IsProperty
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|HasParsedType
+argument_list|(
+name|true
 argument_list|)
 operator|,
 name|NextInPosition
@@ -1173,10 +1251,6 @@ argument|IdentifierInfo *scopeName
 argument_list|,
 argument|SourceLocation scopeLoc
 argument_list|,
-argument|IdentifierInfo *parmName
-argument_list|,
-argument|SourceLocation parmLoc
-argument_list|,
 argument|IdentifierInfo *getterId
 argument_list|,
 argument|IdentifierInfo *setterId
@@ -1194,11 +1268,6 @@ argument_list|(
 name|scopeName
 argument_list|)
 operator|,
-name|ParmName
-argument_list|(
-name|parmName
-argument_list|)
-operator|,
 name|AttrRange
 argument_list|(
 name|attrRange
@@ -1209,9 +1278,12 @@ argument_list|(
 name|scopeLoc
 argument_list|)
 operator|,
-name|ParmLoc
+name|EllipsisLoc
+argument_list|()
+operator|,
+name|NumArgs
 argument_list|(
-name|parmLoc
+literal|0
 argument_list|)
 operator|,
 name|SyntaxUsed
@@ -1242,6 +1314,11 @@ operator|,
 name|IsProperty
 argument_list|(
 name|true
+argument_list|)
+operator|,
+name|HasParsedType
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|NextInPosition
@@ -1368,23 +1445,13 @@ return|return
 name|ScopeLoc
 return|;
 block|}
-name|IdentifierInfo
-operator|*
-name|getParameterName
+name|bool
+name|hasParsedType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ParmName
-return|;
-block|}
-name|SourceLocation
-name|getParameterLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ParmLoc
+name|HasParsedType
 return|;
 block|}
 comment|/// Is this the Microsoft __declspec(property) attribute?
@@ -1576,22 +1643,8 @@ return|return
 name|NumArgs
 return|;
 block|}
-comment|/// hasParameterOrArguments - Return true if this attribute has a parameter,
-comment|/// or has a non empty argument expression list.
-name|bool
-name|hasParameterOrArguments
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ParmName
-operator|||
-name|NumArgs
-return|;
-block|}
 comment|/// getArg - Return the specified argument.
-name|Expr
-modifier|*
+name|ArgsUnion
 name|getArg
 argument_list|(
 name|unsigned
@@ -1616,11 +1669,112 @@ name|Arg
 index|]
 return|;
 block|}
+name|bool
+name|isArgExpr
+argument_list|(
+name|unsigned
+name|Arg
+argument_list|)
+decl|const
+block|{
+return|return
+name|Arg
+operator|<
+name|NumArgs
+operator|&&
+name|getArg
+argument_list|(
+name|Arg
+argument_list|)
+operator|.
+name|is
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|Expr
+modifier|*
+name|getArgAsExpr
+argument_list|(
+name|unsigned
+name|Arg
+argument_list|)
+decl|const
+block|{
+return|return
+name|getArg
+argument_list|(
+name|Arg
+argument_list|)
+operator|.
+name|get
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|bool
+name|isArgIdent
+argument_list|(
+name|unsigned
+name|Arg
+argument_list|)
+decl|const
+block|{
+return|return
+name|Arg
+operator|<
+name|NumArgs
+operator|&&
+name|getArg
+argument_list|(
+name|Arg
+argument_list|)
+operator|.
+name|is
+operator|<
+name|IdentifierLoc
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|IdentifierLoc
+modifier|*
+name|getArgAsIdent
+argument_list|(
+name|unsigned
+name|Arg
+argument_list|)
+decl|const
+block|{
+return|return
+name|getArg
+argument_list|(
+name|Arg
+argument_list|)
+operator|.
+name|get
+operator|<
+name|IdentifierLoc
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
 name|class
 name|arg_iterator
 block|{
-name|Expr
-modifier|*
+name|ArgsUnion
 specifier|const
 modifier|*
 name|X
@@ -1632,7 +1786,7 @@ name|public
 label|:
 name|arg_iterator
 argument_list|(
-argument|Expr * const *x
+argument|ArgsUnion const *x
 argument_list|,
 argument|unsigned idx
 argument_list|)
@@ -1712,8 +1866,7 @@ name|I
 operator|)
 return|;
 block|}
-name|Expr
-operator|*
+name|ArgsUnion
 name|operator
 operator|*
 operator|(
@@ -1960,10 +2113,7 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|getKind
-argument_list|()
-operator|==
-name|AT_VecTypeHint
+name|HasParsedType
 operator|&&
 literal|"Not a type attribute"
 argument_list|)
@@ -1998,6 +2148,21 @@ comment|/// defined in Attr.td. This index is used by an attribute
 comment|/// to pretty print itself.
 name|unsigned
 name|getAttributeSpellingListIndex
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|hasCustomParsing
+argument_list|()
+specifier|const
+expr_stmt|;
+name|unsigned
+name|getMinArgs
+argument_list|()
+specifier|const
+expr_stmt|;
+name|unsigned
+name|getMaxArgs
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -2059,6 +2224,11 @@ argument_list|(
 name|void
 operator|*
 argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|ArgsUnion
+argument_list|)
 operator|-
 literal|1
 operator|)
@@ -2095,6 +2265,11 @@ sizeof|sizeof
 argument_list|(
 name|void
 operator|*
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|ArgsUnion
 argument_list|)
 operator|-
 literal|1
@@ -2441,15 +2616,7 @@ argument_list|,
 name|SourceLocation
 name|scopeLoc
 argument_list|,
-name|IdentifierInfo
-operator|*
-name|parmName
-argument_list|,
-name|SourceLocation
-name|parmLoc
-argument_list|,
-name|Expr
-operator|*
+name|ArgsUnion
 operator|*
 name|args
 argument_list|,
@@ -2483,8 +2650,7 @@ name|numArgs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|Expr
-operator|*
+name|ArgsUnion
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -2504,10 +2670,6 @@ argument_list|,
 name|scopeName
 argument_list|,
 name|scopeLoc
-argument_list|,
-name|parmName
-argument_list|,
-name|parmLoc
 argument_list|,
 name|args
 argument_list|,
@@ -2538,12 +2700,9 @@ argument_list|,
 name|SourceLocation
 name|scopeLoc
 argument_list|,
-name|IdentifierInfo
+name|IdentifierLoc
 operator|*
-name|parmName
-argument_list|,
-name|SourceLocation
-name|parmLoc
+name|Param
 argument_list|,
 specifier|const
 name|AvailabilityChange
@@ -2602,9 +2761,7 @@ name|scopeName
 argument_list|,
 name|scopeLoc
 argument_list|,
-name|parmName
-argument_list|,
-name|parmLoc
+name|Param
 argument_list|,
 name|introduced
 argument_list|,
@@ -2658,12 +2815,9 @@ argument_list|,
 name|SourceLocation
 name|scopeLoc
 argument_list|,
-name|IdentifierInfo
+name|IdentifierLoc
 operator|*
-name|argumentKindName
-argument_list|,
-name|SourceLocation
-name|argumentKindLoc
+name|argumentKind
 argument_list|,
 name|ParsedType
 name|matchingCType
@@ -2708,9 +2862,7 @@ name|scopeName
 argument_list|,
 name|scopeLoc
 argument_list|,
-name|argumentKindName
-argument_list|,
-name|argumentKindLoc
+name|argumentKind
 argument_list|,
 name|matchingCType
 argument_list|,
@@ -2740,13 +2892,6 @@ name|scopeName
 argument_list|,
 name|SourceLocation
 name|scopeLoc
-argument_list|,
-name|IdentifierInfo
-operator|*
-name|parmName
-argument_list|,
-name|SourceLocation
-name|parmLoc
 argument_list|,
 name|ParsedType
 name|typeArg
@@ -2792,10 +2937,6 @@ name|scopeName
 argument_list|,
 name|scopeLoc
 argument_list|,
-name|parmName
-argument_list|,
-name|parmLoc
-argument_list|,
 name|typeArg
 argument_list|,
 name|syntaxUsed
@@ -2820,13 +2961,6 @@ name|scopeName
 argument_list|,
 name|SourceLocation
 name|scopeLoc
-argument_list|,
-name|IdentifierInfo
-operator|*
-name|parmName
-argument_list|,
-name|SourceLocation
-name|parmLoc
 argument_list|,
 name|IdentifierInfo
 operator|*
@@ -2869,10 +3003,6 @@ argument_list|,
 name|scopeName
 argument_list|,
 name|scopeLoc
-argument_list|,
-name|parmName
-argument_list|,
-name|parmLoc
 argument_list|,
 name|getterId
 argument_list|,
@@ -3318,15 +3448,7 @@ argument_list|,
 name|SourceLocation
 name|scopeLoc
 argument_list|,
-name|IdentifierInfo
-operator|*
-name|parmName
-argument_list|,
-name|SourceLocation
-name|parmLoc
-argument_list|,
-name|Expr
-operator|*
+name|ArgsUnion
 operator|*
 name|args
 argument_list|,
@@ -3360,10 +3482,6 @@ argument_list|,
 name|scopeName
 argument_list|,
 name|scopeLoc
-argument_list|,
-name|parmName
-argument_list|,
-name|parmLoc
 argument_list|,
 name|args
 argument_list|,
@@ -3402,12 +3520,9 @@ argument_list|,
 name|SourceLocation
 name|scopeLoc
 argument_list|,
-name|IdentifierInfo
+name|IdentifierLoc
 operator|*
-name|parmName
-argument_list|,
-name|SourceLocation
-name|parmLoc
+name|Param
 argument_list|,
 specifier|const
 name|AvailabilityChange
@@ -3454,9 +3569,7 @@ name|scopeName
 argument_list|,
 name|scopeLoc
 argument_list|,
-name|parmName
-argument_list|,
-name|parmLoc
+name|Param
 argument_list|,
 name|introduced
 argument_list|,
@@ -3499,12 +3612,9 @@ argument_list|,
 name|SourceLocation
 name|scopeLoc
 argument_list|,
-name|IdentifierInfo
+name|IdentifierLoc
 operator|*
-name|argumentKindName
-argument_list|,
-name|SourceLocation
-name|argumentKindLoc
+name|argumentKind
 argument_list|,
 name|ParsedType
 name|matchingCType
@@ -3537,9 +3647,7 @@ name|scopeName
 argument_list|,
 name|scopeLoc
 argument_list|,
-name|argumentKindName
-argument_list|,
-name|argumentKindLoc
+name|argumentKind
 argument_list|,
 name|matchingCType
 argument_list|,
@@ -3578,13 +3686,6 @@ argument_list|,
 name|SourceLocation
 name|scopeLoc
 argument_list|,
-name|IdentifierInfo
-operator|*
-name|parmName
-argument_list|,
-name|SourceLocation
-name|parmLoc
-argument_list|,
 name|ParsedType
 name|typeArg
 argument_list|,
@@ -3609,10 +3710,6 @@ argument_list|,
 name|scopeName
 argument_list|,
 name|scopeLoc
-argument_list|,
-name|parmName
-argument_list|,
-name|parmLoc
 argument_list|,
 name|typeArg
 argument_list|,
@@ -3649,13 +3746,6 @@ name|scopeLoc
 argument_list|,
 name|IdentifierInfo
 operator|*
-name|parmName
-argument_list|,
-name|SourceLocation
-name|parmLoc
-argument_list|,
-name|IdentifierInfo
-operator|*
 name|getterId
 argument_list|,
 name|IdentifierInfo
@@ -3683,10 +3773,6 @@ argument_list|,
 name|scopeName
 argument_list|,
 name|scopeLoc
-argument_list|,
-name|parmName
-argument_list|,
-name|parmLoc
 argument_list|,
 name|getterId
 argument_list|,
@@ -3765,6 +3851,29 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// These constants match the enumerated choices of
+end_comment
+
+begin_comment
+comment|/// err_attribute_argument_n_type and err_attribute_argument_type.
+end_comment
+
+begin_enum
+enum|enum
+name|AttributeArgumentNType
+block|{
+name|AANT_ArgumentIntOrBool
+block|,
+name|AANT_ArgumentIntegerConstant
+block|,
+name|AANT_ArgumentString
+block|,
+name|AANT_ArgumentIdentifier
+block|}
+enum|;
+end_enum
 
 begin_comment
 unit|}

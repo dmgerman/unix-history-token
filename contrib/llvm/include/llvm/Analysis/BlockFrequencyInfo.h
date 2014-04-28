@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//========-------- BlockFrequencyInfo.h - Block Frequency Analysis -------========//
+comment|//===------- BlockFrequencyInfo.h - Block Frequency Analysis --*- C++ -*---===//
 end_comment
 
 begin_comment
@@ -154,11 +154,23 @@ argument|const Module *M
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|Function
+operator|*
+name|getFunction
+argument_list|()
+specifier|const
+block|;
+name|void
+name|view
+argument_list|()
+specifier|const
+block|;
 comment|/// getblockFreq - Return block frequency. Return 0 if we don't have the
-comment|/// information. Please note that initial frequency is equal to 1024. It means
-comment|/// that we should not rely on the value itself, but only on the comparison to
-comment|/// the other block frequencies. We do this to avoid using of floating points.
-comment|///
+comment|/// information. Please note that initial frequency is equal to ENTRY_FREQ. It
+comment|/// means that we should not rely on the value itself, but only on the
+comment|/// comparison to the other block frequencies. We do this to avoid using of
+comment|/// floating points.
 name|BlockFrequency
 name|getBlockFreq
 argument_list|(

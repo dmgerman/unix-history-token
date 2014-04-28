@@ -156,6 +156,16 @@ operator|&
 name|name
 argument_list|)
 expr_stmt|;
+name|lldb
+operator|::
+name|VariableSP
+name|FindVariable
+argument_list|(
+argument|const ConstString& name
+argument_list|,
+argument|lldb::ValueType value_type
+argument_list|)
+expr_stmt|;
 name|uint32_t
 name|FindVariableIndex
 argument_list|(
@@ -167,6 +177,14 @@ operator|&
 name|var_sp
 argument_list|)
 decl_stmt|;
+name|size_t
+name|AppendVariablesIfUnique
+parameter_list|(
+name|VariableList
+modifier|&
+name|var_list
+parameter_list|)
+function_decl|;
 comment|// Returns the actual number of unique variables that were added to the
 comment|// list. "total_matches" will get updated with the actualy number of
 comment|// matches that were found regardless of whether they were unique or not

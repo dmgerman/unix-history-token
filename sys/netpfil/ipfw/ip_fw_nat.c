@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -3115,8 +3127,12 @@ begin_define
 define|#
 directive|define
 name|IPFW_NAT_MODEVENT_ORDER
-value|(SI_ORDER_ANY - 255)
+value|(SI_ORDER_ANY - 128)
 end_define
+
+begin_comment
+comment|/* after ipfw */
+end_comment
 
 begin_define
 define|#

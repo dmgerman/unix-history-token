@@ -70,7 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
 end_include
 
 begin_ifdef
@@ -618,6 +630,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return whether 11n rates are possible.  *  * Some 11n devices may return HT information but no HT rates.  * Thus, we shouldn't treat them as an 11n node.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -649,6 +665,28 @@ operator|->
 name|ni_chan
 operator|==
 name|IEEE80211_CHAN_ANYC
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT
+argument_list|(
+name|ni
+operator|->
+name|ni_chan
+argument_list|)
+operator|&&
+name|ni
+operator|->
+name|ni_htrates
+operator|.
+name|rs_nrates
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -925,7 +963,10 @@ name|amrr_node_is_11n
 argument_list|(
 name|ni
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|rs
 operator|->
@@ -942,6 +983,7 @@ operator|<
 literal|4
 condition|)
 break|break;
+block|}
 elseif|else
 if|if
 condition|(
@@ -961,6 +1003,7 @@ operator|<=
 literal|72
 condition|)
 break|break;
+block|}
 name|rate
 operator|=
 name|rs
@@ -974,7 +1017,6 @@ index|]
 operator|&
 name|IEEE80211_RATE_VAL
 expr_stmt|;
-block|}
 comment|/* if the rate is an 11n rate, ensure the MCS bit is set */
 if|if
 condition|(

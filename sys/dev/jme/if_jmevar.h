@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|JME_MAXTXSEGS
-value|32
+value|35
 end_define
 
 begin_define

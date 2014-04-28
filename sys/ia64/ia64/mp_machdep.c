@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_xtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -208,6 +214,13 @@ specifier|extern
 name|uint64_t
 name|bdata
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|smp_disabled
 decl_stmt|;
 end_decl_stmt
 
@@ -433,6 +446,11 @@ modifier|*
 name|tf
 parameter_list|)
 block|{
+name|struct
+name|trapframe
+modifier|*
+name|stf
+decl_stmt|;
 name|PCPU_INC
 argument_list|(
 name|md
@@ -454,8 +472,26 @@ name|cpuid
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|stf
+operator|=
+name|td
+operator|->
+name|td_intr_frame
+expr_stmt|;
+name|td
+operator|->
+name|td_intr_frame
+operator|=
+name|tf
+expr_stmt|;
 name|hardclockintr
 argument_list|()
+expr_stmt|;
+name|td
+operator|->
+name|td_intr_frame
+operator|=
+name|stf
 expr_stmt|;
 return|return
 operator|(
@@ -836,7 +872,7 @@ literal|8
 operator|)
 operator||
 operator|(
-name|PAGE_SHIFT
+name|LOG2_ID_PAGE_SIZE
 operator|<<
 literal|2
 operator|)
@@ -856,7 +892,7 @@ literal|8
 operator|)
 operator||
 operator|(
-name|PAGE_SHIFT
+name|LOG2_ID_PAGE_SIZE
 operator|<<
 literal|2
 operator|)
@@ -950,6 +986,18 @@ argument_list|(
 name|IA64_FPSR_DEFAULT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XTRACE
+name|ia64_xtrace_init_ap
+argument_list|(
+name|ia64_ap_state
+operator|.
+name|as_xtrace_buffer
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Wait until it's time for us to be unleashed */
 while|while
 condition|(
@@ -984,6 +1032,9 @@ argument_list|(
 name|idlethread
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|pmap_invalidate_all
+argument_list|()
 expr_stmt|;
 name|atomic_add_int
 argument_list|(
@@ -1024,9 +1075,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|ia64_srlz_d
-argument_list|()
-expr_stmt|;
-name|ia64_enable_intr
 argument_list|()
 expr_stmt|;
 name|sched_throw
@@ -1116,6 +1164,11 @@ name|cpuid
 decl_stmt|,
 name|sapic_id
 decl_stmt|;
+if|if
+condition|(
+name|smp_disabled
+condition|)
+return|return;
 name|sapic_id
 operator|=
 name|SAPIC_ID_SET
@@ -1660,6 +1713,18 @@ name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XTRACE
+name|ia64_ap_state
+operator|.
+name|as_xtrace_buffer
+operator|=
+name|ia64_xtrace_alloc
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|ia64_ap_state
 operator|.
 name|as_trace
@@ -1968,10 +2033,7 @@ name|smp_cpus
 argument_list|)
 expr_stmt|;
 block|}
-name|smp_active
-operator|=
-literal|1
-expr_stmt|;
+comment|/* XXX Atomic set operation? */
 name|smp_started
 operator|=
 literal|1

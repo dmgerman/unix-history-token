@@ -444,6 +444,73 @@ begin_comment
 comment|/* LOCORE */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ELFNOTE
+parameter_list|(
+name|name
+parameter_list|,
+name|type
+parameter_list|,
+name|desctype
+parameter_list|,
+name|descdata
+modifier|...
+parameter_list|)
+define|\
+value|.pushsection .note.name                 ;       \   .align 4                              ;       \   .long 2f - 1f
+comment|/* namesz */
+value|;       \   .long 4f - 3f
+comment|/* descsz */
+value|;       \   .long type                            ;       \ 1:.asciz #name                          ;       \ 2:.align 4                              ;       \ 3:desctype descdata                     ;       \ 4:.align 4                              ;       \ .popsection
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__STDC__, i.e. -traditional */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFNOTE
+parameter_list|(
+name|name
+parameter_list|,
+name|type
+parameter_list|,
+name|desctype
+parameter_list|,
+name|descdata
+parameter_list|)
+define|\
+value|.pushsection .note.name                 ;       \   .align 4                              ;       \   .long 2f - 1f
+comment|/* namesz */
+value|;       \   .long 4f - 3f
+comment|/* descsz */
+value|;       \   .long type                            ;       \ 1:.asciz "name"                         ;       \ 2:.align 4                              ;       \ 3:desctype descdata                     ;       \ 4:.align 4                              ;       \ .popsection
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __STDC__ */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

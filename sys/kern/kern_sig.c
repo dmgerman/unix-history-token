@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -39,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|"opt_core.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_procdesc.h"
 end_include
 
 begin_include
@@ -80,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -331,11 +319,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_send
-argument_list|,
-name|signal
-operator|-
-name|send
+name|signal__send
 argument_list|,
 literal|"struct thread *"
 argument_list|,
@@ -353,11 +337,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_clear
-argument_list|,
-name|signal
-operator|-
-name|clear
+name|signal__clear
 argument_list|,
 literal|"int"
 argument_list|,
@@ -373,11 +353,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_discard
-argument_list|,
-name|signal
-operator|-
-name|discard
+name|signal__discard
 argument_list|,
 literal|"struct thread *"
 argument_list|,
@@ -6519,7 +6495,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_clear
+name|signal__clear
 argument_list|,
 name|sig
 argument_list|,
@@ -8971,9 +8947,6 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|PROCDESC
 name|struct
 name|proc
 modifier|*
@@ -9093,15 +9066,6 @@ operator|(
 name|error
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|ENOSYS
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -10663,7 +10627,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_send
+name|signal__send
 argument_list|,
 name|td
 argument_list|,
@@ -10703,7 +10667,7 @@ name|proc
 argument_list|,
 name|kernel
 argument_list|, ,
-name|signal_discard
+name|signal__discard
 argument_list|,
 name|td
 argument_list|,
@@ -14252,7 +14216,7 @@ name|int
 name|reason
 parameter_list|,
 name|int
-name|status
+name|sig
 parameter_list|)
 block|{
 name|struct
@@ -14335,7 +14299,7 @@ name|p
 argument_list|,
 name|reason
 argument_list|,
-name|status
+name|sig
 argument_list|)
 expr_stmt|;
 block|}
@@ -14364,6 +14328,7 @@ name|int
 name|reason
 parameter_list|)
 block|{
+comment|/* p_xstat is a plain signal number, not a full wait() status here. */
 name|childproc_jobstate
 argument_list|(
 name|p
@@ -14414,39 +14379,64 @@ name|int
 name|reason
 decl_stmt|;
 name|int
-name|status
+name|xstat
 init|=
 name|p
 operator|->
 name|p_xstat
 decl_stmt|;
 comment|/* convert to int */
-name|reason
-operator|=
-name|CLD_EXITED
-expr_stmt|;
+name|int
+name|status
+decl_stmt|;
 if|if
 condition|(
 name|WCOREDUMP
 argument_list|(
-name|status
+name|xstat
 argument_list|)
 condition|)
 name|reason
 operator|=
 name|CLD_DUMPED
+operator|,
+name|status
+operator|=
+name|WTERMSIG
+argument_list|(
+name|xstat
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
 condition|(
 name|WIFSIGNALED
 argument_list|(
-name|status
+name|xstat
 argument_list|)
 condition|)
 name|reason
 operator|=
 name|CLD_KILLED
+operator|,
+name|status
+operator|=
+name|WTERMSIG
+argument_list|(
+name|xstat
+argument_list|)
+expr_stmt|;
+else|else
+name|reason
+operator|=
+name|CLD_EXITED
+operator|,
+name|status
+operator|=
+name|WEXITSTATUS
+argument_list|(
+name|xstat
+argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX avoid calling wakeup(p->p_pptr), the work is 	 * done in exit1(). 	 */
 name|sigparent

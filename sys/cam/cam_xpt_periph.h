@@ -136,6 +136,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|xpt_denounce_periph
+parameter_list|(
+name|struct
+name|cam_periph
+modifier|*
+name|periph
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

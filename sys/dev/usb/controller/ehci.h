@@ -380,7 +380,7 @@ value|(((x)>> 0)& 0xFFF)
 define|#
 directive|define
 name|EHCI_ITD_ACTIVE
-value|(1<< 31)
+value|(1U<< 31)
 define|#
 directive|define
 name|EHCI_ITD_DATABUFERR
@@ -522,7 +522,7 @@ value|(0<< 31)
 define|#
 directive|define
 name|EHCI_SITD_SET_DIR_IN
-value|(1<< 31)
+value|(1U<< 31)
 define|#
 directive|define
 name|EHCI_SITD_SET_ADDR

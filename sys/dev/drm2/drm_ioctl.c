@@ -1028,6 +1028,16 @@ operator|.
 name|prefer_shadow
 expr_stmt|;
 break|break;
+case|case
+name|DRM_CAP_TIMESTAMP_MONOTONIC
+case|:
+name|req
+operator|->
+name|value
+operator|=
+name|drm_timestamp_monotonic
+expr_stmt|;
+break|break;
 default|default:
 return|return
 name|EINVAL

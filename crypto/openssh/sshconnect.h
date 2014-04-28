@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.h,v 1.27 2010/11/29 23:45:51 djm Exp $ */
+comment|/* $OpenBSD: sshconnect.h,v 1.28 2013/10/16 02:31:47 djm Exp $ */
 end_comment
 
 begin_comment
@@ -34,12 +34,22 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|addrinfo
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|ssh_connect
 parameter_list|(
 specifier|const
 name|char
+modifier|*
+parameter_list|,
+name|struct
+name|addrinfo
 modifier|*
 parameter_list|,
 name|struct
@@ -58,10 +68,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -242,6 +248,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|longfault
+parameter_list|(
+name|faultbuf
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|machdep_ap_bootstrap
@@ -249,10 +266,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Set up important bits on the CPU (HID registers, etc.) */
-name|cpudep_ap_setup
-argument_list|()
-expr_stmt|;
 comment|/* Set PIR */
 name|PCPU_SET
 argument_list|(
@@ -1014,10 +1027,7 @@ argument_list|(
 literal|10000
 argument_list|)
 expr_stmt|;
-name|smp_active
-operator|=
-literal|1
-expr_stmt|;
+comment|/* XXX Atomic set operation? */
 name|smp_started
 operator|=
 literal|1

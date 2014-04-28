@@ -286,26 +286,48 @@ name|vc_lock
 decl_stmt|;
 block|}
 struct|;
+typedef|typedef
+struct|struct
+name|vdev_queue_class
+block|{
+name|uint32_t
+name|vqc_active
+decl_stmt|;
+comment|/* 	 * Sorted by offset or timestamp, depending on if the queue is 	 * LBA-ordered vs FIFO. 	 */
+name|avl_tree_t
+name|vqc_queued_tree
+decl_stmt|;
+block|}
+name|vdev_queue_class_t
+typedef|;
 struct|struct
 name|vdev_queue
 block|{
-name|avl_tree_t
-name|vq_deadline_tree
+name|vdev_t
+modifier|*
+name|vq_vdev
+decl_stmt|;
+name|vdev_queue_class_t
+name|vq_class
+index|[
+name|ZIO_PRIORITY_NUM_QUEUEABLE
+index|]
 decl_stmt|;
 name|avl_tree_t
-name|vq_read_tree
+name|vq_active_tree
 decl_stmt|;
-name|avl_tree_t
-name|vq_write_tree
-decl_stmt|;
-name|avl_tree_t
-name|vq_pending_tree
+name|uint64_t
+name|vq_last_offset
 decl_stmt|;
 name|hrtime_t
 name|vq_io_complete_ts
 decl_stmt|;
+comment|/* time last i/o completed */
 name|kmutex_t
 name|vq_lock
+decl_stmt|;
+name|uint64_t
+name|vq_lastoffset
 decl_stmt|;
 block|}
 struct|;
@@ -407,13 +429,6 @@ name|uint64_t
 name|vdev_children
 decl_stmt|;
 comment|/* number of children		*/
-name|space_map_t
-name|vdev_dtl
-index|[
-name|DTL_TYPES
-index|]
-decl_stmt|;
-comment|/* in-core dirty time logs	*/
 name|vdev_stat_t
 name|vdev_stat
 decl_stmt|;
@@ -483,10 +498,6 @@ name|boolean_t
 name|vdev_probe_wanted
 decl_stmt|;
 comment|/* async probe wanted?	*/
-name|uint64_t
-name|vdev_removing
-decl_stmt|;
-comment|/* device is being removed?	*/
 name|list_node_t
 name|vdev_config_dirty_node
 decl_stmt|;
@@ -504,22 +515,39 @@ name|vdev_islog
 decl_stmt|;
 comment|/* is an intent log device	*/
 name|uint64_t
+name|vdev_removing
+decl_stmt|;
+comment|/* device is being removed?	*/
+name|boolean_t
 name|vdev_ishole
 decl_stmt|;
 comment|/* is a hole in the namespace 	*/
 comment|/* 	 * Leaf vdev state. 	 */
-name|uint64_t
-name|vdev_psize
+name|range_tree_t
+modifier|*
+name|vdev_dtl
+index|[
+name|DTL_TYPES
+index|]
 decl_stmt|;
-comment|/* physical device capacity	*/
-name|space_map_obj_t
-name|vdev_dtl_smo
+comment|/* dirty time logs	*/
+name|space_map_t
+modifier|*
+name|vdev_dtl_sm
 decl_stmt|;
-comment|/* dirty time log space map obj	*/
+comment|/* dirty time log space map	*/
 name|txg_node_t
 name|vdev_dtl_node
 decl_stmt|;
 comment|/* per-txg dirty DTL linkage	*/
+name|uint64_t
+name|vdev_dtl_object
+decl_stmt|;
+comment|/* DTL object			*/
+name|uint64_t
+name|vdev_psize
+decl_stmt|;
+comment|/* physical device capacity	*/
 name|uint64_t
 name|vdev_wholedisk
 decl_stmt|;
@@ -576,10 +604,6 @@ name|uint64_t
 name|vdev_unspare
 decl_stmt|;
 comment|/* unspare when resilvering done */
-name|hrtime_t
-name|vdev_last_try
-decl_stmt|;
-comment|/* last reopen time		*/
 name|boolean_t
 name|vdev_nowritecache
 decl_stmt|;
@@ -604,27 +628,27 @@ name|boolean_t
 name|vdev_delayed_close
 decl_stmt|;
 comment|/* delayed device close?	*/
-name|uint8_t
+name|boolean_t
 name|vdev_tmpoffline
 decl_stmt|;
 comment|/* device taken offline temporarily? */
-name|uint8_t
+name|boolean_t
 name|vdev_detached
 decl_stmt|;
 comment|/* device detached?		*/
-name|uint8_t
+name|boolean_t
 name|vdev_cant_read
 decl_stmt|;
 comment|/* vdev is failing all reads	*/
-name|uint8_t
+name|boolean_t
 name|vdev_cant_write
 decl_stmt|;
 comment|/* vdev is failing all writes	*/
-name|uint64_t
+name|boolean_t
 name|vdev_isspare
 decl_stmt|;
 comment|/* was a hot spare		*/
-name|uint64_t
+name|boolean_t
 name|vdev_isl2cache
 decl_stmt|;
 comment|/* was a l2cache device		*/
@@ -655,6 +679,19 @@ name|trim_map
 modifier|*
 name|vdev_trimmap
 decl_stmt|;
+comment|/* map on outstanding trims	*/
+name|uint16_t
+name|vdev_rotation_rate
+decl_stmt|;
+comment|/* rotational rate of the media */
+define|#
+directive|define
+name|VDEV_RATE_UNKNOWN
+value|0
+define|#
+directive|define
+name|VDEV_RATE_NON_ROTATING
+value|1
 comment|/* 	 * For DTrace to work in userland (libzpool) context, these fields must 	 * remain at the end of the structure.  DTrace will use the kernel's 	 * CTF definition for 'struct vdev', and since the size of a kmutex_t is 	 * larger in userland, the offsets for the rest of the fields would be 	 * incorrect. 	 */
 name|kmutex_t
 name|vdev_dtl_lock
@@ -993,6 +1030,15 @@ name|vd
 parameter_list|)
 function_decl|;
 specifier|extern
+name|int
+name|vdev_dtl_load
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
 name|vdev_sync
 parameter_list|(
@@ -1030,6 +1076,21 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|uint64_t
+name|txg
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|vdev_dirty_leaves
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|uint64_t
 name|txg
@@ -1120,6 +1181,28 @@ specifier|extern
 name|int
 name|zfs_vdev_cache_size
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
+comment|/*  * The vdev_buf_t is used to translate between zio_t and buf_t, and back again.  */
+typedef|typedef
+struct|struct
+name|vdev_buf
+block|{
+name|buf_t
+name|vb_buf
+decl_stmt|;
+comment|/* buffer that describes the io */
+name|zio_t
+modifier|*
+name|vb_io
+decl_stmt|;
+comment|/* pointer back to the original zio_t */
+block|}
+name|vdev_buf_t
+typedef|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus

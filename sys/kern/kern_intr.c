@@ -4389,8 +4389,6 @@ argument_list|)
 argument_list|,
 literal|2
 argument_list|,
-literal|0
-argument_list|,
 name|RANDOM_INTERRUPT
 argument_list|)
 expr_stmt|;
@@ -5046,8 +5044,6 @@ argument_list|)
 argument_list|,
 literal|2
 argument_list|,
-literal|0
-argument_list|,
 name|RANDOM_INTERRUPT
 argument_list|)
 expr_stmt|;
@@ -5479,8 +5475,6 @@ name|entropy
 argument_list|)
 argument_list|,
 literal|1
-argument_list|,
-literal|0
 argument_list|,
 name|RANDOM_SWI
 argument_list|)

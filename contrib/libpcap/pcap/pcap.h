@@ -1274,10 +1274,12 @@ name|__NetBSD__
 name|u_int
 name|bpf_filter
 parameter_list|(
+specifier|const
 name|struct
 name|bpf_insn
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -1305,6 +1307,7 @@ name|char
 modifier|*
 name|bpf_image
 parameter_list|(
+specifier|const
 name|struct
 name|bpf_insn
 modifier|*
@@ -1315,6 +1318,7 @@ function_decl|;
 name|void
 name|bpf_dump
 parameter_list|(
+specifier|const
 name|struct
 name|bpf_program
 modifier|*

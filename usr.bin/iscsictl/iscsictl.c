@@ -985,27 +985,6 @@ name|t_protocol
 operator|=
 name|PROTOCOL_ISCSI
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ICL_KERNEL_PROXY
-if|if
-condition|(
-name|targ
-operator|->
-name|t_protocol
-operator|==
-name|PROTOCOL_ISER
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"iSER support requires ICL_KERNEL_PROXY; "
-literal|"see iscsi(4) for details"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|targ
@@ -1796,9 +1775,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|bool
-name|show_periphs
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -1947,7 +1923,7 @@ name|iss_conf
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Session ID:      %d\n"
+literal|"Session ID:       %d\n"
 argument_list|,
 name|state
 operator|->
@@ -1956,7 +1932,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Initiator name:  %s\n"
+literal|"Initiator name:   %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -1965,7 +1941,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Initiator addr:  %s\n"
+literal|"Initiator portal: %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -1974,7 +1950,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Initiator alias: %s\n"
+literal|"Initiator alias:  %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -1983,7 +1959,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Target name:     %s\n"
+literal|"Target name:      %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -1992,7 +1968,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Target addr:     %s\n"
+literal|"Target portal:    %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -2001,7 +1977,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Target alias:    %s\n"
+literal|"Target alias:     %s\n"
 argument_list|,
 name|state
 operator|->
@@ -2010,7 +1986,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"User:            %s\n"
+literal|"User:             %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -2019,7 +1995,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Secret:          %s\n"
+literal|"Secret:           %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -2028,7 +2004,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Mutual user:     %s\n"
+literal|"Mutual user:      %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -2037,7 +2013,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Mutual secret:   %s\n"
+literal|"Mutual secret:    %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -2046,7 +2022,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Session type:    %s\n"
+literal|"Session type:     %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -2059,7 +2035,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Session state:   %s\n"
+literal|"Session state:    %s\n"
 argument_list|,
 name|state
 operator|->
@@ -2072,7 +2048,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Failure reason:  %s\n"
+literal|"Failure reason:   %s\n"
 argument_list|,
 name|state
 operator|->
@@ -2081,7 +2057,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Header digest:   %s\n"
+literal|"Header digest:    %s\n"
 argument_list|,
 name|state
 operator|->
@@ -2096,7 +2072,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Data digest:     %s\n"
+literal|"Data digest:      %s\n"
 argument_list|,
 name|state
 operator|->
@@ -2111,7 +2087,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DataSegmentLen:  %d\n"
+literal|"DataSegmentLen:   %d\n"
 argument_list|,
 name|state
 operator|->
@@ -2120,7 +2096,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ImmediateData:   %s\n"
+literal|"ImmediateData:    %s\n"
 argument_list|,
 name|state
 operator|->
@@ -2133,7 +2109,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"iSER (RDMA):     %s\n"
+literal|"iSER (RDMA):      %s\n"
 argument_list|,
 name|conf
 operator|->
@@ -2146,7 +2122,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Device nodes:	 "
+literal|"Device nodes:     "
 argument_list|)
 expr_stmt|;
 name|print_periphs
@@ -2171,7 +2147,7 @@ literal|"%-36s %-16s %s\n"
 argument_list|,
 literal|"Target name"
 argument_list|,
-literal|"Target addr"
+literal|"Target portal"
 argument_list|,
 literal|"State"
 argument_list|)
@@ -2206,10 +2182,6 @@ operator|&
 name|state
 operator|->
 name|iss_conf
-expr_stmt|;
-name|show_periphs
-operator|=
-name|false
 expr_stmt|;
 name|printf
 argument_list|(
@@ -2318,7 +2290,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: iscsictl -A -h host -t target "
+literal|"usage: iscsictl -A -p portal -t target "
 literal|"[-u user -s secret]\n"
 argument_list|)
 expr_stmt|;
@@ -2348,7 +2320,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       iscsictl -R [-h host] [-t target]\n"
+literal|"       iscsictl -R [-p portal] [-t target]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2532,7 +2504,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ARLac:d:n:h:t:u:s:v"
+literal|"ARLac:d:n:p:t:u:s:v"
 argument_list|)
 operator|)
 operator|!=
@@ -2602,7 +2574,7 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|'h'
+literal|'p'
 case|:
 name|host
 operator|=
@@ -2719,7 +2691,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -h and mutually exclusive"
+literal|"-a and -p and mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2806,7 +2778,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -h and mutually exclusive"
+literal|"-n and -p and mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2880,7 +2852,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-d and -h and mutually exclusive"
+literal|"-d and -p and mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2913,7 +2885,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"must specify -a, -n or -t/-h"
+literal|"must specify -a, -n or -t/-p"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2930,7 +2902,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-t must always be used with -h"
+literal|"-t must always be used with -p"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2947,7 +2919,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-h must always be used with -t"
+literal|"-p must always be used with -t"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3063,7 +3035,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -h and mutually exclusive"
+literal|"-a and -p and mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3111,7 +3083,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -h and mutually exclusive"
+literal|"-n and -p and mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3146,7 +3118,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-h and -t and mutually exclusive"
+literal|"-p and -t and mutually exclusive"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3168,7 +3140,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-t and -h and mutually exclusive"
+literal|"-t and -p and mutually exclusive"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3177,7 +3149,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"must specify either-a, -n, -t, or -h"
+literal|"must specify either -a, -n, -t, or -p"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3213,7 +3185,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-L and -h and mutually exclusive"
+literal|"-L and -p and mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if

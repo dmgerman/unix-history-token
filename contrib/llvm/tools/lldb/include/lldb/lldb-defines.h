@@ -144,6 +144,13 @@ name|LLDB_GENERIC_ERROR
 value|UINT32_MAX
 end_define
 
+begin_define
+define|#
+directive|define
+name|LLDB_DEFAULT_SHELL
+value|"/bin/sh"
+end_define
+
 begin_comment
 comment|//----------------------------------------------------------------------
 end_comment
@@ -491,6 +498,20 @@ begin_comment
 comment|// Must match max of lldb::offset_t
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LLDB_INVALID_LINE_NUMBER
+value|UINT32_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLDB_INVALID_QUEUE_ID
+value|0
+end_define
+
 begin_comment
 comment|//----------------------------------------------------------------------
 end_comment
@@ -646,6 +667,48 @@ name|B
 parameter_list|)
 value|(((1U<< (B)) - 1) ^ (((1U<< (A))-1)>> 1))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAX_PATH
+value|260
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_comment
+comment|// ignore GCC function attributes
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__attribute__
+parameter_list|(
+name|X
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

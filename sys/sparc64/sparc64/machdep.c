@@ -963,13 +963,13 @@ name|printf
 argument_list|(
 literal|"avail memory = %lu (%lu MB)\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|*
 name|PAGE_SIZE
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|/
@@ -2372,15 +2372,11 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Take over the trap table via the PROM.  Using the PROM for this 	 * is necessary in order to set obp-control-relinquished to true 	 * within the PROM so obtaining /virtual-memory/translations doesn't 	 * trigger a fatal reset error or worse things further down the road. 	 * XXX it should be possible to use this solely instead of writing 	 * %tba in cpu_setregs().  Doing so causes a hang however. 	 */
+comment|/* 	 * Take over the trap table via the PROM.  Using the PROM for this 	 * is necessary in order to set obp-control-relinquished to true 	 * within the PROM so obtaining /virtual-memory/translations doesn't 	 * trigger a fatal reset error or worse things further down the road. 	 * XXX it should be possible to use this solely instead of writing 	 * %tba in cpu_setregs().  Doing so causes a hang however. 	 * 	 * NB: the low-level console drivers require a working DELAY() and 	 * some compiler optimizations may cause the curthread accesses of 	 * mutex(9) to be factored out even if the latter aren't actually 	 * called.  Both of these require PCPU_REG to be set.  However, we 	 * can't set PCPU_REG without also taking over the trap table or the 	 * firmware will overwrite it. 	 */
 name|sun4u_set_traptable
 argument_list|(
 name|tl0_base
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Initialize the console. 	 * NB: the low-level console drivers require a working DELAY() and 	 * some compiler optimizations may cause the curthread accesses of 	 * mutex(9) to be factored out even if the latter aren't actually 	 * called, both requiring PCPU_REG to be set. 	 */
-name|cninit
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the dynamic per-CPU area for the BSP and the message 	 * buffer (after setting the trap table). 	 */
 name|dpcpu_init
@@ -2399,6 +2395,10 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize mutexes. 	 */
 name|mutex_init
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Initialize console now that we have a reasonable set of system 	 * services. 	 */
+name|cninit
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Finish the interrupt initialization now that mutexes work and 	 * enable them. 	 */

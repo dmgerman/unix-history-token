@@ -2065,23 +2065,9 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
-name|xpt_batch_start
-argument_list|(
-name|ch
-operator|->
-name|sim
-argument_list|)
-expr_stmt|;
 name|ata_interrupt_locked
 argument_list|(
 name|data
-argument_list|)
-expr_stmt|;
-name|xpt_batch_done
-argument_list|(
-name|ch
-operator|->
-name|sim
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -2122,8 +2108,6 @@ name|ata_request
 modifier|*
 name|request
 decl_stmt|;
-do|do
-block|{
 comment|/* ignore interrupt if its not for us */
 if|if
 condition|(
@@ -2145,7 +2129,7 @@ operator|->
 name|dev
 argument_list|)
 condition|)
-break|break;
+return|return;
 comment|/* do we have a running request */
 if|if
 condition|(
@@ -2158,7 +2142,7 @@ operator|->
 name|running
 operator|)
 condition|)
-break|break;
+return|return;
 name|ATA_DEBUG_RQ
 argument_list|(
 name|request
@@ -2185,7 +2169,7 @@ argument_list|,
 literal|"interrupt on idle channel ignored\n"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 comment|/* 	 * we have the HW locks, so end the transaction for this request 	 * if it finishes immediately otherwise wait for next interrupt 	 */
 if|if
@@ -2233,12 +2217,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
-do|while
-condition|(
-literal|0
-condition|)
-do|;
 block|}
 end_function
 

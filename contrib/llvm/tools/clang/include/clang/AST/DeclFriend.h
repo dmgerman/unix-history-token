@@ -1042,10 +1042,8 @@ block|{
 return|return
 name|friend_iterator
 argument_list|(
-name|data
+name|getFirstFriend
 argument_list|()
-operator|.
-name|FirstFriend
 argument_list|)
 return|;
 block|}
@@ -1083,11 +1081,10 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
 name|FD
 operator|->
 name|NextFriend
-operator|==
-literal|0
 operator|&&
 literal|"friend already has next friend?"
 argument_list|)

@@ -398,6 +398,8 @@ name|tty_makealias
 argument_list|(
 name|tp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|output
 argument_list|)
 expr_stmt|;
@@ -423,14 +425,14 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|pcell_t
 name|stdin
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|pcell_t
 name|stdout
 decl_stmt|;
 end_decl_stmt
@@ -681,7 +683,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|chosen
 argument_list|,
@@ -710,7 +712,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|chosen
 argument_list|,

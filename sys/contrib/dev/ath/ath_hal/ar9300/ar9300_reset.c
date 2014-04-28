@@ -5349,7 +5349,6 @@ comment|/* XXX need the logic for Osprey */
 end_comment
 
 begin_function
-specifier|inline
 name|void
 name|ar9300_init_pll
 parameter_list|(

@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -40,13 +46,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/bpfdesc.h>
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/bpfdesc.h>
 end_include
 
 begin_include

@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_clone.h>
 end_include
 
@@ -3538,9 +3544,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 operator|=
 name|rt
 operator|->

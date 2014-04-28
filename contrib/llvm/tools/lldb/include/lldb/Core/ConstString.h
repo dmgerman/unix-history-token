@@ -169,7 +169,7 @@ comment|///
 comment|/// @param[in] cstr
 comment|///     A pointer to the first character in the C string. The C
 comment|///     string can be NULL terminated in a buffer that contains
-comment|///     more characters than the length of the stirng, or the
+comment|///     more characters than the length of the string, or the
 comment|///     string can be part of another string and a new substring
 comment|///     can be created.
 comment|///
@@ -259,6 +259,7 @@ comment|/// @return
 comment|///     /b True this object contains a valid non-empty C string, \b
 comment|///     false otherwise.
 comment|//------------------------------------------------------------------
+name|explicit
 name|operator
 name|bool
 argument_list|()

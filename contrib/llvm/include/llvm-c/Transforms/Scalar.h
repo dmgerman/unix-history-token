@@ -122,6 +122,14 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createLoopRerollPass function. */
+name|void
+name|LLVMAddLoopRerollPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
 comment|/** See llvm::createLoopUnrollPass function. */
 name|void
 name|LLVMAddLoopUnrollPass
@@ -141,6 +149,14 @@ function_decl|;
 comment|/** See llvm::createMemCpyOptPass function. */
 name|void
 name|LLVMAddMemCpyOptPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createPartiallyInlineLibCallsPass function. */
+name|void
+name|LLVMAddPartiallyInlineLibCallsPass
 parameter_list|(
 name|LLVMPassManagerRef
 name|PM

@@ -380,6 +380,14 @@ operator|)
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
+name|new_channel
+operator|->
+name|ring_buffer_size
+operator|=
+name|send_ring_buffer_size
+operator|+
+name|recv_ring_buffer_size
+expr_stmt|;
 name|hv_vmbus_ring_buffer_init
 argument_list|(
 operator|&
@@ -2163,7 +2171,7 @@ name|ring_buffer_pages
 argument_list|,
 name|channel
 operator|->
-name|ring_buffer_page_count
+name|ring_buffer_size
 argument_list|,
 name|M_DEVBUF
 argument_list|)

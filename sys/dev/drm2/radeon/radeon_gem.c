@@ -2638,6 +2638,10 @@ return|return
 operator|-
 name|ENOMEM
 return|;
+name|handle
+operator|=
+literal|0
+expr_stmt|;
 name|r
 operator|=
 name|drm_gem_handle_create

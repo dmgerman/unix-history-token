@@ -224,7 +224,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* This is how we write out a macro definition.      Suitable for being called by cpp_forall_identifiers.  */
+comment|/* This is how we write out a macro definition.    Suitable for being called by cpp_forall_identifiers.  */
 end_comment
 
 begin_function
@@ -1772,7 +1772,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return nonzero if FD is a precompiled header which is consistent    with the preprocessor's current definitions.  It will be consistent    when:     - anything that was defined just before the PCH was generated       is defined the same way now; and    - anything that was not defined then, but is defined now, was not      used by the PCH.     NAME is used to print warnings if `warn_invalid_pch' is set in the    reader's flags. */
+comment|/* Return nonzero if FD is a precompiled header which is consistent    with the preprocessor's current definitions.  It will be consistent    when:     - anything that was defined just before the PCH was generated      is defined the same way now; and    - anything that was not defined then, but is defined now, was not      used by the PCH.     NAME is used to print warnings if `warn_invalid_pch' is set in the    reader's flags. */
 end_comment
 
 begin_function
@@ -2704,7 +2704,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a precompiled header that was previously determined to be valid,    apply all its definitions (and undefinitions) to the current state.     DEPNAME is passed to deps_restore.  */
+comment|/* Given a precompiled header that was previously determined to be valid,    apply all its definitions (and undefinitions) to the current state.    DEPNAME is passed to deps_restore.  */
 end_comment
 
 begin_function
@@ -2737,7 +2737,7 @@ name|struct
 name|lexer_state
 name|old_state
 decl_stmt|;
-comment|/* Restore spec_nodes, which will be full of references to the old       hashtable entries and so will now be invalid.  */
+comment|/* Restore spec_nodes, which will be full of references to the old      hashtable entries and so will now be invalid.  */
 block|{
 name|struct
 name|spec_nodes

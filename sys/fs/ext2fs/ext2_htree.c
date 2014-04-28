@@ -247,7 +247,7 @@ name|hash
 parameter_list|,
 name|uint8_t
 modifier|*
-name|hash_verion
+name|hash_version
 parameter_list|,
 name|struct
 name|ext2fs_htree_lookup_info
@@ -511,9 +511,6 @@ modifier|*
 name|ip
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|EXT2FS_HTREE
 if|if
 condition|(
 name|EXT2_HAS_COMPAT_FEATURE
@@ -527,9 +524,9 @@ argument_list|)
 operator|&&
 name|ip
 operator|->
-name|i_flags
+name|i_flag
 operator|&
-name|EXT4_INDEX
+name|IN_E4INDEX
 condition|)
 return|return
 operator|(
@@ -537,8 +534,6 @@ literal|1
 operator|)
 return|;
 else|else
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2528,7 +2523,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|entry2
+name|entry1
 operator|->
 name|h_hash
 operator|>
@@ -3532,9 +3527,9 @@ name|ep
 expr_stmt|;
 name|dp
 operator|->
-name|i_flags
+name|i_flag
 operator||=
-name|EXT4_INDEX
+name|IN_E4INDEX
 expr_stmt|;
 comment|/* 	 * Initialize index root. 	 */
 name|dotdot

@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -534,6 +528,19 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
@@ -757,9 +764,9 @@ name|lock
 argument_list|,
 literal|"vcio mbox"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 for|for

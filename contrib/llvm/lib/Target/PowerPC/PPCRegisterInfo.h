@@ -119,11 +119,6 @@ name|PPCSubtarget
 operator|&
 name|Subtarget
 block|;
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
-block|;
 name|public
 operator|:
 name|PPCRegisterInfo
@@ -132,11 +127,6 @@ specifier|const
 name|PPCSubtarget
 operator|&
 name|SubTarget
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 comment|/// getPointerRegClass - Return the register class to use to hold pointers.
@@ -361,15 +351,33 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-comment|// Exception handling queries.
+comment|// Base pointer (stack realignment) support.
 name|unsigned
-name|getEHExceptionRegister
-argument_list|()
+name|getBaseRegister
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
 specifier|const
 block|;
-name|unsigned
-name|getEHHandlerRegister
-argument_list|()
+name|bool
+name|hasBasePointer
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|canRealignStack
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|needsStackRealignment
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
 specifier|const
 block|; }
 decl_stmt|;

@@ -24,7 +24,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -1708,7 +1708,7 @@ name|pidfile_open
 argument_list|(
 name|path_dhclient_pidfile
 argument_list|,
-literal|0600
+literal|0644
 argument_list|,
 operator|&
 name|otherpid
@@ -2278,7 +2278,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 argument_list|,
 name|CAP_READ
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,11 +8,15 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/*  * Notes:  * The initial adaptation from 4.4BSD Lite sources in September 1995 used 686  * lines from that version, and made changes/additions for 150 lines.  There  * was no reformatting, so with/without ignoring whitespace, the amount of  * change is the same.  *  * Comparing with current (2009) source, excluding this comment:  * a) 209 lines match identically to the 4.4BSD Lite sources, with 771 lines  *    changed/added.  * a) Ignoring whitespace, the current version still uses 516 lines from the  *    4.4BSD Lite sources, with 402 lines changed/added.  *  * Raymond's original comment on this follows...  */
+end_comment
+
+begin_comment
 comment|/*  * tset.c - terminal initialization utility  *  * This code was mostly swiped from 4.4BSD tset, with some obsolescent  * cruft removed and substantial portions rewritten.  A Regents of the  * University of California copyright applies to some portions of the  * code, and is reproduced below:  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_define
@@ -190,7 +194,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tset.c,v 1.76 2008/10/11 19:26:19 tom Exp $"
+literal|"$Id: tset.c,v 1.93 2013/12/15 01:05:56 tom Exp $"
 argument_list|)
 end_macro
 
@@ -307,6 +311,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|environ
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -315,6 +325,11 @@ modifier|*
 name|environ
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -331,6 +346,45 @@ name|x
 parameter_list|)
 value|((x)& 0x1f)
 end_define
+
+begin_decl_stmt
+specifier|static
+name|void
+name|failed
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|GCC_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|exit_error
+argument_list|(
+name|void
+argument_list|)
+name|GCC_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|err
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|GCC_NORETURN
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -439,6 +493,12 @@ begin_comment
 comment|/* new kill character */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|HAVE_SIZECHANGE
+end_if
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -451,6 +511,11 @@ end_decl_stmt
 begin_comment
 comment|/* window size */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -653,7 +718,7 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|unsigned
+name|size_t
 name|len
 init|=
 name|strlen
@@ -681,28 +746,43 @@ operator|-
 literal|12
 condition|)
 block|{
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|temp
 argument_list|,
 name|_nc_progname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+name|_nc_STRCAT
 argument_list|(
 name|temp
 argument_list|,
 literal|": "
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|temp
 argument_list|,
 literal|"tset: "
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1539,16 +1619,11 @@ argument_list|)
 expr_stmt|;
 name|mapp
 operator|=
-operator|(
-name|MAP
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
+name|typeMalloc
 argument_list|(
 name|MAP
-argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1564,6 +1639,20 @@ condition|)
 name|failed
 argument_list|(
 literal|"malloc"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|copy
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|mapp
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 name|mapp
@@ -1817,20 +1906,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|arg
-operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-condition|)
-comment|/* Non-optional type. */
-goto|goto
-name|badmopt
-goto|;
 name|mapp
 operator|->
 name|type
@@ -2117,6 +2192,9 @@ case|:
 name|match
 operator|=
 operator|(
+operator|(
+name|int
+operator|)
 name|ospeed
 operator|==
 name|mapp
@@ -2131,6 +2209,9 @@ case|:
 name|match
 operator|=
 operator|(
+operator|(
+name|int
+operator|)
 name|ospeed
 operator|>=
 name|mapp
@@ -2145,6 +2226,9 @@ case|:
 name|match
 operator|=
 operator|(
+operator|(
+name|int
+operator|)
 name|ospeed
 operator|>
 name|mapp
@@ -2159,6 +2243,9 @@ case|:
 name|match
 operator|=
 operator|(
+operator|(
+name|int
+operator|)
 name|ospeed
 operator|<=
 name|mapp
@@ -2173,6 +2260,9 @@ case|:
 name|match
 operator|=
 operator|(
+operator|(
+name|int
+operator|)
 name|ospeed
 operator|<
 name|mapp
@@ -2589,6 +2679,9 @@ index|[
 name|n
 index|]
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|8
 argument_list|)
 condition|)
@@ -3499,6 +3592,10 @@ name|c_iflag
 operator|&=
 operator|~
 operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|IGNBRK
 operator||
 name|PARMRK
@@ -3526,6 +3623,7 @@ endif|#
 directive|endif
 operator||
 name|IXOFF
+argument_list|)
 operator|)
 expr_stmt|;
 name|mode
@@ -3555,6 +3653,10 @@ name|c_oflag
 operator|&=
 operator|~
 operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 literal|0
 ifdef|#
 directive|ifdef
@@ -3640,6 +3742,7 @@ operator||
 name|FFDLY
 endif|#
 directive|endif
+argument_list|)
 operator|)
 expr_stmt|;
 name|mode
@@ -3663,6 +3766,10 @@ name|c_cflag
 operator|&=
 operator|~
 operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|CSIZE
 operator||
 name|CSTOPB
@@ -3672,6 +3779,7 @@ operator||
 name|PARODD
 operator||
 name|CLOCAL
+argument_list|)
 operator|)
 expr_stmt|;
 name|mode
@@ -3690,6 +3798,10 @@ name|c_lflag
 operator|&=
 operator|~
 operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|ECHONL
 operator||
 name|NOFLSH
@@ -3714,6 +3826,7 @@ operator||
 name|XCASE
 endif|#
 directive|endif
+argument_list|)
 operator|)
 expr_stmt|;
 name|mode
@@ -3849,6 +3962,7 @@ name|terasechar
 operator|>=
 literal|0
 condition|)
+block|{
 name|mode
 operator|.
 name|c_cc
@@ -3856,6 +3970,8 @@ index|[
 name|VERASE
 index|]
 operator|=
+name|UChar
+argument_list|(
 operator|(
 name|terasechar
 operator|>=
@@ -3866,7 +3982,9 @@ name|terasechar
 else|:
 name|default_erase
 argument_list|()
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|DISABLED
@@ -3883,6 +4001,7 @@ name|intrchar
 operator|>=
 literal|0
 condition|)
+block|{
 name|mode
 operator|.
 name|c_cc
@@ -3890,6 +4009,8 @@ index|[
 name|VINTR
 index|]
 operator|=
+name|UChar
+argument_list|(
 operator|(
 name|intrchar
 operator|>=
@@ -3899,7 +4020,9 @@ condition|?
 name|intrchar
 else|:
 name|CINTR
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|DISABLED
@@ -3916,6 +4039,7 @@ name|tkillchar
 operator|>=
 literal|0
 condition|)
+block|{
 name|mode
 operator|.
 name|c_cc
@@ -3923,6 +4047,8 @@ index|[
 name|VKILL
 index|]
 operator|=
+name|UChar
+argument_list|(
 operator|(
 name|tkillchar
 operator|>=
@@ -3932,7 +4058,9 @@ condition|?
 name|tkillchar
 else|:
 name|CKILL
+argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -4144,7 +4272,12 @@ operator|.
 name|c_oflag
 operator|&=
 operator|~
+operator|(
+operator|(
+name|unsigned
+operator|)
 name|ONLCR
+operator|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -4153,7 +4286,12 @@ operator|.
 name|c_iflag
 operator|&=
 operator|~
+operator|(
+operator|(
+name|unsigned
+operator|)
 name|ICRNL
+operator|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -4449,6 +4587,19 @@ block|{
 name|int
 name|c
 decl_stmt|;
+name|int
+name|lim
+init|=
+if|#
+directive|if
+name|HAVE_SIZECHANGE
+name|tcolumns
+else|#
+directive|else
+name|columns
+endif|#
+directive|endif
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -4477,7 +4628,7 @@ literal|8
 init|;
 name|c
 operator|<
-name|tcolumns
+name|lim
 condition|;
 name|c
 operator|+=
@@ -5443,8 +5594,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
-name|strcmp
+name|same_program
 argument_list|(
 name|_nc_progname
 argument_list|,
@@ -5460,8 +5610,9 @@ name|reset_mode
 argument_list|()
 expr_stmt|;
 block|}
-name|ttype
-operator|=
+operator|(
+name|void
+operator|)
 name|get_termcap_entry
 argument_list|(
 operator|*
@@ -5474,6 +5625,9 @@ operator|!
 name|noset
 condition|)
 block|{
+if|#
+directive|if
+name|HAVE_SIZECHANGE
 name|tcolumns
 operator|=
 name|columns
@@ -5482,9 +5636,6 @@ name|tlines
 operator|=
 name|lines
 expr_stmt|;
-if|#
-directive|if
-name|HAVE_SIZECHANGE
 if|if
 condition|(
 name|opt_w

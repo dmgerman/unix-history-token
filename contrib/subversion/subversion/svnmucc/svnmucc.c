@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_subr_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"svn_private_config.h"
 end_include
 
@@ -246,12 +252,14 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|svn_ver_check_list
+name|svn_ver_check_list2
 argument_list|(
 operator|&
 name|my_version
 argument_list|,
 name|checklist
+argument_list|,
+name|svn_ver_equal
 argument_list|)
 expr_stmt|;
 if|if
@@ -6546,6 +6554,7 @@ operator|=
 name|url
 expr_stmt|;
 else|else
+block|{
 name|anchor
 operator|=
 name|svn_uri_get_longest_ancestor
@@ -6557,6 +6566,33 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|anchor
+operator|||
+operator|!
+name|anchor
+index|[
+literal|0
+index|]
+condition|)
+name|handle_error
+argument_list|(
+name|svn_error_createf
+argument_list|(
+name|SVN_ERR_INCORRECT_PARAMS
+argument_list|,
+name|NULL
+argument_list|,
+literal|"URLs in the action list do not "
+literal|"share a common ancestor"
+argument_list|)
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(

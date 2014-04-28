@@ -214,7 +214,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_DEFAULT
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
@@ -578,6 +578,15 @@ name|AR71XX_SOC_AR9330
 case|:
 case|case
 name|AR71XX_SOC_AR9331
+case|:
+case|case
+name|AR71XX_SOC_AR9341
+case|:
+case|case
+name|AR71XX_SOC_AR9342
+case|:
+case|case
+name|AR71XX_SOC_AR9344
 case|:
 name|sc
 operator|->

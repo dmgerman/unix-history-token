@@ -324,6 +324,8 @@ comment|/* prototypes */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|uss820dci_bus_methods
@@ -331,6 +333,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uss820dci_device_bulk_methods
@@ -338,6 +342,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uss820dci_device_ctrl_methods
@@ -345,6 +351,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uss820dci_device_intr_methods
@@ -352,6 +360,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uss820dci_device_isoc_fs_methods
@@ -6215,6 +6225,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uss820dci_device_bulk_methods
@@ -6324,6 +6336,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uss820dci_device_ctrl_methods
@@ -6433,6 +6447,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uss820dci_device_intr_methods
@@ -6711,6 +6727,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_pipe_methods
 name|uss820dci_device_isoc_fs_methods
@@ -7685,6 +7703,40 @@ operator|*
 operator|)
 operator|&
 name|uss820dci_devd
+expr_stmt|;
+goto|goto
+name|tr_valid
+goto|;
+case|case
+name|UDESC_DEVICE_QUALIFIER
+case|:
+if|if
+condition|(
+name|value
+operator|&
+literal|0xff
+condition|)
+block|{
+goto|goto
+name|tr_stalled
+goto|;
+block|}
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|uss820dci_odevd
+argument_list|)
+expr_stmt|;
+name|ptr
+operator|=
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+operator|&
+name|uss820dci_odevd
 expr_stmt|;
 goto|goto
 name|tr_valid
@@ -9023,6 +9075,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|usb_bus_methods
 name|uss820dci_bus_methods

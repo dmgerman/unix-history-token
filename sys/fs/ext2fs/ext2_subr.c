@@ -224,16 +224,16 @@ name|bpp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * The EXT4_EXTENTS requires special treatment, otherwise we can 	 * fall back to the normal path. 	 */
+comment|/* 	 * IN_E4EXTENTS requires special treatment as we can otherwise fall 	 * back to the normal path. 	 */
 if|if
 condition|(
 operator|!
 operator|(
 name|ip
 operator|->
-name|i_flags
+name|i_flag
 operator|&
-name|EXT4_EXTENTS
+name|IN_E4EXTENTS
 operator|)
 condition|)
 goto|goto
@@ -395,7 +395,7 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If EXT4_EXTENTS is enabled we would get a wrong offset so 	 * reset b_offset here. 	 */
+comment|/* 	 * If IN_E4EXTENTS is enabled we would get a wrong offset so 	 * reset b_offset here. 	 */
 name|bp
 operator|->
 name|b_offset

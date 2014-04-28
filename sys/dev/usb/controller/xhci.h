@@ -990,6 +990,10 @@ name|qwTrb0
 decl_stmt|;
 define|#
 directive|define
+name|XHCI_TRB_0_DIR_IN_MASK
+value|(0x80ULL<< 0)
+define|#
+directive|define
 name|XHCI_TRB_0_WLENGTH_MASK
 value|(0xFFFFULL<< 48)
 specifier|volatile
@@ -2094,6 +2098,9 @@ name|sc_event_idx
 decl_stmt|;
 name|uint16_t
 name|sc_command_idx
+decl_stmt|;
+name|uint16_t
+name|sc_imod_default
 decl_stmt|;
 name|uint8_t
 name|sc_event_ccs

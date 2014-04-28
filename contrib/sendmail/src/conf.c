@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2013 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1182 2013/04/05 17:39:09 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1191 2014/01/08 17:03:14 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2812,6 +2812,32 @@ argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_ARPA_MAP
+comment|/* "arpa" map -- IP -> arpa */
+name|MAPDEF
+argument_list|(
+literal|"arpa"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|dequote_init
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|arpa_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_ARPA_MAP */
 if|#
 directive|if
 name|SOCKETMAP
@@ -16636,15 +16662,44 @@ modifier|*
 name|err
 decl_stmt|;
 block|{
-name|bool
-name|resv6
-init|=
-name|true
-decl_stmt|;
 name|struct
 name|hostent
 modifier|*
 name|h
+decl_stmt|;
+if|#
+directive|if
+name|HAS_GETHOSTBYNAME2
+name|h
+operator|=
+name|gethostbyname2
+argument_list|(
+name|name
+argument_list|,
+name|family
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|==
+name|NULL
+condition|)
+operator|*
+name|err
+operator|=
+name|h_errno
+expr_stmt|;
+return|return
+name|h
+return|;
+else|#
+directive|else
+comment|/* HAS_GETHOSTBYNAME2 */
+name|bool
+name|resv6
+init|=
+name|true
 decl_stmt|;
 if|if
 condition|(
@@ -16696,6 +16751,42 @@ operator|&=
 operator|~
 name|RES_USE_INET6
 expr_stmt|;
+comment|/* the function is supposed to return only the requested family */
+if|if
+condition|(
+name|h
+operator|!=
+name|NULL
+operator|&&
+name|h
+operator|->
+name|h_addrtype
+operator|!=
+name|family
+condition|)
+block|{
+if|#
+directive|if
+name|NETINET6
+name|freehostent
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+name|h
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|err
+operator|=
+name|NO_DATA
+expr_stmt|;
+block|}
+else|else
 operator|*
 name|err
 operator|=
@@ -16704,6 +16795,9 @@ expr_stmt|;
 return|return
 name|h
 return|;
+endif|#
+directive|endif
+comment|/* HAS_GETHOSTBYNAME2 */
 block|}
 specifier|static
 name|struct
@@ -17271,6 +17365,41 @@ block|}
 endif|#
 directive|endif
 comment|/* (SOLARIS> 10000&& SOLARIS< 20400) || (defined(SOLARIS)&& SOLARIS< 204) || (defined(sony_news)&& defined(__svr4)) */
+comment|/* the function is supposed to return only the requested family */
+if|if
+condition|(
+name|h
+operator|!=
+name|NULL
+operator|&&
+name|h
+operator|->
+name|h_addrtype
+operator|!=
+name|family
+condition|)
+block|{
+if|#
+directive|if
+name|NETINET6
+name|freehostent
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+name|h
+operator|=
+name|NULL
+expr_stmt|;
+name|SM_SET_H_ERRNO
+argument_list|(
+name|NO_DATA
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|tTd
@@ -17313,6 +17442,13 @@ literal|11
 argument_list|)
 condition|)
 block|{
+name|struct
+name|in_addr
+name|ia
+decl_stmt|;
+name|size_t
+name|i
+decl_stmt|;
 if|#
 directive|if
 name|NETINET6
@@ -17326,19 +17462,9 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-else|#
-directive|else
-comment|/* NETINET6 */
-name|struct
-name|in_addr
-name|ia
-decl_stmt|;
 endif|#
 directive|endif
 comment|/* NETINET6 */
-name|size_t
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|h
@@ -17400,9 +17526,22 @@ name|char
 modifier|*
 name|addr
 decl_stmt|;
+name|addr
+operator|=
+name|NULL
+expr_stmt|;
 if|#
 directive|if
 name|NETINET6
+if|if
+condition|(
+name|h
+operator|->
+name|h_addrtype
+operator|==
+name|AF_INET6
+condition|)
+block|{
 name|memmove
 argument_list|(
 operator|&
@@ -17433,9 +17572,13 @@ name|buf6
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
+endif|#
+directive|endif
 comment|/* NETINET6 */
+comment|/* "else" in #if code above */
+block|{
 name|memmove
 argument_list|(
 operator|&
@@ -17462,9 +17605,7 @@ argument_list|(
 name|ia
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NETINET6 */
+block|}
 if|if
 condition|(
 name|addr
@@ -23593,6 +23734,15 @@ directive|endif
 comment|/* _FFR_ALLOW_SASLINFO */
 if|#
 directive|if
+name|_FFR_ARPA_MAP
+comment|/* arpa map to reverse an IPv(4,6) address */
+literal|"_FFR_ARPA_MAP"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_ARPA_MAP */
+if|#
+directive|if
 name|_FFR_BADRCPT_SHUTDOWN
 comment|/* shut down connection (421) if there are too many bad RCPTs */
 literal|"_FFR_BADRCPT_SHUTDOWN"
@@ -23864,6 +24014,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_IGNORE_EXT_ON_HELO */
+if|#
+directive|if
+name|_FFR_IPV6_FULL
+comment|/* Use uncompressed IPv6 address format (no "::") */
+literal|"_FFR_IPV6_FULL"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_IPV6_FULL */
 if|#
 directive|if
 name|_FFR_LINUX_MHNL
@@ -24237,6 +24396,14 @@ directive|endif
 comment|/* _FFR_TLS_1 */
 if|#
 directive|if
+name|_FFR_TLS_EC
+literal|"_FFR_TLS_EC"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_TLS_EC */
+if|#
+directive|if
 name|_FFR_TRUSTED_QF
 comment|/* 	**  If we don't own the file mark it as unsafe. 	**  However, allow TrustedUser to own it as well 	**  in case TrustedUser manipulates the queue. 	*/
 literal|"_FFR_TRUSTED_QF"
@@ -24244,6 +24411,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_TRUSTED_QF */
+if|#
+directive|if
+name|_FFR_USE_GETPWNAM_ERRNO
+comment|/* 	**  See libsm/mbdb.c: only enable this on OSs 	**  that implement the correct (POSIX) semantics. 	**  This will need to become an OS-specific #if 	**  enabled in include/sm/os/*.h. 	*/
+literal|"_FFR_USE_GETPWNAM_ERRNO"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_USE_GETPWNAM_ERRNO */
 if|#
 directive|if
 name|_FFR_USE_SEM_LOCKING

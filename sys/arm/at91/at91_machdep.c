@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/physmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
@@ -195,6 +201,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_map.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -360,27 +372,6 @@ value|(KERNEL_PT_AFKERNEL + KERNEL_PT_AFKERNEL_NUM)
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|u_int
-name|data_abort_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|prefetch_abort_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|undefined_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pv_addr
 name|kernel_pt_table
@@ -391,26 +382,130 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Physical and virtual addresses for some global pages */
+comment|/* Static device mappings. */
 end_comment
 
 begin_decl_stmt
-name|vm_paddr_t
-name|phys_avail
-index|[
-literal|10
-index|]
+specifier|const
+name|struct
+name|arm_devmap_entry
+name|at91_devmap
+index|[]
+init|=
+block|{
+comment|/* 	 * Map the critical on-board devices. The interrupt vector at 	 * 0xffff0000 makes it impossible to map them PA == VA, so we map all 	 * 0xfffxxxxx addresses to 0xdffxxxxx. This covers all critical devices 	 * on all members of the AT91SAM9 and AT91RM9200 families. 	 */
+block|{
+literal|0xdff00000
+block|,
+literal|0xfff00000
+block|,
+literal|0x00100000
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+comment|/* There's a notion that we should do the rest of these lazily. */
+comment|/* 	 * We can't just map the OHCI registers VA == PA, because 	 * AT91xx_xxx_BASE belongs to the userland address space. 	 * We could just choose a different virtual address, but a better 	 * solution would probably be to just use pmap_mapdev() to allocate 	 * KVA, as we don't need the OHCI controller before the vm 	 * initialization is done. However, the AT91 resource allocation 	 * system doesn't know how to use pmap_mapdev() yet. 	 * Care must be taken to ensure PA and VM address do not overlap 	 * between entries. 	 */
+block|{
+comment|/* 		 * Add the ohci controller, and anything else that might be 		 * on this chip select for a VA/PA mapping. 		 */
+comment|/* Internal Memory 1MB  */
+name|AT91RM92_OHCI_VA_BASE
+block|,
+name|AT91RM92_OHCI_BASE
+block|,
+literal|0x00100000
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+block|{
+comment|/* CompactFlash controller. Portion of EBI CS4 1MB */
+name|AT91RM92_CF_VA_BASE
+block|,
+name|AT91RM92_CF_BASE
+block|,
+literal|0x00100000
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+comment|/* 	 * The next two should be good for the 9260, 9261 and 9G20 since 	 * addresses mapping is the same. 	 */
+block|{
+comment|/* Internal Memory 1MB  */
+name|AT91SAM9G20_OHCI_VA_BASE
+block|,
+name|AT91SAM9G20_OHCI_BASE
+block|,
+literal|0x00100000
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+block|{
+comment|/* EBI CS3 256MB */
+name|AT91SAM9G20_NAND_VA_BASE
+block|,
+name|AT91SAM9G20_NAND_BASE
+block|,
+name|AT91SAM9G20_NAND_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+comment|/* 	 * The next should be good for the 9G45. 	 */
+block|{
+comment|/* Internal Memory 1MB  */
+name|AT91SAM9G45_OHCI_VA_BASE
+block|,
+name|AT91SAM9G45_OHCI_BASE
+block|,
+literal|0x00100000
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|vm_paddr_t
-name|dump_avail
-index|[
-literal|4
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* Physical and virtual addresses for some global pages */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -451,128 +546,6 @@ begin_decl_stmt
 name|struct
 name|pv_addr
 name|kernelstack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Static device mappings. */
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|pmap_devmap
-name|at91_devmap
-index|[]
-init|=
-block|{
-comment|/* 	 * Map the on-board devices VA == PA so that we can access them 	 * with the MMU on or off. 	 */
-block|{
-comment|/* 		 * This at least maps the interrupt controller, the UART 		 * and the timer. Other devices should use newbus to 		 * map their memory anyway. 		 */
-literal|0xdff00000
-block|,
-literal|0xfff00000
-block|,
-literal|0x00100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|, 	}
-block|,
-comment|/* 	 * We can't just map the OHCI registers VA == PA, because 	 * AT91xx_xxx_BASE belongs to the userland address space. 	 * We could just choose a different virtual address, but a better 	 * solution would probably be to just use pmap_mapdev() to allocate 	 * KVA, as we don't need the OHCI controller before the vm 	 * initialization is done. However, the AT91 resource allocation 	 * system doesn't know how to use pmap_mapdev() yet. 	 * Care must be taken to ensure PA and VM address do not overlap 	 * between entries. 	 */
-block|{
-comment|/* 		 * Add the ohci controller, and anything else that might be 		 * on this chip select for a VA/PA mapping. 		 */
-comment|/* Internal Memory 1MB  */
-name|AT91RM92_OHCI_BASE
-block|,
-name|AT91RM92_OHCI_PA_BASE
-block|,
-literal|0x00100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|, 	}
-block|,
-block|{
-comment|/* CompactFlash controller. Portion of EBI CS4 1MB */
-name|AT91RM92_CF_BASE
-block|,
-name|AT91RM92_CF_PA_BASE
-block|,
-literal|0x00100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|, 	}
-block|,
-comment|/* 	 * The next two should be good for the 9260, 9261 and 9G20 since 	 * addresses mapping is the same. 	 */
-block|{
-comment|/* Internal Memory 1MB  */
-name|AT91SAM9G20_OHCI_BASE
-block|,
-name|AT91SAM9G20_OHCI_PA_BASE
-block|,
-literal|0x00100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|, 	}
-block|,
-block|{
-comment|/* EBI CS3 256MB */
-name|AT91SAM9G20_NAND_BASE
-block|,
-name|AT91SAM9G20_NAND_PA_BASE
-block|,
-name|AT91SAM9G20_NAND_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|, 	}
-block|,
-comment|/* 	 * The next should be good for the 9G45. 	 */
-block|{
-comment|/* Internal Memory 1MB  */
-name|AT91SAM9G45_OHCI_BASE
-block|,
-name|AT91SAM9G45_OHCI_PA_BASE
-block|,
-literal|0x00100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|, 	}
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1584,7 +1557,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|at91_soc_id
 parameter_list|(
@@ -1697,6 +1669,12 @@ argument_list|(
 name|abp
 argument_list|)
 expr_stmt|;
+name|arm_physmem_kernaddr
+operator|=
+name|abp
+operator|->
+name|abp_physaddr
+expr_stmt|;
 name|set_cpufuncs
 argument_list|()
 expr_stmt|;
@@ -1728,7 +1706,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_va, (np));					\ 	(var).pv_pa = (var).pv_va + (KERNPHYSADDR - KERNVIRTADDR);
+value|alloc_pages((var).pv_va, (np));					\ 	(var).pv_pa = (var).pv_va + (abp->abp_physaddr - KERNVIRTADDR);
 define|#
 directive|define
 name|alloc_pages
@@ -1850,7 +1828,9 @@ name|pv_va
 operator|-
 name|KERNVIRTADDR
 operator|+
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 block|}
 block|}
@@ -2291,7 +2271,7 @@ name|PTE_PAGETABLE
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_devmap_bootstrap
+name|arm_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
@@ -2383,18 +2363,40 @@ operator|=
 name|board_init
 argument_list|()
 expr_stmt|;
-name|physmem
-operator|=
+if|if
+condition|(
 name|memsize
-operator|/
-name|PAGE_SIZE
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"board_init() failed, cannot determine ram size; "
+literal|"assuming 16MB\n"
+argument_list|)
 expr_stmt|;
+name|memsize
+operator|=
+literal|16
+operator|*
+literal|1024
+operator|*
+literal|1024
+expr_stmt|;
+block|}
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
 name|cpu_control
 argument_list|(
 name|CPU_CONTROL_MMU_ENABLE
 argument_list|,
 name|CPU_CONTROL_MMU_ENABLE
+argument_list|)
+expr_stmt|;
+name|cpu_setup
+argument_list|(
+literal|""
 argument_list|)
 expr_stmt|;
 name|set_stackptrs
@@ -2405,28 +2407,6 @@ expr_stmt|;
 comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
 name|cpu_idcache_wbinv_all
 argument_list|()
-expr_stmt|;
-comment|/* Set stack for exception handlers */
-name|data_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|data_abort_handler
-expr_stmt|;
-name|prefetch_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|prefetch_abort_handler
-expr_stmt|;
-name|undefined_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|undefinedinstruction_bounce
 expr_stmt|;
 name|undefined_init
 argument_list|()
@@ -2457,31 +2437,16 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-name|arm_dump_avail_init
-argument_list|(
-name|memsize
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dump_avail
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|dump_avail
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* Always use the 256MB of KVA we have available between the kernel and devices */
 name|vm_max_kernel_address
 operator|=
 name|KERNVIRTADDR
 operator|+
-literal|3
-operator|*
-name|memsize
+operator|(
+literal|256
+operator|<<
+literal|20
+operator|)
 expr_stmt|;
 name|pmap_bootstrap
 argument_list|(
@@ -2511,70 +2476,29 @@ expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-if|#
-directive|if
+comment|/* 	 * Add the physical ram we have available. 	 * 	 * Exclude the kernel, and all the things we allocated which immediately 	 * follow the kernel, from the VM allocation pool but not from crash 	 * dumps.  virtual_avail is a global variable which tracks the kva we've 	 * "allocated" while setting up pmaps. 	 * 	 * Prepare the list of physical memory available to the vm subsystem. 	 */
+name|arm_physmem_hardware_region
+argument_list|(
 name|PHYSADDR
-operator|!=
-name|KERNPHYSADDR
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|PHYSADDR
+argument_list|,
+name|memsize
+argument_list|)
 expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|KERNPHYSADDR
-expr_stmt|;
-endif|#
-directive|endif
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
+name|arm_physmem_exclude_region
+argument_list|(
+name|abp
+operator|->
+name|abp_physaddr
+argument_list|,
 name|virtual_avail
 operator|-
 name|KERNVIRTADDR
-operator|+
-name|KERNPHYSADDR
+argument_list|,
+name|EXFLAG_NOALLOC
+argument_list|)
 expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|PHYSADDR
-operator|+
-name|memsize
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-literal|0
+name|arm_physmem_init_kernel_globals
+argument_list|()
 expr_stmt|;
 name|init_param2
 argument_list|(

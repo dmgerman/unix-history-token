@@ -239,6 +239,7 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|encrypt_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 name|int
 name|number_of_rounds
@@ -254,10 +255,12 @@ specifier|const
 name|uint8_t
 modifier|*
 name|encrypt_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 name|uint8_t
 modifier|*
 name|decrypt_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 name|int
 name|number_of_rounds
@@ -280,6 +283,7 @@ specifier|const
 name|void
 modifier|*
 name|key_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 name|size_t
 name|len
@@ -314,6 +318,7 @@ specifier|const
 name|void
 modifier|*
 name|key_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 name|size_t
 name|len
@@ -343,22 +348,19 @@ specifier|const
 name|void
 modifier|*
 name|key_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 name|size_t
 name|len
 parameter_list|,
 specifier|const
 name|uint8_t
+modifier|*
 name|from
-index|[
-name|AES_BLOCK_LEN
-index|]
 parameter_list|,
 name|uint8_t
+modifier|*
 name|to
-index|[
-name|AES_BLOCK_LEN
-index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -374,22 +376,19 @@ specifier|const
 name|void
 modifier|*
 name|key_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 name|size_t
 name|len
 parameter_list|,
 specifier|const
 name|uint8_t
+modifier|*
 name|from
-index|[
-name|AES_BLOCK_LEN
-index|]
 parameter_list|,
 name|uint8_t
+modifier|*
 name|to
-index|[
-name|AES_BLOCK_LEN
-index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -405,11 +404,13 @@ specifier|const
 name|void
 modifier|*
 name|data_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 specifier|const
 name|void
 modifier|*
 name|tweak_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 name|size_t
 name|len
@@ -444,11 +445,13 @@ specifier|const
 name|void
 modifier|*
 name|data_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 specifier|const
 name|void
 modifier|*
 name|tweak_schedule
+comment|/*__aligned(16)*/
 parameter_list|,
 name|size_t
 name|len
@@ -537,6 +540,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _AESNI_H_ */
+end_comment
 
 end_unit
 

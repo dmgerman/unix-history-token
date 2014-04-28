@@ -217,6 +217,9 @@ define|#
 directive|define
 name|MPSSAS_SHUTDOWN
 value|(1<< 4)
+name|u_int
+name|maxtargets
+decl_stmt|;
 name|struct
 name|mpssas_target
 modifier|*

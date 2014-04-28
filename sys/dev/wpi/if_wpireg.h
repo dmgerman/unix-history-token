@@ -692,7 +692,7 @@ begin_define
 define|#
 directive|define
 name|WPI_UC_RUN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -738,7 +738,7 @@ begin_define
 define|#
 directive|define
 name|WPI_RX_INTR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

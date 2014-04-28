@@ -139,20 +139,13 @@ comment|/// and deletions.
 name|DeltaTree
 name|Deltas
 decl_stmt|;
-comment|/// Buffer - This is the actual buffer itself.  Note that using a vector or
-comment|/// string is a horribly inefficient way to do this, we should use a rope
-comment|/// instead.
-typedef|typedef
 name|RewriteRope
-name|BufferTy
-typedef|;
-name|BufferTy
 name|Buffer
 decl_stmt|;
 name|public
 label|:
 typedef|typedef
-name|BufferTy
+name|RewriteRope
 operator|::
 name|const_iterator
 name|iterator
@@ -195,6 +188,9 @@ return|;
 block|}
 comment|/// \brief Write to \p Stream the result of applying all changes to the
 comment|/// original buffer.
+comment|/// Note that it isn't safe to use this function to overwrite memory mapped
+comment|/// files in-place (PR17960). Consider using a higher-level utility such as
+comment|/// Rewriter::overwriteChangedFiles() instead.
 comment|///
 comment|/// The original buffer is not actually changed.
 name|raw_ostream
@@ -496,6 +492,19 @@ operator|>
 operator|::
 name|iterator
 name|buffer_iterator
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|FileID
+operator|,
+name|RewriteBuffer
+operator|>
+operator|::
+name|const_iterator
+name|const_buffer_iterator
 expr_stmt|;
 name|explicit
 name|Rewriter
@@ -1017,9 +1026,33 @@ name|end
 argument_list|()
 return|;
 block|}
+name|const_buffer_iterator
+name|buffer_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RewriteBuffers
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_buffer_iterator
+name|buffer_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RewriteBuffers
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 comment|/// overwriteChangedFiles - Save all changed files to disk.
 comment|///
-comment|/// Returns whether not all changes were saved successfully.
+comment|/// Returns true if any files were not saved successfully.
 comment|/// Outputs diagnostics via the source manager's diagnostic engine
 comment|/// in case of an error.
 name|bool

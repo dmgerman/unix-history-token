@@ -701,12 +701,6 @@ name|errorstr
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (response->pdu_data_len == 0) 		log_errx(1, "received Login PDU with empty data segment");
-endif|#
-directive|endif
 if|if
 condition|(
 name|initial
@@ -3688,12 +3682,6 @@ operator|)
 name|request
 operator|->
 name|pdu_bhs
-expr_stmt|;
-name|bhslr
-operator|->
-name|bhslr_flags
-operator||=
-name|BHSLR_FLAGS_TRANSIT
 expr_stmt|;
 name|request_keys
 operator|=

@@ -92,6 +92,24 @@ name|VM_PAGER_OK
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|const
+name|int
+name|zfs_vm_pagerput_sync
+init|=
+name|VM_PAGER_PUT_SYNC
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|zfs_vm_pagerput_inval
+init|=
+name|VM_PAGER_PUT_INVAL
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|zfs_vmobject_assert_wlocked

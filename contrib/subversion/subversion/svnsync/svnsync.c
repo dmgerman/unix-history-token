@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_subr_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sync.h"
 end_include
 
@@ -959,12 +965,14 @@ name|my_version
 argument_list|)
 expr_stmt|;
 return|return
-name|svn_ver_check_list
+name|svn_ver_check_list2
 argument_list|(
 operator|&
 name|my_version
 argument_list|,
 name|checklist
+argument_list|,
+name|svn_ver_equal
 argument_list|)
 return|;
 block|}
@@ -4706,7 +4714,7 @@ name|NULL
 argument_list|,
 name|_
 argument_list|(
-literal|"Commit created rev %ld but should have created %ld"
+literal|"Commit created r%ld but should have created r%ld"
 argument_list|)
 argument_list|,
 name|rb

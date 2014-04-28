@@ -1677,7 +1677,7 @@ begin_define
 define|#
 directive|define
 name|MGA_CLIPDIS
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2097,7 +2097,7 @@ begin_define
 define|#
 directive|define
 name|MGA_MAP1_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

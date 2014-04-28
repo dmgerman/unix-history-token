@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -77,6 +83,12 @@ directive|include
 file|<netinet/in_pcb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/in_rss.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -99,7 +111,7 @@ comment|/* INET6 */
 end_comment
 
 begin_comment
-comment|/*  * pcbgroups, or "connection groups" are based on Willman, Rixner, and Cox's  * 2006 USENIX paper, "An Evaluation of Network Stack Parallelization  * Strategies in Modern Operating Systems".  This implementation differs  * significantly from that described in the paper, in that it attempts to  * introduce not just notions of affinity for connections and distribute work  * so as to reduce lock contention, but also align those notions with  * hardware work distribution strategies such as RSS.  In this construction,  * connection groups supplement, rather than replace, existing reservation  * tables for protocol 4-tuples, offering CPU-affine lookup tables with  * minimal cache line migration and lock contention during steady state  * operation.  *  * Internet protocols, such as UDP and TCP, register to use connection groups  * by providing an ipi_hashfields value other than IPI_HASHFIELDS_NONE; this  * indicates to the connection group code whether a 2-tuple or 4-tuple is  * used as an argument to hashes that assign a connection to a particular  * group.  This must be aligned with any hardware offloaded distribution  * model, such as RSS or similar approaches taken in embedded network boards.  * Wildcard sockets require special handling, as in Willman 2006, and are  * shared between connection groups -- while being protected by group-local  * locks.  This means that connection establishment and teardown can be  * signficantly more expensive than without connection groups, but that  * steady-state processing can be significantly faster.  *  * Most of the implementation of connection groups is in this file; however,  * connection group lookup is implemented in in_pcb.c alongside reservation  * table lookups -- see in_pcblookup_group().  *  * TODO:  *  * Implement dynamic rebalancing of buckets with connection groups; when  * load is unevenly distributed, search for more optimal balancing on  * demand.  This might require scaling up the number of connection groups  * by<<1.  *  * Provide an IP 2-tuple or 4-tuple netisr m2cpu handler based on connection  * groups for ip_input and ip6_input, allowing non-offloaded work  * distribution.  *  * Expose effective CPU affinity of connections to userspace using socket  * options.  *  * Investigate per-connection affinity overrides based on socket options; an  * option could be set, certainly resulting in work being distributed  * differently in software, and possibly propagated to supporting hardware  * with TCAMs or hardware hash tables.  This might require connections to  * exist in more than one connection group at a time.  *  * Hook netisr thread reconfiguration events, and propagate those to RSS so  * that rebalancing can occur when the thread pool grows or shrinks.  *  * Expose per-pcbgroup statistics to userspace monitoring tools such as  * netstat, in order to allow better debugging and profiling.  */
+comment|/*  * pcbgroups, or "connection groups" are based on Willman, Rixner, and Cox's  * 2006 USENIX paper, "An Evaluation of Network Stack Parallelization  * Strategies in Modern Operating Systems".  This implementation differs  * significantly from that described in the paper, in that it attempts to  * introduce not just notions of affinity for connections and distribute work  * so as to reduce lock contention, but also align those notions with  * hardware work distribution strategies such as RSS.  In this construction,  * connection groups supplement, rather than replace, existing reservation  * tables for protocol 4-tuples, offering CPU-affine lookup tables with  * minimal cache line migration and lock contention during steady state  * operation.  *  * Hardware-offloaded checksums are often inefficient in software -- for  * example, Toeplitz, specified by RSS, introduced a significant overhead if  * performed during per-packge processing.  It is therefore desirable to fall  * back on traditional reservation table lookups without affinity where  * hardware-offloaded checksums aren't available, such as for traffic over  * non-RSS interfaces.  *  * Internet protocols, such as UDP and TCP, register to use connection groups  * by providing an ipi_hashfields value other than IPI_HASHFIELDS_NONE; this  * indicates to the connection group code whether a 2-tuple or 4-tuple is  * used as an argument to hashes that assign a connection to a particular  * group.  This must be aligned with any hardware offloaded distribution  * model, such as RSS or similar approaches taken in embedded network boards.  * Wildcard sockets require special handling, as in Willman 2006, and are  * shared between connection groups -- while being protected by group-local  * locks.  This means that connection establishment and teardown can be  * signficantly more expensive than without connection groups, but that  * steady-state processing can be significantly faster.  *  * When RSS is used, certain connection group parameters, such as the number  * of groups, are provided by the RSS implementation, found in in_rss.c.  * Otherwise, in_pcbgroup.c selects possible sensible parameters  * corresponding to the degree of parallelism exposed by netisr.  *  * Most of the implementation of connection groups is in this file; however,  * connection group lookup is implemented in in_pcb.c alongside reservation  * table lookups -- see in_pcblookup_group().  *  * TODO:  *  * Implement dynamic rebalancing of buckets with connection groups; when  * load is unevenly distributed, search for more optimal balancing on  * demand.  This might require scaling up the number of connection groups  * by<<1.  *  * Provide an IP 2-tuple or 4-tuple netisr m2cpu handler based on connection  * groups for ip_input and ip6_input, allowing non-offloaded work  * distribution.  *  * Expose effective CPU affinity of connections to userspace using socket  * options.  *  * Investigate per-connection affinity overrides based on socket options; an  * option could be set, certainly resulting in work being distributed  * differently in software, and possibly propagated to supporting hardware  * with TCAMs or hardware hash tables.  This might require connections to  * exist in more than one connection group at a time.  *  * Hook netisr thread reconfiguration events, and propagate those to RSS so  * that rebalancing can occur when the thread pool grows or shrinks.  *  * Expose per-pcbgroup statistics to userspace monitoring tools such as  * netstat, in order to allow better debugging and profiling.  */
 end_comment
 
 begin_function
@@ -144,11 +156,31 @@ operator|==
 literal|1
 condition|)
 return|return;
-comment|/* 	 * Use one group per CPU for now.  If we decide to do dynamic 	 * rebalancing a la RSS, we'll need to shift left by at least 1. 	 */
+ifdef|#
+directive|ifdef
+name|RSS
+comment|/* 	 * If we're using RSS, then RSS determines the number of connection 	 * groups to use: one connection group per RSS bucket.  If for some 	 * reason RSS isn't able to provide a number of buckets, disable 	 * connection groups entirely. 	 * 	 * XXXRW: Can this ever happen? 	 */
+name|numpcbgroups
+operator|=
+name|rss_getnumbuckets
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|numpcbgroups
+operator|==
+literal|0
+condition|)
+return|return;
+else|#
+directive|else
+comment|/* 	 * Otherwise, we'll just use one per CPU for now.  If we decide to 	 * do dynamic rebalancing a la RSS, we'll need similar logic here. 	 */
 name|numpcbgroups
 operator|=
 name|mp_ncpus
 expr_stmt|;
+endif|#
+directive|endif
 name|pcbinfo
 operator|->
 name|ipi_hashfields
@@ -249,7 +281,21 @@ argument_list|,
 literal|"pcbgroup"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Initialise notional affinity of the pcbgroup -- for RSS, 		 * we want the same notion of affinity as NICs to be used. 		 * Just round robin for the time being. 		 */
+comment|/* 		 * Initialise notional affinity of the pcbgroup -- for RSS, 		 * we want the same notion of affinity as NICs to be used.  In 		 * the non-RSS case, just round robin for the time being. 		 * 		 * XXXRW: The notion of a bucket to CPU mapping is common at 		 * both pcbgroup and RSS layers -- does that mean that we 		 * should migrate it all from RSS to here, and just leave RSS 		 * responsible only for providing hashing and mapping funtions? 		 */
+ifdef|#
+directive|ifdef
+name|RSS
+name|pcbgroup
+operator|->
+name|ipg_cpu
+operator|=
+name|rss_getcpu
+argument_list|(
+name|pgn
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|pcbgroup
 operator|->
 name|ipg_cpu
@@ -260,6 +306,8 @@ operator|%
 name|mp_ncpus
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -394,7 +442,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a hash of whatever the covered tuple might be, return a pcbgroup  * index.  */
+comment|/*  * Given a hash of whatever the covered tuple might be, return a pcbgroup  * index.  Where RSS is supported, try to align bucket selection with RSS CPU  * affinity strategy.  */
 end_comment
 
 begin_function
@@ -412,6 +460,19 @@ name|uint32_t
 name|hash
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|RSS
+return|return
+operator|(
+name|rss_getbucket
+argument_list|(
+name|hash
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|hash
@@ -421,11 +482,13 @@ operator|->
 name|ipi_npcbgroups
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*  * Map a (hashtype, hash) tuple into a connection group, or NULL if the hash  * information is insufficient to identify the pcbgroup.  */
+comment|/*  * Map a (hashtype, hash) tuple into a connection group, or NULL if the hash  * information is insufficient to identify the pcbgroup.  This might occur if  * a TCP packet turns up with a 2-tuple hash, or if an RSS hash is present but  * RSS is not compiled into the kernel.  */
 end_comment
 
 begin_function
@@ -446,6 +509,53 @@ name|uint32_t
 name|hash
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|RSS
+if|if
+condition|(
+operator|(
+name|pcbinfo
+operator|->
+name|ipi_hashfields
+operator|==
+name|IPI_HASHFIELDS_4TUPLE
+operator|&&
+name|hashtype
+operator|==
+name|M_HASHTYPE_RSS_TCP_IPV4
+operator|)
+operator|||
+operator|(
+name|pcbinfo
+operator|->
+name|ipi_hashfields
+operator|==
+name|IPI_HASHFIELDS_2TUPLE
+operator|&&
+name|hashtype
+operator|==
+name|M_HASHTYPE_RSS_IPV4
+operator|)
+condition|)
+return|return
+operator|(
+operator|&
+name|pcbinfo
+operator|->
+name|ipi_pcbgroups
+index|[
+name|in_pcbgroup_getbucket
+argument_list|(
+name|pcbinfo
+argument_list|,
+name|hash
+argument_list|)
+index|]
+operator|)
+return|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL
@@ -523,6 +633,7 @@ block|{
 name|uint32_t
 name|hash
 decl_stmt|;
+comment|/* 	 * RSS note: we pass foreign addr/port as source, and local addr/port 	 * as destination, as we want to align with what the hardware is 	 * doing. 	 */
 switch|switch
 condition|(
 name|pcbinfo
@@ -533,6 +644,24 @@ block|{
 case|case
 name|IPI_HASHFIELDS_4TUPLE
 case|:
+ifdef|#
+directive|ifdef
+name|RSS
+name|hash
+operator|=
+name|rss_hash_ip4_4tuple
+argument_list|(
+name|faddr
+argument_list|,
+name|fport
+argument_list|,
+name|laddr
+argument_list|,
+name|lport
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|hash
 operator|=
 name|faddr
@@ -541,10 +670,26 @@ name|s_addr
 operator|^
 name|fport
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|IPI_HASHFIELDS_2TUPLE
 case|:
+ifdef|#
+directive|ifdef
+name|RSS
+name|hash
+operator|=
+name|rss_hash_ip4_2tuple
+argument_list|(
+name|faddr
+argument_list|,
+name|laddr
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|hash
 operator|=
 name|faddr
@@ -555,6 +700,8 @@ name|laddr
 operator|.
 name|s_addr
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|hash

@@ -2831,6 +2831,19 @@ block|{
 if|if
 condition|(
 operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+operator|!
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
@@ -3035,8 +3048,32 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* First we _must_ activate the H/W */
+name|err
+operator|=
+name|ti_i2c_activate
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"ti_i2c_activate failed\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* XXXOMAP3: FIXME get proper revision here */
-comment|/* First read the version number of the I2C module */
+comment|/* Read the version number of the I2C module */
 name|sc
 operator|->
 name|sc_rev
@@ -3069,30 +3106,6 @@ operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
-comment|/* Activate the H/W */
-name|err
-operator|=
-name|ti_i2c_activate
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ti_i2c_activate failed\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* activate the interrupt */
 name|err
 operator|=

@@ -2773,7 +2773,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mpt_kthread_create
+name|kproc_create
 argument_list|(
 name|mpt_raid_thread
 argument_list|,
@@ -3115,7 +3115,7 @@ argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
-name|mpt_kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

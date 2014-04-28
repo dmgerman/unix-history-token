@@ -33,17 +33,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|vBufA
-value|0x0200
-end_define
-
-begin_comment
-comment|/* register A */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|vDirB
 value|0x0400
 end_define
@@ -61,6 +50,28 @@ end_define
 
 begin_comment
 comment|/* data direction register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vT1C
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Timer 1 counter Lo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vT1CH
+value|0x0a00
+end_define
+
+begin_comment
+comment|/* Timer 1 counter Hi */
 end_comment
 
 begin_define
@@ -116,6 +127,17 @@ end_define
 
 begin_comment
 comment|/* interrupt enable register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vBufA
+value|0x1e00
+end_define
+
+begin_comment
+comment|/* register A */
 end_comment
 
 begin_define

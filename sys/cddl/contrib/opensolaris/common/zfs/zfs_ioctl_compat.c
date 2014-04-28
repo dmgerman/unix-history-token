@@ -3066,7 +3066,7 @@ argument|, zc->zc_value); 		if (innvl != NULL) 			nvlist_free(innvl); 		return (
 literal|"snaps"
 argument|, innvl); 		} else {
 comment|/* 			 * We are probably called by even older binaries, 			 * allocate and populate nvlist with recursive 			 * snapshots 			 */
-argument|if (snapshot_namecheck(zc->zc_value, NULL, 			    NULL) ==
+argument|if (zfs_component_namecheck(zc->zc_value, NULL, 			    NULL) ==
 literal|0
 argument|) { 				tmpnvl = fnvlist_alloc(); 				if (dmu_get_recursive_snaps_nvl(zc->zc_name, 				    zc->zc_value, tmpnvl) ==
 literal|0

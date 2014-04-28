@@ -1515,7 +1515,7 @@ begin_define
 define|#
 directive|define
 name|HE_REGM_CON_MBOX
-value|(2<< 30)
+value|(2U<< 30)
 end_define
 
 begin_define
@@ -2281,7 +2281,7 @@ begin_define
 define|#
 directive|define
 name|HE_REGM_TSR4_FLUSH
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2470,7 +2470,7 @@ begin_define
 define|#
 directive|define
 name|HE_REGM_TSR14_CBR_DELETE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

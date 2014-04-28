@@ -896,13 +896,25 @@ block|}
 name|td_state
 enum|;
 comment|/* (t) thread state */
+union|union
+block|{
 name|register_t
-name|td_retval
+name|tdu_retval
 index|[
 literal|2
 index|]
 decl_stmt|;
+name|off_t
+name|tdu_off
+decl_stmt|;
+block|}
+name|td_uretoff
+union|;
 comment|/* (k) Syscall aux returns. */
+define|#
+directive|define
+name|td_retval
+value|td_uretoff.tdu_retval
 name|struct
 name|callout
 name|td_slpcallout
@@ -1872,6 +1884,17 @@ end_define
 
 begin_comment
 comment|/* Current uio has pages held in td_ma */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_DEVMEMIO
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Accessing memory for /dev/mem */
 end_comment
 
 begin_comment
@@ -3891,6 +3914,14 @@ directive|define
 name|THREAD_SLEEPING_OK
 parameter_list|()
 value|((curthread)->td_no_sleeping--)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_CAN_SLEEP
+parameter_list|()
+value|((curthread)->td_no_sleeping == 0)
 end_define
 
 begin_define

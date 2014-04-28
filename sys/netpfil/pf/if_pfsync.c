@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_clone.h>
 end_include
 
@@ -149,6 +155,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -2404,9 +2416,12 @@ name|r
 operator|->
 name|max_states
 operator|&&
+name|counter_u64_fetch
+argument_list|(
 name|r
 operator|->
 name|states_cur
+argument_list|)
 operator|>=
 name|r
 operator|->
@@ -3029,17 +3044,6 @@ name|sync_state
 operator|=
 name|PFSYNC_S_NONE
 expr_stmt|;
-comment|/* XXX when we have nat_rule/anchors, use STATE_INC_COUNTERS */
-name|r
-operator|->
-name|states_cur
-operator|++
-expr_stmt|;
-name|r
-operator|->
-name|states_tot
-operator|++
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3074,17 +3078,28 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* XXX when we have nat_rule/anchors, use STATE_DEC_COUNTERS */
-name|r
-operator|->
-name|states_cur
-operator|--
-expr_stmt|;
 goto|goto
 name|cleanup_state
 goto|;
-block|}
+comment|/* XXX when we have nat_rule/anchors, use STATE_INC_COUNTERS */
+name|counter_u64_add
+argument_list|(
+name|r
+operator|->
+name|states_cur
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|counter_u64_add
+argument_list|(
+name|r
+operator|->
+name|states_tot
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3902,7 +3917,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|V_pf_hashmask
+name|pf_hashmask
 condition|;
 name|i
 operator|++
@@ -10897,7 +10912,7 @@ control|(
 init|;
 name|i
 operator|<=
-name|V_pf_hashmask
+name|pf_hashmask
 condition|;
 name|i
 operator|++

@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_sched.h"
 end_include
 
@@ -1108,21 +1102,6 @@ argument_list|(
 name|m
 argument_list|,
 name|MA_OWNED
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|mtx_recurse
-operator|==
-literal|0
-condition|)
-name|LOCKSTAT_PROFILE_RELEASE_LOCK
-argument_list|(
-name|LS_MTX_UNLOCK_RELEASE
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
 name|__mtx_unlock

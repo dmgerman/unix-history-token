@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: vs_refresh.c,v 10.52 2011/12/16 11:06:25 zy Exp $"
+literal|"$Id: vs_refresh.c,v 10.53 2013/11/01 11:57:36 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1190,6 +1190,11 @@ goto|goto
 name|adjust
 goto|;
 block|}
+else|else
+goto|goto
+name|top
+goto|;
+comment|/* XXX No such line. */
 comment|/* 		 * If less than a half screen from the bottom of the file, 		 * put the last line of the file on the bottom of the screen. 		 */
 name|bottom
 label|:

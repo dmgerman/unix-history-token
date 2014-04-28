@@ -74,6 +74,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/fdt.h>
 end_include
 
@@ -606,7 +618,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|localbus
 argument_list|,
-name|fdtbus
+name|ofwbus
 argument_list|,
 name|localbus_driver
 argument_list|,
@@ -1684,7 +1696,7 @@ name|phandle_t
 name|dt_node
 parameter_list|,
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|fdt_devmap
 parameter_list|,
@@ -1898,10 +1910,6 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|bank
-operator|<
-literal|0
-operator|||
 name|bank
 operator|>
 name|MV_LOCALBUS_MAX_BANKS

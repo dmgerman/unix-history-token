@@ -93,6 +93,10 @@ comment|///
 name|int
 name|ReturnAddrSaveIndex
 block|;
+comment|/// Frame index where the old base pointer is stored.
+name|int
+name|BasePointerSaveIndex
+block|;
 comment|/// MustSaveLR - Indicates whether LR is defined (or clobbered) in the current
 comment|/// function.  This is only valid after the initial scan of the function by
 comment|/// PEI.
@@ -189,6 +193,11 @@ literal|0
 argument_list|)
 block|,
 name|ReturnAddrSaveIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|BasePointerSaveIndex
 argument_list|(
 literal|0
 argument_list|)
@@ -295,6 +304,25 @@ block|{
 name|ReturnAddrSaveIndex
 operator|=
 name|idx
+block|; }
+name|int
+name|getBasePointerSaveIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BasePointerSaveIndex
+return|;
+block|}
+name|void
+name|setBasePointerSaveIndex
+argument_list|(
+argument|int Idx
+argument_list|)
+block|{
+name|BasePointerSaveIndex
+operator|=
+name|Idx
 block|; }
 name|unsigned
 name|getMinReservedArea
@@ -556,11 +584,9 @@ operator|=
 name|idx
 block|; }
 specifier|const
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|unsigned
-block|,
-literal|3
 operator|>
 operator|&
 name|getMustSaveCRs

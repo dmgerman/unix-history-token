@@ -96,9 +96,6 @@ name|class
 name|MachineModuleInfo
 decl_stmt|;
 name|class
-name|MachineMove
-decl_stmt|;
-name|class
 name|MachineInstr
 decl_stmt|;
 name|class
@@ -115,6 +112,9 @@ name|MCSymbol
 decl_stmt|;
 name|class
 name|Function
+decl_stmt|;
+name|class
+name|ARMTargetStreamer
 decl_stmt|;
 name|class
 name|AsmPrinter
@@ -472,6 +472,11 @@ name|EmitTypeInfos
 argument_list|(
 argument|unsigned TTypeEncoding
 argument_list|)
+block|;
+name|ARMTargetStreamer
+operator|&
+name|getTargetStreamer
+argument_list|()
 block|;
 name|public
 operator|:

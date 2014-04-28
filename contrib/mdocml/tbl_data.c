@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_data.c,v 1.24 2011/03/20 16:02:05 kristaps Exp $ */
+comment|/*	$Id: tbl_data.c,v 1.27 2013/06/01 04:56:50 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -203,30 +203,16 @@ name|layout
 operator|->
 name|first
 expr_stmt|;
-comment|/*  	 * Skip over spanners and vertical lines to data formats, since 	 * we want to match data with data layout cells in the header. 	 */
+comment|/*  	 * Skip over spanners, since 	 * we want to match data with data layout cells in the header. 	 */
 while|while
 condition|(
 name|cp
 operator|&&
-operator|(
-name|TBL_CELL_VERT
-operator|==
-name|cp
-operator|->
-name|pos
-operator|||
-name|TBL_CELL_DVERT
-operator|==
-name|cp
-operator|->
-name|pos
-operator|||
 name|TBL_CELL_SPAN
 operator|==
 name|cp
 operator|->
 name|pos
-operator|)
 condition|)
 name|cp
 operator|=
@@ -451,7 +437,7 @@ name|TBL_PART_CDATA
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -970,7 +956,7 @@ name|line
 expr_stmt|;
 name|dp
 operator|->
-name|tbl
+name|opts
 operator|=
 operator|&
 name|tbl

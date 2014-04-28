@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -206,8 +206,22 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_comment
+comment|/* XXX: for in6_var.h */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<netinet6/in6_var.h>
 end_include
+
+begin_comment
+comment|/* XXX: for ip6_sprintf */
+end_comment
 
 begin_endif
 endif|#

@@ -2961,6 +2961,26 @@ parameter_list|)
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|GET_NUM_VFS_PER_PATH
+parameter_list|(
+name|sc
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_NUM_VFS_PER_PF
+parameter_list|(
+name|sc
+parameter_list|)
+value|0
+end_define
+
 begin_comment
 comment|/* maximum number of fast-path interrupt contexts */
 end_comment
@@ -5161,7 +5181,8 @@ define|#
 directive|define
 name|BXE_TX_SWITCHING
 value|0x00001000
-name|uint32_t
+name|unsigned
+name|long
 name|debug
 decl_stmt|;
 comment|/* per-instance debug logging config */
@@ -5888,7 +5909,7 @@ decl_stmt|;
 name|int
 name|hc_tx_ticks
 decl_stmt|;
-name|uint32_t
+name|int
 name|rx_budget
 decl_stmt|;
 name|int

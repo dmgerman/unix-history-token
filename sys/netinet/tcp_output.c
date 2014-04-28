@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -4627,7 +4621,7 @@ name|TCPS_SYN_SENT
 condition|)
 name|TCP_PROBE5
 argument_list|(
-name|connect_request
+name|connect__request
 argument_list|,
 name|NULL
 argument_list|,
@@ -4712,9 +4706,7 @@ name|ro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 expr_stmt|;
 name|RO_RTFREE
 argument_list|(
@@ -4831,7 +4823,7 @@ name|TCPS_SYN_SENT
 condition|)
 name|TCP_PROBE5
 argument_list|(
-name|connect_request
+name|connect__request
 argument_list|,
 name|NULL
 argument_list|,
@@ -4913,9 +4905,7 @@ name|ro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 expr_stmt|;
 name|RO_RTFREE
 argument_list|(

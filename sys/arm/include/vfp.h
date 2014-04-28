@@ -538,6 +538,61 @@ begin_comment
 comment|/* vfp enable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VFPEXC_FP2V
+value|(0x10000000)
+end_define
+
+begin_comment
+comment|/* FPINST2 valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFPEXC_INV
+value|(0x00000080)
+end_define
+
+begin_comment
+comment|/* Input exception */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFPEXC_UFC
+value|(0x00000008)
+end_define
+
+begin_comment
+comment|/* Underflow exception */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFPEXC_OFC
+value|(0x00000004)
+end_define
+
+begin_comment
+comment|/* Overflow exception */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFPEXC_IOC
+value|(0x00000001)
+end_define
+
+begin_comment
+comment|/* Invlaid operation */
+end_comment
+
 begin_comment
 comment|/* version 3 registers */
 end_comment
@@ -784,6 +839,12 @@ name|COPROC11
 value|(0x3<< 22)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_function_decl
 name|void
 name|vfp_init
@@ -792,6 +853,35 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|vfp_store
+parameter_list|(
+name|struct
+name|vfp_state
+modifier|*
+parameter_list|,
+name|boolean_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfp_discard
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

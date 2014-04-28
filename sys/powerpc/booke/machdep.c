@@ -334,6 +334,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/libfdt/libfdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
@@ -667,7 +673,9 @@ parameter_list|)
 block|{
 name|int
 name|indx
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|long
 name|size
 decl_stmt|;
 comment|/* Initialise the decrementer-based clock. */
@@ -685,7 +693,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"real memory  = %ld (%ld MB)\n"
+literal|"real memory  = %lu (%ld MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
@@ -751,7 +759,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%08x - 0x%08x, %d bytes (%ld pages)\n"
+literal|"0x%08x - 0x%08x, %lu bytes (%lu pages)\n"
 argument_list|,
 name|phys_avail
 index|[
@@ -784,18 +792,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avail memory = %ld (%ld MB)\n"
+literal|"avail memory = %lu (%ld MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
@@ -1034,6 +1042,81 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|int
+name|booke_check_for_fdt
+parameter_list|(
+name|uint32_t
+name|arg1
+parameter_list|,
+name|vm_offset_t
+modifier|*
+name|dtbp
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|ptr
+decl_stmt|;
+if|if
+condition|(
+name|arg1
+operator|%
+literal|8
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|ptr
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|pmap_early_io_map
+argument_list|(
+name|arg1
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fdt_check_header
+argument_list|(
+name|ptr
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+operator|*
+name|dtbp
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|ptr
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|u_int
 name|booke_init
 parameter_list|(
@@ -1079,7 +1162,99 @@ name|vm_offset_t
 operator|)
 name|NULL
 expr_stmt|;
-comment|/* 	 * Handle the various ways we can get loaded and started: 	 *  -	FreeBSD's loader passes the pointer to the metadata 	 *	in arg1, with arg2 undefined. arg1 has a value that's 	 *	relative to the kernel's link address (i.e. larger 	 *	than 0xc0000000). 	 *  -	Juniper's loader passes the metadata pointer in arg2 	 *	and sets arg1 to zero. This is to signal that the 	 *	loader maps the kernel and starts it at its link 	 *	address (unlike the FreeBSD loader). 	 *  -	U-Boot passes the standard argc and argv parameters 	 *	in arg1 and arg2 (resp). arg1 is between 1 and some 	 *	relatively small number, such as 64K. arg2 is the 	 *	physical address of the argv vector. 	 */
+comment|/* Set up TLB initially */
+name|bootinfo
+operator|=
+name|NULL
+expr_stmt|;
+name|tlb1_init
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Handle the various ways we can get loaded and started: 	 *  -	FreeBSD's loader passes the pointer to the metadata 	 *	in arg1, with arg2 undefined. arg1 has a value that's 	 *	relative to the kernel's link address (i.e. larger 	 *	than 0xc0000000). 	 *  -	Juniper's loader passes the metadata pointer in arg2 	 *	and sets arg1 to zero. This is to signal that the 	 *	loader maps the kernel and starts it at its link 	 *	address (unlike the FreeBSD loader). 	 *  -	U-Boot passes the standard argc and argv parameters 	 *	in arg1 and arg2 (resp). arg1 is between 1 and some 	 *	relatively small number, such as 64K. arg2 is the 	 *	physical address of the argv vector. 	 *  -   ePAPR loaders pass an FDT blob in r3 (arg1) and the magic hex 	 *      string 0x45504150 ('ePAP') in r6 (which has been lost by now). 	 *      r4 (arg2) is supposed to be set to zero, but is not always. 	 */
+if|if
+condition|(
+name|arg1
+operator|==
+literal|0
+condition|)
+comment|/* Juniper loader */
+name|mdp
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|arg2
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|booke_check_for_fdt
+argument_list|(
+name|arg1
+argument_list|,
+operator|&
+name|dtbp
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* ePAPR */
+name|end
+operator|=
+name|roundup
+argument_list|(
+name|end
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+name|memmove
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|end
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|dtbp
+argument_list|,
+name|fdt_totalsize
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|dtbp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dtbp
+operator|=
+name|end
+expr_stmt|;
+name|end
+operator|+=
+name|fdt_totalsize
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|dtbp
+argument_list|)
+expr_stmt|;
+name|mdp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|arg1
@@ -1097,22 +1272,6 @@ name|void
 operator|*
 operator|)
 name|arg1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|arg1
-operator|==
-literal|0
-condition|)
-comment|/* Juniper loader */
-name|mdp
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|arg2
 expr_stmt|;
 else|else
 comment|/* U-Boot */
@@ -1316,20 +1475,6 @@ condition|(
 literal|1
 condition|)
 empty_stmt|;
-if|if
-condition|(
-name|fdt_immr_addr
-argument_list|(
-name|CCSRBAR_VA
-argument_list|)
-operator|!=
-literal|0
-condition|)
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
 name|OF_interpret
 argument_list|(
 literal|"perform-fixup"
@@ -1337,11 +1482,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Set up TLB initially */
-name|booke_init_tlb
-argument_list|(
-name|fdt_immr_pa
-argument_list|)
+comment|/* Reset TLB1 to get rid of temporary mappings */
+name|tlb1_init
+argument_list|()
 expr_stmt|;
 comment|/* Reset Time Base */
 name|mttb
@@ -1399,6 +1542,15 @@ operator|=
 operator|&
 name|thread0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("mr 13,%0" :: "r"(pc->pc_curthread));
+else|#
+directive|else
+asm|__asm __volatile("mr 2,%0" :: "r"(pc->pc_curthread));
+endif|#
+directive|endif
 asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
 comment|/* Initialize system mutexes. */
 name|mutex_init

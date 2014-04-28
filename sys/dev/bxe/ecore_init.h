@@ -2847,37 +2847,77 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MISC_AEU_ENABLE_MCP_PRTY_SUB_BITS
+define|\
+value|(AEU_INPUTS_ATTN_BITS_MCP_LATCHED_ROM_PARITY | \ 	 AEU_INPUTS_ATTN_BITS_MCP_LATCHED_UMP_RX_PARITY | \ 	 AEU_INPUTS_ATTN_BITS_MCP_LATCHED_UMP_TX_PARITY)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MISC_AEU_ENABLE_MCP_PRTY_BITS
 define|\
-value|(AEU_INPUTS_ATTN_BITS_MCP_LATCHED_ROM_PARITY | \ 	 AEU_INPUTS_ATTN_BITS_MCP_LATCHED_UMP_RX_PARITY | \ 	 AEU_INPUTS_ATTN_BITS_MCP_LATCHED_UMP_TX_PARITY | \ 	 AEU_INPUTS_ATTN_BITS_MCP_LATCHED_SCPAD_PARITY)
+value|(MISC_AEU_ENABLE_MCP_PRTY_SUB_BITS | \ 	 AEU_INPUTS_ATTN_BITS_MCP_LATCHED_SCPAD_PARITY)
 end_define
 
 begin_comment
 comment|/* Below registers control the MCP parity attention output. When  * MISC_AEU_ENABLE_MCP_PRTY_BITS are set - attentions are  * enabled, when cleared - disabled.  */
 end_comment
 
-begin_decl_stmt
+begin_struct
 specifier|static
 specifier|const
+struct|struct
+block|{
 name|uint32_t
+name|addr
+decl_stmt|;
+name|uint32_t
+name|bits
+decl_stmt|;
+block|}
 name|mcp_attn_ctl_regs
 index|[]
 init|=
 block|{
+block|{
 name|MISC_REG_AEU_ENABLE4_FUNC_0_OUT_0
 block|,
+name|MISC_AEU_ENABLE_MCP_PRTY_BITS
+block|}
+block|,
+block|{
 name|MISC_REG_AEU_ENABLE4_NIG_0
 block|,
+name|MISC_AEU_ENABLE_MCP_PRTY_SUB_BITS
+block|}
+block|,
+block|{
 name|MISC_REG_AEU_ENABLE4_PXP_0
 block|,
+name|MISC_AEU_ENABLE_MCP_PRTY_SUB_BITS
+block|}
+block|,
+block|{
 name|MISC_REG_AEU_ENABLE4_FUNC_1_OUT_0
 block|,
+name|MISC_AEU_ENABLE_MCP_PRTY_BITS
+block|}
+block|,
+block|{
 name|MISC_REG_AEU_ENABLE4_NIG_1
 block|,
-name|MISC_REG_AEU_ENABLE4_PXP_1
+name|MISC_AEU_ENABLE_MCP_PRTY_SUB_BITS
 block|}
-decl_stmt|;
-end_decl_stmt
+block|,
+block|{
+name|MISC_REG_AEU_ENABLE4_PXP_1
+block|,
+name|MISC_AEU_ENABLE_MCP_PRTY_SUB_BITS
+block|}
+block|}
+struct|;
+end_struct
 
 begin_function
 specifier|static
@@ -2927,6 +2967,8 @@ name|mcp_attn_ctl_regs
 index|[
 name|i
 index|]
+operator|.
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
@@ -2937,12 +2979,14 @@ name|reg_val
 operator||=
 name|MISC_AEU_ENABLE_MCP_PRTY_BITS
 expr_stmt|;
+comment|/* Linux is using mcp_attn_ctl_regs[i].bits */
 else|else
 name|reg_val
 operator|&=
 operator|~
 name|MISC_AEU_ENABLE_MCP_PRTY_BITS
 expr_stmt|;
+comment|/* Linux is using mcp_attn_ctl_regs[i].bits */
 name|REG_WR
 argument_list|(
 name|sc
@@ -2951,6 +2995,8 @@ name|mcp_attn_ctl_regs
 index|[
 name|i
 index|]
+operator|.
+name|addr
 argument_list|,
 name|reg_val
 argument_list|)

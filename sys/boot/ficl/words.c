@@ -9727,7 +9727,7 @@ modifier|*
 name|pVM
 parameter_list|)
 block|{
-name|int
+name|FICL_INT
 name|flag
 decl_stmt|;
 name|FICL_WORD

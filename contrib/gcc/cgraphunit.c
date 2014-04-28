@@ -1155,6 +1155,36 @@ block|}
 end_function
 
 begin_comment
+comment|/* APPLE LOCAL begin radar 6305545 */
+end_comment
+
+begin_comment
+comment|/** lower_if_nested_functions - This routine is called from cplus side only.     Its purpose is to lower block helper (or any other nested function)     which may have been nested in a constructor or destructor. We have to     do this because structors are cloned and are not lowered themselves (which     is the only way to lower the nested functions). */
+end_comment
+
+begin_function
+name|void
+name|lower_if_nested_functions
+parameter_list|(
+name|tree
+name|decl
+parameter_list|)
+block|{
+name|lower_nested_functions
+argument_list|(
+name|decl
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* APPLE LOCAL end radar 6305545 */
+end_comment
+
+begin_comment
 comment|/* DECL has been parsed.  Take it, queue it, compile it at the whim of the    logic in effect.  If NESTED is true, then our caller cannot stand to have    the garbage collector run at the moment.  We would need to either create    a new GC context, or just not compile right now.  */
 end_comment
 
@@ -1230,9 +1260,12 @@ name|node
 operator|->
 name|nested
 condition|)
+comment|/* APPLE LOCAL radar 6305545 */
 name|lower_nested_functions
 argument_list|(
 name|decl
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|gcc_assert
@@ -6047,7 +6080,7 @@ argument_list|)
 expr_stmt|;
 name|name
 operator|=
-name|get_file_function_name_long
+name|get_file_function_name
 argument_list|(
 name|which_buf
 argument_list|)

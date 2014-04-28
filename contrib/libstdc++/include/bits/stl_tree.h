@@ -120,6 +120,13 @@ name|_TREE_H
 value|1
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|system_header
+end_pragma
+
 begin_include
 include|#
 directive|include

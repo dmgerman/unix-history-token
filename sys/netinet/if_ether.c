@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -299,22 +305,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|useloopback
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* use loopback interface for 					 * local traffic */
-end_comment
-
-begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
 argument_list|(
@@ -482,30 +472,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"ARP resolution attempts before returning error"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_VNET_INT
-argument_list|(
-name|_net_link_ether_inet
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|useloopback
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|useloopback
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|"Use the loopback interface for local traffic"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -695,7 +661,7 @@ name|AF_INET
 end_ifdef
 
 begin_comment
-comment|/*  * called by in_ifscrub to remove entry from the table when  * the interface goes away  */
+comment|/*  * called by in_scrubprefix() to remove entry from the table when  * the interface goes away  */
 end_comment
 
 begin_function
@@ -753,7 +719,7 @@ name|s_addr
 operator|=
 name|addr
 expr_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -780,7 +746,7 @@ operator|&
 name|addr4
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1674,7 +1640,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"arpresolve: can't allocate llinfo for %s\n"
+literal|"arpresolve: can't allocate llinfo for %s on %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1685,6 +1651,10 @@ argument_list|)
 operator|->
 name|sin_addr
 argument_list|)
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -4092,7 +4062,7 @@ name|sin_addr
 operator|=
 name|itaddr
 expr_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4117,7 +4087,7 @@ operator|&
 name|sin
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

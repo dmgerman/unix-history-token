@@ -5766,7 +5766,10 @@ argument_list|)
 expr_stmt|;
 name|assemble_align
 argument_list|(
-name|FUNCTION_BOUNDARY
+name|DECL_ALIGN
+argument_list|(
+name|decl
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_LABEL
@@ -5801,7 +5804,10 @@ argument_list|)
 expr_stmt|;
 name|assemble_align
 argument_list|(
-name|FUNCTION_BOUNDARY
+name|DECL_ALIGN
+argument_list|(
+name|decl
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_LABEL
@@ -5898,20 +5904,13 @@ name|align
 operator|=
 name|floor_log2
 argument_list|(
-name|FUNCTION_BOUNDARY
+name|DECL_ALIGN
+argument_list|(
+name|decl
+argument_list|)
 operator|/
 name|BITS_PER_UNIT
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|align
-operator|<
-name|force_align_functions_log
-condition|)
-name|align
-operator|=
-name|force_align_functions_log
 expr_stmt|;
 if|if
 condition|(
@@ -5928,9 +5927,15 @@ name|align
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Handle a user-specified function alignment.      Note that we still need to align to FUNCTION_BOUNDARY, as above,      because ASM_OUTPUT_MAX_SKIP_ALIGN might not do any alignment at all.  */
+comment|/* Handle a user-specified function alignment.      Note that we still need to align to DECL_ALIGN, as above,      because ASM_OUTPUT_MAX_SKIP_ALIGN might not do any alignment at all.  */
 if|if
 condition|(
+operator|!
+name|DECL_USER_ALIGN
+argument_list|(
+name|decl
+argument_list|)
+operator|&&
 name|align_functions_log
 operator|>
 name|align
@@ -16149,6 +16154,10 @@ name|POINTER_TYPE
 case|:
 case|case
 name|REFERENCE_TYPE
+case|:
+comment|/* APPLE LOCAL radar 5822844 */
+case|case
+name|BLOCK_POINTER_TYPE
 case|:
 case|case
 name|OFFSET_TYPE

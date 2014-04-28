@@ -1351,7 +1351,7 @@ name|physvnodes
 operator|=
 name|maxproc
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|/
@@ -1365,7 +1365,7 @@ literal|98304
 operator|*
 literal|4
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 argument_list|)
@@ -2857,7 +2857,7 @@ literal|1
 expr_stmt|;
 name|trigger
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|*

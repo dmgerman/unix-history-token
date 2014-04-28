@@ -113,6 +113,17 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// Save ptr so that we can free it if realloc fails.
+comment|// The point is that message_fatal ends up calling stdio functions
+comment|// which in some libc implementations might allocate memory from
+comment|// the heap. Freeing ptr improves the chances that there's free
+comment|// memory for stdio functions if they need it.
+name|void
+modifier|*
+name|p
+init|=
+name|ptr
+decl_stmt|;
 name|ptr
 operator|=
 name|realloc
@@ -128,16 +139,29 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+block|{
+specifier|const
+name|int
+name|saved_errno
+init|=
+name|errno
+decl_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|message_fatal
 argument_list|(
 literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|saved_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ptr
 return|;

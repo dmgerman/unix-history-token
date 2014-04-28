@@ -657,6 +657,8 @@ argument_list|,
 argument|unsigned Alignment
 argument_list|,
 argument|unsigned SectionID
+argument_list|,
+argument|llvm::StringRef SectionName
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -687,6 +689,8 @@ argument_list|,
 argument|unsigned Alignment
 argument_list|,
 argument|unsigned SectionID
+argument_list|,
+argument|llvm::StringRef SectionName
 argument_list|,
 argument|bool IsReadOnly
 argument_list|)
@@ -724,12 +728,17 @@ comment|///
 comment|/// @return
 comment|///     True in case of failure, false in case of success.
 comment|//------------------------------------------------------------------
+name|virtual
 name|bool
-name|applyPermissions
+name|finalizeMemory
 argument_list|(
 argument|std::string *ErrMsg
 argument_list|)
 block|{
+comment|// TODO: Ensure that the instruction cache is flushed because
+comment|// relocations are updated by dy-load.  See:
+comment|//   sys::Memory::InvalidateInstructionCache
+comment|//   llvm::SectionMemoryManager
 return|return
 name|false
 return|;
@@ -750,78 +759,6 @@ comment|//------------------------------------------------------------------
 comment|/// Passthrough interface stub
 comment|//------------------------------------------------------------------
 name|virtual
-name|uint8_t
-operator|*
-name|startExceptionTable
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Function
-operator|*
-name|F
-argument_list|,
-name|uintptr_t
-operator|&
-name|ActualSize
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Complete the exception table for a function, and add it to the
-comment|/// m_exception_tables map
-comment|///
-comment|/// @param[in] F
-comment|///     The function whose exception table is being written.
-comment|///
-comment|/// @param[in] TableStart
-comment|///     The first byte of the exception table.
-comment|///
-comment|/// @param[in] TableEnd
-comment|///     The last byte of the exception table.
-comment|///
-comment|/// @param[in] FrameRegister
-comment|///     I don't know what this does, but it's passed through.
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|endExceptionTable
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Function
-operator|*
-name|F
-argument_list|,
-name|uint8_t
-operator|*
-name|TableStart
-argument_list|,
-name|uint8_t
-operator|*
-name|TableEnd
-argument_list|,
-name|uint8_t
-operator|*
-name|FrameRegister
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|deallocateExceptionTable
-argument_list|(
-name|void
-operator|*
-name|ET
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
 name|size_t
 name|GetDefaultCodeSlabSize
 argument_list|()
@@ -903,6 +840,30 @@ name|m_default_mm_ap
 operator|->
 name|GetNumStubSlabs
 argument_list|()
+return|;
+block|}
+name|virtual
+name|void
+name|registerEHFrames
+argument_list|(
+argument|uint8_t *Addr
+argument_list|,
+argument|uint64_t LoadAddr
+argument_list|,
+argument|size_t Size
+argument_list|)
+block|{
+return|return
+name|m_default_mm_ap
+operator|->
+name|registerEHFrames
+argument_list|(
+name|Addr
+argument_list|,
+name|LoadAddr
+argument_list|,
+name|Size
+argument_list|)
 return|;
 block|}
 comment|//------------------------------------------------------------------

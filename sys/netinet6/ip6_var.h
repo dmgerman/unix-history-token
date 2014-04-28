@@ -783,32 +783,6 @@ begin_comment
 comment|/* use minimum MTU (IPV6_USE_MIN_MTU) */
 end_comment
 
-begin_comment
-comment|/*  * IPv6 protocol layer specific mbuf flags.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_IP6_NEXTHOP
-value|M_PROTO2
-end_define
-
-begin_comment
-comment|/* explicit ip nexthop */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_SKIP_FIREWALL
-value|M_PROTO3
-end_define
-
-begin_comment
-comment|/* skip firewall processing, 						   keep in sync with IPv4 */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef

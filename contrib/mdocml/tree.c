@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tree.c,v 1.47 2011/09/18 14:14:15 schwarze Exp $ */
+comment|/*	$Id: tree.c,v 1.50 2013/12/24 19:11:46 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -232,13 +232,6 @@ name|j
 decl_stmt|;
 name|size_t
 name|argc
-decl_stmt|,
-name|sz
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|params
 decl_stmt|;
 name|struct
 name|mdoc_argv
@@ -251,13 +244,7 @@ name|NULL
 expr_stmt|;
 name|argc
 operator|=
-name|sz
-operator|=
 literal|0
-expr_stmt|;
-name|params
-operator|=
-name|NULL
 expr_stmt|;
 name|t
 operator|=
@@ -730,35 +717,27 @@ literal|" ]"
 argument_list|)
 expr_stmt|;
 block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-operator|(
-name|int
-operator|)
-name|sz
-condition|;
-name|i
-operator|++
-control|)
-name|printf
+name|putchar
 argument_list|(
-literal|" [%s]"
-argument_list|,
-name|params
-index|[
-name|i
-index|]
+literal|' '
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MDOC_LINE
+operator|&
+name|n
+operator|->
+name|flags
+condition|)
+name|putchar
+argument_list|(
+literal|'*'
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %d:%d\n"
+literal|"%d:%d"
 argument_list|,
 name|n
 operator|->
@@ -767,6 +746,30 @@ argument_list|,
 name|n
 operator|->
 name|pos
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|->
+name|lastline
+operator|!=
+name|n
+operator|->
+name|line
+condition|)
+name|printf
+argument_list|(
+literal|"-%d"
+argument_list|,
+name|n
+operator|->
+name|lastline
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}

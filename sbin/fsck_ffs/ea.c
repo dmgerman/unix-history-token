@@ -135,7 +135,7 @@ operator|->
 name|id_number
 argument_list|,
 operator|(
-name|intmax_t
+name|uintmax_t
 operator|)
 name|dp
 operator|->

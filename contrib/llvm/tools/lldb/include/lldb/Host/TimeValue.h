@@ -53,6 +53,12 @@ directive|include
 file|<stdint.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MSC_VER
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -93,6 +99,11 @@ end_endif
 begin_comment
 comment|// END: MinGW work around
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// C++ Includes
@@ -165,15 +176,18 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
+name|explicit
 name|TimeValue
-argument_list|(
-specifier|const
-expr|struct
-name|timeval
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|uint32_t
+name|seconds
+parameter_list|,
+name|uint32_t
+name|nanos
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 operator|~
 name|TimeValue
 argument_list|()
@@ -215,12 +229,6 @@ decl_stmt|;
 block|struct
 name|timespec
 name|GetAsTimeSpec
-argument_list|()
-specifier|const
-decl_stmt|;
-block|struct
-name|timeval
-name|GetAsTimeVal
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -269,6 +277,52 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Returns only the seconds component of the TimeValue. The nanoseconds
+comment|/// portion is ignored. No rounding is performed.
+comment|/// @brief Retrieve the seconds component
+name|uint32_t
+name|seconds
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_nano_seconds
+operator|/
+name|NanoSecPerSec
+return|;
+block|}
+comment|/// Returns only the nanoseconds component of the TimeValue. The seconds
+comment|/// portion is ignored.
+comment|/// @brief Retrieve the nanoseconds component.
+name|uint32_t
+name|nanoseconds
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_nano_seconds
+operator|%
+name|NanoSecPerSec
+return|;
+block|}
+comment|/// Returns only the fractional portion of the TimeValue rounded down to the
+comment|/// nearest microsecond (divide by one thousand).
+comment|/// @brief Retrieve the fractional part as microseconds;
+name|uint32_t
+name|microseconds
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|m_nano_seconds
+operator|%
+name|NanoSecPerSec
+operator|)
+operator|/
+name|NanoSecPerMicroSec
+return|;
+block|}
 name|protected
 label|:
 comment|//------------------------------------------------------------------

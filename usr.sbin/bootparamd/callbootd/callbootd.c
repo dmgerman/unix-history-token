@@ -500,8 +500,7 @@ if|if
 condition|(
 name|the_inet_addr
 operator|==
-operator|-
-literal|1
+name|INADDR_NONE
 condition|)
 name|errx
 argument_list|(

@@ -1433,7 +1433,11 @@ operator|->
 name|e2fs_features_incompat
 operator|&
 operator|~
+operator|(
 name|EXT2F_INCOMPAT_SUPP
+operator||
+name|EXT4F_RO_INCOMPAT_SUPP
+operator|)
 condition|)
 block|{
 name|printf
@@ -5069,16 +5073,16 @@ name|i_next_alloc_goal
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Now we want to make sure that block pointers for unused 	 * blocks are zeroed out - ext2_balloc depends on this 	 * although for regular files and directories only 	 * 	 * If EXT4_EXTENTS flag is enabled, unused blocks aren't 	 * zeroed out because we could corrupt the extent tree. 	 */
+comment|/* 	 * Now we want to make sure that block pointers for unused 	 * blocks are zeroed out - ext2_balloc depends on this 	 * although for regular files and directories only 	 * 	 * If IN_E4EXTENTS is enabled, unused blocks are not zeroed 	 * out because we could corrupt the extent tree. 	 */
 if|if
 condition|(
 operator|!
 operator|(
 name|ip
 operator|->
-name|i_flags
+name|i_flag
 operator|&
-name|EXT4_EXTENTS
+name|IN_E4EXTENTS
 operator|)
 operator|&&
 operator|(

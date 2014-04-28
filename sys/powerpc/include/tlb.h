@@ -576,6 +576,15 @@ typedef|typedef
 struct|struct
 name|tlb_entry
 block|{
+name|vm_paddr_t
+name|phys
+decl_stmt|;
+name|vm_offset_t
+name|virt
+decl_stmt|;
+name|vm_size_t
+name|size
+decl_stmt|;
 name|uint32_t
 name|mas1
 decl_stmt|;
@@ -613,7 +622,7 @@ begin_function_decl
 name|void
 name|tlb1_init
 parameter_list|(
-name|vm_offset_t
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

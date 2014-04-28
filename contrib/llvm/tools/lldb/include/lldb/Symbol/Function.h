@@ -972,6 +972,39 @@ name|MemorySize
 argument_list|()
 specifier|const
 expr_stmt|;
+name|lldb
+operator|::
+name|DisassemblerSP
+name|GetInstructions
+argument_list|(
+argument|const ExecutionContext&exe_ctx
+argument_list|,
+argument|const char *flavor
+argument_list|,
+argument|bool prefer_file_cache
+argument_list|)
+expr_stmt|;
+name|bool
+name|GetDisassembly
+parameter_list|(
+specifier|const
+name|ExecutionContext
+modifier|&
+name|exe_ctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|flavor
+parameter_list|,
+name|bool
+name|prefer_file_cache
+parameter_list|,
+name|Stream
+modifier|&
+name|strm
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 enum|enum

@@ -158,6 +158,12 @@ directive|include
 file|<net/if_types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2651,7 +2657,6 @@ return|return
 name|error
 return|;
 block|}
-comment|/* XXX COHERENT for now */
 if|if
 condition|(
 name|bus_dmamem_alloc
@@ -5786,6 +5791,17 @@ name|ETHER_ALIGN
 operator|)
 operator|)
 expr_stmt|;
+name|bus_dmamap_unload
+argument_list|(
+name|dma
+operator|->
+name|mtag
+argument_list|,
+name|npe
+operator|->
+name|ix_map
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_load_mbuf_sg
@@ -5882,6 +5898,21 @@ operator|.
 name|next
 operator|=
 literal|0
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|dma
+operator|->
+name|buf_tag
+argument_list|,
+name|dma
+operator|->
+name|buf_map
+argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
+name|BUS_DMASYNC_PREWRITE
+argument_list|)
 expr_stmt|;
 name|npe
 operator|->
@@ -5994,6 +6025,19 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|dma
+operator|->
+name|buf_tag
+argument_list|,
+name|dma
+operator|->
+name|buf_map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -6080,7 +6124,6 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-comment|/* XXX flush hw buffer; works now 'cuz coherent */
 comment|/* set m_len etc. per rx frame size */
 name|mrx
 operator|->
@@ -6983,6 +7026,17 @@ name|sc
 operator|->
 name|tx_free
 expr_stmt|;
+name|bus_dmamap_unload
+argument_list|(
+name|dma
+operator|->
+name|mtag
+argument_list|,
+name|npe
+operator|->
+name|ix_map
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_load_mbuf_sg
@@ -7277,7 +7331,21 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* zero last in chain */
-comment|/* XXX flush descriptor instead of using uncached memory */
+name|bus_dmamap_sync
+argument_list|(
+name|dma
+operator|->
+name|buf_tag
+argument_list|,
+name|dma
+operator|->
+name|buf_map
+argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
+name|BUS_DMASYNC_PREWRITE
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc

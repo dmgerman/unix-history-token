@@ -3943,7 +3943,7 @@ name|Instruction
 operator|::
 name|UIToFP
 operator|>
-name|m_UIToFp
+name|m_UIToFP
 argument_list|(
 argument|const OpTy&Op
 argument_list|)
@@ -3956,6 +3956,40 @@ operator|,
 name|Instruction
 operator|::
 name|UIToFP
+operator|>
+operator|(
+name|Op
+operator|)
+return|;
+block|}
+comment|/// m_SIToFP
+name|template
+operator|<
+name|typename
+name|OpTy
+operator|>
+specifier|inline
+name|CastClass_match
+operator|<
+name|OpTy
+block|,
+name|Instruction
+operator|::
+name|SIToFP
+operator|>
+name|m_SIToFP
+argument_list|(
+argument|const OpTy&Op
+argument_list|)
+block|{
+return|return
+name|CastClass_match
+operator|<
+name|OpTy
+operator|,
+name|Instruction
+operator|::
+name|SIToFP
 operator|>
 operator|(
 name|Op
@@ -5608,7 +5642,7 @@ name|ID
 block|;
 name|IntrinsicID_match
 argument_list|(
-argument|unsigned IntrID
+argument|Intrinsic::ID IntrID
 argument_list|)
 operator|:
 name|ID
@@ -5874,7 +5908,9 @@ comment|/// Match intrinsic calls like this:
 comment|///   m_Intrinsic<Intrinsic::fabs>(m_Value(X))
 name|template
 operator|<
-name|unsigned
+name|Intrinsic
+operator|::
+name|ID
 name|IntrID
 operator|>
 specifier|inline
@@ -5891,7 +5927,9 @@ return|;
 block|}
 name|template
 operator|<
-name|unsigned
+name|Intrinsic
+operator|::
+name|ID
 name|IntrID
 block|,
 name|typename
@@ -5932,7 +5970,9 @@ return|;
 block|}
 name|template
 operator|<
-name|unsigned
+name|Intrinsic
+operator|::
+name|ID
 name|IntrID
 block|,
 name|typename
@@ -5981,7 +6021,9 @@ return|;
 block|}
 name|template
 operator|<
-name|unsigned
+name|Intrinsic
+operator|::
+name|ID
 name|IntrID
 block|,
 name|typename
@@ -6039,7 +6081,9 @@ return|;
 block|}
 name|template
 operator|<
-name|unsigned
+name|Intrinsic
+operator|::
+name|ID
 name|IntrID
 block|,
 name|typename

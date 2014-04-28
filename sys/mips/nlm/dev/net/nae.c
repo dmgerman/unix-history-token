@@ -6842,7 +6842,7 @@ argument_list|,
 name|mac_cfg1
 operator||
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -6915,7 +6915,7 @@ name|mac_cfg1
 operator|&
 operator|~
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

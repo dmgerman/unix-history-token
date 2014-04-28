@@ -243,7 +243,7 @@ name|SetFlagsToDefault
 parameter_list|()
 function_decl|;
 name|bool
-name|FrameMatchesAvoidRegexp
+name|FrameMatchesAvoidCriteria
 parameter_list|()
 function_decl|;
 name|private

@@ -2249,6 +2249,10 @@ argument_list|)
 expr_stmt|;
 name|str
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|NVH_DATA
 argument_list|(
 name|nvh

@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*   * Alias_dummy is just an empty skeleton used to demostrate how to write  * a module for libalias, that will run unalterated in userland or in  * kernel land.  */
+comment|/*  * Alias_dummy is just an empty skeleton used to demostrate how to write  * a module for libalias, that will run unalterated in userland or in  * kernel land.  */
 end_comment
 
 begin_ifdef
@@ -176,7 +176,7 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
-comment|/*  	 * Check here all the data that will be used later, if any field  	 * is empy/NULL, return a -1 value. 	 */
+comment|/* 	 * Check here all the data that will be used later, if any field 	 * is empy/NULL, return a -1 value. 	 */
 if|if
 condition|(
 name|ah
@@ -209,7 +209,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/*  	 * Fingerprint the incoming packet, if it matches any conditions  	 * return an OK value. 	 */
+comment|/* 	 * Fingerprint the incoming packet, if it matches any conditions 	 * return an OK value. 	 */
 if|if
 condition|(
 name|ntohs
@@ -249,7 +249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Wrap in this general purpose function, the real function used to alias the   * packets.  */
+comment|/*  * Wrap in this general purpose function, the real function used to alias the  * packets.  */
 end_comment
 
 begin_function
@@ -291,7 +291,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * NOTA BENE: the next variable MUST NOT be renamed in any case if you want   * your module to work in userland, cause it's used to find and use all   * the protocol handlers present in every module.  * So WATCH OUT, your module needs this variables and it needs it with   * ITS EXACT NAME: handlers.  */
+comment|/*  * NOTA BENE: the next variable MUST NOT be renamed in any case if you want  * your module to work in userland, cause it's used to find and use all  * the protocol handlers present in every module.  * So WATCH OUT, your module needs this variables and it needs it with  * ITS EXACT NAME: handlers.  */
 end_comment
 
 begin_decl_stmt

@@ -422,7 +422,6 @@ name|uint32_t
 name|id
 decl_stmt|;
 block|}
-decl|const
 name|ofw_isa_pnp_map
 index|[]
 init|=

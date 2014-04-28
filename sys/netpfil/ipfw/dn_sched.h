@@ -352,6 +352,16 @@ name|m_nextpkt
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|q
+operator|->
+name|mq
+operator|.
+name|count
+operator|--
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Update stats for the queue */
 end_comment

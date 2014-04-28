@@ -301,6 +301,28 @@ directive|ifndef
 name|KSTACK_PAGES
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KSTACK_PAGES
+value|8
+end_define
+
+begin_comment
+comment|/* includes pcb */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -311,6 +333,11 @@ end_define
 begin_comment
 comment|/* includes pcb */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

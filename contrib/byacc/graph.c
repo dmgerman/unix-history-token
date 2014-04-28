@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: graph.c,v 1.7 2009/10/27 09:25:20 tom Exp $ */
+comment|/* $Id: graph.c,v 1.8 2014/02/19 00:46:57 Tom.Shields Exp $ */
 end_comment
 
 begin_include
@@ -232,18 +232,18 @@ name|int
 name|stateno
 parameter_list|)
 block|{
-name|short
+name|Value_t
 modifier|*
 name|isp
 decl_stmt|;
 name|int
 name|rule
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|sp
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|sp1
 decl_stmt|;

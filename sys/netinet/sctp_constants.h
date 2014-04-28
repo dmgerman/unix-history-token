@@ -33,15 +33,11 @@ begin_comment
 comment|/* IANA assigned port number for SCTP over UDP encapsulation */
 end_comment
 
-begin_comment
-comment|/* For freebsd we cannot bind the port at  * startup. Otherwise what will happen is  * we really won't be bound. The user must  * put it into the sysctl... or we need  * to build a special timer for this to allow  * us to wait 1 second or so after the system  * comes up.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SCTP_OVER_UDP_TUNNELING_PORT
-value|0
+value|9899
 end_define
 
 begin_comment
@@ -3254,17 +3250,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_DEFAULT_MINSEGMENT
-value|512
-end_define
-
-begin_comment
-comment|/* MTU size ... if no mtu disc */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SCTP_HOW_MANY_SECRETS
 value|2
 end_define
@@ -3497,6 +3482,17 @@ define|#
 directive|define
 name|SCTP_DEFAULT_SPLIT_POINT_MIN
 value|2904
+end_define
+
+begin_comment
+comment|/* Maximum length of diagnostic information in error causes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_DIAG_INFO_LEN
+value|64
 end_define
 
 begin_comment

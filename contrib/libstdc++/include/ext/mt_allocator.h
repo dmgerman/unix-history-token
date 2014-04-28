@@ -986,7 +986,7 @@ name|__bin
 parameter_list|,
 name|_Block_record
 modifier|*
-specifier|__block
+name|__block_record
 parameter_list|,
 name|size_t
 name|__thread_id
@@ -998,7 +998,7 @@ name|__gthread_active_p
 argument_list|()
 condition|)
 block|{
-specifier|__block
+name|__block_record
 operator|->
 name|_M_thread_id
 operator|=
@@ -2676,16 +2676,16 @@ name|_Block_record
 name|_Block_record
 expr_stmt|;
 name|_Block_record
-operator|*
-specifier|__block
-operator|=
+modifier|*
+name|__block_record
+init|=
 name|__bin
 operator|.
 name|_M_first
 index|[
 name|__thread_id
 index|]
-expr_stmt|;
+decl_stmt|;
 name|__bin
 operator|.
 name|_M_first
@@ -2693,7 +2693,7 @@ index|[
 name|__thread_id
 index|]
 operator|=
-specifier|__block
+name|__block_record
 operator|->
 name|_M_next
 expr_stmt|;
@@ -2703,7 +2703,7 @@ name|_M_adjust_freelist
 argument_list|(
 name|__bin
 argument_list|,
-specifier|__block
+name|__block_record
 argument_list|,
 name|__thread_id
 argument_list|)
@@ -2716,7 +2716,7 @@ name|char
 operator|*
 operator|>
 operator|(
-specifier|__block
+name|__block_record
 operator|)
 operator|+
 name|__pool

@@ -326,6 +326,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|taskqueue_drain_all
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|taskqueue_free
 parameter_list|(
 name|struct

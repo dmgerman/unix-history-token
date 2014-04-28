@@ -242,7 +242,7 @@ comment|/* Running as virtual machine guest? */
 end_comment
 
 begin_comment
-comment|/*  * Detected virtual machine guest types. The intention is to expand  * and/or add to the VM_GUEST_VM type if specific VM functionality is  * ever implemented (e.g. vendor-specific paravirtualization features).  */
+comment|/*  * Detected virtual machine guest types. The intention is to expand  * and/or add to the VM_GUEST_VM type if specific VM functionality is  * ever implemented (e.g. vendor-specific paravirtualization features).  * Keep in sync with vm_guest_sysctl_names[].  */
 end_comment
 
 begin_enum
@@ -256,6 +256,10 @@ block|,
 name|VM_GUEST_VM
 block|,
 name|VM_GUEST_XEN
+block|,
+name|VM_GUEST_HV
+block|,
+name|VM_LAST
 block|}
 enum|;
 end_enum
@@ -551,11 +555,25 @@ name|iosize_max_clamp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|devfs_iosize_max_clamp
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|IOSIZE_MAX
 value|(iosize_max_clamp ? INT_MAX : SSIZE_MAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVFS_IOSIZE_MAX
+value|(devfs_iosize_max_clamp ? INT_MAX : SSIZE_MAX)
 end_define
 
 begin_comment
@@ -631,6 +649,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|trapframe
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|eventtimer
 struct_decl|;
 end_struct_decl
 
@@ -915,6 +939,36 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EARLY_PRINTF
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|void
+name|early_putc_t
+parameter_list|(
+name|int
+name|ch
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|early_putc_t
+modifier|*
+name|early_putc
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -2188,6 +2242,21 @@ name|bt
 parameter_list|,
 name|sbintime_t
 name|bt_opt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_et_frequency
+parameter_list|(
+name|struct
+name|eventtimer
+modifier|*
+name|et
+parameter_list|,
+name|uint64_t
+name|newfreq
 parameter_list|)
 function_decl|;
 end_function_decl

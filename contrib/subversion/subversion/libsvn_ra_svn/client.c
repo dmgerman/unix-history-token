@@ -147,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_subr_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../libsvn_ra/ra_loader.h"
 end_include
 
@@ -3022,7 +3028,9 @@ name|char
 modifier|*
 name|ra_svn_get_description
 parameter_list|(
-name|void
+name|apr_pool_t
+modifier|*
+name|pool
 parameter_list|)
 block|{
 return|return
@@ -13052,12 +13060,14 @@ block|}
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_ver_check_list
+name|svn_ver_check_list2
 argument_list|(
 name|svn_ra_svn_version
 argument_list|()
 argument_list|,
 name|checklist
+argument_list|,
+name|svn_ver_equal
 argument_list|)
 argument_list|)
 expr_stmt|;

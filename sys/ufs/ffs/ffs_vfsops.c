@@ -6552,6 +6552,13 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|MOUNTEDSOFTDEP
+argument_list|(
+name|mp
+argument_list|)
+condition|)
 name|softdep_unmount
 argument_list|(
 name|mp
@@ -8347,7 +8354,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * We must promote to an exclusive lock for vnode creation.  This 	 * can happen if lookup is passed LOCKSHARED.  	 */
+comment|/* 	 * We must promote to an exclusive lock for vnode creation.  This 	 * can happen if lookup is passed LOCKSHARED. 	 */
 if|if
 condition|(
 operator|(
@@ -9578,11 +9585,12 @@ name|time_second
 expr_stmt|;
 if|if
 condition|(
-name|fs
+name|MOUNTEDSOFTDEP
+argument_list|(
+name|ump
 operator|->
-name|fs_flags
-operator|&
-name|FS_DOSOFTDEP
+name|um_mountp
+argument_list|)
 condition|)
 name|softdep_setup_sbupdate
 argument_list|(
@@ -10832,8 +10840,18 @@ directive|ifdef
 name|DDB
 end_ifdef
 
-begin_function
-specifier|static
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOFTUPDATES
+end_ifdef
+
+begin_comment
+comment|/* defined in ffs_softdep.c */
+end_comment
+
+begin_function_decl
+specifier|extern
 name|void
 name|db_print_ffs
 parameter_list|(
@@ -10842,46 +10860,8 @@ name|ufsmount
 modifier|*
 name|ump
 parameter_list|)
-block|{
-name|db_printf
-argument_list|(
-literal|"mp %p %s devvp %p fs %p su_wl %d su_deps %d su_req %d\n"
-argument_list|,
-name|ump
-operator|->
-name|um_mountp
-argument_list|,
-name|ump
-operator|->
-name|um_mountp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntonname
-argument_list|,
-name|ump
-operator|->
-name|um_devvp
-argument_list|,
-name|ump
-operator|->
-name|um_fs
-argument_list|,
-name|ump
-operator|->
-name|softdep_on_worklist
-argument_list|,
-name|ump
-operator|->
-name|softdep_deps
-argument_list|,
-name|ump
-operator|->
-name|softdep_req
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_macro
 name|DB_SHOW_COMMAND
@@ -10964,6 +10944,15 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOFTUPDATES */
+end_comment
 
 begin_endif
 endif|#

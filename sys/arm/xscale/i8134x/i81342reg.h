@@ -323,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|IOP34X_ADMA_NSE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -518,7 +518,7 @@ begin_define
 define|#
 directive|define
 name|SMC_SDBR_BASEADDR_MASK
-value|((1<< 27) | (1<< 28) | (1<< 29) | (1<< 30) \     				| (1<< 31))
+value|((1<< 27) | (1<< 28) | (1<< 29) | (1<< 30) \     				| (1U<< 31))
 end_define
 
 begin_define
@@ -569,7 +569,7 @@ begin_define
 define|#
 directive|define
 name|SMC_SBSR_BANK_SZ_MASK
-value|((1<< 27) | (1<< 28) | (1<< 29) | (1<< 30) \     				| (1<< 31))
+value|((1<< 27) | (1<< 28) | (1<< 29) | (1<< 30) \     				| (1U<< 31))
 end_define
 
 begin_comment
@@ -1096,7 +1096,7 @@ begin_define
 define|#
 directive|define
 name|ATUX_CORE_RST
-value|((1<< 30) | (1<< 31))
+value|((1<< 30) | (1U<< 31))
 end_define
 
 begin_comment
@@ -1692,7 +1692,7 @@ begin_define
 define|#
 directive|define
 name|ATU_OUMBAR_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

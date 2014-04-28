@@ -266,16 +266,6 @@ parameter_list|)
 value|(((x) + (a) - 1)& ~((a) - 1))
 end_define
 
-begin_define
-define|#
-directive|define
-name|ARRAY_SIZE
-parameter_list|(
-name|x
-parameter_list|)
-value|(sizeof(x) / sizeof((x)[0]))
-end_define
-
 begin_comment
 comment|/* Data blobs */
 end_comment
@@ -636,7 +626,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|bool
 name|data_is_one_string
 parameter_list|(
 name|struct
@@ -672,6 +662,9 @@ begin_struct
 struct|struct
 name|label
 block|{
+name|bool
+name|deleted
+decl_stmt|;
 name|char
 modifier|*
 name|label
@@ -689,6 +682,9 @@ begin_struct
 struct|struct
 name|property
 block|{
+name|bool
+name|deleted
+decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -715,6 +711,9 @@ begin_struct
 struct|struct
 name|node
 block|{
+name|bool
+name|deleted
+decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -766,7 +765,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|for_each_label
+name|for_each_label_withdel
 parameter_list|(
 name|l0
 parameter_list|,
@@ -779,7 +778,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|for_each_property
+name|for_each_label
+parameter_list|(
+name|l0
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|for_each_label_withdel(l0, l) \ 		if (!(l)->deleted)
+end_define
+
+begin_define
+define|#
+directive|define
+name|for_each_property_withdel
 parameter_list|(
 name|n
 parameter_list|,
@@ -792,7 +804,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|for_each_child
+name|for_each_property
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|for_each_property_withdel(n, p) \ 		if (!(p)->deleted)
+end_define
+
+begin_define
+define|#
+directive|define
+name|for_each_child_withdel
 parameter_list|(
 name|n
 parameter_list|,
@@ -800,6 +825,19 @@ name|c
 parameter_list|)
 define|\
 value|for ((c) = (n)->children; (c); (c) = (c)->next_sibling)
+end_define
+
+begin_define
+define|#
+directive|define
+name|for_each_child
+parameter_list|(
+name|n
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|for_each_child_withdel(n, c) \ 		if (!(c)->deleted)
 end_define
 
 begin_function_decl
@@ -820,6 +858,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|delete_labels
+parameter_list|(
+name|struct
+name|label
+modifier|*
+modifier|*
+name|labels
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|property
 modifier|*
@@ -832,6 +883,19 @@ parameter_list|,
 name|struct
 name|data
 name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|property
+modifier|*
+name|build_property_delete
+parameter_list|(
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -884,6 +948,17 @@ name|struct
 name|node
 modifier|*
 name|children
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|node
+modifier|*
+name|build_node_delete
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -963,6 +1038,34 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|delete_property_by_name
+parameter_list|(
+name|struct
+name|node
+modifier|*
+name|node
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|delete_property
+parameter_list|(
+name|struct
+name|property
+modifier|*
+name|prop
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|add_child
 parameter_list|(
 name|struct
@@ -974,6 +1077,34 @@ name|struct
 name|node
 modifier|*
 name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|delete_node_by_name
+parameter_list|(
+name|struct
+name|node
+modifier|*
+name|parent
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|delete_node
+parameter_list|(
+name|struct
+name|node
+modifier|*
+name|node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1362,7 +1493,7 @@ begin_function_decl
 name|void
 name|process_checks
 parameter_list|(
-name|int
+name|bool
 name|force
 parameter_list|,
 name|struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1999-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1999-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,25 +16,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|<term.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<tic.h>
 end_include
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: name_match.c,v 1.17 2008/08/03 19:49:33 tom Exp $"
+literal|"$Id: name_match.c,v 1.23 2013/05/25 20:20:08 tom Exp $"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/*  *	_nc_first_name(char *names)  *  *	Extract the primary name from a compiled entry.  */
-end_comment
 
 begin_define
 define|#
@@ -42,6 +32,86 @@ directive|define
 name|FirstName
 value|_nc_globals.first_name
 end_define
+
+begin_if
+if|#
+directive|if
+name|NCURSES_USE_TERMCAP
+operator|&&
+name|NCURSES_XNAMES
+end_if
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|skip_index
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|_nc_syntax
+operator|==
+name|SYN_TERMCAP
+operator|)
+operator|&&
+name|_nc_user_definable
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|bar
+init|=
+name|strchr
+argument_list|(
+name|name
+argument_list|,
+literal|'|'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|bar
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|bar
+operator|-
+name|name
+operator|)
+operator|==
+literal|2
+condition|)
+name|name
+operator|=
+name|bar
+operator|+
+literal|1
+expr_stmt|;
+block|}
+return|return
+name|name
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Get the primary name from the given name list.  For terminfo, this is the  * first name.  For termcap, this may be the second name, if the first one  * happens to be two characters.  */
+end_comment
 
 begin_macro
 name|NCURSES_EXPORT
@@ -56,10 +126,6 @@ argument_list|(
 argument|const char *const sp
 argument_list|)
 end_macro
-
-begin_comment
-comment|/* get the first name from the given name list */
-end_comment
 
 begin_block
 block|{
@@ -82,11 +148,13 @@ name|FirstName
 operator|!=
 literal|0
 condition|)
+block|{
 name|FreeAndNull
 argument_list|(
 name|FirstName
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 endif|#
@@ -116,6 +184,27 @@ operator|!=
 literal|0
 condition|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|src
+init|=
+name|sp
+decl_stmt|;
+if|#
+directive|if
+name|NCURSES_USE_TERMCAP
+operator|&&
+name|NCURSES_XNAMES
+name|src
+operator|=
+name|skip_index
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|n
@@ -138,7 +227,7 @@ index|[
 name|n
 index|]
 operator|=
-name|sp
+name|src
 index|[
 name|n
 index|]
@@ -175,7 +264,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	int _nc_name_match(namelist, name, delim)  *  *	Is the given name matched in namelist?  */
+comment|/*  * Is the given name matched in namelist?  */
 end_comment
 
 begin_macro

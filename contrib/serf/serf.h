@@ -1575,7 +1575,7 @@ value|3
 define|#
 directive|define
 name|SERF_PATCH_VERSION
-value|0
+value|4
 comment|/* Version number string */
 define|#
 directive|define

@@ -690,6 +690,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|usb_bus_reset_async_locked
+parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+name|bus
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if

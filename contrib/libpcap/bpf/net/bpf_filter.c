@@ -906,12 +906,14 @@ parameter_list|,
 name|buflen
 parameter_list|)
 specifier|register
+specifier|const
 name|struct
 name|bpf_insn
 modifier|*
 name|pc
 decl_stmt|;
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|p

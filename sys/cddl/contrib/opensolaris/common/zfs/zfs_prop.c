@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -738,6 +738,41 @@ name|NULL
 block|}
 block|}
 decl_stmt|;
+specifier|static
+name|zprop_index_t
+name|volmode_table
+index|[]
+init|=
+block|{
+block|{
+literal|"default"
+block|,
+name|ZFS_VOLMODE_DEFAULT
+block|}
+block|,
+block|{
+literal|"geom"
+block|,
+name|ZFS_VOLMODE_GEOM
+block|}
+block|,
+block|{
+literal|"dev"
+block|,
+name|ZFS_VOLMODE_DEV
+block|}
+block|,
+block|{
+literal|"none"
+block|,
+name|ZFS_VOLMODE_NONE
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+decl_stmt|;
 comment|/* inherit index properties */
 name|zprop_register_index
 argument_list|(
@@ -966,6 +1001,29 @@ argument_list|,
 literal|"LOGBIAS"
 argument_list|,
 name|logbias_table
+argument_list|)
+expr_stmt|;
+name|zprop_register_index
+argument_list|(
+name|ZFS_PROP_VOLMODE
+argument_list|,
+literal|"volmode"
+argument_list|,
+name|ZFS_VOLMODE_DEFAULT
+argument_list|,
+name|PROP_INHERIT
+argument_list|,
+name|ZFS_TYPE_FILESYSTEM
+operator||
+name|ZFS_TYPE_SNAPSHOT
+operator||
+name|ZFS_TYPE_VOLUME
+argument_list|,
+literal|"default | geom | dev | none"
+argument_list|,
+literal|"VOLMODE"
+argument_list|,
+name|volmode_table
 argument_list|)
 expr_stmt|;
 comment|/* inherit index (boolean) properties */
@@ -1379,8 +1437,10 @@ argument_list|,
 name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 argument_list|,
-literal|"filesystem | volume | snapshot"
+literal|"filesystem | volume | snapshot | bookmark"
 argument_list|,
 literal|"TYPE"
 argument_list|)
@@ -1758,6 +1818,78 @@ argument_list|,
 literal|"REFRESERV"
 argument_list|)
 expr_stmt|;
+name|zprop_register_number
+argument_list|(
+name|ZFS_PROP_FILESYSTEM_LIMIT
+argument_list|,
+literal|"filesystem_limit"
+argument_list|,
+name|UINT64_MAX
+argument_list|,
+name|PROP_DEFAULT
+argument_list|,
+name|ZFS_TYPE_FILESYSTEM
+argument_list|,
+literal|"<count> | none"
+argument_list|,
+literal|"FSLIMIT"
+argument_list|)
+expr_stmt|;
+name|zprop_register_number
+argument_list|(
+name|ZFS_PROP_SNAPSHOT_LIMIT
+argument_list|,
+literal|"snapshot_limit"
+argument_list|,
+name|UINT64_MAX
+argument_list|,
+name|PROP_DEFAULT
+argument_list|,
+name|ZFS_TYPE_FILESYSTEM
+operator||
+name|ZFS_TYPE_VOLUME
+argument_list|,
+literal|"<count> | none"
+argument_list|,
+literal|"SSLIMIT"
+argument_list|)
+expr_stmt|;
+name|zprop_register_number
+argument_list|(
+name|ZFS_PROP_FILESYSTEM_COUNT
+argument_list|,
+literal|"filesystem_count"
+argument_list|,
+name|UINT64_MAX
+argument_list|,
+name|PROP_DEFAULT
+argument_list|,
+name|ZFS_TYPE_FILESYSTEM
+argument_list|,
+literal|"<count>"
+argument_list|,
+literal|"FSCOUNT"
+argument_list|)
+expr_stmt|;
+name|zprop_register_number
+argument_list|(
+name|ZFS_PROP_SNAPSHOT_COUNT
+argument_list|,
+literal|"snapshot_count"
+argument_list|,
+name|UINT64_MAX
+argument_list|,
+name|PROP_DEFAULT
+argument_list|,
+name|ZFS_TYPE_FILESYSTEM
+operator||
+name|ZFS_TYPE_VOLUME
+argument_list|,
+literal|"<count>"
+argument_list|,
+literal|"SSCOUNT"
+argument_list|)
+expr_stmt|;
 comment|/* inherit number properties */
 name|zprop_register_number
 argument_list|(
@@ -1788,6 +1920,8 @@ argument_list|,
 name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 argument_list|,
 literal|"CREATETXG"
 argument_list|)
@@ -1818,6 +1952,8 @@ argument_list|,
 name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 argument_list|,
 literal|"NAME"
 argument_list|)
@@ -1863,6 +1999,8 @@ argument_list|,
 name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 argument_list|,
 literal|"GUID"
 argument_list|)
@@ -1943,6 +2081,8 @@ argument_list|,
 name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
+operator||
+name|ZFS_TYPE_BOOKMARK
 argument_list|,
 literal|"<date>"
 argument_list|,

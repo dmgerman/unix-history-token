@@ -194,6 +194,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/uuid.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -213,6 +219,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -566,10 +578,10 @@ name|physmem
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 	 * The correct thing here would be: 	 * 	memfree = cnt.v_free_count * PAGE_SIZE; 	memused = memtotal - memfree; 	 * 	 * but it might mislead linux binaries into thinking there 	 * is very little memory left, so we cheat and tell them that 	 * all memory that isn't wired down is free. 	 */
+comment|/* 	 * The correct thing here would be: 	 * 	memfree = vm_cnt.v_free_count * PAGE_SIZE; 	memused = memtotal - memfree; 	 * 	 * but it might mislead linux binaries into thinking there 	 * is very little memory left, so we cheat and tell them that 	 * all memory that isn't wired down is free. 	 */
 name|memused
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 operator|*
@@ -667,7 +679,7 @@ literal|0
 expr_stmt|;
 name|cached
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|*
@@ -2061,27 +2073,27 @@ literal|"intr %u\n"
 literal|"ctxt %u\n"
 literal|"btime %lld\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_vnodepgsin
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_vnodepgsout
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_swappgsin
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_swappgsout
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_intr
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_swtch
 argument_list|,
@@ -5153,59 +5165,83 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%7lu %7lu %4lu %4lu %4lu %5lu %10lu %9lu "
+literal|"%7ju %7ju %4ju %4ju %4lu %5lu %10lu %9ju "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_ibytes
 argument_list|,
 comment|/* rx_bytes */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_ipackets
 argument_list|,
 comment|/* rx_packets */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_ierrors
 argument_list|,
 comment|/* rx_errors */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_iqdrops
 argument_list|,
-comment|/* rx_dropped + 					 * rx_missed_errors */
+comment|/* rx_dropped + 							 * rx_missed_errors */
 literal|0UL
 argument_list|,
 comment|/* rx_fifo_errors */
 literal|0UL
 argument_list|,
-comment|/* rx_length_errors + 					 * rx_over_errors + 		    			 * rx_crc_errors + 					 * rx_frame_errors */
+comment|/* rx_length_errors + 							 * rx_over_errors + 							 * rx_crc_errors + 							 * rx_frame_errors */
 literal|0UL
 argument_list|,
 comment|/* rx_compressed */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_imcasts
 argument_list|)
 expr_stmt|;
-comment|/* multicast, XXX-BZ rx only? */
+comment|/* multicast, 							 * XXX-BZ rx only? */
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%8lu %7lu %4lu %4lu %4lu %5lu %7lu %10lu\n"
+literal|"%8ju %7ju %4ju %4lu %4lu %5ju %7lu %10lu\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_obytes
 argument_list|,
 comment|/* tx_bytes */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_opackets
 argument_list|,
 comment|/* tx_packets */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_oerrors
@@ -5217,6 +5253,9 @@ comment|/* tx_dropped */
 literal|0UL
 argument_list|,
 comment|/* tx_fifo_errors */
+operator|(
+name|uintmax_t
+operator|)
 name|ifp
 operator|->
 name|if_collisions
@@ -5224,7 +5263,7 @@ argument_list|,
 comment|/* collisions */
 literal|0UL
 argument_list|,
-comment|/* tx_carrier_errors + 					 * tx_aborted_errors + 					 * tx_window_errors + 					 * tx_heartbeat_errors */
+comment|/* tx_carrier_errors + 							 * tx_aborted_errors + 							 * tx_window_errors + 							 * tx_heartbeat_errors*/
 literal|0UL
 argument_list|)
 expr_stmt|;
@@ -5728,6 +5767,53 @@ argument_list|(
 name|sb
 argument_list|,
 literal|"unknown"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Filler function for proc/sys/kernel/random/uuid  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|linprocfs_douuid
+parameter_list|(
+name|PFS_FILL_ARGS
+parameter_list|)
+block|{
+name|struct
+name|uuid
+name|uuid
+decl_stmt|;
+name|kern_uuidgen
+argument_list|(
+operator|&
+name|uuid
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|sbuf_printf_uuid
+argument_list|(
+name|sb
+argument_list|,
+operator|&
+name|uuid
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6470,6 +6556,42 @@ literal|"sem"
 argument_list|,
 operator|&
 name|linprocfs_dosem
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|PFS_RD
+argument_list|)
+expr_stmt|;
+comment|/* /proc/sys/kernel/random/... */
+name|dir
+operator|=
+name|pfs_create_dir
+argument_list|(
+name|dir
+argument_list|,
+literal|"random"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|pfs_create_file
+argument_list|(
+name|dir
+argument_list|,
+literal|"uuid"
+argument_list|,
+operator|&
+name|linprocfs_douuid
 argument_list|,
 name|NULL
 argument_list|,

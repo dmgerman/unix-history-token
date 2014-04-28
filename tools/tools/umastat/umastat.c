@@ -480,9 +480,21 @@ index|[]
 init|=
 block|{
 block|{
-name|UMA_ZFLAG_PRIVALLOC
+name|UMA_ZFLAG_MULTI
 block|,
-literal|"privalloc"
+literal|"multi"
+block|}
+block|,
+block|{
+name|UMA_ZFLAG_DRAINING
+block|,
+literal|"draining"
+block|}
+block|,
+block|{
+name|UMA_ZFLAG_BUCKET
+block|,
+literal|"bucket"
 block|}
 block|,
 block|{
@@ -573,6 +585,30 @@ block|{
 name|UMA_ZONE_MAXBUCKET
 block|,
 literal|"maxbucket"
+block|}
+block|,
+block|{
+name|UMA_ZONE_CACHESPREAD
+block|,
+literal|"cachespread"
+block|}
+block|,
+block|{
+name|UMA_ZONE_VTOSLAB
+block|,
+literal|"vtoslab"
+block|}
+block|,
+block|{
+name|UMA_ZONE_NODUMP
+block|,
+literal|"nodump"
+block|}
+block|,
+block|{
+name|UMA_ZONE_PCPU
+block|,
+literal|"pcpu"
 block|}
 block|, }
 struct|;
@@ -1845,15 +1881,6 @@ argument_list|(
 literal|"Keg {\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"  uk_recurse = %d\n"
-argument_list|,
-name|kz
-operator|.
-name|uk_recurse
-argument_list|)
-expr_stmt|;
 name|uma_print_keg_align
 argument_list|(
 operator|&
@@ -1882,6 +1909,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"  uk_reserve = %d\n"
+argument_list|,
+name|kz
+operator|.
+name|uk_reserve
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"  uk_size = %d\n"
 argument_list|,
 name|kz
@@ -1905,6 +1941,15 @@ argument_list|,
 name|kz
 operator|.
 name|uk_maxpages
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  uk_slabsize = %d\n"
+argument_list|,
+name|kz
+operator|.
+name|uk_slabsize
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2148,7 +2193,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    uz_allocs = %ju;\n"
+literal|"    uz_allocs = %lu;\n"
 argument_list|,
 name|uzp_userspace
 operator|->
@@ -2157,7 +2202,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    uz_frees = %ju;\n"
+literal|"    uz_frees = %lu;\n"
 argument_list|,
 name|uzp_userspace
 operator|->
@@ -2166,7 +2211,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    uz_fails = %ju;\n"
+literal|"    uz_fails = %lu;\n"
 argument_list|,
 name|uzp_userspace
 operator|->
@@ -2175,11 +2220,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    uz_fills = %u;\n"
+literal|"    uz_sleeps = %ju;\n"
 argument_list|,
 name|uzp_userspace
 operator|->
-name|uz_fills
+name|uz_sleeps
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2202,27 +2247,9 @@ operator|)
 operator|&
 name|uzp_userspace
 operator|->
-name|uz_full_bucket
+name|uz_buckets
 argument_list|,
-literal|"uz_full_bucket"
-argument_list|,
-literal|"    "
-argument_list|)
-expr_stmt|;
-name|uma_print_bucketlist
-argument_list|(
-name|kvm
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|uzp_userspace
-operator|->
-name|uz_free_bucket
-argument_list|,
-literal|"uz_free_bucket"
+literal|"uz_buckets"
 argument_list|,
 literal|"    "
 argument_list|)

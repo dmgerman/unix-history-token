@@ -2047,7 +2047,7 @@ begin_define
 define|#
 directive|define
 name|E1000_ETQF_QUEUE_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -2175,7 +2175,7 @@ begin_define
 define|#
 directive|define
 name|E1000_DTXSWC_VMDQ_LOOPBACK_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment

@@ -9,6 +9,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|monitor
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ssh_sandbox
 struct_decl|;
 end_struct_decl
@@ -19,7 +25,9 @@ name|ssh_sandbox
 modifier|*
 name|ssh_sandbox_init
 parameter_list|(
-name|void
+name|struct
+name|monitor
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

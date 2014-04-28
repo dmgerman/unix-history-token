@@ -536,22 +536,6 @@ break|break;
 case|case
 name|MII_MEDIACHG
 case|:
-comment|/* 		 * If the interface is not up, don't do anything. 		 */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-break|break;
 name|mii_phy_setmedia
 argument_list|(
 name|sc

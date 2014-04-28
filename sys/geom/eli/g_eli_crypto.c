@@ -1285,6 +1285,16 @@ name|k_ipad
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|k_ipad
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|k_ipad
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1413,6 +1423,17 @@ operator|&
 name|lctx
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|lctx
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lctx
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* mdsize == 0 means "Give me the whole hash!" */
 if|if
 condition|(
@@ -1431,6 +1452,16 @@ argument_list|,
 name|md
 argument_list|,
 name|mdsize
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|digest
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|digest
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

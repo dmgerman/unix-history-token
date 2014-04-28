@@ -256,6 +256,15 @@ name|PassManagerBase
 operator|&
 name|PM
 argument_list|)
+block|;
+name|virtual
+name|void
+name|addAnalysisPasses
+argument_list|(
+name|PassManagerBase
+operator|&
+name|PM
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

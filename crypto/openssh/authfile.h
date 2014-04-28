@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.h,v 1.16 2011/05/04 21:15:29 djm Exp $ */
+comment|/* $OpenBSD: authfile.h,v 1.17 2013/12/06 13:34:54 markus Exp $ */
 end_comment
 
 begin_comment
@@ -37,6 +37,14 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -401,24 +401,6 @@ begin_comment
 comment|/* Book-E */
 end_comment
 
-begin_comment
-comment|/*  * Kernel CCSRBAR location. We make this the reset location.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CCSRBAR_VA
-value|0xfef00000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CCSRBAR_SIZE
-value|0x00100000
-end_define
-
 begin_define
 define|#
 directive|define
@@ -442,6 +424,13 @@ define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
 value|0xf8000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_SAFE_KERNEL_ADDRESS
+value|VM_MAX_KERNEL_ADDRESS
 end_define
 
 begin_endif
@@ -651,29 +640,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VM_KMEM_SIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VM_KMEM_SIZE
-value|(12 * 1024 * 1024)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
+begin_comment
+comment|/*  * How many physical pages per kmem arena virtual page.  */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -693,6 +662,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Optional floor (in bytes) on the size of the kmem arena.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_MIN
+value|(12 * 1024 * 1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Optional ceiling (in bytes) on the size of the kmem arena: 40% of the  * usable KVA space.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -703,17 +698,8 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_MAX
-value|0x1c0000000
+value|((VM_MAX_SAFE_KERNEL_ADDRESS - \     VM_MIN_KERNEL_ADDRESS + 1) * 2 / 5)
 end_define
-
-begin_comment
-comment|/* 7 GB */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

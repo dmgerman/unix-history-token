@@ -124,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|BLOCKIF_MAXREQ
-value|16
+value|32
 end_define
 
 begin_enum
@@ -1076,8 +1076,10 @@ expr_stmt|;
 block|}
 name|bc
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1103,19 +1105,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|memset
-argument_list|(
-name|bc
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|bc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bc
 operator|->
 name|bc_magic
@@ -1249,9 +1238,7 @@ argument_list|(
 name|tname
 argument_list|)
 argument_list|,
-literal|"%s blk-%s"
-argument_list|,
-name|vmname
+literal|"blk-%s"
 argument_list|,
 name|ident
 argument_list|)

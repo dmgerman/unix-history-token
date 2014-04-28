@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ipfw.h"
 end_include
 
@@ -27,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|"opt_ipsec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_kdtrace.h"
 end_include
 
 begin_include
@@ -141,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -463,10 +469,6 @@ name|int
 name|mtu
 decl_stmt|;
 name|int
-name|n
-decl_stmt|;
-comment|/* scratchpad */
-name|int
 name|error
 init|=
 literal|0
@@ -620,38 +622,18 @@ name|ro_rt
 operator|==
 name|NULL
 condition|)
-block|{
-name|struct
-name|flentry
-modifier|*
-name|fle
-decl_stmt|;
-comment|/* 		 * The flow table returns route entries valid for up to 30 		 * seconds; we rely on the remainder of ip_output() taking no 		 * longer than that long for the stability of ro_rt. The 		 * flow ID assignment must have happened before this point. 		 */
-name|fle
-operator|=
-name|flowtable_lookup_mbuf
+operator|(
+name|void
+operator|)
+name|flowtable_lookup
 argument_list|(
-name|V_ip_ft
+name|AF_INET
 argument_list|,
 name|m
-argument_list|,
-name|AF_INET
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fle
-operator|!=
-name|NULL
-condition|)
-name|flow_to_route
-argument_list|(
-name|fle
 argument_list|,
 name|ro
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -772,6 +754,7 @@ operator|<<
 literal|2
 expr_stmt|;
 block|}
+comment|/* 	 * dst/gw handling: 	 * 	 * dst can be rewritten but always points to&ro->ro_dst. 	 * gw is readonly but can point either to dst OR rt_gateway, 	 * therefore we need restore gw if we're redoing lookup. 	 */
 name|gw
 operator|=
 name|dst
@@ -792,7 +775,7 @@ name|ia
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * If there is a cached route, 	 * check that it is to the same destination 	 * and is still up.  If not, free it and try again. 	 * The address family should also be checked in case of sharing the 	 * cache with IPv6. 	 */
+comment|/* 	 * If there is a cached route, check that it is to the same 	 * destination and is still up.  If not, free it and try again. 	 * The address family should also be checked in case of sharing 	 * the cache with IPv6. 	 */
 name|rte
 operator|=
 name|ro
@@ -862,6 +845,10 @@ expr_stmt|;
 name|rte
 operator|=
 name|NULL
+expr_stmt|;
+name|gw
+operator|=
+name|dst
 expr_stmt|;
 block|}
 if|if
@@ -949,6 +936,8 @@ name|sintosa
 argument_list|(
 name|dst
 argument_list|)
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 operator|)
@@ -1023,6 +1012,8 @@ name|sintosa
 argument_list|(
 name|dst
 argument_list|)
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 operator|)
@@ -1042,6 +1033,8 @@ name|dst
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 operator|)
@@ -1270,26 +1263,20 @@ operator|->
 name|rt_ifa
 argument_list|)
 expr_stmt|;
-name|ifa_ref
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|rte
 operator|->
 name|rt_ifp
 expr_stmt|;
+name|counter_u64_add
+argument_list|(
 name|rte
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_pksent
-operator|++
+name|rt_pksent
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1366,9 +1353,7 @@ if|if
 condition|(
 name|rte
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 operator|>
 name|ifp
 operator|->
@@ -1376,9 +1361,7 @@ name|if_mtu
 condition|)
 name|rte
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 operator|=
 name|ifp
 operator|->
@@ -1388,9 +1371,7 @@ name|mtu
 operator|=
 name|rte
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 expr_stmt|;
 block|}
 else|else
@@ -1454,6 +1435,11 @@ operator|->
 name|m_flags
 operator||=
 name|M_MCAST
+expr_stmt|;
+comment|/* 		 * IP destination address is multicast.  Make sure "gw" 		 * still points to the address in "ro".  (It may have been 		 * changed to point to a gateway address, above.) 		 */
+name|gw
+operator|=
+name|dst
 expr_stmt|;
 comment|/* 		 * See if the caller provided any multicast options 		 */
 if|if
@@ -1731,73 +1717,24 @@ name|sin_addr
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Both in the SMP world, pre-emption world if_transmit() world, 	 * the following code doesn't really function as intended any further. 	 * 	 * + There can and will be multiple CPUs running this code path 	 *   in parallel, and we do no lock holding when checking the 	 *   queue depth; 	 * + And since other threads can be running concurrently, even if 	 *   we do pass this check, another thread may queue some frames 	 *   before this thread does and it will end up partially or fully 	 *   failing to send anyway; 	 * + if_transmit() based drivers don't necessarily set ifq_len 	 *   at all. 	 * 	 * This should be replaced with a method of pushing an entire list 	 * of fragment frames to the driver and have the driver decide 	 * whether it can queue or not queue the entire set. 	 */
+if|#
+directive|if
+literal|0
 comment|/* 	 * Verify that we have any chance at all of being able to queue the 	 * packet or packet fragments, unless ALTQ is enabled on the given 	 * interface in which case packetdrop should be done by queueing. 	 */
-name|n
-operator|=
-name|ip_len
-operator|/
-name|mtu
-operator|+
-literal|1
-expr_stmt|;
+block|n = ip_len / mtu + 1;
 comment|/* how many fragments ? */
-if|if
-condition|(
+block|if (
 ifdef|#
 directive|ifdef
 name|ALTQ
-operator|(
-operator|!
-name|ALTQ_IS_ENABLED
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-operator|)
-operator|&&
+block|(!ALTQ_IS_ENABLED(&ifp->if_snd))&&
 endif|#
 directive|endif
 comment|/* ALTQ */
-operator|(
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_len
-operator|+
-name|n
-operator|)
-operator|>=
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_maxlen
-condition|)
-block|{
-name|error
-operator|=
-name|ENOBUFS
-expr_stmt|;
-name|IPSTAT_INC
-argument_list|(
-name|ips_odropped
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_drops
-operator|+=
-name|n
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
+block|(ifp->if_snd.ifq_len + n)>= ifp->if_snd.ifq_maxlen ) { 		error = ENOBUFS; 		IPSTAT_INC(ips_odropped); 		ifp->if_snd.ifq_drops += n; 		goto bad; 	}
+endif|#
+directive|endif
 comment|/* 	 * Look for broadcast address and 	 * verify user is allowed to send 	 * such a packet. 	 */
 if|if
 condition|(
@@ -2158,26 +2095,10 @@ name|done
 goto|;
 block|}
 else|else
-block|{
-if|if
-condition|(
-name|ia
-operator|!=
-name|NULL
-condition|)
-name|ifa_free
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
-argument_list|)
-expr_stmt|;
 goto|goto
 name|again
 goto|;
 comment|/* Redo the routing table lookup. */
-block|}
 block|}
 comment|/* See if local, if yes, send it to netisr with IP_FASTFWD_OURS. */
 if|if
@@ -2345,20 +2266,6 @@ argument_list|(
 name|m
 argument_list|,
 name|fwd_tag
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ia
-operator|!=
-name|NULL
-condition|)
-name|ifa_free
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2622,12 +2529,14 @@ name|csum_flags
 operator|&
 name|CSUM_TSO
 condition|)
+name|counter_u64_add
+argument_list|(
 name|ia
 operator|->
 name|ia_ifa
 operator|.
-name|if_opackets
-operator|+=
+name|ifa_opackets
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
@@ -2639,26 +2548,34 @@ operator|->
 name|m_pkthdr
 operator|.
 name|tso_segsz
+argument_list|)
 expr_stmt|;
 else|else
+name|counter_u64_add
+argument_list|(
 name|ia
 operator|->
 name|ia_ifa
 operator|.
-name|if_opackets
-operator|++
+name|ifa_opackets
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
+name|counter_u64_add
+argument_list|(
 name|ia
 operator|->
 name|ia_ifa
 operator|.
-name|if_obytes
-operator|+=
+name|ifa_obytes
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -2834,24 +2751,31 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|counter_u64_add
+argument_list|(
 name|ia
 operator|->
 name|ia_ifa
 operator|.
-name|if_opackets
-operator|++
+name|ifa_opackets
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
+name|counter_u64_add
+argument_list|(
 name|ia
 operator|->
 name|ia_ifa
 operator|.
-name|if_obytes
-operator|+=
+name|ifa_obytes
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * Reset layer specific mbuf flags 			 * to avoid confusing upper layers. 			 */
@@ -2932,20 +2856,6 @@ condition|)
 name|RO_RTFREE
 argument_list|(
 name|ro
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ia
-operator|!=
-name|NULL
-condition|)
-name|ifa_free
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
 argument_list|)
 expr_stmt|;
 return|return
@@ -3160,7 +3070,7 @@ operator|>
 name|PAGE_SIZE
 condition|)
 block|{
-comment|/*  		 * Fragment large datagrams such that each segment  		 * contains a multiple of PAGE_SIZE amount of data,  		 * plus headers. This enables a receiver to perform  		 * page-flipping zero-copy optimizations. 		 * 		 * XXX When does this help given that sender and receiver 		 * could have different page sizes, and also mtu could 		 * be less than the receiver's page size ? 		 */
+comment|/* 		 * Fragment large datagrams such that each segment 		 * contains a multiple of PAGE_SIZE amount of data, 		 * plus headers. This enables a receiver to perform 		 * page-flipping zero-copy optimizations. 		 * 		 * XXX When does this help given that sender and receiver 		 * could have different page sizes, and also mtu could 		 * be less than the receiver's page size ? 		 */
 name|int
 name|newlen
 decl_stmt|;
@@ -3203,7 +3113,7 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-comment|/* 		 * firstlen (off - hlen) must be aligned on an  		 * 8-byte boundary 		 */
+comment|/* 		 * firstlen (off - hlen) must be aligned on an 		 * 8-byte boundary 		 */
 if|if
 condition|(
 name|off

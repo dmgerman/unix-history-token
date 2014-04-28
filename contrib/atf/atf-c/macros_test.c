@@ -454,6 +454,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|H_CHECK_MATCH_HEAD_NAME
+parameter_list|(
+name|id
+parameter_list|)
+value|ATF_TC_HEAD_NAME(h_check_match_ ## id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_CHECK_MATCH_BODY_NAME
+parameter_list|(
+name|id
+parameter_list|)
+value|ATF_TC_BODY_NAME(h_check_match_ ## id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_CHECK_MATCH
+parameter_list|(
+name|id
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+define|\
+value|H_DEF(check_match_ ## id, ATF_CHECK_MATCH(v1, v2))
+end_define
+
+begin_define
+define|#
+directive|define
 name|H_CHECK_EQ_MSG_HEAD_NAME
 parameter_list|(
 name|id
@@ -527,6 +562,45 @@ name|msg
 parameter_list|)
 define|\
 value|H_DEF(check_streq_msg_ ## id, ATF_CHECK_STREQ_MSG(v1, v2, msg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_CHECK_MATCH_MSG_HEAD_NAME
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|ATF_TC_HEAD_NAME(h_check_match_msg_ ## id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_CHECK_MATCH_MSG_BODY_NAME
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|ATF_TC_BODY_NAME(h_check_match_msg_ ## id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_CHECK_MATCH_MSG
+parameter_list|(
+name|id
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|,
+name|msg
+parameter_list|)
+define|\
+value|H_DEF(check_match_msg_ ## id, ATF_CHECK_MATCH_MSG(v1, v2, msg))
 end_define
 
 begin_define
@@ -705,6 +779,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|H_REQUIRE_MATCH_HEAD_NAME
+parameter_list|(
+name|id
+parameter_list|)
+value|ATF_TC_HEAD_NAME(h_require_match_ ## id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_REQUIRE_MATCH_BODY_NAME
+parameter_list|(
+name|id
+parameter_list|)
+value|ATF_TC_BODY_NAME(h_require_match_ ## id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_REQUIRE_MATCH
+parameter_list|(
+name|id
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+define|\
+value|H_DEF(require_match_ ## id, ATF_REQUIRE_MATCH(v1, v2))
+end_define
+
+begin_define
+define|#
+directive|define
 name|H_REQUIRE_EQ_MSG_HEAD_NAME
 parameter_list|(
 name|id
@@ -778,6 +887,45 @@ name|msg
 parameter_list|)
 define|\
 value|H_DEF(require_streq_msg_ ## id, ATF_REQUIRE_STREQ_MSG(v1, v2, msg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_REQUIRE_MATCH_MSG_HEAD_NAME
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|ATF_TC_HEAD_NAME(h_require_match_msg_ ## id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_REQUIRE_MATCH_MSG_BODY_NAME
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|ATF_TC_BODY_NAME(h_require_match_msg_ ## id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_REQUIRE_MATCH_MSG
+parameter_list|(
+name|id
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|,
+name|msg
+parameter_list|)
+define|\
+value|H_DEF(require_match_msg_ ## id, ATF_REQUIRE_MATCH_MSG(v1, v2, msg))
 end_define
 
 begin_define
@@ -1159,11 +1307,11 @@ condition|)
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
-argument_list|,
 literal|"^passed"
+argument_list|,
+literal|"result"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1172,21 +1320,21 @@ else|else
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
-argument_list|,
 literal|"^failed"
+argument_list|,
+literal|"result"
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"error"
-argument_list|,
 literal|"macros_test.c:[0-9]+: %s$"
+argument_list|,
+literal|"error"
 argument_list|,
 name|t
 operator|->
@@ -1412,11 +1560,11 @@ condition|)
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
-argument_list|,
 literal|"^passed"
+argument_list|,
+literal|"result"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1433,12 +1581,11 @@ else|else
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
+literal|"^failed: .*macros_test.c:[0-9]+: %s$"
 argument_list|,
-literal|"^failed: .*macros_test.c:[0-9]+: "
-literal|"%s$"
+literal|"result"
 argument_list|,
 name|t
 operator|->
@@ -1774,11 +1921,11 @@ condition|)
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
-argument_list|,
 literal|"^passed"
+argument_list|,
+literal|"result"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1787,22 +1934,22 @@ else|else
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
-argument_list|,
 literal|"^failed"
+argument_list|,
+literal|"result"
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"error"
-argument_list|,
 literal|"Check failed: .*"
 literal|"macros_test.c:[0-9]+: %s$"
+argument_list|,
+literal|"error"
 argument_list|,
 name|t
 operator|->
@@ -1985,11 +2132,11 @@ condition|)
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
-argument_list|,
 literal|"^passed"
+argument_list|,
+literal|"result"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1998,22 +2145,22 @@ else|else
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
-argument_list|,
 literal|"^failed"
+argument_list|,
+literal|"result"
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|ATF_CHECK
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"error"
-argument_list|,
 literal|"Check failed: .*"
 literal|"macros_test.c:[0-9]+: %s$"
+argument_list|,
+literal|"error"
 argument_list|,
 name|t
 operator|->
@@ -2504,7 +2651,6 @@ end_define
 
 begin_decl_stmt
 specifier|const
-specifier|const
 name|char
 modifier|*
 name|check_streq_var1
@@ -2514,7 +2660,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|const
 name|char
 modifier|*
@@ -2765,6 +2910,214 @@ name|CHECK_STREQ_VAR1
 literal|" != "
 name|CHECK_STREQ_VAR2
 literal|"\\)"
+block|,
+name|false
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|""
+block|,
+name|false
+block|}
+block|}
+decl_stmt|;
+name|do_check_eq_tests
+argument_list|(
+name|tests
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/* ---------------------------------------------------------------------  * Test cases for the ATF_CHECK_MATCH and ATF_CHECK_MATCH_MSG macros.  * --------------------------------------------------------------------- */
+end_comment
+
+begin_expr_stmt
+name|H_CHECK_MATCH
+argument_list|(
+name|yes
+argument_list|,
+literal|"hello [a-z]+"
+argument_list|,
+literal|"abc hello world"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|H_CHECK_MATCH
+argument_list|(
+name|no
+argument_list|,
+literal|"hello [a-z]+"
+argument_list|,
+literal|"abc hello WORLD"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|H_CHECK_MATCH_MSG
+argument_list|(
+name|yes
+argument_list|,
+literal|"hello [a-z]+"
+argument_list|,
+literal|"abc hello world"
+argument_list|,
+literal|"lowercase"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|H_CHECK_MATCH_MSG
+argument_list|(
+name|no
+argument_list|,
+literal|"hello [a-z]+"
+argument_list|,
+literal|"abc hello WORLD"
+argument_list|,
+literal|"uppercase"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ATF_TC
+argument_list|(
+name|check_match
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_HEAD
+argument_list|(
+argument|check_match
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"descr"
+argument_list|,
+literal|"Tests the ATF_CHECK_MATCH and "
+literal|"ATF_CHECK_MATCH_MSG macros"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|check_match
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|struct
+name|check_eq_test
+name|tests
+index|[]
+init|=
+block|{
+block|{
+name|H_CHECK_MATCH_HEAD_NAME
+argument_list|(
+name|yes
+argument_list|)
+block|,
+name|H_CHECK_MATCH_BODY_NAME
+argument_list|(
+name|yes
+argument_list|)
+block|,
+literal|"hello [a-z]+"
+block|,
+literal|"abc hello world"
+block|,
+literal|""
+block|,
+name|true
+block|}
+block|,
+block|{
+name|H_CHECK_MATCH_HEAD_NAME
+argument_list|(
+name|no
+argument_list|)
+block|,
+name|H_CHECK_MATCH_BODY_NAME
+argument_list|(
+name|no
+argument_list|)
+block|,
+literal|"hello [a-z]+"
+block|,
+literal|"abc hello WORLD"
+block|,
+literal|"'hello \\[a-z\\]\\+' not matched in 'abc hello WORLD'"
+block|,
+name|false
+block|}
+block|,
+block|{
+name|H_CHECK_MATCH_MSG_HEAD_NAME
+argument_list|(
+name|yes
+argument_list|)
+block|,
+name|H_CHECK_MATCH_MSG_BODY_NAME
+argument_list|(
+name|yes
+argument_list|)
+block|,
+literal|"hello [a-z]+"
+block|,
+literal|"abc hello world"
+block|,
+literal|""
+block|,
+name|true
+block|}
+block|,
+block|{
+name|H_CHECK_MATCH_MSG_HEAD_NAME
+argument_list|(
+name|no
+argument_list|)
+block|,
+name|H_CHECK_MATCH_MSG_BODY_NAME
+argument_list|(
+name|no
+argument_list|)
+block|,
+literal|"hello [a-z]+"
+block|,
+literal|"abc hello WORLD"
+block|,
+literal|"'hello \\[a-z\\]\\+' not matched in 'abc hello WORLD': uppercase"
 block|,
 name|false
 block|}
@@ -3070,11 +3423,11 @@ condition|)
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
-argument_list|,
 literal|"^passed"
+argument_list|,
+literal|"result"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3091,12 +3444,11 @@ else|else
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
+literal|"^failed: .*macros_test.c:[0-9]+: %s$"
 argument_list|,
-literal|"^failed: .*macros_test.c:[0-9]+: "
-literal|"%s$"
+literal|"result"
 argument_list|,
 name|t
 operator|->
@@ -3286,11 +3638,11 @@ condition|)
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
-argument_list|,
 literal|"^passed"
+argument_list|,
+literal|"result"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3307,12 +3659,12 @@ else|else
 block|{
 name|ATF_REQUIRE
 argument_list|(
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
-argument_list|,
 literal|"^failed: .*macros_test.c"
 literal|":[0-9]+: %s$"
+argument_list|,
+literal|"result"
 argument_list|,
 name|t
 operator|->
@@ -3818,7 +4170,6 @@ end_define
 
 begin_decl_stmt
 specifier|const
-specifier|const
 name|char
 modifier|*
 name|require_streq_var1
@@ -3828,7 +4179,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|const
 name|char
 modifier|*
@@ -4079,6 +4429,214 @@ name|REQUIRE_STREQ_VAR1
 literal|" != "
 name|REQUIRE_STREQ_VAR2
 literal|"\\)"
+block|,
+name|false
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|""
+block|,
+name|false
+block|}
+block|}
+decl_stmt|;
+name|do_require_eq_tests
+argument_list|(
+name|tests
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/* ---------------------------------------------------------------------  * Test cases for the ATF_REQUIRE_MATCH and ATF_REQUIRE_MATCH_MSG macros.  * --------------------------------------------------------------------- */
+end_comment
+
+begin_expr_stmt
+name|H_REQUIRE_MATCH
+argument_list|(
+name|yes
+argument_list|,
+literal|"hello [a-z]+"
+argument_list|,
+literal|"abc hello world"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|H_REQUIRE_MATCH
+argument_list|(
+name|no
+argument_list|,
+literal|"hello [a-z]+"
+argument_list|,
+literal|"abc hello WORLD"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|H_REQUIRE_MATCH_MSG
+argument_list|(
+name|yes
+argument_list|,
+literal|"hello [a-z]+"
+argument_list|,
+literal|"abc hello world"
+argument_list|,
+literal|"lowercase"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|H_REQUIRE_MATCH_MSG
+argument_list|(
+name|no
+argument_list|,
+literal|"hello [a-z]+"
+argument_list|,
+literal|"abc hello WORLD"
+argument_list|,
+literal|"uppercase"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ATF_TC
+argument_list|(
+name|require_match
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_HEAD
+argument_list|(
+argument|require_match
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"descr"
+argument_list|,
+literal|"Tests the ATF_REQUIRE_MATCH and "
+literal|"ATF_REQUIRE_MATCH_MSG macros"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|require_match
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|struct
+name|require_eq_test
+name|tests
+index|[]
+init|=
+block|{
+block|{
+name|H_REQUIRE_MATCH_HEAD_NAME
+argument_list|(
+name|yes
+argument_list|)
+block|,
+name|H_REQUIRE_MATCH_BODY_NAME
+argument_list|(
+name|yes
+argument_list|)
+block|,
+literal|"hello [a-z]+"
+block|,
+literal|"abc hello world"
+block|,
+literal|""
+block|,
+name|true
+block|}
+block|,
+block|{
+name|H_REQUIRE_MATCH_HEAD_NAME
+argument_list|(
+name|no
+argument_list|)
+block|,
+name|H_REQUIRE_MATCH_BODY_NAME
+argument_list|(
+name|no
+argument_list|)
+block|,
+literal|"hello [a-z]+"
+block|,
+literal|"abc hello WORLD"
+block|,
+literal|"'hello \\[a-z\\]\\+' not matched in 'abc hello WORLD'"
+block|,
+name|false
+block|}
+block|,
+block|{
+name|H_REQUIRE_MATCH_MSG_HEAD_NAME
+argument_list|(
+name|yes
+argument_list|)
+block|,
+name|H_REQUIRE_MATCH_MSG_BODY_NAME
+argument_list|(
+name|yes
+argument_list|)
+block|,
+literal|"hello [a-z]+"
+block|,
+literal|"abc hello world"
+block|,
+literal|""
+block|,
+name|true
+block|}
+block|,
+block|{
+name|H_REQUIRE_MATCH_MSG_HEAD_NAME
+argument_list|(
+name|no
+argument_list|)
+block|,
+name|H_REQUIRE_MATCH_MSG_BODY_NAME
+argument_list|(
+name|no
+argument_list|)
+block|,
+literal|"hello [a-z]+"
+block|,
+literal|"abc hello WORLD"
+block|,
+literal|"'hello \\[a-z\\]\\+' not matched in 'abc hello WORLD': uppercase"
 block|,
 name|false
 block|}
@@ -4415,12 +4973,11 @@ block|{
 name|bool
 name|matched
 init|=
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"result"
+literal|"^failed: .*macros_test.c:[0-9]+: %s$"
 argument_list|,
-literal|"^failed: .*macros_test.c:[0-9]+: "
-literal|"%s$"
+literal|"result"
 argument_list|,
 name|t
 operator|->
@@ -4440,12 +4997,12 @@ block|{
 name|bool
 name|matched
 init|=
-name|grep_file
+name|atf_utils_grep_file
 argument_list|(
-literal|"error"
-argument_list|,
 literal|"Check failed: .*"
 literal|"macros_test.c:[0-9]+: %s$"
+argument_list|,
+literal|"error"
 argument_list|,
 name|t
 operator|->
@@ -4495,20 +5052,96 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|BUILD_TC_FAIL
+name|ATF_TC
 argument_list|(
 name|detect_unused_tests
-argument_list|,
-literal|"unused_test.c"
-argument_list|,
-literal|"Tests that defining an unused test case raises a warning (and thus "
-literal|"an error)"
-argument_list|,
-literal|"Build of unused_test.c passed; unused test cases are not properly "
-literal|"detected"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_macro
+name|ATF_TC_HEAD
+argument_list|(
+argument|detect_unused_tests
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"descr"
+argument_list|,
+literal|"Tests that defining an unused test case raises a "
+literal|"warning (and thus an error)"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|detect_unused_tests
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+specifier|const
+name|char
+modifier|*
+name|validate_compiler
+init|=
+literal|"struct test_struct { int dummy; };\n"
+literal|"#define define_unused static struct test_struct unused\n"
+literal|"define_unused;\n"
+decl_stmt|;
+name|atf_utils_create_file
+argument_list|(
+literal|"compiler_test.c"
+argument_list|,
+literal|"%s"
+argument_list|,
+name|validate_compiler
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|build_check_c_o
+argument_list|(
+literal|"compiler_test.c"
+argument_list|)
+condition|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"Compiler does not raise a warning on an unused "
+literal|"static global variable declared by a macro"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|build_check_c_o_srcdir
+argument_list|(
+name|tc
+argument_list|,
+literal|"unused_test.c"
+argument_list|)
+condition|)
+name|atf_tc_fail
+argument_list|(
+literal|"Build of unused_test.c passed; unused test cases are "
+literal|"not properly detected"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/* ---------------------------------------------------------------------  * Main.  * --------------------------------------------------------------------- */
@@ -4555,6 +5188,13 @@ name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
 argument_list|,
+name|check_match
+argument_list|)
+expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|require
 argument_list|)
 expr_stmt|;
@@ -4577,6 +5217,13 @@ argument_list|(
 name|tp
 argument_list|,
 name|require_errno
+argument_list|)
+expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|require_match
 argument_list|)
 expr_stmt|;
 name|ATF_TP_ADD_TC

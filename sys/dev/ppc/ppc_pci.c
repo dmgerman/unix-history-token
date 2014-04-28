@@ -306,6 +306,14 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0xc1101415
+block|,
+literal|"Oxford Semiconductor OXPCIe952 Parallel port"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x98059710
 block|,
 literal|"NetMos NM9805 1284 Printer port"

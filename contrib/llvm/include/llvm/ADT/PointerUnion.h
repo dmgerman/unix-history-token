@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -297,7 +303,7 @@ comment|///    P = (int*)0;
 comment|///    printf("%d %d", P.is<int*>(), P.is<float*>());  // prints "1 0"
 comment|///    X = P.get<int*>();     // ok.
 comment|///    Y = P.get<float*>();   // runtime assertion failure.
-comment|///    Z = P.get<double*>();  // runtime assertion failure (regardless of tag)
+comment|///    Z = P.get<double*>();  // compile time failure.
 comment|///    P = (float*)0;
 comment|///    Y = P.get<float*>();   // ok.
 comment|///    X = P.get<int*>();     // runtime assertion failure.
@@ -423,6 +429,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -826,8 +833,98 @@ return|;
 block|}
 end_function
 
-begin_comment
+begin_expr_stmt
 unit|};
+name|template
+operator|<
+name|typename
+name|PT1
+operator|,
+name|typename
+name|PT2
+operator|>
+specifier|static
+name|bool
+name|operator
+operator|==
+operator|(
+name|PointerUnion
+operator|<
+name|PT1
+operator|,
+name|PT2
+operator|>
+name|lhs
+operator|,
+name|PointerUnion
+operator|<
+name|PT1
+operator|,
+name|PT2
+operator|>
+name|rhs
+operator|)
+block|{
+return|return
+name|lhs
+operator|.
+name|getOpaqueValue
+argument_list|()
+operator|==
+name|rhs
+operator|.
+name|getOpaqueValue
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|PT1
+operator|,
+name|typename
+name|PT2
+operator|>
+specifier|static
+name|bool
+name|operator
+operator|!=
+operator|(
+name|PointerUnion
+operator|<
+name|PT1
+operator|,
+name|PT2
+operator|>
+name|lhs
+operator|,
+name|PointerUnion
+operator|<
+name|PT1
+operator|,
+name|PT2
+operator|>
+name|rhs
+operator|)
+block|{
+return|return
+name|lhs
+operator|.
+name|getOpaqueValue
+argument_list|()
+operator|!=
+name|rhs
+operator|.
+name|getOpaqueValue
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|// Teach SmallPtrSet that PointerUnion is "basically a pointer", that has
 end_comment
 
@@ -1237,6 +1334,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -1884,6 +1982,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()

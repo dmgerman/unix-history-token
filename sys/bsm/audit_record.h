@@ -18,21 +18,17 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
 begin_comment
 comment|/* struct timeval */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/caprights.h>
-end_include
-
-begin_comment
-comment|/* cap_rights_t */
 end_comment
 
 begin_comment
@@ -893,6 +889,37 @@ struct_decl|struct
 name|vnode_au_info
 struct_decl|;
 end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_CAP_RIGHTS_T_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_CAP_RIGHTS_T_DECLARED
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|cap_rights
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|cap_rights
+name|cap_rights_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#

@@ -26,7 +26,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -74,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
+file|<net/if_media.h>
 end_include
 
 begin_include

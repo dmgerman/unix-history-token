@@ -173,6 +173,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -10911,7 +10917,7 @@ modifier|*
 name|m
 parameter_list|,
 name|int
-name|off
+name|iphlen
 parameter_list|)
 block|{
 name|struct
@@ -10945,14 +10951,11 @@ name|ip
 operator|->
 name|ip_len
 argument_list|)
+operator|-
+name|iphlen
 decl_stmt|;
 name|int
 name|ip_tos
-decl_stmt|;
-name|int
-name|iphlen
-init|=
-name|off
 decl_stmt|;
 comment|/* Keep statistics */
 name|PIMSTAT_INC
@@ -11023,19 +11026,11 @@ expr_stmt|;
 comment|/*      * Get the IP and PIM headers in contiguous memory, and      * possibly the PIM REGISTER header.      */
 if|if
 condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
-operator|||
 name|m
 operator|->
 name|m_len
 operator|<
 name|minlen
-operator|)
 operator|&&
 operator|(
 name|m

@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1688,9 +1682,7 @@ name|ro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_expire
+name|rt_expire
 operator|==
 literal|0
 operator|||
@@ -1700,9 +1692,7 @@ name|ro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_expire
+name|rt_expire
 operator|)
 condition|)
 block|{
@@ -1798,9 +1788,7 @@ name|ro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 condition|)
 name|mtu
 operator|=
@@ -1810,9 +1798,7 @@ name|ro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 argument_list|,
 name|ifp
 operator|->
@@ -2107,14 +2093,16 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|counter_u64_add
+argument_list|(
 name|ro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_pksent
-operator|++
+name|rt_pksent
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|IPSTAT_INC
 argument_list|(

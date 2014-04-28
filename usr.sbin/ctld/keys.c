@@ -146,13 +146,7 @@ name|pdu_data_len
 operator|==
 literal|0
 condition|)
-name|log_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"protocol error: empty data segment"
-argument_list|)
-expr_stmt|;
+return|return;
 if|if
 condition|(
 name|pdu

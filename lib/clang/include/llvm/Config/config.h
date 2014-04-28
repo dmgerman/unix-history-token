@@ -34,6 +34,14 @@ file|<osreldate.h>
 end_include
 
 begin_comment
+comment|/* Define if building universal (internal helper macro) */
+end_comment
+
+begin_comment
+comment|/* #undef AC_APPLE_UNIVERSAL_BUILD */
+end_comment
+
+begin_comment
 comment|/* Bug report URL. */
 end_comment
 
@@ -90,6 +98,17 @@ begin_define
 define|#
 directive|define
 name|ENABLE_BACKTRACES
+value|1
+end_define
+
+begin_comment
+comment|/* Define to enable crash handling overrides */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_CRASH_OVERRIDES
 value|1
 end_define
 
@@ -186,30 +205,11 @@ comment|/* #undef HAVE_ARGZ_STRINGIFY */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<assert.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ASSERT_H
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `backtrace' function. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_BACKTRACE */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `bcopy' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_BCOPY */
 end_comment
 
 begin_comment
@@ -259,17 +259,6 @@ define|#
 directive|define
 name|HAVE_CRASHREPORTER_INFO
 value|0
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the<ctype.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_CTYPE_H
-value|1
 end_define
 
 begin_comment
@@ -336,14 +325,6 @@ comment|/* #undef HAVE_DLD */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<dld.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DLD_H */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `dlerror' function. */
 end_comment
 
@@ -375,14 +356,6 @@ directive|define
 name|HAVE_DLOPEN
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the<dl.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DL_H */
-end_comment
 
 begin_comment
 comment|/* Define if the dot program is available */
@@ -542,6 +515,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `futimens' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FUTIMENS */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `futimes' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FUTIMES
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `getcwd' function. */
 end_comment
 
@@ -610,14 +602,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_GV */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `index' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_INDEX */
 end_comment
 
 begin_comment
@@ -744,6 +728,14 @@ comment|/* #undef HAVE_LIBPTHREAD */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `shell32' library (-lshell32). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBSHELL32 */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `udis86' library (-ludis86). */
 end_comment
 
@@ -763,18 +755,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<limits.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LIMITS_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you can use -Wl,-export-dynamic. */
+comment|/* Define if you can use -rdynamic. */
 end_comment
 
 begin_define
@@ -920,28 +901,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_MALLOC_ZONE_STATISTICS */
 end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `memcpy' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MEMCPY
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `memmove' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MEMMOVE
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<memory.h> header file. */
@@ -1172,14 +1131,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `rindex' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_RINDEX */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `rintf' function. */
 end_comment
 
@@ -1320,17 +1271,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<stdio.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STDIO_H
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the<stdlib.h> header file. */
 end_comment
 
@@ -1360,39 +1300,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STD_ISNAN_IN_CMATH
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `strchr' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRCHR
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `strcmp' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRCMP
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `strdup' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRDUP
 value|1
 end_define
 
@@ -1437,17 +1344,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRING_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `strrchr' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRRCHR
 value|1
 end_define
 
@@ -1501,14 +1397,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_SYS_DIR_H */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the<sys/dl.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_SYS_DL_H */
 end_comment
 
 begin_comment
@@ -1619,6 +1507,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if the setupterm() function is supported this platform. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TERMINFO
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<termios.h> header file. */
 end_comment
 
@@ -1687,14 +1586,6 @@ comment|/* #undef HAVE_VALGRIND_VALGRIND_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<windows.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_WINDOWS_H */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `writev' function. */
 end_comment
 
@@ -1706,11 +1597,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the xdot.py program is available */
+comment|/* Define if the xdot program is available */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_XDOT_PY */
+comment|/* #undef HAVE_XDOT */
 end_comment
 
 begin_comment
@@ -1977,14 +1868,6 @@ comment|/* #undef LLVM_INFODIR */
 end_comment
 
 begin_comment
-comment|/* Installation directory for libraries */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_LIBDIR */
-end_comment
-
-begin_comment
 comment|/* Installation directory for man pages */
 end_comment
 
@@ -2153,11 +2036,11 @@ comment|/* #undef LLVM_PATH_TWOPI */
 end_comment
 
 begin_comment
-comment|/* Define to path to xdot.py program if found or 'echo xdot.py' otherwise */
+comment|/* Define to path to xdot program if found or 'echo xdot' otherwise */
 end_comment
 
 begin_comment
-comment|/* #undef LLVM_PATH_XDOT_PY */
+comment|/* #undef LLVM_PATH_XDOT */
 end_comment
 
 begin_comment
@@ -2212,7 +2095,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|3
+value|4
 end_define
 
 begin_comment
@@ -2235,17 +2118,6 @@ define|#
 directive|define
 name|LTDL_OBJDIR
 value|".libs/"
-end_define
-
-begin_comment
-comment|/* Define to the name of the environment variable that determines the dynamic    library search path. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LTDL_SHLIBPATH_VAR
-value|"LD_LIBRARY_PATH"
 end_define
 
 begin_comment
@@ -2316,7 +2188,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.3"
+value|"LLVM 3.4"
 end_define
 
 begin_comment
@@ -2331,6 +2203,14 @@ value|"llvm"
 end_define
 
 begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_comment
+comment|/* #undef PACKAGE_URL */
+end_comment
+
+begin_comment
 comment|/* Define to the version of this package. */
 end_comment
 
@@ -2338,7 +2218,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.3"
+value|"3.4"
 end_define
 
 begin_comment
@@ -2408,6 +2288,61 @@ end_comment
 begin_comment
 comment|/* #undef WIN32_ELMCB_PCSTR */
 end_comment
+
+begin_comment
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|AC_APPLE_UNIVERSAL_BUILD
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+name|__BIG_ENDIAN__
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WORDS_BIGENDIAN
+end_ifndef
+
+begin_comment
+comment|/* #  undef WORDS_BIGENDIAN */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to empty if `const' does not conform to ANSI C. */

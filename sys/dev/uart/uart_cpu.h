@@ -33,6 +33,12 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|uart_softc
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Low-level operations for use by console and/or debug port support.  */
 end_comment
@@ -143,12 +149,6 @@ begin_comment
 comment|/*  * Console and debug port device info.  */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|uart_softc
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|uart_devinfo
@@ -227,6 +227,12 @@ name|mtx
 modifier|*
 name|hwmtx
 decl_stmt|;
+name|struct
+name|uart_softc
+modifier|*
+name|sc
+decl_stmt|;
+comment|/* valid only from start of attach */
 block|}
 struct|;
 end_struct
@@ -738,6 +744,30 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|uart_grab
+parameter_list|(
+name|struct
+name|uart_devinfo
+modifier|*
+name|di
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uart_ungrab
+parameter_list|(
+name|struct
+name|uart_devinfo
+modifier|*
+name|di
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

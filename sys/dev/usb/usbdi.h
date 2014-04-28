@@ -593,6 +593,7 @@ name|usb_endpoint_ss_comp_descriptor
 modifier|*
 name|ecomp
 decl_stmt|;
+specifier|const
 name|struct
 name|usb_pipe_methods
 modifier|*
@@ -2723,6 +2724,18 @@ end_function_decl
 begin_function_decl
 name|uint16_t
 name|usbd_xfer_get_timestamp
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+name|usbd_xfer_maxp_was_clamped
 parameter_list|(
 name|struct
 name|usb_xfer

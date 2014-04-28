@@ -82,7 +82,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|SDT_PROBE_DEFINE(a, \     b, c, d, d)
+value|SDT_PROBE_DEFINE(a, \     b, c, d)
 end_define
 
 begin_define
@@ -114,7 +114,7 @@ name|d
 parameter_list|,
 name|e
 parameter_list|)
-value|SDT_PROBE_DEFINE1(a, \     b, c, d, d, e)
+value|SDT_PROBE_DEFINE1(a, \     b, c, d, e)
 end_define
 
 begin_define
@@ -150,7 +150,7 @@ name|e
 parameter_list|,
 name|f
 parameter_list|)
-value|SDT_PROBE_DEFINE2(a, \     b, c, d, d, e, f)
+value|SDT_PROBE_DEFINE2(a, \     b, c, d, e, f)
 end_define
 
 begin_define
@@ -190,7 +190,7 @@ name|f
 parameter_list|,
 name|g
 parameter_list|)
-value|SDT_PROBE_DEFINE3(a, \     b, c, d, d, e, f, g)
+value|SDT_PROBE_DEFINE3(a, \     b, c, d, e, f, g)
 end_define
 
 begin_define
@@ -234,7 +234,7 @@ name|g
 parameter_list|,
 name|h
 parameter_list|)
-value|SDT_PROBE_DEFINE4(a, \     b, c, d, d, e, f, g, h)
+value|SDT_PROBE_DEFINE4(a, \     b, c, d, e, f, g, h)
 end_define
 
 begin_define
@@ -283,7 +283,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE5(a, b, c, d, d, e, f, g, h, i)
+value|SDT_PROBE_DEFINE5(a, b, c, d, e, f, g, h, i)
 end_define
 
 begin_define

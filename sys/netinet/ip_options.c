@@ -899,11 +899,14 @@ name|SA
 operator|)
 operator|&
 name|ipaddr
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|ia
 operator|=
 operator|(
@@ -918,8 +921,11 @@ operator|&
 name|ipaddr
 argument_list|,
 literal|0
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 comment|/* XXX MRT 0 for routing */

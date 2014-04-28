@@ -1340,7 +1340,7 @@ literal|16
 operator|)
 operator||
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -1405,7 +1405,7 @@ literal|16
 operator|)
 operator||
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

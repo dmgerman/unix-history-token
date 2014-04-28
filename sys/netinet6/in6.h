@@ -2705,42 +2705,86 @@ comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_comment
-comment|/*  * Redefinition of mbuf flags  */
+comment|/*  * Since both netinet/ and netinet6/ call into netipsec/ and netpfil/,  * the protocol specific mbuf flags are shared between them.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FASTFWD_OURS
+value|M_PROTO1
+end_define
+
+begin_comment
+comment|/* changed dst to local */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_IP6_NEXTHOP
+value|M_PROTO2
+end_define
+
+begin_comment
+comment|/* explicit ip nexthop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_IP_NEXTHOP
+value|M_PROTO2
+end_define
+
+begin_comment
+comment|/* explicit ip nexthop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SKIP_FIREWALL
+value|M_PROTO3
+end_define
+
+begin_comment
+comment|/* skip firewall processing */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|M_AUTHIPHDR
-value|M_PROTO2
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_DECRYPTED
-value|M_PROTO3
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_LOOP
 value|M_PROTO4
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_AUTHIPDGM
+name|M_DECRYPTED
 value|M_PROTO5
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_RTALERT_MLD
+name|M_LOOP
 value|M_PROTO6
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_AUTHIPDGM
+value|M_PROTO7
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_RTALERT_MLD
+value|M_PROTO8
 end_define
 
 begin_ifdef

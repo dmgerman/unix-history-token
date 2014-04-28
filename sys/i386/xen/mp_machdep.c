@@ -2497,11 +2497,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|smp_active
-operator|=
-literal|1
-expr_stmt|;
-comment|/* historic */
 block|}
 name|mtx_unlock_spin
 argument_list|(
@@ -5214,6 +5209,46 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
+comment|/*  * Handlers for TLB related IPIs  *  * On i386 Xen PV this are no-ops since this port doesn't support SMP.  */
+end_comment
+
+begin_function
+name|void
+name|invltlb_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|invlpg_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|invlrng_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|invlcache_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment

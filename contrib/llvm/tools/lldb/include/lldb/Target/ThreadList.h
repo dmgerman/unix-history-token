@@ -61,6 +61,12 @@ directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Iterable.h"
+end_include
+
 begin_comment
 comment|// FIXME: Currently this is a thread list with lots of functionality for use only by
 end_comment
@@ -145,6 +151,20 @@ operator|&
 name|thread_sp
 argument_list|)
 decl_stmt|;
+name|void
+name|InsertThread
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ThreadSP
+operator|&
+name|thread_sp
+argument_list|,
+name|uint32_t
+name|idx
+argument_list|)
+decl_stmt|;
 comment|// Return the selected thread if there is one.  Otherwise, return the thread
 comment|// selected at index 0.
 name|lldb
@@ -204,6 +224,44 @@ argument_list|,
 argument|bool can_update = true
 argument_list|)
 expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|ThreadSP
+operator|>
+name|collection
+expr_stmt|;
+typedef|typedef
+name|LockingAdaptedIterable
+operator|<
+name|collection
+operator|,
+name|lldb
+operator|::
+name|ThreadSP
+operator|,
+name|vector_adapter
+operator|>
+name|ThreadIterable
+expr_stmt|;
+name|ThreadIterable
+name|Threads
+parameter_list|()
+block|{
+return|return
+name|ThreadIterable
+argument_list|(
+name|m_threads
+argument_list|,
+name|GetMutex
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|lldb
 operator|::
 name|ThreadSP
@@ -364,17 +422,6 @@ name|tid_t
 name|tid
 argument_list|)
 decl_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb
-operator|::
-name|ThreadSP
-operator|>
-name|collection
-expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from Process can see and modify these
 comment|//------------------------------------------------------------------

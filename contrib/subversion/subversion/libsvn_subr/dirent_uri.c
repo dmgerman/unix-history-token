@@ -7578,6 +7578,25 @@ endif|#
 directive|endif
 comment|/* SVN_USE_DOS_PATHS */
 comment|/* Now validate the rest of the URI. */
+name|seg
+operator|=
+name|ptr
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|ptr
+operator|&&
+operator|(
+operator|*
+name|ptr
+operator|!=
+literal|'/'
+operator|)
+condition|)
+name|ptr
+operator|++
+expr_stmt|;
 while|while
 condition|(
 literal|1

@@ -533,6 +533,40 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* APPLE LOCAL begin blocks */
+end_comment
+
+begin_function
+name|void
+name|pp_c_caret
+parameter_list|(
+name|c_pretty_printer
+modifier|*
+name|pp
+parameter_list|)
+block|{
+name|pp_carret
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
+name|pp_base
+argument_list|(
+name|pp
+argument_list|)
+operator|->
+name|padding
+operator|=
+name|pp_none
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* APPLE LOCAL end blocks */
+end_comment
+
 begin_function
 name|void
 name|pp_c_arrow
@@ -995,6 +1029,24 @@ name|t
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* APPLE LOCAL begin blocks */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
+name|pp_c_caret
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
+name|pp_c_type_qualifier_list
+argument_list|(
+name|pp
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* APPLE LOCAL end blocks */
 comment|/* ??? This node is now in GENERIC and so shouldn't be here.  But 	 we'll fix that later.  */
 case|case
 name|DECL_EXPR
@@ -1419,6 +1471,10 @@ case|:
 case|case
 name|POINTER_TYPE
 case|:
+comment|/* APPLE LOCAL blocks */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
 block|{
 comment|/* Get the types-specifier of this type.  */
 name|tree
@@ -1735,6 +1791,7 @@ name|tree
 name|t
 parameter_list|)
 block|{
+comment|/* APPLE LOCAL begin blocks */
 if|if
 condition|(
 name|TREE_CODE
@@ -1743,7 +1800,15 @@ name|t
 argument_list|)
 operator|==
 name|POINTER_TYPE
+operator|||
+name|TREE_CODE
+argument_list|(
+name|t
+argument_list|)
+operator|==
+name|BLOCK_POINTER_TYPE
 condition|)
+comment|/* APPLE LOCAL end blocks */
 block|{
 if|if
 condition|(
@@ -1816,6 +1881,10 @@ condition|)
 block|{
 case|case
 name|POINTER_TYPE
+case|:
+comment|/* APPLE LOCAL blocks */
+case|case
+name|BLOCK_POINTER_TYPE
 case|:
 name|pp_abstract_declarator
 argument_list|(
@@ -2267,6 +2336,10 @@ name|ARRAY_TYPE
 case|:
 case|case
 name|POINTER_TYPE
+case|:
+comment|/* APPLE LOCAL blocks */
+case|case
+name|BLOCK_POINTER_TYPE
 case|:
 name|pp_abstract_declarator
 argument_list|(

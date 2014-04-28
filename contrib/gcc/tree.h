@@ -1083,6 +1083,12 @@ name|visited
 range|:
 literal|1
 decl_stmt|;
+comment|/* APPLE LOCAL "unavailable" attribute (Radar 2809697) --ilr */
+name|unsigned
+name|unavailable_flag
+range|:
+literal|1
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1091,7 +1097,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* The following table lists the uses of each of the above flags and    for which types of nodes they are defined.  Note that expressions    include decls.     addressable_flag:         TREE_ADDRESSABLE in 	   VAR_DECL, FUNCTION_DECL, FIELD_DECL, CONSTRUCTOR, LABEL_DECL, 	   ..._TYPE, IDENTIFIER_NODE. 	   In a STMT_EXPR, it means we want the result of the enclosed 	   expression.        CALL_EXPR_TAILCALL in CALL_EXPR        CASE_LOW_SEEN in CASE_LABEL_EXPR     static_flag:         TREE_STATIC in            VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, ADDR_EXPR        BINFO_VIRTUAL_P in            TREE_BINFO        TREE_CONSTANT_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST, VECTOR_CST        TREE_SYMBOL_REFERENCED in            IDENTIFIER_NODE        CLEANUP_EH_ONLY in            TARGET_EXPR, WITH_CLEANUP_EXPR        ASM_INPUT_P in            ASM_EXPR        EH_FILTER_MUST_NOT_THROW in EH_FILTER_EXPR        TYPE_REF_CAN_ALIAS_ALL in            POINTER_TYPE, REFERENCE_TYPE        CASE_HIGH_SEEN in CASE_LABEL_EXPR     public_flag:         TREE_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST, VECTOR_CST        TREE_PUBLIC in            VAR_DECL or FUNCTION_DECL or IDENTIFIER_NODE        ASM_VOLATILE_P in            ASM_EXPR        TYPE_CACHED_VALUES_P in           ..._TYPE        SAVE_EXPR_RESOLVED_P in 	  SAVE_EXPR        OMP_CLAUSE_LASTPRIVATE_FIRSTPRIVATE in 	  OMP_CLAUSE_LASTPRIVATE        OMP_CLAUSE_PRIVATE_DEBUG in 	  OMP_CLAUSE_PRIVATE     private_flag:         TREE_PRIVATE in            ..._DECL        CALL_EXPR_RETURN_SLOT_OPT in            CALL_EXPR        DECL_BY_REFERENCE in            PARM_DECL, RESULT_DECL        OMP_RETURN_NOWAIT in 	   OMP_RETURN        OMP_SECTION_LAST in 	   OMP_SECTION        OMP_PARALLEL_COMBINED in 	   OMP_PARALLEL     protected_flag:         TREE_PROTECTED in            BLOCK 	   ..._DECL        CALL_FROM_THUNK_P in            CALL_EXPR     side_effects_flag:         TREE_SIDE_EFFECTS in            all expressions 	   all decls 	   all constants         FORCED_LABEL in 	   LABEL_DECL     volatile_flag:         TREE_THIS_VOLATILE in            all expressions        TYPE_VOLATILE in            ..._TYPE     readonly_flag:         TREE_READONLY in            all expressions        TYPE_READONLY in            ..._TYPE     constant_flag:         TREE_CONSTANT in            all expressions 	   all decls 	   all constants        TYPE_SIZES_GIMPLIFIED            ..._TYPE     unsigned_flag:         TYPE_UNSIGNED in            all types        DECL_UNSIGNED in            all decls        BIT_FIELD_REF_UNSIGNED in            BIT_FIELD_REF     asm_written_flag:         TREE_ASM_WRITTEN in            VAR_DECL, FUNCTION_DECL, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE 	   BLOCK, SSA_NAME     used_flag:         TREE_USED in            expressions, IDENTIFIER_NODE     nothrow_flag:         TREE_NOTHROW in            CALL_EXPR, FUNCTION_DECL         TYPE_ALIGN_OK in 	   ..._TYPE         TREE_THIS_NOTRAP in           (ALIGN/MISALIGNED_)INDIRECT_REF, ARRAY_REF, ARRAY_RANGE_REF     deprecated_flag:  	TREE_DEPRECATED in 	   ..._DECL  	IDENTIFIER_TRANSPARENT_ALIAS in 	   IDENTIFIER_NODE     visited:     	Used in tree traversals to mark visited nodes.     invariant_flag:  	TREE_INVARIANT in 	    all expressions.     nowarning_flag:         TREE_NO_WARNING in            ... any expr or decl node */
+comment|/* The following table lists the uses of each of the above flags and    for which types of nodes they are defined.  Note that expressions    include decls.     addressable_flag:         TREE_ADDRESSABLE in 	   VAR_DECL, FUNCTION_DECL, FIELD_DECL, CONSTRUCTOR, LABEL_DECL, 	   ..._TYPE, IDENTIFIER_NODE. 	   In a STMT_EXPR, it means we want the result of the enclosed 	   expression.        CALL_EXPR_TAILCALL in CALL_EXPR        CASE_LOW_SEEN in CASE_LABEL_EXPR     static_flag:         TREE_STATIC in            VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, ADDR_EXPR        BINFO_VIRTUAL_P in            TREE_BINFO        TREE_CONSTANT_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST, VECTOR_CST        TREE_SYMBOL_REFERENCED in            IDENTIFIER_NODE        CLEANUP_EH_ONLY in            TARGET_EXPR, WITH_CLEANUP_EXPR        ASM_INPUT_P in            ASM_EXPR        EH_FILTER_MUST_NOT_THROW in EH_FILTER_EXPR        TYPE_REF_CAN_ALIAS_ALL in            POINTER_TYPE, REFERENCE_TYPE        CASE_HIGH_SEEN in CASE_LABEL_EXPR     public_flag:         TREE_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST, VECTOR_CST        TREE_PUBLIC in            VAR_DECL or FUNCTION_DECL or IDENTIFIER_NODE        ASM_VOLATILE_P in            ASM_EXPR        TYPE_CACHED_VALUES_P in           ..._TYPE        SAVE_EXPR_RESOLVED_P in 	  SAVE_EXPR        OMP_CLAUSE_LASTPRIVATE_FIRSTPRIVATE in 	  OMP_CLAUSE_LASTPRIVATE        OMP_CLAUSE_PRIVATE_DEBUG in 	  OMP_CLAUSE_PRIVATE     private_flag:         TREE_PRIVATE in            ..._DECL        CALL_EXPR_RETURN_SLOT_OPT in            CALL_EXPR        DECL_BY_REFERENCE in            PARM_DECL, RESULT_DECL        OMP_RETURN_NOWAIT in 	   OMP_RETURN        OMP_SECTION_LAST in 	   OMP_SECTION        OMP_PARALLEL_COMBINED in 	   OMP_PARALLEL     protected_flag:         TREE_PROTECTED in            BLOCK 	   ..._DECL        CALL_FROM_THUNK_P in            CALL_EXPR     side_effects_flag:         TREE_SIDE_EFFECTS in            all expressions 	   all decls 	   all constants         FORCED_LABEL in 	   LABEL_DECL     volatile_flag:         TREE_THIS_VOLATILE in            all expressions        TYPE_VOLATILE in            ..._TYPE     readonly_flag:         TREE_READONLY in            all expressions        TYPE_READONLY in            ..._TYPE     constant_flag:         TREE_CONSTANT in            all expressions 	   all decls 	   all constants        TYPE_SIZES_GIMPLIFIED            ..._TYPE     unsigned_flag:         TYPE_UNSIGNED in            all types        DECL_UNSIGNED in            all decls        BIT_FIELD_REF_UNSIGNED in            BIT_FIELD_REF     asm_written_flag:         TREE_ASM_WRITTEN in            VAR_DECL, FUNCTION_DECL, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE 	   BLOCK, SSA_NAME     used_flag:         TREE_USED in            expressions, IDENTIFIER_NODE     nothrow_flag:         TREE_NOTHROW in            CALL_EXPR, FUNCTION_DECL         TYPE_ALIGN_OK in 	   ..._TYPE         TREE_THIS_NOTRAP in           (ALIGN/MISALIGNED_)INDIRECT_REF, ARRAY_REF, ARRAY_RANGE_REF     deprecated_flag:  	TREE_DEPRECATED in 	   ..._DECL  	IDENTIFIER_TRANSPARENT_ALIAS in 	   IDENTIFIER_NODE     APPLE LOCAL begin "unavailable" attribute (Radar 2809697)    unavailable_flag:  	TREE_UNAVAILABLE in 	   ..._DECL    APPLE LOCAL end "unavailable" attribute (Radar 2809697)     visited:     	Used in tree traversals to mark visited nodes.     invariant_flag:  	TREE_INVARIANT in 	    all expressions.     nowarning_flag:         TREE_NO_WARNING in            ... any expr or decl node */
 end_comment
 
 begin_undef
@@ -2258,6 +2264,10 @@ parameter_list|)
 value|TREE_CHECK2 (T, FUNCTION_TYPE, METHOD_TYPE)
 end_define
 
+begin_comment
+comment|/* APPLE LOCAL blocks 5862465 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2265,7 +2275,7 @@ name|PTR_OR_REF_CHECK
 parameter_list|(
 name|T
 parameter_list|)
-value|TREE_CHECK2 (T, POINTER_TYPE, REFERENCE_TYPE)
+value|TREE_CHECK3 (T, POINTER_TYPE, REFERENCE_TYPE, BLOCK_POINTER_TYPE)
 end_define
 
 begin_define
@@ -2525,6 +2535,10 @@ begin_comment
 comment|/* Nonzero if TYPE represents a pointer or reference type.    (It should be renamed to INDIRECT_TYPE_P.)  Keep these checks in    ascending code order.  */
 end_comment
 
+begin_comment
+comment|/* APPLE LOCAL begin blocks 5862465 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2533,8 +2547,12 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(TREE_CODE (TYPE) == POINTER_TYPE || TREE_CODE (TYPE) == REFERENCE_TYPE)
+value|(TREE_CODE (TYPE) == POINTER_TYPE \    || TREE_CODE (TYPE) == REFERENCE_TYPE \    || TREE_CODE (TYPE) == BLOCK_POINTER_TYPE)
 end_define
+
+begin_comment
+comment|/* APPLE LOCAL end blocks 5862465 */
+end_comment
 
 begin_comment
 comment|/* Nonzero if this type is a complete type.  */
@@ -2757,6 +2775,21 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|(CST_CHECK (NODE)->common.public_flag)
+end_define
+
+begin_comment
+comment|/* TREE_OVERFLOW can only be true for EXPR of CONSTANT_CLASS_P. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TREE_OVERFLOW_P
+parameter_list|(
+name|EXPR
+parameter_list|)
+define|\
+value|(CONSTANT_CLASS_P (EXPR)&& TREE_OVERFLOW (EXPR))
 end_define
 
 begin_comment
@@ -3099,6 +3132,28 @@ parameter_list|)
 define|\
 value|((NODE)->common.deprecated_flag)
 end_define
+
+begin_comment
+comment|/* APPLE LOCAL begin "unavailable" attribute (Radar 2809697) */
+end_comment
+
+begin_comment
+comment|/* Nonzero in a IDENTIFIER_NODE if the use of the name is defined as a    unavailable feature by __attribute__((unavailable)).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TREE_UNAVAILABLE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->common.unavailable_flag)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end "unavailable" attribute (Radar 2809697) */
+end_comment
 
 begin_comment
 comment|/* Nonzero in an IDENTIFIER_NODE if the name is a local alias, whose    uses are to be substituted for uses of the TREE_CHAINed identifier.  */
@@ -6634,6 +6689,29 @@ define|\
 value|(TYPE_CHECK (NODE)->type.contains_placeholder_bits)
 end_define
 
+begin_comment
+comment|/* APPLE LOCAL begin radar 5811943 - Fix type of pointers to blocks  */
+end_comment
+
+begin_comment
+comment|/* Indicates that the struct type is a block struct, rather than    a 'normal' struct, i.e. one of its fields is a function that can    be called.  This uses the existing bit-field lang_flag_2 in the    struct tree_type, rather than creating a new bit field, as     lang_flag_2 is currently unused and we don't want to increase the     size of trees if we can avoid it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_BLOCK_IMPL_STRUCT
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TYPE_CHECK (NODE)->type.lang_flag_2)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end radar 5811943 - Fix type of pointers to Blocks  */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|die_struct
@@ -6728,6 +6806,9 @@ name|lang_flag_1
 range|:
 literal|1
 decl_stmt|;
+comment|/* APPLE LOCAL begin radar 5811943 - Fix type of pointers to Blocks  */
+comment|/* Since it is currently completely unused, and in the interest of      not making trees any bigger than they already are, lang_flag_2      in the tree_type struct will be used to indicate that a struct is a       block struct.  The macro used for these purposes is       TYPE_BLOCK_IMPL_STRUCT, rather than TYPE_LANG_FLAG_2, in order to make       its uses in the code more clear.  */
+comment|/* APPLE LOCAL end radar 5811943 - Fix type of pointers to Blocks  */
 name|unsigned
 name|lang_flag_2
 range|:
@@ -7731,7 +7812,7 @@ name|DECL_ALIGN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_COMMON_CHECK (NODE)->decl_common.u1.a.align)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.align)
 end_define
 
 begin_comment
@@ -7749,7 +7830,7 @@ value|(DECL_ALIGN (NODE) / BITS_PER_UNIT)
 end_define
 
 begin_comment
-comment|/* For FIELD_DECLs, off_align holds the number of low-order bits of    DECL_FIELD_OFFSET which are known to be always zero.    DECL_OFFSET_ALIGN thus returns the alignment that DECL_FIELD_OFFSET    has.  */
+comment|/* Set if the alignment of this DECL has been set by the user, for    example with an 'aligned' attribute.  */
 end_comment
 
 begin_define
@@ -7787,7 +7868,8 @@ name|DECL_FUNCTION_CODE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(FUNCTION_DECL_CHECK (NODE)->decl_common.u1.f)
+define|\
+value|(FUNCTION_DECL_CHECK (NODE)->function_decl.function_code)
 end_define
 
 begin_define
@@ -8237,46 +8319,25 @@ name|call_clobbered_flag
 range|:
 literal|1
 decl_stmt|;
-union|union
-name|tree_decl_u1
-block|{
-comment|/* In a FUNCTION_DECL for which DECL_BUILT_IN holds, this is        DECL_FUNCTION_CODE.  */
-name|enum
-name|built_in_function
-name|f
+comment|/* APPLE LOCAL duplicate decls in multiple files. */
+name|unsigned
+name|duplicate_decl
+range|:
+literal|1
 decl_stmt|;
-comment|/* In a FUNCTION_DECL for which DECL_BUILT_IN does not hold, this        is used by language-dependent code.  */
-name|HOST_WIDE_INT
-name|i
-decl_stmt|;
-comment|/* DECL_ALIGN and DECL_OFFSET_ALIGN.  (These are not used for        FUNCTION_DECLs).  */
-struct|struct
-name|tree_decl_u1_a
-block|{
 name|unsigned
 name|int
 name|align
 range|:
 literal|24
 decl_stmt|;
+comment|/* DECL_OFFSET_ALIGN, used only for FIELD_DECLs.  */
 name|unsigned
 name|int
 name|off_align
 range|:
 literal|8
 decl_stmt|;
-block|}
-name|a
-struct|;
-block|}
-name|GTY
-argument_list|(
-operator|(
-name|skip
-operator|)
-argument_list|)
-name|u1
-union|;
 name|tree
 name|size_unit
 decl_stmt|;
@@ -8561,7 +8622,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(((unsigned HOST_WIDE_INT)1)<< FIELD_DECL_CHECK (NODE)->decl_common.u1.a.off_align)
+value|(((unsigned HOST_WIDE_INT)1)<< FIELD_DECL_CHECK (NODE)->decl_common.off_align)
 end_define
 
 begin_comment
@@ -8578,7 +8639,7 @@ parameter_list|,
 name|X
 parameter_list|)
 define|\
-value|(FIELD_DECL_CHECK (NODE)->decl_common.u1.a.off_align = exact_log2 ((X)& -(X)))
+value|(FIELD_DECL_CHECK (NODE)->decl_common.off_align = exact_log2 ((X)& -(X)))
 end_define
 
 begin_comment
@@ -8858,6 +8919,20 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|(DECL_WITH_VIS_CHECK (NODE)->decl_with_vis.defer_output)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL duplicate decls in multiple files. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_DUPLICATE_DECL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_COMMON_CHECK (NODE)->decl_common.duplicate_decl)
 end_define
 
 begin_comment
@@ -9262,7 +9337,44 @@ name|tls_model
 label|:
 literal|3
 expr_stmt|;
-comment|/* 11 unused bits. */
+comment|/* APPLE LOCAL begin radar 5732232 - blocks */
+comment|/* Belong to VAR_DECL exclusively. */
+name|unsigned
+name|block_decl_byref
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|block_decl_copied
+range|:
+literal|1
+decl_stmt|;
+comment|/* APPLE LOCAL begin radar 5932809 - copyable byref blocks */
+name|unsigned
+name|copyable_byref_local_var
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|copyable_byref_local_nonpod
+range|:
+literal|1
+decl_stmt|;
+comment|/* APPLE LOCAL radar 6172148 */
+name|unsigned
+name|block_synthesized_function
+range|:
+literal|1
+decl_stmt|;
+comment|/* APPLE LOCAL radar 5847976 */
+name|unsigned
+name|block_weak
+range|:
+literal|1
+decl_stmt|;
+comment|/* 5 unused bits. */
+comment|/* APPLE LOCAL end radar 5932809 - copyable byref blocks */
+comment|/* APPLE LOCAL end radar 5732232 - blocks */
 block|}
 end_decl_stmt
 
@@ -9438,6 +9550,90 @@ name|NODE
 parameter_list|)
 value|(VAR_DECL_CHECK (NODE)->decl_with_vis.tls_model)
 end_define
+
+begin_comment
+comment|/* APPLE LOCAL begin radar 5732232 - blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_DECL_BYREF
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.block_decl_byref)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_DECL_COPIED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.block_decl_copied)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end radar 5732232 - blocks */
+end_comment
+
+begin_comment
+comment|/* APPLE LOCAL radar 6172148 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_SYNTHESIZED_FUNC
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(FUNCTION_DECL_CHECK (NODE)->decl_with_vis.block_synthesized_function)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL begin radar 5932809 - copyable byref blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COPYABLE_BYREF_LOCAL_VAR
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.copyable_byref_local_var)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COPYABLE_BYREF_LOCAL_NONPOD
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.copyable_byref_local_nonpod)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL radar 5847976 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COPYABLE_WEAK_BLOCK
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VAR_DECL_CHECK (NODE)->decl_with_vis.block_weak)
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end radar 5932809 - copyable byref blocks */
+end_comment
 
 begin_comment
 comment|/* In a VAR_DECL, nonzero if the data should be allocated from    thread-local storage.  */
@@ -9835,6 +10031,11 @@ block|{
 name|struct
 name|tree_decl_non_common
 name|common
+decl_stmt|;
+comment|/* In a FUNCTION_DECL for which DECL_BUILT_IN holds, this is      DECL_FUNCTION_CODE.  Otherwise unused.  */
+name|enum
+name|built_in_function
+name|function_code
 decl_stmt|;
 name|unsigned
 name|static_ctor_flag
@@ -10665,6 +10866,10 @@ name|TI_UINTDI_TYPE
 block|,
 name|TI_UINTTI_TYPE
 block|,
+name|TI_UINT32_TYPE
+block|,
+name|TI_UINT64_TYPE
+block|,
 name|TI_INTEGER_ZERO
 block|,
 name|TI_INTEGER_ONE
@@ -10847,6 +11052,20 @@ define|#
 directive|define
 name|unsigned_intTI_type_node
 value|global_trees[TI_UINTTI_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|uint32_type_node
+value|global_trees[TI_UINT32_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|uint64_type_node
+value|global_trees[TI_UINT64_TYPE]
 end_define
 
 begin_define
@@ -12472,6 +12691,20 @@ begin_function_decl
 specifier|extern
 name|tree
 name|build_pointer_type
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL radar 5732232 - blocks */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|build_block_pointer_type
 parameter_list|(
 name|tree
 parameter_list|)
@@ -14707,7 +14940,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|tree
-name|get_file_function_name_long
+name|get_file_function_name
 parameter_list|(
 specifier|const
 name|char
@@ -17589,20 +17822,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* If KIND=='I', return a suitable global initializer (constructor) name.    If KIND=='D', return a suitable global clean-up (destructor) name.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|tree
-name|get_file_function_name
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_escape
 end_escape
 
@@ -18140,6 +18359,25 @@ name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL begin radar 6300081  */
+end_comment
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|tree
+name|generic_block_literal_struct_type
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* APPLE LOCAL end radar 6300081  */
+end_comment
 
 begin_endif
 endif|#

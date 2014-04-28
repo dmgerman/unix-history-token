@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2004,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,14 +16,13 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fld_newftyp.c,v 1.15 2007/10/13 19:30:55 tom Exp $"
+literal|"$Id: fld_newftyp.c,v 1.19 2010/01/23 21:14:36 tom Exp $"
 argument_list|)
 end_macro
 
 begin_decl_stmt
 specifier|static
 name|FIELDTYPE
-specifier|const
 name|default_fieldtype
 init|=
 block|{
@@ -56,17 +55,37 @@ comment|/* copyarg function                            */
 name|NULL
 block|,
 comment|/* freearg function                            */
+name|INIT_FT_FUNC
+argument_list|(
 name|NULL
+argument_list|)
 block|,
 comment|/* field validation function                   */
+name|INIT_FT_FUNC
+argument_list|(
 name|NULL
+argument_list|)
 block|,
 comment|/* Character check function                    */
+name|INIT_FT_FUNC
+argument_list|(
 name|NULL
+argument_list|)
 block|,
 comment|/* enumerate next function                     */
+name|INIT_FT_FUNC
+argument_list|(
 name|NULL
+argument_list|)
+block|,
 comment|/* enumerate previous function                 */
+if|#
+directive|if
+name|NCURSES_INTEROP_FUNCS
+name|NULL
+comment|/* generic callback alternative to makearg     */
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -74,7 +93,7 @@ end_decl_stmt
 begin_macro
 name|NCURSES_EXPORT_VAR
 argument_list|(
-argument|const FIELDTYPE *
+argument|FIELDTYPE *
 argument_list|)
 end_macro
 
@@ -165,6 +184,10 @@ argument_list|(
 literal|"fieldtype %p"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|nftyp
 operator|)
 argument_list|)
@@ -174,6 +197,27 @@ name|nftyp
 operator|=
 name|default_fieldtype
 expr_stmt|;
+if|#
+directive|if
+name|NCURSES_INTEROP_FUNCS
+name|nftyp
+operator|->
+name|fieldcheck
+operator|.
+name|ofcheck
+operator|=
+name|field_check
+expr_stmt|;
+name|nftyp
+operator|->
+name|charcheck
+operator|.
+name|occheck
+operator|=
+name|char_check
+expr_stmt|;
+else|#
+directive|else
 name|nftyp
 operator|->
 name|fcheck
@@ -186,6 +230,8 @@ name|ccheck
 operator|=
 name|char_check
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -240,6 +286,10 @@ argument_list|(
 literal|"free_fieldtype(%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|typ
 operator|)
 argument_list|)

@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -135,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/physmem.h>
 end_include
 
 begin_include
@@ -159,6 +171,29 @@ begin_include
 include|#
 directive|include
 file|<machine/vfp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_MV_PJ4B
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<arm/mv/mvwin.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/fdt/fdt_common.h>
 end_include
 
 begin_endif
@@ -467,7 +502,7 @@ argument_list|)
 expr_stmt|;
 name|addr
 operator|=
-name|KERNPHYSADDR
+name|arm_physmem_kernaddr
 expr_stmt|;
 name|addr_end
 operator|=
@@ -479,7 +514,7 @@ name|_end
 operator|-
 name|KERNVIRTADDR
 operator|+
-name|KERNPHYSADDR
+name|arm_physmem_kernaddr
 expr_stmt|;
 name|addr_end
 operator|&=
@@ -505,7 +540,7 @@ for|for
 control|(
 name|addr
 operator|=
-name|KERNPHYSADDR
+name|arm_physmem_kernaddr
 init|;
 name|addr
 operator|<=
@@ -537,6 +572,8 @@ name|L1_SHARED
 operator||
 name|L1_S_C
 operator||
+name|L1_S_B
+operator||
 name|L1_S_AP
 argument_list|(
 name|AP_KRW
@@ -562,7 +599,7 @@ index|[
 operator|(
 name|addr
 operator|-
-name|KERNPHYSADDR
+name|arm_physmem_kernaddr
 operator|+
 name|KERNVIRTADDR
 operator|)
@@ -575,6 +612,8 @@ operator||
 name|L1_SHARED
 operator||
 name|L1_S_C
+operator||
+name|L1_S_B
 operator||
 name|L1_S_AP
 argument_list|(
@@ -606,7 +645,7 @@ name|temp_pagetable_va
 operator|)
 operator|)
 index|[
-literal|0xf1000000
+name|MV_BASE
 operator|>>
 name|L1_S_SHIFT
 index|]
@@ -622,7 +661,7 @@ argument_list|(
 name|AP_KRW
 argument_list|)
 operator||
-literal|0xd0000000
+name|fdt_immr_pa
 expr_stmt|;
 endif|#
 directive|endif
@@ -747,6 +786,9 @@ name|end
 init|=
 literal|0
 decl_stmt|;
+name|cpu_idcache_inv_all
+argument_list|()
+expr_stmt|;
 name|cpu_setup
 argument_list|(
 name|NULL
@@ -767,11 +809,6 @@ name|__pcpu
 index|[
 name|cpu
 index|]
-expr_stmt|;
-name|set_pcpu
-argument_list|(
-name|pc
-argument_list|)
 expr_stmt|;
 comment|/* 	 * pcpu_init() updates queue, so it should not be executed in parallel 	 * on several cores 	 */
 while|while
@@ -865,6 +902,13 @@ name|pc_idlethread
 operator|->
 name|td_pcb
 expr_stmt|;
+name|set_curthread
+argument_list|(
+name|pc
+operator|->
+name|pc_idlethread
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VFP
@@ -908,10 +952,6 @@ name|smp_started
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-name|smp_active
-operator|=
-literal|1
 expr_stmt|;
 block|}
 name|mtx_unlock_spin
@@ -1107,9 +1147,6 @@ break|break;
 case|case
 name|IPI_STOP
 case|:
-case|case
-name|IPI_STOP_HARD
-case|:
 comment|/* 			 * IPI_STOP_HARD is mapped to IPI_STOP so it is not 			 * necessary to add it in the switch. 			 */
 name|CTR0
 argument_list|(
@@ -1126,6 +1163,10 @@ index|[
 name|cpu
 index|]
 argument_list|)
+expr_stmt|;
+comment|/* 			 * CPUs are stopped when entering the debugger and at 			 * system shutdown, both events which can precede a 			 * panic dump.  For the dump to be correct, all caches 			 * must be flushed and invalidated, but on ARM there's 			 * no way to broadcast a wbinv_all to other cores. 			 * Instead, we have each core do the local wbinv_all as 			 * part of stopping the core.  The core requesting the 			 * stop will do the l2 cache flush after all other cores 			 * have done their l1 flushes and stopped. 			 */
+name|cpu_idcache_wbinv_all
+argument_list|()
 expr_stmt|;
 comment|/* Indicate we are stopped */
 name|CPU_SET_ATOMIC
@@ -1438,7 +1479,7 @@ name|smp_topo_1level
 argument_list|(
 name|CG_SHARE_L2
 argument_list|,
-literal|1
+name|mp_ncpus
 argument_list|,
 literal|0
 argument_list|)

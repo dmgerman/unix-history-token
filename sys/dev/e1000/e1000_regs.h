@@ -1633,7 +1633,7 @@ begin_define
 define|#
 directive|define
 name|E1000_TQAVCC_QUEUE_MODE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment

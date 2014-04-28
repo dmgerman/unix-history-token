@@ -323,7 +323,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|int
 name|ipfw_check_packet
 parameter_list|(
@@ -349,7 +348,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|int
 name|ipfw_check_frame
 parameter_list|(
@@ -528,7 +526,6 @@ endif|#
 directive|endif
 comment|/* SYSCTL_NODE */
 comment|/*  * The pfilter hook to pass packets to ipfw_chk and then to  * dummynet, divert, netgraph or other modules.  * The packet may be consumed.  */
-specifier|static
 name|int
 name|ipfw_check_packet
 parameter_list|(
@@ -1322,7 +1319,6 @@ comment|/*  * ipfw processing for ethernet packets (in and out).  * Inteface is 
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ipfw_check_frame
 parameter_list|(
@@ -1550,9 +1546,15 @@ name|args
 operator|.
 name|oif
 operator|=
+name|dir
+operator|==
+name|PFIL_OUT
+condition|?
 name|dst
+else|:
+name|NULL
 expr_stmt|;
-comment|/* destination, if any			*/
+comment|/* destination, if any	*/
 name|args
 operator|.
 name|next_hop
@@ -2383,10 +2385,6 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
 name|int
-modifier|*
-name|enable
-decl_stmt|;
-name|int
 name|newval
 decl_stmt|;
 name|int
@@ -2400,22 +2398,12 @@ condition|(
 name|arg1
 operator|==
 operator|&
-name|VNET_NAME
-argument_list|(
-name|fw_enable
-argument_list|)
-condition|)
-block|{
-name|enable
-operator|=
-operator|&
 name|V_fw_enable
-expr_stmt|;
+condition|)
 name|af
 operator|=
 name|AF_INET
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|INET6
@@ -2425,22 +2413,12 @@ condition|(
 name|arg1
 operator|==
 operator|&
-name|VNET_NAME
-argument_list|(
-name|fw6_enable
-argument_list|)
-condition|)
-block|{
-name|enable
-operator|=
-operator|&
 name|V_fw6_enable
-expr_stmt|;
+condition|)
 name|af
 operator|=
 name|AF_INET6
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 elseif|else
@@ -2449,22 +2427,12 @@ condition|(
 name|arg1
 operator|==
 operator|&
-name|VNET_NAME
-argument_list|(
-name|fwlink_enable
-argument_list|)
-condition|)
-block|{
-name|enable
-operator|=
-operator|&
 name|V_fwlink_enable
-expr_stmt|;
+condition|)
 name|af
 operator|=
 name|AF_LINK
 expr_stmt|;
-block|}
 else|else
 return|return
 operator|(
@@ -2474,7 +2442,11 @@ return|;
 name|newval
 operator|=
 operator|*
-name|enable
+operator|(
+name|int
+operator|*
+operator|)
+name|arg1
 expr_stmt|;
 comment|/* Handle sysctl change */
 name|error
@@ -2514,7 +2486,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|enable
+operator|(
+name|int
+operator|*
+operator|)
+name|arg1
 operator|==
 name|newval
 condition|)
@@ -2542,7 +2518,11 @@ name|error
 operator|)
 return|;
 operator|*
-name|enable
+operator|(
+name|int
+operator|*
+operator|)
+name|arg1
 operator|=
 name|newval
 expr_stmt|;

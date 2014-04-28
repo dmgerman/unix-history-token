@@ -148,7 +148,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	add	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	add	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -174,7 +174,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	add	%0, %3, %0\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	add	%0, %3, %0\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -199,7 +199,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	add	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	add	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -376,7 +376,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	andc	%0, %0, %3\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	andc	%0, %0, %3\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -402,7 +402,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	andc	%0, %0, %3\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	andc	%0, %0, %3\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -427,7 +427,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	andc	%0, %0, %3\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	andc	%0, %0, %3\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -628,7 +628,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	or	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	or	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -654,7 +654,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	or	%0, %3, %0\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	or	%0, %3, %0\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -679,7 +679,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	or	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	or	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -856,7 +856,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	subf	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	subf	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -882,7 +882,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	subf	%0, %3, %0\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	subf	%0, %3, %0\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -907,7 +907,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	subf	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+value|__asm __volatile(						\ 	"1:	lwarx	%0, 0, %2\n"				\ 	"	subf	%0, %3, %0\n"				\ 	"	stwcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cr0", "memory")
 end_define
 
 begin_comment
@@ -1139,7 +1139,7 @@ operator|*
 name|addr
 operator|)
 operator|:
-literal|"cc"
+literal|"cr0"
 operator|,
 literal|"memory"
 block|)
@@ -1225,7 +1225,7 @@ operator|*
 name|addr
 operator|)
 operator|:
-literal|"cc"
+literal|"cr0"
 operator|,
 literal|"memory"
 block|)
@@ -1579,7 +1579,7 @@ operator|*
 name|p
 operator|)
 operator|:
-literal|"cc"
+literal|"cr0"
 operator|,
 literal|"memory"
 block|)
@@ -1701,7 +1701,7 @@ operator|*
 name|p
 operator|)
 operator|:
-literal|"cc"
+literal|"cr0"
 operator|,
 literal|"memory"
 block|)
@@ -2077,11 +2077,159 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|u_int
+name|atomic_swap_32
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+block|{
+name|u_int
+name|prev
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1:	lwarx	%0,0,%2\n"
+literal|"	stwcx.	%3,0,%2\n"
+literal|"	bne-	1b\n"
+operator|:
+literal|"=&r"
+operator|(
+name|prev
+operator|)
+operator|,
+literal|"+m"
+operator|(
+operator|*
+operator|(
+specifier|volatile
+name|u_int
+operator|*
+operator|)
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"cr0"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|prev
+operator|)
+return|;
+end_return
+
+begin_ifdef
+unit|}
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_function
+unit|static
+name|__inline
+name|u_long
+name|atomic_swap_64
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+name|v
+parameter_list|)
+block|{
+name|u_long
+name|prev
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1:	ldarx	%0,0,%2\n"
+literal|"	stdcx.	%3,0,%2\n"
+literal|"	bne-	1b\n"
+operator|:
+literal|"=&r"
+operator|(
+name|prev
+operator|)
+operator|,
+literal|"+m"
+operator|(
+operator|*
+operator|(
+specifier|volatile
+name|u_long
+operator|*
+operator|)
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"cr0"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|prev
+operator|)
+return|;
+end_return
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|atomic_fetchadd_32
 value|atomic_fetchadd_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_swap_int
+value|atomic_swap_32
 end_define
 
 begin_ifdef
@@ -2095,6 +2243,20 @@ define|#
 directive|define
 name|atomic_fetchadd_64
 value|atomic_fetchadd_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_swap_long
+value|atomic_swap_64
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_swap_ptr
+value|atomic_swap_64
 end_define
 
 begin_endif

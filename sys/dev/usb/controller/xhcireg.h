@@ -1526,11 +1526,22 @@ begin_define
 define|#
 directive|define
 name|XHCI_IMOD_DEFAULT
-value|0x000003E8U
+value|0x000001F4U
 end_define
 
 begin_comment
-comment|/* 8000 IRQ/second */
+comment|/* 8000 IRQs/second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XHCI_IMOD_DEFAULT_LP
+value|0x000003F8U
+end_define
+
+begin_comment
+comment|/* 4000 IRQs/second - LynxPoint */
 end_comment
 
 begin_define

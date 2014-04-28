@@ -78,13 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
+file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -121,11 +115,18 @@ block|{
 return|return
 operator|(
 name|ZYNQ7_PSIO_VBASE
-operator|-
-name|ARM_NOCACHE_KVA_SIZE
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|initarm_early_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
 end_function
 
 begin_function
@@ -156,7 +157,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|fdt_devmap
 index|[
 name|FDT_DEVMAP_SIZE
@@ -170,7 +171,7 @@ end_comment
 
 begin_function
 name|int
-name|platform_devmap_init
+name|initarm_devmap_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -326,13 +327,14 @@ name|pd_cache
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_devmap_bootstrap_table
-operator|=
+name|arm_devmap_register_table
+argument_list|(
 operator|&
 name|fdt_devmap
 index|[
 literal|0
 index|]
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

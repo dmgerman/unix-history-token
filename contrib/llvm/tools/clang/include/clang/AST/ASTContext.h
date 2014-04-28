@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/LambdaMangleContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/NestedNameSpecifier.h"
 end_include
 
@@ -109,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/RawCommentList.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/RecursiveASTVisitor.h"
 end_include
 
 begin_include
@@ -231,6 +219,9 @@ name|class
 name|FileManager
 decl_stmt|;
 name|class
+name|AtomicExpr
+decl_stmt|;
+name|class
 name|ASTRecordLayout
 decl_stmt|;
 name|class
@@ -255,6 +246,9 @@ name|class
 name|IdentifierTable
 decl_stmt|;
 name|class
+name|MaterializeTemporaryExpr
+decl_stmt|;
+name|class
 name|SelectorTable
 decl_stmt|;
 name|class
@@ -262,6 +256,9 @@ name|TargetInfo
 decl_stmt|;
 name|class
 name|CXXABI
+decl_stmt|;
+name|class
+name|MangleNumberingContext
 decl_stmt|;
 comment|// Decls
 name|class
@@ -353,6 +350,15 @@ operator|<
 name|PointerType
 operator|>
 name|PointerTypes
+block|;
+name|mutable
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|DecayedType
+operator|>
+name|DecayedTypes
 block|;
 name|mutable
 name|llvm
@@ -741,9 +747,7 @@ specifier|const
 name|CXXRecordDecl
 operator|*
 operator|,
-specifier|const
-name|CXXMethodDecl
-operator|*
+name|LazyDeclPtr
 operator|>
 name|KeyFunctions
 expr_stmt|;
@@ -804,6 +808,20 @@ name|FunctionDecl
 operator|*
 operator|>
 name|ClassScopeSpecializationPattern
+expr_stmt|;
+comment|/// \brief Mapping from materialized temporaries with static storage duration
+comment|/// that appear in constant initializers to their evaluated values.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|MaterializeTemporaryExpr
+operator|*
+operator|,
+name|APValue
+operator|>
+name|MaterializedTemporaryValues
 expr_stmt|;
 comment|/// \brief Representation of a "canonical" template template parameter that
 comment|/// is used in canonical template names.
@@ -902,6 +920,12 @@ name|mutable
 name|TypedefDecl
 modifier|*
 name|UInt128Decl
+decl_stmt|;
+comment|/// \brief The typedef for the __float128 stub type.
+name|mutable
+name|TypeDecl
+modifier|*
+name|Float128StubDecl
 decl_stmt|;
 comment|/// \brief The typedef for the target specific predefined
 comment|/// __builtin_va_list type.
@@ -1034,13 +1058,51 @@ operator|*
 operator|>
 name|DeclAttrs
 expr_stmt|;
-comment|/// \brief Keeps track of the static data member templates from which
-comment|/// static data members of class template specializations were instantiated.
+comment|/// \brief A mapping from non-redeclarable declarations in modules that were
+comment|/// merged with other declarations to the canonical declaration that they were
+comment|/// merged into.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|Decl
+operator|*
+operator|,
+name|Decl
+operator|*
+operator|>
+name|MergedDecls
+expr_stmt|;
+name|public
+label|:
+comment|/// \brief A type synonym for the TemplateOrInstantiation mapping.
+typedef|typedef
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|VarTemplateDecl
+operator|*
+operator|,
+name|MemberSpecializationInfo
+operator|*
+operator|>
+name|TemplateOrSpecializationInfo
+expr_stmt|;
+name|private
+label|:
+comment|/// \brief A mapping to contain the template or declaration that
+comment|/// a variable declaration describes or was instantiated from,
+comment|/// respectively.
 comment|///
-comment|/// This data structure stores the mapping from instantiations of static
-comment|/// data members to the static data member representations within the
-comment|/// class template from which they were instantiated along with the kind
-comment|/// of instantiation or specialization (a TemplateSpecializationKind - 1).
+comment|/// For non-templates, this value will be NULL. For variable
+comment|/// declarations that describe a variable template, this will be a
+comment|/// pointer to a VarTemplateDecl. For static data members
+comment|/// of class template specializations, this will be the
+comment|/// MemberSpecializationInfo referring to the member variable that was
+comment|/// instantiated or specialized. Thus, the mapping will keep track of
+comment|/// the static data member templates from which static data members of
+comment|/// class template specializations were instantiated.
 comment|///
 comment|/// Given the following example:
 comment|///
@@ -1067,10 +1129,9 @@ specifier|const
 name|VarDecl
 operator|*
 operator|,
-name|MemberSpecializationInfo
-operator|*
+name|TemplateOrSpecializationInfo
 operator|>
-name|InstantiatedFromStaticDataMember
+name|TemplateOrInstantiation
 expr_stmt|;
 comment|/// \brief Keeps track of the declaration from which a UsingDecl was
 comment|/// created during instantiation.
@@ -1160,8 +1221,9 @@ name|CXXMethodVector
 operator|>
 name|OverriddenMethods
 expr_stmt|;
-comment|/// \brief Mapping from each declaration context to its corresponding lambda
-comment|/// mangling context.
+comment|/// \brief Mapping from each declaration context to its corresponding
+comment|/// mangling numbering context (used for constructs like lambdas which
+comment|/// need to be consistently numbered for the mangler).
 name|llvm
 operator|::
 name|DenseMap
@@ -1170,33 +1232,24 @@ specifier|const
 name|DeclContext
 operator|*
 operator|,
-name|LambdaMangleContext
+name|MangleNumberingContext
+operator|*
 operator|>
-name|LambdaMangleContexts
+name|MangleNumberingContexts
 expr_stmt|;
+comment|/// \brief Side-table of mangling numbers for declarations which rarely
+comment|/// need them (like static local vars).
 name|llvm
 operator|::
 name|DenseMap
 operator|<
 specifier|const
-name|DeclContext
+name|NamedDecl
 operator|*
 operator|,
 name|unsigned
 operator|>
-name|UnnamedMangleContexts
-expr_stmt|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|TagDecl
-operator|*
-operator|,
-name|unsigned
-operator|>
-name|UnnamedMangleNumbers
+name|MangleNumbers
 expr_stmt|;
 comment|/// \brief Mapping that stores parameterIndex values for ParmVarDecls when
 comment|/// that value exceeds the bitfield size of ParmVarDeclBits.ParameterIndex.
@@ -1280,6 +1333,11 @@ name|Map
 operator|*
 name|AddrSpaceMap
 expr_stmt|;
+comment|/// \brief Address space map mangling must be used with language specific
+comment|/// address spaces (e.g. OpenCL/CUDA)
+name|bool
+name|AddrSpaceMapMangling
+decl_stmt|;
 name|friend
 name|class
 name|ASTDeclReader
@@ -1423,77 +1481,7 @@ name|DynTypedNode
 operator|&
 name|Node
 argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Node
-operator|.
-name|getMemoizationData
-argument_list|()
-operator|&&
-literal|"Invariant broken: only nodes that support memoization may be "
-literal|"used in the parent map."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|AllParents
-condition|)
-block|{
-comment|// We always need to run over the whole translation unit, as
-comment|// hasAncestor can escape any subtree.
-name|AllParents
-operator|.
-name|reset
-argument_list|(
-name|ParentMapASTVisitor
-operator|::
-name|buildMap
-argument_list|(
-operator|*
-name|getTranslationUnitDecl
-argument_list|()
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|ParentMap
-operator|::
-name|const_iterator
-name|I
-operator|=
-name|AllParents
-operator|->
-name|find
-argument_list|(
-name|Node
-operator|.
-name|getMemoizationData
-argument_list|()
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|I
-operator|==
-name|AllParents
-operator|->
-name|end
-argument_list|()
-condition|)
-block|{
-return|return
-name|ParentVector
-argument_list|()
-return|;
-block|}
-return|return
-name|I
-operator|->
-name|second
-return|;
-block|}
+decl_stmt|;
 specifier|const
 name|clang
 operator|::
@@ -1559,7 +1547,7 @@ name|void
 modifier|*
 name|Allocate
 argument_list|(
-name|unsigned
+name|size_t
 name|Size
 argument_list|,
 name|unsigned
@@ -1632,6 +1620,42 @@ operator|*
 name|Target
 return|;
 block|}
+comment|/// getIntTypeForBitwidth -
+comment|/// sets integer QualTy according to specified details:
+comment|/// bitwidth, signed/unsigned.
+comment|/// Returns empty type if there is no appropriate target types.
+name|QualType
+name|getIntTypeForBitwidth
+argument_list|(
+name|unsigned
+name|DestWidth
+argument_list|,
+name|unsigned
+name|Signed
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getRealTypeForBitwidth -
+comment|/// sets floating point QualTy according to specified bitwidth.
+comment|/// Returns empty type if there is no appropriate target types.
+name|QualType
+name|getRealTypeForBitwidth
+argument_list|(
+name|unsigned
+name|DestWidth
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|AtomicUsesUnsupportedLibcall
+argument_list|(
+specifier|const
+name|AtomicExpr
+operator|*
+name|E
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|const
 name|LangOptions
 operator|&
@@ -1958,6 +1982,19 @@ argument|const Preprocessor *PP
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// Return parsed documentation comment attached to a given declaration.
+comment|/// Returns NULL if no comment is attached. Does not look at any
+comment|/// redeclarations of the declaration.
+name|comments
+operator|::
+name|FullComment
+operator|*
+name|getLocalCommentForDeclUncached
+argument_list|(
+argument|const Decl *D
+argument_list|)
+specifier|const
+expr_stmt|;
 name|comments
 operator|::
 name|FullComment
@@ -2016,9 +2053,19 @@ function_decl|;
 comment|/// \brief If this variable is an instantiated static data member of a
 comment|/// class template specialization, returns the templated static data member
 comment|/// from which it was instantiated.
+comment|// FIXME: Remove ?
 name|MemberSpecializationInfo
 modifier|*
 name|getInstantiatedFromStaticDataMember
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|Var
+parameter_list|)
+function_decl|;
+name|TemplateOrSpecializationInfo
+name|getTemplateOrSpecializationInfo
 parameter_list|(
 specifier|const
 name|VarDecl
@@ -2069,6 +2116,17 @@ name|PointOfInstantiation
 init|=
 name|SourceLocation
 argument_list|()
+parameter_list|)
+function_decl|;
+name|void
+name|setTemplateOrSpecializationInfo
+parameter_list|(
+name|VarDecl
+modifier|*
+name|Inst
+parameter_list|,
+name|TemplateOrSpecializationInfo
+name|TSI
 parameter_list|)
 function_decl|;
 comment|/// \brief If the given using decl \p Inst is an instantiation of a
@@ -2139,91 +2197,6 @@ modifier|*
 name|Tmpl
 parameter_list|)
 function_decl|;
-comment|/// \brief Return \c true if \p FD is a zero-length bitfield which follows
-comment|/// the non-bitfield \p LastFD.
-name|bool
-name|ZeroBitfieldFollowsNonBitfield
-argument_list|(
-specifier|const
-name|FieldDecl
-operator|*
-name|FD
-argument_list|,
-specifier|const
-name|FieldDecl
-operator|*
-name|LastFD
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Return \c true if \p FD is a zero-length bitfield which follows
-comment|/// the bitfield \p LastFD.
-name|bool
-name|ZeroBitfieldFollowsBitfield
-argument_list|(
-specifier|const
-name|FieldDecl
-operator|*
-name|FD
-argument_list|,
-specifier|const
-name|FieldDecl
-operator|*
-name|LastFD
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Return \c true if \p FD is a bitfield which follows the bitfield
-comment|/// \p LastFD.
-name|bool
-name|BitfieldFollowsBitfield
-argument_list|(
-specifier|const
-name|FieldDecl
-operator|*
-name|FD
-argument_list|,
-specifier|const
-name|FieldDecl
-operator|*
-name|LastFD
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Return \c true if \p FD is not a bitfield which follows the
-comment|/// bitfield \p LastFD.
-name|bool
-name|NonBitfieldFollowsBitfield
-argument_list|(
-specifier|const
-name|FieldDecl
-operator|*
-name|FD
-argument_list|,
-specifier|const
-name|FieldDecl
-operator|*
-name|LastFD
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Return \c true if \p FD is a bitfield which follows the
-comment|/// non-bitfield \p LastFD.
-name|bool
-name|BitfieldFollowsNonBitfield
-argument_list|(
-specifier|const
-name|FieldDecl
-operator|*
-name|FD
-argument_list|,
-specifier|const
-name|FieldDecl
-operator|*
-name|LastFD
-argument_list|)
-decl|const
-decl_stmt|;
 comment|// Access to the set of methods overridden by the given C++ method.
 typedef|typedef
 name|CXXMethodVector
@@ -2529,6 +2502,60 @@ return|;
 block|}
 end_expr_stmt
 
+begin_function
+name|Decl
+modifier|*
+name|getPrimaryMergedDecl
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+name|Decl
+modifier|*
+name|Result
+init|=
+name|MergedDecls
+operator|.
+name|lookup
+argument_list|(
+name|D
+argument_list|)
+decl_stmt|;
+return|return
+name|Result
+condition|?
+name|Result
+else|:
+name|D
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setPrimaryMergedDecl
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|,
+name|Decl
+modifier|*
+name|Primary
+parameter_list|)
+block|{
+name|MergedDecls
+index|[
+name|D
+index|]
+operator|=
+name|Primary
+expr_stmt|;
+block|}
+end_function
+
 begin_expr_stmt
 name|TranslationUnitDecl
 operator|*
@@ -2571,7 +2598,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// [C++ 3.9.1p5], integer type in C99.
+comment|// [C++ 3.9.1p5].
+end_comment
+
+begin_decl_stmt
+name|CanQualType
+name|WideCharTy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Same as WCharTy in C++, integer type in C99.
 end_comment
 
 begin_decl_stmt
@@ -2995,6 +3032,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Retrieve the declaration for a 128-bit float stub type.
+end_comment
+
+begin_expr_stmt
+name|TypeDecl
+operator|*
+name|getFloat128StubType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -3373,6 +3423,55 @@ operator|::
 name|CreateUnsafe
 argument_list|(
 name|getPointerType
+argument_list|(
+operator|(
+name|QualType
+operator|)
+name|T
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Return the uniqued reference to the decayed version of the given
+end_comment
+
+begin_comment
+comment|/// type.  Can only be called on array and function types which decay to
+end_comment
+
+begin_comment
+comment|/// pointer types.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getDecayedType
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
+name|getDecayedType
+argument_list|(
+name|CanQualType
+name|T
+argument_list|)
+decl|const
+block|{
+return|return
+name|CanQualType
+operator|::
+name|CreateUnsafe
+argument_list|(
+name|getDecayedType
 argument_list|(
 operator|(
 name|QualType
@@ -4529,8 +4628,6 @@ name|IsDecltypeAuto
 argument_list|,
 name|bool
 name|IsDependent
-operator|=
-name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4638,15 +4735,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief In C++, this returns the unique wchar_t type.  In C99, this
+comment|/// \brief Return the unique wchar_t type available in C++ (and available as
 end_comment
 
 begin_comment
-comment|/// returns a type compatible with the type defined in<stddef.h> as defined
-end_comment
-
-begin_comment
-comment|/// by the target.
+comment|/// __wchar_t as a Microsoft extension).
 end_comment
 
 begin_expr_stmt
@@ -4657,6 +4750,30 @@ specifier|const
 block|{
 return|return
 name|WCharTy
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Return the type of wide characters. In C++, this returns the
+end_comment
+
+begin_comment
+comment|/// unique wchar_t type. In C99, this returns a type compatible with the type
+end_comment
+
+begin_comment
+comment|/// defined in<stddef.h> as defined by the target.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getWideCharType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WideCharTy
 return|;
 block|}
 end_expr_stmt
@@ -6962,11 +7079,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If \p RefAsPointee, references are treated like their underlying type
+comment|/// If \p ForAlignof, references are treated like their underlying type
 end_comment
 
 begin_comment
-comment|/// (for alignof), else they're treated like pointers (for CodeGen).
+comment|/// and  large arrays don't get any special treatment. If not \p ForAlignof
+end_comment
+
+begin_comment
+comment|/// it computes the value expected by CodeGen: references are treated like
+end_comment
+
+begin_comment
+comment|/// pointers and large arrays get extra alignment.
 end_comment
 
 begin_decl_stmt
@@ -6979,7 +7104,7 @@ operator|*
 name|D
 argument_list|,
 name|bool
-name|RefAsPointee
+name|ForAlignof
 operator|=
 name|false
 argument_list|)
@@ -7004,6 +7129,21 @@ specifier|const
 name|ASTRecordLayout
 modifier|&
 name|getASTRecordLayout
+argument_list|(
+specifier|const
+name|RecordDecl
+operator|*
+name|D
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|ASTRecordLayout
+modifier|*
+name|BuildMicrosoftASTRecordLayout
 argument_list|(
 specifier|const
 name|RecordDecl
@@ -7549,6 +7689,23 @@ end_decl_stmt
 
 begin_function_decl
 name|bool
+name|ObjCMethodsAreEqual
+parameter_list|(
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|MethodDecl
+parameter_list|,
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|MethodImp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
 name|UnwrapSimilarPointerTypes
 parameter_list|(
 name|QualType
@@ -7668,76 +7825,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Retrieves the default calling convention to use for
-end_comment
-
-begin_comment
-comment|/// C++ instance methods.
-end_comment
-
-begin_function_decl
-name|CallingConv
-name|getDefaultCXXMethodCallConv
-parameter_list|(
-name|bool
-name|isVariadic
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Retrieves the canonical representation of the given
-end_comment
-
-begin_comment
-comment|/// calling convention.
+comment|/// \brief Retrieves the default calling convention for the current target.
 end_comment
 
 begin_decl_stmt
 name|CallingConv
-name|getCanonicalCallConv
+name|getDefaultCallingConvention
 argument_list|(
-name|CallingConv
-name|CC
+name|bool
+name|isVariadic
+argument_list|,
+name|bool
+name|IsCXXMethod
 argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/// \brief Determines whether two calling conventions name the same
-end_comment
-
-begin_comment
-comment|/// calling convention.
-end_comment
-
-begin_function
-name|bool
-name|isSameCallConv
-parameter_list|(
-name|CallingConv
-name|lcc
-parameter_list|,
-name|CallingConv
-name|rcc
-parameter_list|)
-block|{
-return|return
-operator|(
-name|getCanonicalCallConv
-argument_list|(
-name|lcc
-argument_list|)
-operator|==
-name|getCanonicalCallConv
-argument_list|(
-name|rcc
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/// \brief Retrieves the "canonical" template name that refers to a
@@ -8425,6 +8528,37 @@ return|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|addressSpaceMapManglingFor
+argument_list|(
+name|unsigned
+name|AS
+argument_list|)
+decl|const
+block|{
+return|return
+name|AddrSpaceMapMangling
+operator|||
+name|AS
+operator|<
+name|LangAS
+operator|::
+name|Offset
+operator|||
+name|AS
+operator|>=
+name|LangAS
+operator|::
+name|Offset
+operator|+
+name|LangAS
+operator|::
+name|Count
+return|;
+block|}
+end_decl_stmt
+
 begin_label
 name|private
 label|:
@@ -8565,19 +8699,6 @@ argument_list|()
 return|;
 block|}
 end_decl_stmt
-
-begin_function_decl
-name|bool
-name|QualifiedIdConformsQualifiedId
-parameter_list|(
-name|QualType
-name|LHS
-parameter_list|,
-name|QualType
-name|RHS
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|bool
@@ -9518,43 +9639,61 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|addUnnamedTag
+name|setManglingNumber
 parameter_list|(
 specifier|const
-name|TagDecl
+name|NamedDecl
 modifier|*
-name|Tag
+name|ND
+parameter_list|,
+name|unsigned
+name|Number
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|int
-name|getUnnamedTagManglingNumber
+name|unsigned
+name|getManglingNumber
 argument_list|(
 specifier|const
-name|TagDecl
+name|NamedDecl
 operator|*
-name|Tag
+name|ND
 argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Retrieve the lambda mangling number for a lambda expression.
+comment|/// \brief Retrieve the context for computing mangling numbers in the given
+end_comment
+
+begin_comment
+comment|/// DeclContext.
 end_comment
 
 begin_function_decl
-name|unsigned
-name|getLambdaManglingNumber
+name|MangleNumberingContext
+modifier|&
+name|getManglingNumberContext
 parameter_list|(
-name|CXXMethodDecl
+specifier|const
+name|DeclContext
 modifier|*
-name|CallOperator
+name|DC
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|MangleNumberingContext
+operator|*
+name|createMangleNumberingContext
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Used by ParmVarDecl to store on the side the
@@ -9599,6 +9738,30 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Get the storage for the constant value of a materialized temporary
+end_comment
+
+begin_comment
+comment|/// of static storage duration.
+end_comment
+
+begin_function_decl
+name|APValue
+modifier|*
+name|getMaterializedTemporaryValue
+parameter_list|(
+specifier|const
+name|MaterializeTemporaryExpr
+modifier|*
+name|E
+parameter_list|,
+name|bool
+name|MayCreate
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -10024,12 +10187,11 @@ begin_comment
 comment|/// ASTContext is destroyed.
 end_comment
 
-begin_expr_stmt
-name|SmallVector
-operator|<
-name|std
+begin_typedef
+typedef|typedef
+name|llvm
 operator|::
-name|pair
+name|SmallDenseMap
 operator|<
 name|void
 argument_list|(
@@ -10040,15 +10202,25 @@ name|void
 operator|*
 argument_list|)
 operator|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
 name|void
 operator|*
-operator|>
 operator|,
 literal|16
 operator|>
-name|Deallocations
+expr|>
+name|DeallocationMap
 expr_stmt|;
-end_expr_stmt
+end_typedef
+
+begin_decl_stmt
+name|DeallocationMap
+name|Deallocations
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// FIXME: This currently contains the set of StoredDeclMaps used
@@ -10076,18 +10248,6 @@ name|LastSDM
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/// \brief A counter used to uniquely identify "blocks".
-end_comment
-
-begin_decl_stmt
-name|mutable
-name|unsigned
-name|int
-name|UniqueBlockByRefTypeID
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|friend
 name|class
@@ -10109,340 +10269,7 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/// \brief A \c RecursiveASTVisitor that builds a map from nodes to their
-end_comment
-
-begin_comment
-comment|/// parents as defined by the \c RecursiveASTVisitor.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Note that the relationship described here is purely in terms of AST
-end_comment
-
-begin_comment
-comment|/// traversal - there are other relationships (for example declaration context)
-end_comment
-
-begin_comment
-comment|/// in the AST that are better modeled by special matchers.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// FIXME: Currently only builds up the map using \c Stmt and \c Decl nodes.
-end_comment
-
-begin_decl_stmt
-name|class
-name|ParentMapASTVisitor
-range|:
-name|public
-name|RecursiveASTVisitor
-operator|<
-name|ParentMapASTVisitor
-operator|>
-block|{
-name|public
-operator|:
-comment|/// \brief Builds and returns the translation unit's parent map.
-comment|///
-comment|///  The caller takes ownership of the returned \c ParentMap.
-specifier|static
-name|ParentMap
-operator|*
-name|buildMap
-argument_list|(
-argument|TranslationUnitDecl&TU
-argument_list|)
-block|{
-name|ParentMapASTVisitor
-name|Visitor
-argument_list|(
-argument|new ParentMap
-argument_list|)
-block|;
-name|Visitor
-operator|.
-name|TraverseDecl
-argument_list|(
-operator|&
-name|TU
-argument_list|)
-block|;
-return|return
-name|Visitor
-operator|.
-name|Parents
-return|;
-block|}
-name|private
-operator|:
-typedef|typedef
-name|RecursiveASTVisitor
-operator|<
-name|ParentMapASTVisitor
-operator|>
-name|VisitorBase
-expr_stmt|;
-name|ParentMapASTVisitor
-argument_list|(
-name|ParentMap
-operator|*
-name|Parents
-argument_list|)
-operator|:
-name|Parents
-argument_list|(
-argument|Parents
-argument_list|)
-block|{     }
-name|bool
-name|shouldVisitTemplateInstantiations
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-end_decl_stmt
-
 begin_expr_stmt
-name|bool
-name|shouldVisitImplicitCode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|// Disables data recursion. We intercept Traverse* methods in the RAV, which
-end_comment
-
-begin_comment
-comment|// are not triggered during data recursion.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|shouldUseDataRecursionFor
-argument_list|(
-name|clang
-operator|::
-name|Stmt
-operator|*
-name|S
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|bool
-name|TraverseNode
-argument_list|(
-argument|T *Node
-argument_list|,
-argument|bool(VisitorBase:: *traverse) (T *)
-argument_list|)
-block|{
-if|if
-condition|(
-name|Node
-operator|==
-name|NULL
-condition|)
-return|return
-name|true
-return|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|ParentStack
-operator|.
-name|size
-argument_list|()
-operator|>
-literal|0
-condition|)
-comment|// FIXME: Currently we add the same parent multiple times, for example
-comment|// when we visit all subexpressions of template instantiations; this is
-comment|// suboptimal, bug benign: the only way to visit those is with
-comment|// hasAncestor / hasParent, and those do not create new matches.
-comment|// The plan is to enable DynTypedNode to be storable in a map or hash
-comment|// map. The main problem there is to implement hash functions /
-comment|// comparison operators for all types that DynTypedNode supports that
-comment|// do not have pointer identity.
-operator|(
-operator|*
-name|Parents
-operator|)
-index|[
-name|Node
-index|]
-operator|.
-name|push_back
-argument_list|(
-name|ParentStack
-operator|.
-name|back
-argument_list|()
-argument_list|)
-expr_stmt|;
-end_if
-
-begin_expr_stmt
-name|ParentStack
-operator|.
-name|push_back
-argument_list|(
-name|ast_type_traits
-operator|::
-name|DynTypedNode
-operator|::
-name|create
-argument_list|(
-operator|*
-name|Node
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|bool
-name|Result
-init|=
-operator|(
-name|this
-operator|->*
-name|traverse
-operator|)
-operator|(
-name|Node
-operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|ParentStack
-operator|.
-name|pop_back
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-name|Result
-return|;
-end_return
-
-begin_macro
-unit|}      bool
-name|TraverseDecl
-argument_list|(
-argument|Decl *DeclNode
-argument_list|)
-end_macro
-
-begin_block
-block|{
-return|return
-name|TraverseNode
-argument_list|(
-name|DeclNode
-argument_list|,
-operator|&
-name|VisitorBase
-operator|::
-name|TraverseDecl
-argument_list|)
-return|;
-block|}
-end_block
-
-begin_function
-name|bool
-name|TraverseStmt
-parameter_list|(
-name|Stmt
-modifier|*
-name|StmtNode
-parameter_list|)
-block|{
-return|return
-name|TraverseNode
-argument_list|(
-name|StmtNode
-argument_list|,
-operator|&
-name|VisitorBase
-operator|::
-name|TraverseStmt
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_decl_stmt
-name|ParentMap
-modifier|*
-name|Parents
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|ast_type_traits
-operator|::
-name|DynTypedNode
-operator|,
-literal|16
-operator|>
-name|ParentStack
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|friend
-name|class
-name|RecursiveASTVisitor
-operator|<
-name|ParentMapASTVisitor
-operator|>
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
 name|llvm
 operator|::
 name|OwningPtr

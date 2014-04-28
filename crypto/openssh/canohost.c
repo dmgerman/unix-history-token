@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.c,v 1.67 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: canohost.c,v 1.70 2014/01/19 04:17:29 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -168,9 +162,6 @@ block|{
 name|struct
 name|sockaddr_storage
 name|from
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|socklen_t
 name|fromlen
@@ -458,45 +449,10 @@ name|ntop
 argument_list|)
 return|;
 block|}
-comment|/* 	 * Convert it to all lowercase (which is expected by the rest 	 * of this software). 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|name
-index|[
-name|i
-index|]
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|isupper
+comment|/* Names are stores in lowercase. */
+name|lowercase
 argument_list|(
 name|name
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-name|name
-index|[
-name|i
-index|]
-operator|=
-operator|(
-name|char
-operator|)
-name|tolower
-argument_list|(
-name|name
-index|[
-name|i
-index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Map it back to an IP address and check that the given 	 * address actually is an address of this host.  This is 	 * necessary because anyone with access to a name server can 	 * define arbitrary names for an IP address. Mapping from 	 * name to IP address can be trusted better (but can still be 	 * fooled if the intruder has access to the name server of 	 * the domain). 	 */
@@ -703,8 +659,7 @@ index|]
 decl_stmt|;
 name|socklen_t
 name|option_size
-decl_stmt|;
-name|u_int
+decl_stmt|,
 name|i
 decl_stmt|;
 name|int
@@ -928,9 +883,11 @@ name|a6
 operator|->
 name|sin6_port
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|a4
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

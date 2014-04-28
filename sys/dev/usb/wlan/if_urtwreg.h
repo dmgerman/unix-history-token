@@ -489,7 +489,7 @@ begin_define
 define|#
 directive|define
 name|URTW_TX_CWMIN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -697,7 +697,7 @@ begin_define
 define|#
 directive|define
 name|URTW_RCR_ONLYERLPKT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2395,7 +2395,7 @@ value|(1<< 30)
 define|#
 directive|define
 name|URTW_RX_FLAG_OWN
-value|(1<< 31)
+value|(1U<< 31)
 name|uint64_t
 name|mactime
 decl_stmt|;
@@ -2531,7 +2531,7 @@ value|(1<< 30)
 define|#
 directive|define
 name|URTW_TX_FLAG_OWN
-value|(1<< 31)
+value|(1U<< 31)
 name|uint16_t
 name|rtsdur
 decl_stmt|;

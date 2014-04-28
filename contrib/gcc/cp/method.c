@@ -1700,17 +1700,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* The back-end expects DECL_INITIAL to contain a BLOCK, so we      create one.  */
-name|DECL_INITIAL
-argument_list|(
-name|thunk_fndecl
-argument_list|)
-operator|=
-name|make_node
-argument_list|(
-name|BLOCK
-argument_list|)
-expr_stmt|;
 comment|/* Set up cloned argument trees for the thunk.  */
 name|t
 operator|=
@@ -1790,16 +1779,6 @@ argument_list|)
 operator|=
 name|a
 expr_stmt|;
-name|BLOCK_VARS
-argument_list|(
-name|DECL_INITIAL
-argument_list|(
-name|thunk_fndecl
-argument_list|)
-argument_list|)
-operator|=
-name|a
-expr_stmt|;
 if|if
 condition|(
 name|this_adjusting
@@ -1824,6 +1803,9 @@ specifier|const
 name|char
 modifier|*
 name|fnname
+decl_stmt|;
+name|tree
+name|fn_block
 decl_stmt|;
 name|current_function_decl
 operator|=
@@ -1859,6 +1841,28 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/* The back-end expects DECL_INITIAL to contain a BLOCK, so we 	 create one.  */
+name|fn_block
+operator|=
+name|make_node
+argument_list|(
+name|BLOCK
+argument_list|)
+expr_stmt|;
+name|BLOCK_VARS
+argument_list|(
+name|fn_block
+argument_list|)
+operator|=
+name|a
+expr_stmt|;
+name|DECL_INITIAL
+argument_list|(
+name|thunk_fndecl
+argument_list|)
+operator|=
+name|fn_block
 expr_stmt|;
 name|init_function_start
 argument_list|(

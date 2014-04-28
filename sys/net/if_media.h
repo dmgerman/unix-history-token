@@ -39,6 +39,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Driver callbacks for media status and change requests.  */
 end_comment
@@ -624,6 +630,10 @@ end_define
 
 begin_comment
 comment|/* 40GBase-LR4 */
+end_comment
+
+begin_comment
+comment|/*  * Please update ieee8023ad_lacp.c:lacp_compose_key()  * after adding new Ethernet media types.  */
 end_comment
 
 begin_comment

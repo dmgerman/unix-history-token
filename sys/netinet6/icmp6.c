@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -5294,6 +5300,15 @@ sizeof|sizeof
 argument_list|(
 name|inc
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|inc
+operator|.
+name|inc_fibnum
+operator|=
+name|M_GETFIB
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 name|inc

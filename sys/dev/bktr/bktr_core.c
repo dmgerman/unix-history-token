@@ -12101,7 +12101,7 @@ value|(1<< 30)
 define|#
 directive|define
 name|BKTR_TEST_RISC_STATUS_BIT3
-value|(1<< 31)
+value|(1U<< 31)
 specifier|static
 name|bool_t
 name|notclipped

@@ -1065,7 +1065,7 @@ argument_list|)
 argument_list|,
 operator|(
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

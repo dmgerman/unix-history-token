@@ -172,6 +172,15 @@ name|listener
 argument_list|)
 block|;
 name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|DoDetach
+argument_list|(
+argument|bool keep_stopped
+argument_list|)
+block|;
+name|virtual
 name|bool
 name|UpdateThreadList
 argument_list|(
@@ -186,6 +195,30 @@ operator|::
 name|ThreadList
 operator|&
 name|new_thread_list
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|DoResume
+argument_list|()
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|WillResume
+argument_list|()
+block|;
+name|virtual
+name|void
+name|SendMessage
+argument_list|(
+specifier|const
+name|ProcessMessage
+operator|&
+name|message
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -257,17 +290,55 @@ name|Args
 operator|&
 name|command
 argument_list|)
-block|;  }
+block|;
+name|protected
+operator|:
+name|friend
+name|class
+name|FreeBSDThread
+block|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|tid_t
+operator|>
+name|tid_collection
+expr_stmt|;
+name|tid_collection
+name|m_suspend_tids
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|tid_collection
+name|m_run_tids
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|tid_collection
+name|m_step_tids
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|m_resume_signo
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
+unit|};
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_MacOSXProcess_H_
+comment|// liblldb_ProcessFreeBSD_H_
 end_comment
 
 end_unit

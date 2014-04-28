@@ -9,11 +9,11 @@ directive|include
 file|"int_lib.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|__x86_64
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRT_HAS_128BIT
+end_ifdef
 
 begin_comment
 comment|/* Returns: convert a to a long double, rounding toward even. */

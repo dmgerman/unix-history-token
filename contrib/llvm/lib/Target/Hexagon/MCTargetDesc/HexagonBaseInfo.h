@@ -229,7 +229,12 @@ comment|// Indirect with long offset
 name|BaseRegOffset
 init|=
 literal|5
+block|,
 comment|// Indirect with register offset
+name|PostInc
+init|=
+literal|6
+comment|// Post increment addressing mode
 block|}
 enum|;
 enum|enum
@@ -254,7 +259,7 @@ name|WordAccess
 init|=
 literal|3
 block|,
-comment|// Word access instrution (memw).
+comment|// Word access instruction (memw).
 name|DoubleWordAccess
 init|=
 literal|4

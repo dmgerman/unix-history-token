@@ -710,7 +710,7 @@ operator|*
 name|proto
 operator|<
 literal|0x21
-operator|&&
+operator|||
 operator|*
 name|proto
 operator|>

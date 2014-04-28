@@ -2524,7 +2524,7 @@ name|z_os
 decl_stmt|;
 if|if
 condition|(
-name|snapshot_namecheck
+name|zfs_component_namecheck
 argument_list|(
 name|name
 argument_list|,
@@ -3919,7 +3919,7 @@ name|UIO_SYSSPACE
 decl_stmt|;
 if|if
 condition|(
-name|snapshot_namecheck
+name|zfs_component_namecheck
 argument_list|(
 name|dirname
 argument_list|,

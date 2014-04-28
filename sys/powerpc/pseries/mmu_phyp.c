@@ -797,13 +797,24 @@ operator|--
 expr_stmt|;
 block|}
 block|}
+comment|/* For now we allow shift only to be<= 0x18. */
+if|if
+condition|(
+name|shift
+operator|>=
+literal|0x18
+condition|)
+name|shift
+operator|=
+literal|0x18
+expr_stmt|;
 name|moea64_large_page_shift
 operator|=
 name|shift
 expr_stmt|;
 name|moea64_large_page_size
 operator|=
-literal|1
+literal|1ULL
 operator|<<
 name|shift
 expr_stmt|;

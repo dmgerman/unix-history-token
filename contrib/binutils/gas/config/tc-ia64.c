@@ -54196,6 +54196,8 @@ name|fix
 operator|->
 name|fx_line
 argument_list|,
+literal|"%s"
+argument_list|,
 name|err
 argument_list|)
 expr_stmt|;

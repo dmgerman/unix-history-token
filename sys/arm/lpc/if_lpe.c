@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -196,18 +202,6 @@ include|#
 directive|include
 file|"miibus_if.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
 
 begin_ifdef
 ifdef|#
@@ -945,6 +939,19 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 operator|!

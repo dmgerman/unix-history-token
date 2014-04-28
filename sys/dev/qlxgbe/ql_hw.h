@@ -2129,11 +2129,21 @@ define|#
 directive|define
 name|Q8_MBX_FW_LRO_IPV6_WO_DST_IP_CHK
 value|0x8
+define|#
+directive|define
+name|Q8_MBX_FW_LRO_LOW_THRESHOLD
+value|0x10
 name|uint8_t
 name|rsrvd
 decl_stmt|;
 name|uint16_t
 name|cntxt_id
+decl_stmt|;
+name|uint16_t
+name|low_threshold
+decl_stmt|;
+name|uint16_t
+name|rsrvd0
 decl_stmt|;
 block|}
 name|__packed
@@ -5205,6 +5215,9 @@ name|health_count
 decl_stmt|;
 name|uint32_t
 name|max_tx_segs
+decl_stmt|;
+name|uint32_t
+name|min_lro_pkt_size
 decl_stmt|;
 comment|/* Flash Descriptor Table */
 name|qla_flash_desc_table_t

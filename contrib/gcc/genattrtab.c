@@ -4328,6 +4328,9 @@ case|:
 case|case
 name|PARITY
 case|:
+case|case
+name|BSWAP
+case|:
 name|XEXP
 argument_list|(
 name|exp

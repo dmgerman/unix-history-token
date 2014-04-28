@@ -1788,6 +1788,11 @@ block|{
 comment|/* 	 * Claim log block if not already committed and not already claimed. 	 * If tx == NULL, just verify that the block is claimable. 	 */
 if|if
 condition|(
+name|BP_IS_HOLE
+argument_list|(
+name|bp
+argument_list|)
+operator|||
 name|bp
 operator|->
 name|blk_birth
@@ -2058,6 +2063,12 @@ name|bp
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|!
+name|BP_IS_HOLE
+argument_list|(
+name|bp
+argument_list|)
 condition|)
 name|zio_free
 argument_list|(
@@ -4200,7 +4211,7 @@ name|zil_lwb_write_done
 argument_list|,
 name|lwb
 argument_list|,
-name|ZIO_PRIORITY_LOG_WRITE
+name|ZIO_PRIORITY_SYNC_WRITE
 argument_list|,
 name|ZIO_FLAG_CANFAIL
 operator||

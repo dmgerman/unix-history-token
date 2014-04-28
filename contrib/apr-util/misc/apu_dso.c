@@ -250,10 +250,6 @@ name|APR_SUCCESS
 decl_stmt|;
 name|apr_pool_t
 modifier|*
-name|global
-decl_stmt|;
-name|apr_pool_t
-modifier|*
 name|parent
 decl_stmt|;
 if|if
@@ -293,20 +289,25 @@ for|for
 control|(
 name|parent
 operator|=
-name|global
-operator|=
+name|apr_pool_parent_get
+argument_list|(
 name|pool
+argument_list|)
 init|;
 name|parent
+operator|&&
+name|parent
+operator|!=
+name|pool
 condition|;
 name|parent
 operator|=
 name|apr_pool_parent_get
 argument_list|(
-name|global
+name|pool
 argument_list|)
 control|)
-name|global
+name|pool
 operator|=
 name|parent
 expr_stmt|;
@@ -314,7 +315,7 @@ name|dsos
 operator|=
 name|apr_hash_make
 argument_list|(
-name|global
+name|pool
 argument_list|)
 expr_stmt|;
 if|#
@@ -329,7 +330,7 @@ name|mutex
 argument_list|,
 name|APR_THREAD_MUTEX_DEFAULT
 argument_list|,
-name|global
+name|pool
 argument_list|)
 expr_stmt|;
 comment|/* This already registers a pool cleanup */
@@ -337,7 +338,7 @@ endif|#
 directive|endif
 name|apr_pool_cleanup_register
 argument_list|(
-name|global
+name|pool
 argument_list|,
 name|NULL
 argument_list|,

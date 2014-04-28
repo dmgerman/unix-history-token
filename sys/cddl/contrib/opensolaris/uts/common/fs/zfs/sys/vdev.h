@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -630,7 +630,7 @@ name|vd
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|boolean_t
 name|vdev_cache_read
 parameter_list|(
 name|zio_t
@@ -688,6 +688,37 @@ specifier|extern
 name|void
 name|vdev_queue_io_done
 parameter_list|(
+name|zio_t
+modifier|*
+name|zio
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|vdev_queue_length
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
+name|vdev_queue_lastoffset
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|vdev_queue_register_lastoffset
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|,
 name|zio_t
 modifier|*
 name|zio

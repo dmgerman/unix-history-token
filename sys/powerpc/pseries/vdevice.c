@@ -393,7 +393,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|vdevice
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|vdevice_driver
 argument_list|,
@@ -698,10 +698,15 @@ literal|1
 condition|)
 name|irq
 operator|=
-name|MAP_IRQ
+name|ofw_bus_map_intr
 argument_list|(
+name|dev
+argument_list|,
 name|iparent
 argument_list|,
+name|icells
+argument_list|,
+operator|&
 name|intr
 index|[
 name|i

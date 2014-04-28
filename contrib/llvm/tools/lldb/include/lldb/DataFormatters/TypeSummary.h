@@ -53,12 +53,6 @@ directive|include
 file|<stdint.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
 begin_comment
 comment|// C++ Includes
 end_comment
@@ -699,7 +693,7 @@ argument_list|()
 return|;
 block|}
 name|bool
-name|IsOneliner
+name|IsOneLiner
 argument_list|()
 specifier|const
 block|{
@@ -800,7 +794,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|SetIsOneliner
+name|SetIsOneLiner
 parameter_list|(
 name|bool
 name|value

@@ -58,6 +58,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/Core/ArchSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/RegisterContext.h"
 end_include
 
@@ -66,7 +72,7 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// @class RegisterContextPOSIX
+comment|/// @class POSIXBreakpointProtocol
 end_comment
 
 begin_comment
@@ -79,33 +85,23 @@ end_comment
 
 begin_decl_stmt
 name|class
-name|RegisterContextPOSIX
-range|:
-name|public
-name|lldb_private
-operator|::
-name|RegisterContext
+name|POSIXBreakpointProtocol
 block|{
 name|public
-operator|:
-name|RegisterContextPOSIX
-argument_list|(
-argument|lldb_private::Thread&thread
-argument_list|,
-argument|uint32_t concrete_frame_idx
-argument_list|)
-operator|:
-name|RegisterContext
-argument_list|(
-argument|thread
-argument_list|,
-argument|concrete_frame_idx
-argument_list|)
+label|:
+name|POSIXBreakpointProtocol
+argument_list|()
 block|{
 name|m_watchpoints_initialized
 operator|=
 name|false
-block|; }
+expr_stmt|;
+block|}
+name|virtual
+operator|~
+name|POSIXBreakpointProtocol
+argument_list|()
+block|{}
 comment|/// Updates the register state of the associated thread after hitting a
 comment|/// breakpoint (if that make sense for the architecture).  Default
 comment|/// implementation simply returns true for architectures which do not
@@ -117,46 +113,40 @@ name|virtual
 name|bool
 name|UpdateAfterBreakpoint
 argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
+operator|=
+literal|0
+expr_stmt|;
 comment|/// Determines the index in lldb's register file given a kernel byte offset.
 name|virtual
 name|unsigned
 name|GetRegisterIndexFromOffset
-argument_list|(
-argument|unsigned offset
-argument_list|)
-block|{
-return|return
-name|LLDB_INVALID_REGNUM
-return|;
-block|}
+parameter_list|(
+name|unsigned
+name|offset
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|// Checks to see if a watchpoint specified by hw_index caused the inferior
 comment|// to stop.
 name|virtual
 name|bool
 name|IsWatchpointHit
-argument_list|(
-argument|uint32_t hw_index
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
+parameter_list|(
+name|uint32_t
+name|hw_index
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|// Resets any watchpoints that have been hit.
 name|virtual
 name|bool
 name|ClearWatchpointHits
-argument_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 comment|// Returns the watchpoint address associated with a watchpoint hardware
 comment|// index.
 name|virtual
@@ -167,48 +157,146 @@ name|GetWatchpointAddress
 argument_list|(
 argument|uint32_t hw_index
 argument_list|)
-block|{
-return|return
-name|LLDB_INVALID_ADDRESS
-return|;
-block|}
+operator|=
+literal|0
+expr_stmt|;
 name|virtual
 name|bool
 name|IsWatchpointVacant
-argument_list|(
-argument|uint32_t hw_index
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
+parameter_list|(
+name|uint32_t
+name|hw_index
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 name|virtual
 name|bool
 name|SetHardwareWatchpointWithIndex
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|,
-argument|size_t size
+name|size_t
+name|size
 argument_list|,
-argument|bool read
+name|bool
+name|read
 argument_list|,
-argument|bool write
+name|bool
+name|write
 argument_list|,
-argument|uint32_t hw_index
+name|uint32_t
+name|hw_index
 argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|// From lldb_private::RegisterContext
+name|virtual
+name|uint32_t
+name|NumSupportedHardwareWatchpoints
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|// Force m_watchpoints_initialized to TRUE
+name|void
+name|ForceWatchpointsInitialized
+parameter_list|()
 block|{
-return|return
-name|false
-return|;
+name|m_watchpoints_initialized
+operator|=
+name|true
+expr_stmt|;
 block|}
 name|protected
-operator|:
+label|:
 name|bool
 name|m_watchpoints_initialized
-block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//------------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|/// @class RegisterInfoInterface
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @brief RegisterInfo interface to patch RegisterInfo structure for archs.
+end_comment
+
+begin_decl_stmt
+name|class
+name|RegisterInfoInterface
+block|{
+name|public
+label|:
+name|RegisterInfoInterface
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|target_arch
+argument_list|)
+operator|:
+name|m_target_arch
+argument_list|(
+argument|target_arch
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|RegisterInfoInterface
+argument_list|()
+block|{}
+name|virtual
+name|size_t
+name|GetGPRSize
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+specifier|const
+name|lldb_private
+operator|::
+name|RegisterInfo
+operator|*
+name|GetRegisterInfo
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+name|public
+label|:
+name|lldb_private
+operator|::
+name|ArchSpec
+name|m_target_arch
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_endif
 endif|#

@@ -138,13 +138,33 @@ block|,
 name|CortexR5
 block|,
 name|Swift
+block|,
+name|CortexA53
+block|,
+name|CortexA57
+block|}
+block|;   enum
+name|ARMProcClassEnum
+block|{
+name|None
+block|,
+name|AClass
+block|,
+name|RClass
+block|,
+name|MClass
 block|}
 block|;
 comment|/// ARMProcFamily - ARM processor family: Cortex-A8, Cortex-A9, and others.
 name|ARMProcFamilyEnum
 name|ARMProcFamily
 block|;
-comment|/// HasV4TOps, HasV5TOps, HasV5TEOps, HasV6Ops, HasV6T2Ops, HasV7Ops -
+comment|/// ARMProcClass - ARM processor class: None, AClass, RClass or MClass.
+name|ARMProcClassEnum
+name|ARMProcClass
+block|;
+comment|/// HasV4TOps, HasV5TOps, HasV5TEOps,
+comment|/// HasV6Ops, HasV6MOps, HasV6T2Ops, HasV7Ops, HasV8Ops -
 comment|/// Specify whether target support specific ARM ISA variants.
 name|bool
 name|HasV4TOps
@@ -159,12 +179,18 @@ name|bool
 name|HasV6Ops
 block|;
 name|bool
+name|HasV6MOps
+block|;
+name|bool
 name|HasV6T2Ops
 block|;
 name|bool
 name|HasV7Ops
 block|;
-comment|/// HasVFPv2, HasVFPv3, HasVFPv4, HasNEON - Specify what
+name|bool
+name|HasV8Ops
+block|;
+comment|/// HasVFPv2, HasVFPv3, HasVFPv4, HasFPARMv8, HasNEON - Specify what
 comment|/// floating point ISAs are supported.
 name|bool
 name|HasVFPv2
@@ -174,6 +200,9 @@ name|HasVFPv3
 block|;
 name|bool
 name|HasVFPv4
+block|;
+name|bool
+name|HasFPARMv8
 block|;
 name|bool
 name|HasNEON
@@ -210,11 +239,6 @@ block|;
 comment|/// HasThumb2 - True if Thumb2 instructions are supported.
 name|bool
 name|HasThumb2
-block|;
-comment|/// IsMClass - True if the subtarget belongs to the 'M' profile of CPUs -
-comment|/// v6m, v7m for example.
-name|bool
-name|IsMClass
 block|;
 comment|/// NoARM - True if subtarget does not support ARM mode execution.
 name|bool
@@ -293,20 +317,44 @@ comment|/// extension (ARMv7 only).
 name|bool
 name|HasMPExtension
 block|;
+comment|/// HasVirtualization - True if the subtarget supports the Virtualization
+comment|/// extension.
+name|bool
+name|HasVirtualization
+block|;
 comment|/// FPOnlySP - If true, the floating point unit only supports single
 comment|/// precision.
 name|bool
 name|FPOnlySP
 block|;
+comment|/// If true, the processor supports the Performance Monitor Extensions. These
+comment|/// include a generic cycle-counter as well as more fine-grained (often
+comment|/// implementation-specific) events.
+name|bool
+name|HasPerfMon
+block|;
 comment|/// HasTrustZone - if true, processor supports TrustZone security extensions
 name|bool
 name|HasTrustZone
+block|;
+comment|/// HasCrypto - if true, processor supports Cryptography extensions
+name|bool
+name|HasCrypto
+block|;
+comment|/// HasCRC - if true, processor supports CRC instructions
+name|bool
+name|HasCRC
 block|;
 comment|/// AllowsUnalignedMem - If true, the subtarget allows unaligned memory
 comment|/// accesses for some types.  For details, see
 comment|/// ARMTargetLowering::allowsUnalignedMemoryAccesses().
 name|bool
 name|AllowsUnalignedMem
+block|;
+comment|/// RestrictIT - If true, the subtarget disallows generation of deprecated IT
+comment|///  blocks to conform to ARMv8 rule.
+name|bool
+name|RestrictIT
 block|;
 comment|/// Thumb2DSP - If true, the subtarget supports the v7 DSP (saturating arith
 comment|/// and such) instructions in Thumb2 code.
@@ -355,13 +403,6 @@ block|;
 name|public
 operator|:
 expr|enum
-block|{
-name|isELF
-block|,
-name|isDarwin
-block|}
-name|TargetType
-block|;    enum
 block|{
 name|ARM_ABI_APCS
 block|,
@@ -498,6 +539,15 @@ name|HasV6Ops
 return|;
 block|}
 name|bool
+name|hasV6MOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasV6MOps
+return|;
+block|}
+name|bool
 name|hasV6T2Ops
 argument_list|()
 specifier|const
@@ -513,6 +563,15 @@ specifier|const
 block|{
 return|return
 name|HasV7Ops
+return|;
+block|}
+name|bool
+name|hasV8Ops
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasV8Ops
 return|;
 block|}
 name|bool
@@ -643,12 +702,48 @@ name|HasVFPv4
 return|;
 block|}
 name|bool
+name|hasFPARMv8
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFPARMv8
+return|;
+block|}
+name|bool
 name|hasNEON
 argument_list|()
 specifier|const
 block|{
 return|return
 name|HasNEON
+return|;
+block|}
+name|bool
+name|hasCrypto
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCrypto
+return|;
+block|}
+name|bool
+name|hasCRC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCRC
+return|;
+block|}
+name|bool
+name|hasVirtualization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVirtualization
 return|;
 block|}
 name|bool
@@ -700,6 +795,24 @@ name|HasDataBarrier
 return|;
 block|}
 name|bool
+name|hasAnyDataBarrier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDataBarrier
+operator|||
+operator|(
+name|hasV6Ops
+argument_list|()
+operator|&&
+operator|!
+name|isThumb
+argument_list|()
+operator|)
+return|;
+block|}
+name|bool
 name|useMulOps
 argument_list|()
 specifier|const
@@ -743,6 +856,15 @@ specifier|const
 block|{
 return|return
 name|FPOnlySP
+return|;
+block|}
+name|bool
+name|hasPerfMon
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasPerfMon
 return|;
 block|}
 name|bool
@@ -854,12 +976,8 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isiOS
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|IOS
 return|;
 block|}
 name|bool
@@ -882,12 +1000,20 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSNaCl
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|NaCl
+return|;
+block|}
+name|bool
+name|isTargetLinux
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSLinux
+argument_list|()
 return|;
 block|}
 name|bool
@@ -899,6 +1025,27 @@ return|return
 operator|!
 name|isTargetDarwin
 argument_list|()
+return|;
+block|}
+comment|// ARM EABI is the bare-metal EABI described in ARM ABI documents and
+comment|// can be accessed via -target arm-none-eabi. This is NOT GNUEABI.
+comment|// FIXME: Add a flag for bare-metal for that target and set Triple::EABI
+comment|// even for GNUEABI, so we can make a distinction here and still conform to
+comment|// the EABI on GNU (and Android) mode. This requires change in Clang, too.
+name|bool
+name|isTargetAEABI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|EABI
 return|;
 block|}
 name|bool
@@ -970,17 +1117,31 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IsMClass
+name|ARMProcClass
+operator|==
+name|MClass
 return|;
 block|}
 name|bool
-name|isARClass
+name|isRClass
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|IsMClass
+name|ARMProcClass
+operator|==
+name|RClass
+return|;
+block|}
+name|bool
+name|isAClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ARMProcClass
+operator|==
+name|AClass
 return|;
 block|}
 name|bool
@@ -1022,6 +1183,15 @@ return|return
 name|AllowsUnalignedMem
 return|;
 block|}
+name|bool
+name|restrictIT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RestrictIT
+return|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -1037,6 +1207,13 @@ return|;
 block|}
 name|unsigned
 name|getMispredictionPenalty
+argument_list|()
+specifier|const
+block|;
+comment|/// This function returns true if the target has sincos() routine in its
+comment|/// compiler runtime or math libraries.
+name|bool
+name|hasSinCos
 argument_list|()
 specifier|const
 block|;

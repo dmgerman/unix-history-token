@@ -494,7 +494,7 @@ operator|=
 operator|(
 name|uint64_t
 operator|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|*

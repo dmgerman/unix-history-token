@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexdhs.c,v 1.14 2013/07/19 07:37:48 markus Exp $ */
+comment|/* $OpenBSD: kexdhs.c,v 1.18 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -95,29 +95,6 @@ begin_include
 include|#
 directive|include
 file|"ssh2.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GSSAPI
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"ssh-gss.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"monitor_wrap.h"
 end_include
 
 begin_function
@@ -491,11 +468,9 @@ argument_list|(
 literal|"kexdh_server: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|kbuf
-argument_list|,
-literal|0
 argument_list|,
 name|klen
 argument_list|)
@@ -692,7 +667,7 @@ argument_list|(
 name|dh
 argument_list|)
 expr_stmt|;
-name|kex_derive_keys
+name|kex_derive_keys_bn
 argument_list|(
 name|kex
 argument_list|,

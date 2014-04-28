@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -251,62 +251,31 @@ define|#
 directive|define
 name|ZIO_FAILURE_MODE_PANIC
 value|2
-define|#
-directive|define
-name|ZIO_PRIORITY_NOW
-value|(zio_priority_table[0])
-define|#
-directive|define
+typedef|typedef
+enum|enum
+name|zio_priority
+block|{
 name|ZIO_PRIORITY_SYNC_READ
-value|(zio_priority_table[1])
-define|#
-directive|define
+block|,
 name|ZIO_PRIORITY_SYNC_WRITE
-value|(zio_priority_table[2])
-define|#
-directive|define
-name|ZIO_PRIORITY_LOG_WRITE
-value|(zio_priority_table[3])
-define|#
-directive|define
-name|ZIO_PRIORITY_CACHE_FILL
-value|(zio_priority_table[4])
-define|#
-directive|define
-name|ZIO_PRIORITY_AGG
-value|(zio_priority_table[5])
-define|#
-directive|define
-name|ZIO_PRIORITY_FREE
-value|(zio_priority_table[6])
-define|#
-directive|define
-name|ZIO_PRIORITY_ASYNC_WRITE
-value|(zio_priority_table[7])
-define|#
-directive|define
+block|,
+comment|/* ZIL */
 name|ZIO_PRIORITY_ASYNC_READ
-value|(zio_priority_table[8])
-define|#
-directive|define
-name|ZIO_PRIORITY_RESILVER
-value|(zio_priority_table[9])
-define|#
-directive|define
+block|,
+comment|/* prefetch */
+name|ZIO_PRIORITY_ASYNC_WRITE
+block|,
+comment|/* spa_sync() */
 name|ZIO_PRIORITY_SCRUB
-value|(zio_priority_table[10])
-define|#
-directive|define
-name|ZIO_PRIORITY_DDT_PREFETCH
-value|(zio_priority_table[11])
-define|#
-directive|define
-name|ZIO_PRIORITY_TRIM
-value|(zio_priority_table[12])
-define|#
-directive|define
-name|ZIO_PRIORITY_TABLE_SIZE
-value|13
+block|,
+comment|/* asynchronous scrub/resilver reads */
+name|ZIO_PRIORITY_NUM_QUEUEABLE
+block|,
+name|ZIO_PRIORITY_NOW
+comment|/* non-queued i/os (e.g. free) */
+block|}
+name|zio_priority_t
+typedef|;
 define|#
 directive|define
 name|ZIO_PIPELINE_CONTINUE
@@ -502,6 +471,12 @@ init|=
 literal|1
 operator|<<
 literal|26
+block|,
+name|ZIO_FLAG_DELEGATED
+init|=
+literal|1
+operator|<<
+literal|27
 block|, }
 enum|;
 define|#
@@ -579,13 +554,7 @@ name|zio
 parameter_list|)
 function_decl|;
 specifier|extern
-name|uint8_t
-name|zio_priority_table
-index|[
-name|ZIO_PRIORITY_TABLE_SIZE
-index|]
-decl_stmt|;
-specifier|extern
+specifier|const
 name|char
 modifier|*
 name|zio_type_name
@@ -1010,7 +979,7 @@ decl_stmt|;
 name|int
 name|io_cmd
 decl_stmt|;
-name|uint8_t
+name|zio_priority_t
 name|io_priority
 decl_stmt|;
 name|uint8_t
@@ -1065,6 +1034,10 @@ name|io_ready
 decl_stmt|;
 name|zio_done_func_t
 modifier|*
+name|io_physdone
+decl_stmt|;
+name|zio_done_func_t
+modifier|*
 name|io_done
 decl_stmt|;
 name|void
@@ -1110,21 +1083,11 @@ decl_stmt|;
 name|uint64_t
 name|io_offset
 decl_stmt|;
-name|uint64_t
-name|io_deadline
-decl_stmt|;
 name|hrtime_t
 name|io_timestamp
 decl_stmt|;
 name|avl_node_t
-name|io_offset_node
-decl_stmt|;
-name|avl_node_t
-name|io_deadline_node
-decl_stmt|;
-name|avl_tree_t
-modifier|*
-name|io_vdev_tree
+name|io_queue_node
 decl_stmt|;
 comment|/* Internal pipeline state */
 name|enum
@@ -1173,6 +1136,9 @@ name|uint64_t
 name|io_child_count
 decl_stmt|;
 name|uint64_t
+name|io_phys_children
+decl_stmt|;
+name|uint64_t
 name|io_parent_count
 decl_stmt|;
 name|uint64_t
@@ -1209,16 +1175,10 @@ decl_stmt|;
 name|uint64_t
 name|io_ena
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
-comment|/* FreeBSD only. */
-name|struct
-name|ostask
-name|io_task
+comment|/* Taskq dispatching state */
+name|taskq_ent_t
+name|io_tqent
 decl_stmt|;
-endif|#
-directive|endif
 name|avl_node_t
 name|io_trim_node
 decl_stmt|;
@@ -1312,7 +1272,7 @@ name|void
 modifier|*
 name|priv
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -1363,13 +1323,17 @@ name|ready
 parameter_list|,
 name|zio_done_func_t
 modifier|*
+name|physdone
+parameter_list|,
+name|zio_done_func_t
+modifier|*
 name|done
 parameter_list|,
 name|void
 modifier|*
 name|priv
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -1417,7 +1381,7 @@ name|void
 modifier|*
 name|priv
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -1533,9 +1497,6 @@ name|void
 modifier|*
 name|priv
 parameter_list|,
-name|int
-name|priority
-parameter_list|,
 name|enum
 name|zio_flag
 name|flags
@@ -1575,7 +1536,7 @@ name|void
 modifier|*
 name|priv
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -1620,7 +1581,7 @@ name|void
 modifier|*
 name|priv
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -1910,7 +1871,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -1948,7 +1909,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum

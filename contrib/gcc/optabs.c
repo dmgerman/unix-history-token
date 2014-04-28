@@ -11379,6 +11379,16 @@ goto|goto
 name|try_libcall
 goto|;
 block|}
+comment|/* We can't widen a bswap.  */
+if|if
+condition|(
+name|unoptab
+operator|==
+name|bswap_optab
+condition|)
+goto|goto
+name|try_libcall
+goto|;
 if|if
 condition|(
 name|CLASS_HAS_WIDER_MODES_P
@@ -23317,6 +23327,13 @@ argument_list|(
 name|NOT
 argument_list|)
 expr_stmt|;
+name|bswap_optab
+operator|=
+name|init_optab
+argument_list|(
+name|BSWAP
+argument_list|)
+expr_stmt|;
 name|ffs_optab
 operator|=
 name|init_optab
@@ -24676,6 +24693,25 @@ argument_list|,
 name|MODE_DECIMAL_FLOAT
 argument_list|,
 name|MODE_FLOAT
+argument_list|)
+expr_stmt|;
+comment|/* Explicitly initialize the bswap libfuncs since we need them to be      valid for things other than word_mode.  */
+name|set_optab_libfunc
+argument_list|(
+name|bswap_optab
+argument_list|,
+name|SImode
+argument_list|,
+literal|"__bswapsi2"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|bswap_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__bswapdi2"
 argument_list|)
 expr_stmt|;
 comment|/* Use cabs for double complex abs, since systems generally have cabs.      Don't define any libcall for float complex, so that cabs will be used.  */

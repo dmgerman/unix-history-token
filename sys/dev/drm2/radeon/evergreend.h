@@ -239,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|SE_BROADCAST_WRITES
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -687,7 +687,7 @@ begin_define
 define|#
 directive|define
 name|RB_RPTR_WR_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1121,7 +1121,7 @@ begin_define
 define|#
 directive|define
 name|HDMI_ACR_AUDIO_PRIORITY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2288,7 +2288,7 @@ begin_define
 define|#
 directive|define
 name|AFMT_RAMP_DATA_SIGN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -2907,7 +2907,7 @@ begin_define
 define|#
 directive|define
 name|AUDIO_ENABLED
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3210,7 +3210,7 @@ begin_define
 define|#
 directive|define
 name|GUI_ACTIVE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3294,7 +3294,7 @@ begin_define
 define|#
 directive|define
 name|SE_CB_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -5483,7 +5483,7 @@ begin_define
 define|#
 directive|define
 name|IH_WPTR_OVERFLOW_CLEAR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -5667,7 +5667,7 @@ begin_define
 define|#
 directive|define
 name|RB_INT_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -5709,7 +5709,7 @@ begin_define
 define|#
 directive|define
 name|RB_INT_STAT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -7238,7 +7238,7 @@ begin_define
 define|#
 directive|define
 name|PACKET3_CP_DMA_CP_SYNC
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment

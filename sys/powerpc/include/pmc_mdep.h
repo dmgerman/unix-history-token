@@ -18,15 +18,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|PMC_MDEP_CLASS_INDEX_CPU
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|PMC_MDEP_CLASS_INDEX_PPC7450
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMC_MDEP_CLASS_INDEX_PPC970
-value|0
+value|1
 end_define
 
 begin_union
@@ -97,12 +104,8 @@ name|PMC_TRAPFRAME_TO_PC
 parameter_list|(
 name|TF
 parameter_list|)
-value|(0)
+value|((TF)->srr0)
 end_define
-
-begin_comment
-comment|/* Stubs */
-end_comment
 
 begin_define
 define|#
@@ -111,7 +114,7 @@ name|PMC_TRAPFRAME_TO_FP
 parameter_list|(
 name|TF
 parameter_list|)
-value|(0)
+value|((TF)->fixreg[1])
 end_define
 
 begin_define

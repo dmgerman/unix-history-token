@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -879,6 +885,11 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|CURVNET_SET_QUIET
+argument_list|(
+name|vnet0
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 name|if_alloc
@@ -1161,6 +1172,9 @@ expr|struct
 name|ether_vlan_header
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|num
@@ -1248,6 +1262,9 @@ expr_stmt|;
 return|return;
 name|fail
 label|:
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|free_unr
 argument_list|(
 name|ueunit

@@ -167,9 +167,6 @@ name|class
 name|SBHostOS
 decl_stmt|;
 name|class
-name|SBInputReader
-decl_stmt|;
-name|class
 name|SBInstruction
 decl_stmt|;
 name|class

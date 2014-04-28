@@ -160,6 +160,36 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ARGE_BARRIER_READ
+parameter_list|(
+name|sc
+parameter_list|)
+value|bus_barrier(sc->arge_res, 0, 0, \ 				    BUS_SPACE_BARRIER_READ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_BARRIER_WRITE
+parameter_list|(
+name|sc
+parameter_list|)
+value|bus_barrier(sc->arge_res, 0, 0, \ 				    BUS_SPACE_BARRIER_WRITE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_BARRIER_RW
+parameter_list|(
+name|sc
+parameter_list|)
+value|bus_barrier(sc->arge_res, 0, 0, \ 				    BUS_SPACE_BARRIER_READ | \ 				    BUS_SPACE_BARRIER_WRITE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGE_WRITE
 parameter_list|(
 name|sc
@@ -168,7 +198,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|do {	\ 		bus_write_4(sc->arge_res, (reg), (val)); \ 	} while (0)
+value|do {	\ 		bus_write_4(sc->arge_res, (reg), (val)); \ 		ARGE_BARRIER_WRITE((sc)); \ 	} while (0)
 end_define
 
 begin_define
@@ -244,8 +274,38 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGE_MDIO_BARRIER_READ
+parameter_list|(
+name|_sc
+parameter_list|)
+value|ARGE_BARRIER_READ(_sc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_MDIO_BARRIER_WRITE
+parameter_list|(
+name|_sc
+parameter_list|)
+value|ARGE_BARRIER_WRITE(_sc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_MDIO_BARRIER_RW
+parameter_list|(
+name|_sc
+parameter_list|)
+value|ARGE_BARRIER_READ_RW(_sc)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGE_DESC_EMPTY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -538,6 +598,9 @@ name|arge_if_flags
 decl_stmt|;
 name|uint32_t
 name|arge_debug
+decl_stmt|;
+name|uint32_t
+name|arge_mdiofreq
 decl_stmt|;
 struct|struct
 block|{

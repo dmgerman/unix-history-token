@@ -27,6 +27,12 @@ directive|include
 file|<sys/_lock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/ktr_class.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|lock_list_entry
@@ -523,13 +529,21 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|KTR
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|LOCK_PROFILING
 argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|KTR
+argument_list|)
+operator|&&
+operator|(
+name|KTR_COMPILE
+operator|&
+name|KTR_LOCK
+operator|)
+operator|)
 end_if
 
 begin_define
@@ -690,7 +704,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|lock_initalized
+name|lock_initialized
 parameter_list|(
 name|lo
 parameter_list|)

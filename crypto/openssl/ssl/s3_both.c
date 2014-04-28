@@ -330,6 +330,15 @@ operator|.
 name|finish_md
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|s
 operator|->
 name|s3
@@ -536,6 +545,20 @@ decl_stmt|;
 name|int
 name|slen
 decl_stmt|;
+comment|/* If no new cipher setup return immediately: other functions will 	 * set the appropriate error. 	 */
+if|if
+condition|(
+name|s
+operator|->
+name|s3
+operator|->
+name|tmp
+operator|.
+name|new_cipher
+operator|==
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 name|s

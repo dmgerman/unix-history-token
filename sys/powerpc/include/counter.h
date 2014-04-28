@@ -38,19 +38,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AIM
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__powerpc64__
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -323,7 +315,7 @@ operator|(
 name|inc
 operator|)
 operator|:
-literal|"cc"
+literal|"cr0"
 operator|,
 literal|"memory"
 block|)
@@ -337,7 +329,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !AIM || !64bit */
+comment|/* !64bit */
 end_comment
 
 begin_define
@@ -583,7 +575,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AIM 64bit */
+comment|/* 64bit */
 end_comment
 
 begin_endif

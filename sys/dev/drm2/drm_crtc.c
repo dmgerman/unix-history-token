@@ -9386,6 +9386,12 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|r
+operator|->
+name|handle
+operator|=
+literal|0
+expr_stmt|;
 name|fb
 operator|->
 name|funcs

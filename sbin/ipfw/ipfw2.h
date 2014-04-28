@@ -535,6 +535,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|uint32_t
+name|ipfw_get_tables_max
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct_decl
 struct_decl|struct
 name|in6_addr
@@ -776,6 +785,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PF
+end_ifdef
+
 begin_comment
 comment|/* altq.c */
 end_comment
@@ -813,6 +828,22 @@ name|altqptr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NO_ALTQ
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* dummynet.c */

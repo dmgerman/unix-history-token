@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man.c,v 1.115 2012/01/03 15:16:24 kristaps Exp $ */
+comment|/*	$Id: man.c,v 1.121 2013/11/10 22:54:40 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -162,6 +162,14 @@ block|,
 literal|"ft"
 block|,
 literal|"OP"
+block|,
+literal|"EX"
+block|,
+literal|"EE"
+block|,
+literal|"UR"
+block|,
+literal|"UE"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -335,7 +343,7 @@ specifier|const
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|)
 block|{
 name|assert
@@ -344,7 +352,7 @@ operator|!
 operator|(
 name|MAN_HALT
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 operator|)
@@ -352,7 +360,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|m
+name|man
 operator|->
 name|first
 operator|)
@@ -371,7 +379,7 @@ specifier|const
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|)
 block|{
 name|assert
@@ -380,7 +388,7 @@ operator|!
 operator|(
 name|MAN_HALT
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 operator|)
@@ -389,7 +397,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|m
+name|man
 operator|->
 name|meta
 operator|)
@@ -513,7 +521,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|)
 block|{
 name|assert
@@ -522,7 +530,7 @@ operator|!
 operator|(
 name|MAN_HALT
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 operator|)
@@ -532,7 +540,7 @@ if|if
 condition|(
 name|man_macroend
 argument_list|(
-name|m
+name|man
 argument_list|)
 condition|)
 return|return
@@ -540,7 +548,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|m
+name|man
 operator|->
 name|flags
 operator||=
@@ -561,7 +569,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|ln
@@ -574,7 +582,7 @@ name|int
 name|offs
 parameter_list|)
 block|{
-name|m
+name|man
 operator|->
 name|flags
 operator||=
@@ -586,7 +594,7 @@ operator|!
 operator|(
 name|MAN_HALT
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 operator|)
@@ -594,8 +602,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mandoc_getcontrol
+name|roff_getcontrol
 argument_list|(
+name|man
+operator|->
+name|roff
+argument_list|,
 name|buf
 argument_list|,
 operator|&
@@ -604,7 +616,7 @@ argument_list|)
 condition|?
 name|man_pmacro
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|ln
 argument_list|,
@@ -615,7 +627,7 @@ argument_list|)
 else|:
 name|man_ptext
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|ln
 argument_list|,
@@ -750,13 +762,13 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|)
 block|{
 name|memset
 argument_list|(
 operator|&
-name|m
+name|man
 operator|->
 name|meta
 argument_list|,
@@ -769,13 +781,13 @@ name|man_meta
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|flags
 operator|=
 literal|0
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|last
 operator|=
@@ -790,15 +802,15 @@ name|man_node
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|first
 operator|=
-name|m
+name|man
 operator|->
 name|last
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|last
 operator|->
@@ -806,7 +818,7 @@ name|type
 operator|=
 name|MAN_ROOT
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|last
 operator|->
@@ -814,7 +826,7 @@ name|tok
 operator|=
 name|MAN_MAX
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -1102,7 +1114,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|line
@@ -1165,7 +1177,7 @@ if|if
 condition|(
 name|MAN_NEWLINE
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 condition|)
@@ -1175,7 +1187,7 @@ name|flags
 operator||=
 name|MAN_LINE
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|flags
 operator|&=
@@ -1197,7 +1209,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|line
@@ -1219,7 +1231,7 @@ name|p
 operator|=
 name|man_node_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -1235,7 +1247,7 @@ condition|(
 operator|!
 name|man_node_append
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|p
 argument_list|)
@@ -1245,7 +1257,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -1266,7 +1278,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|line
@@ -1288,7 +1300,7 @@ name|p
 operator|=
 name|man_node_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -1304,7 +1316,7 @@ condition|(
 operator|!
 name|man_node_append
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|p
 argument_list|)
@@ -1314,7 +1326,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -1335,7 +1347,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|line
@@ -1357,7 +1369,7 @@ name|p
 operator|=
 name|man_node_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -1373,7 +1385,7 @@ condition|(
 operator|!
 name|man_node_append
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|p
 argument_list|)
@@ -1383,7 +1395,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -1404,7 +1416,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|line
@@ -1426,7 +1438,7 @@ name|p
 operator|=
 name|man_node_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -1442,7 +1454,7 @@ condition|(
 operator|!
 name|man_node_append
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|p
 argument_list|)
@@ -1452,7 +1464,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -1473,7 +1485,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|line
@@ -1495,7 +1507,7 @@ name|p
 operator|=
 name|man_node_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -1511,7 +1523,7 @@ condition|(
 operator|!
 name|man_node_append
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|p
 argument_list|)
@@ -1521,7 +1533,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -1542,7 +1554,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|line
@@ -1565,7 +1577,7 @@ name|n
 operator|=
 name|man_node_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -1582,7 +1594,7 @@ name|string
 operator|=
 name|roff_strdup
 argument_list|(
-name|m
+name|man
 operator|->
 name|roff
 argument_list|,
@@ -1594,7 +1606,7 @@ condition|(
 operator|!
 name|man_node_append
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|n
 argument_list|)
@@ -1604,7 +1616,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -1661,7 +1673,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|struct
 name|man_node
@@ -1677,7 +1689,7 @@ name|child
 condition|)
 name|man_node_delete
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|p
 operator|->
@@ -1686,7 +1698,7 @@ argument_list|)
 expr_stmt|;
 name|man_node_unlink
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|p
 argument_list|)
@@ -1706,7 +1718,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 specifier|const
 name|struct
@@ -1726,7 +1738,7 @@ operator|!
 operator|(
 name|MAN_HALT
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 operator|)
@@ -1736,7 +1748,7 @@ name|n
 operator|=
 name|man_node_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|ep
 operator|->
@@ -1762,7 +1774,7 @@ condition|(
 operator|!
 name|man_node_append
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|n
 argument_list|)
@@ -1772,7 +1784,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -1782,7 +1794,7 @@ return|return
 operator|(
 name|man_descope
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|ep
 operator|->
@@ -1804,7 +1816,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 specifier|const
 name|struct
@@ -1824,7 +1836,7 @@ operator|!
 operator|(
 name|MAN_HALT
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 operator|)
@@ -1834,7 +1846,7 @@ name|n
 operator|=
 name|man_node_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|sp
 operator|->
@@ -1858,7 +1870,7 @@ condition|(
 operator|!
 name|man_node_append
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|n
 argument_list|)
@@ -1868,7 +1880,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -1878,7 +1890,7 @@ return|return
 operator|(
 name|man_descope
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|sp
 operator|->
@@ -1899,7 +1911,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|line
@@ -1913,12 +1925,12 @@ if|if
 condition|(
 name|MAN_ELINE
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 condition|)
 block|{
-name|m
+name|man
 operator|->
 name|flags
 operator|&=
@@ -1930,9 +1942,9 @@ condition|(
 operator|!
 name|man_unscope
 argument_list|(
-name|m
+name|man
 argument_list|,
-name|m
+name|man
 operator|->
 name|last
 operator|->
@@ -1953,7 +1965,7 @@ operator|!
 operator|(
 name|MAN_BLINE
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 operator|)
@@ -1963,7 +1975,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|m
+name|man
 operator|->
 name|flags
 operator|&=
@@ -1975,9 +1987,9 @@ condition|(
 operator|!
 name|man_unscope
 argument_list|(
-name|m
+name|man
 argument_list|,
-name|m
+name|man
 operator|->
 name|last
 operator|->
@@ -1995,13 +2007,13 @@ return|return
 operator|(
 name|man_body_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
 name|offs
 argument_list|,
-name|m
+name|man
 operator|->
 name|last
 operator|->
@@ -2020,7 +2032,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|line
@@ -2041,7 +2053,7 @@ if|if
 condition|(
 name|MAN_LITERAL
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 condition|)
@@ -2051,7 +2063,7 @@ condition|(
 operator|!
 name|man_word_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -2071,7 +2083,7 @@ return|return
 operator|(
 name|man_descope
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -2080,7 +2092,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* Pump blank lines directly into the backend. */
 for|for
 control|(
 name|i
@@ -2099,6 +2110,7 @@ operator|++
 control|)
 comment|/* Skip leading whitespace. */
 empty_stmt|;
+comment|/* 	 * Blank lines are ignored right after headings 	 * but add a single vertical space elsewhere. 	 */
 if|if
 condition|(
 literal|'\0'
@@ -2112,16 +2124,35 @@ block|{
 comment|/* Allocate a blank entry. */
 if|if
 condition|(
+name|MAN_SH
+operator|!=
+name|man
+operator|->
+name|last
+operator|->
+name|tok
+operator|&&
+name|MAN_SS
+operator|!=
+name|man
+operator|->
+name|last
+operator|->
+name|tok
+condition|)
+block|{
+if|if
+condition|(
 operator|!
-name|man_word_alloc
+name|man_elem_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
 name|offs
 argument_list|,
-literal|""
+name|MAN_sp
 argument_list|)
 condition|)
 return|return
@@ -2129,16 +2160,16 @@ operator|(
 literal|0
 operator|)
 return|;
+name|man
+operator|->
+name|next
+operator|=
+name|MAN_NEXT_SIBLING
+expr_stmt|;
+block|}
 return|return
 operator|(
-name|man_descope
-argument_list|(
-name|m
-argument_list|,
-name|line
-argument_list|,
-name|offs
-argument_list|)
+literal|1
 operator|)
 return|;
 block|}
@@ -2196,7 +2227,7 @@ index|]
 condition|)
 name|man_pmsg
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -2253,7 +2284,7 @@ condition|(
 operator|!
 name|man_word_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -2289,7 +2320,7 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|m
+name|man
 operator|->
 name|last
 operator|->
@@ -2301,7 +2332,7 @@ return|return
 operator|(
 name|man_descope
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|line
 argument_list|,
@@ -2320,7 +2351,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|int
 name|ln
@@ -2365,7 +2396,7 @@ condition|)
 block|{
 name|man_pmsg
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|ln
 argument_list|,
@@ -2480,7 +2511,7 @@ name|mandoc_vmsg
 argument_list|(
 name|MANDOCERR_MACRO
 argument_list|,
-name|m
+name|man
 operator|->
 name|parse
 argument_list|,
@@ -2542,7 +2573,7 @@ index|]
 condition|)
 name|man_pmsg
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|ln
 argument_list|,
@@ -2568,7 +2599,7 @@ operator|.
 name|flags
 operator|)
 operator|&&
-name|m
+name|man
 operator|->
 name|flags
 operator|&
@@ -2577,7 +2608,7 @@ condition|)
 block|{
 name|n
 operator|=
-name|m
+name|man
 operator|->
 name|last
 expr_stmt|;
@@ -2614,7 +2645,7 @@ name|mandoc_vmsg
 argument_list|(
 name|MANDOCERR_LINESCOPE
 argument_list|,
-name|m
+name|man
 operator|->
 name|parse
 argument_list|,
@@ -2643,12 +2674,12 @@ argument_list|)
 expr_stmt|;
 name|man_node_delete
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|flags
 operator|&=
@@ -2660,7 +2691,7 @@ comment|/* 	 * Remove prior BLINE macro that is being clobbered. 	 */
 if|if
 condition|(
 operator|(
-name|m
+name|man
 operator|->
 name|flags
 operator|&
@@ -2681,7 +2712,7 @@ condition|)
 block|{
 name|n
 operator|=
-name|m
+name|man
 operator|->
 name|last
 expr_stmt|;
@@ -2765,7 +2796,7 @@ name|mandoc_vmsg
 argument_list|(
 name|MANDOCERR_LINESCOPE
 argument_list|,
-name|m
+name|man
 operator|->
 name|parse
 argument_list|,
@@ -2794,12 +2825,12 @@ argument_list|)
 expr_stmt|;
 name|man_node_delete
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|flags
 operator|&=
@@ -2812,11 +2843,11 @@ if|if
 condition|(
 name|MAN_BLINE
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 condition|)
-name|m
+name|man
 operator|->
 name|flags
 operator||=
@@ -2846,7 +2877,7 @@ operator|.
 name|fp
 operator|)
 operator|(
-name|m
+name|man
 operator|,
 name|tok
 operator|,
@@ -2870,13 +2901,13 @@ operator|!
 operator|(
 name|MAN_BPLINE
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 operator|)
 condition|)
 block|{
-name|m
+name|man
 operator|->
 name|flags
 operator|&=
@@ -2889,7 +2920,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|m
+name|man
 operator|->
 name|flags
 operator|&=
@@ -2901,12 +2932,12 @@ if|if
 condition|(
 name|MAN_ILINE
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 condition|)
 block|{
-name|m
+name|man
 operator|->
 name|flags
 operator|&=
@@ -2924,7 +2955,7 @@ if|if
 condition|(
 name|MAN_ELINE
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 condition|)
@@ -2938,12 +2969,12 @@ name|assert
 argument_list|(
 name|MAN_BLINE
 operator|&
-name|m
+name|man
 operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|flags
 operator|&=
@@ -2955,9 +2986,9 @@ condition|(
 operator|!
 name|man_unscope
 argument_list|(
-name|m
+name|man
 argument_list|,
-name|m
+name|man
 operator|->
 name|last
 operator|->
@@ -2975,13 +3006,13 @@ return|return
 operator|(
 name|man_body_alloc
 argument_list|(
-name|m
+name|man
 argument_list|,
 name|ln
 argument_list|,
 name|ppos
 argument_list|,
-name|m
+name|man
 operator|->
 name|last
 operator|->
@@ -2992,7 +3023,7 @@ return|;
 name|err
 label|:
 comment|/* Error out. */
-name|m
+name|man
 operator|->
 name|flags
 operator||=
@@ -3007,7 +3038,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unlink a node from its context.  If "m" is provided, the last parse  * point will also be adjusted accordingly.  */
+comment|/*  * Unlink a node from its context.  If "man" is provided, the last parse  * point will also be adjusted accordingly.  */
 end_comment
 
 begin_function
@@ -3018,7 +3049,7 @@ parameter_list|(
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|,
 name|struct
 name|man_node
@@ -3106,9 +3137,9 @@ block|}
 comment|/* Adjust parse point, if applicable. */
 if|if
 condition|(
-name|m
+name|man
 operator|&&
-name|m
+name|man
 operator|->
 name|last
 operator|==
@@ -3124,7 +3155,7 @@ operator|->
 name|prev
 condition|)
 block|{
-name|m
+name|man
 operator|->
 name|last
 operator|=
@@ -3132,7 +3163,7 @@ name|n
 operator|->
 name|prev
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -3141,7 +3172,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|m
+name|man
 operator|->
 name|last
 operator|=
@@ -3149,7 +3180,7 @@ name|n
 operator|->
 name|parent
 expr_stmt|;
-name|m
+name|man
 operator|->
 name|next
 operator|=
@@ -3159,15 +3190,15 @@ block|}
 block|}
 if|if
 condition|(
-name|m
+name|man
 operator|&&
-name|m
+name|man
 operator|->
 name|first
 operator|==
 name|n
 condition|)
-name|m
+name|man
 operator|->
 name|first
 operator|=
@@ -3187,21 +3218,21 @@ specifier|const
 name|struct
 name|man
 modifier|*
-name|m
+name|man
 parameter_list|)
 block|{
 name|assert
 argument_list|(
-name|m
+name|man
 operator|&&
-name|m
+name|man
 operator|->
 name|parse
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|m
+name|man
 operator|->
 name|parse
 operator|)

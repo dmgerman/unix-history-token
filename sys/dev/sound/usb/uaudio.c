@@ -737,7 +737,7 @@ begin_define
 define|#
 directive|define
 name|CHAN_MAX_ALT
-value|20
+value|24
 end_define
 
 begin_struct
@@ -9949,6 +9949,14 @@ name|CHAN_MAX_ALT
 index|]
 init|=
 block|{
+literal|384000
+block|,
+literal|352800
+block|,
+literal|192000
+block|,
+literal|176400
+block|,
 literal|96000
 block|,
 literal|88200
@@ -29545,6 +29553,40 @@ goto|goto
 name|detach
 goto|;
 block|}
+comment|/* 	 * Some USB MIDI device makers couldn't resist using 	 * wMaxPacketSize = 4 for RX and TX BULK endpoints, although 	 * that size is an unsupported value for FULL speed BULK 	 * endpoints. The same applies to some HIGH speed MIDI devices 	 * which are using a wMaxPacketSize different from 512 bytes. 	 * 	 * Refer to section 5.8.3 in USB 2.0 PDF: Cite: "All Host 	 * Controllers are required to have support for 8-, 16-, 32-, 	 * and 64-byte maximum packet sizes for full-speed bulk 	 * endpoints and 512 bytes for high-speed bulk endpoints." 	 */
+if|if
+condition|(
+name|usbd_xfer_maxp_was_clamped
+argument_list|(
+name|chan
+operator|->
+name|xfer
+index|[
+name|UMIDI_TX_TRANSFER
+index|]
+argument_list|)
+condition|)
+name|chan
+operator|->
+name|single_command
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|chan
+operator|->
+name|single_command
+operator|!=
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Single command MIDI quirk enabled\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

@@ -960,6 +960,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|result
 operator|=
 name|strchr
@@ -968,6 +969,7 @@ name|string
 argument_list|,
 literal|'~'
 argument_list|)
+operator|)
 condition|)
 name|result
 operator|=

@@ -38,7 +38,7 @@ block|{
 endif|#
 directive|endif
 comment|/**   * @defgroup APR_Util_OPT_HOOK Optional Hook Functions  * @ingroup APR_Util_Hook  * @{  */
-comment|/**  * Function to implemnt the APR_OPTIONAL_HOOK Macro  * @internal  * @see APR_OPTIONAL_HOOK  *  * @param name The name of the hook  * @param pfn A pointer to a function that will be called  * @param aszPre a NULL-terminated array of strings that name modules whose hooks should precede this one  * @param aszSucc a NULL-terminated array of strings that name modules whose hooks should succeed this one  * @param nOrder an integer determining order before honouring aszPre and aszSucc (for example HOOK_MIDDLE)  */
+comment|/**  * Function to implement the APR_OPTIONAL_HOOK Macro  * @internal  * @see APR_OPTIONAL_HOOK  *  * @param szName The name of the hook  * @param pfn A pointer to a function that will be called  * @param aszPre a NULL-terminated array of strings that name modules whose hooks should precede this one  * @param aszSucc a NULL-terminated array of strings that name modules whose hooks should succeed this one  * @param nOrder an integer determining order before honouring aszPre and aszSucc (for example HOOK_MIDDLE)  */
 name|APU_DECLARE
 argument_list|(
 argument|void

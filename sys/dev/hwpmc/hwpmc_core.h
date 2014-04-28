@@ -404,6 +404,9 @@ name|_md
 parameter_list|,
 name|int
 name|_maxcpu
+parameter_list|,
+name|int
+name|_version_override
 parameter_list|)
 function_decl|;
 end_function_decl

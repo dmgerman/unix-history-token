@@ -36,23 +36,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_NETIPX_IPX_H_
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<netipx/ipx.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -395,10 +378,7 @@ name|struct
 name|sockaddr_in
 name|x_in
 decl_stmt|;
-name|struct
-name|sockaddr_ipx
-name|x_ipx
-decl_stmt|;
+comment|/* struct sockaddr_ipx was here. */
 block|}
 union|;
 end_union

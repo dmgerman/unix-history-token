@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_driver.c,v 1.27 2008/08/03 22:08:22 tom Exp $"
+literal|"$Id: m_driver.c,v 1.31 2012/03/10 23:43:41 tom Exp $"
 argument_list|)
 end_macro
 
@@ -57,7 +57,7 @@ parameter_list|,
 name|ch
 parameter_list|)
 define|\
-value|{ (menu)->pattern[((menu)->pindex)++] = (ch);\     (menu)->pattern[(menu)->pindex] = '\0'; }
+value|{ (menu)->pattern[((menu)->pindex)++] = (char) (ch);\     (menu)->pattern[(menu)->pindex] = '\0'; }
 end_define
 
 begin_comment
@@ -216,10 +216,18 @@ argument_list|(
 literal|"_nc_Match_Next_Character(%p,%d,%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|menu
 operator|,
 name|ch
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|item
 operator|)
 argument_list|)
@@ -488,7 +496,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu |   Function      :  int menu_driver(MENU *menu, int c) | |   Description   :  Central dispatcher for the menu. Translates the logical |                    request 'c' into a menu action. | |   Return Values :  E_OK            - success |                    E_BAD_ARGUMENT  - invalid menu pointer |                    E_BAD_STATE     - menu is in user hook routine |                    E_NOT_POSTED    - menu is not posted +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu |   Function      :  int menu_driver(MENU* menu, int c) | |   Description   :  Central dispatcher for the menu. Translates the logical |                    request 'c' into a menu action. | |   Return Values :  E_OK            - success |                    E_BAD_ARGUMENT  - invalid menu pointer |                    E_BAD_STATE     - menu is in user hook routine |                    E_NOT_POSTED    - menu is not posted +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -539,6 +547,10 @@ argument_list|(
 literal|"menu_driver(%p,%d)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|menu
 operator|,
 name|c
@@ -1826,6 +1838,19 @@ operator|=
 name|E_UNKNOWN_COMMAND
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|item
+operator|==
+literal|0
+condition|)
+block|{
+name|result
+operator|=
+name|E_BAD_STATE
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|E_OK

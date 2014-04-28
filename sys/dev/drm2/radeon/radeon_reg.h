@@ -2204,7 +2204,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_TVCLK_TURNOFF
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3753,7 +3753,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_CUR_LOCK
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -3795,7 +3795,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_CUR2_LOCK
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4341,7 +4341,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_TV_DAC_BDACDET
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -4894,7 +4894,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_DST_X_DIR_LEFT_TO_RIGHT
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -5657,14 +5657,14 @@ begin_define
 define|#
 directive|define
 name|RADEON_DST_TILE_MICRO
-value|(2<< 30)
+value|(2U<< 30)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RADEON_DST_TILE_BOTH
-value|(3<< 30)
+value|(3U<< 30)
 end_define
 
 begin_define
@@ -8346,7 +8346,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_MM_APER
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -10915,7 +10915,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_RBBM_ACTIVE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -10950,7 +10950,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_RB2D_DC_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -11118,7 +11118,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_RB3D_DC_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -12670,7 +12670,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_ENG_DISPLAY_SELECT_CRTC1
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -12949,7 +12949,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_MC_ENABLE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -14301,7 +14301,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_SIGNED_ALPHA_MASK
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -17516,7 +17516,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_TCL_VTX_Z0
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -18244,7 +18244,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_FORCE_W_TO_ONE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -22668,7 +22668,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_RB_RPTR_WR_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -22758,7 +22758,7 @@ begin_define
 define|#
 directive|define
 name|R600_RB_RPTR_WR_ENA
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -24003,7 +24003,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_TV_ON
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -24949,7 +24949,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_TVPLL_TEST_DIS
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

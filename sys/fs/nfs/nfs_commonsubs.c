@@ -468,7 +468,7 @@ comment|/* LockU */
 block|{
 literal|1
 block|,
-literal|1
+literal|2
 block|,
 literal|0
 block|,
@@ -483,7 +483,7 @@ comment|/* Lookup */
 block|{
 literal|1
 block|,
-literal|1
+literal|2
 block|,
 literal|0
 block|,
@@ -10835,7 +10835,7 @@ argument_list|,
 name|attrbitp
 argument_list|)
 expr_stmt|;
-comment|/* If p and cred are NULL, it is a client side call */
+comment|/* 	 * If both p and cred are NULL, it is a client side setattr call. 	 * If both p and cred are not NULL, it is a server side reply call. 	 * If p is not NULL and cred is NULL, it is a client side callback 	 * reply call. 	 */
 if|if
 condition|(
 name|p
@@ -19204,6 +19204,11 @@ name|void
 name|nfsv4_setsequence
 parameter_list|(
 name|struct
+name|nfsmount
+modifier|*
+name|nmp
+parameter_list|,
+name|struct
 name|nfsrv_descript
 modifier|*
 name|nd
@@ -19336,6 +19341,34 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+comment|/* 			 * If a forced dismount is in progress, just return. 			 * This RPC attempt will fail when it calls 			 * newnfs_request(). 			 */
+if|if
+condition|(
+operator|(
+name|nmp
+operator|->
+name|nm_mountp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sep
+operator|->
+name|nfsess_mtx
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Wake up once/sec, to check for a forced dismount. */
 operator|(
 name|void
 operator|)
@@ -19355,9 +19388,10 @@ name|PZERO
 argument_list|,
 literal|"nfsclseq"
 argument_list|,
-literal|0
+name|hz
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 do|while
 condition|(

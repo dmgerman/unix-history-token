@@ -27,18 +27,6 @@ define|\
 value|MIN(4096, MJUMPAGESIZE)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|(sizeof (uint32_t) +		\ 	 sizeof (struct rt2860_rxwi) +	\ 	 sizeof (uint16_t) +		\ 	 MCLBYTES +			\ 	 sizeof (struct rt2870_rxd))
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* NB: "11" is the maximum number of padding bytes needed for Tx */
 end_comment
@@ -48,7 +36,7 @@ define|#
 directive|define
 name|RUN_MAX_TXSZ
 define|\
-value|(sizeof (struct rt2870_txd) +	\ 	 sizeof (struct rt2860_rxwi) +	\ 	 MCLBYTES + 11)
+value|(sizeof (struct rt2870_txd) +	\ 	 sizeof (struct rt2860_txwi) +	\ 	 MCLBYTES + 11)
 end_define
 
 begin_define
@@ -475,6 +463,16 @@ name|ifnet
 modifier|*
 name|sc_ifp
 decl_stmt|;
+name|int
+name|sc_need_fwload
+decl_stmt|;
+name|int
+name|sc_flags
+decl_stmt|;
+define|#
+directive|define
+name|RUN_FLAG_FWLOAD_NEEDED
+value|0x01
 name|uint16_t
 name|wcid_stats
 index|[
@@ -520,7 +518,7 @@ decl_stmt|;
 name|uint16_t
 name|mac_rev
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|rf_rev
 decl_stmt|;
 name|uint8_t
@@ -576,6 +574,12 @@ index|]
 decl_stmt|;
 name|int8_t
 name|txpow2
+index|[
+literal|54
+index|]
+decl_stmt|;
+name|int8_t
+name|txpow3
 index|[
 literal|54
 index|]

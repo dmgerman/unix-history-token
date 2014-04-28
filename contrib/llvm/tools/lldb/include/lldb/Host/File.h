@@ -55,7 +55,19 @@ end_if
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -153,243 +165,25 @@ literal|1u
 operator|<<
 literal|6
 operator|)
+block|,
 comment|// Can create file only if it doesn't already exist
-block|}
-enum|;
-enum|enum
-name|Permissions
-block|{
-name|ePermissionsUserRead
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|0
-operator|)
-block|,
-name|ePermissionsUserWrite
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|1
-operator|)
-block|,
-name|ePermissionsUserExecute
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|2
-operator|)
-block|,
-name|ePermissionsGroupRead
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|3
-operator|)
-block|,
-name|ePermissionsGroupWrite
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|4
-operator|)
-block|,
-name|ePermissionsGroupExecute
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|5
-operator|)
-block|,
-name|ePermissionsWorldRead
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|6
-operator|)
-block|,
-name|ePermissionsWorldWrite
+name|eOpenoptionDontFollowSymlinks
 init|=
 operator|(
 literal|1u
 operator|<<
 literal|7
 operator|)
-block|,
-name|ePermissionsWorldExecute
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|8
-operator|)
-block|,
-name|ePermissionsUserRW
-init|=
-operator|(
-name|ePermissionsUserRead
-operator||
-name|ePermissionsUserWrite
-operator||
-literal|0
-operator|)
-block|,
-name|ePermissionsUserRX
-init|=
-operator|(
-name|ePermissionsUserRead
-operator||
-literal|0
-operator||
-name|ePermissionsUserExecute
-operator|)
-block|,
-name|ePermissionsUserRWX
-init|=
-operator|(
-name|ePermissionsUserRead
-operator||
-name|ePermissionsUserWrite
-operator||
-name|ePermissionsUserExecute
-operator|)
-block|,
-name|ePermissionsGroupRW
-init|=
-operator|(
-name|ePermissionsGroupRead
-operator||
-name|ePermissionsGroupWrite
-operator||
-literal|0
-operator|)
-block|,
-name|ePermissionsGroupRX
-init|=
-operator|(
-name|ePermissionsGroupRead
-operator||
-literal|0
-operator||
-name|ePermissionsGroupExecute
-operator|)
-block|,
-name|ePermissionsGroupRWX
-init|=
-operator|(
-name|ePermissionsGroupRead
-operator||
-name|ePermissionsGroupWrite
-operator||
-name|ePermissionsGroupExecute
-operator|)
-block|,
-name|ePermissionsWorldRW
-init|=
-operator|(
-name|ePermissionsWorldRead
-operator||
-name|ePermissionsWorldWrite
-operator||
-literal|0
-operator|)
-block|,
-name|ePermissionsWorldRX
-init|=
-operator|(
-name|ePermissionsWorldRead
-operator||
-literal|0
-operator||
-name|ePermissionsWorldExecute
-operator|)
-block|,
-name|ePermissionsWorldRWX
-init|=
-operator|(
-name|ePermissionsWorldRead
-operator||
-name|ePermissionsWorldWrite
-operator||
-name|ePermissionsWorldExecute
-operator|)
-block|,
-name|ePermissionsEveryoneR
-init|=
-operator|(
-name|ePermissionsUserRead
-operator||
-name|ePermissionsGroupRead
-operator||
-name|ePermissionsWorldRead
-operator|)
-block|,
-name|ePermissionsEveryoneW
-init|=
-operator|(
-name|ePermissionsUserWrite
-operator||
-name|ePermissionsGroupWrite
-operator||
-name|ePermissionsWorldWrite
-operator|)
-block|,
-name|ePermissionsEveryoneX
-init|=
-operator|(
-name|ePermissionsUserExecute
-operator||
-name|ePermissionsGroupExecute
-operator||
-name|ePermissionsWorldExecute
-operator|)
-block|,
-name|ePermissionsEveryoneRW
-init|=
-operator|(
-name|ePermissionsEveryoneR
-operator||
-name|ePermissionsEveryoneW
-operator||
-literal|0
-operator|)
-block|,
-name|ePermissionsEveryoneRX
-init|=
-operator|(
-name|ePermissionsEveryoneR
-operator||
-literal|0
-operator||
-name|ePermissionsEveryoneX
-operator|)
-block|,
-name|ePermissionsEveryoneRWX
-init|=
-operator|(
-name|ePermissionsEveryoneR
-operator||
-name|ePermissionsEveryoneW
-operator||
-name|ePermissionsEveryoneX
-operator|)
-block|,
-name|ePermissionsDefault
-init|=
-operator|(
-name|ePermissionsUserRW
-operator||
-name|ePermissionsGroupRead
-operator|)
 block|}
 enum|;
+specifier|static
+name|mode_t
+name|ConvertOpenOptionsForPOSIXOpen
+parameter_list|(
+name|uint32_t
+name|open_options
+parameter_list|)
+function_decl|;
 name|File
 argument_list|()
 operator|:
@@ -408,9 +202,24 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|m_owned
+name|m_own_stream
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|m_own_descriptor
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|m_is_interactive
+argument_list|(
+name|eLazyBoolCalculate
+argument_list|)
+operator|,
+name|m_is_real_terminal
+argument_list|(
+argument|eLazyBoolCalculate
 argument_list|)
 block|{     }
 name|File
@@ -435,9 +244,24 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|m_owned
+name|m_own_stream
 argument_list|(
-argument|transfer_ownership
+name|transfer_ownership
+argument_list|)
+operator|,
+name|m_own_descriptor
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|m_is_interactive
+argument_list|(
+name|eLazyBoolCalculate
+argument_list|)
+operator|,
+name|m_is_real_terminal
+argument_list|(
+argument|eLazyBoolCalculate
 argument_list|)
 block|{     }
 name|File
@@ -483,14 +307,41 @@ argument|const char *path
 argument_list|,
 argument|uint32_t options
 argument_list|,
-argument|uint32_t permissions = ePermissionsDefault
+argument|uint32_t permissions = lldb::eFilePermissionsFileDefault
+argument_list|)
+empty_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Constructor with FileSpec.
+comment|///
+comment|/// Takes a FileSpec pointing to a file which can be just a filename, or a full
+comment|/// path. If \a path is not NULL or empty, this function will call
+comment|/// File::Open (const char *path, uint32_t options, uint32_t permissions).
+comment|///
+comment|/// @param[in] path
+comment|///     The FileSpec for this file.
+comment|///
+comment|/// @param[in] options
+comment|///     Options to use when opening (see File::OpenOptions)
+comment|///
+comment|/// @param[in] permissions
+comment|///     Options to use when opening (see File::Permissions)
+comment|///
+comment|/// @see File::Open (const char *path, uint32_t options, uint32_t permissions)
+comment|//------------------------------------------------------------------
+name|File
+argument_list|(
+argument|const FileSpec& filespec
+argument_list|,
+argument|uint32_t options
+argument_list|,
+argument|uint32_t permissions = lldb::eFilePermissionsFileDefault
 argument_list|)
 empty_stmt|;
 name|File
 argument_list|(
 argument|int fd
 argument_list|,
-argument|bool tranfer_ownership
+argument|bool transfer_ownership
 argument_list|)
 block|:
 name|m_descriptor
@@ -508,9 +359,14 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|m_owned
+name|m_own_stream
 argument_list|(
-argument|tranfer_ownership
+name|false
+argument_list|)
+operator|,
+name|m_own_descriptor
+argument_list|(
+argument|transfer_ownership
 argument_list|)
 block|{     }
 comment|//------------------------------------------------------------------
@@ -642,7 +498,9 @@ parameter_list|,
 name|uint32_t
 name|permissions
 init|=
-name|ePermissionsDefault
+name|lldb
+operator|::
+name|eFilePermissionsFileDefault
 parameter_list|)
 function_decl|;
 name|Error
@@ -1005,6 +863,63 @@ name|Sync
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Get the permissions for a this file.
+comment|///
+comment|/// @return
+comment|///     Bits logical OR'ed together from the permission bits defined
+comment|///     in lldb_private::File::Permissions.
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetPermissions
+argument_list|(
+name|Error
+operator|&
+name|error
+argument_list|)
+decl|const
+decl_stmt|;
+specifier|static
+name|uint32_t
+name|GetPermissions
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|Error
+modifier|&
+name|error
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Return true if this file is interactive.
+comment|///
+comment|/// @return
+comment|///     True if this file is a terminal (tty or pty), false
+comment|///     otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|GetIsInteractive
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Return true if this file from a real terminal.
+comment|///
+comment|/// Just knowing a file is a interactive isn't enough, we also need
+comment|/// to know if the terminal has a width and height so we can do
+comment|/// cursor movement and other terminal maninpulations by sending
+comment|/// escape sequences.
+comment|///
+comment|/// @return
+comment|///     True if this file is a terminal (tty, not a pty) that has
+comment|///     a non-zero width and height, false otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|GetIsRealTerminal
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|/// Output printf formatted output to the stream.
 comment|///
 comment|/// Print some formatted output to the stream.
@@ -1056,6 +971,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+name|void
+name|SetOptions
+parameter_list|(
+name|uint32_t
+name|options
+parameter_list|)
+block|{
+name|m_options
+operator|=
+name|options
+expr_stmt|;
+block|}
+end_function
+
 begin_label
 name|protected
 label|:
@@ -1088,6 +1018,13 @@ name|kInvalidStream
 return|;
 block|}
 end_expr_stmt
+
+begin_function_decl
+name|void
+name|CalculateInteractiveAndTerminal
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -1122,7 +1059,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
-name|m_owned
+name|m_own_stream
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|m_own_descriptor
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LazyBool
+name|m_is_interactive
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LazyBool
+name|m_is_real_terminal
 decl_stmt|;
 end_decl_stmt
 

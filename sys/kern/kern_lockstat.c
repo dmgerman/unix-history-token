@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * Backend for the lock tracing (lockstat) kernel support. This is required   * to allow a module to load even though DTrace kernel support may not be   * present.   *  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"opt_kdtrace.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef

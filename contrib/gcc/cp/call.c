@@ -1459,6 +1459,7 @@ argument_list|(
 name|function
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL blocks 6040305 */
 name|gcc_assert
 argument_list|(
 name|TYPE_PTR_P
@@ -1468,6 +1469,16 @@ argument_list|(
 name|function
 argument_list|)
 argument_list|)
+operator|||
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|function
+argument_list|)
+argument_list|)
+operator|==
+name|BLOCK_POINTER_TYPE
 argument_list|)
 expr_stmt|;
 name|fntype
@@ -2781,12 +2792,17 @@ condition|)
 return|return
 name|conv
 return|;
+comment|/* APPLE LOCAL blocks 6040305 (ck) */
 if|if
 condition|(
 operator|(
 name|tcode
 operator|==
 name|POINTER_TYPE
+operator|||
+name|tcode
+operator|==
+name|BLOCK_POINTER_TYPE
 operator|||
 name|TYPE_PTR_TO_MEMBER_P
 argument_list|(
@@ -3537,6 +3553,11 @@ operator|||
 name|fcode
 operator|==
 name|POINTER_TYPE
+comment|/* APPLE LOCAL blocks 6040305 (cl) */
+operator|||
+name|fcode
+operator|==
+name|BLOCK_POINTER_TYPE
 operator|||
 name|TYPE_PTR_TO_MEMBER_P
 argument_list|(
@@ -3684,6 +3705,8 @@ argument_list|(
 name|from
 argument_list|,
 name|to
+argument_list|,
+name|false
 argument_list|)
 condition|)
 return|return
@@ -3831,6 +3854,40 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* APPLE LOCAL begin radar 6029624 */
+end_comment
+
+begin_comment
+comment|/* Used in objective-c++, same as reference_related_p */
+end_comment
+
+begin_function
+name|bool
+name|objcp_reference_related_p
+parameter_list|(
+name|tree
+name|t1
+parameter_list|,
+name|tree
+name|t2
+parameter_list|)
+block|{
+return|return
+name|reference_related_p
+argument_list|(
+name|t1
+argument_list|,
+name|t2
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* APPLE LOCAL end radar 6029624 */
+end_comment
 
 begin_comment
 comment|/* Returns nonzero if T1 is reference-compatible with T2.  */
@@ -13014,6 +13071,7 @@ name|null_ptr_cst_p
 argument_list|(
 name|arg2
 argument_list|)
+comment|/* APPLE LOCAL begin blocks 6040305 (co) */
 operator|&&
 operator|(
 name|TYPE_PTR_P
@@ -13025,14 +13083,23 @@ name|TYPE_PTR_TO_MEMBER_P
 argument_list|(
 name|arg3_type
 argument_list|)
+operator|||
+name|TREE_CODE
+argument_list|(
+name|arg3_type
+argument_list|)
+operator|==
+name|BLOCK_POINTER_TYPE
 operator|)
 operator|)
+comment|/* APPLE LOCAL end blocks 6040305 (co) */
 operator|||
 operator|(
 name|null_ptr_cst_p
 argument_list|(
 name|arg3
 argument_list|)
+comment|/* APPLE LOCAL begin blocks 6040305 (co) */
 operator|&&
 operator|(
 name|TYPE_PTR_P
@@ -13044,20 +13111,46 @@ name|TYPE_PTR_TO_MEMBER_P
 argument_list|(
 name|arg2_type
 argument_list|)
+operator|||
+name|TREE_CODE
+argument_list|(
+name|arg2_type
+argument_list|)
+operator|==
+name|BLOCK_POINTER_TYPE
 operator|)
 operator|)
 operator|||
+operator|(
 operator|(
 name|TYPE_PTR_P
 argument_list|(
 name|arg2_type
 argument_list|)
+operator|||
+name|TREE_CODE
+argument_list|(
+name|arg2_type
+argument_list|)
+operator|==
+name|BLOCK_POINTER_TYPE
+operator|)
 operator|&&
+operator|(
 name|TYPE_PTR_P
 argument_list|(
 name|arg3_type
 argument_list|)
+operator|||
+name|TREE_CODE
+argument_list|(
+name|arg3_type
+argument_list|)
+operator|==
+name|BLOCK_POINTER_TYPE
 operator|)
+operator|)
+comment|/* APPLE LOCAL end blocks 6040305 (co) */
 operator|||
 operator|(
 name|TYPE_PTRMEM_P

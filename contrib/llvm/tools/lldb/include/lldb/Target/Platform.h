@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Interpreter/Options.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/Mutex.h"
 end_include
 
@@ -458,8 +464,7 @@ operator|&
 name|s
 argument_list|)
 block|;
-comment|// Returns the the hostname if we are connected, else the short plugin
-comment|// name.
+comment|// Returns the the name of the platform
 name|ConstString
 name|GetName
 argument_list|()
@@ -558,6 +563,25 @@ return|;
 comment|// Return an invalid architecture
 block|}
 name|virtual
+name|ConstString
+name|GetRemoteWorkingDirectory
+argument_list|()
+block|{
+return|return
+name|m_working_dir
+return|;
+block|}
+name|virtual
+name|bool
+name|SetRemoteWorkingDirectory
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|path
+argument_list|)
+block|;
+name|virtual
 specifier|const
 name|char
 operator|*
@@ -605,7 +629,7 @@ comment|///     An error object.
 comment|//------------------------------------------------------------------
 name|virtual
 name|Error
-name|GetFile
+name|GetFileWithUUID
 argument_list|(
 specifier|const
 name|FileSpec
@@ -772,9 +796,13 @@ name|true
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Subclasses should NOT need to implement this function as it uses
-comment|/// the Platform::LaunchProcess() followed by Platform::Attach ()
+comment|/// Subclasses do not need to implement this function as it uses
+comment|/// the Platform::LaunchProcess() followed by Platform::Attach ().
+comment|/// Remote platforms will want to subclass this function in order
+comment|/// to be able to intercept STDIO and possibly launch a separate
+comment|/// process that will debug the debuggee.
 comment|//------------------------------------------------------------------
+name|virtual
 name|lldb
 operator|::
 name|ProcessSP
@@ -914,6 +942,26 @@ operator|&
 name|target
 argument_list|)
 block|;
+comment|//------------------------------------------------------------------
+comment|// Given a target, find the local SDK directory if one exists on the
+comment|// current host.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb_private
+operator|::
+name|ConstString
+name|GetSDKDirectory
+argument_list|(
+argument|lldb_private::Target&target
+argument_list|)
+block|{
+return|return
+name|lldb_private
+operator|::
+name|ConstString
+argument_list|()
+return|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -1050,6 +1098,19 @@ name|m_sdk_build
 operator|=
 name|sdk_build
 block|;         }
+name|ConstString
+name|GetWorkingDirectory
+argument_list|()
+block|;
+name|bool
+name|SetWorkingDirectory
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|path
+argument_list|)
+block|;
 comment|// There may be modules that we don't want to find by default for operations like "setting breakpoint by name".
 comment|// The platform will return "true" from this call if the passed in module happens to be one of these.
 name|virtual
@@ -1066,6 +1127,233 @@ name|false
 return|;
 block|}
 name|virtual
+name|Error
+name|MakeDirectory
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|uint32_t permissions
+argument_list|)
+block|;
+name|virtual
+name|Error
+name|GetFilePermissions
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|path
+argument_list|,
+name|uint32_t
+operator|&
+name|file_permissions
+argument_list|)
+block|;
+name|virtual
+name|Error
+name|SetFilePermissions
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|uint32_t file_permissions
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|user_id_t
+name|OpenFile
+argument_list|(
+argument|const FileSpec& file_spec
+argument_list|,
+argument|uint32_t flags
+argument_list|,
+argument|uint32_t mode
+argument_list|,
+argument|Error&error
+argument_list|)
+block|{
+return|return
+name|UINT64_MAX
+return|;
+block|}
+name|virtual
+name|bool
+name|CloseFile
+argument_list|(
+argument|lldb::user_id_t fd
+argument_list|,
+argument|Error&error
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|lldb
+operator|::
+name|user_id_t
+name|GetFileSize
+argument_list|(
+argument|const FileSpec& file_spec
+argument_list|)
+block|{
+return|return
+name|UINT64_MAX
+return|;
+block|}
+name|virtual
+name|uint64_t
+name|ReadFile
+argument_list|(
+argument|lldb::user_id_t fd
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|void *dst
+argument_list|,
+argument|uint64_t dst_len
+argument_list|,
+argument|Error&error
+argument_list|)
+block|{
+name|error
+operator|.
+name|SetErrorStringWithFormat
+argument_list|(
+literal|"Platform::ReadFile() is not supported in the %s platform"
+argument_list|,
+name|GetName
+argument_list|()
+operator|.
+name|GetCString
+argument_list|()
+argument_list|)
+block|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|virtual
+name|uint64_t
+name|WriteFile
+argument_list|(
+argument|lldb::user_id_t fd
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|const void* src
+argument_list|,
+argument|uint64_t src_len
+argument_list|,
+argument|Error&error
+argument_list|)
+block|{
+name|error
+operator|.
+name|SetErrorStringWithFormat
+argument_list|(
+literal|"Platform::ReadFile() is not supported in the %s platform"
+argument_list|,
+name|GetName
+argument_list|()
+operator|.
+name|GetCString
+argument_list|()
+argument_list|)
+block|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|virtual
+name|Error
+name|GetFile
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|source
+argument_list|,
+specifier|const
+name|FileSpec
+operator|&
+name|destination
+argument_list|)
+block|;
+name|virtual
+name|Error
+name|PutFile
+argument_list|(
+argument|const FileSpec& source
+argument_list|,
+argument|const FileSpec& destination
+argument_list|,
+argument|uint32_t uid = UINT32_MAX
+argument_list|,
+argument|uint32_t gid = UINT32_MAX
+argument_list|)
+block|;
+name|virtual
+name|Error
+name|CreateSymlink
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|src
+argument_list|,
+comment|// The name of the link is in src
+specifier|const
+name|char
+operator|*
+name|dst
+argument_list|)
+block|;
+comment|// The symlink points to dst
+comment|//----------------------------------------------------------------------
+comment|/// Install a file or directory to the remote system.
+comment|///
+comment|/// Install is similar to Platform::PutFile(), but it differs in that if
+comment|/// an application/framework/shared library is installed on a remote
+comment|/// platform and the remote platform requires something to be done to
+comment|/// register the application/framework/shared library, then this extra
+comment|/// registration can be done.
+comment|///
+comment|/// @param[in] src
+comment|///     The source file/directory to install on the remote system.
+comment|///
+comment|/// @param[in] dst
+comment|///     The destination file/directory where \a src will be installed.
+comment|///     If \a dst has no filename specified, then its filename will
+comment|///     be set from \a src. It \a dst has no directory specified, it
+comment|///     will use the platform working directory. If \a dst has a
+comment|///     directory specified, but the directory path is relative, the
+comment|///     platform working directory will be prepended to the relative
+comment|///     directory.
+comment|///
+comment|/// @return
+comment|///     An error object that describes anything that went wrong.
+comment|//----------------------------------------------------------------------
+name|virtual
+name|Error
+name|Install
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|src
+argument_list|,
+specifier|const
+name|FileSpec
+operator|&
+name|dst
+argument_list|)
+block|;
+name|virtual
 name|size_t
 name|GetEnvironment
 argument_list|(
@@ -1073,6 +1361,371 @@ name|StringList
 operator|&
 name|environment
 argument_list|)
+block|;
+name|virtual
+name|bool
+name|GetFileExists
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|)
+block|;
+name|virtual
+name|Error
+name|Unlink
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|path
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|GetSupportsRSync
+argument_list|()
+block|{
+return|return
+name|m_supports_rsync
+return|;
+block|}
+name|virtual
+name|void
+name|SetSupportsRSync
+argument_list|(
+argument|bool flag
+argument_list|)
+block|{
+name|m_supports_rsync
+operator|=
+name|flag
+block|;         }
+name|virtual
+specifier|const
+name|char
+operator|*
+name|GetRSyncOpts
+argument_list|()
+block|{
+return|return
+name|m_rsync_opts
+operator|.
+name|c_str
+argument_list|()
+return|;
+block|}
+name|virtual
+name|void
+name|SetRSyncOpts
+argument_list|(
+argument|const char* opts
+argument_list|)
+block|{
+name|m_rsync_opts
+operator|.
+name|assign
+argument_list|(
+name|opts
+argument_list|)
+block|;         }
+name|virtual
+specifier|const
+name|char
+operator|*
+name|GetRSyncPrefix
+argument_list|()
+block|{
+return|return
+name|m_rsync_prefix
+operator|.
+name|c_str
+argument_list|()
+return|;
+block|}
+name|virtual
+name|void
+name|SetRSyncPrefix
+argument_list|(
+argument|const char* prefix
+argument_list|)
+block|{
+name|m_rsync_prefix
+operator|.
+name|assign
+argument_list|(
+name|prefix
+argument_list|)
+block|;         }
+name|virtual
+name|bool
+name|GetSupportsSSH
+argument_list|()
+block|{
+return|return
+name|m_supports_ssh
+return|;
+block|}
+name|virtual
+name|void
+name|SetSupportsSSH
+argument_list|(
+argument|bool flag
+argument_list|)
+block|{
+name|m_supports_ssh
+operator|=
+name|flag
+block|;         }
+name|virtual
+specifier|const
+name|char
+operator|*
+name|GetSSHOpts
+argument_list|()
+block|{
+return|return
+name|m_ssh_opts
+operator|.
+name|c_str
+argument_list|()
+return|;
+block|}
+name|virtual
+name|void
+name|SetSSHOpts
+argument_list|(
+argument|const char* opts
+argument_list|)
+block|{
+name|m_ssh_opts
+operator|.
+name|assign
+argument_list|(
+name|opts
+argument_list|)
+block|;         }
+name|virtual
+name|bool
+name|GetIgnoresRemoteHostname
+argument_list|()
+block|{
+return|return
+name|m_ignores_remote_hostname
+return|;
+block|}
+name|virtual
+name|void
+name|SetIgnoresRemoteHostname
+argument_list|(
+argument|bool flag
+argument_list|)
+block|{
+name|m_ignores_remote_hostname
+operator|=
+name|flag
+block|;         }
+name|virtual
+name|lldb_private
+operator|::
+name|OptionGroupOptions
+operator|*
+name|GetConnectionOptions
+argument_list|(
+argument|CommandInterpreter& interpreter
+argument_list|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|RunShellCommand
+argument_list|(
+argument|const char *command
+argument_list|,
+comment|// Shouldn't be NULL
+argument|const char *working_dir
+argument_list|,
+comment|// Pass NULL to use the current working directory
+argument|int *status_ptr
+argument_list|,
+comment|// Pass NULL if you don't want the process exit status
+argument|int *signo_ptr
+argument_list|,
+comment|// Pass NULL if you don't want the signal that caused the process to exit
+argument|std::string *command_output
+argument_list|,
+comment|// Pass NULL if you don't want the command output
+argument|uint32_t timeout_sec
+argument_list|)
+block|;
+comment|// Timeout in seconds to wait for shell program to finish
+name|virtual
+name|void
+name|SetLocalCacheDirectory
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|local
+argument_list|)
+block|;
+name|virtual
+specifier|const
+name|char
+operator|*
+name|GetLocalCacheDirectory
+argument_list|()
+block|;
+name|virtual
+name|std
+operator|::
+name|string
+name|GetPlatformSpecificConnectionInformation
+argument_list|()
+block|{
+return|return
+literal|""
+return|;
+block|}
+name|virtual
+name|bool
+name|CalculateMD5
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|,
+name|uint64_t
+operator|&
+name|low
+argument_list|,
+name|uint64_t
+operator|&
+name|high
+argument_list|)
+block|;
+name|virtual
+name|int32_t
+name|GetResumeCountForLaunchInfo
+argument_list|(
+argument|ProcessLaunchInfo&launch_info
+argument_list|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Locate a queue name given a thread's qaddr
+comment|///
+comment|/// On a system using libdispatch ("Grand Central Dispatch") style
+comment|/// queues, a thread may be associated with a GCD queue or not,
+comment|/// and a queue may be associated with multiple threads.
+comment|/// The process/thread must provide a way to find the "dispatch_qaddr"
+comment|/// for each thread, and from that dispatch_qaddr this Platform method
+comment|/// will locate the queue name and provide that.
+comment|///
+comment|/// @param[in] process
+comment|///     A process is required for reading memory.
+comment|///
+comment|/// @param[in] dispatch_qaddr
+comment|///     The dispatch_qaddr for this thread.
+comment|///
+comment|/// @return
+comment|///     The name of the queue, if there is one.  An empty string
+comment|///     means that this thread is not associated with a dispatch
+comment|///     queue.
+comment|//------------------------------------------------------------------
+name|virtual
+name|std
+operator|::
+name|string
+name|GetQueueNameForThreadQAddress
+argument_list|(
+argument|Process *process
+argument_list|,
+argument|lldb::addr_t dispatch_qaddr
+argument_list|)
+block|{
+return|return
+literal|""
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Locate a queue ID given a thread's qaddr
+comment|///
+comment|/// On a system using libdispatch ("Grand Central Dispatch") style
+comment|/// queues, a thread may be associated with a GCD queue or not,
+comment|/// and a queue may be associated with multiple threads.
+comment|/// The process/thread must provide a way to find the "dispatch_qaddr"
+comment|/// for each thread, and from that dispatch_qaddr this Platform method
+comment|/// will locate the queue ID and provide that.
+comment|///
+comment|/// @param[in] process
+comment|///     A process is required for reading memory.
+comment|///
+comment|/// @param[in] dispatch_qaddr
+comment|///     The dispatch_qaddr for this thread.
+comment|///
+comment|/// @return
+comment|///     The queue_id for this thread, if this thread is associated
+comment|///     with a dispatch queue.  Else LLDB_INVALID_QUEUE_ID is returned.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|queue_id_t
+name|GetQueueIDForThreadQAddress
+argument_list|(
+argument|Process *process
+argument_list|,
+argument|lldb::addr_t dispatch_qaddr
+argument_list|)
+block|{
+return|return
+name|LLDB_INVALID_QUEUE_ID
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Provide a list of trap handler function names for this platform
+comment|///
+comment|/// The unwinder needs to treat trap handlers specially -- the stack
+comment|/// frame may not be aligned correctly for a trap handler (the kernel
+comment|/// often won't perturb the stack pointer, or won't re-align it properly,
+comment|/// in the process of calling the handler) and the frame above the handler
+comment|/// needs to be treated by the unwinder's "frame 0" rules instead of its
+comment|/// "middle of the stack frame" rules.
+comment|///
+comment|/// In a user process debugging scenario, the list of trap handlers is
+comment|/// typically just "_sigtramp".
+comment|///
+comment|/// The Platform base class provides the m_trap_handlers ivar but it does
+comment|/// not populate it.  Subclasses should add the names of the asynchronous
+comment|/// signal handler routines as needed.  For most Unix platforms, add _sigtramp.
+comment|///
+comment|/// @return
+comment|///     A list of symbol names.  The list may be empty.
+comment|//------------------------------------------------------------------
+name|virtual
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+operator|&
+name|GetTrapHandlerSymbolNames
+argument_list|()
 block|;
 name|protected
 operator|:
@@ -1097,6 +1750,10 @@ comment|// the root location of where the SDK files are all located
 name|ConstString
 name|m_sdk_build
 block|;
+name|ConstString
+name|m_working_dir
+block|;
+comment|// The working directory which is used when installing modules that have no install path set
 name|std
 operator|::
 name|string
@@ -1149,6 +1806,66 @@ decl_stmt|;
 name|size_t
 name|m_max_gid_name_len
 decl_stmt|;
+name|bool
+name|m_supports_rsync
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|m_rsync_opts
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|m_rsync_prefix
+expr_stmt|;
+name|bool
+name|m_supports_ssh
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|m_ssh_opts
+expr_stmt|;
+name|bool
+name|m_ignores_remote_hostname
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|m_local_cache_directory
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+name|m_trap_handlers
+expr_stmt|;
+name|bool
+name|m_calculated_trap_handlers
+decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Ask the Platform subclass to fill in the list of trap handler names
+comment|///
+comment|/// For most Unix user process environments, this will be a single
+comment|/// function name, _sigtramp.  More specialized environments may have
+comment|/// additional handler names.  The unwinder code needs to know when a
+comment|/// trap handler is on the stack because the unwind rules for the frame
+comment|/// that caused the trap are different.
+comment|///
+comment|/// The base class Platform ivar m_trap_handlers should be updated by
+comment|/// the Platform subclass when this method is called.  If there are no
+comment|/// predefined trap handlers, this method may be a no-op.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|CalculateTrapHandlerSymbolNames
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 specifier|const
 name|char
 modifier|*
@@ -1791,8 +2508,254 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+unit|};
+name|class
+name|OptionGroupPlatformRSync
+range|:
+name|public
+name|lldb_private
+operator|::
+name|OptionGroup
+block|{
+name|public
+operator|:
+name|OptionGroupPlatformRSync
+argument_list|()
+block|;
+name|virtual
+operator|~
+name|OptionGroupPlatformRSync
+argument_list|()
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|SetOptionValue
+argument_list|(
+argument|CommandInterpreter&interpreter
+argument_list|,
+argument|uint32_t option_idx
+argument_list|,
+argument|const char *option_value
+argument_list|)
+block|;
+name|void
+name|OptionParsingStarting
+argument_list|(
+name|CommandInterpreter
+operator|&
+name|interpreter
+argument_list|)
+block|;
+specifier|const
+name|lldb_private
+operator|::
+name|OptionDefinition
+operator|*
+name|GetDefinitions
+argument_list|()
+block|;
+name|virtual
+name|uint32_t
+name|GetNumDefinitions
+argument_list|()
+block|;
+comment|// Options table: Required for subclasses of Options.
+specifier|static
+name|lldb_private
+operator|::
+name|OptionDefinition
+name|g_option_table
+index|[]
+block|;
+comment|// Instance variables to hold the values for command options.
+name|bool
+name|m_rsync
+block|;
+name|std
+operator|::
+name|string
+name|m_rsync_opts
+block|;
+name|std
+operator|::
+name|string
+name|m_rsync_prefix
+block|;
+name|bool
+name|m_ignores_remote_hostname
+block|;
+name|private
+operator|:
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|OptionGroupPlatformRSync
+argument_list|)
+block|;     }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|class
+name|OptionGroupPlatformSSH
+range|:
+name|public
+name|lldb_private
+operator|::
+name|OptionGroup
+block|{
+name|public
+operator|:
+name|OptionGroupPlatformSSH
+argument_list|()
+block|;
+name|virtual
+operator|~
+name|OptionGroupPlatformSSH
+argument_list|()
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|SetOptionValue
+argument_list|(
+argument|CommandInterpreter&interpreter
+argument_list|,
+argument|uint32_t option_idx
+argument_list|,
+argument|const char *option_value
+argument_list|)
+block|;
+name|void
+name|OptionParsingStarting
+argument_list|(
+name|CommandInterpreter
+operator|&
+name|interpreter
+argument_list|)
+block|;
+name|virtual
+name|uint32_t
+name|GetNumDefinitions
+argument_list|()
+block|;
+specifier|const
+name|lldb_private
+operator|::
+name|OptionDefinition
+operator|*
+name|GetDefinitions
+argument_list|()
+block|;
+comment|// Options table: Required for subclasses of Options.
+specifier|static
+name|lldb_private
+operator|::
+name|OptionDefinition
+name|g_option_table
+index|[]
+block|;
+comment|// Instance variables to hold the values for command options.
+name|bool
+name|m_ssh
+block|;
+name|std
+operator|::
+name|string
+name|m_ssh_opts
+block|;
+name|private
+operator|:
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|OptionGroupPlatformSSH
+argument_list|)
+block|;     }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|class
+name|OptionGroupPlatformCaching
+range|:
+name|public
+name|lldb_private
+operator|::
+name|OptionGroup
+block|{
+name|public
+operator|:
+name|OptionGroupPlatformCaching
+argument_list|()
+block|;
+name|virtual
+operator|~
+name|OptionGroupPlatformCaching
+argument_list|()
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|SetOptionValue
+argument_list|(
+argument|CommandInterpreter&interpreter
+argument_list|,
+argument|uint32_t option_idx
+argument_list|,
+argument|const char *option_value
+argument_list|)
+block|;
+name|void
+name|OptionParsingStarting
+argument_list|(
+name|CommandInterpreter
+operator|&
+name|interpreter
+argument_list|)
+block|;
+name|virtual
+name|uint32_t
+name|GetNumDefinitions
+argument_list|()
+block|;
+specifier|const
+name|lldb_private
+operator|::
+name|OptionDefinition
+operator|*
+name|GetDefinitions
+argument_list|()
+block|;
+comment|// Options table: Required for subclasses of Options.
+specifier|static
+name|lldb_private
+operator|::
+name|OptionDefinition
+name|g_option_table
+index|[]
+block|;
+comment|// Instance variables to hold the values for command options.
+name|std
+operator|::
+name|string
+name|m_cache_dir
+block|;
+name|private
+operator|:
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|OptionGroupPlatformCaching
+argument_list|)
+block|;     }
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-unit|}; }
+unit|}
 comment|// namespace lldb_private
 end_comment
 

@@ -22,12 +22,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/fp.h>
 end_include
 
@@ -88,9 +82,6 @@ name|pcb32_lr
 decl_stmt|;
 name|u_int
 name|pcb32_pc
-decl_stmt|;
-name|u_int
-name|pcb32_und_sp
 decl_stmt|;
 block|}
 struct|;
@@ -168,8 +159,16 @@ name|pcb_vfpcpu
 decl_stmt|;
 comment|/* VP/NEON last cpu */
 block|}
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
+
+begin_comment
+comment|/*  		 * We need the PCB to be aligned on 8 bytes, as we may 		 * access it using ldrd/strd, and some CPUs require it 		 * to by aligned on 8 bytes. 		 */
+end_comment
 
 begin_comment
 comment|/*  * No additional data for core dumps.  */

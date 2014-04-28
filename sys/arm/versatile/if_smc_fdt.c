@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -44,7 +44,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
 end_include
 
 begin_include
@@ -175,6 +187,19 @@ name|smc_softc
 modifier|*
 name|sc
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 name|ofw_bus_is_compatible

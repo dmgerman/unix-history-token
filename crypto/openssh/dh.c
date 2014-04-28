@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dh.c,v 1.51 2013/07/02 12:31:43 markus Exp $ */
+comment|/* $OpenBSD: dh.c,v 1.53 2013/11/21 00:45:44 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1329,23 +1329,19 @@ name|need
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
-name|bits_set
-decl_stmt|,
-name|tries
-init|=
-literal|0
+name|pbits
 decl_stmt|;
 if|if
 condition|(
 name|need
-operator|<
+operator|<=
 literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"dh_gen_key: need< 0"
+literal|"%s: need<= 0"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1358,101 +1354,46 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"dh_gen_key: dh->p == NULL"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|need
-operator|>
-name|INT_MAX
-operator|/
-literal|2
-operator|||
-literal|2
-operator|*
-name|need
-operator|>=
-name|BN_num_bits
-argument_list|(
-name|dh
-operator|->
-name|p
-argument_list|)
-condition|)
-name|fatal
-argument_list|(
-literal|"dh_gen_key: group too small: %d (2*need %d)"
+literal|"%s: dh->p == NULL"
 argument_list|,
-name|BN_num_bits
-argument_list|(
-name|dh
-operator|->
-name|p
-argument_list|)
-argument_list|,
-literal|2
-operator|*
-name|need
-argument_list|)
-expr_stmt|;
-do|do
-block|{
-if|if
-condition|(
-name|dh
-operator|->
-name|priv_key
-operator|!=
-name|NULL
-condition|)
-name|BN_clear_free
-argument_list|(
-name|dh
-operator|->
-name|priv_key
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
+name|pbits
+operator|=
+name|BN_num_bits
+argument_list|(
 name|dh
 operator|->
-name|priv_key
-operator|=
-name|BN_new
-argument_list|()
+name|p
+argument_list|)
 operator|)
-operator|==
-name|NULL
+operator|<=
+literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"dh_gen_key: BN_new failed"
+literal|"%s: bits(p)<= 0"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* generate a 2*need bits random private exponent */
-if|if
-condition|(
-operator|!
-name|BN_rand
-argument_list|(
 name|dh
 operator|->
-name|priv_key
-argument_list|,
-literal|2
-operator|*
-name|need
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-name|fatal
+name|length
+operator|=
+name|MIN
 argument_list|(
-literal|"dh_gen_key: BN_rand failed"
+name|need
+operator|*
+literal|2
+argument_list|,
+name|pbits
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1466,73 +1407,12 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"DH_generate_key"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-operator|,
-name|bits_set
-operator|=
-literal|0
-init|;
-name|i
-operator|<=
-name|BN_num_bits
-argument_list|(
-name|dh
-operator|->
-name|priv_key
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|BN_is_bit_set
-argument_list|(
-name|dh
-operator|->
-name|priv_key
+literal|"%s: key generation failed"
 argument_list|,
-name|i
-argument_list|)
-condition|)
-name|bits_set
-operator|++
-expr_stmt|;
-name|debug2
-argument_list|(
-literal|"dh_gen_key: priv key bits set: %d/%d"
-argument_list|,
-name|bits_set
-argument_list|,
-name|BN_num_bits
-argument_list|(
-name|dh
-operator|->
-name|priv_key
-argument_list|)
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
-condition|(
-name|tries
-operator|++
-operator|>
-literal|10
-condition|)
-name|fatal
-argument_list|(
-literal|"dh_gen_key: too many bad keys: giving up"
-argument_list|)
-expr_stmt|;
-block|}
-do|while
 condition|(
 operator|!
 name|dh_pub_is_valid
@@ -1544,7 +1424,13 @@ operator|->
 name|pub_key
 argument_list|)
 condition|)
-do|;
+name|fatal
+argument_list|(
+literal|"%s: generated invalid key"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1849,7 +1735,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Estimates the group order for a Diffie-Hellman group that has an  * attack complexity approximately the same as O(2**bits).  Estimate  * with:  O(exp(1.9223 * (ln q)^(1/3) (ln ln q)^(2/3)))  */
+comment|/*  * Estimates the group order for a Diffie-Hellman group that has an  * attack complexity approximately the same as O(2**bits).  * Values from NIST Special Publication 800-57: Recommendation for Key  * Management Part 1 (rev 3) limited by the recommended maximum value  * from RFC4419 section 3.  */
 end_comment
 
 begin_function
@@ -1864,14 +1750,20 @@ if|if
 condition|(
 name|bits
 operator|<=
+literal|112
+condition|)
+return|return
+literal|2048
+return|;
+if|if
+condition|(
+name|bits
+operator|<=
 literal|128
 condition|)
 return|return
-operator|(
-literal|1024
-operator|)
+literal|3072
 return|;
-comment|/* O(2**86) */
 if|if
 condition|(
 name|bits
@@ -1879,17 +1771,11 @@ operator|<=
 literal|192
 condition|)
 return|return
-operator|(
-literal|2048
-operator|)
+literal|7680
 return|;
-comment|/* O(2**116) */
 return|return
-operator|(
-literal|4096
-operator|)
+literal|8192
 return|;
-comment|/* O(2**156) */
 block|}
 end_function
 

@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_media.h>
 end_include
 
@@ -465,22 +471,6 @@ break|break;
 case|case
 name|MII_MEDIACHG
 case|:
-comment|/* 		 * If the interface is not up, don't do anything. 		 */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-break|break;
 if|if
 condition|(
 name|jmphy_setmedia
@@ -501,26 +491,6 @@ break|break;
 case|case
 name|MII_TICK
 case|:
-comment|/* 		 * Is the interface even up? 		 */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 		 * Only used for autonegotiation. 		 */
 if|if
 condition|(

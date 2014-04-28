@@ -1755,7 +1755,7 @@ begin_define
 define|#
 directive|define
 name|EXP_CNFG0_MEM_MAP
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment

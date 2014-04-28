@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"aux.h"
+file|"util.h"
 end_include
 
 begin_comment
@@ -174,7 +174,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_dev_open: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -205,7 +205,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_dev_set_config_index: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -255,7 +255,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_tr_get_pointer: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -290,7 +290,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_tr_open: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -324,7 +324,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_tr_open: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -377,7 +377,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_tr_bulk_intr_sync (OUT): %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -421,7 +421,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_tr_bulk_intr_sync: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)

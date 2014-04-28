@@ -961,11 +961,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read data from the cache.  Returns 0 on cache hit, errno on a miss.  */
+comment|/*  * Read data from the cache.  Returns B_TRUE cache hit, B_FALSE on miss.  */
 end_comment
 
 begin_function
-name|int
+name|boolean_t
 name|vdev_cache_read
 parameter_list|(
 name|zio_t
@@ -1037,10 +1037,7 @@ name|ZIO_FLAG_DONT_CACHE
 condition|)
 return|return
 operator|(
-name|SET_ERROR
-argument_list|(
-name|EINVAL
-argument_list|)
+name|B_FALSE
 operator|)
 return|;
 if|if
@@ -1053,10 +1050,7 @@ name|zfs_vdev_cache_max
 condition|)
 return|return
 operator|(
-name|SET_ERROR
-argument_list|(
-name|EOVERFLOW
-argument_list|)
+name|B_FALSE
 operator|)
 return|;
 comment|/* 	 * If the I/O straddles two or more cache blocks, don't cache it. 	 */
@@ -1077,10 +1071,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|SET_ERROR
-argument_list|(
-name|EXDEV
-argument_list|)
+name|B_FALSE
 operator|)
 return|;
 name|ASSERT
@@ -1147,10 +1138,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|SET_ERROR
-argument_list|(
-name|ESTALE
-argument_list|)
+name|B_FALSE
 operator|)
 return|;
 block|}
@@ -1194,7 +1182,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|B_TRUE
 operator|)
 return|;
 block|}
@@ -1227,7 +1215,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|B_TRUE
 operator|)
 return|;
 block|}
@@ -1255,10 +1243,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|SET_ERROR
-argument_list|(
-name|ENOMEM
-argument_list|)
+name|B_FALSE
 operator|)
 return|;
 block|}
@@ -1280,7 +1265,7 @@ name|VCBS
 argument_list|,
 name|ZIO_TYPE_READ
 argument_list|,
-name|ZIO_PRIORITY_CACHE_FILL
+name|ZIO_PRIORITY_NOW
 argument_list|,
 name|ZIO_FLAG_DONT_CACHE
 argument_list|,
@@ -1327,7 +1312,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|B_TRUE
 operator|)
 return|;
 block|}

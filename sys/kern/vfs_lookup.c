@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -56,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -198,8 +192,6 @@ name|lookup
 argument_list|,
 name|entry
 argument_list|,
-name|entry
-argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -217,8 +209,6 @@ argument_list|,
 argument|namei
 argument_list|,
 argument|lookup
-argument_list|,
-argument|return
 argument_list|,
 argument|return
 argument_list|,
@@ -1958,37 +1948,23 @@ return|;
 comment|/* 	 * For lookups during open(), if the mount point supports 	 * extended shared operations, then use a shared lock for the 	 * leaf node, otherwise use an exclusive lock. 	 */
 if|if
 condition|(
+operator|(
 name|flags
 operator|&
 name|ISOPEN
-condition|)
-block|{
-if|if
-condition|(
-name|mp
+operator|)
 operator|!=
-name|NULL
-operator|&&
-operator|(
-name|mp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_EXTENDED_SHARED
-operator|)
+literal|0
 condition|)
 return|return
 operator|(
-literal|0
+operator|!
+name|MNT_EXTENDED_SHARED
+argument_list|(
+name|mp
+argument_list|)
 operator|)
 return|;
-else|else
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 comment|/* 	 * Lookup requests outside of open() that specify LOCKSHARED 	 * only need a shared lock on the leaf vnode. 	 */
 return|return
 operator|(

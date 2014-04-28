@@ -1318,6 +1318,9 @@ name|HSOpts
 parameter_list|,
 name|StringRef
 name|isysroot
+parameter_list|,
+name|bool
+name|Modules
 parameter_list|)
 function_decl|;
 name|void
@@ -1531,6 +1534,14 @@ function_decl|;
 name|void
 name|WriteMergedDecls
 parameter_list|()
+function_decl|;
+name|void
+name|WriteLateParsedTemplates
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|)
 function_decl|;
 name|unsigned
 name|DeclParmVarAbbrev
@@ -1966,6 +1977,20 @@ specifier|const
 name|TemplateArgumentLoc
 modifier|&
 name|Arg
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emits an AST template argument list info.
+name|void
+name|AddASTTemplateArgumentListInfo
+parameter_list|(
+specifier|const
+name|ASTTemplateArgumentListInfo
+modifier|*
+name|ASTTemplArgList
 parameter_list|,
 name|RecordDataImpl
 modifier|&
@@ -2634,6 +2659,21 @@ name|void
 name|AddedCXXTemplateSpecialization
 parameter_list|(
 specifier|const
+name|VarTemplateDecl
+modifier|*
+name|TD
+parameter_list|,
+specifier|const
+name|VarTemplateSpecializationDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|AddedCXXTemplateSpecialization
+parameter_list|(
+specifier|const
 name|FunctionTemplateDecl
 modifier|*
 name|TD
@@ -2642,6 +2682,19 @@ specifier|const
 name|FunctionDecl
 modifier|*
 name|D
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|DeducedReturnType
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|,
+name|QualType
+name|ReturnType
 parameter_list|)
 function_decl|;
 name|virtual
@@ -2699,6 +2752,16 @@ modifier|*
 name|ClassExt
 parameter_list|)
 function_decl|;
+name|void
+name|DeclarationMarkedUsed
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+name|LLVM_OVERRIDE
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief AST and semantic-analysis consumer that generates a
@@ -2754,6 +2817,12 @@ block|;
 name|ASTWriter
 name|Writer
 block|;
+name|bool
+name|AllowASTWithErrors
+block|;
+name|bool
+name|HasEmittedPCH
+block|;
 name|protected
 operator|:
 name|ASTWriter
@@ -2789,6 +2858,8 @@ argument_list|,
 argument|StringRef isysroot
 argument_list|,
 argument|raw_ostream *Out
+argument_list|,
+argument|bool AllowASTWithErrors = false
 argument_list|)
 block|;
 operator|~
@@ -2827,9 +2898,18 @@ name|ASTDeserializationListener
 operator|*
 name|GetASTDeserializationListener
 argument_list|()
-block|; }
-decl_stmt|;
+block|;
+name|bool
+name|hasEmittedPCH
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasEmittedPCH
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment
