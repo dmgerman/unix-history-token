@@ -430,6 +430,18 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_suspend
+block|{
+name|enum
+name|vm_suspend_how
+name|how
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -593,7 +605,7 @@ define|#
 directive|define
 name|VM_SUSPEND
 define|\
-value|_IO('v', IOCNUM_SUSPEND)
+value|_IOW('v', IOCNUM_SUSPEND, struct vm_suspend)
 end_define
 
 begin_define

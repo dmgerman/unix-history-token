@@ -343,6 +343,10 @@ name|struct
 name|vmctx
 modifier|*
 name|ctx
+parameter_list|,
+name|enum
+name|vm_suspend_how
+name|how
 parameter_list|)
 function_decl|;
 end_function_decl
