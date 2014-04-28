@@ -95,7 +95,7 @@ operator|)
 operator||
 name|mask
 expr_stmt|;
-asm|__asm __volatile("vmsr fpscr, %0" : : "r"(old));
+asm|__asm __volatile("vmsr fpscr, %0" : : "r"(new));
 return|return
 operator|(
 operator|(
