@@ -5716,16 +5716,6 @@ directive|undef
 name|flags
 end_undef
 
-begin_define
-define|#
-directive|define
-name|senderr
-parameter_list|(
-name|e
-parameter_list|)
-value|{ error = e; goto bad; }
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -5939,11 +5929,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|senderr
-argument_list|(
-name|error
-argument_list|)
-expr_stmt|;
+goto|goto
+name|bad
+goto|;
 block|}
 comment|/* Check if outgoing interface has changed */
 if|if
@@ -6036,11 +6024,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|senderr
-argument_list|(
-name|error
-argument_list|)
-expr_stmt|;
+goto|goto
+name|bad
+goto|;
 name|rt
 operator|->
 name|rt_flags
@@ -6190,12 +6176,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|senderr
-end_undef
 
 begin_function
 name|int
