@@ -2024,6 +2024,9 @@ decl_stmt|;
 name|uint16_t
 name|sc_command_idx
 decl_stmt|;
+name|uint16_t
+name|sc_imod_default
+decl_stmt|;
 name|uint8_t
 name|sc_event_ccs
 decl_stmt|;
