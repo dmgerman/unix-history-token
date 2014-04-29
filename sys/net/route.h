@@ -1252,6 +1252,14 @@ name|ifnet
 modifier|*
 name|rti_ifp
 decl_stmt|;
+name|u_long
+name|rti_mflags
+decl_stmt|;
+name|struct
+name|rt_metrics
+modifier|*
+name|rti_rmx
+decl_stmt|;
 block|}
 struct|;
 end_struct
