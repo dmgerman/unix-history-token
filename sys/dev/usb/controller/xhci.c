@@ -2813,6 +2813,21 @@ name|temp
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Check if we should use the default IMOD value */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_imod_default
+operator|==
+literal|0
+condition|)
+name|sc
+operator|->
+name|sc_imod_default
+operator|=
+name|XHCI_IMOD_DEFAULT
+expr_stmt|;
 comment|/* Setup interrupt rate */
 name|XWRITE4
 argument_list|(
@@ -2825,7 +2840,9 @@ argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-name|XHCI_IMOD_DEFAULT
+name|sc
+operator|->
+name|sc_imod_default
 argument_list|)
 expr_stmt|;
 name|usbd_get_page

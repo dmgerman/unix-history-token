@@ -1127,6 +1127,12 @@ operator|=
 operator|&
 name|xhci_pci_port_route
 expr_stmt|;
+name|sc
+operator|->
+name|sc_imod_default
+operator|=
+name|XHCI_IMOD_DEFAULT_LP
+expr_stmt|;
 break|break;
 default|default:
 break|break;
