@@ -1300,11 +1300,25 @@ name|fdt_to_load
 argument_list|)
 return|;
 block|}
+comment|/* Board vendors use both fdtaddr and fdt_addr names.  Grrrr. */
 name|s
 operator|=
 name|ub_env_get
 argument_list|(
 literal|"fdtaddr"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+name|s
+operator|=
+name|ub_env_get
+argument_list|(
+literal|"fdt_addr"
 argument_list|)
 expr_stmt|;
 if|if
