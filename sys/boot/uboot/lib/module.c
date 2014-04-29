@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * U-Boot-specific module functionality.  *  * XXX not much for now...  *  */
+comment|/*  * U-Boot-specific module functionality.  */
 end_comment
 
 begin_include
@@ -39,6 +39,12 @@ directive|include
 file|"bootstrap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libuboot.h"
+end_include
+
 begin_function
 name|int
 name|uboot_autoload
@@ -46,6 +52,33 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LOADER_FDT_SUPPORT
+argument_list|)
+name|int
+name|err
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|err
+operator|=
+name|fdt_setup_fdtp
+argument_list|()
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0

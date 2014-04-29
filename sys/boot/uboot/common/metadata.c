@@ -80,15 +80,11 @@ name|LOADER_FDT_SUPPORT
 argument_list|)
 end_if
 
-begin_function_decl
-specifier|extern
-name|int
-name|fdt_copy
-parameter_list|(
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"libuboot.h"
+end_include
 
 begin_endif
 endif|#
