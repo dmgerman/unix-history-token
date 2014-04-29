@@ -1124,8 +1124,9 @@ modifier|*
 name|header
 parameter_list|)
 block|{
-comment|// TODO: Verify that there really is an FDT at
-comment|// the specified location.
+name|int
+name|err
+decl_stmt|;
 name|fdtp_size
 operator|=
 name|fdt_totalsize
@@ -1133,6 +1134,38 @@ argument_list|(
 name|header
 argument_list|)
 expr_stmt|;
+name|err
+operator|=
+name|fdt_check_header
+argument_list|(
+name|header
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|<
+literal|0
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|command_errbuf
+argument_list|,
+literal|"error validating blob: %s"
+argument_list|,
+name|fdt_strerror
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
 name|free
 argument_list|(
 name|fdtp
@@ -3307,8 +3340,6 @@ decl_stmt|;
 name|int
 name|chosen
 decl_stmt|,
-name|err
-decl_stmt|,
 name|eth_no
 decl_stmt|,
 name|len
@@ -3339,32 +3370,17 @@ condition|(
 name|fdtp
 operator|==
 name|NULL
-condition|)
-block|{
-name|err
-operator|=
+operator|&&
 name|fdt_setup_fdtp
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|err
+operator|!=
+literal|0
 condition|)
-block|{
-name|sprintf
-argument_list|(
-name|command_errbuf
-argument_list|,
-literal|"No valid device tree blob found!"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-block|}
 comment|/* Create /chosen node (if not exists) */
 if|if
 condition|(
@@ -3633,7 +3649,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No valid device tree blob found!"
+literal|"No valid device tree blob found!\n"
 argument_list|)
 expr_stmt|;
 return|return
