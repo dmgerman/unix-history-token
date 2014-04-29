@@ -2478,7 +2478,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %m"
 argument_list|,
-name|infoname
+name|buf
 argument_list|)
 expr_stmt|;
 name|nerr
