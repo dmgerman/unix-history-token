@@ -552,6 +552,7 @@ name|char
 modifier|*
 name|loaderdev
 decl_stmt|;
+comment|/* 	 * If we can't find the magic signature and related info, exit with a 	 * unique error code that U-Boot reports as "## Application terminated, 	 * rc = 0xnnbadab1". Hopefully 'badab1' looks enough like "bad api" to 	 * provide a clue. It's better than 0xffffffff anyway. 	 */
 if|if
 condition|(
 operator|!
@@ -563,8 +564,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+literal|0x01badab1
 operator|)
 return|;
 name|syscall_ptr
@@ -581,8 +581,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-operator|-
-literal|2
+literal|0x02badab1
 operator|)
 return|;
 if|if
@@ -595,8 +594,7 @@ name|API_SIG_VERSION
 condition|)
 return|return
 operator|(
-operator|-
-literal|3
+literal|0x03badab1
 operator|)
 return|;
 comment|/* Clear BSS sections */
