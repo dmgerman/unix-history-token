@@ -269,10 +269,13 @@ comment|/* spa_sync() */
 name|ZIO_PRIORITY_SCRUB
 block|,
 comment|/* asynchronous scrub/resilver reads */
+name|ZIO_PRIORITY_TRIM
+block|,
+comment|/* free requests used for TRIM */
 name|ZIO_PRIORITY_NUM_QUEUEABLE
 block|,
 name|ZIO_PRIORITY_NOW
-comment|/* non-queued i/os (e.g. free) */
+comment|/* non-queued I/Os (e.g. ioctl) */
 block|}
 name|zio_priority_t
 typedef|;
@@ -1497,6 +1500,9 @@ parameter_list|,
 name|void
 modifier|*
 name|priv
+parameter_list|,
+name|zio_priority_t
+name|priority
 parameter_list|,
 name|enum
 name|zio_flag

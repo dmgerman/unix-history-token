@@ -294,6 +294,11 @@ define|\
 value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_STAGE_FREE_BP_INIT |		\ 	ZIO_STAGE_DVA_FREE)
 define|#
 directive|define
+name|ZIO_FREE_PHYS_PIPELINE
+define|\
+value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_VDEV_IO_STAGES)
+define|#
+directive|define
 name|ZIO_DDT_FREE_PIPELINE
 define|\
 value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_STAGE_FREE_BP_INIT |		\ 	ZIO_STAGE_ISSUE_ASYNC |			\ 	ZIO_STAGE_DDT_FREE)
