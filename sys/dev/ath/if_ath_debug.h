@@ -194,6 +194,10 @@ init|=
 literal|0x1000000000ULL
 block|,
 comment|/* Diversity logic */
+name|ATH_DEBUG_PWRSAVE
+init|=
+literal|0x2000000000ULL
+block|,
 name|ATH_DEBUG_ANY
 init|=
 literal|0xffffffffffffffffULL
