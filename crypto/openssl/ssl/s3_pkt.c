@@ -3915,6 +3915,16 @@ operator|->
 name|mode
 operator|&
 name|SSL_MODE_RELEASE_BUFFERS
+operator|&&
+name|s
+operator|->
+name|s3
+operator|->
+name|rbuf
+operator|.
+name|left
+operator|==
+literal|0
 condition|)
 name|ssl3_release_read_buffer
 argument_list|(
