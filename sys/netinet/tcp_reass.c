@@ -709,6 +709,7 @@ goto|;
 comment|/* 	 * Limit the number of segments that can be queued to reduce the 	 * potential for mbuf exhaustion. For best performance, we want to be 	 * able to queue a full window's worth of segments. The size of the 	 * socket receive buffer determines our advertised window and grows 	 * automatically when socket buffer autotuning is enabled. Use it as the 	 * basis for our queue limit. 	 * Always let the missing segment through which caused this queue. 	 * NB: Access to the socket buffer is left intentionally unlocked as we 	 * can tolerate stale information here. 	 * 	 * XXXLAS: Using sbspace(so->so_rcv) instead of so->so_rcv.sb_hiwat 	 * should work but causes packets to be dropped when they shouldn't. 	 * Investigate why and re-evaluate the below limit after the behaviour 	 * is understood. 	 */
 if|if
 condition|(
+operator|(
 name|th
 operator|->
 name|th_seq
@@ -716,6 +717,15 @@ operator|!=
 name|tp
 operator|->
 name|rcv_nxt
+operator|||
+operator|!
+name|TCPS_HAVEESTABLISHED
+argument_list|(
+name|tp
+operator|->
+name|t_state
+argument_list|)
+operator|)
 operator|&&
 name|tp
 operator|->
@@ -829,6 +839,14 @@ operator|!=
 name|tp
 operator|->
 name|rcv_nxt
+operator|||
+operator|!
+name|TCPS_HAVEESTABLISHED
+argument_list|(
+name|tp
+operator|->
+name|t_state
+argument_list|)
 condition|)
 block|{
 name|TCPSTAT_INC
@@ -1056,6 +1074,13 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|te
+operator|!=
+operator|&
+name|tqs
+condition|)
 name|uma_zfree
 argument_list|(
 name|V_tcp_reass_zone
