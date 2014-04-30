@@ -351,7 +351,7 @@ value|{									\     int f = 0, g;							\ 									\     int *suff = xmalloc(p
 end_define
 
 begin_comment
-comment|/*  * Copies the pattern pat having lenght n to p and stores  * the size in l.  */
+comment|/*  * Copies the pattern pat having length n to p and stores  * the size in l.  */
 end_comment
 
 begin_define
