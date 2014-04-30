@@ -294,6 +294,7 @@ name|struct
 name|uio
 modifier|*
 name|uio
+name|__unused
 parameter_list|,
 name|int
 name|flags
