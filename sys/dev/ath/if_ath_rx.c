@@ -1082,6 +1082,9 @@ decl_stmt|;
 name|uint64_t
 name|tsf_beacon_target
 decl_stmt|;
+name|int
+name|tsf_intval
+decl_stmt|;
 name|tsf_beacon_old
 operator|=
 operator|(
@@ -1113,6 +1116,43 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|TU_TO_TSF
+parameter_list|(
+name|_tu
+parameter_list|)
+value|(((u_int64_t)(_tu))<< 10)
+name|tsf_intval
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ni
+operator|!=
+name|NULL
+operator|&&
+name|ni
+operator|->
+name|ni_intval
+operator|>
+literal|0
+condition|)
+block|{
+name|tsf_intval
+operator|=
+name|TU_TO_TSF
+argument_list|(
+name|ni
+operator|->
+name|ni_intval
+argument_list|)
+expr_stmt|;
+block|}
+undef|#
+directive|undef
+name|TU_TO_TSF
 comment|/* 	 * Call up first so subsequent work can use information 	 * potentially stored in the node (e.g. for ibss merge). 	 */
 name|ATH_VAP
 argument_list|(
@@ -1208,21 +1248,24 @@ name|long
 operator|)
 name|tsf_beacon_old
 expr_stmt|;
-comment|/* 		 * For now let's just assume the intval is 100TU, which is 		 * 102400uS.  So, we can just calculate the remainder from 		 * that. 		 */
 name|tsf_delta_bmiss
 operator|=
 name|tsf_delta
 operator|/
-literal|102400
+name|tsf_intval
 expr_stmt|;
 comment|/* 		 * If our delta is greater than half the beacon interval, 		 * let's round the bmiss value up to the next beacon 		 * interval.  Ie, we're running really, really early 		 * on the next beacon. 		 */
 if|if
 condition|(
 name|tsf_delta
 operator|%
-literal|102400
+name|tsf_intval
 operator|>
-literal|51200
+operator|(
+name|tsf_intval
+operator|/
+literal|2
+operator|)
 condition|)
 name|tsf_delta_bmiss
 operator|++
@@ -1241,10 +1284,14 @@ operator|)
 name|tsf_delta_bmiss
 operator|)
 operator|*
-literal|102400ULL
+operator|(
+name|long
+name|long
+operator|)
+name|tsf_intval
 operator|)
 expr_stmt|;
-comment|/* 		 * The remainder using '%' is between 0 .. 102400-1. 		 * If we're actually running too fast, then the remainder 		 * will be some large number just under 102400-1. 		 * So we need to look at whether we're running 		 * before or after the target beacon interval 		 * and if we are, modify how we do the remainder 		 * calculation. 		 */
+comment|/* 		 * The remainder using '%' is between 0 .. intval-1. 		 * If we're actually running too fast, then the remainder 		 * will be some large number just under intval-1. 		 * So we need to look at whether we're running 		 * before or after the target beacon interval 		 * and if we are, modify how we do the remainder 		 * calculation. 		 */
 if|if
 condition|(
 name|tsf_beacon
@@ -1256,7 +1303,7 @@ name|tsf_remainder
 operator|=
 operator|-
 operator|(
-literal|102400
+name|tsf_intval
 operator|-
 operator|(
 operator|(
@@ -1265,7 +1312,7 @@ operator|-
 name|tsf_beacon_old
 operator|)
 operator|%
-literal|102400
+name|tsf_intval
 operator|)
 operator|)
 expr_stmt|;
@@ -1280,7 +1327,7 @@ operator|-
 name|tsf_beacon_old
 operator|)
 operator|%
-literal|102400
+name|tsf_intval
 expr_stmt|;
 block|}
 name|DPRINTF
@@ -1359,7 +1406,7 @@ name|int32_t
 operator|)
 name|nexttbtt
 operator|+
-literal|102400
+name|tsf_intval
 argument_list|)
 expr_stmt|;
 if|if
