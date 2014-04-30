@@ -204,11 +204,7 @@ name|links
 expr_stmt|;
 name|struct
 name|cam_ed_qinfo
-name|alloc_ccb_entry
-decl_stmt|;
-name|struct
-name|cam_ed_qinfo
-name|send_ccb_entry
+name|devq_entry
 decl_stmt|;
 name|struct
 name|cam_et
@@ -327,10 +323,6 @@ name|CAM_DEV_REL_ON_QUEUE_EMPTY
 value|0x08
 define|#
 directive|define
-name|CAM_DEV_RESIZE_QUEUE_NEEDED
-value|0x10
-define|#
-directive|define
 name|CAM_DEV_TAG_AFTER_COUNT
 value|0x20
 define|#
@@ -366,6 +358,12 @@ name|struct
 name|callout
 name|callout
 decl_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|cam_ed
+argument_list|)
+name|highpowerq_entry
+expr_stmt|;
 block|}
 struct|;
 end_struct
