@@ -880,7 +880,8 @@ name|zio_pipe_stage_t
 parameter_list|(
 name|zio_t
 modifier|*
-name|zio
+modifier|*
+name|ziop
 parameter_list|)
 function_decl|;
 comment|/*  * The io_reexecute flags are distinct from io_flags because the child must  * be able to propagate them to the parent.  The normal io_flags are local  * to the zio, not protected by any lock, and not modifiable by children;  * the reexecute flags are protected by io_lock, modifiable by children,  * and always propagated -- even when ZIO_FLAG_DONT_PROPAGATE is set.  */
