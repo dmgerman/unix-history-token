@@ -107,6 +107,15 @@ argument_list|)
 block|}
 block|,
 block|{
+name|ALIAS_FREEBSD_BOOT
+block|,
+name|ALIAS_PTR2TYPE
+argument_list|(
+argument|APM_ENT_TYPE_APPLE_BOOT
+argument_list|)
+block|}
+block|,
+block|{
 name|ALIAS_FREEBSD_NANDFS
 block|,
 name|ALIAS_PTR2TYPE
