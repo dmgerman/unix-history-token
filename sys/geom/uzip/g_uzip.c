@@ -2627,6 +2627,13 @@ operator|+=
 name|nread
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_GEOM
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
