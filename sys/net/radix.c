@@ -4922,6 +4922,19 @@ decl_stmt|;
 name|int
 name|lastb
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: mask needs to be specified"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * rn_search_m is sort-of-open-coded here. We cannot use the 	 * function because we need to keep track of the last node seen. 	 */
 comment|/* printf("about to search\n"); */
 for|for
@@ -4996,14 +5009,22 @@ expr_stmt|;
 block|}
 block|}
 comment|/* printf("done searching\n"); */
-comment|/* 	 * Two cases: either we stepped off the end of our mask, 	 * in which case last == rn, or we reached a leaf, in which 	 * case we want to start from the last node we looked at. 	 * Either way, last is the node we want to start from. 	 */
+comment|/* 	 * Two cases: either we stepped off the end of our mask, 	 * in which case last == rn, or we reached a leaf, in which 	 * case we want to start from the leaf. 	 */
+if|if
+condition|(
+name|rn
+operator|->
+name|rn_bit
+operator|>=
+literal|0
+condition|)
 name|rn
 operator|=
 name|last
 expr_stmt|;
 name|lastb
 operator|=
-name|rn
+name|last
 operator|->
 name|rn_bit
 expr_stmt|;
