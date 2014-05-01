@@ -821,7 +821,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
 name|wch
 operator|>=
 literal|0xd800
@@ -829,15 +828,6 @@ operator|&&
 name|wch
 operator|<=
 literal|0xdfff
-operator|)
-operator|||
-name|wch
-operator|==
-literal|0xfffe
-operator|||
-name|wch
-operator|==
-literal|0xffff
 condition|)
 block|{
 comment|/* 		 * Malformed input; invalid code points. 		 */
