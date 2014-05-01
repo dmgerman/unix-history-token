@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<geom/geom.h>
 end_include
 
@@ -305,6 +299,7 @@ name|offsets
 operator|!=
 name|NULL
 condition|)
+block|{
 name|free
 argument_list|(
 name|sc
@@ -314,6 +309,13 @@ argument_list|,
 name|M_GEOM_UZIP
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|offsets
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -376,7 +378,9 @@ name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ptr
+operator|)
 return|;
 block|}
 end_function
@@ -1745,7 +1749,9 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_uzip_orphan(%p/%s)"
+literal|"%s(%p/%s)"
+argument_list|,
+name|__func__
 argument_list|,
 name|cp
 argument_list|,
@@ -1858,7 +1864,9 @@ operator|>
 literal|0
 condition|)
 return|return
+operator|(
 name|EROFS
+operator|)
 return|;
 return|return
 operator|(
@@ -1903,7 +1911,9 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_uzip_spoiled(%p/%s)"
+literal|"%s(%p/%s)"
+argument_list|,
+name|__func__
 argument_list|,
 name|cp
 argument_list|,
@@ -2006,7 +2016,9 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_uzip_taste(%s,%s)"
+literal|"%s(%s,%s)"
+argument_list|,
+name|__func__
 argument_list|,
 name|mp
 operator|->
@@ -2904,7 +2916,9 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_uzip_destroy_geom(%s, %s)"
+literal|"%s(%s, %s)"
+argument_list|,
+name|__func__
 argument_list|,
 name|mp
 operator|->
