@@ -44,25 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/libkern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -81,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
 end_include
 
 begin_include
