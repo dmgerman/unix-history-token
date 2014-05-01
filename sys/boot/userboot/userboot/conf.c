@@ -201,6 +201,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|console
+name|userboot_comconsole
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|console
 modifier|*
@@ -210,6 +218,9 @@ init|=
 block|{
 operator|&
 name|userboot_console
+block|,
+operator|&
+name|userboot_comconsole
 block|,
 name|NULL
 block|}
