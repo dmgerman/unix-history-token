@@ -3012,9 +3012,12 @@ name|int
 name|status
 parameter_list|)
 function_decl|;
-comment|/* 	 * powersave state tracking. 	 */
+comment|/* 	 * Powersave state tracking. 	 * 	 * target/cur powerstate is the chip power state. 	 * target selfgen state is the self-generated frames 	 *   state.  The chip can be awake but transmitted frames 	 *   can have the PWRMGT bit set to 1 so the destination 	 *   thinks the node is asleep. 	 */
 name|HAL_POWER_MODE
 name|sc_target_powerstate
+decl_stmt|;
+name|HAL_POWER_MODE
+name|sc_target_selfgen_state
 decl_stmt|;
 name|HAL_POWER_MODE
 name|sc_cur_powerstate

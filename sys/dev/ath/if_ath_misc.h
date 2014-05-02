@@ -702,6 +702,30 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|_ath_power_set_selfgen
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|power_state
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|_ath_power_set_power_state
 parameter_list|(
 name|struct
@@ -754,6 +778,18 @@ parameter_list|,
 name|ps
 parameter_list|)
 value|_ath_power_setpower(sc, ps, __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_power_setselfgen
+parameter_list|(
+name|sc
+parameter_list|,
+name|ps
+parameter_list|)
+value|_ath_power_set_selfgen(sc, ps, __FILE__, __LINE__)
 end_define
 
 begin_define
