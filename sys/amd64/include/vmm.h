@@ -25,6 +25,8 @@ name|VM_SUSPEND_RESET
 block|,
 name|VM_SUSPEND_POWEROFF
 block|,
+name|VM_SUSPEND_HALT
+block|,
 name|VM_SUSPEND_LAST
 block|}
 enum|;
