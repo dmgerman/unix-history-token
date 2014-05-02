@@ -183,6 +183,10 @@ name|wcpu
 decl_stmt|;
 comment|/* show weighted cpu */
 name|int
+name|jid
+decl_stmt|;
+comment|/* only this jid (unless jid == -1) */
+name|int
 name|jail
 decl_stmt|;
 comment|/* show jail ID */
