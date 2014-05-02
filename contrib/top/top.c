@@ -3674,7 +3674,7 @@ name|new_message
 argument_list|(
 name|MT_standout
 argument_list|,
-literal|"Username to show: "
+literal|"Username to show (+ for all): "
 argument_list|)
 expr_stmt|;
 if|if
@@ -4053,7 +4053,7 @@ name|new_message
 argument_list|(
 name|MT_standout
 argument_list|,
-literal|"Jail to show: "
+literal|"Jail to show (+ for all): "
 argument_list|)
 expr_stmt|;
 if|if
