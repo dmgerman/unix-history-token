@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_pragma
@@ -60963,7 +60963,7 @@ if|if
 condition|(
 name|dofhp
 operator|->
-name|dofhp_addr
+name|dofhp_dof
 operator|==
 name|help
 operator|->
@@ -60974,7 +60974,7 @@ index|]
 operator|->
 name|dthp_prov
 operator|.
-name|dofhp_addr
+name|dofhp_dof
 condition|)
 return|return
 operator|(
