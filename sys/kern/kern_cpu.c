@@ -4872,6 +4872,13 @@ argument_list|,
 literal|"warning: cpufreq_unregister called with no cpufreq device active\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|devs
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
