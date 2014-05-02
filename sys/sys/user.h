@@ -1120,7 +1120,7 @@ value|-4
 end_define
 
 begin_comment
-comment|/* ptrace vnode */
+comment|/* Ktrace vnode */
 end_comment
 
 begin_define
