@@ -3108,15 +3108,19 @@ begin_define
 define|#
 directive|define
 name|IPFW_NAT_SI_SUB_FIREWALL
-value|(SI_SUB_PROTO_IFATTACHDOMAIN + 1)
+value|SI_SUB_PROTO_IFATTACHDOMAIN
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPFW_NAT_MODEVENT_ORDER
-value|(SI_ORDER_ANY - 255)
+value|(SI_ORDER_ANY - 128)
 end_define
+
+begin_comment
+comment|/* after ipfw */
+end_comment
 
 begin_define
 define|#
