@@ -11,6 +11,13 @@ begin_define
 define|#
 directive|define
 name|GVINUMMOD
+value|"g_vinum"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GVINUMKLD
 value|"geom_vinum"
 end_define
 

@@ -527,14 +527,24 @@ decl_stmt|;
 comment|/* Load the module if necessary. */
 if|if
 condition|(
-name|kldfind
+name|modfind
 argument_list|(
 name|GVINUMMOD
 argument_list|)
 operator|<
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|kldload
+argument_list|(
+name|GVINUMKLD
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|modfind
 argument_list|(
 name|GVINUMMOD
 argument_list|)
@@ -545,10 +555,11 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|GVINUMMOD
+name|GVINUMKLD
 literal|": Kernel module not available"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Arguments given on the command line. */
 if|if
 condition|(
@@ -5973,7 +5984,7 @@ name|fileid
 operator|=
 name|kldfind
 argument_list|(
-name|GVINUMMOD
+name|GVINUMKLD
 argument_list|)
 expr_stmt|;
 if|if
@@ -5984,10 +5995,19 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|modfind
+argument_list|(
+name|GVINUMMOD
+argument_list|)
+operator|<
+literal|0
+condition|)
 name|warn
 argument_list|(
 literal|"cannot find "
-name|GVINUMMOD
+name|GVINUMKLD
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5996,7 +6016,7 @@ comment|/* 	 * This little hack prevents that we end up in an infinite loop in 	
 name|printf
 argument_list|(
 literal|"unloading "
-name|GVINUMMOD
+name|GVINUMKLD
 literal|" kernel module... "
 argument_list|)
 expr_stmt|;
@@ -6053,7 +6073,7 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"cannot unload "
-name|GVINUMMOD
+name|GVINUMKLD
 argument_list|)
 expr_stmt|;
 return|return;
