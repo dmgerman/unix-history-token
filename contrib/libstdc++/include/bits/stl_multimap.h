@@ -606,7 +606,7 @@ argument_list|()
 block|{
 name|_M_t
 operator|.
-name|_M_insert_unique
+name|_M_insert_equal
 argument_list|(
 name|__first
 argument_list|,
