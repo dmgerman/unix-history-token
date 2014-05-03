@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/gpio.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -44,13 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -68,19 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"gpio_if.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gpiobus_if.h"
 end_include
 
 begin_function_decl

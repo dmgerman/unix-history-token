@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/gpio.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -51,18 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
