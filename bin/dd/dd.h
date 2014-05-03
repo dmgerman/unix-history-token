@@ -33,7 +33,7 @@ comment|/* last read byte count */
 name|size_t
 name|dbsz
 decl_stmt|;
-comment|/* buffer size */
+comment|/* block size */
 define|#
 directive|define
 name|ISCHR
