@@ -1688,8 +1688,12 @@ end_comment
 
 begin_function_decl
 name|int
-name|rtexpunge
+name|rt_expunge
 parameter_list|(
+name|struct
+name|radix_node_head
+modifier|*
+parameter_list|,
 name|struct
 name|rtentry
 modifier|*

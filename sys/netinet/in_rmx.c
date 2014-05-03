@@ -689,13 +689,13 @@ name|V_rtq_reallyold
 expr_stmt|;
 block|}
 else|else
-block|{
-name|rtexpunge
+name|rt_expunge
 argument_list|(
+name|head
+argument_list|,
 name|rt
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1599,6 +1599,11 @@ struct|struct
 name|in_ifadown_arg
 block|{
 name|struct
+name|radix_node_head
+modifier|*
+name|rnh
+decl_stmt|;
+name|struct
 name|ifaddr
 modifier|*
 name|ifa
@@ -1682,8 +1687,12 @@ name|rt
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Disconnect it from the tree and permit protocols 		 * to cleanup. 		 */
-name|rtexpunge
+name|rt_expunge
 argument_list|(
+name|ap
+operator|->
+name|rnh
+argument_list|,
 name|rt
 argument_list|)
 expr_stmt|;
