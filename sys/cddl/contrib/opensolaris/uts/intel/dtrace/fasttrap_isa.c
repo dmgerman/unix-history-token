@@ -123,7 +123,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cddl/dev/dtrace/i386/regset.h>
+file|<cddl/dev/dtrace/x86/regset.h>
 end_include
 
 begin_include
