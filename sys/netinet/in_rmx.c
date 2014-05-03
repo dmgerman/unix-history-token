@@ -1786,6 +1786,12 @@ argument_list|)
 expr_stmt|;
 name|arg
 operator|.
+name|rnh
+operator|=
+name|rnh
+expr_stmt|;
+name|arg
+operator|.
 name|ifa
 operator|=
 name|ifa
