@@ -8794,7 +8794,7 @@ name|error
 operator|=
 name|rtsock_msg_buffer
 argument_list|(
-name|RTM_NEWADDR
+name|RTM_NEWMADDR
 argument_list|,
 operator|&
 name|info
