@@ -11106,7 +11106,21 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"GEOM_PART: %s was automatically resized\n"
+literal|"GEOM_PART: %s was automatically resized.\n"
+literal|"  Use `gpart commit %s` to save changes or "
+literal|"`gpart undo %s` to revert them.\n"
+argument_list|,
+name|cp
+operator|->
+name|geom
+operator|->
+name|name
+argument_list|,
+name|cp
+operator|->
+name|geom
+operator|->
+name|name
 argument_list|,
 name|cp
 operator|->
