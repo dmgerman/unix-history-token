@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gpio_if.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"gpiobus_if.h"
 end_include
 

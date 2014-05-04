@@ -65,12 +65,6 @@ directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"gpio_if.h"
-end_include
-
 begin_function_decl
 specifier|static
 name|int
@@ -718,7 +712,7 @@ block|}
 comment|/* Get the GPIO pin number and flags. */
 if|if
 condition|(
-name|ofw_bus_map_gpios
+name|gpio_map_gpios
 argument_list|(
 name|sc
 operator|->
