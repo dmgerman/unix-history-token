@@ -480,6 +480,12 @@ init|=
 literal|1
 operator|<<
 literal|27
+block|,
+name|ZIO_FLAG_QUEUE_IO_DONE
+init|=
+literal|1
+operator|<<
+literal|28
 block|, }
 enum|;
 define|#
