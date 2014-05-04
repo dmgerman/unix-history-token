@@ -8585,13 +8585,9 @@ name|db_printf
 argument_list|(
 literal|"t_segq first: %p   t_segqlen: %d   t_dupacks: %d\n"
 argument_list|,
-name|LIST_FIRST
-argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_segq
-argument_list|)
 argument_list|,
 name|tp
 operator|->

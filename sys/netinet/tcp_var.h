@@ -63,50 +63,6 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_comment
-comment|/* TCP segment queue entry */
-end_comment
-
-begin_struct
-struct|struct
-name|tseg_qent
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|tseg_qent
-argument_list|)
-name|tqe_q
-expr_stmt|;
-name|int
-name|tqe_len
-decl_stmt|;
-comment|/* TCP segment data length */
-name|struct
-name|tcphdr
-modifier|*
-name|tqe_th
-decl_stmt|;
-comment|/* a pointer to tcp header */
-name|struct
-name|mbuf
-modifier|*
-name|tqe_m
-decl_stmt|;
-comment|/* mbuf contains packet */
-block|}
-struct|;
-end_struct
-
-begin_expr_stmt
-name|LIST_HEAD
-argument_list|(
-name|tsegqe_head
-argument_list|,
-name|tseg_qent
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|sackblk
@@ -260,7 +216,8 @@ struct|struct
 name|tcpcb
 block|{
 name|struct
-name|tsegqe_head
+name|mbuf
+modifier|*
 name|t_segq
 decl_stmt|;
 comment|/* segment reassembly queue */
@@ -2912,15 +2869,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|tcp_reass_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|tcp_reass_flush
 parameter_list|(
 name|struct
@@ -2929,26 +2877,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
-begin_function_decl
-name|void
-name|tcp_reass_destroy
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
