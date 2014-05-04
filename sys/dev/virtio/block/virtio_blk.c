@@ -3027,6 +3027,8 @@ operator|->
 name|d_flags
 operator|=
 name|DISKFLAG_CANFLUSHCACHE
+operator||
+name|DISKFLAG_UNMAPPED_BIO
 expr_stmt|;
 name|dp
 operator|->
@@ -3875,17 +3877,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|sglist_append
+name|sglist_append_bio
 argument_list|(
 name|sg
 argument_list|,
 name|bp
-operator|->
-name|bio_data
-argument_list|,
-name|bp
-operator|->
-name|bio_bcount
 argument_list|)
 expr_stmt|;
 if|if
@@ -3900,6 +3896,7 @@ name|sg
 operator|->
 name|sg_maxseg
 condition|)
+block|{
 name|panic
 argument_list|(
 literal|"%s: data buffer too big bio:%p error:%d"
@@ -3911,6 +3908,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* BIO_READ means the host writes into our buffer. */
 if|if
 condition|(
