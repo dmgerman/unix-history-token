@@ -7230,9 +7230,18 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"%d"
+literal|"%d%s"
 argument_list|,
 name|error
+argument_list|,
+name|error
+operator|!=
+name|EBUSY
+condition|?
+literal|""
+else|:
+literal|" resizing will lead to unexpected shrinking"
+literal|" due to alignment"
 argument_list|)
 expr_stmt|;
 return|return
