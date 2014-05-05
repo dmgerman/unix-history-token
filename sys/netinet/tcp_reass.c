@@ -535,11 +535,6 @@ argument_list|(
 name|tcps_rcvmemdrop
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 operator|*
 name|tlenp
 operator|=
@@ -588,6 +583,11 @@ name|M_TCPLOG
 argument_list|)
 expr_stmt|;
 block|}
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
