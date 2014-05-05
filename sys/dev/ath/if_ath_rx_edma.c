@@ -3354,6 +3354,10 @@ name|EINVAL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -3737,6 +3741,11 @@ operator|->
 name|sc_rx_statuslen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -3763,6 +3772,7 @@ operator|->
 name|sc_edma_bufsize
 argument_list|)
 expr_stmt|;
+block|}
 name|sc
 operator|->
 name|sc_rx
