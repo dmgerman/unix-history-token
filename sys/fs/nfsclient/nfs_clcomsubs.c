@@ -218,7 +218,7 @@ block|,
 block|{
 name|NFSV4OP_OPEN
 block|,
-literal|3
+literal|5
 block|,
 literal|"Open"
 block|,
