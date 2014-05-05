@@ -3241,6 +3241,45 @@ end_define
 begin_define
 define|#
 directive|define
+name|HCSPLT_XACTPOS_MIDDLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCSPLT_XACTPOS_LAST
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCSPLT_XACTPOS_BEGIN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCSPLT_XACTPOS_ALL
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCSPLT_XACTLEN_MAX
+value|188
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HCSPLT_HUBADDR_SHIFT
 value|7
 end_define
@@ -3280,6 +3319,14 @@ directive|define
 name|HCINT_RETRY
 define|\
 value|(HCINT_DATATGLERR | HCINT_FRMOVRUN | HCINT_NAK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCINT_DEFAULT_MASK
+define|\
+value|(HCINT_STALL | HCINT_BBLERR | \    HCINT_XACTERR | HCINT_NAK | HCINT_ACK | HCINT_NYET | \    HCINT_CHHLTD | HCINT_FRMOVRUN | \    HCINT_DATATGLERR)
 end_define
 
 begin_define
