@@ -438,7 +438,7 @@ comment|/* LockU */
 block|{
 literal|1
 block|,
-literal|1
+literal|2
 block|,
 literal|0
 block|,
@@ -451,7 +451,7 @@ comment|/* Lookup */
 block|{
 literal|1
 block|,
-literal|1
+literal|2
 block|,
 literal|0
 block|,
