@@ -228,7 +228,7 @@ block|,
 block|{
 name|NFSV4OP_CREATE
 block|,
-literal|3
+literal|5
 block|,
 literal|"Create"
 block|,
