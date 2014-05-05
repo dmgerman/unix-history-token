@@ -1245,12 +1245,12 @@ operator|(
 name|sop
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
 name|p
 operator|->
 name|ssize
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|sop
