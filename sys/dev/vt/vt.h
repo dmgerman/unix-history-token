@@ -1731,6 +1731,22 @@ value|static struct terminal	driver ## _consterm;				\ static struct vt_window	d
 end_define
 
 begin_comment
+comment|/* name argument is not used yet. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VT_DRIVER_DECLARE
+parameter_list|(
+name|name
+parameter_list|,
+name|drv
+parameter_list|)
+value|DATA_SET(vt_drv_set, drv)
+end_define
+
+begin_comment
 comment|/*  * Fonts.  *  * Remapping tables are used to map Unicode points to glyphs.  They need  * to be sorted, because vtfont_lookup() performs a binary search.  Each  * font has two remapping tables, for normal and bold.  When a character  * is not present in bold, it uses a normal glyph.  When no glyph is  * available, it uses glyph 0, which is normally equal to U+FFFD.  */
 end_comment
 
