@@ -159,6 +159,11 @@ name|vt_ofwfb_driver
 init|=
 block|{
 operator|.
+name|vd_name
+operator|=
+literal|"ofwfb"
+block|,
+operator|.
 name|vd_init
 operator|=
 name|ofwfb_init
