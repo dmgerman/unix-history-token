@@ -881,7 +881,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"addcpu: attempting to delete unknown cpu %d\n"
+literal|"Attempting to delete unknown cpu %d\n"
 argument_list|,
 name|vcpu
 argument_list|)
