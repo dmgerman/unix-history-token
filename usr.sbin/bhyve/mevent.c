@@ -103,22 +103,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|MEV_ENABLE
+name|MEV_ADD
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MEV_DISABLE
+name|MEV_ENABLE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|MEV_DEL_PENDING
+name|MEV_DISABLE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEV_DEL_PENDING
+value|4
 end_define
 
 begin_decl_stmt
@@ -462,22 +469,19 @@ name|me_state
 condition|)
 block|{
 case|case
-name|MEV_ENABLE
+name|MEV_ADD
 case|:
 name|ret
 operator|=
 name|EV_ADD
 expr_stmt|;
-if|if
-condition|(
-name|mevp
-operator|->
-name|me_type
-operator|==
-name|EVF_TIMER
-condition|)
+comment|/* implicitly enabled */
+break|break;
+case|case
+name|MEV_ENABLE
+case|:
 name|ret
-operator||=
+operator|=
 name|EV_ENABLE
 expr_stmt|;
 break|break;
@@ -495,6 +499,13 @@ case|:
 name|ret
 operator|=
 name|EV_DELETE
+expr_stmt|;
+break|break;
+default|default:
+name|assert
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1044,7 +1055,7 @@ name|mevp
 operator|->
 name|me_state
 operator|=
-name|MEV_ENABLE
+name|MEV_ADD
 expr_stmt|;
 name|mevent_notify
 argument_list|()
