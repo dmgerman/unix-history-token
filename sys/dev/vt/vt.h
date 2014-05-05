@@ -1309,6 +1309,19 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|int
+name|vd_probe_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|void
 name|vd_postswitch_t
 parameter_list|(
@@ -1543,7 +1556,17 @@ begin_struct
 struct|struct
 name|vt_driver
 block|{
+name|char
+name|vd_name
+index|[
+literal|16
+index|]
+decl_stmt|;
 comment|/* Console attachment. */
+name|vd_probe_t
+modifier|*
+name|vd_probe
+decl_stmt|;
 name|vd_init_t
 modifier|*
 name|vd_init
