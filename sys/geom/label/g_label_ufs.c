@@ -231,7 +231,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* Check for magic. We also need to check if file system size is equal 		 * to providers size, because sysinstall(8) used to bogusly put first 		 * partition at offset 0 instead of 16, and glabel/ufs would find file 		 * system on slice instead of partition. 		 */
+comment|/* 		 * Check for magic. We also need to check if file system size is equal 		 * to providers size, because sysinstall(8) used to bogusly put first 		 * partition at offset 0 instead of 16, and glabel/ufs would find file 		 * system on slice instead of partition. 		 */
 if|if
 condition|(
 name|fs
@@ -246,6 +246,8 @@ name|fs_fsize
 operator|>
 literal|0
 operator|&&
+operator|(
+operator|(
 name|pp
 operator|->
 name|mediasize
@@ -257,6 +259,22 @@ operator|==
 name|fs
 operator|->
 name|fs_old_size
+operator|)
+operator|||
+operator|(
+name|pp
+operator|->
+name|mediasize
+operator|/
+name|fs
+operator|->
+name|fs_fsize
+operator|==
+name|fs
+operator|->
+name|fs_providersize
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* Valid UFS1. */
