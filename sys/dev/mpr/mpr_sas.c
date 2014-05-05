@@ -11780,9 +11780,26 @@ literal|0
 expr_stmt|;
 if|#
 directive|if
+operator|(
 name|__FreeBSD_version
 operator|>=
-literal|1000029
+literal|1000028
+operator|)
+operator|||
+expr|\
+operator|(
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|902001
+operator|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|1000000
+operator|)
+operator|)
 switch|switch
 condition|(
 name|ccb
@@ -12027,7 +12044,7 @@ return|return;
 block|}
 else|#
 directive|else
-comment|//__FreeBSD_version< 1000029
+comment|/* __FreeBSD_version< 1000028 */
 comment|/* 	 * XXX We don't yet support physical addresses here. 	 */
 if|if
 condition|(
@@ -12165,6 +12182,9 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|req_sg
 index|[
 literal|0
@@ -12215,6 +12235,9 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|rsp_sg
 index|[
 literal|0
@@ -12254,7 +12277,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|//__FreeBSD_version>= 1000029
+comment|/* __FreeBSD_version< 1000028 */
 name|cm
 operator|=
 name|mpr_alloc_command
