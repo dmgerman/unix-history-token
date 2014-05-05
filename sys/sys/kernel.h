@@ -186,11 +186,6 @@ init|=
 literal|0x1800000
 block|,
 comment|/* kernel memory*/
-name|SI_SUB_KVM_RSRC
-init|=
-literal|0x1A00000
-block|,
-comment|/* kvm operational limits*/
 name|SI_SUB_HYPERVISOR
 init|=
 literal|0x1A40000
@@ -386,11 +381,6 @@ init|=
 literal|0x4800000
 block|,
 comment|/* real time and stat clocks*/
-name|SI_SUB_CLIST
-init|=
-literal|0x5800000
-block|,
-comment|/* clists*/
 name|SI_SUB_SYSV_SHM
 init|=
 literal|0x6400000
