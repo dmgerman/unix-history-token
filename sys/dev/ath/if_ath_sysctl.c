@@ -1918,7 +1918,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%d: fifolen: %d/%d; head=%d; tail=%d\n"
+literal|"%d: fifolen: %d/%d; head=%d; tail=%d; m_pending=%p, m_holdbf=%p\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1957,6 +1957,24 @@ name|i
 index|]
 operator|.
 name|m_fifo_tail
+argument_list|,
+name|sc
+operator|->
+name|sc_rxedma
+index|[
+name|i
+index|]
+operator|.
+name|m_rxpending
+argument_list|,
+name|sc
+operator|->
+name|sc_rxedma
+index|[
+name|i
+index|]
+operator|.
+name|m_holdbf
 argument_list|)
 expr_stmt|;
 block|}

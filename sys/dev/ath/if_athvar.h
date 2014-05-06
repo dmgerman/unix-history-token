@@ -1753,6 +1753,11 @@ name|mbuf
 modifier|*
 name|m_rxpending
 decl_stmt|;
+name|struct
+name|ath_buf
+modifier|*
+name|m_holdbf
+decl_stmt|;
 block|}
 struct|;
 end_struct
