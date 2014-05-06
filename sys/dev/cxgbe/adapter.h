@@ -2477,6 +2477,9 @@ name|last_op_thr
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|sc_do_rxcopy
+decl_stmt|;
 block|}
 struct|;
 end_struct
