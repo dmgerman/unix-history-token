@@ -1591,9 +1591,9 @@ name|tcps_rcvbadoff
 decl_stmt|;
 comment|/* packets received with bad offset */
 name|uint64_t
-name|tcps_rcvmemdrop
+name|tcps_rcvreassfull
 decl_stmt|;
-comment|/* packets dropped for lack of memory */
+comment|/* packets dropped for no reass space */
 name|uint64_t
 name|tcps_rcvshort
 decl_stmt|;
