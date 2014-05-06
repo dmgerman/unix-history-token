@@ -585,6 +585,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEBUG_CTRL_DISABLE_LINEFILL
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_CTRL_DISABLE_WRITEBACK
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PL310_PREFETCH_CTRL
 value|0xF60
 end_define
