@@ -210,11 +210,9 @@ name|apm_write
 parameter_list|(
 name|int
 name|fd
-name|__unused
 parameter_list|,
 name|lba_t
 name|imgsz
-name|__unused
 parameter_list|,
 name|void
 modifier|*
