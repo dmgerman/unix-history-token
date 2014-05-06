@@ -271,7 +271,7 @@ define|#
 directive|define
 name|DWC_OTG_MSK_GINT_ENABLED
 define|\
-value|(GINTSTS_ENUMDONE |			\    GINTSTS_USBRST |			\    GINTSTS_USBSUSP |			\    GINTSTS_IEPINT |			\    GINTSTS_RXFLVL |			\    GINTSTS_SESSREQINT |			\    GINTMSK_OTGINTMSK |			\    GINTMSK_HCHINTMSK |			\    GINTSTS_PRTINT)
+value|(GINTMSK_ENUMDONEMSK |		\    GINTMSK_USBRSTMSK |			\    GINTMSK_USBSUSPMSK |			\    GINTMSK_IEPINTMSK |			\    GINTMSK_SESSREQINTMSK |		\    GINTMSK_OTGINTMSK |			\    GINTMSK_PRTINTMSK)
 end_define
 
 begin_decl_stmt
@@ -841,7 +841,7 @@ name|x
 operator|++
 control|)
 block|{
-comment|/* enable all needed interrupts */
+comment|/* disable all host interrupts */
 name|DWC_OTG_WRITE_4
 argument_list|(
 name|sc
@@ -851,7 +851,7 @@ argument_list|(
 name|x
 argument_list|)
 argument_list|,
-name|HCINT_DEFAULT_MASK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -885,22 +885,14 @@ name|sc_tx_max_size
 operator|=
 name|fifo_size
 expr_stmt|;
-comment|/* enable host channel interrupts */
+comment|/* disable all host channel interrupts */
 name|DWC_OTG_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
 name|DOTG_HAINTMSK
 argument_list|,
-operator|(
-literal|1U
-operator|<<
-name|sc
-operator|->
-name|sc_host_ch_max
-operator|)
-operator|-
-literal|1U
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1330,6 +1322,113 @@ end_function
 begin_function
 specifier|static
 name|void
+name|dwc_otg_update_host_frame_interval
+parameter_list|(
+name|struct
+name|dwc_otg_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|uint32_t
+name|temp
+decl_stmt|;
+comment|/* setup HOST frame interval register, based on existing value */
+name|temp
+operator|=
+name|DWC_OTG_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|DOTG_HFIR
+argument_list|)
+operator|&
+name|HFIR_FRINT_MASK
+expr_stmt|;
+if|if
+condition|(
+name|temp
+operator|>=
+literal|10000
+condition|)
+name|temp
+operator|/=
+literal|1000
+expr_stmt|;
+else|else
+name|temp
+operator|/=
+literal|125
+expr_stmt|;
+comment|/* figure out nearest X-tal value */
+if|if
+condition|(
+name|temp
+operator|>=
+literal|54
+condition|)
+name|temp
+operator|=
+literal|60
+expr_stmt|;
+comment|/* MHz */
+elseif|else
+if|if
+condition|(
+name|temp
+operator|>=
+literal|39
+condition|)
+name|temp
+operator|=
+literal|48
+expr_stmt|;
+comment|/* MHz */
+else|else
+name|temp
+operator|=
+literal|30
+expr_stmt|;
+comment|/* MHz */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|.
+name|status_high_speed
+condition|)
+name|temp
+operator|*=
+literal|125
+expr_stmt|;
+else|else
+name|temp
+operator|*=
+literal|1000
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"HFIR=0x%08x\n"
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+name|DWC_OTG_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|DOTG_HFIR
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|dwc_otg_clocks_on
 parameter_list|(
 name|struct
@@ -1549,13 +1648,26 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+comment|/* In device mode we don't use the SOF interrupt */
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|.
+name|status_device_mode
+operator|!=
+literal|0
+operator|||
+operator|(
 name|sc
 operator|->
 name|sc_irq_mask
 operator|&
 name|GINTMSK_SOFMSK
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return;
 name|sc
@@ -1630,13 +1742,13 @@ operator|->
 name|sc_irq_mask
 operator|&=
 operator|~
-name|GINTSTS_WKUPINT
+name|GINTMSK_WKUPINTMSK
 expr_stmt|;
 name|sc
 operator|->
 name|sc_irq_mask
 operator||=
-name|GINTSTS_USBSUSP
+name|GINTMSK_USBSUSPMSK
 expr_stmt|;
 name|DWC_OTG_WRITE_4
 argument_list|(
@@ -1713,13 +1825,13 @@ operator|->
 name|sc_irq_mask
 operator|&=
 operator|~
-name|GINTSTS_USBSUSP
+name|GINTMSK_USBSUSPMSK
 expr_stmt|;
 name|sc
 operator|->
 name|sc_irq_mask
 operator||=
-name|GINTSTS_WKUPINT
+name|GINTMSK_WKUPINTMSK
 expr_stmt|;
 name|DWC_OTG_WRITE_4
 argument_list|(
@@ -2024,12 +2136,23 @@ argument_list|,
 literal|"RX status clear\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|.
+name|status_device_mode
+operator|!=
+literal|0
+condition|)
+block|{
 comment|/* enable RX FIFO level interrupt */
 name|sc
 operator|->
 name|sc_irq_mask
 operator||=
-name|GINTSTS_RXFLVL
+name|GINTMSK_RXFLVLMSK
 expr_stmt|;
 name|DWC_OTG_WRITE_4
 argument_list|(
@@ -2042,6 +2165,7 @@ operator|->
 name|sc_irq_mask
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* clear cached status */
 name|sc
 operator|->
@@ -2812,12 +2936,6 @@ name|wait_sof
 operator|=
 literal|2
 expr_stmt|;
-comment|/* enable SOF interrupt */
-name|dwc_otg_enable_sof_irq
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -3001,12 +3119,9 @@ argument_list|(
 name|td
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* busy */
+goto|goto
+name|busy
+goto|;
 comment|/* get pointer to softc */
 name|sc
 operator|=
@@ -3113,12 +3228,9 @@ name|error_any
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 block|}
 elseif|else
 if|if
@@ -3163,12 +3275,9 @@ name|error_any
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 block|}
 block|}
 comment|/* channel must be disabled before we can complete the transfer */
@@ -3321,12 +3430,9 @@ name|tt_scheduled
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 block|}
 break|break;
 case|case
@@ -3490,12 +3596,9 @@ name|toggle
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 block|}
 break|break;
 case|case
@@ -3516,12 +3619,9 @@ goto|;
 default|default:
 break|break;
 block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* busy */
+goto|goto
+name|busy
+goto|;
 name|send_pkt
 label|:
 if|if
@@ -3542,12 +3642,9 @@ name|error_any
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 block|}
 if|if
 condition|(
@@ -3749,12 +3846,9 @@ argument_list|(
 name|req
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* busy */
+goto|goto
+name|busy
+goto|;
 name|send_cpkt
 label|:
 comment|/* Wait for our turn, if TT transfer */
@@ -3868,32 +3962,33 @@ argument_list|,
 name|hcchar
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* busy */
+goto|goto
+name|busy
+goto|;
 name|tt_wait
 label|:
-comment|/* enable SOF interrupt */
-name|dwc_otg_enable_sof_irq
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* free allocated channel */
 name|dwc_otg_host_channel_free
 argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|busy
+label|:
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 comment|/* busy */
+name|complete
+label|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* complete */
 block|}
 end_function
 
@@ -4578,12 +4673,6 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* enable SOF interrupt */
-name|dwc_otg_enable_sof_irq
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 goto|goto
 name|busy
 goto|;
@@ -4610,17 +4699,22 @@ operator|==
 name|UE_INTERRUPT
 condition|)
 block|{
-comment|/* non TT interrupt traffic */
-return|return
-operator|(
-name|dwc_otg_host_rate_check_interrupt
-argument_list|(
-name|sc
-argument_list|,
+if|if
+condition|(
+operator|!
 name|td
-argument_list|)
-operator|)
-return|;
+operator|->
+name|tt_scheduled
+condition|)
+goto|goto
+name|busy
+goto|;
+name|td
+operator|->
+name|tt_scheduled
+operator|=
+literal|0
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -4707,12 +4801,9 @@ argument_list|(
 name|td
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* busy */
+goto|goto
+name|busy
+goto|;
 comment|/* get pointer to softc */
 name|sc
 operator|=
@@ -4834,12 +4925,9 @@ name|error_any
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 block|}
 elseif|else
 if|if
@@ -4891,12 +4979,9 @@ name|error_any
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 block|}
 block|}
 block|}
@@ -5149,12 +5234,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* we are complete */
+goto|goto
+name|complete
+goto|;
 block|}
 block|}
 name|td
@@ -5193,12 +5275,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* we are complete */
+goto|goto
+name|complete
+goto|;
 block|}
 name|usbd_copy_in
 argument_list|(
@@ -5370,12 +5449,9 @@ name|UE_ISOCHRONOUS
 condition|)
 block|{
 comment|/* we missed the service interval */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 block|}
 if|if
 condition|(
@@ -5438,12 +5514,9 @@ operator|==
 name|HCSPLT_XACTPOS_BEGIN
 operator|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 goto|goto
 name|receive_pkt
 goto|;
@@ -5476,12 +5549,9 @@ name|td
 operator|->
 name|short_pkt
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 comment|/* 					 * Else need to receive a zero length 					 * packet. 					 */
 block|}
 name|td
@@ -6033,12 +6103,6 @@ name|busy
 goto|;
 name|tt_wait
 label|:
-comment|/* enable SOF interrupt */
-name|dwc_otg_enable_sof_irq
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* free allocated channel */
 name|dwc_otg_host_channel_free
 argument_list|(
@@ -6053,6 +6117,14 @@ literal|1
 operator|)
 return|;
 comment|/* busy */
+name|complete
+label|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* complete */
 block|}
 end_function
 
@@ -6511,12 +6583,9 @@ argument_list|(
 name|td
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* busy */
+goto|goto
+name|busy
+goto|;
 comment|/* get pointer to softc */
 name|sc
 operator|=
@@ -6637,12 +6706,9 @@ name|error_any
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 block|}
 elseif|else
 if|if
@@ -6687,12 +6753,9 @@ name|error_any
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 block|}
 block|}
 comment|/* channel must be disabled before we can complete the transfer */
@@ -6861,12 +6924,9 @@ name|td
 operator|->
 name|short_pkt
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 comment|/* 				 * Else we need to transmit a short 				 * packet: 				 */
 block|}
 goto|goto
@@ -7057,12 +7117,9 @@ name|td
 operator|->
 name|short_pkt
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 comment|/* else we need to transmit a short packet */
 block|}
 goto|goto
@@ -7174,12 +7231,9 @@ name|remainder
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* complete */
+goto|goto
+name|complete
+goto|;
 name|td
 operator|->
 name|state
@@ -8223,12 +8277,6 @@ name|busy
 goto|;
 name|tt_wait
 label|:
-comment|/* enable SOF interrupt */
-name|dwc_otg_enable_sof_irq
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* free allocated channel */
 name|dwc_otg_host_channel_free
 argument_list|(
@@ -8243,6 +8291,14 @@ literal|1
 operator|)
 return|;
 comment|/* busy */
+name|complete
+label|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* complete */
 block|}
 end_function
 
@@ -9467,8 +9523,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* poll jobs */
-name|dwc_otg_interrupt_poll
+comment|/* enable SOF interrupt, which will poll jobs */
+name|dwc_otg_enable_sof_irq
 argument_list|(
 name|sc
 argument_list|)
@@ -9598,7 +9654,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|dwc_otg_update_host_transfer_state
+name|dwc_otg_update_host_transfer_schedule
 parameter_list|(
 name|struct
 name|dwc_otg_softc
@@ -9799,8 +9855,8 @@ name|NULL
 operator|||
 name|td
 operator|->
-name|hcsplt
-operator|==
+name|did_nak
+operator|!=
 literal|0
 operator|||
 operator|(
@@ -9816,6 +9872,19 @@ name|UE_CONTROL
 operator|<<
 name|HCCHAR_EPTYPE_SHIFT
 operator|)
+condition|)
+continue|continue;
+name|needsof
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|hcsplt
+operator|==
+literal|0
 condition|)
 continue|continue;
 comment|/* Reset state if stuck waiting for complete split */
@@ -9902,10 +9971,6 @@ block|{
 name|td
 operator|->
 name|tt_scheduled
-operator|=
-literal|1
-expr_stmt|;
-name|needsof
 operator|=
 literal|1
 expr_stmt|;
@@ -10161,12 +10226,6 @@ name|td
 operator|==
 name|NULL
 operator|||
-name|td
-operator|->
-name|hcsplt
-operator|==
-literal|0
-operator|||
 operator|(
 name|td
 operator|->
@@ -10194,6 +10253,27 @@ name|td
 argument_list|)
 condition|)
 continue|continue;
+name|needsof
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|hcsplt
+operator|==
+literal|0
+condition|)
+block|{
+name|td
+operator|->
+name|tt_scheduled
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* Reset state if stuck waiting for complete split */
 if|if
 condition|(
@@ -10281,10 +10361,6 @@ name|tt_scheduled
 operator|=
 literal|1
 expr_stmt|;
-name|needsof
-operator|=
-literal|1
-expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -10364,8 +10440,8 @@ name|NULL
 operator|||
 name|td
 operator|->
-name|hcsplt
-operator|==
+name|did_nak
+operator|!=
 literal|0
 operator|||
 operator|(
@@ -10385,6 +10461,19 @@ condition|)
 block|{
 continue|continue;
 block|}
+name|needsof
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|hcsplt
+operator|==
+literal|0
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -10492,10 +10581,6 @@ block|{
 name|td
 operator|->
 name|tt_scheduled
-operator|=
-literal|1
-expr_stmt|;
-name|needsof
 operator|=
 literal|1
 expr_stmt|;
@@ -11030,12 +11115,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* update SOF related information */
-name|dwc_otg_update_host_transfer_state
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+comment|/* scan for completion events first */
 name|TAILQ_FOREACH
 argument_list|(
 argument|xfer
@@ -11062,6 +11142,49 @@ block|}
 block|}
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|.
+name|status_device_mode
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* update host transfer schedule, so that new transfers can be issued */
+name|dwc_otg_update_host_transfer_schedule
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* start re-scheduled transfers */
+name|TAILQ_FOREACH
+argument_list|(
+argument|xfer
+argument_list|,
+argument|&sc->sc_bus.intr_q.head
+argument_list|,
+argument|wait_entry
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|dwc_otg_xfer_do_fifo
+argument_list|(
+name|xfer
+argument_list|)
+condition|)
+block|{
+comment|/* queue has been modified */
+goto|goto
+name|repeat
+goto|;
+block|}
+block|}
+block|}
+if|if
+condition|(
 name|got_rx_status
 condition|)
 block|{
@@ -11083,7 +11206,7 @@ operator|->
 name|sc_irq_mask
 operator|&=
 operator|~
-name|GINTSTS_RXFLVL
+name|GINTMSK_RXFLVLMSK
 expr_stmt|;
 name|DWC_OTG_WRITE_4
 argument_list|(
@@ -11340,6 +11463,32 @@ name|change_connect
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Disable SOF interrupt */
+name|sc
+operator|->
+name|sc_irq_mask
+operator|&=
+operator|~
+name|GINTMSK_SOFMSK
+expr_stmt|;
+comment|/* Enable RX frame interrupt */
+name|sc
+operator|->
+name|sc_irq_mask
+operator||=
+name|GINTMSK_RXFLVLMSK
+expr_stmt|;
+name|DWC_OTG_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|DOTG_GINTMSK
+argument_list|,
+name|sc
+operator|->
+name|sc_irq_mask
+argument_list|)
+expr_stmt|;
 comment|/* complete root HUB interrupt endpoint */
 name|dwc_otg_root_intr
 argument_list|(
@@ -11474,19 +11623,27 @@ name|status_high_speed
 operator|=
 literal|0
 expr_stmt|;
-comment|/* disable resume interrupt and enable suspend interrupt */
+comment|/* 		 * Disable resume and SOF interrupt, and enable 		 * suspend and RX frame interrupt: 		 */
 name|sc
 operator|->
 name|sc_irq_mask
 operator|&=
 operator|~
-name|GINTSTS_WKUPINT
+operator|(
+name|GINTMSK_WKUPINTMSK
+operator||
+name|GINTMSK_SOFMSK
+operator|)
 expr_stmt|;
 name|sc
 operator|->
 name|sc_irq_mask
 operator||=
-name|GINTSTS_USBSUSP
+operator|(
+name|GINTMSK_USBSUSPMSK
+operator||
+name|GINTMSK_RXFLVLMSK
+operator|)
 expr_stmt|;
 name|DWC_OTG_WRITE_4
 argument_list|(
@@ -11789,6 +11946,31 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* disable RX FIFO level interrupt */
+name|sc
+operator|->
+name|sc_irq_mask
+operator|&=
+operator|~
+name|GINTMSK_RXFLVLMSK
+expr_stmt|;
+name|DWC_OTG_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|DOTG_GINTMSK
+argument_list|,
+name|sc
+operator|->
+name|sc_irq_mask
+argument_list|)
+expr_stmt|;
+comment|/* update host frame interval */
+name|dwc_otg_update_host_frame_interval
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * If resume and suspend is set at the same time we interpret 	 * that like RESUME. Resume is set when there is at least 3 	 * milliseconds of inactivity on the USB BUS. 	 */
 if|if
@@ -11953,18 +12135,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* check for SOF interrupt */
-if|if
-condition|(
-name|status
-operator|&
-name|GINTSTS_SOF
-condition|)
-name|dwc_otg_update_host_transfer_state
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* poll FIFO(s) */
 name|dwc_otg_interrupt_poll
 argument_list|(
@@ -13576,12 +13746,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* update SOF related information */
-name|dwc_otg_update_host_transfer_state
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* poll one time - will turn on interrupts */
 if|if
 condition|(
@@ -13629,6 +13793,12 @@ name|timeout
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* enable SOF interrupt, if any */
+name|dwc_otg_enable_sof_irq
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
