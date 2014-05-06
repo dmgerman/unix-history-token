@@ -1005,7 +1005,7 @@ name|GID_OPERATOR
 argument_list|,
 literal|0640
 argument_list|,
-literal|"mpr_%d"
+literal|"mpr%d"
 argument_list|,
 name|unit
 argument_list|)
