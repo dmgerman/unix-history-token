@@ -2398,9 +2398,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: invalid cluster size"
+literal|"%s: invalid cluster size %d"
 argument_list|,
 name|__func__
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -2618,9 +2620,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: invalid cluster size"
+literal|"%s: invalid cluster size %d"
 argument_list|,
 name|__func__
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -3210,9 +3214,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: unknown cluster type"
+literal|"%s: unknown cluster type %d"
 argument_list|,
 name|__func__
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 break|break;
