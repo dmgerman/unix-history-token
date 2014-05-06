@@ -14622,6 +14622,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|FW_PORT_TYPE_QSFP_10G
+case|:
+case|case
 name|FW_PORT_TYPE_SFP
 case|:
 case|case
@@ -43325,14 +43328,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* MAC stats */
-name|t4_clr_port_stats
-argument_list|(
-name|sc
-argument_list|,
-name|port_id
-argument_list|)
-expr_stmt|;
 name|pi
 operator|=
 name|sc
@@ -43341,6 +43336,16 @@ name|port
 index|[
 name|port_id
 index|]
+expr_stmt|;
+comment|/* MAC stats */
+name|t4_clr_port_stats
+argument_list|(
+name|sc
+argument_list|,
+name|pi
+operator|->
+name|tx_chan
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

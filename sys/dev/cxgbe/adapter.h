@@ -846,6 +846,10 @@ decl_stmt|;
 name|uint8_t
 name|tx_chan
 decl_stmt|;
+name|uint8_t
+name|rx_chan_map
+decl_stmt|;
+comment|/* rx MPS channel bitmap */
 comment|/* These need to be int as they are used in sysctl */
 name|int
 name|ntxq
@@ -1970,6 +1974,9 @@ index|]
 decl_stmt|;
 name|int
 name|fl_starve_threshold
+decl_stmt|;
+name|int
+name|fl_starve_threshold2
 decl_stmt|;
 name|int
 name|eq_s_qpp
