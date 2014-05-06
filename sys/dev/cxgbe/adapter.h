@@ -517,20 +517,24 @@ directive|if
 name|MJUMPAGESIZE
 operator|!=
 name|MCLBYTES
-name|FL_BUF_SIZES_MAX
-init|=
-literal|5
-block|,
-comment|/* cluster, jumbop, jumbo9k, jumbo16k, extra */
-else|#
-directive|else
-name|FL_BUF_SIZES_MAX
+name|SW_ZONE_SIZES
 init|=
 literal|4
 block|,
-comment|/* cluster, jumbo9k, jumbo16k, extra */
+comment|/* cluster, jumbop, jumbo9k, jumbo16k */
+else|#
+directive|else
+name|SW_ZONE_SIZES
+init|=
+literal|3
+block|,
+comment|/* cluster, jumbo9k, jumbo16k */
 endif|#
 directive|endif
+name|CL_METADATA_SIZE
+init|=
+name|CACHE_LINE_SIZE
+block|,
 name|CTRL_EQ_QSIZE
 init|=
 literal|128
@@ -938,28 +942,69 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Where the cluster came from, how it has been carved up. */
+end_comment
+
+begin_struct
+struct|struct
+name|cluster_layout
+block|{
+name|int8_t
+name|zidx
+decl_stmt|;
+name|int8_t
+name|hwidx
+decl_stmt|;
+name|uint16_t
+name|region1
+decl_stmt|;
+comment|/* mbufs laid out within this region */
+comment|/* region2 is the DMA region */
+name|uint16_t
+name|region3
+decl_stmt|;
+comment|/* cluster_metadata within this region */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|cluster_metadata
+block|{
+name|u_int
+name|refcount
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|struct
+name|fl_sdesc
+modifier|*
+name|sd
+decl_stmt|;
+comment|/* For debug only.  Could easily be stale */
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|fl_sdesc
 block|{
-name|bus_dmamap_t
-name|map
-decl_stmt|;
 name|caddr_t
 name|cl
 decl_stmt|;
 name|uint8_t
-name|tag_idx
+name|nmbuf
 decl_stmt|;
-comment|/* the fl->tag entry this map comes from */
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|__be64
-name|ba_hwtag
+name|struct
+name|cluster_layout
+name|cll
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1391,84 +1436,48 @@ end_struct
 
 begin_struct
 struct|struct
-name|fl_buf_info
+name|sw_zone_info
 block|{
-name|u_int
+name|uma_zone_t
+name|zone
+decl_stmt|;
+comment|/* zone that this cluster comes from */
+name|int
 name|size
 decl_stmt|;
+comment|/* size of cluster: 2K, 4K, 9K, 16K, etc. */
 name|int
 name|type
 decl_stmt|;
-name|int
-name|hwtag
-range|:
-literal|4
+comment|/* EXT_xxx type of the cluster */
+name|int8_t
+name|head_hwidx
 decl_stmt|;
-comment|/* tag in low 4 bits of the pa. */
-name|uma_zone_t
-name|zone
+name|int8_t
+name|tail_hwidx
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|FL_BUF_SIZES
-parameter_list|(
-name|sc
-parameter_list|)
-value|(sc->sge.fl_buf_sizes)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FL_BUF_SIZE
-parameter_list|(
-name|sc
-parameter_list|,
-name|x
-parameter_list|)
-value|(sc->sge.fl_buf_info[x].size)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FL_BUF_TYPE
-parameter_list|(
-name|sc
-parameter_list|,
-name|x
-parameter_list|)
-value|(sc->sge.fl_buf_info[x].type)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FL_BUF_HWTAG
-parameter_list|(
-name|sc
-parameter_list|,
-name|x
-parameter_list|)
-value|(sc->sge.fl_buf_info[x].hwtag)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FL_BUF_ZONE
-parameter_list|(
-name|sc
-parameter_list|,
-name|x
-parameter_list|)
-value|(sc->sge.fl_buf_info[x].zone)
-end_define
+begin_struct
+struct|struct
+name|hw_buf_info
+block|{
+name|int8_t
+name|zidx
+decl_stmt|;
+comment|/* backpointer to zone; -ve means unused */
+name|int8_t
+name|next
+decl_stmt|;
+comment|/* next hwidx for this zone; -1 means no more */
+name|int
+name|size
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_enum
 enum|enum
@@ -1534,16 +1543,16 @@ decl_stmt|;
 name|bus_dmamap_t
 name|desc_map
 decl_stmt|;
-name|bus_dma_tag_t
-name|tag
-index|[
-name|FL_BUF_SIZES_MAX
-index|]
+name|struct
+name|cluster_layout
+name|cll_def
 decl_stmt|;
-comment|/* only first FL_BUF_SIZES(sc) are 						valid */
-name|uint8_t
-name|tag_idx
+comment|/* default refill zone, layout */
+name|struct
+name|cluster_layout
+name|cll_alt
 decl_stmt|;
+comment|/* alternate refill zone, layout */
 name|struct
 name|mtx
 name|fl_lock
@@ -1608,17 +1617,6 @@ name|uint32_t
 name|pending
 decl_stmt|;
 comment|/* # of bufs allocated since last doorbell */
-name|u_int
-name|dmamap_failed
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|mstash
-index|[
-literal|8
-index|]
-decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|sge_fl
@@ -1626,6 +1624,40 @@ argument_list|)
 name|link
 expr_stmt|;
 comment|/* All starving freelists */
+name|struct
+name|mbuf
+modifier|*
+name|m0
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|pnext
+decl_stmt|;
+name|u_int
+name|remaining
+decl_stmt|;
+name|uint64_t
+name|mbuf_allocated
+decl_stmt|;
+comment|/* # of mbuf allocated from zone_mbuf */
+name|uint64_t
+name|mbuf_inlined
+decl_stmt|;
+comment|/* # of mbuf created within clusters */
+name|uint64_t
+name|cl_allocated
+decl_stmt|;
+comment|/* # of clusters allocated */
+name|uint64_t
+name|cl_recycled
+decl_stmt|;
+comment|/* # of clusters recycled */
+name|uint64_t
+name|cl_fast_recycled
+decl_stmt|;
+comment|/* # of clusters recycled (fast) */
 block|}
 struct|;
 end_struct
@@ -2078,18 +2110,29 @@ modifier|*
 name|eqmap
 decl_stmt|;
 comment|/* eq->cntxt_id to eq mapping */
-name|u_int
-name|fl_buf_sizes
-name|__aligned
-parameter_list|(
-name|CACHE_LINE_SIZE
-parameter_list|)
-function_decl|;
+name|int
+name|pack_boundary
+decl_stmt|;
+name|int8_t
+name|safe_hwidx1
+decl_stmt|;
+comment|/* may not have room for metadata */
+name|int8_t
+name|safe_hwidx2
+decl_stmt|;
+comment|/* with room for metadata and maybe more */
 name|struct
-name|fl_buf_info
-name|fl_buf_info
+name|sw_zone_info
+name|sw_zone_info
 index|[
-name|FL_BUF_SIZES_MAX
+name|SW_ZONE_SIZES
+index|]
+decl_stmt|;
+name|struct
+name|hw_buf_info
+name|hw_buf_info
+index|[
+name|SGE_FLBUF_SIZES
 index|]
 decl_stmt|;
 block|}
