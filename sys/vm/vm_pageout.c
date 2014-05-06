@@ -3671,6 +3671,14 @@ name|addl_page_shortage
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Calculate the number of pages we want to either free or move 	 * to the cache. 	 */
+if|if
+condition|(
+name|pass
+operator|>
+literal|0
+condition|)
+block|{
 name|deficit
 operator|=
 name|atomic_readandclear_int
@@ -3679,13 +3687,20 @@ operator|&
 name|vm_pageout_deficit
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Calculate the number of pages we want to either free or move 	 * to the cache. 	 */
 name|page_shortage
 operator|=
 name|vm_paging_target
 argument_list|()
 operator|+
 name|deficit
+expr_stmt|;
+block|}
+else|else
+name|page_shortage
+operator|=
+name|deficit
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * maxlaunder limits the number of dirty pages we flush per scan. 	 * For most systems a smaller value (16 or 32) is more robust under 	 * extreme memory and disk pressure because any unnecessary writes 	 * to disk can result in extreme performance degredation.  However, 	 * systems with excessive dirty pages (especially when MAP_NOSYNC is 	 * used) will die horribly with limited laundering.  If the pageout 	 * daemon cannot clean enough pages in the first pass, we let it go 	 * all out in succeeding passes. 	 */
 if|if
