@@ -165,7 +165,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"pl310.enabled"
+literal|"hw.pl310.enabled"
 argument_list|,
 operator|&
 name|pl310_enabled
@@ -628,7 +628,7 @@ argument_list|)
 operator|&
 name|mask
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 end_function
 
@@ -1303,8 +1303,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|rid
-init|=
-literal|0
 decl_stmt|;
 name|uint32_t
 name|aux_value
@@ -1320,6 +1318,10 @@ operator|->
 name|sc_dev
 operator|=
 name|dev
+expr_stmt|;
+name|rid
+operator|=
+literal|0
 expr_stmt|;
 name|sc
 operator|->
@@ -1804,12 +1806,8 @@ argument_list|,
 name|pl310_attach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 
