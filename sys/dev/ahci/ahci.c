@@ -810,7 +810,7 @@ literal|0x43801002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP600"
+literal|"AMD SB600"
 block|,
 name|AHCI_Q_NOMSI
 block|}
@@ -820,7 +820,7 @@ literal|0x43901002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP700"
+literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -830,7 +830,7 @@ literal|0x43911002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP700"
+literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -840,7 +840,7 @@ literal|0x43921002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP700"
+literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -850,7 +850,7 @@ literal|0x43931002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP700"
+literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -860,7 +860,7 @@ literal|0x43941002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP800"
+literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -870,7 +870,7 @@ literal|0x43951002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP800"
+literal|"AMD SB8x0/SB9x0"
 block|,
 literal|0
 block|}
