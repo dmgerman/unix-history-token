@@ -530,7 +530,7 @@ name|SI_SUB_RACCTD
 init|=
 literal|0xf100000
 block|,
-comment|/* start raccd*/
+comment|/* start racctd*/
 name|SI_SUB_LAST
 init|=
 literal|0xfffffff
