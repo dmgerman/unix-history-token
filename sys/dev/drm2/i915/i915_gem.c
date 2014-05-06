@@ -7002,6 +7002,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|vm_obj
+argument_list|)
+expr_stmt|;
 name|cause
 operator|=
 literal|60
