@@ -21507,8 +21507,9 @@ literal|"\20\1PPP\2QFC\3DCBX"
 block|,
 comment|/* caps[0] linkcaps */
 literal|"\20\1NIC\2VM\3IDS\4UM\5UM_ISGL"
-block|,
 comment|/* caps[1] niccaps */
+literal|"\6HASHFILTER\7ETHOFLD"
+block|,
 literal|"\20\1TOE"
 block|,
 comment|/* caps[2] toecaps */
@@ -21522,6 +21523,7 @@ literal|"\5INITIATOR_SSNOFLD\6TARGET_SSNOFLD"
 block|,
 literal|"\20\1INITIATOR\2TARGET\3CTRL_OFLD"
 comment|/* caps[5] fcoecaps */
+literal|"\4PO_INITIAOR\5PO_TARGET"
 block|}
 decl_stmt|;
 specifier|static
@@ -32815,23 +32817,13 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|uint32_t
-name|tx_cnt
-index|[
-name|PM_NSTATS
-index|]
-decl_stmt|,
-name|rx_cnt
+name|cnt
 index|[
 name|PM_NSTATS
 index|]
 decl_stmt|;
 name|uint64_t
-name|tx_cyc
-index|[
-name|PM_NSTATS
-index|]
-decl_stmt|,
-name|rx_cyc
+name|cyc
 index|[
 name|PM_NSTATS
 index|]
@@ -32840,7 +32832,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|pm_stats
+name|rx_stats
 index|[]
 init|=
 block|{
@@ -32851,8 +32843,23 @@ block|,
 literal|"Write mem:"
 block|,
 literal|"Flush:"
+block|}
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|tx_stats
+index|[]
+init|=
+block|{
+literal|"Read:"
 block|,
-literal|"FIFO wait:"
+literal|"Write bypass:"
+block|,
+literal|"Write mem:"
+block|,
+literal|"Bypass + mem:"
 block|}
 decl_stmt|;
 name|rc
@@ -32903,26 +32910,16 @@ name|t4_pmtx_get_stats
 argument_list|(
 name|sc
 argument_list|,
-name|tx_cnt
+name|cnt
 argument_list|,
-name|tx_cyc
-argument_list|)
-expr_stmt|;
-name|t4_pmrx_get_stats
-argument_list|(
-name|sc
-argument_list|,
-name|rx_cnt
-argument_list|,
-name|rx_cyc
+name|cyc
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"                Tx count            Tx cycles    "
-literal|"Rx count            Rx cycles"
+literal|"                Tx pcmds             Tx bytes"
 argument_list|)
 expr_stmt|;
 for|for
@@ -32933,7 +32930,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|PM_NSTATS
+name|ARRAY_SIZE
+argument_list|(
+name|tx_stats
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -32942,29 +32942,73 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\n%-13s %10u %20ju  %10u %20ju"
+literal|"\n%-13s %10u %20ju"
 argument_list|,
-name|pm_stats
+name|tx_stats
 index|[
 name|i
 index|]
 argument_list|,
-name|tx_cnt
+name|cnt
 index|[
 name|i
 index|]
 argument_list|,
-name|tx_cyc
+name|cyc
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|t4_pmrx_get_stats
+argument_list|(
+name|sc
+argument_list|,
+name|cnt
+argument_list|,
+name|cyc
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\n                Rx pcmds             Rx bytes"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ARRAY_SIZE
+argument_list|(
+name|rx_stats
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\n%-13s %10u %20ju"
+argument_list|,
+name|rx_stats
 index|[
 name|i
 index|]
 argument_list|,
-name|rx_cnt
+name|cnt
 index|[
 name|i
 index|]
 argument_list|,
-name|rx_cyc
+name|cyc
 index|[
 name|i
 index|]
