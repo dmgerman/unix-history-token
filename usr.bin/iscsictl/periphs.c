@@ -340,6 +340,14 @@ name|pattern_buf_len
 operator|=
 literal|0
 expr_stmt|;
+name|skip_bus
+operator|=
+literal|1
+expr_stmt|;
+name|skip_device
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * We do the ioctl multiple times if necessary, in case there are 	 * more than 100 nodes in the EDT. 	 */
 do|do
 block|{
@@ -420,14 +428,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|skip_bus
-operator|=
-literal|1
-expr_stmt|;
-name|skip_device
-operator|=
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|i
