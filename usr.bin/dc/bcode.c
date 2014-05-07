@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: bcode.c,v 1.40 2009/10/27 23:59:37 deraadt Exp $	*/
+comment|/*	$OpenBSD: bcode.c,v 1.45 2012/11/07 11:06:14 otto Exp $	*/
 end_comment
 
 begin_comment
@@ -69,11 +69,9 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|__inline
-end_define
+begin_comment
+comment|/* #define	DEBUGGING */
+end_comment
 
 begin_define
 define|#
@@ -1641,11 +1639,9 @@ name|void
 parameter_list|)
 block|{
 return|return
-operator|(
 name|bmachine
 operator|.
 name|scale
-operator|)
 return|;
 block|}
 end_function
@@ -3584,7 +3580,6 @@ name|number
 argument_list|)
 condition|)
 return|return
-operator|(
 name|n
 operator|->
 name|scale
@@ -3594,7 +3589,6 @@ operator|->
 name|scale
 else|:
 literal|1
-operator|)
 return|;
 name|int_part
 operator|=
@@ -5851,15 +5845,17 @@ name|a
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|number
 modifier|*
 name|r
 decl_stmt|;
-name|u_int
-name|rscale
-decl_stmt|;
 name|bool
 name|neg
+decl_stmt|;
+name|u_int
+name|rscale
 decl_stmt|;
 name|p
 operator|=
@@ -5949,8 +5945,7 @@ argument_list|)
 condition|)
 name|warnx
 argument_list|(
-literal|"Runtime warning: non-zero fractional part "
-literal|"in exponent"
+literal|"Runtime warning: non-zero fractional part in exponent"
 argument_list|)
 expr_stmt|;
 name|BN_free
