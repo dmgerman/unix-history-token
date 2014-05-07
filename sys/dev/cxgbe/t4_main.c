@@ -18205,6 +18205,10 @@ literal|0xea7c
 block|,
 literal|0xf000
 block|,
+literal|0x11110
+block|,
+literal|0x11118
+block|,
 literal|0x11190
 block|,
 literal|0x19040
@@ -19029,6 +19033,10 @@ block|,
 literal|0x11088
 block|,
 literal|0x1109c
+block|,
+literal|0x11110
+block|,
+literal|0x11118
 block|,
 literal|0x1117c
 block|,
