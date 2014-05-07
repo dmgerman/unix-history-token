@@ -4812,6 +4812,11 @@ name|cur_time
 decl_stmt|,
 name|start_time
 decl_stmt|;
+name|mpr_lock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * For each LUN of each target, issue a StartStopUnit command to stop 	 * the device. 	 */
 name|sc
 operator|->
@@ -4885,6 +4890,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|mpr_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mpr_dprint
 argument_list|(
 name|sc
@@ -4943,6 +4953,11 @@ expr_stmt|;
 name|xpt_free_ccb
 argument_list|(
 name|ccb
+argument_list|)
+expr_stmt|;
+name|mpr_unlock
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5065,6 +5080,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|mpr_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Wait until all of the SSU commands have completed or time has 	 * expired (60 seconds).  pause for 100ms each time through.  If any 	 * command times out, the target will be reset in the SCSI command 	 * timeout routine. 	 */
 name|getmicrotime
 argument_list|(
