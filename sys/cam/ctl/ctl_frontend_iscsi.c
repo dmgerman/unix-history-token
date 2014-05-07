@@ -11689,10 +11689,7 @@ name|cdw
 operator|->
 name|cdw_target_transfer_tag
 operator|=
-name|htonl
-argument_list|(
 name|target_transfer_tag
-argument_list|)
 expr_stmt|;
 name|cdw
 operator|->
@@ -11869,10 +11866,7 @@ name|bhsr2t
 operator|->
 name|bhsr2t_target_transfer_tag
 operator|=
-name|htonl
-argument_list|(
 name|target_transfer_tag
-argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: Here we assume that cfiscsi_datamove() won't ever 	 *	be running concurrently on several CPUs for a given 	 *	command. 	 */
 name|bhsr2t
