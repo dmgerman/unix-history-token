@@ -5268,6 +5268,11 @@ argument_list|,
 argument|is_next
 argument_list|)
 block|{
+name|ISCSI_SESSION_LOCK
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|is
@@ -5275,6 +5280,11 @@ operator|->
 name|is_waiting_for_iscsid
 condition|)
 break|break;
+name|ISCSI_SESSION_UNLOCK
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5322,11 +5332,6 @@ return|;
 block|}
 continue|continue;
 block|}
-name|ISCSI_SESSION_LOCK
-argument_list|(
-name|is
-argument_list|)
-expr_stmt|;
 name|is
 operator|->
 name|is_waiting_for_iscsid
@@ -7629,6 +7634,11 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Trigger immediate reconnection. 	 */
+name|ISCSI_SESSION_LOCK
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
 name|is
 operator|->
 name|is_waiting_for_iscsid
@@ -7649,6 +7659,11 @@ name|is
 operator|->
 name|is_reason
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ISCSI_SESSION_UNLOCK
+argument_list|(
+name|is
 argument_list|)
 expr_stmt|;
 name|cv_signal
