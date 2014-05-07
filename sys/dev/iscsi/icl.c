@@ -197,7 +197,7 @@ argument_list|,
 operator|&
 name|debug
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Enable debug messages"
 argument_list|)
@@ -238,7 +238,7 @@ argument_list|,
 operator|&
 name|coalesce
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Try to coalesce PDUs before sending"
 argument_list|)
@@ -281,9 +281,7 @@ argument_list|,
 operator|&
 name|partial_receive_len
 argument_list|,
-literal|1
-operator|*
-literal|1024
+literal|0
 argument_list|,
 literal|"Minimum read size for partially received "
 literal|"data segment"
@@ -325,7 +323,7 @@ argument_list|,
 operator|&
 name|sendspace
 argument_list|,
-literal|1048576
+literal|0
 argument_list|,
 literal|"Default send socket buffer size"
 argument_list|)
@@ -366,7 +364,7 @@ argument_list|,
 operator|&
 name|recvspace
 argument_list|,
-literal|1048576
+literal|0
 argument_list|,
 literal|"Default receive socket buffer size"
 argument_list|)
