@@ -519,23 +519,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|iscsi_daemon_close
-block|{
-name|int
-name|idc_session_id
-decl_stmt|;
-name|int
-name|idc_spare
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -555,13 +538,6 @@ define|#
 directive|define
 name|ISCSIDRECEIVE
 value|_IOWR('I', 0x06, struct iscsi_daemon_receive)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISCSIDCLOSE
-value|_IOWR('I', 0x07, struct iscsi_daemon_close)
 end_define
 
 begin_endif
