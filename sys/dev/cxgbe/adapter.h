@@ -805,6 +805,10 @@ name|int
 name|if_flags
 decl_stmt|;
 name|uint16_t
+modifier|*
+name|rss
+decl_stmt|;
+name|uint16_t
 name|viid
 decl_stmt|;
 name|int16_t
