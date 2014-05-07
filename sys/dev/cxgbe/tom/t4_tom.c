@@ -805,6 +805,12 @@ name|pi
 expr_stmt|;
 name|toep
 operator|->
+name|tx_total
+operator|=
+name|tx_credits
+expr_stmt|;
+name|toep
+operator|->
 name|tx_credits
 operator|=
 name|tx_credits
