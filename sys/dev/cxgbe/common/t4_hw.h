@@ -281,6 +281,10 @@ comment|/* # of interrupt packet counter values */
 name|SGE_MAX_IQ_SIZE
 init|=
 literal|65520
+block|,
+name|SGE_FLBUF_SIZES
+init|=
+literal|16
 block|, }
 enum|;
 end_enum
