@@ -5674,13 +5674,13 @@ name|is
 operator|->
 name|is_expcmdsn
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|is
 operator|->
 name|is_maxcmdsn
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|is
 operator|->
