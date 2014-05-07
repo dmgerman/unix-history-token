@@ -5642,6 +5642,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * XXX: If target or lun removal fails, we should somehow "move" 	 * 	the old lun or target into newconf, so that subsequent 	 * 	conf_apply() will try to remove them again.  That would 	 * 	be somewhat hairy, and lun deletion doesn't really happen, 	 * 	so leave it as it is for now. 	 */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|oldtarg
@@ -6178,13 +6179,15 @@ operator|->
 name|t_name
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|newlun
 argument_list|,
 argument|&newtarg->t_luns
 argument_list|,
 argument|l_next
+argument_list|,
+argument|tmplun
 argument_list|)
 block|{
 if|if
@@ -6321,6 +6324,11 @@ argument_list|,
 name|newtarg
 operator|->
 name|t_name
+argument_list|)
+expr_stmt|;
+name|lun_delete
+argument_list|(
+name|newlun
 argument_list|)
 expr_stmt|;
 name|cumulated_error
