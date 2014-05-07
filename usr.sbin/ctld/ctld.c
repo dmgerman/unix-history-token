@@ -5642,7 +5642,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * XXX: If target or lun removal fails, we should somehow "move" 	 * 	the old lun or target into newconf, so that subsequent 	 * 	conf_apply() will try to remove them again.  That would 	 * 	be somewhat hairy, and lun deletion doesn't really happen, 	 * 	so leave it as it is for now. 	 */
+comment|/* 	 * XXX: If target or lun removal fails, we should somehow "move" 	 * 	the old lun or target into newconf, so that subsequent 	 * 	conf_apply() would try to remove them again.  That would 	 * 	be somewhat hairy, though, and lun deletion failures don't 	 * 	really happen, so leave it as it is for now. 	 */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|oldtarg
