@@ -9484,13 +9484,6 @@ operator|->
 name|is_terminating
 condition|)
 block|{
-name|ISCSI_SESSION_DEBUG
-argument_list|(
-name|is
-argument_list|,
-literal|"called during termination"
-argument_list|)
-expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
