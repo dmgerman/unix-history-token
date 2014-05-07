@@ -1131,10 +1131,6 @@ expr_stmt|;
 if|if
 condition|(
 name|ni
-operator|!=
-name|NULL
-operator|&&
-name|ni
 operator|->
 name|ni_intval
 operator|>
