@@ -3421,6 +3421,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|t4_sge_sysctls
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|struct
+name|sysctl_ctx_list
+modifier|*
+parameter_list|,
+name|struct
+name|sysctl_oid_list
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|t4_destroy_dma_tag
 parameter_list|(
