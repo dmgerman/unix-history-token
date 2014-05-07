@@ -3472,7 +3472,7 @@ operator|<
 name|size
 condition|)
 block|{
-comment|/* 			 * Set the low watermark, to be checked by 			 * sowritable() in icl_soupcall_send() 			 * to avoid unneccessary wakeups until there 			 * is enough space for the PDU to fit. 			 */
+comment|/* 			 * Set the low watermark, to be checked by 			 * sowriteable() in icl_soupcall_send() 			 * to avoid unneccessary wakeups until there 			 * is enough space for the PDU to fit. 			 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
