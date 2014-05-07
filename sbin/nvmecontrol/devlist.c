@@ -379,7 +379,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %10s (%lldGB)\n"
+literal|"  %10s (%lldMB)\n"
 argument_list|,
 name|name
 argument_list|,
@@ -396,8 +396,6 @@ argument_list|(
 operator|&
 name|nsdata
 argument_list|)
-operator|/
-literal|1024
 operator|/
 literal|1024
 operator|/
