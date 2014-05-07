@@ -459,6 +459,16 @@ parameter_list|)
 value|mtx_assert(X->ic_lock, MA_NOTOWNED)
 end_define
 
+begin_expr_stmt
+name|STAILQ_HEAD
+argument_list|(
+name|icl_pdu_stailq
+argument_list|,
+name|icl_pdu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -3310,21 +3320,12 @@ name|icl_conn
 modifier|*
 name|ic
 parameter_list|,
-name|void
+name|struct
+name|icl_pdu_stailq
 modifier|*
-name|fts
+name|queue
 parameter_list|)
 block|{
-name|STAILQ_HEAD
-argument_list|(,
-name|icl_pdu
-argument_list|)
-operator|*
-name|queue
-operator|=
-name|fts
-expr_stmt|;
-comment|/* XXX */
 name|struct
 name|icl_pdu
 modifier|*
@@ -3747,13 +3748,10 @@ name|icl_conn
 modifier|*
 name|ic
 decl_stmt|;
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|icl_pdu
-argument_list|)
+name|struct
+name|icl_pdu_stailq
 name|queue
-expr_stmt|;
+decl_stmt|;
 name|ic
 operator|=
 name|arg
