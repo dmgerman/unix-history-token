@@ -303,7 +303,7 @@ name|ICL_CONN_LOCK
 parameter_list|(
 name|X
 parameter_list|)
-value|mtx_lock(&X->ic_lock)
+value|mtx_lock(X->ic_lock)
 end_define
 
 begin_define
@@ -313,7 +313,7 @@ name|ICL_CONN_UNLOCK
 parameter_list|(
 name|X
 parameter_list|)
-value|mtx_unlock(&X->ic_lock)
+value|mtx_unlock(X->ic_lock)
 end_define
 
 begin_define
@@ -323,7 +323,17 @@ name|ICL_CONN_LOCK_ASSERT
 parameter_list|(
 name|X
 parameter_list|)
-value|mtx_assert(&X->ic_lock, MA_OWNED)
+value|mtx_assert(X->ic_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICL_CONN_LOCK_ASSERT_NOT
+parameter_list|(
+name|X
+parameter_list|)
+value|mtx_assert(X->ic_lock, MA_NOTOWNED)
 end_define
 
 begin_function
@@ -3496,7 +3506,6 @@ name|ic
 operator|->
 name|ic_send_cv
 argument_list|,
-operator|&
 name|ic
 operator|->
 name|ic_lock
@@ -3827,7 +3836,7 @@ name|ip
 operator|->
 name|ip_conn
 expr_stmt|;
-name|ICL_CONN_LOCK
+name|ICL_CONN_LOCK_ASSERT
 argument_list|(
 name|ic
 argument_list|)
@@ -3850,11 +3859,6 @@ argument_list|(
 literal|"icl_pdu_queue on closed connection"
 argument_list|)
 expr_stmt|;
-name|ICL_CONN_UNLOCK
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|ip
@@ -3874,11 +3878,6 @@ argument_list|,
 name|ip_next
 argument_list|)
 expr_stmt|;
-name|ICL_CONN_UNLOCK
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
 name|cv_signal
 argument_list|(
 operator|&
@@ -3896,7 +3895,10 @@ name|icl_conn
 modifier|*
 name|icl_conn_new
 parameter_list|(
-name|void
+name|struct
+name|mtx
+modifier|*
+name|lock
 parameter_list|)
 block|{
 name|struct
@@ -3929,19 +3931,11 @@ operator|->
 name|ic_to_send
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
 name|ic
 operator|->
 name|ic_lock
-argument_list|,
-literal|"icl_lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
+operator|=
+name|lock
 expr_stmt|;
 name|cv_init
 argument_list|(
@@ -4002,14 +3996,6 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
-name|mtx_destroy
-argument_list|(
-operator|&
-name|ic
-operator|->
-name|ic_lock
-argument_list|)
-expr_stmt|;
 name|cv_destroy
 argument_list|(
 operator|&
@@ -4451,6 +4437,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|ICL_CONN_LOCK_ASSERT_NOT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Steal the socket from userland. 	 */
 name|error
 operator|=
@@ -4623,6 +4614,11 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
+name|ICL_CONN_LOCK_ASSERT_NOT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|ICL_CONN_LOCK
 argument_list|(
 name|ic
@@ -4676,6 +4672,11 @@ name|icl_pdu
 modifier|*
 name|pdu
 decl_stmt|;
+name|ICL_CONN_LOCK_ASSERT_NOT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|ICL_CONN_LOCK
 argument_list|(
 name|ic
@@ -4887,6 +4888,11 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
+name|ICL_CONN_LOCK_ASSERT_NOT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|ICL_CONN_LOCK
 argument_list|(
 name|ic
@@ -4971,6 +4977,11 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|ICL_CONN_LOCK_ASSERT_NOT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
