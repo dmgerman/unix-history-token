@@ -2497,11 +2497,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|smp_active
-operator|=
-literal|1
-expr_stmt|;
-comment|/* historic */
 block|}
 name|mtx_unlock_spin
 argument_list|(

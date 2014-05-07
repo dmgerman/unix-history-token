@@ -1027,10 +1027,7 @@ argument_list|(
 literal|10000
 argument_list|)
 expr_stmt|;
-name|smp_active
-operator|=
-literal|1
-expr_stmt|;
+comment|/* XXX Atomic set operation? */
 name|smp_started
 operator|=
 literal|1
