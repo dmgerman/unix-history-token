@@ -5767,9 +5767,21 @@ argument_list|(
 name|is
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|ICL_KERNEL_PROXY
+if|if
+condition|(
+name|handoff
+operator|->
+name|idh_socket
+operator|!=
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
+comment|/* 		 * Handoff without using ICL proxy. 		 */
 name|error
 operator|=
 name|icl_conn_handoff
@@ -5808,6 +5820,10 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
+ifdef|#
+directive|ifdef
+name|ICL_KERNEL_PROXY
 block|}
 endif|#
 directive|endif
@@ -6359,11 +6375,22 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|ISCSI_SESSION_WARN
+argument_list|(
+name|is
+argument_list|,
+literal|"getsockaddr failed with error %d"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 else|else
 block|{
@@ -6399,6 +6426,15 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ISCSI_SESSION_WARN
+argument_list|(
+name|is
+argument_list|,
+literal|"getsockaddr failed with error %d"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|from_sa
