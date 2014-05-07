@@ -2188,6 +2188,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+comment|/* Note: NVMe PRP format is restricted to 4-byte alignment. */
 name|bus_dma_tag_create
 argument_list|(
 name|bus_get_dma_tag
@@ -2197,10 +2198,7 @@ operator|->
 name|dev
 argument_list|)
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
+literal|4
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
