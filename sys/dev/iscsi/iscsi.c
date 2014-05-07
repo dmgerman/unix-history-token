@@ -480,7 +480,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|if (debug> 1) {					\ 		printf("%s: " X "\n", __func__, ## __VA_ARGS__);\ 	} while (0)
+value|do {								\ 		if (debug> 1) 						\ 			printf("%s: " X "\n", __func__, ## __VA_ARGS__);\ 	} while (0)
 end_define
 
 begin_define
@@ -493,7 +493,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|if (debug> 0) {					\ 		printf("WARNING: %s: " X "\n",			\ 		    __func__, ## __VA_ARGS__);			\ 	} while (0)
+value|do {								\ 		if (debug> 0) {					\ 			printf("WARNING: %s: " X "\n",			\ 			    __func__, ## __VA_ARGS__);			\ 		}							\ 	} while (0)
 end_define
 
 begin_define
@@ -508,7 +508,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|if (debug> 1) {					\ 		printf("%s: %s (%s): " X "\n",			\ 		    __func__, S->is_conf.isc_target_addr,	\ 		    S->is_conf.isc_target, ## __VA_ARGS__);	\ 	} while (0)
+value|do {								\ 		if (debug> 1) {					\ 			printf("%s: %s (%s): " X "\n",			\ 			    __func__, S->is_conf.isc_target_addr,	\ 			    S->is_conf.isc_target, ## __VA_ARGS__);	\ 		}							\ 	} while (0)
 end_define
 
 begin_define
@@ -523,7 +523,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|if (debug> 0) {					\ 		printf("WARNING: %s (%s): " X "\n",		\ 		    S->is_conf.isc_target_addr,			\ 		    S->is_conf.isc_target, ## __VA_ARGS__);	\ 	} while (0)
+value|do {								\ 		if (debug> 0) {					\ 			printf("WARNING: %s (%s): " X "\n",		\ 			    S->is_conf.isc_target_addr,			\ 			    S->is_conf.isc_target, ## __VA_ARGS__);	\ 		}							\ 	} while (0)
 end_define
 
 begin_define
