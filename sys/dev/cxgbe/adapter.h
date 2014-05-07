@@ -517,18 +517,18 @@ directive|if
 name|MJUMPAGESIZE
 operator|!=
 name|MCLBYTES
-name|FL_BUF_SIZES
+name|FL_BUF_SIZES_MAX
+init|=
+literal|5
+block|,
+comment|/* cluster, jumbop, jumbo9k, jumbo16k, extra */
+else|#
+directive|else
+name|FL_BUF_SIZES_MAX
 init|=
 literal|4
 block|,
-comment|/* cluster, jumbop, jumbo9k, jumbo16k */
-else|#
-directive|else
-name|FL_BUF_SIZES
-init|=
-literal|3
-block|,
-comment|/* cluster, jumbo9k, jumbo16k */
+comment|/* cluster, jumbo9k, jumbo16k, extra */
 endif|#
 directive|endif
 name|CTRL_EQ_QSIZE
@@ -670,6 +670,14 @@ operator|(
 literal|1
 operator|<<
 literal|5
+operator|)
+block|,
+name|BUF_PACKING_OK
+init|=
+operator|(
+literal|1
+operator|<<
+literal|6
 operator|)
 block|,
 name|CXGBE_BUSY
@@ -914,11 +922,6 @@ begin_struct
 struct|struct
 name|fl_sdesc
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 name|bus_dmamap_t
 name|map
 decl_stmt|;
@@ -928,12 +931,12 @@ decl_stmt|;
 name|uint8_t
 name|tag_idx
 decl_stmt|;
-comment|/* the sc->fl_tag this map comes from */
+comment|/* the fl->tag entry this map comes from */
 ifdef|#
 directive|ifdef
 name|INVARIANTS
 name|__be64
-name|ba_tag
+name|ba_hwtag
 decl_stmt|;
 endif|#
 directive|endif
@@ -1366,6 +1369,87 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|fl_buf_info
+block|{
+name|u_int
+name|size
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+name|int
+name|hwtag
+range|:
+literal|4
+decl_stmt|;
+comment|/* tag in low 4 bits of the pa. */
+name|uma_zone_t
+name|zone
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FL_BUF_SIZES
+parameter_list|(
+name|sc
+parameter_list|)
+value|(sc->sge.fl_buf_sizes)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FL_BUF_SIZE
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+value|(sc->sge.fl_buf_info[x].size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FL_BUF_TYPE
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+value|(sc->sge.fl_buf_info[x].type)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FL_BUF_HWTAG
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+value|(sc->sge.fl_buf_info[x].hwtag)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FL_BUF_ZONE
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+value|(sc->sge.fl_buf_info[x].zone)
+end_define
+
 begin_enum
 enum|enum
 block|{
@@ -1387,6 +1471,15 @@ literal|1
 operator|)
 block|,
 comment|/* about to be destroyed */
+name|FL_BUF_PACKING
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|/* buffer packing enabled */
 block|}
 enum|;
 end_enum
@@ -1424,9 +1517,10 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|tag
 index|[
-name|FL_BUF_SIZES
+name|FL_BUF_SIZES_MAX
 index|]
 decl_stmt|;
+comment|/* only first FL_BUF_SIZES(sc) are 						valid */
 name|uint8_t
 name|tag_idx
 decl_stmt|;
@@ -1475,6 +1569,10 @@ name|cidx
 decl_stmt|;
 comment|/* consumer idx (buffer idx, NOT hw desc idx) */
 name|uint32_t
+name|rx_offset
+decl_stmt|;
+comment|/* offset in fl buf (when buffer packing) */
+name|uint32_t
 name|pidx
 decl_stmt|;
 comment|/* producer idx (buffer idx, NOT hw desc idx) */
@@ -1490,9 +1588,16 @@ name|uint32_t
 name|pending
 decl_stmt|;
 comment|/* # of bufs allocated since last doorbell */
-name|unsigned
-name|int
+name|u_int
 name|dmamap_failed
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mstash
+index|[
+literal|8
+index|]
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
@@ -1947,6 +2052,20 @@ modifier|*
 name|eqmap
 decl_stmt|;
 comment|/* eq->cntxt_id to eq mapping */
+name|u_int
+name|fl_buf_sizes
+name|__aligned
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
+name|struct
+name|fl_buf_info
+name|fl_buf_info
+index|[
+name|FL_BUF_SIZES_MAX
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
