@@ -202,6 +202,19 @@ end_function
 
 begin_function_decl
 name|int
+name|mkimg_set_size
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|lba_t
+name|blk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|mkimg_write
 parameter_list|(
 name|int
