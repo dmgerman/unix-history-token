@@ -849,6 +849,16 @@ name|taskqueue
 modifier|*
 name|taskqueue
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|msi_res
+index|[
+name|MAXCPU
+operator|+
+literal|1
+index|]
+decl_stmt|;
 comment|/* For shared legacy interrupt. */
 name|int
 name|rid
