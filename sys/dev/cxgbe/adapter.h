@@ -1956,7 +1956,10 @@ name|int
 name|fl_starve_threshold
 decl_stmt|;
 name|int
-name|s_qpp
+name|eq_s_qpp
+decl_stmt|;
+name|int
+name|iq_s_qpp
 decl_stmt|;
 name|int
 name|nrxq
