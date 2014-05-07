@@ -3683,12 +3683,6 @@ name|request
 operator|->
 name|pdu_bhs
 expr_stmt|;
-name|bhslr
-operator|->
-name|bhslr_flags
-operator||=
-name|BHSLR_FLAGS_TRANSIT
-expr_stmt|;
 name|request_keys
 operator|=
 name|keys_new
