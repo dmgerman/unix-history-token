@@ -220,6 +220,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VIRTIO_NET_F_GUEST_ANNOUNCE
+value|0x200000
+end_define
+
+begin_comment
+comment|/* Announce device on network */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_NET_F_MQ
+value|0x400000
+end_define
+
+begin_comment
+comment|/* Device supports RFS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_NET_F_CTRL_MAC_ADDR
+value|0x800000
+end_define
+
+begin_comment
+comment|/* Set MAC address */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VIRTIO_NET_S_LINK_UP
 value|1
 end_define
@@ -243,6 +276,10 @@ comment|/* See VIRTIO_NET_F_STATUS and VIRTIO_NET_S_* above */
 name|uint16_t
 name|status
 decl_stmt|;
+comment|/* Maximum number of each of transmit and receive queues; 	 * see VIRTIO_NET_F_MQ and VIRTIO_NET_CTRL_MQ. 	 * Legal values are between 1 and 0x8000. 	 */
+name|uint16_t
+name|max_virtqueue_pairs
+decl_stmt|;
 block|}
 name|__packed
 struct|;
@@ -261,6 +298,11 @@ directive|define
 name|VIRTIO_NET_HDR_F_NEEDS_CSUM
 value|1
 comment|/* Use csum_start,csum_offset*/
+define|#
+directive|define
+name|VIRTIO_NET_HDR_F_DATA_VALID
+value|2
+comment|/* Csum is valid */
 name|uint8_t
 name|flags
 decl_stmt|;
@@ -351,13 +393,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-name|uint8_t
-name|virtio_net_ctrl_ack
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -426,7 +461,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*  * Control the MAC filter table.  *  * The MAC filter table is managed by the hypervisor, the guest should  * assume the size is infinite.  Filtering should be considered  * non-perfect, ie. based on hypervisor resources, the guest may  * received packets from sources not specified in the filter list.  *  * In addition to the class/cmd header, the TABLE_SET command requires  * two out scatterlists.  Each contains a 4 byte count of entries followed  * by a concatenated byte stream of the ETH_ALEN MAC addresses.  The  * first sg list contains unicast addresses, the second is for multicast.  * This functionality is present if the VIRTIO_NET_F_CTRL_RX feature  * is available.  */
+comment|/*  * Control the MAC filter table.  *  * The MAC filter table is managed by the hypervisor, the guest should  * assume the size is infinite.  Filtering should be considered  * non-perfect, ie. based on hypervisor resources, the guest may  * received packets from sources not specified in the filter list.  *  * In addition to the class/cmd header, the TABLE_SET command requires  * two out scatterlists.  Each contains a 4 byte count of entries followed  * by a concatenated byte stream of the ETH_ALEN MAC addresses.  The  * first sg list contains unicast addresses, the second is for multicast.  * This functionality is present if the VIRTIO_NET_F_CTRL_RX feature  * is available.  *  * The ADDR_SET command requests one out scatterlist, it contains a  * 6 bytes MAC address. This functionality is present if the  * VIRTIO_NET_F_CTRL_MAC_ADDR feature is available.  */
 end_comment
 
 begin_struct
@@ -462,6 +497,13 @@ name|VIRTIO_NET_CTRL_MAC_TABLE_SET
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIRTIO_NET_CTRL_MAC_ADDR_SET
+value|1
+end_define
+
 begin_comment
 comment|/*  * Control VLAN filtering  *  * The VLAN filter table is controlled via a simple ADD/DEL interface.  * VLAN IDs not added may be filtered by the hypervisor.  Del is the  * opposite of add.  Both commands expect an out entry containing a 2  * byte VLAN ID.  VLAN filtering is available with the  * VIRTIO_NET_F_CTRL_VLAN feature bit.  */
 end_comment
@@ -485,6 +527,68 @@ define|#
 directive|define
 name|VIRTIO_NET_CTRL_VLAN_DEL
 value|1
+end_define
+
+begin_comment
+comment|/*  * Control link announce acknowledgement  *  * The command VIRTIO_NET_CTRL_ANNOUNCE_ACK is used to indicate that  * driver has recevied the notification; device would clear the  * VIRTIO_NET_S_ANNOUNCE bit in the status field after it receives  * this command.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_NET_CTRL_ANNOUNCE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_NET_CTRL_ANNOUNCE_ACK
+value|0
+end_define
+
+begin_comment
+comment|/*  * Control Receive Flow Steering  *  * The command VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET enables Receive Flow  * Steering, specifying the number of the transmit and receive queues  * that will be used. After the command is consumed and acked by the  * device, the device will not steer new packets on receive virtqueues  * other than specified nor read from transmit virtqueues other than  * specified. Accordingly, driver should not transmit new packets on  * virtqueues other than specified.  */
+end_comment
+
+begin_struct
+struct|struct
+name|virtio_net_ctrl_mq
+block|{
+name|uint16_t
+name|virtqueue_pairs
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_NET_CTRL_MQ
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_NET_CTRL_MQ_VQ_PAIRS_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_NET_CTRL_MQ_VQ_PAIRS_MAX
+value|0x8000
 end_define
 
 begin_endif
