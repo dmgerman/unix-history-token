@@ -1222,9 +1222,15 @@ name|CTL_ISCSI_LOGOUT
 block|,
 name|CTL_ISCSI_TERMINATE
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ICL_KERNEL_PROXY
+argument_list|)
+operator|||
+literal|1
+comment|/* 	 * We actually need those in all cases, but leave the ICL_KERNEL_PROXY, 	 * to remember to remove them along with rest of proxy code, eventually. 	 */
 name|CTL_ISCSI_LISTEN
 block|,
 name|CTL_ISCSI_ACCEPT

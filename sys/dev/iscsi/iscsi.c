@@ -194,6 +194,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ICL_KERNEL_PROXY
+end_ifdef
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|iscsi_kernel_proxy
+argument_list|,
+literal|"iSCSI initiator built with ICL_KERNEL_PROXY"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * XXX: This is global so the iscsi_unload() can access it.  * 	Think about how to do this properly.  */
 end_comment
