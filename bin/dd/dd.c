@@ -93,6 +93,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -274,6 +280,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* pending seek if sparse */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|off_t
+name|last_sp
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of last added sparse block */
 end_comment
 
 begin_decl_stmt
@@ -806,6 +825,7 @@ argument_list|,
 literal|"output buffer"
 argument_list|)
 expr_stmt|;
+comment|/* dbp is the first free position in each buffer. */
 name|in
 operator|.
 name|dbp
@@ -2115,6 +2135,7 @@ name|out
 operator|.
 name|db
 expr_stmt|;
+comment|/* 	 * If force, first try to write all pending data, else try to write 	 * just one block. Subsequently always write data one full block at 	 * a time at most. 	 */
 for|for
 control|(
 name|n
@@ -2137,17 +2158,11 @@ operator|.
 name|dbsz
 control|)
 block|{
-for|for
-control|(
 name|cnt
 operator|=
 name|n
-init|;
-condition|;
-name|cnt
-operator|-=
-name|nw
-control|)
+expr_stmt|;
+do|do
 block|{
 name|sparse
 operator|=
@@ -2207,6 +2222,10 @@ name|pending
 operator|+=
 name|cnt
 expr_stmt|;
+name|last_sp
+operator|=
+name|cnt
+expr_stmt|;
 name|nw
 operator|=
 name|cnt
@@ -2221,13 +2240,39 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* If forced to write, and we have no 					 * data left, we need to write the last 					 * sparse block explicitly. 					 */
 if|if
 condition|(
 name|force
+operator|&&
+name|cnt
+operator|==
+literal|0
 condition|)
+block|{
 name|pending
-operator|--
+operator|-=
+name|last_sp
 expr_stmt|;
+name|assert
+argument_list|(
+name|outp
+operator|==
+name|out
+operator|.
+name|db
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|outp
+argument_list|,
+literal|0
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|lseek
@@ -2255,22 +2300,9 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|force
-condition|)
-name|write
-argument_list|(
-name|out
-operator|.
-name|fd
-argument_list|,
-name|outp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|pending
+operator|=
+name|last_sp
 operator|=
 literal|0
 expr_stmt|;
@@ -2359,12 +2391,9 @@ operator|)
 name|nw
 operator|==
 name|n
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|n
-operator|!=
+operator|==
 name|out
 operator|.
 name|dbsz
@@ -2372,16 +2401,9 @@ condition|)
 operator|++
 name|st
 operator|.
-name|out_part
-expr_stmt|;
-else|else
-operator|++
-name|st
-operator|.
 name|out_full
 expr_stmt|;
-break|break;
-block|}
+else|else
 operator|++
 name|st
 operator|.
@@ -2393,10 +2415,10 @@ operator|(
 name|size_t
 operator|)
 name|nw
-operator|==
+operator|!=
 name|cnt
 condition|)
-break|break;
+block|{
 if|if
 condition|(
 name|out
@@ -2443,6 +2465,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|cnt
+operator|-=
+name|nw
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|cnt
+operator|!=
+literal|0
+condition|)
+do|;
 if|if
 condition|(
 operator|(
