@@ -798,6 +798,7 @@ name|auth_group
 modifier|*
 name|auth_group_find
 parameter_list|(
+specifier|const
 name|struct
 name|conf
 modifier|*
@@ -895,6 +896,7 @@ name|auth
 modifier|*
 name|auth_find
 parameter_list|(
+specifier|const
 name|struct
 name|auth_group
 modifier|*
@@ -1053,6 +1055,7 @@ name|portal_group
 modifier|*
 name|portal_group_find
 parameter_list|(
+specifier|const
 name|struct
 name|conf
 modifier|*
@@ -1171,6 +1174,7 @@ name|lun
 modifier|*
 name|lun_find
 parameter_list|(
+specifier|const
 name|struct
 name|target
 modifier|*
@@ -1337,6 +1341,7 @@ name|lun_option
 modifier|*
 name|lun_option_find
 parameter_list|(
+specifier|const
 name|struct
 name|lun
 modifier|*
