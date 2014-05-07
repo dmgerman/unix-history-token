@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -244,15 +250,11 @@ specifier|static
 name|int
 name|partial_receive_len
 init|=
-literal|1
+literal|128
 operator|*
 literal|1024
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX: More? */
-end_comment
 
 begin_expr_stmt
 name|TUNABLE_INT
@@ -2917,6 +2919,7 @@ block|{
 comment|//ICL_DEBUG("terminating");
 break|break;
 block|}
+comment|/* 		 * Set the low watermark, to be checked by 		 * soreadable() in icl_soupcall_receive() 		 * to avoid unneccessary wakeups until there 		 * is enough data received to read the PDU. 		 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -2968,6 +2971,21 @@ name|sb_mtx
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_lowat
+operator|=
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_hiwat
+operator|+
+literal|1
+expr_stmt|;
 name|SOCKBUF_UNLOCK
 argument_list|(
 operator|&
@@ -3029,6 +3047,19 @@ name|icl_conn
 modifier|*
 name|ic
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|soreadable
+argument_list|(
+name|so
+argument_list|)
+condition|)
+return|return
+operator|(
+name|SU_OK
+operator|)
+return|;
 name|ic
 operator|=
 name|arg
@@ -3381,7 +3412,7 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Notify the socket layer that it doesn't need to call 	 * send socket upcall for the time being. 	 */
+comment|/* 	 * Notify the socket upcall that we don't need wakeups 	 * for the time being. 	 */
 name|so
 operator|->
 name|so_snd
@@ -3393,6 +3424,8 @@ operator|->
 name|so_snd
 operator|.
 name|sb_hiwat
+operator|+
+literal|1
 expr_stmt|;
 name|SOCKBUF_UNLOCK
 argument_list|(
@@ -3439,6 +3472,32 @@ operator|<
 name|size
 condition|)
 block|{
+comment|/* 			 * Set the low watermark, to be checked by 			 * sowritable() in icl_soupcall_send() 			 * to avoid unneccessary wakeups until there 			 * is enough space for the PDU to fit. 			 */
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
+name|available
+operator|=
+name|sbspace
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|available
+operator|<
+name|size
+condition|)
+block|{
 if|#
 directive|if
 literal|1
@@ -3454,15 +3513,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 			 * Set the low watermark on the socket, 			 * to avoid unneccessary wakeups until there 			 * is enough space for the PDU to fit. 			 */
-name|SOCKBUF_LOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_snd
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_snd
@@ -3480,6 +3530,15 @@ name|so_snd
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 block|}
 name|STAILQ_REMOVE_HEAD
 argument_list|(
@@ -3936,6 +3995,19 @@ name|icl_conn
 modifier|*
 name|ic
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|sowriteable
+argument_list|(
+name|so
+argument_list|)
+condition|)
+return|return
+operator|(
+name|SU_OK
+operator|)
+return|;
 name|ic
 operator|=
 name|arg
