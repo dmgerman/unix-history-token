@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"image.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mkimg.h"
 end_include
 
@@ -696,9 +702,6 @@ begin_function
 name|int
 name|scheme_write
 parameter_list|(
-name|int
-name|fd
-parameter_list|,
 name|lba_t
 name|end
 parameter_list|)
@@ -729,10 +732,8 @@ name|cylsz
 expr_stmt|;
 name|error
 operator|=
-name|mkimg_set_size
+name|image_set_size
 argument_list|(
-name|fd
-argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
@@ -747,8 +748,6 @@ name|scheme
 operator|->
 name|write
 argument_list|(
-name|fd
-argument_list|,
 name|end
 argument_list|,
 name|bootcode

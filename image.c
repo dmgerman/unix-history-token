@@ -50,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mkimg.h"
+file|"image.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"image.h"
+file|"mkimg.h"
 end_include
 
 begin_define

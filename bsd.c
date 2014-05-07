@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"image.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mkimg.h"
 end_include
 
@@ -190,9 +196,6 @@ specifier|static
 name|int
 name|bsd_write
 parameter_list|(
-name|int
-name|fd
-parameter_list|,
 name|lba_t
 name|imgsz
 parameter_list|,
@@ -297,10 +300,8 @@ name|nsecs
 expr_stmt|;
 name|error
 operator|=
-name|mkimg_set_size
+name|image_set_size
 argument_list|(
-name|fd
-argument_list|,
 name|imgsz
 argument_list|)
 expr_stmt|;
@@ -597,10 +598,8 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mkimg_write
+name|image_write
 argument_list|(
-name|fd
-argument_list|,
 literal|0
 argument_list|,
 name|buf

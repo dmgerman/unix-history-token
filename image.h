@@ -15,6 +15,13 @@ directive|define
 name|_MKIMG_IMAGE_H_
 end_define
 
+begin_typedef
+typedef|typedef
+name|int64_t
+name|lba_t
+typedef|;
+end_typedef
+
 begin_function_decl
 name|int
 name|image_copyin
