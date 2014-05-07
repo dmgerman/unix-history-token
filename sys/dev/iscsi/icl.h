@@ -298,6 +298,11 @@ decl_stmt|;
 name|bool
 name|ic_iser
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ic_name
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -335,6 +340,11 @@ name|icl_conn
 modifier|*
 name|icl_conn_new
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|struct
 name|mtx
 modifier|*
