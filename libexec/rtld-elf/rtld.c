@@ -17945,7 +17945,9 @@ name|m
 parameter_list|)
 block|{
 comment|/*      * The following is a hack to force the compiler to emit calls to      * this function, even when optimizing.  If the function is empty,      * the compiler is not obliged to emit any code for calls to it,      * even when marked __noinline.  However, gdb depends on those      * calls being made.      */
-asm|__asm __volatile("" : : : "memory");
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -17964,7 +17966,9 @@ name|m
 parameter_list|)
 block|{
 comment|/* See r_debug_state(). */
-asm|__asm __volatile("" : : : "memory");
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
