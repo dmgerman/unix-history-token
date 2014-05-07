@@ -3309,6 +3309,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|log_err
 argument_list|(
 literal|1
@@ -3317,6 +3318,7 @@ literal|"error issuing CTL_ISCSI ioctl; "
 literal|"dropping connection"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|req
@@ -3325,6 +3327,7 @@ name|status
 operator|!=
 name|CTL_ISCSI_OK
 condition|)
+block|{
 name|log_errx
 argument_list|(
 literal|1
@@ -3337,6 +3340,7 @@ operator|.
 name|error_str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3511,6 +3515,9 @@ name|ai
 parameter_list|,
 name|bool
 name|iser
+parameter_list|,
+name|int
+name|portal_id
 parameter_list|)
 block|{
 name|struct
@@ -3604,6 +3611,16 @@ name|ai
 operator|->
 name|ai_addrlen
 expr_stmt|;
+name|req
+operator|.
+name|data
+operator|.
+name|listen
+operator|.
+name|portal_id
+operator|=
+name|portal_id
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -3619,7 +3636,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|log_err
 argument_list|(
 literal|1
@@ -3627,8 +3643,6 @@ argument_list|,
 literal|"error issuing CTL_ISCSI ioctl"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|req
@@ -3654,10 +3668,16 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|kernel_accept
 parameter_list|(
-name|void
+name|int
+modifier|*
+name|connection_id
+parameter_list|,
+name|int
+modifier|*
+name|portal_id
 parameter_list|)
 block|{
 name|struct
@@ -3696,18 +3716,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|log_warn
+name|log_err
 argument_list|(
+literal|1
+argument_list|,
 literal|"error issuing CTL_ISCSI ioctl"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|req
@@ -3717,8 +3732,10 @@ operator|!=
 name|CTL_ISCSI_OK
 condition|)
 block|{
-name|log_warnx
+name|log_errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"error returned from CTL iSCSI accept: %s"
 argument_list|,
 name|req
@@ -3726,14 +3743,10 @@ operator|.
 name|error_str
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
-return|return
-operator|(
+operator|*
+name|connection_id
+operator|=
 name|req
 operator|.
 name|data
@@ -3741,8 +3754,18 @@ operator|.
 name|accept
 operator|.
 name|connection_id
-operator|)
-return|;
+expr_stmt|;
+operator|*
+name|portal_id
+operator|=
+name|req
+operator|.
+name|data
+operator|.
+name|accept
+operator|.
+name|portal_id
+expr_stmt|;
 block|}
 end_function
 

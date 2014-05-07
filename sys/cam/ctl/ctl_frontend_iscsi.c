@@ -6172,6 +6172,9 @@ name|struct
 name|socket
 modifier|*
 name|so
+parameter_list|,
+name|int
+name|portal_id
 parameter_list|)
 block|{
 name|struct
@@ -6209,6 +6212,12 @@ name|cs_conn
 argument_list|,
 name|so
 argument_list|)
+expr_stmt|;
+name|cs
+operator|->
+name|cs_portal_id
+operator|=
+name|portal_id
 expr_stmt|;
 name|cs
 operator|->
@@ -8047,6 +8056,10 @@ operator|->
 name|protocol
 argument_list|,
 name|sa
+argument_list|,
+name|cilp
+operator|->
+name|portal_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -8263,6 +8276,14 @@ operator|=
 name|cs
 operator|->
 name|cs_id
+expr_stmt|;
+name|ciap
+operator|->
+name|portal_id
+operator|=
+name|cs
+operator|->
+name|cs_portal_id
 expr_stmt|;
 name|ci
 operator|->
@@ -8967,21 +8988,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|cfiscsi_ioctl_close
-parameter_list|(
-name|struct
-name|ctl_iscsi
-modifier|*
-name|ci
-parameter_list|)
-block|{
-comment|/* 	 * XXX 	 */
-block|}
-end_function
-
 begin_endif
 endif|#
 directive|endif
@@ -9123,15 +9129,6 @@ name|ci
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|CTL_ISCSI_CLOSE
-case|:
-name|cfiscsi_ioctl_close
-argument_list|(
-name|ci
-argument_list|)
-expr_stmt|;
-break|break;
 else|#
 directive|else
 case|case
@@ -9145,9 +9142,6 @@ name|CTL_ISCSI_SEND
 case|:
 case|case
 name|CTL_ISCSI_RECEIVE
-case|:
-case|case
-name|CTL_ISCSI_CLOSE
 case|:
 name|ci
 operator|->
