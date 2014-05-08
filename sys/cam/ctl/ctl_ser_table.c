@@ -123,9 +123,11 @@ name|CTL_SERIDX_COUNT
 index|]
 init|=
 block|{
-comment|/**>IDX_ :: 2nd:TUR RD  WRT  MDSN MDSL RQSN INQ  RDCP RES  REL LSNS FMT STR PRIN PROT MAININ*/
+comment|/**>IDX_ :: 2nd:TUR RD  WRT UNM MDSN MDSL RQSN INQ RDCP RES REL LSNS FMT STR PRIN PROT MAININ*/
 comment|/*TUR     */
 block|{
+name|pS
+block|,
 name|pS
 block|,
 name|pS
@@ -173,6 +175,8 @@ name|bK
 block|,
 name|bK
 block|,
+name|bK
+block|,
 name|pS
 block|,
 name|pS
@@ -208,6 +212,45 @@ name|bK
 block|,
 name|bK
 block|,
+name|bK
+block|,
+name|pS
+block|,
+name|pS
+block|,
+name|bK
+block|,
+name|bK
+block|,
+name|pS
+block|,
+name|bK
+block|,
+name|bK
+block|,
+name|bK
+block|,
+name|bK
+block|,
+name|bK
+block|}
+block|,
+comment|/*UNMAP   */
+block|{
+name|pS
+block|,
+name|bK
+block|,
+name|bK
+block|,
+name|pS
+block|,
+name|bK
+block|,
+name|bK
+block|,
+name|bK
+block|,
 name|pS
 block|,
 name|pS
@@ -231,6 +274,8 @@ block|}
 block|,
 comment|/*MD_SNS  */
 block|{
+name|bK
+block|,
 name|bK
 block|,
 name|bK
@@ -278,6 +323,8 @@ name|bK
 block|,
 name|bK
 block|,
+name|bK
+block|,
 name|pS
 block|,
 name|pS
@@ -301,6 +348,8 @@ block|}
 block|,
 comment|/*RQ_SNS  */
 block|{
+name|pS
+block|,
 name|pS
 block|,
 name|pS
@@ -346,6 +395,8 @@ name|pS
 block|,
 name|pS
 block|,
+name|pS
+block|,
 name|bK
 block|,
 name|pS
@@ -371,6 +422,8 @@ block|}
 block|,
 comment|/*RD_CAP  */
 block|{
+name|pS
+block|,
 name|pS
 block|,
 name|pS
@@ -437,6 +490,8 @@ block|,
 name|bK
 block|,
 name|bK
+block|,
+name|bK
 block|}
 block|,
 comment|/*REL     */
@@ -472,10 +527,14 @@ block|,
 name|bK
 block|,
 name|bK
+block|,
+name|bK
 block|}
 block|,
 comment|/*LOG_SNS */
 block|{
+name|pS
+block|,
 name|pS
 block|,
 name|pS
@@ -521,6 +580,8 @@ name|bK
 block|,
 name|bK
 block|,
+name|bK
+block|,
 name|pS
 block|,
 name|pS
@@ -546,6 +607,8 @@ block|}
 block|,
 comment|/*START   */
 block|{
+name|bK
+block|,
 name|bK
 block|,
 name|bK
@@ -612,6 +675,8 @@ block|,
 name|bK
 block|,
 name|bK
+block|,
+name|bK
 block|}
 block|,
 comment|/*PRES_OUT*/
@@ -647,10 +712,14 @@ block|,
 name|bK
 block|,
 name|bK
+block|,
+name|bK
 block|}
 block|,
 comment|/*MAIN_IN */
 block|{
+name|bK
+block|,
 name|bK
 block|,
 name|bK
