@@ -2216,7 +2216,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|image_copyout
+name|format_write
 argument_list|(
 name|outfd
 argument_list|)

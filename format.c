@@ -185,5 +185,37 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|format_write
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+block|{
+if|if
+condition|(
+name|format
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+return|return
+operator|(
+name|format
+operator|->
+name|write
+argument_list|(
+name|fd
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

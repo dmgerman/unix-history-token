@@ -84,12 +84,14 @@ name|raw_write
 parameter_list|(
 name|int
 name|fd
-name|__unused
 parameter_list|)
 block|{
 return|return
 operator|(
-name|ENOSYS
+name|image_copyout
+argument_list|(
+name|fd
+argument_list|)
 operator|)
 return|;
 block|}
