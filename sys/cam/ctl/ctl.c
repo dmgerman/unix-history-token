@@ -5571,7 +5571,7 @@ control|)
 block|{
 name|error
 operator|=
-name|kproc_create
+name|kproc_kthread_add
 argument_list|(
 name|ctl_work_thread
 argument_list|,
@@ -5582,11 +5582,15 @@ name|softc
 operator|->
 name|work_thread
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|"ctl_thrd%d"
+literal|0
+argument_list|,
+literal|"ctl"
+argument_list|,
+literal|"work%d"
 argument_list|,
 name|i
 argument_list|)
@@ -55965,7 +55969,7 @@ name|ctl_lock
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"ctl_work"
+literal|"-"
 argument_list|,
 literal|0
 argument_list|)
