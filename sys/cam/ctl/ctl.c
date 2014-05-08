@@ -34396,6 +34396,14 @@ name|CTL_RETVAL_COMPLETE
 operator|)
 return|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|ctl_lock
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 comment|/* create a reservation */
