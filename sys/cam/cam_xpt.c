@@ -3486,7 +3486,7 @@ name|xpt_topo_lock
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"ccb_scanq"
+literal|"-"
 argument_list|,
 literal|0
 argument_list|)
