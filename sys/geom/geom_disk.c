@@ -1115,6 +1115,10 @@ name|bp
 parameter_list|)
 block|{
 name|struct
+name|bintime
+name|now
+decl_stmt|;
+name|struct
 name|bio
 modifier|*
 name|bp2
@@ -1151,6 +1155,12 @@ operator|-
 name|bp
 operator|->
 name|bio_resid
+expr_stmt|;
+name|binuptime
+argument_list|(
+operator|&
+name|now
+argument_list|)
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -1202,7 +1212,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|devstat_end_transaction_bio
+name|devstat_end_transaction_bio_bt
 argument_list|(
 name|sc
 operator|->
@@ -1211,6 +1221,9 @@ operator|->
 name|d_devstat
 argument_list|,
 name|bp
+argument_list|,
+operator|&
+name|now
 argument_list|)
 expr_stmt|;
 name|g_destroy_bio
