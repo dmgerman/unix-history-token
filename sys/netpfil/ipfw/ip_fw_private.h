@@ -790,35 +790,18 @@ block|{
 name|struct
 name|ip_fw
 modifier|*
-name|rules
-decl_stmt|;
-comment|/* list of rules */
-name|struct
-name|ip_fw
-modifier|*
-name|reap
-decl_stmt|;
-comment|/* list of rules to reap */
-name|struct
-name|ip_fw
-modifier|*
-name|default_rule
-decl_stmt|;
-name|int
-name|n_rules
-decl_stmt|;
-comment|/* number of static rules */
-name|int
-name|static_len
-decl_stmt|;
-comment|/* total len of static rules */
-name|struct
-name|ip_fw
-modifier|*
 modifier|*
 name|map
 decl_stmt|;
 comment|/* array of rule ptrs to ease lookup */
+name|uint32_t
+name|id
+decl_stmt|;
+comment|/* ruleset id */
+name|int
+name|n_rules
+decl_stmt|;
+comment|/* number of static rules */
 name|LIST_HEAD
 argument_list|(
 argument|nat_list
@@ -861,6 +844,44 @@ argument_list|)
 name|spinlock_t
 name|rwmtx
 decl_stmt|;
+else|#
+directive|else
+name|struct
+name|rwlock
+name|rwmtx
+decl_stmt|;
+endif|#
+directive|endif
+name|int
+name|static_len
+decl_stmt|;
+comment|/* total len of static rules */
+name|uint32_t
+name|gencnt
+decl_stmt|;
+comment|/* NAT generation count */
+name|struct
+name|ip_fw
+modifier|*
+name|reap
+decl_stmt|;
+comment|/* list of rules to reap */
+name|struct
+name|ip_fw
+modifier|*
+name|default_rule
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
 name|spinlock_t
 name|uh_lock
 decl_stmt|;
@@ -868,23 +889,11 @@ else|#
 directive|else
 name|struct
 name|rwlock
-name|rwmtx
-decl_stmt|;
-name|struct
-name|rwlock
 name|uh_lock
 decl_stmt|;
 comment|/* lock for upper half */
 endif|#
 directive|endif
-name|uint32_t
-name|id
-decl_stmt|;
-comment|/* ruleset id */
-name|uint32_t
-name|gencnt
-decl_stmt|;
-comment|/* generation count */
 block|}
 struct|;
 end_struct
