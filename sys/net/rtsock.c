@@ -578,7 +578,7 @@ specifier|static
 name|struct
 name|mbuf
 modifier|*
-name|rt_msg1
+name|rtsock_msg_mbuf
 parameter_list|(
 name|int
 name|type
@@ -4729,7 +4729,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Used by the routing socket.  */
+comment|/*  * Writes information related to @rtinfo object to newly-allocated mbuf.  * Assumes MCLBYTES is enough to construct any message.  * Used for OS notifications of vaious events (if/ifa announces,etc)  *  * Returns allocated mbuf or NULL on failure.  */
 end_comment
 
 begin_function
@@ -4737,7 +4737,7 @@ specifier|static
 name|struct
 name|mbuf
 modifier|*
-name|rt_msg1
+name|rtsock_msg_mbuf
 parameter_list|(
 name|int
 name|type
@@ -5709,7 +5709,7 @@ condition|)
 return|return;
 name|m
 operator|=
-name|rt_msg1
+name|rtsock_msg_mbuf
 argument_list|(
 name|type
 argument_list|,
@@ -5903,7 +5903,7 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|=
-name|rt_msg1
+name|rtsock_msg_mbuf
 argument_list|(
 name|RTM_IFINFO
 argument_list|,
@@ -6131,7 +6131,7 @@ condition|(
 operator|(
 name|m
 operator|=
-name|rt_msg1
+name|rtsock_msg_mbuf
 argument_list|(
 name|ncmd
 argument_list|,
@@ -6360,7 +6360,7 @@ condition|(
 operator|(
 name|m
 operator|=
-name|rt_msg1
+name|rtsock_msg_mbuf
 argument_list|(
 name|cmd
 argument_list|,
@@ -6566,7 +6566,7 @@ name|ifma_lladdr
 expr_stmt|;
 name|m
 operator|=
-name|rt_msg1
+name|rtsock_msg_mbuf
 argument_list|(
 name|cmd
 argument_list|,
@@ -6702,7 +6702,7 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|=
-name|rt_msg1
+name|rtsock_msg_mbuf
 argument_list|(
 name|type
 argument_list|,
