@@ -2314,14 +2314,12 @@ parameter_list|(
 name|nvlist_t
 modifier|*
 name|props
-parameter_list|)
-block|{
+parameter_list|,
 name|char
 modifier|*
 name|propname
-init|=
-name|optarg
-decl_stmt|;
+parameter_list|)
+block|{
 name|char
 modifier|*
 name|propval
@@ -2490,7 +2488,7 @@ argument_list|(
 literal|"%s is not an integer\n"
 argument_list|)
 argument_list|,
-name|optarg
+name|opt
 argument_list|)
 expr_stmt|;
 name|usage
@@ -2903,6 +2901,8 @@ condition|(
 name|parseprop
 argument_list|(
 name|props
+argument_list|,
+name|optarg
 argument_list|)
 condition|)
 return|return
@@ -3508,6 +3508,8 @@ condition|(
 name|parseprop
 argument_list|(
 name|props
+argument_list|,
+name|optarg
 argument_list|)
 condition|)
 goto|goto
@@ -16765,6 +16767,8 @@ condition|(
 name|parseprop
 argument_list|(
 name|props
+argument_list|,
+name|optarg
 argument_list|)
 condition|)
 return|return
