@@ -561,7 +561,7 @@ name|secsz
 expr_stmt|;
 if|if
 condition|(
-name|write
+name|sparse_write
 argument_list|(
 name|image_fd
 argument_list|,
