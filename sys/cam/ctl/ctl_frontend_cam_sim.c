@@ -174,12 +174,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/ctl/ctl_mem_pool.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/ctl/ctl_debug.h>
 end_include
 
