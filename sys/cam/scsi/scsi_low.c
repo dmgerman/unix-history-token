@@ -22262,8 +22262,7 @@ decl_stmt|;
 name|int
 name|lun
 init|=
-operator|-
-literal|1
+name|CAM_LUN_WILDCARD
 decl_stmt|;
 if|if
 condition|(

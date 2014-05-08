@@ -146,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|CAM_DEBUG_BUS
-value|(-1)
+value|CAM_BUS_WILDCARD
 end_define
 
 begin_endif
@@ -164,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|CAM_DEBUG_TARGET
-value|(-1)
+value|CAM_TARGET_WILDCARD
 end_define
 
 begin_endif
@@ -182,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|CAM_DEBUG_LUN
-value|(-1)
+value|CAM_LUN_WILDCARD
 end_define
 
 begin_endif
