@@ -282,6 +282,8 @@ block|,
 name|ZFS_PROP_INCONSISTENT
 block|,
 comment|/* not exposed to the user */
+name|ZFS_PROP_VOLMODE
+block|,
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t
@@ -858,6 +860,27 @@ init|=
 literal|2
 block|}
 name|zfs_sync_type_t
+typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|ZFS_VOLMODE_DEFAULT
+init|=
+literal|0
+block|,
+name|ZFS_VOLMODE_GEOM
+init|=
+literal|1
+block|,
+name|ZFS_VOLMODE_DEV
+init|=
+literal|2
+block|,
+name|ZFS_VOLMODE_NONE
+init|=
+literal|3
+block|}
+name|zfs_volmode_t
 typedef|;
 comment|/*  * On-disk version number.  */
 define|#
