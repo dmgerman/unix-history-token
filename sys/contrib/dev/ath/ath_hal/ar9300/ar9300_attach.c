@@ -17437,6 +17437,12 @@ comment|/* Aphrodite */
 return|return
 literal|"Qualcomm Atheros AR9565"
 return|;
+case|case
+name|AR9300_DEVID_AR1111_PCIE
+case|:
+return|return
+literal|"Atheros AR1111"
+return|;
 default|default:
 return|return
 name|AH_NULL

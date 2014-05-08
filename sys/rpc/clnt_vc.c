@@ -1257,11 +1257,6 @@ name|err
 label|:
 if|if
 condition|(
-name|cl
-condition|)
-block|{
-if|if
-condition|(
 name|ct
 condition|)
 block|{
@@ -1299,7 +1294,6 @@ name|CLIENT
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 operator|(

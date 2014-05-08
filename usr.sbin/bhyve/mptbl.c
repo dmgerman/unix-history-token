@@ -1220,6 +1220,8 @@ name|mpie
 decl_stmt|;
 name|int
 name|ioints
+decl_stmt|,
+name|bus
 decl_stmt|;
 name|char
 modifier|*
@@ -1247,8 +1249,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"mptable requires mapped mem\n"
 argument_list|)
 expr_stmt|;
@@ -1257,6 +1261,52 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
+comment|/* 	 * There is no way to advertise multiple PCI hierarchies via MPtable 	 * so require that there is no PCI hierarchy with a non-zero bus 	 * number. 	 */
+for|for
+control|(
+name|bus
+operator|=
+literal|1
+init|;
+name|bus
+operator|<=
+name|PCI_BUSMAX
+condition|;
+name|bus
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|pci_bus_configured
+argument_list|(
+name|bus
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"MPtable is incompatible with "
+literal|"multiple PCI hierarchies.\r\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"MPtable generation can be disabled "
+literal|"by passing the -Y option to bhyve(8).\r\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 block|}
 name|curraddr
 operator|=

@@ -178,7 +178,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Ddout copies the leftover output to the beginning of 		 * the buffer and resets the output buffer.  Reset the 		 * input buffer to match it. 	 	 */
+comment|/* 		 * dd_out copies the leftover output to the beginning of 		 * the buffer and resets the output buffer.  Reset the 		 * input buffer to match it. 	 	 */
 name|in
 operator|.
 name|dbp

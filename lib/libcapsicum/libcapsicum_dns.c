@@ -1388,6 +1388,10 @@ name|firstai
 operator|=
 name|curai
 expr_stmt|;
+name|prevai
+operator|=
+name|curai
+expr_stmt|;
 block|}
 name|nvlist_destroy
 argument_list|(

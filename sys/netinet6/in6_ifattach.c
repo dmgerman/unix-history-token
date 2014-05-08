@@ -3627,8 +3627,10 @@ name|rt_ifp
 operator|==
 name|ifp
 condition|)
-name|rtexpunge
+name|rt_expunge
 argument_list|(
+name|rnh
+argument_list|,
 name|rt
 argument_list|)
 expr_stmt|;

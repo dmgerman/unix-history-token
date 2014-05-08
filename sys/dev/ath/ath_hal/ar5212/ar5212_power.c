@@ -424,6 +424,10 @@ block|{
 case|case
 name|HAL_PM_AWAKE
 case|:
+if|if
+condition|(
+name|setChip
+condition|)
 name|ah
 operator|->
 name|ah_powerMode
@@ -450,6 +454,10 @@ argument_list|,
 name|setChip
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setChip
+condition|)
 name|ah
 operator|->
 name|ah_powerMode
@@ -467,6 +475,10 @@ argument_list|,
 name|setChip
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setChip
+condition|)
 name|ah
 operator|->
 name|ah_powerMode

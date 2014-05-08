@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -517,11 +523,18 @@ name|sec
 operator|>
 literal|59
 operator|||
-name|ct
-operator|->
+operator|(
+sizeof|sizeof
+argument_list|(
+name|time_t
+argument_list|)
+operator|==
+literal|4
+operator|&&
 name|year
 operator|>
 literal|2037
+operator|)
 condition|)
 block|{
 comment|/* time_t overflow */

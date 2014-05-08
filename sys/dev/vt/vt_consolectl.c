@@ -150,6 +150,9 @@ operator|)
 return|;
 block|}
 default|default:
+ifdef|#
+directive|ifdef
+name|VT_CONSOLECTL_DEBUG
 name|printf
 argument_list|(
 literal|"consolectl: unknown ioctl: %c:%lx\n"
@@ -168,6 +171,8 @@ name|cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOIOCTL

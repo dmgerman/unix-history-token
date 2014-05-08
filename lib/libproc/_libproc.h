@@ -88,6 +88,18 @@ name|struct
 name|lwpstatus
 name|lwps
 decl_stmt|;
+name|rd_loadobj_t
+modifier|*
+name|rdexec
+decl_stmt|;
+comment|/* rdobj index of program executable. */
+name|char
+name|execname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+comment|/* Path to program executable. */
 block|}
 struct|;
 end_struct

@@ -486,8 +486,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
-operator|=
 name|pipe_named_ctor
 argument_list|(
 operator|&
@@ -496,17 +494,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|fip
 operator|=
 name|malloc

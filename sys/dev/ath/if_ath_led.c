@@ -358,6 +358,23 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_set_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|HAL_PM_AWAKE
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Software LED blinking - GPIO controlled LED */
 if|if
 condition|(
@@ -448,6 +465,21 @@ name|HAL_GPIO_OUTPUT_MUX_MAC_NETWORK_LED
 argument_list|)
 expr_stmt|;
 block|}
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_restore_power_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

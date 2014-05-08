@@ -202,13 +202,20 @@ end_function
 
 begin_function_decl
 name|int
-name|mkimg_seek
+name|mkimg_write
 parameter_list|(
 name|int
 name|fd
 parameter_list|,
 name|lba_t
 name|blk
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|ssize_t
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl

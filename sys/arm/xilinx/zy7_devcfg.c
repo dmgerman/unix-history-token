@@ -1358,6 +1358,26 @@ argument_list|,
 name|ZY7_DEVCFG_CTRL
 argument_list|)
 expr_stmt|;
+comment|/* Clear sticky bits and set up INIT signal positive edge interrupt. */
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|ZY7_DEVCFG_INT_STATUS
+argument_list|,
+name|ZY7_DEVCFG_INT_ALL
+argument_list|)
+expr_stmt|;
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|ZY7_DEVCFG_INT_MASK
+argument_list|,
+operator|~
+name|ZY7_DEVCFG_INT_PCFG_INIT_PE
+argument_list|)
+expr_stmt|;
 comment|/* Deassert PROG_B (active low). */
 name|devcfg_ctl
 operator||=
@@ -1372,12 +1392,8 @@ argument_list|,
 name|devcfg_ctl
 argument_list|)
 expr_stmt|;
-comment|/* Wait for INIT_B deasserted (active low). */
-name|tries
-operator|=
-literal|0
-expr_stmt|;
-while|while
+comment|/* 	 * Wait for INIT to assert.  If it is already asserted, we may not get 	 * an edge interrupt so cancel it and continue. 	 */
+if|if
 condition|(
 operator|(
 name|RD4
@@ -1389,29 +1405,56 @@ argument_list|)
 operator|&
 name|ZY7_DEVCFG_STATUS_PCFG_INIT
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|++
-name|tries
-operator|>=
-literal|100
-condition|)
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
-name|DELAY
+comment|/* Already asserted.  Cancel interrupt. */
+name|WR4
 argument_list|(
-literal|5
+name|sc
+argument_list|,
+name|ZY7_DEVCFG_INT_MASK
+argument_list|,
+operator|~
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Reassert PROG_B. */
+else|else
+block|{
+comment|/* Wait for positive edge interrupt. */
+name|err
+operator|=
+name|mtx_sleep
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|,
+name|PCATCH
+argument_list|,
+literal|"zy7i1"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
+comment|/* Reassert PROG_B (active low). */
 name|devcfg_ctl
 operator|&=
 operator|~
@@ -1426,7 +1469,7 @@ argument_list|,
 name|devcfg_ctl
 argument_list|)
 expr_stmt|;
-comment|/* Wait for INIT_B asserted. */
+comment|/* Wait for INIT deasserted.  This happens almost instantly. */
 name|tries
 operator|=
 literal|0
@@ -1465,7 +1508,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Clear sticky bits and set up INIT_B positive edge interrupt. */
+comment|/* Clear sticky bits and set up INIT positive edge interrupt. */
 name|WR4
 argument_list|(
 name|sc
@@ -1499,7 +1542,7 @@ argument_list|,
 name|devcfg_ctl
 argument_list|)
 expr_stmt|;
-comment|/* Wait for INIT_B deasserted indicating FPGA internal initialization 	 * is complete.  This takes much longer than the previous waits for 	 * INIT_B transition (on the order of 700us). 	 */
+comment|/* 	 * Wait for INIT asserted indicating FPGA internal initialization 	 * is complete. 	 */
 name|err
 operator|=
 name|mtx_sleep
@@ -1513,7 +1556,7 @@ name|sc_mtx
 argument_list|,
 name|PCATCH
 argument_list|,
-literal|"zy7in"
+literal|"zy7i2"
 argument_list|,
 name|hz
 argument_list|)
@@ -1971,6 +2014,11 @@ operator|->
 name|uio_resid
 argument_list|)
 expr_stmt|;
+name|DEVCFG_SC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|uiomove
@@ -1980,6 +2028,11 @@ argument_list|,
 name|segsz
 argument_list|,
 name|uio
+argument_list|)
+expr_stmt|;
+name|DEVCFG_SC_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 if|if

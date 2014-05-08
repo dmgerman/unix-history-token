@@ -427,14 +427,12 @@ name|status
 init|=
 name|AH_TRUE
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|setChip
-condition|)
-return|return
-name|AH_TRUE
-return|;
+if|#
+directive|if
+literal|0
+block|if (!setChip) 		return AH_TRUE;
+endif|#
+directive|endif
 name|HALDEBUG
 argument_list|(
 name|ah
@@ -472,6 +470,10 @@ block|{
 case|case
 name|HAL_PM_AWAKE
 case|:
+if|if
+condition|(
+name|setChip
+condition|)
 name|ah
 operator|->
 name|ah_powerMode
@@ -498,6 +500,10 @@ argument_list|,
 name|setChip
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setChip
+condition|)
 name|ah
 operator|->
 name|ah_powerMode
@@ -515,6 +521,10 @@ argument_list|,
 name|setChip
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setChip
+condition|)
 name|ah
 operator|->
 name|ah_powerMode

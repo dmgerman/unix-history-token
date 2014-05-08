@@ -185,13 +185,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|Pstate
-value|proc_state
-end_define
-
-begin_define
-define|#
-directive|define
 name|Psymbol_iter_by_addr
 value|proc_iter_symbyaddr
 end_define

@@ -2753,33 +2753,35 @@ literal|"ath_tx_handoff_hw called for mcast queue"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX racy, should hold the PCU lock when checking this, 	 * and also should ensure that the TX counter is>0! 	 */
-name|KASSERT
-argument_list|(
-operator|(
+comment|/* 	 * XXX We should instead just verify that sc_txstart_cnt 	 * or ath_txproc_cnt> 0.  That would mean that 	 * the reset is going to be waiting for us to complete. 	 */
+if|if
+condition|(
 name|sc
 operator|->
-name|sc_inreset_cnt
+name|sc_txproc_cnt
 operator|==
 literal|0
-operator|)
+operator|&&
+name|sc
+operator|->
+name|sc_txstart_cnt
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-operator|(
-literal|"%s: TX during reset?\n"
-operator|,
+literal|"%s: TX dispatch without holding txcount/txstart refcnt!\n"
+argument_list|,
 name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * This causes a LOR. Find out where the PCU lock is being 	 * held whilst the TXQ lock is grabbed - that shouldn't 	 * be occuring. 	 */
-block|ATH_PCU_LOCK(sc); 	if (sc->sc_inreset_cnt) { 		ATH_PCU_UNLOCK(sc); 		DPRINTF(sc, ATH_DEBUG_RESET, 		    "%s: called with sc_in_reset != 0\n", 		    __func__); 		DPRINTF(sc, ATH_DEBUG_XMIT, 		    "%s: queued: TXDP[%u] = %p (%p) depth %d\n", 		    __func__, txq->axq_qnum, 		    (caddr_t)bf->bf_daddr, bf->bf_desc, 		    txq->axq_depth);
-comment|/* XXX axq_link needs to be set and updated! */
-block|ATH_TXQ_INSERT_TAIL(txq, bf, bf_list); 		if (bf->bf_state.bfs_aggr) 			txq->axq_aggr_depth++; 		return; 		} 	ATH_PCU_UNLOCK(sc);
-endif|#
-directive|endif
+block|}
+comment|/* 	 * XXX .. this is going to cause the hardware to get upset; 	 * so we really should find some way to drop or queue 	 * things. 	 */
 name|ATH_TXQ_LOCK
 argument_list|(
 name|txq
@@ -5782,6 +5784,21 @@ condition|)
 return|return
 name|error
 return|;
+name|KASSERT
+argument_list|(
+operator|(
+name|ni
+operator|!=
+name|NULL
+operator|)
+argument_list|,
+operator|(
+literal|"%s: ni=NULL!"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|bf
 operator|->
 name|bf_node
@@ -7499,6 +7516,16 @@ decl_stmt|;
 name|int
 name|queue_to_head
 decl_stmt|;
+name|struct
+name|ath_node
+modifier|*
+name|an
+init|=
+name|ATH_NODE
+argument_list|(
+name|ni
+argument_list|)
+decl_stmt|;
 name|ATH_TX_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -7760,6 +7787,21 @@ name|ieee80211_frame
 operator|*
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|ni
+operator|!=
+name|NULL
+operator|)
+argument_list|,
+operator|(
+literal|"%s: ni=NULL!"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|bf
 operator|->
 name|bf_node
@@ -7852,6 +7894,7 @@ name|sc_curmode
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Fetch first rate information */
 name|rix
 operator|=
 name|ath_tx_findrix
@@ -7863,6 +7906,35 @@ operator|->
 name|ibp_rate0
 argument_list|)
 expr_stmt|;
+name|try0
+operator|=
+name|params
+operator|->
+name|ibp_try0
+expr_stmt|;
+comment|/* 	 * Override EAPOL rate as appropriate. 	 */
+if|if
+condition|(
+name|m0
+operator|->
+name|m_flags
+operator|&
+name|M_EAPOL
+condition|)
+block|{
+comment|/* XXX? maybe always use long preamble? */
+name|rix
+operator|=
+name|an
+operator|->
+name|an_mgmtrix
+expr_stmt|;
+name|try0
+operator|=
+name|ATH_TXMAXTRY
+expr_stmt|;
+comment|/* XXX?too many? */
+block|}
 name|txrate
 operator|=
 name|rt
@@ -7898,12 +7970,6 @@ operator|->
 name|sc_txrix
 operator|=
 name|rix
-expr_stmt|;
-name|try0
-operator|=
-name|params
-operator|->
-name|ibp_try0
 expr_stmt|;
 name|ismrr
 operator|=
@@ -8325,14 +8391,7 @@ index|]
 operator|.
 name|rix
 operator|=
-name|ath_tx_findrix
-argument_list|(
-name|sc
-argument_list|,
-name|params
-operator|->
-name|ibp_rate0
-argument_list|)
+name|rix
 expr_stmt|;
 name|bf
 operator|->
@@ -8760,7 +8819,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 goto|goto
-name|bad0
+name|badbad
 goto|;
 block|}
 name|sc
@@ -8769,6 +8828,24 @@ name|sc_txstart_cnt
 operator|++
 expr_stmt|;
 name|ATH_PCU_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Wake the hardware up already */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_set_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|HAL_PM_AWAKE
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -9057,6 +9134,22 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Put the hardware back to sleep if required */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_restore_power_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -9119,7 +9212,23 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|bad0
+comment|/* Put the hardware back to sleep if required */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_restore_power_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|badbad
 label|:
 name|ATH_KTR
 argument_list|(

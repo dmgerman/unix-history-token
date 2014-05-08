@@ -3623,9 +3623,9 @@ argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
-name|tcps_rcvmemdrop
+name|tcps_rcvreassfull
 argument_list|,
-literal|"\t\t%ju discarded due to memory problems\n"
+literal|"\t\t%ju discarded due to no space in reassembly queue\n"
 argument_list|)
 expr_stmt|;
 name|p

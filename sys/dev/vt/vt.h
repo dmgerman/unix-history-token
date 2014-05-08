@@ -255,6 +255,12 @@ name|SC_DRIVER_NAME
 value|"vt"
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VT_DEBUG
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -266,6 +272,40 @@ modifier|...
 parameter_list|)
 value|if (vt_debug> (_l)) printf( __VA_ARGS__ )
 end_define
+
+begin_define
+define|#
+directive|define
+name|VT_CONSOLECTL_DEBUG
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT_SYSMOUSE_DEBUG
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|_l
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1309,6 +1349,19 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|int
+name|vd_probe_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|void
 name|vd_postswitch_t
 parameter_list|(
@@ -1543,7 +1596,17 @@ begin_struct
 struct|struct
 name|vt_driver
 block|{
+name|char
+name|vd_name
+index|[
+literal|16
+index|]
+decl_stmt|;
 comment|/* Console attachment. */
+name|vd_probe_t
+modifier|*
+name|vd_probe
+decl_stmt|;
 name|vd_init_t
 modifier|*
 name|vd_init
@@ -1705,6 +1768,22 @@ name|softc
 parameter_list|)
 define|\
 value|static struct terminal	driver ## _consterm;				\ static struct vt_window	driver ## _conswindow;				\ static struct vt_device	driver ## _consdev = {				\ 	.vd_driver =&driver,						\ 	.vd_softc = (softc),						\ 	.vd_flags = VDF_INVALID,					\ 	.vd_windows = { [VT_CONSWINDOW] =&driver ## _conswindow, },	\ 	.vd_curwindow =&driver ## _conswindow,				\ 	.vd_markedwin = NULL,						\ 	.vd_kbstate = 0,						\ };									\ static term_char_t	driver ## _constextbuf[(width) * 		\ 	    (VBF_DEFAULT_HISTORY_SIZE)];				\ static term_char_t	*driver ## _constextbufrows[			\ 	    VBF_DEFAULT_HISTORY_SIZE];					\ static struct vt_window	driver ## _conswindow = {			\ 	.vw_number = VT_CONSWINDOW,					\ 	.vw_flags = VWF_CONSOLE,					\ 	.vw_buf = {							\ 		.vb_buffer = driver ## _constextbuf,			\ 		.vb_rows = driver ## _constextbufrows,			\ 		.vb_history_size = VBF_DEFAULT_HISTORY_SIZE,		\ 		.vb_curroffset = 0,					\ 		.vb_roffset = 0,					\ 		.vb_flags = VBF_STATIC,					\ 		.vb_mark_start = {					\ 			.tp_row = 0,					\ 			.tp_col = 0,					\ 		},							\ 		.vb_mark_end = {					\ 			.tp_row = 0,					\ 			.tp_col = 0,					\ 		},							\ 		.vb_scr_size = {					\ 			.tp_row = height,				\ 			.tp_col = width,				\ 		},							\ 	},								\ 	.vw_device =&driver ## _consdev,				\ 	.vw_terminal =&driver ## _consterm,				\ 	.vw_kbdmode = K_XLATE,						\ };									\ TERMINAL_DECLARE_EARLY(driver ## _consterm, vt_termclass,		\&driver ## _conswindow);						\ SYSINIT(vt_early_cons, SI_SUB_INT_CONFIG_HOOKS, SI_ORDER_ANY,		\     vt_upgrade,&driver ## _consdev)
+end_define
+
+begin_comment
+comment|/* name argument is not used yet. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VT_DRIVER_DECLARE
+parameter_list|(
+name|name
+parameter_list|,
+name|drv
+parameter_list|)
+value|DATA_SET(vt_drv_set, drv)
 end_define
 
 begin_comment

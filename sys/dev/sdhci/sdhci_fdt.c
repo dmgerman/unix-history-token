@@ -188,6 +188,10 @@ name|u_int
 name|caps
 decl_stmt|;
 comment|/* If we override SDHCI_CAPABILITIES */
+name|uint32_t
+name|max_clk
+decl_stmt|;
+comment|/* Max possible freq */
 name|struct
 name|resource
 modifier|*
@@ -721,6 +725,12 @@ name|num_slots
 operator|=
 literal|1
 expr_stmt|;
+name|sc
+operator|->
+name|max_clk
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -790,11 +800,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Allow dts to patch quirks and slots. */
+comment|/* Allow dts to patch quirks, slots, and max-frequency. */
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -816,15 +826,12 @@ name|sc
 operator|->
 name|quirks
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|cid
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -846,10 +853,34 @@ name|sc
 operator|->
 name|num_slots
 operator|=
-name|fdt32_to_cpu
+name|cid
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|OF_getencprop
+argument_list|(
+name|node
+argument_list|,
+literal|"max-frequency"
+argument_list|,
+operator|&
+name|cid
+argument_list|,
+sizeof|sizeof
 argument_list|(
 name|cid
 argument_list|)
+argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+name|sc
+operator|->
+name|max_clk
+operator|=
+name|cid
 expr_stmt|;
 return|return
 operator|(
@@ -1042,6 +1073,14 @@ operator|=
 name|sc
 operator|->
 name|caps
+expr_stmt|;
+name|slot
+operator|->
+name|max_clk
+operator|=
+name|sc
+operator|->
+name|max_clk
 expr_stmt|;
 if|if
 condition|(

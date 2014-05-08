@@ -33,7 +33,7 @@ comment|/* last read byte count */
 name|size_t
 name|dbsz
 decl_stmt|;
-comment|/* buffer size */
+comment|/* block size */
 define|#
 directive|define
 name|ISCHR
@@ -118,7 +118,8 @@ name|uintmax_t
 name|bytes
 decl_stmt|;
 comment|/* # of bytes written */
-name|double
+name|struct
+name|timespec
 name|start
 decl_stmt|;
 comment|/* start time of dd */

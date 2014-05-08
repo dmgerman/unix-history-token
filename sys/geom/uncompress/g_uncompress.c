@@ -353,7 +353,7 @@ name|sc
 operator|->
 name|offsets
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 switch|switch
@@ -779,8 +779,6 @@ block|{
 name|off_t
 name|len
 decl_stmt|,
-name|dlen
-decl_stmt|,
 name|ulen
 decl_stmt|,
 name|uoff
@@ -818,8 +816,6 @@ operator|-
 name|upos
 argument_list|)
 expr_stmt|;
-name|dlen
-operator|=
 name|len
 operator|=
 name|sc
@@ -965,7 +961,7 @@ name|bio_data
 operator|+
 name|pos
 argument_list|,
-name|dlen
+name|len
 argument_list|,
 literal|0
 argument_list|,
@@ -1026,7 +1022,7 @@ name|b
 operator|->
 name|in_size
 operator|=
-name|dlen
+name|len
 expr_stmt|;
 name|sc
 operator|->
@@ -1084,7 +1080,7 @@ name|zs
 operator|->
 name|avail_in
 operator|=
-name|dlen
+name|len
 expr_stmt|;
 name|sc
 operator|->
@@ -2855,6 +2851,13 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_GEOM
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -3086,13 +3089,6 @@ argument_list|(
 name|pp2
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|buf
-argument_list|,
-name|M_GEOM
 argument_list|)
 expr_stmt|;
 name|g_access

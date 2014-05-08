@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/gpio.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -44,25 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/libkern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -75,30 +63,6 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/ofw_bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gpio_if.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gpiobus_if.h"
 end_include
 
 begin_function_decl
@@ -748,7 +712,7 @@ block|}
 comment|/* Get the GPIO pin number and flags. */
 if|if
 condition|(
-name|ofw_bus_map_gpios
+name|gpio_map_gpios
 argument_list|(
 name|sc
 operator|->
