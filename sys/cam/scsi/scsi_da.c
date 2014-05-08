@@ -329,6 +329,10 @@ block|,
 name|DA_Q_NO_RC16
 init|=
 literal|0x10
+block|,
+name|DA_Q_NO_UNMAP
+init|=
+literal|0x20
 block|}
 name|da_quirks
 typedef|;
@@ -1083,6 +1087,24 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * The STEC 842 sometimes hang on UNMAP. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"STEC"
+block|,
+literal|"S842E800M2"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_UNMAP
 block|}
 block|,
 comment|/* USB mass storage devices supported by umass(4) */
@@ -13122,6 +13144,16 @@ expr_stmt|;
 if|if
 condition|(
 name|lbp
+operator|&&
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_NO_UNMAP
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 			 * Based on older SBC-3 spec revisions 			 * any of the UNMAP methods "may" be 			 * available via LBP given this flag so 			 * we flag all of them as availble and 			 * then remove those which further 			 * probes confirm aren't available 			 * later. 			 * 			 * We could also check readcap(16) p_type 			 * flag to exclude one or more invalid 			 * write same (X) types here 			 */
@@ -13912,6 +13944,16 @@ operator|->
 name|support_dsm
 operator|&
 name|ATA_SUPPORT_DSM_TRIM
+operator|&&
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_NO_UNMAP
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|dadeleteflag
