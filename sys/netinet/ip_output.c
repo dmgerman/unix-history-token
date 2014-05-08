@@ -3789,43 +3789,35 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* This should not happen. */
-name|printf
+name|KASSERT
 argument_list|(
-literal|"in_delayed_cksum(): checksum outside mbuf chain.\n"
+name|m
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"in_delayed_cksum: checksum outside mbuf chain."
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|offset
 operator|+
 sizeof|sizeof
 argument_list|(
 name|u_short
 argument_list|)
-operator|>
+operator|<=
 name|m
 operator|->
 name|m_len
-condition|)
-block|{
-comment|/* 		 * XXX 		 * This should not happen, but if it does, it might make more 		 * sense to fix the caller than to add code to split it here. 		 */
-name|printf
-argument_list|(
-literal|"in_delayed_cksum(): checksum split between mbufs.\n"
+argument_list|,
+operator|(
+literal|"in_delayed_cksum: checksum split between mbufs."
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 operator|*
 operator|(
 name|u_short
