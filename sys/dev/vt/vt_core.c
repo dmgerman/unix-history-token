@@ -10169,6 +10169,12 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
+comment|/* Refill settings with new sizes. */
+name|vt_resize
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -10485,12 +10491,6 @@ name|vd
 argument_list|)
 expr_stmt|;
 name|vt_upgrade
-argument_list|(
-name|vd
-argument_list|)
-expr_stmt|;
-comment|/* Refill settings with new sizes. */
-name|vt_resize
 argument_list|(
 name|vd
 argument_list|)
