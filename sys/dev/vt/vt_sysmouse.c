@@ -1744,6 +1744,9 @@ literal|0
 operator|)
 return|;
 default|default:
+ifdef|#
+directive|ifdef
+name|VT_SYSMOUSE_DEBUG
 name|printf
 argument_list|(
 literal|"sysmouse: unknown ioctl: %c:%lx\n"
@@ -1762,6 +1765,8 @@ name|cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOIOCTL

@@ -255,6 +255,12 @@ name|SC_DRIVER_NAME
 value|"vt"
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VT_DEBUG
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -266,6 +272,40 @@ modifier|...
 parameter_list|)
 value|if (vt_debug> (_l)) printf( __VA_ARGS__ )
 end_define
+
+begin_define
+define|#
+directive|define
+name|VT_CONSOLECTL_DEBUG
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT_SYSMOUSE_DEBUG
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|_l
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
