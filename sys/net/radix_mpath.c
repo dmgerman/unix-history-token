@@ -329,8 +329,7 @@ argument_list|)
 condition|)
 break|break;
 block|}
-else|else
-block|{
+comment|/* 		 * Check for other options: 		 * 1) Routes with 'real' IPv4/IPv6 gateway 		 * 2) Loopback host routes (another AF_LINK/sockadd_dl check) 		 * */
 if|if
 condition|(
 name|rt
@@ -358,7 +357,6 @@ name|sa_len
 argument_list|)
 condition|)
 break|break;
-block|}
 block|}
 do|while
 condition|(
