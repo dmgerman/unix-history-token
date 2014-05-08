@@ -2469,7 +2469,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_TASKS
-value|MAX(32, MAXCPU * 2)
+value|MAX(32, MAXCPU * 4)
 end_define
 
 begin_endif
