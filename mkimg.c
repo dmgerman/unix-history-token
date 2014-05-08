@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"format.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"image.h"
 end_include
 
@@ -197,13 +203,22 @@ name|why
 parameter_list|)
 block|{
 name|struct
+name|mkimg_format
+modifier|*
+name|f
+decl_stmt|,
+modifier|*
+modifier|*
+name|f_iter
+decl_stmt|;
+name|struct
 name|mkimg_scheme
 modifier|*
 name|s
 decl_stmt|,
 modifier|*
 modifier|*
-name|iter
+name|s_iter
 decl_stmt|;
 name|warnx
 argument_list|(
@@ -289,12 +304,47 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    schemes:\n"
+literal|"\n    formats:\n"
 argument_list|)
 expr_stmt|;
 name|SET_FOREACH
 argument_list|(
-argument|iter
+argument|f_iter
+argument_list|,
+argument|formats
+argument_list|)
+block|{
+name|f
+operator|=
+operator|*
+name|f_iter
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t%s\t-  %s\n"
+argument_list|,
+name|f
+operator|->
+name|name
+argument_list|,
+name|f
+operator|->
+name|description
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n    schemes:\n"
+argument_list|)
+expr_stmt|;
+name|SET_FOREACH
+argument_list|(
+argument|s_iter
 argument_list|,
 argument|schemes
 argument_list|)
@@ -302,7 +352,7 @@ block|{
 name|s
 operator|=
 operator|*
-name|iter
+name|s_iter
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -324,7 +374,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    partition specification:\n"
+literal|"\n    partition specification:\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
