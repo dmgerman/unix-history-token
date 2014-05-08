@@ -436,7 +436,7 @@ function_decl|(
 modifier|*
 name|rnh_matchaddr
 function_decl|)
-comment|/* locate based on sockaddr */
+comment|/* longest match for sockaddr */
 parameter_list|(
 name|void
 modifier|*
@@ -455,7 +455,7 @@ function_decl|(
 modifier|*
 name|rnh_lookup
 function_decl|)
-comment|/* locate based on sockaddr */
+comment|/*exact match for sockaddr*/
 parameter_list|(
 name|void
 modifier|*

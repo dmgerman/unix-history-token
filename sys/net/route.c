@@ -3948,6 +3948,18 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|int p_sockaddr(char *buf, int buflen, struct sockaddr *s); int rt_print(char *buf, int buflen, struct rtentry *rt);  int p_sockaddr(char *buf, int buflen, struct sockaddr *s) { 	void *paddr = NULL;  	switch (s->sa_family) { 	case AF_INET: 		paddr =&((struct sockaddr_in *)s)->sin_addr; 		break; 	case AF_INET6: 		paddr =&((struct sockaddr_in6 *)s)->sin6_addr; 		break; 	}  	if (paddr == NULL) 		return (0);  	if (inet_ntop(s->sa_family, paddr, buf, buflen) == NULL) 		return (0); 	 	return (strlen(buf)); }  int rt_print(char *buf, int buflen, struct rtentry *rt) { 	struct sockaddr *addr, *mask; 	int i = 0;  	addr = rt_key(rt); 	mask = rt_mask(rt);  	i = p_sockaddr(buf, buflen, addr); 	if (!(rt->rt_flags& RTF_HOST)) { 		buf[i++] = '/'; 		i += p_sockaddr(buf + i, buflen - i, mask); 	}  	if (rt->rt_flags& RTF_GATEWAY) { 		buf[i++] = '>'; 		i += p_sockaddr(buf + i, buflen - i, rt->rt_gateway); 	}  	return (i); }
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4005,9 +4017,11 @@ name|rn
 operator|=
 name|rnh
 operator|->
-name|rnh_matchaddr
+name|rnh_lookup
 argument_list|(
 name|dst
+argument_list|,
+name|netmask
 argument_list|,
 name|rnh
 argument_list|)
@@ -6311,21 +6325,6 @@ operator|->
 name|rt_ifa
 operator|!=
 name|ifa
-operator|||
-operator|!
-name|sa_equal
-argument_list|(
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-name|rn
-operator|->
-name|rn_key
-argument_list|,
-name|dst
-argument_list|)
 operator|)
 expr_stmt|;
 name|RADIX_NODE_HEAD_RUNLOCK
