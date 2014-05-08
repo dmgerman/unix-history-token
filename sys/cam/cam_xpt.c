@@ -9294,8 +9294,7 @@ name|periph_result
 operator|.
 name|target_id
 operator|=
-operator|-
-literal|1
+name|CAM_TARGET_WILDCARD
 expr_stmt|;
 if|if
 condition|(
@@ -9340,8 +9339,7 @@ name|periph_result
 operator|.
 name|target_lun
 operator|=
-operator|-
-literal|1
+name|CAM_LUN_WILDCARD
 expr_stmt|;
 name|cdm
 operator|->
