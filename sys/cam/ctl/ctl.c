@@ -41285,15 +41285,7 @@ argument_list|)
 expr_stmt|;
 name|scsi_ulto4b
 argument_list|(
-operator|(
-literal|16
-operator|*
-literal|1024
-operator|*
-literal|1024
-operator|)
-operator|/
-name|bs
+literal|0xffffffff
 argument_list|,
 name|bl_ptr
 operator|->
