@@ -159,7 +159,11 @@ specifier|const
 name|u_int32_t
 name|CH_TIMEOUT_MOVE_MEDIUM
 init|=
-literal|100000
+literal|15
+operator|*
+literal|60
+operator|*
+literal|1000
 decl_stmt|;
 end_decl_stmt
 
@@ -169,7 +173,11 @@ specifier|const
 name|u_int32_t
 name|CH_TIMEOUT_EXCHANGE_MEDIUM
 init|=
-literal|100000
+literal|15
+operator|*
+literal|60
+operator|*
+literal|1000
 decl_stmt|;
 end_decl_stmt
 
@@ -179,7 +187,11 @@ specifier|const
 name|u_int32_t
 name|CH_TIMEOUT_POSITION_TO_ELEMENT
 init|=
-literal|100000
+literal|15
+operator|*
+literal|60
+operator|*
+literal|1000
 decl_stmt|;
 end_decl_stmt
 
@@ -189,7 +201,11 @@ specifier|const
 name|u_int32_t
 name|CH_TIMEOUT_READ_ELEMENT_STATUS
 init|=
-literal|60000
+literal|5
+operator|*
+literal|60
+operator|*
+literal|1000
 decl_stmt|;
 end_decl_stmt
 
