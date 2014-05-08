@@ -21719,6 +21719,7 @@ block|}
 else|else
 block|{
 comment|/* Port or any other key */
+comment|/* Skip non-base 10 entries like 'fa1' */
 name|key
 operator|=
 name|strtol
@@ -21731,12 +21732,12 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Skip non-base 10 entries like 'fa1' */
 if|if
 condition|(
+operator|*
 name|p
-operator|!=
-name|arg
+operator|==
+literal|'\0'
 condition|)
 block|{
 name|pkey
@@ -21759,11 +21760,43 @@ name|type
 operator|=
 name|IPFW_TABLE_CIDR
 expr_stmt|;
+name|masklen
+operator|=
+literal|32
+expr_stmt|;
 name|addrlen
 operator|=
 sizeof|sizeof
 argument_list|(
 name|uint32_t
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|p
+operator|!=
+name|arg
+operator|)
+operator|&&
+operator|(
+operator|*
+name|p
+operator|==
+literal|'.'
+operator|)
+condition|)
+block|{
+comment|/* 				 * Warn on IPv4 address strings 				 * which are "valid" for inet_aton() but not 				 * in inet_pton(). 				 * 				 * Typical examples: '10.5' or '10.0.0.05' 				 */
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"Invalid IPv4 address: %s"
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
