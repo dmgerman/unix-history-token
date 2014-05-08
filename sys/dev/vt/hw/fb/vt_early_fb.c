@@ -1286,19 +1286,6 @@ name|fb_width
 operator|*
 literal|8
 expr_stmt|;
-comment|/* 	 * Early FB driver work with static window buffer 80x25, so reduce 	 * size to 640x480. 	 */
-name|info
-operator|->
-name|fb_width
-operator|=
-name|VT_FB_DEFAULT_WIDTH
-expr_stmt|;
-name|info
-operator|->
-name|fb_height
-operator|=
-name|VT_FB_DEFAULT_HEIGHT
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FDT
