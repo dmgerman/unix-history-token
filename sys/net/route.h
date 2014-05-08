@@ -176,6 +176,17 @@ begin_comment
 comment|/* Explicitly mark fib=0 restricted cases */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RT_ALL_FIBS
+value|-1
+end_define
+
+begin_comment
+comment|/* Announce event for every fib */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -184,7 +195,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number fo usable routing tables */
+comment|/* number of usable routing tables */
 end_comment
 
 begin_comment
