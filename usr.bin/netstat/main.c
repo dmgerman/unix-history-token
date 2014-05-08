@@ -2139,7 +2139,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AaBbdF:f:ghI:iLlM:mN:np:Qq:rSTsuWw:xz"
+literal|"46AaBbdF:f:ghI:iLlM:mN:np:Qq:rSTsuWw:xz"
 argument_list|)
 operator|)
 operator|!=
@@ -2151,6 +2151,50 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'4'
+case|:
+ifdef|#
+directive|ifdef
+name|INET
+name|af
+operator|=
+name|AF_INET
+expr_stmt|;
+else|#
+directive|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"IPv4 support is not compiled in"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
+literal|'6'
+case|:
+ifdef|#
+directive|ifdef
+name|INET6
+name|af
+operator|=
+name|AF_INET6
+expr_stmt|;
+else|#
+directive|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"IPv6 support is not compiled in"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
 case|case
 literal|'A'
 case|:
@@ -4317,31 +4361,31 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: netstat [-AaLnSTWx] [-f protocol_family | -p protocol]\n"
+literal|"usage: netstat [-46AaLnSTWx] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -i | -I interface [-abdhnW] [-f address_family]\n"
+literal|"       netstat -i | -I interface [-46abdhnW] [-f address_family]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -w wait [-I interface] [-d] [-M core] [-N system] [-q howmany]"
+literal|"       netstat -w wait [-I interface] [-46d] [-M core] [-N system] [-q howmany]"
 argument_list|,
-literal|"       netstat -s [-s] [-z] [-f protocol_family | -p protocol]\n"
+literal|"       netstat -s [-s] [-46z] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -i | -I interface -s [-f protocol_family | -p protocol]\n"
+literal|"       netstat -i | -I interface [-46s] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -m [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -B [-I interface]"
 argument_list|,
-literal|"       netstat -r [-AanW] [-f address_family] [-M core] [-N system]"
+literal|"       netstat -r [-46AanW] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -rs [-s] [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -g [-W] [-f address_family] [-M core] [-N system]"
+literal|"       netstat -g [-46W] [-f address_family] [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -gs [-s] [-f address_family] [-M core] [-N system]"
+literal|"       netstat -gs [-46s] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -Q"
 argument_list|)
