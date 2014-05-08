@@ -3758,6 +3758,52 @@ operator|.
 name|csum_data
 expr_stmt|;
 comment|/* checksum offset */
+comment|/* find the mbuf in the chain where the checksum starts*/
+while|while
+condition|(
+operator|(
+name|m
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|offset
+operator|>=
+name|m
+operator|->
+name|m_len
+operator|)
+condition|)
+block|{
+name|offset
+operator|-=
+name|m
+operator|->
+name|m_len
+expr_stmt|;
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* This should not happen. */
+name|printf
+argument_list|(
+literal|"in_delayed_cksum(): checksum outside mbuf chain.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|offset
@@ -3772,22 +3818,12 @@ operator|->
 name|m_len
 condition|)
 block|{
+comment|/* 		 * XXX 		 * This should not happen, but if it does, it might make more 		 * sense to fix the caller than to add code to split it here. 		 */
 name|printf
 argument_list|(
-literal|"delayed m_pullup, m->len: %d  off: %d  p: %d\n"
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|,
-name|offset
-argument_list|,
-name|ip
-operator|->
-name|ip_p
+literal|"in_delayed_cksum(): checksum split between mbufs.\n"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX 		 * this shouldn't happen, but if it does, the 		 * correct behavior may be to insert the checksum 		 * in the appropriate next mbuf in the chain. 		 */
 return|return;
 block|}
 operator|*
