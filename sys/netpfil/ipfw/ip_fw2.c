@@ -10087,6 +10087,16 @@ block|}
 case|case
 name|O_NAT
 case|:
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
+name|done
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
 if|if
 condition|(
 operator|!
@@ -10097,9 +10107,8 @@ name|retval
 operator|=
 name|IP_FW_DENY
 expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
 name|struct
 name|cfg_nat
 modifier|*
@@ -10137,14 +10146,6 @@ name|NULL
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-name|l
-operator|=
-literal|0
-expr_stmt|;
-name|done
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -10202,16 +10203,6 @@ name|retval
 operator|=
 name|IP_FW_DENY
 expr_stmt|;
-name|l
-operator|=
-literal|0
-expr_stmt|;
-comment|/* exit inner loop */
-name|done
-operator|=
-literal|1
-expr_stmt|;
-comment|/* exit outer loop */
 break|break;
 block|}
 if|if
@@ -10246,17 +10237,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-block|}
-name|l
-operator|=
-literal|0
-expr_stmt|;
-comment|/* exit inner loop */
-name|done
-operator|=
-literal|1
-expr_stmt|;
-comment|/* exit outer loop */
 break|break;
 case|case
 name|O_REASS
@@ -11084,10 +11064,6 @@ name|O_ACCEPT
 else|:
 name|O_DENY
 expr_stmt|;
-name|chain
-operator|->
-name|rules
-operator|=
 name|chain
 operator|->
 name|default_rule

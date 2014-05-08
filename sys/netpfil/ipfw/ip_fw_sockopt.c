@@ -599,7 +599,7 @@ if|if
 condition|(
 name|chain
 operator|->
-name|rules
+name|map
 operator|==
 name|NULL
 operator|||
@@ -2754,7 +2754,7 @@ name|cmd
 operator|->
 name|arg1
 operator|>=
-name|IPFW_TABLES_MAX
+name|V_fw_tables_max
 condition|)
 block|{
 name|printf
