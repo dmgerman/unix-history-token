@@ -2048,6 +2048,8 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+name|INTOFF
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2055,6 +2057,8 @@ name|unsetvar
 argument_list|(
 literal|"OPTARG"
 argument_list|)
+expr_stmt|;
+name|INTON
 expr_stmt|;
 block|}
 name|c
@@ -2153,6 +2157,8 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+name|INTOFF
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2160,6 +2166,8 @@ name|unsetvar
 argument_list|(
 literal|"OPTARG"
 argument_list|)
+expr_stmt|;
+name|INTON
 expr_stmt|;
 name|c
 operator|=
