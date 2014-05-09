@@ -2143,6 +2143,7 @@ name|i
 operator|++
 expr_stmt|;
 block|}
+comment|/* Turn on the hinted pins. */
 for|for
 control|(
 name|i
@@ -2184,6 +2185,16 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|ar71xx_gpio_pin_setflags
+argument_list|(
+name|dev
+argument_list|,
+name|j
+argument_list|,
+name|GPIO_PIN_OUTPUT
+argument_list|)
+expr_stmt|;
 name|ar71xx_gpio_pin_set
 argument_list|(
 name|dev
@@ -2193,6 +2204,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|device_add_child
 argument_list|(
