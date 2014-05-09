@@ -6294,10 +6294,12 @@ if|if
 condition|(
 name|V_udp_cksum
 operator|||
-operator|!
-name|cscov_partial
+name|pr
+operator|==
+name|IPPROTO_UDPLITE
 condition|)
 block|{
+comment|/* for UDP-Lite full checksum coverage is requested */
 if|if
 condition|(
 name|inp
