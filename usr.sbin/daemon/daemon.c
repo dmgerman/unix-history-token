@@ -471,6 +471,10 @@ name|pidfile
 operator|!=
 name|NULL
 operator|||
+name|ppidfile
+operator|!=
+name|NULL
+operator|||
 name|restart
 condition|)
 block|{
