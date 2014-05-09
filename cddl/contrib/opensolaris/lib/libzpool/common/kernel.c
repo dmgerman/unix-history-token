@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -3637,24 +3637,11 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Find highest one bit set.  *	Returns bit number + 1 of highest bit that is set, otherwise returns 0.  * High order bit is 31 (or 63 in _LP64 kernel).  */
+comment|/*  * Find highest one bit set.  *	Returns bit number + 1 of highest bit that is set, otherwise returns 0.  */
 end_comment
 
-begin_ifdef
-unit|int highbit(ulong_t i) { 	register int h = 1;  	if (i == 0) 		return (0);
-ifdef|#
-directive|ifdef
-name|_LP64
-end_ifdef
-
 begin_endif
-unit|if (i& 0xffffffff00000000ul) { 		h += 32; i>>= 32; 	}
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|if (i& 0xffff0000) { 		h += 16; i>>= 16; 	} 	if (i& 0xff00) { 		h += 8; i>>= 8; 	} 	if (i& 0xf0) { 		h += 4; i>>= 4; 	} 	if (i& 0xc) { 		h += 2; i>>= 2; 	} 	if (i& 0x2) { 		h += 1; 	} 	return (h); }
+unit|int highbit64(uint64_t i) { 	int h = 1;  	if (i == 0) 		return (0); 	if (i& 0xffffffff00000000ULL) { 		h += 32; i>>= 32; 	} 	if (i& 0xffff0000) { 		h += 16; i>>= 16; 	} 	if (i& 0xff00) { 		h += 8; i>>= 8; 	} 	if (i& 0xf0) { 		h += 4; i>>= 4; 	} 	if (i& 0xc) { 		h += 2; i>>= 2; 	} 	if (i& 0x2) { 		h += 1; 	} 	return (h); }
 endif|#
 directive|endif
 end_endif
