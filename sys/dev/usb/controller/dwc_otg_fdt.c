@@ -673,7 +673,7 @@ name|sc_otg
 operator|.
 name|sc_irq_res
 argument_list|,
-name|INTR_TYPE_BIO
+name|INTR_TYPE_TTY
 operator||
 name|INTR_MPSAFE
 argument_list|,
