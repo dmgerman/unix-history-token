@@ -4879,6 +4879,12 @@ name|uio_segflg
 operator|=
 name|UIO_SYSSPACE
 expr_stmt|;
+name|uiop
+operator|->
+name|uio_td
+operator|=
+name|NULL
+expr_stmt|;
 name|nh
 operator|=
 name|nfsrv_sequential_heuristic
