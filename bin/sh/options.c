@@ -2041,7 +2041,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|out1fmt
+name|out2fmt_flush
 argument_list|(
 literal|"Illegal option -%c\n"
 argument_list|,
@@ -2150,7 +2150,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|out1fmt
+name|out2fmt_flush
 argument_list|(
 literal|"No arg for -%c option\n"
 argument_list|,
