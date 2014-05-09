@@ -80,11 +80,6 @@ name|int
 modifier|*
 name|portphy
 decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|ifname
-decl_stmt|;
 name|device_t
 modifier|*
 modifier|*
