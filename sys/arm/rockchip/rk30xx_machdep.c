@@ -170,6 +170,13 @@ parameter_list|)
 block|{
 name|arm_devmap_add_entry
 argument_list|(
+literal|0x10000000
+argument_list|,
+literal|0x00200000
+argument_list|)
+expr_stmt|;
+name|arm_devmap_add_entry
+argument_list|(
 literal|0x20000000
 argument_list|,
 literal|0x00100000
