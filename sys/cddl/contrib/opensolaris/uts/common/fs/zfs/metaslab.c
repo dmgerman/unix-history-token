@@ -1623,7 +1623,7 @@ name|mg_taskq
 operator|=
 name|taskq_create
 argument_list|(
-literal|"metaslab_group_tasksq"
+literal|"metaslab_group_taskq"
 argument_list|,
 name|metaslab_load_pct
 argument_list|,
@@ -1679,6 +1679,13 @@ operator|->
 name|mg_activation_count
 operator|<=
 literal|0
+argument_list|)
+expr_stmt|;
+name|taskq_destroy
+argument_list|(
+name|mg
+operator|->
+name|mg_taskq
 argument_list|)
 expr_stmt|;
 name|avl_destroy
