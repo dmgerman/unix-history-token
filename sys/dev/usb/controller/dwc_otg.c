@@ -5242,6 +5242,19 @@ operator|&
 name|HCINT_ACK
 condition|)
 block|{
+comment|/* wait for data - ACK arrived first */
+if|if
+condition|(
+operator|!
+operator|(
+name|hcint
+operator|&
+name|HCINT_SOFTWARE_ONLY
+operator|)
+condition|)
+goto|goto
+name|busy
+goto|;
 if|if
 condition|(
 name|td
@@ -6690,7 +6703,6 @@ name|complete
 goto|;
 block|}
 block|}
-comment|/* channel must be disabled before we can complete the transfer */
 if|if
 condition|(
 name|hcint
@@ -6885,9 +6897,12 @@ name|hcint
 operator|&
 name|HCINT_NYET
 condition|)
+block|{
 goto|goto
 name|send_cpkt
 goto|;
+block|}
+elseif|else
 if|if
 condition|(
 name|hcint
@@ -6915,6 +6930,7 @@ goto|goto
 name|send_pkt
 goto|;
 block|}
+elseif|else
 if|if
 condition|(
 name|hcint
