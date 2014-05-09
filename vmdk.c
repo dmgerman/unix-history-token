@@ -44,6 +44,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -182,6 +194,29 @@ argument_list|)
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|desc_fmt
+index|[]
+init|=
+literal|"# Disk DescriptorFile\n"
+literal|"version=%d\n"
+literal|"CID=%08x\n"
+literal|"parentCID=ffffffff\n"
+literal|"createType=\"monolithicSparse\"\n"
+literal|"# Extent description\n"
+literal|"RW %ju SPARSE \"%s\"\n"
+literal|"# The Disk Data Base\n"
+literal|"#DDB\n"
+literal|"ddb.adapterType = \"ide\"\n"
+literal|"ddb.geometry.cylinders = \"%u\"\n"
+literal|"ddb.geometry.heads = \"%u\"\n"
+literal|"ddb.geometry.sectors = \"%u\"\n"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -192,6 +227,81 @@ name|fd
 name|__unused
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+name|lba_t
+name|imgsz
+decl_stmt|;
+name|int
+name|desc_len
+decl_stmt|;
+name|imgsz
+operator|=
+name|image_get_size
+argument_list|()
+expr_stmt|;
+name|desc_len
+operator|=
+name|asprintf
+argument_list|(
+operator|&
+name|desc
+argument_list|,
+name|desc_fmt
+argument_list|,
+literal|1
+comment|/*version*/
+argument_list|,
+literal|0
+comment|/*CID*/
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|imgsz
+comment|/*size*/
+argument_list|,
+literal|"mkimg.vmdk"
+comment|/*name*/
+argument_list|,
+name|ncyls
+comment|/*cylinders*/
+argument_list|,
+name|nheads
+comment|/*heads*/
+argument_list|,
+name|nsecs
+comment|/*sectors*/
+argument_list|)
+expr_stmt|;
+name|desc_len
+operator|=
+operator|(
+name|desc_len
+operator|+
+literal|512
+operator|-
+literal|1
+operator|)
+operator|&
+operator|~
+operator|(
+literal|512
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+name|desc
+operator|=
+name|realloc
+argument_list|(
+name|desc
+argument_list|,
+name|desc_len
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Steps: 	 * 1. create embedded descriptor. We need to know its size upfront. 	 * 2. create and populate grain directory and tables. This means 	 *    iterating over the written sectors of the image. 	 * 3. (optional) create and populate redundant directory and 	 *    tables while doing step 2. 	 * 4. create and write header (512 bytes) 	 * 5. write descriptor (# x 512 bytes) 	 * 6. write grain directory and tables (# x 512 bytes) 	 * 7. (optional) write redundant directory and tables (# x 512 bytes) 	 * 8. align to grain size. 	 * 9. create and write grains. 	 * 	 * Notes: 	 * 1. The drain directory is being ignored by some implementations 	 *    so the tables must be at their known/assumed offsets. 	 * 2. Default grain size is 128 sectors (= 64KB). 	 * 3. There are 512 entries in a table, each entry being 32-bits. 	 *    Thus, a grain table is 2KB (= 4 sectors). 	 * 4. Each grain table covers 512 * 128 sectors (= 64K sectors). 	 *    With 512-bytes per sector, this yields 32MB of disk data. 	 * 5. For smaller images, the grain size can be reduced to avoid 	 *    rounding the output file to 32MB. The minimum grain size is 	 *    8 sectors (= 4KB). The smallest VMDK file is 2MB without 	 *    overhead (= metadata). 	 * 6. The capacity is a multiple of the grain size. 	 */
 return|return
 operator|(

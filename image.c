@@ -86,6 +86,13 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|lba_t
+name|image_size
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -484,6 +491,21 @@ block|}
 end_function
 
 begin_function
+name|lba_t
+name|image_get_size
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|image_size
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|int
 name|image_set_size
 parameter_list|(
@@ -491,6 +513,10 @@ name|lba_t
 name|blk
 parameter_list|)
 block|{
+name|image_size
+operator|=
+name|blk
+expr_stmt|;
 if|if
 condition|(
 name|ftruncate
