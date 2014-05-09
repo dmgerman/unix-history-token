@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -282,6 +282,14 @@ block|,
 name|ZFS_PROP_INCONSISTENT
 block|,
 comment|/* not exposed to the user */
+name|ZFS_PROP_FILESYSTEM_LIMIT
+block|,
+name|ZFS_PROP_SNAPSHOT_LIMIT
+block|,
+name|ZFS_PROP_FILESYSTEM_COUNT
+block|,
+name|ZFS_PROP_SNAPSHOT_COUNT
+block|,
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t

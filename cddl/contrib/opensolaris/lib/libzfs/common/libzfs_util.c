@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -5702,6 +5702,34 @@ expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
+comment|/* 		 * Special handling for "*_limit=none". In this case it's not 		 * 0 but UINT64_MAX. 		 */
+if|if
+condition|(
+operator|(
+name|type
+operator|&
+name|ZFS_TYPE_DATASET
+operator|)
+operator|&&
+name|isnone
+operator|&&
+operator|(
+name|prop
+operator|==
+name|ZFS_PROP_FILESYSTEM_LIMIT
+operator|||
+name|prop
+operator|==
+name|ZFS_PROP_SNAPSHOT_LIMIT
+operator|)
+condition|)
+block|{
+operator|*
+name|ivalp
+operator|=
+name|UINT64_MAX
+expr_stmt|;
 block|}
 break|break;
 case|case
