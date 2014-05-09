@@ -4163,7 +4163,6 @@ name|rec
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|OQUEST_
 case|:
@@ -4228,7 +4227,6 @@ name|rec
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|OPLUS_
 case|:
@@ -4289,7 +4287,6 @@ name|rec
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|O_PLUS
 case|:
@@ -4401,7 +4398,6 @@ operator|(
 name|dp
 operator|)
 return|;
-break|break;
 case|case
 name|OCH_
 case|:
@@ -4578,6 +4574,7 @@ name|O_CH
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* NOTREACHED */
 break|break;
 case|case
 name|OLPAREN
@@ -4679,7 +4676,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-break|break;
 case|case
 name|ORPAREN
 case|:
@@ -4780,7 +4776,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-break|break;
 default|default:
 comment|/* uh oh */
 name|assert

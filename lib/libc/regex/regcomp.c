@@ -3949,7 +3949,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 comment|/* NOTE RETURN */
-break|break;
 default|default:
 name|c
 operator|=
