@@ -89,6 +89,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DWC_OTG_SLOT_IDLE_MIN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|DWC_OTG_READ_4
 parameter_list|(
 name|sc
