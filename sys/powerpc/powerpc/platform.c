@@ -471,11 +471,7 @@ name|PLATFORM_MEM_REGIONS
 argument_list|(
 name|plat_obj
 argument_list|,
-operator|&
 name|pregions
-index|[
-literal|0
-index|]
 argument_list|,
 operator|&
 name|npregions
