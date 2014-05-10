@@ -304,8 +304,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
-name|platform_gpio_init
+name|rk30_gpio_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -2286,7 +2287,7 @@ name|rk30_gpio_sc
 operator|=
 name|sc
 expr_stmt|;
-name|platform_gpio_init
+name|rk30_gpio_init
 argument_list|()
 expr_stmt|;
 return|return
@@ -2821,8 +2822,9 @@ value|4
 end_define
 
 begin_function
+specifier|static
 name|int
-name|platform_gpio_init
+name|rk30_gpio_init
 parameter_list|(
 name|void
 parameter_list|)
