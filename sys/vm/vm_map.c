@@ -12131,6 +12131,16 @@ name|MAP_ENTRY_NEEDS_COPY
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|src_entry
+operator|->
+name|protection
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|pmap_protect
