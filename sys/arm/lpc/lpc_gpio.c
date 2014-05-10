@@ -2347,7 +2347,7 @@ end_function
 
 begin_function
 name|void
-name|platform_gpio_init
+name|lpc_gpio_init
 parameter_list|()
 block|{
 name|bus_space_tag_t

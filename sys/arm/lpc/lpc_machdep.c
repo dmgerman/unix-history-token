@@ -140,7 +140,7 @@ name|void
 parameter_list|)
 block|{
 comment|/* 	 * Set initial values of GPIO output ports 	 */
-name|platform_gpio_init
+name|lpc_gpio_init
 argument_list|()
 expr_stmt|;
 block|}
