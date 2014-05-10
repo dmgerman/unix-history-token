@@ -15869,6 +15869,9 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|have_devid
 name|int
 name|fd
 decl_stmt|;
@@ -15974,6 +15977,15 @@ operator|(
 name|ret
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
