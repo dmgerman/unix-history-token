@@ -1603,6 +1603,9 @@ name|mask
 decl_stmt|,
 name|pinon
 decl_stmt|;
+name|uint32_t
+name|oe
+decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -1860,8 +1863,7 @@ name|mask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Configure all pins as input */
-comment|/* disable interrupts for all pins */
+comment|/* Disable interrupts for all pins. */
 name|GPIO_WRITE
 argument_list|(
 name|sc
@@ -1979,6 +1981,16 @@ name|gpio_npins
 operator|++
 expr_stmt|;
 block|}
+comment|/* Iniatilize the GPIO pins, keep the loader settings. */
+name|oe
+operator|=
+name|GPIO_READ
+argument_list|(
+name|sc
+argument_list|,
+name|AR71XX_GPIO_OE
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|gpio_pins
@@ -2077,6 +2089,16 @@ name|gp_caps
 operator|=
 name|DEFAULT_CAPS
 expr_stmt|;
+if|if
+condition|(
+name|oe
+operator|&
+operator|(
+literal|1
+operator|<<
+name|j
+operator|)
+condition|)
 name|sc
 operator|->
 name|gpio_pins
@@ -2086,22 +2108,19 @@ index|]
 operator|.
 name|gp_flags
 operator|=
-literal|0
+name|GPIO_PIN_OUTPUT
 expr_stmt|;
-name|ar71xx_gpio_pin_configure
-argument_list|(
-name|sc
-argument_list|,
-operator|&
+else|else
 name|sc
 operator|->
 name|gpio_pins
 index|[
 name|i
 index|]
-argument_list|,
-name|DEFAULT_CAPS
-argument_list|)
+operator|.
+name|gp_flags
+operator|=
+name|GPIO_PIN_INPUT
 expr_stmt|;
 name|i
 operator|++
