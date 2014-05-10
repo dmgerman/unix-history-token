@@ -1,25 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_comment
+comment|/* original parser id follows */
+end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|yysccsid
-index|[]
-init|=
-literal|"@(#)yaccpar	1.9 (Berkeley) 02/21/93"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* yysccsid[] = "@(#)yaccpar 1.9 (Berkeley) 02/21/93" */
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* (use YYMAJOR/YYMINOR for ifdefs dependent on parser version) */
+end_comment
 
 begin_define
 define|#
@@ -89,7 +79,7 @@ begin_line
 line|#
 directive|line
 number|39
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 end_line
 
 begin_include
@@ -223,7 +213,7 @@ begin_line
 line|#
 directive|line
 number|64
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 end_line
 
 begin_ifdef
@@ -289,7 +279,7 @@ begin_line
 line|#
 directive|line
 number|54
-file|"util/configparser.c"
+file|"y.tab.c"
 end_line
 
 begin_comment
@@ -8393,7 +8383,7 @@ begin_line
 line|#
 directive|line
 number|1277
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 end_line
 
 begin_comment
@@ -8404,7 +8394,7 @@ begin_line
 line|#
 directive|line
 number|845
-file|"util/configparser.c"
+file|"y.tab.c"
 end_line
 
 begin_if
@@ -9475,7 +9465,7 @@ case|:
 line|#
 directive|line
 number|118
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -9492,7 +9482,7 @@ case|:
 line|#
 directive|line
 number|167
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|struct
 name|config_stub
@@ -9562,7 +9552,7 @@ case|:
 line|#
 directive|line
 number|183
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|struct
 name|config_stub
@@ -9632,7 +9622,7 @@ case|:
 line|#
 directive|line
 number|199
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -9726,7 +9716,7 @@ case|:
 line|#
 directive|line
 number|208
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -9820,7 +9810,7 @@ case|:
 line|#
 directive|line
 number|217
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -9941,7 +9931,7 @@ case|:
 line|#
 directive|line
 number|228
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10043,7 +10033,7 @@ case|:
 line|#
 directive|line
 number|237
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10145,7 +10135,7 @@ case|:
 line|#
 directive|line
 number|246
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10223,7 +10213,7 @@ case|:
 line|#
 directive|line
 number|255
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10346,7 +10336,7 @@ case|:
 line|#
 directive|line
 number|268
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10469,7 +10459,7 @@ case|:
 line|#
 directive|line
 number|283
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10547,7 +10537,7 @@ case|:
 line|#
 directive|line
 number|292
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10615,7 +10605,7 @@ case|:
 line|#
 directive|line
 number|301
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10683,7 +10673,7 @@ case|:
 line|#
 directive|line
 number|310
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10777,7 +10767,7 @@ case|:
 line|#
 directive|line
 number|319
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10871,7 +10861,7 @@ case|:
 line|#
 directive|line
 number|328
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -10973,7 +10963,7 @@ case|:
 line|#
 directive|line
 number|337
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11075,7 +11065,7 @@ case|:
 line|#
 directive|line
 number|346
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11177,7 +11167,7 @@ case|:
 line|#
 directive|line
 number|355
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11279,7 +11269,7 @@ case|:
 line|#
 directive|line
 number|364
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11381,7 +11371,7 @@ case|:
 line|#
 directive|line
 number|373
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11483,7 +11473,7 @@ case|:
 line|#
 directive|line
 number|382
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11585,7 +11575,7 @@ case|:
 line|#
 directive|line
 number|391
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11635,7 +11625,7 @@ case|:
 line|#
 directive|line
 number|398
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11685,7 +11675,7 @@ case|:
 line|#
 directive|line
 number|405
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11763,7 +11753,7 @@ case|:
 line|#
 directive|line
 number|414
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -11865,7 +11855,7 @@ case|:
 line|#
 directive|line
 number|423
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12006,7 +11996,7 @@ case|:
 line|#
 directive|line
 number|437
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12108,7 +12098,7 @@ case|:
 line|#
 directive|line
 number|446
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12210,7 +12200,7 @@ case|:
 line|#
 directive|line
 number|455
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12260,7 +12250,7 @@ case|:
 line|#
 directive|line
 number|462
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12310,7 +12300,7 @@ case|:
 line|#
 directive|line
 number|469
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12360,7 +12350,7 @@ case|:
 line|#
 directive|line
 number|476
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12418,7 +12408,7 @@ case|:
 line|#
 directive|line
 number|484
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12468,7 +12458,7 @@ case|:
 line|#
 directive|line
 number|491
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12521,7 +12511,7 @@ case|:
 line|#
 directive|line
 number|498
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12571,7 +12561,7 @@ case|:
 line|#
 directive|line
 number|505
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12624,7 +12614,7 @@ case|:
 line|#
 directive|line
 number|512
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12677,7 +12667,7 @@ case|:
 line|#
 directive|line
 number|520
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12730,7 +12720,7 @@ case|:
 line|#
 directive|line
 number|528
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12783,7 +12773,7 @@ case|:
 line|#
 directive|line
 number|536
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12836,7 +12826,7 @@ case|:
 line|#
 directive|line
 number|543
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12889,7 +12879,7 @@ case|:
 line|#
 directive|line
 number|550
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -12991,7 +12981,7 @@ case|:
 line|#
 directive|line
 number|559
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13093,7 +13083,7 @@ case|:
 line|#
 directive|line
 number|568
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13143,7 +13133,7 @@ case|:
 line|#
 directive|line
 number|575
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13193,7 +13183,7 @@ case|:
 line|#
 directive|line
 number|582
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13258,7 +13248,7 @@ case|:
 line|#
 directive|line
 number|590
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13323,7 +13313,7 @@ case|:
 line|#
 directive|line
 number|598
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13448,7 +13438,7 @@ case|:
 line|#
 directive|line
 number|611
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13548,7 +13538,7 @@ case|:
 line|#
 directive|line
 number|622
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13613,7 +13603,7 @@ case|:
 line|#
 directive|line
 number|630
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13710,7 +13700,7 @@ case|:
 line|#
 directive|line
 number|643
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13788,7 +13778,7 @@ case|:
 line|#
 directive|line
 number|652
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13882,7 +13872,7 @@ case|:
 line|#
 directive|line
 number|661
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -13947,7 +13937,7 @@ case|:
 line|#
 directive|line
 number|669
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14044,7 +14034,7 @@ case|:
 line|#
 directive|line
 number|682
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14138,7 +14128,7 @@ case|:
 line|#
 directive|line
 number|691
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14193,7 +14183,7 @@ case|:
 line|#
 directive|line
 number|699
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14271,7 +14261,7 @@ case|:
 line|#
 directive|line
 number|708
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14326,7 +14316,7 @@ case|:
 line|#
 directive|line
 number|716
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14423,7 +14413,7 @@ case|:
 line|#
 directive|line
 number|729
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14473,7 +14463,7 @@ case|:
 line|#
 directive|line
 number|736
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14575,7 +14565,7 @@ case|:
 line|#
 directive|line
 number|746
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14677,7 +14667,7 @@ case|:
 line|#
 directive|line
 number|756
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14779,7 +14769,7 @@ case|:
 line|#
 directive|line
 number|766
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14881,7 +14871,7 @@ case|:
 line|#
 directive|line
 number|776
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -14983,7 +14973,7 @@ case|:
 line|#
 directive|line
 number|786
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15085,7 +15075,7 @@ case|:
 line|#
 directive|line
 number|796
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15187,7 +15177,7 @@ case|:
 line|#
 directive|line
 number|806
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15240,7 +15230,7 @@ case|:
 line|#
 directive|line
 number|813
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15293,7 +15283,7 @@ case|:
 line|#
 directive|line
 number|820
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15395,7 +15385,7 @@ case|:
 line|#
 directive|line
 number|829
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15497,7 +15487,7 @@ case|:
 line|#
 directive|line
 number|838
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15591,7 +15581,7 @@ case|:
 line|#
 directive|line
 number|847
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15644,7 +15634,7 @@ case|:
 line|#
 directive|line
 number|854
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15746,7 +15736,7 @@ case|:
 line|#
 directive|line
 number|864
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15896,7 +15886,7 @@ case|:
 line|#
 directive|line
 number|878
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -15946,7 +15936,7 @@ case|:
 line|#
 directive|line
 number|885
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16119,7 +16109,7 @@ case|:
 line|#
 directive|line
 number|903
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16234,7 +16224,7 @@ case|:
 line|#
 directive|line
 number|916
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16349,7 +16339,7 @@ case|:
 line|#
 directive|line
 number|929
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16443,7 +16433,7 @@ case|:
 line|#
 directive|line
 number|938
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16537,7 +16527,7 @@ case|:
 line|#
 directive|line
 number|947
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16631,7 +16621,7 @@ case|:
 line|#
 directive|line
 number|956
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16733,7 +16723,7 @@ case|:
 line|#
 directive|line
 number|966
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16835,7 +16825,7 @@ case|:
 line|#
 directive|line
 number|976
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -16937,7 +16927,7 @@ case|:
 line|#
 directive|line
 number|985
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17031,7 +17021,7 @@ case|:
 line|#
 directive|line
 number|994
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17081,7 +17071,7 @@ case|:
 line|#
 directive|line
 number|1001
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17175,7 +17165,7 @@ case|:
 line|#
 directive|line
 number|1010
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17269,7 +17259,7 @@ case|:
 line|#
 directive|line
 number|1019
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17363,7 +17353,7 @@ case|:
 line|#
 directive|line
 number|1028
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17428,7 +17418,7 @@ case|:
 line|#
 directive|line
 number|1036
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17525,7 +17515,7 @@ case|:
 line|#
 directive|line
 number|1049
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17590,7 +17580,7 @@ case|:
 line|#
 directive|line
 number|1057
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17848,7 +17838,7 @@ case|:
 line|#
 directive|line
 number|1079
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -17901,7 +17891,7 @@ case|:
 line|#
 directive|line
 number|1086
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|char
 modifier|*
@@ -17991,7 +17981,7 @@ case|:
 line|#
 directive|line
 number|1101
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18093,7 +18083,7 @@ case|:
 line|#
 directive|line
 number|1111
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18195,7 +18185,7 @@ case|:
 line|#
 directive|line
 number|1121
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18265,7 +18255,7 @@ case|:
 line|#
 directive|line
 number|1131
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18320,7 +18310,7 @@ case|:
 line|#
 directive|line
 number|1138
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18375,7 +18365,7 @@ case|:
 line|#
 directive|line
 number|1145
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18479,7 +18469,7 @@ case|:
 line|#
 directive|line
 number|1154
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18583,7 +18573,7 @@ case|:
 line|#
 directive|line
 number|1164
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18653,7 +18643,7 @@ case|:
 line|#
 directive|line
 number|1174
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18708,7 +18698,7 @@ case|:
 line|#
 directive|line
 number|1181
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18763,7 +18753,7 @@ case|:
 line|#
 directive|line
 number|1188
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18867,7 +18857,7 @@ case|:
 line|#
 directive|line
 number|1197
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18884,7 +18874,7 @@ case|:
 line|#
 directive|line
 number|1208
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -18986,7 +18976,7 @@ case|:
 line|#
 directive|line
 number|1218
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19064,7 +19054,7 @@ case|:
 line|#
 directive|line
 number|1227
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19117,7 +19107,7 @@ case|:
 line|#
 directive|line
 number|1234
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19167,7 +19157,7 @@ case|:
 line|#
 directive|line
 number|1241
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19217,7 +19207,7 @@ case|:
 line|#
 directive|line
 number|1248
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19267,7 +19257,7 @@ case|:
 line|#
 directive|line
 number|1255
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19317,7 +19307,7 @@ case|:
 line|#
 directive|line
 number|1262
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19334,7 +19324,7 @@ case|:
 line|#
 directive|line
 number|1271
-file|"util/configparser.y"
+file|"/home/rpaulo/freebsd-svn/stable/10/lib/libunbound/../../contrib/unbound/util/configparser.y"
 block|{
 name|OUTYY
 argument_list|(
@@ -19381,7 +19371,7 @@ break|break;
 line|#
 directive|line
 number|2269
-file|"util/configparser.c"
+file|"y.tab.c"
 block|}
 name|yystack
 operator|.
