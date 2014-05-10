@@ -1603,11 +1603,6 @@ name|mask
 decl_stmt|,
 name|pinon
 decl_stmt|;
-name|int
-name|old
-init|=
-literal|0
-decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -1823,10 +1818,6 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-name|old
-operator|=
-literal|1
-expr_stmt|;
 block|}
 comment|/* Disable function bits that are required */
 if|if
@@ -1866,33 +1857,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|mask
-argument_list|)
-expr_stmt|;
-name|old
-operator|=
-literal|1
-expr_stmt|;
-block|}
-comment|/* Handle previous behaviour */
-if|if
-condition|(
-name|old
-operator|==
-literal|0
-condition|)
-block|{
-name|ar71xx_gpio_function_enable
-argument_list|(
-name|sc
-argument_list|,
-name|GPIO_FUNC_SPI_CS1_EN
-argument_list|)
-expr_stmt|;
-name|ar71xx_gpio_function_enable
-argument_list|(
-name|sc
-argument_list|,
-name|GPIO_FUNC_SPI_CS2_EN
 argument_list|)
 expr_stmt|;
 block|}
@@ -2273,20 +2237,6 @@ argument_list|,
 operator|(
 literal|"gpio mutex not initialized"
 operator|)
-argument_list|)
-expr_stmt|;
-name|ar71xx_gpio_function_disable
-argument_list|(
-name|sc
-argument_list|,
-name|GPIO_FUNC_SPI_CS1_EN
-argument_list|)
-expr_stmt|;
-name|ar71xx_gpio_function_disable
-argument_list|(
-name|sc
-argument_list|,
-name|GPIO_FUNC_SPI_CS2_EN
 argument_list|)
 expr_stmt|;
 name|bus_generic_detach
