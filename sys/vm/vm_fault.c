@@ -5011,6 +5011,11 @@ argument_list|)
 expr_stmt|;
 name|VM_WAIT
 expr_stmt|;
+name|VM_OBJECT_WLOCK
+argument_list|(
+name|dst_object
+argument_list|)
+expr_stmt|;
 goto|goto
 name|again
 goto|;
