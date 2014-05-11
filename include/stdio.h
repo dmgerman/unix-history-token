@@ -1353,9 +1353,13 @@ if|#
 directive|if
 name|__BSD_VISIBLE
 operator|||
+operator|(
+name|__POSIX_VISIBLE
+operator|&&
 name|__POSIX_VISIBLE
 operator|<=
 literal|199506
+operator|)
 end_if
 
 begin_define
