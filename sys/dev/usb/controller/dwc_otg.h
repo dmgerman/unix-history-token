@@ -96,6 +96,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|DWC_OTG_NAK_MAX
+value|8
+end_define
+
+begin_comment
+comment|/* 1 ms */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DWC_OTG_READ_4
 parameter_list|(
 name|sc
@@ -204,6 +215,10 @@ name|uint8_t
 name|tmr_val
 decl_stmt|;
 name|uint8_t
+name|did_nak
+decl_stmt|;
+comment|/* NAK counter */
+name|uint8_t
 name|ep_no
 decl_stmt|;
 name|uint8_t
@@ -300,11 +315,6 @@ literal|1
 decl_stmt|;
 name|uint8_t
 name|got_short
-range|:
-literal|1
-decl_stmt|;
-name|uint8_t
-name|did_nak
 range|:
 literal|1
 decl_stmt|;
