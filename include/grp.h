@@ -114,8 +114,6 @@ begin_function_decl
 name|__BEGIN_DECLS
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__POSIX_VISIBLE
 operator|>=
 literal|200112
@@ -255,8 +253,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__XSI_VISIBLE
 end_if
 
@@ -281,8 +277,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__POSIX_VISIBLE
 operator|>=
 literal|200112

@@ -34,8 +34,6 @@ end_include
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__XSI_VISIBLE
 end_if
 

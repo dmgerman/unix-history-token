@@ -67,8 +67,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__POSIX_VISIBLE
 operator|>=
 literal|200809
@@ -130,8 +128,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__POSIX_VISIBLE
 operator|>=
 literal|200112
@@ -1728,8 +1724,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__POSIX_VISIBLE
 operator|>=
 literal|200809
@@ -2024,7 +2018,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __BSD_VISIBLE || __POSIX_VISIBLE>= 200809 */
+comment|/* __POSIX_VISIBLE>= 200809 */
 end_comment
 
 begin_comment
