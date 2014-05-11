@@ -7953,6 +7953,7 @@ name|protection
 operator|=
 name|new_prot
 expr_stmt|;
+comment|/* 		 * For user wired map entries, the normal lazy evaluation of 		 * write access upgrades through soft page faults is 		 * undesirable.  Instead, immediately copy any pages that are 		 * copy-on-write and enable write access in the physical map. 		 */
 if|if
 condition|(
 operator|(
@@ -7960,18 +7961,10 @@ name|current
 operator|->
 name|eflags
 operator|&
-operator|(
-name|MAP_ENTRY_COW
-operator||
 name|MAP_ENTRY_USER_WIRED
 operator|)
-operator|)
-operator|==
-operator|(
-name|MAP_ENTRY_COW
-operator||
-name|MAP_ENTRY_USER_WIRED
-operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|current
@@ -7992,6 +7985,17 @@ operator|==
 literal|0
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|old_prot
+operator|!=
+name|VM_PROT_NONE
+argument_list|,
+operator|(
+literal|"vm_map_protect: inaccessible wired map entry"
+operator|)
+argument_list|)
+expr_stmt|;
 name|vm_fault_copy_entry
 argument_list|(
 name|map
