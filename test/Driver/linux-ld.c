@@ -2732,7 +2732,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Check that crtfastmath.o is linked with -ffast-math.
+comment|// Check that crtfastmath.o is linked with -ffast-math and with -Ofast.
 end_comment
 
 begin_comment
@@ -2772,6 +2772,42 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -Ofast\
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -Ofast -O3\
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOCRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -O3 -Ofast\
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -ffast-math -fno-fast-math \
 end_comment
 
@@ -2781,6 +2817,54 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-NOCRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -Ofast -fno-fast-math \
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -Ofast -fno-unsafe-math-optimizations \
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -fno-fast-math -Ofast  \
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -fno-unsafe-math-optimizations -Ofast \
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CRTFASTMATH %s
 end_comment
 
 begin_comment

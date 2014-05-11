@@ -8,6 +8,26 @@ comment|// RUN:   -no-integrated-as -static -dynamic 2>%t
 end_comment
 
 begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-STATIC_AND_DYNAMIC-32-DARWIN10 --input-file %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-STATIC_AND_DYNAMIC-32-DARWIN10: as{{(.exe)?}}" "-arch" "i386" "-force_cpusubtype_ALL" "-static" "-o"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-darwin11 -### -x assembler -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -static -dynamic 2>%t
+end_comment
+
+begin_comment
 comment|// RUN: FileCheck -check-prefix=CHECK-STATIC_AND_DYNAMIC-32 --input-file %t %s
 end_comment
 
@@ -20,7 +40,7 @@ comment|// CHECK-STATIC_AND_DYNAMIC-32: as{{(.exe)?}}" "-Q" "-arch" "i386" "-for
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-apple-darwin10 -### -x assembler -c %s \
+comment|// RUN: %clang -target x86_64-apple-darwin11 -### -x assembler -c %s \
 end_comment
 
 begin_comment
@@ -40,7 +60,7 @@ comment|// CHECK-STATIC-64: as{{(.exe)?}}" "-Q" "-arch" "x86_64" "-force_cpusubt
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-apple-darwin10 -### \
+comment|// RUN: %clang -target x86_64-apple-darwin11 -### \
 end_comment
 
 begin_comment
