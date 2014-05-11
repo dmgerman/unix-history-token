@@ -736,8 +736,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 return|return;
 if|if
