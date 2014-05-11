@@ -1082,15 +1082,7 @@ name|FRF_AZ_TX_DESCQ_LABEL_WIDTH
 operator|)
 argument_list|)
 expr_stmt|;
-name|EFSYS_ASSERT3U
-argument_list|(
-name|label
-argument_list|,
-operator|<
-argument_list|,
-name|EFX_EV_TX_NLABELS
-argument_list|)
-expr_stmt|;
+comment|/*	EFSYS_ASSERT3U(label,<, EFX_EV_TX_NLABELS);*/
 name|EFSYS_ASSERT3U
 argument_list|(
 name|enp
