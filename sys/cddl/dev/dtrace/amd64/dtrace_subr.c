@@ -1542,7 +1542,7 @@ name|tsc
 operator|=
 name|rdtsc
 argument_list|()
-operator|+
+operator|-
 name|tsc_skew
 index|[
 name|curcpu
