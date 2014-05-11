@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/devmap.h>
 end_include
 
@@ -314,7 +320,21 @@ name|int
 name|flags
 parameter_list|)
 block|{
-comment|/* Nothing to do. */
+comment|/* 	 * dsb() will drain the L1 write buffer and establish a memory access 	 * barrier point on platforms where that has meaning.  On a write we 	 * also need to drain the L2 write buffer, because most on-chip memory 	 * mapped devices are downstream of the L2 cache.  Note that this needs 	 * to be done even for memory mapped as Device type, because while 	 * Device memory is not cached, writes to it are still buffered. 	 */
+name|dsb
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|BUS_SPACE_BARRIER_WRITE
+condition|)
+block|{
+name|cpu_l2cache_drain_writebuf
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 
