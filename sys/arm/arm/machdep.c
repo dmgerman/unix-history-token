@@ -1883,11 +1883,9 @@ condition|(
 operator|!
 name|busy
 condition|)
-block|{
 name|cpu_idleclock
 argument_list|()
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -1909,11 +1907,9 @@ condition|(
 operator|!
 name|busy
 condition|)
-block|{
 name|cpu_activeclock
 argument_list|()
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|spinlock_exit
