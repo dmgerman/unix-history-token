@@ -1872,6 +1872,9 @@ argument_list|,
 name|curcpu
 argument_list|)
 expr_stmt|;
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_EVENTTIMERS
@@ -1881,9 +1884,6 @@ operator|!
 name|busy
 condition|)
 block|{
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|cpu_idleclock
 argument_list|()
 expr_stmt|;
@@ -1913,12 +1913,12 @@ block|{
 name|cpu_activeclock
 argument_list|()
 expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|spinlock_exit
+argument_list|()
+expr_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_SPARE2
