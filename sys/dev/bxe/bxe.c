@@ -264,7 +264,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57710 10GbE"
+literal|"QLogic NetXtreme II BCM57710 10GbE"
 block|}
 block|,
 block|{
@@ -276,7 +276,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57711 10GbE"
+literal|"QLogic NetXtreme II BCM57711 10GbE"
 block|}
 block|,
 block|{
@@ -288,7 +288,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57711E 10GbE"
+literal|"QLogic NetXtreme II BCM57711E 10GbE"
 block|}
 block|,
 block|{
@@ -300,7 +300,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57712 10GbE"
+literal|"QLogic NetXtreme II BCM57712 10GbE"
 block|}
 block|,
 block|{
@@ -312,13 +312,13 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57712 MF 10GbE"
+literal|"QLogic NetXtreme II BCM57712 MF 10GbE"
 block|}
 block|,
 if|#
 directive|if
 literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57712_VF,         PCI_ANY_ID, PCI_ANY_ID,         "Broadcom NetXtreme II BCM57712 VF 10GbE"     },
+block|{         BRCM_VENDORID,         CHIP_NUM_57712_VF,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57712 VF 10GbE"     },
 endif|#
 directive|endif
 block|{
@@ -330,7 +330,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57800 10GbE"
+literal|"QLogic NetXtreme II BCM57800 10GbE"
 block|}
 block|,
 block|{
@@ -342,13 +342,13 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57800 MF 10GbE"
+literal|"QLogic NetXtreme II BCM57800 MF 10GbE"
 block|}
 block|,
 if|#
 directive|if
 literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57800_VF,         PCI_ANY_ID, PCI_ANY_ID,         "Broadcom NetXtreme II BCM57800 VF 10GbE"     },
+block|{         BRCM_VENDORID,         CHIP_NUM_57800_VF,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57800 VF 10GbE"     },
 endif|#
 directive|endif
 block|{
@@ -360,7 +360,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57810 10GbE"
+literal|"QLogic NetXtreme II BCM57810 10GbE"
 block|}
 block|,
 block|{
@@ -372,13 +372,13 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57810 MF 10GbE"
+literal|"QLogic NetXtreme II BCM57810 MF 10GbE"
 block|}
 block|,
 if|#
 directive|if
 literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57810_VF,         PCI_ANY_ID, PCI_ANY_ID,         "Broadcom NetXtreme II BCM57810 VF 10GbE"     },
+block|{         BRCM_VENDORID,         CHIP_NUM_57810_VF,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57810 VF 10GbE"     },
 endif|#
 directive|endif
 block|{
@@ -390,7 +390,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57811 10GbE"
+literal|"QLogic NetXtreme II BCM57811 10GbE"
 block|}
 block|,
 block|{
@@ -402,13 +402,13 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57811 MF 10GbE"
+literal|"QLogic NetXtreme II BCM57811 MF 10GbE"
 block|}
 block|,
 if|#
 directive|if
 literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57811_VF,         PCI_ANY_ID, PCI_ANY_ID,         "Broadcom NetXtreme II BCM57811 VF 10GbE"     },
+block|{         BRCM_VENDORID,         CHIP_NUM_57811_VF,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57811 VF 10GbE"     },
 endif|#
 directive|endif
 block|{
@@ -420,13 +420,13 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57840 4x10GbE"
+literal|"QLogic NetXtreme II BCM57840 4x10GbE"
 block|}
 block|,
 if|#
 directive|if
 literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57840_2_20,         PCI_ANY_ID, PCI_ANY_ID,         "Broadcom NetXtreme II BCM57840 2x20GbE"     },
+block|{         BRCM_VENDORID,         CHIP_NUM_57840_2_20,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57840 2x20GbE"     },
 endif|#
 directive|endif
 block|{
@@ -438,13 +438,13 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM57840 MF 10GbE"
+literal|"QLogic NetXtreme II BCM57840 MF 10GbE"
 block|}
 block|,
 if|#
 directive|if
 literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57840_VF,         PCI_ANY_ID, PCI_ANY_ID,         "Broadcom NetXtreme II BCM57840 VF 10GbE"     },
+block|{         BRCM_VENDORID,         CHIP_NUM_57840_VF,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57840 VF 10GbE"     },
 endif|#
 directive|endif
 block|{
