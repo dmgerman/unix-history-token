@@ -1735,7 +1735,6 @@ operator|=
 name|usec
 operator|*
 operator|(
-operator|(
 name|am335x_dmtimer_tc
 operator|.
 name|tc_frequency
@@ -1744,7 +1743,6 @@ literal|1000000
 operator|)
 operator|+
 literal|1
-operator|)
 expr_stmt|;
 name|first
 operator|=
