@@ -147,7 +147,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DMTIMER_TIDR
+name|DMT_TIDR
 value|0x00
 end_define
 
@@ -158,177 +158,437 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DMTIMER_TIOCP_CFG
+name|DMT_TIOCP_CFG
 value|0x10
 end_define
 
 begin_comment
-comment|/* Timer OCP Configuration Reg */
+comment|/* OCP Configuration Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_IQR_EOI
+name|DMT_TIOCP_RESET
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* TIOCP perform soft reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_IQR_EOI
 value|0x20
 end_define
 
 begin_comment
-comment|/* Timer IRQ End-Of-Interrupt Reg */
+comment|/* IRQ End-Of-Interrupt Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_IRQSTATUS_RAW
+name|DMT_IRQSTATUS_RAW
 value|0x24
 end_define
 
 begin_comment
-comment|/* Timer IRQSTATUS Raw Reg */
+comment|/* IRQSTATUS Raw Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_IRQSTATUS
+name|DMT_IRQSTATUS
 value|0x28
 end_define
 
 begin_comment
-comment|/* Timer IRQSTATUS Reg */
+comment|/* IRQSTATUS Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_IRQENABLE_SET
+name|DMT_IRQENABLE_SET
 value|0x2c
 end_define
 
 begin_comment
-comment|/* Timer IRQSTATUS Set Reg */
+comment|/* IRQSTATUS Set Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_IRQENABLE_CLR
+name|DMT_IRQENABLE_CLR
 value|0x30
 end_define
 
 begin_comment
-comment|/* Timer IRQSTATUS Clear Reg */
+comment|/* IRQSTATUS Clear Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_IRQWAKEEN
+name|DMT_IRQWAKEEN
 value|0x34
 end_define
 
 begin_comment
-comment|/* Timer IRQ Wakeup Enable Reg */
+comment|/* IRQ Wakeup Enable Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_TCLR
+name|DMT_IRQ_TCAR
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* IRQ: Capture */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_IRQ_OVF
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* IRQ: Overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_IRQ_MAT
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* IRQ: Match */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_IRQ_MASK
+value|(DMT_IRQ_TCAR | DMT_IRQ_OVF | DMT_IRQ_MAT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR
 value|0x38
 end_define
 
 begin_comment
-comment|/* Timer Control Register */
+comment|/* Control Register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_TCRR
+name|DMT_TCLR_START
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Start timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_AUTOLOAD
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Auto-reload on overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_PRES_MASK
+value|(7<< 2)
+end_define
+
+begin_comment
+comment|/* Prescaler mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_PRES_ENABLE
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* Prescaler enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_COMP_ENABLE
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Compare enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_PWM_HIGH
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* PWM default output high */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAPTRAN_MASK
+value|(3<< 8)
+end_define
+
+begin_comment
+comment|/* Capture transition mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAPTRAN_NONE
+value|(0<< 8)
+end_define
+
+begin_comment
+comment|/* Capture: none */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAPTRAN_LOHI
+value|(1<< 8)
+end_define
+
+begin_comment
+comment|/* Capture lo->hi transition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAPTRAN_HILO
+value|(2<< 8)
+end_define
+
+begin_comment
+comment|/* Capture hi->lo transition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAPTRAN_BOTH
+value|(3<< 8)
+end_define
+
+begin_comment
+comment|/* Capture both transitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_TRGMODE_MASK
+value|(3<< 10)
+end_define
+
+begin_comment
+comment|/* Trigger output mode mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_TRGMODE_NONE
+value|(0<< 10)
+end_define
+
+begin_comment
+comment|/* Trigger off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_TRGMODE_OVFL
+value|(1<< 10)
+end_define
+
+begin_comment
+comment|/* Trigger on overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_TRGMODE_BOTH
+value|(2<< 10)
+end_define
+
+begin_comment
+comment|/* Trigger on match + ovflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_PWM_PTOGGLE
+value|(1<< 12)
+end_define
+
+begin_comment
+comment|/* PWM toggles */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_CAP_MODE_2ND
+value|(1<< 13)
+end_define
+
+begin_comment
+comment|/* Capture second event mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCLR_GPO_CFG
+value|(1<< 14)
+end_define
+
+begin_comment
+comment|/* (no descr in datasheet) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCRR
 value|0x3C
 end_define
 
 begin_comment
-comment|/* Timer Counter Register */
+comment|/* Counter Register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_TLDR
+name|DMT_TLDR
 value|0x40
 end_define
 
 begin_comment
-comment|/* Timer Load Reg */
+comment|/* Load Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_TTGR
+name|DMT_TTGR
 value|0x44
 end_define
 
 begin_comment
-comment|/* Timer Trigger Reg */
+comment|/* Trigger Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_TWPS
+name|DMT_TWPS
 value|0x48
 end_define
 
 begin_comment
-comment|/* Timer Write Posted Status Reg */
+comment|/* Write Posted Status Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_TMAR
+name|DMT_TMAR
 value|0x4C
 end_define
 
 begin_comment
-comment|/* Timer Match Reg */
+comment|/* Match Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_TCAR1
+name|DMT_TCAR1
 value|0x50
 end_define
 
 begin_comment
-comment|/* Timer Capture Reg */
+comment|/* Capture Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_TSICR
+name|DMT_TSICR
 value|0x54
 end_define
 
 begin_comment
-comment|/* Timer Synchr. Interface Control Reg */
+comment|/* Synchr. Interface Ctrl Reg */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMTIMER_TCAR2
+name|DMT_TSICR_RESET
+value|0x02
+end_define
+
+begin_comment
+comment|/* TSICR perform soft reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMT_TCAR2
 value|0x48
 end_define
 
 begin_comment
-comment|/* Timer Capture Reg */
+comment|/* Capture Reg */
 end_comment
 
 begin_struct
@@ -679,7 +939,7 @@ block|{
 return|return
 name|am335x_dmtimer_tc_read_4
 argument_list|(
-name|DMTIMER_TCRR
+name|DMT_TCRR
 argument_list|)
 return|;
 block|}
@@ -795,7 +1055,7 @@ expr_stmt|;
 comment|/* Reset Timer */
 name|am335x_dmtimer_et_write_4
 argument_list|(
-name|DMTIMER_TSICR
+name|DMT_TSICR
 argument_list|,
 literal|2
 argument_list|)
@@ -805,7 +1065,7 @@ while|while
 condition|(
 name|am335x_dmtimer_et_read_4
 argument_list|(
-name|DMTIMER_TIOCP_CFG
+name|DMT_TIOCP_CFG
 argument_list|)
 operator|&
 literal|1
@@ -814,7 +1074,7 @@ empty_stmt|;
 comment|/* set load value */
 name|am335x_dmtimer_et_write_4
 argument_list|(
-name|DMTIMER_TLDR
+name|DMT_TLDR
 argument_list|,
 literal|0xFFFFFFFE
 operator|-
@@ -824,7 +1084,7 @@ expr_stmt|;
 comment|/* set counter value */
 name|am335x_dmtimer_et_write_4
 argument_list|(
-name|DMTIMER_TCRR
+name|DMT_TCRR
 argument_list|,
 literal|0xFFFFFFFE
 operator|-
@@ -834,7 +1094,7 @@ expr_stmt|;
 comment|/* enable overflow interrupt */
 name|am335x_dmtimer_et_write_4
 argument_list|(
-name|DMTIMER_IRQENABLE_SET
+name|DMT_IRQENABLE_SET
 argument_list|,
 literal|2
 argument_list|)
@@ -846,7 +1106,7 @@ literal|1
 expr_stmt|;
 name|am335x_dmtimer_et_write_4
 argument_list|(
-name|DMTIMER_TCLR
+name|DMT_TCLR
 argument_list|,
 name|tclr
 argument_list|)
@@ -887,7 +1147,7 @@ decl_stmt|;
 comment|/* Disable all interrupts */
 name|am335x_dmtimer_et_write_4
 argument_list|(
-name|DMTIMER_IRQENABLE_CLR
+name|DMT_IRQENABLE_CLR
 argument_list|,
 literal|7
 argument_list|)
@@ -895,7 +1155,7 @@ expr_stmt|;
 comment|/* Stop Timer */
 name|am335x_dmtimer_et_write_4
 argument_list|(
-name|DMTIMER_TCLR
+name|DMT_TCLR
 argument_list|,
 literal|0
 argument_list|)
@@ -933,7 +1193,7 @@ decl_stmt|;
 comment|/* Ack interrupt */
 name|am335x_dmtimer_et_write_4
 argument_list|(
-name|DMTIMER_IRQSTATUS
+name|DMT_IRQSTATUS
 argument_list|,
 literal|7
 argument_list|)
@@ -1282,7 +1542,7 @@ expr_stmt|;
 comment|/* Reset Timer */
 name|am335x_dmtimer_tc_write_4
 argument_list|(
-name|DMTIMER_TSICR
+name|DMT_TSICR
 argument_list|,
 literal|2
 argument_list|)
@@ -1292,7 +1552,7 @@ while|while
 condition|(
 name|am335x_dmtimer_tc_read_4
 argument_list|(
-name|DMTIMER_TIOCP_CFG
+name|DMT_TIOCP_CFG
 argument_list|)
 operator|&
 literal|1
@@ -1301,7 +1561,7 @@ empty_stmt|;
 comment|/* set load value */
 name|am335x_dmtimer_tc_write_4
 argument_list|(
-name|DMTIMER_TLDR
+name|DMT_TLDR
 argument_list|,
 literal|0
 argument_list|)
@@ -1309,7 +1569,7 @@ expr_stmt|;
 comment|/* set counter value */
 name|am335x_dmtimer_tc_write_4
 argument_list|(
-name|DMTIMER_TCRR
+name|DMT_TCRR
 argument_list|,
 literal|0
 argument_list|)
@@ -1317,7 +1577,7 @@ expr_stmt|;
 comment|/* Set Timer autoreload(AR) and start timer(ST) */
 name|am335x_dmtimer_tc_write_4
 argument_list|(
-name|DMTIMER_TCLR
+name|DMT_TCLR
 argument_list|,
 literal|3
 argument_list|)
@@ -1748,7 +2008,7 @@ name|first
 operator|=
 name|am335x_dmtimer_tc_read_4
 argument_list|(
-name|DMTIMER_TCRR
+name|DMT_TCRR
 argument_list|)
 expr_stmt|;
 while|while
@@ -1762,7 +2022,7 @@ name|last
 operator|=
 name|am335x_dmtimer_tc_read_4
 argument_list|(
-name|DMTIMER_TCRR
+name|DMT_TCRR
 argument_list|)
 expr_stmt|;
 if|if
