@@ -4124,6 +4124,11 @@ argument_list|(
 name|inhistory
 argument_list|)
 expr_stmt|;
+name|el_end
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
