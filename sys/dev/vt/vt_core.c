@@ -9983,7 +9983,15 @@ operator||
 name|VDF_DEAD
 operator|)
 condition|)
+block|{
+comment|/* Refill settings with new sizes anyway. */
+name|vt_resize
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|vd
 operator|->
 name|vd_flags
