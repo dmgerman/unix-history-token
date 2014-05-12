@@ -619,14 +619,9 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|malloc
-argument_list|(
-name|strlen
+name|strdup
 argument_list|(
 name|str
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -634,18 +629,11 @@ condition|(
 operator|!
 name|ret
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|3
 argument_list|,
-literal|"memory allocation error"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|ret
-argument_list|,
-name|str
+literal|"dupstr"
 argument_list|)
 expr_stmt|;
 return|return
