@@ -3620,7 +3620,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fqvUV:"
+literal|"f:qvUV"
 argument_list|)
 operator|)
 operator|!=
@@ -3678,6 +3678,17 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+literal|'V'
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"FreeBSD units\n"
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 literal|'U'
 case|:
 if|if
@@ -3708,20 +3719,6 @@ name|exit
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'V'
-case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"FreeBSD units\n"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
 expr_stmt|;
 break|break;
 default|default:
