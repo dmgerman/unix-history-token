@@ -4649,6 +4649,17 @@ name|g_part_gpt_entry
 modifier|*
 name|entry
 decl_stmt|;
+if|if
+condition|(
+name|baseentry
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 name|entry
 operator|=
 operator|(
