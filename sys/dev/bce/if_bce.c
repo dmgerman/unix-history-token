@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006-2010 Broadcom Corporation  *	David Christensen<davidch@broadcom.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Broadcom Corporation nor the name of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written consent.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2006-2014 QLogic Corporation  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -259,7 +259,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM5706 1000Base-T"
+literal|"QLogic NetXtreme II BCM5706 1000Base-T"
 block|}
 block|,
 comment|/* BCM5706S controllers and OEM boards. */
@@ -284,7 +284,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM5706 1000Base-SX"
+literal|"QLogic NetXtreme II BCM5706 1000Base-SX"
 block|}
 block|,
 comment|/* BCM5708C controllers and OEM boards. */
@@ -333,7 +333,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM5708 1000Base-T"
+literal|"QLogic NetXtreme II BCM5708 1000Base-T"
 block|}
 block|,
 comment|/* BCM5708S controllers and OEM boards. */
@@ -382,7 +382,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM5708 1000Base-SX"
+literal|"QLogic NetXtreme II BCM5708 1000Base-SX"
 block|}
 block|,
 comment|/* BCM5709C controllers and OEM boards. */
@@ -419,7 +419,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM5709 1000Base-T"
+literal|"QLogic NetXtreme II BCM5709 1000Base-T"
 block|}
 block|,
 comment|/* BCM5709S controllers and OEM boards. */
@@ -456,7 +456,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM5709 1000Base-SX"
+literal|"QLogic NetXtreme II BCM5709 1000Base-SX"
 block|}
 block|,
 comment|/* BCM5716 controllers and OEM boards. */
@@ -469,7 +469,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM5716 1000Base-T"
+literal|"QLogic NetXtreme II BCM5716 1000Base-T"
 block|}
 block|,
 block|{
