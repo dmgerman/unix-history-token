@@ -17008,7 +17008,7 @@ modifier|*
 modifier|*
 name|inp_p
 parameter_list|,
-name|in_port_t
+name|uint16_t
 name|port
 parameter_list|,
 name|struct
