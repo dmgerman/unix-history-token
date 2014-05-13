@@ -1097,7 +1097,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|ihandle_t
+name|phandle_t
 name|iph
 decl_stmt|;
 name|pcell_t
@@ -1253,7 +1253,7 @@ argument_list|)
 expr_stmt|;
 name|intr_par
 operator|=
-name|OF_instance_to_package
+name|OF_xref_phandle
 argument_list|(
 name|iph
 argument_list|)

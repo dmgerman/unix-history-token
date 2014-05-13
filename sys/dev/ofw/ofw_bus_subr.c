@@ -993,7 +993,7 @@ name|msksz
 decl_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1030,7 +1030,7 @@ name|ii
 operator|->
 name|opi_imapsz
 operator|=
-name|OF_getprop_alloc
+name|OF_getencprop_alloc
 argument_list|(
 name|node
 argument_list|,
@@ -1060,7 +1060,7 @@ condition|)
 block|{
 name|msksz
 operator|=
-name|OF_getprop_alloc
+name|OF_getencprop_alloc
 argument_list|(
 name|node
 argument_list|,
@@ -1192,7 +1192,7 @@ condition|)
 block|{
 name|rv
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1474,7 +1474,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_searchprop
+name|OF_searchencprop
 argument_list|(
 name|OF_xref_phandle
 argument_list|(

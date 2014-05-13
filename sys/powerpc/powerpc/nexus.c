@@ -999,7 +999,7 @@ name|acells
 operator|=
 literal|2
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1024,7 +1024,7 @@ name|scells
 operator|=
 literal|1
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2657,7 +2657,7 @@ argument_list|)
 expr_stmt|;
 name|nreg
 operator|=
-name|OF_getprop_alloc
+name|OF_getencprop_alloc
 argument_list|(
 name|node
 argument_list|,
@@ -2858,7 +2858,7 @@ argument_list|)
 expr_stmt|;
 name|nintr
 operator|=
-name|OF_getprop_alloc
+name|OF_getencprop_alloc
 argument_list|(
 name|node
 argument_list|,
