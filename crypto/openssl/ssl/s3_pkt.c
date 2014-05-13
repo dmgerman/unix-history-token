@@ -2278,6 +2278,27 @@ name|i
 operator|)
 return|;
 comment|/* if it went, fall through and send more stuff */
+comment|/* we may have released our buffer, so get it again */
+if|if
+condition|(
+name|wb
+operator|->
+name|buf
+operator|==
+name|NULL
+condition|)
+if|if
+condition|(
+operator|!
+name|ssl3_setup_write_buffer
+argument_list|(
+name|s
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 block|}
 if|if
 condition|(
