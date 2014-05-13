@@ -22852,9 +22852,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|PR_SCTP_ENABLED
+argument_list|(
 name|tp1
 operator|->
-name|pr_sctp_on
+name|flags
+argument_list|)
 condition|)
 block|{
 if|if
