@@ -10090,6 +10090,12 @@ operator|->
 name|flags_int
 operator|.
 name|short_frames_ok
+operator|||
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|isochronous_xfr
 expr_stmt|;
 name|temp
 operator|.
@@ -11338,6 +11344,12 @@ operator|->
 name|flags_int
 operator|.
 name|short_frames_ok
+operator|||
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|isochronous_xfr
 condition|)
 block|{
 comment|/* follow alt next */
