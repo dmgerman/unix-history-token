@@ -2035,9 +2035,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|AIM
 comment|/* 	 * Don't let the user set privileged MSR bits 	 */
 if|if
 condition|(
@@ -2064,8 +2061,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 comment|/* Copy trapframe, preserving TLS pointer across context change */
 if|if
 condition|(
@@ -2835,8 +2830,6 @@ name|tf
 operator|->
 name|srr1
 operator|=
-name|PSL_MBO
-operator||
 name|PSL_USERSET
 operator||
 name|PSL_FE_DFLT
@@ -5150,8 +5143,6 @@ name|tf
 operator|->
 name|srr1
 operator|=
-name|PSL_MBO
-operator||
 name|PSL_USERSET
 operator||
 name|PSL_FE_DFLT
@@ -5247,8 +5238,6 @@ operator|->
 name|srr1
 operator|=
 name|PSL_SF
-operator||
-name|PSL_MBO
 operator||
 name|PSL_USERSET
 operator||
