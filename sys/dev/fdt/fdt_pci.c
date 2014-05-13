@@ -1427,7 +1427,7 @@ name|powerpc_config_intr
 argument_list|(
 name|FDT_MAP_IRQ
 argument_list|(
-name|intr_par
+name|iph
 argument_list|,
 operator|*
 name|interrupt
