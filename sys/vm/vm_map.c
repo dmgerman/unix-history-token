@@ -12121,6 +12121,16 @@ operator|->
 name|wired_count
 operator|==
 literal|0
+operator|||
+operator|(
+name|src_entry
+operator|->
+name|protection
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * If the source entry is marked needs_copy, it is already 		 * write-protected. 		 */
@@ -12580,7 +12590,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Of course, wired down pages can't be set copy-on-write. 		 * Cause wired pages to be copied into the new map by 		 * simulating faults (the new pages are pageable) 		 */
+comment|/* 		 * We don't want to make writeable wired pages copy-on-write. 		 * Immediately copy these pages into the new map by simulating 		 * page faults.  The new pages are pageable. 		 */
 name|vm_fault_copy_entry
 argument_list|(
 name|dst_map
