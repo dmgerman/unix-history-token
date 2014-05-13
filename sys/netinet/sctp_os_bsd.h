@@ -386,6 +386,18 @@ directive|include
 file|<netinet/ip_options.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<crypto/sha1.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<crypto/sha2/sha2.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1993,12 +2005,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_SHA2
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_READ_RANDOM
 parameter_list|(
 name|buf
@@ -2008,29 +2014,6 @@ parameter_list|)
 value|read_random(buf, len)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_SCTP_SHA1
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/sctp_sha1.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<crypto/sha1.h>
-end_include
-
 begin_comment
 comment|/* map standard crypto API names */
 end_comment
@@ -2038,21 +2021,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SHA1_Init
+name|SCTP_SHA1_CTX
+value|SHA1_CTX
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SHA1_INIT
 value|SHA1Init
 end_define
 
 begin_define
 define|#
 directive|define
-name|SHA1_Update
+name|SCTP_SHA1_UPDATE
 value|SHA1Update
 end_define
 
 begin_define
 define|#
 directive|define
-name|SHA1_Final
+name|SCTP_SHA1_FINAL
 parameter_list|(
 name|x
 parameter_list|,
@@ -2061,30 +2051,38 @@ parameter_list|)
 value|SHA1Final((caddr_t)x, y)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|SCTP_SHA256_CTX
+value|SHA256_CTX
+end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SHA2
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|SCTP_SHA256_INIT
+value|SHA256_Init
+end_define
 
-begin_include
-include|#
-directive|include
-file|<crypto/sha2/sha2.h>
-end_include
+begin_define
+define|#
+directive|define
+name|SCTP_SHA256_UPDATE
+value|SHA256_Update
+end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|SCTP_SHA256_FINAL
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|SHA256_Final((caddr_t)x, y)
+end_define
 
 begin_endif
 endif|#
