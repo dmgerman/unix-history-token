@@ -698,8 +698,10 @@ literal|1
 condition|)
 name|irq
 operator|=
-name|MAP_IRQ
+name|ofw_bus_map_intr
 argument_list|(
+name|dev
+argument_list|,
 name|iparent
 argument_list|,
 name|intr
