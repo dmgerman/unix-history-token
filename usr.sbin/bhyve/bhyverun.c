@@ -536,6 +536,7 @@ literal|"       -a: local apic is in xAPIC mode (deprecated)\n"
 literal|"       -A: create an ACPI table\n"
 literal|"       -g: gdb port\n"
 literal|"       -c: # cpus (default 1)\n"
+literal|"       -C: include guest memory in core file\n"
 literal|"       -p: pin 'vcpu' to 'hostcpu'\n"
 literal|"       -H: vmexit from the guest on hlt\n"
 literal|"       -P: vmexit from the guest on pause\n"
@@ -2947,6 +2948,8 @@ decl_stmt|,
 name|bvmcons
 decl_stmt|;
 name|int
+name|dump_guest_memory
+decl_stmt|,
 name|max_vcpus
 decl_stmt|,
 name|mptgen
@@ -2963,6 +2966,10 @@ name|size_t
 name|memsize
 decl_stmt|;
 name|bvmcons
+operator|=
+literal|0
+expr_stmt|;
+name|dump_guest_memory
 operator|=
 literal|0
 expr_stmt|;
@@ -3005,7 +3012,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehwxAHIPWYp:g:c:s:m:l:U:"
+literal|"abehwxACHIPWYp:g:c:s:m:l:U:"
 argument_list|)
 operator|)
 operator|!=
@@ -3076,6 +3083,14 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|dump_guest_memory
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3332,6 +3347,17 @@ argument_list|(
 name|ctx
 argument_list|,
 name|BSP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dump_guest_memory
+condition|)
+name|vm_set_memflags
+argument_list|(
+name|ctx
+argument_list|,
+name|VM_MEM_F_INCORE
 argument_list|)
 expr_stmt|;
 name|err

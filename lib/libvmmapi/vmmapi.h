@@ -48,6 +48,17 @@ block|}
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|VM_MEM_F_INCORE
+value|0x01
+end_define
+
+begin_comment
+comment|/* include guest memory in core file */
+end_comment
+
 begin_function_decl
 name|int
 name|vm_create
@@ -208,6 +219,21 @@ name|ctx
 parameter_list|,
 name|uint32_t
 name|limit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_set_memflags
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
