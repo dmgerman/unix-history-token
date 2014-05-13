@@ -969,12 +969,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FDT
-end_ifndef
-
 begin_function
 name|void
 name|ofw_bus_setup_iinfo
@@ -1188,6 +1182,14 @@ name|opi_addrc
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|node
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|rv
 operator|=
 name|OF_getprop
@@ -1209,9 +1211,10 @@ name|regsz
 condition|)
 name|panic
 argument_list|(
-literal|"ofw_bus_lookup_imap: could not get reg property"
+literal|"ofw_bus_lookup_imap: cannot get reg property"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ofw_bus_search_intrmap
@@ -1597,15 +1600,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !FDT */
-end_comment
 
 end_unit
 

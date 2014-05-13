@@ -1347,15 +1347,6 @@ literal|1
 condition|)
 block|{
 comment|/* Non-firmware enumerated child, use standard routing */
-comment|/* 		 * XXX: Right now we don't have anything sensible to do here, 		 * since the ofw_imap stuff relies on nodes having a reg 		 * property. There exist ways around this, so the ePAPR 		 * spec will need to be studied. 		 */
-return|return
-operator|(
-name|PCI_INVALID_IRQ
-operator|)
-return|;
-ifdef|#
-directive|ifdef
-name|NOTYET
 name|intr
 operator|=
 name|pci_get_intpin
@@ -1378,8 +1369,6 @@ name|intr
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Try to determine the node's interrupt parent so we know which 	 * PIC to use. 	 */
 name|iparent
