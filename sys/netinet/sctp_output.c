@@ -38260,7 +38260,7 @@ endif|#
 directive|endif
 parameter_list|)
 block|{
-comment|/* 	 * Ok this is the generic chunk service queue. we must do the 	 * following: - Service the stream queue that is next, moving any 	 * message (note I must get a complete message i.e. FIRST/MIDDLE and 	 * LAST to the out queue in one pass) and assigning TSN's - Check to 	 * see if the cwnd/rwnd allows any output, if so we go ahead and 	 * fomulate and send the low level chunks. Making sure to combine 	 * any control in the control chunk queue also. 	 */
+comment|/** 	 * Ok this is the generic chunk service queue. we must do the 	 * following: - Service the stream queue that is next, moving any 	 * message (note I must get a complete message i.e. FIRST/MIDDLE and 	 * LAST to the out queue in one pass) and assigning TSN's - Check to 	 * see if the cwnd/rwnd allows any output, if so we go ahead and 	 * fomulate and send the low level chunks. Making sure to combine 	 * any control in the control chunk queue also. 	 */
 name|struct
 name|sctp_nets
 modifier|*

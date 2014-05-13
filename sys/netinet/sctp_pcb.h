@@ -1071,14 +1071,14 @@ name|socket
 modifier|*
 name|sctp_socket
 decl_stmt|;
+name|uint64_t
+name|sctp_features
+decl_stmt|;
+comment|/* Feature flags */
 name|uint32_t
 name|sctp_flags
 decl_stmt|;
 comment|/* INP state flag set */
-name|uint32_t
-name|sctp_features
-decl_stmt|;
-comment|/* Feature flags */
 name|uint32_t
 name|sctp_mobility_features
 decl_stmt|;

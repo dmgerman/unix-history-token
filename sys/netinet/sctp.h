@@ -1993,14 +1993,14 @@ begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_DO_NOT_PMTUD
-value|0x00000001
+value|0x0000000000000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_EXT_RCVINFO
-value|0x00000002
+value|0x0000000000000002
 end_define
 
 begin_comment
@@ -2011,42 +2011,42 @@ begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_DONOT_HEARTBEAT
-value|0x00000004
+value|0x0000000000000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_FRAG_INTERLEAVE
-value|0x00000008
+value|0x0000000000000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_INTERLEAVE_STRMS
-value|0x00000010
+value|0x0000000000000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_DO_ASCONF
-value|0x00000020
+value|0x0000000000000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_AUTO_ASCONF
-value|0x00000040
+value|0x0000000000000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_ZERO_COPY_ACTIVE
-value|0x00000080
+value|0x0000000000000080
 end_define
 
 begin_comment
@@ -2057,21 +2057,21 @@ begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_NODELAY
-value|0x00000100
+value|0x0000000000000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_AUTOCLOSE
-value|0x00000200
+value|0x0000000000000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_RECVDATAIOEVNT
-value|0x00000400
+value|0x0000000000000400
 end_define
 
 begin_comment
@@ -2082,28 +2082,28 @@ begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_RECVASSOCEVNT
-value|0x00000800
+value|0x0000000000000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_RECVPADDREVNT
-value|0x00001000
+value|0x0000000000001000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_RECVPEERERR
-value|0x00002000
+value|0x0000000000002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_RECVSENDFAILEVNT
-value|0x00004000
+value|0x0000000000004000
 end_define
 
 begin_comment
@@ -2114,112 +2114,112 @@ begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_RECVSHUTDOWNEVNT
-value|0x00008000
+value|0x0000000000008000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_ADAPTATIONEVNT
-value|0x00010000
+value|0x0000000000010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_PDAPIEVNT
-value|0x00020000
+value|0x0000000000020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_AUTHEVNT
-value|0x00040000
+value|0x0000000000040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_STREAM_RESETEVNT
-value|0x00080000
+value|0x0000000000080000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_NO_FRAGMENT
-value|0x00100000
+value|0x0000000000100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_EXPLICIT_EOR
-value|0x00400000
+value|0x0000000000400000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_NEEDS_MAPPED_V4
-value|0x00800000
+value|0x0000000000800000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_MULTIPLE_ASCONFS
-value|0x01000000
+value|0x0000000001000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_PORTREUSE
-value|0x02000000
+value|0x0000000002000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_DRYEVNT
-value|0x04000000
+value|0x0000000004000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_RECVRCVINFO
-value|0x08000000
+value|0x0000000008000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_RECVNXTINFO
-value|0x10000000
+value|0x0000000010000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_ASSOC_RESETEVNT
-value|0x20000000
+value|0x0000000020000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_STREAM_CHANGEEVNT
-value|0x40000000
+value|0x0000000040000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_PCB_FLAGS_RECVNSENDFAILEVNT
-value|0x80000000
+value|0x0000000080000000
 end_define
 
 begin_comment

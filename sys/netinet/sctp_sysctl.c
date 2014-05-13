@@ -1918,6 +1918,9 @@ name|xinpcb
 operator|.
 name|features
 operator|=
+operator|(
+name|uint32_t
+operator|)
 name|inp
 operator|->
 name|sctp_features

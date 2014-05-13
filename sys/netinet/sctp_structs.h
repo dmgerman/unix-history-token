@@ -3355,7 +3355,7 @@ decl_stmt|;
 name|uint8_t
 name|use_precise_time
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|sctp_features
 decl_stmt|;
 name|uint16_t
