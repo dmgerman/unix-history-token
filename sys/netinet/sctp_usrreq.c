@@ -19509,9 +19509,6 @@ decl_stmt|;
 name|uint32_t
 name|i
 decl_stmt|;
-name|size_t
-name|found
-decl_stmt|;
 name|SCTP_CHECK_AND_CAST
 argument_list|(
 name|shmac
@@ -19662,10 +19659,6 @@ name|sctp_set_hmac_done
 goto|;
 block|}
 block|}
-name|found
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -19695,18 +19688,19 @@ name|SCTP_AUTH_HMAC_ID_SHA1
 condition|)
 block|{
 comment|/* already in list */
-name|found
-operator|=
-literal|1
-expr_stmt|;
+break|break;
 block|}
 block|}
 if|if
 condition|(
-operator|!
-name|found
+name|i
+operator|==
+name|hmaclist
+operator|->
+name|num_algo
 condition|)
 block|{
+comment|/* not found in list */
 name|sctp_free_hmaclist
 argument_list|(
 name|hmaclist
