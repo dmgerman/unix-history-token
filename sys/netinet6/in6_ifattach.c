@@ -3657,6 +3657,14 @@ expr_stmt|;
 name|in6_pcbpurgeif0
 argument_list|(
 operator|&
+name|V_ulitecbinfo
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
+name|in6_pcbpurgeif0
+argument_list|(
+operator|&
 name|V_ripcbinfo
 argument_list|,
 name|ifp

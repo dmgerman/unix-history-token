@@ -58,6 +58,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|udplite6_ctlinput
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|udp6_input
 parameter_list|(

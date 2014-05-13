@@ -1628,6 +1628,39 @@ begin_comment
 comment|/* IPv6 Mobility Header */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPPROTO_UDPLITE
+value|136
+end_define
+
+begin_comment
+comment|/* UDP-Lite */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_HIP
+value|139
+end_define
+
+begin_comment
+comment|/* IP6 Host Identity Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SHIM6
+value|140
+end_define
+
+begin_comment
+comment|/* IP6 Shim6 Protocol */
+end_comment
+
 begin_comment
 comment|/* 101-254: Partly Unassigned */
 end_comment
@@ -1685,6 +1718,28 @@ end_define
 
 begin_comment
 comment|/* PFSYNC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_RESERVED_253
+value|253
+end_define
+
+begin_comment
+comment|/* Reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_RESERVED_254
+value|254
+end_define
+
+begin_comment
+comment|/* Reserved */
 end_comment
 
 begin_comment
