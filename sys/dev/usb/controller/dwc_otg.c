@@ -1412,99 +1412,23 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|uint32_t
-name|temp
-decl_stmt|;
+comment|/*    * Disabled until further. Assuming that the register is already    * programmed correctly by the boot loader.    */
+if|#
+directive|if
+literal|0
+block|uint32_t temp;
 comment|/* setup HOST frame interval register, based on existing value */
-name|temp
-operator|=
-name|DWC_OTG_READ_4
-argument_list|(
-name|sc
-argument_list|,
-name|DOTG_HFIR
-argument_list|)
-operator|&
-name|HFIR_FRINT_MASK
-expr_stmt|;
-if|if
-condition|(
-name|temp
-operator|>=
-literal|10000
-condition|)
-name|temp
-operator|/=
-literal|1000
-expr_stmt|;
-else|else
-name|temp
-operator|/=
-literal|125
-expr_stmt|;
+block|temp = DWC_OTG_READ_4(sc, DOTG_HFIR)& HFIR_FRINT_MASK; 	if (temp>= 10000) 		temp /= 1000; 	else 		temp /= 125;
 comment|/* figure out nearest X-tal value */
-if|if
-condition|(
-name|temp
-operator|>=
-literal|54
-condition|)
-name|temp
-operator|=
-literal|60
-expr_stmt|;
+block|if (temp>= 54) 		temp = 60;
 comment|/* MHz */
-elseif|else
-if|if
-condition|(
-name|temp
-operator|>=
-literal|39
-condition|)
-name|temp
-operator|=
-literal|48
-expr_stmt|;
+block|else if (temp>= 39) 		temp = 48;
 comment|/* MHz */
-else|else
-name|temp
-operator|=
-literal|30
-expr_stmt|;
+block|else 		temp = 30;
 comment|/* MHz */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_flags
-operator|.
-name|status_high_speed
-condition|)
-name|temp
-operator|*=
-literal|125
-expr_stmt|;
-else|else
-name|temp
-operator|*=
-literal|1000
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"HFIR=0x%08x\n"
-argument_list|,
-name|temp
-argument_list|)
-expr_stmt|;
-name|DWC_OTG_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|DOTG_HFIR
-argument_list|,
-name|temp
-argument_list|)
-expr_stmt|;
+block|if (sc->sc_flags.status_high_speed) 		temp *= 125; 	else 		temp *= 1000;  	DPRINTF("HFIR=0x%08x\n", temp);  	DWC_OTG_WRITE_4(sc, DOTG_HFIR, temp);
+endif|#
+directive|endif
 block|}
 end_function
 
