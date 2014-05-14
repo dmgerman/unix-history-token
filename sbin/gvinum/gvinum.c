@@ -136,6 +136,7 @@ file|"gvinum.h"
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_attach
 parameter_list|(
@@ -143,12 +144,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_concat
 parameter_list|(
@@ -156,12 +159,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_create
 parameter_list|(
@@ -169,12 +174,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_detach
 parameter_list|(
@@ -182,12 +189,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_grow
 parameter_list|(
@@ -195,12 +204,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_help
 parameter_list|(
@@ -210,6 +221,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_list
 parameter_list|(
@@ -217,12 +229,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_move
 parameter_list|(
@@ -230,12 +244,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_mirror
 parameter_list|(
@@ -243,12 +259,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_parityop
 parameter_list|(
@@ -256,6 +274,7 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|,
 name|int
@@ -264,6 +283,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_printconfig
 parameter_list|(
@@ -271,12 +291,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_raid5
 parameter_list|(
@@ -284,12 +306,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_rename
 parameter_list|(
@@ -297,12 +321,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_resetconfig
 parameter_list|(
@@ -310,12 +336,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_rm
 parameter_list|(
@@ -323,12 +351,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_saveconfig
 parameter_list|(
@@ -338,6 +368,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_setstate
 parameter_list|(
@@ -345,12 +376,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_start
 parameter_list|(
@@ -358,12 +391,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_stop
 parameter_list|(
@@ -371,12 +406,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gvinum_stripe
 parameter_list|(
@@ -384,12 +421,14 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|parseline
 parameter_list|(
@@ -397,18 +436,21 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|printconfig
 parameter_list|(
 name|FILE
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -416,10 +458,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|create_drive
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -427,6 +471,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|create_volume
 parameter_list|(
@@ -434,8 +479,10 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -443,6 +490,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|find_name
@@ -459,6 +507,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|find_pattern
@@ -466,6 +516,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -473,6 +524,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|copy_device
 parameter_list|(
@@ -492,6 +544,7 @@ define|#
 directive|define
 name|find_drive
 parameter_list|()
+define|\
 value|find_name("gvinumdrive", GV_TYPE_DRIVE, GV_MAXDRIVENAME)
 end_define
 
@@ -705,6 +758,7 @@ comment|/* Attach a plex to a volume or a subdisk to a plex. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|gvinum_attach
 parameter_list|(
@@ -713,6 +767,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -938,6 +993,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_create
 parameter_list|(
@@ -946,6 +1002,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -2192,6 +2249,7 @@ comment|/* Create a concatenated volume. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|gvinum_concat
 parameter_list|(
@@ -2200,6 +2258,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -2235,10 +2294,12 @@ comment|/* Create a drive quick and dirty. */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|create_drive
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|device
@@ -2607,10 +2668,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * General routine for creating a volume. Mainly for use by concat, mirror,  * raid5 and stripe commands.  */
+comment|/*  * General routine for creating a volume. Mainly for use by concat, mirror,  * raid5 and stripe commands.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|create_volume
 parameter_list|(
@@ -2619,9 +2681,11 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|verb
@@ -2989,6 +3053,8 @@ comment|/* Parse a line of the config, return the word after<pattern>. */
 end_comment
 
 begin_function
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|find_pattern
@@ -2997,6 +3063,7 @@ name|char
 modifier|*
 name|line
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|pattern
@@ -3075,6 +3142,7 @@ comment|/* Find a free name for an object given a prefix. */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|find_name
@@ -3110,9 +3178,6 @@ literal|1
 index|]
 decl_stmt|,
 modifier|*
-name|name
-decl_stmt|,
-modifier|*
 name|sname
 decl_stmt|,
 modifier|*
@@ -3122,6 +3187,9 @@ specifier|const
 name|char
 modifier|*
 name|errstr
+decl_stmt|,
+modifier|*
+name|name
 decl_stmt|;
 name|int
 name|i
@@ -3460,6 +3528,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|copy_device
 parameter_list|(
@@ -3532,6 +3601,7 @@ comment|/* Detach a plex or subdisk from its parent. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|gvinum_detach
 parameter_list|(
@@ -3540,6 +3610,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -3724,6 +3795,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_help
 parameter_list|(
@@ -3787,11 +3859,11 @@ literal|"stripe [-fv] [-n name] drives\n"
 literal|"        Create a striped volume from the specified drives.\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_setstate
 parameter_list|(
@@ -3800,6 +3872,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -4048,6 +4121,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_list
 parameter_list|(
@@ -4056,6 +4130,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -4372,7 +4447,6 @@ argument_list|(
 name|req
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4381,6 +4455,7 @@ comment|/* Create a mirrored volume. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|gvinum_mirror
 parameter_list|(
@@ -4389,6 +4464,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -4424,6 +4500,7 @@ comment|/* Note that move is currently of form '[-r] target object [...]' */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|gvinum_move
 parameter_list|(
@@ -4432,6 +4509,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -4693,11 +4771,11 @@ argument_list|(
 name|req
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_printconfig
 parameter_list|(
@@ -4706,6 +4784,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -4721,6 +4800,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_parityop
 parameter_list|(
@@ -4729,6 +4809,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|,
@@ -4824,9 +4905,6 @@ operator||=
 name|GV_FLAG_V
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 name|warnx
 argument_list|(
@@ -4967,6 +5045,7 @@ comment|/* Create a RAID-5 volume. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|gvinum_raid5
 parameter_list|(
@@ -4975,6 +5054,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -5006,6 +5086,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_rename
 parameter_list|(
@@ -5014,6 +5095,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -5082,9 +5164,6 @@ operator||=
 name|GV_FLAG_R
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 return|return;
 block|}
@@ -5232,11 +5311,11 @@ argument_list|(
 name|req
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_rm
 parameter_list|(
@@ -5245,6 +5324,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -5324,9 +5404,6 @@ operator||=
 name|GV_FLAG_R
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 return|return;
 block|}
@@ -5485,6 +5562,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_resetconfig
 parameter_list|(
@@ -5493,6 +5571,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -5703,6 +5782,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_saveconfig
 parameter_list|(
@@ -5777,6 +5857,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_start
 parameter_list|(
@@ -5785,6 +5866,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -5867,9 +5949,6 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 return|return;
 block|}
@@ -6037,6 +6116,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gvinum_stop
 parameter_list|(
@@ -6045,6 +6125,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -6170,6 +6251,7 @@ comment|/* Create a striped volume. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|gvinum_stripe
 parameter_list|(
@@ -6178,6 +6260,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -6213,6 +6296,7 @@ comment|/* Grow a subdisk by adding disk backed by provider. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|gvinum_grow
 parameter_list|(
@@ -6221,6 +6305,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -6701,6 +6786,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|parseline
 parameter_list|(
@@ -6709,6 +6795,7 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 parameter_list|)
@@ -7313,7 +7400,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7322,6 +7408,7 @@ comment|/*  * The guts of printconfig.  This is called from gvinum_printconfig a
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|printconfig
 parameter_list|(
@@ -7329,6 +7416,7 @@ name|FILE
 modifier|*
 name|of
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|comment
