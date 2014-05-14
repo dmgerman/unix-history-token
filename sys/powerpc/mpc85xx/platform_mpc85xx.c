@@ -273,7 +273,6 @@ parameter_list|,
 name|struct
 name|mem_region
 modifier|*
-modifier|*
 name|phys
 parameter_list|,
 name|int
@@ -282,7 +281,6 @@ name|physsz
 parameter_list|,
 name|struct
 name|mem_region
-modifier|*
 modifier|*
 name|avail
 parameter_list|,
@@ -990,7 +988,6 @@ parameter_list|,
 name|struct
 name|mem_region
 modifier|*
-modifier|*
 name|phys
 parameter_list|,
 name|int
@@ -999,7 +996,6 @@ name|physsz
 parameter_list|,
 name|struct
 name|mem_region
-modifier|*
 modifier|*
 name|avail
 parameter_list|,

@@ -139,14 +139,12 @@ parameter_list|(
 name|struct
 name|mem_region
 modifier|*
-modifier|*
 parameter_list|,
 name|int
 modifier|*
 parameter_list|,
 name|struct
 name|mem_region
-modifier|*
 modifier|*
 parameter_list|,
 name|int

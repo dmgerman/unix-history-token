@@ -951,10 +951,13 @@ name|ihandle_t
 name|instance
 parameter_list|)
 block|{
+comment|/* Where real OF uses ihandles in the tree, FDT uses xref phandles */
 return|return
 operator|(
-operator|-
-literal|1
+name|OF_xref_phandle
+argument_list|(
+name|instance
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1239,7 +1242,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the next property of a package. Return the actual len of retrieved  * prop name.  */
+comment|/*  * Get the next property of a package. Return values:  *  -1: package or previous property does not exist  *   0: no more properties  *   1: success  */
 end_comment
 
 begin_function
@@ -1455,10 +1458,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
+literal|1
 operator|)
 return|;
 block|}
@@ -1644,10 +1644,39 @@ name|size_t
 name|len
 parameter_list|)
 block|{
+name|phandle_t
+name|phandle
+decl_stmt|;
+name|phandle
+operator|=
+name|OF_instance_to_package
+argument_list|(
+name|instance
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|phandle
+operator|==
+operator|-
+literal|1
+condition|)
 return|return
 operator|(
 operator|-
 literal|1
+operator|)
+return|;
+return|return
+operator|(
+name|OF_package_to_path
+argument_list|(
+name|phandle
+argument_list|,
+name|buf
+argument_list|,
+name|len
+argument_list|)
 operator|)
 return|;
 block|}
