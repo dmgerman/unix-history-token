@@ -3756,7 +3756,7 @@ name|uap
 operator|->
 name|type
 argument_list|,
-name|MNAMELEN
+name|MFSNAMELEN
 argument_list|)
 expr_stmt|;
 name|ma
