@@ -3124,6 +3124,21 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+comment|/* 	 * Ensure it is not a PCI bridge (some vendors use 	 * the same PID and VID in PCI bridge and AHCI cards). 	 */
+if|if
+condition|(
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIC_BRIDGE
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* Is this a possible AHCI candidate? */
 if|if
 condition|(
