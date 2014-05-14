@@ -193,10 +193,10 @@ name|int
 name|phyp_iommu_set_dma_tag
 parameter_list|(
 name|device_t
-name|dev
+name|bus
 parameter_list|,
 name|device_t
-name|child
+name|dev
 parameter_list|,
 name|bus_dma_tag_t
 name|tag
@@ -230,9 +230,12 @@ for|for
 control|(
 name|p
 operator|=
-name|child
+name|dev
 init|;
+name|device_get_parent
+argument_list|(
 name|p
+argument_list|)
 operator|!=
 name|NULL
 condition|;
@@ -673,7 +676,7 @@ name|bus_dma_tag_set_iommu
 argument_list|(
 name|tag
 argument_list|,
-name|dev
+name|bus
 argument_list|,
 name|window
 argument_list|)

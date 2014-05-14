@@ -268,7 +268,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}

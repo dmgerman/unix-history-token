@@ -610,13 +610,9 @@ argument_list|,
 literal|"AT91 device bus"
 argument_list|)
 expr_stmt|;
-name|arm_post_filter
-operator|=
-name|at91_eoi
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
@@ -751,6 +747,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|arm_post_filter
+operator|=
+name|at91_eoi
+expr_stmt|;
 name|at91_softc
 operator|=
 name|sc
