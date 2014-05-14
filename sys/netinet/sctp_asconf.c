@@ -12152,7 +12152,7 @@ name|ch
 operator|.
 name|chunk_length
 operator|=
-name|ntohs
+name|htons
 argument_list|(
 operator|*
 name|retlen

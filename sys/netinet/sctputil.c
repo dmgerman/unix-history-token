@@ -13276,7 +13276,7 @@ condition|)
 block|{
 name|abort_len
 operator|=
-name|htons
+name|ntohs
 argument_list|(
 name|abort
 operator|->
@@ -18312,7 +18312,7 @@ condition|)
 block|{
 name|chunk_len
 operator|=
-name|htons
+name|ntohs
 argument_list|(
 name|chunk
 operator|->
