@@ -3780,6 +3780,23 @@ block|{
 comment|/* 					 * We allow pending addresses, where 					 * we have sent an asconf-add to be 					 * considered valid. 					 */
 continue|continue;
 block|}
+if|if
+condition|(
+name|sctp_ifa
+operator|->
+name|address
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|!=
+name|to
+operator|->
+name|sa_family
+condition|)
+block|{
+continue|continue;
+block|}
 switch|switch
 condition|(
 name|sctp_ifa
