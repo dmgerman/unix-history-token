@@ -12148,15 +12148,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|prot
-operator|&
-operator|(
-name|VM_PROT_ALL
-operator|)
-condition|)
-block|{
-if|if
-condition|(
 operator|(
 name|m
 operator|->
@@ -12167,6 +12158,16 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|prot
+operator|&
+operator|(
+name|VM_PROT_ALL
+operator|)
+condition|)
+block|{
 name|vm_page_aflag_set
 argument_list|(
 name|m
@@ -12177,12 +12178,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Need to do page referenced emulation. 			 */
+comment|/* 				 * Need to do page referenced emulation. 				 */
 name|npte
 operator|&=
 operator|~
 name|L2_S_REF
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -12191,14 +12193,6 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 block|{
-comment|/* Write enable */
-name|npte
-operator|&=
-operator|~
-operator|(
-name|L2_APX
-operator|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -12219,23 +12213,28 @@ argument_list|,
 name|PGA_WRITEABLE
 argument_list|)
 expr_stmt|;
-comment|/* 				 * The access type and permissions indicate  				 * that the page will be written as soon as 				 * returned from fault service. 				 * Mark it dirty from the outset. 				 */
-if|if
-condition|(
+comment|/* 				 * XXX: Skip modified bit emulation for now. 				 *	The emulation reveals problems 				 *	that result in random failures 				 *	during memory allocation on some 				 *	platforms. 				 *	Therefore, the page is marked RW 				 *	immediately. 				 */
+name|npte
+operator|&=
+operator|~
 operator|(
-name|access
-operator|&
-name|VM_PROT_WRITE
+name|L2_APX
 operator|)
-operator|!=
-literal|0
-condition|)
+expr_stmt|;
 name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|npte
+operator|&=
+operator|~
+operator|(
+name|L2_APX
+operator|)
+expr_stmt|;
 block|}
 if|if
 condition|(

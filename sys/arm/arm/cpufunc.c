@@ -2664,6 +2664,11 @@ name|defined
 argument_list|(
 name|CPU_CORTEXA
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -2928,6 +2933,11 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_CORTEXA
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
 argument_list|)
 end_if
 
@@ -4316,9 +4326,17 @@ block|}
 endif|#
 directive|endif
 comment|/* CPU_ARM1136 || CPU_ARM1176 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_CORTEXA
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
+argument_list|)
 if|if
 condition|(
 name|cputype
@@ -4352,6 +4370,10 @@ operator|||
 name|cputype
 operator|==
 name|CPU_ID_CORTEXA15
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_KRAIT
 condition|)
 block|{
 name|cpufuncs
@@ -8239,11 +8261,19 @@ begin_comment
 comment|/* CPU_MV_PJ4B */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_CORTEXA
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
+argument_list|)
+end_if
 
 begin_function
 name|void

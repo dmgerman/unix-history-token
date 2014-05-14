@@ -1160,6 +1160,16 @@ name|generic_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_KRAIT
+block|,
+name|CPU_CLASS_KRAIT
+block|,
+literal|"Krait"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_SA110
 block|,
 name|CPU_CLASS_SA1
@@ -1607,6 +1617,13 @@ literal|"CPU_CORTEXA"
 block|}
 block|,
 comment|/* CPU_CLASS_CORTEXA */
+block|{
+literal|"Krait"
+block|,
+literal|"CPU_KRAIT"
+block|}
+block|,
+comment|/* CPU_CLASS_KRAIT */
 block|{
 literal|"SA-1"
 block|,

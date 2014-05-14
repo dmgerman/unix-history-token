@@ -790,6 +790,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_KRAIT
+value|0x510f06f0
+end_define
+
+begin_comment
+comment|/* Snapdragon S4 Pro/APQ8064 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_TI925T
 value|0x54029250
 end_define
