@@ -5206,9 +5206,7 @@ expr|struct
 name|amd64tss
 argument_list|)
 operator|+
-name|IOPAGES
-operator|*
-name|PAGE_SIZE
+name|IOPERM_BITMAP_SIZE
 operator|-
 literal|1
 block|,
@@ -9400,9 +9398,7 @@ expr|struct
 name|amd64tss
 argument_list|)
 operator|+
-name|IOPAGES
-operator|*
-name|PAGE_SIZE
+name|IOPERM_BITMAP_SIZE
 expr_stmt|;
 name|gsel_tss
 operator|=
