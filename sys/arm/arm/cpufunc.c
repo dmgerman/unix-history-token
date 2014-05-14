@@ -4619,10 +4619,110 @@ name|defined
 argument_list|(
 name|CPU_ARM1176
 argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|CPU_MV_PJ4B
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|CPU_CORTEXA
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|cpu_scc_setup_ccnt
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* This is how you give userland access to the CCNT and PMCn  * registers.  * BEWARE! This gives write access also, which may not be what  * you want!  */
+ifdef|#
+directive|ifdef
+name|_PMC_USER_READ_WRITE_
+comment|/* Set PMUSERENR[0] to allow userland access */
+asm|__asm volatile ("mcr	p15, 0, %0, c9, c14, 0\n\t"
+block|: 			:
+literal|"r"
+operator|(
+literal|0x00000001
+operator|)
+block|)
+function|;
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Set up the PMCCNTR register as a cyclecounter: 	 * Set PMINTENCLR to 0xFFFFFFFF to block interrupts 	 * Set PMCR[2,0] to enable counters and reset CCNT 	 * Set PMCNTENSET to 0x80000000 to enable CCNT */
+end_comment
+
+begin_asm
+asm|__asm volatile ("mcr	p15, 0, %0, c9, c14, 2\n\t"
+end_asm
+
+begin_expr_stmt
+literal|"mcr	p15, 0, %1, c9, c12, 0\n\t"
+literal|"mcr	p15, 0, %2, c9, c12, 1\n\t"
+operator|:
+operator|:
+literal|"r"
+operator|(
+literal|0xFFFFFFFF
+operator|)
+operator|,
+literal|"r"
+operator|(
+literal|0x00000005
+operator|)
+operator|,
+literal|"r"
+operator|(
+literal|0x80000000
+operator|)
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM1136
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM1176
+argument_list|)
 end_if
 
 begin_decl_stmt
-name|struct
+unit|struct
 name|cpu_option
 name|arm11_options
 index|[]
@@ -4960,6 +5060,12 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|cpu_scc_setup_ccnt
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 unit|}
 endif|#
@@ -5078,6 +5184,9 @@ argument_list|)
 expr_stmt|;
 comment|/* And again. */
 name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+name|cpu_scc_setup_ccnt
 argument_list|()
 expr_stmt|;
 block|}
@@ -5233,6 +5342,9 @@ expr_stmt|;
 comment|/* Enable SMP + TLB broadcasting  */
 endif|#
 directive|endif
+name|cpu_scc_setup_ccnt
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
