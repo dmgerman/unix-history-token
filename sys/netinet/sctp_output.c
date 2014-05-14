@@ -17660,10 +17660,6 @@ name|cookie_sz
 decl_stmt|;
 name|mret
 operator|=
-name|NULL
-expr_stmt|;
-name|mret
-operator|=
 name|sctp_get_mbuf_for_msg
 argument_list|(
 operator|(
@@ -44181,10 +44177,6 @@ name|sctp_tmit_chunk
 modifier|*
 name|chk
 decl_stmt|;
-name|cookie_ack
-operator|=
-name|NULL
-expr_stmt|;
 name|SCTP_TCB_LOCK_ASSERT
 argument_list|(
 name|stcb
