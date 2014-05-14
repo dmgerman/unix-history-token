@@ -76,7 +76,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  *  Create response according to the ldns packet content  *  *  This function fills qstate.return_msg up with data of a given packet  *   * @param qstate: module environment  * @param pkt: a ldns_buffer which contains ldns_packet data  * @return 0 on failure, out of memory or parse error.  */
+comment|/**  *  Create response according to the ldns packet content  *  *  This function fills qstate.return_msg up with data of a given packet  *   * @param qstate: module environment  * @param pkt: a sldns_buffer which contains sldns_packet data  * @return 0 on failure, out of memory or parse error.  */
 end_comment
 
 begin_function_decl
@@ -88,7 +88,7 @@ name|module_qstate
 modifier|*
 name|qstate
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)

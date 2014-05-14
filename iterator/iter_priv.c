@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * iterator/iter_priv.c - iterative resolver private address and domain store  *  * Copyright (c) 2008, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * iterator/iter_priv.c - iterative resolver private address and domain store  *  * Copyright (c) 2008, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/dname.h>
 end_include
 
 begin_include
@@ -65,6 +59,18 @@ begin_include
 include|#
 directive|include
 file|"util/storage/dnstree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/str2wire.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
 end_include
 
 begin_function
@@ -392,16 +398,15 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|nm
+decl_stmt|,
+modifier|*
+name|nmr
 decl_stmt|;
 name|size_t
 name|nm_len
 decl_stmt|;
 name|int
 name|nm_labs
-decl_stmt|;
-name|ldns_rdf
-modifier|*
-name|rdf
 decl_stmt|;
 for|for
 control|(
@@ -427,19 +432,22 @@ operator|->
 name|str
 argument_list|)
 expr_stmt|;
-name|rdf
+name|nm
 operator|=
-name|ldns_dname_new_frm_str
+name|sldns_str2wire_dname
 argument_list|(
 name|p
 operator|->
 name|str
+argument_list|,
+operator|&
+name|nm_len
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|rdf
+name|nm
 condition|)
 block|{
 name|log_err
@@ -455,13 +463,6 @@ return|return
 literal|0
 return|;
 block|}
-name|nm
-operator|=
-name|ldns_rdf_data
-argument_list|(
-name|rdf
-argument_list|)
-expr_stmt|;
 name|nm_labs
 operator|=
 name|dname_count_size_labels
@@ -472,7 +473,7 @@ operator|&
 name|nm_len
 argument_list|)
 expr_stmt|;
-name|nm
+name|nmr
 operator|=
 operator|(
 name|uint8_t
@@ -489,15 +490,15 @@ argument_list|,
 name|nm_len
 argument_list|)
 expr_stmt|;
-name|ldns_rdf_deep_free
+name|free
 argument_list|(
-name|rdf
+name|nm
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|nm
+name|nmr
 condition|)
 block|{
 name|log_err
@@ -556,7 +557,7 @@ name|n
 argument_list|,
 name|n
 argument_list|,
-name|nm
+name|nmr
 argument_list|,
 name|nm_len
 argument_list|,
@@ -730,7 +731,7 @@ name|iter_priv
 modifier|*
 name|priv
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -866,7 +867,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1021,7 +1022,7 @@ name|iter_priv
 modifier|*
 name|priv
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1165,7 +1166,7 @@ control|)
 block|{
 if|if
 condition|(
-name|ldns_read_uint16
+name|sldns_read_uint16
 argument_list|(
 name|rr
 operator|->
@@ -1332,7 +1333,7 @@ control|)
 block|{
 if|if
 condition|(
-name|ldns_read_uint16
+name|sldns_read_uint16
 argument_list|(
 name|rr
 operator|->

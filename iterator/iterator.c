@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * iterator/iterator.c - iterative resolver DNS query response module  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * iterator/iterator.c - iterative resolver DNS query response module  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/ldns.h>
 end_include
 
 begin_include
@@ -137,6 +131,30 @@ begin_include
 include|#
 directive|include
 file|"util/config_file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/rrdef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/wire2str.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/parseutil.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
 end_include
 
 begin_function
@@ -847,16 +865,16 @@ name|VERB_QUERY
 argument_list|,
 literal|"return error response %s"
 argument_list|,
-name|ldns_lookup_by_id
+name|sldns_lookup_by_id
 argument_list|(
-name|ldns_rcodes
+name|sldns_rcodes
 argument_list|,
 name|rcode
 argument_list|)
 condition|?
-name|ldns_lookup_by_id
+name|sldns_lookup_by_id
 argument_list|(
-name|ldns_rcodes
+name|sldns_rcodes
 argument_list|,
 name|rcode
 argument_list|)
@@ -2420,9 +2438,9 @@ name|VERB_DETAIL
 argument_list|,
 literal|"priming . %s NS"
 argument_list|,
-name|ldns_lookup_by_id
+name|sldns_lookup_by_id
 argument_list|(
-name|ldns_rr_classes
+name|sldns_rr_classes
 argument_list|,
 operator|(
 name|int
@@ -2430,9 +2448,9 @@ operator|)
 name|qclass
 argument_list|)
 condition|?
-name|ldns_lookup_by_id
+name|sldns_lookup_by_id
 argument_list|(
-name|ldns_rr_classes
+name|sldns_rr_classes
 argument_list|,
 operator|(
 name|int
@@ -5479,6 +5497,10 @@ condition|(
 name|verbosity
 operator|>=
 name|VERB_ALGO
+operator|&&
+name|iq
+operator|->
+name|response
 condition|)
 name|log_dns_msg
 argument_list|(
@@ -13159,7 +13181,7 @@ name|struct
 name|edns_data
 name|edns
 decl_stmt|;
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 decl_stmt|;
@@ -13319,7 +13341,7 @@ name|c
 operator|->
 name|buffer
 expr_stmt|;
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -13586,7 +13608,7 @@ name|qstate
 operator|->
 name|env
 operator|->
-name|scratch_buffer
+name|scratch
 argument_list|)
 condition|)
 block|{

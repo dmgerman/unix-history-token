@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * testcode/pktview.c - debug program to disassemble a DNS packet.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * testcode/pktview.c - debug program to disassemble a DNS packet.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/ldns.h>
 end_include
 
 begin_include
@@ -47,6 +41,18 @@ begin_include
 include|#
 directive|include
 file|"testcode/readhex.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/parseutil.h"
 end_include
 
 begin_comment
@@ -96,7 +102,7 @@ specifier|static
 name|void
 name|read_input
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -183,7 +189,7 @@ specifier|static
 name|void
 name|analyze_dname
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -191,7 +197,7 @@ block|{
 name|size_t
 name|oldpos
 init|=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -215,7 +221,7 @@ name|stdout
 argument_list|,
 name|pkt
 argument_list|,
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -240,7 +246,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -257,7 +263,7 @@ call|(
 name|int
 call|)
 argument_list|(
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -284,12 +290,12 @@ specifier|static
 name|void
 name|analyze_rdata
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
 specifier|const
-name|ldns_rr_descriptor
+name|sldns_rr_descriptor
 modifier|*
 name|desc
 parameter_list|,
@@ -341,7 +347,7 @@ name|LDNS_RDF_TYPE_DNAME
 case|:
 name|oldpos
 operator|=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -353,7 +359,7 @@ argument_list|)
 expr_stmt|;
 name|rdlen
 operator|-=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -373,7 +379,7 @@ name|LDNS_RDF_TYPE_STR
 case|:
 name|len
 operator|=
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -413,7 +419,7 @@ operator|)
 name|len
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -470,7 +476,7 @@ argument_list|,
 operator|(
 name|unsigned
 operator|)
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -491,7 +497,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -513,7 +519,7 @@ specifier|static
 name|void
 name|analyze_rr
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -538,14 +544,14 @@ argument_list|)
 expr_stmt|;
 name|type
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
 name|dclass
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -554,12 +560,12 @@ name|printf
 argument_list|(
 literal|"type %s(%d)"
 argument_list|,
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|type
 argument_list|)
 condition|?
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|type
 argument_list|)
@@ -578,9 +584,9 @@ name|printf
 argument_list|(
 literal|" class %s(%d) "
 argument_list|,
-name|ldns_lookup_by_id
+name|sldns_lookup_by_id
 argument_list|(
-name|ldns_rr_classes
+name|sldns_rr_classes
 argument_list|,
 operator|(
 name|int
@@ -588,9 +594,9 @@ operator|)
 name|dclass
 argument_list|)
 condition|?
-name|ldns_lookup_by_id
+name|sldns_lookup_by_id
 argument_list|(
-name|ldns_rr_classes
+name|sldns_rr_classes
 argument_list|,
 operator|(
 name|int
@@ -623,7 +629,7 @@ else|else
 block|{
 name|ttl
 operator|=
-name|ldns_buffer_read_u32
+name|sldns_buffer_read_u32
 argument_list|(
 name|pkt
 argument_list|)
@@ -645,7 +651,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -662,7 +668,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|type
 argument_list|)
@@ -671,7 +677,7 @@ name|analyze_rdata
 argument_list|(
 name|pkt
 argument_list|,
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|type
 argument_list|)
@@ -680,7 +686,7 @@ name|len
 argument_list|)
 expr_stmt|;
 else|else
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -703,7 +709,7 @@ specifier|static
 name|void
 name|analyze
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -733,7 +739,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|pkt
 argument_list|)
@@ -741,7 +747,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|pkt
 argument_list|)
@@ -751,7 +757,7 @@ condition|)
 return|return;
 name|i
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -773,7 +779,7 @@ argument_list|)
 expr_stmt|;
 name|f
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -790,7 +796,7 @@ argument_list|)
 expr_stmt|;
 name|qd
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -807,7 +813,7 @@ argument_list|)
 expr_stmt|;
 name|an
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -824,7 +830,7 @@ argument_list|)
 expr_stmt|;
 name|ns
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -841,7 +847,7 @@ argument_list|)
 expr_stmt|;
 name|ar
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -863,7 +869,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -971,11 +977,11 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 init|=
-name|ldns_buffer_new
+name|sldns_buffer_new
 argument_list|(
 literal|65553
 argument_list|)
@@ -1015,7 +1021,7 @@ argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_free
+name|sldns_buffer_free
 argument_list|(
 name|pkt
 argument_list|)

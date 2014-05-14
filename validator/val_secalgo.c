@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * validator/val_secalgo.c - validator security algorithm functions.  *  * Copyright (c) 2012, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * validator/val_secalgo.c - validator security algorithm functions.  *  * Copyright (c) 2012, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/ldns.h>
 end_include
 
 begin_include
@@ -35,6 +29,24 @@ begin_include
 include|#
 directive|include
 file|"util/log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/rrdef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/keyraw.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
 end_include
 
 begin_if
@@ -271,7 +283,7 @@ return|return
 literal|0
 return|;
 return|return
-name|ldns_digest_evp
+name|sldns_digest_evp
 argument_list|(
 name|data
 argument_list|,
@@ -520,7 +532,7 @@ name|LDNS_ECC_GOST
 case|:
 comment|/* we support GOST if it can be loaded */
 return|return
-name|ldns_key_EVP_load_gost_id
+name|sldns_key_EVP_load_gost_id
 argument_list|()
 return|;
 endif|#
@@ -1065,7 +1077,7 @@ return|;
 block|}
 name|dsa
 operator|=
-name|ldns_key_buf2dsa_raw
+name|sldns_key_buf2dsa_raw
 argument_list|(
 name|key
 argument_list|,
@@ -1083,7 +1095,7 @@ argument_list|(
 name|VERB_QUERY
 argument_list|,
 literal|"verify: "
-literal|"ldns_key_buf2dsa_raw failed"
+literal|"sldns_key_buf2dsa_raw failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1184,7 +1196,7 @@ return|;
 block|}
 name|rsa
 operator|=
-name|ldns_key_buf2rsa_raw
+name|sldns_key_buf2rsa_raw
 argument_list|(
 name|key
 argument_list|,
@@ -1202,7 +1214,7 @@ argument_list|(
 name|VERB_QUERY
 argument_list|,
 literal|"verify: "
-literal|"ldns_key_buf2rsa_raw SHA failed"
+literal|"sldns_key_buf2rsa_raw SHA failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1321,7 +1333,7 @@ return|;
 block|}
 name|rsa
 operator|=
-name|ldns_key_buf2rsa_raw
+name|sldns_key_buf2rsa_raw
 argument_list|(
 name|key
 argument_list|,
@@ -1339,7 +1351,7 @@ argument_list|(
 name|VERB_QUERY
 argument_list|,
 literal|"verify: "
-literal|"ldns_key_buf2rsa_raw MD5 failed"
+literal|"sldns_key_buf2rsa_raw MD5 failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1387,7 +1399,7 @@ case|:
 operator|*
 name|evp_key
 operator|=
-name|ldns_gost2pkey_raw
+name|sldns_gost2pkey_raw
 argument_list|(
 name|key
 argument_list|,
@@ -1406,7 +1418,7 @@ argument_list|(
 name|VERB_QUERY
 argument_list|,
 literal|"verify: "
-literal|"ldns_gost2pkey_raw failed"
+literal|"sldns_gost2pkey_raw failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1452,7 +1464,7 @@ case|:
 operator|*
 name|evp_key
 operator|=
-name|ldns_ecdsa2pkey_raw
+name|sldns_ecdsa2pkey_raw
 argument_list|(
 name|key
 argument_list|,
@@ -1473,7 +1485,7 @@ argument_list|(
 name|VERB_QUERY
 argument_list|,
 literal|"verify: "
-literal|"ldns_ecdsa2pkey_raw failed"
+literal|"sldns_ecdsa2pkey_raw failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1565,7 +1577,7 @@ case|:
 operator|*
 name|evp_key
 operator|=
-name|ldns_ecdsa2pkey_raw
+name|sldns_ecdsa2pkey_raw
 argument_list|(
 name|key
 argument_list|,
@@ -1586,7 +1598,7 @@ argument_list|(
 name|VERB_QUERY
 argument_list|,
 literal|"verify: "
-literal|"ldns_ecdsa2pkey_raw failed"
+literal|"sldns_ecdsa2pkey_raw failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1704,7 +1716,7 @@ name|enum
 name|sec_status
 name|verify_canonrrset
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|,
@@ -1972,7 +1984,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -1981,7 +1993,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)
@@ -4038,7 +4050,7 @@ name|enum
 name|sec_status
 name|verify_canonrrset
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|,
@@ -4357,7 +4369,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -4366,7 +4378,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)

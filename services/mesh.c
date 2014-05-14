@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * services/mesh.c - deal with mesh of query states and handle events for that.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * services/mesh.c - deal with mesh of query states and handle events for that.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/wire2host.h>
 end_include
 
 begin_include
@@ -89,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"util/config_file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
 end_include
 
 begin_comment
@@ -734,7 +734,7 @@ name|mesh
 operator|->
 name|qbuf_bak
 operator|=
-name|ldns_buffer_new
+name|sldns_buffer_new
 argument_list|(
 name|env
 operator|->
@@ -1000,7 +1000,7 @@ operator|->
 name|histogram
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_free
+name|sldns_buffer_free
 argument_list|(
 name|mesh
 operator|->
@@ -1134,7 +1134,7 @@ name|mesh_area
 modifier|*
 name|mesh
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|qbuf
 parameter_list|)
@@ -1254,7 +1254,7 @@ if|if
 condition|(
 name|qbuf
 condition|)
-name|ldns_buffer_copy
+name|sldns_buffer_copy
 argument_list|(
 name|mesh
 operator|->
@@ -1324,7 +1324,7 @@ if|if
 condition|(
 name|qbuf
 condition|)
-name|ldns_buffer_copy
+name|sldns_buffer_copy
 argument_list|(
 name|qbuf
 argument_list|,
@@ -1866,7 +1866,7 @@ name|edns_data
 modifier|*
 name|edns
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|,
@@ -4356,7 +4356,7 @@ name|edns
 operator|.
 name|udp_size
 decl_stmt|;
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|r
 operator|->
@@ -4761,7 +4761,7 @@ name|c
 operator|->
 name|buffer
 condition|)
-name|ldns_buffer_copy
+name|sldns_buffer_copy
 argument_list|(
 name|r
 operator|->
@@ -4780,7 +4780,7 @@ operator|->
 name|buffer
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_at
+name|sldns_buffer_write_at
 argument_list|(
 name|r
 operator|->
@@ -4803,7 +4803,7 @@ name|uint16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_at
+name|sldns_buffer_write_at
 argument_list|(
 name|r
 operator|->
@@ -5102,7 +5102,9 @@ name|verbose
 argument_list|(
 name|VERB_ALGO
 argument_list|,
-literal|"query took %lld.%6.6d sec"
+literal|"query took "
+name|ARG_LL
+literal|"d.%6.6d sec"
 argument_list|,
 operator|(
 name|long
@@ -5182,7 +5184,7 @@ name|rc
 init|=
 name|FLAGS_GET_RCODE
 argument_list|(
-name|ldns_buffer_read_u16_at
+name|sldns_buffer_read_u16_at
 argument_list|(
 name|r
 operator|->
@@ -5233,7 +5235,7 @@ literal|0
 operator|&&
 name|LDNS_ANCOUNT
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|r
 operator|->
@@ -5614,7 +5616,7 @@ name|edns_data
 modifier|*
 name|edns
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|,
@@ -6721,7 +6723,8 @@ expr_stmt|;
 name|log_info
 argument_list|(
 literal|"average recursion processing time "
-literal|"%lld.%6.6d sec"
+name|ARG_LL
+literal|"d.%6.6d sec"
 argument_list|,
 operator|(
 name|long
@@ -6899,10 +6902,10 @@ name|num
 operator|+
 sizeof|sizeof
 argument_list|(
-name|ldns_buffer
+name|sldns_buffer
 argument_list|)
 operator|+
-name|ldns_buffer_capacity
+name|sldns_buffer_capacity
 argument_list|(
 name|mesh
 operator|->

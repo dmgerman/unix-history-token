@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * testcode/replay.c - store and use a replay of events for the DNS resolver.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *   * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * testcode/replay.c - store and use a replay of events for the DNS resolver.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *   * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -21,6 +21,18 @@ begin_include
 include|#
 directive|include
 file|<math.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -50,13 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"testcode/ldns-testpkts.h"
+file|"testcode/testpkts.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"testcode/fake_event.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/str2wire.h"
 end_include
 
 begin_comment
@@ -408,7 +426,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**   * Read a range from file.   * @param remain: Rest of line (after RANGE keyword).  * @param in: file to read from.  * @param name: name to print in errors.  * @param lineno: incremented as lines are read.  * @param line: line buffer.  * @param ttl: for readentry  * @param or: for readentry  * @param prev: for readentry  * @return: range object to add to list, or NULL on error.  */
+comment|/**   * Read a range from file.   * @param remain: Rest of line (after RANGE keyword).  * @param in: file to read from.  * @param name: name to print in errors.  * @param pstate: read state structure with  * 	with lineno : incremented as lines are read.  * 	ttl, origin, prev for readentry.  * @param line: line buffer.  * @return: range object to add to list, or NULL on error.  */
 end_comment
 
 begin_function
@@ -431,27 +449,14 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|struct
+name|sldns_file_parse_state
 modifier|*
-name|lineno
+name|pstate
 parameter_list|,
 name|char
 modifier|*
 name|line
-parameter_list|,
-name|uint32_t
-modifier|*
-name|ttl
-parameter_list|,
-name|ldns_rdf
-modifier|*
-modifier|*
-name|or
-parameter_list|,
-name|ldns_rdf
-modifier|*
-modifier|*
-name|prev
 parameter_list|)
 block|{
 name|struct
@@ -572,10 +577,9 @@ name|in
 argument_list|)
 condition|)
 block|{
-operator|(
-operator|*
+name|pstate
+operator|->
 name|lineno
-operator|)
 operator|++
 expr_stmt|;
 name|parse
@@ -670,7 +674,8 @@ name|log_err
 argument_list|(
 literal|"Line %d: could not read ADDRESS: %s"
 argument_list|,
-operator|*
+name|pstate
+operator|->
 name|lineno
 argument_list|,
 name|parse
@@ -710,10 +715,9 @@ name|rng
 return|;
 block|}
 comment|/* set position before line; read entry */
-operator|(
-operator|*
+name|pstate
+operator|->
 name|lineno
-operator|)
 operator|--
 expr_stmt|;
 name|fseeko
@@ -733,13 +737,7 @@ name|in
 argument_list|,
 name|name
 argument_list|,
-name|lineno
-argument_list|,
-name|ttl
-argument_list|,
-name|or
-argument_list|,
-name|prev
+name|pstate
 argument_list|,
 literal|1
 argument_list|)
@@ -753,7 +751,8 @@ name|fatal_exit
 argument_list|(
 literal|"%d: bad entry"
 argument_list|,
-operator|*
+name|pstate
+operator|->
 name|lineno
 argument_list|)
 expr_stmt|;
@@ -1139,7 +1138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**   * Read a replay moment 'STEP' from file.   * @param remain: Rest of line (after STEP keyword).  * @param in: file to read from.  * @param name: name to print in errors.  * @param lineno: incremented as lines are read.  * @param ttl: for readentry  * @param or: for readentry  * @param prev: for readentry  * @return: range object to add to list, or NULL on error.  */
+comment|/**   * Read a replay moment 'STEP' from file.   * @param remain: Rest of line (after STEP keyword).  * @param in: file to read from.  * @param name: name to print in errors.  * @param pstate: with lineno, ttl, origin, prev for parse state.  * 	lineno is incremented.  * @return: range object to add to list, or NULL on error.  */
 end_comment
 
 begin_function
@@ -1162,23 +1161,10 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|struct
+name|sldns_file_parse_state
 modifier|*
-name|lineno
-parameter_list|,
-name|uint32_t
-modifier|*
-name|ttl
-parameter_list|,
-name|ldns_rdf
-modifier|*
-modifier|*
-name|or
-parameter_list|,
-name|ldns_rdf
-modifier|*
-modifier|*
-name|prev
+name|pstate
 parameter_list|)
 block|{
 name|struct
@@ -1255,7 +1241,8 @@ name|log_err
 argument_list|(
 literal|"%d: cannot read number: %s"
 argument_list|,
-operator|*
+name|pstate
+operator|->
 name|lineno
 argument_list|,
 name|remain
@@ -1646,6 +1633,9 @@ name|read_file_content
 argument_list|(
 name|in
 argument_list|,
+operator|&
+name|pstate
+operator|->
 name|lineno
 argument_list|,
 name|mom
@@ -1952,7 +1942,8 @@ name|log_err
 argument_list|(
 literal|"%d: unknown event type %s"
 argument_list|,
-operator|*
+name|pstate
+operator|->
 name|lineno
 argument_list|,
 name|remain
@@ -2051,7 +2042,8 @@ name|log_err
 argument_list|(
 literal|"line %d: could not parse ADDRESS: %s"
 argument_list|,
-operator|*
+name|pstate
+operator|->
 name|lineno
 argument_list|,
 name|remain
@@ -2110,7 +2102,8 @@ name|log_err
 argument_list|(
 literal|"line %d: could not parse ELAPSE: %s (%s)"
 argument_list|,
-operator|*
+name|pstate
+operator|->
 name|lineno
 argument_list|,
 name|remain
@@ -2190,13 +2183,7 @@ name|in
 argument_list|,
 name|name
 argument_list|,
-name|lineno
-argument_list|,
-name|ttl
-argument_list|,
-name|or
-argument_list|,
-name|prev
+name|pstate
 argument_list|,
 literal|1
 argument_list|)
@@ -2382,22 +2369,9 @@ name|scen
 init|=
 name|NULL
 decl_stmt|;
-name|uint32_t
-name|ttl
-init|=
-literal|3600
-decl_stmt|;
-name|ldns_rdf
-modifier|*
-name|or
-init|=
-name|NULL
-decl_stmt|;
-name|ldns_rdf
-modifier|*
-name|prev
-init|=
-name|NULL
+name|struct
+name|sldns_file_parse_state
+name|pstate
 decl_stmt|;
 name|line
 index|[
@@ -2407,6 +2381,32 @@ literal|1
 index|]
 operator|=
 literal|0
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|pstate
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pstate
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pstate
+operator|.
+name|default_ttl
+operator|=
+literal|3600
+expr_stmt|;
+name|pstate
+operator|.
+name|lineno
+operator|=
+operator|*
+name|lineno
 expr_stmt|;
 while|while
 condition|(
@@ -2425,6 +2425,11 @@ block|{
 name|parse
 operator|=
 name|line
+expr_stmt|;
+name|pstate
+operator|.
+name|lineno
+operator|++
 expr_stmt|;
 operator|(
 operator|*
@@ -2536,18 +2541,10 @@ name|in
 argument_list|,
 name|name
 argument_list|,
-name|lineno
+operator|&
+name|pstate
 argument_list|,
 name|line
-argument_list|,
-operator|&
-name|ttl
-argument_list|,
-operator|&
-name|or
-argument_list|,
-operator|&
-name|prev
 argument_list|)
 decl_stmt|;
 if|if
@@ -2559,9 +2556,17 @@ name|fatal_exit
 argument_list|(
 literal|"%d: bad range"
 argument_list|,
-operator|*
+name|pstate
+operator|.
 name|lineno
 argument_list|)
+expr_stmt|;
+operator|*
+name|lineno
+operator|=
+name|pstate
+operator|.
+name|lineno
 expr_stmt|;
 name|newr
 operator|->
@@ -2603,16 +2608,8 @@ name|in
 argument_list|,
 name|name
 argument_list|,
-name|lineno
-argument_list|,
 operator|&
-name|ttl
-argument_list|,
-operator|&
-name|or
-argument_list|,
-operator|&
-name|prev
+name|pstate
 argument_list|)
 decl_stmt|;
 if|if
@@ -2624,9 +2621,17 @@ name|fatal_exit
 argument_list|(
 literal|"%d: bad moment"
 argument_list|,
-operator|*
+name|pstate
+operator|.
 name|lineno
 argument_list|)
+expr_stmt|;
+operator|*
+name|lineno
+operator|=
+name|pstate
+operator|.
+name|lineno
 expr_stmt|;
 if|if
 condition|(
@@ -2728,31 +2733,11 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|ldns_rdf_deep_free
-argument_list|(
-name|or
-argument_list|)
-expr_stmt|;
-name|ldns_rdf_deep_free
-argument_list|(
-name|prev
-argument_list|)
-expr_stmt|;
 return|return
 name|scen
 return|;
 block|}
 block|}
-name|ldns_rdf_deep_free
-argument_list|(
-name|or
-argument_list|)
-expr_stmt|;
-name|ldns_rdf_deep_free
-argument_list|(
-name|prev
-argument_list|)
-expr_stmt|;
 name|replay_scenario_delete
 argument_list|(
 name|scen
@@ -4312,7 +4297,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%lld"
+name|ARG_LL
+literal|"d"
 argument_list|,
 operator|(
 name|long
@@ -4404,7 +4390,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%lld"
+name|ARG_LL
+literal|"d"
 argument_list|,
 operator|(
 name|long

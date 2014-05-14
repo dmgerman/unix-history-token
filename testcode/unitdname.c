@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * testcode/unitdname.c - unit test for dname routines.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * testcode/unitdname.c - unit test for dname routines.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -11,18 +11,6 @@ begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/dname.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/host2wire.h>
 end_include
 
 begin_include
@@ -43,17 +31,29 @@ directive|include
 file|"util/data/dname.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/str2wire.h"
+end_include
+
 begin_comment
 comment|/** put dname into buffer */
 end_comment
 
 begin_function
 specifier|static
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|dname_to_buf
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|b
 parameter_list|,
@@ -63,39 +63,42 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|ldns_rdf
-modifier|*
-name|rdf
+name|int
+name|e
 decl_stmt|;
-name|ldns_status
-name|status
+name|size_t
+name|len
+init|=
+name|sldns_buffer_capacity
+argument_list|(
+name|b
+argument_list|)
 decl_stmt|;
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
-name|rdf
+name|e
 operator|=
-name|ldns_dname_new_frm_str
+name|sldns_str2wire_dname_buf
 argument_list|(
 name|str
-argument_list|)
-expr_stmt|;
-name|status
-operator|=
-name|ldns_dname2buffer_wire
+argument_list|,
+name|sldns_buffer_begin
 argument_list|(
 name|b
+argument_list|)
 argument_list|,
-name|rdf
+operator|&
+name|len
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|status
+name|e
 operator|!=
-name|LDNS_STATUS_OK
+literal|0
 condition|)
 name|fatal_exit
 argument_list|(
@@ -103,18 +106,20 @@ literal|"%s ldns: %s"
 argument_list|,
 name|__func__
 argument_list|,
-name|ldns_get_errorstr_by_id
+name|sldns_get_errorstr_parse
 argument_list|(
-name|status
+name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ldns_rdf_deep_free
+name|sldns_buffer_set_position
 argument_list|(
-name|rdf
+name|b
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|b
 argument_list|)
@@ -134,7 +139,7 @@ specifier|static
 name|void
 name|dname_test_qdl
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|)
@@ -213,7 +218,7 @@ specifier|static
 name|void
 name|dname_test_qdtl
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|)
@@ -225,7 +230,7 @@ argument_list|,
 literal|"query_dname_tolower"
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_at
+name|sldns_buffer_write_at
 argument_list|(
 name|buff
 argument_list|,
@@ -238,7 +243,7 @@ argument_list|)
 expr_stmt|;
 name|query_dname_tolower
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
@@ -248,7 +253,7 @@ name|unit_assert
 argument_list|(
 name|memcmp
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
@@ -261,7 +266,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_at
+name|sldns_buffer_write_at
 argument_list|(
 name|buff
 argument_list|,
@@ -274,7 +279,7 @@ argument_list|)
 expr_stmt|;
 name|query_dname_tolower
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
@@ -284,7 +289,7 @@ name|unit_assert
 argument_list|(
 name|memcmp
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
@@ -297,7 +302,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_at
+name|sldns_buffer_write_at
 argument_list|(
 name|buff
 argument_list|,
@@ -310,7 +315,7 @@ argument_list|)
 expr_stmt|;
 name|query_dname_tolower
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
@@ -320,7 +325,7 @@ name|unit_assert
 argument_list|(
 name|memcmp
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
@@ -333,7 +338,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_at
+name|sldns_buffer_write_at
 argument_list|(
 name|buff
 argument_list|,
@@ -346,7 +351,7 @@ argument_list|)
 expr_stmt|;
 name|query_dname_tolower
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
@@ -356,7 +361,7 @@ name|unit_assert
 argument_list|(
 name|memcmp
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
@@ -889,7 +894,7 @@ specifier|static
 name|void
 name|dname_test_pkt_dname_len
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|)
@@ -901,12 +906,12 @@ argument_list|,
 literal|"pkt_dname_len"
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -915,7 +920,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -932,7 +937,7 @@ argument_list|)
 expr_stmt|;
 name|unit_assert
 argument_list|(
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|buff
 argument_list|)
@@ -940,12 +945,12 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -954,7 +959,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -971,7 +976,7 @@ argument_list|)
 expr_stmt|;
 name|unit_assert
 argument_list|(
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|buff
 argument_list|)
@@ -979,12 +984,12 @@ operator|==
 literal|5
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -993,7 +998,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -1010,7 +1015,7 @@ argument_list|)
 expr_stmt|;
 name|unit_assert
 argument_list|(
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|buff
 argument_list|)
@@ -1019,12 +1024,12 @@ literal|16
 argument_list|)
 expr_stmt|;
 comment|/* invalid compression pointer: to self */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -1033,7 +1038,7 @@ argument_list|,
 literal|17
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -1049,12 +1054,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* valid compression pointer */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -1063,12 +1068,12 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|buff
 argument_list|,
@@ -1087,7 +1092,7 @@ argument_list|)
 expr_stmt|;
 name|unit_assert
 argument_list|(
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|buff
 argument_list|)
@@ -1096,12 +1101,12 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* unknown label type */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -1110,7 +1115,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -1126,12 +1131,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* label too long */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -1140,7 +1145,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -1156,12 +1161,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* label exceeds packet */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -1170,7 +1175,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -1186,12 +1191,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* name very long */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -1218,7 +1223,7 @@ argument_list|,
 literal|255
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -1235,7 +1240,7 @@ argument_list|)
 expr_stmt|;
 name|unit_assert
 argument_list|(
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|buff
 argument_list|)
@@ -1244,12 +1249,12 @@ literal|255
 argument_list|)
 expr_stmt|;
 comment|/* name too long */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -1279,7 +1284,7 @@ argument_list|,
 literal|255
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -4054,11 +4059,11 @@ specifier|static
 name|void
 name|dname_test_pdtl
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|loopbuf
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|boundbuf
 parameter_list|)
@@ -4074,7 +4079,7 @@ name|pkt_dname_tolower
 argument_list|(
 name|loopbuf
 argument_list|,
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|loopbuf
 argument_list|,
@@ -4086,7 +4091,7 @@ name|pkt_dname_tolower
 argument_list|(
 name|boundbuf
 argument_list|,
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|boundbuf
 argument_list|,
@@ -4106,16 +4111,16 @@ specifier|static
 name|void
 name|dname_setup_bufs
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|loopbuf
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|boundbuf
 parameter_list|)
 block|{
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|loopbuf
 argument_list|,
@@ -4123,7 +4128,7 @@ literal|0xd54d
 argument_list|)
 expr_stmt|;
 comment|/* id */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|loopbuf
 argument_list|,
@@ -4131,7 +4136,7 @@ literal|0x12
 argument_list|)
 expr_stmt|;
 comment|/* flags  */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|loopbuf
 argument_list|,
@@ -4139,7 +4144,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* qdcount */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|loopbuf
 argument_list|,
@@ -4147,7 +4152,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* ancount */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|loopbuf
 argument_list|,
@@ -4155,7 +4160,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* nscount */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|loopbuf
 argument_list|,
@@ -4163,7 +4168,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* arcount */
-name|ldns_buffer_write_u8
+name|sldns_buffer_write_u8
 argument_list|(
 name|loopbuf
 argument_list|,
@@ -4171,19 +4176,19 @@ literal|0xc0
 argument_list|)
 expr_stmt|;
 comment|/* PTR back at itself */
-name|ldns_buffer_write_u8
+name|sldns_buffer_write_u8
 argument_list|(
 name|loopbuf
 argument_list|,
 literal|0x0c
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|loopbuf
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|boundbuf
 argument_list|,
@@ -4191,7 +4196,7 @@ literal|0xd54d
 argument_list|)
 expr_stmt|;
 comment|/* id */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|boundbuf
 argument_list|,
@@ -4199,7 +4204,7 @@ literal|0x12
 argument_list|)
 expr_stmt|;
 comment|/* flags  */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|boundbuf
 argument_list|,
@@ -4207,7 +4212,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* qdcount */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|boundbuf
 argument_list|,
@@ -4215,7 +4220,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* ancount */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|boundbuf
 argument_list|,
@@ -4223,7 +4228,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* nscount */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|boundbuf
 argument_list|,
@@ -4231,7 +4236,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* arcount */
-name|ldns_buffer_write_u8
+name|sldns_buffer_write_u8
 argument_list|(
 name|boundbuf
 argument_list|,
@@ -4239,7 +4244,7 @@ literal|0x01
 argument_list|)
 expr_stmt|;
 comment|/* len=1 */
-name|ldns_buffer_write_u8
+name|sldns_buffer_write_u8
 argument_list|(
 name|boundbuf
 argument_list|,
@@ -4250,7 +4255,7 @@ literal|'A'
 argument_list|)
 expr_stmt|;
 comment|/* A. label */
-name|ldns_buffer_write_u8
+name|sldns_buffer_write_u8
 argument_list|(
 name|boundbuf
 argument_list|,
@@ -4258,14 +4263,14 @@ literal|0xc0
 argument_list|)
 expr_stmt|;
 comment|/* PTR out of bounds */
-name|ldns_buffer_write_u8
+name|sldns_buffer_write_u8
 argument_list|(
 name|boundbuf
 argument_list|,
 literal|0xcc
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|boundbuf
 argument_list|)
@@ -4280,29 +4285,29 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|loopbuf
 init|=
-name|ldns_buffer_new
+name|sldns_buffer_new
 argument_list|(
 literal|14
 argument_list|)
 decl_stmt|;
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|boundbuf
 init|=
-name|ldns_buffer_new
+name|sldns_buffer_new
 argument_list|(
 literal|16
 argument_list|)
 decl_stmt|;
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 init|=
-name|ldns_buffer_new
+name|sldns_buffer_new
 argument_list|(
 literal|65800
 argument_list|)
@@ -4316,7 +4321,7 @@ operator|&&
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -4389,17 +4394,17 @@ expr_stmt|;
 name|dname_test_valid
 argument_list|()
 expr_stmt|;
-name|ldns_buffer_free
+name|sldns_buffer_free
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_free
+name|sldns_buffer_free
 argument_list|(
 name|loopbuf
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_free
+name|sldns_buffer_free
 argument_list|(
 name|boundbuf
 argument_list|)

@@ -49,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ldns/ldns.h>
+file|"ldns/sbuffer.h"
 end_include
 
 begin_undef

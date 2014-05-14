@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * testcode/replay.h - store and use a replay of events for the DNS resolver.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *   * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * testcode/replay.h - store and use a replay of events for the DNS resolver.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *   * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"testcode/ldns-testpkts.h"
+file|"testcode/testpkts.h"
 end_include
 
 begin_include
@@ -76,6 +76,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|infra_cache
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sldns_buffer
 struct_decl|;
 end_struct_decl
 
@@ -194,11 +200,6 @@ decl_stmt|;
 comment|/** length of addr, if 0, then any address will do */
 name|socklen_t
 name|addrlen
-decl_stmt|;
-comment|/** what pending query should timeout or is answered. or  	 * NULL for last sent query.  	 * Unused at this time. 	 */
-name|ldns_rr
-modifier|*
-name|qname
 decl_stmt|;
 comment|/** macro name, for assign. */
 name|char
@@ -379,7 +380,8 @@ struct|struct
 name|fake_pending
 block|{
 comment|/** what is important only that we remember the query, copied here. */
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|buffer
 decl_stmt|;
@@ -425,10 +427,13 @@ name|fake_pending
 modifier|*
 name|next
 decl_stmt|;
-comment|/** the buffer parsed into a ldns_pkt */
-name|ldns_pkt
+comment|/** the buffer parsed into a sldns_pkt */
+name|uint8_t
 modifier|*
 name|pkt
+decl_stmt|;
+name|size_t
+name|pkt_len
 decl_stmt|;
 comment|/** by what transport was the query sent out */
 name|enum
@@ -469,9 +474,12 @@ name|comm_reply
 name|repinfo
 decl_stmt|;
 comment|/** the answer preparsed as ldns pkt */
-name|ldns_pkt
+name|uint8_t
 modifier|*
 name|pkt
+decl_stmt|;
+name|size_t
+name|pkt_len
 decl_stmt|;
 block|}
 struct|;

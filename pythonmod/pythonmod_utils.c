@@ -67,6 +67,12 @@ directive|include
 file|"util/regional.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -426,7 +432,7 @@ name|module_qstate
 modifier|*
 name|qstate
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -504,7 +510,7 @@ name|edns
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,

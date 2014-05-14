@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * testcode/delayer.c - debug program that delays queries to a server.  *  * Copyright (c) 2008, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * testcode/delayer.c - debug program that delays queries to a server.  *  * Copyright (c) 2008, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|"util/config_file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
 end_include
 
 begin_include
@@ -689,7 +695,7 @@ name|ringbuf
 modifier|*
 name|r
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -716,7 +722,7 @@ init|=
 operator|(
 name|uint16_t
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|pkt
 argument_list|)
@@ -736,7 +742,7 @@ name|NULL
 decl_stmt|;
 name|log_assert
 argument_list|(
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|pkt
 argument_list|)
@@ -1059,7 +1065,7 @@ argument_list|(
 name|len
 argument_list|)
 argument_list|,
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -1159,7 +1165,7 @@ name|ringbuf
 modifier|*
 name|r
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1270,7 +1276,7 @@ argument_list|)
 expr_stmt|;
 name|memmove
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -1297,7 +1303,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_set_limit
+name|sldns_buffer_set_limit
 argument_list|(
 name|pkt
 argument_list|,
@@ -1549,7 +1555,7 @@ name|timeval
 modifier|*
 name|now
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1665,12 +1671,12 @@ operator|(
 name|void
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
 argument_list|,
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|pkt
 argument_list|)
@@ -1732,7 +1738,7 @@ operator|!=
 operator|(
 name|ssize_t
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|pkt
 argument_list|)
@@ -1777,7 +1783,7 @@ parameter_list|,
 name|int
 name|retsock
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -1814,12 +1820,12 @@ operator|(
 name|void
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
 argument_list|,
-name|ldns_buffer_capacity
+name|sldns_buffer_capacity
 argument_list|(
 name|pkt
 argument_list|)
@@ -1889,7 +1895,7 @@ endif|#
 directive|endif
 return|return;
 block|}
-name|ldns_buffer_set_limit
+name|sldns_buffer_set_limit
 argument_list|(
 name|pkt
 argument_list|,
@@ -1931,7 +1937,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -2020,7 +2026,7 @@ name|proxy
 modifier|*
 name|proxies
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2449,7 +2455,7 @@ name|ringbuf
 modifier|*
 name|ring
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2543,12 +2549,12 @@ operator|(
 name|void
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
 argument_list|,
-name|ldns_buffer_capacity
+name|sldns_buffer_capacity
 argument_list|(
 name|pkt
 argument_list|)
@@ -2627,7 +2633,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|ldns_buffer_set_limit
+name|sldns_buffer_set_limit
 argument_list|(
 name|pkt
 argument_list|,
@@ -3404,7 +3410,7 @@ name|timeval
 modifier|*
 name|delay
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -3425,12 +3431,12 @@ operator|(
 name|void
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
 argument_list|,
-name|ldns_buffer_capacity
+name|sldns_buffer_capacity
 argument_list|(
 name|pkt
 argument_list|)
@@ -3577,7 +3583,7 @@ name|item
 operator|=
 name|memdup
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -3958,7 +3964,7 @@ name|timeval
 modifier|*
 name|tcp_timeout
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -4900,7 +4906,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|strncpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|from
 argument_list|,
@@ -4949,7 +4958,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|strncpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|from
 argument_list|,
@@ -5109,7 +5121,7 @@ parameter_list|,
 name|socklen_t
 name|srv_len
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -5562,7 +5574,7 @@ name|delay
 decl_stmt|,
 name|reuse
 decl_stmt|;
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 decl_stmt|;
@@ -5674,7 +5686,7 @@ expr_stmt|;
 block|}
 name|pkt
 operator|=
-name|ldns_buffer_new
+name|sldns_buffer_new
 argument_list|(
 literal|65535
 argument_list|)
@@ -6259,7 +6271,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ldns_buffer_free
+name|sldns_buffer_free
 argument_list|(
 name|pkt
 argument_list|)
