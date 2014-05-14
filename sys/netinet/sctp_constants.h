@@ -3254,17 +3254,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_DEFAULT_MINSEGMENT
-value|512
-end_define
-
-begin_comment
-comment|/* MTU size ... if no mtu disc */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SCTP_HOW_MANY_SECRETS
 value|2
 end_define
