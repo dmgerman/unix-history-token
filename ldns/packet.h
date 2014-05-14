@@ -619,6 +619,19 @@ modifier|*
 name|p
 parameter_list|)
 function_decl|;
+comment|/**  * Return the number of RRs in the given section.  * Returns the sum of all RRs when LDNS_SECTION_ANY is given.  * Returns the sum of all non-question RRs when LDNS_SECTION_ANY_NOQUESTION  * is given.  * \param[in] p the packet  * \param[in] s the section  * \return the number of RRs in the given section  */
+name|uint16_t
+name|ldns_pkt_section_count
+parameter_list|(
+specifier|const
+name|ldns_pkt
+modifier|*
+name|p
+parameter_list|,
+name|ldns_pkt_section
+name|s
+parameter_list|)
+function_decl|;
 comment|/**  * Return the packet's tsig pseudo rr's  * \param[in] p the packet  * \return the tsig rr  */
 name|ldns_rr
 modifier|*
@@ -1243,6 +1256,31 @@ name|uint16_t
 name|flags
 parameter_list|)
 function_decl|;
+comment|/**  * creates an IXFR request packet for the given name, class.  * adds the SOA record to the authority section.  * \param[out] p the packet to be returned  * \param[in] rr_name the name to query for (as string)  * \param[in] rr_class the class to query for  * \param[in] flags packet flags  * \param[in] soa soa record to be added to the authority section  * \return LDNS_STATUS_OK or a ldns_status mesg with the error  */
+name|ldns_status
+name|ldns_pkt_ixfr_request_new_frm_str
+parameter_list|(
+name|ldns_pkt
+modifier|*
+modifier|*
+name|p
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|rr_name
+parameter_list|,
+name|ldns_rr_class
+name|rr_class
+parameter_list|,
+name|uint16_t
+name|flags
+parameter_list|,
+name|ldns_rr
+modifier|*
+name|soa
+parameter_list|)
+function_decl|;
 comment|/**  * creates a packet with a query in it for the given name, type and class.  * \param[in] rr_name the name to query for  * \param[in] rr_type the type to query for  * \param[in] rr_class the class to query for  * \param[in] flags packet flags  * \return ldns_pkt* a pointer to the new pkt  */
 name|ldns_pkt
 modifier|*
@@ -1260,6 +1298,26 @@ name|rr_class
 parameter_list|,
 name|uint16_t
 name|flags
+parameter_list|)
+function_decl|;
+comment|/**  * creates an IXFR request packet for the given name, type and class.  * adds the SOA record to the authority section.  * \param[in] rr_name the name to query for  * \param[in] rr_class the class to query for  * \param[in] flags packet flags  * \param[in] soa soa record to be added to the authority section  * \return ldns_pkt* a pointer to the new pkt  */
+name|ldns_pkt
+modifier|*
+name|ldns_pkt_ixfr_request_new
+parameter_list|(
+name|ldns_rdf
+modifier|*
+name|rr_name
+parameter_list|,
+name|ldns_rr_class
+name|rr_class
+parameter_list|,
+name|uint16_t
+name|flags
+parameter_list|,
+name|ldns_rr
+modifier|*
+name|soa
 parameter_list|)
 function_decl|;
 comment|/**  * clones the given packet, creating a fully allocated copy  *  * \param[in] pkt the packet to clone  * \return ldns_pkt* pointer to the new packet  */

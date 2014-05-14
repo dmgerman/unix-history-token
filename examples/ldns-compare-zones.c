@@ -113,6 +113,16 @@ argument_list|(
 literal|"       -z - do not sort zones\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"       -h - show usage and exit\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"       -v - show the version and exit\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

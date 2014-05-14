@@ -656,7 +656,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Did not get address record for nameserver, doing seperate query.\n"
+literal|"Did not get address record for nameserver, doing separate query.\n"
 argument_list|)
 expr_stmt|;
 block|}

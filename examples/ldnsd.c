@@ -1198,19 +1198,7 @@ name|answer_ad
 argument_list|)
 expr_stmt|;
 block|}
-name|ldns_rdf_deep_free
-argument_list|(
-name|origin
-argument_list|)
-expr_stmt|;
-name|ldns_zone_deep_free
-argument_list|(
-name|zone
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
+comment|/* No cleanup because of the infinite loop 	 * 	 * ldns_rdf_deep_free(origin); 	 * ldns_zone_deep_free(zone); 	 * return 0; 	 */
 block|}
 end_function
 

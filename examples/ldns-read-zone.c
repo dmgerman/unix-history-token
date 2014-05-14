@@ -40,6 +40,162 @@ file|<errno.h>
 end_include
 
 begin_function
+name|void
+name|print_usage
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|progname
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"Usage: %s [OPTIONS]<zonefile>\n"
+argument_list|,
+name|progname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tReads the zonefile and prints it.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tThe RR count of the zone is printed to stderr.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-b include Bubble Babble encoding of DS's.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-0 zeroize timestamps and signature in RRSIG records.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-c canonicalize all rrs in the zone.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-d only show DNSSEC data from the zone\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-h show this text\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-n do not print the SOA record\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-p prepend SOA serial with spaces so"
+literal|" it takes exactly ten characters.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-s strip DNSSEC data from the zone\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-S [[+|-]<number> | YYYYMMDDxx | "
+literal|" unixtime ]\n"
+literal|"\t\tSet serial number to<number> or,"
+literal|" when preceded by a sign,\n"
+literal|"\t\toffset the existing number with "
+literal|"<number>.  With YYYYMMDDxx\n"
+literal|"\t\tthe serial is formatted as a datecounter"
+literal|", and with unixtime as\n"
+literal|"\t\tthe number of seconds since 1-1-1970."
+literal|"  However, on serial\n"
+literal|"\t\tnumber decrease, +1 is used in stead"
+literal|".  (implies -s)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-u<rr type>\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t\tMark<rr type> for printing in unknown type format.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t\tThis option may be given multiple times.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t\t-u is not meant to be used together with -U.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-U<rr type>\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t\tMark<rr type> for not printing in unknown type format.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t\tThis option may be given multiple times.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t\tThe first occurrence of the -U option marks all RR types for"
+literal|"\n\t\tprinting in unknown type format except for the given<rr type>."
+literal|"\n\t\tSubsequent -U options will clear the mark for those<rr type>s"
+literal|"\n\t\ttoo, so that only the given<rr type>s will be printed in the"
+literal|"\n\t\tpresentation format specific for those<rr type>s.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t\t-U is not meant to be used together with -u.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-v shows the version and exits\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-z sort the zone (implies -c).\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nif no file is given standard input is read\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -114,18 +270,18 @@ decl_stmt|;
 name|ldns_rr_type
 name|cur_rr_type
 decl_stmt|;
+name|ldns_output_format_storage
+name|fmt_storage
+decl_stmt|;
 name|ldns_output_format
+modifier|*
 name|fmt
 init|=
-block|{
-name|ldns_output_format_default
-operator|->
-name|flags
-block|,
-name|ldns_output_format_default
-operator|->
-name|data
-block|}
+name|ldns_output_format_init
+argument_list|(
+operator|&
+name|fmt_storage
+argument_list|)
 decl_stmt|;
 name|ldns_soa_serial_increment_func_t
 name|soa_serial_increment_func
@@ -148,7 +304,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0bcdhnpsvzS:"
+literal|"0bcdhnpsu:U:vzS:"
 argument_list|)
 operator|)
 operator|!=
@@ -165,7 +321,7 @@ case|case
 literal|'b'
 case|:
 name|fmt
-operator|.
+operator|->
 name|flags
 operator||=
 operator|(
@@ -179,7 +335,7 @@ case|case
 literal|'0'
 case|:
 name|fmt
-operator|.
+operator|->
 name|flags
 operator||=
 name|LDNS_FMT_ZEROIZE_RRSIGS
@@ -217,101 +373,9 @@ break|break;
 case|case
 literal|'h'
 case|:
-name|printf
+name|print_usage
 argument_list|(
-literal|"Usage: %s [OPTIONS]<zonefile>\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\tReads the zonefile and prints it.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\tThe RR count of the zone is printed to stderr.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-b include bubblebabble of DS's.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-0 zeroize timestamps and signature in RRSIG records.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-c canonicalize all rrs in the zone.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-d only show DNSSEC data from the zone\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-h show this text\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-n do not print the SOA record\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-p prepend SOA serial with spaces so"
-literal|" it takes exactly ten characters.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-s strip DNSSEC data from the zone\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-S [[+|-]<number> | YYYYMMDDxx | "
-literal|" unixtime ]\n"
-literal|"\t\tSet serial number to<number> or,"
-literal|" when preceded by a sign,\n"
-literal|"\t\toffset the existing number with "
-literal|"<number>.  With YYYYMMDDxx\n"
-literal|"\t\tthe serial is formatted as a datecounter"
-literal|", and with unixtime as the\n"
-literal|"\t\tnumber of seconds since 1-1-1970."
-literal|"  However, on serial number"
-literal|"\n\t\tdecrease, +1 is used in stead"
-literal|".  (implies -s)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-v shows the version and exits\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-z sort the zone (implies -c).\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nif no file is given standard input is read\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_SUCCESS
+literal|"ldns-read-zone"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -327,7 +391,7 @@ case|case
 literal|'p'
 case|:
 name|fmt
-operator|.
+operator|->
 name|flags
 operator||=
 name|LDNS_FMT_PAD_SOA_SERIAL
@@ -350,6 +414,112 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Warning: stripping both DNSSEC and non-DNSSEC records. Output will be sparse.\n"
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'u'
+case|:
+name|s
+operator|=
+name|ldns_output_format_set_type
+argument_list|(
+name|fmt
+argument_list|,
+name|ldns_get_rr_type_by_name
+argument_list|(
+name|optarg
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|!=
+name|LDNS_STATUS_OK
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot set rr type %s "
+literal|"in output format to "
+literal|"print as unknown type: %s\n"
+argument_list|,
+name|ldns_rr_descript
+argument_list|(
+name|ldns_get_rr_type_by_name
+argument_list|(
+name|optarg
+argument_list|)
+argument_list|)
+operator|->
+name|_name
+argument_list|,
+name|ldns_get_errorstr_by_id
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'U'
+case|:
+name|s
+operator|=
+name|ldns_output_format_clear_type
+argument_list|(
+name|fmt
+argument_list|,
+name|ldns_get_rr_type_by_name
+argument_list|(
+name|optarg
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|!=
+name|LDNS_STATUS_OK
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot set rr type %s "
+literal|"in output format to not "
+literal|"print as unknown type: %s\n"
+argument_list|,
+name|ldns_rr_descript
+argument_list|(
+name|ldns_get_rr_type_by_name
+argument_list|(
+name|optarg
+argument_list|)
+argument_list|)
+operator|->
+name|_name
+argument_list|,
+name|ldns_get_errorstr_by_id
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
@@ -872,7 +1042,6 @@ name|ldns_rr_print_fmt
 argument_list|(
 name|stdout
 argument_list|,
-operator|&
 name|fmt
 argument_list|,
 name|ldns_zone_soa
@@ -886,7 +1055,6 @@ name|ldns_rr_list_print_fmt
 argument_list|(
 name|stdout
 argument_list|,
-operator|&
 name|fmt
 argument_list|,
 name|ldns_zone_rrs

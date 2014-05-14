@@ -199,7 +199,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"n:o:v"
+literal|"o:v"
 argument_list|)
 operator|)
 operator|!=
@@ -425,7 +425,7 @@ argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
-comment|/* SOA is stored seperately */
+comment|/* SOA is stored separately */
 name|fprintf
 argument_list|(
 name|stderr

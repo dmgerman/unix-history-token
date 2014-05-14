@@ -76,6 +76,8 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|resp
+init|=
+name|NULL
 decl_stmt|;
 name|ldns_rr_list
 modifier|*

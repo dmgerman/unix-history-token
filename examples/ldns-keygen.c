@@ -295,7 +295,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:kb:r:v25"
+literal|"a:kb:r:v"
 argument_list|)
 operator|)
 operator|!=
@@ -780,7 +780,7 @@ argument_list|,
 name|bits
 argument_list|)
 expr_stmt|;
-comment|/* set the owner name in the key - this is a /seperate/ step */
+comment|/* set the owner name in the key - this is a /separate/ step */
 name|ldns_key_set_pubkey_owner
 argument_list|(
 name|key

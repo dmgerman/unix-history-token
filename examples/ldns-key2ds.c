@@ -247,9 +247,7 @@ return|;
 endif|#
 directive|endif
 default|default:
-return|return
-name|LDNS_SHA1
-return|;
+break|break;
 block|}
 return|return
 name|LDNS_SHA1

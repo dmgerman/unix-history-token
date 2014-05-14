@@ -334,6 +334,12 @@ literal|"No data"
 block|}
 block|,
 block|{
+name|LDNS_STATUS_EXISTS_ERR
+block|,
+literal|"Element already exists"
+block|}
+block|,
+block|{
 name|LDNS_STATUS_CERT_BAD_ALGORITHM
 block|,
 literal|"Bad algorithm type for CERT record"
@@ -590,6 +596,58 @@ name|LDNS_STATUS_DANE_PKIX_NO_SELF_SIGNED_TRUST_ANCHOR
 block|,
 literal|"The validation path "
 literal|"did not end in a self-signed certificate"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_INVALID_ILNP64
+block|,
+literal|"Conversion error, 4 colon separated hex numbers expected"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_INVALID_EUI48
+block|,
+literal|"Conversion error, 6 two character hex numbers "
+literal|"separated by dashes expected (i.e. xx-xx-xx-xx-xx-xx"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_INVALID_EUI64
+block|,
+literal|"Conversion error, 8 two character hex numbers "
+literal|"separated by dashes expected (i.e. xx-xx-xx-xx-xx-xx-xx-xx"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_WIRE_RDATA_ERR
+block|,
+literal|"invalid rdata in wire format"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_INVALID_TAG
+block|,
+literal|"Conversion error, a non-zero sequence of US-ASCII letters "
+literal|"and numbers in lower case expected"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_TYPE_NOT_IN_BITMAP
+block|,
+literal|"The RR type bitmap rdata field did not have "
+literal|"a bit reserved for the specific RR type"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_INVALID_RDF_TYPE
+block|,
+literal|"The rdata field was not of the expected type"
+block|}
+block|,
+block|{
+name|LDNS_STATUS_RDATA_OVERFLOW
+block|,
+literal|"Rdata size overflow"
 block|}
 block|,
 block|{

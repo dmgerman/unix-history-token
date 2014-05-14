@@ -229,7 +229,25 @@ block|,
 name|LDNS_STATUS_DANE_PKIX_DID_NOT_VALIDATE
 block|,
 name|LDNS_STATUS_DANE_PKIX_NO_SELF_SIGNED_TRUST_ANCHOR
-block|}
+block|,
+name|LDNS_STATUS_EXISTS_ERR
+block|,
+name|LDNS_STATUS_INVALID_ILNP64
+block|,
+name|LDNS_STATUS_INVALID_EUI48
+block|,
+name|LDNS_STATUS_INVALID_EUI64
+block|,
+name|LDNS_STATUS_WIRE_RDATA_ERR
+block|,
+name|LDNS_STATUS_INVALID_TAG
+block|,
+name|LDNS_STATUS_TYPE_NOT_IN_BITMAP
+block|,
+name|LDNS_STATUS_INVALID_RDF_TYPE
+block|,
+name|LDNS_STATUS_RDATA_OVERFLOW
+block|, }
 enum|;
 typedef|typedef
 name|enum

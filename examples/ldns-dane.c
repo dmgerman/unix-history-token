@@ -27,16 +27,90 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_IN_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SOCKET_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETDB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ARPA_INET_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -50,6 +124,12 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_DANE
+end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -120,6 +200,17 @@ define|#
 directive|define
 name|BUFSIZE
 value|16384
+end_define
+
+begin_comment
+comment|/* Exit status on a PKIX validated connection but without TLSA records  * when the -T option was given:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_TLSAS_EXIT_STATUS
+value|2
 end_define
 
 begin_comment
@@ -325,6 +416,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"\t-T\t\tReturn exit status 2 for PKIX validated connections\n"
+literal|"\t\t\twithout (secure) TLSA records(s)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\t-u\t\tuse UDP transport instead of TCP\n"
 argument_list|)
 expr_stmt|;
@@ -333,7 +430,7 @@ argument_list|(
 literal|"\t-v\t\tshow version and exit\n"
 argument_list|)
 expr_stmt|;
-comment|/* printf("\t-V [0-5]\tset verbosity level (defaul 3)\n"); */
+comment|/* printf("\t-V [0-5]\tset verbosity level (default 3)\n"); */
 name|exit
 argument_list|(
 name|EXIT_SUCCESS
@@ -778,6 +875,11 @@ name|SSL
 operator|*
 name|ssl
 argument_list|,
+specifier|const
+name|char
+operator|*
+name|name_str
+argument_list|,
 name|ldns_rdf
 operator|*
 name|address
@@ -1008,6 +1110,21 @@ return|return
 name|LDNS_STATUS_SSL_ERR
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SSL_CTRL_SET_TLSEXT_HOSTNAME
+operator|(
+name|void
+operator|)
+name|SSL_set_tlsext_host_name
+argument_list|(
+name|ssl
+argument_list|,
+name|name_str
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|SSL_set_connect_state
 argument_list|(
 name|ssl
@@ -1531,28 +1648,6 @@ block|}
 comment|/* if (FD_ISSET(STDIN_FILENO,&rfds)) */
 block|}
 comment|/* for (;;) */
-block|}
-end_function
-
-begin_function
-name|void
-name|ssl_shutdown
-parameter_list|(
-name|SSL
-modifier|*
-name|ssl
-parameter_list|)
-block|{
-while|while
-condition|(
-name|SSL_shutdown
-argument_list|(
-name|ssl
-argument_list|)
-operator|==
-literal|0
-condition|)
-empty_stmt|;
 block|}
 end_function
 
@@ -3089,7 +3184,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning! Bogus IPv4 addresses. "
+literal|"Warning! Bogus IPv6 addresses. "
 literal|"Discarding...\n"
 argument_list|)
 expr_stmt|;
@@ -4580,6 +4675,9 @@ argument_list|,
 name|ldns_rdf
 operator|*
 name|name
+argument_list|,
+name|bool
+name|assume_pkix_validity
 argument_list|)
 block|{
 name|ldns_status
@@ -4690,6 +4788,28 @@ argument_list|(
 name|stdout
 argument_list|,
 literal|" dane-validated successfully\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|assume_pkix_validity
+operator|&&
+name|s
+operator|==
+name|LDNS_STATUS_DANE_PKIX_DID_NOT_VALIDATE
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|" dane-validated successfully,"
+literal|" because PKIX is assumed valid\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4997,6 +5117,16 @@ name|ssl
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|no_tlsas_exit_status
+init|=
+name|EXIT_SUCCESS
+decl_stmt|;
+name|int
+name|exit_success
+init|=
+name|EXIT_SUCCESS
+decl_stmt|;
 name|bool
 name|success
 init|=
@@ -5028,7 +5158,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46a:bc:df:hik:no:p:sSt:uvV:"
+literal|"46a:bc:df:hik:no:p:sSt:TuvV:"
 argument_list|)
 operator|)
 operator|!=
@@ -5389,6 +5519,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'T'
+case|:
+name|no_tlsas_exit_status
+operator|=
+name|NO_TLSAS_EXIT_STATUS
+expr_stmt|;
+break|break;
+case|case
 literal|'u'
 case|:
 name|transport
@@ -5698,7 +5836,7 @@ name|LDNS_ERR
 argument_list|(
 name|s
 argument_list|,
-literal|"could not read tlas from file"
+literal|"could not read tlsas from file"
 argument_list|)
 expr_stmt|;
 comment|/* extract port, transport and hostname from TLSA owner name */
@@ -6303,10 +6441,14 @@ literal|"were found, but were insecure.\n"
 literal|"PKIX validation without DANE will be "
 literal|"performed. If you wish to perform DANE\n"
 literal|"even though the RR's are insecure, "
-literal|"se the -d option.\n"
+literal|"use the -d option.\n"
 argument_list|,
 name|tlsa_owner_str
 argument_list|)
+expr_stmt|;
+name|exit_success
+operator|=
+name|no_tlsas_exit_status
 expr_stmt|;
 block|}
 elseif|else
@@ -6350,6 +6492,10 @@ argument_list|(
 name|tlsa_owner
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|exit_success
+operator|=
+name|no_tlsas_exit_status
 expr_stmt|;
 block|}
 elseif|else
@@ -6761,6 +6907,12 @@ literal|"error loading certificate"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cert_file
+condition|)
+block|{
+comment|/* ssl load certificate */
 name|ssl
 operator|=
 name|SSL_new
@@ -6780,12 +6932,6 @@ literal|"could not SSL_new"
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|cert_file
-condition|)
-block|{
-comment|/* ssl load certificate */
 name|cert
 operator|=
 name|SSL_get_certificate
@@ -6871,6 +7017,8 @@ argument_list|,
 name|verify_server_name
 argument_list|,
 name|name
+argument_list|,
+name|assume_pkix_validity
 argument_list|)
 condition|)
 block|{
@@ -6884,6 +7032,11 @@ default|default:
 break|break;
 comment|/* suppress warning */
 block|}
+name|SSL_free
+argument_list|(
+name|ssl
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6983,6 +7136,25 @@ name|i
 operator|++
 control|)
 block|{
+name|ssl
+operator|=
+name|SSL_new
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ssl
+condition|)
+block|{
+name|ssl_err
+argument_list|(
+literal|"could not SSL_new"
+argument_list|)
+expr_stmt|;
+block|}
 name|address
 operator|=
 name|ldns_rr_a_address
@@ -7013,6 +7185,8 @@ operator|&
 name|extra_certs
 argument_list|,
 name|ssl
+argument_list|,
+name|name_str
 argument_list|,
 name|address
 argument_list|,
@@ -7123,6 +7297,8 @@ argument_list|,
 name|verify_server_name
 argument_list|,
 name|name
+argument_list|,
+name|assume_pkix_validity
 argument_list|)
 condition|)
 block|{
@@ -7148,7 +7324,17 @@ default|default:
 break|break;
 comment|/* suppress warning */
 block|}
-name|ssl_shutdown
+while|while
+condition|(
+name|SSL_shutdown
+argument_list|(
+name|ssl
+argument_list|)
+operator|==
+literal|0
+condition|)
+empty_stmt|;
+name|SSL_free
 argument_list|(
 name|ssl
 argument_list|)
@@ -7194,11 +7380,6 @@ name|tlsas
 argument_list|)
 expr_stmt|;
 comment|/* cleanup */
-name|SSL_free
-argument_list|(
-name|ssl
-argument_list|)
-expr_stmt|;
 name|SSL_CTX_free
 argument_list|(
 name|ctx
@@ -7255,7 +7436,7 @@ condition|)
 block|{
 name|exit
 argument_list|(
-name|EXIT_SUCCESS
+name|exit_success
 argument_list|)
 expr_stmt|;
 block|}
@@ -7274,6 +7455,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* HAVE_SSL */
+end_comment
 
 begin_function
 name|int
@@ -7309,6 +7494,51 @@ end_endif
 
 begin_comment
 comment|/* HAVE_SSL */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* USE_DANE */
+end_comment
+
+begin_function
+name|int
+name|main
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"dane support was disabled with this build of ldns, "
+literal|"and has not been compiled in\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_DANE */
 end_comment
 
 end_unit
