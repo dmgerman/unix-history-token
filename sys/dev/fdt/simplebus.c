@@ -862,6 +862,8 @@ if|if
 condition|(
 name|fdt_intr_to_rl
 argument_list|(
+name|dev
+argument_list|,
 name|dt_child
 argument_list|,
 operator|&
