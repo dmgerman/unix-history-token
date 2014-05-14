@@ -604,19 +604,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|setfault
-parameter_list|(
-name|faultbuf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* defined in locore.S */
-end_comment
-
 begin_decl_stmt
 name|long
 name|Maxmem
