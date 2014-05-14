@@ -306,7 +306,11 @@ begin_function_decl
 name|void
 name|gvinum_resetconfig
 parameter_list|(
-name|void
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1103,7 +1107,7 @@ name|fopen
 argument_list|(
 name|argv
 index|[
-literal|1
+name|i
 index|]
 argument_list|,
 literal|"r"
@@ -1119,7 +1123,7 @@ literal|"can't open '%s' for reading"
 argument_list|,
 name|argv
 index|[
-literal|1
+name|i
 index|]
 argument_list|)
 expr_stmt|;
@@ -3747,7 +3751,7 @@ literal|"rename [-r] [drive | subdisk | plex | volume] newname\n"
 literal|"        Change the name of the specified object.\n"
 literal|"rebuildparity plex [-f]\n"
 literal|"        Rebuild the parity blocks of a RAID-5 plex.\n"
-literal|"resetconfig\n"
+literal|"resetconfig [-f]\n"
 literal|"        Reset the complete gvinum configuration\n"
 literal|"rm [-r] [-f] volume | plex | subdisk | drive\n"
 literal|"        Remove an object.\n"
@@ -5465,7 +5469,13 @@ begin_function
 name|void
 name|gvinum_resetconfig
 parameter_list|(
-name|void
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
 parameter_list|)
 block|{
 name|struct
@@ -5484,6 +5494,69 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|,
+name|i
+decl_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|i
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"f"
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+switch|switch
+condition|(
+name|i
+condition|)
+block|{
+case|case
+literal|'f'
+case|:
+name|flags
+operator||=
+name|GV_FLAG_F
+expr_stmt|;
+break|break;
+default|default:
+name|warn
+argument_list|(
+literal|"invalid flag: %c"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|GV_FLAG_F
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -5502,8 +5575,8 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|" WARNING!  This command will completely wipe out your gvinum"
-literal|"configuration.\n"
+literal|" WARNING!  This command will completely wipe out"
+literal|" your gvinum configuration.\n"
 literal|" All data will be lost.  If you really want to do this,"
 literal|" enter the text\n\n"
 literal|" NO FUTURE\n"
@@ -5538,6 +5611,7 @@ literal|"\n No change\n"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|req
 operator|=
@@ -6167,6 +6241,10 @@ name|subdisks
 decl_stmt|,
 name|flags
 decl_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|drives
 operator|=
 name|volumes
@@ -7022,7 +7100,11 @@ literal|"resetconfig"
 argument_list|)
 condition|)
 name|gvinum_resetconfig
-argument_list|()
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
