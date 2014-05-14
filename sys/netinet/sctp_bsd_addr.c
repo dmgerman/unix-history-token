@@ -438,6 +438,13 @@ block|{
 comment|/* You only get one */
 return|return;
 block|}
+comment|/* Initialize global locks here, thus only once. */
+name|SCTP_ITERATOR_LOCK_INIT
+argument_list|()
+expr_stmt|;
+name|SCTP_IPI_ITERATOR_WQ_INIT
+argument_list|()
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
