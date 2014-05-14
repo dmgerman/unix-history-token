@@ -43,7 +43,7 @@ value|__attribute__((packed))
 end_define
 
 begin_comment
-comment|/*  * SCTP protocol - RFC2960.  */
+comment|/*  * SCTP protocol - RFC4960.  */
 end_comment
 
 begin_struct
@@ -65,7 +65,7 @@ comment|/* verification tag of packet */
 name|uint32_t
 name|checksum
 decl_stmt|;
-comment|/* Adler32 C-Sum */
+comment|/* CRC32C checksum */
 comment|/* chunks follow... */
 block|}
 name|SCTP_PACKED
