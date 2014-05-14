@@ -288,6 +288,34 @@ name|MVS_Q_SOC
 block|}
 block|,
 block|{
+name|MV_DEV_MV78260
+block|,
+literal|0x00
+block|,
+literal|"Marvell MV78260"
+block|,
+literal|2
+block|,
+name|MVS_Q_GENIIE
+operator||
+name|MVS_Q_SOC
+block|}
+block|,
+block|{
+name|MV_DEV_MV78460
+block|,
+literal|0x00
+block|,
+literal|"Marvell MV78460"
+block|,
+literal|2
+block|,
+name|MVS_Q_GENIIE
+operator||
+name|MVS_Q_SOC
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0x00

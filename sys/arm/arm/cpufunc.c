@@ -1394,143 +1394,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|cpu_functions
-name|pj4bv6_cpufuncs
-init|=
-block|{
-comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
-name|arm11_drain_writebuf
-block|,
-comment|/* cpwait		*/
-comment|/* MMU functions */
-name|cpufunc_control
-block|,
-comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* Domain		*/
-name|pj4b_setttb
-block|,
-comment|/* Setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress		*/
-comment|/* TLB functions */
-name|arm11_tlb_flushID
-block|,
-comment|/* tlb_flushID		*/
-name|arm11_tlb_flushID_SE
-block|,
-comment|/* tlb_flushID_SE	*/
-name|arm11_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-name|arm11_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE	*/
-name|arm11_tlb_flushD
-block|,
-comment|/* tlb_flushD		*/
-name|arm11_tlb_flushD_SE
-block|,
-comment|/* tlb_flushD_SE	*/
-comment|/* Cache operations */
-name|armv6_icache_sync_all
-block|,
-comment|/* icache_sync_all	*/
-name|pj4b_icache_sync_range
-block|,
-comment|/* icache_sync_range	*/
-name|armv6_dcache_wbinv_all
-block|,
-comment|/* dcache_wbinv_all	*/
-name|pj4b_dcache_wbinv_range
-block|,
-comment|/* dcache_wbinv_range	*/
-name|pj4b_dcache_inv_range
-block|,
-comment|/* dcache_inv_range	*/
-name|pj4b_dcache_wb_range
-block|,
-comment|/* dcache_wb_range	*/
-name|armv6_idcache_wbinv_all
-block|,
-comment|/* idcache_wbinv_all	*/
-name|pj4b_idcache_wbinv_range
-block|,
-comment|/* idcache_wbinv_all	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_wbinv_all	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_wbinv_range	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_inv_range	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_wb_range	*/
-comment|/* Other functions */
-name|pj4b_drain_readbuf
-block|,
-comment|/* flush_prefetchbuf	*/
-name|arm11_drain_writebuf
-block|,
-comment|/* drain_writebuf	*/
-name|pj4b_flush_brnchtgt_all
-block|,
-comment|/* flush_brnchtgt_C	*/
-name|pj4b_flush_brnchtgt_va
-block|,
-comment|/* flush_brnchtgt_E	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* sleep		*/
-comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
-name|arm11_context_switch
-block|,
-comment|/* context_switch	*/
-name|pj4bv6_setup
-comment|/* cpu setup		*/
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -4528,10 +4391,6 @@ if|if
 condition|(
 name|cputype
 operator|==
-name|CPU_ID_MV88SV581X_V6
-operator|||
-name|cputype
-operator|==
 name|CPU_ID_MV88SV581X_V7
 operator|||
 name|cputype
@@ -4540,56 +4399,12 @@ name|CPU_ID_MV88SV584X_V7
 operator|||
 name|cputype
 operator|==
-name|CPU_ID_ARM_88SV581X_V6
-operator|||
-name|cputype
-operator|==
 name|CPU_ID_ARM_88SV581X_V7
 condition|)
 block|{
-if|if
-condition|(
-name|cpu_pfr
-argument_list|(
-literal|0
-argument_list|)
-operator|&
-name|ARM_PFR0_THUMBEE_MASK
-condition|)
 name|cpufuncs
 operator|=
 name|pj4bv7_cpufuncs
-expr_stmt|;
-else|else
-name|cpufuncs
-operator|=
-name|pj4bv6_cpufuncs
-expr_stmt|;
-name|get_cachetype_cp15
-argument_list|()
-expr_stmt|;
-name|pmap_pte_init_mmu_v6
-argument_list|()
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|cputype
-operator|==
-name|CPU_ID_ARM_88SV584X_V6
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_MV88SV584X_V6
-condition|)
-block|{
-name|cpufuncs
-operator|=
-name|pj4bv6_cpufuncs
 expr_stmt|;
 name|get_cachetype_cp15
 argument_list|()
@@ -8310,128 +8125,20 @@ end_ifdef
 
 begin_macro
 unit|void
-name|pj4bv6_setup
+name|pj4bv7_setup
 argument_list|(
-argument|char *args
+argument|args
 argument_list|)
 end_macro
 
-begin_block
-block|{
-name|int
-name|cpuctrl
-decl_stmt|;
-name|pj4b_config
-argument_list|()
-expr_stmt|;
-name|cpuctrl
-operator|=
-name|CPU_CONTROL_MMU_ENABLE
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ARM32_DISABLE_ALIGNMENT_FAULTS
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_AFLT_ENABLE
-expr_stmt|;
-endif|#
-directive|endif
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_DC_ENABLE
-expr_stmt|;
-name|cpuctrl
-operator||=
-operator|(
-literal|0xf
-operator|<<
-literal|3
-operator|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__ARMEB__
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_BEND_ENABLE
-expr_stmt|;
-endif|#
-directive|endif
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_SYST_ENABLE
-expr_stmt|;
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_BPRD_ENABLE
-expr_stmt|;
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_IC_ENABLE
-expr_stmt|;
-if|if
-condition|(
-name|vector_page
-operator|==
-name|ARM_VECTORS_HIGH
-condition|)
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_VECRELOC
-expr_stmt|;
-name|cpuctrl
-operator||=
-operator|(
-literal|0x5
-operator|<<
-literal|16
-operator|)
-expr_stmt|;
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_V6_EXTPAGE
-expr_stmt|;
-comment|/* XXX not yet */
-comment|/* cpuctrl |= CPU_CONTROL_L2_ENABLE; */
-comment|/* Make sure caches are clean.  */
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
-argument_list|()
-expr_stmt|;
-comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
-name|cpu_control
-argument_list|(
-literal|0xffffffff
-argument_list|,
-name|cpuctrl
-argument_list|)
-expr_stmt|;
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_function
-name|void
-name|pj4bv7_setup
-parameter_list|(
-name|args
-parameter_list|)
+begin_decl_stmt
 name|char
 modifier|*
 name|args
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|int
 name|cpuctrl
@@ -8521,7 +8228,7 @@ name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#

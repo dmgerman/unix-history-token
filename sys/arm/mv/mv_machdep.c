@@ -1252,6 +1252,36 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SOC_MV_ARMADAXP
+name|vm_paddr_t
+name|cur_immr_pa
+decl_stmt|;
+comment|/* 	 * Acquire SoC registers' base passed by u-boot and fill devmap 	 * accordingly. DTB is going to be modified basing on this data 	 * later. 	 */
+asm|__asm __volatile("mrc p15, 4, %0, c15, c0, 0" : "=r" (cur_immr_pa));
+name|cur_immr_pa
+operator|=
+operator|(
+name|cur_immr_pa
+operator|<<
+literal|13
+operator|)
+operator|&
+literal|0xff000000
+expr_stmt|;
+if|if
+condition|(
+name|cur_immr_pa
+operator|!=
+literal|0
+condition|)
+name|fdt_immr_pa
+operator|=
+name|cur_immr_pa
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * IMMR range. 	 */
 name|fdt_devmap
 index|[

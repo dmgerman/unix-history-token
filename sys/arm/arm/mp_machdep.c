@@ -166,6 +166,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_MV_PJ4B
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<arm/mv/mvwin.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/fdt/fdt_common.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -606,7 +629,7 @@ name|temp_pagetable_va
 operator|)
 operator|)
 index|[
-literal|0xf1000000
+name|MV_BASE
 operator|>>
 name|L1_S_SHIFT
 index|]
@@ -622,7 +645,7 @@ argument_list|(
 name|AP_KRW
 argument_list|)
 operator||
-literal|0xd0000000
+name|fdt_immr_pa
 expr_stmt|;
 endif|#
 directive|endif
