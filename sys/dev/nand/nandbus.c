@@ -2226,7 +2226,7 @@ literal|50
 operator|*
 literal|5000
 expr_stmt|;
-comment|/* 10ms */
+comment|/* 250ms */
 name|getmicrotime
 argument_list|(
 operator|&
