@@ -38,6 +38,15 @@ decl_stmt|;
 name|int
 function_decl|(
 modifier|*
+name|resize
+function_decl|)
+parameter_list|(
+name|lba_t
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
 name|write
 function_decl|)
 parameter_list|(
@@ -68,6 +77,15 @@ name|nm
 parameter_list|)
 value|DATA_SET(formats, nm)
 end_define
+
+begin_function_decl
+name|int
+name|format_resize
+parameter_list|(
+name|lba_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

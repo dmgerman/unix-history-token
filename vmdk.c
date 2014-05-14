@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"format.h"
+file|"image.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"image.h"
+file|"format.h"
 end_include
 
 begin_include
@@ -220,6 +220,25 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
+name|vmdk_resize
+parameter_list|(
+name|lba_t
+name|imgsz
+name|__unused
+parameter_list|)
+block|{
+comment|/* 	 * Caulculate optimal grain size and round image size to 	 * a multiple of the grain size. 	 */
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|vmdk_write
 parameter_list|(
 name|int
@@ -327,6 +346,11 @@ operator|.
 name|description
 operator|=
 literal|"Virtual Machine Disk"
+block|,
+operator|.
+name|resize
+operator|=
+name|vmdk_resize
 block|,
 operator|.
 name|write

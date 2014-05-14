@@ -62,13 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"format.h"
+file|"image.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"image.h"
+file|"format.h"
 end_include
 
 begin_include
@@ -76,6 +76,24 @@ include|#
 directive|include
 file|"mkimg.h"
 end_include
+
+begin_function
+specifier|static
+name|int
+name|raw_resize
+parameter_list|(
+name|lba_t
+name|imgsz
+name|__unused
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -113,6 +131,11 @@ operator|.
 name|description
 operator|=
 literal|"Raw Disk"
+block|,
+operator|.
+name|resize
+operator|=
+name|raw_resize
 block|,
 operator|.
 name|write
