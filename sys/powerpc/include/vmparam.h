@@ -426,6 +426,13 @@ name|VM_MAX_KERNEL_ADDRESS
 value|0xf8000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|VM_MAX_SAFE_KERNEL_ADDRESS
+value|VM_MAX_KERNEL_ADDRESS
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -651,11 +658,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
+begin_comment
+comment|/*  * How many physical pages per KVA page allocated.  * min(max(VM_KMEM_SIZE, Physical memory/VM_KMEM_SIZE_SCALE), VM_KMEM_SIZE_MAX)  * is the total KVA space allocated for kmem_map.  */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -675,6 +680,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Ceiling on the amount of kmem_map KVA space: 40% of the entire KVA space.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -685,17 +694,8 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_MAX
-value|0x1c0000000
+value|((VM_MAX_SAFE_KERNEL_ADDRESS - \     VM_MIN_KERNEL_ADDRESS + 1) * 2 / 5)
 end_define
-
-begin_comment
-comment|/* 7 GB */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
