@@ -5703,26 +5703,15 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* Re-enable write permissions for the page */
-name|pmap_set_prot
-argument_list|(
-name|ptep
-argument_list|,
-name|VM_PROT_WRITE
-argument_list|,
 operator|*
 name|ptep
-operator|&
-name|L2_S_PROT_U
-argument_list|)
-expr_stmt|;
-name|CTR1
-argument_list|(
-name|KTR_PMAP
-argument_list|,
-literal|"pmap_fault_fix: new pte:0x%x"
-argument_list|,
+operator|=
+operator|(
 name|pte
-argument_list|)
+operator|&
+operator|~
+name|L2_APX
+operator|)
 expr_stmt|;
 name|PTE_SYNC
 argument_list|(
@@ -5732,6 +5721,16 @@ expr_stmt|;
 name|rv
 operator|=
 literal|1
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"pmap_fault_fix: new pte:0x%x"
+argument_list|,
+operator|*
+name|ptep
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -5819,6 +5818,16 @@ expr_stmt|;
 name|rv
 operator|=
 literal|1
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"pmap_fault_fix: new pte:0x%x"
+argument_list|,
+operator|*
+name|ptep
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * We know there is a valid mapping here, so simply 	 * fix up the L1 if necessary. 	 */
@@ -9586,6 +9595,17 @@ name|vm_offset_t
 name|va
 parameter_list|)
 block|{
+if|if
+condition|(
+name|kernel_vm_end
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|pmap_extract_locked
@@ -13058,6 +13078,12 @@ block|{
 name|vm_paddr_t
 name|pa
 decl_stmt|;
+if|if
+condition|(
+name|kernel_vm_end
+operator|!=
+literal|0
+condition|)
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -13072,6 +13098,12 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kernel_vm_end
+operator|!=
+literal|0
+condition|)
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
@@ -13119,6 +13151,10 @@ name|l1idx
 decl_stmt|;
 if|if
 condition|(
+name|kernel_vm_end
+operator|!=
+literal|0
+operator|&&
 name|pmap
 operator|!=
 name|kernel_pmap

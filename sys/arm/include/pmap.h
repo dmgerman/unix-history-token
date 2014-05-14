@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|PTE_PAGETABLE
-value|4
+value|6
 end_define
 
 begin_else
@@ -2124,6 +2124,10 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_81342
 argument_list|)
+operator|||
+name|ARM_ARCH_6
+operator|||
+name|ARM_ARCH_7A
 end_elif
 
 begin_define
@@ -2436,6 +2440,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_L2_PIPT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_sync_l2
+parameter_list|(
+name|pte
+parameter_list|,
+name|size
+parameter_list|)
+value|cpu_l2cache_wb_range(vtophys(pte), size)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_sync_l2
+parameter_list|(
+name|pte
+parameter_list|,
+name|size
+parameter_list|)
+value|cpu_l2cache_wb_range(pte, size)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2444,7 +2488,7 @@ parameter_list|(
 name|pte
 parameter_list|)
 define|\
-value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 		cpu_l2cache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 	} else								\ 		cpu_drain_writebuf();					\ } while (
+value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 		cpu_drain_writebuf();					\ 		_sync_l2((vm_offset_t)(pte), sizeof(pt_entry_t));\ 	} else								\ 		cpu_drain_writebuf();					\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -2461,7 +2505,7 @@ parameter_list|)
 define|\
 value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm_offset_t)(pte),			\ 		    (cnt)<< 2);
 comment|/* * sizeof(pt_entry_t) */
-value|\ 		cpu_l2cache_wb_range((vm_offset_t)(pte), 		\ 		    (cnt)<< 2);
+value|\ 		cpu_drain_writebuf();					\ 		_sync_l2((vm_offset_t)(pte),		 		\ 		    (cnt)<< 2);
 comment|/* * sizeof(pt_entry_t) */
 value|\ 	} else								\ 		cpu_drain_writebuf();					\ } while (
 comment|/*CONSTCOND*/
