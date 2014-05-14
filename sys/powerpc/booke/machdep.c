@@ -1486,39 +1486,6 @@ comment|/* Reset TLB1 to get rid of temporary mappings */
 name|tlb1_init
 argument_list|()
 expr_stmt|;
-comment|/* Set up IMMR */
-if|if
-condition|(
-name|fdt_immr_addr
-argument_list|(
-literal|0
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|fdt_immr_va
-operator|=
-name|pmap_early_io_map
-argument_list|(
-name|fdt_immr_pa
-argument_list|,
-name|fdt_immr_size
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"Warning: SOC base registers could not be found!\n"
-argument_list|)
-expr_stmt|;
-name|fdt_immr_va
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* Reset Time Base */
 name|mttb
 argument_list|(

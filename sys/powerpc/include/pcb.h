@@ -154,12 +154,6 @@ struct|;
 struct|struct
 block|{
 name|register_t
-name|ctr
-decl_stmt|;
-name|register_t
-name|xer
-decl_stmt|;
-name|register_t
 name|dbcr0
 decl_stmt|;
 block|}
