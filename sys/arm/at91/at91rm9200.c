@@ -229,6 +229,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint32_t
+name|at91_pio_base
+index|[]
+init|=
+block|{
+name|AT91RM92_PIOA_BASE
+block|,
+name|AT91RM92_PIOB_BASE
+block|,
+name|AT91RM92_PIOC_BASE
+block|,
+name|AT91RM92_PIOD_BASE
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -782,6 +801,19 @@ operator|.
 name|soc_children
 operator|=
 name|at91_devs
+block|,
+operator|.
+name|soc_pio_base
+operator|=
+name|at91_pio_base
+block|,
+operator|.
+name|soc_pio_count
+operator|=
+name|nitems
+argument_list|(
+name|at91_pio_base
+argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt

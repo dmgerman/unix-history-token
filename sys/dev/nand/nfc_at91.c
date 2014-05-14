@@ -117,8 +117,20 @@ directive|include
 file|"nfc_if.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/nand/nfc_at91.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/at91/at91_smc.h>
+end_include
+
 begin_comment
-comment|/*  * Data cycles are triggered by access to any address within the EBI CS3 region  * that has A21 and A22 clear.  Command cycles are any access with bit A21  * asserted. Address cycles are any access with bit A22 asserted.  *  * XXX The atmel docs say that any address bits can be used instead of A21 and  * A22; these values should be configurable.  */
+comment|/*  * Data cycles are triggered by access to any address within the EBI CS3 region  * that has A21 and A22 clear.  Command cycles are any access with bit A21  * asserted. Address cycles are any access with bit A22 asserted. Or vice versa.  * We get these parameters from the nand_param that the board is required to  * call at91_enable_nand, and enable the GPIO lines properly (that will be moved  * into at91_enable_nand when the great GPIO pin renumbering happens). We use  * ale (Address Latch Enable) and cle (Comand Latch Enable) to match the hardware  * names used in NAND.  */
 end_comment
 
 begin_define
@@ -126,20 +138,6 @@ define|#
 directive|define
 name|AT91_NAND_DATA
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AT91_NAND_COMMAND
-value|(1<< 21)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AT91_NAND_ADDRESS
-value|(1<< 22)
 end_define
 
 begin_struct
@@ -155,9 +153,22 @@ name|resource
 modifier|*
 name|res
 decl_stmt|;
+name|struct
+name|at91_nand_params
+modifier|*
+name|nand_param
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|at91_nand_params
+name|nand_param
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -264,6 +275,25 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+name|void
+name|at91_enable_nand
+parameter_list|(
+specifier|const
+name|struct
+name|at91_nand_params
+modifier|*
+name|np
+parameter_list|)
+block|{
+name|nand_param
+operator|=
+operator|*
+name|np
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -375,6 +405,63 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|nand_param
+operator|=
+operator|&
+name|nand_param
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|nand_param
+operator|->
+name|width
+operator|!=
+literal|8
+operator|&&
+name|sc
+operator|->
+name|nand_param
+operator|->
+name|width
+operator|!=
+literal|16
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Bad bus width (%d) defaulting to 8 bits\n"
+argument_list|,
+name|sc
+operator|->
+name|nand_param
+operator|->
+name|width
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|nand_param
+operator|->
+name|width
+operator|=
+literal|8
+expr_stmt|;
+block|}
+name|at91_ebi_enable
+argument_list|(
+name|sc
+operator|->
+name|nand_param
+operator|->
+name|cs
+argument_list|)
+expr_stmt|;
 name|rid
 operator|=
 literal|0
@@ -469,7 +556,15 @@ name|at91_nand_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* nand_debug(NDBG_DRV,"at91_nand_send_command: 0x%02x", command); */
+name|nand_debug
+argument_list|(
+name|NDBG_DRV
+argument_list|,
+literal|"at91_nand_send_command: 0x%02x"
+argument_list|,
+name|command
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -481,7 +576,11 @@ name|dev_write_1
 argument_list|(
 name|sc
 argument_list|,
-name|AT91_NAND_COMMAND
+name|sc
+operator|->
+name|nand_param
+operator|->
+name|cle
 argument_list|,
 name|command
 argument_list|)
@@ -511,7 +610,15 @@ name|at91_nand_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* nand_debug(NDBG_DRV,"at91_nand_send_address: x%02x", addr); */
+name|nand_debug
+argument_list|(
+name|NDBG_DRV
+argument_list|,
+literal|"at91_nand_send_address: x%02x"
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -523,7 +630,11 @@ name|dev_write_1
 argument_list|(
 name|sc
 argument_list|,
-name|AT91_NAND_ADDRESS
+name|sc
+operator|->
+name|nand_param
+operator|->
+name|ale
 argument_list|,
 name|addr
 argument_list|)
@@ -569,7 +680,15 @@ argument_list|,
 name|AT91_NAND_DATA
 argument_list|)
 expr_stmt|;
-comment|/* nand_debug(NDBG_DRV,"at91_nand_read_byte: 0x%02x", data); */
+name|nand_debug
+argument_list|(
+name|NDBG_DRV
+argument_list|,
+literal|"at91_nand_read_byte: 0x%02x"
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|data

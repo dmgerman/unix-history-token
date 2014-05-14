@@ -263,23 +263,38 @@ block|{
 name|DELAY_t
 name|soc_delay
 decl_stmt|;
+comment|/* SoC specific delay function */
 name|cpu_reset_t
 name|soc_reset
 decl_stmt|;
+comment|/* SoC specific reset function */
 name|clk_init_t
 name|soc_clock_init
 decl_stmt|;
+comment|/* SoC specific clock init function */
 specifier|const
 name|int
 modifier|*
 name|soc_irq_prio
 decl_stmt|;
+comment|/* SoC specific IRQ priorities */
 specifier|const
 name|struct
 name|cpu_devs
 modifier|*
 name|soc_children
 decl_stmt|;
+comment|/* SoC specific children list */
+specifier|const
+name|uint32_t
+modifier|*
+name|soc_pio_base
+decl_stmt|;
+comment|/* SoC specific PIO base registers */
+name|size_t
+name|soc_pio_count
+decl_stmt|;
+comment|/* Count of PIO units (not pins) in SoC */
 block|}
 struct|;
 end_struct
