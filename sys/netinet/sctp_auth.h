@@ -78,13 +78,6 @@ name|SCTP_AUTH_RANDOM_SIZE_REQUIRED
 value|32
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_AUTH_RANDOM_SIZE_MAX
-value|256
-end_define
-
 begin_comment
 comment|/* union of all supported HMAC algorithm contexts */
 end_comment
