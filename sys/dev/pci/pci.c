@@ -18438,6 +18438,10 @@ decl_stmt|;
 name|int
 name|subclass
 decl_stmt|;
+name|int
+name|report
+decl_stmt|;
+comment|/* 0 = bootverbose, 1 = always */
 specifier|const
 name|char
 modifier|*
@@ -18454,6 +18458,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"old"
 block|}
 block|,
@@ -18462,6 +18468,8 @@ name|PCIC_OLD
 block|,
 name|PCIS_OLD_NONVGA
 block|,
+literal|1
+block|,
 literal|"non-VGA display device"
 block|}
 block|,
@@ -18469,6 +18477,8 @@ block|{
 name|PCIC_OLD
 block|,
 name|PCIS_OLD_VGA
+block|,
+literal|1
 block|,
 literal|"VGA-compatible display device"
 block|}
@@ -18479,6 +18489,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"mass storage"
 block|}
 block|,
@@ -18486,6 +18498,8 @@ block|{
 name|PCIC_STORAGE
 block|,
 name|PCIS_STORAGE_SCSI
+block|,
+literal|1
 block|,
 literal|"SCSI"
 block|}
@@ -18495,6 +18509,8 @@ name|PCIC_STORAGE
 block|,
 name|PCIS_STORAGE_IDE
 block|,
+literal|1
+block|,
 literal|"ATA"
 block|}
 block|,
@@ -18502,6 +18518,8 @@ block|{
 name|PCIC_STORAGE
 block|,
 name|PCIS_STORAGE_FLOPPY
+block|,
+literal|1
 block|,
 literal|"floppy disk"
 block|}
@@ -18511,6 +18529,8 @@ name|PCIC_STORAGE
 block|,
 name|PCIS_STORAGE_IPI
 block|,
+literal|1
+block|,
 literal|"IPI"
 block|}
 block|,
@@ -18518,6 +18538,8 @@ block|{
 name|PCIC_STORAGE
 block|,
 name|PCIS_STORAGE_RAID
+block|,
+literal|1
 block|,
 literal|"RAID"
 block|}
@@ -18527,6 +18549,8 @@ name|PCIC_STORAGE
 block|,
 name|PCIS_STORAGE_ATA_ADMA
 block|,
+literal|1
+block|,
 literal|"ATA (ADMA)"
 block|}
 block|,
@@ -18534,6 +18558,8 @@ block|{
 name|PCIC_STORAGE
 block|,
 name|PCIS_STORAGE_SATA
+block|,
+literal|1
 block|,
 literal|"SATA"
 block|}
@@ -18543,6 +18569,8 @@ name|PCIC_STORAGE
 block|,
 name|PCIS_STORAGE_SAS
 block|,
+literal|1
+block|,
 literal|"SAS"
 block|}
 block|,
@@ -18550,6 +18578,8 @@ block|{
 name|PCIC_STORAGE
 block|,
 name|PCIS_STORAGE_NVM
+block|,
+literal|1
 block|,
 literal|"NVM"
 block|}
@@ -18560,6 +18590,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"network"
 block|}
 block|,
@@ -18567,6 +18599,8 @@ block|{
 name|PCIC_NETWORK
 block|,
 name|PCIS_NETWORK_ETHERNET
+block|,
+literal|1
 block|,
 literal|"ethernet"
 block|}
@@ -18576,6 +18610,8 @@ name|PCIC_NETWORK
 block|,
 name|PCIS_NETWORK_TOKENRING
 block|,
+literal|1
+block|,
 literal|"token ring"
 block|}
 block|,
@@ -18583,6 +18619,8 @@ block|{
 name|PCIC_NETWORK
 block|,
 name|PCIS_NETWORK_FDDI
+block|,
+literal|1
 block|,
 literal|"fddi"
 block|}
@@ -18592,6 +18630,8 @@ name|PCIC_NETWORK
 block|,
 name|PCIS_NETWORK_ATM
 block|,
+literal|1
+block|,
 literal|"ATM"
 block|}
 block|,
@@ -18599,6 +18639,8 @@ block|{
 name|PCIC_NETWORK
 block|,
 name|PCIS_NETWORK_ISDN
+block|,
+literal|1
 block|,
 literal|"ISDN"
 block|}
@@ -18609,6 +18651,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"display"
 block|}
 block|,
@@ -18616,6 +18660,8 @@ block|{
 name|PCIC_DISPLAY
 block|,
 name|PCIS_DISPLAY_VGA
+block|,
+literal|1
 block|,
 literal|"VGA"
 block|}
@@ -18625,6 +18671,8 @@ name|PCIC_DISPLAY
 block|,
 name|PCIS_DISPLAY_XGA
 block|,
+literal|1
+block|,
 literal|"XGA"
 block|}
 block|,
@@ -18632,6 +18680,8 @@ block|{
 name|PCIC_DISPLAY
 block|,
 name|PCIS_DISPLAY_3D
+block|,
+literal|1
 block|,
 literal|"3D"
 block|}
@@ -18642,6 +18692,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"multimedia"
 block|}
 block|,
@@ -18649,6 +18701,8 @@ block|{
 name|PCIC_MULTIMEDIA
 block|,
 name|PCIS_MULTIMEDIA_VIDEO
+block|,
+literal|1
 block|,
 literal|"video"
 block|}
@@ -18658,6 +18712,8 @@ name|PCIC_MULTIMEDIA
 block|,
 name|PCIS_MULTIMEDIA_AUDIO
 block|,
+literal|1
+block|,
 literal|"audio"
 block|}
 block|,
@@ -18666,6 +18722,8 @@ name|PCIC_MULTIMEDIA
 block|,
 name|PCIS_MULTIMEDIA_TELE
 block|,
+literal|1
+block|,
 literal|"telephony"
 block|}
 block|,
@@ -18673,6 +18731,8 @@ block|{
 name|PCIC_MULTIMEDIA
 block|,
 name|PCIS_MULTIMEDIA_HDA
+block|,
+literal|1
 block|,
 literal|"HDA"
 block|}
@@ -18683,6 +18743,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"memory"
 block|}
 block|,
@@ -18691,6 +18753,8 @@ name|PCIC_MEMORY
 block|,
 name|PCIS_MEMORY_RAM
 block|,
+literal|1
+block|,
 literal|"RAM"
 block|}
 block|,
@@ -18698,6 +18762,8 @@ block|{
 name|PCIC_MEMORY
 block|,
 name|PCIS_MEMORY_FLASH
+block|,
+literal|1
 block|,
 literal|"flash"
 block|}
@@ -18708,6 +18774,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"bridge"
 block|}
 block|,
@@ -18715,6 +18783,8 @@ block|{
 name|PCIC_BRIDGE
 block|,
 name|PCIS_BRIDGE_HOST
+block|,
+literal|1
 block|,
 literal|"HOST-PCI"
 block|}
@@ -18724,6 +18794,8 @@ name|PCIC_BRIDGE
 block|,
 name|PCIS_BRIDGE_ISA
 block|,
+literal|1
+block|,
 literal|"PCI-ISA"
 block|}
 block|,
@@ -18731,6 +18803,8 @@ block|{
 name|PCIC_BRIDGE
 block|,
 name|PCIS_BRIDGE_EISA
+block|,
+literal|1
 block|,
 literal|"PCI-EISA"
 block|}
@@ -18740,6 +18814,8 @@ name|PCIC_BRIDGE
 block|,
 name|PCIS_BRIDGE_MCA
 block|,
+literal|1
+block|,
 literal|"PCI-MCA"
 block|}
 block|,
@@ -18747,6 +18823,8 @@ block|{
 name|PCIC_BRIDGE
 block|,
 name|PCIS_BRIDGE_PCI
+block|,
+literal|1
 block|,
 literal|"PCI-PCI"
 block|}
@@ -18756,6 +18834,8 @@ name|PCIC_BRIDGE
 block|,
 name|PCIS_BRIDGE_PCMCIA
 block|,
+literal|1
+block|,
 literal|"PCI-PCMCIA"
 block|}
 block|,
@@ -18763,6 +18843,8 @@ block|{
 name|PCIC_BRIDGE
 block|,
 name|PCIS_BRIDGE_NUBUS
+block|,
+literal|1
 block|,
 literal|"PCI-NuBus"
 block|}
@@ -18772,6 +18854,8 @@ name|PCIC_BRIDGE
 block|,
 name|PCIS_BRIDGE_CARDBUS
 block|,
+literal|1
+block|,
 literal|"PCI-CardBus"
 block|}
 block|,
@@ -18779,6 +18863,8 @@ block|{
 name|PCIC_BRIDGE
 block|,
 name|PCIS_BRIDGE_RACEWAY
+block|,
+literal|1
 block|,
 literal|"PCI-RACEway"
 block|}
@@ -18789,6 +18875,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"simple comms"
 block|}
 block|,
@@ -18796,6 +18884,8 @@ block|{
 name|PCIC_SIMPLECOMM
 block|,
 name|PCIS_SIMPLECOMM_UART
+block|,
+literal|1
 block|,
 literal|"UART"
 block|}
@@ -18806,6 +18896,8 @@ name|PCIC_SIMPLECOMM
 block|,
 name|PCIS_SIMPLECOMM_PAR
 block|,
+literal|1
+block|,
 literal|"parallel port"
 block|}
 block|,
@@ -18814,6 +18906,8 @@ name|PCIC_SIMPLECOMM
 block|,
 name|PCIS_SIMPLECOMM_MULSER
 block|,
+literal|1
+block|,
 literal|"multiport serial"
 block|}
 block|,
@@ -18821,6 +18915,8 @@ block|{
 name|PCIC_SIMPLECOMM
 block|,
 name|PCIS_SIMPLECOMM_MODEM
+block|,
+literal|1
 block|,
 literal|"generic modem"
 block|}
@@ -18831,6 +18927,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|0
+block|,
 literal|"base peripheral"
 block|}
 block|,
@@ -18838,6 +18936,8 @@ block|{
 name|PCIC_BASEPERIPH
 block|,
 name|PCIS_BASEPERIPH_PIC
+block|,
+literal|1
 block|,
 literal|"interrupt controller"
 block|}
@@ -18847,6 +18947,8 @@ name|PCIC_BASEPERIPH
 block|,
 name|PCIS_BASEPERIPH_DMA
 block|,
+literal|1
+block|,
 literal|"DMA controller"
 block|}
 block|,
@@ -18854,6 +18956,8 @@ block|{
 name|PCIC_BASEPERIPH
 block|,
 name|PCIS_BASEPERIPH_TIMER
+block|,
+literal|1
 block|,
 literal|"timer"
 block|}
@@ -18863,6 +18967,8 @@ name|PCIC_BASEPERIPH
 block|,
 name|PCIS_BASEPERIPH_RTC
 block|,
+literal|1
+block|,
 literal|"realtime clock"
 block|}
 block|,
@@ -18871,6 +18977,8 @@ name|PCIC_BASEPERIPH
 block|,
 name|PCIS_BASEPERIPH_PCIHOT
 block|,
+literal|1
+block|,
 literal|"PCI hot-plug controller"
 block|}
 block|,
@@ -18878,6 +18986,8 @@ block|{
 name|PCIC_BASEPERIPH
 block|,
 name|PCIS_BASEPERIPH_SDHC
+block|,
+literal|1
 block|,
 literal|"SD host controller"
 block|}
@@ -18888,6 +18998,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"input device"
 block|}
 block|,
@@ -18895,6 +19007,8 @@ block|{
 name|PCIC_INPUTDEV
 block|,
 name|PCIS_INPUTDEV_KEYBOARD
+block|,
+literal|1
 block|,
 literal|"keyboard"
 block|}
@@ -18904,6 +19018,8 @@ name|PCIC_INPUTDEV
 block|,
 name|PCIS_INPUTDEV_DIGITIZER
 block|,
+literal|1
+block|,
 literal|"digitizer"
 block|}
 block|,
@@ -18911,6 +19027,8 @@ block|{
 name|PCIC_INPUTDEV
 block|,
 name|PCIS_INPUTDEV_MOUSE
+block|,
+literal|1
 block|,
 literal|"mouse"
 block|}
@@ -18920,6 +19038,8 @@ name|PCIC_INPUTDEV
 block|,
 name|PCIS_INPUTDEV_SCANNER
 block|,
+literal|1
+block|,
 literal|"scanner"
 block|}
 block|,
@@ -18928,6 +19048,8 @@ name|PCIC_INPUTDEV
 block|,
 name|PCIS_INPUTDEV_GAMEPORT
 block|,
+literal|1
+block|,
 literal|"gameport"
 block|}
 block|,
@@ -18935,6 +19057,8 @@ block|{
 name|PCIC_DOCKING
 block|,
 operator|-
+literal|1
+block|,
 literal|1
 block|,
 literal|"docking station"
@@ -18946,6 +19070,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"processor"
 block|}
 block|,
@@ -18953,6 +19079,8 @@ block|{
 name|PCIC_SERIALBUS
 block|,
 operator|-
+literal|1
+block|,
 literal|1
 block|,
 literal|"serial bus"
@@ -18963,6 +19091,8 @@ name|PCIC_SERIALBUS
 block|,
 name|PCIS_SERIALBUS_FW
 block|,
+literal|1
+block|,
 literal|"FireWire"
 block|}
 block|,
@@ -18970,6 +19100,8 @@ block|{
 name|PCIC_SERIALBUS
 block|,
 name|PCIS_SERIALBUS_ACCESS
+block|,
+literal|1
 block|,
 literal|"AccessBus"
 block|}
@@ -18979,6 +19111,8 @@ name|PCIC_SERIALBUS
 block|,
 name|PCIS_SERIALBUS_SSA
 block|,
+literal|1
+block|,
 literal|"SSA"
 block|}
 block|,
@@ -18986,6 +19120,8 @@ block|{
 name|PCIC_SERIALBUS
 block|,
 name|PCIS_SERIALBUS_USB
+block|,
+literal|1
 block|,
 literal|"USB"
 block|}
@@ -18995,6 +19131,8 @@ name|PCIC_SERIALBUS
 block|,
 name|PCIS_SERIALBUS_FC
 block|,
+literal|1
+block|,
 literal|"Fibre Channel"
 block|}
 block|,
@@ -19002,6 +19140,8 @@ block|{
 name|PCIC_SERIALBUS
 block|,
 name|PCIS_SERIALBUS_SMBUS
+block|,
+literal|0
 block|,
 literal|"SMBus"
 block|}
@@ -19012,6 +19152,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"wireless controller"
 block|}
 block|,
@@ -19019,6 +19161,8 @@ block|{
 name|PCIC_WIRELESS
 block|,
 name|PCIS_WIRELESS_IRDA
+block|,
+literal|1
 block|,
 literal|"iRDA"
 block|}
@@ -19028,6 +19172,8 @@ name|PCIC_WIRELESS
 block|,
 name|PCIS_WIRELESS_IR
 block|,
+literal|1
+block|,
 literal|"IR"
 block|}
 block|,
@@ -19035,6 +19181,8 @@ block|{
 name|PCIC_WIRELESS
 block|,
 name|PCIS_WIRELESS_RF
+block|,
+literal|1
 block|,
 literal|"RF"
 block|}
@@ -19045,6 +19193,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"intelligent I/O controller"
 block|}
 block|,
@@ -19052,6 +19202,8 @@ block|{
 name|PCIC_INTELLIIO
 block|,
 name|PCIS_INTELLIIO_I2O
+block|,
+literal|1
 block|,
 literal|"I2O"
 block|}
@@ -19062,6 +19214,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"satellite communication"
 block|}
 block|,
@@ -19069,6 +19223,8 @@ block|{
 name|PCIC_SATCOM
 block|,
 name|PCIS_SATCOM_TV
+block|,
+literal|1
 block|,
 literal|"sat TV"
 block|}
@@ -19078,6 +19234,8 @@ name|PCIC_SATCOM
 block|,
 name|PCIS_SATCOM_AUDIO
 block|,
+literal|1
+block|,
 literal|"sat audio"
 block|}
 block|,
@@ -19086,6 +19244,8 @@ name|PCIC_SATCOM
 block|,
 name|PCIS_SATCOM_VOICE
 block|,
+literal|1
+block|,
 literal|"sat voice"
 block|}
 block|,
@@ -19093,6 +19253,8 @@ block|{
 name|PCIC_SATCOM
 block|,
 name|PCIS_SATCOM_DATA
+block|,
+literal|1
 block|,
 literal|"sat data"
 block|}
@@ -19103,6 +19265,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|1
+block|,
 literal|"encrypt/decrypt"
 block|}
 block|,
@@ -19111,6 +19275,8 @@ name|PCIC_CRYPTO
 block|,
 name|PCIS_CRYPTO_NETCOMP
 block|,
+literal|1
+block|,
 literal|"network/computer crypto"
 block|}
 block|,
@@ -19118,6 +19284,8 @@ block|{
 name|PCIC_CRYPTO
 block|,
 name|PCIS_CRYPTO_ENTERTAIN
+block|,
+literal|1
 block|,
 literal|"entertainment crypto"
 block|}
@@ -19128,6 +19296,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|0
+block|,
 literal|"dasp"
 block|}
 block|,
@@ -19136,10 +19306,14 @@ name|PCIC_DASP
 block|,
 name|PCIS_DASP_DPIO
 block|,
+literal|1
+block|,
 literal|"DPIO module"
 block|}
 block|,
 block|{
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -19163,6 +19337,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|report
 decl_stmt|;
 specifier|const
 name|char
@@ -19177,6 +19353,10 @@ modifier|*
 name|device
 decl_stmt|;
 comment|/* 	 * Look for a listing for this device in a loaded device database. 	 */
+name|report
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -19275,6 +19455,15 @@ index|]
 operator|.
 name|desc
 expr_stmt|;
+name|report
+operator|=
+name|pci_nomatch_tab
+index|[
+name|i
+index|]
+operator|.
+name|report
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -19301,9 +19490,25 @@ index|]
 operator|.
 name|desc
 expr_stmt|;
+name|report
+operator|=
+name|pci_nomatch_tab
+index|[
+name|i
+index|]
+operator|.
+name|report
+expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|report
+operator|||
+name|bootverbose
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -19342,6 +19547,14 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|report
+operator|||
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|" at device %d.%d (no driver attached)\n"
@@ -19357,6 +19570,7 @@ name|child
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|pci_cfg_save
 argument_list|(
 name|child
