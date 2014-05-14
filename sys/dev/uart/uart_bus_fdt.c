@@ -269,6 +269,16 @@ name|uart_imx_class
 block|}
 block|,
 block|{
+literal|"fsl,mvf600-uart"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|uart_vybrid_class
+block|}
+block|,
+block|{
 literal|"lpc,uart"
 block|,
 operator|(
