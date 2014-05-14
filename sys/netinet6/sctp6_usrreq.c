@@ -3999,11 +3999,6 @@ modifier|*
 name|inp
 decl_stmt|;
 name|struct
-name|in6pcb
-modifier|*
-name|inp6
-decl_stmt|;
-name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
@@ -4011,6 +4006,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
+name|struct
+name|in6pcb
+modifier|*
+name|inp6
+decl_stmt|;
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -4022,6 +4022,9 @@ name|ss
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|inp6
 operator|=
 operator|(
@@ -4033,6 +4036,8 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
+endif|#
+directive|endif
 name|inp
 operator|=
 operator|(
