@@ -299,6 +299,13 @@ name|MII_PHY_DESC
 argument_list|(
 name|xxATHEROS
 argument_list|,
+name|AR8021
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
+name|xxATHEROS
+argument_list|,
 name|F2
 argument_list|)
 block|,

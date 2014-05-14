@@ -602,7 +602,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|simplebus
 argument_list|,
-name|fdtbus
+name|nexus
 argument_list|,
 name|simplebus_driver
 argument_list|,

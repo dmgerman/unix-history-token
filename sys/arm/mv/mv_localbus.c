@@ -618,7 +618,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|localbus
 argument_list|,
-name|fdtbus
+name|nexus
 argument_list|,
 name|localbus_driver
 argument_list|,

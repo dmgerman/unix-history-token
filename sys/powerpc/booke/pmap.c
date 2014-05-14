@@ -12215,8 +12215,7 @@ modifier|*
 name|locked_pa
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
+comment|/* XXX: this should be implemented at some point */
 return|return
 operator|(
 literal|0
