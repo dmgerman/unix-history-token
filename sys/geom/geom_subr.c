@@ -4122,7 +4122,8 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"Geom provider %s::%s failed closing ->access()"
+literal|"Geom provider %s::%s dcr=%d dcw=%d dce=%d error=%d failed "
+literal|"closing ->access()"
 operator|,
 name|pp
 operator|->
@@ -4135,6 +4136,14 @@ operator|,
 name|pp
 operator|->
 name|name
+operator|,
+name|dcr
+operator|,
+name|dcw
+operator|,
+name|dce
+operator|,
+name|error
 operator|)
 argument_list|)
 expr_stmt|;
