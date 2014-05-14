@@ -1686,7 +1686,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%#08jx - %#08jx, %ju bytes (%ju pages)\n"
+literal|"  0x%08jx - 0x%08jx, %ju KBytes (%ju pages)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1712,6 +1712,8 @@ operator|(
 name|uintmax_t
 operator|)
 name|size
+operator|/
+literal|1024
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1755,6 +1757,13 @@ argument_list|)
 operator|/
 literal|1048576
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|arm_devmap_print_table
+argument_list|()
 expr_stmt|;
 name|bufinit
 argument_list|()

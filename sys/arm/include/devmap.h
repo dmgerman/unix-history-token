@@ -153,6 +153,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Print the static mapping table; used for bootverbose output. */
+end_comment
+
+begin_function_decl
+name|void
+name|arm_devmap_print_table
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
