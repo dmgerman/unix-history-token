@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/fdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/machdep.h>
 end_include
 
@@ -1150,7 +1156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Supply a default do-nothing implementation of fdt_pci_devmap() via a weak  * alias.  Many Marvell platforms don't support a PCI interface, but to support  * those that do, we end up with a reference to this function below, in  * platform_devmap_init().  If "device pci" appears in the kernel config, the  * real implementation of this function in dev/fdt/fdt_pci.c overrides the weak  * alias defined here.  */
+comment|/*  * Supply a default do-nothing implementation of mv_pci_devmap() via a weak  * alias.  Many Marvell platforms don't support a PCI interface, but to support  * those that do, we end up with a reference to this function below, in  * platform_devmap_init().  If "device pci" appears in the kernel config, the  * real implementation of this function in arm/mv/mv_pci.c overrides the weak  * alias defined here.  */
 end_comment
 
 begin_function_decl
@@ -1206,7 +1212,7 @@ name|__weak_reference
 argument_list|(
 name|mv_default_fdt_pci_devmap
 argument_list|,
-name|fdt_pci_devmap
+name|mv_pci_devmap
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1431,7 +1437,7 @@ return|;
 comment|/* 			 * XXX this should account for PCI and multiple ranges 			 * of a given kind. 			 */
 if|if
 condition|(
-name|fdt_pci_devmap
+name|mv_pci_devmap
 argument_list|(
 name|child
 argument_list|,

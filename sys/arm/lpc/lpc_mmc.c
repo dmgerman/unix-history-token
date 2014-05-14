@@ -2634,7 +2634,7 @@ name|lm_dev
 argument_list|,
 name|LPC_MMC_DMACH_READ
 argument_list|,
-name|LPC_SD_BASE
+name|LPC_SD_PHYS_BASE
 operator|+
 name|LPC_SD_FIFO
 argument_list|,
@@ -2675,7 +2675,7 @@ name|sc
 operator|->
 name|lm_buffer_phys
 argument_list|,
-name|LPC_SD_BASE
+name|LPC_SD_PHYS_BASE
 operator|+
 name|LPC_SD_FIFO
 argument_list|,

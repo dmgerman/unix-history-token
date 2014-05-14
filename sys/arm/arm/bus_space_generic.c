@@ -125,22 +125,7 @@ name|void
 modifier|*
 name|va
 decl_stmt|;
-comment|/* 	 * Look up the address in the static device mappings.  If it's not 	 * there, establish a new dynamic mapping. 	 * 	 * We don't even examine the passed-in flags.  For ARM, the CACHEABLE 	 * flag doesn't make sense (we create PTE_DEVICE mappings), and the 	 * LINEAR flag is just implied because we use kva_alloc(size). 	 */
-if|if
-condition|(
-operator|(
-name|va
-operator|=
-name|arm_devmap_ptov
-argument_list|(
-name|bpa
-argument_list|,
-name|size
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
+comment|/* 	 * We don't even examine the passed-in flags.  For ARM, the CACHEABLE 	 * flag doesn't make sense (we create PTE_DEVICE mappings), and the 	 * LINEAR flag is just implied because we use kva_alloc(size). 	 */
 if|if
 condition|(
 operator|(
@@ -235,22 +220,6 @@ name|bus_size_t
 name|size
 parameter_list|)
 block|{
-comment|/* 	 * If the region is static-mapped do nothing, otherwise remove the 	 * dynamic mapping. 	 */
-if|if
-condition|(
-name|arm_devmap_vtop
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|h
-argument_list|,
-name|size
-argument_list|)
-operator|==
-name|DEVMAP_PADDR_NOTFOUND
-condition|)
 name|pmap_unmapdev
 argument_list|(
 operator|(

@@ -83,17 +83,6 @@ directive|include
 file|<arm/ti/omap4/omap4_reg.h>
 end_include
 
-begin_comment
-comment|/* Start of address space used for bootstrap map */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEVMAP_BOOTSTRAP_MAP_START
-value|0xF0000000
-end_define
-
 begin_function_decl
 name|void
 function_decl|(
@@ -103,6 +92,8 @@ function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
+init|=
+name|NULL
 function_decl|;
 end_function_decl
 
@@ -115,7 +106,8 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|DEVMAP_BOOTSTRAP_MAP_START
+name|arm_devmap_lastaddr
+argument_list|()
 operator|)
 return|;
 block|}
@@ -127,12 +119,7 @@ name|initarm_early_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-name|ti_cpu_reset
-operator|=
-name|NULL
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -153,44 +140,8 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_define
-define|#
-directive|define
-name|FDT_DEVMAP_MAX
-value|(2)
-end_define
-
 begin_comment
-comment|// FIXME
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|arm_devmap_entry
-name|fdt_devmap
-index|[
-name|FDT_DEVMAP_MAX
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Construct pmap_devmap[] with DT-derived config data.  */
+comment|/*  * Construct static devmap entries to map out the most frequently used  * peripherals using 1mb section mappings.  */
 end_comment
 
 begin_function
@@ -200,125 +151,90 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
 if|#
 directive|if
 name|defined
 argument_list|(
 name|SOC_OMAP4
 argument_list|)
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_va
-operator|=
-literal|0xF8000000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_pa
-operator|=
+name|arm_devmap_add_entry
+argument_list|(
 literal|0x48000000
+argument_list|,
+literal|0x01000000
+argument_list|)
 expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_size
-operator|=
-literal|0x1000000
+comment|/*16mb L4_PER devices */
+name|arm_devmap_add_entry
+argument_list|(
+literal|0x4A000000
+argument_list|,
+literal|0x01000000
+argument_list|)
 expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_prot
-operator|=
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_cache
-operator|=
-name|PTE_DEVICE
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
+comment|/*16mb L4_CFG devices */
 elif|#
 directive|elif
 name|defined
 argument_list|(
 name|SOC_TI_AM335X
 argument_list|)
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_va
-operator|=
-literal|0xF4C00000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_pa
-operator|=
+name|arm_devmap_add_entry
+argument_list|(
 literal|0x44C00000
+argument_list|,
+literal|0x00400000
+argument_list|)
 expr_stmt|;
-comment|/* L4_WKUP */
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_size
-operator|=
-literal|0x400000
+comment|/* 4mb L4_WKUP devices*/
+name|arm_devmap_add_entry
+argument_list|(
+literal|0x47400000
+argument_list|,
+literal|0x00100000
+argument_list|)
 expr_stmt|;
-comment|/* 4 MB */
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_prot
-operator|=
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
+comment|/* 1mb USB            */
+name|arm_devmap_add_entry
+argument_list|(
+literal|0x47800000
+argument_list|,
+literal|0x00100000
+argument_list|)
 expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_cache
-operator|=
-name|PTE_DEVICE
+comment|/* 1mb mmchs2         */
+name|arm_devmap_add_entry
+argument_list|(
+literal|0x48000000
+argument_list|,
+literal|0x01000000
+argument_list|)
 expr_stmt|;
-name|i
-operator|++
+comment|/*16mb L4_PER devices */
+name|arm_devmap_add_entry
+argument_list|(
+literal|0x49000000
+argument_list|,
+literal|0x00100000
+argument_list|)
 expr_stmt|;
+comment|/* 1mb edma3          */
+name|arm_devmap_add_entry
+argument_list|(
+literal|0x49800000
+argument_list|,
+literal|0x00300000
+argument_list|)
+expr_stmt|;
+comment|/* 3mb edma3          */
+name|arm_devmap_add_entry
+argument_list|(
+literal|0x4A000000
+argument_list|,
+literal|0x01000000
+argument_list|)
+expr_stmt|;
+comment|/*16mb L4_FAST devices*/
 else|#
 directive|else
 error|#
@@ -326,15 +242,6 @@ directive|error
 literal|"Unknown SoC"
 endif|#
 directive|endif
-name|arm_devmap_register_table
-argument_list|(
-operator|&
-name|fdt_devmap
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
