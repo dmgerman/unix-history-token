@@ -463,16 +463,6 @@ name|pcpup
 value|((struct pcpu *) powerpc_get_pcpup())
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AIM
-end_ifdef
-
-begin_comment
-comment|/* Book-E not yet adapted */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|__inline
@@ -512,11 +502,6 @@ directive|define
 name|curthread
 value|(__curthread())
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

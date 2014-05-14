@@ -1575,6 +1575,15 @@ operator|=
 operator|&
 name|thread0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("mr 13,%0" :: "r"(pc->pc_curthread));
+else|#
+directive|else
+asm|__asm __volatile("mr 2,%0" :: "r"(pc->pc_curthread));
+endif|#
+directive|endif
 asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
 comment|/* Initialize system mutexes. */
 name|mutex_init
