@@ -19417,6 +19417,11 @@ block|}
 name|SCTP_DECR_ASOC_COUNT
 argument_list|()
 expr_stmt|;
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|SCTP_TCB_LOCK_DESTROY
 argument_list|(
 name|stcb
@@ -23668,6 +23673,11 @@ comment|/* sa_ignore FREED_MEMORY */
 block|}
 comment|/* Insert new items here :> */
 comment|/* Get rid of LOCK */
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|SCTP_TCB_LOCK_DESTROY
 argument_list|(
 name|stcb
