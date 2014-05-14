@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/fdt/fdt_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<powerpc/mpc85xx/mpc85xx.h>
 end_include
 

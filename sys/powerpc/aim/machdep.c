@@ -2600,6 +2600,22 @@ return|;
 block|}
 endif|#
 directive|endif
+name|vm_offset_t
+name|pmap_early_io_map
+parameter_list|(
+name|vm_paddr_t
+name|pa
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|)
+block|{
+return|return
+operator|(
+name|pa
+operator|)
+return|;
+block|}
 comment|/* From p3-53 of the MPC7450 RISC Microprocessor Family Reference Manual */
 name|void
 name|flush_disable_caches

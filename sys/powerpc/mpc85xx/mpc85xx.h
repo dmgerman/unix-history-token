@@ -22,6 +22,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CCSRBAR_VA
+value|fdt_immr_va
+end_define
+
+begin_define
+define|#
+directive|define
 name|OCP85XX_CCSRBAR
 value|(CCSRBAR_VA + 0x0)
 end_define

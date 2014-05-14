@@ -401,24 +401,6 @@ begin_comment
 comment|/* Book-E */
 end_comment
 
-begin_comment
-comment|/*  * Kernel CCSRBAR location. We make this the reset location.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CCSRBAR_VA
-value|0xfef00000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CCSRBAR_SIZE
-value|0x00100000
-end_define
-
 begin_define
 define|#
 directive|define
