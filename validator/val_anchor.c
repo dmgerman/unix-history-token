@@ -1145,6 +1145,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|r
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_insert
@@ -4323,7 +4328,7 @@ operator|->
 name|rr_ttl
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|*
 operator|)
 name|malloc
@@ -4332,7 +4337,7 @@ name|num
 operator|*
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 argument_list|)
 expr_stmt|;

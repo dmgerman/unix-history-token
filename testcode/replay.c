@@ -4312,10 +4312,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u"
+literal|"%lld"
 argument_list|,
 operator|(
-name|unsigned
+name|long
+name|long
 operator|)
 name|runtime
 operator|->
@@ -4347,7 +4348,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|uint32_t
+name|time_t
 name|res
 init|=
 literal|0
@@ -4367,7 +4368,7 @@ condition|(
 name|t
 operator|&&
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|t
 operator|->
@@ -4382,7 +4383,7 @@ condition|)
 name|res
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|t
 operator|->
@@ -4403,10 +4404,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u"
+literal|"%lld"
 argument_list|,
 operator|(
-name|unsigned
+name|long
+name|long
 operator|)
 name|res
 argument_list|)

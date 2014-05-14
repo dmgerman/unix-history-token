@@ -119,6 +119,23 @@ directive|include
 file|"services/cache/rrset.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -680,9 +697,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/** stop the bg thread */
+end_comment
+
 begin_function
+specifier|static
 name|void
-name|ub_ctx_delete
+name|ub_stop_bg
 parameter_list|(
 name|struct
 name|ub_ctx
@@ -690,20 +712,6 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-name|struct
-name|alloc_cache
-modifier|*
-name|a
-decl_stmt|,
-modifier|*
-name|na
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|ctx
-condition|)
-return|return;
 comment|/* stop the bg thread */
 name|lock_basic_lock
 argument_list|(
@@ -898,6 +906,88 @@ name|cfglock
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|ub_ctx_delete
+parameter_list|(
+name|struct
+name|ub_ctx
+modifier|*
+name|ctx
+parameter_list|)
+block|{
+name|struct
+name|alloc_cache
+modifier|*
+name|a
+decl_stmt|,
+modifier|*
+name|na
+decl_stmt|;
+name|int
+name|do_stop
+init|=
+literal|1
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ctx
+condition|)
+return|return;
+comment|/* see if bg thread is created and if threads have been killed */
+comment|/* no locks, because those may be held by terminated threads */
+comment|/* for processes the read pipe is closed and we see that on read */
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD
+if|if
+condition|(
+name|ctx
+operator|->
+name|created_bg
+operator|&&
+name|ctx
+operator|->
+name|dothread
+condition|)
+block|{
+if|if
+condition|(
+name|pthread_kill
+argument_list|(
+name|ctx
+operator|->
+name|bg_tid
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+name|ESRCH
+condition|)
+block|{
+comment|/* thread has been killed */
+name|do_stop
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_PTHREAD */
+if|if
+condition|(
+name|do_stop
+condition|)
+name|ub_stop_bg
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 name|modstack_desetup
 argument_list|(
 operator|&
@@ -1099,10 +1189,12 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|opt
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|val
@@ -1187,6 +1279,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|opt
@@ -1278,6 +1371,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -1362,6 +1456,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|ta
@@ -1474,6 +1569,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -1586,6 +1682,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -2731,6 +2828,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2988,6 +3086,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3758,6 +3857,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|addr
@@ -4168,6 +4268,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -4607,6 +4708,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -5268,10 +5370,12 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|zone_name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|zone_type
@@ -5488,6 +5592,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|zone_name
@@ -5622,6 +5727,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|data
@@ -5727,6 +5833,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|data

@@ -1101,7 +1101,7 @@ decl_stmt|;
 name|size_t
 name|rr_len
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|rr_ttl
 decl_stmt|;
 name|uint8_t

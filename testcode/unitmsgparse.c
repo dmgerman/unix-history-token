@@ -1562,7 +1562,7 @@ name|ldns_buffer
 modifier|*
 name|out
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|struct
@@ -1843,7 +1843,7 @@ decl_stmt|;
 name|uint16_t
 name|flags
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|timenow
 init|=
 literal|0

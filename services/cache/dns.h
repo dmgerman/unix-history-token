@@ -110,7 +110,7 @@ parameter_list|,
 name|int
 name|is_referral
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|,
 name|int
@@ -150,7 +150,7 @@ name|reply_info
 modifier|*
 name|rep
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|,
 name|int
@@ -208,7 +208,7 @@ modifier|*
 modifier|*
 name|msg
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 function_decl|;
@@ -341,7 +341,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|rrset
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 function_decl|;

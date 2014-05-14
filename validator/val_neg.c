@@ -2223,13 +2223,13 @@ expr_stmt|;
 name|free
 argument_list|(
 name|p
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|p
-operator|->
-name|name
 argument_list|)
 expr_stmt|;
 name|p
@@ -2942,13 +2942,13 @@ expr_stmt|;
 name|free
 argument_list|(
 name|p
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|p
-operator|->
-name|name
 argument_list|)
 expr_stmt|;
 name|p
@@ -4342,7 +4342,7 @@ name|rrset_cache
 modifier|*
 name|rrset_cache
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -5451,7 +5451,7 @@ parameter_list|,
 name|uint16_t
 name|checktype
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -5990,7 +5990,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|uint8_t
@@ -6217,7 +6217,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|uint8_t
@@ -6655,7 +6655,7 @@ name|rrset_cache
 modifier|*
 name|rrset_cache
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -6844,7 +6844,7 @@ name|ldns_buffer
 modifier|*
 name|buf
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|int

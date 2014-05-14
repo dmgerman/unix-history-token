@@ -87,11 +87,11 @@ struct|struct
 name|infra_data
 block|{
 comment|/** TTL value for this entry. absolute time. */
-name|uint32_t
+name|time_t
 name|ttl
 decl_stmt|;
 comment|/** time in seconds (absolute) when probing re-commences, 0 disabled */
-name|uint32_t
+name|time_t
 name|probedelay
 decl_stmt|;
 comment|/** round trip times for timeout calculation */
@@ -304,7 +304,7 @@ parameter_list|,
 name|size_t
 name|namelen
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|int
@@ -350,7 +350,7 @@ parameter_list|,
 name|size_t
 name|namelen
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|int
@@ -402,7 +402,7 @@ parameter_list|,
 name|int
 name|orig_rtt
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 function_decl|;
@@ -470,7 +470,7 @@ parameter_list|,
 name|int
 name|edns_version
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 function_decl|;
@@ -523,7 +523,7 @@ name|int
 modifier|*
 name|rtt
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 function_decl|;
@@ -534,7 +534,8 @@ comment|/**  * Get additional (debug) info on timing.  * @param infra: infra cac
 end_comment
 
 begin_function_decl
-name|int
+name|long
+name|long
 name|infra_get_host_rto
 parameter_list|(
 name|struct
@@ -566,7 +567,7 @@ name|int
 modifier|*
 name|delay
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|int

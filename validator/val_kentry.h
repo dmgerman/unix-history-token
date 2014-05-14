@@ -82,7 +82,7 @@ struct|struct
 name|key_entry_data
 block|{
 comment|/** the TTL of this entry (absolute time) */
-name|uint32_t
+name|time_t
 name|ttl
 decl_stmt|;
 comment|/** the key rrdata. can be NULL to signal keyless name. */
@@ -356,10 +356,10 @@ parameter_list|,
 name|uint16_t
 name|dclass
 parameter_list|,
-name|uint32_t
+name|time_t
 name|ttl
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 function_decl|;
@@ -399,7 +399,7 @@ name|uint8_t
 modifier|*
 name|sigalg
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 function_decl|;
@@ -430,10 +430,10 @@ parameter_list|,
 name|uint16_t
 name|dclass
 parameter_list|,
-name|uint32_t
+name|time_t
 name|ttl
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 function_decl|;

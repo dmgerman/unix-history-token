@@ -421,7 +421,7 @@ name|rrset_cache
 modifier|*
 name|rrset_cache
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 function_decl|;
@@ -461,7 +461,7 @@ name|ldns_buffer
 modifier|*
 name|buf
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|int

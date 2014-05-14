@@ -66,7 +66,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|uint32_t
+name|time_t
 name|MAX_TTL
 decl_stmt|;
 end_decl_stmt
@@ -77,7 +77,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|uint32_t
+name|time_t
 name|MIN_TTL
 decl_stmt|;
 end_decl_stmt

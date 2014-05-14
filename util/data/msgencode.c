@@ -1760,7 +1760,7 @@ name|uint16_t
 modifier|*
 name|num_rrs
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|struct
@@ -2351,7 +2351,7 @@ parameter_list|,
 name|size_t
 name|rrsets_before
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|struct
@@ -2964,7 +2964,7 @@ name|ldns_buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|struct
@@ -3145,12 +3145,15 @@ literal|0
 return|;
 block|}
 block|}
-comment|/* roundrobin offset. using query id for random number */
+comment|/* roundrobin offset. using query id for random number.  With ntohs 	 * for different roundrobins for sequential id client senders. */
 name|rr_offset
 operator|=
 name|RRSET_ROUNDROBIN
 condition|?
+name|ntohs
+argument_list|(
 name|id
+argument_list|)
 else|:
 literal|0
 expr_stmt|;
@@ -3443,27 +3446,6 @@ name|arcount
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|ldns_buffer_write_u16_at
-argument_list|(
-name|buffer
-argument_list|,
-literal|8
-argument_list|,
-name|nscount
-argument_list|)
-expr_stmt|;
-name|ldns_buffer_write_u16_at
-argument_list|(
-name|buffer
-argument_list|,
-literal|10
-argument_list|,
-name|arcount
-argument_list|)
-expr_stmt|;
-block|}
 name|ldns_buffer_flip
 argument_list|(
 name|buffer
@@ -3672,7 +3654,7 @@ name|ldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|int

@@ -1943,7 +1943,7 @@ expr_stmt|;
 while|while
 condition|(
 name|d
-operator|!=
+operator|<
 operator|(
 name|ssize_t
 operator|)

@@ -555,6 +555,10 @@ comment|/* RRSet roundrobin */
 name|int
 name|rrset_roundrobin
 decl_stmt|;
+comment|/* maximum UDP response size */
+name|size_t
+name|max_udp_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1056,7 +1060,7 @@ comment|/**  * Convert 14digit to time value  * @param str: string of 14 digits 
 end_comment
 
 begin_function_decl
-name|uint32_t
+name|time_t
 name|cfg_convert_timeval
 parameter_list|(
 specifier|const

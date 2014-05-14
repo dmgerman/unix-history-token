@@ -1017,7 +1017,7 @@ operator|->
 name|last_change
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|timestamp
 expr_stmt|;
@@ -3392,7 +3392,7 @@ operator|->
 name|query_interval
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|parse_int
 argument_list|(
@@ -3452,7 +3452,7 @@ operator|->
 name|retry_time
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|parse_int
 argument_list|(
@@ -4453,6 +4453,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|s
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|ldns_rdf2buffer_str_dname
@@ -5091,6 +5096,19 @@ operator|->
 name|autr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|env
+condition|)
+block|{
+name|log_err
+argument_list|(
+literal|"autr_write_file: Module environment is NULL."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* unique name with pid number and thread number */
 name|snprintf
 argument_list|(
@@ -5111,8 +5129,6 @@ operator|)
 name|getpid
 argument_list|()
 argument_list|,
-name|env
-operator|&&
 name|env
 operator|->
 name|worker
@@ -5367,7 +5383,7 @@ end_comment
 
 begin_function
 specifier|static
-name|uint32_t
+name|time_t
 name|min_expiry
 parameter_list|(
 name|struct
@@ -5383,7 +5399,7 @@ block|{
 name|size_t
 name|i
 decl_stmt|;
-name|uint32_t
+name|int32_t
 name|t
 decl_stmt|,
 name|r
@@ -5445,8 +5461,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int32_t
+operator|)
 name|t
 operator|-
+operator|(
+name|int32_t
+operator|)
 operator|*
 name|env
 operator|->
@@ -5475,6 +5497,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
+name|time_t
+operator|)
 name|r
 return|;
 block|}
@@ -6465,7 +6490,7 @@ end_comment
 
 begin_function
 specifier|static
-name|uint32_t
+name|time_t
 name|key_ttl
 parameter_list|(
 name|struct
@@ -6512,10 +6537,10 @@ name|trust_anchor
 modifier|*
 name|tp
 parameter_list|,
-name|uint32_t
+name|time_t
 name|rrsig_exp_interval
 parameter_list|,
-name|uint32_t
+name|time_t
 name|origttl
 parameter_list|,
 name|int
@@ -6523,7 +6548,7 @@ modifier|*
 name|changed
 parameter_list|)
 block|{
-name|uint32_t
+name|time_t
 name|x
 decl_stmt|,
 name|qi
@@ -7553,7 +7578,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|time_t
 name|check_holddown
 parameter_list|(
 name|struct
@@ -7571,23 +7596,16 @@ name|int
 name|holddown
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|time_t
 name|elapsed
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|unsigned
-operator|)
 operator|*
 name|env
 operator|->
 name|now
 operator|<
-operator|(
-name|unsigned
-operator|)
 name|ta
 operator|->
 name|last_change
@@ -7604,17 +7622,11 @@ return|;
 block|}
 name|elapsed
 operator|=
-operator|(
-name|unsigned
-operator|)
 operator|*
 name|env
 operator|->
 name|now
 operator|-
-operator|(
-name|unsigned
-operator|)
 name|ta
 operator|->
 name|last_change
@@ -7623,18 +7635,19 @@ if|if
 condition|(
 name|elapsed
 operator|>
+operator|(
+name|time_t
+operator|)
 name|holddown
 condition|)
 block|{
 return|return
-call|(
-name|int
-call|)
-argument_list|(
 name|elapsed
 operator|-
+operator|(
+name|time_t
+operator|)
 name|holddown
-argument_list|)
 return|;
 block|}
 name|verbose_key
@@ -7643,12 +7656,16 @@ name|ta
 argument_list|,
 name|VERB_ALGO
 argument_list|,
-literal|"holddown time %d seconds to go"
+literal|"holddown time %lld seconds to go"
 argument_list|,
 call|(
-name|int
+name|long
+name|long
 call|)
 argument_list|(
+operator|(
+name|time_t
+operator|)
 name|holddown
 operator|-
 name|elapsed
@@ -7839,7 +7856,7 @@ name|c
 parameter_list|)
 block|{
 comment|/* This not according to RFC, this is 30 days, but the RFC demands  	 * MAX(30days, TTL expire time of first DNSKEY set with this key), 	 * The value may be too small if a very large TTL was used. */
-name|int
+name|time_t
 name|exceeded
 init|=
 name|check_holddown
@@ -7873,8 +7890,12 @@ argument_list|,
 name|VERB_ALGO
 argument_list|,
 literal|"add-holddown time exceeded "
-literal|"%d seconds ago, and pending-count %d"
+literal|"%lld seconds ago, and pending-count %d"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|exceeded
 argument_list|,
 name|anchor
@@ -7952,7 +7973,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|int
+name|time_t
 name|exceeded
 init|=
 name|check_holddown
@@ -7986,8 +8007,12 @@ argument_list|,
 name|VERB_ALGO
 argument_list|,
 literal|"del-holddown time exceeded "
-literal|"%d seconds ago"
+literal|"%lld seconds ago"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|exceeded
 argument_list|)
 expr_stmt|;
@@ -8641,7 +8666,7 @@ name|autr_ta
 modifier|*
 name|anchor
 decl_stmt|;
-name|int
+name|time_t
 name|exceeded
 decl_stmt|;
 name|int
@@ -8848,8 +8873,12 @@ argument_list|,
 name|VERB_ALGO
 argument_list|,
 literal|"keep-missing time "
-literal|"exceeded %d seconds ago, [%d key(s) VALID]"
+literal|"exceeded %lld seconds ago, [%d key(s) VALID]"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|exceeded
 argument_list|,
 name|valid
@@ -9183,12 +9212,12 @@ name|module_env
 modifier|*
 name|env
 parameter_list|,
-name|uint32_t
+name|time_t
 name|wait
 parameter_list|)
 block|{
 comment|/* make it random, 90-100% */
-name|uint32_t
+name|time_t
 name|rnd
 decl_stmt|,
 name|rest
@@ -9218,7 +9247,7 @@ expr_stmt|;
 name|rnd
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|ub_random_max
 argument_list|(
@@ -9330,11 +9359,11 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|S_SPLINT_S
-name|uint32_t
+name|time_t
 name|next
 init|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|wait_probe_time
 argument_list|(
@@ -9406,10 +9435,11 @@ name|verbose
 argument_list|(
 name|VERB_ALGO
 argument_list|,
-literal|"scheduled next probe in %d sec"
+literal|"scheduled next probe in %lld sec"
 argument_list|,
 operator|(
-name|int
+name|long
+name|long
 operator|)
 name|tv
 operator|.
@@ -11460,7 +11490,7 @@ name|module_env
 modifier|*
 name|env
 parameter_list|,
-name|uint32_t
+name|time_t
 modifier|*
 name|next
 parameter_list|)
@@ -11544,7 +11574,7 @@ comment|/* is it eligible? */
 if|if
 condition|(
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|tp
 operator|->
@@ -11563,7 +11593,7 @@ operator|*
 name|next
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|tp
 operator|->
@@ -11672,7 +11702,7 @@ block|}
 end_function
 
 begin_function
-name|uint32_t
+name|time_t
 name|autr_probe_timer
 parameter_list|(
 name|struct
@@ -11686,7 +11716,7 @@ name|trust_anchor
 modifier|*
 name|tp
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|next_probe
 init|=
 literal|3600

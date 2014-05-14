@@ -152,6 +152,31 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Find forward zone exactly by name  * @param fwd: forward storage.  * @param qname: The qname of the query.  * @param qclass: The qclass of the query.  * @return: A delegation point or null.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|delegpt
+modifier|*
+name|forwards_find
+parameter_list|(
+name|struct
+name|iter_forwards
+modifier|*
+name|fwd
+parameter_list|,
+name|uint8_t
+modifier|*
+name|qname
+parameter_list|,
+name|uint16_t
+name|qclass
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Find forward zone information  * For this qname/qclass find forward zone information, returns delegation  * point with server names and addresses, or NULL if no forwarding is needed.  *  * @param fwd: forward storage.  * @param qname: The qname of the query.  * @param qclass: The qclass of the query.  * @return: A delegation point if the query has to be forwarded to that list,  *         otherwise null.  */
 end_comment
 

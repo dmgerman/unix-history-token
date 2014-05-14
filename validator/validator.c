@@ -11161,7 +11161,7 @@ name|VAL_CLASS_NAMEERROR
 condition|)
 block|{
 comment|/* NODATA means that the qname exists, but that there was  		 * no DS.  This is a pretty normal case. */
-name|uint32_t
+name|time_t
 name|proof_ttl
 init|=
 literal|0

@@ -95,7 +95,7 @@ name|key_entry_key
 modifier|*
 name|kkey
 parameter_list|,
-name|uint32_t
+name|time_t
 modifier|*
 name|proof_ttl
 parameter_list|,

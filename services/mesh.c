@@ -1573,6 +1573,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|n
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_insert
@@ -1959,6 +1964,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|n
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_insert
@@ -2145,7 +2155,7 @@ parameter_list|,
 name|uint16_t
 name|qflags
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|)
 block|{
@@ -2293,6 +2303,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|n
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_insert
@@ -3629,6 +3644,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|n
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_delete
@@ -3850,6 +3870,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|n
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_insert
@@ -3884,6 +3909,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|n
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_insert
@@ -4140,6 +4170,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|n
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_insert
@@ -5067,10 +5102,11 @@ name|verbose
 argument_list|(
 name|VERB_ALGO
 argument_list|,
-literal|"query took %d.%6.6d sec"
+literal|"query took %lld.%6.6d sec"
 argument_list|,
 operator|(
-name|int
+name|long
+name|long
 operator|)
 name|duration
 operator|.
@@ -6685,10 +6721,11 @@ expr_stmt|;
 name|log_info
 argument_list|(
 literal|"average recursion processing time "
-literal|"%d.%6.6d sec"
+literal|"%lld.%6.6d sec"
 argument_list|,
 operator|(
-name|int
+name|long
+name|long
 operator|)
 name|avg
 operator|.

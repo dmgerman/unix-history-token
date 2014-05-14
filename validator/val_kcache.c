@@ -449,7 +449,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{

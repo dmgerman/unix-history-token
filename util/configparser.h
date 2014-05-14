@@ -594,6 +594,10 @@ block|,
 name|VAR_RRSET_ROUNDROBIN
 init|=
 literal|384
+block|,
+name|VAR_MAX_UDP_SIZE
+init|=
+literal|385
 block|}
 enum|;
 end_enum
@@ -1496,6 +1500,13 @@ name|VAR_RRSET_ROUNDROBIN
 value|384
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_MAX_UDP_SIZE
+value|385
+end_define
+
 begin_if
 if|#
 directive|if
@@ -1525,7 +1536,7 @@ decl_stmt|;
 comment|/* Line 2049 of yacc.c  */
 line|#
 directive|line
-number|320
+number|322
 file|"util/configparser.h"
 block|}
 name|YYSTYPE

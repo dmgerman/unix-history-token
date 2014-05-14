@@ -462,6 +462,18 @@ name|rdf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|qinfo
+operator|.
+name|qname
+condition|)
+name|fatal_exit
+argument_list|(
+literal|"out of memory"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -480,18 +492,6 @@ expr_stmt|;
 name|ldns_rdf_deep_free
 argument_list|(
 name|rdf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|qinfo
-operator|.
-name|qname
-condition|)
-name|fatal_exit
-argument_list|(
-literal|"out of memory"
 argument_list|)
 expr_stmt|;
 comment|/* qtype and qclass */

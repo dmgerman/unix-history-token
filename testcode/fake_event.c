@@ -2457,7 +2457,7 @@ operator|->
 name|now_secs
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|runtime
 operator|->
@@ -4307,7 +4307,7 @@ name|comm_base
 modifier|*
 name|b
 parameter_list|,
-name|uint32_t
+name|time_t
 modifier|*
 modifier|*
 name|tt
@@ -4953,9 +4953,16 @@ name|outnet
 operator|->
 name|udp_buff
 condition|)
+block|{
+name|free
+argument_list|(
+name|outnet
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 return|return
 name|outnet
 return|;

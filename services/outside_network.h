@@ -100,7 +100,7 @@ modifier|*
 name|base
 decl_stmt|;
 comment|/** pointer to time in seconds */
-name|uint32_t
+name|time_t
 modifier|*
 name|now_secs
 decl_stmt|;

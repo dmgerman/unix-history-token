@@ -358,7 +358,7 @@ modifier|*
 name|rnd
 decl_stmt|;
 comment|/** time in seconds, converted to integer */
-name|uint32_t
+name|time_t
 modifier|*
 name|now
 decl_stmt|;
@@ -603,7 +603,7 @@ modifier|*
 name|mesh_info
 decl_stmt|;
 comment|/** how many seconds before expiry is this prefetched (0 if not) */
-name|uint32_t
+name|time_t
 name|prefetch_leeway
 decl_stmt|;
 block|}

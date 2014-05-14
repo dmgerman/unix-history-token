@@ -2583,6 +2583,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
+specifier|static
 name|unsigned
 name|char
 name|param256
@@ -2611,6 +2612,7 @@ block|,
 literal|0x07
 block|}
 decl_stmt|;
+specifier|static
 name|unsigned
 name|char
 name|param384
@@ -3518,6 +3520,7 @@ parameter_list|)
 block|{
 comment|/* uses libNSS */
 comment|/* hash prefix for md5, RFC2537 */
+specifier|static
 name|unsigned
 name|char
 name|p_md5
@@ -3562,6 +3565,7 @@ literal|0x10
 block|}
 decl_stmt|;
 comment|/* hash prefix to prepend to hash output, from RFC3110 */
+specifier|static
 name|unsigned
 name|char
 name|p_sha1
@@ -3600,6 +3604,7 @@ literal|0x14
 block|}
 decl_stmt|;
 comment|/* from RFC5702 */
+specifier|static
 name|unsigned
 name|char
 name|p_sha256
@@ -3645,6 +3650,7 @@ block|,
 literal|0x20
 block|}
 decl_stmt|;
+specifier|static
 name|unsigned
 name|char
 name|p_sha512
@@ -3691,7 +3697,7 @@ literal|0x40
 block|}
 decl_stmt|;
 comment|/* from RFC6234 */
-comment|/* for future RSASHA384 ..  	unsigned char p_sha384[] = {0x30, 0x51, 0x30, 0x0d, 0x06, 0x09, 0x60, 	0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x02, 0x05, 0x00, 0x04, 0x30}; 	*/
+comment|/* for future RSASHA384 ..  	static unsigned char p_sha384[] = {0x30, 0x51, 0x30, 0x0d, 0x06, 0x09, 0x60, 	0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x02, 0x05, 0x00, 0x04, 0x30}; 	*/
 switch|switch
 condition|(
 name|algo

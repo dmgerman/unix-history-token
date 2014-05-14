@@ -98,10 +98,10 @@ name|reply_info
 modifier|*
 name|rep
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|,
 name|int
@@ -383,7 +383,7 @@ name|reply_info
 modifier|*
 name|rep
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|,
 name|int
@@ -405,7 +405,7 @@ name|msgreply_entry
 modifier|*
 name|e
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|ttl
 init|=
 name|rep
@@ -599,7 +599,7 @@ parameter_list|,
 name|uint16_t
 name|qclass
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|uint16_t
@@ -728,7 +728,7 @@ name|dns_msg
 modifier|*
 name|msg
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -806,7 +806,7 @@ parameter_list|,
 name|uint16_t
 name|qclass
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|int
@@ -951,7 +951,7 @@ name|delegpt
 modifier|*
 name|dp
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -1316,7 +1316,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|akey
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|now
 init|=
 operator|*
@@ -1384,9 +1384,6 @@ name|region
 argument_list|,
 name|akey
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ns
 operator|->
 name|lame
@@ -1525,9 +1522,6 @@ name|region
 argument_list|,
 name|akey
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ns
 operator|->
 name|lame
@@ -1659,7 +1653,7 @@ name|delegpt
 modifier|*
 name|dp
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -2053,7 +2047,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|rrset
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -2136,7 +2130,7 @@ modifier|*
 modifier|*
 name|msg
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -2607,7 +2601,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -3013,7 +3007,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -3228,7 +3222,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -3744,7 +3738,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -3969,7 +3963,7 @@ decl_stmt|;
 name|hashvalue_t
 name|h
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|now
 init|=
 operator|*
@@ -4604,7 +4598,7 @@ parameter_list|,
 name|int
 name|is_referral
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|,
 name|int

@@ -392,7 +392,7 @@ modifier|*
 name|base
 decl_stmt|;
 comment|/** seconds time pointer points here */
-name|uint32_t
+name|time_t
 name|secs
 decl_stmt|;
 comment|/** timeval with current time */
@@ -584,7 +584,7 @@ operator|->
 name|secs
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|b
 operator|->
@@ -1005,7 +1005,7 @@ name|comm_base
 modifier|*
 name|b
 parameter_list|,
-name|uint32_t
+name|time_t
 modifier|*
 modifier|*
 name|tt
@@ -1291,6 +1291,20 @@ break|break;
 block|}
 endif|#
 directive|endif
+comment|/* permission denied is gotten for every send if the 	 * network is disconnected (on some OS), squelch it */
+if|if
+condition|(
+name|errno
+operator|==
+name|EPERM
+operator|&&
+name|verbosity
+operator|<
+name|VERB_DETAIL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* squelch errors where people deploy AAAA ::ffff:bla for 	 * authority servers, which we try for intranets. */
 if|if
 condition|(

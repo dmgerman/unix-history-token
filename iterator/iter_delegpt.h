@@ -217,12 +217,16 @@ name|int
 name|sel_rtt
 decl_stmt|;
 comment|/** if true, the A or AAAA RR was bogus, so this address is bad. 	 * Also check the dp->bogus to see if everything is bogus. */
-name|int
+name|uint8_t
 name|bogus
 decl_stmt|;
 comment|/** if true, this address is dispreferred: it is a lame IP address */
-name|int
+name|uint8_t
 name|lame
+decl_stmt|;
+comment|/** if the address is dnsseclame, but this cannot be cached, this 	 * option is useful to mark the address dnsseclame. 	 * This value is not copied in addr-copy and dp-copy. */
+name|uint8_t
+name|dnsseclame
 decl_stmt|;
 block|}
 struct|;
@@ -316,7 +320,7 @@ name|uint8_t
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|uint8_t
 name|lame
 parameter_list|)
 function_decl|;
@@ -345,7 +349,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|ns_rrset
 parameter_list|,
-name|int
+name|uint8_t
 name|lame
 parameter_list|)
 function_decl|;
@@ -384,10 +388,10 @@ parameter_list|,
 name|socklen_t
 name|addrlen
 parameter_list|,
-name|int
+name|uint8_t
 name|bogus
 parameter_list|,
-name|int
+name|uint8_t
 name|lame
 parameter_list|)
 function_decl|;
@@ -416,7 +420,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|rrset
 parameter_list|,
-name|int
+name|uint8_t
 name|lame
 parameter_list|)
 function_decl|;
@@ -445,7 +449,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|rrset
 parameter_list|,
-name|int
+name|uint8_t
 name|lame
 parameter_list|)
 function_decl|;
@@ -474,7 +478,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|rrset
 parameter_list|,
-name|int
+name|uint8_t
 name|lame
 parameter_list|)
 function_decl|;
@@ -506,10 +510,10 @@ parameter_list|,
 name|socklen_t
 name|addrlen
 parameter_list|,
-name|int
+name|uint8_t
 name|bogus
 parameter_list|,
-name|int
+name|uint8_t
 name|lame
 parameter_list|)
 function_decl|;
@@ -832,7 +836,7 @@ name|uint8_t
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|uint8_t
 name|lame
 parameter_list|)
 function_decl|;
@@ -859,10 +863,10 @@ parameter_list|,
 name|socklen_t
 name|addrlen
 parameter_list|,
-name|int
+name|uint8_t
 name|bogus
 parameter_list|,
-name|int
+name|uint8_t
 name|lame
 parameter_list|)
 function_decl|;
@@ -896,10 +900,10 @@ parameter_list|,
 name|socklen_t
 name|addrlen
 parameter_list|,
-name|int
+name|uint8_t
 name|bogus
 parameter_list|,
-name|int
+name|uint8_t
 name|lame
 parameter_list|)
 function_decl|;

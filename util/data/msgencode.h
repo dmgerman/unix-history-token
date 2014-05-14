@@ -71,7 +71,7 @@ name|ldns_buffer
 modifier|*
 name|dest
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|int
@@ -127,7 +127,7 @@ name|ldns_buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|struct

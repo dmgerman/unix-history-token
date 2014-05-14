@@ -1473,10 +1473,10 @@ parameter_list|,
 name|uint16_t
 name|dclass
 parameter_list|,
-name|uint32_t
+name|time_t
 name|ttl
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -1587,7 +1587,7 @@ name|uint8_t
 modifier|*
 name|sigalg
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -1782,10 +1782,10 @@ parameter_list|,
 name|uint16_t
 name|dclass
 parameter_list|,
-name|uint32_t
+name|time_t
 name|ttl
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{

@@ -169,7 +169,7 @@ name|int
 name|need_to_exit
 decl_stmt|;
 comment|/** where to store time in seconds */
-name|uint32_t
+name|time_t
 modifier|*
 name|time_secs
 decl_stmt|;
@@ -295,7 +295,7 @@ name|void
 modifier|*
 name|event_init
 parameter_list|(
-name|uint32_t
+name|time_t
 modifier|*
 name|time_secs
 parameter_list|,

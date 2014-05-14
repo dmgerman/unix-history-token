@@ -235,7 +235,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|time_t
 modifier|*
 name|log_now
 init|=
@@ -581,7 +581,7 @@ begin_function
 name|void
 name|log_set_time
 parameter_list|(
-name|uint32_t
+name|time_t
 modifier|*
 name|t
 parameter_list|)
@@ -1119,10 +1119,11 @@ name|fprintf
 argument_list|(
 name|logfile
 argument_list|,
-literal|"[%u] %s[%d:%x] %s: %s\n"
+literal|"[%lld] %s[%d:%x] %s: %s\n"
 argument_list|,
 operator|(
-name|unsigned
+name|long
+name|long
 operator|)
 name|now
 argument_list|,

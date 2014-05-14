@@ -129,7 +129,7 @@ name|packed_rrset_data
 modifier|*
 name|d
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|size_t
@@ -358,7 +358,7 @@ name|packed_rrset_data
 modifier|*
 name|d
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|size_t
@@ -487,7 +487,7 @@ name|packed_rrset_data
 modifier|*
 name|d
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -526,7 +526,7 @@ name|ssl_printf
 argument_list|(
 name|ssl
 argument_list|,
-literal|";rrset%s %u %u %u %d %d\n"
+literal|";rrset%s %lld %u %u %d %d\n"
 argument_list|,
 operator|(
 name|k
@@ -543,7 +543,8 @@ else|:
 literal|""
 argument_list|,
 call|(
-name|unsigned
+name|long
+name|long
 call|)
 argument_list|(
 name|d
@@ -696,7 +697,7 @@ name|lruhash
 modifier|*
 name|h
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -1185,7 +1186,7 @@ name|reply_info
 modifier|*
 name|d
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -1378,7 +1379,7 @@ name|ssl_printf
 argument_list|(
 name|ssl
 argument_list|,
-literal|"msg %s %s %s %d %d %u %d %u %u %u\n"
+literal|"msg %s %s %s %d %d %lld %d %u %u %u\n"
 argument_list|,
 name|nm
 argument_list|,
@@ -1401,7 +1402,8 @@ operator|->
 name|qdcount
 argument_list|,
 call|(
-name|unsigned
+name|long
+name|long
 call|)
 argument_list|(
 name|d
@@ -2242,7 +2244,7 @@ name|int
 modifier|*
 name|go_on
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -2865,7 +2867,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 operator|)
 operator|*
@@ -3033,7 +3035,7 @@ index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 operator|*
 name|num
@@ -3043,7 +3045,7 @@ name|p
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 operator|*
 name|num
@@ -3208,8 +3210,6 @@ name|d
 decl_stmt|;
 name|unsigned
 name|int
-name|ttl
-decl_stmt|,
 name|rr_count
 decl_stmt|,
 name|rrsig_count
@@ -3217,6 +3217,10 @@ decl_stmt|,
 name|trust
 decl_stmt|,
 name|security
+decl_stmt|;
+name|long
+name|long
+name|ttl
 decl_stmt|;
 name|unsigned
 name|int
@@ -3348,7 +3352,7 @@ name|sscanf
 argument_list|(
 name|s
 argument_list|,
-literal|" %u %u %u %u %u"
+literal|" %lld %u %u %u %u"
 argument_list|,
 operator|&
 name|ttl
@@ -3443,7 +3447,7 @@ operator|->
 name|ttl
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|ttl
 operator|+
@@ -3488,7 +3492,7 @@ name|region
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 operator|*
 operator|(
@@ -4364,8 +4368,6 @@ name|flags
 decl_stmt|,
 name|qdcount
 decl_stmt|,
-name|ttl
-decl_stmt|,
 name|security
 decl_stmt|,
 name|an
@@ -4373,6 +4375,10 @@ decl_stmt|,
 name|ns
 decl_stmt|,
 name|ar
+decl_stmt|;
+name|long
+name|long
+name|ttl
 decl_stmt|;
 name|size_t
 name|i
@@ -4447,7 +4453,7 @@ name|sscanf
 argument_list|(
 name|s
 argument_list|,
-literal|" %u %u %u %u %u %u %u"
+literal|" %u %u %lld %u %u %u %u"
 argument_list|,
 operator|&
 name|flags
@@ -4508,7 +4514,7 @@ operator|.
 name|ttl
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|ttl
 expr_stmt|;
@@ -4902,8 +4908,6 @@ name|to
 decl_stmt|,
 name|delay
 decl_stmt|,
-name|entry_ttl
-decl_stmt|,
 name|tA
 init|=
 literal|0
@@ -4915,6 +4919,10 @@ decl_stmt|,
 name|tother
 init|=
 literal|0
+decl_stmt|;
+name|long
+name|long
+name|entry_ttl
 decl_stmt|;
 name|struct
 name|rtt_info
@@ -5184,7 +5192,7 @@ name|ssl_printf
 argument_list|(
 name|ssl
 argument_list|,
-literal|"%s%s%s%srto %d msec, ttl %d, ping %d "
+literal|"%s%s%s%srto %d msec, ttl %lld, ping %d "
 literal|"var %d rtt %d, tA %d, tAAAA %d, tother %d"
 argument_list|,
 name|lame

@@ -327,7 +327,7 @@ modifier|*
 name|infra
 decl_stmt|;
 comment|/** the current time in seconds */
-name|uint32_t
+name|time_t
 name|now_secs
 decl_stmt|;
 comment|/** the current time in microseconds */

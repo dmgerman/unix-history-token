@@ -272,7 +272,7 @@ parameter_list|,
 name|int
 name|is_referral
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|,
 name|int

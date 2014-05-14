@@ -563,7 +563,7 @@ name|val_env
 modifier|*
 name|ve
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -616,7 +616,7 @@ name|val_env
 modifier|*
 name|ve
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct

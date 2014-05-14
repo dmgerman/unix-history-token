@@ -971,7 +971,7 @@ operator|->
 name|rr_ttl
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|*
 operator|)
 operator|&
@@ -1206,7 +1206,7 @@ name|packed_rrset_data
 modifier|*
 name|data
 parameter_list|,
-name|uint32_t
+name|time_t
 name|add
 parameter_list|)
 block|{
@@ -1469,7 +1469,7 @@ block|}
 end_function
 
 begin_function
-name|uint32_t
+name|time_t
 name|ub_packed_rrset_ttl
 parameter_list|(
 name|struct
@@ -1518,7 +1518,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -1799,7 +1799,7 @@ name|alloc_cache
 modifier|*
 name|alloc
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -2302,7 +2302,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -2407,7 +2407,7 @@ operator|->
 name|rr_ttl
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|*
 operator|)
 operator|&

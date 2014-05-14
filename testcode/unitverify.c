@@ -1534,7 +1534,7 @@ name|struct
 name|val_env
 name|ve
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|now
 init|=
 name|time
@@ -2394,6 +2394,8 @@ name|struct
 name|nsec3_cached_hash
 modifier|*
 name|hash
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|ret

@@ -1083,7 +1083,7 @@ name|uint16_t
 modifier|*
 name|dclass
 parameter_list|,
-name|uint32_t
+name|time_t
 modifier|*
 name|ttl
 parameter_list|,
@@ -1206,7 +1206,7 @@ operator|*
 name|ttl
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|ldns_rr_ttl
 argument_list|(
@@ -1853,7 +1853,7 @@ name|ldns_buffer
 modifier|*
 name|buf
 parameter_list|,
-name|uint32_t
+name|time_t
 name|ttl
 parameter_list|)
 block|{
@@ -1865,7 +1865,7 @@ name|pd
 operator|->
 name|rr_len
 decl_stmt|;
-name|uint32_t
+name|time_t
 modifier|*
 name|oldttl
 init|=
@@ -2494,7 +2494,7 @@ name|rrclass
 init|=
 literal|0
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|ttl
 init|=
 literal|0

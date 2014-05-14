@@ -607,7 +607,7 @@ parameter_list|,
 name|uint16_t
 name|qflags
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|)
 function_decl|;

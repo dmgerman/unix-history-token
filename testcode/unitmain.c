@@ -3136,7 +3136,7 @@ parameter_list|,
 name|int
 name|wr
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -3276,7 +3276,7 @@ init|=
 name|config_create
 argument_list|()
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|now
 init|=
 literal|0

@@ -529,7 +529,7 @@ name|comm_base
 modifier|*
 name|b
 parameter_list|,
-name|uint32_t
+name|time_t
 modifier|*
 modifier|*
 name|tt

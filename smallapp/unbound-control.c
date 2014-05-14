@@ -334,6 +334,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"  insecure_add zone 		add domain-insecure zone\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  insecure_remove zone		remove domain-insecure zone\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"  forward_add [+i] zone addr..	add forward-zone with servers\n"
 argument_list|)
 expr_stmt|;

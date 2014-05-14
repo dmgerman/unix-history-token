@@ -254,7 +254,7 @@ operator|->
 name|time_secs
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|base
 operator|->
@@ -279,7 +279,7 @@ name|void
 modifier|*
 name|event_init
 parameter_list|(
-name|uint32_t
+name|time_t
 modifier|*
 name|time_secs
 parameter_list|,

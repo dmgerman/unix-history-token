@@ -5841,7 +5841,7 @@ name|s
 argument_list|,
 name|len
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -5897,7 +5897,7 @@ name|s
 argument_list|,
 name|len
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -6888,7 +6888,7 @@ argument_list|(
 name|s
 argument_list|)
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -7033,7 +7033,7 @@ name|z
 argument_list|,
 name|len
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -7593,7 +7593,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{

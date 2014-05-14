@@ -3806,6 +3806,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|n
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_insert

@@ -134,7 +134,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * See if rrset is bad.  * @param priv: structure for private address storage.  * @param pkt: packet to decompress rrset name in.  * @param rrset: the rrset to examine, A or AAAA.  * @return true if the rrset is bad and should be removed.  */
+comment|/**  * See if rrset is bad.  * Will remove individual RRs that are bad (if possible) to  * sanitize the RRset without removing it completely.  * @param priv: structure for private address storage.  * @param pkt: packet to decompress rrset name in.  * @param rrset: the rrset to examine, A or AAAA.  * @return true if the rrset is bad and should be removed.  */
 end_comment
 
 begin_function_decl

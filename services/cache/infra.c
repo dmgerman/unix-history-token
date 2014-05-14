@@ -964,7 +964,7 @@ name|lruhash_entry
 modifier|*
 name|e
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 block|{
@@ -1094,7 +1094,7 @@ parameter_list|,
 name|size_t
 name|namelen
 parameter_list|,
-name|uint32_t
+name|time_t
 name|tm
 parameter_list|)
 block|{
@@ -1312,7 +1312,7 @@ parameter_list|,
 name|size_t
 name|nmlen
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|int
@@ -1823,7 +1823,7 @@ parameter_list|,
 name|size_t
 name|nmlen
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|int
@@ -2185,7 +2185,7 @@ parameter_list|,
 name|int
 name|orig_rtt
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 block|{
@@ -2510,7 +2510,8 @@ block|}
 end_function
 
 begin_function
-name|int
+name|long
+name|long
 name|infra_get_host_rto
 parameter_list|(
 name|struct
@@ -2542,7 +2543,7 @@ name|int
 modifier|*
 name|delay
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|int
@@ -2583,7 +2584,8 @@ name|infra_data
 modifier|*
 name|data
 decl_stmt|;
-name|int
+name|long
+name|long
 name|ttl
 init|=
 operator|-
@@ -2621,7 +2623,8 @@ block|{
 name|ttl
 operator|=
 call|(
-name|int
+name|long
+name|long
 call|)
 argument_list|(
 name|data
@@ -2747,7 +2750,7 @@ parameter_list|,
 name|int
 name|edns_version
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 block|{
@@ -2979,7 +2982,7 @@ name|int
 modifier|*
 name|rtt
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 block|{

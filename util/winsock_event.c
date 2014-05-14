@@ -218,7 +218,7 @@ operator|->
 name|time_secs
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|base
 operator|->
@@ -365,7 +365,7 @@ name|void
 modifier|*
 name|event_init
 parameter_list|(
-name|uint32_t
+name|time_t
 modifier|*
 name|time_secs
 parameter_list|,
@@ -806,10 +806,11 @@ name|verbose
 argument_list|(
 name|VERB_CLIENT
 argument_list|,
-literal|"winsock_event wait=%d.%6.6d"
+literal|"winsock_event wait=%lld.%6.6d"
 argument_list|,
 operator|(
-name|int
+name|long
+name|long
 operator|)
 name|wait
 operator|->
@@ -2664,7 +2665,7 @@ name|verbose
 argument_list|(
 name|VERB_ALGO
 argument_list|,
-literal|"event_add %p added=%d fd=%d tv=%d %s%s%s"
+literal|"event_add %p added=%d fd=%d tv=%lld %s%s%s"
 argument_list|,
 name|ev
 argument_list|,
@@ -2680,7 +2681,8 @@ operator|(
 name|tv
 condition|?
 operator|(
-name|int
+name|long
+name|long
 operator|)
 name|tv
 operator|->
@@ -2689,7 +2691,8 @@ operator|*
 literal|1000
 operator|+
 operator|(
-name|int
+name|long
+name|long
 operator|)
 name|tv
 operator|->
@@ -3243,7 +3246,7 @@ name|verbose
 argument_list|(
 name|VERB_ALGO
 argument_list|,
-literal|"event_del %p added=%d fd=%d tv=%d %s%s%s"
+literal|"event_del %p added=%d fd=%d tv=%lld %s%s%s"
 argument_list|,
 name|ev
 argument_list|,
@@ -3264,7 +3267,8 @@ name|EV_TIMEOUT
 operator|)
 condition|?
 operator|(
-name|int
+name|long
+name|long
 operator|)
 name|ev
 operator|->
@@ -3275,7 +3279,8 @@ operator|*
 literal|1000
 operator|+
 operator|(
-name|int
+name|long
+name|long
 operator|)
 name|ev
 operator|->

@@ -179,7 +179,7 @@ begin_function_decl
 name|void
 name|log_set_time
 parameter_list|(
-name|uint32_t
+name|time_t
 modifier|*
 name|t
 parameter_list|)

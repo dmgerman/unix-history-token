@@ -158,17 +158,17 @@ comment|/** 	 * Number of RRs in the query section. 	 * If qdcount is not 0, the
 name|uint8_t
 name|qdcount
 decl_stmt|;
-comment|/**  	 * TTL of the entire reply (for negative caching). 	 * only for use when there are 0 RRsets in this message. 	 * if there are RRsets, check those instead. 	 */
-name|uint32_t
-name|ttl
-decl_stmt|;
-comment|/** 	 * TTL for prefetch. After it has expired, a prefetch is suitable. 	 * Smaller than the TTL, otherwise the prefetch would not happen. 	 */
-name|uint32_t
-name|prefetch_ttl
-decl_stmt|;
 comment|/** 32 bit padding to pad struct member alignment to 64 bits. */
 name|uint32_t
 name|padding
+decl_stmt|;
+comment|/**  	 * TTL of the entire reply (for negative caching). 	 * only for use when there are 0 RRsets in this message. 	 * if there are RRsets, check those instead. 	 */
+name|time_t
+name|ttl
+decl_stmt|;
+comment|/** 	 * TTL for prefetch. After it has expired, a prefetch is suitable. 	 * Smaller than the TTL, otherwise the prefetch would not happen. 	 */
+name|time_t
+name|prefetch_ttl
 decl_stmt|;
 comment|/** 	 * The security status from DNSSEC validation of this message. 	 */
 name|enum
@@ -363,7 +363,7 @@ name|reply_info
 modifier|*
 name|rep
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 function_decl|;

@@ -195,7 +195,7 @@ name|alloc_cache
 modifier|*
 name|alloc
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 function_decl|;
@@ -232,7 +232,7 @@ parameter_list|,
 name|uint32_t
 name|flags
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|,
 name|int
@@ -257,7 +257,7 @@ parameter_list|,
 name|size_t
 name|count
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 function_decl|;
@@ -329,7 +329,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|rrset
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 function_decl|;
@@ -353,7 +353,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|rrset
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 function_decl|;

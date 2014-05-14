@@ -84,7 +84,7 @@ comment|/** MAX TTL default for messages and rrsets */
 end_comment
 
 begin_decl_stmt
-name|uint32_t
+name|time_t
 name|MAX_TTL
 init|=
 literal|3600
@@ -104,7 +104,7 @@ comment|/** MIN TTL default for messages and rrsets */
 end_comment
 
 begin_decl_stmt
-name|uint32_t
+name|time_t
 name|MIN_TTL
 init|=
 literal|0
@@ -267,10 +267,10 @@ parameter_list|,
 name|size_t
 name|qd
 parameter_list|,
-name|uint32_t
+name|time_t
 name|ttl
 parameter_list|,
-name|uint32_t
+name|time_t
 name|prettl
 parameter_list|,
 name|size_t
@@ -798,7 +798,7 @@ name|rr_parse
 modifier|*
 name|rr
 parameter_list|,
-name|uint32_t
+name|time_t
 modifier|*
 name|rr_ttl
 parameter_list|,
@@ -1314,7 +1314,7 @@ operator|->
 name|rr_ttl
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|*
 operator|)
 operator|&
@@ -1584,7 +1584,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 operator|)
 operator|+
@@ -2661,7 +2661,7 @@ name|reply_info
 modifier|*
 name|rep
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 block|{

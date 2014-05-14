@@ -574,7 +574,7 @@ parameter_list|,
 name|uint16_t
 name|qtype
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -827,6 +827,10 @@ elseif|else
 if|if
 condition|(
 name|dnsseclame
+operator|||
+name|a
+operator|->
+name|dnsseclame
 condition|)
 return|return
 name|rtt
@@ -857,6 +861,21 @@ name|rtt
 return|;
 block|}
 comment|/* no server information present */
+if|if
+condition|(
+name|a
+operator|->
+name|dnsseclame
+condition|)
+return|return
+name|UNKNOWN_SERVER_NICENESS
+operator|+
+name|USEFUL_SERVER_TOP_TIMEOUT
+operator|*
+literal|2
+return|;
+comment|/* nonpref */
+elseif|else
 if|if
 condition|(
 name|a
@@ -906,7 +925,7 @@ parameter_list|,
 name|uint16_t
 name|qtype
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -1088,7 +1107,7 @@ parameter_list|,
 name|uint16_t
 name|qtype
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -1968,7 +1987,7 @@ parameter_list|,
 name|int
 name|is_referral
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|,
 name|int
@@ -3979,7 +3998,7 @@ name|rep
 parameter_list|)
 block|{
 comment|/* TTL: NS from referral in iq->deleg_msg, 	 *      or first RR from iq->response, 	 *      or servfail5secs if !iq->response */
-name|uint32_t
+name|time_t
 name|ttl
 init|=
 name|NORR_TTL
@@ -4228,7 +4247,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 operator|+
 sizeof|sizeof

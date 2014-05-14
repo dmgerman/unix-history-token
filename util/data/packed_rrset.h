@@ -235,7 +235,7 @@ struct|struct
 name|packed_rrset_data
 block|{
 comment|/** TTL (in seconds like time()) of the rrset. 	 * Same for all RRs see rfc2181(5.2).  */
-name|uint32_t
+name|time_t
 name|ttl
 decl_stmt|;
 comment|/** number of rrs. */
@@ -262,7 +262,7 @@ modifier|*
 name|rr_len
 decl_stmt|;
 comment|/** ttl of every rr. rr_ttl[i] ttl of rr i. */
-name|uint32_t
+name|time_t
 modifier|*
 name|rr_ttl
 decl_stmt|;
@@ -365,7 +365,7 @@ comment|/**  * Get TTL of rrset. RRset data must be filled in correctly.  * @par
 end_comment
 
 begin_function_decl
-name|uint32_t
+name|time_t
 name|ub_packed_rrset_ttl
 parameter_list|(
 name|struct
@@ -518,7 +518,7 @@ name|packed_rrset_data
 modifier|*
 name|data
 parameter_list|,
-name|uint32_t
+name|time_t
 name|add
 parameter_list|)
 function_decl|;
@@ -628,7 +628,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 function_decl|;
@@ -654,7 +654,7 @@ name|alloc_cache
 modifier|*
 name|alloc
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 function_decl|;

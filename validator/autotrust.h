@@ -176,11 +176,11 @@ name|time_t
 name|next_probe_time
 decl_stmt|;
 comment|/** when to query if !failed */
-name|uint32_t
+name|time_t
 name|query_interval
 decl_stmt|;
 comment|/** when to retry if failed */
-name|uint32_t
+name|time_t
 name|retry_time
 decl_stmt|;
 comment|/**  	 * How many times did it fail. diagnostic only (has no effect). 	 * Only updated if there was a dnskey rrset that failed to verify. 	 */
@@ -263,7 +263,7 @@ comment|/**  * Process probe timer.  Add new probes if needed.  * @param env: mo
 end_comment
 
 begin_function_decl
-name|uint32_t
+name|time_t
 name|autr_probe_timer
 parameter_list|(
 name|struct

@@ -143,6 +143,8 @@ name|verbosity
 operator|>=
 name|VERB_QUERY
 operator|&&
+name|str
+operator|&&
 operator|(
 operator|*
 name|rrset
@@ -2539,7 +2541,7 @@ name|struct
 name|rrset_ref
 name|ref
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|now
 init|=
 operator|*
@@ -3051,7 +3053,12 @@ name|type
 operator|==
 name|LDNS_RR_TYPE_AAAA
 operator|)
-operator|&&
+condition|)
+block|{
+comment|/* do not set servfail since this leads to too 			 * many drops of other people using rfc1918 space */
+comment|/* also do not remove entire rrset, unless all records 			 * in it are bad */
+if|if
+condition|(
 name|priv_rrset_bad
 argument_list|(
 name|ie
@@ -3064,11 +3071,9 @@ name|rrset
 argument_list|)
 condition|)
 block|{
-comment|/* do not set servfail since this leads to too 			 * many drops of other people using rfc1918 space */
 name|remove_rrset
 argument_list|(
-literal|"sanitize: removing public name with "
-literal|"private address"
+name|NULL
 argument_list|,
 name|pkt
 argument_list|,
@@ -3081,6 +3086,7 @@ name|rrset
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 comment|/* skip DNAME records -- they will always be followed by a  		 * synthesized CNAME, which will be relevant. 		 * FIXME: should this do something differently with DNAME  		 * rrsets NOT in Section.ANSWER? */
 comment|/* But since DNAME records are also subdomains of the zone, 		 * same check can be used */

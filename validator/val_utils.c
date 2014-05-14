@@ -2428,7 +2428,7 @@ block|}
 comment|/* Once we see a single DS with a known digestID and  		 * algorithm, we cannot return INSECURE (with a  		 * "null" KeyEntry). */
 name|has_useful_ds
 operator|=
-name|true
+literal|1
 expr_stmt|;
 name|sec
 operator|=
@@ -3072,7 +3072,7 @@ continue|continue;
 comment|/* Once we see a single DS with a known digestID and  		 * algorithm, we cannot return INSECURE (with a  		 * "null" KeyEntry). */
 name|has_useful_ta
 operator|=
-name|true
+literal|1
 expr_stmt|;
 name|sec
 operator|=
@@ -3203,7 +3203,7 @@ continue|continue;
 comment|/* we saw a useful TA */
 name|has_useful_ta
 operator|=
-name|true
+literal|1
 expr_stmt|;
 name|sec
 operator|=
@@ -4082,6 +4082,35 @@ name|len
 condition|)
 block|{
 comment|/* at least rdatalen + signature + signame (+1 sig)*/
+if|if
+condition|(
+operator|!
+name|dname_valid
+argument_list|(
+name|d
+operator|->
+name|rr_data
+index|[
+name|i
+index|]
+operator|+
+literal|2
+operator|+
+literal|18
+argument_list|,
+name|d
+operator|->
+name|rr_len
+index|[
+name|i
+index|]
+operator|-
+literal|2
+operator|-
+literal|18
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|query_dname_compare
