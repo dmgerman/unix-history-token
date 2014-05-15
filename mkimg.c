@@ -925,9 +925,9 @@ name|int
 name|fd
 parameter_list|,
 specifier|const
-name|char
+name|void
 modifier|*
-name|buf
+name|ptr
 parameter_list|,
 name|size_t
 name|sz
@@ -935,6 +935,9 @@ parameter_list|)
 block|{
 specifier|const
 name|char
+modifier|*
+name|buf
+decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
@@ -949,6 +952,10 @@ name|wr
 decl_stmt|,
 name|wrsz
 decl_stmt|;
+name|buf
+operator|=
+name|ptr
+expr_stmt|;
 name|wrsz
 operator|=
 literal|0
