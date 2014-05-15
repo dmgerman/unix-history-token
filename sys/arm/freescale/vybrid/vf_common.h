@@ -87,5 +87,14 @@ define|\
 value|bus_space_write_1(_sc->bst, _sc->bsh, _reg, _val)
 end_define
 
+begin_function_decl
+name|uint32_t
+name|tcon_bypass
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
