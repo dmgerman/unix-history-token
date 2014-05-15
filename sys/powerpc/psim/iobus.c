@@ -467,7 +467,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|iobus
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|iobus_driver
 argument_list|,

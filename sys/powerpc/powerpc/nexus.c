@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/ofw_nexus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -120,8 +114,22 @@ file|<machine/resource.h>
 end_include
 
 begin_comment
-comment|/*  * The nexus (which is a pseudo-bus actually) iterates over the nodes that  * hang from the Open Firmware root node and adds them as devices to this bus  * (except some special nodes which are excluded) so that drivers can be  * attached to them.  *  * Additionally, interrupt setup/teardown and some resource management are  * done at this level.  */
+comment|/*  * The nexus handles root-level resource allocation requests and interrupt  * mapping. All direct subdevices of nexus are attached by DEVICE_IDENTIFY().  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|device_probe_t
+name|nexus_probe
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|device_attach_t
+name|nexus_attach
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -190,7 +198,29 @@ name|nexus_methods
 index|[]
 init|=
 block|{
+comment|/* Device interface */
+name|DEVMETHOD
+argument_list|(
+name|device_probe
+argument_list|,
+name|nexus_probe
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_attach
+argument_list|,
+name|nexus_attach
+argument_list|)
+block|,
 comment|/* Bus interface */
+name|DEVMETHOD
+argument_list|(
+name|bus_add_child
+argument_list|,
+name|bus_generic_add_child
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_activate_resource
@@ -259,7 +289,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DEFINE_CLASS_1
+name|DEFINE_CLASS_0
 argument_list|(
 name|nexus
 argument_list|,
@@ -267,13 +297,7 @@ name|nexus_driver
 argument_list|,
 name|nexus_methods
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ofw_nexus_softc
-argument_list|)
-argument_list|,
-name|ofw_nexus_driver
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -307,6 +331,56 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+specifier|static
+name|int
+name|nexus_probe
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* suppress attach message for neatness */
+return|return
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|nexus_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|bus_generic_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|bus_generic_attach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static

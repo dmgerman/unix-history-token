@@ -296,7 +296,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|openpic
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|openpic_ofw_driver
 argument_list|,

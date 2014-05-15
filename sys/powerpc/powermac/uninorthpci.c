@@ -334,7 +334,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|uninorth
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|uninorth_driver
 argument_list|,

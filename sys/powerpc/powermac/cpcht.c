@@ -571,7 +571,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|cpcht
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|cpcht_driver
 argument_list|,

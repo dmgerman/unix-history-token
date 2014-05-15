@@ -6608,18 +6608,6 @@ name|shpgperproc
 init|=
 name|PMAP_SHPGPERPROC
 decl_stmt|;
-name|PDEBUG
-argument_list|(
-literal|1
-argument_list|,
-name|printf
-argument_list|(
-literal|"pmap_init: phys_start = %08x\n"
-argument_list|,
-name|PHYSADDR
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|l2zone
 operator|=
 name|uma_zcreate

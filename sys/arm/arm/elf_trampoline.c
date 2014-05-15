@@ -1057,6 +1057,11 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
+name|PHYSADDR
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|LOADERRAMADDR
 argument_list|)
 name|unsigned

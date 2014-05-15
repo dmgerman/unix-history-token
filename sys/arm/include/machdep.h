@@ -308,11 +308,11 @@ begin_function_decl
 name|void
 name|arm_dump_avail_init
 parameter_list|(
+name|vm_paddr_t
+parameter_list|,
 name|vm_offset_t
-name|memsize
 parameter_list|,
 name|size_t
-name|max
 parameter_list|)
 function_decl|;
 end_function_decl

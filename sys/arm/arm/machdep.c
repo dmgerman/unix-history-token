@@ -3706,6 +3706,9 @@ begin_function
 name|void
 name|arm_dump_avail_init
 parameter_list|(
+name|vm_paddr_t
+name|physaddr
+parameter_list|,
 name|vm_offset_t
 name|ramsize
 parameter_list|,
@@ -3840,7 +3843,7 @@ index|]
 operator|=
 name|round_page
 argument_list|(
-name|PHYSADDR
+name|physaddr
 argument_list|)
 expr_stmt|;
 name|dump_avail
@@ -3850,7 +3853,7 @@ index|]
 operator|=
 name|trunc_page
 argument_list|(
-name|PHYSADDR
+name|physaddr
 operator|+
 name|ramsize
 argument_list|)
@@ -4368,7 +4371,9 @@ name|abp_r2
 operator|+
 name|KERNVIRTADDR
 operator|-
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 operator|)
 expr_stmt|;
 comment|/* xxx - Need to also look for binary device tree */
@@ -4723,7 +4728,9 @@ name|preload_addr_relocate
 operator|=
 name|KERNVIRTADDR
 operator|-
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 return|return
 name|lastaddr
@@ -5128,6 +5135,9 @@ name|availmem_regions
 parameter_list|,
 name|int
 name|availmem_regions_sz
+parameter_list|,
+name|vm_offset_t
+name|kernload
 parameter_list|)
 block|{
 name|int
@@ -5139,8 +5149,6 @@ name|cnt
 decl_stmt|;
 name|vm_offset_t
 name|phys_kernelend
-decl_stmt|,
-name|kernload
 decl_stmt|;
 name|uint32_t
 name|s
@@ -5159,17 +5167,13 @@ name|mp1
 decl_stmt|;
 name|phys_kernelend
 operator|=
-name|KERNPHYSADDR
+name|kernload
 operator|+
 operator|(
 name|virtual_avail
 operator|-
 name|KERNVIRTADDR
 operator|)
-expr_stmt|;
-name|kernload
-operator|=
-name|KERNPHYSADDR
 expr_stmt|;
 comment|/* 	 * Remove kernel physical address range from avail 	 * regions list. Page align all regions. 	 * Non-page aligned memory isn't very interesting to us. 	 * Also, sort the entries for ascending addresses. 	 */
 name|sz
@@ -6202,7 +6206,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_va, (np));					\ 	(var).pv_pa = (var).pv_va + (KERNPHYSADDR - KERNVIRTADDR);
+value|alloc_pages((var).pv_va, (np));					\ 	(var).pv_pa = (var).pv_va + (abp->abp_physaddr - KERNVIRTADDR);
 define|#
 directive|define
 name|alloc_pages
@@ -6329,7 +6333,9 @@ name|pv_va
 operator|-
 name|KERNVIRTADDR
 operator|+
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 block|}
 block|}
@@ -6481,7 +6487,9 @@ name|l1pagetable
 argument_list|,
 name|KERNVIRTADDR
 argument_list|,
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 argument_list|,
 operator|(
 operator|(
@@ -6843,6 +6851,10 @@ argument_list|)
 expr_stmt|;
 name|arm_dump_avail_init
 argument_list|(
+name|abp
+operator|->
+name|abp_physaddr
+argument_list|,
 name|memsize
 argument_list|,
 sizeof|sizeof
@@ -6893,6 +6905,10 @@ argument_list|(
 name|availmem_regions
 argument_list|,
 name|availmem_regions_sz
+argument_list|,
+name|abp
+operator|->
+name|abp_physaddr
 argument_list|)
 expr_stmt|;
 name|init_param2

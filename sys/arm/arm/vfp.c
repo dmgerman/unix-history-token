@@ -92,6 +92,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|vfp_bounce
 parameter_list|(
@@ -109,30 +110,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vfp_discard
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vfp_enable
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|vfp_restore
 parameter_list|(
 name|struct
 name|vfp_state
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfp_discard
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -469,6 +462,7 @@ comment|/* start VFP unit, restore the vfp registers from the PCB  and retry  * 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|vfp_bounce
 parameter_list|(
@@ -700,6 +694,7 @@ comment|/* vfs_store is called from from a VFP command to restore the registers 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vfp_restore
 parameter_list|(
@@ -961,41 +956,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* Enable the VFP hardware without restoring registers.  * Called when the registers are still in the VFP unit  */
-end_comment
-
-begin_function
-name|void
-name|vfp_enable
-parameter_list|()
-block|{
-name|u_int
-name|tmp
-init|=
-literal|0
-decl_stmt|;
-name|tmp
-operator|=
-name|fmrx
-argument_list|(
-name|VFPEXC
-argument_list|)
-expr_stmt|;
-name|tmp
-operator||=
-name|VFPEXC_EN
-expr_stmt|;
-name|fmxr
-argument_list|(
-name|VFPEXC
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_endif
 endif|#

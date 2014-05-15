@@ -1697,7 +1697,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|bcm2835fb
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|bcm_fb_driver
 argument_list|,

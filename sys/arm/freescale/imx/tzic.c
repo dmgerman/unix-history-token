@@ -545,7 +545,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Memory space of controller located outside of device range, so let him to  * attach not only to simplebus, but nexus also.  */
+comment|/*  * Memory space of controller located outside of device range, so let him to  * attach not only to simplebus, but ofwbus also.  */
 end_comment
 
 begin_expr_stmt
@@ -553,7 +553,7 @@ name|EARLY_DRIVER_MODULE
 argument_list|(
 name|tzic
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|tzic_driver
 argument_list|,

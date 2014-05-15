@@ -1887,7 +1887,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|pcib
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|mv_pcib_driver
 argument_list|,

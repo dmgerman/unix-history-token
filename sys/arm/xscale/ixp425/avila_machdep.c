@@ -1710,6 +1710,10 @@ name|PAGE_SIZE
 expr_stmt|;
 name|arm_dump_avail_init
 argument_list|(
+name|abp
+operator|->
+name|abp_physaddr
+argument_list|,
 name|memsize
 argument_list|,
 sizeof|sizeof
