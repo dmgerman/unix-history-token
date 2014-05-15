@@ -271,9 +271,14 @@ expr_stmt|;
 name|partial
 operator|=
 operator|(
+call|(
+name|ssize_t
+call|)
+argument_list|(
 name|bcnt
 operator|*
 name|secsz
+argument_list|)
 operator|!=
 name|rdsz
 operator|)
