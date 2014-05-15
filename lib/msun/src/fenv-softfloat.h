@@ -379,7 +379,7 @@ comment|/* We currently provide no external definitions of the functions below. 
 end_comment
 
 begin_function
-specifier|static
+name|__fenv_static
 specifier|inline
 name|int
 name|feenableexcept
@@ -406,7 +406,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|__fenv_static
 specifier|inline
 name|int
 name|fedisableexcept
@@ -434,7 +434,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|__fenv_static
 specifier|inline
 name|int
 name|fegetexcept
