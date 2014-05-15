@@ -5572,7 +5572,6 @@ comment|/* this function is needed to abort a transfer that is in progress;  * w
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ldns_axfr_abort
 parameter_list|(

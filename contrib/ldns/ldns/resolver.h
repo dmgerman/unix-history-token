@@ -1293,6 +1293,15 @@ modifier|*
 name|resolver
 parameter_list|)
 function_decl|;
+comment|/**  * Abort a transfer that is in progress  * \param[in] resolver the resolver that is used  */
+name|void
+name|ldns_axfr_abort
+parameter_list|(
+name|ldns_resolver
+modifier|*
+name|resolver
+parameter_list|)
+function_decl|;
 comment|/**  * Returns true if the axfr transfer has completed (i.e. 2 SOA RRs and no errors were encountered  * \param[in] resolver the resolver that is used  * \return bool true if axfr transfer was completed without error  */
 name|bool
 name|ldns_axfr_complete
