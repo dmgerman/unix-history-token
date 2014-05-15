@@ -21641,11 +21641,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-name|SCTP_COOKIE_ECHO
-case|:
-comment|/* We hit here only if the assoc is being freed */
-return|return;
-case|case
 name|SCTP_PACKET_DROPPED
 case|:
 comment|/* we don't respond to pkt-dropped */
