@@ -21,6 +21,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
 begin_struct
 struct|struct
 name|srcfile_state
@@ -111,7 +117,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|bool
 name|srcfile_pop
 parameter_list|(
 name|void
@@ -267,9 +273,15 @@ name|srcpos
 modifier|*
 name|pos
 parameter_list|,
-name|char
 specifier|const
+name|char
 modifier|*
+name|prefix
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
 parameter_list|,
 name|va_list
 name|va
@@ -280,7 +292,7 @@ function_decl|(format
 parameter_list|(
 name|printf
 parameter_list|,
-function_decl|2
+function_decl|3
 operator|,
 function_decl|0
 end_function_decl
@@ -300,9 +312,15 @@ name|srcpos
 modifier|*
 name|pos
 parameter_list|,
-name|char
 specifier|const
+name|char
 modifier|*
+name|prefix
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -312,9 +330,9 @@ function_decl|(format
 parameter_list|(
 name|printf
 parameter_list|,
-function_decl|2
-operator|,
 function_decl|3
+operator|,
+function_decl|4
 end_function_decl
 
 begin_empty_stmt
@@ -325,34 +343,17 @@ end_empty_stmt
 begin_function_decl
 specifier|extern
 name|void
-name|srcpos_warn
+name|srcpos_set_line
 parameter_list|(
-name|struct
-name|srcpos
-modifier|*
-name|pos
-parameter_list|,
 name|char
-specifier|const
 modifier|*
+name|f
 parameter_list|,
-modifier|...
+name|int
+name|l
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(format
-parameter_list|(
-name|printf
-parameter_list|,
-function_decl|2
-operator|,
-function_decl|3
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
 
 begin_endif
 endif|#

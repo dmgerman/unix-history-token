@@ -1168,7 +1168,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|bool
 name|data_is_one_string
 parameter_list|(
 name|struct
@@ -1193,7 +1193,7 @@ operator|==
 literal|0
 condition|)
 return|return
-literal|0
+name|false
 return|;
 for|for
 control|(
@@ -1222,7 +1222,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-literal|0
+name|false
 return|;
 if|if
 condition|(
@@ -1238,10 +1238,10 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
-literal|0
+name|false
 return|;
 return|return
-literal|1
+name|true
 return|;
 block|}
 end_function
