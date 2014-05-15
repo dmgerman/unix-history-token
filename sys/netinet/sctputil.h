@@ -1170,6 +1170,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|sctp_generate_no_user_data_cause
+parameter_list|(
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sctp_bindx_add_address
 parameter_list|(
