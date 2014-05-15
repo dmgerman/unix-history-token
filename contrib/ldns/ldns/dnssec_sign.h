@@ -148,7 +148,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* LDNS_BUILD_CONFIG_HAVE_SSL */
-comment|/**  * Marks the names in the zone that are occluded. Those names will be skipped  * when walking the tree with the ldns_dnssec_name_node_next_nonglue()  * function. But watch out! Names that are partially occluded (like glue with  * the same name as the delegation) will not be marked and should specifically   * be taken into account seperately.  *  * When glue_list is given (not NULL), in the process of marking the names, all  * glue resource records will be pushed to that list, even glue at the delegation name.  *  * \param[in] zone the zone in which to mark the names  * \param[in] glue_list the list to which to push the glue rrs  * \return LDNS_STATUS_OK on success, an error code otherwise  */
+comment|/**  * Marks the names in the zone that are occluded. Those names will be skipped  * when walking the tree with the ldns_dnssec_name_node_next_nonglue()  * function. But watch out! Names that are partially occluded (like glue with  * the same name as the delegation) will not be marked and should specifically   * be taken into account separately.  *  * When glue_list is given (not NULL), in the process of marking the names, all  * glue resource records will be pushed to that list, even glue at the delegation name.  *  * \param[in] zone the zone in which to mark the names  * \param[in] glue_list the list to which to push the glue rrs  * \return LDNS_STATUS_OK on success, an error code otherwise  */
 name|ldns_status
 name|ldns_dnssec_zone_mark_and_get_glue
 parameter_list|(
@@ -161,7 +161,7 @@ modifier|*
 name|glue_list
 parameter_list|)
 function_decl|;
-comment|/**  * Marks the names in the zone that are occluded. Those names will be skipped  * when walking the tree with the ldns_dnssec_name_node_next_nonglue()  * function. But watch out! Names that are partially occluded (like glue with  * the same name as the delegation) will not be marked and should specifically   * be taken into account seperately.  *  * \param[in] zone the zone in which to mark the names  * \return LDNS_STATUS_OK on succesful completion  */
+comment|/**  * Marks the names in the zone that are occluded. Those names will be skipped  * when walking the tree with the ldns_dnssec_name_node_next_nonglue()  * function. But watch out! Names that are partially occluded (like glue with  * the same name as the delegation) will not be marked and should specifically   * be taken into account separately.  *  * \param[in] zone the zone in which to mark the names  * \return LDNS_STATUS_OK on succesful completion  */
 name|ldns_status
 name|ldns_dnssec_zone_mark_glue
 parameter_list|(

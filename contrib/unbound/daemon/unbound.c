@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * daemon/unbound.c - main program for unbound DNS resolver daemon.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * daemon/unbound.c - main program for unbound DNS resolver daemon.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -160,6 +160,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_SPLINT_S
+end_ifndef
+
+begin_comment
+comment|/* splint chokes on this system header file */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -176,6 +186,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* S_SPLINT_S */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -681,16 +700,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"linked libs: %s %s (it uses %s), ldns %s, %s\n"
+literal|"linked libs: %s %s (it uses %s), %s\n"
 argument_list|,
 name|evnm
 argument_list|,
 name|evsys
 argument_list|,
 name|evmethod
-argument_list|,
-name|ldns_version
-argument_list|()
 argument_list|,
 ifdef|#
 directive|ifdef
@@ -815,6 +831,9 @@ modifier|*
 name|cfg
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|S_SPLINT_S
 ifdef|#
 directive|ifdef
 name|HAVE_GETRLIMIT
@@ -1382,6 +1401,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_GETRLIMIT */
+endif|#
+directive|endif
+comment|/* S_SPLINT_S */
 block|}
 comment|/** set verbosity, check rlimits, cache settings */
 specifier|static
@@ -2518,6 +2540,9 @@ name|pwd
 argument_list|,
 name|uid
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|LOGIN_SETALL
 operator|&
 operator|~
@@ -3503,6 +3528,36 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|log_ident_set
+argument_list|(
+name|strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+condition|?
+name|strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|+
+literal|1
+else|:
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* parse the options */

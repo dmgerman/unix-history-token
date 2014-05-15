@@ -75,11 +75,11 @@ define|#
 directive|define
 name|LDNS_RR_OVERHEAD
 value|10
-comment|/* The first fields are 'common' and can be referenced instantly */
+comment|/* The first fields are contiguous and can be referenced instantly */
 define|#
 directive|define
 name|LDNS_RDATA_FIELD_DESCRIPTORS_COMMON
-value|53
+value|258
 comment|/**  *  The different RR classes.  */
 enum|enum
 name|ldns_enum_rr_class
@@ -360,7 +360,7 @@ name|LDNS_RR_TYPE_APL
 init|=
 literal|42
 block|,
-comment|/**  draft-ietf-dnsext-delegation */
+comment|/**  RFC4034, RFC3658 */
 name|LDNS_RR_TYPE_DS
 init|=
 literal|43
@@ -413,20 +413,41 @@ name|LDNS_RR_TYPE_NSEC3PARAMS
 init|=
 literal|51
 block|,
-comment|/** draft-ietf-dane-protocol */
 name|LDNS_RR_TYPE_TLSA
 init|=
 literal|52
+block|,
+comment|/* RFC 6698 */
+name|LDNS_RR_TYPE_HIP
+init|=
+literal|55
+block|,
+comment|/* RFC 5205 */
+comment|/** draft-reid-dnsext-zs */
+name|LDNS_RR_TYPE_NINFO
+init|=
+literal|56
+block|,
+comment|/** draft-reid-dnsext-rkey */
+name|LDNS_RR_TYPE_RKEY
+init|=
+literal|57
 block|,
 comment|/** draft-ietf-dnsop-trust-history */
 name|LDNS_RR_TYPE_TALINK
 init|=
 literal|58
 block|,
+comment|/** draft-barwood-dnsop-ds-publis */
+name|LDNS_RR_TYPE_CDS
+init|=
+literal|59
+block|,
 name|LDNS_RR_TYPE_SPF
 init|=
 literal|99
 block|,
+comment|/* RFC 4408 */
 name|LDNS_RR_TYPE_UINFO
 init|=
 literal|100
@@ -443,6 +464,41 @@ name|LDNS_RR_TYPE_UNSPEC
 init|=
 literal|103
 block|,
+name|LDNS_RR_TYPE_NID
+init|=
+literal|104
+block|,
+comment|/* RFC 6742 */
+name|LDNS_RR_TYPE_L32
+init|=
+literal|105
+block|,
+comment|/* RFC 6742 */
+name|LDNS_RR_TYPE_L64
+init|=
+literal|106
+block|,
+comment|/* RFC 6742 */
+name|LDNS_RR_TYPE_LP
+init|=
+literal|107
+block|,
+comment|/* RFC 6742 */
+name|LDNS_RR_TYPE_EUI48
+init|=
+literal|108
+block|,
+comment|/* RFC 7043 */
+name|LDNS_RR_TYPE_EUI64
+init|=
+literal|109
+block|,
+comment|/* RFC 7043 */
+name|LDNS_RR_TYPE_TKEY
+init|=
+literal|249
+block|,
+comment|/* RFC 2930 */
 name|LDNS_RR_TYPE_TSIG
 init|=
 literal|250
@@ -469,6 +525,21 @@ comment|/**  any type (wildcard) */
 name|LDNS_RR_TYPE_ANY
 init|=
 literal|255
+block|,
+comment|/** draft-faltstrom-uri-06 */
+name|LDNS_RR_TYPE_URI
+init|=
+literal|256
+block|,
+name|LDNS_RR_TYPE_CAA
+init|=
+literal|257
+block|,
+comment|/* RFC 6844 */
+comment|/** DNSSEC Trust Authorities */
+name|LDNS_RR_TYPE_TA
+init|=
+literal|32768
 block|,
 comment|/* RFC 4431, 5074, DNSSEC Lookaside Validation */
 name|LDNS_RR_TYPE_DLV
@@ -610,6 +681,26 @@ name|struct
 name|ldns_struct_rr_descriptor
 name|ldns_rr_descriptor
 typedef|;
+comment|/**  * Create a rr type bitmap rdf providing enough space to set all   * known (to ldns) rr types.  * \param[out] rdf the constructed rdf  * \return LDNS_STATUS_OK if all went well.  */
+name|ldns_status
+name|ldns_rdf_bitmap_known_rr_types_space
+parameter_list|(
+name|ldns_rdf
+modifier|*
+modifier|*
+name|rdf
+parameter_list|)
+function_decl|;
+comment|/**  * Create a rr type bitmap rdf with at least all known (to ldns) rr types set.  * \param[out] rdf the constructed rdf  * \return LDNS_STATUS_OK if all went well.  */
+name|ldns_status
+name|ldns_rdf_bitmap_known_rr_types
+parameter_list|(
+name|ldns_rdf
+modifier|*
+modifier|*
+name|rdf
+parameter_list|)
+function_decl|;
 comment|/**  * creates a new rr structure.  * \return ldns_rr *  */
 name|ldns_rr
 modifier|*

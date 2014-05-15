@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * util/data/msgparse.c - parse wireformat DNS messages.  *   * Copyright (c) 2007, NLnet Labs. All rights reserved.  *   * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*   * util/data/msgparse.c - parse wireformat DNS messages.  *   * Copyright (c) 2007, NLnet Labs. All rights reserved.  *   * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/ldns.h>
 end_include
 
 begin_include
@@ -49,6 +43,30 @@ directive|include
 file|"util/regional.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ldns/rrdef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/parseutil.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/wire2str.h"
+end_include
+
 begin_comment
 comment|/** smart comparison of (compressed, valid) dnames from packet */
 end_comment
@@ -58,7 +76,7 @@ specifier|static
 name|int
 name|smart_compare
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -89,7 +107,7 @@ name|uint8_t
 modifier|*
 name|p
 init|=
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|pkt
 argument_list|,
@@ -201,7 +219,7 @@ parameter_list|,
 name|uint32_t
 name|rrset_flags
 parameter_list|,
-name|ldns_pkt_section
+name|sldns_pkt_section
 name|section
 parameter_list|,
 name|struct
@@ -398,7 +416,7 @@ specifier|static
 name|int
 name|nsec_at_apex
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -407,7 +425,7 @@ comment|/* we are at ttl position in packet. */
 name|size_t
 name|pos
 init|=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -417,7 +435,7 @@ name|rdatalen
 decl_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -429,7 +447,7 @@ return|return
 literal|0
 return|;
 comment|/* eek! */
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -440,14 +458,14 @@ comment|/* ttl */
 empty_stmt|;
 name|rdatalen
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -455,7 +473,7 @@ operator|<
 name|rdatalen
 condition|)
 block|{
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -478,7 +496,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -493,7 +511,7 @@ block|}
 comment|/* see if SOA bit is set. */
 if|if
 condition|(
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -516,7 +534,7 @@ decl_stmt|;
 comment|/* need: windownum, bitmap len, firstbyte */
 if|if
 condition|(
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -530,7 +548,7 @@ operator|+
 name|rdatalen
 condition|)
 block|{
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -544,21 +562,21 @@ comment|/* malformed nsec */
 block|}
 name|win
 operator|=
-name|ldns_buffer_read_u8
+name|sldns_buffer_read_u8
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
 name|blen
 operator|=
-name|ldns_buffer_read_u8
+name|sldns_buffer_read_u8
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
 name|bits
 operator|=
-name|ldns_buffer_read_u8
+name|sldns_buffer_read_u8
 argument_list|(
 name|pkt
 argument_list|)
@@ -581,7 +599,7 @@ literal|0x02
 operator|)
 condition|)
 block|{
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -593,7 +611,7 @@ literal|1
 return|;
 block|}
 block|}
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -615,14 +633,14 @@ specifier|static
 name|uint32_t
 name|pkt_rrset_flags
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
 name|uint16_t
 name|type
 parameter_list|,
-name|ldns_pkt_section
+name|sldns_pkt_section
 name|sec
 parameter_list|)
 block|{
@@ -675,7 +693,7 @@ begin_function
 name|hashvalue_t
 name|pkt_hash_rrset
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -773,7 +791,7 @@ specifier|static
 name|hashvalue_t
 name|pkt_hash_rrset_first
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -901,7 +919,7 @@ name|rrset_parse
 modifier|*
 name|p
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -990,7 +1008,7 @@ name|msg_parse
 modifier|*
 name|msg
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1083,7 +1101,7 @@ specifier|static
 name|int
 name|pkt_rrsig_covered
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1099,12 +1117,12 @@ block|{
 name|size_t
 name|pos
 init|=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
 decl_stmt|;
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -1114,7 +1132,7 @@ call|)
 argument_list|(
 name|here
 operator|-
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -1124,7 +1142,7 @@ expr_stmt|;
 comment|/* ttl + len + size of small rrsig(rootlabel, no signature) */
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -1138,7 +1156,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -1148,7 +1166,7 @@ expr_stmt|;
 comment|/* ttl */
 if|if
 condition|(
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -1157,7 +1175,7 @@ literal|19
 condition|)
 comment|/* too short */
 block|{
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -1171,12 +1189,12 @@ block|}
 operator|*
 name|type
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -1198,7 +1216,7 @@ specifier|static
 name|int
 name|pkt_rrsig_covered_equals
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1335,7 +1353,7 @@ name|rrset_parse
 modifier|*
 name|rrset
 parameter_list|,
-name|ldns_pkt_section
+name|sldns_pkt_section
 name|section
 parameter_list|)
 block|{
@@ -1552,7 +1570,7 @@ specifier|static
 name|int
 name|rrset_has_sigover
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1642,7 +1660,7 @@ specifier|static
 name|int
 name|moveover_rrsigs
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1918,7 +1936,7 @@ name|msg_parse
 modifier|*
 name|msg
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1931,7 +1949,7 @@ parameter_list|,
 name|int
 name|hasother
 parameter_list|,
-name|ldns_pkt_section
+name|sldns_pkt_section
 name|section
 parameter_list|,
 name|struct
@@ -2253,7 +2271,7 @@ name|msg_parse
 modifier|*
 name|msg
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2306,7 +2324,7 @@ modifier|*
 modifier|*
 name|rrset_prev
 parameter_list|,
-name|ldns_pkt_section
+name|sldns_pkt_section
 name|section
 parameter_list|,
 name|struct
@@ -2398,7 +2416,7 @@ name|pkt_rrsig_covered_equals
 argument_list|(
 name|pkt
 argument_list|,
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -2458,7 +2476,7 @@ name|pkt_rrsig_covered
 argument_list|(
 name|pkt
 argument_list|,
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -2919,7 +2937,7 @@ specifier|static
 name|int
 name|parse_query_section
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2962,7 +2980,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -2976,7 +2994,7 @@ name|msg
 operator|->
 name|qname
 operator|=
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -3001,7 +3019,7 @@ name|LDNS_RCODE_FORMERR
 return|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -3020,7 +3038,7 @@ name|msg
 operator|->
 name|qtype
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -3029,7 +3047,7 @@ name|msg
 operator|->
 name|qclass
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -3044,7 +3062,7 @@ begin_function
 name|size_t
 name|get_rdf_size
 parameter_list|(
-name|ldns_rdf_type
+name|sldns_rdf_type
 name|rdf
 parameter_list|)
 block|{
@@ -3112,7 +3130,7 @@ break|break;
 default|default:
 name|log_assert
 argument_list|(
-name|false
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* add type above */
@@ -3133,7 +3151,7 @@ specifier|static
 name|int
 name|calc_size
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -3147,7 +3165,7 @@ name|rr
 parameter_list|)
 block|{
 specifier|const
-name|ldns_rr_descriptor
+name|sldns_rr_descriptor
 modifier|*
 name|desc
 decl_stmt|;
@@ -3165,7 +3183,7 @@ name|uint16_t
 argument_list|)
 expr_stmt|;
 comment|/* the rdatalen */
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -3175,14 +3193,14 @@ expr_stmt|;
 comment|/* skip ttl */
 name|pkt_len
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -3194,7 +3212,7 @@ literal|0
 return|;
 name|desc
 operator|=
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|type
 argument_list|)
@@ -3261,7 +3279,7 @@ case|:
 comment|/* decompress every domain name */
 name|oldpos
 operator|=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -3285,7 +3303,7 @@ return|;
 comment|/* malformed dname */
 if|if
 condition|(
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -3300,7 +3318,7 @@ return|;
 comment|/* dname exceeds rdata */
 name|pkt_len
 operator|-=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -3339,7 +3357,7 @@ comment|/* len byte exceeds rdata */
 block|}
 name|len
 operator|=
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -3383,7 +3401,7 @@ name|pkt_len
 operator|-=
 name|len
 expr_stmt|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -3412,7 +3430,7 @@ name|size
 operator|+=
 name|pkt_len
 expr_stmt|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -3437,7 +3455,7 @@ specifier|static
 name|int
 name|skip_ttl_rdata
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -3447,7 +3465,7 @@ name|rdatalen
 decl_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -3458,7 +3476,7 @@ comment|/* ttl + rdatalen */
 return|return
 literal|0
 return|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -3468,14 +3486,14 @@ expr_stmt|;
 comment|/* ttl */
 name|rdatalen
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -3485,7 +3503,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -3510,7 +3528,7 @@ specifier|static
 name|int
 name|sig_is_double
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -3532,7 +3550,7 @@ decl_stmt|;
 name|size_t
 name|pos
 init|=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -3544,7 +3562,7 @@ name|sig
 decl_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -3554,7 +3572,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -3564,14 +3582,14 @@ expr_stmt|;
 comment|/* ttl */
 name|rlen
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -3579,7 +3597,7 @@ operator|<
 name|rlen
 condition|)
 block|{
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -3590,7 +3608,7 @@ return|return
 literal|0
 return|;
 block|}
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -3698,7 +3716,7 @@ name|rrset_parse
 modifier|*
 name|rrset
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -3712,7 +3730,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|ldns_pkt_section
+name|sldns_pkt_section
 name|section
 parameter_list|,
 name|uint16_t
@@ -3784,7 +3802,7 @@ name|pkt
 argument_list|,
 name|rrset
 argument_list|,
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -3843,7 +3861,7 @@ name|rr
 operator|->
 name|ttl_data
 operator|=
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -3974,7 +3992,7 @@ specifier|static
 name|int
 name|parse_section
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -3988,7 +4006,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|ldns_pkt_section
+name|sldns_pkt_section
 name|section
 parameter_list|,
 name|uint16_t
@@ -4068,7 +4086,7 @@ literal|0
 return|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -4095,7 +4113,7 @@ block|{
 comment|/* parse this RR. */
 name|dname
 operator|=
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -4118,7 +4136,7 @@ name|LDNS_RCODE_FORMERR
 return|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -4131,12 +4149,12 @@ name|LDNS_RCODE_FORMERR
 return|;
 name|type
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_read
+name|sldns_buffer_read
 argument_list|(
 name|pkt
 argument_list|,
@@ -4171,7 +4189,7 @@ name|pkt_rrsig_covered
 argument_list|(
 name|pkt
 argument_list|,
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -4186,12 +4204,12 @@ name|stderr
 argument_list|,
 literal|"parse of %s(%d) [%s(%d)]"
 argument_list|,
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|type
 argument_list|)
 condition|?
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|type
 argument_list|)
@@ -4205,12 +4223,12 @@ name|int
 operator|)
 name|type
 argument_list|,
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|t
 argument_list|)
 condition|?
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|t
 argument_list|)
@@ -4233,12 +4251,12 @@ name|stderr
 argument_list|,
 literal|"parse of %s(%d)"
 argument_list|,
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|type
 argument_list|)
 condition|?
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|type
 argument_list|)
@@ -4259,9 +4277,9 @@ name|stderr
 argument_list|,
 literal|" %s(%d) "
 argument_list|,
-name|ldns_lookup_by_id
+name|sldns_lookup_by_id
 argument_list|(
-name|ldns_rr_classes
+name|sldns_rr_classes
 argument_list|,
 operator|(
 name|int
@@ -4272,9 +4290,9 @@ name|dclass
 argument_list|)
 argument_list|)
 condition|?
-name|ldns_lookup_by_id
+name|sldns_lookup_by_id
 argument_list|(
-name|ldns_rr_classes
+name|sldns_rr_classes
 argument_list|,
 operator|(
 name|int
@@ -4440,14 +4458,14 @@ name|stderr
 argument_list|,
 literal|" type %s(%d)\n"
 argument_list|,
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|rrset
 operator|->
 name|type
 argument_list|)
 condition|?
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|rrset
 operator|->
@@ -4505,7 +4523,7 @@ begin_function
 name|int
 name|parse_packet
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -4525,7 +4543,7 @@ name|ret
 decl_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -4536,7 +4554,7 @@ return|return
 name|LDNS_RCODE_FORMERR
 return|;
 comment|/* read the header */
-name|ldns_buffer_read
+name|sldns_buffer_read
 argument_list|(
 name|pkt
 argument_list|,
@@ -4555,7 +4573,7 @@ name|msg
 operator|->
 name|flags
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -4564,7 +4582,7 @@ name|msg
 operator|->
 name|qdcount
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -4573,7 +4591,7 @@ name|msg
 operator|->
 name|ancount
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -4582,7 +4600,7 @@ name|msg
 operator|->
 name|nscount
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -4591,7 +4609,7 @@ name|msg
 operator|->
 name|arcount
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -4689,7 +4707,7 @@ name|ret
 return|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -4737,7 +4755,7 @@ condition|)
 return|return
 name|ret
 return|;
-comment|/* if(ldns_buffer_remaining(pkt)> 0) { */
+comment|/* if(sldns_buffer_remaining(pkt)> 0) { */
 comment|/* there is spurious data at end of packet. ignore */
 comment|/* } */
 name|msg
@@ -5046,7 +5064,7 @@ name|edns
 operator|->
 name|bits
 operator|=
-name|ldns_read_uint16
+name|sldns_read_uint16
 argument_list|(
 operator|&
 name|found
@@ -5081,7 +5099,7 @@ begin_function
 name|int
 name|parse_edns_from_pkt
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -5095,7 +5113,7 @@ name|log_assert
 argument_list|(
 name|LDNS_QDCOUNT
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -5108,7 +5126,7 @@ name|log_assert
 argument_list|(
 name|LDNS_ANCOUNT
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -5121,7 +5139,7 @@ name|log_assert
 argument_list|(
 name|LDNS_NSCOUNT
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -5135,7 +5153,7 @@ if|if
 condition|(
 name|LDNS_ARCOUNT
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -5152,7 +5170,7 @@ if|if
 condition|(
 name|LDNS_ARCOUNT
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -5199,7 +5217,7 @@ name|LDNS_RCODE_FORMERR
 return|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -5212,7 +5230,7 @@ name|LDNS_RCODE_FORMERR
 return|;
 if|if
 condition|(
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -5232,7 +5250,7 @@ name|edns
 operator|->
 name|udp_size
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
@@ -5242,7 +5260,7 @@ name|edns
 operator|->
 name|ext_rcode
 operator|=
-name|ldns_buffer_read_u8
+name|sldns_buffer_read_u8
 argument_list|(
 name|pkt
 argument_list|)
@@ -5252,7 +5270,7 @@ name|edns
 operator|->
 name|edns_version
 operator|=
-name|ldns_buffer_read_u8
+name|sldns_buffer_read_u8
 argument_list|(
 name|pkt
 argument_list|)
@@ -5261,7 +5279,7 @@ name|edns
 operator|->
 name|bits
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)

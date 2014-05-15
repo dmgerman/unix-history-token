@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"ldns/sbuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"util/data/packed_rrset.h"
 end_include
 
@@ -209,7 +215,7 @@ parameter_list|,
 name|int
 name|rcode
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|,
@@ -239,7 +245,7 @@ parameter_list|,
 name|int
 name|rcode
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|,
