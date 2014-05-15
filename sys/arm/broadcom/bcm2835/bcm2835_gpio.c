@@ -2794,7 +2794,7 @@ name|OID_AUTO
 argument_list|,
 literal|"pin"
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 name|NULL
 argument_list|,
