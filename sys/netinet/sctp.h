@@ -1357,6 +1357,25 @@ end_comment
 
 begin_struct
 struct|struct
+name|sctp_gen_error_cause
+block|{
+name|uint16_t
+name|code
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|info
+index|[]
+decl_stmt|;
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_error_cause
 block|{
 name|uint16_t
