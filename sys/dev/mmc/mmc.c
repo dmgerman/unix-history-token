@@ -9996,6 +9996,15 @@ operator|==
 literal|0
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"No compatible cards found on bus\n"
+argument_list|)
+expr_stmt|;
 name|mmc_delete_cards
 argument_list|(
 name|sc

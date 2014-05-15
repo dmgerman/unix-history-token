@@ -306,6 +306,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|phandle_t
+name|fdt_depth_search_compatible
+parameter_list|(
+name|phandle_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|fdt_get_mem_regions
 parameter_list|(
