@@ -1442,19 +1442,17 @@ value|~0
 end_define
 
 begin_expr_stmt
-name|SYSCTL_NODE
+name|SYSCTL_DECL
 argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|dtrace
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"DTrace Information"
+name|_debug_dtrace
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_dtrace
 argument_list|)
 expr_stmt|;
 end_expr_stmt
