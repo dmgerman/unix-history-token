@@ -184,6 +184,9 @@ decl_stmt|;
 name|uint8_t
 name|hwtype
 decl_stmt|;
+name|boolean_t
+name|force_card_present
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -313,6 +316,146 @@ define|#
 directive|define
 name|SDHC_VEND_PEREN
 value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_STATE
+value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_CIHB
+value|(1<<  0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_CDIHB
+value|(1<<  1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_DLA
+value|(1<<  2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_SDSTB
+value|(1<<  3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_IPGOFF
+value|(1<<  4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_HCKOFF
+value|(1<<  5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_PEROFF
+value|(1<<  6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_SDOFF
+value|(1<<  7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_WTA
+value|(1<<  8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_RTA
+value|(1<<  9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_BWEN
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_BREN
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_RTR
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_CINST
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_CDPL
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_WPSPL
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_CLSL
+value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_DLSL_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PRES_DLSL_MASK
+value|(0xffU<< SDHC_PRES_DLSL_SHIFT)
 end_define
 
 begin_define
@@ -984,14 +1127,14 @@ name|RD4
 argument_list|(
 name|sc
 argument_list|,
-name|SDHCI_PRESENT_STATE
+name|SDHC_PRES_STATE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|wrk32
 operator|&
-literal|0x08
+name|SDHC_PRES_SDSTB
 condition|)
 name|val32
 operator||=
@@ -1066,15 +1209,9 @@ argument_list|)
 decl_stmt|;
 name|uint32_t
 name|val32
+decl_stmt|,
+name|wrk32
 decl_stmt|;
-comment|/* 	 * The hardware leaves the base clock frequency out of the capabilities 	 * register; fill it in.  The timeout clock is the same as the active 	 * output sdclock; we indicate that with a quirk setting so don't 	 * populate the timeout frequency bits. 	 * 	 * XXX Turn off (for now) features the hardware can do but this driver 	 * doesn't yet handle (1.8v, suspend/resume, etc). 	 */
-if|if
-condition|(
-name|off
-operator|==
-name|SDHCI_CAPABILITIES
-condition|)
-block|{
 name|val32
 operator|=
 name|RD4
@@ -1084,6 +1221,14 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The hardware leaves the base clock frequency out of the capabilities 	 * register; fill it in.  The timeout clock is the same as the active 	 * output sdclock; we indicate that with a quirk setting so don't 	 * populate the timeout frequency bits. 	 * 	 * XXX Turn off (for now) features the hardware can do but this driver 	 * doesn't yet handle (1.8v, suspend/resume, etc). 	 */
+if|if
+condition|(
+name|off
+operator|==
+name|SDHCI_CAPABILITIES
+condition|)
+block|{
 name|val32
 operator|&=
 operator|~
@@ -1116,15 +1261,58 @@ name|val32
 operator|)
 return|;
 block|}
-name|val32
-operator|=
-name|RD4
-argument_list|(
-name|sc
-argument_list|,
+comment|/* 	 * The hardware moves bits around in the present state register to make 	 * room for all 8 data line state bits.  To translate, mask out all the 	 * bits which are not in the same position in both registers (this also 	 * masks out some freescale-specific bits in locations defined as 	 * reserved by sdhci), then shift the data line and retune request bits 	 * down to their standard locations. 	 */
+if|if
+condition|(
 name|off
-argument_list|)
+operator|==
+name|SDHCI_PRESENT_STATE
+condition|)
+block|{
+name|wrk32
+operator|=
+name|val32
 expr_stmt|;
+name|val32
+operator|&=
+literal|0x000F0F07
+expr_stmt|;
+name|val32
+operator||=
+operator|(
+name|wrk32
+operator|>>
+literal|4
+operator|)
+operator|&
+name|SDHCI_STATE_DAT_MASK
+expr_stmt|;
+name|val32
+operator||=
+operator|(
+name|wrk32
+operator|>>
+literal|9
+operator|)
+operator|&
+name|SDHCI_RETUNE_REQUEST
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|force_card_present
+condition|)
+name|val32
+operator||=
+name|SDHCI_CARD_PRESENT
+expr_stmt|;
+return|return
+operator|(
+name|val32
+operator|)
+return|;
+block|}
 comment|/* 	 * imx_sdhci_intr() can synthesize a DATA_END interrupt following a 	 * command with an R1B response, mix it into the hardware status. 	 */
 if|if
 condition|(
@@ -1133,12 +1321,15 @@ operator|==
 name|SDHCI_INT_STATUS
 condition|)
 block|{
+return|return
+operator|(
 name|val32
-operator||=
+operator||
 name|sc
 operator|->
 name|r1bfix_intmask
-expr_stmt|;
+operator|)
+return|;
 block|}
 return|return
 name|val32
@@ -2150,10 +2341,10 @@ name|RD4
 argument_list|(
 name|sc
 argument_list|,
-name|SDHCI_PRESENT_STATE
+name|SDHC_PRES_STATE
 argument_list|)
 operator|&
-name|SDHCI_DAT_ACTIVE
+name|SDHC_PRES_DLA
 operator|)
 condition|)
 block|{
@@ -2271,6 +2462,9 @@ name|int
 name|rid
 decl_stmt|,
 name|err
+decl_stmt|;
+name|phandle_t
+name|node
 decl_stmt|;
 name|sc
 operator|->
@@ -2508,6 +2702,48 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the slot is flagged with the non-removable property, set our flag 	 * to always force the SDHCI_CARD_PRESENT bit on. 	 * 	 * XXX Workaround for gpio-based card detect... 	 * 	 * We don't have gpio support yet.  If there's a cd-gpios property just 	 * force the SDHCI_CARD_PRESENT bit on for now.  If there isn't really a 	 * card there it will fail to probe at the mmc layer and nothing bad 	 * happens except instantiating a /dev/mmcN device for an empty slot. 	 */
+name|node
+operator|=
+name|ofw_bus_get_node
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OF_hasprop
+argument_list|(
+name|node
+argument_list|,
+literal|"non-removable"
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|force_card_present
+operator|=
+name|true
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|OF_hasprop
+argument_list|(
+name|node
+argument_list|,
+literal|"cd-gpios"
+argument_list|)
+condition|)
+block|{
+comment|/* XXX put real gpio hookup here. */
+name|sc
+operator|->
+name|force_card_present
+operator|=
+name|true
+expr_stmt|;
+block|}
 name|bus_generic_probe
 argument_list|(
 name|dev

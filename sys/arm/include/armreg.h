@@ -2419,6 +2419,28 @@ begin_comment
 comment|/* Imprecise exception (XSCALE) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FAULT_EXTERNAL
+value|0x400
+end_define
+
+begin_comment
+comment|/* External abort (armv6+) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_WNR
+value|0x800
+end_define
+
+begin_comment
+comment|/* Write-not-Read access (armv6+) */
+end_comment
+
 begin_comment
 comment|/*  * Address of the vector page, low and high versions.  */
 end_comment
