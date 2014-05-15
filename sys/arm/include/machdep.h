@@ -300,23 +300,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Setup standard arrays */
-end_comment
-
-begin_function_decl
-name|void
-name|arm_dump_avail_init
-parameter_list|(
-name|vm_paddr_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

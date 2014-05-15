@@ -175,6 +175,10 @@ name|vector_page
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Params passed into initarm. If you change the size of this you will  * need to update locore.S to allocate more memory on the stack before  * it calls initarm.  */
+end_comment
+
 begin_struct
 struct|struct
 name|arm_boot_params
@@ -203,6 +207,10 @@ name|vm_offset_t
 name|abp_physaddr
 decl_stmt|;
 comment|/* The kernel physical address */
+name|vm_offset_t
+name|abp_pagetable
+decl_stmt|;
+comment|/* The early page table */
 block|}
 struct|;
 end_struct

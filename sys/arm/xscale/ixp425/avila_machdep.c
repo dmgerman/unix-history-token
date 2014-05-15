@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/physmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
@@ -261,31 +267,6 @@ directive|include
 file|<arm/xscale/ixp425/ixp425var.h>
 end_include
 
-begin_comment
-comment|/* kernel text starts where we were loaded at boot */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERNEL_TEXT_OFF
-value|(KERNPHYSADDR  - PHYSADDR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNEL_TEXT_BASE
-value|(KERNBASE + KERNEL_TEXT_OFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNEL_TEXT_PHYS
-value|(PHYSADDR + KERNEL_TEXT_OFF)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -381,24 +362,6 @@ end_decl_stmt
 begin_comment
 comment|/* Physical and virtual addresses for some global pages */
 end_comment
-
-begin_decl_stmt
-name|vm_paddr_t
-name|phys_avail
-index|[
-literal|10
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_paddr_t
-name|dump_avail
-index|[
-literal|4
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -826,12 +789,31 @@ decl_stmt|;
 name|uint32_t
 name|memsize
 decl_stmt|;
+comment|/* kernel text starts where we were loaded at boot */
+define|#
+directive|define
+name|KERNEL_TEXT_OFF
+value|(abp->abp_physaddr  - PHYSADDR)
+define|#
+directive|define
+name|KERNEL_TEXT_BASE
+value|(KERNBASE + KERNEL_TEXT_OFF)
+define|#
+directive|define
+name|KERNEL_TEXT_PHYS
+value|(PHYSADDR + KERNEL_TEXT_OFF)
 name|lastaddr
 operator|=
 name|parse_boot_param
 argument_list|(
 name|abp
 argument_list|)
+expr_stmt|;
+name|arm_physmem_kernaddr
+operator|=
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 name|set_cpufuncs
 argument_list|()
@@ -875,7 +857,9 @@ expr_stmt|;
 comment|/* 	 * We allocate memory downwards from where we were loaded 	 * by RedBoot; first the L1 page table, then NUM_KERNEL_PTS 	 * entries in the L2 page table.  Past that we re-align the 	 * allocation boundary so later data structures (stacks, etc) 	 * can be mapped with different attributes (write-back vs 	 * write-through).  Note this leaves a gap for expansion 	 * (or might be repurposed). 	 */
 name|freemempos
 operator|=
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 comment|/* macros to simplify initial memory allocation */
 define|#
@@ -897,7 +881,7 @@ name|var
 parameter_list|,
 name|np
 parameter_list|)
-value|do {					\ 	alloc_pages((var).pv_pa, (np));					\ 	(var).pv_va = (var).pv_pa + (KERNVIRTADDR - KERNPHYSADDR);	\ } while (0)
+value|do {					\ 	alloc_pages((var).pv_pa, (np));					\ 	(var).pv_va = (var).pv_pa + (KERNVIRTADDR - abp->abp_physaddr);	\ } while (0)
 comment|/* force L1 page table alignment */
 while|while
 condition|(
@@ -1013,7 +997,9 @@ operator|+
 operator|(
 name|KERNVIRTADDR
 operator|-
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 operator|)
 expr_stmt|;
 block|}
@@ -1465,12 +1451,6 @@ operator|=
 name|ixp425_sdram_size
 argument_list|()
 expr_stmt|;
-name|physmem
-operator|=
-name|memsize
-operator|/
-name|PAGE_SIZE
-expr_stmt|;
 comment|/* Set stack for exception handlers */
 name|data_abort_handler_address
 operator|=
@@ -1516,28 +1496,6 @@ name|afterkern
 operator|+
 name|PAGE_SIZE
 expr_stmt|;
-name|arm_dump_avail_init
-argument_list|(
-name|abp
-operator|->
-name|abp_physaddr
-argument_list|,
-name|memsize
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dump_avail
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|dump_avail
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|vm_max_kernel_address
 operator|=
 literal|0xd0000000
@@ -1570,54 +1528,29 @@ expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|round_page
+comment|/* 	 * Add the physical ram we have available. 	 * 	 * Exclude the kernel, and all the things we allocated which immediately 	 * follow the kernel, from the VM allocation pool but not from crash 	 * dumps.  virtual_avail is a global variable which tracks the kva we've 	 * "allocated" while setting up pmaps. 	 * 	 * Prepare the list of physical memory available to the vm subsystem. 	 */
+name|arm_physmem_hardware_region
 argument_list|(
+name|PHYSADDR
+argument_list|,
+name|memsize
+argument_list|)
+expr_stmt|;
+name|arm_physmem_exclude_region
+argument_list|(
+name|abp
+operator|->
+name|abp_physaddr
+argument_list|,
 name|virtual_avail
 operator|-
-name|KERNBASE
-operator|+
-name|PHYSADDR
+name|KERNVIRTADDR
+argument_list|,
+name|EXFLAG_NOALLOC
 argument_list|)
 expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|trunc_page
-argument_list|(
-name|PHYSADDR
-operator|+
-name|memsize
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-index|]
-operator|=
-literal|0
+name|arm_physmem_init_kernel_globals
+argument_list|()
 expr_stmt|;
 name|init_param2
 argument_list|(
