@@ -1319,7 +1319,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CALLCHAIN_DEPTH
-value|8
+value|16
 end_define
 
 begin_define
