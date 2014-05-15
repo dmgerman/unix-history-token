@@ -196,21 +196,21 @@ name|VM_PHYSSEG_DENSE
 end_define
 
 begin_comment
-comment|/*  * Create three free page pools: VM_FREEPOOL_DEFAULT is the default pool  * from which physical pages are allocated and VM_FREEPOOL_DIRECT is  * the pool from which physical pages for small UMA objects are  * allocated.  */
+comment|/*  * Create two free page pools.  Since the ARM kernel virtual address  * space does not include a mapping onto the machine's entire physical  * memory, VM_FREEPOOL_DIRECT is defined as an alias for the default  * pool, VM_FREEPOOL_DEFAULT.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VM_NFREEPOOL
-value|3
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_FREEPOOL_CACHE
-value|2
+value|1
 end_define
 
 begin_define
@@ -224,7 +224,7 @@ begin_define
 define|#
 directive|define
 name|VM_FREEPOOL_DIRECT
-value|1
+value|0
 end_define
 
 begin_comment
@@ -328,54 +328,6 @@ name|VM_MIN_ADDRESS
 value|(0x00001000)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ARM_USE_SMALL_ALLOC
-end_ifdef
-
-begin_comment
-comment|/*  * ARM_KERN_DIRECTMAP is used to make sure there's enough space between  * VM_MAXUSER_ADDRESS and KERNBASE to map the whole memory.  * It has to be a compile-time constant, even if arm_init_smallalloc(),  * which will do the mapping, gets the real amount of memory at runtime,  * because VM_MAXUSER_ADDRESS is a constant.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ARM_KERN_DIRECTMAP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ARM_KERN_DIRECTMAP
-value|512 * 1024 * 1024
-end_define
-
-begin_comment
-comment|/* 512 MB */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|VM_MAXUSER_ADDRESS
-value|KERNBASE - ARM_KERN_DIRECTMAP
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ARM_USE_SMALL_ALLOC */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -396,15 +348,6 @@ end_endif
 
 begin_comment
 comment|/* VM_MAXUSER_ADDRESS */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ARM_USE_SMALL_ALLOC */
 end_comment
 
 begin_define
@@ -529,27 +472,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ARM_USE_SMALL_ALLOC
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|UMA_MD_SMALL_ALLOC
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ARM_USE_SMALL_ALLOC */
-end_comment
 
 begin_decl_stmt
 specifier|extern
