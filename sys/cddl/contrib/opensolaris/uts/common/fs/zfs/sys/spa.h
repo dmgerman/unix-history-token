@@ -304,11 +304,16 @@ define|#
 directive|define
 name|SPA_BLOCKSIZES
 value|(SPA_MAXBLOCKSHIFT - SPA_MINBLOCKSHIFT + 1)
-comment|/*  * Maximum supported logical ashift.  *  * The current 8k allocation block size limit is due to the 8k  * aligned/sized operations performed by vdev_probe() on  * vdev_label->vl_pad2.  Using another "safe region" for these tests  * would allow the limit to be raised to 16k, at the expense of  * only having 8 available uberblocks in the label area.  */
+comment|/*  * Default maximum supported logical ashift.  *  * The current 8k allocation block size limit is due to the 8k  * aligned/sized operations performed by vdev_probe() on  * vdev_label->vl_pad2.  Using another "safe region" for these tests  * would allow the limit to be raised to 16k, at the expense of  * only having 8 available uberblocks in the label area.  */
 define|#
 directive|define
 name|SPA_MAXASHIFT
 value|13
+comment|/*  * Default minimum supported logical ashift.  */
+define|#
+directive|define
+name|SPA_MINASHIFT
+value|SPA_MINBLOCKSHIFT
 comment|/*  * Size of block to hold the configuration data (a packed nvlist)  */
 define|#
 directive|define
