@@ -63,14 +63,14 @@ begin_define
 define|#
 directive|define
 name|FNBUFF
-value|161
+value|512
 end_define
 
 begin_define
 define|#
 directive|define
 name|LNBUFF
-value|161
+value|512
 end_define
 
 begin_define
