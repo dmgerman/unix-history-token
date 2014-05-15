@@ -3010,7 +3010,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|7
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -3027,7 +3030,7 @@ condition|)
 block|{
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"sysctl: net.route.0.%d.dump.%d estimate"
 argument_list|,
@@ -3130,6 +3133,15 @@ operator|*
 operator|)
 name|next
 expr_stmt|;
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_version
+operator|!=
+name|RTM_VERSION
+condition|)
+continue|continue;
 comment|/* 		 * Peek inside header to determine AF 		 */
 name|sa
 operator|=
@@ -3183,6 +3195,11 @@ name|rtm
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5103,7 +5120,14 @@ name|sin6_addr
 argument_list|)
 condition|)
 block|{
-comment|/* XXX: override is ok? */
+if|if
+condition|(
+name|sa6
+operator|->
+name|sin6_scope_id
+operator|==
+literal|0
+condition|)
 name|sa6
 operator|->
 name|sin6_scope_id
