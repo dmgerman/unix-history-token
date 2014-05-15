@@ -5246,6 +5246,12 @@ name|uint32_t
 name|pintr
 decl_stmt|,
 name|mintr
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|int
+name|icells
 decl_stmt|;
 name|phandle_t
 name|iparent
@@ -5304,8 +5310,8 @@ operator|<<
 name|OFW_PCI_PHYS_HI_FUNCTIONSHIFT
 operator|)
 expr_stmt|;
-if|if
-condition|(
+name|icells
+operator|=
 name|ofw_bus_lookup_imap
 argument_list|(
 name|ofw_bus_get_node
@@ -5334,7 +5340,6 @@ argument_list|(
 name|pintr
 argument_list|)
 argument_list|,
-operator|&
 name|mintr
 argument_list|,
 sizeof|sizeof
@@ -5345,6 +5350,12 @@ argument_list|,
 operator|&
 name|iparent
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|icells
+operator|>
+literal|0
 condition|)
 return|return
 operator|(
@@ -5353,6 +5364,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|iparent
+argument_list|,
+name|icells
 argument_list|,
 name|mintr
 argument_list|)
