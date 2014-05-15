@@ -3826,7 +3826,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not initalize history"
+literal|"Could not initialize history"
 argument_list|)
 expr_stmt|;
 if|if
