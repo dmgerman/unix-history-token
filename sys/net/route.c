@@ -7070,6 +7070,33 @@ name|rt_numfibs
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+ifdef|#
+directive|ifdef
+name|SCTP
+comment|/* 	 * notify the SCTP stack 	 * this will only get called when an address is added/deleted 	 * XXX pass the ifaddr struct instead if ifa->ifa_addr... 	 */
+name|sctp_addr_change
+argument_list|(
+name|ifa
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SCTP */
+endif|#
+directive|endif
 return|return
 operator|(
 name|rtsock_addrmsg
@@ -7301,33 +7328,6 @@ name|rt_numfibs
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
-ifdef|#
-directive|ifdef
-name|SCTP
-comment|/* 	 * notify the SCTP stack 	 * this will only get called when an address is added/deleted 	 * XXX pass the ifaddr struct instead if ifa->ifa_addr... 	 */
-name|sctp_addr_change
-argument_list|(
-name|ifa
-argument_list|,
-name|cmd
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCTP */
-endif|#
-directive|endif
 if|if
 condition|(
 name|cmd
