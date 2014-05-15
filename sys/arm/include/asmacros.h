@@ -76,7 +76,7 @@ value|\ 	stmia	r0, {r13-r14}^;
 comment|/* Push the user mode registers */
 value|\         mov     r0, r0;
 comment|/* NOP for previous instruction */
-value|\ 	mrs	r0, spsr_all;
+value|\ 	mrs	r0, spsr;
 comment|/* Put the SPSR on the stack */
 value|\ 	str	r0, [sp, #-4]!;						   \ 	ldr	r0, =ARM_RAS_START;					   \ 	mov	r1, #0;							   \ 	str	r1, [r0];						   \ 	mov	r1, #0xffffffff;					   \ 	str	r1, [r0, #4];
 end_define
@@ -105,7 +105,7 @@ value|\ 	stmia	r0, {r13-r14}^;
 comment|/* Push the user mode registers */
 value|\         mov     r0, r0;
 comment|/* NOP for previous instruction */
-value|\ 	mrs	r0, spsr_all;
+value|\ 	mrs	r0, spsr;
 comment|/* Put the SPSR on the stack */
 value|\ 	str	r0, [sp, #-4]!;
 end_define
@@ -132,7 +132,7 @@ name|PULLFRAME
 define|\
 value|ldr     r0, [sp], #0x0004;
 comment|/* Get the SPSR from stack */
-value|\         msr     spsr_all, r0;						   \         ldmia   sp, {r0-r14}^;
+value|\         msr     spsr_fsxc, r0;						   \         ldmia   sp, {r0-r14}^;
 comment|/* Restore registers (usr mode) */
 value|\         mov     r0, r0;
 comment|/* NOP for previous instruction */
@@ -159,7 +159,7 @@ name|PULLFRAME
 define|\
 value|ldr     r0, [sp], #0x0004;
 comment|/* Get the SPSR from stack */
-value|\         msr     spsr_all, r0;						   \ 	clrex;								   \         ldmia   sp, {r0-r14}^;
+value|\         msr     spsr_fsxc, r0;						   \ 	clrex;								   \         ldmia   sp, {r0-r14}^;
 comment|/* Restore registers (usr mode) */
 value|\         mov     r0, r0;
 comment|/* NOP for previous instruction */
@@ -220,7 +220,7 @@ value|\ 	str	lr, [sp, #-4]!;
 comment|/* Push SVC lr */
 value|\ 	str	r2, [sp, #-4]!;
 comment|/* Push SVC sp */
-value|\ 	msr     spsr_all, r3;
+value|\ 	msr     spsr_fsxc, r3;
 comment|/* Restore correct spsr */
 value|\ 	ldmdb	r1, {r0-r3};
 comment|/* Restore 4 regs from xxx mode */
@@ -258,7 +258,7 @@ value|\ 	cmpne   r4, r1;
 comment|/* execution later resumes at   */
 value|\ 	strhi   r3, [r0, #16];
 comment|/* the RAS_START location.      */
-value|\ 	mrs     r0, spsr_all;                                              \ 	str     r0, [sp, #-4]!
+value|\ 	mrs     r0, spsr;                                              \ 	str     r0, [sp, #-4]!
 end_define
 
 begin_else
@@ -297,7 +297,7 @@ value|\ 	str	lr, [sp, #-4]!;
 comment|/* Push SVC lr */
 value|\ 	str	r2, [sp, #-4]!;
 comment|/* Push SVC sp */
-value|\ 	msr     spsr_all, r3;
+value|\ 	msr     spsr_fsxc, r3;
 comment|/* Restore correct spsr */
 value|\ 	ldmdb	r1, {r0-r3};
 comment|/* Restore 4 regs from xxx mode */
@@ -311,7 +311,7 @@ value|\ 	stmia	r0, {r13-r14}^;
 comment|/* Push the user mode registers */
 value|\         mov     r0, r0;
 comment|/* NOP for previous instruction */
-value|\ 	mrs	r0, spsr_all;
+value|\ 	mrs	r0, spsr;
 comment|/* Put the SPSR on the stack */
 value|\ 	str	r0, [sp, #-4]!
 end_define
@@ -338,7 +338,7 @@ name|PULLFRAMEFROMSVCANDEXIT
 define|\
 value|ldr     r0, [sp], #0x0004;
 comment|/* Get the SPSR from stack */
-value|\         msr     spsr_all, r0;
+value|\         msr     spsr_fsxc, r0;
 comment|/* restore SPSR */
 value|\         ldmia   sp, {r0-r14}^;
 comment|/* Restore registers (usr mode) */
@@ -365,7 +365,7 @@ name|PULLFRAMEFROMSVCANDEXIT
 define|\
 value|ldr     r0, [sp], #0x0004;
 comment|/* Get the SPSR from stack */
-value|\         msr     spsr_all, r0;
+value|\         msr     spsr_fsxc, r0;
 comment|/* restore SPSR */
 value|\ 	clrex;								   \         ldmia   sp, {r0-r14}^;
 comment|/* Restore registers (usr mode) */
@@ -394,14 +394,16 @@ name|__ARM_EABI__
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * Unwind hints so we can unwind past functions that use  * PULLFRAMEFROMSVCANDEXIT. They are run in reverse order.  * As the last thing we do is restore the stack pointer  * we can ignore the padding at the end of struct trapframe.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|UNWINDSVCFRAME
 define|\
-value|.pad #(4);
-comment|/* Skip stack alignment */
-value|\ 	.save {r13-r15};
+value|.save {r13-r15};
 comment|/* Restore sp, lr, pc */
 value|\ 	.pad #(2*4);
 comment|/* Skip user sp and lr */
