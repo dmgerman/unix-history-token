@@ -195,6 +195,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vatpic_set_irq_trigger
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|irq
+parameter_list|,
+name|enum
+name|vm_intr_trigger
+name|trigger
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vatpic_pending_intr
 parameter_list|(

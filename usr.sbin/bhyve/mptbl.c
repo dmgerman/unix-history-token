@@ -892,6 +892,9 @@ name|int
 name|pin
 parameter_list|,
 name|int
+name|pirq_pin
+parameter_list|,
+name|int
 name|ioapic_irq
 parameter_list|,
 name|void

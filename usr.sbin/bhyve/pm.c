@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"pci_irq.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pci_lpc.h"
 end_include
 
@@ -1136,6 +1142,34 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|void
+name|sci_init
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|)
+block|{
+comment|/* 	 * Mark ACPI's SCI as level trigger and bump its use count 	 * in the PIRQ router. 	 */
+name|pci_irq_use
+argument_list|(
+name|SCI_INT
+argument_list|)
+expr_stmt|;
+name|vm_isa_set_irq_trigger
+argument_list|(
+name|ctx
+argument_list|,
+name|SCI_INT
+argument_list|,
+name|LEVEL_TRIGGER
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

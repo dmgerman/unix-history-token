@@ -136,6 +136,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|lpc_pirq_name
+parameter_list|(
+name|int
+name|pin
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lpc_pirq_routed
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
