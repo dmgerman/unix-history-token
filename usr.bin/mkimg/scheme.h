@@ -150,8 +150,6 @@ modifier|*
 name|write
 function_decl|)
 parameter_list|(
-name|int
-parameter_list|,
 name|lba_t
 parameter_list|,
 name|void
@@ -271,8 +269,6 @@ begin_function_decl
 name|int
 name|scheme_write
 parameter_list|(
-name|int
-parameter_list|,
 name|lba_t
 parameter_list|)
 function_decl|;

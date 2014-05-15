@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"image.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mkimg.h"
 end_include
 
@@ -208,9 +214,6 @@ specifier|static
 name|int
 name|apm_write
 parameter_list|(
-name|int
-name|fd
-parameter_list|,
 name|lba_t
 name|imgsz
 parameter_list|,
@@ -488,10 +491,8 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|mkimg_write
+name|image_write
 argument_list|(
-name|fd
-argument_list|,
 literal|0
 argument_list|,
 name|buf
