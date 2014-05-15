@@ -463,7 +463,7 @@ parameter_list|(
 name|tmp
 parameter_list|)
 define|\
-value|mrc p15, 0, tmp, c13, c0, 4; \ 	add	tmp, tmp, #(PC_CURTHREAD)
+value|mrc	p15, 0, tmp, c13, c0, 4
 end_define
 
 begin_else
@@ -486,7 +486,7 @@ parameter_list|(
 name|tmp
 parameter_list|)
 define|\
-value|ldr	tmp, .Lcurthread
+value|ldr	tmp, .Lcurthread;     \ 	ldr	tmp, [tmp]
 end_define
 
 begin_endif
@@ -509,7 +509,7 @@ value|;\ 	and	r0, r0, #(PSR_MODE)
 comment|/* Returning to USR mode? */
 value|;\ 	teq	r0, #(PSR_USR32_MODE)					;\ 	bne	2f
 comment|/* Nope, get out now */
-value|;\ 	bic	r4, r4, #(I32_bit|F32_bit)				;\ 1:	GET_CURTHREAD_PTR(r5)						;\ 	ldr	r5, [r5]						;\ 	ldr	r1, [r5, #(TD_FLAGS)]					;\ 	and	r1, r1, #(TDF_ASTPENDING|TDF_NEEDRESCHED)		;\ 	teq	r1, #0x00000000						;\ 	beq	2f
+value|;\ 	bic	r4, r4, #(I32_bit|F32_bit)				;\ 1:	GET_CURTHREAD_PTR(r5)						;\ 	ldr	r1, [r5, #(TD_FLAGS)]					;\ 	and	r1, r1, #(TDF_ASTPENDING|TDF_NEEDRESCHED)		;\ 	teq	r1, #0x00000000						;\ 	beq	2f
 comment|/* Nope. Just bail */
 value|;\ 	msr	cpsr_c, r4
 comment|/* Restore interrupts */

@@ -500,6 +500,9 @@ name|thread
 modifier|*
 name|vfptd
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -509,6 +512,15 @@ return|return
 literal|1
 return|;
 comment|/* vfp does not exist */
+name|i
+operator|=
+name|disable_interrupts
+argument_list|(
+name|I32_bit
+operator||
+name|F32_bit
+argument_list|)
+expr_stmt|;
 name|fpexc
 operator|=
 name|fmrx
@@ -595,6 +607,11 @@ name|curthread
 condition|)
 block|{
 comment|/* kill the process - we do not handle emulation */
+name|restore_interrupts
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
 name|killproc
 argument_list|(
 name|curthread
@@ -633,10 +650,9 @@ expr_stmt|;
 comment|/* enable the vfp and repeat command */
 name|curpcb
 operator|=
-name|PCPU_GET
-argument_list|(
-name|curpcb
-argument_list|)
+name|curthread
+operator|->
+name|td_pcb
 expr_stmt|;
 comment|/* If we were the last process to use the VFP, the process did not 	 * use a VFP on another processor, then the registers in the VFP 	 * will still be ours and are current. Eventually, we will make the 	 * restore smarter. 	 */
 name|vfp_restore
@@ -665,10 +681,12 @@ name|PCPU_SET
 argument_list|(
 name|vfpcthread
 argument_list|,
-name|PCPU_GET
-argument_list|(
 name|curthread
 argument_list|)
+expr_stmt|;
+name|restore_interrupts
+argument_list|(
+name|i
 argument_list|)
 expr_stmt|;
 return|return
@@ -756,16 +774,6 @@ operator|:
 literal|"cc"
 block|)
 empty_stmt|;
-name|PCPU_SET
-argument_list|(
-name|vfpcthread
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|curthread
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -803,9 +811,11 @@ if|if
 condition|(
 name|vfpsave
 operator|&&
+operator|(
 name|tmp
 operator|&
 name|VFPEXC_EN
+operator|)
 condition|)
 block|{
 asm|__asm __volatile("stc	p11, c0, [%1], #128\n"
@@ -920,6 +930,7 @@ name|tmp
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * No need to protect the access to vfpcthread by disabling 	 * interrupts, since it's called from cpu_throw(), who is called 	 * with interrupts disabled. 	 */
 name|PCPU_SET
 argument_list|(
 name|vfpcthread

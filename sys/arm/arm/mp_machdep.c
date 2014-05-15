@@ -791,11 +791,6 @@ index|[
 name|cpu
 index|]
 expr_stmt|;
-name|set_pcpu
-argument_list|(
-name|pc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * pcpu_init() updates queue, so it should not be executed in parallel 	 * on several cores 	 */
 while|while
 condition|(
@@ -887,6 +882,13 @@ operator|->
 name|pc_idlethread
 operator|->
 name|td_pcb
+expr_stmt|;
+name|set_curthread
+argument_list|(
+name|pc
+operator|->
+name|pc_idlethread
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

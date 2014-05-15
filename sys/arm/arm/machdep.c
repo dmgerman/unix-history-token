@@ -4247,9 +4247,10 @@ name|defined
 argument_list|(
 name|CPU_MV_PJ4B
 argument_list|)
-name|set_pcpu
+name|set_curthread
 argument_list|(
-name|pcpup
+operator|&
+name|thread0
 argument_list|)
 expr_stmt|;
 endif|#
