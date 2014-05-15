@@ -115,18 +115,6 @@ end_include
 
 begin_function_decl
 specifier|static
-name|void
-name|gpiobus_print_pins
-parameter_list|(
-name|struct
-name|gpiobus_ivar
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|gpiobus_parse_pins
 parameter_list|(
@@ -418,69 +406,7 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|GPIOBUS_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->sc_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPIOBUS_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->sc_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPIOBUS_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|)
-define|\
-value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->sc_dev), \ 	    "gpiobus", MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPIOBUS_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&_sc->sc_mtx);
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPIOBUS_ASSERT_LOCKED
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_OWNED);
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPIOBUS_ASSERT_UNLOCKED
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_NOTOWNED);
-end_define
-
 begin_function
-specifier|static
 name|void
 name|gpiobus_print_pins
 parameter_list|(
@@ -921,7 +847,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
@@ -987,12 +913,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Increase to get number of pins 	 */
-name|sc
-operator|->
-name|sc_npins
-operator|++
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|sc
@@ -1005,6 +925,12 @@ operator|(
 literal|"GPIO device with no pins"
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Increase to get number of pins 	 */
+name|sc
+operator|->
+name|sc_npins
+operator|++
 expr_stmt|;
 name|sc
 operator|->
@@ -1047,6 +973,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get parent's pins and mark them as unmapped 	 */
+name|bus_generic_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|bus_enumerate_hinted_children
 argument_list|(
 name|dev
