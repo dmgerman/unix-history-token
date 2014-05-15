@@ -162,16 +162,26 @@ name|CAM_PRIORITY_DEV
 value|((CAM_RL_DEV<< 8) + 0x80)
 define|#
 directive|define
-name|CAM_PRIORITY_OOB
-value|(CAM_RL_DEV<< 8)
-define|#
-directive|define
 name|CAM_PRIORITY_NORMAL
 value|((CAM_RL_NORMAL<< 8) + 0x80)
 define|#
 directive|define
 name|CAM_PRIORITY_NONE
 value|(u_int32_t)-1
+define|#
+directive|define
+name|CAM_PRIORITY_TO_RL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 8)
+define|#
+directive|define
+name|CAM_RL_TO_PRIORITY
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 8)
 name|u_int32_t
 name|generation
 decl_stmt|;
@@ -190,10 +200,6 @@ define|#
 directive|define
 name|CAM_DONEQ_INDEX
 value|-3
-define|#
-directive|define
-name|CAM_EXTRAQ_INDEX
-value|INT_MAX
 block|}
 name|cam_pinfo
 typedef|;

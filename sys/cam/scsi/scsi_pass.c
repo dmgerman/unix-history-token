@@ -1836,14 +1836,18 @@ expr_stmt|;
 if|if
 condition|(
 name|priority
-operator|<=
-name|CAM_PRIORITY_OOB
+operator|<
+name|CAM_RL_TO_PRIORITY
+argument_list|(
+name|CAM_RL_NORMAL
+argument_list|)
 condition|)
 name|priority
 operator|+=
-name|CAM_PRIORITY_OOB
-operator|+
-literal|1
+name|CAM_RL_TO_PRIORITY
+argument_list|(
+name|CAM_RL_NORMAL
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Non-immediate CCBs need a CCB from the per-device pool 		 * of CCBs, which is scheduled by the transport layer. 		 * Immediate CCBs and user-supplied CCBs should just be 		 * malloced. 		 */
 if|if
