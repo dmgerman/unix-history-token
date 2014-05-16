@@ -1059,6 +1059,14 @@ operator|->
 name|ifp
 operator|==
 name|NULL
+operator|||
+name|bus
+operator|->
+name|ifp
+operator|->
+name|if_bpf
+operator|==
+name|NULL
 condition|)
 return|return;
 if|if
