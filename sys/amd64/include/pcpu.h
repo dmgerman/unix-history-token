@@ -87,11 +87,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|XENHVM
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MODXENHVM
+argument_list|)
+end_if
 
 begin_comment
 comment|/* This is now unused, but remains here for KBI compatibility reasons. */

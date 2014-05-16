@@ -161,6 +161,12 @@ name|defined
 argument_list|(
 name|XENHVM
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MODXENHVM
+argument_list|)
 end_elif
 
 begin_comment
@@ -181,7 +187,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !XEN&& !XENHVM */
+comment|/* !XEN&& (!XENHVM || MODXENHVM) */
 end_comment
 
 begin_define
