@@ -11009,23 +11009,11 @@ modifier|*
 name|ep
 parameter_list|)
 block|{
-name|struct
-name|saf1761_otg_softc
-modifier|*
-name|sc
-init|=
-name|SAF1761_OTG_BUS2SC
-argument_list|(
-name|udev
-operator|->
-name|bus
-argument_list|)
-decl_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|2
 argument_list|,
-literal|"endpoint=%p, addr=%d, endpt=%d, mode=%d (%d)\n"
+literal|"endpoint=%p, addr=%d, endpt=%d, mode=%d\n"
 argument_list|,
 name|ep
 argument_list|,
@@ -11042,10 +11030,6 @@ operator|->
 name|flags
 operator|.
 name|usb_mode
-argument_list|,
-name|sc
-operator|->
-name|sc_rt_addr
 argument_list|)
 expr_stmt|;
 if|if
