@@ -2834,7 +2834,7 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* flush_brnchtgt_E     */
-name|arm11_sleep
+name|armv7_sleep
 block|,
 comment|/* sleep                */
 comment|/* Soft functions */

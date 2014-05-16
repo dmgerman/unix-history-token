@@ -449,7 +449,7 @@ block|{
 operator|.
 name|tc_name
 operator|=
-literal|"ARM MPCore Timecounter"
+literal|"MPCore"
 block|,
 operator|.
 name|tc_get_timecount
@@ -475,7 +475,7 @@ block|,
 operator|.
 name|tc_quality
 operator|=
-literal|1000
+literal|800
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -770,7 +770,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"ARM Generic MPCore Timers"
+literal|"ARM MPCore Timers"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1081,7 +1081,7 @@ name|et
 operator|.
 name|et_name
 operator|=
-literal|"ARM MPCore Eventtimer"
+literal|"MPCore"
 expr_stmt|;
 name|sc
 operator|->
@@ -1264,42 +1264,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  *	cpu_initclocks - called by system to initialise the cpu clocks  *  *	This is a boilerplat function, most of the setup has already been done  *	when the driver was attached.  Therefore this function must only be called  *	after the driver is attached.  *  *	RETURNS  *	nothing  */
-end_comment
-
-begin_function
-name|void
-name|cpu_initclocks
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|cpu_initclocks_bsp
-argument_list|()
-expr_stmt|;
-else|else
-name|cpu_initclocks_ap
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/**  *	DELAY - Delay for at least usec microseconds.  *	@usec: number of microseconds to delay by  *  *	This function is called all over the kernel and is suppose to provide a  *	consistent delay.  This function may also be called before the console   *	is setup so no printf's can be called here.  *  *	RETURNS:  *	nothing  */
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|DELAY
+name|__used
+comment|/* Must emit function code for the weak ref below. */
+name|arm_tmr_DELAY
 parameter_list|(
 name|int
 name|usec
@@ -1435,6 +1408,20 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Supply a DELAY() implementation via weak linkage.  A platform may want to use  * the mpcore per-cpu eventtimers but provide its own DELAY() routine,  * especially when the core frequency can change on the fly.  */
+end_comment
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|arm_tmr_DELAY
+argument_list|,
+name|DELAY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

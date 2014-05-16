@@ -1472,7 +1472,7 @@ name|smp_topo_1level
 argument_list|(
 name|CG_SHARE_L2
 argument_list|,
-literal|1
+name|mp_ncpus
 argument_list|,
 literal|0
 argument_list|)

@@ -854,7 +854,7 @@ operator|)
 condition|)
 name|DELAY
 argument_list|(
-literal|1000
+literal|10000
 argument_list|)
 expr_stmt|;
 name|at91_usart_param

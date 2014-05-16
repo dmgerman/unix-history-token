@@ -1320,34 +1320,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|cpu_initclocks
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|imx_gpt_sc
-operator|==
-name|NULL
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"%s: i.MX GPT driver has not been initialized!"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
-name|cpu_initclocks_bsp
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|imx_gpt_intr
