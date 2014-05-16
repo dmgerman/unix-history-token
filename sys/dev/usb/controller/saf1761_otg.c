@@ -4669,12 +4669,34 @@ block|{
 name|uint32_t
 name|status
 decl_stmt|;
+name|uint32_t
+name|hcstat
+decl_stmt|;
 name|USB_BUS_LOCK
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_bus
+argument_list|)
+expr_stmt|;
+name|hcstat
+operator|=
+name|SAF1761_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_HCINTERRUPT
+argument_list|)
+expr_stmt|;
+comment|/* acknowledge all host controller interrupts */
+name|SAF1761_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_HCINTERRUPT
+argument_list|,
+name|hcstat
 argument_list|)
 expr_stmt|;
 name|status
@@ -4686,7 +4708,7 @@ argument_list|,
 name|SOTG_DCINTERRUPT
 argument_list|)
 expr_stmt|;
-comment|/* acknowledge all interrupts */
+comment|/* acknowledge all device controller interrupts */
 name|SAF1761_WRITE_4
 argument_list|(
 name|sc
@@ -4698,9 +4720,11 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"DCINTERRUPT=0x%08x SOF=0x%04x\n"
+literal|"DCINTERRUPT=0x%08x HCINTERRUPT=0x%08x SOF=0x%04x\n"
 argument_list|,
 name|status
+argument_list|,
+name|hcstat
 argument_list|,
 name|SAF1761_READ_2
 argument_list|(
@@ -7611,6 +7635,22 @@ argument_list|,
 name|SOTG_USBCMD
 argument_list|,
 name|SOTG_USBCMD_RS
+argument_list|)
+expr_stmt|;
+comment|/* enable HC interrupts */
+name|SAF1761_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_HCINTERRUPT_ENABLE
+argument_list|,
+name|SOTG_HCINTERRUPT_OTG_IRQ
+operator||
+name|SOTG_HCINTERRUPT_ISO_IRQ
+operator||
+name|SOTG_HCINTERRUPT_ALT_IRQ
+operator||
+name|SOTG_HCINTERRUPT_INT_IRQ
 argument_list|)
 expr_stmt|;
 comment|/* poll initial VBUS status */

@@ -1242,6 +1242,76 @@ name|SOTG_USBCMD_RS
 value|(1<< 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SOTG_HCINTERRUPT
+value|0x310
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCINTERRUPT_OTG_IRQ
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCINTERRUPT_ISO_IRQ
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCINTERRUPT_ALT_IRQ
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCINTERRUPT_INT_IRQ
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCINTERRUPT_CLKREADY
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCINTERRUPT_HCSUSP
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCINTERRUPT_DMAEOTINT
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCINTERRUPT_SOFITLINT
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCINTERRUPT_ENABLE
+value|0x314
+end_define
+
 begin_endif
 endif|#
 directive|endif
