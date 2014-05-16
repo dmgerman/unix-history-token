@@ -343,11 +343,6 @@ name|d_pulled_up
 range|:
 literal|1
 decl_stmt|;
-name|uint8_t
-name|mcsr_feat
-range|:
-literal|1
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -399,6 +394,10 @@ name|uint32_t
 name|sc_intr_enable
 decl_stmt|;
 comment|/* enabled interrupts */
+name|uint32_t
+name|sc_hw_mode
+decl_stmt|;
+comment|/* hardware mode */
 name|uint8_t
 name|sc_rt_addr
 decl_stmt|;

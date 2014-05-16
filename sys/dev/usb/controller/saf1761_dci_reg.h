@@ -485,6 +485,83 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOTG_HW_MODE_CTRL_ALL_ATX_RESET
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HW_MODE_CTRL_ANA_DIGI_OC
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HW_MODE_CTRL_DEV_DMA
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HW_MODE_CTRL_COMN_INT
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HW_MODE_CTRL_COMN_DMA
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HW_MODE_CTRL_DATA_BUS_WIDTH
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HW_MODE_CTRL_DACK_POL
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HW_MODE_CTRL_DREQ_POL
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HW_MODE_CTRL_INTR_POL
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HW_MODE_CTRL_INTR_LEVEL
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HW_MODE_CTRL_GLOBAL_INTR_EN
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_OTG_CTRL
 value|0x374
 end_define
@@ -857,6 +934,169 @@ define|#
 directive|define
 name|SOTG_TEST_MODE
 value|0x284
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_TEST_MODE_FORCEHS
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_TEST_MODE_FORCEFS
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_TEST_MODE_PRBS
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_TEST_MODE_KSTATE
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_TEST_MODE_JSTATE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_TEST_MODE_SE0_NAK
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Host controller specific registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOTG_CONFIGFLAG
+value|0x0060
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_CONFIGFLAG_ENABLE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PORTSC1
+value|0x0064
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PORTSC1_PO
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PORTSC1_PP
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PORTSC1_PR
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PORTSC1_SUSP
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PORTSC1_FPR
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PORTSC1_PED
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PORTSC1_ECSC
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PORTSC1_ECCS
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ASYNC_PDT
+parameter_list|(
+name|x
+parameter_list|)
+value|(0x400 + (60 * 1024) + ((x) * 32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_INTR_PDT
+parameter_list|(
+name|x
+parameter_list|)
+value|(0x400 + (61 * 1024) + ((x) * 32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ISOC_PDT
+parameter_list|(
+name|x
+parameter_list|)
+value|(0x400 + (62 * 1024) + ((x) * 32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HC_MEMORY_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) - 0x400)>> 3)
 end_define
 
 begin_endif

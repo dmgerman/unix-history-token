@@ -659,15 +659,6 @@ name|d_pulled_up
 operator|=
 literal|1
 expr_stmt|;
-name|SAF1761_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|SOTG_CTRL_SET
-argument_list|,
-name|SOTG_CTRL_DP_PULL_UP
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -705,15 +696,6 @@ operator|.
 name|d_pulled_up
 operator|=
 literal|0
-expr_stmt|;
-name|SAF1761_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|SOTG_CTRL_CLR
-argument_list|,
-name|SOTG_CTRL_DP_PULL_UP
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1142,6 +1124,15 @@ literal|0
 index|]
 operator|&
 literal|0x7F
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"Set address %d\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_dv_addr
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2295,26 +2286,44 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-if|if
-condition|(
-name|SAF1761_READ_4
+name|uint16_t
+name|status
+decl_stmt|;
+comment|/* read fresh status */
+name|status
+operator|=
+name|SAF1761_READ_2
 argument_list|(
 name|sc
 argument_list|,
-name|SOTG_MODE
+name|SOTG_STATUS
 argument_list|)
-operator|&
-name|SOTG_MODE_VBUSSTAT
-condition|)
-block|{
+expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|4
 argument_list|,
-literal|"VBUS ON\n"
+literal|"STATUS=0x%04x\n"
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
-comment|/* VBUS present */
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+name|SOTG_STATUS_VBUS_VLD
+operator|)
+operator|&&
+operator|(
+name|status
+operator|&
+name|SOTG_STATUS_ID
+operator|)
+condition|)
+block|{
+comment|/* VBUS present and device mode */
 if|if
 condition|(
 operator|!
@@ -2343,14 +2352,7 @@ block|}
 block|}
 else|else
 block|{
-name|DPRINTFN
-argument_list|(
-literal|4
-argument_list|,
-literal|"VBUS OFF\n"
-argument_list|)
-expr_stmt|;
-comment|/* VBUS not-present */
+comment|/* VBUS not-present or host mode */
 if|if
 condition|(
 name|sc
@@ -2451,6 +2453,21 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"DCINTERRUPT=0x%08x SOF=0x%04x\n"
+argument_list|,
+name|status
+argument_list|,
+name|SAF1761_READ_2
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_FRAME_NUM
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* update VBUS and ID bits, if any */
 if|if
 condition|(
 name|status
@@ -2458,7 +2475,6 @@ operator|&
 name|SOTG_DCINTERRUPT_IEVBUS
 condition|)
 block|{
-comment|/* update VBUS bit */
 name|saf1761_dci_update_vbus
 argument_list|(
 name|sc
@@ -2472,6 +2488,26 @@ operator|&
 name|SOTG_DCINTERRUPT_IEBRST
 condition|)
 block|{
+comment|/* unlock device */
+name|SAF1761_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_UNLOCK_DEVICE
+argument_list|,
+name|SOTG_UNLOCK_DEVICE_CODE
+argument_list|)
+expr_stmt|;
+comment|/* Enable device address */
+name|SAF1761_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_ADDRESS
+argument_list|,
+name|SOTG_ADDRESS_ENABLE
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_flags
@@ -2527,6 +2563,16 @@ operator|&
 name|SOTG_DCINTERRUPT_IERESM
 condition|)
 block|{
+comment|/* unlock device */
+name|SAF1761_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_UNLOCK_DEVICE
+argument_list|,
+name|SOTG_UNLOCK_DEVICE_CODE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -3436,11 +3482,13 @@ name|DPRINTFN
 argument_list|(
 literal|15
 argument_list|,
-literal|"endpoint 0x%02x\n"
+literal|"endpoint=%d set=%d\n"
 argument_list|,
 name|xfer
 operator|->
 name|endpointno
+argument_list|,
+name|set
 argument_list|)
 expr_stmt|;
 if|if
@@ -4515,7 +4563,7 @@ name|x
 decl_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"start\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* set up the bus structure */
@@ -4542,6 +4590,50 @@ operator|&
 name|sc
 operator|->
 name|sc_bus
+argument_list|)
+expr_stmt|;
+comment|/* Enable interrupts */
+name|sc
+operator|->
+name|sc_hw_mode
+operator||=
+name|SOTG_HW_MODE_CTRL_GLOBAL_INTR_EN
+operator||
+name|SOTG_HW_MODE_CTRL_COMN_INT
+expr_stmt|;
+comment|/* 	 * Set correct hardware mode, must be written twice if bus 	 * width is changed: 	 */
+name|SAF1761_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_HW_MODE_CTRL
+argument_list|,
+name|sc
+operator|->
+name|sc_hw_mode
+argument_list|)
+expr_stmt|;
+name|SAF1761_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_HW_MODE_CTRL
+argument_list|,
+name|sc
+operator|->
+name|sc_hw_mode
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"DCID=0x%08x\n"
+argument_list|,
+name|SAF1761_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_DCCHIP_ID
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* reset device */
@@ -4594,7 +4686,7 @@ for|for
 control|(
 name|x
 operator|=
-literal|0
+literal|1
 init|;
 condition|;
 name|x
@@ -4646,24 +4738,6 @@ operator|->
 name|max_in_frame_size
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|x
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* enable control endpoint */
-name|SAF1761_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|SOTG_EP_TYPE
-argument_list|,
-name|SOTG_EP_TYPE_ENABLE
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* select the correct endpoint */
 name|SAF1761_WRITE_1
 argument_list|(
@@ -4692,24 +4766,6 @@ operator|->
 name|max_out_frame_size
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|x
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* enable control endpoint */
-name|SAF1761_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|SOTG_EP_TYPE
-argument_list|,
-name|SOTG_EP_TYPE_ENABLE
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/* enable interrupts */
 name|SAF1761_WRITE_2
@@ -4719,6 +4775,45 @@ argument_list|,
 name|SOTG_MODE
 argument_list|,
 name|SOTG_MODE_GLINTENA
+operator||
+name|SOTG_MODE_CLKAON
+operator||
+name|SOTG_MODE_WKUPCS
+argument_list|)
+expr_stmt|;
+comment|/* set default values */
+name|SAF1761_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_INTERRUPT_CFG
+argument_list|,
+name|SOTG_INTERRUPT_CFG_CDBGMOD
+operator||
+name|SOTG_INTERRUPT_CFG_DDBGMODIN
+operator||
+name|SOTG_INTERRUPT_CFG_DDBGMODOUT
+argument_list|)
+expr_stmt|;
+comment|/* enable VBUS and ID interrupt */
+name|SAF1761_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_IRQ_ENABLE_CLR
+argument_list|,
+literal|0xFFFF
+argument_list|)
+expr_stmt|;
+name|SAF1761_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_IRQ_ENABLE_SET
+argument_list|,
+name|SOTG_IRQ_ID
+operator||
+name|SOTG_IRQ_VBUS_VLD
 argument_list|)
 expr_stmt|;
 comment|/* enable interrupts */
@@ -4726,15 +4821,13 @@ name|sc
 operator|->
 name|sc_intr_enable
 operator|=
-name|SOTG_DCINTERRUPT_EN
-operator|,
 name|SOTG_DCINTERRUPT_IEVBUS
 operator||
 name|SOTG_DCINTERRUPT_IEBRST
 operator||
 name|SOTG_DCINTERRUPT_IESUSP
 expr_stmt|;
-name|SAF1761_WRITE_2
+name|SAF1761_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
@@ -4743,6 +4836,37 @@ argument_list|,
 name|sc
 operator|->
 name|sc_intr_enable
+argument_list|)
+expr_stmt|;
+comment|/* connect ATX port 1 to device controller */
+name|SAF1761_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_CTRL_CLR
+argument_list|,
+literal|0xFFFF
+argument_list|)
+expr_stmt|;
+name|SAF1761_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_CTRL_SET
+argument_list|,
+name|SOTG_CTRL_SW_SEL_HC_DC
+operator||
+name|SOTG_CTRL_BDIS_ACON_EN
+argument_list|)
+expr_stmt|;
+comment|/* disable device address */
+name|SAF1761_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|SOTG_ADDRESS
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* poll initial VBUS status */
