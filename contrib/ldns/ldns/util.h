@@ -185,6 +185,7 @@ name|ntohs
 argument_list|(
 operator|*
 operator|(
+specifier|const
 name|uint16_t
 operator|*
 operator|)
@@ -193,11 +194,13 @@ argument_list|)
 return|;
 else|#
 directive|else
+specifier|const
 name|uint8_t
 modifier|*
 name|p
 init|=
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -245,6 +248,7 @@ name|ntohl
 argument_list|(
 operator|*
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -253,11 +257,13 @@ argument_list|)
 return|;
 else|#
 directive|else
+specifier|const
 name|uint8_t
 modifier|*
 name|p
 init|=
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
