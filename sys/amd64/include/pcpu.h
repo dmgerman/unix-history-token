@@ -93,6 +93,10 @@ directive|ifdef
 name|XENHVM
 end_ifdef
 
+begin_comment
+comment|/* This is now unused, but remains here for KBI compatibility reasons. */
+end_comment
+
 begin_define
 define|#
 directive|define
