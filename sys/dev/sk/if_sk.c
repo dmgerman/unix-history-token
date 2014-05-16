@@ -13684,11 +13684,6 @@ name|sc_if
 decl_stmt|;
 block|{
 name|struct
-name|sk_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
 name|sk_txdesc
 modifier|*
 name|txd
@@ -13708,12 +13703,6 @@ name|idx
 decl_stmt|,
 name|sk_ctl
 decl_stmt|;
-name|sc
-operator|=
-name|sc_if
-operator|->
-name|sk_softc
-expr_stmt|;
 name|ifp
 operator|=
 name|sc_if
