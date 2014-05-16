@@ -2117,6 +2117,7 @@ literal|"\t -d\t\t (toggle) track descendants\n"
 literal|"\t -f spec\t pass \"spec\" to as plugin option\n"
 literal|"\t -g\t\t produce gprof(1) compatible profiles\n"
 literal|"\t -k dir\t\t set the path to the kernel\n"
+literal|"\t -l secs\t set duration time\n"
 literal|"\t -m file\t print sampled PCs to \"file\"\n"
 literal|"\t -n rate\t set sampling rate\n"
 literal|"\t -o file\t send print output to \"file\"\n"
@@ -2188,6 +2189,9 @@ name|cpumask
 decl_stmt|;
 name|double
 name|interval
+decl_stmt|;
+name|double
+name|duration
 decl_stmt|;
 name|int
 name|hcpu
@@ -2455,6 +2459,12 @@ name|pa_mergepmc
 operator|=
 literal|0
 expr_stmt|;
+name|args
+operator|.
+name|pa_duration
+operator|=
+literal|0.0
+expr_stmt|;
 name|STAILQ_INIT
 argument_list|(
 operator|&
@@ -2569,7 +2579,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CD:EF:G:M:NO:P:R:S:TWa:c:df:gk:m:n:o:p:qr:s:t:vw:z:"
+literal|"CD:EF:G:M:NO:P:R:S:TWa:c:df:gk:l:m:n:o:p:qr:s:t:vw:z:"
 argument_list|)
 operator|)
 operator|!=
@@ -2882,6 +2892,54 @@ operator|.
 name|pa_flags
 operator||=
 name|FLAG_HAS_KERNELPATH
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+comment|/* time duration in seconds */
+name|duration
+operator|=
+name|strtod
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|end
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|end
+operator|!=
+literal|'\0'
+operator|||
+name|duration
+operator|<=
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: Illegal duration time "
+literal|"value \"%s\"."
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|args
+operator|.
+name|pa_flags
+operator||=
+name|FLAG_HAS_DURATION
+expr_stmt|;
+name|args
+operator|.
+name|pa_duration
+operator|=
+name|duration
 expr_stmt|;
 break|break;
 case|case
@@ -3908,6 +3966,33 @@ argument_list|(
 name|EX_USAGE
 argument_list|,
 literal|"ERROR: options -O and -R are mutually exclusive."
+argument_list|)
+expr_stmt|;
+comment|/* disallow -T and -l together */
+if|if
+condition|(
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_HAS_DURATION
+operator|)
+operator|&&
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_TOP
+operator|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: options -T and -l are mutually "
+literal|"exclusive."
 argument_list|)
 expr_stmt|;
 comment|/* -m option is allowed with -R only. */
@@ -5743,6 +5828,77 @@ literal|"ERROR: Cannot register kevent for timer"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Setup a duration timer if we have sampling mode PMCs and 	 * a duration time is set 	 */
+if|if
+condition|(
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_HAS_SAMPLING_PMCS
+operator|)
+operator|&&
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_HAS_DURATION
+operator|)
+condition|)
+block|{
+name|EV_SET
+argument_list|(
+operator|&
+name|kev
+argument_list|,
+literal|0
+argument_list|,
+name|EVFILT_TIMER
+argument_list|,
+name|EV_ADD
+argument_list|,
+literal|0
+argument_list|,
+name|args
+operator|.
+name|pa_duration
+operator|*
+literal|1000
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kevent
+argument_list|(
+name|pmcstat_kq
+argument_list|,
+operator|&
+name|kev
+argument_list|,
+literal|1
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot register kevent for "
+literal|"time duration"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* attach PMCs to the target process, starting it if specified */
 if|if
 condition|(
@@ -6040,7 +6196,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * loop till either the target process (if any) exits, or we 	 * are killed by a SIGINT. 	 */
+comment|/* 	 * loop till either the target process (if any) exits, or we 	 * are killed by a SIGINT or we reached the time duration. 	 */
 name|runstate
 operator|=
 name|PMCSTAT_RUNNING
@@ -6325,6 +6481,22 @@ break|break;
 case|case
 name|EVFILT_TIMER
 case|:
+comment|/* time duration reached, exit */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_HAS_DURATION
+condition|)
+block|{
+name|runstate
+operator|=
+name|PMCSTAT_FINISHED
+expr_stmt|;
+break|break;
+block|}
 comment|/* print out counting PMCs */
 if|if
 condition|(
