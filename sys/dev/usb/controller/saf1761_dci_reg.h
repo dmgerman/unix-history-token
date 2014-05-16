@@ -1006,6 +1006,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOTG_PORTSC1_PIC
+value|(3<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_PORTSC1_PO
 value|(1<< 13)
 end_define
@@ -1015,6 +1022,13 @@ define|#
 directive|define
 name|SOTG_PORTSC1_PP
 value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PORTSC1_LS
+value|(3<< 10)
 end_define
 
 begin_define
@@ -1062,6 +1076,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOTG_DATA_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|(0x400 + (512 * (x)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_ASYNC_PDT
 parameter_list|(
 name|x
@@ -1097,6 +1121,125 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x) - 0x400)>> 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_SW_RESET
+value|0x30C
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_SW_RESET_HC
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_SW_RESET_ALL
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_POWER_DOWN
+value|0x354
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_POWER_DOWN_PORT3_PD
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_POWER_DOWN_PORT2_PD
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_POWER_DOWN_VBATDET_PWR
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_POWER_DOWN_BIAS_EN
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_POWER_DOWN_VREG_ON
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_POWER_DOWN_OC3_PWR
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_POWER_DOWN_OC2_PWR
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_POWER_DOWN_OC1_PWR
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_POWER_DOWN_HC_CLK_EN
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_USBCMD
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_USBCMD_LHCR
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_USBCMD_HCRESET
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_USBCMD_RS
+value|(1<< 0)
 end_define
 
 begin_endif

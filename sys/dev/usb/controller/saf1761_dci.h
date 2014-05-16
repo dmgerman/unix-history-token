@@ -43,6 +43,38 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOTG_NUM_PORTS
+value|2
+end_define
+
+begin_comment
+comment|/* one Device and one Host port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOTG_HOST_PORT_NUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_DEVICE_PORT_NUM
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HOST_CHANNEL_MAX
+value|(3 * 32)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SAF1761_READ_1
 parameter_list|(
 name|sc
@@ -179,6 +211,9 @@ decl_stmt|;
 name|uint32_t
 name|remainder
 decl_stmt|;
+name|uint32_t
+name|dw1_value
+decl_stmt|;
 name|uint16_t
 name|max_packet_size
 decl_stmt|;
@@ -186,7 +221,18 @@ name|uint8_t
 name|ep_index
 decl_stmt|;
 name|uint8_t
-name|error
+name|ep_type
+decl_stmt|;
+name|uint8_t
+name|channel
+decl_stmt|;
+name|uint8_t
+name|error_any
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|error_stall
 range|:
 literal|1
 decl_stmt|;
@@ -202,6 +248,16 @@ literal|1
 decl_stmt|;
 name|uint8_t
 name|did_stall
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|toggle
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|set_toggle
 range|:
 literal|1
 decl_stmt|;
@@ -391,6 +447,15 @@ name|bus_space_handle_t
 name|sc_io_hdl
 decl_stmt|;
 name|uint32_t
+name|sc_host_async_map
+decl_stmt|;
+name|uint32_t
+name|sc_host_intr_map
+decl_stmt|;
+name|uint32_t
+name|sc_host_isoc_map
+decl_stmt|;
+name|uint32_t
 name|sc_intr_enable
 decl_stmt|;
 comment|/* enabled interrupts */
@@ -398,6 +463,16 @@ name|uint32_t
 name|sc_hw_mode
 decl_stmt|;
 comment|/* hardware mode */
+name|uint8_t
+name|sc_bounce_buffer
+index|[
+literal|1024
+index|]
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
+decl_stmt|;
 name|uint8_t
 name|sc_rt_addr
 decl_stmt|;
@@ -410,6 +485,10 @@ name|uint8_t
 name|sc_conf
 decl_stmt|;
 comment|/* root HUB config */
+name|uint8_t
+name|sc_isreset
+decl_stmt|;
+comment|/* host mode */
 name|uint8_t
 name|sc_hub_idata
 index|[
