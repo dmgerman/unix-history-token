@@ -961,6 +961,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|SIGF_UC
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|sigframe
+argument_list|,
+name|sf_uc
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef

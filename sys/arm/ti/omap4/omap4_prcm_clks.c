@@ -3329,6 +3329,9 @@ comment|/* Calculate the MPU freq */
 name|mpuclk
 operator|=
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|sysclk
 operator|*
 name|pll_mult

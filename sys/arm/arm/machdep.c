@@ -3438,14 +3438,8 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-name|struct
-name|sigframe
-name|sf
-decl_stmt|;
-name|struct
-name|trapframe
-modifier|*
-name|tf
+name|ucontext_t
+name|uc
 decl_stmt|;
 name|int
 name|spsr
@@ -3470,11 +3464,11 @@ operator|->
 name|sigcntxp
 argument_list|,
 operator|&
-name|sf
+name|uc
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sf
+name|uc
 argument_list|)
 argument_list|)
 condition|)
@@ -3486,9 +3480,7 @@ return|;
 comment|/* 	 * Make sure the processor mode has not been tampered with and 	 * interrupts have not been disabled. 	 */
 name|spsr
 operator|=
-name|sf
-operator|.
-name|sf_uc
+name|uc
 operator|.
 name|uc_mcontext
 operator|.
@@ -3525,20 +3517,12 @@ name|EINVAL
 operator|)
 return|;
 comment|/* Restore register context. */
-name|tf
-operator|=
-name|td
-operator|->
-name|td_frame
-expr_stmt|;
 name|set_mcontext
 argument_list|(
 name|td
 argument_list|,
 operator|&
-name|sf
-operator|.
-name|sf_uc
+name|uc
 operator|.
 name|uc_mcontext
 argument_list|)
@@ -3551,9 +3535,7 @@ argument_list|,
 name|SIG_SETMASK
 argument_list|,
 operator|&
-name|sf
-operator|.
-name|sf_uc
+name|uc
 operator|.
 name|uc_sigmask
 argument_list|,

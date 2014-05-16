@@ -522,6 +522,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCM_AHB_GATING_EMAC
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_USB_PHY
 value|(1<< 8)
 end_define
@@ -559,6 +566,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|a10_clk_usb_deactivate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|a10_clk_emac_activate
 parameter_list|(
 name|void
 parameter_list|)
