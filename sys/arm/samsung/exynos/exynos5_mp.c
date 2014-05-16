@@ -78,24 +78,6 @@ name|EXYNOS_SYSRAM
 value|0x02020000
 end_define
 
-begin_function_decl
-name|void
-name|mpentry
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mptramp
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 name|platform_mp_init_secondary

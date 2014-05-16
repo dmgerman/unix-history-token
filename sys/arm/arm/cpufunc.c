@@ -406,6 +406,9 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* dcache_wb_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* idcache_inv_all	*/
 name|arm7tdmi_cache_flushID
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -579,6 +582,9 @@ operator|)
 name|arm8_cache_cleanID
 block|,
 comment|/* dcache_wb_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* idcache_inv_all	*/
 name|arm8_cache_purgeID
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -739,6 +745,9 @@ comment|/* dcache_inv_range	*/
 name|arm9_dcache_wb_range
 block|,
 comment|/* dcache_wb_range	*/
+name|armv4_idcache_inv_all
+block|,
+comment|/* idcache_inv_all	*/
 name|arm9_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -899,6 +908,9 @@ comment|/* dcache_inv_range	*/
 name|armv5_ec_dcache_wb_range
 block|,
 comment|/* dcache_wb_range	*/
+name|armv4_idcache_inv_all
+block|,
+comment|/* idcache_inv_all	*/
 name|armv5_ec_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -1036,6 +1048,9 @@ comment|/* dcache_inv_range	*/
 name|sheeva_dcache_wb_range
 block|,
 comment|/* dcache_wb_range	*/
+name|armv4_idcache_inv_all
+block|,
+comment|/* idcache_inv_all	*/
 name|armv5_ec_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -1172,6 +1187,9 @@ comment|/* dcache_inv_range	*/
 name|arm10_dcache_wb_range
 block|,
 comment|/* dcache_wb_range	*/
+name|armv4_idcache_inv_all
+block|,
+comment|/* idcache_inv_all	*/
 name|arm10_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -1324,6 +1342,9 @@ comment|/* dcache_inv_range	*/
 name|armv7_dcache_wb_range
 block|,
 comment|/* dcache_wb_range	*/
+name|armv7_idcache_inv_all
+block|,
+comment|/* idcache_inv_all	*/
 name|armv7_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -1481,6 +1502,9 @@ comment|/* dcache_inv_range	*/
 name|sa1_cache_cleanD_rng
 block|,
 comment|/* dcache_wb_range	*/
+name|sa1_cache_flushID
+block|,
+comment|/* idcache_inv_all	*/
 name|sa1_cache_purgeID
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -1646,6 +1670,9 @@ comment|/* dcache_inv_range	*/
 name|sa1_cache_cleanD_rng
 block|,
 comment|/* dcache_wb_range	*/
+name|sa1_cache_flushID
+block|,
+comment|/* idcache_inv_all	*/
 name|sa1_cache_purgeID
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -1799,6 +1826,9 @@ comment|/* dcache_inv_range	*/
 name|sa1_cache_cleanD_rng
 block|,
 comment|/* dcache_wb_range	*/
+name|sa1_cache_flushID
+block|,
+comment|/* idcache_inv_all	*/
 name|sa1_cache_purgeID
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -1980,6 +2010,9 @@ comment|/* dcache_inv_range	*/
 name|xscale_cache_cleanD_rng
 block|,
 comment|/* dcache_wb_range	*/
+name|xscale_cache_flushID
+block|,
+comment|/* idcache_inv_all	*/
 name|xscale_cache_purgeID
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -2132,6 +2165,9 @@ comment|/* dcache_inv_range	*/
 name|xscalec3_cache_cleanD_rng
 block|,
 comment|/* dcache_wb_range	*/
+name|xscale_cache_flushID
+block|,
+comment|/* idcache_inv_all	*/
 name|xscalec3_cache_purgeID
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -2276,6 +2312,9 @@ comment|/* dcache_inv_range	*/
 name|fa526_dcache_wb_range
 block|,
 comment|/* dcache_wb_range	*/
+name|armv4_idcache_inv_all
+block|,
+comment|/* idcache_inv_all	*/
 name|fa526_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all	*/
@@ -2423,6 +2462,9 @@ comment|/* dcache_inv_range     */
 name|armv6_dcache_wb_range
 block|,
 comment|/* dcache_wb_range      */
+name|armv6_idcache_inv_all
+block|,
+comment|/* idcache_inv_all	*/
 name|arm11x6_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all    */
@@ -2578,6 +2620,9 @@ comment|/* dcache_inv_range     */
 name|armv6_dcache_wb_range
 block|,
 comment|/* dcache_wb_range      */
+name|armv6_idcache_inv_all
+block|,
+comment|/* idcache_inv_all	*/
 name|arm11x6_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all    */
@@ -2738,6 +2783,9 @@ comment|/* dcache_inv_range     */
 name|armv7_dcache_wb_range
 block|,
 comment|/* dcache_wb_range      */
+name|armv7_idcache_inv_all
+block|,
+comment|/* idcache_inv_all	*/
 name|armv7_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all    */

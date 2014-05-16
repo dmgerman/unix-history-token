@@ -566,6 +566,8 @@ name|L1_SHARED
 operator||
 name|L1_S_C
 operator||
+name|L1_S_B
+operator||
 name|L1_S_AP
 argument_list|(
 name|AP_KRW
@@ -604,6 +606,8 @@ operator||
 name|L1_SHARED
 operator||
 name|L1_S_C
+operator||
+name|L1_S_B
 operator||
 name|L1_S_AP
 argument_list|(
@@ -776,6 +780,9 @@ name|end
 init|=
 literal|0
 decl_stmt|;
+name|cpu_idcache_inv_all
+argument_list|()
+expr_stmt|;
 name|cpu_setup
 argument_list|(
 name|NULL

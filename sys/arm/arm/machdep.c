@@ -1826,6 +1826,24 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_L2_PIPT
+name|cpu_l2cache_wb_range
+argument_list|(
+operator|(
+name|uintptr_t
+operator|)
+name|vtophys
+argument_list|(
+name|ptr
+argument_list|)
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|cpu_l2cache_wb_range
 argument_list|(
 operator|(
@@ -1836,6 +1854,8 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

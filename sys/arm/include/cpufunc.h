@@ -193,7 +193,7 @@ name|u_int
 name|va
 parameter_list|)
 function_decl|;
-comment|/* 	 * Cache operations: 	 * 	 * We define the following primitives: 	 * 	 *	icache_sync_all		Synchronize I-cache 	 *	icache_sync_range	Synchronize I-cache range 	 * 	 *	dcache_wbinv_all	Write-back and Invalidate D-cache 	 *	dcache_wbinv_range	Write-back and Invalidate D-cache range 	 *	dcache_inv_range	Invalidate D-cache range 	 *	dcache_wb_range		Write-back D-cache range 	 * 	 *	idcache_wbinv_all	Write-back and Invalidate D-cache, 	 *				Invalidate I-cache 	 *	idcache_wbinv_range	Write-back and Invalidate D-cache, 	 *				Invalidate I-cache range 	 * 	 * Note that the ARM term for "write-back" is "clean".  We use 	 * the term "write-back" since it's a more common way to describe 	 * the operation. 	 * 	 * There are some rules that must be followed: 	 * 	 *	I-cache Synch (all or range): 	 *		The goal is to synchronize the instruction stream, 	 *		so you may beed to write-back dirty D-cache blocks 	 *		first.  If a range is requested, and you can't 	 *		synchronize just a range, you have to hit the whole 	 *		thing. 	 * 	 *	D-cache Write-Back and Invalidate range: 	 *		If you can't WB-Inv a range, you must WB-Inv the 	 *		entire D-cache. 	 * 	 *	D-cache Invalidate: 	 *		If you can't Inv the D-cache, you must Write-Back 	 *		and Invalidate.  Code that uses this operation 	 *		MUST NOT assume that the D-cache will not be written 	 *		back to memory. 	 * 	 *	D-cache Write-Back: 	 *		If you can't Write-back without doing an Inv, 	 *		that's fine.  Then treat this as a WB-Inv. 	 *		Skipping the invalidate is merely an optimization. 	 * 	 *	All operations: 	 *		Valid virtual addresses must be passed to each 	 *		cache operation. 	 */
+comment|/* 	 * Cache operations: 	 * 	 * We define the following primitives: 	 * 	 *	icache_sync_all		Synchronize I-cache 	 *	icache_sync_range	Synchronize I-cache range 	 * 	 *	dcache_wbinv_all	Write-back and Invalidate D-cache 	 *	dcache_wbinv_range	Write-back and Invalidate D-cache range 	 *	dcache_inv_range	Invalidate D-cache range 	 *	dcache_wb_range		Write-back D-cache range 	 * 	 *	idcache_wbinv_all	Write-back and Invalidate D-cache, 	 *				Invalidate I-cache 	 *	idcache_wbinv_range	Write-back and Invalidate D-cache, 	 *				Invalidate I-cache range 	 * 	 * Note that the ARM term for "write-back" is "clean".  We use 	 * the term "write-back" since it's a more common way to describe 	 * the operation. 	 * 	 * There are some rules that must be followed: 	 * 	 *	ID-cache Invalidate All: 	 *		Unlike other functions, this one must never write back. 	 *		It is used to intialize the MMU when it is in an unknown 	 *		state (such as when it may have lines tagged as valid 	 *		that belong to a previous set of mappings). 	 *                                           	 *	I-cache Synch (all or range): 	 *		The goal is to synchronize the instruction stream, 	 *		so you may beed to write-back dirty D-cache blocks 	 *		first.  If a range is requested, and you can't 	 *		synchronize just a range, you have to hit the whole 	 *		thing. 	 * 	 *	D-cache Write-Back and Invalidate range: 	 *		If you can't WB-Inv a range, you must WB-Inv the 	 *		entire D-cache. 	 * 	 *	D-cache Invalidate: 	 *		If you can't Inv the D-cache, you must Write-Back 	 *		and Invalidate.  Code that uses this operation 	 *		MUST NOT assume that the D-cache will not be written 	 *		back to memory. 	 * 	 *	D-cache Write-Back: 	 *		If you can't Write-back without doing an Inv, 	 *		that's fine.  Then treat this as a WB-Inv. 	 *		Skipping the invalidate is merely an optimization. 	 * 	 *	All operations: 	 *		Valid virtual addresses must be passed to each 	 *		cache operation. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -254,6 +254,15 @@ parameter_list|(
 name|vm_offset_t
 parameter_list|,
 name|vm_size_t
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|cf_idcache_inv_all
+function_decl|)
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 name|void
@@ -733,6 +742,14 @@ parameter_list|,
 name|s
 parameter_list|)
 value|cpufuncs.cf_dcache_wb_range((a), (s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cpu_idcache_inv_all
+parameter_list|()
+value|cpufuncs.cf_idcache_inv_all()
 end_define
 
 begin_define
@@ -2681,6 +2698,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|armv6_idcache_inv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|armv6_idcache_wbinv_all
 parameter_list|(
 name|void
@@ -2744,6 +2770,15 @@ parameter_list|(
 name|vm_offset_t
 parameter_list|,
 name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|armv7_idcache_inv_all
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3409,6 +3444,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|armv4_drain_writebuf
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|armv4_idcache_inv_all
 parameter_list|(
 name|void
 parameter_list|)
