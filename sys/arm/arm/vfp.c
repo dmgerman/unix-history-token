@@ -508,6 +508,9 @@ name|pcb
 modifier|*
 name|curpcb
 decl_stmt|;
+name|ksiginfo_t
+name|ksi
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -541,19 +544,105 @@ operator|&
 name|VFPEXC_EN
 condition|)
 block|{
+comment|/* Clear any exceptions */
+name|fmxr
+argument_list|(
+name|VFPEXC
+argument_list|,
+name|fpexc
+operator|&
+operator|~
+operator|(
+name|VFPEXC_EX
+operator||
+name|VFPEXC_FP2V
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* kill the process - we do not handle emulation */
 name|critical_exit
 argument_list|()
 expr_stmt|;
-name|killproc
+if|if
+condition|(
+name|fpexc
+operator|&
+name|VFPEXC_EX
+condition|)
+block|{
+comment|/* We have an exception, signal a SIGFPE */
+name|ksiginfo_init_trap
 argument_list|(
-name|curthread
-operator|->
-name|td_proc
-argument_list|,
-literal|"vfp emulation"
+operator|&
+name|ksi
 argument_list|)
 expr_stmt|;
+name|ksi
+operator|.
+name|ksi_signo
+operator|=
+name|SIGFPE
+expr_stmt|;
+if|if
+condition|(
+name|fpexc
+operator|&
+name|VFPEXC_UFC
+condition|)
+name|ksi
+operator|.
+name|ksi_code
+operator|=
+name|FPE_FLTUND
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|fpexc
+operator|&
+name|VFPEXC_OFC
+condition|)
+name|ksi
+operator|.
+name|ksi_code
+operator|=
+name|FPE_FLTOVF
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|fpexc
+operator|&
+name|VFPEXC_IOC
+condition|)
+name|ksi
+operator|.
+name|ksi_code
+operator|=
+name|FPE_FLTINV
+expr_stmt|;
+name|ksi
+operator|.
+name|ksi_addr
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|addr
+expr_stmt|;
+name|trapsignal
+argument_list|(
+name|curthread
+argument_list|,
+operator|&
+name|ksi
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 return|return
 literal|1
 return|;
@@ -645,28 +734,67 @@ modifier|*
 name|vfpsave
 parameter_list|)
 block|{
-name|u_int
-name|vfpscr
-init|=
-literal|0
+name|uint32_t
+name|fpexc
 decl_stmt|;
-asm|__asm __volatile("ldc	p10, c0, [%1], #128\n"
+comment|/* On VFPv2 we may need to restore FPINST and FPINST2 */
+name|fpexc
+operator|=
+name|vfpsave
+operator|->
+name|fpexec
+expr_stmt|;
+if|if
+condition|(
+name|fpexc
+operator|&
+name|VFPEXC_EX
+condition|)
+block|{
+name|fmxr
+argument_list|(
+name|VFPINST
+argument_list|,
+name|vfpsave
+operator|->
+name|fpinst
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fpexc
+operator|&
+name|VFPEXC_FP2V
+condition|)
+name|fmxr
+argument_list|(
+name|VFPINST2
+argument_list|,
+name|vfpsave
+operator|->
+name|fpinst2
+argument_list|)
+expr_stmt|;
+block|}
+name|fmxr
+argument_list|(
+name|VFPSCR
+argument_list|,
+name|vfpsave
+operator|->
+name|fpscr
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("ldc	p10, c0, [%0], #128\n"
 comment|/* d0-d15 */
-literal|"cmp	%2, #0\n"
+literal|"cmp	%1, #0\n"
 comment|/* -D16 or -D32? */
 name|LDCLNE
-literal|"p11, c0, [%1], #128\n"
+literal|"p11, c0, [%0], #128\n"
 comment|/* d16-d31 */
-literal|"addeq	%1, %1, #128\n"
+literal|"addeq	%0, %0, #128\n"
 comment|/* skip missing regs */
-literal|"ldr	%0, [%1]\n"
-comment|/* set old vfpscr */
-literal|"mcr	p10, 7, %0, cr1, c0, 0\n"
 operator|:
-literal|"=&r"
-operator|(
-name|vfpscr
-operator|)
 operator|:
 literal|"r"
 operator|(
@@ -682,6 +810,16 @@ literal|"cc"
 block|)
 function|;
 end_function
+
+begin_expr_stmt
+name|fmxr
+argument_list|(
+name|VFPEXC
+argument_list|,
+name|fpexc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|}
@@ -700,12 +838,10 @@ end_macro
 
 begin_block
 block|{
-name|u_int
-name|tmp
-decl_stmt|,
-name|vfpscr
+name|uint32_t
+name|fpexc
 decl_stmt|;
-name|tmp
+name|fpexc
 operator|=
 name|fmrx
 argument_list|(
@@ -715,30 +851,75 @@ expr_stmt|;
 comment|/* Is the vfp enabled? */
 if|if
 condition|(
-name|tmp
+name|fpexc
 operator|&
 name|VFPEXC_EN
 condition|)
 block|{
+name|vfpsave
+operator|->
+name|fpexec
+operator|=
+name|fpexc
+expr_stmt|;
+name|vfpsave
+operator|->
+name|fpscr
+operator|=
+name|fmrx
+argument_list|(
+name|VFPSCR
+argument_list|)
+expr_stmt|;
+comment|/* On VFPv2 we may need to save FPINST and FPINST2 */
+if|if
+condition|(
+name|fpexc
+operator|&
+name|VFPEXC_EX
+condition|)
+block|{
+name|vfpsave
+operator|->
+name|fpinst
+operator|=
+name|fmrx
+argument_list|(
+name|VFPINST
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fpexc
+operator|&
+name|VFPEXC_FP2V
+condition|)
+name|vfpsave
+operator|->
+name|fpinst2
+operator|=
+name|fmrx
+argument_list|(
+name|VFPINST2
+argument_list|)
+expr_stmt|;
+name|fpexc
+operator|&=
+operator|~
+name|VFPEXC_EX
+expr_stmt|;
+block|}
 asm|__asm __volatile(
-literal|"stc	p11, c0, [%1], #128\n"
+literal|"stc	p11, c0, [%0], #128\n"
 comment|/* d0-d15 */
-literal|"cmp	%2, #0\n"
+literal|"cmp	%1, #0\n"
 comment|/* -D16 or -D32? */
 name|STCLNE
-literal|"p11, c0, [%1], #128\n"
+literal|"p11, c0, [%0], #128\n"
 comment|/* d16-d31 */
-literal|"addeq	%1, %1, #128\n"
+literal|"addeq	%0, %0, #128\n"
 comment|/* skip missing regs */
-literal|"mrc	p10, 7, %0, cr1, c0, 0\n"
-comment|/* fmxr(VFPSCR) */
-literal|"str	%0, [%1]\n"
-comment|/* save vfpscr */
 operator|:
-literal|"=&r"
-operator|(
-name|vfpscr
-operator|)
 operator|:
 literal|"r"
 operator|(
@@ -761,7 +942,7 @@ name|fmxr
 argument_list|(
 name|VFPEXC
 argument_list|,
-name|tmp
+name|fpexc
 operator|&
 operator|~
 name|VFPEXC_EN

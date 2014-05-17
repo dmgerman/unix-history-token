@@ -191,6 +191,12 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/vfp.h>
+end_include
+
 begin_comment
 comment|/*  * struct switchframe and trapframe must both be a multiple of 8  * for correct stack alignment.  */
 end_comment
@@ -597,6 +603,16 @@ name|pcb_vfpcpu
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|pcb2
+operator|->
+name|pcb_vfpstate
+operator|.
+name|fpscr
+operator|=
+name|VFPSCR_DN
+operator||
+name|VFPSCR_FZ
 expr_stmt|;
 name|pmap_activate
 argument_list|(

@@ -803,11 +803,41 @@ name|generic_steppings
 block|}
 block|,
 block|{
-name|CPU_ID_CORTEXA15
+name|CPU_ID_CORTEXA15R0
 block|,
 name|CPU_CLASS_CORTEXA
 block|,
-literal|"Cortex A15"
+literal|"Cortex A15-r0"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_CORTEXA15R1
+block|,
+name|CPU_CLASS_CORTEXA
+block|,
+literal|"Cortex A15-r1"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_CORTEXA15R2
+block|,
+name|CPU_CLASS_CORTEXA
+block|,
+literal|"Cortex A15-r2"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_CORTEXA15R3
+block|,
+name|CPU_CLASS_CORTEXA
+block|,
+literal|"Cortex A15-r3"
 block|,
 name|generic_steppings
 block|}
