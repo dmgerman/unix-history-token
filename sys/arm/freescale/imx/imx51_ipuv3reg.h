@@ -4580,21 +4580,17 @@ value|0x10000000
 end_define
 
 begin_comment
-comment|/* Image Prossasing Unit */
+comment|/*   * Image Processing Unit   *  * All addresses are relative to the base SoC address.   */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IPU_BASE
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|IPU_CM_BASE
-value|(IPU_BASE + 0x1e000000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e000000)
 end_define
 
 begin_define
@@ -4608,7 +4604,10 @@ begin_define
 define|#
 directive|define
 name|IPU_IDMAC_BASE
-value|(IPU_BASE + 0x1e008000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e008000)
 end_define
 
 begin_define
@@ -4622,7 +4621,10 @@ begin_define
 define|#
 directive|define
 name|IPU_DP_BASE
-value|(IPU_BASE + 0x1e018000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e018000)
 end_define
 
 begin_define
@@ -4636,7 +4638,10 @@ begin_define
 define|#
 directive|define
 name|IPU_IC_BASE
-value|(IPU_BASE + 0x1e020000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e020000)
 end_define
 
 begin_define
@@ -4650,7 +4655,10 @@ begin_define
 define|#
 directive|define
 name|IPU_IRT_BASE
-value|(IPU_BASE + 0x1e028000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e028000)
 end_define
 
 begin_define
@@ -4664,7 +4672,10 @@ begin_define
 define|#
 directive|define
 name|IPU_CSI0_BASE
-value|(IPU_BASE + 0x1e030000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e030000)
 end_define
 
 begin_define
@@ -4678,7 +4689,10 @@ begin_define
 define|#
 directive|define
 name|IPU_CSI1_BASE
-value|(IPU_BASE + 0x1e038000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e038000)
 end_define
 
 begin_define
@@ -4692,7 +4706,10 @@ begin_define
 define|#
 directive|define
 name|IPU_DI0_BASE
-value|(IPU_BASE + 0x1e040000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e040000)
 end_define
 
 begin_define
@@ -4706,7 +4723,10 @@ begin_define
 define|#
 directive|define
 name|IPU_DI1_BASE
-value|(IPU_BASE + 0x1e048000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e048000)
 end_define
 
 begin_define
@@ -4720,7 +4740,10 @@ begin_define
 define|#
 directive|define
 name|IPU_SMFC_BASE
-value|(IPU_BASE + 0x1e050000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e050000)
 end_define
 
 begin_define
@@ -4734,7 +4757,10 @@ begin_define
 define|#
 directive|define
 name|IPU_DC_BASE
-value|(IPU_BASE + 0x1e058000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e058000)
 end_define
 
 begin_define
@@ -4748,7 +4774,10 @@ begin_define
 define|#
 directive|define
 name|IPU_DMFC_BASE
-value|(IPU_BASE + 0x1e060000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e060000)
 end_define
 
 begin_define
@@ -4762,7 +4791,10 @@ begin_define
 define|#
 directive|define
 name|IPU_VDI_BASE
-value|(IPU_BASE + 0x1e068000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1e068000)
 end_define
 
 begin_define
@@ -4776,7 +4808,10 @@ begin_define
 define|#
 directive|define
 name|IPU_CPMEM_BASE
-value|(IPU_BASE + 0x1f000000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1f000000)
 end_define
 
 begin_define
@@ -4790,7 +4825,10 @@ begin_define
 define|#
 directive|define
 name|IPU_LUT_BASE
-value|(IPU_BASE + 0x1f020000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1f020000)
 end_define
 
 begin_define
@@ -4804,7 +4842,10 @@ begin_define
 define|#
 directive|define
 name|IPU_SRM_BASE
-value|(IPU_BASE + 0x1f040000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1f040000)
 end_define
 
 begin_define
@@ -4818,7 +4859,10 @@ begin_define
 define|#
 directive|define
 name|IPU_TPM_BASE
-value|(IPU_BASE + 0x1f060000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1f060000)
 end_define
 
 begin_define
@@ -4832,7 +4876,10 @@ begin_define
 define|#
 directive|define
 name|IPU_DCTMPL_BASE
-value|(IPU_BASE + 0x1f080000)
+parameter_list|(
+name|_base
+parameter_list|)
+value|((_base) + 0x1f080000)
 end_define
 
 begin_define
