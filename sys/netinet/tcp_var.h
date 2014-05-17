@@ -1867,6 +1867,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|tcps_rcvmemdrop
+value|tcps_rcvreassfull
+end_define
+
+begin_comment
+comment|/* compat */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
