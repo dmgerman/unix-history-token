@@ -233,6 +233,10 @@ name|PRUSS_CLK
 init|=
 literal|1700
 block|,
+name|TSC_ADC_CLK
+init|=
+literal|1800
+block|,
 name|INVALID_CLK_IDENT
 block|}
 name|clk_ident_t
