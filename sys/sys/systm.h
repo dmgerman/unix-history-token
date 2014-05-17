@@ -652,6 +652,12 @@ name|trapframe
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|eventtimer
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|int
 name|setjmp
@@ -2236,6 +2242,21 @@ name|bt
 parameter_list|,
 name|sbintime_t
 name|bt_opt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_et_frequency
+parameter_list|(
+name|struct
+name|eventtimer
+modifier|*
+name|et
+parameter_list|,
+name|uint64_t
+name|newfreq
 parameter_list|)
 function_decl|;
 end_function_decl
