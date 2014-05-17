@@ -190,14 +190,14 @@ begin_define
 define|#
 directive|define
 name|GPX3CON
-value|0x0C60
+value|0x0
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPX3DAT
-value|0x0C64
+value|0x4
 end_define
 
 begin_define
@@ -240,7 +240,7 @@ begin_define
 define|#
 directive|define
 name|EXYNOS5_SYSREG_USB2_PHY
-value|0x230
+value|0x0
 end_define
 
 begin_define
