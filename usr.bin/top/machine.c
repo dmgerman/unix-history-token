@@ -3327,6 +3327,9 @@ name|int
 name|show_idle
 decl_stmt|;
 name|int
+name|show_jid
+decl_stmt|;
+name|int
 name|show_self
 decl_stmt|;
 name|int
@@ -3572,6 +3575,15 @@ operator|=
 name|sel
 operator|->
 name|idle
+expr_stmt|;
+name|show_jid
+operator|=
+name|sel
+operator|->
+name|jid
+operator|!=
+operator|-
+literal|1
 expr_stmt|;
 name|show_self
 operator|=
@@ -3826,6 +3838,20 @@ operator|==
 literal|0
 condition|)
 comment|/* skip processes that aren't doing I/O */
+continue|continue;
+if|if
+condition|(
+name|show_jid
+operator|&&
+name|pp
+operator|->
+name|ki_jid
+operator|!=
+name|sel
+operator|->
+name|jid
+condition|)
+comment|/* skip proc. that don't belong to the selected JID */
 continue|continue;
 if|if
 condition|(
