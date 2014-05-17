@@ -743,8 +743,11 @@ argument_list|,
 name|pgs
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we write coherent datas. */
+comment|/* 	 * Make sure we write coherent data.  Note that in the SMP case this 	 * only operates on the L1 cache of the current CPU, but all other CPUs 	 * have already been stopped, and their flush/invalidate was done as 	 * part of stopping. 	 */
 name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+name|cpu_l2cache_wbinv_all
 argument_list|()
 expr_stmt|;
 ifdef|#
