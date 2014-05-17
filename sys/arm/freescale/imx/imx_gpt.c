@@ -146,7 +146,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/freescale/imx/imx51_ccmvar.h>
+file|<arm/freescale/imx/imx_ccmvar.h>
 end_include
 
 begin_define
@@ -631,10 +631,8 @@ name|GPT_CR_CLKSRC_IPG
 case|:
 name|basefreq
 operator|=
-name|imx51_get_clock
-argument_list|(
-name|IMX51CLK_IPG_CLK_ROOT
-argument_list|)
+name|imx_ccm_ipg_hz
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -642,10 +640,8 @@ name|GPT_CR_CLKSRC_IPG_HIGH
 case|:
 name|basefreq
 operator|=
-name|imx51_get_clock
-argument_list|(
-name|IMX51CLK_IPG_CLK_ROOT
-argument_list|)
+name|imx_ccm_ipg_hz
+argument_list|()
 operator|*
 literal|2
 expr_stmt|;

@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/freescale/imx/imx_machdep.h>
+file|<arm/freescale/imx/imx_ccmvar.h>
 end_include
 
 begin_include
