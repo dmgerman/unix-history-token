@@ -136,6 +136,25 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|FDT_PLATFORM_DEF2
+parameter_list|(
+name|NAME
+parameter_list|,
+name|VAR_NAME
+parameter_list|,
+name|NAME_STR
+parameter_list|,
+name|size
+parameter_list|,
+name|compatible
+parameter_list|)
+define|\
+value|static fdt_platform_def_t VAR_NAME ## _fdt_platform = {			\ 	.name = NAME_STR,						\ 	.methods = fdt_platform_methods,				\ 	.fdt_compatible = compatible,					\ };									\ static kobj_class_t VAR_NAME ## _baseclasses[] =			\ 	{ (kobj_class_t)&VAR_NAME ## _fdt_platform, NULL };		\ static platform_def_t VAR_NAME ## _platform = {				\ 	NAME_STR,							\ 	NAME ## _methods,						\ 	size,								\ 	VAR_NAME ## _baseclasses,					\ };									\ DATA_SET(platform_set, VAR_NAME ## _platform)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FDT_PLATFORM_DEF
 parameter_list|(
 name|NAME
@@ -147,7 +166,7 @@ parameter_list|,
 name|compatible
 parameter_list|)
 define|\
-value|static fdt_platform_def_t NAME ## _fdt_platform = {		\ 	.name = NAME_STR,					\ 	.methods = fdt_platform_methods,			\ 	.fdt_compatible = compatible,				\ };								\ static kobj_class_t NAME ## _baseclasses[] =			\ 	{ (kobj_class_t)&NAME ## _fdt_platform, NULL };		\ static platform_def_t NAME ## _platform = {			\ 	NAME_STR,						\ 	NAME ## _methods,					\ 	size,							\ 	NAME ## _baseclasses,					\ };								\ DATA_SET(platform_set, NAME ## _platform)
+value|FDT_PLATFORM_DEF2(NAME, NAME, NAME_STR, size, compatible)
 end_define
 
 begin_endif
