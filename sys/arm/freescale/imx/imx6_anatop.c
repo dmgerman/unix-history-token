@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/arm/mpcore_timervar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/freescale/fsl_ocotpreg.h>
 end_include
 
@@ -835,6 +841,15 @@ argument_list|(
 name|IMX6_ANALOG_CCM_PLL_ARM_CLR
 argument_list|,
 name|IMX6_ANALOG_CCM_PLL_ARM_BYPASS
+argument_list|)
+expr_stmt|;
+name|arm_tmr_change_frequency
+argument_list|(
+name|sc
+operator|->
+name|cpu_curhz
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
