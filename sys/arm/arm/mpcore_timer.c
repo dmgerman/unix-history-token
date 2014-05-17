@@ -934,6 +934,12 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|sc
+operator|->
+name|clkfreq
+operator|=
+name|clock
+expr_stmt|;
 block|}
 block|}
 if|if

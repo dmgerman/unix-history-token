@@ -435,20 +435,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
-name|ckb_set_leds
-parameter_list|(
-name|struct
-name|ckb_softc
-modifier|*
-parameter_list|,
-name|uint8_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|ckb_set_typematic
 parameter_list|(
