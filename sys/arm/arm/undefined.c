@@ -609,12 +609,6 @@ operator||
 name|F32_bit
 argument_list|)
 expr_stmt|;
-name|frame
-operator|->
-name|tf_pc
-operator|-=
-name|INSN_SIZE
-expr_stmt|;
 name|PCPU_INC
 argument_list|(
 name|cnt

@@ -784,6 +784,12 @@ name|COPROC11
 value|(0x3<< 22)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_function_decl
 name|void
 name|vfp_init
@@ -792,6 +798,35 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|vfp_store
+parameter_list|(
+name|struct
+name|vfp_state
+modifier|*
+parameter_list|,
+name|boolean_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfp_discard
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

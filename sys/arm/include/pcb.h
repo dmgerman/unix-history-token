@@ -83,9 +83,6 @@ decl_stmt|;
 name|u_int
 name|pcb32_pc
 decl_stmt|;
-name|u_int
-name|pcb32_und_sp
-decl_stmt|;
 block|}
 struct|;
 end_struct
