@@ -603,9 +603,19 @@ end_expr_stmt
 begin_expr_stmt
 name|VMM_STAT
 argument_list|(
-name|VMEXIT_EPT_FAULT
+name|VMEXIT_NESTED_FAULT
 argument_list|,
 literal|"vm exits due to nested page fault"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_INST_EMUL
+argument_list|,
+literal|"vm exits for instruction emulation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -636,6 +646,16 @@ argument_list|(
 name|VMEXIT_USERSPACE
 argument_list|,
 literal|"number of vm exits handled in userspace"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_RENDEZVOUS
+argument_list|,
+literal|"number of times rendezvous pending at exit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

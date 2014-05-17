@@ -58,7 +58,8 @@ specifier|static
 name|int
 name|amdv_init
 parameter_list|(
-name|void
+name|int
+name|ipinum
 parameter_list|)
 block|{
 name|printf
@@ -154,6 +155,10 @@ name|struct
 name|pmap
 modifier|*
 name|pmap
+parameter_list|,
+name|void
+modifier|*
+name|cookie
 parameter_list|)
 block|{
 name|printf
@@ -471,6 +476,52 @@ return|return;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|struct
+name|vlapic
+modifier|*
+name|amdv_vlapic_init
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|vcpuid
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"amdv_vlapic_init: not implmented"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|amdv_vlapic_cleanup
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|struct
+name|vlapic
+modifier|*
+name|vlapic
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"amdv_vlapic_cleanup: not implemented"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|vmm_ops
@@ -506,6 +557,10 @@ block|,
 name|amdv_vmspace_alloc
 block|,
 name|amdv_vmspace_free
+block|,
+name|amdv_vlapic_init
+block|,
+name|amdv_vlapic_cleanup
 block|, }
 decl_stmt|;
 end_decl_stmt

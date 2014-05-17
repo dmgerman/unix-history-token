@@ -5483,6 +5483,9 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
+name|int
+name|ipinum
+decl_stmt|;
 name|sched_pin
 argument_list|()
 expr_stmt|;
@@ -5515,14 +5518,22 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Force the vcpu to exit and trap back into the hypervisor. 	 * 	 * XXX this is not optimal because IPI_AST builds a trapframe 	 * whereas all we need is an 'eoi' followed by 'iret'. 	 */
+comment|/* 	 * Force the vcpu to exit and trap back into the hypervisor. 	 */
+name|ipinum
+operator|=
+name|pmap
+operator|->
+name|pm_flags
+operator|&
+name|PMAP_NESTED_IPIMASK
+expr_stmt|;
 name|ipi_selected
 argument_list|(
 name|pmap
 operator|->
 name|pm_active
 argument_list|,
-name|IPI_AST
+name|ipinum
 argument_list|)
 expr_stmt|;
 name|sched_unpin

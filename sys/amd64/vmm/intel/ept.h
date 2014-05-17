@@ -25,7 +25,8 @@ begin_function_decl
 name|int
 name|ept_init
 parameter_list|(
-name|void
+name|int
+name|ipinum
 parameter_list|)
 function_decl|;
 end_function_decl
