@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/platform.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/ti/omap4/omap4_reg.h>
 end_include
 
@@ -99,7 +105,7 @@ end_function_decl
 
 begin_function
 name|vm_offset_t
-name|initarm_lastaddr
+name|platform_lastaddr
 parameter_list|(
 name|void
 parameter_list|)
@@ -115,7 +121,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_early_init
+name|platform_probe_and_attach
 parameter_list|(
 name|void
 parameter_list|)
@@ -124,7 +130,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_gpio_init
+name|platform_gpio_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -133,7 +139,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_late_init
+name|platform_late_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -146,7 +152,7 @@ end_comment
 
 begin_function
 name|int
-name|initarm_devmap_init
+name|platform_devmap_init
 parameter_list|(
 name|void
 parameter_list|)

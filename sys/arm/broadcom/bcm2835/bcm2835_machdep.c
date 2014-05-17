@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/platform.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/platformvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
@@ -101,11 +113,19 @@ directive|include
 file|<arm/broadcom/bcm2835/bcm2835_wdog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"platform_if.h"
+end_include
+
 begin_function
+specifier|static
 name|vm_offset_t
-name|initarm_lastaddr
+name|bcm2835_lastaddr
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 return|return
@@ -118,28 +138,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|initarm_early_init
+name|bcm2835_late_init
 parameter_list|(
-name|void
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
-name|initarm_gpio_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
-name|initarm_late_init
-parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|phandle_t
@@ -253,10 +257,12 @@ comment|/*  * Set up static device mappings.  * All on-chip peripherals exist in
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|initarm_devmap_init
+name|bcm2835_devmap_init
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|arm_devmap_add_entry
@@ -321,6 +327,53 @@ condition|)
 empty_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|platform_method_t
+name|bcm2835_methods
+index|[]
+init|=
+block|{
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_devmap_init
+argument_list|,
+name|bcm2835_devmap_init
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_lastaddr
+argument_list|,
+name|bcm2835_lastaddr
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_late_init
+argument_list|,
+name|bcm2835_late_init
+argument_list|)
+block|,
+name|PLATFORMMETHOD_END
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|FDT_PLATFORM_DEF
+argument_list|(
+name|bcm2835
+argument_list|,
+literal|"bcm2835"
+argument_list|,
+literal|0
+argument_list|,
+literal|"raspberrypi,model-b"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
