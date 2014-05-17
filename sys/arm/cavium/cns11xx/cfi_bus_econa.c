@@ -86,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/econa/econa_reg.h>
+file|<arm/cavium/cns11xx/econa_reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/econa/econa_var.h>
+file|<arm/cavium/cns11xx/econa_var.h>
 end_include
 
 begin_function
