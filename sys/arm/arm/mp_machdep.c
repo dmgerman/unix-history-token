@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -1141,9 +1147,6 @@ break|break;
 case|case
 name|IPI_STOP
 case|:
-case|case
-name|IPI_STOP_HARD
-case|:
 comment|/* 			 * IPI_STOP_HARD is mapped to IPI_STOP so it is not 			 * necessary to add it in the switch. 			 */
 name|CTR0
 argument_list|(
@@ -1160,6 +1163,10 @@ index|[
 name|cpu
 index|]
 argument_list|)
+expr_stmt|;
+comment|/* 			 * CPUs are stopped when entering the debugger and at 			 * system shutdown, both events which can precede a 			 * panic dump.  For the dump to be correct, all caches 			 * must be flushed and invalidated, but on ARM there's 			 * no way to broadcast a wbinv_all to other cores. 			 * Instead, we have each core do the local wbinv_all as 			 * part of stopping the core.  The core requesting the 			 * stop will do the l2 cache flush after all other cores 			 * have done their l1 flushes and stopped. 			 */
+name|cpu_idcache_wbinv_all
+argument_list|()
 expr_stmt|;
 comment|/* Indicate we are stopped */
 name|CPU_SET_ATOMIC
