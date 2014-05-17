@@ -1771,7 +1771,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"imx_uart"
+literal|"Freescale i.MX UART"
 argument_list|)
 expr_stmt|;
 return|return

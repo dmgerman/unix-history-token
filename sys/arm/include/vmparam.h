@@ -186,13 +186,13 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * The physical address space is densely populated.  */
+comment|/*  * The physical address space may be sparsely populated on some ARM systems.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VM_PHYSSEG_DENSE
+name|VM_PHYSSEG_SPARSE
 end_define
 
 begin_comment
