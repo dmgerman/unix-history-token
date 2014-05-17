@@ -223,31 +223,6 @@ directive|include
 file|<machine/smp.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|BOOKE_E500
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"This architecture is not currently compatible with ULE"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
