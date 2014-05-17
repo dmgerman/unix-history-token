@@ -2830,6 +2830,39 @@ begin_comment
 comment|/* bool; receive IP TOS w/dgram */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FLOWID
+value|69
+end_define
+
+begin_comment
+comment|/* flow id for the given socket/inp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FLOWTYPE
+value|70
+end_define
+
+begin_comment
+comment|/* flow type (M_HASHTYPE) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RSSCPUID
+value|71
+end_define
+
+begin_comment
+comment|/* RSS flowid -> CPU id mapping */
+end_comment
+
 begin_comment
 comment|/* IPv4 Source Filter Multicast API [RFC3678] */
 end_comment
