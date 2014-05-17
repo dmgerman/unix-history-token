@@ -1093,7 +1093,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|Lst_EnQueue
+name|Lst_EnQueueOnce
 argument_list|(
 name|l
 argument_list|,

@@ -849,6 +849,17 @@ begin_comment
 comment|/* Do not compare commands in .meta file */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OP_LSTAT
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Use lstat rather that stat */
+end_comment
+
 begin_comment
 comment|/* Attributes applied by PMake */
 end_comment

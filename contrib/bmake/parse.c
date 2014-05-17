@@ -354,6 +354,9 @@ comment|/* .INTERRUPT */
 name|Libs
 block|,
 comment|/* .LIBS */
+name|Lstat
+block|,
+comment|/* .LSTAT */
 name|Meta
 block|,
 comment|/* .META */
@@ -752,6 +755,14 @@ block|,
 name|Libs
 block|,
 literal|0
+block|}
+block|,
+block|{
+literal|".LSTAT"
+block|,
+name|Lstat
+block|,
+name|OP_LSTAT
 block|}
 block|,
 block|{

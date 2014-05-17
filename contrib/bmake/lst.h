@@ -584,6 +584,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Same but only if not on list */
+end_comment
+
+begin_function_decl
+name|ReturnStatus
+name|Lst_EnQueueOnce
+parameter_list|(
+name|Lst
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Remove an element from head of queue */
 end_comment
 
