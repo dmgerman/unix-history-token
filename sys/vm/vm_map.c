@@ -7935,9 +7935,11 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"vm_map_protect: object %p overcharged\n"
+literal|"vm_map_protect: object %p overcharged (entry %p)"
 operator|,
 name|obj
+operator|,
+name|current
 operator|)
 argument_list|)
 expr_stmt|;
