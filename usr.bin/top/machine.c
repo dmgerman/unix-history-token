@@ -265,6 +265,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* TOP_JID_LEN based on max of 999999 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOP_JID_LEN
+value|7
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|jidlength
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -383,7 +401,7 @@ name|char
 name|io_header
 index|[]
 init|=
-literal|"  PID%s %-*.*s   VCSW  IVCSW   READ  WRITE  FAULT  TOTAL PERCENT COMMAND"
+literal|"  PID%*s %-*.*s   VCSW  IVCSW   READ  WRITE  FAULT  TOTAL PERCENT COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -392,7 +410,7 @@ define|#
 directive|define
 name|io_Proc_format
 define|\
-value|"%5d%s %-*.*s %6ld %6ld %6ld %6ld %6ld %6ld %6.2f%% %.*s"
+value|"%5d%*s %-*.*s %6ld %6ld %6ld %6ld %6ld %6ld %6.2f%% %.*s"
 end_define
 
 begin_decl_stmt
@@ -401,7 +419,7 @@ name|char
 name|smp_header_thr
 index|[]
 init|=
-literal|"  PID%s %-*.*s  THR PRI NICE   SIZE    RES STATE   C   TIME %7s COMMAND"
+literal|"  PID%*s %-*.*s  THR PRI NICE   SIZE    RES STATE   C   TIME %7s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -411,7 +429,7 @@ name|char
 name|smp_header
 index|[]
 init|=
-literal|"  PID%s %-*.*s "
+literal|"  PID%*s %-*.*s "
 literal|"PRI NICE   SIZE    RES STATE   C   TIME %7s COMMAND"
 decl_stmt|;
 end_decl_stmt
@@ -421,7 +439,7 @@ define|#
 directive|define
 name|smp_Proc_format
 define|\
-value|"%5d%s %-*.*s %s%3d %4s%7s %6s %-6.6s %2d%7s %6.2f%% %.*s"
+value|"%5d%*s %-*.*s %s%3d %4s%7s %6s %-6.6s %2d%7s %6.2f%% %.*s"
 end_define
 
 begin_decl_stmt
@@ -430,7 +448,7 @@ name|char
 name|up_header_thr
 index|[]
 init|=
-literal|"  PID%s %-*.*s  THR PRI NICE   SIZE    RES STATE    TIME %7s COMMAND"
+literal|"  PID%*s %-*.*s  THR PRI NICE   SIZE    RES STATE    TIME %7s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,7 +458,7 @@ name|char
 name|up_header
 index|[]
 init|=
-literal|"  PID%s %-*.*s "
+literal|"  PID%*s %-*.*s "
 literal|"PRI NICE   SIZE    RES STATE    TIME %7s COMMAND"
 decl_stmt|;
 end_decl_stmt
@@ -450,7 +468,7 @@ define|#
 directive|define
 name|up_Proc_format
 define|\
-value|"%5d%s %-*.*s %s%3d %4s%7s %6s %-6.6s%.0d%7s %6.2f%% %.*s"
+value|"%5d%*s %-*.*s %s%3d %4s%7s %6s %-6.6s%.0d%7s %6.2f%% %.*s"
 end_define
 
 begin_comment
@@ -1849,6 +1867,24 @@ name|char
 modifier|*
 name|prehead
 decl_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|jail
+condition|)
+name|jidlength
+operator|=
+name|TOP_JID_LEN
+operator|+
+literal|1
+expr_stmt|;
+comment|/* +1 for extra left space. */
+else|else
+name|jidlength
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|displaymode
@@ -1893,6 +1929,8 @@ argument_list|)
 argument_list|,
 name|prehead
 argument_list|,
+name|jidlength
+argument_list|,
 name|ps
 operator|.
 name|jail
@@ -1934,6 +1972,8 @@ name|Header
 argument_list|)
 argument_list|,
 name|prehead
+argument_list|,
+name|jidlength
 argument_list|,
 name|ps
 operator|.
@@ -4034,7 +4074,9 @@ index|]
 decl_stmt|,
 name|jid_buf
 index|[
-literal|6
+name|TOP_JID_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
@@ -4890,14 +4932,11 @@ argument_list|(
 name|jid_buf
 argument_list|)
 argument_list|,
-literal|" %*d"
+literal|"%*d"
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|jid_buf
-argument_list|)
+name|jidlength
 operator|-
-literal|3
+literal|1
 argument_list|,
 name|pp
 operator|->
@@ -5067,6 +5106,8 @@ argument_list|,
 name|pp
 operator|->
 name|ki_pid
+argument_list|,
+name|jidlength
 argument_list|,
 name|jid_buf
 argument_list|,
@@ -5245,6 +5286,8 @@ argument_list|,
 name|pp
 operator|->
 name|ki_pid
+argument_list|,
+name|jidlength
 argument_list|,
 name|jid_buf
 argument_list|,
