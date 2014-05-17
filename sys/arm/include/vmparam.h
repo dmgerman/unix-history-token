@@ -228,14 +228,14 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * we support 2 free lists:  *  *	- DEFAULT for all systems  *	- ISADMA for the ISA DMA range on Sharks only  */
+comment|/*  * We need just one free list:  DEFAULT.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VM_NFREELIST
-value|2
+value|1
 end_define
 
 begin_define
@@ -243,13 +243,6 @@ define|#
 directive|define
 name|VM_FREELIST_DEFAULT
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_FREELIST_ISADMA
-value|1
 end_define
 
 begin_comment
