@@ -1428,11 +1428,7 @@ end_define
 begin_elif
 elif|#
 directive|elif
-operator|(
 name|ARM_MMU_GENERIC
-operator|+
-name|ARM_MMU_SA1
-operator|)
 operator|!=
 literal|0
 end_elif
@@ -2091,17 +2087,14 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
-name|ARM_MMU_SA1
-operator|==
-literal|1
-operator|)
-operator|&&
-operator|(
-name|ARM_NMMUS
-operator|==
-literal|1
-operator|)
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
+operator|||
+name|ARM_ARCH_6
+operator|||
+name|ARM_ARCH_7A
 end_if
 
 begin_define
@@ -2117,41 +2110,10 @@ directive|define
 name|PMAP_INCLUDE_PTE_SYNC
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|CPU_XSCALE_81342
-argument_list|)
-operator|||
-name|ARM_ARCH_6
-operator|||
-name|ARM_ARCH_7A
-end_elif
-
-begin_define
-define|#
-directive|define
-name|PMAP_NEEDS_PTE_SYNC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMAP_INCLUDE_PTE_SYNC
-end_define
-
-begin_elif
-elif|#
-directive|elif
-operator|(
-name|ARM_MMU_SA1
-operator|==
-literal|0
-operator|)
-end_elif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -2694,8 +2656,6 @@ operator|+
 name|ARM_MMU_V6
 operator|+
 name|ARM_MMU_V7
-operator|+
-name|ARM_MMU_SA1
 operator|)
 operator|!=
 literal|0
@@ -2738,29 +2698,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_ARM8
-argument_list|)
-end_if
-
-begin_function_decl
-name|void
-name|pmap_pte_init_arm8
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -2852,32 +2789,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (ARM_MMU_GENERIC + ARM_MMU_SA1) != 0 */
-end_comment
-
-begin_if
-if|#
-directive|if
-comment|/* ARM_MMU_SA1 == */
-literal|1
-end_if
-
-begin_function_decl
-name|void
-name|pmap_pte_init_sa1
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ARM_MMU_SA1 == 1 */
+comment|/* (ARM_MMU_GENERIC + ARM_MMU_V6 + ARM_MMU_V7) != 0 */
 end_comment
 
 begin_if

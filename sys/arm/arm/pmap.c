@@ -1406,11 +1406,7 @@ end_function
 begin_if
 if|#
 directive|if
-operator|(
 name|ARM_MMU_GENERIC
-operator|+
-name|ARM_MMU_SA1
-operator|)
 operator|!=
 literal|0
 end_if
@@ -1544,50 +1540,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_ARM8
-argument_list|)
-end_if
-
-begin_function
-name|void
-name|pmap_pte_init_arm8
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-comment|/* 	 * ARM8 is compatible with generic, but we need to use 	 * the page tables uncached. 	 */
-name|pmap_pte_init_generic
-argument_list|()
-expr_stmt|;
-name|pte_l1_s_cache_mode_pt
-operator|=
-literal|0
-expr_stmt|;
-name|pte_l2_l_cache_mode_pt
-operator|=
-literal|0
-expr_stmt|;
-name|pte_l2_s_cache_mode_pt
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPU_ARM8 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|CPU_ARM9
 argument_list|)
 operator|&&
@@ -1650,7 +1602,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (ARM_MMU_GENERIC + ARM_MMU_SA1) != 0 */
+comment|/* ARM_MMU_GENERIC != 0 */
 end_comment
 
 begin_if
@@ -1713,59 +1665,6 @@ end_endif
 
 begin_comment
 comment|/* CPU_ARM10 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|ARM_MMU_SA1
-operator|==
-literal|1
-end_if
-
-begin_function
-name|void
-name|pmap_pte_init_sa1
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-comment|/* 	 * The StrongARM SA-1 cache does not have a write-through 	 * mode.  So, do the generic initialization, then reset 	 * the page table cache mode to B=1,C=1, and note that 	 * the PTEs need to be sync'd. 	 */
-name|pmap_pte_init_generic
-argument_list|()
-expr_stmt|;
-name|pte_l1_s_cache_mode_pt
-operator|=
-name|L1_S_B
-operator||
-name|L1_S_C
-expr_stmt|;
-name|pte_l2_l_cache_mode_pt
-operator|=
-name|L2_B
-operator||
-name|L2_C
-expr_stmt|;
-name|pte_l2_s_cache_mode_pt
-operator|=
-name|L2_B
-operator||
-name|L2_C
-expr_stmt|;
-name|pmap_needs_pte_sync
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ARM_MMU_SA1 == 1*/
 end_comment
 
 begin_if
@@ -7149,119 +7048,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|CPU_SA110
-comment|/* 	 * There are bugs in the rev K SA110.  This is a check for one 	 * of them. 	 */
-if|if
-condition|(
-name|rv
-operator|==
-literal|0
-operator|&&
-name|curcpu
-argument_list|()
-operator|->
-name|ci_arm_cputype
-operator|==
-name|CPU_ID_SA110
-operator|&&
-name|curcpu
-argument_list|()
-operator|->
-name|ci_arm_cpurev
-operator|<
-literal|3
-condition|)
-block|{
-comment|/* Always current pmap */
-if|if
-condition|(
-name|l2pte_valid
-argument_list|(
-name|pte
-argument_list|)
-condition|)
-block|{
-specifier|extern
-name|int
-name|kernel_debug
-decl_stmt|;
-if|if
-condition|(
-name|kernel_debug
-operator|&
-literal|1
-condition|)
-block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curlwp
-operator|->
-name|l_proc
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"prefetch_abort: page is already "
-literal|"mapped - pte=%p *pte=%08x\n"
-argument_list|,
-name|ptep
-argument_list|,
-name|pte
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"prefetch_abort: pc=%08lx proc=%p "
-literal|"process=%s\n"
-argument_list|,
-name|va
-argument_list|,
-name|p
-argument_list|,
-name|p
-operator|->
-name|p_comm
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"prefetch_abort: far=%08x fs=%x\n"
-argument_list|,
-name|cpu_faultaddress
-argument_list|()
-argument_list|,
-name|cpu_faultstatus
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-ifdef|#
-directive|ifdef
-name|DDB
-if|if
-condition|(
-name|kernel_debug
-operator|&
-literal|2
-condition|)
-name|Debugger
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|rv
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* CPU_SA110 */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -15126,11 +14912,7 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|ARM_MMU_GENERIC
-operator|+
-name|ARM_MMU_SA1
-operator|)
 operator|!=
 literal|0
 operator|||
@@ -15260,7 +15042,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (ARM_MMU_GENERIC + ARM_MMU_SA1) != 0 */
+comment|/* ARM_MMU_GENERIC != 0 */
 end_comment
 
 begin_if
@@ -15721,11 +15503,7 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|ARM_MMU_GENERIC
-operator|+
-name|ARM_MMU_SA1
-operator|)
 operator|!=
 literal|0
 operator|||
@@ -16019,7 +15797,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (ARM_MMU_GENERIC + ARM_MMU_SA1) != 0 */
+comment|/* ARM_MMU_GENERIC != 0 */
 end_comment
 
 begin_if

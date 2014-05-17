@@ -23,16 +23,6 @@ directive|define
 name|_ARM_XSCALE_PXAREG_H_
 end_define
 
-begin_comment
-comment|/* Borrow some register definitions from sa11x0 */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<arm/sa11x0/sa11x0_reg.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
