@@ -77,6 +77,12 @@ directive|include
 file|<dev/ofw/ofw_pci.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/fdt.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
