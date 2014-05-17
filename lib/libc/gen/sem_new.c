@@ -1417,10 +1417,12 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 name|unlink
 argument_list|(
 name|path
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
