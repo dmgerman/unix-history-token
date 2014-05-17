@@ -671,7 +671,7 @@ literal|"%-16s %-32s %14s\n"
 argument_list|,
 literal|"COMM"
 argument_list|,
-literal|"TYPE"
+literal|"RESOURCE"
 argument_list|,
 literal|"VALUE        "
 argument_list|)
