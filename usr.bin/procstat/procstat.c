@@ -84,13 +84,15 @@ name|kflag
 decl_stmt|,
 name|lflag
 decl_stmt|,
-name|sflag
+name|rflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|int
+name|sflag
+decl_stmt|,
 name|tflag
 decl_stmt|,
 name|vflag
@@ -106,6 +108,8 @@ decl_stmt|,
 name|nflag
 decl_stmt|,
 name|Cflag
+decl_stmt|,
+name|Hflag
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +125,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: procstat [-h] [-C] [-M core] [-N system] "
+literal|"usage: procstat [-CHhn] [-M core] [-N system] "
 literal|"[-w interval] \n"
 argument_list|)
 expr_stmt|;
@@ -130,7 +134,14 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"                [-b | -c | -e | -f | -i | -j | -k | "
-literal|"-l | -s | -t | -v | -x] [-a | pid | core ...]\n"
+literal|"-l | -r | -s | -t | -v | -x]\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"                [-a | pid | core ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -248,6 +259,18 @@ condition|(
 name|lflag
 condition|)
 name|procstat_rlimit
+argument_list|(
+name|prstat
+argument_list|,
+name|kipp
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rflag
+condition|)
+name|procstat_rusage
 argument_list|(
 name|prstat
 argument_list|,
@@ -513,7 +536,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CN:M:abcefijklhstvw:x"
+literal|"CHN:M:abcefijklhrstvw:x"
 argument_list|)
 operator|)
 operator|!=
@@ -530,6 +553,13 @@ case|case
 literal|'C'
 case|:
 name|Cflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'H'
+case|:
+name|Hflag
 operator|++
 expr_stmt|;
 break|break;
@@ -623,6 +653,13 @@ case|case
 literal|'h'
 case|:
 name|hflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|rflag
 operator|++
 expr_stmt|;
 break|break;
@@ -738,6 +775,8 @@ literal|0
 operator|)
 operator|+
 name|lflag
+operator|+
+name|rflag
 operator|+
 name|sflag
 operator|+
