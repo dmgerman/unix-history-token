@@ -4540,6 +4540,10 @@ operator|.
 name|clear
 argument_list|)
 expr_stmt|;
+name|busy
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 name|free
