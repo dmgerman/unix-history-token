@@ -58787,9 +58787,9 @@ name|enc
 index|[]
 init|=
 block|{
-literal|"ftosis"
+literal|"ftosizs"
 block|,
-literal|"ftouis"
+literal|"ftouizs"
 block|,
 literal|"fsitos"
 block|,
@@ -58799,9 +58799,9 @@ literal|"fcvtsd"
 block|,
 literal|"fcvtds"
 block|,
-literal|"ftosid"
+literal|"ftosizd"
 block|,
-literal|"ftouid"
+literal|"ftouizd"
 block|,
 literal|"fsitod"
 block|,
