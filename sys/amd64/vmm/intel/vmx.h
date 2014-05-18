@@ -117,7 +117,7 @@ comment|/* 	 * XXX todo debug registers and fpu state 	 */
 name|int
 name|inst_fail_status
 decl_stmt|;
-comment|/* 	 * The pmap needs to be deactivated in vmx_exit_guest() 	 * so keep a copy of the 'pmap' in each vmxctx. 	 */
+comment|/* 	 * The pmap needs to be deactivated in vmx_enter_guest() 	 * so keep a copy of the 'pmap' in each vmxctx. 	 */
 name|struct
 name|pmap
 modifier|*
@@ -454,15 +454,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vmx_exit_guest
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vmx_call_isr
 parameter_list|(
 name|uintptr_t
@@ -490,6 +481,14 @@ name|cr4
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|vmx_exit_guest
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
