@@ -622,7 +622,7 @@ name|ret
 decl_stmt|;
 asm|__asm __volatile("1: ldrex %0, [%1]\n"
 literal|"cmp %0, %2\n"
-literal|"it ne\n"
+literal|"itt ne\n"
 literal|"movne %0, #0\n"
 literal|"bne 2f\n"
 literal|"strex %0, %3, [%1]\n"
