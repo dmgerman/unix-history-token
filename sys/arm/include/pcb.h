@@ -159,8 +159,16 @@ name|pcb_vfpcpu
 decl_stmt|;
 comment|/* VP/NEON last cpu */
 block|}
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
+
+begin_comment
+comment|/*  		 * We need the PCB to be aligned on 8 bytes, as we may 		 * access it using ldrd/strd, and some CPUs require it 		 * to by aligned on 8 bytes. 		 */
+end_comment
 
 begin_comment
 comment|/*  * No additional data for core dumps.  */
