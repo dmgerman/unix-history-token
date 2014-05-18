@@ -606,6 +606,18 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|OP_VMX2
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|OP_0fae
 parameter_list|(
 name|int
@@ -1976,6 +1988,13 @@ define|#
 directive|define
 name|VM
 value|{ OP_VMX, q_mode }
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM2
+value|{ OP_VMX2, q_mode }
 end_define
 
 begin_define
@@ -16440,13 +16459,15 @@ block|}
 block|,
 comment|/* See OP_VMX.  */
 block|{
-literal|"vmptrst"
+literal|""
 block|,
 block|{
-name|Mq
+name|VM2
 block|}
 block|}
-block|,   }
+block|,
+comment|/* See OP_VMX2.  */
+block|}
 block|,
 comment|/* GRP11_C6 */
 block|{
@@ -39919,6 +39940,62 @@ expr_stmt|;
 name|OP_E
 argument_list|(
 name|bytemode
+argument_list|,
+name|sizeflag
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|OP_VMX2
+parameter_list|(
+name|int
+name|bytemode
+parameter_list|,
+name|int
+name|sizeflag
+parameter_list|)
+block|{
+if|if
+condition|(
+name|modrm
+operator|.
+name|mod
+operator|==
+literal|3
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|obuf
+argument_list|,
+literal|"rdseed"
+argument_list|)
+expr_stmt|;
+name|OP_E
+argument_list|(
+name|v_mode
+argument_list|,
+name|sizeflag
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|strcpy
+argument_list|(
+name|obuf
+argument_list|,
+literal|"vmptrst"
+argument_list|)
+expr_stmt|;
+name|OP_M
+argument_list|(
+name|q_mode
 argument_list|,
 name|sizeflag
 argument_list|)
