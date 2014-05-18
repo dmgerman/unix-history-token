@@ -4538,6 +4538,15 @@ name|m_pkthdr
 operator|.
 name|flowid
 expr_stmt|;
+name|inp
+operator|->
+name|inp_flowtype
+operator|=
+name|M_HASHTYPE_GET
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef

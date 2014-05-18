@@ -3302,6 +3302,15 @@ name|m_pkthdr
 operator|.
 name|flowid
 expr_stmt|;
+name|inp
+operator|->
+name|inp_flowtype
+operator|=
+name|M_HASHTYPE_GET
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Install in the reservation hash table for now, but don't yet 	 * install a connection group since the full 4-tuple isn't yet 	 * configured. 	 */
 name|inp
