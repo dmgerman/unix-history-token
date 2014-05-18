@@ -2191,18 +2191,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* 			 * It is possible that 'vmmctl' or some other process 			 * has transitioned the vcpu to CANNOT_RUN state right 			 * before we tried to transition it to RUNNING. 			 * 			 * This is expected to be temporary so just retry. 			 */
-if|if
-condition|(
-name|errno
-operator|==
-name|EBUSY
-condition|)
-continue|continue;
-else|else
 break|break;
-block|}
 name|prevcpu
 operator|=
 name|vcpu

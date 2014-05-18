@@ -761,6 +761,8 @@ argument_list|,
 name|vcpu
 argument_list|,
 name|VCPU_FROZEN
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 if|if
@@ -817,6 +819,8 @@ argument_list|,
 name|vcpu
 argument_list|,
 name|VCPU_FROZEN
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 if|if
@@ -846,6 +850,8 @@ argument_list|,
 name|vcpu
 argument_list|,
 name|VCPU_IDLE
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1850,6 +1856,8 @@ argument_list|,
 name|vcpu
 argument_list|,
 name|VCPU_IDLE
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 block|}
@@ -1883,6 +1891,8 @@ argument_list|,
 name|vcpu
 argument_list|,
 name|VCPU_IDLE
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 block|}
