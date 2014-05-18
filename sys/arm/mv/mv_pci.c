@@ -938,7 +938,7 @@ name|devmap
 operator|->
 name|pd_cache
 operator|=
-name|PTE_NOCACHE
+name|PTE_DEVICE
 expr_stmt|;
 name|devmap
 operator|++
@@ -985,7 +985,7 @@ name|devmap
 operator|->
 name|pd_cache
 operator|=
-name|PTE_NOCACHE
+name|PTE_DEVICE
 expr_stmt|;
 return|return
 operator|(

@@ -395,7 +395,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 comment|/* 	 * Map the on-board devices VA == PA so that we can access them 	 * with the MMU on or off. 	 */
@@ -414,7 +414,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -432,7 +432,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -449,7 +449,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{

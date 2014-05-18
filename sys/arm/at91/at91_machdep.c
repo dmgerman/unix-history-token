@@ -405,7 +405,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 comment|/* There's a notion that we should do the rest of these lazily. */
@@ -423,7 +423,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -438,7 +438,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 comment|/* 	 * The next two should be good for the 9260, 9261 and 9G20 since 	 * addresses mapping is the same. 	 */
@@ -454,7 +454,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -469,7 +469,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 comment|/* 	 * The next should be good for the 9G45. 	 */
@@ -485,7 +485,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{

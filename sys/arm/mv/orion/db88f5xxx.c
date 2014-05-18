@@ -121,32 +121,32 @@ comment|/* SoC integrated peripherals registers range */
 end_comment
 
 begin_comment
-unit|MV_BASE, 		MV_PHYS_BASE, 		MV_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_NOCACHE, 	}, 	{
+unit|MV_BASE, 		MV_PHYS_BASE, 		MV_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_DEVICE, 	}, 	{
 comment|/* PCIE I/O */
 end_comment
 
 begin_comment
-unit|MV_PCIE_IO_BASE, 		MV_PCIE_IO_PHYS_BASE, 		MV_PCIE_IO_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_NOCACHE, 	}, 	{
+unit|MV_PCIE_IO_BASE, 		MV_PCIE_IO_PHYS_BASE, 		MV_PCIE_IO_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_DEVICE, 	}, 	{
 comment|/* PCIE Memory */
 end_comment
 
 begin_comment
-unit|MV_PCIE_MEM_BASE, 		MV_PCIE_MEM_PHYS_BASE, 		MV_PCIE_MEM_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_NOCACHE, 	}, 	{
+unit|MV_PCIE_MEM_BASE, 		MV_PCIE_MEM_PHYS_BASE, 		MV_PCIE_MEM_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_DEVICE, 	}, 	{
 comment|/* PCI I/O */
 end_comment
 
 begin_comment
-unit|MV_PCI_IO_BASE, 		MV_PCI_IO_PHYS_BASE, 		MV_PCI_IO_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_NOCACHE, 	}, 	{
+unit|MV_PCI_IO_BASE, 		MV_PCI_IO_PHYS_BASE, 		MV_PCI_IO_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_DEVICE, 	}, 	{
 comment|/* PCI Memory */
 end_comment
 
 begin_comment
-unit|MV_PCI_MEM_BASE, 		MV_PCI_MEM_PHYS_BASE, 		MV_PCI_MEM_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_NOCACHE, 	}, 	{
+unit|MV_PCI_MEM_BASE, 		MV_PCI_MEM_PHYS_BASE, 		MV_PCI_MEM_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_DEVICE, 	}, 	{
 comment|/* 7-seg LED */
 end_comment
 
 begin_comment
-unit|MV_DEV_CS0_BASE, 		MV_DEV_CS0_PHYS_BASE, 		MV_DEV_CS0_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_NOCACHE, 	}, 	{ 0, 0, 0, 0, 0, } };
+unit|MV_DEV_CS0_BASE, 		MV_DEV_CS0_PHYS_BASE, 		MV_DEV_CS0_SIZE, 		VM_PROT_READ | VM_PROT_WRITE, 		PTE_DEVICE, 	}, 	{ 0, 0, 0, 0, 0, } };
 comment|/*  * The pci_irq_map table consists of 3 columns:  * - PCI slot number (less than zero means ANY).  * - PCI IRQ pin (less than zero means ANY).  * - PCI IRQ (less than zero marks end of table).  *  * IRQ number from the first matching entry is used to configure PCI device  */
 end_comment
 
