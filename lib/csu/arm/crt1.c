@@ -439,7 +439,7 @@ name|descsz
 operator|=
 sizeof|sizeof
 argument_list|(
-name|int32_t
+name|MACHINE_ARCH
 argument_list|)
 block|,
 operator|.
