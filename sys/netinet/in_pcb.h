@@ -438,10 +438,14 @@ literal|5
 index|]
 decl_stmt|;
 comment|/* (x) route caching / general use */
+name|uint32_t
+name|inp_flowtype
+decl_stmt|;
+comment|/* (x) M_HASHTYPE value */
 name|u_int
 name|inp_ispare
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
 comment|/* (x) route caching / user cookie / 					 *     general use */
