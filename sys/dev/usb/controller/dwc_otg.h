@@ -152,6 +152,11 @@ name|dwc_otg_cmd_t
 function_decl|)
 parameter_list|(
 name|struct
+name|dwc_otg_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
 name|dwc_otg_td
 modifier|*
 name|td
@@ -678,6 +683,9 @@ decl_stmt|;
 name|uint32_t
 name|sc_hprt_val
 decl_stmt|;
+name|uint32_t
+name|sc_xfer_complete
+decl_stmt|;
 name|uint16_t
 name|sc_active_rx_ep
 decl_stmt|;
@@ -744,16 +752,17 @@ begin_comment
 comment|/* prototypes */
 end_comment
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|driver_filter_t
+name|dwc_otg_filter_interrupt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|driver_intr_t
 name|dwc_otg_interrupt
-parameter_list|(
-name|struct
-name|dwc_otg_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int

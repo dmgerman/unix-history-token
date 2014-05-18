@@ -519,12 +519,10 @@ name|INTR_TYPE_BIO
 operator||
 name|INTR_MPSAFE
 argument_list|,
-name|NULL
+operator|&
+name|dwc_otg_filter_interrupt
 argument_list|,
-operator|(
-name|driver_intr_t
-operator|*
-operator|)
+operator|&
 name|dwc_otg_interrupt
 argument_list|,
 name|sc
