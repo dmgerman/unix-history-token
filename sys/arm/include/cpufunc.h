@@ -327,6 +327,15 @@ parameter_list|,
 name|vm_size_t
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|cf_l2cache_drain_writebuf
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/* Other functions */
 name|void
 function_decl|(
@@ -814,6 +823,14 @@ parameter_list|,
 name|s
 parameter_list|)
 value|cpufuncs.cf_l2cache_wbinv_range((a), (s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cpu_l2cache_drain_writebuf
+parameter_list|()
+value|cpufuncs.cf_l2cache_drain_writebuf()
 end_define
 
 begin_define

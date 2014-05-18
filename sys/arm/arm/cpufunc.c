@@ -427,6 +427,13 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -590,6 +597,13 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range     */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -718,6 +732,13 @@ comment|/* l2cache_inv_range    */
 name|sheeva_l2cache_wb_range
 block|,
 comment|/* l2cache_wb_range     */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -869,6 +890,13 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -1028,6 +1056,13 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|pj4b_drain_readbuf
 block|,
@@ -1208,6 +1243,13 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -1351,6 +1393,13 @@ comment|/* l2cache_inv_range	*/
 name|xscalec3_l2cache_clean_rng
 block|,
 comment|/* l2cache_wb_range	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -1510,6 +1559,13 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|fa526_flush_prefetchbuf
 block|,
@@ -1664,6 +1720,13 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range     */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|arm11x6_flush_prefetchbuf
 block|,
@@ -1822,6 +1885,13 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range     */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|arm11x6_flush_prefetchbuf
 block|,
@@ -1982,6 +2052,13 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range     */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
