@@ -2215,16 +2215,16 @@ expr_stmt|;
 if|if
 condition|(
 name|start
-operator|+
+operator|>
+name|ULONG_MAX
+operator|-
 name|amask
-operator|<
-name|start
 condition|)
 block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"start+amask wrapped around\n"
+literal|"start+amask would wrap around\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2312,18 +2312,16 @@ condition|(
 name|s
 operator|->
 name|r_start
-operator|+
+operator|>
+name|ULONG_MAX
+operator|-
 name|amask
-operator|<
-name|s
-operator|->
-name|r_start
 condition|)
 block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"s->r_start (%#lx) + amask (%#lx) wrapped\n"
+literal|"s->r_start (%#lx) + amask (%#lx) too large\n"
 operator|,
 name|s
 operator|->
