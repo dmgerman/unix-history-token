@@ -314,6 +314,20 @@ literal|0x18
 block|}
 block|,
 block|{
+literal|0x103c
+block|,
+literal|0x3301
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"HP iLO serial port"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x11c1
 block|,
 literal|0x0480
