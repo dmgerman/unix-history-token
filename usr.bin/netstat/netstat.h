@@ -155,6 +155,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|Rflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show flowid / RSS information */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|sflag
 decl_stmt|;
 end_decl_stmt
