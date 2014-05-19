@@ -13583,7 +13583,7 @@ name|fhp
 operator|->
 name|fh_fid
 argument_list|,
-name|LK_EXCLUSIVE
+name|lktype
 argument_list|,
 name|vpp
 argument_list|)
@@ -13700,27 +13700,6 @@ index|]
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-operator|&&
-name|lktype
-operator|==
-name|LK_SHARED
-condition|)
-comment|/* 		 * It would be much better to pass lktype to VFS_FHTOVP(), 		 * but this will have to do until VFS_FHTOVP() has a lock 		 * type argument like VFS_VGET(). 		 */
-name|NFSVOPLOCK
-argument_list|(
-operator|*
-name|vpp
-argument_list|,
-name|LK_DOWNGRADE
-operator||
-name|LK_RETRY
-argument_list|)
-expr_stmt|;
 name|NFSEXITCODE
 argument_list|(
 name|error
