@@ -4979,6 +4979,8 @@ modifier|*
 name|vme
 decl_stmt|;
 name|int
+name|cpl
+decl_stmt|,
 name|error
 decl_stmt|,
 name|inst_length
@@ -5065,6 +5067,16 @@ name|inst_emul
 operator|.
 name|cr3
 expr_stmt|;
+name|cpl
+operator|=
+name|vme
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|cpl
+expr_stmt|;
 name|cpu_mode
 operator|=
 name|vme
@@ -5117,6 +5129,8 @@ argument_list|,
 name|cr3
 argument_list|,
 name|paging_mode
+argument_list|,
+name|cpl
 argument_list|,
 name|vie
 argument_list|)

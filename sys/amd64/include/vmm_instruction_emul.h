@@ -318,6 +318,9 @@ name|enum
 name|vie_paging_mode
 name|paging_mode
 parameter_list|,
+name|int
+name|cpl
+parameter_list|,
 name|struct
 name|vie
 modifier|*

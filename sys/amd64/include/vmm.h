@@ -1892,6 +1892,9 @@ name|enum
 name|vie_paging_mode
 name|paging_mode
 decl_stmt|;
+name|int
+name|cpl
+decl_stmt|;
 name|struct
 name|vie
 name|vie
