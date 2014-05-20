@@ -2043,6 +2043,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|urtwn_ms_delay
+parameter_list|(
+name|struct
+name|urtwn_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Aliases. */
 end_comment
@@ -6039,9 +6051,9 @@ operator|)
 operator|)
 condition|)
 break|break;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -6404,9 +6416,9 @@ operator|~
 name|R92C_HSSI_PARAM2_READ_EDGE
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1000
+name|sc
 argument_list|)
 expr_stmt|;
 name|urtwn_bb_write
@@ -6433,9 +6445,9 @@ operator||
 name|R92C_HSSI_PARAM2_READ_EDGE
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1000
+name|sc
 argument_list|)
 expr_stmt|;
 name|urtwn_bb_write
@@ -6455,9 +6467,9 @@ operator||
 name|R92C_HSSI_PARAM2_READ_EDGE
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1000
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -6596,9 +6608,9 @@ operator|(
 literal|0
 operator|)
 return|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|5
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -6704,9 +6716,9 @@ name|R92C_EFUSE_CTRL_DATA
 argument_list|)
 operator|)
 return|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|5
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -11818,9 +11830,9 @@ operator|&
 name|R92C_APS_FSMCO_PFM_ALDN
 condition|)
 break|break;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|5
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -11866,9 +11878,9 @@ argument_list|,
 literal|0x2b
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|100
+name|sc
 argument_list|)
 expr_stmt|;
 name|reg
@@ -11901,9 +11913,9 @@ operator||
 name|R92C_LDOV12D_CTRL_LDV12_EN
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|100
+name|sc
 argument_list|)
 expr_stmt|;
 name|urtwn_write_1
@@ -11970,9 +11982,9 @@ name|R92C_APS_FSMCO_APFM_ONMAC
 operator|)
 condition|)
 break|break;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|5
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -12077,9 +12089,9 @@ name|R92C_APSD_CTRL_OFF_STATUS
 operator|)
 condition|)
 break|break;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|5
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -12214,9 +12226,9 @@ operator|==
 literal|0x2
 condition|)
 break|break;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|10
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -12361,9 +12373,9 @@ literal|0x1
 operator|)
 condition|)
 break|break;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|10
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -12687,9 +12699,9 @@ name|R92C_SYS_FUNC_EN_CPUEN
 operator|)
 condition|)
 return|return;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|50
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -13410,9 +13422,9 @@ operator|&
 name|R92C_MCUFWDL_CHKSUM_RPT
 condition|)
 break|break;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|5
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -13509,9 +13521,9 @@ operator|&
 name|R92C_MCUFWDL_WINTINI_RDY
 condition|)
 break|break;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|5
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -14594,9 +14606,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -14946,9 +14958,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -14973,9 +14985,9 @@ argument_list|,
 literal|0x69553422
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 name|urtwn_bb_write
@@ -14990,9 +15002,9 @@ argument_list|,
 literal|0x69553420
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 name|crystalcap
@@ -15250,9 +15262,9 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Set RF_ENV output high. */
@@ -15284,9 +15296,9 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Set address and data lengths of RF registers. */
@@ -15319,9 +15331,9 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 name|reg
@@ -15353,9 +15365,9 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Write RF initialization values for this chain. */
@@ -15413,9 +15425,12 @@ name|sc
 operator|->
 name|sc_mtx
 argument_list|,
-literal|50
+name|hz
+operator|/
+literal|20
 argument_list|)
 expr_stmt|;
+comment|/* 50ms */
 continue|continue;
 block|}
 name|urtwn_rf_write
@@ -15445,9 +15460,9 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|urtwn_ms_delay
 argument_list|(
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -18405,9 +18420,12 @@ name|sc
 operator|->
 name|sc_mtx
 argument_list|,
-literal|100
+name|hz
+operator|/
+literal|10
 argument_list|)
 expr_stmt|;
+comment|/* 100ms */
 comment|/* Restore configuration. */
 if|if
 condition|(
@@ -19732,6 +19750,32 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|urtwn_ms_delay
+parameter_list|(
+name|struct
+name|urtwn_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|usb_pause_mtx
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|,
+name|hz
+operator|/
+literal|1000
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
