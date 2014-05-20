@@ -331,6 +331,13 @@ name|SOTG_TIMER_START_TMR
 value|(1U<< 15)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SOTG_MEMORY_REG
+value|0x33c
+end_define
+
 begin_comment
 comment|/* Peripheral controller specific registers */
 end_comment
@@ -1080,7 +1087,7 @@ name|SOTG_DATA_ADDR
 parameter_list|(
 name|x
 parameter_list|)
-value|(0x400 + (512 * (x)))
+value|(0x1000 + (512 * (x)))
 end_define
 
 begin_define
@@ -1090,7 +1097,7 @@ name|SOTG_ASYNC_PDT
 parameter_list|(
 name|x
 parameter_list|)
-value|(0x400 + (60 * 1024) + ((x) * 32))
+value|(0xC00 + ((x) * 32))
 end_define
 
 begin_define
@@ -1100,7 +1107,7 @@ name|SOTG_INTR_PDT
 parameter_list|(
 name|x
 parameter_list|)
-value|(0x400 + (61 * 1024) + ((x) * 32))
+value|(0x800 + ((x) * 32))
 end_define
 
 begin_define
@@ -1110,7 +1117,7 @@ name|SOTG_ISOC_PDT
 parameter_list|(
 name|x
 parameter_list|)
-value|(0x400 + (62 * 1024) + ((x) * 32))
+value|(0x400 + ((x) * 32))
 end_define
 
 begin_define
@@ -1240,6 +1247,13 @@ define|#
 directive|define
 name|SOTG_USBCMD_RS
 value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCSCRATCH
+value|0x308
 end_define
 
 begin_define
