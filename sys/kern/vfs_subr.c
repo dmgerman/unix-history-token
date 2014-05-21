@@ -9905,6 +9905,23 @@ operator|->
 name|v_holdcnt
 operator|--
 expr_stmt|;
+name|VNASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_holdcnt
+operator|>=
+name|vp
+operator|->
+name|v_usecount
+argument_list|,
+name|vp
+argument_list|,
+operator|(
+literal|"hold count less than use count"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
