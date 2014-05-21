@@ -1398,6 +1398,10 @@ parameter_list|,
 name|struct
 name|rsu_data
 modifier|*
+parameter_list|,
+name|struct
+name|usb_xfer
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1421,6 +1425,10 @@ name|rsu_start_locked
 parameter_list|(
 name|struct
 name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|usb_xfer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -9351,6 +9359,8 @@ expr_stmt|;
 name|rsu_start_locked
 argument_list|(
 name|ifp
+argument_list|,
+name|xfer
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9447,6 +9457,11 @@ name|struct
 name|rsu_data
 modifier|*
 name|data
+parameter_list|,
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer_self
 parameter_list|)
 block|{
 name|struct
@@ -10029,6 +10044,12 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|!=
+name|xfer_self
+condition|)
 name|usbd_transfer_start
 argument_list|(
 name|xfer
@@ -10083,6 +10104,8 @@ expr_stmt|;
 name|rsu_start_locked
 argument_list|(
 name|ifp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|RSU_UNLOCK
@@ -10102,6 +10125,11 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|,
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer_self
 parameter_list|)
 block|{
 name|struct
@@ -10214,6 +10242,8 @@ argument_list|,
 name|m
 argument_list|,
 name|bf
+argument_list|,
+name|xfer_self
 argument_list|)
 operator|!=
 literal|0
@@ -13052,6 +13082,8 @@ argument_list|,
 name|m
 argument_list|,
 name|bf
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
