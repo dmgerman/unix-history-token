@@ -227,6 +227,12 @@ name|uint8_t
 name|channel
 decl_stmt|;
 name|uint8_t
+name|uframe
+decl_stmt|;
+name|uint8_t
+name|interval
+decl_stmt|;
+name|uint8_t
 name|error_any
 range|:
 literal|1
