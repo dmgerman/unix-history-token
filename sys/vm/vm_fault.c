@@ -4969,8 +4969,6 @@ name|dst_object
 condition|)
 block|{
 comment|/* 			 * Allocate a page in the destination object. 			 */
-do|do
-block|{
 name|dst_m
 operator|=
 name|vm_page_alloc
@@ -5020,14 +5018,6 @@ goto|goto
 name|again
 goto|;
 block|}
-block|}
-do|while
-condition|(
-name|dst_m
-operator|==
-name|NULL
-condition|)
-do|;
 name|pmap_copy_page
 argument_list|(
 name|src_m
