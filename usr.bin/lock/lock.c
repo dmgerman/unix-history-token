@@ -497,7 +497,7 @@ literal|'v'
 case|:
 name|vtylock
 operator|=
-literal|1
+literal|0x2
 expr_stmt|;
 break|break;
 case|case
@@ -925,7 +925,7 @@ expr_stmt|;
 block|}
 name|vtyunlock
 operator|=
-literal|0x2
+literal|0x1
 expr_stmt|;
 block|}
 comment|/* header info */
