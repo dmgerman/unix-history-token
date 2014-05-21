@@ -3526,6 +3526,10 @@ name|IEEE80211_ELEMID_HTCAP
 init|=
 literal|45
 block|,
+name|IEEE80211_ELEMID_QOS
+init|=
+literal|46
+block|,
 name|IEEE80211_ELEMID_RSN
 init|=
 literal|48
