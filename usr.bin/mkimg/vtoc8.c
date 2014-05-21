@@ -236,6 +236,9 @@ name|sum
 decl_stmt|;
 name|imgsz
 operator|=
+operator|(
+name|lba_t
+operator|)
 name|ncyls
 operator|*
 name|nheads
