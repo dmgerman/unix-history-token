@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vfprintf.c,v 1.55 2013/11/22 20:51:44 ca Exp $"
+literal|"@(#)$Id: vfprintf.c,v 1.55 2013-11-22 20:51:44 ca Exp $"
 argument_list|)
 end_macro
 

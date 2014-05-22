@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: makemap.c,v 8.183 2013/11/22 20:51:52 ca Exp $"
+literal|"@(#)$Id: makemap.c,v 8.183 2013-11-22 20:51:52 ca Exp $"
 argument_list|)
 end_macro
 
