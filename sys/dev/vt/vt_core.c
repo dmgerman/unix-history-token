@@ -8992,8 +8992,7 @@ condition|)
 name|vw
 operator|->
 name|vw_flags
-operator|&=
-operator|~
+operator||=
 name|VWF_VTYLOCK
 expr_stmt|;
 elseif|else
@@ -9013,7 +9012,8 @@ condition|)
 name|vw
 operator|->
 name|vw_flags
-operator||=
+operator|&=
+operator|~
 name|VWF_VTYLOCK
 expr_stmt|;
 else|else
