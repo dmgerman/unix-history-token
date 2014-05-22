@@ -595,6 +595,9 @@ block|{
 name|u_int
 name|i
 decl_stmt|;
+name|u_int
+name|cpuid
+decl_stmt|;
 comment|/* 	 * Validate tunables, coerce to sensible values. 	 */
 switch|switch
 condition|(
@@ -768,7 +771,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Set up initial CPU assignments: round-robin by default. 	 * 	 * XXXRW: Need a mapping to non-contiguous IDs here. 	 */
+comment|/* 	 * Set up initial CPU assignments: round-robin by default. 	 */
+name|cpuid
+operator|=
+name|CPU_FIRST
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -782,6 +790,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|rss_table
 index|[
 name|i
@@ -789,10 +798,16 @@ index|]
 operator|.
 name|rte_cpu
 operator|=
-name|i
-operator|%
-name|rss_ncpus
+name|cpuid
 expr_stmt|;
+name|cpuid
+operator|=
+name|CPU_NEXT
+argument_list|(
+name|cpuid
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Randomize rrs_key. 	 * 	 * XXXRW: Not yet.  If nothing else, will require an rss_isbadkey() 	 * loop to check for "bad" RSS keys. 	 */
 block|}
 end_function
