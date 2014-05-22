@@ -1598,6 +1598,28 @@ begin_comment
 comment|/* undefined instruction fault */
 end_comment
 
+begin_function_decl
+name|void
+name|vm_inject_pf
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
+parameter_list|,
+name|int
+name|error_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* page fault */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
