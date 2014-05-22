@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: sysexits.h,v 8.5 2000/11/26 02:13:20 ca Exp $  *	@(#)sysexits.h	8.1 (Berkeley) 6/2/93  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: sysexits.h,v 8.5 2000-11-26 02:13:20 ca Exp $  *	@(#)sysexits.h	8.1 (Berkeley) 6/2/93  */
 end_comment
 
 begin_ifndef

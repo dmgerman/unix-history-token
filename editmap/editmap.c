@@ -52,7 +52,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: editmap.c,v 1.26 2013/11/22 20:51:26 ca Exp $"
+literal|"@(#)$Id: editmap.c,v 1.26 2013-11-22 20:51:26 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
