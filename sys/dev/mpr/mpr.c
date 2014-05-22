@@ -10016,12 +10016,6 @@ operator|&
 name|MPR_CM_FLAGS_SGE_SIMPLE
 condition|)
 block|{
-comment|//SLM-test
-name|printf
-argument_list|(
-literal|"Trying to add a chain element to an MPI SGL\n"
-argument_list|)
-expr_stmt|;
 name|mpr_dprint
 argument_list|(
 name|sc
