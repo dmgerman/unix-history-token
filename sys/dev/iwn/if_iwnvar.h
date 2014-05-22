@@ -1027,6 +1027,16 @@ name|struct
 name|task
 name|sc_radiooff_task
 decl_stmt|;
+name|struct
+name|task
+name|sc_panic_task
+decl_stmt|;
+comment|/* Taskqueue */
+name|struct
+name|taskqueue
+modifier|*
+name|sc_tq
+decl_stmt|;
 comment|/* Calibration information */
 name|struct
 name|callout
