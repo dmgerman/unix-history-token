@@ -761,6 +761,9 @@ modifier|*
 name|vmcs
 parameter_list|,
 name|int
+name|running
+parameter_list|,
+name|int
 name|seg
 parameter_list|,
 name|struct
@@ -808,6 +811,11 @@ argument_list|,
 name|seg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|running
+condition|)
 name|VMPTRLD
 argument_list|(
 name|vmcs
@@ -883,6 +891,11 @@ goto|;
 block|}
 name|done
 label|:
+if|if
+condition|(
+operator|!
+name|running
+condition|)
 name|VMCLEAR
 argument_list|(
 name|vmcs
@@ -904,6 +917,9 @@ name|struct
 name|vmcs
 modifier|*
 name|vmcs
+parameter_list|,
+name|int
+name|running
 parameter_list|,
 name|int
 name|seg
@@ -956,6 +972,11 @@ argument_list|,
 name|seg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|running
+condition|)
 name|VMPTRLD
 argument_list|(
 name|vmcs
@@ -1046,6 +1067,11 @@ expr_stmt|;
 block|}
 name|done
 label|:
+if|if
+condition|(
+operator|!
+name|running
+condition|)
 name|VMCLEAR
 argument_list|(
 name|vmcs
