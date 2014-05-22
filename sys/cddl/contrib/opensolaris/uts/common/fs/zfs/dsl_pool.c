@@ -290,8 +290,8 @@ name|zfs_dirty_data_max
 argument_list|,
 literal|0
 argument_list|,
-literal|"The dirty space limit in bytes after which new writes are halted until "
-literal|"space becomes available"
+literal|"The maximum amount of dirty data in bytes after which new writes are "
+literal|"halted until space becomes available"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -323,7 +323,7 @@ name|zfs_dirty_data_max_max
 argument_list|,
 literal|0
 argument_list|,
-literal|"The absolute cap on diry_data_max when auto calculating"
+literal|"The absolute cap on dirty_data_max when auto calculating"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -387,7 +387,7 @@ name|zfs_dirty_data_sync
 argument_list|,
 literal|0
 argument_list|,
-literal|"Force at txg if the number of dirty buffer bytes exceed this value"
+literal|"Force a txg if the number of dirty buffer bytes exceed this value"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
