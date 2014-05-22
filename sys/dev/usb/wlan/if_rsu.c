@@ -12577,7 +12577,7 @@ literal|0
 init|;
 name|ntries
 operator|!=
-literal|10
+literal|50
 condition|;
 name|ntries
 operator|++
@@ -12616,7 +12616,7 @@ if|if
 condition|(
 name|ntries
 operator|==
-literal|10
+literal|50
 condition|)
 block|{
 name|device_printf
