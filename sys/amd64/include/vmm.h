@@ -119,6 +119,12 @@ end_struct_decl
 
 begin_enum_decl
 enum_decl|enum
+name|vm_reg_name
+enum_decl|;
+end_enum_decl
+
+begin_enum_decl
+enum_decl|enum
 name|x2apic_state
 enum_decl|;
 end_enum_decl
@@ -1620,6 +1626,17 @@ begin_comment
 comment|/* page fault */
 end_comment
 
+begin_function_decl
+name|enum
+name|vm_reg_name
+name|vm_segment_name
+parameter_list|(
+name|int
+name|seg_encoding
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -1828,6 +1845,8 @@ name|VM_EXITCODE_IOAPIC_EOI
 block|,
 name|VM_EXITCODE_SUSPENDED
 block|,
+name|VM_EXITCODE_INOUT_STR
+block|,
 name|VM_EXITCODE_MAX
 block|}
 enum|;
@@ -1835,22 +1854,7 @@ end_enum
 
 begin_struct
 struct|struct
-name|vm_exit
-block|{
-name|enum
-name|vm_exitcode
-name|exitcode
-decl_stmt|;
-name|int
-name|inst_length
-decl_stmt|;
-comment|/* 0 means unknown */
-name|uint64_t
-name|rip
-decl_stmt|;
-union|union
-block|{
-struct|struct
+name|vm_inout
 block|{
 name|uint16_t
 name|bytes
@@ -1863,7 +1867,6 @@ name|in
 range|:
 literal|1
 decl_stmt|;
-comment|/* out is 0, in is 1 */
 name|uint16_t
 name|string
 range|:
@@ -1882,8 +1885,92 @@ name|eax
 decl_stmt|;
 comment|/* valid for out */
 block|}
-name|inout
 struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vm_inout_str
+block|{
+name|struct
+name|vm_inout
+name|inout
+decl_stmt|;
+comment|/* must be the first element */
+name|enum
+name|vie_cpu_mode
+name|cpu_mode
+decl_stmt|;
+name|enum
+name|vie_paging_mode
+name|paging_mode
+decl_stmt|;
+name|uint64_t
+name|rflags
+decl_stmt|;
+name|uint64_t
+name|cr0
+decl_stmt|;
+name|uint64_t
+name|cr3
+decl_stmt|;
+name|uint64_t
+name|index
+decl_stmt|;
+name|uint64_t
+name|count
+decl_stmt|;
+comment|/* rep=1 (%rcx), rep=0 (1) */
+name|int
+name|cpl
+decl_stmt|;
+name|int
+name|addrsize
+decl_stmt|;
+name|enum
+name|vm_reg_name
+name|seg_name
+decl_stmt|;
+name|struct
+name|seg_desc
+name|seg_desc
+decl_stmt|;
+name|uint64_t
+name|gla
+decl_stmt|;
+comment|/* may be set to VIE_INVALID_GLA */
+name|uint64_t
+name|gpa
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vm_exit
+block|{
+name|enum
+name|vm_exitcode
+name|exitcode
+decl_stmt|;
+name|int
+name|inst_length
+decl_stmt|;
+comment|/* 0 means unknown */
+name|uint64_t
+name|rip
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|vm_inout
+name|inout
+decl_stmt|;
+name|struct
+name|vm_inout_str
+name|inout_str
+decl_stmt|;
 struct|struct
 block|{
 name|uint64_t
