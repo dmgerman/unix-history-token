@@ -1790,6 +1790,17 @@ begin_comment
 comment|/* Last errno is already in td_errno */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_EXECVMSPC
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Execve destroyed old vmspace */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
