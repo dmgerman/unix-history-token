@@ -1977,10 +1977,9 @@ name|KERN_INVALID_ADDRESS
 case|:
 return|return
 operator|(
-name|EINVAL
+name|ENOMEM
 operator|)
 return|;
-comment|/* Sun returns ENOMEM? */
 case|case
 name|KERN_INVALID_ARGUMENT
 case|:
