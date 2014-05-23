@@ -660,5 +660,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_EXCEPTION
+argument_list|,
+literal|"number of vm exits due to exceptions"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
