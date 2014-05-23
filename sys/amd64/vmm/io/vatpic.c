@@ -2521,6 +2521,10 @@ decl_stmt|;
 name|uint8_t
 name|val
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|val
 operator|=
 operator|*
