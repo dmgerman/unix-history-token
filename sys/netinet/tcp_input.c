@@ -1251,37 +1251,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-specifier|inline
-name|tcp_fields_to_host
-parameter_list|(
-name|struct
-name|tcphdr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|TCP_SIGNATURE
 end_ifdef
-
-begin_function_decl
-specifier|static
-name|void
-specifier|inline
-name|tcp_fields_to_net
-parameter_list|(
-name|struct
-name|tcphdr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
