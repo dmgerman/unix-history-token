@@ -497,6 +497,9 @@ name|pfn
 expr_stmt|;
 name|phys
 operator|=
+operator|(
+name|uint64_t
+operator|)
 name|pfn
 operator|<<
 name|VRING_PFN
