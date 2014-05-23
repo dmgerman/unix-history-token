@@ -614,8 +614,6 @@ decl_stmt|,
 name|segbase
 decl_stmt|;
 name|int
-name|bytes
-decl_stmt|,
 name|error
 decl_stmt|,
 name|in
@@ -638,7 +636,7 @@ operator|.
 name|in
 expr_stmt|;
 comment|/* 	 * ins/outs VM exit takes precedence over the following error 	 * conditions that would ordinarily be checked by the processor: 	 * 	 * - #GP(0) due to segment being unusable. 	 * - #GP(0) due to memory operand effective address outside the limit 	 *   of the segment. 	 * - #AC(0) if alignment checking is enabled and an unaligned memory 	 *   reference is made at CPL=3 	 */
-comment|/* 	 * XXX 	 * inout string emulation only supported in 64-bit mode and only 	 * for byte instructions. 	 * 	 * The #GP(0) fault conditions described above don't apply in 	 * 64-bit mode. 	 * 	 * The #AC(0) fault condition described above does not apply 	 * because byte accesses don't have alignment constraints. 	 */
+comment|/* 	 * XXX 	 * inout string emulation only supported in 64-bit mode. 	 * 	 * The #GP(0) fault conditions described above don't apply in 	 * 64-bit mode. 	 */
 if|if
 condition|(
 name|vis
@@ -659,38 +657,6 @@ argument_list|,
 name|vis
 operator|->
 name|cpu_mode
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-name|bytes
-operator|=
-name|vis
-operator|->
-name|inout
-operator|.
-name|bytes
-expr_stmt|;
-if|if
-condition|(
-name|bytes
-operator|!=
-literal|1
-condition|)
-block|{
-name|VCPU_CTR1
-argument_list|(
-name|vm
-argument_list|,
-name|vcpuid
-argument_list|,
-literal|"ins/outs operand size %d not supported"
-argument_list|,
-name|bytes
 argument_list|)
 expr_stmt|;
 return|return
