@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscall.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<link.h>
 end_include
 
@@ -35,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_include
@@ -778,6 +790,28 @@ operator|.
 name|at_fork
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* 	 * Preresolve the symbols needed for the fork interposer.  We 	 * call _rtld_atfork_pre() and _rtld_atfork_post() with NULL 	 * argument to indicate that no actual locking inside the 	 * functions should happen.  Neither rtld compat locks nor 	 * libthr rtld locks cannot work there: 	 * - compat locks do not handle the case of two locks taken 	 *   in write mode (the signal mask for the thread is corrupted); 	 * - libthr locks would work, but locked rtld_bind_lock prevents 	 *   symbol resolution for _rtld_atfork_post. 	 */
+name|_rtld_atfork_pre
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|_rtld_atfork_post
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|_malloc_prefork
+argument_list|()
+expr_stmt|;
+name|_malloc_postfork
+argument_list|()
+expr_stmt|;
+name|syscall
+argument_list|(
+name|SYS_getpid
+argument_list|)
 expr_stmt|;
 comment|/* mask signals, also force to resolve __sys_sigprocmask PLT */
 name|_thr_signal_block
