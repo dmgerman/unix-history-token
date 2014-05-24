@@ -782,6 +782,13 @@ name|ucl_variable
 modifier|*
 name|variables
 decl_stmt|;
+name|ucl_variable_handler
+name|var_handler
+decl_stmt|;
+name|void
+modifier|*
+name|var_data
+decl_stmt|;
 name|UT_string
 modifier|*
 name|err
