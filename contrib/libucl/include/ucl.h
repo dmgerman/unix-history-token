@@ -521,12 +521,22 @@ name|ucl_object_t
 modifier|*
 name|ucl_object_typed_new
 argument_list|(
-name|unsigned
-name|int
+name|ucl_type_t
 name|type
 argument_list|)
 name|UCL_WARN_UNUSED_RESULT
 decl_stmt|;
+comment|/**  * Return the type of an object  * @return the object type  */
+name|UCL_EXTERN
+name|ucl_type_t
+name|ucl_object_type
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
 comment|/**  * Convert any string to an ucl object making the specified transformations  * @param str fixed size or NULL terminated string  * @param len length (if len is zero, than str is treated as NULL terminated)  * @param flags conversion flags  * @return new object  */
 name|UCL_EXTERN
 name|ucl_object_t
@@ -834,6 +844,23 @@ modifier|*
 name|top
 parameter_list|)
 function_decl|;
+comment|/**  * Return object identified by an index of the array `top`  * @param obj object to get a key from (must be of type UCL_ARRAY)  * @param index index to return  * @return object at the specified index or NULL if index is not found  */
+name|UCL_EXTERN
+specifier|const
+name|ucl_object_t
+modifier|*
+name|ucl_array_find_index
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|top
+parameter_list|,
+name|unsigned
+name|int
+name|index
+parameter_list|)
+function_decl|;
 comment|/**  * Removes the first element from the array `top`. Caller must unref the returned object when it is not  * needed.  * @param top array ucl object  * @return removed element or NULL if `top` is NULL or not an array  */
 name|UCL_EXTERN
 name|ucl_object_t
@@ -1058,6 +1085,24 @@ name|size_t
 name|klen
 parameter_list|)
 function_decl|;
+comment|/**  * Return object identified by dot notation string  * @param obj object to search in  * @param path dot.notation.path to the path to lookup. May use numeric .index on arrays  * @return object matched the specified path or NULL if path is not found  */
+name|UCL_EXTERN
+specifier|const
+name|ucl_object_t
+modifier|*
+name|ucl_lookup_path
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
 comment|/**  * Returns a key of an object as a NULL terminated string  * @param obj CL object  * @return key or NULL if there is no key  */
 name|UCL_EXTERN
 specifier|const
@@ -1247,6 +1292,42 @@ modifier|*
 name|ud
 parameter_list|)
 function_decl|;
+comment|/**  * Handler to detect unregistered variables  * @param data variable data  * @param len length of variable  * @param replace (out) replace value for variable  * @param replace_len (out) replace length for variable  * @param need_free (out) UCL will free `dest` after usage  * @param ud opaque userdata  * @return true if variable  */
+typedef|typedef
+name|bool
+function_decl|(
+modifier|*
+name|ucl_variable_handler
+function_decl|)
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+modifier|*
+name|replace
+parameter_list|,
+name|size_t
+modifier|*
+name|replace_len
+parameter_list|,
+name|bool
+modifier|*
+name|need_free
+parameter_list|,
+name|void
+modifier|*
+name|ud
+parameter_list|)
+function_decl|;
 comment|/**  * Register new parser variable  * @param parser parser object  * @param var variable name  * @param value variable value  */
 name|UCL_EXTERN
 name|void
@@ -1266,6 +1347,24 @@ specifier|const
 name|char
 modifier|*
 name|value
+parameter_list|)
+function_decl|;
+comment|/**  * Set handler for unknown variables  * @param parser parser structure  * @param handler desired handler  * @param ud opaque data for the handler  */
+name|UCL_EXTERN
+name|void
+name|ucl_parser_set_variables_handler
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+name|ucl_variable_handler
+name|handler
+parameter_list|,
+name|void
+modifier|*
+name|ud
 parameter_list|)
 function_decl|;
 comment|/**  * Load new chunk to a parser  * @param parser parser structure  * @param data the pointer to the beginning of a chunk  * @param len the length of a chunk  * @param err if *err is NULL it is set to parser error  * @return true if chunk has been added and false in case of error  */
