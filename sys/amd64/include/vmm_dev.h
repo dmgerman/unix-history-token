@@ -457,6 +457,36 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_gla2gpa
+block|{
+name|int
+name|vcpuid
+decl_stmt|;
+comment|/* inputs */
+name|int
+name|prot
+decl_stmt|;
+comment|/* PROT_READ or PROT_WRITE */
+name|uint64_t
+name|gla
+decl_stmt|;
+name|struct
+name|vm_guest_paging
+name|paging
+decl_stmt|;
+name|int
+name|fault
+decl_stmt|;
+comment|/* outputs */
+name|uint64_t
+name|gpa
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -493,6 +523,10 @@ block|,
 name|IOCNUM_GET_GPA_PMAP
 init|=
 literal|12
+block|,
+name|IOCNUM_GLA2GPA
+init|=
+literal|13
 block|,
 comment|/* register/state accessors */
 name|IOCNUM_SET_REGISTER
@@ -881,6 +915,14 @@ directive|define
 name|VM_GET_GPA_PMAP
 define|\
 value|_IOWR('v', IOCNUM_GET_GPA_PMAP, struct vm_gpa_pte)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GLA2GPA
+define|\
+value|_IOWR('v', IOCNUM_GLA2GPA, struct vm_gla2gpa)
 end_define
 
 begin_endif

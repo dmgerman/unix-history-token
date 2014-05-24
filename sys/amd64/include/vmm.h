@@ -2111,9 +2111,6 @@ name|uint64_t
 name|gla
 decl_stmt|;
 comment|/* may be set to VIE_INVALID_GLA */
-name|uint64_t
-name|gpa
-decl_stmt|;
 block|}
 struct|;
 end_struct
