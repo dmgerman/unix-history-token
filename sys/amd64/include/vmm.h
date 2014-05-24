@@ -1645,12 +1645,6 @@ begin_comment
 comment|/* KERNEL */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<machine/vmm_instruction_emul.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -1813,6 +1807,193 @@ end_struct
 
 begin_enum
 enum|enum
+name|vm_cpu_mode
+block|{
+name|CPU_MODE_COMPATIBILITY
+block|,
+comment|/* IA-32E mode (CS.L = 0) */
+name|CPU_MODE_64BIT
+block|,
+comment|/* IA-32E mode (CS.L = 1) */
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|vm_paging_mode
+block|{
+name|PAGING_MODE_FLAT
+block|,
+name|PAGING_MODE_32
+block|,
+name|PAGING_MODE_PAE
+block|,
+name|PAGING_MODE_64
+block|, }
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|vm_guest_paging
+block|{
+name|uint64_t
+name|cr3
+decl_stmt|;
+name|int
+name|cpl
+decl_stmt|;
+name|enum
+name|vm_cpu_mode
+name|cpu_mode
+decl_stmt|;
+name|enum
+name|vm_paging_mode
+name|paging_mode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The data structures 'vie' and 'vie_op' are meant to be opaque to the  * consumers of instruction decoding. The only reason why their contents  * need to be exposed is because they are part of the 'vm_exit' structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vie_op
+block|{
+name|uint8_t
+name|op_byte
+decl_stmt|;
+comment|/* actual opcode byte */
+name|uint8_t
+name|op_type
+decl_stmt|;
+comment|/* type of operation (e.g. MOV) */
+name|uint16_t
+name|op_flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|VIE_INST_SIZE
+value|15
+end_define
+
+begin_struct
+struct|struct
+name|vie
+block|{
+name|uint8_t
+name|inst
+index|[
+name|VIE_INST_SIZE
+index|]
+decl_stmt|;
+comment|/* instruction bytes */
+name|uint8_t
+name|num_valid
+decl_stmt|;
+comment|/* size of the instruction */
+name|uint8_t
+name|num_processed
+decl_stmt|;
+name|uint8_t
+name|rex_w
+range|:
+literal|1
+decl_stmt|,
+comment|/* REX prefix */
+name|rex_r
+range|:
+literal|1
+decl_stmt|,
+name|rex_x
+range|:
+literal|1
+decl_stmt|,
+name|rex_b
+range|:
+literal|1
+decl_stmt|,
+name|rex_present
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|mod
+range|:
+literal|2
+decl_stmt|,
+comment|/* ModRM byte */
+name|reg
+range|:
+literal|4
+decl_stmt|,
+name|rm
+range|:
+literal|4
+decl_stmt|;
+name|uint8_t
+name|ss
+range|:
+literal|2
+decl_stmt|,
+comment|/* SIB byte */
+name|index
+range|:
+literal|4
+decl_stmt|,
+name|base
+range|:
+literal|4
+decl_stmt|;
+name|uint8_t
+name|disp_bytes
+decl_stmt|;
+name|uint8_t
+name|imm_bytes
+decl_stmt|;
+name|uint8_t
+name|scale
+decl_stmt|;
+name|int
+name|base_register
+decl_stmt|;
+comment|/* VM_REG_GUEST_xyz */
+name|int
+name|index_register
+decl_stmt|;
+comment|/* VM_REG_GUEST_xyz */
+name|int64_t
+name|displacement
+decl_stmt|;
+comment|/* optional addr displacement */
+name|int64_t
+name|immediate
+decl_stmt|;
+comment|/* optional immediate operand */
+name|uint8_t
+name|decoded
+decl_stmt|;
+comment|/* set to 1 if successfully decoded */
+name|struct
+name|vie_op
+name|op
+decl_stmt|;
+comment|/* opcode description */
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
 name|vm_exitcode
 block|{
 name|VM_EXITCODE_INOUT
@@ -1898,13 +2079,9 @@ name|vm_inout
 name|inout
 decl_stmt|;
 comment|/* must be the first element */
-name|enum
-name|vie_cpu_mode
-name|cpu_mode
-decl_stmt|;
-name|enum
-name|vie_paging_mode
-name|paging_mode
+name|struct
+name|vm_guest_paging
+name|paging
 decl_stmt|;
 name|uint64_t
 name|rflags
@@ -1913,18 +2090,12 @@ name|uint64_t
 name|cr0
 decl_stmt|;
 name|uint64_t
-name|cr3
-decl_stmt|;
-name|uint64_t
 name|index
 decl_stmt|;
 name|uint64_t
 name|count
 decl_stmt|;
 comment|/* rep=1 (%rcx), rep=0 (1) */
-name|int
-name|cpl
-decl_stmt|;
 name|int
 name|addrsize
 decl_stmt|;
@@ -1991,19 +2162,9 @@ decl_stmt|;
 name|uint64_t
 name|gla
 decl_stmt|;
-name|uint64_t
-name|cr3
-decl_stmt|;
-name|enum
-name|vie_cpu_mode
-name|cpu_mode
-decl_stmt|;
-name|enum
-name|vie_paging_mode
-name|paging_mode
-decl_stmt|;
-name|int
-name|cpl
+name|struct
+name|vm_guest_paging
+name|paging
 decl_stmt|;
 name|struct
 name|vie

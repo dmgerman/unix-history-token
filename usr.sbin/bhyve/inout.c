@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vmm_instruction_emul.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vmmapi.h>
 end_include
 
@@ -619,6 +625,8 @@ name|vie_alignment_check
 argument_list|(
 name|vis
 operator|->
+name|paging
+operator|.
 name|cpl
 argument_list|,
 name|bytes
