@@ -534,6 +534,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|tcp_twrespond
+parameter_list|(
+name|struct
+name|tcptw
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * tw_pcbref() bumps the reference count on an tw in order to maintain  * stability of an tw pointer despite the tw lock being released.  */
 end_comment
@@ -1951,6 +1965,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|tcp_twrespond
 parameter_list|(
