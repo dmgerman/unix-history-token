@@ -1618,13 +1618,12 @@ name|vcpuid
 parameter_list|,
 name|int
 name|error_code
+parameter_list|,
+name|uint64_t
+name|cr2
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* page fault */
-end_comment
 
 begin_function_decl
 name|enum
@@ -1736,6 +1735,8 @@ block|,
 name|VM_REG_GUEST_GDTR
 block|,
 name|VM_REG_GUEST_EFER
+block|,
+name|VM_REG_GUEST_CR2
 block|,
 name|VM_REG_LAST
 block|}

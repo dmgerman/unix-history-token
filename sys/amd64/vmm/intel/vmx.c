@@ -9918,6 +9918,17 @@ operator|->
 name|guest_r15
 operator|)
 return|;
+case|case
+name|VM_REG_GUEST_CR2
+case|:
+return|return
+operator|(
+operator|&
+name|vmxctx
+operator|->
+name|guest_cr2
+operator|)
+return|;
 default|default:
 break|break;
 block|}
