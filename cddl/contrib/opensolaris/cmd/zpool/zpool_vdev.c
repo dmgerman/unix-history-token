@@ -1897,6 +1897,9 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|have_devid
 comment|/* 	 * For a whole disk, defer getting its devid until after labeling it. 	 */
 if|if
 condition|(
@@ -2068,6 +2071,8 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|vdev
