@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: output.c,v 1.65 2014/04/09 21:10:48 tom Exp $ */
+comment|/* $Id: output.c,v 1.67 2014/04/22 23:16:57 tom Exp $ */
 end_comment
 
 begin_include
@@ -1377,11 +1377,11 @@ specifier|static
 name|Value_t
 name|find_conflict_base
 parameter_list|(
-name|Value_t
+name|int
 name|cbase
 parameter_list|)
 block|{
-name|Value_t
+name|int
 name|i
 decl_stmt|,
 name|j
@@ -1442,12 +1442,13 @@ name|cbase
 operator|>=
 name|nconflicts
 condition|)
-return|return
-name|i
-return|;
+break|break;
 block|}
 return|return
-name|cbase
+operator|(
+name|Value_t
+operator|)
+name|i
 return|;
 block|}
 end_function
