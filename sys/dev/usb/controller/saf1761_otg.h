@@ -72,6 +72,10 @@ name|SOTG_HOST_CHANNEL_MAX
 value|(3 * 32)
 end_define
 
+begin_comment
+comment|/* Macros used for reading and writing registers */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -82,7 +86,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1((sc)->sc_io_tag, (sc)->sc_io_hdl, reg)
+value|bus_space_read_1((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg))
 end_define
 
 begin_define
@@ -94,8 +98,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_2((sc)->sc_io_tag, (sc)->sc_io_hdl, reg)
+value|({ uint16_t _temp; \   _temp = bus_space_read_2((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg)); \   le16toh(_temp); })
 end_define
 
 begin_define
@@ -107,8 +110,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_4((sc)->sc_io_tag, (sc)->sc_io_hdl, reg)
+value|({ uint32_t _temp; \   _temp = bus_space_read_4((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg)); \   le32toh(_temp); })
 end_define
 
 begin_define
@@ -123,7 +125,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|bus_space_write_1((sc)->sc_io_tag, (sc)->sc_io_hdl, reg, data)
+value|bus_space_write_1((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg), data)
 end_define
 
 begin_define
@@ -137,8 +139,7 @@ name|reg
 parameter_list|,
 name|data
 parameter_list|)
-define|\
-value|bus_space_write_2((sc)->sc_io_tag, (sc)->sc_io_hdl, reg, data)
+value|do { \   uint16_t _temp = (data); \   bus_space_write_2((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg), htole16(_temp)); \ } while (0)
 end_define
 
 begin_define
@@ -152,8 +153,7 @@ name|reg
 parameter_list|,
 name|data
 parameter_list|)
-define|\
-value|bus_space_write_4((sc)->sc_io_tag, (sc)->sc_io_hdl, reg, data)
+value|do { \   uint32_t _temp = (data); \   bus_space_write_4((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg), htole32(_temp)); \ } while (0)
 end_define
 
 begin_struct_decl
