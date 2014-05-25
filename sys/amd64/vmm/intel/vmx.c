@@ -8317,13 +8317,6 @@ argument_list|,
 name|vis
 argument_list|)
 expr_stmt|;
-name|vis
-operator|->
-name|gla
-operator|=
-name|vmcs_gla
-argument_list|()
-expr_stmt|;
 block|}
 break|break;
 case|case

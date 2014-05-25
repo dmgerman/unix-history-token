@@ -2107,10 +2107,6 @@ name|struct
 name|seg_desc
 name|seg_desc
 decl_stmt|;
-name|uint64_t
-name|gla
-decl_stmt|;
-comment|/* may be set to VIE_INVALID_GLA */
 block|}
 struct|;
 end_struct
