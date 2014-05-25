@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: defs.h,v 1.47 2014/04/09 21:23:45 Rick.Spates Exp $ */
+comment|/* $Id: defs.h,v 1.49 2014/04/22 23:34:34 tom Exp $ */
 end_comment
 
 begin_ifdef
@@ -2323,6 +2323,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_PRINTFLIKE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC_PRINTFLIKE
+parameter_list|(
+name|fmt
+parameter_list|,
+name|var
+parameter_list|)
+end_define
+
+begin_comment
+comment|/*nothing*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* closure.c */
 end_comment
@@ -3222,8 +3248,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|GCC_PRINTFLIKE
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|extern
@@ -3549,6 +3584,16 @@ begin_function_decl
 specifier|extern
 name|void
 name|output_leaks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|mstring_leaks
 parameter_list|(
 name|void
 parameter_list|)

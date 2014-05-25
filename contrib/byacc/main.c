@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.49 2014/04/09 21:25:20 Rick.Spates Exp $ */
+comment|/* $Id: main.c,v 1.50 2014/04/22 23:34:47 tom Exp $ */
 end_comment
 
 begin_include
@@ -821,6 +821,9 @@ name|lalr_leaks
 argument_list|()
 expr_stmt|;
 name|mkpar_leaks
+argument_list|()
+expr_stmt|;
+name|mstring_leaks
 argument_list|()
 expr_stmt|;
 name|output_leaks
