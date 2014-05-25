@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000-2011 Dag-Erling SmÃ¸rgrav  * Copyright (c) 2013 Michael Gmelin<freebsd@grem.de>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2000-2014 Dag-Erling SmÃ¸rgrav  * Copyright (c) 2013 Michael Gmelin<freebsd@grem.de>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|MINBUFSIZE
-value|4096
+value|16384
 end_define
 
 begin_define
@@ -132,6 +132,7 @@ comment|/* Option flags */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|A_flag
 decl_stmt|;
@@ -142,6 +143,7 @@ comment|/*    -A: do not follow 302 redirects */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|a_flag
 decl_stmt|;
@@ -152,6 +154,7 @@ comment|/*    -a: auto retry */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|B_size
 decl_stmt|;
@@ -162,6 +165,7 @@ comment|/*    -B: buffer size */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|b_flag
 decl_stmt|;
@@ -172,6 +176,7 @@ comment|/*!   -b: workaround TCP bug */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|c_dirname
@@ -183,6 +188,7 @@ comment|/*    -c: remote directory */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|d_flag
 decl_stmt|;
@@ -193,6 +199,7 @@ comment|/*    -d: direct connection */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|F_flag
 decl_stmt|;
@@ -203,6 +210,7 @@ comment|/*    -F: restart without checking mtime  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|f_filename
@@ -214,6 +222,7 @@ comment|/*    -f: file to fetch */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|h_hostname
@@ -225,16 +234,18 @@ comment|/*    -h: host to fetch from */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|i_flag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    -i: specify input file for mtime comparison */
+comment|/*    -i: specify file for mtime comparison */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|i_filename
@@ -246,6 +257,7 @@ comment|/*        name of input file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|l_flag
 decl_stmt|;
@@ -256,6 +268,7 @@ comment|/*    -l: link rather than copy file: URLs */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|m_flag
 decl_stmt|;
@@ -266,6 +279,7 @@ comment|/* -[Mm]: mirror mode */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|N_filename
@@ -277,6 +291,7 @@ comment|/*    -N: netrc file name */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|n_flag
 decl_stmt|;
@@ -287,6 +302,7 @@ comment|/*    -n: do not preserve modification time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|o_flag
 decl_stmt|;
@@ -297,6 +313,7 @@ comment|/*    -o: specify output file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|o_directory
 decl_stmt|;
@@ -307,6 +324,7 @@ comment|/*        output file is a directory */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|o_filename
@@ -318,6 +336,7 @@ comment|/*        name of output file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|o_stdout
 decl_stmt|;
@@ -328,6 +347,7 @@ comment|/*        output file is stdout */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|once_flag
 decl_stmt|;
@@ -338,6 +358,7 @@ comment|/*    -1: stop at first successful file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|p_flag
 decl_stmt|;
@@ -348,26 +369,29 @@ comment|/* -[Pp]: use passive FTP */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|R_flag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    -R: don't delete partially transferred files */
+comment|/*    -R: don't delete partial files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|r_flag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    -r: restart previously interrupted transfer */
+comment|/*    -r: restart previous transfer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|S_size
 decl_stmt|;
@@ -378,6 +402,7 @@ comment|/*    -S: require size to match */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|s_flag
 decl_stmt|;
@@ -388,6 +413,7 @@ comment|/*    -s: show size, don't fetch */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|T_secs
 decl_stmt|;
@@ -398,6 +424,7 @@ comment|/*    -T: transfer timeout in seconds */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|t_flag
 decl_stmt|;
@@ -408,6 +435,7 @@ comment|/*!   -t: workaround TCP bug */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|U_flag
 decl_stmt|;
@@ -418,6 +446,7 @@ comment|/*    -U: do not use high ports */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|v_level
 init|=
@@ -430,6 +459,7 @@ comment|/*    -v: verbosity level */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|v_tty
 decl_stmt|;
@@ -440,6 +470,7 @@ comment|/*        stdout is a tty */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|pid_t
 name|pgrp
 decl_stmt|;
@@ -450,6 +481,7 @@ comment|/*        our process group */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|w_secs
 decl_stmt|;
@@ -460,6 +492,7 @@ comment|/*    -w: retry delay */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|family
 init|=
@@ -472,6 +505,7 @@ comment|/* -[46]: address family to use */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sigalrm
 decl_stmt|;
@@ -482,6 +516,7 @@ comment|/* SIGALRM received */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|siginfo
 decl_stmt|;
@@ -492,6 +527,7 @@ comment|/* SIGINFO received */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sigint
 decl_stmt|;
@@ -502,6 +538,7 @@ comment|/* SIGINT received */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|ftp_timeout
 init|=
@@ -514,6 +551,7 @@ comment|/* default timeout for FTP transfers */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|http_timeout
 init|=
@@ -526,6 +564,7 @@ comment|/* default timeout for HTTP transfers */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|buf
@@ -3489,7 +3528,7 @@ name|nsb
 operator|.
 name|st_ino
 operator|!=
-name|nsb
+name|sb
 operator|.
 name|st_ino
 operator|||
@@ -3862,6 +3901,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* suck in the data */
+name|setvbuf
+argument_list|(
+name|f
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOFBF
+argument_list|,
+name|B_size
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINFO
