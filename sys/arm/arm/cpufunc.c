@@ -962,7 +962,7 @@ comment|/* CPU functions */
 name|cpufunc_id
 block|,
 comment|/* id			*/
-name|arm11_drain_writebuf
+name|armv7_drain_writebuf
 block|,
 comment|/* cpwait		*/
 comment|/* MMU functions */
@@ -972,7 +972,7 @@ comment|/* control		*/
 name|cpufunc_domains
 block|,
 comment|/* Domain		*/
-name|pj4b_setttb
+name|armv7_setttb
 block|,
 comment|/* Setttb		*/
 name|cpufunc_faultstatus
@@ -1064,16 +1064,20 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|pj4b_drain_readbuf
+name|cpufunc_nullop
 block|,
 comment|/* flush_prefetchbuf	*/
-name|arm11_drain_writebuf
+name|armv7_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|pj4b_flush_brnchtgt_all
+name|cpufunc_nullop
 block|,
 comment|/* flush_brnchtgt_C	*/
-name|pj4b_flush_brnchtgt_va
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
 block|,
 comment|/* flush_brnchtgt_E	*/
 operator|(
@@ -1090,7 +1094,7 @@ comment|/* dataabt_fixup	*/
 name|cpufunc_null_fixup
 block|,
 comment|/* prefetchabt_fixup	*/
-name|arm11_context_switch
+name|armv7_context_switch
 block|,
 comment|/* context_switch	*/
 name|pj4bv7_setup
