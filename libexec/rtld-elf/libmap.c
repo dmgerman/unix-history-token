@@ -435,7 +435,7 @@ condition|(
 name|libmap_override
 condition|)
 block|{
-comment|/* 		 * Do some character replacement to make $LIBMAP look 		 * like a text file, then parse it. 		 */
+comment|/* 		 * Do some character replacement to make $LDLIBMAP look 		 * like a text file, then parse it. 		 */
 name|libmap_override
 operator|=
 name|xstrdup
@@ -484,17 +484,16 @@ block|}
 block|}
 name|lmc_parse
 argument_list|(
-name|p
+name|libmap_override
 argument_list|,
-name|strlen
-argument_list|(
 name|p
-argument_list|)
+operator|-
+name|libmap_override
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|p
+name|libmap_override
 argument_list|)
 expr_stmt|;
 block|}
