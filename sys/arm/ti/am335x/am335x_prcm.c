@@ -948,7 +948,7 @@ end_define
 begin_decl_stmt
 name|struct
 name|ti_clock_dev
-name|ti_clk_devmap
+name|ti_am335x_clk_devmap
 index|[]
 init|=
 block|{
