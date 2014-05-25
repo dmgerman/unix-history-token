@@ -666,27 +666,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * XXX insb/insw/insd instructions not emulated at this time. 	 */
-if|if
-condition|(
-name|in
-condition|)
-block|{
-name|VCPU_CTR0
-argument_list|(
-name|vm
-argument_list|,
-name|vcpuid
-argument_list|,
-literal|"ins emulation not implemented"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
 operator|*
 name|retu
 operator|=
