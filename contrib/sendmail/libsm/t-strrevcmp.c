@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: t-strrevcmp.c,v 1.4 2013/11/22 20:51:44 ca Exp $"
+literal|"@(#)$Id: t-strrevcmp.c,v 1.4 2013-11-22 20:51:44 ca Exp $"
 argument_list|)
 end_macro
 
