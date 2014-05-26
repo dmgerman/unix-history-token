@@ -14393,6 +14393,7 @@ if|if
 condition|(
 name|locked
 condition|)
+block|{
 name|ready
 operator|=
 name|e1000_is_mphy_ready
@@ -14418,6 +14419,7 @@ argument_list|,
 name|E1000_MPHY_DIS_ACCESS
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|E1000_SUCCESS
 return|;
@@ -14622,6 +14624,7 @@ if|if
 condition|(
 name|locked
 condition|)
+block|{
 name|ready
 operator|=
 name|e1000_is_mphy_ready
@@ -14647,6 +14650,7 @@ argument_list|,
 name|E1000_MPHY_DIS_ACCESS
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|E1000_SUCCESS
 return|;
