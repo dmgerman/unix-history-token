@@ -2020,9 +2020,8 @@ name|cfg
 operator|->
 name|mode
 argument_list|,
-name|cfg
-operator|->
-name|mode
+operator|~
+literal|0
 argument_list|)
 expr_stmt|;
 name|LibAliasSetAddress
