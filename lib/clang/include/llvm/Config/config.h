@@ -34,14 +34,6 @@ file|<osreldate.h>
 end_include
 
 begin_comment
-comment|/* Define if building universal (internal helper macro) */
-end_comment
-
-begin_comment
-comment|/* #undef AC_APPLE_UNIVERSAL_BUILD */
-end_comment
-
-begin_comment
 comment|/* Bug report URL. */
 end_comment
 
@@ -2051,7 +2043,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_PREFIX
-value|""
+value|"/usr"
 end_define
 
 begin_comment
@@ -2096,6 +2088,17 @@ define|#
 directive|define
 name|LLVM_VERSION_MINOR
 value|4
+end_define
+
+begin_comment
+comment|/* Patch version of the LLVM API */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_VERSION_PATCH
+value|1
 end_define
 
 begin_comment
@@ -2188,7 +2191,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.4"
+value|"LLVM 3.4.1"
 end_define
 
 begin_comment
@@ -2203,14 +2206,6 @@ value|"llvm"
 end_define
 
 begin_comment
-comment|/* Define to the home page for this package. */
-end_comment
-
-begin_comment
-comment|/* #undef PACKAGE_URL */
-end_comment
-
-begin_comment
 comment|/* Define to the version of this package. */
 end_comment
 
@@ -2218,7 +2213,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.4"
+value|"3.4.1"
 end_define
 
 begin_comment
@@ -2288,61 +2283,6 @@ end_comment
 begin_comment
 comment|/* #undef WIN32_ELMCB_PCSTR */
 end_comment
-
-begin_comment
-comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-name|AC_APPLE_UNIVERSAL_BUILD
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-name|__BIG_ENDIAN__
-end_if
-
-begin_define
-define|#
-directive|define
-name|WORDS_BIGENDIAN
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WORDS_BIGENDIAN
-end_ifndef
-
-begin_comment
-comment|/* #  undef WORDS_BIGENDIAN */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to empty if `const' does not conform to ANSI C. */
