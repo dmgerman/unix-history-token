@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2006 Proofpoint, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: misc.h,v 1.2 2013/11/22 20:51:31 ca Exp $  */
+comment|/*  * Copyright (c) 2006 Proofpoint, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: misc.h,v 1.2 2013-11-22 20:51:31 ca Exp $  */
 end_comment
 
 begin_ifndef
