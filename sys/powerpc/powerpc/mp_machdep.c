@@ -1344,6 +1344,9 @@ name|ipi
 operator|)
 argument_list|)
 expr_stmt|;
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
 name|PIC_IPI
 argument_list|(
 name|root_pic
