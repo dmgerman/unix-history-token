@@ -417,6 +417,13 @@ argument_list|)
 block|,
 name|URTWN_DEV
 argument_list|(
+name|ASUS
+argument_list|,
+name|USBN10NANO
+argument_list|)
+block|,
+name|URTWN_DEV
+argument_list|(
 name|AZUREWAVE
 argument_list|,
 name|RTL8188CE_1
