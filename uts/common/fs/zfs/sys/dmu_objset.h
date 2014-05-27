@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -202,32 +202,38 @@ modifier|*
 name|os_zil
 decl_stmt|;
 comment|/* can change, under dsl_dir's locks: */
-name|uint8_t
+name|enum
+name|zio_checksum
 name|os_checksum
 decl_stmt|;
-name|uint8_t
+name|enum
+name|zio_compress
 name|os_compress
 decl_stmt|;
 name|uint8_t
 name|os_copies
 decl_stmt|;
-name|uint8_t
+name|enum
+name|zio_checksum
 name|os_dedup_checksum
 decl_stmt|;
-name|uint8_t
+name|boolean_t
 name|os_dedup_verify
 decl_stmt|;
-name|uint8_t
+name|zfs_logbias_op_t
 name|os_logbias
 decl_stmt|;
-name|uint8_t
+name|zfs_cache_type_t
 name|os_primary_cache
 decl_stmt|;
-name|uint8_t
+name|zfs_cache_type_t
 name|os_secondary_cache
 decl_stmt|;
-name|uint8_t
+name|zfs_sync_type_t
 name|os_sync
+decl_stmt|;
+name|zfs_redundant_metadata_type_t
+name|os_redundant_metadata
 decl_stmt|;
 comment|/* no lock needed: */
 name|struct
