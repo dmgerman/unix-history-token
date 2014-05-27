@@ -243,7 +243,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/**  * Set the current threshold at which the allocator should start  * giving blocks back to the system.  * @param allocator The allocator the set the threshold on  * @param size The threshold.  0 == unlimited.  */
+comment|/**  * Set the current threshold at which the allocator should start  * giving blocks back to the system.  * @param allocator The allocator to set the threshold on  * @param size The threshold.  0 == unlimited.  */
 name|APR_DECLARE
 argument_list|(
 argument|void

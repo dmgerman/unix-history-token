@@ -77,7 +77,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/** number of microseconds since 00:00:00 january 1, 1970 UTC */
+comment|/** number of microseconds since 00:00:00 January 1, 1970 UTC */
 typedef|typedef
 name|apr_int64_t
 name|apr_time_t
@@ -184,7 +184,7 @@ name|struct
 name|apr_time_exp_t
 name|apr_time_exp_t
 typedef|;
-comment|/**  * a structure similar to ANSI struct tm with the following differences:  *  - tm_usec isn't an ANSI field  *  - tm_gmtoff isn't an ANSI field (it's a bsdism)  */
+comment|/**  * a structure similar to ANSI struct tm with the following differences:  *  - tm_usec isn't an ANSI field  *  - tm_gmtoff isn't an ANSI field (it's a BSDism)  */
 struct|struct
 name|apr_time_exp_t
 block|{
@@ -216,11 +216,11 @@ comment|/** year since 1900 */
 name|apr_int32_t
 name|tm_year
 decl_stmt|;
-comment|/** (0-6) days since sunday */
+comment|/** (0-6) days since Sunday */
 name|apr_int32_t
 name|tm_wday
 decl_stmt|;
-comment|/** (0-365) days since jan 1 */
+comment|/** (0-365) days since January 1 */
 name|apr_int32_t
 name|tm_yday
 decl_stmt|;
@@ -234,7 +234,7 @@ name|tm_gmtoff
 decl_stmt|;
 block|}
 struct|;
-comment|/**  * convert an ansi time_t to an apr_time_t  * @param result the resulting apr_time_t  * @param input the time_t to convert  */
+comment|/**  * Convert an ansi time_t to an apr_time_t  * @param result the resulting apr_time_t  * @param input the time_t to convert  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -246,7 +246,7 @@ argument_list|,
 argument|time_t input
 argument_list|)
 empty_stmt|;
-comment|/**  * convert a time to its human readable components using an offset  * from GMT  * @param result the exploded time  * @param input the time to explode  * @param offs the number of seconds offset to apply  */
+comment|/**  * Convert a time to its human readable components using an offset  * from GMT.  * @param result the exploded time  * @param input the time to explode  * @param offs the number of seconds offset to apply  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -260,7 +260,7 @@ argument_list|,
 argument|apr_int32_t offs
 argument_list|)
 empty_stmt|;
-comment|/**  * convert a time to its human readable components in GMT timezone  * @param result the exploded time  * @param input the time to explode  */
+comment|/**  * Convert a time to its human readable components (GMT).  * @param result the exploded time  * @param input the time to explode  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -272,7 +272,7 @@ argument_list|,
 argument|apr_time_t input
 argument_list|)
 empty_stmt|;
-comment|/**  * convert a time to its human readable components in local timezone  * @param result the exploded time  * @param input the time to explode  */
+comment|/**  * Convert a time to its human readable components in the local timezone.  * @param result the exploded time  * @param input the time to explode  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -284,7 +284,7 @@ argument_list|,
 argument|apr_time_t input
 argument_list|)
 empty_stmt|;
-comment|/**  * Convert time value from human readable format to a numeric apr_time_t   * e.g. elapsed usec since epoch  * @param result the resulting imploded time  * @param input the input exploded time  */
+comment|/**  * Convert time value from human readable format to a numeric apr_time_t  * (elapsed microseconds since the epoch).  * @param result the resulting imploded time  * @param input the input exploded time  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -300,7 +300,7 @@ operator|*
 name|input
 argument_list|)
 expr_stmt|;
-comment|/**  * Convert time value from human readable format to a numeric apr_time_t that  * always represents GMT  * @param result the resulting imploded time  * @param input the input exploded time  */
+comment|/**  * Convert time value from human readable format to a numeric apr_time_t that  * always represents GMT.  * @param result the resulting imploded time  * @param input the input exploded time  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -331,7 +331,7 @@ define|#
 directive|define
 name|APR_RFC822_DATE_LEN
 value|(30)
-comment|/**  * apr_rfc822_date formats dates in the RFC822  * format in an efficient manner.  It is a fixed length  * format which requires the indicated amount of storage,  * including the trailing NUL terminator.  * @param date_str String to write to.  * @param t the time to convert   */
+comment|/**  * apr_rfc822_date formats dates in the RFC822  * format in an efficient manner.  It is a fixed length  * format which requires APR_RFC822_DATA_LEN bytes of storage,  * including the trailing NUL terminator.  * @param date_str String to write to.  * @param t the time to convert   */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -348,7 +348,7 @@ define|#
 directive|define
 name|APR_CTIME_LEN
 value|(25)
-comment|/**  * apr_ctime formats dates in the ctime() format  * in an efficient manner.  it is a fixed length format  * and requires the indicated amount of storage including  * the trailing NUL terminator.  * Unlike ANSI/ISO C ctime(), apr_ctime() does not include  * a \n at the end of the string.  * @param date_str String to write to.  * @param t the time to convert   */
+comment|/**  * apr_ctime formats dates in the ctime() format  * in an efficient manner.  It is a fixed length format  * and requires APR_CTIME_LEN bytes of storage including  * the trailing NUL terminator.  * Unlike ANSI/ISO C ctime(), apr_ctime() does not include  * a \\n at the end of the string.  * @param date_str String to write to.  * @param t the time to convert   */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -360,7 +360,7 @@ argument_list|,
 argument|apr_time_t t
 argument_list|)
 empty_stmt|;
-comment|/**  * formats the exploded time according to the format specified  * @param s string to write to  * @param retsize The length of the returned string  * @param max The maximum length of the string  * @param format The format for the time string  * @param tm The time to convert  */
+comment|/**  * Formats the exploded time according to the format specified  * @param s string to write to  * @param retsize The length of the returned string  * @param max The maximum length of the string  * @param format The format for the time string  * @param tm The time to convert  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -378,7 +378,7 @@ argument_list|,
 argument|apr_time_exp_t *tm
 argument_list|)
 empty_stmt|;
-comment|/**  * Improve the clock resolution for the lifetime of the given pool.  * Generally this is only desireable on benchmarking and other very  * time-sensitive applications, and has no impact on most platforms.  * @param p The pool to associate the finer clock resolution   */
+comment|/**  * Improve the clock resolution for the lifetime of the given pool.  * Generally this is only desirable on benchmarking and other very  * time-sensitive applications, and has no impact on most platforms.  * @param p The pool to associate the finer clock resolution   */
 name|APR_DECLARE
 argument_list|(
 argument|void

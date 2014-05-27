@@ -61,7 +61,7 @@ typedef|typedef
 name|int
 name|apr_status_t
 typedef|;
-comment|/**  * Return a human readable string describing the specified error.  * @param statcode The error code the get a string for.  * @param buf A buffer to hold the error string.  * @param bufsize Size of the buffer to hold the string.  */
+comment|/**  * Return a human readable string describing the specified error.  * @param statcode The error code to get a string for.  * @param buf A buffer to hold the error string.  * @param bufsize Size of the buffer to hold the string.  */
 name|APR_DECLARE
 argument_list|(
 argument|char *
@@ -114,7 +114,7 @@ define|#
 directive|define
 name|APR_OS_ERRSPACE_SIZE
 value|50000
-comment|/**  * APR_UTIL_ERRSPACE_SIZE is the size of the space that is reserved for  * use within apr-util. This space is reserved above that used by APR  * internally.  * @note This number MUST be smaller than APR_OS_ERRSPACE_SIZE by a  *       large enough amount that APR has sufficient room for it's  *       codes.  */
+comment|/**  * APR_UTIL_ERRSPACE_SIZE is the size of the space that is reserved for  * use within apr-util. This space is reserved above that used by APR  * internally.  * @note This number MUST be smaller than APR_OS_ERRSPACE_SIZE by a  *       large enough amount that APR has sufficient room for its  *       codes.  */
 define|#
 directive|define
 name|APR_UTIL_ERRSPACE_SIZE
@@ -124,7 +124,7 @@ define|#
 directive|define
 name|APR_OS_START_STATUS
 value|(APR_OS_START_ERROR + APR_OS_ERRSPACE_SIZE)
-comment|/**  * APR_UTIL_START_STATUS is where APR-Util starts defining it's  * status codes.  */
+comment|/**  * APR_UTIL_START_STATUS is where APR-Util starts defining its  * status codes.  */
 define|#
 directive|define
 name|APR_UTIL_START_STATUS

@@ -79,7 +79,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Apache's "replacement" for the strncpy() function. We roll our  * own to implement these specific changes:  *   (1) strncpy() doesn't always null terminate and we want it to.  *   (2) strncpy() null fills, which is bogus, esp. when copy 8byte  *       strings into 8k blocks.  *   (3) Instead of returning the pointer to the beginning of  *       the destination string, we return a pointer to the  *       terminating '\0' to allow us to "check" for truncation  *  * apr_cpystrn() follows the same call structure as strncpy().  */
+comment|/*  * Apache's "replacement" for the strncpy() function. We roll our  * own to implement these specific changes:  *   (1) strncpy() doesn't always null terminate and we want it to.  *   (2) strncpy() null fills, which is bogus, esp. when copy 8byte  *       strings into 8k blocks.  *   (3) Instead of returning the pointer to the beginning of  *       the destination string, we return a pointer to the  *       terminating '\0' to allow us to "check" for truncation  *   (4) If src is NULL, null terminate dst (empty string copy)  *  * apr_cpystrn() follows the same call structure as strncpy().  */
 end_comment
 
 begin_macro
@@ -105,6 +105,8 @@ block|{
 name|char
 modifier|*
 name|d
+init|=
+name|dst
 decl_stmt|,
 modifier|*
 name|end
@@ -122,10 +124,11 @@ name|dst
 operator|)
 return|;
 block|}
-name|d
-operator|=
-name|dst
-expr_stmt|;
+if|if
+condition|(
+name|src
+condition|)
+block|{
 name|end
 operator|=
 name|dst
@@ -165,6 +168,7 @@ operator|(
 name|d
 operator|)
 return|;
+block|}
 block|}
 block|}
 operator|*

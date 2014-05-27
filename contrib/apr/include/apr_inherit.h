@@ -20,7 +20,7 @@ comment|/**  * @file apr_inherit.h   * @brief APR File Handle Inheritance Helper
 end_comment
 
 begin_comment
-comment|/**  * Prototype for type-specific declarations of apr_foo_inherit_set   * functions.    * @remark Doxygen unwraps this macro (via doxygen.conf) to provide   * actual help for each specific occurance of apr_foo_inherit_set.  * @remark the linkage is specified for APR. It would be possible to expand  *       the macros to support other linkages.  */
+comment|/**  * Prototype for type-specific declarations of apr_foo_inherit_set   * functions.    * @remark Doxygen unwraps this macro (via doxygen.conf) to provide   * actual help for each specific occurrence of apr_foo_inherit_set.  * @remark the linkage is specified for APR. It would be possible to expand  *       the macros to support other linkages.  */
 end_comment
 
 begin_define
@@ -35,7 +35,7 @@ value|APR_DECLARE(apr_status_t) apr_##type##_inherit_set( \                     
 end_define
 
 begin_comment
-comment|/**  * Prototype for type-specific declarations of apr_foo_inherit_unset   * functions.    * @remark Doxygen unwraps this macro (via doxygen.conf) to provide   * actual help for each specific occurance of apr_foo_inherit_unset.  * @remark the linkage is specified for APR. It would be possible to expand  *       the macros to support other linkages.  */
+comment|/**  * Prototype for type-specific declarations of apr_foo_inherit_unset   * functions.    * @remark Doxygen unwraps this macro (via doxygen.conf) to provide   * actual help for each specific occurrence of apr_foo_inherit_unset.  * @remark the linkage is specified for APR. It would be possible to expand  *       the macros to support other linkages.  */
 end_comment
 
 begin_define

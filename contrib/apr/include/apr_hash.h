@@ -217,6 +217,42 @@ operator|*
 name|val
 argument_list|)
 expr_stmt|;
+comment|/**  * Get the current entry's key from the iteration state.  * @param hi The iteration state  * @return The pointer to the key  */
+name|APR_DECLARE
+argument_list|(
+argument|const void*
+argument_list|)
+name|apr_hash_this_key
+argument_list|(
+name|apr_hash_index_t
+operator|*
+name|hi
+argument_list|)
+expr_stmt|;
+comment|/**  * Get the current entry's key length from the iteration state.  * @param hi The iteration state  * @return The key length  */
+name|APR_DECLARE
+argument_list|(
+argument|apr_ssize_t
+argument_list|)
+name|apr_hash_this_key_len
+argument_list|(
+name|apr_hash_index_t
+operator|*
+name|hi
+argument_list|)
+expr_stmt|;
+comment|/**  * Get the current entry's value from the iteration state.  * @param hi The iteration state  * @return The pointer to the value  */
+name|APR_DECLARE
+argument_list|(
+argument|void*
+argument_list|)
+name|apr_hash_this_val
+argument_list|(
+name|apr_hash_index_t
+operator|*
+name|hi
+argument_list|)
+expr_stmt|;
 comment|/**  * Get the number of key/value pairs in the hash table.  * @param ht The hash table  * @return The number of key/value pairs in the hash table.  */
 name|APR_DECLARE
 argument_list|(

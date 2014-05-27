@@ -155,16 +155,9 @@ literal|1
 expr_stmt|;
 name|res
 operator|=
-name|apr_palloc
+name|apr_pmemdup
 argument_list|(
 name|a
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|res
 argument_list|,
 name|s
 argument_list|,

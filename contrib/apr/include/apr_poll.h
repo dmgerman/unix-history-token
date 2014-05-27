@@ -86,7 +86,7 @@ endif|#
 directive|endif
 comment|/* __cplusplus */
 comment|/**  * @defgroup apr_poll Poll Routines  * @ingroup APR   * @{  */
-comment|/**  * Poll options  */
+comment|/**  * @defgroup pollopts Poll options  * @ingroup apr_poll  * @{  */
 define|#
 directive|define
 name|APR_POLLIN
@@ -117,7 +117,8 @@ directive|define
 name|APR_POLLNVAL
 value|0x040
 comment|/**< Descriptor invalid */
-comment|/**  * Pollset Flags  */
+comment|/** @} */
+comment|/**  * @defgroup pollflags Pollset Flags  * @ingroup apr_poll  * @{  */
 define|#
 directive|define
 name|APR_POLLSET_THREADSAFE
@@ -138,6 +139,7 @@ directive|define
 name|APR_POLLSET_NODEFAULT
 value|0x010
 comment|/**< Do not try to use the default method if                                       * the specified non-default method cannot be                                       * used                                       */
+comment|/** @} */
 comment|/**  * Pollset Methods  */
 typedef|typedef
 enum|enum
@@ -158,7 +160,10 @@ name|APR_POLLSET_EPOLL
 block|,
 comment|/**< Poll uses epoll method */
 name|APR_POLLSET_POLL
+block|,
 comment|/**< Poll uses poll method */
+name|APR_POLLSET_AIO_MSGQ
+comment|/**< Poll uses z/OS asio method */
 block|}
 name|apr_pollset_method_e
 typedef|;
@@ -242,7 +247,7 @@ name|struct
 name|apr_pollset_t
 name|apr_pollset_t
 typedef|;
-comment|/**  * Set up a pollset object  * @param pollset  The pointer in which to return the newly created object   * @param size The maximum number of descriptors that this pollset can hold  * @param p The pool from which to allocate the pollset  * @param flags Optional flags to modify the operation of the pollset.  *  * @remark If flags contains APR_POLLSET_THREADSAFE, then a pollset is  *         created on which it is safe to make concurrent calls to  *         apr_pollset_add(), apr_pollset_remove() and apr_pollset_poll()  *         from separate threads.  This feature is only supported on some  *         platforms; the apr_pollset_create() call will fail with  *         APR_ENOTIMPL on platforms where it is not supported.  * @remark If flags contains APR_POLLSET_WAKEABLE, then a pollset is  *         created with an additional internal pipe object used for the  *         apr_pollset_wakeup() call. The actual size of pollset is  *         in that case size + 1. This feature is only supported on some  *         platforms; the apr_pollset_create() call will fail with  *         APR_ENOTIMPL on platforms where it is not supported.  * @remark If flags contains APR_POLLSET_NOCOPY, then the apr_pollfd_t  *         structures passed to apr_pollset_add() are not copied and  *         must have a lifetime at least as long as the pollset.  * @remark Some poll methods (including APR_POLLSET_KQUEUE,  *         APR_POLLSET_PORT, and APR_POLLSET_EPOLL) do not have a  *         fixed limit on the size of the pollset. For these methods,  *         the size parameter controls the maximum number of  *         descriptors that will be returned by a single call to  *         apr_pollset_poll().  */
+comment|/**  * Set up a pollset object  * @param pollset  The pointer in which to return the newly created object   * @param size The maximum number of descriptors that this pollset can hold  * @param p The pool from which to allocate the pollset  * @param flags Optional flags to modify the operation of the pollset.  *  * @remark If flags contains APR_POLLSET_THREADSAFE, then a pollset is  *         created on which it is safe to make concurrent calls to  *         apr_pollset_add(), apr_pollset_remove() and apr_pollset_poll()  *         from separate threads.  This feature is only supported on some  *         platforms; the apr_pollset_create() call will fail with  *         APR_ENOTIMPL on platforms where it is not supported.  * @remark If flags contains APR_POLLSET_WAKEABLE, then a pollset is  *         created with an additional internal pipe object used for the  *         apr_pollset_wakeup() call. The actual size of pollset is  *         in that case @a size + 1. This feature is only supported on some  *         platforms; the apr_pollset_create() call will fail with  *         APR_ENOTIMPL on platforms where it is not supported.  * @remark If flags contains APR_POLLSET_NOCOPY, then the apr_pollfd_t  *         structures passed to apr_pollset_add() are not copied and  *         must have a lifetime at least as long as the pollset.  * @remark Some poll methods (including APR_POLLSET_KQUEUE,  *         APR_POLLSET_PORT, and APR_POLLSET_EPOLL) do not have a  *         fixed limit on the size of the pollset. For these methods,  *         the size parameter controls the maximum number of  *         descriptors that will be returned by a single call to  *         apr_pollset_poll().  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -305,7 +310,7 @@ operator|*
 name|descriptor
 argument_list|)
 expr_stmt|;
-comment|/**  * Remove a descriptor from a pollset  * @param pollset The pollset from which to remove the descriptor  * @param descriptor The descriptor to remove  * @remark If the pollset has been created with APR_POLLSET_THREADSAFE  *         and thread T1 is blocked in a call to apr_pollset_poll() for  *         this same pollset that is being modified via apr_pollset_remove()  *         in thread T2, the currently executing apr_pollset_poll() call in  *         T1 will either: (1) automatically exclude the newly added descriptor  *         in the set of descriptors it is watching or (2) return immediately  *         with APR_EINTR.  Option (1) is recommended, but option (2) is  *         allowed for implementations where option (1) is impossible  *         or impractical.  * @remark apr_pollset_remove() cannot be used to remove a subset of requested  *         events for a descriptor.  The reqevents field in the apr_pollfd_t  *         parameter must contain the same value when removing as when adding.  */
+comment|/**  * Remove a descriptor from a pollset  * @param pollset The pollset from which to remove the descriptor  * @param descriptor The descriptor to remove  * @remark If the descriptor is not found, APR_NOTFOUND is returned.  * @remark If the pollset has been created with APR_POLLSET_THREADSAFE  *         and thread T1 is blocked in a call to apr_pollset_poll() for  *         this same pollset that is being modified via apr_pollset_remove()  *         in thread T2, the currently executing apr_pollset_poll() call in  *         T1 will either: (1) automatically exclude the newly added descriptor  *         in the set of descriptors it is watching or (2) return immediately  *         with APR_EINTR.  Option (1) is recommended, but option (2) is  *         allowed for implementations where option (1) is impossible  *         or impractical.  * @remark apr_pollset_remove() cannot be used to remove a subset of requested  *         events for a descriptor.  The reqevents field in the apr_pollfd_t  *         parameter must contain the same value when removing as when adding.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -322,7 +327,7 @@ operator|*
 name|descriptor
 argument_list|)
 expr_stmt|;
-comment|/**  * Block for activity on the descriptor(s) in a pollset  * @param pollset The pollset to use  * @param timeout The amount of time in microseconds to wait.  This is a  *                maximum, not a minimum.  If a descriptor is signalled, the  *                function will return before this time.  If timeout is  *                negative, the function will block until a descriptor is  *                signalled or until apr_pollset_wakeup() has been called.  * @param num Number of signalled descriptors (output parameter)  * @param descriptors Array of signalled descriptors (output parameter)  * @remark APR_EINTR will be returned if the pollset has been created with  *         APR_POLLSET_WAKEABLE, apr_pollset_wakeup() has been called while  *         waiting for activity, and there were no signalled descriptors at the  *         time of the wakeup call.  * @remark Multiple signalled conditions for the same descriptor may be reported  *         in one or more returned apr_pollfd_t structures, depending on the  *         implementation.  * @bug With versions 1.4.2 and prior on Windows, a call with no descriptors  *      and timeout will return immediately with the wrong error code.  */
+comment|/**  * Block for activity on the descriptor(s) in a pollset  * @param pollset The pollset to use  * @param timeout The amount of time in microseconds to wait.  This is a  *                maximum, not a minimum.  If a descriptor is signalled, the  *                function will return before this time.  If timeout is  *                negative, the function will block until a descriptor is  *                signalled or until apr_pollset_wakeup() has been called.  * @param num Number of signalled descriptors (output parameter)  * @param descriptors Array of signalled descriptors (output parameter)  * @remark APR_EINTR will be returned if the pollset has been created with  *         APR_POLLSET_WAKEABLE, apr_pollset_wakeup() has been called while  *         waiting for activity, and there were no signalled descriptors at the  *         time of the wakeup call.  * @remark Multiple signalled conditions for the same descriptor may be reported  *         in one or more returned apr_pollfd_t structures, depending on the  *         implementation.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -350,7 +355,7 @@ operator|*
 name|pollset
 argument_list|)
 expr_stmt|;
-comment|/**  * Poll the descriptors in the poll structure  * @param aprset The poll structure we will be using.   * @param numsock The number of descriptors we are polling  * @param nsds The number of descriptors signalled (output parameter)  * @param timeout The amount of time in microseconds to wait.  This is a  *                maximum, not a minimum.  If a descriptor is signalled, the  *                function will return before this time.  If timeout is  *                negative, the function will block until a descriptor is  *                signalled or until apr_pollset_wakeup() has been called.  * @remark The number of descriptors signalled is returned in the third argument.   *         This is a blocking call, and it will not return until either a   *         descriptor has been signalled or the timeout has expired.   * @remark The rtnevents field in the apr_pollfd_t array will only be filled-  *         in if the return value is APR_SUCCESS.  * @bug With versions 1.4.2 and prior on Windows, a call with no descriptors  *      and timeout will return immediately with the wrong error code.  */
+comment|/**  * Poll the descriptors in the poll structure  * @param aprset The poll structure we will be using.   * @param numsock The number of descriptors we are polling  * @param nsds The number of descriptors signalled (output parameter)  * @param timeout The amount of time in microseconds to wait.  This is a  *                maximum, not a minimum.  If a descriptor is signalled, the  *                function will return before this time.  If timeout is  *                negative, the function will block until a descriptor is  *                signalled or until apr_pollset_wakeup() has been called.  * @remark The number of descriptors signalled is returned in the third argument.   *         This is a blocking call, and it will not return until either a   *         descriptor has been signalled or the timeout has expired.   * @remark The rtnevents field in the apr_pollfd_t array will only be filled-  *         in if the return value is APR_SUCCESS.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -388,7 +393,7 @@ argument_list|(
 name|void
 argument_list|)
 expr_stmt|;
-comment|/** Opaque structure used for pollset API */
+comment|/** Opaque structure used for pollcb API */
 typedef|typedef
 name|struct
 name|apr_pollcb_t
@@ -477,7 +482,7 @@ modifier|*
 name|descriptor
 parameter_list|)
 function_decl|;
-comment|/**  * Block for activity on the descriptor(s) in a pollcb  * @param pollcb The pollcb to use  * @param timeout The amount of time in microseconds to wait.  This is a  *                maximum, not a minimum.  If a descriptor is signalled, the  *                function will return before this time.  If timeout is  *                negative, the function will block until a descriptor is  *                signalled.  * @param func Callback function to call for each active descriptor.  * @param baton Opaque baton passed to the callback function.  * @remark Multiple signalled conditions for the same descriptor may be reported  *         in one or more calls to the callback function, depending on the  *         implementation.  * @bug With versions 1.4.2 and prior on Windows, a call with no descriptors  *      and timeout will return immediately with the wrong error code.  */
+comment|/**  * Block for activity on the descriptor(s) in a pollcb  * @param pollcb The pollcb to use  * @param timeout The amount of time in microseconds to wait.  This is a  *                maximum, not a minimum.  If a descriptor is signalled, the  *                function will return before this time.  If timeout is  *                negative, the function will block until a descriptor is  *                signalled.  * @param func Callback function to call for each active descriptor.  * @param baton Opaque baton passed to the callback function.  * @remark Multiple signalled conditions for the same descriptor may be reported  *         in one or more calls to the callback function, depending on the  *         implementation.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
