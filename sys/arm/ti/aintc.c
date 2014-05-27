@@ -694,6 +694,11 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|arm_irq_memory_barrier
+argument_list|(
+name|nb
+argument_list|)
+expr_stmt|;
 name|aintc_write_4
 argument_list|(
 name|INTC_MIR_CLEAR

@@ -415,6 +415,17 @@ begin_comment
 comment|/* v1 ICCIIDR*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GIC_LAST_IPI
+value|15
+end_define
+
+begin_comment
+comment|/* Irqs 0-15 are IPIs. */
+end_comment
+
 begin_comment
 comment|/* First bit is a polarity bit (0 - low, 1 - high) */
 end_comment
@@ -1328,6 +1339,17 @@ name|uintptr_t
 operator|)
 name|arg
 decl_stmt|;
+if|if
+condition|(
+name|irq
+operator|>
+name|GIC_LAST_IPI
+condition|)
+name|arm_irq_memory_barrier
+argument_list|(
+name|irq
+argument_list|)
+expr_stmt|;
 name|gic_c_write_4
 argument_list|(
 name|GICC_EOIR
@@ -1364,8 +1386,8 @@ name|active_irq
 operator|&
 literal|0x3ff
 operator|)
-operator|<
-literal|16
+operator|<=
+name|GIC_LAST_IPI
 condition|)
 name|gic_c_write_4
 argument_list|(
@@ -1394,9 +1416,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"Spurious interrupt detected [0x%08x]\n"
-argument_list|,
-name|active_irq
+literal|"Spurious interrupt detected\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1456,6 +1476,17 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+if|if
+condition|(
+name|nb
+operator|>
+name|GIC_LAST_IPI
+condition|)
+name|arm_irq_memory_barrier
+argument_list|(
+name|nb
+argument_list|)
+expr_stmt|;
 name|gic_d_write_4
 argument_list|(
 name|GICD_ISENABLER
