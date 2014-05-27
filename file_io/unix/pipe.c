@@ -34,14 +34,20 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|BEOS
+argument_list|)
 end_if
 
 begin_if
 if|#
 directive|if
 operator|!
+name|defined
+argument_list|(
 name|BONE7
+argument_list|)
 end_if
 
 begin_define
@@ -85,6 +91,12 @@ parameter_list|)
 block|{
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|BEOS
+argument_list|)
+operator|||
 operator|!
 name|BEOS_BLOCKING
 name|int
@@ -238,6 +250,12 @@ parameter_list|)
 block|{
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|BEOS
+argument_list|)
+operator|||
 operator|!
 name|BEOS_BLOCKING
 name|int

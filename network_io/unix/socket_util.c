@@ -133,6 +133,7 @@ return|return
 name|rv
 return|;
 block|}
+comment|/* Many platforms return only APR_POLLIN; OS X returns APR_POLLHUP|APR_POLLIN */
 elseif|else
 if|if
 condition|(
@@ -140,12 +141,16 @@ name|nfds
 operator|==
 literal|1
 operator|&&
+operator|(
 name|pfds
 index|[
 literal|0
 index|]
 operator|.
 name|rtnevents
+operator|&
+name|APR_POLLIN
+operator|)
 operator|==
 name|APR_POLLIN
 condition|)

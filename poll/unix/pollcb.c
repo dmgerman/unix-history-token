@@ -253,6 +253,9 @@ case|case
 name|APR_POLLSET_SELECT
 case|:
 case|case
+name|APR_POLLSET_AIO_MSGQ
+case|:
+case|case
 name|APR_POLLSET_DEFAULT
 case|:
 break|break;

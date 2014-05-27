@@ -407,6 +407,28 @@ operator|*
 name|key
 argument_list|)
 expr_stmt|;
+comment|/**  * Get values associated with a given key from the table.      If more than one  * value exists, return a comma separated list of values.  After this call, the  * data is still in the table.  * @param p The pool to allocate the combined value from, if necessary  * @param t The table to search for the key  * @param key The key to search for (case does not matter)  * @return The value associated with the key, or NULL if the key does not exist.  */
+name|APR_DECLARE
+argument_list|(
+argument|const char *
+argument_list|)
+name|apr_table_getm
+argument_list|(
+name|apr_pool_t
+operator|*
+name|p
+argument_list|,
+specifier|const
+name|apr_table_t
+operator|*
+name|t
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|key
+argument_list|)
+expr_stmt|;
 comment|/**  * Add a key/value pair to a table.  If another element already exists with the  * same key, this will overwrite the old data.  * @param t The table to add the data to.  * @param key The key to use (case does not matter)  * @param val The value to add  * @remark When adding data, this function makes a copy of both the key and the  *         value.  */
 name|APR_DECLARE
 argument_list|(

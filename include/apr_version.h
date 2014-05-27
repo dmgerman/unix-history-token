@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|APR_COPYRIGHT
-value|"Copyright (c) 2013 The Apache Software " \                       "Foundation or its licensors, as applicable."
+value|"Copyright (c) 2000-2014 The Apache Software " \                       "Foundation or its licensors, as applicable."
 end_define
 
 begin_comment
@@ -49,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|APR_MINOR_VERSION
-value|4
+value|5
 end_define
 
 begin_comment
@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|APR_PATCH_VERSION
-value|8
+value|1
 end_define
 
 begin_comment
