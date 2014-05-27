@@ -116,7 +116,7 @@ operator|=
 name|rcr4
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Only permit a guest to use XSAVE if the host is using 	 * XSAVE.  Only permit a guest to use XSAVE features supported 	 * by the host.  This ensures that the FPU state used by the 	 * guest is always a subset of the saved guest FPU state. 	 */
+comment|/* 	 * Only permit a guest to use XSAVE if the host is using 	 * XSAVE.  Only permit a guest to use XSAVE features supported 	 * by the host.  This ensures that the FPU state used by the 	 * guest is always a subset of the saved guest FPU state. 	 * 	 * In addition, only permit known XSAVE features where the 	 * rules for which features depend on other features is known 	 * to properly emulate xsetbv. 	 */
 if|if
 condition|(
 name|vmm_host_cr4
@@ -142,6 +142,14 @@ operator|.
 name|xcr0_allowed
 operator|=
 name|vmm_host_xcr0
+operator|&
+operator|(
+name|XFEATURE_AVX
+operator||
+name|XFEATURE_MPX
+operator||
+name|XFEATURE_AVX512
+operator|)
 expr_stmt|;
 name|cpuid_count
 argument_list|(
