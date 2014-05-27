@@ -15,6 +15,12 @@ directive|define
 name|_VMM_INSTRUCTION_EMUL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
+
 begin_comment
 comment|/*  * Callback functions to read and write memory regions.  */
 end_comment
@@ -204,9 +210,6 @@ name|enum
 name|vm_cpu_mode
 name|cpu_mode
 parameter_list|,
-name|int
-name|addrsize
-parameter_list|,
 name|enum
 name|vm_reg_name
 name|seg
@@ -218,6 +221,15 @@ name|desc
 parameter_list|,
 name|uint64_t
 name|off
+parameter_list|,
+name|int
+name|length
+parameter_list|,
+name|int
+name|addrsize
+parameter_list|,
+name|int
+name|prot
 parameter_list|,
 name|uint64_t
 modifier|*

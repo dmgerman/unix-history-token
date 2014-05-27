@@ -1805,6 +1805,56 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|SEG_DESC_TYPE
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc)->access& 0x001f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEG_DESC_PRESENT
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc)->access& 0x0080)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEG_DESC_DEF32
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc)->access& 0x4000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEG_DESC_GRANULARITY
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc)->access& 0x8000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEG_DESC_UNUSABLE
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc)->access& 0x10000)
+end_define
+
 begin_enum
 enum|enum
 name|vm_cpu_mode
