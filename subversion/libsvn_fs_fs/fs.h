@@ -520,7 +520,7 @@ name|svn_cache__t
 modifier|*
 name|dir_cache
 decl_stmt|;
-comment|/* Fulltext cache; currently only used with memcached.  Maps from      rep key (revision/offset) to svn_string_t. */
+comment|/* Fulltext cache; currently only used with memcached.  Maps from      rep key (revision/offset) to svn_stringbuf_t. */
 name|svn_cache__t
 modifier|*
 name|fulltext_cache
