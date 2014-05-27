@@ -185,19 +185,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
 name|BUS_DMA_COULD_BOUNCE
-value|BUS_DMA_BUS3
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+literal|0x01
+block|,
 name|BUS_DMA_MIN_ALLOC_COMP
-value|BUS_DMA_BUS4
-end_define
+init|=
+literal|0x02
+block|, }
+enum|;
+end_enum
 
 begin_struct_decl
 struct_decl|struct
@@ -215,6 +215,9 @@ name|common
 decl_stmt|;
 name|int
 name|map_count
+decl_stmt|;
+name|int
+name|bounce_flags
 decl_stmt|;
 name|bus_dma_segment_t
 modifier|*
@@ -855,9 +858,7 @@ operator|(
 operator|(
 name|parent
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -868,9 +869,7 @@ operator|)
 condition|)
 name|newtag
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator||=
 name|BUS_DMA_COULD_BOUNCE
 expr_stmt|;
@@ -900,9 +899,7 @@ literal|1
 condition|)
 name|newtag
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator||=
 name|BUS_DMA_COULD_BOUNCE
 expr_stmt|;
@@ -912,9 +909,7 @@ operator|(
 operator|(
 name|newtag
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -1016,9 +1011,7 @@ block|}
 comment|/* Performed initial allocation */
 name|newtag
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator||=
 name|BUS_DMA_MIN_ALLOC_COMP
 expr_stmt|;
@@ -1337,9 +1330,7 @@ if|if
 condition|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 condition|)
@@ -1481,9 +1472,7 @@ condition|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_MIN_ALLOC_COMP
 operator|)
@@ -1563,9 +1552,7 @@ condition|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_MIN_ALLOC_COMP
 operator|)
@@ -1582,9 +1569,7 @@ condition|)
 block|{
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator||=
 name|BUS_DMA_MIN_ALLOC_COMP
 expr_stmt|;
@@ -3071,9 +3056,7 @@ condition|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -3155,9 +3138,7 @@ operator|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -3340,9 +3321,7 @@ condition|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -3467,9 +3446,7 @@ operator|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
