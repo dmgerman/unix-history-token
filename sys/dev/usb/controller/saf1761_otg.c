@@ -8862,6 +8862,10 @@ operator||
 name|SOTG_INTERRUPT_CFG_DDBGMODIN
 operator||
 name|SOTG_INTERRUPT_CFG_DDBGMODOUT
+operator||
+name|sc
+operator|->
+name|sc_interrupt_cfg
 argument_list|)
 expr_stmt|;
 comment|/* enable VBUS and ID interrupt */

@@ -430,6 +430,10 @@ name|sc_hw_mode
 decl_stmt|;
 comment|/* hardware mode */
 name|uint32_t
+name|sc_interrupt_cfg
+decl_stmt|;
+comment|/* interrupt configuration */
+name|uint32_t
 name|sc_bounce_buffer
 index|[
 literal|1024
