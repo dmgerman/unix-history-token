@@ -587,9 +587,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* #define	LZ4_FORCE_SW_BITCOUNT */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LZ4_FORCE_SW_BITCOUNT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Compiler Options  */
