@@ -4945,6 +4945,13 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|data
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
