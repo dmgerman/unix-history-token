@@ -26,29 +26,55 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SOTG_VEND_ID
+name|SOTG_VEND_PROD_ID
 value|0x370
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PROD_ID
-value|0x372
+name|SOTG_VEND_ID
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xFFFF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_CTRL_SET
+name|SOTG_PROD_ID
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 16)& 0xFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_CTRL_SET_CLR
 value|0x374
 end_define
 
 begin_define
 define|#
 directive|define
+name|SOTG_CTRL_SET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_CTRL_CLR
-value|0x376
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<< 16)& 0xFFFF0000)
 end_define
 
 begin_define
@@ -187,43 +213,82 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_IRQ_LATCH_SET
+name|SOTG_IRQ_LATCH_SET_CLR
 value|0x37C
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_IRQ_LATCH_CLR
-value|0x37E
+name|SOTG_IRQ_LATCH_SET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xFFFF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_IRQ_ENABLE_SET
+name|SOTG_IRQ_LATCH_CLR
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<< 16)& 0xFFFF0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_IRQ_ENABLE_SET_CLR
 value|0x380
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_IRQ_ENABLE_CLR
-value|0x382
+name|SOTG_IRQ_ENABLE_SET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xFFFF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_IRQ_RISE_SET
+name|SOTG_IRQ_ENABLE_CLR
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<< 16)& 0xFFFF0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_IRQ_RISE_SET_CLR
 value|0x384
 end_define
 
 begin_define
 define|#
 directive|define
+name|SOTG_IRQ_RISE_SET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_IRQ_RISE_CLR
-value|0x386
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<< 16)& 0xFFFF0000)
 end_define
 
 begin_define
@@ -299,29 +364,55 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_TIMER_LOW_SET
+name|SOTG_TIMER_LOW_SET_CLR
 value|0x388
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_TIMER_LOW_CLR
-value|0x38A
+name|SOTG_TIMER_LOW_SET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xFFFF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_TIMER_HIGH_SET
+name|SOTG_TIMER_LOW_CLR
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<< 16)& 0xFFFF0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_TIMER_HIGH_SET_CLR
 value|0x38C
 end_define
 
 begin_define
 define|#
 directive|define
+name|SOTG_TIMER_HIGH_SET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_TIMER_HIGH_CLR
-value|0x38E
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<< 16)& 0xFFFF0000)
 end_define
 
 begin_define
@@ -429,6 +520,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOTG_INTERRUPT_CFG_DEBUG_SET
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_INTERRUPT_CFG_CDBGMOD
 value|(3<< 6)
 end_define
@@ -458,20 +556,6 @@ begin_define
 define|#
 directive|define
 name|SOTG_INTERRUPT_CFG_INTPOL
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOTG_DEBUG
-value|0x212
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOTG_DEBUG_SET
 value|(1<< 0)
 end_define
 
@@ -674,15 +758,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_DCBUFFERSTATUS
-value|0x21E
+name|SOTG_BUF_LENGTH_BUFLEN_MASK
+value|0xFFFF
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_DCBUFFERSTATUS_FILLED_MASK
-value|(3<< 0)
+name|SOTG_BUF_LENGTH_FILLED_MASK
+value|(3<< 16)
 end_define
 
 begin_define
@@ -992,6 +1076,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SOTG_FRINDEX
+value|0x002c
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_CONFIGFLAG
 value|0x0060
 end_define
@@ -1083,98 +1174,105 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW0
+name|SOTG_PTD_DW0
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW0_VALID
+name|SOTG_PTD_DW0_VALID
 value|1U
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW1
+name|SOTG_PTD_DW1
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW2
+name|SOTG_PTD_DW1_ENABLE_SPLIT
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PTD_DW2
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW3
+name|SOTG_PTD_DW3
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW3_ACTIVE
+name|SOTG_PTD_DW3_ACTIVE
 value|(1U<< 31)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW3_HALTED
+name|SOTG_PTD_DW3_HALTED
 value|(1U<< 30)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW3_ERRORS
+name|SOTG_PTD_DW3_ERRORS
 value|(3U<< 28)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW3_CERR
+name|SOTG_PTD_DW3_CERR
 value|(3U<< 23)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW3_XFER_COUNT
+name|SOTG_PTD_DW3_XFER_COUNT
 value|0x7FFF
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW4
+name|SOTG_PTD_DW4
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW5
+name|SOTG_PTD_DW5
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW6
+name|SOTG_PTD_DW6
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOTG_PDT_DW7
+name|SOTG_PTD_DW7
 value|28
 end_define
 
@@ -1191,7 +1289,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_ASYNC_PDT
+name|SOTG_ASYNC_PTD
 parameter_list|(
 name|x
 parameter_list|)
@@ -1201,7 +1299,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_INTR_PDT
+name|SOTG_INTR_PTD
 parameter_list|(
 name|x
 parameter_list|)
@@ -1211,7 +1309,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_ISOC_PDT
+name|SOTG_ISOC_PTD
 parameter_list|(
 name|x
 parameter_list|)
@@ -1221,7 +1319,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_PDT
+name|SOTG_PTD
 parameter_list|(
 name|x
 parameter_list|)
@@ -1432,6 +1530,76 @@ define|#
 directive|define
 name|SOTG_HCINTERRUPT_ENABLE
 value|0x314
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ATL_PTD_SKIP_PTD
+value|0x154
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ATL_PTD_LAST_PTD
+value|0x158
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_INT_PTD_SKIP_PTD
+value|0x144
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_INT_PTD_LAST_PTD
+value|0x148
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ISO_PTD_SKIP_PTD
+value|0x134
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ISO_PTD_LAST_PTD
+value|0x138
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCBUFFERSTATUS
+value|0x334
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCBUFFERSTATUS_ISO_BUF_FILL
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCBUFFERSTATUS_INT_BUF_FILL
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_HCBUFFERSTATUS_ATL_BUF_FILL
+value|(1<< 0)
 end_define
 
 begin_endif
