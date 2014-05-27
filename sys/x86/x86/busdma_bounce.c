@@ -195,6 +195,10 @@ block|,
 name|BUS_DMA_MIN_ALLOC_COMP
 init|=
 literal|0x02
+block|,
+name|BUS_DMA_KMEM_ALLOC
+init|=
+literal|0x04
 block|, }
 enum|;
 end_enum
@@ -481,8 +485,6 @@ specifier|static
 name|struct
 name|bus_dmamap
 name|nobounce_dmamap
-decl_stmt|,
-name|contig_dmamap
 decl_stmt|;
 end_decl_stmt
 
@@ -1659,11 +1661,6 @@ name|map
 operator|!=
 operator|&
 name|nobounce_dmamap
-operator|&&
-name|map
-operator|!=
-operator|&
-name|contig_dmamap
 condition|)
 block|{
 if|if
@@ -2033,11 +2030,11 @@ argument_list|,
 name|attr
 argument_list|)
 expr_stmt|;
-operator|*
-name|mapp
-operator|=
-operator|&
-name|contig_dmamap
+name|dmat
+operator|->
+name|bounce_flags
+operator||=
+name|BUS_DMA_KMEM_ALLOC
 expr_stmt|;
 block|}
 else|else
@@ -2094,11 +2091,11 @@ argument_list|,
 name|attr
 argument_list|)
 expr_stmt|;
-operator|*
-name|mapp
-operator|=
-operator|&
-name|contig_dmamap
+name|dmat
+operator|->
+name|bounce_flags
+operator||=
+name|BUS_DMA_KMEM_ALLOC
 expr_stmt|;
 block|}
 if|if
@@ -2207,20 +2204,12 @@ name|bus_dmamap_t
 name|map
 parameter_list|)
 block|{
-comment|/* 	 * dmamem does not need to be bounced, so the map should be 	 * NULL if malloc() was used and contig_dmamap if 	 * kmem_alloc_contig() was used. 	 */
+comment|/* 	 * dmamem does not need to be bounced, so the map should be 	 * NULL and the BUS_DMA_KMEM_ALLOC flag cleared if malloc() 	 * was used and set if kmem_alloc_contig() was used. 	 */
 if|if
 condition|(
-operator|!
-operator|(
 name|map
-operator|==
+operator|!=
 name|NULL
-operator|||
-name|map
-operator|==
-operator|&
-name|contig_dmamap
-operator|)
 condition|)
 name|panic
 argument_list|(
@@ -2229,9 +2218,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|map
+operator|(
+name|dmat
+operator|->
+name|bounce_flags
+operator|&
+name|BUS_DMA_KMEM_ALLOC
+operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 name|free
 argument_list|(
@@ -2269,9 +2264,7 @@ name|dmat
 argument_list|,
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -3028,11 +3021,6 @@ condition|(
 name|map
 operator|==
 name|NULL
-operator|||
-name|map
-operator|==
-operator|&
-name|contig_dmamap
 condition|)
 name|map
 operator|=
@@ -3293,11 +3281,6 @@ condition|(
 name|map
 operator|==
 name|NULL
-operator|||
-name|map
-operator|==
-operator|&
-name|contig_dmamap
 condition|)
 name|map
 operator|=
@@ -5014,11 +4997,6 @@ name|map
 operator|!=
 operator|&
 name|nobounce_dmamap
-operator|&&
-name|map
-operator|!=
-operator|&
-name|contig_dmamap
 argument_list|,
 operator|(
 literal|"add_bounce_page: bad map %p"
