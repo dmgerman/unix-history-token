@@ -416,6 +416,11 @@ begin_if
 if|#
 directive|if
 name|APR_HAVE_WINDOWS_H
+operator|&&
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
 end_if
 
 begin_comment
@@ -1437,6 +1442,18 @@ comment|/**   * Thread callbacks from APR functions must be declared with APR_TH
 define|#
 directive|define
 name|APR_THREAD_FUNC
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DOXYGEN
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
 comment|/**  * The public APR functions are declared with APR_DECLARE(), so they may  * use the most appropriate calling convention.  Public APR functions with   * variable arguments must use APR_DECLARE_NONSTD().  *  * @remark Both the declaration and implementations must use the same macro.  *  *<PRE>  * APR_DECLARE(rettype) apr_func(args)  *</PRE>  * @see APR_DECLARE_NONSTD @see APR_DECLARE_DATA  * @remark Note that when APR compiles the library itself, it passes the   * symbol -DAPR_DECLARE_EXPORT to the compiler on some platforms (e.g. Win32)   * to export public symbols from the dynamic library build.\n  * The user must define the APR_DECLARE_STATIC when compiling to target  * the static APR library on some platforms (e.g. Win32.)  The public symbols   * are neither exported nor imported when APR_DECLARE_STATIC is defined.\n  * By default, compiling an application and including the APR public  * headers, without defining APR_DECLARE_STATIC, will prepare the code to be  * linked to the dynamic library.  */
 define|#
 directive|define
@@ -1457,6 +1474,75 @@ comment|/**  * The public APR variables are declared with AP_MODULE_DECLARE_DATA
 define|#
 directive|define
 name|APR_DECLARE_DATA
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|APR_DECLARE_STATIC
+argument_list|)
+define|#
+directive|define
+name|APR_DECLARE
+parameter_list|(
+name|type
+parameter_list|)
+value|type __stdcall
+define|#
+directive|define
+name|APR_DECLARE_NONSTD
+parameter_list|(
+name|type
+parameter_list|)
+value|type __cdecl
+define|#
+directive|define
+name|APR_DECLARE_DATA
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|APR_DECLARE_EXPORT
+argument_list|)
+define|#
+directive|define
+name|APR_DECLARE
+parameter_list|(
+name|type
+parameter_list|)
+value|__declspec(dllexport) type __stdcall
+define|#
+directive|define
+name|APR_DECLARE_NONSTD
+parameter_list|(
+name|type
+parameter_list|)
+value|__declspec(dllexport) type __cdecl
+define|#
+directive|define
+name|APR_DECLARE_DATA
+value|__declspec(dllexport)
+else|#
+directive|else
+define|#
+directive|define
+name|APR_DECLARE
+parameter_list|(
+name|type
+parameter_list|)
+value|__declspec(dllimport) type __stdcall
+define|#
+directive|define
+name|APR_DECLARE_NONSTD
+parameter_list|(
+name|type
+parameter_list|)
+value|__declspec(dllimport) type __cdecl
+define|#
+directive|define
+name|APR_DECLARE_DATA
+value|__declspec(dllimport)
+endif|#
+directive|endif
 comment|/* Define APR_SSIZE_T_FMT.    * If ssize_t is an integer we define it to be "d",  * if ssize_t is a long int we define it to be "ld",  * if ssize_t is neither we declare an error here.  * I looked for a better way to define this here, but couldn't find one, so  * to find the logic for this definition search for "ssize_t_fmt" in  * configure.in.  */
 ifdef|#
 directive|ifdef

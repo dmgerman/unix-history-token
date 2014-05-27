@@ -248,6 +248,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if async i/o supports message q's */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_AIO_MSGQ */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have `alloca', as a function or macro. */
 end_comment
 
@@ -432,9 +440,12 @@ begin_comment
 comment|/* Define if dup3 function is supported */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_DUP3 */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_DUP3
+value|1
+end_define
 
 begin_comment
 comment|/* Define if EGD is supported */
@@ -3083,10 +3094,16 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|BEOS
+argument_list|)
 operator|&&
 operator|!
+name|defined
+argument_list|(
 name|HAVE_BONE_VERSION
+argument_list|)
 end_if
 
 begin_define
