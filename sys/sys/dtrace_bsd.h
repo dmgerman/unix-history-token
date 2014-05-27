@@ -141,24 +141,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|dtrace_invop_func_t
-function_decl|)
-parameter_list|(
-name|uintptr_t
-parameter_list|,
-name|uintptr_t
-modifier|*
-parameter_list|,
-name|uintptr_t
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|void
 function_decl|(
 modifier|*
@@ -173,13 +155,6 @@ end_typedef
 begin_comment
 comment|/* Global variables in trap.c */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|dtrace_invop_func_t
-name|dtrace_invop_func
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
