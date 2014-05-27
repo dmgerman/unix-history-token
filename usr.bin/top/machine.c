@@ -4624,7 +4624,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"malloc(%d)"
+literal|"malloc(%zd)"
 argument_list|,
 name|argbuflen
 operator|+
@@ -5268,12 +5268,17 @@ argument_list|)
 argument_list|,
 literal|"%*d "
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|thr_buf
 argument_list|)
 operator|-
 literal|2
+argument_list|)
 argument_list|,
 name|pp
 operator|->
