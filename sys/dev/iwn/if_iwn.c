@@ -489,6 +489,22 @@ block|,
 block|{
 literal|0x8086
 block|,
+name|IWN_DID_105_1
+block|,
+literal|"Intel Centrino Wireless-N 105"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|IWN_DID_105_2
+block|,
+literal|"Intel Centrino Wireless-N 105"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 name|IWN_DID_135_1
 block|,
 literal|"Intel Centrino Wireless-N 135"
@@ -3677,6 +3693,19 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"hw %d sdid %x\n"
+argument_list|,
+name|sc
+operator|->
+name|hw_type
+argument_list|,
+name|sc
+operator|->
+name|subdevice_id
+argument_list|)
+expr_stmt|;
 comment|/* 	 * 4965 versus 5000 and later have different methods. 	 * Let's set those up first. 	 */
 if|if
 condition|(
@@ -5738,6 +5767,82 @@ operator|->
 name|fwname
 operator|=
 literal|"iwn100fw"
+expr_stmt|;
+break|break;
+default|default:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"adapter type id : 0x%04x sub id :"
+literal|"0x%04x rev %d not supported (subdevice)\n"
+argument_list|,
+name|pid
+argument_list|,
+name|sc
+operator|->
+name|subdevice_id
+argument_list|,
+name|sc
+operator|->
+name|hw_type
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOTSUP
+return|;
+block|}
+break|break;
+comment|/* 105 Series */
+comment|/* XXX: This series will need adjustment for rate.  * see rx_with_siso_diversity in linux kernel  */
+case|case
+name|IWN_DID_105_1
+case|:
+case|case
+name|IWN_DID_105_2
+case|:
+switch|switch
+condition|(
+name|sc
+operator|->
+name|subdevice_id
+condition|)
+block|{
+case|case
+name|IWN_SDID_105_1
+case|:
+case|case
+name|IWN_SDID_105_2
+case|:
+case|case
+name|IWN_SDID_105_3
+case|:
+comment|//iwl105_bgn_cfg
+case|case
+name|IWN_SDID_105_4
+case|:
+comment|//iwl105_bgn_d_cfg
+name|sc
+operator|->
+name|limits
+operator|=
+operator|&
+name|iwn2030_sensitivity_limits
+expr_stmt|;
+name|sc
+operator|->
+name|base_params
+operator|=
+operator|&
+name|iwn2000_base_params
+expr_stmt|;
+name|sc
+operator|->
+name|fwname
+operator|=
+literal|"iwn105fw"
 expr_stmt|;
 break|break;
 default|default:
