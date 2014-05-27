@@ -864,11 +864,23 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|/* Skip file externals if they are a descendant of the export,      BUT NOT if we are explictly exporting the file external. */
 if|if
 condition|(
 name|status
 operator|->
 name|file_external
+operator|&&
+name|strcmp
+argument_list|(
+name|eib
+operator|->
+name|origin_abspath
+argument_list|,
+name|local_abspath
+argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|SVN_NO_ERROR

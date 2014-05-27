@@ -2914,6 +2914,27 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
+comment|/* Structure used as linked list in svn_wc__db_info_t to describe all nodes    in this location that were moved to another location */
+struct|struct
+name|svn_wc__db_moved_to_info_t
+block|{
+specifier|const
+name|char
+modifier|*
+name|moved_to_abspath
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|shadow_op_root_abspath
+decl_stmt|;
+name|struct
+name|svn_wc__db_moved_to_info_t
+modifier|*
+name|next
+decl_stmt|;
+block|}
+struct|;
 comment|/* Structure returned by svn_wc__db_read_children_info.  Only has the    fields needed by status. */
 struct|struct
 name|svn_wc__db_info_t
@@ -3012,12 +3033,12 @@ name|svn_boolean_t
 name|incomplete
 decl_stmt|;
 comment|/* TRUE if a working node is incomplete */
-specifier|const
-name|char
+name|struct
+name|svn_wc__db_moved_to_info_t
 modifier|*
-name|moved_to_abspath
+name|moved_to
 decl_stmt|;
-comment|/* Only on op-roots. See svn_wc_status3_t. */
+comment|/* A linked list of locations                                                  where nodes at this path                                                  are moved to. Highest layers                                                  first */
 name|svn_boolean_t
 name|moved_here
 decl_stmt|;
@@ -3050,6 +3071,36 @@ specifier|const
 name|char
 modifier|*
 name|dir_abspath
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* Like svn_wc__db_read_children_info, but only gets an info node for the root    element. */
+name|svn_error_t
+modifier|*
+name|svn_wc__db_read_single_info
+parameter_list|(
+specifier|const
+name|struct
+name|svn_wc__db_info_t
+modifier|*
+modifier|*
+name|info
+parameter_list|,
+name|svn_wc__db_t
+modifier|*
+name|db
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|local_abspath
 parameter_list|,
 name|apr_pool_t
 modifier|*

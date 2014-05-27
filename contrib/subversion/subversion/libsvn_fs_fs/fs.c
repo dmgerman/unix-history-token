@@ -301,6 +301,7 @@ name|common_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* We also need a mutex for synchronizing access to the active          transaction list and free transaction pointer.  This one is          enabled unconditionally. */
 name|SVN_ERR
 argument_list|(
 name|svn_mutex__init
@@ -310,7 +311,7 @@ name|ffsd
 operator|->
 name|txn_list_lock
 argument_list|,
-name|SVN_FS_FS__USE_LOCK_MUTEX
+name|TRUE
 argument_list|,
 name|common_pool
 argument_list|)
