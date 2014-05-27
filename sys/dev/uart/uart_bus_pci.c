@@ -734,6 +734,20 @@ block|,
 block|{
 literal|0x8086
 block|,
+literal|0x2a07
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Intel AMT - PM965/GM965 KT Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 literal|0x2e17
 block|,
 literal|0xffff
