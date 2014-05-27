@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -8081,6 +8081,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * When the "redundant_metadata" property is set to "most", only indirect  * blocks of this level and higher will have an additional ditto block.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|zfs_redundant_metadata_most_ditto_level
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|dmu_write_policy
@@ -8220,6 +8232,42 @@ condition|)
 name|checksum
 operator|=
 name|ZIO_CHECKSUM_FLETCHER_4
+expr_stmt|;
+if|if
+condition|(
+name|os
+operator|->
+name|os_redundant_metadata
+operator|==
+name|ZFS_REDUNDANT_METADATA_ALL
+operator|||
+operator|(
+name|os
+operator|->
+name|os_redundant_metadata
+operator|==
+name|ZFS_REDUNDANT_METADATA_MOST
+operator|&&
+operator|(
+name|level
+operator|>=
+name|zfs_redundant_metadata_most_ditto_level
+operator|||
+name|DMU_OT_IS_METADATA
+argument_list|(
+name|type
+argument_list|)
+operator|||
+operator|(
+name|wp
+operator|&
+name|WP_SPILL
+operator|)
+operator|)
+operator|)
+condition|)
+name|copies
+operator|++
 expr_stmt|;
 block|}
 elseif|else
@@ -8377,8 +8425,6 @@ operator|=
 name|MIN
 argument_list|(
 name|copies
-operator|+
-name|ismd
 argument_list|,
 name|spa_max_replication
 argument_list|(

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -291,6 +291,8 @@ block|,
 name|ZFS_PROP_FILESYSTEM_COUNT
 block|,
 name|ZFS_PROP_SNAPSHOT_COUNT
+block|,
+name|ZFS_PROP_REDUNDANT_METADATA
 block|,
 name|ZFS_NUM_PROPS
 block|}
@@ -889,6 +891,15 @@ init|=
 literal|3
 block|}
 name|zfs_volmode_t
+typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|ZFS_REDUNDANT_METADATA_ALL
+block|,
+name|ZFS_REDUNDANT_METADATA_MOST
+block|}
+name|zfs_redundant_metadata_type_t
 typedef|;
 comment|/*  * On-disk version number.  */
 define|#
