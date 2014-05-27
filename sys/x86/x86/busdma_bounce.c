@@ -834,7 +834,6 @@ name|segments
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Bouncing might be needed if there's a filter. 	 * XXX Filters are likely broken as there's no way to 	 *     guarantee that bounce pages will also satisfy the 	 *     filter requirement. 	 */
 if|if
 condition|(
 name|parent
@@ -875,7 +874,6 @@ name|flags
 operator||=
 name|BUS_DMA_COULD_BOUNCE
 expr_stmt|;
-comment|/* 	 * Bouncing might be needed if there's an upper memory 	 * restriction. 	 */
 if|if
 condition|(
 name|newtag
@@ -891,29 +889,7 @@ name|vm_paddr_t
 operator|)
 name|Maxmem
 argument_list|)
-condition|)
-name|newtag
-operator|->
-name|common
-operator|.
-name|flags
-operator||=
-name|BUS_DMA_COULD_BOUNCE
-expr_stmt|;
-comment|/* 	 * Bouncing might be needed if there's an alignment 	 * restriction that can't be satisfied by breaking up 	 * the segment. 	 * XXX Need to consider non-natural alignment. 	 * XXX Static allocations that tie to bus_dmamem_alloc() 	 *     will likely pass this test and be penalized with 	 *     the COULD_BOUNCE flag.  Should probably have 	 *     bus_dmamem_alloc() clear this flag. 	 */
-if|if
-condition|(
-operator|(
-name|newtag
-operator|->
-name|common
-operator|.
-name|nsegments
-operator|<=
-literal|1
-operator|)
-operator|&&
-operator|(
+operator|||
 name|newtag
 operator|->
 name|common
@@ -921,7 +897,6 @@ operator|.
 name|alignment
 operator|>
 literal|1
-operator|)
 condition|)
 name|newtag
 operator|->
