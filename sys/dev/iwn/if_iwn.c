@@ -3693,19 +3693,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"hw %d sdid %x\n"
-argument_list|,
-name|sc
-operator|->
-name|hw_type
-argument_list|,
-name|sc
-operator|->
-name|subdevice_id
-argument_list|)
-expr_stmt|;
 comment|/* 	 * 4965 versus 5000 and later have different methods. 	 * Let's set those up first. 	 */
 if|if
 condition|(
