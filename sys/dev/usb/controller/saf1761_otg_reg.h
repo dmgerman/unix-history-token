@@ -418,7 +418,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_TIMER_START_TMR
+name|SOTG_TIMER_HIGH_START
 value|(1U<< 15)
 end_define
 
@@ -528,22 +528,34 @@ begin_define
 define|#
 directive|define
 name|SOTG_INTERRUPT_CFG_CDBGMOD
-value|(3<< 6)
+value|(1<< 6)
 end_define
+
+begin_comment
+comment|/* ACK only */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SOTG_INTERRUPT_CFG_DDBGMODIN
-value|(3<< 4)
+value|(1<< 4)
 end_define
+
+begin_comment
+comment|/* ACK only */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SOTG_INTERRUPT_CFG_DDBGMODOUT
-value|(3<< 2)
+value|(1<< 2)
 end_define
+
+begin_comment
+comment|/* ACK and NYET only */
+end_comment
 
 begin_define
 define|#
@@ -1209,8 +1221,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOTG_PTD_DW2_RL
+value|(0xf<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_PTD_DW3
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PTD_DW3_NRL
+value|(0xf<< 19)
 end_define
 
 begin_define
@@ -1237,8 +1263,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_PTD_DW3_CERR
+name|SOTG_PTD_DW3_CERR_3
 value|(3U<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PTD_DW3_CERR_2
+value|(2U<< 23)
+end_define
+
+begin_comment
+comment|/* infinite NAKs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOTG_PTD_DW3_CERR_1
+value|(1U<< 23)
 end_define
 
 begin_define
@@ -1535,6 +1579,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOTG_ATL_PTD_DONE_PTD
+value|0x150
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_ATL_PTD_SKIP_PTD
 value|0x154
 end_define
@@ -1549,6 +1600,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOTG_INT_PTD_DONE_PTD
+value|0x140
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_INT_PTD_SKIP_PTD
 value|0x144
 end_define
@@ -1558,6 +1616,13 @@ define|#
 directive|define
 name|SOTG_INT_PTD_LAST_PTD
 value|0x148
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ISO_PTD_DONE_PTD
+value|0x130
 end_define
 
 begin_define
@@ -1600,6 +1665,48 @@ define|#
 directive|define
 name|SOTG_HCBUFFERSTATUS_ATL_BUF_FILL
 value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ISO_IRQ_MASK_OR
+value|0x318
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_INT_IRQ_MASK_OR
+value|0x31C
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ATL_IRQ_MASK_OR
+value|0x320
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ISO_IRQ_MASK_AND
+value|0x324
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_INT_IRQ_MASK_AND
+value|0x328
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_ATL_IRQ_MASK_AND
+value|0x32C
 end_define
 
 begin_endif
