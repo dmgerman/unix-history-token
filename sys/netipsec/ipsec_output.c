@@ -2558,7 +2558,7 @@ name|error
 operator|=
 name|EPFNOSUPPORT
 expr_stmt|;
-name|IPSEC6STAT_INC
+name|IPSECSTAT_INC
 argument_list|(
 name|ips_out_inval
 argument_list|)
