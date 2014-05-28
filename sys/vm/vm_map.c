@@ -7984,18 +7984,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|KASSERT
-argument_list|(
-name|old_prot
-operator|!=
-name|VM_PROT_NONE
-argument_list|,
-operator|(
-literal|"vm_map_protect: inaccessible wired map entry"
-operator|)
-argument_list|)
-expr_stmt|;
 name|vm_fault_copy_entry
 argument_list|(
 name|map
@@ -8009,7 +7997,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * When restricting access, update the physical map.  Worry 		 * about copy-on-write here. 		 */
 if|if
 condition|(
