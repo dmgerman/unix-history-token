@@ -4007,8 +4007,6 @@ decl_stmt|,
 name|op_ret
 decl_stmt|,
 name|ret
-decl_stmt|,
-name|val
 decl_stmt|;
 name|struct
 name|linux_emuldata
@@ -4033,6 +4031,8 @@ name|error
 decl_stmt|;
 name|uint32_t
 name|flags
+decl_stmt|,
+name|val
 decl_stmt|;
 name|LIN_SDT_PROBE2
 argument_list|(
@@ -4191,7 +4191,7 @@ name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"WAIT uaddr %p val %d val3 %d"
+literal|"WAIT uaddr %p val 0x%x bitset 0x%x"
 argument_list|,
 name|args
 operator|->
@@ -4345,11 +4345,11 @@ operator|->
 name|val3
 argument_list|)
 expr_stmt|;
-name|LINUX_CTR4
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"WAIT uaddr %p val %d != uval %d val3 %d"
+literal|"WAIT uaddr %p val 0x%x != uval 0x%x"
 argument_list|,
 name|args
 operator|->
@@ -4360,10 +4360,6 @@ operator|->
 name|val
 argument_list|,
 name|val
-argument_list|,
-name|args
-operator|->
-name|val3
 argument_list|)
 expr_stmt|;
 name|futex_put
@@ -4446,7 +4442,7 @@ name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"WAKE uaddr %p val % d val3 %d"
+literal|"WAKE uaddr %p nrwake 0x%x bitset 0x%x"
 argument_list|,
 name|args
 operator|->
@@ -4599,7 +4595,7 @@ argument_list|(
 name|sys_futex
 argument_list|,
 literal|"CMP_REQUEUE uaddr %p "
-literal|"val %d val3 %d uaddr2 %p val2 %d"
+literal|"nrwake 0x%x uval 0x%x uaddr2 %p nrequeue 0x%x"
 argument_list|,
 name|args
 operator|->
@@ -4617,13 +4613,6 @@ name|args
 operator|->
 name|uaddr2
 argument_list|,
-operator|(
-name|int
-operator|)
-operator|(
-name|unsigned
-name|long
-operator|)
 name|args
 operator|->
 name|timeout
@@ -4854,7 +4843,7 @@ name|LINUX_CTR2
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"CMP_REQUEUE val %d != uval %d"
+literal|"CMP_REQUEUE val 0x%x != uval 0x%x"
 argument_list|,
 name|args
 operator|->
@@ -4979,15 +4968,11 @@ argument_list|(
 name|sys_futex
 argument_list|,
 literal|"WAKE_OP "
-literal|"uaddr %p op %d val %x uaddr2 %p val3 %x"
+literal|"uaddr %p nrwake 0x%x uaddr2 %p op 0x%x nrwake2 0x%x"
 argument_list|,
 name|args
 operator|->
 name|uaddr
-argument_list|,
-name|args
-operator|->
-name|op
 argument_list|,
 name|args
 operator|->
@@ -5000,6 +4985,10 @@ argument_list|,
 name|args
 operator|->
 name|val3
+argument_list|,
+name|args
+operator|->
+name|timeout
 argument_list|)
 expr_stmt|;
 name|error
@@ -5109,6 +5098,19 @@ argument_list|,
 name|args
 operator|->
 name|uaddr2
+argument_list|)
+expr_stmt|;
+name|LINUX_CTR2
+argument_list|(
+name|sys_futex
+argument_list|,
+literal|"WAKE_OP atomic_op uaddr %p ret 0x%x"
+argument_list|,
+name|args
+operator|->
+name|uaddr
+argument_list|,
+name|op_ret
 argument_list|)
 expr_stmt|;
 if|if
