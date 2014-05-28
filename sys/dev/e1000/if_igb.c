@@ -20360,7 +20360,7 @@ condition|(
 name|slot
 condition|)
 block|{
-comment|/* slot sj is mapped to the i-th NIC-ring entry */
+comment|/* slot sj is mapped to the j-th NIC-ring entry */
 name|int
 name|sj
 init|=
