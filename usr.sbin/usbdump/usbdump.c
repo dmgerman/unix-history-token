@@ -2256,12 +2256,9 @@ name|up
 operator|->
 name|up_address
 operator|=
-name|le32toh
-argument_list|(
 name|up
 operator|->
 name|up_address
-argument_list|)
 expr_stmt|;
 name|up
 operator|->
