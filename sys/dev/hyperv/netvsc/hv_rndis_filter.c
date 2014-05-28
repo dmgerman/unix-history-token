@@ -6,6 +6,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1408,7 +1422,10 @@ operator|(
 name|rndis_msg
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|pkt
 operator|->
 name|page_buffers
@@ -1419,7 +1436,7 @@ operator|.
 name|pfn
 operator|<<
 name|PAGE_SHIFT
-operator|)
+argument_list|)
 expr_stmt|;
 name|rndis_hdr
 operator|=
