@@ -8274,15 +8274,15 @@ expr_stmt|;
 name|tmp
 operator|=
 call|(
-name|u_int32_t
+name|bus_addr_t
 call|)
-argument_list|(
-name|u_long
-argument_list|)
 argument_list|(
 operator|(
 name|u_int8_t
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|blk
 operator|->
@@ -12692,11 +12692,7 @@ argument_list|,
 name|emu_pci_detach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -12727,9 +12723,9 @@ name|emu_driver
 argument_list|,
 name|pcm_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12910,11 +12906,7 @@ argument_list|,
 name|emujoy_pci_detach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -12929,8 +12921,9 @@ literal|"emujoy"
 block|,
 name|emujoy_methods
 block|,
-literal|8
-block|, }
+literal|1
+comment|/* no softc */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -12952,9 +12945,9 @@ name|emujoy_driver
 argument_list|,
 name|emujoy_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
