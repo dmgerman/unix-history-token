@@ -8274,7 +8274,7 @@ expr_stmt|;
 name|tmp
 operator|=
 call|(
-name|bus_addr_t
+name|uintptr_t
 call|)
 argument_list|(
 operator|(
