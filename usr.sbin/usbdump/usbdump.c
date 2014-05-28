@@ -2254,14 +2254,6 @@ argument_list|)
 expr_stmt|;
 name|up
 operator|->
-name|up_address
-operator|=
-name|up
-operator|->
-name|up_address
-expr_stmt|;
-name|up
-operator|->
 name|up_flags
 operator|=
 name|le32toh
