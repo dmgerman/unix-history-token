@@ -5008,7 +5008,7 @@ name|__a
 argument_list|)
 expr_stmt|;
 return|return
-name|_mm_packs_pi16
+name|_mm_packs_pi32
 argument_list|(
 name|__b
 argument_list|,
