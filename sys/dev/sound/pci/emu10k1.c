@@ -8274,16 +8274,9 @@ expr_stmt|;
 name|tmp
 operator|=
 call|(
-name|uintptr_t
+name|uint32_t
 call|)
 argument_list|(
-operator|(
-name|u_int8_t
-operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|blk
 operator|->
 name|buf_addr
