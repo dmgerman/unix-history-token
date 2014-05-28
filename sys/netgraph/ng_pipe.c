@@ -2244,7 +2244,7 @@ argument_list|)
 argument_list|,
 name|M_NG_PIPE
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|current
