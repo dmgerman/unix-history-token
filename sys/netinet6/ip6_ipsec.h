@@ -73,12 +73,6 @@ name|struct
 name|ifnet
 modifier|*
 modifier|*
-parameter_list|,
-name|struct
-name|secpolicy
-modifier|*
-modifier|*
-name|sp
 parameter_list|)
 function_decl|;
 end_function_decl
