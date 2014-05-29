@@ -3693,8 +3693,6 @@ name|sockaddr
 operator|*
 operator|)
 name|sin
-argument_list|,
-name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3718,8 +3716,6 @@ operator|)
 name|sin
 argument_list|,
 literal|0
-argument_list|,
-name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4242,8 +4238,6 @@ argument_list|(
 operator|&
 name|sain
 argument_list|)
-argument_list|,
-name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4266,8 +4260,6 @@ name|sain
 argument_list|)
 argument_list|,
 literal|0
-argument_list|,
-name|RT_DEFAULT_FIB
 argument_list|)
 argument_list|)
 expr_stmt|;

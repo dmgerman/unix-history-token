@@ -2335,7 +2335,7 @@ condition|(
 operator|(
 name|ifa
 operator|=
-name|ifa_ifwithnet
+name|ifa_ifwithnet_fib
 argument_list|(
 name|gateway
 argument_list|,
@@ -3010,7 +3010,7 @@ name|RTF_HOST
 condition|)
 name|ifa
 operator|=
-name|ifa_ifwithdstaddr
+name|ifa_ifwithdstaddr_fib
 argument_list|(
 name|dst
 argument_list|,
@@ -3036,7 +3036,7 @@ block|{
 comment|/* 		 * If we are adding a route to a remote net 		 * or host, the gateway may still be on the 		 * other end of a pt to pt link. 		 */
 name|ifa
 operator|=
-name|ifa_ifwithdstaddr
+name|ifa_ifwithdstaddr_fib
 argument_list|(
 name|gateway
 argument_list|,
@@ -3052,7 +3052,7 @@ name|NULL
 condition|)
 name|ifa
 operator|=
-name|ifa_ifwithnet
+name|ifa_ifwithnet_fib
 argument_list|(
 name|gateway
 argument_list|,
@@ -3550,7 +3550,7 @@ operator|&&
 operator|(
 name|ifa
 operator|=
-name|ifa_ifwithnet
+name|ifa_ifwithnet_fib
 argument_list|(
 name|ifpaddr
 argument_list|,
