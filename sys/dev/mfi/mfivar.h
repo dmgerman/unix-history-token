@@ -216,20 +216,24 @@ name|MFI_CMD_CCB
 value|(1<<6)
 define|#
 directive|define
-name|MFI_CMD_TBOLT
+name|MFI_CMD_BIO
 value|(1<<7)
 define|#
 directive|define
-name|MFI_ON_MFIQ_FREE
+name|MFI_CMD_TBOLT
 value|(1<<8)
 define|#
 directive|define
-name|MFI_ON_MFIQ_READY
+name|MFI_ON_MFIQ_FREE
 value|(1<<9)
 define|#
 directive|define
-name|MFI_ON_MFIQ_BUSY
+name|MFI_ON_MFIQ_READY
 value|(1<<10)
+define|#
+directive|define
+name|MFI_ON_MFIQ_BUSY
+value|(1<<11)
 define|#
 directive|define
 name|MFI_ON_MFIQ_MASK
@@ -237,7 +241,7 @@ value|(MFI_ON_MFIQ_FREE | MFI_ON_MFIQ_READY| \     MFI_ON_MFIQ_BUSY)
 define|#
 directive|define
 name|MFI_CMD_FLAGS_FMT
-value|"\20" \     "\1MAPPED" \     "\2DATAIN" \     "\3DATAOUT" \     "\4COMPLETED" \     "\5POLLED" \     "\6SCSI" \     "\7TBOLT" \     "\10Q_FREE" \     "\11Q_READY" \     "\12Q_BUSY"
+value|"\20" \     "\1MAPPED" \     "\2DATAIN" \     "\3DATAOUT" \     "\4COMPLETED" \     "\5POLLED" \     "\6SCSI" \     "\7BIO" \     "\10TBOLT" \     "\11Q_FREE" \     "\12Q_READY" \     "\13Q_BUSY"
 name|uint8_t
 name|retry_for_fw_reset
 decl_stmt|;
