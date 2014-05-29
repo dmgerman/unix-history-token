@@ -416,10 +416,19 @@ name|uint32_t
 name|sc_host_async_map
 decl_stmt|;
 name|uint32_t
+name|sc_host_async_suspend_map
+decl_stmt|;
+name|uint32_t
 name|sc_host_intr_map
 decl_stmt|;
 name|uint32_t
+name|sc_host_intr_suspend_map
+decl_stmt|;
+name|uint32_t
 name|sc_host_isoc_map
+decl_stmt|;
+name|uint32_t
+name|sc_host_isoc_suspend_map
 decl_stmt|;
 name|uint32_t
 name|sc_intr_enable
@@ -433,6 +442,9 @@ name|uint32_t
 name|sc_interrupt_cfg
 decl_stmt|;
 comment|/* interrupt configuration */
+name|uint32_t
+name|sc_xfer_complete
+decl_stmt|;
 name|uint32_t
 name|sc_bounce_buffer
 index|[
@@ -499,17 +511,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|driver_filter_t
+name|saf1761_otg_filter_interrupt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|driver_intr_t
 name|saf1761_otg_interrupt
-parameter_list|(
-name|struct
-name|saf1761_otg_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
