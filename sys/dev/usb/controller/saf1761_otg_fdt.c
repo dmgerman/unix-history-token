@@ -334,7 +334,7 @@ block|{
 operator|.
 name|name
 operator|=
-literal|"saf1761"
+literal|"saf1761otg"
 block|,
 operator|.
 name|methods
@@ -363,7 +363,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|saf1761
+name|saf1761otg
 argument_list|,
 name|simplebus
 argument_list|,
@@ -381,7 +381,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|saf1761
+name|saf1761otg
 argument_list|,
 name|usb
 argument_list|,

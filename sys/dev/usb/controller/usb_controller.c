@@ -760,7 +760,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|usbus
 argument_list|,
-name|saf1761
+name|saf1761otg
 argument_list|,
 name|usb_driver
 argument_list|,
