@@ -77,6 +77,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysent.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -113,6 +119,40 @@ literal|"DTrace hooks"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Hooks used in the machine-dependent trap handlers. */
+end_comment
+
+begin_decl_stmt
+name|dtrace_trap_func_t
+name|dtrace_trap_func
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|dtrace_doubletrap_func_t
+name|dtrace_doubletrap_func
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|dtrace_pid_probe_ptr_t
+name|dtrace_pid_probe_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|dtrace_return_probe_ptr_t
+name|dtrace_return_probe_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|systrace_probe_func_t
+name|systrace_probe_func
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Return the DTrace process data size compiled in the kernel hooks. */
