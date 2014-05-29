@@ -4307,6 +4307,9 @@ operator|*
 operator|)
 name|sc
 decl_stmt|;
+name|u_char
+name|ier
+decl_stmt|;
 comment|/* 	 * turn off all interrupts to enter polling mode. Leave the 	 * saved mask alone. We'll restore whatever it was in ungrab. 	 * All pending interupt signals are reset when IER is set to 0. 	 */
 name|uart_lock
 argument_list|(
@@ -4315,18 +4318,26 @@ operator|->
 name|sc_hwmtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * On XScale, bit 6 (0x40) is the UART Unit Enable, removing it 	 * turns the UART completely off,  so make sure it is stays there. 	 */
+name|ier
+operator|=
+name|uart_getreg
+argument_list|(
+name|bas
+argument_list|,
+name|REG_IER
+argument_list|)
+expr_stmt|;
 name|uart_setreg
 argument_list|(
 name|bas
 argument_list|,
 name|REG_IER
 argument_list|,
-name|ns8250
-operator|->
 name|ier
 operator|&
-literal|0x40
+name|ns8250
+operator|->
+name|ier_mask
 argument_list|)
 expr_stmt|;
 name|uart_barrier
