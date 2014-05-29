@@ -1829,7 +1829,7 @@ operator|.
 name|tp_row
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked begin.tp_row %d must be< screen width %d"
+literal|"vtbuf_fill_locked begin.tp_row %d must be< screen height %d"
 operator|,
 name|r
 operator|->
@@ -1860,7 +1860,7 @@ operator|.
 name|tp_col
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked begin.tp_col %d must be< screen height %d"
+literal|"vtbuf_fill_locked begin.tp_col %d must be< screen width %d"
 operator|,
 name|r
 operator|->
@@ -1891,7 +1891,7 @@ operator|.
 name|tp_row
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked end.tp_row %d must be<= screen width %d"
+literal|"vtbuf_fill_locked end.tp_row %d must be<= screen height %d"
 operator|,
 name|r
 operator|->
@@ -1922,7 +1922,7 @@ operator|.
 name|tp_col
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked end.tp_col %d must be<= screen height %d"
+literal|"vtbuf_fill_locked end.tp_col %d must be<= screen width %d"
 operator|,
 name|r
 operator|->
