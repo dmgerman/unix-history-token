@@ -2711,6 +2711,17 @@ name|M_VTBUF
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* Just update the size. */
+name|vb
+operator|->
+name|vb_scr_size
+operator|=
+operator|*
+name|p
+expr_stmt|;
+block|}
 block|}
 end_function
 
