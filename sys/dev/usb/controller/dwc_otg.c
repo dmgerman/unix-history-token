@@ -521,7 +521,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|dwc_otg_interrupt_poll
+name|dwc_otg_interrupt_poll_locked
 parameter_list|(
 name|struct
 name|dwc_otg_softc
@@ -9363,7 +9363,7 @@ end_function
 begin_function
 specifier|static
 name|uint8_t
-name|dwc_otg_xfer_do_complete
+name|dwc_otg_xfer_do_complete_locked
 parameter_list|(
 name|struct
 name|dwc_otg_softc
@@ -9769,7 +9769,7 @@ end_function
 begin_function
 specifier|static
 name|uint8_t
-name|dwc_otg_update_host_transfer_schedule
+name|dwc_otg_update_host_transfer_schedule_locked
 parameter_list|(
 name|struct
 name|dwc_otg_softc
@@ -10696,7 +10696,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|dwc_otg_interrupt_poll
+name|dwc_otg_interrupt_poll_locked
 parameter_list|(
 name|struct
 name|dwc_otg_softc
@@ -11126,7 +11126,7 @@ block|{
 comment|/* update host transfer schedule, so that new transfers can be issued */
 if|if
 condition|(
-name|dwc_otg_update_host_transfer_schedule
+name|dwc_otg_update_host_transfer_schedule_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -11141,7 +11141,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|dwc_otg_interrupt_complete
+name|dwc_otg_interrupt_complete_locked
 parameter_list|(
 name|struct
 name|dwc_otg_softc
@@ -11168,7 +11168,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|dwc_otg_xfer_do_complete
+name|dwc_otg_xfer_do_complete_locked
 argument_list|(
 name|sc
 argument_list|,
@@ -11335,6 +11335,14 @@ decl_stmt|;
 name|uint32_t
 name|status
 decl_stmt|;
+name|USB_BUS_SPIN_LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|)
+expr_stmt|;
 comment|/* read and clear interrupt status */
 name|status
 operator|=
@@ -11437,16 +11445,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|USB_BUS_SPIN_LOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
 comment|/* poll FIFOs, if any */
-name|dwc_otg_interrupt_poll
+name|dwc_otg_interrupt_poll_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -12234,7 +12234,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* complete FIFOs, if any */
-name|dwc_otg_interrupt_complete
+name|dwc_otg_interrupt_complete_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -12253,12 +12253,12 @@ block|{
 comment|/* update host transfer schedule, so that new transfers can be issued */
 if|if
 condition|(
-name|dwc_otg_update_host_transfer_schedule
+name|dwc_otg_update_host_transfer_schedule_locked
 argument_list|(
 name|sc
 argument_list|)
 condition|)
-name|dwc_otg_interrupt_poll
+name|dwc_otg_interrupt_poll_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -13847,6 +13847,14 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Poll one time in device mode, which will turn on the 	 * endpoint interrupts. Else wait for SOF interrupt in host 	 * mode. 	 */
+name|USB_BUS_SPIN_LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -13867,23 +13875,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dwc_otg_xfer_do_complete
+name|dwc_otg_xfer_do_complete_locked
 argument_list|(
 name|sc
 argument_list|,
 name|xfer
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
-name|USB_BUS_SPIN_LOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
 comment|/* put transfer on interrupt queue */
 name|usbd_transfer_enqueue
 argument_list|(
@@ -14507,6 +14509,14 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|USB_BUS_SPIN_LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xfer
@@ -14566,6 +14576,14 @@ argument_list|(
 name|xfer
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+name|USB_BUS_SPIN_UNLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
 argument_list|)
 expr_stmt|;
 block|}
@@ -14657,6 +14675,14 @@ argument_list|(
 name|udev
 operator|->
 name|bus
+argument_list|)
+expr_stmt|;
+name|USB_BUS_SPIN_LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
 argument_list|)
 expr_stmt|;
 comment|/* get endpoint address */
@@ -14806,25 +14832,33 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* poll interrupt */
-name|dwc_otg_interrupt_poll
+name|dwc_otg_interrupt_poll_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|dwc_otg_interrupt_complete
+name|dwc_otg_interrupt_complete_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|USB_BUS_SPIN_UNLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_function
 specifier|static
 name|void
-name|dwc_otg_clear_stall_sub
+name|dwc_otg_clear_stall_sub_locked
 parameter_list|(
 name|struct
 name|dwc_otg_softc
@@ -15055,12 +15089,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* poll interrupt */
-name|dwc_otg_interrupt_poll
+name|dwc_otg_interrupt_poll_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|dwc_otg_interrupt_complete
+name|dwc_otg_interrupt_complete_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -15137,6 +15171,14 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
+name|USB_BUS_SPIN_LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|)
+expr_stmt|;
 comment|/* get endpoint descriptor */
 name|ed
 operator|=
@@ -15145,7 +15187,7 @@ operator|->
 name|edesc
 expr_stmt|;
 comment|/* reset endpoint */
-name|dwc_otg_clear_stall_sub
+name|dwc_otg_clear_stall_sub_locked
 argument_list|(
 name|sc
 argument_list|,
@@ -15183,6 +15225,14 @@ operator||
 name|UE_DIR_OUT
 operator|)
 operator|)
+argument_list|)
+expr_stmt|;
+name|USB_BUS_SPIN_UNLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
 argument_list|)
 expr_stmt|;
 block|}
@@ -16295,12 +16345,12 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-name|dwc_otg_interrupt_poll
+name|dwc_otg_interrupt_poll_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|dwc_otg_interrupt_complete
+name|dwc_otg_interrupt_complete_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -16319,12 +16369,12 @@ block|{
 comment|/* update host transfer schedule, so that new transfers can be issued */
 if|if
 condition|(
-name|dwc_otg_update_host_transfer_schedule
+name|dwc_otg_update_host_transfer_schedule_locked
 argument_list|(
 name|sc
 argument_list|)
 condition|)
-name|dwc_otg_interrupt_poll
+name|dwc_otg_interrupt_poll_locked
 argument_list|(
 name|sc
 argument_list|)
