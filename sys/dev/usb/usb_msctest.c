@@ -2557,6 +2557,9 @@ decl_stmt|;
 name|usb_error_t
 name|err
 decl_stmt|;
+if|#
+directive|if
+name|USB_HAVE_MSCTEST_DETACH
 name|uint8_t
 name|do_unlock
 decl_stmt|;
@@ -2587,6 +2590,8 @@ argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|iface
 operator|=
 name|usbd_get_iface
