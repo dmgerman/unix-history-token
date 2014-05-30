@@ -1550,6 +1550,7 @@ name|struct
 name|tcpopt
 modifier|*
 name|to
+name|__unused
 parameter_list|,
 name|struct
 name|tcphdr
