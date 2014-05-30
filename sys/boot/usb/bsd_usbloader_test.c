@@ -88,6 +88,12 @@ name|hz
 value|1000
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MALLOC
+end_ifdef
+
 begin_function
 name|void
 modifier|*
@@ -124,6 +130,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
