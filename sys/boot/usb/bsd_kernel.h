@@ -25,11 +25,17 @@ directive|define
 name|_KERNEL
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|__FreeBSD_version
+end_undef
+
 begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1000000
+value|1100000
 end_define
 
 begin_include
@@ -410,12 +416,24 @@ name|hz
 value|1000
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|PAGE_SIZE
+end_undef
+
 begin_define
 define|#
 directive|define
 name|PAGE_SIZE
 value|4096
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|MIN
+end_undef
 
 begin_define
 define|#
@@ -428,6 +446,12 @@ name|b
 parameter_list|)
 value|(((a)< (b)) ? (a) : (b))
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|MAX
+end_undef
 
 begin_define
 define|#
@@ -506,12 +530,24 @@ name|CALLOUT_RETURNUNLOCKED
 value|0x1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|va_list
+end_undef
+
 begin_define
 define|#
 directive|define
 name|va_list
 value|__builtin_va_list
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|va_size
+end_undef
 
 begin_define
 define|#
@@ -522,6 +558,12 @@ name|type
 parameter_list|)
 value|__builtin_va_size(type)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|va_start
+end_undef
 
 begin_define
 define|#
@@ -535,6 +577,12 @@ parameter_list|)
 value|__builtin_va_start(ap, last)
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|va_end
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -544,6 +592,12 @@ name|ap
 parameter_list|)
 value|__builtin_va_end(ap)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|va_arg
+end_undef
 
 begin_define
 define|#
@@ -750,6 +804,18 @@ name|usb_process
 struct_decl|;
 end_struct_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STANDARD_DEFS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_UINT8_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -757,6 +823,12 @@ name|char
 name|uint8_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_INT8_T_DECLARED
+end_define
 
 begin_typedef
 typedef|typedef
@@ -766,6 +838,12 @@ name|int8_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|_UINT16_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -773,6 +851,12 @@ name|short
 name|uint16_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_INT16_T_DECLARED
+end_define
 
 begin_typedef
 typedef|typedef
@@ -782,6 +866,12 @@ name|int16_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|_UINT32_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -790,6 +880,12 @@ name|uint32_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|_INT32_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|signed
@@ -797,6 +893,12 @@ name|int
 name|int32_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UINT64_T_DECLARED
+end_define
 
 begin_typedef
 typedef|typedef
@@ -807,76 +909,18 @@ name|uint64_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|_INT16_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|signed
 name|long
 name|long
 name|int64_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|bus_addr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|bus_size_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|size_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|u_long
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|bus_dmamap_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|bus_dma_tag_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|bus_space_tag_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint8_t
-modifier|*
-name|bus_space_handle_t
 typedef|;
 end_typedef
 
@@ -922,6 +966,75 @@ typedef|typedef
 name|unsigned
 name|long
 name|uintptr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|size_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|u_long
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|bus_addr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|bus_size_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|bus_dmamap_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|bus_dma_tag_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|bus_space_tag_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+modifier|*
+name|bus_space_handle_t
 typedef|;
 end_typedef
 
@@ -2749,6 +2862,18 @@ begin_comment
 comment|/* MALLOC API */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_MALLOC
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|malloc
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -2773,6 +2898,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_undef
+undef|#
+directive|undef
+name|free
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -2794,6 +2925,74 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|malloc
+end_undef
+
+begin_function_decl
+name|void
+modifier|*
+name|malloc
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|malloc
+parameter_list|(
+name|s
+parameter_list|,
+name|x
+parameter_list|,
+name|f
+parameter_list|)
+value|malloc(s)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|free
+end_undef
+
+begin_function_decl
+name|void
+name|free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|free
+parameter_list|(
+name|p
+parameter_list|,
+name|x
+parameter_list|)
+value|free(p)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2823,6 +3022,12 @@ end_function_decl
 begin_comment
 comment|/* ENDIANNESS */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ENDIAN_DEFS
+end_ifndef
 
 begin_comment
 comment|/* Assume little endian */
@@ -2907,6 +3112,22 @@ name|x
 parameter_list|)
 value|((uint32_t)(x))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* USB */
