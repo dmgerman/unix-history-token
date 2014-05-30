@@ -19,11 +19,31 @@ directive|define
 name|_UMASS_COMMON_H_
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|usb_attach_arg
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|devsw
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
 name|usb_attach_arg
 name|umass_uaa
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|devsw
+name|umass_disk
 decl_stmt|;
 end_decl_stmt
 
