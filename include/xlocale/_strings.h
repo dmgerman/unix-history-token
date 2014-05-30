@@ -30,19 +30,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This file is included from both string.h and xlocale.h.  We need to expose  * the declarations unconditionally if we are included from xlocale.h, but only  * if we are in POSIX2008 mode if included from string.h.  */
+comment|/*  * This file is included from both strings.h and xlocale.h.  We need to expose  * the declarations unconditionally if we are included from xlocale.h, but only  * if we are in POSIX2008 mode if included from string.h.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_XLOCALE_STRING1_H
+name|_XLOCALE_STRINGS1_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_XLOCALE_STRING1_H
+name|_XLOCALE_STRINGS1_H
 end_define
 
 begin_comment
@@ -51,7 +51,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|strcoll_l
+name|strcasecmp_l
 parameter_list|(
 specifier|const
 name|char
@@ -67,9 +67,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|size_t
-name|strxfrm_l
+name|int
+name|strncasecmp_l
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -90,65 +91,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _XLOCALE_STRING1_H */
-end_comment
-
-begin_comment
-comment|/*  * xlocale extensions  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_XLOCALE_H_
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_XLOCALE_STRING2_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_XLOCALE_STRING2_H
-end_define
-
-begin_function_decl
-name|char
-modifier|*
-name|strcasestr_l
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|locale_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _XLOCALE_STRING2_H */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _XLOCALE_H_ */
+comment|/* _XLOCALE_STRINGS1_H */
 end_comment
 
 end_unit
