@@ -1284,14 +1284,14 @@ begin_define
 define|#
 directive|define
 name|PMC_HASH_SIZE
-value|16
+value|1024
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMC_MTXPOOL_SIZE
-value|32
+value|2048
 end_define
 
 begin_define
@@ -1305,21 +1305,21 @@ begin_define
 define|#
 directive|define
 name|PMC_NLOGBUFFERS
-value|64
+value|1024
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMC_NSAMPLES
-value|512
+value|1024
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMC_CALLCHAIN_DEPTH
-value|8
+value|16
 end_define
 
 begin_define
