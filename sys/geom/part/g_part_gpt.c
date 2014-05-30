@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<geom/geom_int.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/part/g_part.h>
 end_include
 
@@ -7799,7 +7805,7 @@ name|ch
 operator|<
 literal|0x80
 condition|)
-name|sbuf_printf
+name|g_conf_printf_escaped
 argument_list|(
 name|sb
 argument_list|,
@@ -7815,7 +7821,7 @@ name|ch
 operator|<
 literal|0x800
 condition|)
-name|sbuf_printf
+name|g_conf_printf_escaped
 argument_list|(
 name|sb
 argument_list|,
@@ -7845,7 +7851,7 @@ name|ch
 operator|<
 literal|0x10000
 condition|)
-name|sbuf_printf
+name|g_conf_printf_escaped
 argument_list|(
 name|sb
 argument_list|,
@@ -7887,7 +7893,7 @@ name|ch
 operator|<
 literal|0x200000
 condition|)
-name|sbuf_printf
+name|g_conf_printf_escaped
 argument_list|(
 name|sb
 argument_list|,
