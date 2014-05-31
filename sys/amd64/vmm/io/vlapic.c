@@ -4142,21 +4142,11 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 			 * XXX this assumes that the startup IPI always succeeds 			 */
 name|vlapic2
 operator|->
 name|boot_state
 operator|=
 name|BS_RUNNING
-expr_stmt|;
-name|vm_activate_cpu
-argument_list|(
-name|vlapic2
-operator|->
-name|vm
-argument_list|,
-name|dest
-argument_list|)
 expr_stmt|;
 operator|*
 name|retu

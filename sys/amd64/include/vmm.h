@@ -1111,7 +1111,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_activate_cpu
 parameter_list|(
 name|struct
@@ -1128,6 +1128,18 @@ end_function_decl
 begin_function_decl
 name|cpuset_t
 name|vm_active_cpus
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|cpuset_t
+name|vm_suspended_cpus
 parameter_list|(
 name|struct
 name|vm

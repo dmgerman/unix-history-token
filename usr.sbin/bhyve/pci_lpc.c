@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/vmm_dev.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
