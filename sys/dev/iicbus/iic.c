@@ -1409,6 +1409,17 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Ignore IIC_ENOADDR as it only means we have a master-only 		 * controller. 		 */
+if|if
+condition|(
+name|error
+operator|==
+name|IIC_ENOADDR
+condition|)
+name|error
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|I2CWRITE
