@@ -2253,6 +2253,11 @@ name|my_ss_cnt
 operator|++
 expr_stmt|;
 block|}
+name|zap_cursor_fini
+argument_list|(
+name|zc
+argument_list|)
+expr_stmt|;
 name|dsl_dataset_rele
 argument_list|(
 name|ds
