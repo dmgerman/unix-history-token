@@ -1325,7 +1325,7 @@ name|fs_bsize
 operator|/
 sizeof|sizeof
 argument_list|(
-name|int32_t
+name|ufs1_daddr_t
 argument_list|)
 expr_stmt|;
 name|sblock
@@ -1355,7 +1355,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|int32_t
+name|ufs1_daddr_t
 argument_list|)
 operator|)
 expr_stmt|;
@@ -1452,21 +1452,12 @@ name|fs_magic
 operator|=
 name|FS_UFS2_MAGIC
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX makefs is used for small filesystems. */
-block|sblock.fs_sblockloc = SBLOCK_UFS2;
-else|#
-directive|else
 name|sblock
 operator|.
 name|fs_sblockloc
 operator|=
-name|SBLOCK_UFS1
+name|SBLOCK_UFS2
 expr_stmt|;
-endif|#
-directive|endif
 name|sblock
 operator|.
 name|fs_nindir
@@ -1477,7 +1468,7 @@ name|fs_bsize
 operator|/
 sizeof|sizeof
 argument_list|(
-name|int64_t
+name|ufs2_daddr_t
 argument_list|)
 expr_stmt|;
 name|sblock
@@ -1507,7 +1498,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|int64_t
+name|ufs2_daddr_t
 argument_list|)
 operator|)
 expr_stmt|;
