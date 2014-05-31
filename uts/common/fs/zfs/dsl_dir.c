@@ -1943,7 +1943,7 @@ name|ds
 decl_stmt|;
 name|ASSERT
 argument_list|(
-name|spa_feature_is_enabled
+name|spa_feature_is_active
 argument_list|(
 name|dp
 operator|->
@@ -7765,7 +7765,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|spa_feature_is_enabled
+name|spa_feature_is_active
 argument_list|(
 name|dp
 operator|->
@@ -7877,11 +7877,27 @@ name|err
 operator|!=
 literal|0
 condition|)
+block|{
+name|dsl_dir_rele
+argument_list|(
+name|newparent
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
+name|dsl_dir_rele
+argument_list|(
+name|dd
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
 operator|)
 return|;
+block|}
 comment|/* 			 * have to add 1 for the filesystem itself that we're 			 * moving 			 */
 name|fs_cnt
 operator|++
@@ -7919,11 +7935,27 @@ name|err
 operator|!=
 literal|0
 condition|)
+block|{
+name|dsl_dir_rele
+argument_list|(
+name|newparent
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
+name|dsl_dir_rele
+argument_list|(
+name|dd
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
 operator|)
 return|;
+block|}
 block|}
 comment|/* no rename into our descendant */
 if|if
@@ -8171,7 +8203,7 @@ decl_stmt|;
 comment|/* 		 * We already made sure the dd counts were initialized in the 		 * check function. 		 */
 if|if
 condition|(
-name|spa_feature_is_enabled
+name|spa_feature_is_active
 argument_list|(
 name|dp
 operator|->
