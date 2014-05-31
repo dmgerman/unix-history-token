@@ -552,6 +552,19 @@ operator|=
 literal|5
 expr_stmt|;
 break|break;
+case|case
+literal|0x4D
+case|:
+comment|/* Per Intel document 330061-001 01/2014. */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_ATOM_SILVERMONT
+expr_stmt|;
+name|nclasses
+operator|=
+literal|3
+expr_stmt|;
+break|break;
 block|}
 break|break;
 if|#
@@ -676,6 +689,9 @@ argument_list|)
 comment|/* 		 * Intel Core, Core 2 and Atom processors. 		 */
 case|case
 name|PMC_CPU_INTEL_ATOM
+case|:
+case|case
+name|PMC_CPU_INTEL_ATOM_SILVERMONT
 case|:
 case|case
 name|PMC_CPU_INTEL_CORE
@@ -913,6 +929,9 @@ name|__amd64__
 argument_list|)
 case|case
 name|PMC_CPU_INTEL_ATOM
+case|:
+case|case
+name|PMC_CPU_INTEL_ATOM_SILVERMONT
 case|:
 case|case
 name|PMC_CPU_INTEL_CORE
