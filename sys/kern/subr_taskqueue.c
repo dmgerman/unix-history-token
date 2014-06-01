@@ -2607,7 +2607,7 @@ name|error
 operator|=
 name|cpuset_setthread
 argument_list|(
-name|curthread
+name|td
 operator|->
 name|td_tid
 argument_list|,
