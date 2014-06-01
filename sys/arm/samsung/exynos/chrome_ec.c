@@ -567,7 +567,7 @@ name|malloc
 argument_list|(
 name|dinp_len
 operator|+
-literal|4
+literal|3
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -673,7 +673,7 @@ name|IIC_M_RD
 block|,
 name|dinp_len
 operator|+
-literal|4
+literal|3
 block|,
 name|msg_dinp
 block|, }
@@ -754,7 +754,7 @@ name|msg_dinp
 index|[
 name|i
 operator|+
-literal|3
+literal|2
 index|]
 expr_stmt|;
 block|}
