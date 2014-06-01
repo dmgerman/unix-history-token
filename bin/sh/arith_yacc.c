@@ -598,6 +598,9 @@ case|case
 name|ARITH_LSHIFT
 case|:
 return|return
+operator|(
+name|uintmax_t
+operator|)
 name|a
 operator|<<
 name|b
