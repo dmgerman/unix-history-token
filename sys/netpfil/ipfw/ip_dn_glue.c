@@ -255,10 +255,6 @@ value|0x0020
 comment|/* the pipe has a delay profile. */
 define|#
 directive|define
-name|DNOLD_IS_ECN
-value|0x0040
-define|#
-directive|define
 name|DNOLD_IS_PIPE
 value|0x4000
 define|#
@@ -1105,16 +1101,6 @@ condition|)
 name|dst
 operator||=
 name|DN_IS_GENTLE_RED
-expr_stmt|;
-if|if
-condition|(
-name|src
-operator|&
-name|DNOLD_IS_ECN
-condition|)
-name|dst
-operator||=
-name|DN_IS_ECN
 expr_stmt|;
 if|if
 condition|(
