@@ -132,6 +132,29 @@ define|\
 value|assert((port)>= 0&& (size)> 0&& ((port) + (size))<= MAX_IOPORTS)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|min
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|min
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)< (b) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 specifier|static
 struct|struct
@@ -372,6 +395,8 @@ name|gla
 decl_stmt|,
 name|index
 decl_stmt|,
+name|iterations
+decl_stmt|,
 name|count
 decl_stmt|;
 name|struct
@@ -611,9 +636,21 @@ argument_list|(
 name|addrsize
 argument_list|)
 expr_stmt|;
+comment|/* Limit number of back-to-back in/out emulations to 16 */
+name|iterations
+operator|=
+name|min
+argument_list|(
+name|count
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
-name|count
+name|iterations
+operator|>
+literal|0
 condition|)
 block|{
 if|if
@@ -668,11 +705,11 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|retval
+operator|=
 name|INOUT_RESTART
-operator|)
-return|;
+expr_stmt|;
+break|break;
 block|}
 name|error
 operator|=
@@ -873,6 +910,9 @@ operator|+=
 name|bytes
 expr_stmt|;
 name|count
+operator|--
+expr_stmt|;
+name|iterations
 operator|--
 expr_stmt|;
 block|}
