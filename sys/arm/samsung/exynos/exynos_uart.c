@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/samsung/exynos/uart.h>
+file|<arm/samsung/exynos/exynos_uart.h>
 end_include
 
 begin_include
