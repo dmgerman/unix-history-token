@@ -1095,6 +1095,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOTG_FRINDEX_MASK
+value|0x3fff
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOTG_CONFIGFLAG
 value|0x0060
 end_define
