@@ -132,29 +132,6 @@ define|\
 value|assert((port)>= 0&& (size)> 0&& ((port) + (size))<= MAX_IOPORTS)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|min
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)< (b) ? (a) : (b))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 specifier|static
 struct|struct
@@ -639,7 +616,7 @@ expr_stmt|;
 comment|/* Limit number of back-to-back in/out emulations to 16 */
 name|iterations
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|count
 argument_list|,
