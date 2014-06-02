@@ -403,8 +403,7 @@ begin_struct
 struct|struct
 name|fxp_softc
 block|{
-name|struct
-name|ifnet
+name|void
 modifier|*
 name|ifp
 decl_stmt|;
