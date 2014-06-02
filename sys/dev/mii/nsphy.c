@@ -467,11 +467,12 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
+name|if_getdname
+argument_list|(
 name|mii
 operator|->
 name|mii_ifp
-operator|->
-name|if_dname
+argument_list|)
 argument_list|,
 literal|"fxp"
 argument_list|)

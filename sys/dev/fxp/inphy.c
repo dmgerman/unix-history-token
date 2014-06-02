@@ -412,11 +412,12 @@ comment|/* 		 * If the interface is not up, don't do anything. 		 */
 if|if
 condition|(
 operator|(
+name|if_getflags
+argument_list|(
 name|mii
 operator|->
 name|mii_ifp
-operator|->
-name|if_flags
+argument_list|)
 operator|&
 name|IFF_UP
 operator|)

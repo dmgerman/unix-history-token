@@ -3327,5 +3327,31 @@ return|;
 block|}
 end_function
 
+begin_function
+name|struct
+name|netmap_adapter
+modifier|*
+name|netmap_getna
+parameter_list|(
+name|if_t
+name|ifp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|NA
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+name|ifp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

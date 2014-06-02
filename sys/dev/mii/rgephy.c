@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -421,13 +427,14 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
+name|if_getdname
+argument_list|(
 name|ma
 operator|->
 name|mii_data
 operator|->
 name|mii_ifp
-operator|->
-name|if_dname
+argument_list|)
 argument_list|,
 literal|"re"
 argument_list|)

@@ -500,9 +500,7 @@ name|mii_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
+name|if_t
 name|ifp
 decl_stmt|;
 name|sc
@@ -536,9 +534,10 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
+name|if_getdname
+argument_list|(
 name|ifp
-operator|->
-name|if_dname
+argument_list|)
 argument_list|,
 literal|"msk"
 argument_list|)

@@ -4145,6 +4145,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|netmap_adapter
+modifier|*
+name|netmap_getna
+parameter_list|(
+name|if_t
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * netmap_mitigation API. This is used by the generic adapter  * to reduce the number of interrupt requests/selwakeup  * to clients on incoming packets.  */
 end_comment
