@@ -1589,7 +1589,7 @@ argument_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%-12s"
+literal|"%-16s"
 argument_list|,
 name|cmd
 operator|->
@@ -1598,7 +1598,7 @@ argument_list|)
 expr_stmt|;
 name|db_end_line
 argument_list|(
-literal|12
+literal|16
 argument_list|)
 expr_stmt|;
 block|}
