@@ -1399,9 +1399,7 @@ index|[
 name|IFNAMSIZ
 index|]
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
+name|if_t
 name|ifp
 init|=
 name|NULL
@@ -1586,6 +1584,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+comment|/* XXX */
 block|{
 name|db_printf
 argument_list|(
@@ -1605,9 +1604,10 @@ expr|struct
 name|bxe_softc
 operator|*
 operator|)
+name|if_getsoftc
+argument_list|(
 name|ifp
-operator|->
-name|if_softc
+argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
